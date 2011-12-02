@@ -122,12 +122,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				tooltip = layout.Item.Description;
 			}
-			else if (layout.TextTooLarge)
+			else if (layout.IsTextTooLarge)
 			{
 				tooltip = layout.Item.Label;
 			}
 
-			if (!tooltip.IsNullOrEmpty && tooltip != layout.Item.Label)
+			if (!tooltip.IsNullOrEmpty && (tooltip != layout.Item.Label || layout.IsTextTooLarge))
 			{
 				ToolTip.Default.SetToolTip (button, tooltip);
 			}

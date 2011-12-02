@@ -86,11 +86,19 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		public bool								TextTooLarge
+		public bool								IsIcon
 		{
 			get
 			{
-				return this.textTooLarge;
+				return ActionItem.IsIcon (this.Item.Label);
+			}
+		}
+
+		public bool								IsTextTooLarge
+		{
+			get
+			{
+				return this.isTextTooLarge;
 			}
 		}
 
@@ -174,10 +182,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				var layouts  = sortedLayouts.GetItemsInRow (row);
 				var position = topRight;
 
+				ActionItemLayout.AdaptWidths (tile, layouts);
+
 				foreach (var item in layouts)
 				{
 					ActionItemLayout.SetActionItemLayoutBounds (item, position);
-
 					position -= new Point (item.bounds.Width, 0);
 				}
 
@@ -185,34 +194,87 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		private static void AdaptWidths(TitleTile tile, IEnumerable<ActionItemLayout> layouts)
+		{
+			//	Si nécessaire, réduit "intelligement" la largeurs des boutons, pour tout caser dans l'espace disponible.
+			foreach (var item in layouts)
+			{
+				if (item.IsIcon)  // icône ?
+				{
+					item.finalWidth = item.width;
+				}
+				else  // texte ?
+				{
+					item.finalWidth = System.Math.Max (item.width + ActionItemLayout.AdditionalTextWidth * 2.0, ActionItemLayout.MinTextWidth);
+				}
+
+				item.isTextTooLarge = false;
+			}
+
+			var frameWidth = ActionItemLayout.GetTitleTileUsableWidth (tile);
+
+			//	On essaie en premier de réduire la largeur des icônes.
+			if (ActionItemLayout.ActualWidth (layouts) > frameWidth)
+			{
+				//	Les icônes "importantes" sont simplement ramenées au stade d'icônes "normales".
+				layouts.Where (x => x.IsIcon).ForEach (x => x.finalWidth = ActionItemLayout.DefaultIconWidth);
+			}
+
+			//	On essaie ensuite de réduire la largeur des textes.
+			bool changed;
+			do
+			{
+				//	On réduit linéairement la largeur de tous les textes, sans toutefois descendre au-dessous de la
+				//	limite inférieure. Comme certains boutons sont ignorés (icônes et textes ayant la largeur minimale),
+				//	il faut répéter l'opération tant qu'une réduction quelconque a eu lieu.
+				changed = false;
+
+				if (ActionItemLayout.ActualWidth (layouts) > frameWidth)
+				{
+					double factor = frameWidth / ActionItemLayout.ActualWidth (layouts);
+					layouts.Where (x => !x.IsIcon).ForEach (x => ActionItemLayout.SetFinalWidth (x, factor, ref changed));
+				}
+			}
+			while (changed);
+		}
+
+		private static void SetFinalWidth(ActionItemLayout item, double factor, ref bool changed)
+		{
+			double width = System.Math.Max (System.Math.Floor (item.finalWidth * factor), ActionItemLayout.MinTextWidth);
+
+			if (item.finalWidth != width)
+			{
+				item.finalWidth = width;
+				changed = true;
+			}
+		}
+
+		private static double ActualWidth(IEnumerable<ActionItemLayout> layouts)
+		{
+			return layouts.Sum (x => x.finalWidth);
+		}
 
 		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
 		{
 			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (14, 3), x => x.IsFence);
 		}
 
+		private static double GetTitleTileUsableWidth(TitleTile tile)
+		{
+			return tile.Client.Size.Width - 4 - Library.UI.Constants.RightMargin;
+		}
+
 		private static void SetActionItemLayoutBounds(ActionItemLayout item, Point position)
 		{
-			double additionalWidth;
-
-			if (ActionItem.IsIcon (item.Item.Label))  // icône ?
-			{
-				additionalWidth = 0;  // pas de largeur additionnelle pour une icône
-			}
-			else  // texte ?
-			{
-				additionalWidth = ActionItemLayout.AdditionalTextWidth * 2.0;
-			}
-
-			var width  = item.TextWidth + additionalWidth;
-			var height = ActionItemLayout.DefaultHeight;
+			double width = item.finalWidth;
+			double height = ActionItemLayout.DefaultHeight;
 
 			item.bounds = new Rectangle (position.X - width, position.Y - height, width, height);
 		}
 
 		private void ComputeWidth()
 		{
-			if (ActionItem.IsIcon (this.item.Label))  // icône ?
+			if (this.IsIcon)  // icône ?
 			{
 				this.width = ActionItemLayout.DefaultIconWidth;
 
@@ -220,24 +282,13 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				{
 					this.width *= 2.0;  // 2x plus large
 				}
-
-				this.textTooLarge = false;
 			}
 			else  // texte ?
 			{
 				var textLayout = this.CreateTextLayout ();
 				var textSize   = textLayout.GetSingleLineSize ();
 
-				if (textSize.Width <= ActionItemLayout.MaxTextWidth)
-				{
-					this.textTooLarge = false;
-					this.width = System.Math.Ceiling (textSize.Width);
-				}
-				else
-				{
-					this.textTooLarge = true;
-					this.width = ActionItemLayout.MaxTextWidth;
-				}
+				this.width = System.Math.Ceiling (textSize.Width);
 			}
 		}
 		
@@ -477,7 +528,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		public static readonly double			DefaultHeight       = 16.0;
 		public static readonly double			DefaultIconWidth    = ActionItemLayout.DefaultHeight*1.5;  // bouton icône au format 3:2
 		public static readonly double			AdditionalTextWidth = 4.0;   // largeur additionnelle de part et d'autre du texte
-		public static readonly double			MaxTextWidth        = 87.0;  // largeur maximale d'un bouton textuel (permet d'en mettre 3)
+		public static readonly double			MinTextWidth        = 20.0;  // largeur additionnelle de part et d'autre du texte
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
@@ -486,7 +537,8 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private int								row;
 		private int								priority;
 		private double							width;
-		private bool							textTooLarge;
+		private double							finalWidth;
+		private bool							isTextTooLarge;
 		
 		private Rectangle						bounds;
 		private bool							isDuplicate;
