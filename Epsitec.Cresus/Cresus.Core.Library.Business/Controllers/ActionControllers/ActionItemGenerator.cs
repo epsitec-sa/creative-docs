@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Workflows;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Orchestrators;
 
 namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 {
@@ -23,9 +24,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 	/// </summary>
 	public sealed class ActionItemGenerator
 	{
-		public ActionItemGenerator(BusinessContext context, IEnumerable<TileDataItem> items)
+		public ActionItemGenerator(DataViewOrchestrator orchestrator, BusinessContext context, IEnumerable<TileDataItem> items)
 		{
-			this.context = context;
+			this.orchestrator = orchestrator;
+			this.context      = context;
 			
 			this.tileDataItems = new List<TileDataItem> (items);
 			this.tileDataItemLookupTable = new Dictionary<string, TileDataItem> (this.tileDataItems.ToDictionary (x => x.Name));
@@ -144,7 +146,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			var label       = transition.Edge.GetLabel (LabelDetailLevel.Compact);
 			var description = transition.Edge.GetLabel (LabelDetailLevel.Detailed);
 
-			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, action.Action, label, description));
+			this.CreateLayout (item, new ActionItem (ActionClasses.NextStep, transition.CreateAction (this.orchestrator.Navigator), label, description));
 		}
 
 		private bool CreateWorflowTransitionActionItem(WorkflowTransition transition, WorkflowAction action)
@@ -167,7 +169,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 						var label       = transition.Edge.GetLabel (LabelDetailLevel.Compact);
 						var description = transition.Edge.GetLabel (LabelDetailLevel.Detailed);
 
-						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, action.Action, label, description));
+						this.CreateLayout (affairTile, new ActionItem (ActionClasses.Create, transition.CreateAction (this.orchestrator.Navigator), label, description));
 
 						return true;
 					}
@@ -197,6 +199,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		private readonly DataViewOrchestrator				orchestrator;
 		private readonly BusinessContext					context;
 		private readonly List<TileDataItem>					tileDataItems;
 		private readonly Dictionary<string, TileDataItem>	tileDataItemLookupTable;

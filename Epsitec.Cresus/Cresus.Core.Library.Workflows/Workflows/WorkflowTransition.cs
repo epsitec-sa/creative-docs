@@ -74,6 +74,25 @@ namespace Epsitec.Cresus.Core.Workflows
 		}
 
 
+		public void Execute(params object[] parameters)
+		{
+			using (var engine = new WorkflowExecutionEngine (this))
+			{
+				foreach (var parameter in parameters)
+				{
+					engine.Associate (parameter);
+				}
+
+				engine.Execute ();
+			}
+		}
+
+		public System.Action CreateAction(params object[] parameters)
+		{
+			return () => this.Execute (parameters);
+		}
+
+
 		private readonly IBusinessContext		businessContext;
 		private readonly WorkflowEntity			workflow;
 		private readonly WorkflowThreadEntity	thread;

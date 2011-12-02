@@ -560,12 +560,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void ExecuteWorkflowTransition(WorkflowTransition workflowTransition)
 		{
 			//	Crée un nouveau document dans l'affaire en cours.
-			using (var engine = new WorkflowExecutionEngine (workflowTransition))
-			{
-				engine.Associate (this.orchestrator.Navigator);
-				engine.Execute ();
-			}
-
+			
+			workflowTransition.Execute (this.orchestrator.Navigator);
+			
 			this.RefreshNavigation ();
 		}
 

@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				{
 					if (srcDocMeta.IsValid == false)
 					{
+						businessContext.DeleteEntity (newDocMeta);
 						throw new System.InvalidOperationException ("Cannot create document based on invalid source document");
 					}
 

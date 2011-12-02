@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Refresh(IEnumerable<TileDataItem> items)
 		{
-			var generator = new ActionItemGenerator (this.BusinessContext, items);
+			var generator = new ActionItemGenerator (this.Orchestrator, this.BusinessContext, items);
 
 			this.layouts.Clear ();
 			this.layouts.AddRange (generator.GenerateLayouts ());
