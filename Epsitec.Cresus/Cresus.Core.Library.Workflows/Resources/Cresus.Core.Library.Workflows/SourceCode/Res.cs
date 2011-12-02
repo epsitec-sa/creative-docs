@@ -74,6 +74,22 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
 					}
 				}
+				//	designer:cap/DVAG1
+				public static global::Epsitec.Common.Types.Caption IsFrozen
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 48));
+					}
+				}
+				//	designer:cap/DVAC1
+				public static global::Epsitec.Common.Types.Caption IsRestricted
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44));
+					}
+				}
 				//	designer:cap/DVA51
 				public static global::Epsitec.Common.Types.Caption None
 				{
@@ -90,20 +106,20 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
 					}
 				}
-				//	designer:cap/DVAC1
-				public static global::Epsitec.Common.Types.Caption Restricted
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 44));
-					}
-				}
 				//	designer:cap/DVAA1
 				public static global::Epsitec.Common.Types.Caption TimedOut
 				{
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 42));
+					}
+				}
+				//	designer:cap/DVAF1
+				public static global::Epsitec.Common.Types.Caption ValueMask
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 47));
 					}
 				}
 			}
