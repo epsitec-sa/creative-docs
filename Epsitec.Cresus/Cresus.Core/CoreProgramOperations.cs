@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core
 			Data.Infrastructure.DropDatabase (dbAccess);
 		}
 		
-		private const string					CoreServerProgram	    = "Epsitec.Cresus.Core.Server.CoreServerProgram";
+		private const string					CoreServerProgram	    = "Epsitec.Cresus.WebCore.Server.CoreServerProgram";
 		private const string					CoreMaintenanceEngine	= "Epsitec.Cresus.Core.Maintenance.Engine";
 		
 		private const string					CoreServerAssembly	    = "Cresus.Core.Server";

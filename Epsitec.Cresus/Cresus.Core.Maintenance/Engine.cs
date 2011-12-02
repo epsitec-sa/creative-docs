@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Repositories;
-using Epsitec.Cresus.Core.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using Epsitec.Data.Platform;
 

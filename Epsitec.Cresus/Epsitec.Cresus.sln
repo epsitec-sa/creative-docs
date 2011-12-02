@@ -151,7 +151,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.Feature
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Library.UI", "Cresus.Core.Library.UI\Cresus.Core.Library.UI.csproj", "{F33C234B-2DD9-420D-9793-FD22B601D061}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Server", "Cresus.Core.Server\Cresus.Core.Server.csproj", "{E85C5738-4267-4F95-B6B0-A30B47B76D01}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.WebCore.Server", "Cresus.WebCore.Server\Cresus.WebCore.Server.csproj", "{E85C5738-4267-4F95-B6B0-A30B47B76D01}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Data.Platform", "Data.Platform\Data.Platform.csproj", "{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}"
 EndProject
@@ -168,23 +168,23 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.Aider", "App.Aider\App.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "App.DebugService", "App.DebugService\App.DebugService.csproj", "{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Core.Server.Tests.Vs", "Cresus.Core.Server.Tests.Vs\Cresus.Core.Server.Tests.Vs.csproj", "{4A5D4878-2560-4158-8266-B94688E92BE0}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.WebCore.Server.Tests.Vs", "Cresus.WebCore.Server.Tests.Vs\Cresus.WebCore.Server.Tests.Vs.csproj", "{4A5D4878-2560-4158-8266-B94688E92BE0}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tool.MailingColis", "Tool.MailingColis\Tool.MailingColis.csproj", "{0EB713F3-1C36-4BD2-800D-91BAA34E1D5B}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.Core.WebCore", "Cresus.Core.WebCore\", "{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cresus.WebCore.Client\", "{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/Cresus.Core.WebClient"
-		Debug.AspNetCompiler.PhysicalPath = "Cresus.Core.WebCore\"
-		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Cresus.Core.WebClient\"
+		Debug.AspNetCompiler.VirtualPath = "/Cresus.WebCore.Clientt"
+		Debug.AspNetCompiler.PhysicalPath = "Cresus.WebCore.Client\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Cresus.WebCore.Client\"
 		Debug.AspNetCompiler.Updateable = "true"
 		Debug.AspNetCompiler.ForceOverwrite = "true"
 		Debug.AspNetCompiler.FixedNames = "false"
 		Debug.AspNetCompiler.Debug = "True"
-		Release.AspNetCompiler.VirtualPath = "/Cresus.Core.WebClient"
-		Release.AspNetCompiler.PhysicalPath = "Cresus.Core.WebCore\"
-		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Cresus.Core.WebClient\"
+		Release.AspNetCompiler.VirtualPath = "/Cresus.WebCore.Client"
+		Release.AspNetCompiler.PhysicalPath = "Cresus.WebCore.Client\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\Cresus.WebCore.Client\"
 		Release.AspNetCompiler.Updateable = "true"
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"

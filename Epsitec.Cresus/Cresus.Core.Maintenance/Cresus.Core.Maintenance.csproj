@@ -98,9 +98,9 @@
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Cresus.Core.Server\Cresus.Core.Server.csproj">
+    <ProjectReference Include="..\Cresus.WebCore.Server\Cresus.WebCore.Server.csproj">
       <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
-      <Name>Cresus.Core.Server</Name>
+      <Name>Cresus.WebCore.Server</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
       <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
