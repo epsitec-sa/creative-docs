@@ -214,7 +214,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			var frameWidth = ActionItemLayout.GetTitleTileUsableWidth (tile);
 
 			//	On essaie en premier de réduire la largeur des icônes.
-			if (ActionItemLayout.ActualWidth (layouts) > frameWidth)
+			double actualWidth = layouts.Sum (x => x.finalWidth);
+
+			if (actualWidth > frameWidth)
 			{
 				//	Les icônes "importantes" sont simplement ramenées au stade d'icônes "normales".
 				layouts.Where (x => x.IsIcon).ForEach (x => x.finalWidth = ActionItemLayout.DefaultIconWidth);
@@ -228,10 +230,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				//	limite inférieure. Comme certains boutons sont ignorés (icônes et textes ayant la largeur minimale),
 				//	il faut répéter l'opération tant qu'une réduction quelconque a eu lieu.
 				changed = false;
+				actualWidth = layouts.Sum (x => x.finalWidth);
 
-				if (ActionItemLayout.ActualWidth (layouts) > frameWidth)
+				if (actualWidth > frameWidth)
 				{
-					double factor = frameWidth / ActionItemLayout.ActualWidth (layouts);
+					double factor = frameWidth / actualWidth;
 					layouts.Where (x => !x.IsIcon).ForEach (x => ActionItemLayout.SetFinalWidth (x, factor, ref changed));
 				}
 			}
@@ -247,11 +250,6 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				item.finalWidth = width;
 				changed = true;
 			}
-		}
-
-		private static double ActualWidth(IEnumerable<ActionItemLayout> layouts)
-		{
-			return layouts.Sum (x => x.finalWidth);
 		}
 
 		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
