@@ -41,9 +41,11 @@
   <data name="Val.WorkflowState.Done" id="A81">&lt;s:data id="_0" f:Name="Done" f:Labels="{Collection {Text 'Terminé'}}" /&gt;</data>
   <data name="Val.WorkflowState.Cancelled" id="A91">&lt;s:data id="_0" f:Name="Cancelled" f:Labels="{Collection {Text 'Annulé'}}" /&gt;</data>
   <data name="Val.WorkflowState.TimedOut" id="AA1">&lt;s:data id="_0" f:Name="TimedOut" f:Labels="{Collection {Text 'Échu'}}" /&gt;</data>
-  <data name="Typ.WorkflowState" id="A41">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="WorkflowState" f:_1.SystemType="E:Epsitec.Cresus.Core.Workflows.WorkflowState, Cresus.Core.Library.Workflows" f:_2.EnumValues="{Collection {Text '0 [DVA51]'}, {Text '1 [DVA61]'}, {Text '2 [DVA71]'}, {Text '3 [DVA81]'}, {Text '4 [DVA91]'}, {Text '5 [DVAA1]'}, {Text '6 [DVAC1]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Business.WorkflowState, Cresus.Core.Library.Workflows/None" f:Labels="{Collection {Text 'État du workflow'}}" /&gt;</data>
+  <data name="Typ.WorkflowState" id="A41">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="WorkflowState" f:_1.SystemType="E:Epsitec.Cresus.Core.Workflows.WorkflowState, Cresus.Core.Library.Workflows" f:_2.EnumValues="{Collection {Text '0 [DVA51]'}, {Text '1 [DVA61]'}, {Text '2 [DVA71]'}, {Text '3 [DVA81]'}, {Text '4 [DVA91]'}, {Text '5 [DVAA1]'}, {Text '6 [DVAC1]'}, {Text '7 [DVAF1]'}, {Text '8 [DVAG1]'}}" f:_1.DefaultValue="Epsitec.Cresus.Core.Workflows.WorkflowState, Cresus.Core.Library.Workflows/None" f:Labels="{Collection {Text 'État du workflow'}}" /&gt;</data>
   <data name="Fld.WorkflowThread.SerializedArgs" id="AB1">&lt;s:data id="_0" f:Name="SerializedArgs" /&gt;</data>
-  <data name="Val.WorkflowState.Restricted" id="AC1">&lt;s:data id="_0" f:Name="Restricted" f:Labels="{Collection {Text 'Restreint'}}" /&gt;</data>
+  <data name="Val.WorkflowState.IsRestricted" id="AC1">&lt;s:data id="_0" f:Name="IsRestricted" f:Labels="{Collection {Text 'Workflow restreint à un utilisateur'}}" /&gt;</data>
   <data name="Fld.WorkflowThread.RestrictedUserCode" id="AD1">&lt;s:data id="_0" f:Name="RestrictedUserCode" /&gt;</data>
   <data name="Fld.WorkflowEdge.Labels" id="AE1">&lt;s:data id="_0" f:Name="Labels" /&gt;</data>
+  <data name="Val.WorkflowState.ValueMask" id="AF1">&lt;s:data id="_0" f:Name="ValueMask" f:Labels="{Collection {Text 'Masque : valeurs de l&amp;amp;apos;énumération'}}" /&gt;</data>
+  <data name="Val.WorkflowState.IsFrozen" id="AG1">&lt;s:data id="_0" f:Name="IsFrozen" f:Labels="{Collection {Text 'Workflow gelé'}}" /&gt;</data>
 </bundle>

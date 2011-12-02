@@ -2,11 +2,13 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Workflows;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -36,6 +38,22 @@ namespace Epsitec.Cresus.Core.Entities
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText ("Créé le ", this.History.First ().Date);
+		}
+
+		/// <summary>
+		/// Sets the frozen state of the workflow thread.
+		/// </summary>
+		/// <param name="freeze">If set to <c>true</c>, freezes the workflow thread; otherwise, thaws it.</param>
+		public void SetFrozen(bool freeze)
+		{
+			if (freeze)
+			{
+				this.State = this.State.SetFlag (WorkflowState.IsFrozen);
+			}
+			else
+			{
+				this.State = this.State.ClearFlag (WorkflowState.IsFrozen);
+			}
 		}
 
 		/// <summary>

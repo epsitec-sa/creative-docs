@@ -228,20 +228,28 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			WorkflowState state = thread.State;
 
-			switch (state)
+			switch (state & WorkflowState.ValueMask)
 			{
 				case WorkflowState.None:
 				case WorkflowState.Active:
 				case WorkflowState.Pending:
-					return true;
+					if (state.HasFlag (WorkflowState.IsFrozen))
+					{
+						return false;
+					}
+					else if (state.HasFlag (WorkflowState.IsRestricted))
+					{
+						return thread.RestrictedUserCode == activeUserCode;
+					}
+					else
+					{
+						return true;
+					}
 
 				case WorkflowState.Done:
 				case WorkflowState.Cancelled:
 				case WorkflowState.TimedOut:
 					return false;
-
-				case WorkflowState.Restricted:
-					return thread.RestrictedUserCode == activeUserCode;
 
 				default:
 					throw new System.NotImplementedException (string.Format ("{0} not implemented", state.GetQualifiedName ()));

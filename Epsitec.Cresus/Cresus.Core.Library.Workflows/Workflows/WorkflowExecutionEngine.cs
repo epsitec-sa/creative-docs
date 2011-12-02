@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 
 			switch (edge.TransitionType)
-            {
+			{
 				case WorkflowTransitionType.Default:
 					break;
 				
@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Workflows
 				
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", edge.TransitionType.GetQualifiedName ()));
-            }
+			}
 
 			this.PrepareNextNode (thread, arcs, edge);
 
@@ -416,11 +416,18 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 		}
 
-		public static void SetWorkflowThreadState(WorkflowThreadEntity thread, WorkflowState status)
+		/// <summary>
+		/// Sets the state of the workflow thread, without affecting the thread state flags.
+		/// </summary>
+		/// <param name="thread">The thread.</param>
+		/// <param name="state">The thread state.</param>
+		public static void SetWorkflowThreadState(WorkflowThreadEntity thread, WorkflowState state)
 		{
 			if (thread.IsNotNull ())
 			{
-				thread.State = status;
+				var flags = thread.State & WorkflowState.ValueMask;
+
+				thread.State = state | flags;
 			}
 		}
 
