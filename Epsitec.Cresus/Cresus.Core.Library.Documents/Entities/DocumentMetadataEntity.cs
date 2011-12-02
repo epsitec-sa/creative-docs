@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -32,34 +33,40 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this document is frozen. This is related to
-		/// the document's state; currently, only the <see cref="DocumentState.Draft"/>
-		/// is considered to be not frozen (ie editable).
-		/// </summary>
-		/// <value>
-		///   <c>true</c> if this document is frozen; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsFrozen
+		public bool								IsEditable
 		{
 			get
 			{
-				//?return false;  //? TODO: provisoire !!!
-				switch (this.DocumentState)
+				var state = this.DocumentState;
+				
+				switch (state & Business.DocumentState.ValueMask)
 				{
 					case Business.DocumentState.None:
-						return true;
+					case Business.DocumentState.Valid:
+						return false;
 
 					case Business.DocumentState.Draft:
-						return false;
-					
-					case Business.DocumentState.Inactive:
-					case Business.DocumentState.Active:
-						return true;
+						if (state.HasFlag (Business.DocumentState.IsReferenced) ||
+							state.HasFlag (Business.DocumentState.IsFrozen))
+						{
+							return false;
+						}
+						else
+						{
+							return true;
+						}
 
 					default:
 						throw new System.NotSupportedException (string.Format ("DocumentState.{0} not supported", this.DocumentState));
 				}
+			}
+		}
+
+		public bool								IsValid
+		{
+			get
+			{
+				return (this.DocumentState & Business.DocumentState.ValueMask) == Business.DocumentState.Valid;
 			}
 		}
 
@@ -92,6 +99,25 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.GetCompactSummary ();
 		}
 
+
+		public void SetDocumentStateValue(Business.DocumentState state)
+		{
+			var flags = this.DocumentState & Business.DocumentState.ValueMask;
+
+			this.DocumentState = state | flags;
+		}
+
+		public void SetDocumentStateFlag(Business.DocumentState flag, bool set = true)
+		{
+			if (set)
+			{
+				this.DocumentState = this.DocumentState.SetFlag (flag);
+			}
+			else
+			{
+				this.DocumentState = this.DocumentState.ClearFlag (flag);
+			}
+		}
 
 		public override EntityStatus GetEntityStatus()
 		{

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers;
@@ -64,27 +65,33 @@ namespace Epsitec.Cresus.Core.Business.Rules
 
 			if (documentCategory.IsNotNull ())
 			{
-				var documentMetadata = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
-				var sourceDocument   = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, sourceDocumentType);
+				var newDocMeta = BusinessDocumentBusinessRules.CreateDocumentMetadata (businessContext, documentCategory);
+				var srcDocMeta = BusinessDocumentBusinessRules.FindSourceDocument (businessContext, activeAffair, activeVariantId, sourceDocumentType);
 
-				if (sourceDocument.IsNotNull ())
+				if (srcDocMeta.IsNotNull ())
 				{
-					//	Le nouveau document devient un clone du document source.
-					documentMetadata.BusinessDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, activeAffair, sourceDocument, sourceDocumentType);
+					if (srcDocMeta.IsValid == false)
+					{
+						throw new System.InvalidOperationException ("Cannot create document based on invalid source document");
+					}
 
-					// TODO: Ce n'est pas suffisant de geler le document "source" !
-					// Une facture n'est jamais gelée, puisqu'elle ne sert jamais de source.
-					sourceDocument.DocumentState = DocumentState.Active;
+					var newDocument = BusinessDocumentBusinessRules.CloneBusinessDocument (businessContext, activeAffair, srcDocMeta, sourceDocumentType);
+
+					newDocMeta.BusinessDocument = newDocument;
+					newDocMeta.DocumentState    = DocumentState.Draft;
+
+					srcDocMeta.SetDocumentStateFlag (DocumentState.IsReferenced);
+					activeAffair.Documents.Add (newDocMeta);
+
+					return newDocMeta;
 				}
-
-				activeAffair.Documents.Add (documentMetadata);
-
-				return documentMetadata;
+				else
+				{
+					businessContext.DeleteEntity (newDocMeta);
+				}
 			}
-			else
-			{
-				throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", sourceDocumentType));
-			}
+			
+			throw new System.InvalidOperationException (string.Format ("Cannot create document of type {0}", sourceDocumentType));
 		}
 
 		public static void AddPayment(DocumentMetadataEntity document, PaymentTransactionEntity payment)

@@ -6,12 +6,20 @@ using Epsitec.Common.Types;
 namespace Epsitec.Cresus.Core.Business
 {
 	[DesignerVisible]
+	[System.Flags]
+
 	public enum DocumentState
 	{
 		None					= 0,
 
 		Draft					= 1,
-		Active					= 2,
-		Inactive				= 3,
+		Valid					= 2,
+
+
+		ValueMask				= 0x000000ff,
+
+		IsReferenced			= 0x00000100,
+		IsHidden				= 0x00000200,
+		IsFrozen				= 0x00000400,
 	}
 }

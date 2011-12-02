@@ -182,15 +182,13 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			var lineColor     = Color.FromBrightness (1.0);  // blanc
 			var documentColor = Color.FromBrightness (1.0);  // blanc
 
-			switch (this.accessData.DocumentMetadata.DocumentState)
+			if (this.accessData.DocumentMetadata.IsEditable)
 			{
-				case DocumentState.Active:
-					documentColor = Color.FromHexa ("e2eeff");  // bleu clair
-					break;
-
-				case DocumentState.Inactive:
-					documentColor = Color.FromBrightness (0.8);  // gris clair
-					break;
+				documentColor = Color.FromHexa ("e2eeff");  // bleu clair
+			}
+			else
+			{
+				documentColor = Color.FromBrightness (0.8);  // gris clair
 			}
 
 			if (this.lineEditorController != null)

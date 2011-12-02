@@ -180,14 +180,6 @@ namespace Epsitec.Cresus.Core.Library.Documents
 				{
 				}
 				
-				//	designer:cap/HVAS
-				public static global::Epsitec.Common.Types.Caption Active
-				{
-					get
-					{
-						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
-					}
-				}
 				//	designer:cap/HVAR
 				public static global::Epsitec.Common.Types.Caption Draft
 				{
@@ -196,8 +188,24 @@ namespace Epsitec.Cresus.Core.Library.Documents
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 					}
 				}
+				//	designer:cap/HVAA2
+				public static global::Epsitec.Common.Types.Caption IsFrozen
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 74));
+					}
+				}
+				//	designer:cap/HVA92
+				public static global::Epsitec.Common.Types.Caption IsHidden
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 73));
+					}
+				}
 				//	designer:cap/HVA52
-				public static global::Epsitec.Common.Types.Caption Inactive
+				public static global::Epsitec.Common.Types.Caption IsReferenced
 				{
 					get
 					{
@@ -210,6 +218,22 @@ namespace Epsitec.Cresus.Core.Library.Documents
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
+					}
+				}
+				//	designer:cap/HVAS
+				public static global::Epsitec.Common.Types.Caption Valid
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 28));
+					}
+				}
+				//	designer:cap/HVA82
+				public static global::Epsitec.Common.Types.Caption ValueMask
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 72));
 					}
 				}
 			}

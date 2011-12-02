@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug || 
-					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsLinesEditionEnabled);
+					(this.documentMetadata.IsEditable && this.documentLogic.IsLinesEditionEnabled);
 			}
 		}
 
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsArticleParametersEditionEnabled);
+					(this.documentMetadata.IsEditable && this.documentLogic.IsArticleParametersEditionEnabled);
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsTextEditionEnabled);
+					(this.documentMetadata.IsEditable && this.documentLogic.IsTextEditionEnabled);
 			}
 		}
 
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	interne à l'entreprise.
 			get
 			{
-				return this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsMyEyesOnlyEditionEnabled;
+				return this.documentMetadata.IsEditable && this.documentLogic.IsMyEyesOnlyEditionEnabled;
 			}
 		}
 
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsPriceEditionEnabled);
+					(this.documentMetadata.IsEditable && this.documentLogic.IsPriceEditionEnabled);
 			}
 		}
 
@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			get
 			{
 				return this.IsDebug ||
-					(this.documentMetadata.DocumentState != DocumentState.Inactive && this.documentLogic.IsDiscountEditionEnabled);
+					(this.documentMetadata.IsEditable && this.documentLogic.IsDiscountEditionEnabled);
 			}
 		}
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	Indique s'il est possible d'éditer une ou plusieurs quantités.
 			get
 			{
-				return this.documentMetadata.DocumentState != DocumentState.Inactive &&
+				return this.documentMetadata.IsEditable &&
 					   this.GetEnabledArticleQuantityTypes ().Any ();
 			}
 		}
@@ -166,32 +166,30 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsEditionEnabled(Line info)
 		{
 			//	Indique s'il est possible d'éditer une ligne donnée.
-			if (this.documentMetadata.DocumentState == DocumentState.Inactive)
+			if (this.documentMetadata.IsEditable)
 			{
-				return false;
-			}
-
-			if (this.IsLinesEditionEnabled)
-			{
-				return true;
-			}
-
-			if (this.IsArticleQuantityEditionEnabled)
-			{
-				if (info.IsQuantity)
+				if (this.IsLinesEditionEnabled)
 				{
 					return true;
 				}
-			}
 
-			if (this.IsMyEyesOnlyEditionEnabled)
-			{
-				if (info.DocumentItem is TextDocumentItemEntity)
+				if (this.IsArticleQuantityEditionEnabled)
 				{
-					var text = info.DocumentItem as TextDocumentItemEntity;
-					if (text.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+					if (info.IsQuantity)
 					{
 						return true;
+					}
+				}
+
+				if (this.IsMyEyesOnlyEditionEnabled)
+				{
+					if (info.DocumentItem is TextDocumentItemEntity)
+					{
+						var text = info.DocumentItem as TextDocumentItemEntity;
+						if (text.Attributes.HasFlag (DocumentItemAttributes.MyEyesOnly))
+						{
+							return true;
+						}
 					}
 				}
 			}
@@ -202,7 +200,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public bool IsArticleQuantityTypeEditionEnabled(ArticleQuantityType type)
 		{
 			//	Indique s'il est possible d'éditer une quantité donnée.
-			return this.documentMetadata.DocumentState != DocumentState.Inactive &&
+			return this.documentMetadata.IsEditable &&
 				   this.GetEnabledArticleQuantityTypes ().Where (x => x == type).Any ();
 		}
 

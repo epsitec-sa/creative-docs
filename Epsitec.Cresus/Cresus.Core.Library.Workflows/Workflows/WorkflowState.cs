@@ -8,7 +8,10 @@ namespace Epsitec.Cresus.Core.Workflows
 	/// <summary>
 	/// The <c>WorkflowState</c> enumeration defines the states in which a workflow can be.
 	/// </summary>
+	
 	[DesignerVisible]
+	[System.Flags]
+	
 	public enum WorkflowState
 	{
 		None			= 0,
