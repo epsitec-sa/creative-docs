@@ -234,7 +234,15 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 				if (actualWidth > frameWidth)
 				{
-					double factor = frameWidth / actualWidth;
+					double fixedWidth = layouts.Where (x => !x.IsIcon && x.finalWidth <= ActionItemLayout.MinTextWidth).Sum (x => x.finalWidth);
+
+					if (actualWidth == fixedWidth)
+					{
+						break;
+					}
+
+					double factor = (frameWidth-fixedWidth) / (actualWidth-fixedWidth);
+
 					layouts.Where (x => !x.IsIcon).ForEach (x => ActionItemLayout.SetFinalWidth (x, factor, ref changed));
 				}
 			}
