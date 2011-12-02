@@ -25,20 +25,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.showMode = ActionViewControllerMode.Hide;
 			this.layouts = new List<ActionItemLayout> ();
 
-			this.windowRoot = this.Orchestrator.DataViewController.Root;
-			System.Diagnostics.Debug.Assert (this.windowRoot != null);
+			System.Diagnostics.Debug.Assert (this.Orchestrator.DataViewController.Root != null);
+			System.Diagnostics.Debug.Assert (this.Orchestrator.DataViewController.Root.Window != null);
 
-			this.windowRoot.IsFence = true;
+			this.viewRoot   = this.Orchestrator.DataViewController.Root;
+			this.windowRoot = this.viewRoot.Window.Root;
+
+			this.viewRoot.IsFence = true;
 
 			this.frameRoot = new FrameBox
 			{
-				Parent     = this.windowRoot,
+				Parent     = this.viewRoot,
 				Anchor     = AnchorStyles.All,
 				Visibility = false,
 			};
 
 			this.frameRoot.Pressed  += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
 			this.frameRoot.Released += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
+			
+			this.windowRoot.AltModifierChanged += this.HandleWindowRootAltModifierChanged;
 		}
 
 
@@ -196,23 +201,39 @@ namespace Epsitec.Cresus.Core.Controllers
 			e.Message.Swallowed = true;
 		}
 
+		private void HandleWindowRootAltModifierChanged(object sender, MessageEventArgs e)
+		{
+			if (e.Message.IsAltPressed)
+			{
+				this.ShowMode = ActionViewControllerMode.Full;
+			}
+			else
+			{
+				this.ShowMode = ActionViewControllerMode.Hide;
+			}
+		}
+
 
 		protected override void Dispose(bool disposing)
 		{
+			this.windowRoot.AltModifierChanged -= this.HandleWindowRootAltModifierChanged;
+			
 			this.frameRoot.Pressed  -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
 			this.frameRoot.Released -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
 
 			this.frameRoot.Children.Clear ();
-			this.windowRoot.Children.Remove (this.frameRoot);
-
+			
+			this.viewRoot.Children.Remove (this.frameRoot);
+			
 			base.Dispose (disposing);
 		}
 
 
-		private readonly List<ActionItemLayout>		layouts;
-		private readonly Widget						windowRoot;
-		private readonly FrameBox					frameRoot;
+		private readonly List<ActionItemLayout>	layouts;
+		private readonly Widget					viewRoot;
+		private readonly FrameBox				frameRoot;
+		private readonly WindowRoot				windowRoot;
 
-		private ActionViewControllerMode			showMode;
+		private ActionViewControllerMode		showMode;
 	}
 }

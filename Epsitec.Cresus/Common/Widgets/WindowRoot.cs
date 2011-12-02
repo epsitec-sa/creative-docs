@@ -91,6 +91,14 @@ namespace Epsitec.Common.Widgets
 				return this.treeChangeCounter;
 			}
 		}
+
+		public ModifierKeys						ActiveModifierKeys
+		{
+			get
+			{
+				return this.activeModifierKeys;
+			}
+		}
 		
 		
 		public bool DoesVisualContainKeyboardFocus(Visual visual)
@@ -105,12 +113,30 @@ namespace Epsitec.Common.Widgets
 		
 		public override void MessageHandler(Message message, Drawing.Point pos)
 		{
+			var oldModifierKeys = this.activeModifierKeys;
+			var newModifierKeys = message.ModifierKeys;
+
+			var diffModifierKeys = oldModifierKeys ^ newModifierKeys;
+			
+			if (diffModifierKeys != ModifierKeys.None)
+			{
+				this.activeModifierKeys = newModifierKeys;
+
+				if (diffModifierKeys.HasFlag (ModifierKeys.Alt))
+				{
+					this.OnAltModifierChanged (new MessageEventArgs (message, pos));
+				}
+				if (diffModifierKeys.HasFlag (ModifierKeys.Control))
+				{
+					this.OnControlModifierChanged (new MessageEventArgs (message, pos));
+				}
+			}
+
 			message.WindowRoot = this;
 			
 			base.MessageHandler (message, pos);
 		}
 
-		
 		public override void InvalidateRectangle(Drawing.Rectangle rect, bool sync)
 		{
 			System.Diagnostics.Debug.Assert (this.Parent == null);
@@ -236,7 +262,7 @@ namespace Epsitec.Common.Widgets
 				
 				if (execute)
 				{
-					Widget widget = focused == null ? this : focused;
+					Widget widget = focused ?? this;
 					Window window = this.window;
 
 					List<Command> commands = Types.Collection.ToList (Widgets.Command.FindAll (shortcut));
@@ -252,25 +278,6 @@ namespace Epsitec.Common.Widgets
 							return true;
 						}
 					}
-					
-#if false
-					if ((shortcut.KeyCodeOnly == KeyCode.FuncF4) &&
-						(shortcut.IsAltDefined) &&
-						(shortcut.IsControlDefined == false) &&
-						(shortcut.IsShiftDefined == false))
-					{
-						if (string.IsNullOrEmpty (window.Name) == false)
-						{
-							window.QueueCommand (this, "Quit" + this.Window.Name);
-
-							if (window.Name == "Application")
-							{
-								window.QueueCommand (this, ApplicationCommands.Quit);
-							}
-						}
-						return true;
-					}
-#endif
 				}
 				
 				if (focused == null)
@@ -417,7 +424,16 @@ namespace Epsitec.Common.Widgets
 				handler(this);
 			}
 		}
-		
+
+		private void OnAltModifierChanged(MessageEventArgs e)
+		{
+			this.AltModifierChanged.Raise (this, e);
+		}
+
+		private void OnControlModifierChanged(MessageEventArgs e)
+		{
+			this.ControlModifierChanged.Raise (this, e);
+		}
 		
 		internal void NotifyAdornerChanged()
 		{
@@ -454,7 +470,8 @@ namespace Epsitec.Common.Widgets
 			this.treeChangeCounter++;
 		}
 		
-		public event EventHandler					WindowStylesChanged
+		
+		public event EventHandler				WindowStylesChanged
 		{
 			add
 			{
@@ -465,8 +482,7 @@ namespace Epsitec.Common.Widgets
 				this.RemoveUserEventHandler("WindowStylesChanged", value);
 			}
 		}
-
-		public event EventHandler					WindowTypeChanged
+		public event EventHandler				WindowTypeChanged
 		{
 			add
 			{
@@ -478,12 +494,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public event EventHandler<MessageEventArgs> AltModifierChanged;
+		public event EventHandler<MessageEventArgs> ControlModifierChanged;
 
-		private WindowStyles						windowStyles;
-		private WindowType							windowType;
-		private Window								window;
-		private bool								isReady;
-		private readonly List<Visual>				focusChain;
-		private int									treeChangeCounter;
+		private WindowStyles					windowStyles;
+		private WindowType						windowType;
+		private Window							window;
+		private readonly bool					isReady;
+		private readonly List<Visual>			focusChain;
+		private int								treeChangeCounter;
+		private ModifierKeys					activeModifierKeys;
 	}
 }
