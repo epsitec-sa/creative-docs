@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Workflows;
+using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -67,7 +68,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			if (item.HideAddButton == false && item.AddNewItem != null)
 			{
-				this.CreateLayout (item, new ActionItem (ActionClasses.Create, item.AddNewItem, ActionItem.GetIcon ("Action.Create")));
+				if (ActionButton.HasIcon)
+				{
+					this.CreateLayout (item, new ActionItem (ActionClasses.Create, item.AddNewItem, ActionItem.GetIcon ("Action.Create")));
+				}
+				else
+				{
+					this.CreateLayout (item, new ActionItem (ActionClasses.Create, item.AddNewItem));
+				}
 			}
 		}
 
@@ -75,7 +83,14 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			if (item.HideRemoveButton == false && item.DeleteItem != null)
 			{
-				this.CreateLayout (item, new ActionItem (ActionClasses.Delete, item.DeleteItem, ActionItem.GetIcon ("Action.Delete")));
+				if (ActionButton.HasIcon)
+				{
+					this.CreateLayout (item, new ActionItem (ActionClasses.Delete, item.DeleteItem, ActionItem.GetIcon ("Action.Delete")));
+				}
+				else
+				{
+					this.CreateLayout (item, new ActionItem (ActionClasses.Delete, item.DeleteItem));
+				}
 			}
 		}
 

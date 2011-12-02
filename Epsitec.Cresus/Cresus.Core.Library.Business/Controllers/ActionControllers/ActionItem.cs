@@ -5,6 +5,8 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -148,7 +150,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private static FormattedText GetLabel(Caption caption)
 		{
-			if (string.IsNullOrEmpty (caption.Icon))
+			if (!ActionButton.HasIcon || string.IsNullOrEmpty (caption.Icon))
 			{
 				return caption.DefaultLabel;
 			}

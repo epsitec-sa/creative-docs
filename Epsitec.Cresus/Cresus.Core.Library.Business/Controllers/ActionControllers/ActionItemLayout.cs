@@ -7,6 +7,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
@@ -75,14 +76,6 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			get
 			{
 				return this.bounds;
-			}
-		}
-
-		public double							TextWidth
-		{
-			get
-			{
-				return this.width;
 			}
 		}
 
@@ -201,12 +194,15 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			{
 				if (item.IsIcon)  // icône ?
 				{
-					item.finalWidth = item.width;
+					item.finalWidth = item.textWidth;
 				}
 				else  // texte ?
 				{
-					item.finalWidth = System.Math.Max (item.width + ActionItemLayout.AdditionalTextWidth * 2.0, ActionItemLayout.MinTextWidth);
+					item.finalWidth = System.Math.Max (item.textWidth + ActionItemLayout.AdditionalTextWidth * 2.0, ActionItemLayout.MinTextWidth);
 				}
+
+				int modulo = (int) ActionItemLayout.WidthModulo;
+				item.finalWidth = ((int) item.finalWidth + modulo -1) / modulo * modulo;
 
 				item.isTextTooLarge = false;
 			}
@@ -282,11 +278,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		{
 			if (this.IsIcon)  // icône ?
 			{
-				this.width = ActionItemLayout.DefaultIconWidth;
+				this.textWidth = ActionItemLayout.DefaultIconWidth;
 
 				if (this.item.ActionClass.Class == ActionClasses.Create)  // icône importante ?
 				{
-					this.width *= 2.0;  // 2x plus large
+					this.textWidth *= 2.0;  // 2x plus large
 				}
 			}
 			else  // texte ?
@@ -294,7 +290,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				var textLayout = this.CreateTextLayout ();
 				var textSize   = textLayout.GetSingleLineSize ();
 
-				this.width = System.Math.Ceiling (textSize.Width);
+				this.textWidth = System.Math.Ceiling (textSize.Width);
 			}
 		}
 		
@@ -303,8 +299,8 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			return new TextLayout ()
 			{
 				FormattedText   = this.Item.Label,
-				DefaultFont     = ActionItemLayout.DefaultFont,
-				DefaultFontSize = ActionItemLayout.DefaultFontSize
+				DefaultFont     = ActionButton.DefaultFont,
+				DefaultFontSize = ActionButton.DefaultFontSize
 			};
 		}
 
@@ -529,12 +525,11 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		#endregion
 
 
-		public static readonly Font				DefaultFont         = Font.DefaultFont;
-		public static readonly double			DefaultFontSize     = Font.DefaultFontSize;
 		public static readonly double			DefaultHeight       = 16.0;
 		public static readonly double			DefaultIconWidth    = ActionItemLayout.DefaultHeight*1.5;  // bouton icône au format 3:2
-		public static readonly double			AdditionalTextWidth = 4.0;   // largeur additionnelle de part et d'autre du texte
-		public static readonly double			MinTextWidth        = 20.0;  // largeur additionnelle de part et d'autre du texte
+		public static readonly double			AdditionalTextWidth = 6.0;   // largeur additionnelle de part et d'autre du texte
+		public static readonly double			MinTextWidth        = 24.0;  // largeur minimale d'un bouton textuel
+		public static readonly double			WidthModulo         = 24.0;  // multiple pour la largeur de tous les boutons
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
@@ -542,7 +537,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private ActionTarget					actionTarget;
 		private int								row;
 		private int								priority;
-		private double							width;
+		private double							textWidth;
 		private double							finalWidth;
 		private bool							isTextTooLarge;
 		

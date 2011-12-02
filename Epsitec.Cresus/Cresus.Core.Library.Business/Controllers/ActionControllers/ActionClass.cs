@@ -6,6 +6,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -101,23 +103,49 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		
 		private static Color GetColor(ActionClasses actionClass)
 		{
-			switch (actionClass)
+			if (ActionButton.HasPastelColor)
 			{
-				case ActionClasses.Create:
-					return Color.FromHexa ("e6ffdc");  // vert pâle
+				switch (actionClass)
+				{
+					case ActionClasses.Create:
+					case ActionClasses.NextStep:
+						return Color.FromHexa ("e6ffdc");  // vert pâle
 
-				case ActionClasses.Delete:
-					return Color.FromHexa ("ffdcdc");  // rouge pâle
+					case ActionClasses.Delete:
+						return Color.FromHexa ("ffdcdc");  // rouge pâle
 
-				case ActionClasses.Output:
-				case ActionClasses.Input:
-					return Color.FromHexa ("dcf7ff");  // bleu pâle
+					case ActionClasses.Output:
+					case ActionClasses.Input:
+						return Color.FromHexa ("dcf7ff");  // bleu pâle
 
-				case ActionClasses.NextStep:
-					return Color.FromHexa ("ffffdc");  // jaune pâle
+					case ActionClasses.Validate:
+						return Color.FromHexa ("ffffdc");  // jaune pâle
 
-				default:
-					return Color.FromHexa ("ffffff");  // blanc
+					default:
+						return Color.FromHexa ("ffffff");  // blanc
+				}
+			}
+			else
+			{
+				switch (actionClass)
+				{
+					case ActionClasses.Create:
+					case ActionClasses.NextStep:
+						return Color.FromHexa ("53c15e");  // vert
+
+					case ActionClasses.Delete:
+						return Color.FromHexa ("e73333");  // rouge
+
+					case ActionClasses.Output:
+					case ActionClasses.Input:
+						return Color.FromHexa ("388ebf");  // bleu
+
+					case ActionClasses.Validate:
+						return Color.FromHexa ("fff600");  // jaune
+
+					default:
+						return Color.FromHexa ("ffffff");  // blanc
+				}
 			}
 		}
 

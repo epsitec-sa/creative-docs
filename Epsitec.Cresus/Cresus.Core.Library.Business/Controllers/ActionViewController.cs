@@ -98,6 +98,20 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateLayoutUI(ActionItemLayout layout)
 		{
+			Point bottomLeft;
+			Size size;
+
+			if (ActionButton.HasPastelColor)
+			{
+				bottomLeft = new Point (layout.Bounds.Left, layout.Bounds.Bottom);
+				size       = new Size (layout.Bounds.Width+1, layout.Bounds.Height+1);
+			}
+			else
+			{
+				bottomLeft = new Point (layout.Bounds.Left+1, layout.Bounds.Bottom+1);
+				size       = new Size (layout.Bounds.Width-1, layout.Bounds.Height-1);
+			}
+
 			var button = new ActionButton
 			{
 				Parent               = this.frameRoot,
@@ -106,8 +120,8 @@ namespace Epsitec.Cresus.Core.Controllers
 				FormattedText        = layout.Item.Label,
 				IsIcon               = ActionItem.IsIcon (layout.Item.Label),
 				Anchor               = AnchorStyles.Left | AnchorStyles.Bottom,
-				Margins              = new Margins (layout.Bounds.Left, 0, 0, layout.Bounds.Bottom),
-				PreferredSize        = new Size (layout.Bounds.Width+1, layout.Bounds.Height+1),
+				Margins              = new Margins (bottomLeft.X, 0, 0, bottomLeft.Y),
+				PreferredSize        = size,
 			};
 
 			button.Clicked += delegate

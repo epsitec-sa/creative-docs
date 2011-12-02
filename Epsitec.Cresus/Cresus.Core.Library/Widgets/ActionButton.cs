@@ -6,6 +6,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Core.Library;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -69,29 +71,27 @@ namespace Epsitec.Cresus.Core.Widgets
 
 			var adorner = Common.Widgets.Adorners.Factory.Active;
 
-			var rect  = this.Client.Bounds;
-			var state = Widget.ConstrainPaintState (this.GetPaintState ());
-			var pos   = this.GetTextLayoutOffset ();
+			var rect    = this.Client.Bounds;
+			var state   = Widget.ConstrainPaintState (this.GetPaintState ());
+			var pos     = this.GetTextLayoutOffset ();
+			var entered = (state & WidgetPaintState.Entered) != 0;
 
 			//	Dessine le fond et le cadre du bouton.
-			rect.Deflate (0.5);
-
-			Color color;
-
-			if ((state & WidgetPaintState.Entered) == 0)
+			if (ActionButton.HasPastelColor)
 			{
-				color = this.BackgroundColor;
+				rect.Deflate (0.5);
 			}
-			else
-			{
-				color = Tiles.TileColors.SurfaceHilitedSelectedColors.FirstOrDefault ();
-			}
+
+			Color color = entered ? Tiles.TileColors.SurfaceHilitedSelectedColors.FirstOrDefault () : this.BackgroundColor;
 
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (color);
 
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (Tiles.TileColors.BorderColors.FirstOrDefault ());
+			if (ActionButton.HasPastelColor)
+			{
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Tiles.TileColors.BorderColors.FirstOrDefault ());
+			}
 
 			//	Dessine le contenu du bouton.
 			if (this.IsIcon)  // icône ?
@@ -108,19 +108,20 @@ namespace Epsitec.Cresus.Core.Widgets
 			{
 				pos.Y += this.GetBaseLineVerticalOffset ();
 
-				this.TextLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
-
-				if (this.innerZoom != 1.0)
+				Color textColor;
+				if (ActionButton.HasPastelColor)
 				{
-					Transform transform = graphics.Transform;
-					graphics.ScaleTransform (this.innerZoom, this.innerZoom, this.Client.Size.Width / 2, this.Client.Size.Height / 2);
-					adorner.PaintButtonTextLayout (graphics, pos, this.TextLayout, state, this.ButtonStyle);
-					graphics.Transform = transform;
+					textColor = Color.FromName ("Black");
 				}
 				else
 				{
-					adorner.PaintButtonTextLayout (graphics, pos, this.TextLayout, state, this.ButtonStyle);
+					textColor = entered ? Color.FromName ("Black") : Color.FromName ("White");
 				}
+
+				this.TextLayout.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				this.TextLayout.DefaultFont = ActionButton.DefaultFont;
+				this.TextLayout.DefaultFontSize = ActionButton.DefaultFontSize;
+				this.TextLayout.Paint (pos, graphics, rect, textColor, GlyphPaintStyle.Normal);
 			}
 
 			if (this.alpha < 1.0)
@@ -144,6 +145,28 @@ namespace Epsitec.Cresus.Core.Widgets
 				}
 			}
 		}
+
+
+#if false  // mode "Jean" (un outsider)
+		public static readonly bool		HasPastelColor		= true;
+		public static readonly bool		HasIcon				= false;
+		public static readonly Font		DefaultFont         = Font.DefaultFont;
+		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
+#endif
+
+#if true  // mode "Pierre"
+		public static readonly bool		HasPastelColor		= false;
+		public static readonly bool		HasIcon				= false;
+		public static readonly Font		DefaultFont         = Font.GetFont (Font.DefaultFont.FaceName, "Bold");
+		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
+#endif
+
+#if false  // mode "Daniel"
+		public static readonly bool		HasPastelColor		= true;
+		public static readonly bool		HasIcon				= true;
+		public static readonly Font		DefaultFont         = Font.DefaultFont;
+		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
+#endif
 
 
 		private readonly TextLayout		textLayout;
