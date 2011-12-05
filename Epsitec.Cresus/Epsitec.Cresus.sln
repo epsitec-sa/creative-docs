@@ -175,7 +175,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cresus.WebCore.Client\", "{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
-		Debug.AspNetCompiler.VirtualPath = "/Cresus.WebCore.Clientt"
+		Debug.AspNetCompiler.VirtualPath = "/Cresus.WebCore.Client"
 		Debug.AspNetCompiler.PhysicalPath = "Cresus.WebCore.Client\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\Cresus.WebCore.Client\"
 		Debug.AspNetCompiler.Updateable = "true"
