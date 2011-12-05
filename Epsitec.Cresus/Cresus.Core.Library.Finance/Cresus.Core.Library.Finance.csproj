@@ -48,6 +48,8 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Business\Accounting\BookAccountDefinition.cs" />
+    <Compile Include="Business\Accounting\AccountingEntryDefinition.cs" />
+    <Compile Include="Business\Accounting\MultiAccountingEntryDefinition.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccounts.cs" />
     <Compile Include="Business\Accounting\CresusChartOfAccountsConnector.cs" />
     <Compile Include="Business\Finance\BillingMode.cs" />
