@@ -44,6 +44,14 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.frameRoot.Released += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
 			
 			this.windowRoot.AltModifierChanged += this.HandleWindowRootAltModifierChanged;
+
+			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
+			{
+				this.timer = new Timer ();
+				this.timer.AutoRepeat = 1.0 / ActionViewController.timerFps;
+				this.timer.TimeElapsed += new Common.Support.EventHandler (this.HandleTimer_TimeElapsed);
+				this.timer.Start ();
+			}
 		}
 
 
@@ -57,6 +65,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				if (this.showMode != value)
 				{
+					this.oldShowMode = this.showMode;
 					this.showMode = value;
 					this.UpdateFrameRoot ();
 				}
@@ -150,20 +159,61 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateFrameRoot()
 		{
-			switch (this.showMode)
+			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
 			{
-				case ActionViewControllerMode.Hide:
-				this.SetFrameRootButtonsAlpha (0.0);
-					break;
+				switch (this.showMode)
+				{
+					case ActionViewControllerMode.Hide:
+						if (this.oldShowMode == ActionViewControllerMode.Full)
+						{
+							this.ImmediatFrameRootButtonsAlpha (0.0);
+						}
+						else
+						{
+							this.finalAlpha = 0.0;
+							this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.timerFps / ActionViewController.timerTransitionDelay;
+						}
+						break;
 
-				case ActionViewControllerMode.Dimmed:
-				this.SetFrameRootButtonsAlpha (0.2);
-					break;
+					case ActionViewControllerMode.Dimmed:
+						this.finalAlpha = 0.2;
+						this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.timerFps / ActionViewController.timerTransitionDelay;
+						break;
 
-				case ActionViewControllerMode.Full:
-				this.SetFrameRootButtonsAlpha (1.0);
-					break;
+					case ActionViewControllerMode.Full:
+						this.ImmediatFrameRootButtonsAlpha (1.0);
+						break;
+				}
 			}
+			else
+			{
+				switch (this.showMode)
+				{
+					case ActionViewControllerMode.Hide:
+						this.SetFrameRootButtonsAlpha (0.0);
+						break;
+
+					case ActionViewControllerMode.Dimmed:
+						this.SetFrameRootButtonsAlpha (0.2);
+						break;
+
+					case ActionViewControllerMode.Full:
+						this.SetFrameRootButtonsAlpha (1.0);
+						break;
+				}
+			}
+		}
+
+		private void ImmediatFrameRootButtonsAlpha(double alpha)
+		{
+			this.timer.Stop ();
+
+			this.finalAlpha = alpha;
+			this.currentAlpha = alpha;
+			this.stepAlpha = 1.0;
+			this.SetFrameRootButtonsAlpha (this.currentAlpha);
+			
+			this.timer.Start ();
 		}
 
 		private void SetFrameRootButtonsAlpha(double alpha)
@@ -200,6 +250,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+
+		private void HandleTimer_TimeElapsed(object sender)
+		{
+			if (this.currentAlpha != this.finalAlpha)
+			{
+				if (this.currentAlpha < this.finalAlpha)
+				{
+					this.currentAlpha = System.Math.Min (this.currentAlpha+this.stepAlpha, this.finalAlpha);
+				}
+				else
+				{
+					this.currentAlpha = System.Math.Max (this.currentAlpha-this.stepAlpha, this.finalAlpha);
+				}
+
+				this.SetFrameRootButtonsAlpha (this.currentAlpha);
+			}
+		}
+
 		private void HandleFrameRoot_Pressed(object sender, MessageEventArgs e)
 		{
 			if (this.showMode == ActionViewControllerMode.Full)
@@ -230,6 +298,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		protected override void Dispose(bool disposing)
 		{
+			if (this.timer != null)
+			{
+				this.timer.TimeElapsed -= new Common.Support.EventHandler (this.HandleTimer_TimeElapsed);
+				this.timer.Dispose ();
+			}
+
 			this.windowRoot.AltModifierChanged -= this.HandleWindowRootAltModifierChanged;
 			
 			this.frameRoot.Pressed  -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
@@ -243,11 +317,19 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
+		private static readonly double			timerFps				= 10.0;
+		private static readonly double			timerTransitionDelay	= 0.5;
+
 		private readonly List<ActionItemLayout>	layouts;
 		private readonly Widget					viewRoot;
 		private readonly FrameBox				frameRoot;
 		private readonly WindowRoot				windowRoot;
+		private readonly Timer					timer;
 
 		private ActionViewControllerMode		showMode;
+		private ActionViewControllerMode		oldShowMode;
+		private double							finalAlpha;
+		private double							currentAlpha;
+		private double							stepAlpha;
 	}
 }

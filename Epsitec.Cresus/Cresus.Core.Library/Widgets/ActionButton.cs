@@ -77,6 +77,18 @@ namespace Epsitec.Cresus.Core.Widgets
 			var entered = (state & WidgetPaintState.Entered) != 0;
 
 			//	Dessine le fond et le cadre du bouton.
+			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
+			{
+				if (ActionButton.HasPastelColor || this.alpha == 1.0)
+				{
+					graphics.AlphaMutiplier = this.alpha;
+				}
+				else
+				{
+					graphics.AlphaMutiplier = this.alpha*0.5;
+				}
+			}
+
 			if (ActionButton.HasPastelColor)
 			{
 				rect.Deflate (0.5);
@@ -94,6 +106,11 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			//	Dessine le contenu du bouton.
+			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
+			{
+				graphics.AlphaMutiplier = System.Math.Min (this.alpha*4.0, 1.0);
+			}
+
 			if (this.IsIcon)  // icône ?
 			{
 				var box = this.Client.Bounds;
@@ -124,10 +141,17 @@ namespace Epsitec.Cresus.Core.Widgets
 				this.TextLayout.Paint (pos, graphics, rect, textColor, GlyphPaintStyle.Normal);
 			}
 
-			if (this.alpha < 1.0)
+			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
 			{
-				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromAlphaRgb (1.0-this.alpha, 1.0, 1.0, 1.0));  // dessine un voile blanc par dessus
+				graphics.AlphaMutiplier = 1.0;
+			}
+			else
+			{
+				if (this.alpha < 1.0)
+				{
+					graphics.AddFilledRectangle (rect);
+					graphics.RenderSolid (Color.FromAlphaRgb (1.0-this.alpha, 1.0, 1.0, 1.0));  // dessine un voile blanc par dessus
+				}
 			}
 		}
 
@@ -150,6 +174,7 @@ namespace Epsitec.Cresus.Core.Widgets
 #if false  // mode "Jean" (un outsider)
 		public static readonly bool		HasPastelColor		= true;
 		public static readonly bool		HasIcon				= false;
+		public static readonly bool		SmoothTransition	= true;
 		public static readonly Font		DefaultFont         = Font.DefaultFont;
 		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
 #endif
@@ -157,6 +182,7 @@ namespace Epsitec.Cresus.Core.Widgets
 #if true  // mode "Pierre"
 		public static readonly bool		HasPastelColor		= false;
 		public static readonly bool		HasIcon				= false;
+		public static readonly bool		SmoothTransition	= true;
 		public static readonly Font		DefaultFont         = Font.GetFont (Font.DefaultFont.FaceName, "Bold");
 		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
 #endif
@@ -164,6 +190,7 @@ namespace Epsitec.Cresus.Core.Widgets
 #if false  // mode "Daniel"
 		public static readonly bool		HasPastelColor		= true;
 		public static readonly bool		HasIcon				= true;
+		public static readonly bool		SmoothTransition	= false;
 		public static readonly Font		DefaultFont         = Font.DefaultFont;
 		public static readonly double	DefaultFontSize     = Font.DefaultFontSize;
 #endif
