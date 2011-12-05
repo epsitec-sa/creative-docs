@@ -110,9 +110,10 @@ namespace Epsitec.Cresus.Core.Library.Business
 			var remoteBackupFileName = CoreSnapshotService.GetTimeStampedId ("db.firebird-backup");
 			var remoteBackupPath     = System.IO.Path.Combine (remoteBackupFolder, remoteBackupFileName);
 
-			CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ());
-
-			this.TryRecordDatabaseSnapshot (remoteBackupPath);
+			if (CoreData.BackupDatabase (remoteBackupPath, CoreData.GetDatabaseAccess ()))
+			{
+				this.TryRecordDatabaseSnapshot (remoteBackupPath);
+			}
 		}
 
 		private void TryRecordDatabaseSnapshot(string remoteBackupPath)

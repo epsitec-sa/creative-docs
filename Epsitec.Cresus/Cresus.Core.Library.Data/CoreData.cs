@@ -530,9 +530,19 @@ namespace Epsitec.Cresus.Core
 			dataInfrastructure.ExportEpsitecData (file, exportMode);
 		}
 
-		public static void BackupDatabase(string remoteFilePath, DbAccess dbAccess)
+		public static bool BackupDatabase(string remoteFilePath, DbAccess dbAccess)
 		{
-			DbInfrastructure.BackupDatabase (dbAccess, remoteFilePath);
+			try
+			{
+				DbInfrastructure.BackupDatabase (dbAccess, remoteFilePath);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("BackupDatabase failed: " + ex.Message);
+				return false;
+			}
+			
+			return true;
 		}
 
 		public static void RestoreDatabase(string remoteFilePath, DbAccess dbAccess)
@@ -593,17 +603,20 @@ namespace Epsitec.Cresus.Core
 		{
 			public override CoreAppComponent Create(CoreApp host)
 			{
-#if REBUILD_DATABASE
-				var data = new CoreData (host, forceDatabaseCreation: true);
-#else
-				var data = new CoreData (host, forceDatabaseCreation: false);
-#endif
+				var data = new CoreData (host, forceDatabaseCreation: CoreData.ForceDatabaseCreationRequest);
 				data.SetupBusiness ();
 				return data;
 			}
 		}
 
 		#endregion
+
+#if REBUILD_DATABASE
+		public static bool ForceDatabaseCreationRequest = true;
+#else
+		public static bool ForceDatabaseCreationRequest = false;
+#endif
+
 
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 		private readonly EntityContext			independentEntityContext;

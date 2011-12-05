@@ -16,24 +16,24 @@ using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Maintenance
 {
-	public sealed class Engine
+	public sealed class MaintenanceEngine
 	{
-		public Engine()
+		public MaintenanceEngine()
 		{
 			this.Refresh ();
 		}
 
-		
-		public void Refresh()
+
+		private void Refresh()
 		{
 			using (var session = new CoreSession ("maintenance session"))
 			{
-				Engine.ImportCountries (session);
-				Engine.ImportSwissLocations (session);
+				MaintenanceEngine.ImportCountries (session);
+				MaintenanceEngine.ImportSwissLocations (session);
 			}
 		}
 
-		
+
 		private static void ImportSwissLocations(CoreSession session)
 		{
 			//	Use the MAT[CH]zip data to import swiss locations into the database.
@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Core.Maintenance
 			var languageCodes = new string[] { "1:de", "2:fr", "3:it", "4:rm" };
 
 			var context    = session.GetBusinessContext ();
-			var languages  = Engine.GetLanguages (session, languageCodes);
+			var languages  = MaintenanceEngine.GetLanguages (session, languageCodes);
 			var repository = session.CoreData.GetRepository<LocationEntity> (context.DataContext);
-			var countryCH  = Engine.GetCountry (context, session.CoreData.GetRepository<CountryEntity> (context.DataContext), "CH");
+			var countryCH  = MaintenanceEngine.GetCountry (context, session.CoreData.GetRepository<CountryEntity> (context.DataContext), "CH");
 
 			System.Diagnostics.Debug.WriteLine ("Importing Swiss locations from MAT[CH]zip database");
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 			foreach (var zipInfo in SwissPostZip.GetZips ())
 			{
 				ItemCode onrpCode = ItemCode.Create ("ONRP:" + zipInfo.OnrpCode);
-				var location = Engine.GetLocation (context, repository, onrpCode);
+				var location = MaintenanceEngine.GetLocation (context, repository, onrpCode);
 
 				location.Code       = onrpCode.Code;
 				location.Name       = FormattedText.FromSimpleText (zipInfo.LongName);
@@ -79,21 +79,22 @@ namespace Epsitec.Cresus.Core.Maintenance
 			System.Diagnostics.Debug.WriteLine ("Importing countries from geonames.org database");
 			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
 			watch.Start ();
-			
+
 			int count = 0;
 
 			foreach (var alpha2Code in Iso3166.GetAlpha2Codes ())
 			{
-				var country          = Engine.GetCountry (context, repository, alpha2Code);
+				var country          = MaintenanceEngine.GetCountry (context, repository, alpha2Code);
 				var multilingualName = new MultilingualText ();
 
-				foreach (var languageCode in Engine.GetLanguageCodes ())
+				foreach (var languageCode in MaintenanceEngine.GetLanguageCodes ())
 				{
 					multilingualName.SetText (languageCode, FormattedText.FromSimpleText (Iso3166.GetCountryInformation (alpha2Code, languageCode).Name));
 				}
 
 				country.CountryCode = alpha2Code;
 				country.Name        = multilingualName.GetGlobalText ();
+				country.IsPreferred = MaintenanceEngine.IsPreferredCountry (alpha2Code);
 
 				count++;
 			}
@@ -103,7 +104,6 @@ namespace Epsitec.Cresus.Core.Maintenance
 			context.SaveChanges ();
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
-
 
 		private static Dictionary<string, LanguageEntity> GetLanguages(CoreSession session, IEnumerable<string> languageCodes)
 		{
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 				var iso = languageCode.Substring (2);
 				var key = languageCode.Substring (0, 1);
 
-				languages[key] = Engine.GetLanguage (context, repository, iso);
+				languages[key] = MaintenanceEngine.GetLanguage (context, repository, iso);
 			}
 
 			return languages;
@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 			{
 				language = context.CreateEntity<LanguageEntity> ();
 				language.IsoLanguageCode = languageCode;
+				language.Name = MaintenanceEngine.GetLanguageName (languageCode);
 			}
 
 			return language;
@@ -158,13 +159,47 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			return repository.GetByExample (example).FirstOrDefault () ?? context.CreateEntity<LocationEntity> ();
 		}
-		
+
 		private static IEnumerable<string> GetLanguageCodes()
 		{
 			yield return "fr";
 			yield return "de";
 			yield return "en";
 			yield return "it";
+		}
+		
+		private static bool IsPreferredCountry(string alpha2Code)
+		{
+			switch (alpha2Code.ToLowerInvariant ())
+			{
+				case "fr":
+				case "ch":
+				case "de":
+				case "it":
+				case "li":
+				case "at":
+					return true;
+				default:
+					return false;
+			}
+		}
+
+		private static FormattedText GetLanguageName(string code)
+		{
+			switch (code)
+			{
+				case "fr":
+					return TextFormatter.FormatText ("français");
+				case "de":
+					return TextFormatter.FormatText ("allemand");
+				case "it":
+					return TextFormatter.FormatText ("italien");
+				case "rm":
+					return TextFormatter.FormatText ("romanche");
+
+				default:
+					return FormattedText.Empty;
+			}
 		}
 	}
 }

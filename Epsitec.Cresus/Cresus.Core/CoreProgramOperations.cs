@@ -36,8 +36,12 @@ namespace Epsitec.Cresus.Core
 					CoreProgramOperations.ExecuteJsServer ();
 					break;
 
-				case "-maintenance":
+				case "-db-maintenance":
 					CoreProgramOperations.StartMaintenance ();
+					break;
+
+				case "-db-maintenance-reset":
+					CoreProgramOperations.StartMaintenanceReset ();
 					break;
 			}
 		}
@@ -76,6 +80,12 @@ namespace Epsitec.Cresus.Core
 		{
 			Library.CoreContext.StartAsMaintenance ();
 			System.Activator.CreateInstance (CoreProgramOperations.CoreMaintenanceAssembly, CoreProgramOperations.CoreMaintenanceEngine);
+		}
+
+		private static void StartMaintenanceReset()
+		{
+			Library.CoreContext.StartAsMaintenance ();
+			System.Activator.CreateInstance (CoreProgramOperations.CoreMaintenanceAssembly, CoreProgramOperations.CoreMaintenanceResetEngine);
 		}
 
 		private static void ExecuteJsServer()
@@ -137,10 +147,11 @@ namespace Epsitec.Cresus.Core
 			Data.Infrastructure.DropDatabase (dbAccess);
 		}
 		
-		private const string					CoreServerProgram	    = "Epsitec.Cresus.WebCore.Server.CoreServerProgram";
-		private const string					CoreMaintenanceEngine	= "Epsitec.Cresus.Core.Maintenance.Engine";
+		private const string					CoreServerProgram	        = "Epsitec.Cresus.WebCore.Server.CoreServerProgram";
+		private const string					CoreMaintenanceEngine	    = "Epsitec.Cresus.Core.Maintenance.MaintenanceEngine";
+		private const string					CoreMaintenanceResetEngine	= "Epsitec.Cresus.Core.Maintenance.MaintenanceResetEngine";
 		
-		private const string					CoreServerAssembly	    = "Cresus.Core.Server";
-		private const string					CoreMaintenanceAssembly = "Cresus.Core.Maintenance";
+		private const string					CoreServerAssembly			= "Cresus.Core.Server";
+		private const string					CoreMaintenanceAssembly		= "Cresus.Core.Maintenance";
 	}
 }

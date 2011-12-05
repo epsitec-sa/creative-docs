@@ -71,6 +71,6 @@ namespace Epsitec.Cresus.Core.Workflows
 			return matches.FirstOrDefault ();
 		}
 		
-		private const string DefaultWorkflowPrefix = "DefaultWorkflow/";
+		private const string DefaultWorkflowPrefix = "DefaultWorkflows.";
 	}
 }
