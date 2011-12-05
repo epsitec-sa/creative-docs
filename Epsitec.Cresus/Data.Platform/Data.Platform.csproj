@@ -50,6 +50,8 @@
     <Compile Include="GeoNamesCountryInformation.cs" />
     <Compile Include="Iso3166.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Res.cs" />
     <Compile Include="SwissPostZip.cs" />
     <Compile Include="SwissPostZipInformation.cs" />
   </ItemGroup>
@@ -57,13 +59,35 @@
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
+    <Content Include="Resources\Data.Platform.SwissPostMatch\Captions.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Data.Platform.SwissPostMatch\module.info">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Data.Platform.SwissPostMatch\Strings.00.resource">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ModuleInfo id="1014" name="Data.Platform.SwissPostMatch" layer="A" textMode="FormattedText" namespace="Epsitec.Data.Platform">
+  <Versions>
+    <Version id="1" build="3" date="2011-12-05T09:57:59.1599651Z" />
+  </Versions>
+</ModuleInfo>
