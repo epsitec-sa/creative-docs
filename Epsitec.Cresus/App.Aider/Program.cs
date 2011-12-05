@@ -17,11 +17,12 @@ namespace Epsitec.Aider
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-			GeneralExceptionCatcher.Setup ();
-			CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
+			//GeneralExceptionCatcher.Setup ();
+			//CoreContext.ParseOptionalSettingsFile (CoreContext.ReadCoreContextSettingsFile ());
 
-			var importer = new Epsitec.Aider.Data.eCH_Importer ();
-			importer.ParseAll ();
+			//var importer = new Epsitec.Aider.Data.eCH_Importer ();
+			//importer.ParseAll ();
+			AiderProgram.Main (args);
 		}
 	}
 }

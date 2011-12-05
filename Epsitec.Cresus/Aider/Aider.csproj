@@ -50,7 +50,20 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="AddressType.cs" />
+    <Compile Include="AiderProgram.cs" />
     <Compile Include="ContactRole.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderAddressViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderCountryViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderHouseholdViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderPersonViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderTownViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderPersonRelationshipViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderAddressViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderCountryViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderHouseholdViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonRelationshipViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderTownViewController.cs" />
     <Compile Include="Data\eCH_Importer.cs" />
     <Compile Include="eCH\DataSource.cs" />
     <Compile Include="eCH\DatePrecision.cs" />
@@ -59,6 +72,12 @@
     <Compile Include="eCH\PersonMrMrs.cs" />
     <Compile Include="eCH\PersonNationalityStatus.cs" />
     <Compile Include="eCH\PersonSex.cs" />
+    <Compile Include="Entities\AiderAddressEntity.cs" />
+    <Compile Include="Entities\AiderCountryEntity.cs" />
+    <Compile Include="Entities\AiderHouseholdEntity.cs" />
+    <Compile Include="Entities\AiderPersonEntity.cs" />
+    <Compile Include="Entities\AiderPersonRelationshipEntity.cs" />
+    <Compile Include="Entities\AiderTownEntity.cs" />
     <Compile Include="EventParticipantRole.cs" />
     <Compile Include="EventType.cs" />
     <Compile Include="GroupLevel.cs" />
@@ -72,6 +91,9 @@
     <Compile Include="PlacePersonRole.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="eCH\RemovalReason.cs" />
+    <Compile Include="Resources\Aider\SourceCode\Entities.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Resources\Aider\SourceCode\Res.cs" />
     <Compile Include="UserRole.cs" />
     <Compile Include="ValidationState.cs" />
@@ -97,6 +119,10 @@
       <Project>{AE911461-2EFC-435D-B7AD-1F0DE07EE251}</Project>
       <Name>Cresus.Bricks</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
       <Name>Cresus.Core.Library.Business</Name>
@@ -113,6 +139,10 @@
       <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
       <Name>Cresus.Core.Library</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
+      <Name>Cresus.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
       <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
       <Name>Cresus.Database.Implementation</Name>
@@ -126,7 +156,10 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Controllers\CreationControllers\" />
+    <Folder Include="Rules\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

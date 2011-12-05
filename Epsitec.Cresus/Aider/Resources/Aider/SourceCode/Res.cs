@@ -10,6 +10,61 @@ namespace Epsitec.Aider
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Base
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVG202
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderAddress = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 2));
+				//	designer:cap/LVG402
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderCountry = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 4));
+				//	designer:cap/LVG102
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderHousehold = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1));
+				//	designer:cap/LVG002
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPerson = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0));
+				//	designer:cap/LVG502
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderPersonRelationship = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 5));
+				//	designer:cap/LVG302
+				public static readonly global::Epsitec.Common.Widgets.Command ShowAiderTown = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 3));
+			}
+		}
+		
+		public static class CommandIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Base
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVG202
+				public const long ShowAiderAddress = 0x3F500050000002L;
+				//	designer:cap/LVG402
+				public const long ShowAiderCountry = 0x3F500050000004L;
+				//	designer:cap/LVG102
+				public const long ShowAiderHousehold = 0x3F500050000001L;
+				//	designer:cap/LVG002
+				public const long ShowAiderPerson = 0x3F500050000000L;
+				//	designer:cap/LVG502
+				public const long ShowAiderPersonRelationship = 0x3F500050000005L;
+				//	designer:cap/LVG302
+				public const long ShowAiderTown = 0x3F500050000003L;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -1006,7 +1061,7 @@ namespace Epsitec.Aider
 				//	designer:cap/LVAL2
 				public static readonly global::Epsitec.Common.Support.Druid OriginalName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
 				//	designer:cap/LVAP7
-				public static readonly global::Epsitec.Common.Support.Druid Prefession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
+				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
 				//	designer:cap/LVAH6
@@ -1275,10 +1330,18 @@ namespace Epsitec.Aider
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Aider");
+			Commands._Initialize ();
+			Commands.Base._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Base._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();

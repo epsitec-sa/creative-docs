@@ -833,11 +833,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Prefession</c> field.
+		///	The <c>Profession</c> field.
 		///	designer:fld/LVAF/LVAP7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAP7]")]
-		public string Prefession
+		public string Profession
 		{
 			get
 			{
@@ -845,12 +845,12 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				string oldValue = this.Prefession;
+				string oldValue = this.Profession;
 				if (oldValue != value || !this.IsFieldDefined("[LVAP7]"))
 				{
-					this.OnPrefessionChanging (oldValue, value);
+					this.OnProfessionChanging (oldValue, value);
 					this.SetField<string> ("[LVAP7]", oldValue, value);
-					this.OnPrefessionChanged (oldValue, value);
+					this.OnProfessionChanged (oldValue, value);
 				}
 			}
 		}
@@ -903,8 +903,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnConfessionChanged(global::Epsitec.Aider.PersonConfession oldValue, global::Epsitec.Aider.PersonConfession newValue);
 		partial void OnLanguageChanging(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
-		partial void OnPrefessionChanging(string oldValue, string newValue);
-		partial void OnPrefessionChanged(string oldValue, string newValue);
+		partial void OnProfessionChanging(string oldValue, string newValue);
+		partial void OnProfessionChanged(string oldValue, string newValue);
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
