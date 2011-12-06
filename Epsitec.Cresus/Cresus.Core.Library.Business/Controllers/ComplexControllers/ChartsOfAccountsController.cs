@@ -44,19 +44,19 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 			var frame = new FrameBox
 			{
-				Parent = parent,
+				Parent          = parent,
 				PreferredHeight = 200,  // hauteur arbitraire permettant de voir environ 5 plans comptables sans scrolling
-				Dock = DockStyle.Top,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
-				TabIndex = tabIndex++,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, Library.UI.Constants.RightMargin, 0, 0),
+				TabIndex        = tabIndex++,
 			};
 
 			//	Crée le panneau de gauche.
 			new StaticText
 			{
-				Parent = frame,
-				Dock = DockStyle.Top,
-				Text = "Liste des plans comptables :",
+				Parent  = frame,
+				Dock    = DockStyle.Top,
+				Text    = "Liste des plans comptables :",
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderLabel),
 			};
 
@@ -71,55 +71,66 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 				this.addButton = new GlyphButton
 				{
-					Parent = toolbar,
+					Parent        = toolbar,
 					PreferredSize = new Size (buttonSize*2+1, buttonSize),
-					GlyphShape = GlyphShape.Plus,
-					Margins = new Margins (0, 0, 0, 0),
-					Dock = DockStyle.Left,
-					TabIndex = tabIndex++,
+					GlyphShape    = GlyphShape.Plus,
+					Margins       = new Margins (0, 0, 0, 0),
+					Dock          = DockStyle.Left,
+					TabIndex      = tabIndex++,
 				};
 
 				this.removeButton = new GlyphButton
 				{
-					Parent = toolbar,
+					Parent        = toolbar,
 					PreferredSize = new Size (buttonSize, buttonSize),
-					GlyphShape = GlyphShape.Minus,
-					Margins = new Margins (1, 0, 0, 0),
-					Dock = DockStyle.Left,
-					TabIndex = tabIndex++,
+					GlyphShape    = GlyphShape.Minus,
+					Margins       = new Margins (1, 0, 0, 0),
+					Dock          = DockStyle.Left,
+					TabIndex      = tabIndex++,
+				};
+
+				this.testButton = new Button
+				{
+					Parent        = toolbar,
+					Text          = "Test",
+					PreferredSize = new Size (50, buttonSize),
+					Margins       = new Margins (0, 0, 0, 0),
+					Dock          = DockStyle.Right,
+					TabIndex      = tabIndex++,
 				};
 
 				ToolTip.Default.SetToolTip (this.addButton,    "Ajoute un plan comptable");
 				ToolTip.Default.SetToolTip (this.removeButton, "Supprime le plan comptable sélectionné");
+				ToolTip.Default.SetToolTip (this.testButton,   "Bouton provisoire qui génère quelques écritures dans les fichiers ecc/ecf ad-hoc");
 			}
 
 			{
 				//	Crée la liste.
 				var tile = new FrameBox
 				{
-					Parent = frame,
-					Dock = DockStyle.Fill,
+					Parent        = frame,
+					Dock          = DockStyle.Fill,
 					DrawFullFrame = true,
-					TabIndex = tabIndex++,
+					TabIndex      = tabIndex++,
 				};
 
 				this.table = new CellTable
 				{
-					Parent = tile,
-					StyleH = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
-					StyleV = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
-					Margins = new Margins (2),
-					Dock = DockStyle.Fill,
+					Parent   = tile,
+					StyleH   = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.Header,
+					StyleV   = CellArrayStyles.ScrollNorm | CellArrayStyles.Separator | CellArrayStyles.SelectLine,
+					Margins  = new Margins (2),
+					Dock     = DockStyle.Fill,
 					TabIndex = tabIndex++,
 				};
 			}
 
 			new StaticText
 			{
-				Parent = frame,
+				Parent          = frame,
 				PreferredHeight = 30,
-				Dock = DockStyle.Bottom,
-				Text = "<i><b>Remarque:</b> Il ne devrait pas y avoir plus d'un plan comptable par période.</i>",
+				Dock            = DockStyle.Bottom,
+				Text            = "<i><b>Remarque:</b> Il ne devrait pas y avoir plus d'un plan comptable par période.</i>",
 			};
 
 			//	Connexion des événements.
@@ -131,6 +142,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			this.removeButton.Clicked += delegate
 			{
 				this.RemoveAction ();
+			};
+
+			this.testButton.Clicked += delegate
+			{
+				this.TestAction ();
 			};
 
 			this.table.SelectionChanged += delegate
@@ -323,6 +339,16 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			}
 		}
 
+		private void TestAction()
+		{
+			//	Génère quelques écritures dans les fichiers ecc/ecf ad-hoc.
+			var charts = this.financeSettingsEntity.GetAllChartsOfAccounts ();
+			foreach (CresusChartOfAccounts chart in charts)
+			{
+				string error = CresusAccountingEntriesConnector.GenerateFiles (chart);
+			}
+		}
+
 
 		private string[] OpenFileDialog()
 		{
@@ -387,6 +413,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 		private GlyphButton								addButton;
 		private GlyphButton								removeButton;
+		private Button									testButton;
 		private CellTable								table;
 	}
 }
