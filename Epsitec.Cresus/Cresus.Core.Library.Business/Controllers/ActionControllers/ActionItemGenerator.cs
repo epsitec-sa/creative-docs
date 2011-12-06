@@ -148,14 +148,12 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			var result = WorkflowActionCompiler.Validate (lines);
 			var action = result.WorkflowAction;
 
-			if (action == null || action.IsInvalid)
+			if (action != null && !action.IsInvalid)
 			{
-				return;
-			}
-
-			if (this.CreateWorflowTransitionActionItem (transition, action))
-			{
-				return;
+				if (this.CreateWorflowTransitionActionItem (transition, action))
+				{
+					return;
+				}
 			}
 
 			var label       = transition.Edge.GetLabel (LabelDetailLevel.Compact);

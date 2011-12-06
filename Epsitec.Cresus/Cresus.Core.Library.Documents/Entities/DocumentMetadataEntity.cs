@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public void SetDocumentStateValue(Business.DocumentState state)
 		{
-			var flags = this.DocumentState & Business.DocumentState.ValueMask;
+			var flags = this.DocumentState & Business.DocumentState.FlagsMask;
 
 			this.DocumentState = state | flags;
 		}

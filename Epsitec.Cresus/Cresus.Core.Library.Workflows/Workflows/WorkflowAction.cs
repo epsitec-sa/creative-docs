@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			}
 		}
 
-        /// <summary>
+		/// <summary>
 		/// Executes the compiled code (if any).
 		/// </summary>
 		public void Execute()

@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Core.Workflows
 		/// </summary>
 		TimedOut		= 5,
 
+		/// <summary>
+		/// Workflow has finished executing and it is again pending for execution.
+		/// </summary>
+		RestartPending	= 6,
+
 
 		/// <summary>
 		/// Flag: workflow is restricted to a user specified by a user code.
@@ -54,5 +59,6 @@ namespace Epsitec.Cresus.Core.Workflows
 		
 		
 		ValueMask		= 0x0000ff,
+		FlagsMask		= ~ValueMask,
 	}
 }

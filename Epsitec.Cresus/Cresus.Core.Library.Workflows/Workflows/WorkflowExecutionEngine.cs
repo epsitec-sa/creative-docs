@@ -384,6 +384,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			{
 				//	We have reached the end of the graph...
 
+				
 				WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Done);
 			}
 			else
@@ -425,7 +426,7 @@ namespace Epsitec.Cresus.Core.Workflows
 		{
 			if (thread.IsNotNull ())
 			{
-				var flags = thread.State & WorkflowState.ValueMask;
+				var flags = thread.State & WorkflowState.FlagsMask;
 
 				thread.State = state | flags;
 			}

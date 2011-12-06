@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Core.Business
 
 
 		ValueMask				= 0x000000ff,
+		FlagsMask				= ~ValueMask,
 
 		IsReferenced			= 0x00000100,
 		IsHidden				= 0x00000200,

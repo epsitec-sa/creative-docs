@@ -233,6 +233,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				case WorkflowState.None:
 				case WorkflowState.Active:
 				case WorkflowState.Pending:
+				case WorkflowState.RestartPending:
 					if (state.HasFlag (WorkflowState.IsFrozen))
 					{
 						return false;
@@ -273,7 +274,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			int lastIndex = thread.History.Count - 1;
 
-			if (lastIndex < 0)
+			if ((lastIndex < 0) ||
+				((thread.State & WorkflowState.ValueMask) == WorkflowState.RestartPending))
 			{
 				return thread.Definition;
 			}
