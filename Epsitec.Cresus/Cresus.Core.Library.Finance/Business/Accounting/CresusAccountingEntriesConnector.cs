@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 		public static string GenerateFiles(CresusChartOfAccounts chart)
 		{
 			//	La version final recevra en entrée la liste des écritures.
+			//	On génère ici quelques écritures de test.
+			//	TODO: à supprimer et terminer
 			var écritures = new List<CresusComptaEcritureMultiple> ();
 
 			{
