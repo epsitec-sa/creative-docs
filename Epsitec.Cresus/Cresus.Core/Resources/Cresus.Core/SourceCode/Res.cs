@@ -158,6 +158,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0KA2
+				public static readonly global::Epsitec.Common.Widgets.Command ExportAccountingEntries = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 74));
 				//	designer:cap/L0KD
 				public static readonly global::Epsitec.Common.Widgets.Command ImportV11 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13));
 			}
@@ -335,6 +337,8 @@ namespace Epsitec.Cresus.Core
 				{
 				}
 				
+				//	designer:cap/L0KA2
+				public const long ExportAccountingEntries = 0x150001400004AL;
 				//	designer:cap/L0KD
 				public const long ImportV11 = 0x150001400000DL;
 			}

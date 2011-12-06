@@ -608,6 +608,7 @@
     <EmbeddedResource Include="Images\Action.Delete.icon" />
     <EmbeddedResource Include="Images\Action.Print.icon" />
     <EmbeddedResource Include="Images\Action.Mail.icon" />
+    <EmbeddedResource Include="Images\ExportAccountingEntries.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

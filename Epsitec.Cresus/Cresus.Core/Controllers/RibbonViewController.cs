@@ -157,6 +157,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (Res.Commands.File.ImportV11, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.File.ExportAccountingEntries, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Feedback, large: false));
 			}
 
