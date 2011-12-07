@@ -66,6 +66,7 @@
     <Compile Include="Workflows\WorkflowException.cs" />
     <Compile Include="Workflows\WorkflowExecutionEngine.cs" />
     <Compile Include="Workflows\WorkflowFactory.cs" />
+    <Compile Include="Workflows\WorkflowNodeAttributes.cs" />
     <Compile Include="Workflows\WorkflowState.cs" />
     <Compile Include="Workflows\WorkflowArgs.cs" />
     <Compile Include="Workflows\WorkflowTransition.cs" />
