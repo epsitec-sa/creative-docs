@@ -384,15 +384,29 @@ namespace Epsitec.Cresus.Core.Workflows
 			{
 				//	We have reached the end of the graph...
 
-				
-				WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Done);
+				this.ReachedEndOfWorkflow (thread);
 			}
 			else
 			{
-				this.AddStepToThreadHistory (thread, null, thread.CallGraph[lastIndex].Continuation);
+				var call = thread.CallGraph[lastIndex];
+				var continuation = call.Continuation;
 
+				//	Remove the call continuation information from the call stack; it will no
+				//	longer be used, so we can safely delete it:
+				
 				thread.CallGraph.RemoveAt (lastIndex);
+				this.businessContext.DeleteEntity (call);
+
+				//	Continue execution where we came from (implicit return) or where we were
+				//	said to continue to (explicit continuation).
+				
+				this.AddStepToThreadHistory (thread, null, continuation);
 			}
+		}
+
+		private void ReachedEndOfWorkflow(WorkflowThreadEntity thread)
+		{
+			WorkflowExecutionEngine.SetWorkflowThreadState (thread, WorkflowState.Done);
 		}
 
 		private void AddStepToThreadHistory(WorkflowThreadEntity thread, WorkflowEdgeEntity edge, WorkflowNodeEntity node)
