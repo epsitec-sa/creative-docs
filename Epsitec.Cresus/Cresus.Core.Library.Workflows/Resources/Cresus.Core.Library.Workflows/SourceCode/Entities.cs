@@ -361,68 +361,24 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
-		///	The <c>IsAuto</c> field.
-		///	designer:fld/DVA2/DVA7
+		///	The <c>Attributes</c> field.
+		///	designer:fld/DVA2/DVAN1
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[DVA7]")]
-		public bool IsAuto
+		[global::Epsitec.Common.Support.EntityField ("[DVAN1]")]
+		public global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes Attributes
 		{
 			get
 			{
-				return this.GetField<bool> ("[DVA7]");
+				return this.GetField<global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes> ("[DVAN1]");
 			}
 			set
 			{
-				bool oldValue = this.IsAuto;
-				if (oldValue != value || !this.IsFieldDefined("[DVA7]"))
+				global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes oldValue = this.Attributes;
+				if (oldValue != value || !this.IsFieldDefined("[DVAN1]"))
 				{
-					this.OnIsAutoChanging (oldValue, value);
-					this.SetField<bool> ("[DVA7]", oldValue, value);
-					this.OnIsAutoChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>IsPublic</c> field.
-		///	designer:fld/DVA2/DVA8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[DVA8]")]
-		public bool IsPublic
-		{
-			get
-			{
-				return this.GetField<bool> ("[DVA8]");
-			}
-			set
-			{
-				bool oldValue = this.IsPublic;
-				if (oldValue != value || !this.IsFieldDefined("[DVA8]"))
-				{
-					this.OnIsPublicChanging (oldValue, value);
-					this.SetField<bool> ("[DVA8]", oldValue, value);
-					this.OnIsPublicChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>IsForeign</c> field.
-		///	designer:fld/DVA2/DVA9
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[DVA9]")]
-		public bool IsForeign
-		{
-			get
-			{
-				return this.GetField<bool> ("[DVA9]");
-			}
-			set
-			{
-				bool oldValue = this.IsForeign;
-				if (oldValue != value || !this.IsFieldDefined("[DVA9]"))
-				{
-					this.OnIsForeignChanging (oldValue, value);
-					this.SetField<bool> ("[DVA9]", oldValue, value);
-					this.OnIsForeignChanged (oldValue, value);
+					this.OnAttributesChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes> ("[DVAN1]", oldValue, value);
+					this.OnAttributesChanged (oldValue, value);
 				}
 			}
 		}
@@ -439,12 +395,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
-		partial void OnIsAutoChanging(bool oldValue, bool newValue);
-		partial void OnIsAutoChanged(bool oldValue, bool newValue);
-		partial void OnIsPublicChanging(bool oldValue, bool newValue);
-		partial void OnIsPublicChanged(bool oldValue, bool newValue);
-		partial void OnIsForeignChanging(bool oldValue, bool newValue);
-		partial void OnIsForeignChanged(bool oldValue, bool newValue);
+		partial void OnAttributesChanging(global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes oldValue, global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes newValue);
+		partial void OnAttributesChanged(global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes oldValue, global::Epsitec.Cresus.Core.Workflows.WorkflowNodeAttributes newValue);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -188,6 +188,14 @@ namespace Epsitec.Cresus.Core.Library.Documents
 						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 27));
 					}
 				}
+				//	designer:cap/HVAB2
+				public static global::Epsitec.Common.Types.Caption FlagsMask
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Documents.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75));
+					}
+				}
 				//	designer:cap/HVAA2
 				public static global::Epsitec.Common.Types.Caption IsFrozen
 				{

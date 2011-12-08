@@ -16,6 +16,8 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			{
 			}
 			
+			//	designer:cap/DVAJ1
+			public static readonly Epsitec.Common.Types.EnumType WorkflowNodeAttributes = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 51));
 			//	designer:cap/DVA41
 			public static readonly Epsitec.Common.Types.EnumType WorkflowState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
 			//	designer:cap/DVAU
@@ -42,6 +44,38 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 		{
 			internal static void _Initialize()
 			{
+			}
+			
+			public static class WorkflowNodeAttributes
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/DVAK1
+				public static global::Epsitec.Common.Types.Caption Auto
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 52));
+					}
+				}
+				//	designer:cap/DVAM1
+				public static global::Epsitec.Common.Types.Caption Foreign
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 54));
+					}
+				}
+				//	designer:cap/DVAL1
+				public static global::Epsitec.Common.Types.Caption Public
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53));
+					}
+				}
 			}
 			
 			public static class WorkflowState
@@ -74,6 +108,14 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 40));
 					}
 				}
+				//	designer:cap/DVAH1
+				public static global::Epsitec.Common.Types.Caption FlagsMask
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 49));
+					}
+				}
 				//	designer:cap/DVAG1
 				public static global::Epsitec.Common.Types.Caption IsFrozen
 				{
@@ -104,6 +146,14 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 					get
 					{
 						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
+					}
+				}
+				//	designer:cap/DVAI1
+				public static global::Epsitec.Common.Types.Caption RestartPending
+				{
+					get
+					{
+						return global::Epsitec.Cresus.Core.Library.Workflows.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 50));
 					}
 				}
 				//	designer:cap/DVAA1
@@ -230,14 +280,10 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 				{
 				}
 				
+				//	designer:cap/DVAN1
+				public static readonly global::Epsitec.Common.Support.Druid Attributes = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 55);
 				//	designer:cap/DVAA
 				public static readonly global::Epsitec.Common.Support.Druid Edges = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
-				//	designer:cap/DVA7
-				public static readonly global::Epsitec.Common.Support.Druid IsAuto = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7);
-				//	designer:cap/DVA9
-				public static readonly global::Epsitec.Common.Support.Druid IsForeign = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
-				//	designer:cap/DVA8
-				public static readonly global::Epsitec.Common.Support.Druid IsPublic = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 			}
 			
 			public static class WorkflowStep
@@ -332,6 +378,7 @@ namespace Epsitec.Cresus.Core.Library.Workflows
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library.Workflows");
 			Types._Initialize ();
 			Values._Initialize ();
+			Values.WorkflowNodeAttributes._Initialize ();
 			Values.WorkflowState._Initialize ();
 			Values.WorkflowTransitionType._Initialize ();
 			Fields.IWorkflowHost._Initialize ();
