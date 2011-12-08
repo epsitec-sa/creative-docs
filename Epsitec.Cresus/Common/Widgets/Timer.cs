@@ -1,5 +1,7 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
 {
@@ -7,7 +9,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Timer implémente les services nécessaires à la réalisation
 	/// d'un timer compatible avec l'interface graphique.
 	/// </summary>
-	public sealed class Timer : System.IDisposable
+	public sealed class Timer : System.IDisposable, IIsDisposed
 	{
 		public Timer()
 		{
@@ -80,25 +82,30 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
-		
-		
-		#region IDisposable Members
-		public void Dispose()
-		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
-		}
-		#endregion
 
-		private void Dispose(bool disposing)
+
+		#region IIsDisposed Members
+
+		public bool IsDisposed
 		{
-			if (disposing)
+			get
 			{
-				this.CleanupTimerIfNeeded ();
-				this.state = TimerState.Disposed;
-				this.delaySecondsAutoRepeat = 0;
+				return this.state == TimerState.Disposed;
 			}
 		}
+
+		#endregion
+		
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.CleanupTimerIfNeeded ();
+			this.state = TimerState.Disposed;
+			this.delaySecondsAutoRepeat = 0;
+		}
+	
+		#endregion
 
 
 		private void SetupTimerIfNeeded()
@@ -112,7 +119,7 @@ namespace Epsitec.Common.Widgets
 
 		private void CleanupTimerIfNeeded()
 		{
-			System.Windows.Forms.Timer timer = this.timer;
+			var timer = this.timer;
 			
 			//	Work on a copy of the timer variable, since the internal field
 			//	could change inexpectedly (this has been observed by YR).

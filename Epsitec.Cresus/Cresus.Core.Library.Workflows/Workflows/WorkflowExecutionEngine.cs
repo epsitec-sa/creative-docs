@@ -286,7 +286,7 @@ namespace Epsitec.Cresus.Core.Workflows
 
 			this.AddStepToThreadHistory (thread, edge, node);
 
-			if ((node == null) ||
+			if ((node.IsNull ()) ||
 				(node.Edges.Count == 0))
 			{
 				//	Reached the end of the workflow. Can we "pop" an edge from the call

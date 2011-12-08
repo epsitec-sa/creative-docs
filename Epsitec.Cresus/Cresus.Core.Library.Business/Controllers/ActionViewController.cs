@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					case ActionViewControllerMode.Hide:
 						if (this.oldShowMode == ActionViewControllerMode.Full)
 						{
-							this.ImmediatFrameRootButtonsAlpha (0.0);
+							this.ImmediateFrameRootButtonsAlpha (0.0);
 						}
 						else
 						{
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 
 					case ActionViewControllerMode.Full:
-						this.ImmediatFrameRootButtonsAlpha (1.0);
+						this.ImmediateFrameRootButtonsAlpha (1.0);
 						break;
 				}
 			}
@@ -204,8 +204,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void ImmediatFrameRootButtonsAlpha(double alpha)
+		private void ImmediateFrameRootButtonsAlpha(double alpha)
 		{
+			if (this.timer.IsDisposed)
+			{
+				return;
+			}
+
 			this.timer.Stop ();
 
 			this.finalAlpha = alpha;
