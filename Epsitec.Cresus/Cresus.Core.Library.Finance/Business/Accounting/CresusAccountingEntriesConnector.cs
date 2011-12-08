@@ -13,127 +13,48 @@ namespace Epsitec.Cresus.Core.Business.Accounting
 {
 	public static class CresusAccountingEntriesConnector
 	{
-		public static string GenerateFiles(CresusChartOfAccounts chart)
+		public static int GenerateFiles(CresusChartOfAccounts chart, List<string> écritures, out FormattedText message, int maxLines = int.MaxValue)
 		{
-			//	La version final recevra en entrée la liste des écritures.
-			//	On génère ici quelques écritures de test.
-			//	TODO: à supprimer et terminer
-			var écritures = new List<CresusComptaEcritureMultiple> ();
+			//	Génère les fichiers ecc/ecf en fonction des réglages de l'entreprise.
+			// TODO: La liste des écritures devra être remplacée par une ligne d'entités de type "écriture" !
+			//	Retourne le nombre d'écriture générées, ou -1 en cas d'erreur.
+			var écrituresTest = new List<CresusComptaEcritureMultiple> ();
 
+			foreach (var écriture in écritures)
 			{
-				var multiple = new CresusComptaEcritureMultiple ()
-				{
-					Date  = new System.DateTime (2010, 9, 1),
-					Pièce = "10",
-				};
-
-				var simple = new CresusComptaEcritureSimple ()
-				{
-					Crédit  = "1000",
-					Débit   = "2000",
-					Libellé = "Virement 1",
-					Montant = 123.45M,
-				};
-
-				multiple.Ecritures.Add (simple);
-
-				écritures.Add (multiple);
+				écrituresTest.Add (new CresusComptaEcritureMultiple (écriture));
 			}
 
-			{
-				var multiple = new CresusComptaEcritureMultiple ()
-				{
-					Date  = new System.DateTime (2011, 3, 31),
-					Pièce = "11",
-				};
-
-				var simple = new CresusComptaEcritureSimple ()
-				{
-					Crédit  = "1000",
-					Débit   = "2000",
-					Libellé = "Virement 2",
-					Montant = 1000.00M,
-				};
-
-				multiple.Ecritures.Add (simple);
-
-				écritures.Add (multiple);
-			}
-
-			{
-				var multiple = new CresusComptaEcritureMultiple ()
-				{
-					Date  = new System.DateTime (2011, 7, 26),
-					Pièce = "13",
-				};
-
-				var simple = new CresusComptaEcritureSimple ()
-				{
-					Crédit  = "1000",
-					Débit   = "2000",
-					Libellé = "Virement 3",
-					Montant = 20.50M,
-				};
-
-				multiple.Ecritures.Add (simple);
-
-				écritures.Add (multiple);
-			}
-
-			{
-				var multiple = new CresusComptaEcritureMultiple ()
-				{
-					Date  = new System.DateTime (2011, 4, 1),
-					Pièce = "12",
-				};
-
-				{
-					var simple = new CresusComptaEcritureSimple ()
-					{
-						Crédit  = "1000",
-						Libellé = "Virement 4.1",
-						Montant = 11.00M,
-					};
-
-					multiple.Ecritures.Add (simple);
-				}
-
-				{
-					var simple = new CresusComptaEcritureSimple ()
-					{
-						Crédit  = "1010",
-						Libellé = "Virement 4.2",
-						Montant = 22.00M,
-					};
-
-					multiple.Ecritures.Add (simple);
-				}
-
-				{
-					var simple = new CresusComptaEcritureSimple ()
-					{
-						Débit   = "2000",
-						Libellé = "Virement 4.3",
-						Montant = 33.00M,
-					};
-
-					multiple.Ecritures.Add (simple);
-				}
-
-				écritures.Add (multiple);
-			}
-
+			// TODO: Le numéro 12345789 devra être remplacé par un numéro unique lié au mandat !
 			var journal = new CresusComptaJournal (chart.Path.FullPath, 123456789);
-			var result = journal.GenerateFiles (écritures, chart.BeginDate.ToDateTime (), chart.EndDate.ToDateTime ());
+			int nbEcritures;
+			var errors = journal.GenerateFiles (écrituresTest, chart.BeginDate.ToDateTime (), chart.EndDate.ToDateTime (), out nbEcritures);
 
-			if (result == CresusToolkit.CresusComptaJournalError.Ok)
+			var builder = new System.Text.StringBuilder ();
+
+			string b = chart.BeginDate.ToDateTime ().ToString ("dd.MM.yyyy");
+			string e = chart.  EndDate.ToDateTime ().ToString ("dd.MM.yyyy");
+			builder.Append (string.Format ("{0} - {1} / {2} :<br/>", b, e, chart.Title));
+
+			var messages = journal.Messages;
+			for (int i = 0; i < messages.Count; i++)
 			{
-				return null;  // ok
+				if (i < maxLines)
+				{
+					builder.Append (string.Concat ("● ", messages[i], "<br/>"));
+				}
+				else
+				{
+					builder.Append (string.Format ("● ... <i>({0} autres erreurs)</i><br/>", (messages.Count-maxLines).ToString ()));
+					break;
+				}
 			}
-			else
-			{
-				return result.ToString ();
-			}
+
+			builder.Append ("<br/>");
+
+			message = builder.ToString ();
+
+			return (errors.Count == 0) ? nbEcritures : -1;
 		}
 	}
 }

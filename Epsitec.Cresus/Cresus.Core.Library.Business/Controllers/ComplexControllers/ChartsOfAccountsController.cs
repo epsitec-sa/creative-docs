@@ -89,19 +89,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 					TabIndex      = tabIndex++,
 				};
 
-				this.testButton = new Button
-				{
-					Parent        = toolbar,
-					Text          = "Test",
-					PreferredSize = new Size (50, buttonSize),
-					Margins       = new Margins (0, 0, 0, 0),
-					Dock          = DockStyle.Right,
-					TabIndex      = tabIndex++,
-				};
-
 				ToolTip.Default.SetToolTip (this.addButton,    "Ajoute un plan comptable");
 				ToolTip.Default.SetToolTip (this.removeButton, "Supprime le plan comptable sélectionné");
-				ToolTip.Default.SetToolTip (this.testButton,   "Bouton provisoire qui génère quelques écritures dans les fichiers ecc/ecf ad-hoc");
 			}
 
 			{
@@ -142,11 +131,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			this.removeButton.Clicked += delegate
 			{
 				this.RemoveAction ();
-			};
-
-			this.testButton.Clicked += delegate
-			{
-				this.TestAction ();
 			};
 
 			this.table.SelectionChanged += delegate
@@ -339,16 +323,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 			}
 		}
 
-		private void TestAction()
-		{
-			//	Génère quelques écritures dans les fichiers ecc/ecf ad-hoc.
-			var charts = this.financeSettingsEntity.GetAllChartsOfAccounts ();
-			foreach (CresusChartOfAccounts chart in charts)
-			{
-				string error = CresusAccountingEntriesConnector.GenerateFiles (chart);
-			}
-		}
-
 
 		private string[] OpenFileDialog()
 		{
@@ -413,7 +387,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 		private GlyphButton								addButton;
 		private GlyphButton								removeButton;
-		private Button									testButton;
 		private CellTable								table;
 	}
 }
