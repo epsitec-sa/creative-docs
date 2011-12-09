@@ -13,6 +13,7 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
+using System;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
@@ -123,10 +124,40 @@ namespace Epsitec.Cresus.Core.Bricks
 			var brick    = e.Brick;
 			var property = e.Property;
 
-			if (property.Key == BrickPropertyKey.OfType)
+			switch (property.Key)
 			{
-				var type = property.Brick.GetFieldType ();
-				Bridge.CreateDefaultProperties (brick, type);
+				case BrickPropertyKey.OfType:
+					Bridge.PostProcessPropertyOfType (brick, property);
+					break;
+
+				case BrickPropertyKey.Attribute:
+					Bridge.PostProcessPropertyAttribute (brick, property);
+					break;
+			}
+		}
+
+		private static void PostProcessPropertyOfType(Brick brick, BrickProperty property)
+		{
+			var type = property.Brick.GetFieldType ();
+			Bridge.CreateDefaultProperties (brick, type);
+		}
+
+		private static void PostProcessPropertyAttribute(Brick brick, BrickProperty property)
+		{
+			var attributeValue = property.AttributeValue;
+
+			if ((attributeValue != null) &&
+				(attributeValue.ContainsValue<BrickMode> ()))
+			{
+				var brickMode = attributeValue.GetValue<BrickMode> ();
+
+				if (brickMode.IsSpecialController ())
+				{
+					var nameProperty = Brick.GetProperty (brick, BrickPropertyKey.Name);
+					var nameSuffix   = brickMode.ToString ();
+
+					Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Name, string.Concat (nameProperty.StringValue, ".", nameSuffix)));
+				}
 			}
 		}
 

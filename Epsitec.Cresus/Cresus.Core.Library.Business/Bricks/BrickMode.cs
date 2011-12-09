@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Core.Bricks
 		HideAddButton,
 		HideRemoveButton,
 
-		SpecialController0,
-		SpecialController1,
+		SpecialController0,				//	Also update class BrickModeExtensions ...
+		SpecialController1,				//	... if you add more special controllers here !
 		SpecialController2,
 		SpecialController3,
 
