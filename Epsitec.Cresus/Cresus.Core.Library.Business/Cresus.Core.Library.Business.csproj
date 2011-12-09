@@ -223,6 +223,7 @@
     <Compile Include="Controllers\MainViewController.cs" />
     <Compile Include="Business\EntityPrinters\DeliveryNoteDocumentPrinter.cs" />
     <Compile Include="Dialogs\ItemPickerDialog.cs" />
+    <Compile Include="EccEcfExport\EccEcfExport.cs" />
     <Compile Include="Entities\ArticleSupplyEntity.cs" />
     <Compile Include="Entities\ArticleStockLocationEntity.cs" />
     <Compile Include="Entities\ArticleQuantityColumnEntity.cs" />
