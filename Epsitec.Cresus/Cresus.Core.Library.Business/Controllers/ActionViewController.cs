@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
 			{
 				this.timer = new Timer ();
-				this.timer.AutoRepeat = 1.0 / ActionViewController.timerFps;
+				this.timer.AutoRepeat = 1.0 / ActionViewController.TimerFps;
 				this.timer.TimeElapsed += new Common.Support.EventHandler (this.HandleTimer_TimeElapsed);
 				this.timer.Start ();
 			}
@@ -171,13 +171,13 @@ namespace Epsitec.Cresus.Core.Controllers
 						else
 						{
 							this.finalAlpha = 0.0;
-							this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.timerFps / ActionViewController.timerTransitionDelay;
+							this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.TimerFps / ActionViewController.TimerTransitionDelayOff;
 						}
 						break;
 
 					case ActionViewControllerMode.Dimmed:
-						this.finalAlpha = 0.2;
-						this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.timerFps / ActionViewController.timerTransitionDelay;
+						this.finalAlpha = 0.6;
+						this.stepAlpha = System.Math.Abs (this.currentAlpha-this.finalAlpha) / ActionViewController.TimerFps / ActionViewController.TimerTransitionDelayOn;
 						break;
 
 					case ActionViewControllerMode.Full:
@@ -322,8 +322,9 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static readonly double			timerFps				= 10.0;
-		private static readonly double			timerTransitionDelay	= 0.5;
+		private static readonly double			TimerFps				= 10.0;
+		private static readonly double			TimerTransitionDelayOn	=  0.5;
+		private static readonly double			TimerTransitionDelayOff	=  0.3;
 
 		private readonly List<ActionItemLayout>	layouts;
 		private readonly Widget					viewRoot;
