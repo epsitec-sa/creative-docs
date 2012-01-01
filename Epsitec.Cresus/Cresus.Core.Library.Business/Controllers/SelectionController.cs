@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void Attach(Widgets.AutoCompleteTextField widget)
+		public void Attach(Widgets.AutoCompleteTextFieldEx widget)
 		{
 			this.attachedWidget = widget;
 			this.widgetItems    = widget.Items;
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private System.Func<T>					valueGetter;
 
-		private Widgets.AutoCompleteTextField	attachedWidget;
+		private Widgets.AutoCompleteTextFieldEx	attachedWidget;
 		private Common.Widgets.Widget			attachedPicker;
 		private PickerMode						attachedPickerMode;
 

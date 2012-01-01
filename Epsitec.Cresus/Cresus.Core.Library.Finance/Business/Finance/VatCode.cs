@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business.Finance
 {
-#if false
+#if true
 	[DesignerVisible]
 	public enum VatCode
 	{

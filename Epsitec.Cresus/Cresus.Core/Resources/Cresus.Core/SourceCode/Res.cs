@@ -40,6 +40,8 @@ namespace Epsitec.Cresus.Core
 				public static readonly global::Epsitec.Common.Widgets.Command ShowArticleStockLocation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
 				//	designer:cap/L0KH
 				public static readonly global::Epsitec.Common.Widgets.Command ShowBusinessSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+				//	designer:cap/L0KB2
+				public static readonly global::Epsitec.Common.Widgets.Command ShowComptabilité = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 75));
 				//	designer:cap/L0K91
 				public static readonly global::Epsitec.Common.Widgets.Command ShowContactGroup = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41));
 				//	designer:cap/L0K72
@@ -219,6 +221,8 @@ namespace Epsitec.Cresus.Core
 				public const long ShowArticleStockLocation = 0x150001400003FL;
 				//	designer:cap/L0KH
 				public const long ShowBusinessSettings = 0x1500014000011L;
+				//	designer:cap/L0KB2
+				public const long ShowComptabilité = 0x150001400004BL;
 				//	designer:cap/L0K91
 				public const long ShowContactGroup = 0x1500014000029L;
 				//	designer:cap/L0K72

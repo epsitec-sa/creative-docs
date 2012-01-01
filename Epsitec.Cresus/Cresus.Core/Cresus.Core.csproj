@@ -100,6 +100,21 @@
     <Compile Include="Controllers\CreationControllers\CreationContactPersonViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationArticleParameterDefinitionViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationCustomerViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController3.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController4.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController11.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController10.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController9.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController8.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController7.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController6.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController5.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController2.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController1.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController0.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéEcritureViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéCompteViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionComptabilitéViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionDocumentFooterTextViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactPersonGroupViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionContactPersonViewController.cs" />
@@ -143,6 +158,9 @@
     <Compile Include="Controllers\EditionControllers\EditionVatDefinitionViewController.cs" />
     <Compile Include="Controllers\RibbonViewController.cs" />
     <Compile Include="Controllers\RibbonViewMode.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryComptabilitéEcritureViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryComptabilitéCompteViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryComptabilitéViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDocumentFooterTextViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactPersonGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryContactPersonViewController.cs" />
@@ -609,6 +627,20 @@
     <EmbeddedResource Include="Images\Action.Print.icon" />
     <EmbeddedResource Include="Images\Action.Mail.icon" />
     <EmbeddedResource Include="Images\ExportAccountingEntries.icon" />
+    <EmbeddedResource Include="Images\Base.Comptabilité.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Journal.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.PlanComptable.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Balance.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Bilan.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Compte.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.PP.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Exploitation.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Budgets.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Change.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.DécompteTVA.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.RésuméPériodique.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.RésuméTVA.icon" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

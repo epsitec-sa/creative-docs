@@ -62,6 +62,17 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.EnumType VatCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
 				//	designer:cap/CVAH5
 				public static readonly Epsitec.Common.Types.EnumType VatRateType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 177));
+				public static class Comptabilité
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/CVKH
+					public static readonly Epsitec.Common.Types.EnumType CatégorieDeCompte = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
+					//	designer:cap/CVKO
+					public static readonly Epsitec.Common.Types.EnumType TypeDeCompte = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
+				}
 			}
 			
 			public static class String
@@ -80,6 +91,12 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			
 			//	designer:cap/CVAN5
 			public static readonly Epsitec.Common.Types.StructuredType AccountingOperation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 183));
+			//	designer:cap/CVKA
+			public static readonly Epsitec.Common.Types.StructuredType Comptabilité = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
+			//	designer:cap/CVK2
+			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
+			//	designer:cap/CVK
+			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/CVAT
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
@@ -204,6 +221,109 @@ namespace Epsitec.Cresus.Core.Library.Finance
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100));
+						}
+					}
+				}
+				
+				public static class Comptabilité
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					public static class CatégorieDeCompte
+					{
+						internal static void _Initialize()
+						{
+						}
+						
+						//	designer:cap/CVKJ
+						public static global::Epsitec.Common.Types.Caption Actif
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19));
+							}
+						}
+						//	designer:cap/CVKL
+						public static global::Epsitec.Common.Types.Caption Charge
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21));
+							}
+						}
+						//	designer:cap/CVKN
+						public static global::Epsitec.Common.Types.Caption Exploitation
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23));
+							}
+						}
+						//	designer:cap/CVKI
+						public static global::Epsitec.Common.Types.Caption Inconnu
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18));
+							}
+						}
+						//	designer:cap/CVKK
+						public static global::Epsitec.Common.Types.Caption Passif
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20));
+							}
+						}
+						//	designer:cap/CVKM
+						public static global::Epsitec.Common.Types.Caption Produit
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22));
+							}
+						}
+					}
+					
+					public static class TypeDeCompte
+					{
+						internal static void _Initialize()
+						{
+						}
+						
+						//	designer:cap/CVKS
+						public static global::Epsitec.Common.Types.Caption Bloqué
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 28));
+							}
+						}
+						//	designer:cap/CVKR
+						public static global::Epsitec.Common.Types.Caption Groupe
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 27));
+							}
+						}
+						//	designer:cap/CVKP
+						public static global::Epsitec.Common.Types.Caption Normal
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 25));
+							}
+						}
+						//	designer:cap/CVKQ
+						public static global::Epsitec.Common.Types.Caption Titre
+						{
+							get
+							{
+								return global::Epsitec.Cresus.Core.Library.Finance.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 26));
+							}
 						}
 					}
 				}
@@ -755,6 +875,78 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly global::Epsitec.Common.Support.Druid StandardVatCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 184);
 			}
 			
+			public static class Comptabilité
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVKC
+				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12);
+				//	designer:cap/CVKB
+				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11);
+			}
+			
+			public static class ComptabilitéCompte
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVKT
+				public static readonly global::Epsitec.Common.Support.Druid Catégorie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 29);
+				//	designer:cap/CVK11
+				public static readonly global::Epsitec.Common.Support.Druid CompteOuvBoucl = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 33);
+				//	designer:cap/CVKV
+				public static readonly global::Epsitec.Common.Support.Druid Groupe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 31);
+				//	designer:cap/CVK21
+				public static readonly global::Epsitec.Common.Support.Druid IndexOuvBoucl = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 34);
+				//	designer:cap/CVK31
+				public static readonly global::Epsitec.Common.Support.Druid Monnaie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 35);
+				//	designer:cap/CVK91
+				public static readonly global::Epsitec.Common.Support.Druid Niveau = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41);
+				//	designer:cap/CVK3
+				public static readonly global::Epsitec.Common.Support.Druid Numéro = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3);
+				//	designer:cap/CVK4
+				public static readonly global::Epsitec.Common.Support.Druid Titre = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4);
+				//	designer:cap/CVK01
+				public static readonly global::Epsitec.Common.Support.Druid TVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 32);
+				//	designer:cap/CVKU
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 30);
+			}
+			
+			public static class ComptabilitéEcriture
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/CVKG
+				public static readonly global::Epsitec.Common.Support.Druid CodeAnalytique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16);
+				//	designer:cap/CVKF
+				public static readonly global::Epsitec.Common.Support.Druid CodeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15);
+				//	designer:cap/CVK6
+				public static readonly global::Epsitec.Common.Support.Druid Crédit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 6);
+				//	designer:cap/CVK51
+				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37);
+				//	designer:cap/CVK5
+				public static readonly global::Epsitec.Common.Support.Druid Débit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5);
+				//	designer:cap/CVK8
+				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 8);
+				//	designer:cap/CVK61
+				public static readonly global::Epsitec.Common.Support.Druid Lignes = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 38);
+				//	designer:cap/CVK9
+				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 9);
+				//	designer:cap/CVK81
+				public static readonly global::Epsitec.Common.Support.Druid Multi = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40);
+				//	designer:cap/CVKE
+				public static readonly global::Epsitec.Common.Support.Druid NuméroTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14);
+				//	designer:cap/CVK7
+				public static readonly global::Epsitec.Common.Support.Druid Pièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7);
+				//	designer:cap/CVKD
+				public static readonly global::Epsitec.Common.Support.Druid TypeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13);
+			}
+			
 			public static class Currency
 			{
 				internal static void _Initialize()
@@ -1035,6 +1227,10 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			#endregion
 		}
 		
+		public static class StringIds
+		{
+		}
+		
 		static Res()
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
@@ -1042,10 +1238,13 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Types._Initialize ();
 			Types.Decimal._Initialize ();
 			Types.Enum._Initialize ();
+			Types.Enum.Comptabilité._Initialize ();
 			Types.String._Initialize ();
 			Values._Initialize ();
 			Values.Enum.BillingMode._Initialize ();
 			Values.Enum.BillingStatus._Initialize ();
+			Values.Enum.Comptabilité.CatégorieDeCompte._Initialize ();
+			Values.Enum.Comptabilité.TypeDeCompte._Initialize ();
 			Values.Enum.CurrencyCode._Initialize ();
 			Values.Enum.DiscountPolicy._Initialize ();
 			Values.Enum.ExchangeRateSourceType._Initialize ();
@@ -1056,6 +1255,9 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Values.Enum.VatCode._Initialize ();
 			Values.Enum.VatRateType._Initialize ();
 			Fields.AccountingOperation._Initialize ();
+			Fields.Comptabilité._Initialize ();
+			Fields.ComptabilitéCompte._Initialize ();
+			Fields.ComptabilitéEcriture._Initialize ();
 			Fields.Currency._Initialize ();
 			Fields.ExchangeRateSource._Initialize ();
 			Fields.FinanceSettings._Initialize ();

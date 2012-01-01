@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 		
-		public void Attach(AutoCompleteTextField widget)
+		public void Attach(AutoCompleteTextFieldEx widget)
 		{
 			foreach (string[] item in possibleItems)
 			{
@@ -182,9 +182,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private string GetWidgetText()
 		{
-			if (this.widget is AutoCompleteTextField)
+			if (this.widget is AutoCompleteTextFieldEx)
 			{
-				var autoCompleteTextField = this.widget as AutoCompleteTextField;
+				var autoCompleteTextField = this.widget as AutoCompleteTextFieldEx;
 
 				string[] item = autoCompleteTextField.Items.GetValue (autoCompleteTextField.SelectedItemIndex) as string[];
 
@@ -198,9 +198,9 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void SetWidgetText(string text)
 		{
-			if (this.widget is AutoCompleteTextField)
+			if (this.widget is AutoCompleteTextFieldEx)
 			{
-				var auto = this.widget as AutoCompleteTextField;
+				var auto = this.widget as AutoCompleteTextFieldEx;
 
 				auto.SelectedItemIndex = auto.Items.FindIndexByKey (text);
 			}

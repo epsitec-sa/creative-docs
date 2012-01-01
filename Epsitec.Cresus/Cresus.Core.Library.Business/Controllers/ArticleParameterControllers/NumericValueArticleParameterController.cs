@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Controllers.ArticleParameterControllers
 			double buttonWidth = 14;
 
 			//	Ligne éditable.
-			var editor = new AutoCompleteTextField
+			var editor = new AutoCompleteTextFieldEx
 			{
 				Parent = parent,
 				MenuButtonWidth = buttonWidth-1,

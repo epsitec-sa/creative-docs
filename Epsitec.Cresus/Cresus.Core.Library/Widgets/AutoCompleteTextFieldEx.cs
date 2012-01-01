@@ -13,9 +13,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Widgets
 {
-	public sealed class AutoCompleteTextField : TextField, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
+	public sealed class AutoCompleteTextFieldEx : TextFieldEx, Common.Widgets.Collections.IStringCollectionHost, Common.Support.Data.IKeyedStringSelection
 	{
-		public AutoCompleteTextField()
+		public AutoCompleteTextFieldEx()
 		{
 			this.HintEditorMode = Widgets.HintEditorMode.DisplayMenuForSmallList;
 			this.HintEditorSmallListLimit = 100;
@@ -87,14 +87,6 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		protected override bool CanStartEdition
-		{
-			get
-			{
-				return true;
-			}
-		}
-		
 
 		public void RefreshTextBasedOnSelectedItem()
 		{
@@ -206,11 +198,11 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			add
 			{
-				this.AddUserEventHandler(AutoCompleteTextField.SelectedItemChangedEvent, value);
+				this.AddUserEventHandler(AutoCompleteTextFieldEx.SelectedItemChangedEvent, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent, value);
+				this.RemoveUserEventHandler (AutoCompleteTextFieldEx.SelectedItemChangedEvent, value);
 			}
 		}
 
@@ -342,7 +334,7 @@ namespace Epsitec.Cresus.Core.Widgets
 
 		private void OnSelectedItemChanged()
 		{
-			var handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextField.SelectedItemChangedEvent);
+			var handler = (EventHandler) this.GetUserEventHandler (AutoCompleteTextFieldEx.SelectedItemChangedEvent);
 			
 			if (handler != null)
 			{
@@ -861,7 +853,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				//	Il y a assez de place pour dérouler le menu vers le bas,
 				//	mais il faudra peut-être le raccourcir un bout :
 				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
-				AutoCompleteTextField.AdjustSize (scrollList);
+				AutoCompleteTextFieldEx.AdjustSize (scrollList);
 
 				size.Height = scrollList.PreferredHeight;
 				size.Width  = System.Math.Max (size.Width+this.MenuButtonWidth, scrollList.PreferredWidth);
@@ -876,7 +868,7 @@ namespace Epsitec.Cresus.Core.Widgets
 				maxHeight = workingArea.Top - pos.Y;
 
 				scrollList.MaxSize = new Size (scrollList.MaxWidth, maxHeight);
-				AutoCompleteTextField.AdjustSize (scrollList);
+				AutoCompleteTextFieldEx.AdjustSize (scrollList);
 
 				pos.Y += scrollList.PreferredHeight;
 

@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
 	/// The <c>HintEditorMode</c> enumeration defines how the hints will be showed in an
-	/// editor such as <see cref="AutoCompleteTextField"/>.
+	/// editor such as <see cref="AutoCompleteTextFieldEx"/>.
 	/// </summary>
 	public enum HintEditorMode
 	{

@@ -85,6 +85,9 @@
     <Compile Include="Library\TextFormatterConverter`1.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
+    <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\StringArray.cs" />
+    <Compile Include="Widgets\StringList.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Workflows\WorkflowActionAttribute.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
@@ -133,7 +136,7 @@
     <Compile Include="Widgets\TabPageDef.cs" />
     <Compile Include="Widgets\TabPageDef`1.cs" />
     <Compile Include="Widgets\Tiles\ArrowedTile.cs" />
-    <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\AutoCompleteTextFieldEx.cs" />
     <Compile Include="Widgets\ButtonExtensions.cs" />
     <Compile Include="Widgets\CellTableExtensions.cs" />
     <Compile Include="Widgets\HintComparer.cs" />

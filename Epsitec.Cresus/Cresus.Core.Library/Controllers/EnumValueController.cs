@@ -16,7 +16,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
-	/// The <c>EnumValueController</c> class manages an <see cref="AutoCompleteTextField"/>,
+	/// The <c>EnumValueController</c> class manages an <see cref="AutoCompleteTextFieldEx"/>,
 	/// where the data being edited is represented by an <see cref="EnumKeyValues"/> instance.
 	/// </summary>
 	/// <typeparam name="T">The underlying type represented by <see cref="EnumKeyValues&lt;T&gt;"/>.</typeparam>
@@ -58,6 +58,25 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.widget = widget;
 			this.Update ();
 
+			widget.TextChanged += delegate
+			{
+				int    index = widget.SelectedItemIndex;
+				string key   = index < 0 ? null : widget.Items.GetKey (index);
+				this.marshaler.SetStringValue (key);
+			};
+		}
+
+		public void Attach(AutoCompleteTextFieldEx widget)
+		{
+			this.AddItems (widget);
+
+			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
+			widget.HintComparer                = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
+			widget.HintComparisonConverter     = x => Widgets.HintComparer.GetComparableText (x);
+
+			this.widgetEx = widget;
+			this.Update ();
+
 			widget.EditionAccepted += delegate
 			{
 				int    index = widget.SelectedItemIndex;
@@ -84,7 +103,26 @@ namespace Epsitec.Cresus.Core.Controllers
 				widget.Items.Add (key, item);
 			}
 		}
-		
+
+		private void AddItems(AutoCompleteTextFieldEx widget)
+		{
+			foreach (var item in this.possibleItems)
+			{
+				string key;
+
+				if (typeof (T).IsEnum)
+				{
+					key = EnumConverter<T>.ConvertToNumericString (item.Key);
+				}
+				else
+				{
+					key = item.Key.ToString ();
+				}
+
+				widget.Items.Add (key, item);
+			}
+		}
+
 		private static HintComparerResult MatchUserText(EnumKeyValues<T> value, string userText)
 		{
 			if (string.IsNullOrWhiteSpace (userText))
@@ -112,6 +150,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				this.widget.SelectedItemIndex = this.widget.Items.FindIndexByKey (this.marshaler.GetStringValue ());
 			}
+
+			if (this.widgetEx != null)
+			{
+				this.widgetEx.SelectedItemIndex = this.widgetEx.Items.FindIndexByKey (this.marshaler.GetStringValue ());
+			}
 		}
 
 		#endregion
@@ -120,5 +163,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
 		private readonly ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText;
 		private AutoCompleteTextField widget;
+		private AutoCompleteTextFieldEx widgetEx;
 	}
 }

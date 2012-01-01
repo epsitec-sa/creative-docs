@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
 	/// The <c>HintComparer</c> class provides support methods used in conjunction with
-	/// <see cref="AutoCompleteTextField"/>, for instance.
+	/// <see cref="AutoCompleteTextFieldEx"/>, for instance.
 	/// </summary>
 	public static class HintComparer
 	{

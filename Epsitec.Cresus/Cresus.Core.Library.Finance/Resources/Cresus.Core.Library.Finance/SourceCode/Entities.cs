@@ -17,6 +17,9 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAA4]", typeof (Epsitec.Cresus.Core.Entities.PriceGroupEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAF4]", typeof (Epsitec.Cresus.Core.Entities.PriceCalculatorEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[CVAN5]", typeof (Epsitec.Cresus.Core.Entities.AccountingOperationEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVK]", typeof (Epsitec.Cresus.Core.Entities.ComptabilitéEcritureEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVK2]", typeof (Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[CVKA]", typeof (Epsitec.Cresus.Core.Entities.ComptabilitéEntity))]
 #region Epsitec.Cresus.Core.IsrDefinition Entity
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -2358,6 +2361,816 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AccountingOperationEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ComptabilitéEcriture Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ComptabilitéEcriture</c> entity.
+	///	designer:cap/CVK
+	///	</summary>
+	public partial class ComptabilitéEcritureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemRank
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/CVK/8VA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA1]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVK/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Date</c> field.
+		///	designer:fld/CVK/CVK71
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK71]")]
+		public global::Epsitec.Common.Types.Date Date
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[CVK71]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date oldValue = this.Date;
+				if (oldValue != value || !this.IsFieldDefined("[CVK71]"))
+				{
+					this.OnDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[CVK71]", oldValue, value);
+					this.OnDateChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Multi</c> field.
+		///	designer:fld/CVK/CVK81
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK81]")]
+		public int Multi
+		{
+			get
+			{
+				return this.GetField<int> ("[CVK81]");
+			}
+			set
+			{
+				int oldValue = this.Multi;
+				if (oldValue != value || !this.IsFieldDefined("[CVK81]"))
+				{
+					this.OnMultiChanging (oldValue, value);
+					this.SetField<int> ("[CVK81]", oldValue, value);
+					this.OnMultiChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Débit</c> field.
+		///	designer:fld/CVK/CVK5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK5]")]
+		public global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity Débit
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK5]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue = this.Débit;
+				if (oldValue != value || !this.IsFieldDefined("[CVK5]"))
+				{
+					this.OnDébitChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK5]", oldValue, value);
+					this.OnDébitChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Crédit</c> field.
+		///	designer:fld/CVK/CVK6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK6]")]
+		public global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity Crédit
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK6]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue = this.Crédit;
+				if (oldValue != value || !this.IsFieldDefined("[CVK6]"))
+				{
+					this.OnCréditChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK6]", oldValue, value);
+					this.OnCréditChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Pièce</c> field.
+		///	designer:fld/CVK/CVK7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK7]")]
+		public global::Epsitec.Common.Types.FormattedText Pièce
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[CVK7]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Pièce;
+				if (oldValue != value || !this.IsFieldDefined("[CVK7]"))
+				{
+					this.OnPièceChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[CVK7]", oldValue, value);
+					this.OnPièceChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Libellé</c> field.
+		///	designer:fld/CVK/CVK8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK8]")]
+		public global::Epsitec.Common.Types.FormattedText Libellé
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[CVK8]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Libellé;
+				if (oldValue != value || !this.IsFieldDefined("[CVK8]"))
+				{
+					this.OnLibelléChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[CVK8]", oldValue, value);
+					this.OnLibelléChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Montant</c> field.
+		///	designer:fld/CVK/CVK9
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK9]")]
+		public global::System.Decimal Montant
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[CVK9]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Montant;
+				if (oldValue != value || !this.IsFieldDefined("[CVK9]"))
+				{
+					this.OnMontantChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[CVK9]", oldValue, value);
+					this.OnMontantChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TypeTVA</c> field.
+		///	designer:fld/CVK/CVKD
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKD]")]
+		public string TypeTVA
+		{
+			get
+			{
+				return this.GetField<string> ("[CVKD]");
+			}
+			set
+			{
+				string oldValue = this.TypeTVA;
+				if (oldValue != value || !this.IsFieldDefined("[CVKD]"))
+				{
+					this.OnTypeTVAChanging (oldValue, value);
+					this.SetField<string> ("[CVKD]", oldValue, value);
+					this.OnTypeTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>NuméroTVA</c> field.
+		///	designer:fld/CVK/CVKE
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKE]")]
+		public string NuméroTVA
+		{
+			get
+			{
+				return this.GetField<string> ("[CVKE]");
+			}
+			set
+			{
+				string oldValue = this.NuméroTVA;
+				if (oldValue != value || !this.IsFieldDefined("[CVKE]"))
+				{
+					this.OnNuméroTVAChanging (oldValue, value);
+					this.SetField<string> ("[CVKE]", oldValue, value);
+					this.OnNuméroTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CodeTVA</c> field.
+		///	designer:fld/CVK/CVKF
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKF]")]
+		public string CodeTVA
+		{
+			get
+			{
+				return this.GetField<string> ("[CVKF]");
+			}
+			set
+			{
+				string oldValue = this.CodeTVA;
+				if (oldValue != value || !this.IsFieldDefined("[CVKF]"))
+				{
+					this.OnCodeTVAChanging (oldValue, value);
+					this.SetField<string> ("[CVKF]", oldValue, value);
+					this.OnCodeTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CodeAnalytique</c> field.
+		///	designer:fld/CVK/CVKG
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKG]")]
+		public string CodeAnalytique
+		{
+			get
+			{
+				return this.GetField<string> ("[CVKG]");
+			}
+			set
+			{
+				string oldValue = this.CodeAnalytique;
+				if (oldValue != value || !this.IsFieldDefined("[CVKG]"))
+				{
+					this.OnCodeAnalytiqueChanging (oldValue, value);
+					this.SetField<string> ("[CVKG]", oldValue, value);
+					this.OnCodeAnalytiqueChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnMultiChanging(int oldValue, int newValue);
+		partial void OnMultiChanged(int oldValue, int newValue);
+		partial void OnDébitChanging(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnDébitChanged(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnCréditChanging(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnCréditChanged(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnPièceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLibelléChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnMontantChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnTypeTVAChanging(string oldValue, string newValue);
+		partial void OnTypeTVAChanged(string oldValue, string newValue);
+		partial void OnNuméroTVAChanging(string oldValue, string newValue);
+		partial void OnNuméroTVAChanged(string oldValue, string newValue);
+		partial void OnCodeTVAChanging(string oldValue, string newValue);
+		partial void OnCodeTVAChanged(string oldValue, string newValue);
+		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
+		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéEcritureEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéEcritureEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 20, 0);	// [CVK]
+		public static readonly string EntityStructuredTypeKey = "[CVK]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéEcritureEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.ComptabilitéCompte Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>ComptabilitéCompte</c> entity.
+	///	designer:cap/CVK2
+	///	</summary>
+	public partial class ComptabilitéCompteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemRank
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/CVK2/8VA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA1]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVK2/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Numéro</c> field.
+		///	designer:fld/CVK2/CVK3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK3]")]
+		public global::Epsitec.Common.Types.FormattedText Numéro
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[CVK3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Numéro;
+				if (oldValue != value || !this.IsFieldDefined("[CVK3]"))
+				{
+					this.OnNuméroChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[CVK3]", oldValue, value);
+					this.OnNuméroChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Titre</c> field.
+		///	designer:fld/CVK2/CVK4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK4]")]
+		public global::Epsitec.Common.Types.FormattedText Titre
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[CVK4]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Titre;
+				if (oldValue != value || !this.IsFieldDefined("[CVK4]"))
+				{
+					this.OnTitreChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[CVK4]", oldValue, value);
+					this.OnTitreChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Catégorie</c> field.
+		///	designer:fld/CVK2/CVKT
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKT]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte Catégorie
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte> ("[CVKT]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte oldValue = this.Catégorie;
+				if (oldValue != value || !this.IsFieldDefined("[CVKT]"))
+				{
+					this.OnCatégorieChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte> ("[CVKT]", oldValue, value);
+					this.OnCatégorieChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Type</c> field.
+		///	designer:fld/CVK2/CVKU
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKU]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte Type
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte> ("[CVKU]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte oldValue = this.Type;
+				if (oldValue != value || !this.IsFieldDefined("[CVKU]"))
+				{
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte> ("[CVKU]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Groupe</c> field.
+		///	designer:fld/CVK2/CVKV
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKV]")]
+		public global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity Groupe
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVKV]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue = this.Groupe;
+				if (oldValue != value || !this.IsFieldDefined("[CVKV]"))
+				{
+					this.OnGroupeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVKV]", oldValue, value);
+					this.OnGroupeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>TVA</c> field.
+		///	designer:fld/CVK2/CVK01
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK01]")]
+		public global::Epsitec.Cresus.Core.Business.Finance.VatCode TVA
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVK01]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue = this.TVA;
+				if (oldValue != value || !this.IsFieldDefined("[CVK01]"))
+				{
+					this.OnTVAChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Business.Finance.VatCode> ("[CVK01]", oldValue, value);
+					this.OnTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CompteOuvBoucl</c> field.
+		///	designer:fld/CVK2/CVK11
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK11]")]
+		public global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity CompteOuvBoucl
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK11]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue = this.CompteOuvBoucl;
+				if (oldValue != value || !this.IsFieldDefined("[CVK11]"))
+				{
+					this.OnCompteOuvBouclChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVK11]", oldValue, value);
+					this.OnCompteOuvBouclChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>IndexOuvBoucl</c> field.
+		///	designer:fld/CVK2/CVK21
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK21]")]
+		public int IndexOuvBoucl
+		{
+			get
+			{
+				return this.GetField<int> ("[CVK21]");
+			}
+			set
+			{
+				int oldValue = this.IndexOuvBoucl;
+				if (oldValue != value || !this.IsFieldDefined("[CVK21]"))
+				{
+					this.OnIndexOuvBouclChanging (oldValue, value);
+					this.SetField<int> ("[CVK21]", oldValue, value);
+					this.OnIndexOuvBouclChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Monnaie</c> field.
+		///	designer:fld/CVK2/CVK31
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK31]")]
+		public string Monnaie
+		{
+			get
+			{
+				return this.GetField<string> ("[CVK31]");
+			}
+			set
+			{
+				string oldValue = this.Monnaie;
+				if (oldValue != value || !this.IsFieldDefined("[CVK31]"))
+				{
+					this.OnMonnaieChanging (oldValue, value);
+					this.SetField<string> ("[CVK31]", oldValue, value);
+					this.OnMonnaieChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Niveau</c> field.
+		///	designer:fld/CVK2/CVK91
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVK91]")]
+		public int Niveau
+		{
+			get
+			{
+				return this.GetField<int> ("[CVK91]");
+			}
+			set
+			{
+				int oldValue = this.Niveau;
+				if (oldValue != value || !this.IsFieldDefined("[CVK91]"))
+				{
+					this.OnNiveauChanging (oldValue, value);
+					this.SetField<int> ("[CVK91]", oldValue, value);
+					this.OnNiveauChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnNuméroChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNuméroChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTitreChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTitreChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnCatégorieChanging(global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte oldValue, global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte newValue);
+		partial void OnCatégorieChanged(global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte oldValue, global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte newValue);
+		partial void OnTypeChanging(global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte oldValue, global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte oldValue, global::Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte newValue);
+		partial void OnGroupeChanging(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnGroupeChanged(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnTVAChanging(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnTVAChanged(global::Epsitec.Cresus.Core.Business.Finance.VatCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.VatCode newValue);
+		partial void OnCompteOuvBouclChanging(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnCompteOuvBouclChanged(global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnIndexOuvBouclChanging(int oldValue, int newValue);
+		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
+		partial void OnMonnaieChanging(string oldValue, string newValue);
+		partial void OnMonnaieChanged(string oldValue, string newValue);
+		partial void OnNiveauChanging(int oldValue, int newValue);
+		partial void OnNiveauChanged(int oldValue, int newValue);
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 20, 2);	// [CVK2]
+		public static readonly string EntityStructuredTypeKey = "[CVK2]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéCompteEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Core.Comptabilité Entity
+namespace Epsitec.Cresus.Core.Entities
+{
+	///	<summary>
+	///	The <c>Comptabilité</c> entity.
+	///	designer:cap/CVKA
+	///	</summary>
+	public partial class ComptabilitéEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IItemRank, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region IItemRank Members
+		///	<summary>
+		///	The <c>Rank</c> field.
+		///	designer:fld/CVKA/8VA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA1]")]
+		public int? Rank
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.GetRank (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IItemRankInterfaceImplementation.SetRank (this, value);
+			}
+		}
+		#endregion
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/CVKA/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/CVKA/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>BeginDate</c> field.
+		///	designer:fld/CVKA/8VAO
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
+		public global::Epsitec.Common.Types.Date? BeginDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
+			}
+		}
+		#endregion
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/CVKA/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/CVKA/8VAP
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>PlanComptable</c> field.
+		///	designer:fld/CVKA/CVKB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKB]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> PlanComptable
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ComptabilitéCompteEntity> ("[CVKB]");
+			}
+		}
+		///	<summary>
+		///	The <c>Journal</c> field.
+		///	designer:fld/CVKA/CVKC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[CVKC]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Core.Entities.ComptabilitéEcritureEntity> Journal
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ComptabilitéEcritureEntity> ("[CVKC]");
+			}
+		}
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Core.Entities.ComptabilitéEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1004, 20, 10);	// [CVKA]
+		public static readonly string EntityStructuredTypeKey = "[CVKA]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

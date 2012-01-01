@@ -652,7 +652,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var editor = new Widgets.AutoCompleteTextField
+			var editor = new Widgets.AutoCompleteTextFieldEx
 			{
 				Parent = container,
 				IsReadOnly = this.ReadOnly,
@@ -729,7 +729,7 @@ namespace Epsitec.Cresus.Core
 			return HintComparer.Compare (itemText, userText);
 		}
 
-		private static void InitializeAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		private static void InitializeAccount(Widgets.AutoCompleteTextFieldEx editor, Marshaler marshaler)
 		{
 			//	Initialise le texte complet du widget, en fonction du numéro de compte stocké dans le champ de l'entité.
 			FormattedText value = marshaler.GetStringValue();
@@ -748,7 +748,7 @@ namespace Epsitec.Cresus.Core
 			editor.FormattedText = value;
 		}
 
-		private static void UpdateAccount(Widgets.AutoCompleteTextField editor, Marshaler marshaler)
+		private static void UpdateAccount(Widgets.AutoCompleteTextFieldEx editor, Marshaler marshaler)
 		{
 			//	Met à jour le champ de l'entité (numéro de compte seul), en fonction de l'état du widget.
 			if (string.IsNullOrEmpty (editor.Text) || editor.SelectedItemIndex == -1)
@@ -939,7 +939,7 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, ValueToFormattedTextConverter<string[]> getUserText)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<string[]> possibleItems, ValueToFormattedTextConverter<string[]> getUserText)
 		{
 			//	possibleItems[0] doit obligatoirement être la 'key' !
 			if (!string.IsNullOrEmpty (label))
@@ -965,12 +965,12 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			Widgets.AutoCompleteTextField textField;
+			Widgets.AutoCompleteTextFieldEx textField;
 			GlyphButton menuButton;
 
 			if (width == 0)
 			{
-				textField = new Widgets.AutoCompleteTextField
+				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
@@ -999,7 +999,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				textField = new Widgets.AutoCompleteTextField
+				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
@@ -1045,12 +1045,12 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems)
 		{
 			return this.CreateAutoCompleteTextField<T> (tile, width, label, marshaler, possibleItems, x => TextFormatter.FormatText (x));
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
+		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
 			if (!string.IsNullOrEmpty (label))
@@ -1075,13 +1075,13 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			Widgets.AutoCompleteTextField textField;
+			Widgets.AutoCompleteTextFieldEx textField;
 			GlyphButton menuButton;
 
 
 			if (width == 0)
 			{
-				textField = new Widgets.AutoCompleteTextField
+				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
@@ -1110,7 +1110,7 @@ namespace Epsitec.Cresus.Core
 			}
 			else
 			{
-				textField = new Widgets.AutoCompleteTextField
+				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
 					IsReadOnly = this.ReadOnly,
@@ -1155,14 +1155,14 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
 			return this.CreateAutoCompleteTextField<T>(tile, label, controller);
 		}
 
-		public Widgets.AutoCompleteTextField CreateAutoCompleteTextField<T>(EditionTile tile, string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, string label, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, x => controller.SetValue (x as T), controller.ReferenceController);
@@ -1173,7 +1173,7 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		public Widgets.AutoCompleteTextField CreateCompactAutoCompleteTextField<T>(FrameBox frame, string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextFieldEx CreateCompactAutoCompleteTextField<T>(FrameBox frame, string label, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var autoCompleteTextField = this.CreateCompactAutoCompleteTextField (frame, label);
@@ -1332,7 +1332,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-		private Widgets.AutoCompleteTextField CreateCompactAutoCompleteTextField(FrameBox parent, string label)
+		private Widgets.AutoCompleteTextFieldEx CreateCompactAutoCompleteTextField(FrameBox parent, string label)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -1356,7 +1356,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var editor = new Widgets.AutoCompleteTextField
+			var editor = new Widgets.AutoCompleteTextFieldEx
 			{
 				Parent = container,
 				IsReadOnly = this.ReadOnly,
@@ -1399,7 +1399,7 @@ namespace Epsitec.Cresus.Core
 			return editor;
 		}
 
-		private Widgets.AutoCompleteTextField CreateAutoCompleteTextField(EditionTile tile, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
+		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField(EditionTile tile, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
 			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");
 
@@ -1427,7 +1427,7 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-			var editor = new Widgets.AutoCompleteTextField
+			var editor = new Widgets.AutoCompleteTextFieldEx
 			{
 				Parent = container,
 				IsReadOnly = this.ReadOnly,
@@ -1735,7 +1735,7 @@ namespace Epsitec.Cresus.Core
 
 		class AutoCompleteItemSynchronizer
 		{
-			public AutoCompleteItemSynchronizer(AutoCompleteTextField field, EntityViewController controller, AbstractEntity entity)
+			public AutoCompleteItemSynchronizer(AutoCompleteTextFieldEx field, EntityViewController controller, AbstractEntity entity)
 			{
 				this.field = field;
 				this.controller = controller;
@@ -1757,7 +1757,7 @@ namespace Epsitec.Cresus.Core
 			}
 
 
-			private readonly AutoCompleteTextField field;
+			private readonly AutoCompleteTextFieldEx field;
 			private readonly EntityViewController controller;
 			private readonly IStructuredData entity;
 		}
@@ -1823,7 +1823,7 @@ namespace Epsitec.Cresus.Core
 
 		
 		
-		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextField editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
+		private static System.Action CreateAutoCompleteTextFieldChangeHandler(Widgets.AutoCompleteTextFieldEx editor, GlyphButton showButton, ReferenceController referenceController, bool createEnabled)
 		{
 			return
 				delegate

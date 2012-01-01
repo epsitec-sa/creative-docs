@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.Core.Widgets
 {
 	/// <summary>
 	/// The <c>HintComparerResult</c> enumeration defines the values returned by the
-	/// <see cref="AutoCompleteTextField.HintComparer"/> callback.
+	/// <see cref="AutoCompleteTextFieldEx.HintComparer"/> callback.
 	/// </summary>
 	/// <remarks>
 	/// Implementation detail: the best match has the smallest value.
