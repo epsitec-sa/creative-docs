@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Gère l'accès aux données du journal des écritures de la comptabilité.
 	/// </summary>
-	public class JournalAccessor : AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity, object>
+	public class JournalAccessor : AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity>
 	{
 		public JournalAccessor(ComptabilitéEntity comptabilitéEntity)
 			: base (comptabilitéEntity)
@@ -90,10 +90,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			switch (column)
 			{
 				case JournalColumn.Date:
-					Date d;
-					if (this.ParseDate (text, out d))
+					Date? d;
+					if (this.comptabilitéEntity.ParseDate (text, out d) && d.HasValue)
 					{
-						écriture.Date = d;
+						écriture.Date = d.Value;
 					}
 					break;
 

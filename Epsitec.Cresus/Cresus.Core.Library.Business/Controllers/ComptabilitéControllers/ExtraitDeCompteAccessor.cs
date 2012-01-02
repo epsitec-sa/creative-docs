@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Gère l'accès aux données de la balance de vérification de la comptabilité.
 	/// </summary>
-	public class ExtraitDeCompteAccessor : AbstractDataAccessor<ExtraitDeCompteColumn, ExtraitDeCompteData, ExtraitDeCompteOptions>
+	public class ExtraitDeCompteAccessor : AbstractDataAccessor<ExtraitDeCompteColumn, ExtraitDeCompteData>
 	{
 		public ExtraitDeCompteAccessor(ComptabilitéEntity comptabilitéEntity)
 			: base (comptabilitéEntity)
@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 			this.sortedEntities = new List<ExtraitDeCompteData> ();
 
-			FormattedText filter = this.options.NuméroCompte;
+			FormattedText filter = this.Options.NuméroCompte;
 			if (filter.IsNullOrEmpty)
 			{
 				return;
@@ -43,6 +43,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 			foreach (var écriture in this.comptabilitéEntity.Journal.OrderBy (x => x.Date))
 			{
+				if (!this.options.DateInRange (écriture.Date))
+				{
+					continue;
+				}
+
 				bool débit  = (ComptabilitéEntity.Match (écriture.Débit,  filter));
 				bool crédit = (ComptabilitéEntity.Match (écriture.Crédit, filter));
 
@@ -156,6 +161,14 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			else
 			{
 				return FormattedText.Empty;
+			}
+		}
+
+		private ExtraitDeCompteOptions Options
+		{
+			get
+			{
+				return this.options as ExtraitDeCompteOptions;
 			}
 		}
 	}

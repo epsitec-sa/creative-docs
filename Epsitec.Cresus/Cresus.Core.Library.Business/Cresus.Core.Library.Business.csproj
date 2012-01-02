@@ -173,6 +173,7 @@
     <Compile Include="Controllers\ComptabilitéControllers\AbstractOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\BalanceOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\BalanceOptionsController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\AbstractOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\ExtraitDeCompteOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\ExtraitDeCompteOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\ExtraitDeCompteController.cs" />

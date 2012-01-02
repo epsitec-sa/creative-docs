@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère les options d'affichage d'un extrait de compte de la comptabilité.
 	/// </summary>
-	public class ExtraitDeCompteOptionsController : AbstractOptionsController<ExtraitDeCompteData, ExtraitDeCompteOptions>
+	public class ExtraitDeCompteOptionsController : AbstractOptionsController<ExtraitDeCompteData>
 	{
 		public ExtraitDeCompteOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, ExtraitDeCompteOptions options)
 			: base (tileContainer, comptabilitéEntity, options)
@@ -40,13 +40,14 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				DrawFullFrame       = true,
 				BackColor           = Color.FromBrightness (0.96),  // gris très clair
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				PreferredHeight     = 56,
+				PreferredHeight     = 81,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 20, 0, 6),
 				Padding             = new Margins (5),
 			};
 
 			this.CreateEditionUI (this.toolbar, optionsChanged);
+			this.CreateDateUI (this.toolbar, optionsChanged);
 			this.CreateTitleUI (this.toolbar);
 
 			this.UpdateTitle ();
@@ -56,8 +57,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 			var frame = new FrameBox
 			{
-				Parent = parent,
-				Dock   = DockStyle.Top,
+				Parent   = parent,
+				Dock     = DockStyle.Top,
+				TabIndex = ++this.tabIndex,
 			};
 
 			new StaticText
@@ -75,6 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			UIBuilder.CreateAutoCompleteTextField (frame, comptes, marshaler, out container, out field);
 			container.PreferredWidth = 100;
 			container.Margins = new Margins (0, 10, 0, 0);
+			container.TabIndex = ++this.tabIndex;
 
 			field.EditionAccepted += delegate
 			{
@@ -167,7 +170,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		private void UpdateTitle()
 		{
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == this.options.NuméroCompte).FirstOrDefault ();
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == this.Options.NuméroCompte).FirstOrDefault ();
 
 			if (compte == null)
 			{
@@ -226,11 +229,19 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 			get
 			{
-				return this.options.NuméroCompte;
+				return this.Options.NuméroCompte;
 			}
 			set
 			{
-				this.options.NuméroCompte = PlanComptableAccessor.GetCompteNuméro (value);
+				this.Options.NuméroCompte = PlanComptableAccessor.GetCompteNuméro (value);
+			}
+		}
+
+		private ExtraitDeCompteOptions Options
+		{
+			get
+			{
+				return this.options as ExtraitDeCompteOptions;
 			}
 		}
 

@@ -21,11 +21,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère les options d'affichage génériques de la comptabilité.
 	/// </summary>
-	public abstract class AbstractOptionsController<Entity, Options>
+	public abstract class AbstractOptionsController<Entity>
 		where Entity : class
-		where Options : class
 	{
-		public AbstractOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, Options options)
+		public AbstractOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractOptions options)
 		{
 			this.tileContainer      = tileContainer;
 			this.comptabilitéEntity = comptabilitéEntity;
@@ -38,6 +37,121 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
 		}
+
+		protected FrameBox CreateDateUI(FrameBox parent, System.Action optionsChanged)
+		{
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 5, 0),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent         = frame,
+				FormattedText  = "Depuis le",
+				PreferredWidth = 64,
+				Dock           = DockStyle.Left,
+			};
+
+			this.fieldDateDébut = new TextFieldEx
+			{
+				Parent                       = frame,
+				PreferredWidth               = 100,
+				PreferredHeight              = 20,
+				Dock                         = DockStyle.Left,
+				Margins                      = new Margins (0, 20, 0, 0),
+				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+				TabIndex                     = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent         = frame,
+				FormattedText  = "Jusqu'au",
+				PreferredWidth = 64,
+				Dock           = DockStyle.Left,
+			};
+
+			this.fieldDateFin = new TextFieldEx
+			{
+				Parent                       = frame,
+				PreferredWidth               = 100,
+				PreferredHeight              = 20,
+				Dock                         = DockStyle.Left,
+				Margins                      = new Margins (0, 20, 0, 0),
+				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+				TabIndex                     = ++this.tabIndex,
+			};
+
+			this.clearButton = new GlyphButton
+			{
+				Parent        = frame,
+				GlyphShape    = GlyphShape.Close,
+				PreferredSize = new Size (20, 20),
+				Dock          = DockStyle.Left,
+				TabIndex      = ++this.tabIndex,
+			};
+
+			this.fieldDateDébut.EditionAccepted += delegate
+			{
+				this.CheckDate (this.fieldDateDébut, x => this.options.DateDébut = x, optionsChanged);
+			};
+
+			this.fieldDateFin.EditionAccepted += delegate
+			{
+				this.CheckDate (this.fieldDateFin, x => this.options.DateFin = x, optionsChanged);
+			};
+
+			this.clearButton.Clicked += delegate
+			{
+				this.fieldDateDébut.FormattedText = null;
+				this.fieldDateFin.FormattedText   = null;
+				this.options.DateDébut = null;
+				this.options.DateFin   = null;
+				this.UpdateClearButton ();
+				optionsChanged ();
+			};
+
+			ToolTip.Default.SetToolTip (this.fieldDateDébut, "Filtre depuis cette date (inclus)");
+			ToolTip.Default.SetToolTip (this.fieldDateFin,   "Filtre jusqu'à cette date (inclus)");
+			ToolTip.Default.SetToolTip (this.clearButton,    "Annule le filtre");
+
+			this.UpdateClearButton ();
+
+			return frame;
+		}
+
+		private delegate void SetDate(Date? date);
+
+		private void CheckDate(TextFieldEx field, SetDate setter, System.Action optionsChanged)
+		{
+			Date? date;
+			if (this.comptabilitéEntity.ParseDate (field.FormattedText, out date))
+			{
+				setter (date);
+				field.SetError (false);
+				this.UpdateClearButton ();
+				optionsChanged ();
+			}
+			else
+			{
+				field.SetError (true);
+			}
+		}
+
+		private void UpdateClearButton()
+		{
+			this.clearButton.Enable = this.options.DateDébut.HasValue || this.options.DateFin.HasValue;
+		}
+
 
 		public void FinalizeUI(FrameBox parent)
 		{
@@ -86,9 +200,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected readonly TileContainer						tileContainer;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
-		protected readonly Options								options;
+		protected readonly AbstractOptions						options;
 
+		protected int											tabIndex;
 		protected FrameBox										toolbar;
+		protected TextFieldEx									fieldDateDébut;
+		protected TextFieldEx									fieldDateFin;
+		protected GlyphButton									clearButton;
 		protected GlyphButton									showHideButton;
 		protected bool											toolbarShowed;
 		protected double										topOffset;

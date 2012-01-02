@@ -87,10 +87,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		#region Validators
 		private FormattedText ValidateDate(JournalColumn column, FormattedText text)
 		{
-			Date date;
+			Date? date;
 			var accessor = this.dataAccessor as JournalAccessor;
 
-			if (accessor.ParseDate (text, out date))
+			if (this.comptabilitéEntity.ParseDate (text, out date) && date.HasValue)
 			{
 				return FormattedText.Empty;
 			}

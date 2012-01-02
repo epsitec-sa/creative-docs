@@ -229,11 +229,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		protected readonly TileContainer								tileContainer;
 		protected readonly ComptabilitéEntity							comptabilitéEntity;
 
-		protected AbstractDataAccessor<ColumnType, Entity, Options>		dataAccessor;
+		protected AbstractDataAccessor<ColumnType, Entity>				dataAccessor;
 		protected List<AbstractColumnMapper<ColumnType>>				columnMappers;
 
 		protected TopToolbarController									topToolbarController;
-		protected AbstractOptionsController<Entity, Options>			optionsController;
+		protected AbstractOptionsController<Entity>						optionsController;
 		protected ArrayController<Entity>								arrayController;
 		protected AbstractFooterController<ColumnType, Entity, Options>	footerController;
 		protected FrameBox												frameBox;

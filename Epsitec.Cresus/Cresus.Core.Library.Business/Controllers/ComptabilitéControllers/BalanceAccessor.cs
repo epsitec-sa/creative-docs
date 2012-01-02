@@ -16,12 +16,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Gère l'accès aux données de la balance de vérification de la comptabilité.
 	/// </summary>
-	public class BalanceAccessor : AbstractDataAccessor<BalanceColumn, BalanceData, BalanceOptions>
+	public class BalanceAccessor : AbstractDataAccessor<BalanceColumn, BalanceData>
 	{
 		public BalanceAccessor(ComptabilitéEntity comptabilitéEntity)
 			: base (comptabilitéEntity)
 		{
-			this.options = new BalanceOptions ();
+			this.options = new BalanceOptions (this.comptabilitéEntity);
 
 			this.UpdateSortedList ();
 		}
@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					continue;
 				}
 
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte);
+				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
-				if (!this.options.ComptesNuls && (!solde.HasValue || solde.Value == 0))
+				if (!this.Options.ComptesNuls && (!solde.HasValue || solde.Value == 0))
 				{
 					continue;
 				}
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				var data = new BalanceData ();
 
 				data.Numéro = compte.Numéro;
-				data.Titre = compte.Titre;
+				data.Titre  = compte.Titre;
 				data.Niveau = compte.Niveau;
 
 				if (compte.Catégorie == CatégorieDeCompte.Actif ||
@@ -123,6 +123,14 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			else
 			{
 				return FormattedText.Empty;
+			}
+		}
+
+		private BalanceOptions Options
+		{
+			get
+			{
+				return this.options as BalanceOptions;
 			}
 		}
 	}

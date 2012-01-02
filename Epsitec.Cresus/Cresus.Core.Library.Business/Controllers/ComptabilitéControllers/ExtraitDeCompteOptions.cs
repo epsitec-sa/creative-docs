@@ -22,12 +22,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Cette classe décrit les options d'affichage d'un extrait de compte de la comptabilité.
 	/// </summary>
-	public class ExtraitDeCompteOptions
+	public class ExtraitDeCompteOptions : AbstractOptions
 	{
 		public ExtraitDeCompteOptions(ComptabilitéEntity comptabilitéEntity)
+			: base (comptabilitéEntity)
 		{
 			//	Utilise le premier compte normal par défaut.
-			var compte = comptabilitéEntity.PlanComptable.OrderBy (x => x.Numéro).Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
+			var compte = this.comptabilitéEntity.PlanComptable.OrderBy (x => x.Numéro).Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
 			if (compte != null)
 			{

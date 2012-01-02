@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Gère l'accès aux données du plan comptable de la comptabilité.
 	/// </summary>
-	public class PlanComptableAccessor : AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity, object>
+	public class PlanComptableAccessor : AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity>
 	{
 		public PlanComptableAccessor(ComptabilitéEntity comptabilitéEntity)
 			: base (comptabilitéEntity)

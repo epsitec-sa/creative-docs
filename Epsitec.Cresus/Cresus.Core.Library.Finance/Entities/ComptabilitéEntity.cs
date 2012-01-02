@@ -65,6 +65,42 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
+		public bool ParseDate(FormattedText text, out Date? date)
+		{
+			//	Transforme un texte en une date valide pour la comptabilité.
+			if (text.IsNullOrEmpty)
+			{
+				date = null;
+				return true;
+			}
+
+			System.DateTime d;
+
+			if (System.DateTime.TryParse (text.ToSimpleText (), System.Threading.Thread.CurrentThread.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out d))
+			{
+				date = new Date (d);
+
+				if (this.BeginDate.HasValue && date < this.BeginDate.Value)
+				{
+					date = this.BeginDate.Value;
+					return false;
+				}
+
+				if (this.EndDate.HasValue && date > this.EndDate.Value)
+				{
+					date = this.EndDate.Value;
+					return false;
+				}
+
+				return true;
+			}
+			else
+			{
+				date = Date.Today;
+				return false;
+			}
+		}
+
 		public void UpdateNiveauCompte(ComptabilitéCompteEntity compte)
 		{
 			//	Met à jour le niveau d'imbrication d'un compte (0..n).
@@ -89,7 +125,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public decimal? GetSoldeCompte(ComptabilitéCompteEntity compte)
+		public decimal? GetSoldeCompte(ComptabilitéCompteEntity compte, Date? dateDébut = null, Date? dateFin = null)
 		{
 			//	Calcule le solde d'un compte.
 			if (compte.Type != TypeDeCompte.Normal &&
@@ -98,8 +134,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return null;
 			}
 
-			var débit  = this.Journal.Where (x => ComptabilitéEntity.Match (x.Débit,  compte.Numéro)).Sum (x => x.Montant);
-			var crédit = this.Journal.Where (x => ComptabilitéEntity.Match (x.Crédit, compte.Numéro)).Sum (x => x.Montant);
+			var débit  = this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Débit,  compte.Numéro)).Sum (x => x.Montant);
+			var crédit = this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Crédit, compte.Numéro)).Sum (x => x.Montant);
 
 			if (compte.Catégorie == CatégorieDeCompte.Passif ||
 				compte.Catégorie == CatégorieDeCompte.Produit)
@@ -110,6 +146,24 @@ namespace Epsitec.Cresus.Core.Entities
 			{
 				return débit - crédit;
 			}
+		}
+
+		private static bool Match(Date? dateDébut, Date? dateFin, Date? date)
+		{
+			if (date.HasValue)
+			{
+				if (dateDébut.HasValue && date.Value < dateDébut.Value)
+				{
+					return false;
+				}
+
+				if (dateFin.HasValue && date.Value > dateFin.Value)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 		public static bool Match(ComptabilitéCompteEntity compte, FormattedText numéro)

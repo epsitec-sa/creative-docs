@@ -13,9 +13,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Gère l'accès à des données génériques de la comptabilité.
 	/// </summary>
-	public abstract class AbstractDataAccessor<ColumnType, Entity, Options>
+	public abstract class AbstractDataAccessor<ColumnType, Entity>
 		where Entity : class
-		where Options : class
 	{
 		public AbstractDataAccessor(ComptabilitéEntity comptabilitéEntity)
 		{
@@ -23,7 +22,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		public Options AccessorOptions
+		public AbstractOptions AccessorOptions
 		{
 			get
 			{
@@ -87,8 +86,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		protected readonly ComptabilitéEntity comptabilitéEntity;
-		protected Options options;
-		protected List<Entity> sortedEntities;
+		protected readonly ComptabilitéEntity	comptabilitéEntity;
+
+		protected AbstractOptions				options;
+		protected List<Entity>					sortedEntities;
 	}
 }

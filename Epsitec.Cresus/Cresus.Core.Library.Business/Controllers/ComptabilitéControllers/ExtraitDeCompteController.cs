@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new ExtraitDeCompteOptionsController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor.AccessorOptions);
+			this.optionsController = new ExtraitDeCompteOptionsController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 		}
 

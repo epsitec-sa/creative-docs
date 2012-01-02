@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		where Entity : class
 		where Options : class
 	{
-		public AbstractFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<ColumnType, Entity, Options> dataAccessor, List<AbstractColumnMapper<ColumnType>> columnMappers, ArrayController<Entity> arrayController)
+		public AbstractFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<ColumnType, Entity> dataAccessor, List<AbstractColumnMapper<ColumnType>> columnMappers, ArrayController<Entity> arrayController)
 		{
 			this.tileContainer      = tileContainer;
 			this.comptabilitéEntity = comptabilitéEntity;
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected readonly TileContainer								tileContainer;
 		protected readonly ComptabilitéEntity							comptabilitéEntity;
-		protected AbstractDataAccessor<ColumnType, Entity, Options>		dataAccessor;
+		protected AbstractDataAccessor<ColumnType, Entity>				dataAccessor;
 		protected List<AbstractColumnMapper<ColumnType>>				columnMappers;
 		protected ArrayController<Entity>								arrayController;
 		protected readonly List<Widget>									footerContainers;

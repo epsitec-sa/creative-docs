@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class PlanComptableFooterController : AbstractFooterController<PlanComptableColumn, ComptabilitéCompteEntity, object>
 	{
-		public PlanComptableFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity, object> dataAccessor, List<AbstractColumnMapper<PlanComptableColumn>> columnMappers, ArrayController<ComptabilitéCompteEntity> arrayController)
+		public PlanComptableFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity> dataAccessor, List<AbstractColumnMapper<PlanComptableColumn>> columnMappers, ArrayController<ComptabilitéCompteEntity> arrayController)
 			: base (tileContainer, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
 		{
 		}

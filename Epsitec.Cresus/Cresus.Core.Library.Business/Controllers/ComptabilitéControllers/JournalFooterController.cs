@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class JournalFooterController : AbstractFooterController<JournalColumn, ComptabilitéEcritureEntity, object>
 	{
-		public JournalFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity, object> dataAccessor, List<AbstractColumnMapper<JournalColumn>> columnMappers, ArrayController<ComptabilitéEcritureEntity> arrayController)
+		public JournalFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity> dataAccessor, List<AbstractColumnMapper<JournalColumn>> columnMappers, ArrayController<ComptabilitéEcritureEntity> arrayController)
 			: base (tileContainer, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
 		{
 			this.infoShowed = true;

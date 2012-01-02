@@ -21,9 +21,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Cette classe décrit les options d'affichage de la balance de vérification de la comptabilité.
 	/// </summary>
-	public class BalanceOptions
+	public class BalanceOptions : AbstractOptions
 	{
-		public BalanceOptions()
+		public BalanceOptions(ComptabilitéEntity comptabilitéEntity)
+			: base (comptabilitéEntity)
 		{
 		}
 
