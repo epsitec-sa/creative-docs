@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			};
 
 			this.CreateCheckUI (this.toolbar, optionsChanged);
-			this.CreateDateUI (this.toolbar, optionsChanged);
+			this.CreateDatesUI (this.toolbar, optionsChanged);
 		}
 
 		protected void CreateCheckUI(FrameBox parent, System.Action optionsChanged)
@@ -57,11 +57,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				TabIndex        = ++this.tabIndex,
 			};
 
+			this.CreateProfondeurUI (frame, optionsChanged);
+
 			var button = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche les comptes dont le solde est nul",
-				PreferredWidth = 300,
+				PreferredWidth = 220,
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,

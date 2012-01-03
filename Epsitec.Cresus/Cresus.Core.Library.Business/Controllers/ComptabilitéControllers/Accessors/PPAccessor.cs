@@ -36,6 +36,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Charge).OrderBy (x => x.Numéro))
 			{
+				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
+				{
+					continue;
+				}
+
 				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
 				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
@@ -57,6 +62,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			int rank = 0;
 			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Produit).OrderBy (x => x.Numéro))
 			{
+				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
+				{
+					continue;
+				}
+
 				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
 				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)

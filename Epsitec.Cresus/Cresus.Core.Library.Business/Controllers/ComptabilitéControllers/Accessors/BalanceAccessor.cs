@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					continue;
 				}
 
+				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
+				{
+					continue;
+				}
+
 				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
 				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)

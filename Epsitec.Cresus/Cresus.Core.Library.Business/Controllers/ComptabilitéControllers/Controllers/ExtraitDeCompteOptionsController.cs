@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			};
 
 			this.CreateEditionUI (this.toolbar, optionsChanged);
-			this.CreateDateUI (this.toolbar, optionsChanged);
+			this.CreateDatesUI (this.toolbar, optionsChanged);
 			this.CreateTitleUI (this.toolbar);
 
 			this.UpdateTitle ();

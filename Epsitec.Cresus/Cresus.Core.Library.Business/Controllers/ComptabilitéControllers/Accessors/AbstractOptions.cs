@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
+		public int? Profondeur
+		{
+			get;
+			set;
+		}
+
 		public Date? DateDébut
 		{
 			get;
@@ -64,6 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected readonly ComptabilitéEntity		comptabilitéEntity;
 
+		protected int?								profondeur;
 		protected Date?								dateDébut;
 		protected Date?								dateFin;
 	}

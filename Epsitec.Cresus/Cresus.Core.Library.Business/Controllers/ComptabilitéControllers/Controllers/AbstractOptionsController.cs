@@ -38,7 +38,79 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 		}
 
-		protected FrameBox CreateDateUI(FrameBox parent, System.Action optionsChanged)
+
+		protected FrameBox CreateProfondeurUI(FrameBox parent, System.Action optionsChanged)
+		{
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 20,
+				PreferredWidth  = 140,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 20, 0, 0),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent         = frame,
+				FormattedText  = "Profondeur",
+				PreferredWidth = 64,
+				Dock           = DockStyle.Left,
+			};
+
+			var field = new TextFieldCombo
+			{
+				Parent          = frame,
+				IsReadOnly      = true,
+				PreferredHeight = 20,
+				FormattedText   = this.ProfondeurToDescription (this.options.Profondeur),
+				Dock            = DockStyle.Fill,
+			};
+
+			for (int i = 1; i <= 6; i++)
+            {
+				field.Items.Add (this.ProfondeurToDescription (i));  // 1..6
+            }
+			field.Items.Add (this.ProfondeurToDescription (null));  // Tout
+
+			field.TextChanged += delegate
+			{
+				this.options.Profondeur = this.DescriptionToProfondeur (field.FormattedText);
+				optionsChanged ();
+			};
+
+			return frame;
+		}
+
+		private FormattedText ProfondeurToDescription(int? profondeur)
+		{
+			if (profondeur.HasValue)
+			{
+				return profondeur.ToString ();  // 1..9
+			}
+			else
+			{
+				return "Tout";
+			}
+		}
+
+		private int? DescriptionToProfondeur(FormattedText text)
+		{
+			var t = text.ToSimpleText();
+
+			if (string.IsNullOrEmpty (t)|| t.Length != 1 || t[0] < '1' || t[0] < '9')
+			{
+				return t[0] - '0';
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		protected FrameBox CreateDatesUI(FrameBox parent, System.Action optionsChanged)
 		{
 			var frame = new FrameBox
 			{
@@ -62,6 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				Parent                       = frame,
 				PreferredWidth               = 100,
 				PreferredHeight              = 20,
+				FormattedText                = this.options.DateDébut.HasValue ? this.options.DateDébut.ToString () : FormattedText.Empty,
 				Dock                         = DockStyle.Left,
 				Margins                      = new Margins (0, 20, 0, 0),
 				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
@@ -83,6 +156,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				Parent                       = frame,
 				PreferredWidth               = 100,
 				PreferredHeight              = 20,
+				FormattedText                = this.options.DateFin.HasValue ? this.options.DateFin.ToString () : FormattedText.Empty,
 				Dock                         = DockStyle.Left,
 				Margins                      = new Margins (0, 20, 0, 0),
 				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
