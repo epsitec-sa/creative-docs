@@ -164,6 +164,7 @@
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanAccessor.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanData.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanOptions.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\AbstractData.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationAccessor.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationData.cs" />

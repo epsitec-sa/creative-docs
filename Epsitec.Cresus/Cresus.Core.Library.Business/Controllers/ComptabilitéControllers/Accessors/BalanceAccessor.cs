@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 				if (lastCompte == null || lastCompte.Catégorie != compte.Catégorie)  // changement de catégorie ?
 				{
-					data.IsHilited = true;
+					data.IsBold = true;
 				}
 
 				lastCompte = compte;
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				data.Crédit      = totalCrédit;
 				data.SoldeDébit  = totalSoldeD;
 				data.SoldeCrédit = totalSoldeC;
-				data.IsHilited   = true;
+				data.IsItalic    = true;
 
 				this.sortedEntities.Add (data);
 			}

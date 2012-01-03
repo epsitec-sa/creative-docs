@@ -919,10 +919,9 @@ namespace Epsitec.Cresus.Core.Widgets
 			}
 
 			this.selectedHint = this.scrollList.SelectedItemIndex;
-			
 			this.UseSelectedHint (SelectedHintMode.AcceptEdition);
-
 			this.CloseComboMenu ();
+			this.OnTextChanged ();
 		}
 
 		

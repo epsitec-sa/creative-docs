@@ -62,14 +62,15 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			//	Retourne le texte contenu dans une cellule.
 			var mapper = this.columnMappers[column];
 			var text = this.dataAccessor.GetText (row, mapper.Column);
+			var data = this.dataAccessor.SortedList[row];
 
 			if (mapper.Column == ExtraitDeCompteColumn.Solde &&
-				row == this.dataAccessor.Count-2)
+				row == this.dataAccessor.Count-2)  // total sur l'avant-dernière ligne ?
 			{
 				text = text.ApplyBold ();
 			}
 
-			return text;
+			return data.Typo (text);
 		}
 
 

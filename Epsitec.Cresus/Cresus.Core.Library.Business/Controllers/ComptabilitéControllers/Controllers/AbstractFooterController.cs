@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 			this.footerContainers = new List<Widget> ();
 			this.footerFields = new List<AbstractTextField> ();
+			this.footerValidatedTexts = new List<FormattedText> ();
 		}
 
 
@@ -44,7 +45,50 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			this.bottomToolbarController = new BottomToolbarController (this.tileContainer);
 			this.bottomToolbarController.CreateUI (parent, this.AcceptAction, this.CancelAction, null, null);
 			this.bottomToolbarController.CancelEnable = true;
+
+			this.tileContainer.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
+			this.tileContainer.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
 		}
+
+		private void HandleFocusedWidgetChanging(object sender, FocusChangingEventArgs e)
+		{
+#if true
+			if (this.footerFields.Contains (e.OldFocus))
+			{
+				int column = e.OldFocus.Index;
+				var mapper = this.columnMappers[column];
+				var field = this.GetTextField (column);
+
+				var currentText = this.footerValidatedTexts[column];
+				if (field.FormattedText != currentText)
+				{
+					this.arrayController.IgnoreChanged = true;
+					field.FormattedText = currentText;
+					this.arrayController.IgnoreChanged = false;
+				}
+			}
+#endif
+		}
+
+		private void HandleFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var field = sender as Widget;
+
+			if (field != null && field.Window != null)
+			{
+				var focused = field.Window.FocusedWidget;
+
+				if (this.footerFields.Contains (focused))
+				{
+					this.arrayController.HiliteHeaderColumn (focused.Index);
+				}
+				else
+				{
+					this.arrayController.HiliteHeaderColumn (-1);
+				}
+			}
+		}
+
 
 		public void FinalizeUI(FrameBox parent)
 		{
@@ -119,8 +163,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			for (int column = 0; column < columnCount; column++)
 			{
 				var mapper = this.columnMappers[column];
+				var field = this.GetTextField (column);
 
-				this.dataAccessor.SetText (row, mapper.Column, this.GetTextField (column).FormattedText);
+				this.dataAccessor.SetText (row, mapper.Column, field.FormattedText);
 			}
 
 			this.FinalUpdateEntities ();
@@ -190,7 +235,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				else
 				{
 					var text = this.footerFields[column].FormattedText;
-					var error = mapper.Validate (mapper.Column, text);
+					var error = mapper.Validate (mapper.Column, ref text);
+					this.footerValidatedTexts[column] = text;
 					bool ok = error.IsNullOrEmpty;
 
 					this.footerFields[column].SetError (!ok);
@@ -278,6 +324,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		protected ArrayController<Entity>								arrayController;
 		protected readonly List<Widget>									footerContainers;
 		protected readonly List<AbstractTextField>						footerFields;
+		protected readonly List<FormattedText>							footerValidatedTexts;
 
 		protected System.Action											updateArrayContentAction;
 		protected BottomToolbarController								bottomToolbarController;

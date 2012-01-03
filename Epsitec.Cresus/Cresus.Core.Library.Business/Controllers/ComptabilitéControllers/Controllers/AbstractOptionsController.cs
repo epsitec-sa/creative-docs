@@ -205,12 +205,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		private delegate void SetDate(Date? date);
 
-		private void CheckDate(TextFieldEx field, SetDate setter, System.Action optionsChanged)
+		private void CheckDate(TextFieldEx field, SetDate setDate, System.Action optionsChanged)
 		{
 			Date? date;
 			if (this.comptabilitéEntity.ParseDate (field.FormattedText, out date))
 			{
-				setter (date);
+				setDate (date);
+				field.FormattedText = date.HasValue ? date.ToString () : FormattedText.Empty;
 				field.SetError (false);
 				this.UpdateClearButton ();
 				optionsChanged ();

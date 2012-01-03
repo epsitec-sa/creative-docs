@@ -79,12 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				}
 			}
 
-			if (data.IsHilited)
-			{
-				text = text.ApplyBold ();
-			}
-
-			return text;
+			return data.Typo (text);
 		}
 
 

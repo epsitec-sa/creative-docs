@@ -64,6 +64,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		public delegate FormattedText ValidateFunction(ColumnType column, FormattedText text);
+		public delegate FormattedText ValidateFunction(ColumnType column, ref FormattedText text);
 	}
 }

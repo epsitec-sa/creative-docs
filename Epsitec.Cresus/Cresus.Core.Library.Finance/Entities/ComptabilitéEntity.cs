@@ -74,31 +74,55 @@ namespace Epsitec.Cresus.Core.Entities
 				return true;
 			}
 
-			System.DateTime d;
+			var brut = text.ToSimpleText ();
+			brut = brut.Replace (".", " ");
+			brut = brut.Replace (",", " ");
+			brut = brut.Replace ("/", " ");
+			brut = brut.Replace ("-", " ");
+			brut = brut.Replace (":", " ");
+			brut = brut.Replace (";", " ");
+			brut = brut.Replace ("  ", " ");
+			brut = brut.Replace ("  ", " ");
 
-			if (System.DateTime.TryParse (text.ToSimpleText (), System.Threading.Thread.CurrentThread.CurrentCulture, System.Globalization.DateTimeStyles.AssumeLocal | System.Globalization.DateTimeStyles.AllowWhiteSpaces, out d))
+			var words = brut.Split (' ');
+			var defaultDate = this.DefaultDate;
+			int day, month, year;
+
+			int.TryParse (words[0], out day);
+
+			if (words.Length <= 1 || !int.TryParse (words[1], out month))
 			{
-				date = new Date (d);
-
-				if (this.BeginDate.HasValue && date < this.BeginDate.Value)
-				{
-					date = this.BeginDate.Value;
-					return false;
-				}
-
-				if (this.EndDate.HasValue && date > this.EndDate.Value)
-				{
-					date = this.EndDate.Value;
-					return false;
-				}
-
-				return true;
+				month = defaultDate.Month;
 			}
-			else
+
+			if (words.Length <= 2 || !int.TryParse (words[2], out year))
 			{
-				date = Date.Today;
+				year = defaultDate.Year;
+			}
+
+			try
+			{
+				date = new Date (year, month, day);
+			}
+			catch
+			{
+				date = defaultDate;
 				return false;
 			}
+
+			if (this.BeginDate.HasValue && date < this.BeginDate.Value)
+			{
+				date = this.BeginDate.Value;
+				return false;
+			}
+
+			if (this.EndDate.HasValue && date > this.EndDate.Value)
+			{
+				date = this.EndDate.Value;
+				return false;
+			}
+
+			return true;
 		}
 
 		public void UpdateNiveauCompte(ComptabilitéCompteEntity compte)
@@ -150,7 +174,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public decimal? GetSoldeCompteDébit(ComptabilitéCompteEntity compte, Date? dateDébut = null, Date? dateFin = null)
 		{
-			//	Calcule le solde d'un compte.
+			//	Calcule le solde au débit d'un compte.
 			if (compte.Type != TypeDeCompte.Normal &&
 				compte.Type != TypeDeCompte.Groupe)
 			{
@@ -164,7 +188,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public decimal? GetSoldeCompteCrédit(ComptabilitéCompteEntity compte, Date? dateDébut = null, Date? dateFin = null)
 		{
-			//	Calcule le solde d'un compte.
+			//	Calcule le solde au crédit d'un compte.
 			if (compte.Type != TypeDeCompte.Normal &&
 				compte.Type != TypeDeCompte.Groupe)
 			{

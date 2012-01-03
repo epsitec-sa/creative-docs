@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			container.Margins = new Margins (0, 10, 0, 0);
 			container.TabIndex = ++this.tabIndex;
 
-			field.EditionAccepted += delegate
+			field.TextChanged += delegate
 			{
 				this.NuméroCompte = field.FormattedText;
 				this.UpdateTitle ();
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 			else
 			{
-				this.titleLabel.FormattedText = TextFormatter.FormatText (compte.Numéro, compte.Titre).ApplyBold ().ApplyFontSize (14.0);
+				this.titleLabel.FormattedText = TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre).ApplyBold ().ApplyFontSize (14.0);
 			}
 		}
 

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Données pour un extrait de compte de la comptabilité.
 	/// </summary>
-	public class ExtraitDeCompteData
+	public class ExtraitDeCompteData : AbstractData
 	{
 		public ExtraitDeCompteData()
 		{

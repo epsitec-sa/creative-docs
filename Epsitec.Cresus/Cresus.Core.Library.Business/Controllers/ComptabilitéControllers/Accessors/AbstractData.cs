@@ -14,56 +14,36 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 {
 	/// <summary>
-	/// Données pour la balance de vérification de la comptabilité.
+	/// Données génériques pour la comptabilité.
 	/// </summary>
-	public class BalanceData : AbstractData
+	public abstract class AbstractData
 	{
-		public FormattedText Numéro
+		public bool IsBold
 		{
 			get;
 			set;
 		}
 
-		public FormattedText Titre
+		public bool IsItalic
 		{
 			get;
 			set;
 		}
 
-		public decimal? Débit
-		{
-			get;
-			set;
-		}
 
-		public decimal? Crédit
+		public FormattedText Typo(FormattedText value)
 		{
-			get;
-			set;
-		}
+			if (this.IsBold)
+			{
+				value = value.ApplyBold ();
+			}
 
-		public decimal? SoldeDébit
-		{
-			get;
-			set;
-		}
+			if (this.IsItalic)
+			{
+				value = value.ApplyItalic ();
+			}
 
-		public decimal? SoldeCrédit
-		{
-			get;
-			set;
-		}
-
-		public decimal? Budget
-		{
-			get;
-			set;
-		}
-
-		public int Niveau
-		{
-			get;
-			set;
+			return value;
 		}
 	}
 }

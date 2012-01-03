@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Données pour les pertes et profits de la comptabilité.
 	/// </summary>
-	public class PPData
+	public class PPData : AbstractData
 	{
 		public PPData()
 		{
@@ -67,12 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 		public decimal? SoldeDroite
-		{
-			get;
-			set;
-		}
-
-		public bool IsHilited
 		{
 			get;
 			set;

@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Données pour la balance de la comptabilité.
 	/// </summary>
-	public class BilanData
+	public class BilanData : AbstractData
 	{
 		public BilanData()
 		{
@@ -67,12 +67,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 		public decimal? SoldeDroite
-		{
-			get;
-			set;
-		}
-
-		public bool IsHilited
 		{
 			get;
 			set;

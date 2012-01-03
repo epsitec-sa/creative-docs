@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				{
 					data.TitreGauche = "Différence (découvert)";
 					data.SoldeGauche = totalDroite - totalGauche;
-					data.IsHilited   = true;
+					data.IsBold      = true;
 
 					totalGauche = totalDroite;
 				}
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				{
 					data.TitreDroite = "Différence (capital)";
 					data.SoldeDroite = totalGauche - totalDroite;
-					data.IsHilited   = true;
+					data.IsBold      = true;
 
 					totalDroite = totalGauche;
 				}
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 				data.SoldeGauche = totalGauche;
 				data.SoldeDroite = totalDroite;
-				data.IsHilited  = true;
+				data.IsBold      = true;
 
 				this.SortedList.Add (data);
 			}

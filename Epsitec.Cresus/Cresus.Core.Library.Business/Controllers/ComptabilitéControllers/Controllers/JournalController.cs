@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				yield return new ColumnMapper (JournalColumn.Crédit,  this.ValidateCompte,  0.25, ContentAlignment.MiddleLeft,  "Crédit",  "Numéro ou nom du compte à créditer");
 				yield return new ColumnMapper (JournalColumn.Pièce,   null,                 0.20, ContentAlignment.MiddleLeft,  "Pièce",   "Numéro de la pièce comptable correspondant à l'écriture");
 				yield return new ColumnMapper (JournalColumn.Libellé, this.ValidateLibellé, 0.80, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
-				yield return new ColumnMapper (JournalColumn.Montant, null,                 0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
+				yield return new ColumnMapper (JournalColumn.Montant, this.ValidateMontant, 0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
 			}
 		}
 
@@ -85,13 +85,14 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 
 		#region Validators
-		private FormattedText ValidateDate(JournalColumn column, FormattedText text)
+		private FormattedText ValidateDate(JournalColumn column, ref FormattedText text)
 		{
 			Date? date;
 			var accessor = this.dataAccessor as JournalAccessor;
 
 			if (this.comptabilitéEntity.ParseDate (text, out date) && date.HasValue)
 			{
+				text = date.ToString ();
 				return FormattedText.Empty;
 			}
 			else
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
-		private FormattedText ValidateCompte(JournalColumn column, FormattedText text)
+		private FormattedText ValidateCompte(JournalColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -115,8 +116,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return FormattedText.Empty;
 			}
 
-			text = PlanComptableAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+			var n = PlanComptableAccessor.GetCompteNuméro (text);
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 
 			if (compte == null)
 			{
@@ -128,10 +129,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return "Ce compte n'a pas le type \"Normal\"";
 			}
 
+			text = n;
 			return FormattedText.Empty;
 		}
 
-		private FormattedText ValidateLibellé(JournalColumn column, FormattedText text)
+		private FormattedText ValidateLibellé(JournalColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -140,6 +142,25 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			else
 			{
 				return FormattedText.Empty;
+			}
+		}
+
+		private FormattedText ValidateMontant(JournalColumn column, ref FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return "Il manque le montant";
+			}
+
+			decimal montant;
+			if (decimal.TryParse (text.ToSimpleText (), out montant))
+			{
+				text = montant.ToString ("0.00");
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return "Le montant n'est pas correct";
 			}
 		}
 		#endregion

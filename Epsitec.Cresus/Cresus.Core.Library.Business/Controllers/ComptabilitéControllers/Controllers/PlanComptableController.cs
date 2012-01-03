@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 
 		#region Validators
-		private FormattedText ValidateNuméro(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateNuméro(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -126,7 +126,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return "Le numéro du compte ne peut pas contenir d'espace";
 			}
 
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+			var t = text;
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
 			if (compte == null)
 			{
 				return FormattedText.Empty;
@@ -141,7 +142,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			return "Ce numéro de compte existe déjà";
 		}
 
-		private FormattedText ValidateTitre(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateTitre(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -153,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
-		private FormattedText ValidateCatégorie(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateCatégorie(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -171,7 +172,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
-		private FormattedText ValidateType(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateType(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -189,7 +190,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
-		private FormattedText ValidateTVA(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateTVA(PlanComptableColumn column, ref FormattedText text)
 		{
 			return FormattedText.Empty;  //?
 			if (text.IsNullOrEmpty)
@@ -208,15 +209,15 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
-		private FormattedText ValidateGroupe(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateGroupe(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
 				return FormattedText.Empty;
 			}
 
-			text = PlanComptableAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+			var n = PlanComptableAccessor.GetCompteNuméro (text);
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 			if (compte == null)
 			{
 				return "Ce compte n'existe pas";
@@ -227,18 +228,19 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return "Ce n'est pas un compte de groupement";
 			}
 
+			text = n;
 			return FormattedText.Empty;
 		}
 
-		private FormattedText ValidateCompteOuvBoucl(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateCompteOuvBoucl(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
 				return FormattedText.Empty;
 			}
 
-			text = PlanComptableAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+			var n = PlanComptableAccessor.GetCompteNuméro (text);
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 			if (compte == null)
 			{
 				return "Ce compte n'existe pas";
@@ -254,10 +256,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return "Ce n'est pas un compte d'exploitation";
 			}
 
+			text = n;
 			return FormattedText.Empty;
 		}
 
-		private FormattedText ValidateIndexOuvBoucl(PlanComptableColumn column, FormattedText text)
+		private FormattedText ValidateIndexOuvBoucl(PlanComptableColumn column, ref FormattedText text)
 		{
 			if (text.IsNullOrEmpty)
 			{
@@ -298,11 +301,29 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				compte.Titre          = c.Titre;
 				compte.Catégorie      = c.Catégorie;
 				compte.Type           = c.Type;
-				compte.Groupe         = c.Groupe;
-				compte.CompteOuvBoucl = c.CompteOuvBoucl;
+//				compte.Groupe         = c.Groupe;
+//				compte.CompteOuvBoucl = c.CompteOuvBoucl;
 				compte.IndexOuvBoucl  = c.IndexOuvBoucl;
 
 				this.comptabilitéEntity.PlanComptable.Add (compte);
+			}
+
+			foreach (var c in comptes)
+			{
+				if (c.Groupe != null && !c.Groupe.Numéro.IsNullOrEmpty)
+				{
+					var compte    = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Numéro).FirstOrDefault ();
+					compte.Groupe = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Groupe.Numéro).FirstOrDefault ();
+				}
+			}
+
+			foreach (var c in comptes)
+			{
+				if (c.CompteOuvBoucl != null && !c.CompteOuvBoucl.Numéro.IsNullOrEmpty)
+				{
+					var compte            = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Numéro).FirstOrDefault ();
+					compte.CompteOuvBoucl = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.CompteOuvBoucl.Numéro).FirstOrDefault ();
+				}
 			}
 
 			(this.footerController as PlanComptableFooterController).PlanComptableUpdate ();

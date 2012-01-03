@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 			this.footerContainers.Clear ();
 			this.footerFields.Clear ();
+			this.footerValidatedTexts.Clear ();
 
 			//	Crée les boîtes.
 			this.infoFrameBox = new FrameBox
@@ -82,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					container.TabIndex = column+1;
 					field.Index = column;
 
-					field.EditionAccepted += delegate
+					field.TextChanged += delegate
 					{
 						this.FooterTextChanged (field.Index, field.FormattedText);
 					};
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					container.TabIndex = column+1;
 					field.Index = column;
 
-					field.EditionAccepted += delegate
+					field.TextChanged += delegate
 					{
 						this.FooterTextChanged (field.Index, field.FormattedText);
 					};
@@ -118,25 +119,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					container = field;
 				}
 
-				this.tileContainer.Window.FocusedWidgetChanged += delegate
-				{
-					if (field.Window != null)
-					{
-						var focused = field.Window.FocusedWidget;
-
-						if (this.footerFields.Contains (focused))
-						{
-							this.arrayController.HiliteHeaderColumn (focused.Index);
-						}
-						else
-						{
-							this.arrayController.HiliteHeaderColumn (-1);
-						}
-					}
-				};
-
 				this.footerContainers.Add (container);
 				this.footerFields.Add (field);
+				this.footerValidatedTexts.Add (FormattedText.Empty);
 			}
 
 			//	Crée les informations.

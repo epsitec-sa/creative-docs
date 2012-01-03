@@ -37,9 +37,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				return;
 			}
 
+			var compte = this.comptabilitéEntity.PlanComptable.Where(x => x.Numéro == filter).FirstOrDefault ();
+
 			decimal solde       = 0;
-			decimal soldeDébit  = 0;
-			decimal soldeCrédit = 0;
+			decimal totalDébit  = 0;
+			decimal totalCrédit = 0;
 
 			foreach (var écriture in this.comptabilitéEntity.Journal.OrderBy (x => x.Date))
 			{
@@ -51,44 +53,69 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				bool débit  = (ComptabilitéEntity.Match (écriture.Débit,  filter));
 				bool crédit = (ComptabilitéEntity.Match (écriture.Crédit, filter));
 
-				if (!débit && !crédit)
-				{
-					continue;
-				}
-
-				var data = new ExtraitDeCompteData ();
-
-				data.Date    = écriture.Date;
-				data.Pièce   = écriture.Pièce;
-				data.Libellé = écriture.Libellé;
-
 				if (débit)
 				{
-					data.CP    = écriture.Crédit;
-					data.Débit = écriture.Montant;
-					solde      += écriture.Montant;
-					soldeDébit += écriture.Montant;
+					var data = new ExtraitDeCompteData ();
+
+					data.Date    = écriture.Date;
+					data.Pièce   = écriture.Pièce;
+					data.Libellé = écriture.Libellé;
+					data.CP      = écriture.Crédit;
+					data.Débit   = écriture.Montant;
+
+					solde        += écriture.Montant;
+					totalDébit   += écriture.Montant;
+
+					if (compte != null &&
+						(compte.Catégorie == CatégorieDeCompte.Passif) ||
+						(compte.Catégorie == CatégorieDeCompte.Produit))
+					{
+						data.Solde = -solde;
+					}
+					else
+					{
+						data.Solde = solde;
+					}
+
+					this.sortedEntities.Add (data);
 				}
-				else
+
+				if (crédit)
 				{
-					data.CP     = écriture.Débit;
-					data.Crédit = écriture.Montant;
-					solde       -= écriture.Montant;
-					soldeCrédit += écriture.Montant;
+					var data = new ExtraitDeCompteData ();
+
+					data.Date    = écriture.Date;
+					data.Pièce   = écriture.Pièce;
+					data.Libellé = écriture.Libellé;
+					data.CP      = écriture.Débit;
+					data.Crédit  = écriture.Montant;
+
+					solde        -= écriture.Montant;
+					totalCrédit  += écriture.Montant;
+
+					if (compte != null &&
+						(compte.Catégorie == CatégorieDeCompte.Passif) ||
+						(compte.Catégorie == CatégorieDeCompte.Produit))
+					{
+						data.Solde = -solde;
+					}
+					else
+					{
+						data.Solde = solde;
+					}
+
+					this.sortedEntities.Add (data);
 				}
-
-				data.Solde = solde;
-
-				this.sortedEntities.Add (data);
 			}
 
 			//	Génère la dernière ligne.
 			{
 				var data = new ExtraitDeCompteData ();
 
-				data.Libellé = "Mouvement";
-				data.Débit   = soldeDébit;
-				data.Crédit  = soldeCrédit;
+				data.Libellé  = "Mouvement";
+				data.Débit    = totalDébit;
+				data.Crédit   = totalCrédit;
+				data.IsItalic = true;
 
 				this.sortedEntities.Add (data);
 			}
