@@ -39,12 +39,17 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		public FrameBox CreateUI(FrameBox parent)
 		{
-			this.frameBox = new FrameBox ()
+			this.frameBox = new CatcherFrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 10, 1, 1),
+				Parent        = parent,
+				Dock          = DockStyle.Fill,
+				Margins       = new Margins (0, 10, 1, 1),
+				CatcherAction = this.CatcherAction,
 			};
+
+			this.frameBox.KeyCodes.Add (KeyCode.Return);
+			this.frameBox.KeyCodes.Add (KeyCode.NumericEnter);
+			this.frameBox.KeyCodes.Add (KeyCode.Escape);
 
 			this.CreateTopToolbar (this.frameBox);
 			this.CreateOptions (this.frameBox);
@@ -79,6 +84,20 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			if (this.footerController != null)
 			{
 				this.footerController.FinalUpdate ();
+			}
+		}
+
+		private void CatcherAction(KeyCode keyCode, bool isShiftPressed)
+		{
+			if (keyCode == KeyCode.Return      ||
+				keyCode == KeyCode.NumericEnter)
+			{
+				this.footerController.AcceptAction ();
+			}
+
+			if (keyCode == KeyCode.Escape)
+			{
+				this.footerController.CancelAction ();
 			}
 		}
 
@@ -237,6 +256,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		protected AbstractOptionsController<Entity>				optionsController;
 		protected ArrayController<Entity>						arrayController;
 		protected AbstractFooterController<ColumnType, Entity>	footerController;
-		protected FrameBox										frameBox;
+		protected CatcherFrameBox								frameBox;
 	}
 }

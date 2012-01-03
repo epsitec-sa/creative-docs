@@ -195,16 +195,19 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		protected override void AcceptAction()
+		public override void AcceptAction()
 		{
-			this.AcceptAction (false, this.arrayController.SelectedEntity);
-
-			if (this.JustCreate)
+			if (this.bottomToolbarController.AcceptEnable)
 			{
-				int column = this.GetMapperColumnRank (JournalColumn.Montant);
-				this.arrayController.IgnoreChanged = true;
-				this.GetTextField (column).FormattedText = "0.00";
-				this.arrayController.IgnoreChanged = false;
+				this.AcceptAction (false, this.arrayController.SelectedEntity);
+
+				if (this.JustCreate)
+				{
+					int column = this.GetMapperColumnRank (JournalColumn.Montant);
+					this.arrayController.IgnoreChanged = true;
+					this.GetTextField (column).FormattedText = "0.00";
+					this.arrayController.IgnoreChanged = false;
+				}
 			}
 		}
 

@@ -43,16 +43,19 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			this.updateArrayContentAction = updateArrayContentAction;
 
 			this.bottomToolbarController = new BottomToolbarController (this.tileContainer);
-			this.bottomToolbarController.CreateUI (parent, this.AcceptAction, this.CancelAction, null, null);
+			this.bottomToolbarController.CreateUI (parent, this.AcceptAction, this.CancelAction, this.DuplicateAction, this.DeleteAction);
 			this.bottomToolbarController.CancelEnable = true;
 
+			// TODO: Le nombre d'événement ajouté augmente à l'infini !!!
 			this.tileContainer.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
 			this.tileContainer.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
 		}
 
 		private void HandleFocusedWidgetChanging(object sender, FocusChangingEventArgs e)
 		{
-#if true
+			//	Le focus va changer de widget. Il faut modifier le contenu du widget initial, en
+			//	fonction de la validation. Par exemple, si on a tapé "20" dans une date, ce texte
+			//	sera remplacé par "20.03.2012".
 			if (this.footerFields.Contains (e.OldFocus))
 			{
 				int column = e.OldFocus.Index;
@@ -67,16 +70,17 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					this.arrayController.IgnoreChanged = false;
 				}
 			}
-#endif
 		}
 
 		private void HandleFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
-			var field = sender as Widget;
+			//	Le focus a changé de widget. Il faut mettre en évidence la colonne correspondant au
+			//	nouveau widget, dans l'en-tête du tableau principal.
+			var window = sender as Window;
 
-			if (field != null && field.Window != null)
+			if (window != null)
 			{
-				var focused = field.Window.FocusedWidget;
+				var focused = window.FocusedWidget;
 
 				if (this.footerFields.Contains (focused))
 				{
@@ -126,9 +130,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		protected virtual void AcceptAction()
+		public virtual void AcceptAction()
 		{
-			this.AcceptAction (false, this.arrayController.SelectedEntity);
+			if (this.bottomToolbarController.AcceptEnable)
+			{
+				this.AcceptAction (false, this.arrayController.SelectedEntity);
+			}
 		}
 
 		public void AcceptAction(bool silent, Entity entity)
@@ -196,13 +203,24 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		{
 		}
 
-		private void CancelAction()
+		public void CancelAction()
 		{
-			this.dirty = false;
-			this.arrayController.SelectedRow = -1;
-			this.arrayController.SelectedEntity = null;
-			this.JustCreate = false;
-			this.FooterSelect (0);
+			if (this.bottomToolbarController.CancelEnable)
+			{
+				this.dirty = false;
+				this.arrayController.SelectedRow = -1;
+				this.arrayController.SelectedEntity = null;
+				this.JustCreate = false;
+				this.FooterSelect (0);
+			}
+		}
+
+		public void DuplicateAction()
+		{
+		}
+
+		public void DeleteAction()
+		{
 		}
 
 
@@ -319,9 +337,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected readonly TileContainer								tileContainer;
 		protected readonly ComptabilitéEntity							comptabilitéEntity;
-		protected AbstractDataAccessor<ColumnType, Entity>				dataAccessor;
-		protected List<AbstractColumnMapper<ColumnType>>				columnMappers;
-		protected ArrayController<Entity>								arrayController;
+		protected readonly AbstractDataAccessor<ColumnType, Entity>		dataAccessor;
+		protected readonly List<AbstractColumnMapper<ColumnType>>		columnMappers;
+		protected readonly ArrayController<Entity>						arrayController;
 		protected readonly List<Widget>									footerContainers;
 		protected readonly List<AbstractTextField>						footerFields;
 		protected readonly List<FormattedText>							footerValidatedTexts;
