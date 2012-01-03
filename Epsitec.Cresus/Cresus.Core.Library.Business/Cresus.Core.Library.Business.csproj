@@ -164,6 +164,10 @@
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanAccessor.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanData.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanOptions.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationOptions.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationAccessor.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationData.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExploitationColumn.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPAccessor.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPColumn.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPData.cs" />
@@ -185,6 +189,8 @@
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExtraitDeCompteOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExploitationController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExploitationOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\PPController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\PPOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExtraitDeCompteOptionsController.cs" />

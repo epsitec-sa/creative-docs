@@ -36,10 +36,15 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Actif).OrderBy (x => x.Numéro))
 			{
+				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
+
+				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
+				{
+					continue;
+				}
+
 				var data = new BilanData ();
 				this.SortedList.Add (data);
-
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
 				data.NuméroGauche = compte.Numéro;
 				data.TitreGauche  = compte.Titre;
@@ -52,6 +57,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			int rank = 0;
 			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Passif).OrderBy (x => x.Numéro))
 			{
+				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
+
+				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
+				{
+					continue;
+				}
+
 				BilanData data;
 
 				if (rank >= this.SortedList.Count)
@@ -63,8 +75,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				{
 					data = this.SortedList[rank];
 				}
-
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
 				data.NuméroDroite = compte.Numéro;
 				data.TitreDroite  = compte.Titre;
@@ -149,5 +159,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 		}
 
+		private BilanOptions Options
+		{
+			get
+			{
+				return this.options as BilanOptions;
+			}
+		}
 	}
 }

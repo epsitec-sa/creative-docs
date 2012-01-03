@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
 
-				if (!this.Options.ComptesNuls && (!solde.HasValue || solde.Value == 0))
+				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
 				{
 					continue;
 				}

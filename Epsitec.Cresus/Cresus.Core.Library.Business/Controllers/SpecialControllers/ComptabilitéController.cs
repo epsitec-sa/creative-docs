@@ -77,6 +77,12 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var controller = new PPController (this.tileContainer, this.comptabilitéEntity);
 				controller.CreateUI (frameBox);
 			}
+
+			if (this.mode == 6)  // exploitation ?
+			{
+				var controller = new ExploitationController (this.tileContainer, this.comptabilitéEntity);
+				controller.CreateUI (frameBox);
+			}
 		}
 
 
