@@ -65,6 +65,18 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var controller = new ExtraitDeCompteController (this.tileContainer, this.comptabilitéEntity);
 				controller.CreateUI (frameBox);
 			}
+
+			if (this.mode == 4)  // bilan ?
+			{
+				var controller = new BilanController (this.tileContainer, this.comptabilitéEntity);
+				controller.CreateUI (frameBox);
+			}
+
+			if (this.mode == 5)  // pertes et profits ?
+			{
+				var controller = new PPController (this.tileContainer, this.comptabilitéEntity);
+				controller.CreateUI (frameBox);
+			}
 		}
 
 

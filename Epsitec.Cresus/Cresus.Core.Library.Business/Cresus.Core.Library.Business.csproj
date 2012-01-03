@@ -160,6 +160,14 @@
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\ComplexControllers\FooterTextController.cs" />
     <Compile Include="Controllers\ComplexControllers\SerializedDocumentBlobController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanColumn.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanAccessor.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanData.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\BilanOptions.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPAccessor.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPColumn.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPData.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Accessors\PPOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ArrayController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BottomToolbarController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\AbstractColumnMapper.cs" />
@@ -175,6 +183,10 @@
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BalanceOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\AbstractOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExtraitDeCompteOptions.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanOptionsController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\PPController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\PPOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExtraitDeCompteOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExtraitDeCompteController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExtraitDeCompteAccessor.cs" />
