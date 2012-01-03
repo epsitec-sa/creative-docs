@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère la ExtraitDeCompte de vérification de la comptabilité.
 	/// </summary>
-	public class ExtraitDeCompteController : AbstractEditorController<ExtraitDeCompteColumn, ExtraitDeCompteData, ExtraitDeCompteOptions>
+	public class ExtraitDeCompteController : AbstractController<ExtraitDeCompteColumn, ExtraitDeCompteData>
 	{
 		public ExtraitDeCompteController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)

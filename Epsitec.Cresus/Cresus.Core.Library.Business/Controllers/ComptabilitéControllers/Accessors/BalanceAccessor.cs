@@ -32,6 +32,10 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			this.sortedEntities = new List<BalanceData> ();
 
 			ComptabilitéCompteEntity lastCompte = null;
+			decimal totalDébit  = 0;
+			decimal totalCrédit = 0;
+			decimal totalSoldeD = 0;
+			decimal totalSoldeC = 0;
 
 			foreach (var compte in this.comptabilitéEntity.PlanComptable.OrderBy (x => x.Numéro))
 			{
@@ -46,9 +50,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					continue;
 				}
 
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte, this.options.DateDébut, this.options.DateFin);
+				var soldeDébit  = this.comptabilitéEntity.GetSoldeCompteDébit (compte, this.options.DateDébut, this.options.DateFin);
+				var soldeCrédit = this.comptabilitéEntity.GetSoldeCompteCrédit (compte, this.options.DateDébut, this.options.DateFin);
+				var différence = soldeCrédit.GetValueOrDefault () - soldeDébit.GetValueOrDefault ();
 
-				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
+				if (!this.Options.ComptesNuls && soldeDébit.GetValueOrDefault () == 0 && soldeCrédit.GetValueOrDefault () == 0)
 				{
 					continue;
 				}
@@ -58,15 +64,31 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				data.Numéro = compte.Numéro;
 				data.Titre  = compte.Titre;
 				data.Niveau = compte.Niveau;
+				data.Débit  = soldeDébit .GetValueOrDefault () == 0 ? null : soldeDébit;
+				data.Crédit = soldeCrédit.GetValueOrDefault () == 0 ? null : soldeCrédit;
 
-				if (compte.Catégorie == CatégorieDeCompte.Actif ||
-					compte.Catégorie == CatégorieDeCompte.Charge)
+				if (différence < 0)
 				{
-					data.Débit = solde;
+					data.SoldeDébit = -différence;
 				}
-				else
+				if (différence > 0)
 				{
-					data.Crédit = solde;
+					data.SoldeCrédit = différence;
+				}
+
+				if (compte.Type == TypeDeCompte.Normal)
+				{
+					totalDébit  += soldeDébit.GetValueOrDefault ();
+					totalCrédit += soldeCrédit.GetValueOrDefault ();
+
+					if (différence < 0)
+					{
+						totalSoldeD -= différence;
+					}
+					if (différence > 0)
+					{
+						totalSoldeC += différence;
+					}
 				}
 
 				if (lastCompte == null || lastCompte.Catégorie != compte.Catégorie)  // changement de catégorie ?
@@ -75,6 +97,20 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				}
 
 				lastCompte = compte;
+
+				this.sortedEntities.Add (data);
+			}
+
+			// Génère la dernière ligne.
+			{
+				var data = new BalanceData ();
+
+				data.Titre       = "Mouvement";
+				data.Débit       = totalDébit;
+				data.Crédit      = totalCrédit;
+				data.SoldeDébit  = totalSoldeD;
+				data.SoldeCrédit = totalSoldeC;
+				data.IsHilited   = true;
 
 				this.sortedEntities.Add (data);
 			}

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class JournalFooterController : AbstractFooterController<JournalColumn, ComptabilitéEcritureEntity, object>
+	public class JournalFooterController : AbstractFooterController<JournalColumn, ComptabilitéEcritureEntity>
 	{
 		public JournalFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity> dataAccessor, List<AbstractColumnMapper<JournalColumn>> columnMappers, ArrayController<ComptabilitéEcritureEntity> arrayController)
 			: base (tileContainer, comptabilitéEntity, dataAccessor, columnMappers, arrayController)

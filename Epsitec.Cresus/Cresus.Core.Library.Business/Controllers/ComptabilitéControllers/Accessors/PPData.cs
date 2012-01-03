@@ -71,5 +71,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			get;
 			set;
 		}
+
+		public bool IsHilited
+		{
+			get;
+			set;
+		}
 	}
 }

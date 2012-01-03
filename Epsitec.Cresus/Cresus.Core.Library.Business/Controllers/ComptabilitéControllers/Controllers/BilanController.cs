@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère le bilan de la comptabilité.
 	/// </summary>
-	public class BilanController : AbstractEditorController<BilanColumn, BilanData, BilanOptions>
+	public class BilanController : AbstractController<BilanColumn, BilanData>
 	{
 		public BilanController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)
@@ -79,6 +79,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				}
 			}
 
+			if (data.IsHilited)
+			{
+				text = text.ApplyBold ();
+			}
+
 			return text;
 		}
 
@@ -91,6 +96,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				yield return new ColumnMapper (BilanColumn.NuméroGauche, 0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (BilanColumn.TitreGauche,  0.60, ContentAlignment.MiddleLeft,  "Actif");
 				yield return new ColumnMapper (BilanColumn.SoldeGauche,  0.20, ContentAlignment.MiddleRight, "");
+
+				yield return new ColumnMapper (BilanColumn.Espace,       0.01, ContentAlignment.MiddleLeft,  "");
 
 				yield return new ColumnMapper (BilanColumn.NuméroDroite, 0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (BilanColumn.TitreDroite,  0.60, ContentAlignment.MiddleLeft,  "Passif");

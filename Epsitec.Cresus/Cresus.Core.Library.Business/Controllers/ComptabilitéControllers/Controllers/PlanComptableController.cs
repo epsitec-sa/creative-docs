@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère le plan comptable de la comptabilité.
 	/// </summary>
-	public class PlanComptableController : AbstractEditorController<PlanComptableColumn, ComptabilitéCompteEntity, object>
+	public class PlanComptableController : AbstractController<PlanComptableColumn, ComptabilitéCompteEntity>
 	{
 		public PlanComptableController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)
@@ -280,6 +280,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		private void PlanComptableImport()
 		{
+			this.comptabilitéEntity.Journal.Clear ();
 			this.comptabilitéEntity.PlanComptable.Clear ();
 
 			var businessSettings = this.tileContainer.Controller.BusinessContext.GetCachedBusinessSettings ();

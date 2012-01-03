@@ -175,7 +175,7 @@
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ArrayController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BottomToolbarController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\AbstractColumnMapper.cs" />
-    <Compile Include="Controllers\ComptabilitéControllers\Controllers\AbstractEditorController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\AbstractController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\AbstractFooterController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BalanceController.cs" />

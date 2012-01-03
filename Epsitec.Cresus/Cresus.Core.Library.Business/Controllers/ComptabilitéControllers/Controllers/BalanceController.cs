@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère la balance de vérification de la comptabilité.
 	/// </summary>
-	public class BalanceController : AbstractEditorController<BalanceColumn, BalanceData, BalanceOptions>
+	public class BalanceController : AbstractController<BalanceColumn, BalanceData>
 	{
 		public BalanceController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)
@@ -62,11 +62,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			//	Retourne le texte contenu dans une cellule.
 			var mapper = this.columnMappers[column];
 			var text = this.dataAccessor.GetText (row, mapper.Column);
-			var compte = this.dataAccessor.SortedList[row];
+			var data = this.dataAccessor.SortedList[row];
 
 			if (mapper.Column == BalanceColumn.Titre)
 			{
-				for (int i = 0; i < compte.Niveau; i++)
+				for (int i = 0; i < data.Niveau; i++)
 				{
 					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
 				}
@@ -77,13 +77,13 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 					 mapper.Column == BalanceColumn.SoldeCrédit ||
 					 mapper.Column == BalanceColumn.Budget)
 			{
-				for (int i = 0; i < compte.Niveau; i++)
+				for (int i = 0; i < data.Niveau; i++)
 				{
 					text = FormattedText.Concat (text, UIBuilder.rightIndentText);
 				}
 			}
 
-			if (compte.IsHilited)
+			if (data.IsHilited)
 			{
 				text = text.ApplyBold ();
 			}

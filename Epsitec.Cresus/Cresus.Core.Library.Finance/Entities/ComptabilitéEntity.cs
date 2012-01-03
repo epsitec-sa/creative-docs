@@ -134,8 +134,8 @@ namespace Epsitec.Cresus.Core.Entities
 				return null;
 			}
 
-			var débit  = this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Débit,  compte.Numéro)).Sum (x => x.Montant);
-			var crédit = this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Crédit, compte.Numéro)).Sum (x => x.Montant);
+			var débit  = this.GetSoldeCompteDébit  (compte, dateDébut, dateFin);
+			var crédit = this.GetSoldeCompteCrédit (compte, dateDébut, dateFin);
 
 			if (compte.Catégorie == CatégorieDeCompte.Passif ||
 				compte.Catégorie == CatégorieDeCompte.Produit)
@@ -145,6 +145,34 @@ namespace Epsitec.Cresus.Core.Entities
 			else
 			{
 				return débit - crédit;
+			}
+		}
+
+		public decimal? GetSoldeCompteDébit(ComptabilitéCompteEntity compte, Date? dateDébut = null, Date? dateFin = null)
+		{
+			//	Calcule le solde d'un compte.
+			if (compte.Type != TypeDeCompte.Normal &&
+				compte.Type != TypeDeCompte.Groupe)
+			{
+				return null;
+			}
+			else
+			{
+				return this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Débit, compte.Numéro)).Sum (x => x.Montant);
+			}
+		}
+
+		public decimal? GetSoldeCompteCrédit(ComptabilitéCompteEntity compte, Date? dateDébut = null, Date? dateFin = null)
+		{
+			//	Calcule le solde d'un compte.
+			if (compte.Type != TypeDeCompte.Normal &&
+				compte.Type != TypeDeCompte.Groupe)
+			{
+				return null;
+			}
+			else
+			{
+				return this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date) && ComptabilitéEntity.Match (x.Crédit, compte.Numéro)).Sum (x => x.Montant);
 			}
 		}
 

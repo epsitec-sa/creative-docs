@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère le journal des écritures de la comptabilité.
 	/// </summary>
-	public class JournalController : AbstractEditorController<JournalColumn, ComptabilitéEcritureEntity, object>
+	public class JournalController : AbstractController<JournalColumn, ComptabilitéEcritureEntity>
 	{
 		public JournalController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)

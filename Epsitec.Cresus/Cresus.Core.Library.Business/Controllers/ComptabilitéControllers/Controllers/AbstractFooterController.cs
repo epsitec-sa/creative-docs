@@ -21,9 +21,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page générique pour l'édition de la comptabilité.
 	/// </summary>
-	public abstract class AbstractFooterController<ColumnType, Entity, Options>
+	public abstract class AbstractFooterController<ColumnType, Entity>
 		where Entity : class
-		where Options : class
 	{
 		public AbstractFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<ColumnType, Entity> dataAccessor, List<AbstractColumnMapper<ColumnType>> columnMappers, ArrayController<Entity> arrayController)
 		{
@@ -270,6 +269,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				this.justCreate = value;
 			}
 		}
+
 
 		protected readonly TileContainer								tileContainer;
 		protected readonly ComptabilitéEntity							comptabilitéEntity;

@@ -23,13 +23,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 {
 	/// <summary>
-	/// Ce contrôleur gère un éditeur générique pour la comptabilité.
+	/// Contrôleur générique pour la comptabilité, qui sert de base aux contrôleurs permettant l'édition
+	/// (journal et plan comptable) ainsi qu'à ceux qui représentent des données 'readonly' (balance,
+	/// bilan, etc.).
 	/// </summary>
-	public abstract class AbstractEditorController<ColumnType, Entity, Options>
+	public abstract class AbstractController<ColumnType, Entity>
 		where Entity : class
-		where Options : class
 	{
-		public AbstractEditorController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
+		public AbstractController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 		{
 			this.tileContainer = tileContainer;
 			this.comptabilitéEntity = comptabilitéEntity;
@@ -172,7 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			}
 
 			this.arrayController.SelectedEntity = entity;
-			this.arrayController.SelectedRow = this.dataAccessor.IndexOf (entity);
+			this.arrayController.SetSelectedRow (this.dataAccessor.IndexOf (entity), this.arrayController.SelectedColumn);
 
 			if (this.footerController != null)
 			{
@@ -226,16 +227,16 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		#endregion
 
 
-		protected readonly TileContainer								tileContainer;
-		protected readonly ComptabilitéEntity							comptabilitéEntity;
+		protected readonly TileContainer						tileContainer;
+		protected readonly ComptabilitéEntity					comptabilitéEntity;
 
-		protected AbstractDataAccessor<ColumnType, Entity>				dataAccessor;
-		protected List<AbstractColumnMapper<ColumnType>>				columnMappers;
+		protected AbstractDataAccessor<ColumnType, Entity>		dataAccessor;
+		protected List<AbstractColumnMapper<ColumnType>>		columnMappers;
 
-		protected TopToolbarController									topToolbarController;
-		protected AbstractOptionsController<Entity>						optionsController;
-		protected ArrayController<Entity>								arrayController;
-		protected AbstractFooterController<ColumnType, Entity, Options>	footerController;
-		protected FrameBox												frameBox;
+		protected TopToolbarController							topToolbarController;
+		protected AbstractOptionsController<Entity>				optionsController;
+		protected ArrayController<Entity>						arrayController;
+		protected AbstractFooterController<ColumnType, Entity>	footerController;
+		protected FrameBox										frameBox;
 	}
 }

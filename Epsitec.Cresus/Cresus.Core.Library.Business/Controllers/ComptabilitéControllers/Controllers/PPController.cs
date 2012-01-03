@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// <summary>
 	/// Ce contrôleur gère les pertes et profits de la comptabilité.
 	/// </summary>
-	public class PPController : AbstractEditorController<PPColumn, PPData, PPOptions>
+	public class PPController : AbstractController<PPColumn, PPData>
 	{
 		public PPController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
 			: base (tileContainer, comptabilitéEntity)
@@ -79,6 +79,11 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				}
 			}
 
+			if (data.IsHilited)
+			{
+				text = text.ApplyBold ();
+			}
+
 			return text;
 		}
 
@@ -91,6 +96,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				yield return new ColumnMapper (PPColumn.NuméroGauche, 0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (PPColumn.TitreGauche,  0.60, ContentAlignment.MiddleLeft,  "Charges");
 				yield return new ColumnMapper (PPColumn.SoldeGauche,  0.20, ContentAlignment.MiddleRight, "");
+
+				yield return new ColumnMapper (PPColumn.Espace,       0.01, ContentAlignment.MiddleLeft,  "");
 
 				yield return new ColumnMapper (PPColumn.NuméroDroite, 0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (PPColumn.TitreDroite,  0.60, ContentAlignment.MiddleLeft,  "Produits");

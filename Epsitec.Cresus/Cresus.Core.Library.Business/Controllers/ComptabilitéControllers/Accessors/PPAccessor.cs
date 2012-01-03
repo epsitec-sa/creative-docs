@@ -54,9 +54,12 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				data.NuméroGauche = compte.Numéro;
 				data.TitreGauche  = compte.Titre;
 				data.NiveauGauche = compte.Niveau;
-				data.SoldeGauche = solde;
 
-				totalGauche += solde.GetValueOrDefault ();
+				if (this.HasSolde (compte))
+				{
+					data.SoldeGauche = solde;
+					totalGauche += solde.GetValueOrDefault ();
+				}
 			}
 
 			int rank = 0;
@@ -89,11 +92,40 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				data.NuméroDroite = compte.Numéro;
 				data.TitreDroite  = compte.Titre;
 				data.NiveauDroite = compte.Niveau;
-				data.SoldeDroite = solde;
 
-				totalDroite += solde.GetValueOrDefault ();
+				if (this.HasSolde (compte))
+				{
+					data.SoldeDroite = solde;
+					totalDroite += solde.GetValueOrDefault ();
+				}
 
 				rank++;
+			}
+
+			//	Avant-dernière ligne.
+			if (totalGauche != totalDroite)
+			{
+				var data = new PPData ();
+
+				if (totalGauche < totalDroite)
+				{
+					data.TitreGauche = "Différence (bénéfice)";
+					data.SoldeGauche = totalDroite - totalGauche;
+					data.IsHilited   = true;
+
+					totalGauche = totalDroite;
+				}
+
+				if (totalGauche > totalDroite)
+				{
+					data.TitreDroite = "Différence (perte)";
+					data.SoldeDroite = totalGauche - totalDroite;
+					data.IsHilited   = true;
+
+					totalDroite = totalGauche;
+				}
+
+				this.SortedList.Add (data);
 			}
 
 			//	Dernière ligne
@@ -102,9 +134,28 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 				data.SoldeGauche = totalGauche;
 				data.SoldeDroite = totalDroite;
+				data.IsHilited   = true;
 
 				this.SortedList.Add (data);
 			}
+		}
+
+		private bool HasSolde(ComptabilitéCompteEntity compte)
+		{
+			//	Indique si le solde du compte doit figurer dans le tableau.
+			//	Si la profondeur n'est pas spécifiée, on accepte tous les comptes normaux.
+			//	Si la profondeur est spécifiée, on accepte les comptes qui ont exactement cette profondeur.
+			if (compte.Type == TypeDeCompte.Normal)
+			{
+				return true;
+			}
+
+			if (this.Options.Profondeur.HasValue && compte.Niveau+1 == this.Options.Profondeur.Value)
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 

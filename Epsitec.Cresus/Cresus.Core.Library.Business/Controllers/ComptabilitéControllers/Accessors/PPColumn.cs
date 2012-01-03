@@ -8,6 +8,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		NuméroGauche,
 		TitreGauche,
 		SoldeGauche,
+		Espace,
 		NuméroDroite,
 		TitreDroite,
 		SoldeDroite,
