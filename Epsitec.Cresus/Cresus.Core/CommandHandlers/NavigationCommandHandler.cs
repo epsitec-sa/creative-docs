@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.Internal;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,6 +34,20 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 			var navigator = this.GetNavigator (e);
 			navigator.History.NavigateForward ();
 		}
+
+
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView1)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView2)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView3)]
+		public void ProcessToggleView(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var navigator = this.GetNavigator (e);
+
+			int view = e.Command.Name.LastCharacter () - '1';
+
+			navigator.ToggleView (view);
+		}
+
 
 		private Epsitec.Cresus.Core.Orchestrators.NavigationOrchestrator GetNavigator(CommandEventArgs e)
 		{

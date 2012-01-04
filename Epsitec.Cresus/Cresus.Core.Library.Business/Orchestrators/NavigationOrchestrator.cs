@@ -85,6 +85,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			newPath.Navigate (this);
 		}
 
+		public void ToggleView(int view)
+		{
+			this.DataViewController.ToggleView (view);
+		}
+
 		/// <summary>
 		/// Adds a node in the navigation history for the controller which was just
 		/// opened.

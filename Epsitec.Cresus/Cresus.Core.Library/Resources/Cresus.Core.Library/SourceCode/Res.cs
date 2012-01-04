@@ -28,6 +28,20 @@ namespace Epsitec.Cresus.Core.Library
 				public static readonly global::Epsitec.Common.Widgets.Command SaveRecord = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 7));
 			}
 			
+			public static class Focus
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAV
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView1 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
+				//	designer:cap/EVA01
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView2 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
+				//	designer:cap/EVA11
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView3 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
+			}
+			
 			public static class History
 			{
 				internal static void _Initialize()
@@ -57,6 +71,20 @@ namespace Epsitec.Cresus.Core.Library
 				public const long DiscardRecord = 0x3EE0000A000008L;
 				//	designer:cap/EVA7
 				public const long SaveRecord = 0x3EE0000A000007L;
+			}
+			
+			public static class Focus
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/EVAV
+				public const long ToggleView1 = 0x3EE0000A00001FL;
+				//	designer:cap/EVA01
+				public const long ToggleView2 = 0x3EE0000A000020L;
+				//	designer:cap/EVA11
+				public const long ToggleView3 = 0x3EE0000A000021L;
 			}
 			
 			public static class History
@@ -422,9 +450,11 @@ namespace Epsitec.Cresus.Core.Library
 			Res._manager.DefineDefaultModuleName ("Cresus.Core.Library");
 			Commands._Initialize ();
 			Commands.Edition._Initialize ();
+			Commands.Focus._Initialize ();
 			Commands.History._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Edition._Initialize ();
+			CommandIds.Focus._Initialize ();
 			CommandIds.History._Initialize ();
 			Captions._Initialize ();
 			Captions.ActionButton._Initialize ();

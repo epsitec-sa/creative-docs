@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -245,6 +245,24 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PopViewControllersUntil (oldViewController);
 			this.PopViewController ();
 			this.PushViewController (newViewController);
+		}
+
+		public void ToggleView(int view)
+		{
+			var top = this.viewControllers.FirstOrDefault (x => x.Mode == ViewControllerMode.Summary);
+
+			if (top != null)
+			{
+				int index  = this.viewControllers.IndexOf (top);
+				var column = this.viewLayoutController.GetColumn (index);
+				var tile   = column.Children.Widgets.OfType<Epsitec.Cresus.Core.Widgets.Tiles.TitleTile> ().Skip (view).FirstOrDefault ();
+
+				if (tile != null)
+				{
+					tile.SimulateClicked ();
+				}
+				//	TODO:
+			}
 		}
 
 		#region FocusInformation Structure

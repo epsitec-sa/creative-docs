@@ -1,11 +1,11 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Library.Internal
 {
-	static internal class StringExtensions
+	public static class StringExtensions
 	{
 		public static char LastCharacter(this string text)
 		{

@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Type);
+			return TextFormatter.FormatText (this.Name, this.Type, TextFormatter.Command.IfEmpty);
 		}
 		
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Type, "\n", this.Originator);
+			return TextFormatter.FormatText (this.Name, this.Type, TextFormatter.Command.IfEmpty, "\n", this.Description, "\n", this.Originator);
 		}
 	}
 }
