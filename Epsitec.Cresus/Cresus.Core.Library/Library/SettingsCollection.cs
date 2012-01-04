@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Library
 		/// When fetching a value, if the key is not found in the collection, then
 		/// a <c>null</c> string will be returned.
 		/// </summary>
-		public string this[string key]
+		public string							this[string key]
 		{
 			get
 			{
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public int Count
+		public int								Count
 		{
 			get
 			{
@@ -168,7 +168,13 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-        public XElement Save(string xmlNodeName)
+
+		/// <summary>
+		/// Saves the settings to the specified XML node.
+		/// </summary>
+		/// <param name="xmlNodeName">Name of the XML node.</param>
+		/// <returns>The XML node.</returns>
+		public XElement Save(string xmlNodeName)
 		{
 			var nodes = this.tuples.Select (x =>
 				new XElement (Xml.Tuple,
@@ -178,6 +184,10 @@ namespace Epsitec.Cresus.Core.Library
 			return new XElement (xmlNodeName, nodes);
 		}
 
+		/// <summary>
+		/// Restores the settings from the specified XML node.
+		/// </summary>
+		/// <param name="xml">The XML node.</param>
 		public void Restore(XElement xml)
 		{
 			this.Clear ();
@@ -198,6 +208,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		
 		#region IEnumerable<SettingTuple> Members
 
 		public IEnumerator<SettingsTuple> GetEnumerator()
@@ -228,6 +239,6 @@ namespace Epsitec.Cresus.Core.Library
 		#endregion
 
 		private readonly Dictionary<string, string> dict;
-		private readonly List<SettingsTuple> tuples;
+		private readonly List<SettingsTuple>	tuples;
 	}
 }

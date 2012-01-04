@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -6,8 +6,8 @@ using Epsitec.Common.Support.Extensions;
 namespace Epsitec.Cresus.Core.Library
 {
 	/// <summary>
-	/// The <c>SettingsTuple</c> structure stores a key/value pair used to define
-	/// settings, as stored by the <see cref="SettingsCollection"/>.
+	/// The <c>SettingsTuple</c> immutable structure stores a key/value pair used to
+	/// define settings, as stored by the <see cref="SettingsCollection"/>.
 	/// </summary>
 	public struct SettingsTuple : System.IEquatable<SettingsTuple>
 	{
@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Library
 			this.value = value;
 		}
 
+		
 		public string							Key
 		{
 			get
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
+		
 		#region IEquatable<SettingsTuple> Members
 
 		public bool Equals(SettingsTuple other)
@@ -46,6 +48,7 @@ namespace Epsitec.Cresus.Core.Library
 
 		#endregion
 
+		
 		public override bool Equals(object obj)
 		{
 			if (obj is SettingsTuple)
@@ -68,7 +71,8 @@ namespace Epsitec.Cresus.Core.Library
 			return string.Concat (this.key, " : ", this.value);
 		}
 		
-		private readonly string key;
-		private readonly string value;
+		
+		private readonly string					key;
+		private readonly string					value;
 	}
 }

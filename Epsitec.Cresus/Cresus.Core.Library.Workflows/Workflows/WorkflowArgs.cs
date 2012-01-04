@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers;
@@ -9,19 +9,25 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Workflows
 {
+	/// <summary>
+	/// The <c>WorkflowArgs</c> class is used to manipulate arguments associated with
+	/// a <see cref="WorfklowThreadEntity"/>, stored as a <see cref="SettingsCollection"/>
+	/// serialized into an <see cref="XmlBlobEntity"/>.
+	/// </summary>
 	public static class WorkflowArgs
 	{
 		public static int? GetActiveVariantId(SettingsCollection args = null)
 		{
-			return WorkflowArgs.GetIntValue (args, "ActiveVariant");
+			return WorkflowArgs.GetIntValue (args, Keys.ActiveVariant);
 		}
 
 		public static void SetActiveVariantId(int? value, SettingsCollection args = null)
 		{
-			WorkflowArgs.SetIntValue (args, "ActiveVariant", value);
+			WorkflowArgs.SetIntValue (args, Keys.ActiveVariant, value);
 		}
 
-		public static int? GetIntValue(SettingsCollection args, string key)
+		
+		private static int? GetIntValue(SettingsCollection args, string key)
 		{
 			if (args == null)
 			{
@@ -31,7 +37,7 @@ namespace Epsitec.Cresus.Core.Workflows
 			return args.GetIntValue (key);
 		}
 
-		public static void SetIntValue(SettingsCollection args, string key, int? value)
+		private static void SetIntValue(SettingsCollection args, string key, int? value)
 		{
 			var transition      = WorkflowExecutionEngine.Current.Transition;
 			var businessContext = transition.BusinessContext;
@@ -48,5 +54,14 @@ namespace Epsitec.Cresus.Core.Workflows
 				args.SetIntValue (key, value);
 			}
 		}
+
+		#region Static Keys Class
+
+		private static class Keys
+		{
+			public static readonly string		ActiveVariant = "ActiveVariant";
+		}
+
+		#endregion
 	}
 }
