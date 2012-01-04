@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class JournalFooterController : AbstractFooterController<JournalColumn, ComptabilitéEcritureEntity>
 	{
-		public JournalFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity> dataAccessor, List<AbstractColumnMapper<JournalColumn>> columnMappers, ArrayController<ComptabilitéEcritureEntity> arrayController)
-			: base (tileContainer, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
+		public JournalFooterController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<JournalColumn, ComptabilitéEcritureEntity> dataAccessor, List<AbstractColumnMapper<JournalColumn>> columnMappers, ArrayController<ComptabilitéEcritureEntity> arrayController)
+			: base (businessContext, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
 		{
 			this.infoShowed = true;
 		}
@@ -213,7 +214,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateEntity(bool silent)
 		{
-			var écriture = this.tileContainer.Controller.DataContext.CreateEntity<ComptabilitéEcritureEntity> ();
+			var écriture = this.businessContext.DataContext.CreateEntity<ComptabilitéEcritureEntity> ();
 			this.dataAccessor.Add (écriture);
 			this.UpdateEntity (silent, écriture);
 		}

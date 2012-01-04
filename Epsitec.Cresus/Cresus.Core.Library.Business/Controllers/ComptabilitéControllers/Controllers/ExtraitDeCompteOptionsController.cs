@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class ExtraitDeCompteOptionsController : AbstractOptionsController<ExtraitDeCompteData>
 	{
-		public ExtraitDeCompteOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, ExtraitDeCompteOptions options)
-			: base (tileContainer, comptabilitéEntity, options)
+		public ExtraitDeCompteOptionsController(ComptabilitéEntity comptabilitéEntity, ExtraitDeCompteOptions options)
+			: base (comptabilitéEntity, options)
 		{
 		}
 

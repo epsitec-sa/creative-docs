@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class JournalController : AbstractController<JournalColumn, ComptabilitéEcritureEntity>
 	{
-		public JournalController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
-			: base (tileContainer, comptabilitéEntity)
+		public JournalController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+			: base (businessContext, comptabilitéEntity)
 		{
 			this.dataAccessor = new JournalAccessor (this.comptabilitéEntity);
 
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new JournalFooterController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this.arrayController);
+			this.footerController = new JournalFooterController (this.businessContext, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this.arrayController);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 		}
 

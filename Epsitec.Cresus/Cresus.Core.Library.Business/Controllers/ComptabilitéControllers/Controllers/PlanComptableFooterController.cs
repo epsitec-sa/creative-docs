@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class PlanComptableFooterController : AbstractFooterController<PlanComptableColumn, ComptabilitéCompteEntity>
 	{
-		public PlanComptableFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity> dataAccessor, List<AbstractColumnMapper<PlanComptableColumn>> columnMappers, ArrayController<ComptabilitéCompteEntity> arrayController)
-			: base (tileContainer, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
+		public PlanComptableFooterController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<PlanComptableColumn, ComptabilitéCompteEntity> dataAccessor, List<AbstractColumnMapper<PlanComptableColumn>> columnMappers, ArrayController<ComptabilitéCompteEntity> arrayController)
+			: base (businessContext, comptabilitéEntity, dataAccessor, columnMappers, arrayController)
 		{
 		}
 
@@ -158,7 +159,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateEntity(bool silent)
 		{
-			var compte = this.tileContainer.Controller.DataContext.CreateEntity<ComptabilitéCompteEntity> ();
+			var compte = this.businessContext.DataContext.CreateEntity<ComptabilitéCompteEntity> ();
 			this.dataAccessor.Add (compte);
 			this.UpdateEntity (silent, compte);
 		}

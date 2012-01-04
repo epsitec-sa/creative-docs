@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class PlanComptableController : AbstractController<PlanComptableColumn, ComptabilitéCompteEntity>
 	{
-		public PlanComptableController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
-			: base (tileContainer, comptabilitéEntity)
+		public PlanComptableController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+			: base (businessContext, comptabilitéEntity)
 		{
 			this.dataAccessor = new PlanComptableAccessor (this.comptabilitéEntity);
 
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new PlanComptableFooterController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this.arrayController);
+			this.footerController = new PlanComptableFooterController (this.businessContext, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this.arrayController);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 		}
 
@@ -286,16 +287,16 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			this.comptabilitéEntity.Journal.Clear ();
 			this.comptabilitéEntity.PlanComptable.Clear ();
 
-			var businessSettings = this.tileContainer.Controller.BusinessContext.GetCachedBusinessSettings ();
+			var businessSettings = this.businessContext.GetCachedBusinessSettings ();
 			var financeSettings  = businessSettings.Finance;
 
 			System.Diagnostics.Debug.Assert (financeSettings != null);
-			var chart = financeSettings.GetChartOfAccountsOrDefaultToNearest (this.tileContainer.Controller.BusinessContext.GetReferenceDate ());
+			var chart = financeSettings.GetChartOfAccountsOrDefaultToNearest (this.businessContext.GetReferenceDate ());
 			var comptes = Epsitec.Cresus.Core.Business.Accounting.CresusChartOfAccountsConnector.Import (chart);
 
 			foreach (var c in comptes)
 			{
-				var compte = this.tileContainer.Controller.DataContext.CreateEntity<ComptabilitéCompteEntity> ();
+				var compte = this.businessContext.DataContext.CreateEntity<ComptabilitéCompteEntity> ();
 
 				compte.Numéro         = c.Numéro;
 				compte.Titre          = c.Titre;

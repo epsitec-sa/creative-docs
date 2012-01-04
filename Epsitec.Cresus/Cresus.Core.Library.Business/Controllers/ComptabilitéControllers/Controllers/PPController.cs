@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class PPController : AbstractController<PPColumn, PPData>
 	{
-		public PPController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
-			: base (tileContainer, comptabilitéEntity)
+		public PPController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+			: base (businessContext, comptabilitéEntity)
 		{
 			this.dataAccessor = new PPAccessor (this.comptabilitéEntity);
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new PPOptionsController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor.AccessorOptions as PPOptions);
+			this.optionsController = new PPOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as PPOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 		}
 

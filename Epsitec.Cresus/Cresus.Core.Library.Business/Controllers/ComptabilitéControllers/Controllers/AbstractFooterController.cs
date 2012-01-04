@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -24,9 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	public abstract class AbstractFooterController<ColumnType, Entity>
 		where Entity : class
 	{
-		public AbstractFooterController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<ColumnType, Entity> dataAccessor, List<AbstractColumnMapper<ColumnType>> columnMappers, ArrayController<Entity> arrayController)
+		public AbstractFooterController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor<ColumnType, Entity> dataAccessor, List<AbstractColumnMapper<ColumnType>> columnMappers, ArrayController<Entity> arrayController)
 		{
-			this.tileContainer      = tileContainer;
+			this.businessContext    = businessContext;
 			this.comptabilitéEntity = comptabilitéEntity;
 			this.dataAccessor       = dataAccessor;
 			this.columnMappers      = columnMappers;
@@ -40,15 +41,22 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		public virtual void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
+			this.parent = parent;
+
 			this.updateArrayContentAction = updateArrayContentAction;
 
-			this.bottomToolbarController = new BottomToolbarController (this.tileContainer);
+			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
 			this.bottomToolbarController.CreateUI (parent, this.AcceptAction, this.CancelAction, this.DuplicateAction, this.DeleteAction);
 			this.bottomToolbarController.CancelEnable = true;
 
-			// TODO: Le nombre d'événement ajouté augmente à l'infini !!!
-			this.tileContainer.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
-			this.tileContainer.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
+			this.parent.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
+			this.parent.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
+		}
+
+		public void Dispose()
+		{
+			this.parent.Window.FocusedWidgetChanging -= new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
+			this.parent.Window.FocusedWidgetChanged -= new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
 		}
 
 		private void HandleFocusedWidgetChanging(object sender, FocusChangingEventArgs e)
@@ -335,7 +343,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		protected readonly TileContainer								tileContainer;
+		protected readonly BusinessContext								businessContext;
 		protected readonly ComptabilitéEntity							comptabilitéEntity;
 		protected readonly AbstractDataAccessor<ColumnType, Entity>		dataAccessor;
 		protected readonly List<AbstractColumnMapper<ColumnType>>		columnMappers;
@@ -344,6 +352,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		protected readonly List<AbstractTextField>						footerFields;
 		protected readonly List<FormattedText>							footerValidatedTexts;
 
+		protected FrameBox												parent;
 		protected System.Action											updateArrayContentAction;
 		protected BottomToolbarController								bottomToolbarController;
 		protected bool													dirty;

@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
+using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -22,9 +23,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class TopToolbarController
 	{
-		public TopToolbarController(TileContainer tileContainer)
+		public TopToolbarController(BusinessContext businessContext)
 		{
-			this.tileContainer = tileContainer;
+			this.businessContext = businessContext;
 			this.toolbarShowed = true;
 		}
 
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 				DrawFullFrame   = true,
 				BackColor       = Color.FromBrightness (0.96),  // gris très clair
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 20, 2, 6),
+				Margins         = new Margins (0, 20, 0, 6),
 				Padding         = new Margins (5),
 			};
 
@@ -184,7 +185,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		private static readonly double			toolbarHeight = 20;
 
-		private readonly TileContainer			tileContainer;
+		private readonly BusinessContext		businessContext;
 
 		private FrameBox						toolbar;
 		private IconButton						importButton;

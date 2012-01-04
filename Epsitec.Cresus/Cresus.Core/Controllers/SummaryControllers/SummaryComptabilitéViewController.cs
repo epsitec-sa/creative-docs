@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			wall.AddBrick (x => x)
 				.Icon ("Comptabilité")
 				;
+#if false
 			wall.AddBrick ()
 				.Attribute (BrickMode.SpecialController1)
 				.Icon ("Comptabilité.Journal")
@@ -103,6 +104,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 				.Title ("Décompte TVA")
 				.Text ("")
 				;
+#endif
 		}
 
 		private FormattedText PlanComptableTitle

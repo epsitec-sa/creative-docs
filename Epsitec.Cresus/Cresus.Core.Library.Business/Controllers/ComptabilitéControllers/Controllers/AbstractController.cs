@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -30,9 +31,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	public abstract class AbstractController<ColumnType, Entity>
 		where Entity : class
 	{
-		public AbstractController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
+		public AbstractController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
 		{
-			this.tileContainer = tileContainer;
+			this.businessContext = businessContext;
 			this.comptabilitéEntity = comptabilitéEntity;
 		}
 
@@ -43,7 +44,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Fill,
-				Margins       = new Margins (0, 10, 1, 1),
 				CatcherAction = this.CatcherAction,
 			};
 
@@ -77,6 +77,14 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 			return this.frameBox;
 		}
 
+		public void Dispose()
+		{
+			if (this.footerController != null)
+			{
+				this.footerController.Dispose ();
+			}
+		}
+
 		protected virtual void FinalUpdate()
 		{
 			this.ShowHideToolbar ();
@@ -105,7 +113,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		#region Toolbar
 		private void CreateTopToolbar(FrameBox parent)
 		{
-			this.topToolbarController = new TopToolbarController (this.tileContainer);
+			this.topToolbarController = new TopToolbarController (this.businessContext);
 			this.topToolbarController.CreateUI (parent, this.ImportAction, this.ShowHideToolbar);
 		}
 
@@ -246,7 +254,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		#endregion
 
 
-		protected readonly TileContainer						tileContainer;
+		protected readonly BusinessContext						businessContext;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
 
 		protected AbstractDataAccessor<ColumnType, Entity>		dataAccessor;

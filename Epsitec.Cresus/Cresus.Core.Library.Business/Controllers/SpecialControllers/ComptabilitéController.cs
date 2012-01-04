@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			var frameBox = parent as FrameBox;
 			System.Diagnostics.Debug.Assert (frameBox != null);
 
+#if false
 			if (this.mode == 0)  // plan comptable ?
 			{
 				var controller = new PlanComptableController (this.tileContainer, this.comptabilitéEntity);
@@ -83,6 +84,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var controller = new ExploitationController (this.tileContainer, this.comptabilitéEntity);
 				controller.CreateUI (frameBox);
 			}
+#endif
 		}
 
 

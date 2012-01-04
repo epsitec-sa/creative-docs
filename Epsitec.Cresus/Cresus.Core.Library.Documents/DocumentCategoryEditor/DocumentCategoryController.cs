@@ -52,17 +52,17 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Parent = parent,
 				PreferredWidth = standardWidth,
 				Dock = DockStyle.Left,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 10),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 47, 10),
+				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, 10),
 			};
 
-			this.CreateDocumentType (leftFrame);
+			//?this.CreateDocumentType (leftFrame);
 
 			this.documentOptionsController = new DocumentOptionsController (this);
 			this.documentOptionsController.CreateUI (leftFrame, standardWidth);
@@ -74,6 +74,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			this.pageTypesController.CreateUI (rightFrame);
 		}
 
+#if false
 		private void CreateDocumentType(Widget parent)
 		{
 			new StaticText
@@ -117,6 +118,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				this.summaryController.UpdateAfterDocumentTypeChanged ();
 			};
 		}
+#endif
 
 
 		public IBusinessContext BusinessContext

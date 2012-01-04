@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Business.Finance;
 using Epsitec.Cresus.Core.Business.Finance.Comptabilité;
 
@@ -27,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class BilanController : AbstractController<BilanColumn, BilanData>
 	{
-		public BilanController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity)
-			: base (tileContainer, comptabilitéEntity)
+		public BilanController(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+			: base (businessContext, comptabilitéEntity)
 		{
 			this.dataAccessor = new BilanAccessor (this.comptabilitéEntity);
 
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new BilanOptionsController (this.tileContainer, this.comptabilitéEntity, this.dataAccessor.AccessorOptions as BilanOptions);
+			this.optionsController = new BilanOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as BilanOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 		}
 

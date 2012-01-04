@@ -24,9 +24,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	public abstract class AbstractOptionsController<Entity>
 		where Entity : class
 	{
-		public AbstractOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, AbstractOptions options)
+		public AbstractOptionsController(ComptabilitéEntity comptabilitéEntity, AbstractOptions options)
 		{
-			this.tileContainer      = tileContainer;
 			this.comptabilitéEntity = comptabilitéEntity;
 			this.options            = options;
 
@@ -273,7 +272,6 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 		}
 
 
-		protected readonly TileContainer						tileContainer;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
 		protected readonly AbstractOptions						options;
 

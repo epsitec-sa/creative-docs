@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class BilanOptionsController : AbstractOptionsController<BilanData>
 	{
-		public BilanOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, BilanOptions options)
-			: base (tileContainer, comptabilitéEntity, options)
+		public BilanOptionsController(ComptabilitéEntity comptabilitéEntity, BilanOptions options)
+			: base (comptabilitéEntity, options)
 		{
 		}
 

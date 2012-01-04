@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Core.Controllers.ComptabilitéControllers
 	/// </summary>
 	public class PPOptionsController : AbstractOptionsController<PPData>
 	{
-		public PPOptionsController(TileContainer tileContainer, ComptabilitéEntity comptabilitéEntity, PPOptions options)
-			: base (tileContainer, comptabilitéEntity, options)
+		public PPOptionsController(ComptabilitéEntity comptabilitéEntity, PPOptions options)
+			: base (comptabilitéEntity, options)
 		{
 		}
 

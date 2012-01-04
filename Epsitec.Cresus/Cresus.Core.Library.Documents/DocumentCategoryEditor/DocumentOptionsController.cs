@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 			{
 				Parent = parent,
 				Dock = DockStyle.Fill,
-				Margins = new Margins (0, 0, 10, 0),
+				Margins = new Margins (0, 0, 0, 0),
 				Padding = TileArrow.GetContainerPadding (Direction.Right) + new Margins (Library.UI.Constants.TileInternalPadding),
 			};
 

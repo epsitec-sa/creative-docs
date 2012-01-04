@@ -190,6 +190,7 @@
     <Compile Include="Controllers\ComptabilitéControllers\Accessors\ExtraitDeCompteOptions.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\BilanController.cs" />
+    <Compile Include="Controllers\ComptabilitéControllers\Controllers\MainWindow.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExploitationController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\ExploitationOptionsController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\PPController.cs" />
