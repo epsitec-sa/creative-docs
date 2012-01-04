@@ -211,7 +211,6 @@
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\TopToolbarController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\PlanComptableController.cs" />
     <Compile Include="Controllers\ComptabilitéControllers\Controllers\JournalController.cs" />
-    <Compile Include="Controllers\SpecialControllers\ComptabilitéController.cs" />
     <Compile Include="Controllers\SpecialControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
