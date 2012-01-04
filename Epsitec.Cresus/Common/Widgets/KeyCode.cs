@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -118,6 +118,11 @@ namespace Epsitec.Common.Widgets
 		Comma			= 188,
 		Dash			= 189,
 		Dot				= 190,
+
+		OemParaSign		= 191,
+		OemApostrophe	= 219,
+		OemCircumflex	= 221,
+		OemBackslash	= 226,
 		
 		ContextualMenu	= 93,
 		

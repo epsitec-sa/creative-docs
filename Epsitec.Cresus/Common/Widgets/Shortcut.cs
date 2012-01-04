@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -243,6 +243,12 @@ namespace Epsitec.Common.Widgets
 						case KeyCode.PageDown:
 						case KeyCode.PageUp:
 						case KeyCode.Pause:
+							break;
+
+						case KeyCode.OemApostrophe:
+						case KeyCode.OemBackslash:
+						case KeyCode.OemCircumflex:
+						case KeyCode.OemParaSign:
 							break;
 
 						case KeyCode.Digit0:

@@ -51,7 +51,15 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				return this.frame;
 			}
-		}	
+		}
+
+		public int								ViewControllerCount
+		{
+			get
+			{
+				return this.viewControllers.Count;
+			}
+		}
 
 		
 		public override IEnumerable<CoreController> GetSubControllers()
@@ -247,7 +255,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.PushViewController (newViewController);
 		}
 
-		public void ToggleView(int view)
+		public void ToggleSummaryViewSubview(int subviewIndex)
 		{
 			var top = this.viewControllers.FirstOrDefault (x => x.Mode == ViewControllerMode.Summary);
 
@@ -255,13 +263,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			{
 				int index  = this.viewControllers.IndexOf (top);
 				var column = this.viewLayoutController.GetColumn (index);
-				var tile   = column.Children.Widgets.OfType<Epsitec.Cresus.Core.Widgets.Tiles.TitleTile> ().Skip (view).FirstOrDefault ();
+				var tile   = column.Children.Widgets.OfType<Epsitec.Cresus.Core.Widgets.Tiles.TitleTile> ().Skip (subviewIndex).FirstOrDefault ();
 
 				if (tile != null)
 				{
 					tile.SimulateClicked ();
 				}
-				//	TODO:
 			}
 		}
 

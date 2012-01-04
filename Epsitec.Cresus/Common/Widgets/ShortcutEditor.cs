@@ -173,6 +173,8 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.AlphaY);
 			this.ComboAddCode(KeyCode.AlphaZ);
 
+			this.ComboAddCode(KeyCode.OemParaSign);
+
 			this.ComboAddCode(KeyCode.Digit0);
 			this.ComboAddCode(KeyCode.Digit1);
 			this.ComboAddCode(KeyCode.Digit2);
@@ -183,6 +185,10 @@ namespace Epsitec.Common.Widgets
 			this.ComboAddCode(KeyCode.Digit7);
 			this.ComboAddCode(KeyCode.Digit8);
 			this.ComboAddCode(KeyCode.Digit9);
+
+			this.ComboAddCode (KeyCode.OemApostrophe);
+			this.ComboAddCode (KeyCode.OemCircumflex);
+			this.ComboAddCode (KeyCode.OemBackslash);
 
 			this.ComboAddCode(KeyCode.FuncF1);
 			this.ComboAddCode(KeyCode.FuncF2);
@@ -226,15 +232,15 @@ namespace Epsitec.Common.Widgets
 		protected void ComboAddModifier(KeyCode code)
 		{
 			//	Ajoute une touche modificatrice dans le menu-combo.
-			this.fieldModifier.Items.Add(ShortcutEditor.GetModifierText(code));
-			this.listModifier.Add(code);
+			this.fieldModifier.Items.Add (TextLayout.ConvertToTaggedText (ShortcutEditor.GetModifierText (code)));
+			this.listModifier.Add (code);
 		}
 
 		protected void ComboAddCode(KeyCode code)
 		{
 			//	Ajoute une touche principale dans le menu-combo.
-			this.fieldCode.Items.Add(ShortcutEditor.GetCodeText(code));
-			this.listCode.Add(code);
+			this.fieldCode.Items.Add (TextLayout.ConvertToTaggedText (ShortcutEditor.GetCodeText (code)));
+			this.listCode.Add (code);
 		}
 
 		static protected string GetModifierText(KeyCode code)

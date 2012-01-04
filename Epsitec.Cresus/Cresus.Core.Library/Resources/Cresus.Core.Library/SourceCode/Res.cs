@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Core.Library
 				{
 				}
 				
+				//	designer:cap/EVA21
+				public static readonly global::Epsitec.Common.Widgets.Command CloseView = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 34));
 				//	designer:cap/EVAV
 				public static readonly global::Epsitec.Common.Widgets.Command ToggleView1 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 31));
 				//	designer:cap/EVA01
@@ -79,6 +81,8 @@ namespace Epsitec.Cresus.Core.Library
 				{
 				}
 				
+				//	designer:cap/EVA21
+				public const long CloseView = 0x3EE0000A000022L;
 				//	designer:cap/EVAV
 				public const long ToggleView1 = 0x3EE0000A00001FL;
 				//	designer:cap/EVA01

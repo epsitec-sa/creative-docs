@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -87,7 +87,16 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 		public void ToggleView(int view)
 		{
-			this.DataViewController.ToggleView (view);
+			this.DataViewController.ToggleSummaryViewSubview (view);
+		}
+
+		public void CloseLeafSubview()
+		{
+			if (this.DataViewController.ViewControllerCount > 1)
+			{
+				var leaf = this.orchestrator.GetLeafViewController ();
+				this.orchestrator.CloseView (leaf);
+			}
 		}
 
 		/// <summary>

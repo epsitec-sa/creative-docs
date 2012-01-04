@@ -36,6 +36,13 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
+		[Command (Core.Library.Res.CommandIds.Focus.CloseView)]
+		public void ProcessCloseView(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			var navigator = this.GetNavigator (e);
+			navigator.CloseLeafSubview ();
+		}
+
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView1)]
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView2)]
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView3)]
