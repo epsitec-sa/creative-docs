@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Bricks;
@@ -15,10 +15,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
-				  .Field (x => x.Name)
-				  .Field (x => x.Description)
 				  .Field (x => x.QuantityType)
-				  .Field (x => x.Rank)
+				  .Field (x => x.Name)
+				  .Field (x => x.ShortName)
+				  .Field (x => x.Description)
 				.End ()
 				;
 		}

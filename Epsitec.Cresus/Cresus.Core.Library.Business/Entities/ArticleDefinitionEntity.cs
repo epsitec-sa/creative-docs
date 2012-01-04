@@ -29,9 +29,10 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.IdA, "~-~", this.Name);
 		}
 
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return new string[] { this.IdA, this.Name.ToSimpleText () };
+			yield return TextFormatter.FormatText (this.IdA);
+			yield return TextFormatter.FormatText (this.Name);
 		}
 
 		public override EntityStatus GetEntityStatus()

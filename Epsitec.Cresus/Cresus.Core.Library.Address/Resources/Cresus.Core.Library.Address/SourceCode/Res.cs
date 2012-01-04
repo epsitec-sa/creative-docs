@@ -156,12 +156,36 @@ namespace Epsitec.Cresus.Core.Library.Address
 							return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 65));
 						}
 					}
+					//	designer:cap/FVAN2
+					public static global::Epsitec.Common.Types.Caption Mailing
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 87));
+						}
+					}
+					//	designer:cap/FVAP2
+					public static global::Epsitec.Common.Types.Caption Main
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 89));
+						}
+					}
 					//	designer:cap/FVA02
 					public static global::Epsitec.Common.Types.Caption None
 					{
 						get
 						{
 							return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
+						}
+					}
+					//	designer:cap/FVAO2
+					public static global::Epsitec.Common.Types.Caption Other
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Core.Library.Address.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 88));
 						}
 					}
 					//	designer:cap/FVA32

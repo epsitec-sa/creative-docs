@@ -126,6 +126,8 @@ namespace Epsitec.Cresus.Core.Library.Measures
 				public static readonly global::Epsitec.Common.Support.Druid DivideRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1);
 				//	designer:cap/IVA2
 				public static readonly global::Epsitec.Common.Support.Druid MultiplyRatio = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
+				//	designer:cap/IVAI
+				public static readonly global::Epsitec.Common.Support.Druid ShortName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 18);
 				//	designer:cap/IVA3
 				public static readonly global::Epsitec.Common.Support.Druid SmallestIncrement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 			}
@@ -186,6 +188,10 @@ namespace Epsitec.Cresus.Core.Library.Measures
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
 		}
 		
 		static Res()

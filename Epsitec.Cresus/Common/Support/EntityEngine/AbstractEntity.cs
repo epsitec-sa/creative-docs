@@ -1,4 +1,4 @@
-//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -209,9 +209,14 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// Retourne la liste des mots-clé de l'entité, en vue d'une recherche.
 		/// </summary>
 		/// <returns></returns>
-		public virtual string[] GetEntityKeywords()
+		public string[] GetEntityKeywords()
 		{
-			return new string[] { this.GetCompactSummary ().ToSimpleText () };
+			return this.GetFormattedEntityKeywords ().Select (x => x.ToSimpleText ()).ToArray ();
+		}
+
+		public virtual IEnumerable<FormattedText> GetFormattedEntityKeywords()
+		{
+			yield return this.GetCompactSummary ();
 		}
 
 		public bool IsEntityEmpty

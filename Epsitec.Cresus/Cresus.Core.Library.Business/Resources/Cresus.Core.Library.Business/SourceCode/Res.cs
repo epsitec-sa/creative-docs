@@ -844,6 +844,8 @@ namespace Epsitec.Cresus.Core.Library.Business
 				
 				//	designer:cap/GVAM6
 				public static readonly global::Epsitec.Common.Support.Druid QuantityType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 214);
+				//	designer:cap/GVAF9
+				public static readonly global::Epsitec.Common.Support.Druid ShortName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 303);
 			}
 			
 			public static class ArticleSupply

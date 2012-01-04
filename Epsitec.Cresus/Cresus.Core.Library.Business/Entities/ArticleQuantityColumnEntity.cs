@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,8 +6,6 @@ using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Library;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -20,7 +18,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.Name, "/~", this.ShortName);
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -28,15 +26,18 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.ShortName.GetEntityStatus ());
 				a.Accumulate (this.Description.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}
 		}
 
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return new string[] { this.Name.ToSimpleText (), this.Description.ToSimpleText (), this.QuantityType.ToString () };
+			yield return TextFormatter.FormatText (this.Name);
+			yield return TextFormatter.FormatText (this.Description);
+			yield return TextFormatter.FormatText (this.QuantityType);
 		}
 	}
 }

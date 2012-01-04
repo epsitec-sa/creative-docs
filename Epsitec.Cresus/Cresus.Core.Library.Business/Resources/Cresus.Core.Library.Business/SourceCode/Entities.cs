@@ -5884,6 +5884,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>ShortName</c> field.
+		///	designer:fld/GVAL6/GVAF9
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[GVAF9]")]
+		public global::Epsitec.Common.Types.FormattedText ShortName
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[GVAF9]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.ShortName;
+				if (oldValue != value || !this.IsFieldDefined("[GVAF9]"))
+				{
+					this.OnShortNameChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[GVAF9]", oldValue, value);
+					this.OnShortNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>QuantityType</c> field.
 		///	designer:fld/GVAL6/GVAM6
 		///	</summary>
@@ -5906,6 +5928,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnShortNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnQuantityTypeChanging(global::Epsitec.Cresus.Core.Business.ArticleQuantityType oldValue, global::Epsitec.Cresus.Core.Business.ArticleQuantityType newValue);
 		partial void OnQuantityTypeChanged(global::Epsitec.Cresus.Core.Business.ArticleQuantityType oldValue, global::Epsitec.Cresus.Core.Business.ArticleQuantityType newValue);
 		

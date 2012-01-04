@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			return TextFormatter.FormatText
 				(
-					"Nom: ", this.Name, "\n",
+					"Nom: ", this.Name, "(", this.ShortName, ")", "\n",
 					"Catégorie: ", UnitOfMeasureEntity.GetCategory (this), "\n",
 					"Valeurs: ", UnitOfMeasureEntity.GetFactors (this)
 				);
@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name);
+			return TextFormatter.FormatText (this.Name, "~/", this.ShortName);
 		}
 
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return new string[] { this.Name.ToSimpleText (), this.Code };
+			yield return TextFormatter.FormatText (this.Name);
+			yield return TextFormatter.FormatText (this.ShortName);
 		}
 
 		public override EntityStatus GetEntityStatus()
@@ -39,6 +40,7 @@ namespace Epsitec.Cresus.Core.Entities
 			using (var a = new EntityStatusAccumulator ())
 			{
 				a.Accumulate (this.Code.GetEntityStatus ());
+				a.Accumulate (this.ShortName.GetEntityStatus ());
 				a.Accumulate (this.Name.GetEntityStatus ());
 
 				return a.EntityStatus;

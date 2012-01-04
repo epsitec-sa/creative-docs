@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -12,14 +12,21 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ExchangeRateSourceEntity
 	{
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			List<string> keywords = new List<string> ();
+			if (string.IsNullOrWhiteSpace (this.Originator))
+			{
+				yield return "—";
+			}
+			else
+			{
+				yield return TextFormatter.FormatText (this.Originator);
+			}
 
-			keywords.Add (string.IsNullOrWhiteSpace (this.Originator) ? "—" : this.Originator);
-			keywords.AddRange (EnumKeyValues.GetEnumKeyValue (this.Type).Values.Select (x => x.ToString ()));
-
-			return keywords.ToArray ();
+			foreach (var value in EnumKeyValues.GetEnumKeyValue (this.Type).Values)
+			{
+				yield return value;
+			}
 		}
 		
 		public override FormattedText GetCompactSummary()

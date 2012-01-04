@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -79,15 +79,12 @@ namespace Epsitec.Cresus.Core.Entities
 				);
 		}
 
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return new string[]
-			{
-				TextFormatter.FormatText (this.PersonAddress).ToSimpleText ().Split ('\n').Last (),
-				this.StreetName,
-				this.Location.PostalCode,
-				TextFormatter.FormatText (this.Location.Name).ToSimpleText ()
-			};
+			yield return TextFormatter.FormatText (this.PersonAddress).Lines.Last ();
+			yield return TextFormatter.FormatText (this.StreetName);
+			yield return TextFormatter.FormatText (this.Location.PostalCode);
+			yield return TextFormatter.FormatText (this.Location.Name);
 		}
 
 		public override EntityStatus GetEntityStatus()

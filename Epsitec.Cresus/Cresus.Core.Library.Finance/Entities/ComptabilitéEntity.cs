@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -13,9 +13,10 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ComptabilitéEntity
 	{
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return new string[] { this.BeginDate.ToString (), this.Name.ToSimpleText () };
+			yield return TextFormatter.FormatText (this.BeginDate);
+			yield return TextFormatter.FormatText (this.Name);
 		}
 		
 		public override FormattedText GetCompactSummary()

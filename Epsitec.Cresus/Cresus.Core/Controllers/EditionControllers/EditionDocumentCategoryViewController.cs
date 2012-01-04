@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -21,12 +21,12 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+				  .Field (x => x.DocumentType)
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
 				.End ()
 				.Separator ()
 				.Input ()
-				  .Field (x => x.DocumentType)
 				  .Field (x => x.DocumentSource)
 				  .Field (x => x.DocumentFlowDirection)
 				.End ()

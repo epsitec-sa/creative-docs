@@ -86,6 +86,28 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 		#endregion
 		///	<summary>
+		///	The <c>ShortName</c> field.
+		///	designer:fld/IVA/IVAI
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[IVAI]")]
+		public string ShortName
+		{
+			get
+			{
+				return this.GetField<string> ("[IVAI]");
+			}
+			set
+			{
+				string oldValue = this.ShortName;
+				if (oldValue != value || !this.IsFieldDefined("[IVAI]"))
+				{
+					this.OnShortNameChanging (oldValue, value);
+					this.SetField<string> ("[IVAI]", oldValue, value);
+					this.OnShortNameChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>DivideRatio</c> field.
 		///	designer:fld/IVA/IVA1
 		///	</summary>
@@ -174,6 +196,8 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		
+		partial void OnShortNameChanging(string oldValue, string newValue);
+		partial void OnShortNameChanged(string oldValue, string newValue);
 		partial void OnDivideRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDivideRatioChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMultiplyRatioChanging(global::System.Decimal oldValue, global::System.Decimal newValue);

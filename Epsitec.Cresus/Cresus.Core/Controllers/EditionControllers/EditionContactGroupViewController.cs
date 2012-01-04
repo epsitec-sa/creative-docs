@@ -22,11 +22,9 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+				  .Field (x => x.ContactGroupType)
 				  .Field (x => x.Name)
 				  .Field (x => x.Description)
-				.End ()
-				.Input ()
-				  .Field (x => x.ContactGroupType)
 				.End ()
 				;
 		}

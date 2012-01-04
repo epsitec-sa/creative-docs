@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Business;
 
 using System.Linq;
+using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -39,9 +40,9 @@ namespace Epsitec.Cresus.Core.Entities
 			return this.MainRelation.GetCompactSummary ();
 		}
 
-		public override string[] GetEntityKeywords()
+		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			return this.MainRelation.GetEntityKeywords ();
+			return this.MainRelation.GetFormattedEntityKeywords ();
 		}
 
 		public override EntityStatus GetEntityStatus()
