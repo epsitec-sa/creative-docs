@@ -40,6 +40,10 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.orchestrator = this.controller.Orchestrator;
 			this.navigator    = this.controller.Navigator;
 			this.container    = this.controller.TileContainer;
+
+			System.Diagnostics.Debug.Assert (this.container.TileContainerController == null);
+
+			this.container.TileContainerController = this;
 			
 			this.dataItems    = new TileDataItems (this.controller);
 			this.liveItems    = new List<TileDataItem> ();

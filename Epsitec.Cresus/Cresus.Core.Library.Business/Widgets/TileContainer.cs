@@ -60,20 +60,6 @@ namespace Epsitec.Cresus.Core.Widgets
 			return this.controller.GetPreferredWidth (columnCount, columnCount);
 		}
 
-		public void SetTileVisibility(string name, bool visibility)
-		{
-			//	Montre ou cache une tuile d'après son nom.
-			foreach (Widget child in this.GetAllChildren ())
-			{
-				if (child is Tiles.TitleTile)
-				{
-					var titleTile = child as Tiles.TitleTile;
-
-					titleTile.SetTileVisibility (name, visibility);
-				}
-			}
-		}
-
 
 		#region IWidgetUpdater Members
 
@@ -144,8 +130,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			return base.TabNavigate (index, dir, siblings);
 		}
 
-
-		protected virtual void OnTabNavigating(TabNavigateEventArgs e)
+		private void OnTabNavigating(TabNavigateEventArgs e)
 		{
 			var handler = this.TabNavigating;
 
