@@ -167,7 +167,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowCustomer));
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowArticleDefinition));
 				section.Children.Add (this.CreateButton (Res.Commands.Base.ShowDocumentMetadata));
-				//section.Children.Add (this.CreateButton (Res.Commands.Base.ShowComptabilité));
 
 				this.CreateRibbonDatabaseSectionMenuButton (section);
 			}

@@ -79,13 +79,8 @@
     <Compile Include="Business\Finance\VatCodeRate.cs" />
     <Compile Include="Business\Finance\VatRateType.cs" />
     <Compile Include="Business\IsrHelper.cs" />
-    <Compile Include="Comptabilité\CatégorieDeCompte.cs" />
-    <Compile Include="Comptabilité\TypeDeCompte.cs" />
     <Compile Include="Dialogs\V11ImportDialog.cs" />
     <Compile Include="Entities\AccountingOperationEntity.cs" />
-    <Compile Include="Entities\ComptabilitéEntity.cs" />
-    <Compile Include="Entities\ComptabilitéEcritureEntity.cs" />
-    <Compile Include="Entities\ComptabilitéCompteEntity.cs" />
     <Compile Include="Entities\PaymentTransactionEntity.cs" />
     <Compile Include="Entities\CurrencyEntity.cs" />
     <Compile Include="Entities\ExchangeRateSourceEntity.cs" />

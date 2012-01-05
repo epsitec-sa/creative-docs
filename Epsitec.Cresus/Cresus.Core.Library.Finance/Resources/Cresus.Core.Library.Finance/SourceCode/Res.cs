@@ -91,12 +91,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			
 			//	designer:cap/CVAN5
 			public static readonly Epsitec.Common.Types.StructuredType AccountingOperation = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 183));
-			//	designer:cap/CVKA
-			public static readonly Epsitec.Common.Types.StructuredType Comptabilité = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 10));
-			//	designer:cap/CVK2
-			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
-			//	designer:cap/CVK
-			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/CVAT
 			public static readonly Epsitec.Common.Types.StructuredType Currency = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29));
 			//	designer:cap/CVAU
