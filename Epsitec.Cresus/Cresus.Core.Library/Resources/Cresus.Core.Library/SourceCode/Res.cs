@@ -42,6 +42,18 @@ namespace Epsitec.Cresus.Core.Library
 				public static readonly global::Epsitec.Common.Widgets.Command ToggleView2 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 32));
 				//	designer:cap/EVA11
 				public static readonly global::Epsitec.Common.Widgets.Command ToggleView3 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33));
+				//	designer:cap/EVK
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView4 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+				//	designer:cap/EVK1
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView5 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 1));
+				//	designer:cap/EVK2
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView6 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2));
+				//	designer:cap/EVK3
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView7 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+				//	designer:cap/EVK4
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView8 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 4));
+				//	designer:cap/EVK5
+				public static readonly global::Epsitec.Common.Widgets.Command ToggleView9 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 5));
 			}
 			
 			public static class History
@@ -89,6 +101,18 @@ namespace Epsitec.Cresus.Core.Library
 				public const long ToggleView2 = 0x3EE0000A000020L;
 				//	designer:cap/EVA11
 				public const long ToggleView3 = 0x3EE0000A000021L;
+				//	designer:cap/EVK
+				public const long ToggleView4 = 0x3EE00014000000L;
+				//	designer:cap/EVK1
+				public const long ToggleView5 = 0x3EE00014000001L;
+				//	designer:cap/EVK2
+				public const long ToggleView6 = 0x3EE00014000002L;
+				//	designer:cap/EVK3
+				public const long ToggleView7 = 0x3EE00014000003L;
+				//	designer:cap/EVK4
+				public const long ToggleView8 = 0x3EE00014000004L;
+				//	designer:cap/EVK5
+				public const long ToggleView9 = 0x3EE00014000005L;
 			}
 			
 			public static class History

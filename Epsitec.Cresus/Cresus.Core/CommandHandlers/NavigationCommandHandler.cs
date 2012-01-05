@@ -46,6 +46,12 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView1)]
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView2)]
 		[Command (Core.Library.Res.CommandIds.Focus.ToggleView3)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView4)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView5)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView6)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView7)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView8)]
+		[Command (Core.Library.Res.CommandIds.Focus.ToggleView9)]
 		public void ProcessToggleView(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			var navigator = this.GetNavigator (e);
