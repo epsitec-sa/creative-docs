@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				Dock = DockStyle.Fill,
 			};
 
-			var controller = this.tileContainer.Controller as EntityViewController;
+			var controller = this.tileContainer.EntityViewController;
 			var businessContext = controller.BusinessContext;
 
 			var c = new Cresus.Core.DocumentOptionsController.DocumentOptionsController (businessContext, this.documentOptionsEntity);

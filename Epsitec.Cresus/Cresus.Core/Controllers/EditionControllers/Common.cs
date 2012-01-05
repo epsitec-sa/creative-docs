@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			//	TODO: supprimer ce code
 			// TODO: Il faudra supprimer cette méthode. Un *ViewController devrait connaître les entités parent !
-			var controllers = container.Controller.Orchestrator.DataViewController.GetAllSubControllers ();
+			var controllers = container.EntityViewController.Orchestrator.DataViewController.GetAllSubControllers ();
 
 			if (controllers.Count () > 1)
 			{

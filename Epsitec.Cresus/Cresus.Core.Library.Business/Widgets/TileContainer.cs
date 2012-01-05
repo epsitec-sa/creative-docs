@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Core.Widgets
 	/// takes into account the tile arrows. There is exactly one <c>TileContainer</c>
 	/// for every column managed by the <see cref="ViewLayoutController"/>.
 	/// </summary>
-	public class TileContainer : FrameBox, IWidgetUpdater
+	public sealed class TileContainer : FrameBox, IWidgetUpdater
 	{
 		public TileContainer(CoreViewController controller)
 		{
@@ -30,12 +30,18 @@ namespace Epsitec.Cresus.Core.Widgets
 		}
 
 
-		public CoreViewController				Controller
+		public EntityViewController				EntityViewController
 		{
 			get
 			{
-				return this.controller;
+				return this.controller as EntityViewController;
 			}
+		}
+
+		public TileContainerController			TileContainerController
+		{
+			get;
+			set;
 		}
 
 		

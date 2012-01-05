@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			var controller = this.tileContainer.Controller as EntityViewController;
+			var controller = this.tileContainer.EntityViewController;
 			var businessContext = controller.BusinessContext;
 
 			var charts = new ComplexControllers.ChartsOfAccountsController (businessContext, this.financeSettingsEntity);

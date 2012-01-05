@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 			if (this.imageBlobEntity.IsNotNull ())
 			{
-				var box = EntityPreviewHelper.CreateSummaryUI (this.imageBlobEntity, parent, this.tileContainer.Controller.Data);
+				var box = EntityPreviewHelper.CreateSummaryUI (this.imageBlobEntity, parent, this.tileContainer.EntityViewController.Data);
 
 				box.PreferredHeight = 300;
 				box.Padding         = new Margins (10);

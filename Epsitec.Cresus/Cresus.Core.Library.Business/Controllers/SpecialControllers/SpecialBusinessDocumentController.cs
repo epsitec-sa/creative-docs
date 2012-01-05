@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 			this.tileContainer    = tileContainer;
 			this.businessDocument = businessDocument;
 			this.mode             = mode;
-			this.viewController   = this.tileContainer.Controller as EntityViewController;
+			this.viewController   = this.tileContainer.EntityViewController;
 			this.businessContext  = this.viewController.BusinessContext;
 			this.dataContext      = this.viewController.DataContext;
 			this.coreData         = this.viewController.Data;

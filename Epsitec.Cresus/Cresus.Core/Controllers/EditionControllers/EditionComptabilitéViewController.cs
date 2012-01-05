@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 
 		private void CreateWindow(Widget parent)
 		{
-			var window = new MainWindow (this.Data.Host, this.TileContainer.Controller.BusinessContext, this.Entity, MainWindow.TypeDeDocumentComptable.Journal);
+			var window = new MainWindow (this.Data.Host, this.TileContainer.EntityViewController.BusinessContext, this.Entity, MainWindow.TypeDeDocumentComptable.Journal);
 
 			window.IsModal = false;
 			window.OpenDialog ();

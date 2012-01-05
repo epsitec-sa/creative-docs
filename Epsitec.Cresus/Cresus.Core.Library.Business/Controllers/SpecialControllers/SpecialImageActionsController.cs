@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		{
 			this.isReadOnly = isReadOnly;
 
-			var controller = this.tileContainer.Controller as EntityViewController;
+			var controller = this.tileContainer.EntityViewController;
 			this.businessContext = controller.BusinessContext;
 			this.dataContext = controller.DataContext;
 			this.coreData = controller.Data;

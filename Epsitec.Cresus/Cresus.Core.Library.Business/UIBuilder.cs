@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateHeaderEditorTile()
 		{
-			var controller = this.container.Controller;
+			var controller = this.container.EntityViewController;
 
 			if (controller != this.controller)
 			{
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Core
 
 		public void CreateFooterEditorTile()
 		{
-			var controller = this.container.Controller;
+			var controller = this.container.EntityViewController;
 
 			if (controller != this.controller)
 			{
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Core
 			var offset1 = UIBuilder.ContainsWidget (this.container, "ColumnTileCloseButton") ? 18 : 0;
 			var offset2 = UIBuilder.ContainsWidget (this.container, "ColumnTileLockButton")  ? 18 : 0;
 
-			var controller   = this.container.Controller;
+			var controller   = this.container.EntityViewController;
 			var orchestrator = controller.Orchestrator;
 
 			string businessContextId = "-";
@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Core
 				return closeButton;
 			}
 
-			var controller   = container.Controller;
+			var controller   = container.EntityViewController;
 			var orchestrator = controller.Orchestrator;
 
 			closeButton = new GlyphButton
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Core
 		public Widget CreateColumnTileLockButton(TileContainer container)
 		{
 			var offset = UIBuilder.ContainsWidget (container, "ColumnTileCloseButton") ? 18 : 0;
-			var controller   = container.Controller;
+			var controller   = container.EntityViewController;
 			var orchestrator = controller.Orchestrator;
 
 			var lockButton = new StaticGlyph
