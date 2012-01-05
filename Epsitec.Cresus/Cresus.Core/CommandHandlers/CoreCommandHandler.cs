@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.CommandHandlers
 {
-	public class CoreCommandHandler : ICommandHandler
+	public sealed class CoreCommandHandler : ICommandHandler
 	{
 		public CoreCommandHandler(CoreCommandDispatcher commandDispatcher)
 		{
@@ -187,6 +187,6 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		private readonly CoreCommandDispatcher	commandDispatcher;
 		private readonly CoreApplication		application;
 
-		private bool initialized;
+		private bool							initialized;
 	}
 }

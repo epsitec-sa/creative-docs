@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
-		public PersistenceManager PersistenceManager
+		public PersistenceManager				PersistenceManager
 		{
 			get
 			{
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public SettingsManager SettingsManager
+		public SettingsManager					SettingsManager
 		{
 			get
 			{

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -32,16 +32,18 @@ namespace Epsitec.Cresus.Core.Controllers
 	/// </summary>
 	public sealed partial class TileContainerController : IClickSimulator, IWidgetUpdater, IIsDisposed
 	{
-		private TileContainerController(TileContainer container, Widget parent = null)
+		private TileContainerController(EntityViewController controller)
 		{
-			this.controller   = container.Controller as EntityViewController;
+			this.controller   = controller;
+			
+			this.dataContext  = this.controller.DataContext;
 			this.orchestrator = this.controller.Orchestrator;
 			this.navigator    = this.controller.Navigator;
-			this.container    = container;
-			this.parent       = parent ?? this.container;
+			this.container    = this.controller.TileContainer;
+			
 			this.dataItems    = new TileDataItems (this.controller);
 			this.liveItems    = new List<TileDataItem> ();
-			this.dataContext  = this.controller.DataContext;
+			
 			this.refreshTimer = new Timer ()
 			{
 				AutoRepeat = 0.2,
@@ -52,13 +54,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
 
-			this.refreshTimer.TimeElapsed += this.HandleTimerTimeElapsed;
-			this.parent.SizeChanged += this.HandleContainerSizeChanged;
-
 			this.controller.ActivateNextSubView = cyclic => Library.UI.Services.ExecuteWithDirectSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic)));
 			this.controller.ActivatePrevSubView = cyclic => Library.UI.Services.ExecuteWithReverseSetFocus (() => this.ActivateNextGenericTile (this.GetCyclicGenericTiles (cyclic).Reverse ()));
 
-			this.controller.Disposing += this.HandleControllerDisposing;
+			this.refreshTimer.TimeElapsed  += this.HandleTimerTimeElapsed;
+			this.container.SizeChanged     += this.HandleContainerSizeChanged;
+			this.controller.Disposing      += this.HandleControllerDisposing;
 			this.dataContext.EntityChanged += this.HandleEntityChanged;
 
 			this.navigator.Register (this);
@@ -95,24 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public static Initializer Setup(EntityViewController controller)
 		{
-			return TileContainerController.Setup (controller.TileContainer);
-		}
-
-		public static Initializer Setup(TileContainer container)
-		{
-			return new Initializer (new TileContainerController (container));
-		}
-
-		public static Initializer Setup(UIBuilder builder)
-		{
-			var frame = new FrameBox
-			{
-				Padding = new Margins (0, 0, 0, 1),
-			};
-
-			builder.Add (frame);
-
-			return new Initializer (new TileContainerController (builder.TileContainer, frame));
+			return new Initializer (controller);
 		}
 
 
@@ -240,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
 			this.dataContext.EntityChanged -= this.HandleEntityChanged;
-			this.parent.SizeChanged -= this.HandleContainerSizeChanged;
+			this.container.SizeChanged -= this.HandleContainerSizeChanged;
 			
 			this.GetTitleTiles ().ForEach (x => x.Parent = null);
 
@@ -326,12 +310,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void RefreshLayout()
 		{
-			if (this.parent.IsActualGeometryDirty)
+			if (this.container.IsActualGeometryDirty)
 			{
-				LayoutContext.SyncArrange (this.parent);
+				LayoutContext.SyncArrange (this.container);
 			}
 
-			this.LayoutTiles (this.parent.ActualHeight);
+			this.LayoutTiles (this.container.ActualHeight);
 		}
 
 		private static void DisposeDataItems(IEnumerable<TileDataItem> collection)
@@ -795,7 +779,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.ResetTitleTilesOrder (this.GetTitleTiles ());
 
-			var window = this.parent.Window;
+			var window = this.container.Window;
 
 			if (window != null)
 			{
@@ -818,7 +802,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			foreach (var titleTile in titleTiles)
 			{
-				titleTile.Parent  = this.parent;
+				titleTile.Parent  = this.container;
 				titleTile.Margins = new Margins (0, 0, 0, -1);
 			}
 		}
@@ -890,7 +874,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly EntityViewController		controller;
 		private readonly DataViewOrchestrator		orchestrator; 
 		private readonly NavigationOrchestrator		navigator;
-		private readonly Widget						parent;
 		private readonly TileContainer				container;
 		private readonly TileDataItems				dataItems;
 		private readonly List<TileDataItem>			liveItems;

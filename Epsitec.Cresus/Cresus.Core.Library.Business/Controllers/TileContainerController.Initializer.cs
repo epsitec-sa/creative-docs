@@ -1,7 +1,6 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
@@ -12,23 +11,14 @@ namespace Epsitec.Cresus.Core.Controllers
 	public sealed partial class TileContainerController
 	{
 		/// <summary>
-		/// The <c>Initializer</c> class is used to set up the <see cref="TileContainerController"/>.
+		/// The <c>Initializer</c> class is used to set up the <see cref="TileContainerController"/>
+		/// in a <c>using</c> block.
 		/// </summary>
-		public class Initializer : System.IDisposable
+		public sealed class Initializer : System.IDisposable
 		{
-			public Initializer(TileContainerController controller)
+			public Initializer(EntityViewController entityViewController)
 			{
-				this.controller = controller;
-			}
-
-			public void Add(TileDataItem item)
-			{
-				this.controller.DataItems.Add (item);
-			}
-
-			public void Add(CollectionAccessor item)
-			{
-				this.controller.DataItems.Add (item);
+				this.controller = new TileContainerController (entityViewController);
 			}
 
 			public static implicit operator TileDataItems(Initializer x)
