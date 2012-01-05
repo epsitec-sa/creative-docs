@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -8,18 +8,19 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers.ActionControllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
-using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Cresus.Core.Controllers
 {
 	public class ActionViewController : Library.ViewControllerComponent<ActionViewController>
 	{
-		public ActionViewController(Orchestrators.DataViewOrchestrator orchestrator)
+		public ActionViewController(DataViewOrchestrator orchestrator)
 			: base (orchestrator)
 		{
 			this.showMode = ActionViewControllerMode.Hide;
@@ -40,16 +41,16 @@ namespace Epsitec.Cresus.Core.Controllers
 				Visibility = false,
 			};
 
-			this.frameRoot.Pressed  += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
-			this.frameRoot.Released += new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
-			
+			this.frameRoot.Pressed  += this.HandleFrameRoot_Pressed;
+			this.frameRoot.Released += this.HandleFrameRoot_Released;
+
 			this.windowRoot.AltModifierChanged += this.HandleWindowRootAltModifierChanged;
 
 			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
 			{
 				this.timer = new Timer ();
 				this.timer.AutoRepeat = 1.0 / ActionViewController.TimerFps;
-				this.timer.TimeElapsed += new Common.Support.EventHandler (this.HandleTimer_TimeElapsed);
+				this.timer.TimeElapsed += this.HandleTimer_TimeElapsed;
 				this.timer.Start ();
 			}
 		}
@@ -305,14 +306,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			if (this.timer != null)
 			{
-				this.timer.TimeElapsed -= new Common.Support.EventHandler (this.HandleTimer_TimeElapsed);
+				this.timer.TimeElapsed -= this.HandleTimer_TimeElapsed;
 				this.timer.Dispose ();
 			}
 
 			this.windowRoot.AltModifierChanged -= this.HandleWindowRootAltModifierChanged;
-			
-			this.frameRoot.Pressed  -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Pressed);
-			this.frameRoot.Released -= new Common.Support.EventHandler<MessageEventArgs> (this.HandleFrameRoot_Released);
+
+			this.frameRoot.Pressed  -= this.HandleFrameRoot_Pressed;
+			this.frameRoot.Released -= this.HandleFrameRoot_Released;
 
 			this.frameRoot.Children.Clear ();
 			

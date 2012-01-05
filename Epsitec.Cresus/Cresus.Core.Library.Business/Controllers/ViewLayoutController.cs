@@ -13,6 +13,10 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
+	/// <summary>
+	/// The <c>ViewLayoutController</c> class manages the layout of the <see cref="TileContainer"/>
+	/// columns.
+	/// </summary>
 	public sealed class ViewLayoutController : CoreController, IWidgetUpdater
 	{
 		public ViewLayoutController(string name, Widget container)
@@ -161,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		public event EventHandler LayoutChanged;
+		public event EventHandler				LayoutChanged;
 
 
 		private readonly Widget					container;
