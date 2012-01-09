@@ -4599,30 +4599,6 @@ namespace Epsitec.Common.Designer
 							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554465));
 						}
 					}
-					//	designer:str/302K2
-					public static global::System.String BoxComment1
-					{
-						get
-						{
-							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554516));
-						}
-					}
-					//	designer:str/302L2
-					public static global::System.String BoxComment2
-					{
-						get
-						{
-							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554517));
-						}
-					}
-					//	designer:str/302M2
-					public static global::System.String BoxComment3
-					{
-						get
-						{
-							return global::Epsitec.Common.Designer.Res.Strings.GetString (global::Epsitec.Common.Support.Druid.FromFieldId (33554518));
-						}
-					}
 					//	designer:str/30271
 					public static global::System.String BoxExtend
 					{
@@ -9987,30 +9963,6 @@ namespace Epsitec.Common.Designer
 						get
 						{
 							return global::Epsitec.Common.Support.Druid.FromFieldId (33554465);
-						}
-					}
-					//	designer:str/302K2
-					public static global::Epsitec.Common.Support.Druid BoxComment1
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (33554516);
-						}
-					}
-					//	designer:str/302L2
-					public static global::Epsitec.Common.Support.Druid BoxComment2
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (33554517);
-						}
-					}
-					//	designer:str/302M2
-					public static global::Epsitec.Common.Support.Druid BoxComment3
-					{
-						get
-						{
-							return global::Epsitec.Common.Support.Druid.FromFieldId (33554518);
 						}
 					}
 					//	designer:str/30271

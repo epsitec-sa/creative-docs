@@ -357,7 +357,7 @@
   <data name="Entities.Question.SubView.Long.Swap" id="2U">Les vues &lt;b&gt;{0}&lt;/b&gt; et &lt;b&gt;{1}&lt;/b&gt; sont permutées.</data>
   <data name="Entities.Action.BoxHeader" id="2V">Déplace l&amp;apos;entité</data>
   <data name="Entities.Action.BoxSources" id="201">Ouvre une entité source</data>
-  <data name="Entities.Action.BoxComment" id="211">Montre ou cache le commentaire associé</data>
+  <data name="Entities.Action.BoxComment" id="211">Crée un nouveau commentaire associé</data>
   <data name="Entities.Action.BoxInfo" id="221">Montre ou cache les informations associées</data>
   <data name="Entities.Action.BoxColor1" id="231">Entité bleue</data>
   <data name="Entities.Action.BoxColor4" id="241">Entité grise</data>
@@ -407,9 +407,6 @@
   <data name="Entities.Action.BoxSources1" id="2H2">Ouvre une entité source à choix</data>
   <data name="Entities.Action.BoxExtend1" id="2I2">Compacte l&amp;apos;entité</data>
   <data name="Entities.Action.BoxExtend2" id="2J2">Etend l&amp;apos;entité</data>
-  <data name="Entities.Action.BoxComment1" id="2K2">Montre le commentaire associé</data>
-  <data name="Entities.Action.BoxComment2" id="2L2">Montre le commentaire associé&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
-  <data name="Entities.Action.BoxComment3" id="2M2">Cache le commentaire associé</data>
   <data name="Entities.Action.BoxInfo1" id="2N2">Montre les informations associées&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
   <data name="Entities.Action.BoxInfo2" id="2O2">Cache les informations associées</data>
   <data name="Entities.Action.BoxFieldExpression1" id="2P2">Expression du champ&lt;br/&gt;&lt;b&gt;{0}&lt;/b&gt;</data>
