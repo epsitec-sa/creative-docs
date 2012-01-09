@@ -39,6 +39,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.subtitle.Alignment = ContentAlignment.MiddleCenter;
 			this.subtitle.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
 
+			this.comments = new List<ObjectComment> ();
 			this.fields = new List<Field>();
 
 			this.columnsSeparatorRelative1 = 0.5;
@@ -135,16 +136,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.UpdateSources();
 		}
 
-		public ObjectComment Comment
+		public List<ObjectComment> Comments
 		{
-			//	Commentaire lié.
+			//	Commentaires liés.
 			get
 			{
-				return this.comment;
-			}
-			set
-			{
-				this.comment = value;
+				return this.comments;
 			}
 		}
 
@@ -184,12 +181,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.bounds = bounds;
 			Point p2 = this.bounds.TopLeft;
 
-			//	S'il existe un commentaire associé, il doit aussi être déplacé.
-			if (this.comment != null)
+			//	S'il existe des commentaires associés, ils doivent aussi être déplacés.
+			foreach (var comment in this.comments)
 			{
-				Rectangle rect = this.comment.InternalBounds;
-				rect.Offset(p2-p1);
-				this.comment.SetBounds(rect);
+				Rectangle rect = comment.InternalBounds;
+				rect.Offset (p2-p1);
+				comment.SetBounds (rect);
 			}
 
 			//	S'il existe des informations associées, elles doivent aussi être déplacées.
@@ -521,20 +518,6 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					else
 					{
 						return Res.Strings.Entities.Action.BoxExtend2;
-					}
-
-				case ActiveElement.BoxComment:
-					if (this.comment == null)
-					{
-						return Res.Strings.Entities.Action.BoxComment1;
-					}
-					else if (!this.comment.IsVisible)
-					{
-						return string.Format(Res.Strings.Entities.Action.BoxComment2, this.comment.Text);
-					}
-					else
-					{
-						return Res.Strings.Entities.Action.BoxComment3;
 					}
 
 				case ActiveElement.BoxInfo:
@@ -2410,29 +2393,49 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private void AddComment()
 		{
 			//	Ajoute un commentaire à la boîte.
-			if (this.comment == null)
+			var comment = new ObjectComment(this.editor);
+			comment.AttachObject = this;
+
+			double h = 0;
+			double width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
+			for (int i = 0; i < 50; i++)  // garde-fou
 			{
-				this.comment = new ObjectComment(this.editor);
-				this.comment.AttachObject = this;
+				var rect = new Rectangle (this.bounds.Right+30, this.bounds.Top-h, width, 20);
+				comment.SetBounds (rect);
+				comment.UpdateHeight ();  // adapte la hauteur en fonction du contenu
 
-				Rectangle rect = this.bounds;
-				rect.Left = rect.Right+30;
-				rect.Width = System.Math.Max(this.bounds.Width, AbstractObject.infoMinWidth);
-				this.comment.SetBounds(rect);
-				this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+				if (this.IsFreeAreaForComment (comment.Bounds))
+				{
+					break;
+				}
 
-				this.editor.AddComment(this.comment);
-				this.editor.UpdateAfterCommentChanged();
-
-				this.comment.EditComment();  // édite tout de suite le texte du commentaire
+				h += 20;  // on essaie plus bas
 			}
-			else
-			{
-				this.comment.IsVisible = !this.comment.IsVisible;
-			}
+
+			this.comments.Add (comment);
+			this.editor.AddComment(comment);
+			this.editor.UpdateAfterCommentChanged();
+
+			comment.EditComment();  // édite tout de suite le texte du commentaire
 
 			this.editor.Module.AccessEntities.SetLocalDirty();
 		}
+
+		private bool IsFreeAreaForComment(Rectangle rect)
+		{
+			rect.Inflate (10);
+
+			foreach (var comment in this.comments)
+			{
+				if (rect.IntersectsWith (comment.Bounds))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 
 		private void AddInfo()
 		{
@@ -3936,11 +3939,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				field.WriteXml(writer);
 			}
 
-			if (this.comment != null && this.comment.IsVisible)  // commentaire associé ?
+			foreach (var comment in this.comments)
 			{
-				this.comment.WriteXml(writer);
+				comment.WriteXml (writer);
 			}
-			
+
 			if (this.info != null && this.info.IsVisible)  // informations associées ?
 			{
 				this.info.WriteXml(writer);
@@ -3952,6 +3955,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void ReadXml(XmlReader reader)
 		{
 			this.fields.Clear();
+			this.comments.Clear ();
 
 			reader.Read();
 
@@ -3970,11 +3974,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 					}
 					else if (name == Xml.Comment)
 					{
-						this.comment = new ObjectComment(this.editor);
-						this.comment.ReadXml(reader);
-						this.comment.AttachObject = this;
-						this.comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
-						this.editor.AddComment(this.comment);
+						var comment = new ObjectComment(this.editor);
+						comment.ReadXml(reader);
+						comment.AttachObject = this;
+						comment.UpdateHeight();  // adapte la hauteur en fonction du contenu
+						this.comments.Add (comment);
+						this.editor.AddComment(comment);
 						reader.Read();
 					}
 					else if (name == Xml.Info)
@@ -4128,7 +4133,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private static readonly double indentWidth = 2;
 
 		private CultureMap cultureMap;
-		private ObjectComment comment;
+		private List<ObjectComment> comments;
 		private ObjectInfo info;
 		private Rectangle bounds;
 		private double columnsSeparatorRelative1;

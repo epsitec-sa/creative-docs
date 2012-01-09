@@ -1,4 +1,5 @@
 using Epsitec.Common.Support;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.ResourceAccessors;
 using Epsitec.Common.Identity;
 
@@ -19,6 +20,30 @@ namespace Epsitec.Common.Designer
 			this.saveAllImageParameters = new Dictionary<string, string> ();
 		}
 
+
+		public Rectangle WindowBounds
+		{
+			get
+			{
+				return this.windowBounds;
+			}
+			set
+			{
+				this.windowBounds = value;
+			}
+		}
+
+		public bool IsFullScreen
+		{
+			get
+			{
+				return this.isFullScreen;
+			}
+			set
+			{
+				this.isFullScreen = value;
+			}
+		}
 
 		public List<ResourceModuleId> Modules
 		{
@@ -167,11 +192,16 @@ namespace Epsitec.Common.Designer
 				writer.WriteEndElement ();
 			}
 
-			writer.WriteStartElement("Identity");
-			writer.WriteElementString("UserName", this.identityCard == null ? "" : this.identityCard.UserName);
-			writer.WriteEndElement();
+			writer.WriteStartElement ("Identity");
+			writer.WriteElementString ("UserName", this.identityCard == null ? "" : this.identityCard.UserName);
+			writer.WriteEndElement ();
 
-			writer.WriteEndElement();
+			writer.WriteStartElement ("Window");
+			writer.WriteElementString ("Bounds", this.windowBounds.ToString ());
+			writer.WriteElementString ("IsFullScreen", this.isFullScreen ? "true" : "false");
+			writer.WriteEndElement ();
+
+			writer.WriteEndElement ();
 			
 			writer.WriteEndDocument();
 		}
@@ -203,7 +233,11 @@ namespace Epsitec.Common.Designer
 								break;
 
 							case "Identity":
-								this.ReadXmlIdentity(reader);
+								this.ReadXmlIdentity (reader);
+								break;
+
+							case "Window":
+								this.ReadXmlWindow (reader);
 								break;
 
 							default:
@@ -309,6 +343,40 @@ namespace Epsitec.Common.Designer
 			}
 		}
 
+		private void ReadXmlWindow(XmlReader reader)
+		{
+			reader.Read ();
+
+			while (true)
+			{
+				if (reader.NodeType == XmlNodeType.Element)
+				{
+					string name = reader.LocalName;
+					string element = reader.ReadElementString ();
+
+					if (name == "Bounds")
+					{
+						this.windowBounds = Rectangle.Parse (element);
+					}
+
+					if (name == "IsFullScreen")
+					{
+						this.isFullScreen = (element == "true");
+					}
+				}
+				if (reader.NodeType == XmlNodeType.EndElement)
+				{
+					System.Diagnostics.Debug.Assert (reader.Name == "Window");
+					reader.Read ();
+					break;
+				}
+				else
+				{
+					reader.Read ();
+				}
+			}
+		}
+
 		private void ReadXmlModule(XmlReader reader)
 		{
 			reader.Read ();
@@ -401,5 +469,7 @@ namespace Epsitec.Common.Designer
 		private readonly List<ResourceModuleId> modules;
 		private readonly Dictionary<string, string> saveAllImageParameters;
 		private IdentityCard identityCard;
+		private Rectangle windowBounds;
+		private bool isFullScreen;
 	}
 }

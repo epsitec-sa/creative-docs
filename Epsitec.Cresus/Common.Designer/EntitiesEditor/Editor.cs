@@ -192,7 +192,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public void AddComment(ObjectComment comment)
 		{
 			//	Ajoute un nouveau commentaire dans l'éditeur.
-			this.comments.Add(comment);
+			this.comments.Add (comment);
+		}
+
+		public void RemoveComment(ObjectComment comment)
+		{
+			//	Supprime un commentaire dans l'éditeur.
+			this.comments.Remove (comment);
 		}
 
 		public void AddInfo(ObjectInfo info)
@@ -829,9 +835,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 				foreach (ObjectBox box in this.boxes)
 				{
-					if (box.Comment != null)
+					foreach (var comment in box.Comments)
 					{
-						box.Comment.IsDimmed = box.IsDimmed;
+						comment.IsDimmed = box.IsDimmed;
 					}
 
 					if (box.Info != null)
@@ -985,11 +991,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void CloseOneBox(ObjectBox box)
 		{
-			if (box.Comment != null)
+			foreach (var comment in box.Comments)
 			{
-				this.comments.Remove(box.Comment);
-				box.Comment = null;
+				this.comments.Remove (comment);
 			}
+			box.Comments.Clear ();
 
 			if (box.Info != null)
 			{

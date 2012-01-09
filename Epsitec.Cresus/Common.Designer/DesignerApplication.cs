@@ -59,6 +59,9 @@ namespace Epsitec.Common.Designer
 				string path = System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "app.ico");
 				this.icon = Epsitec.Common.Drawing.Bitmap.FromNativeIcon (path, 48, 48);
 
+				//	Les réglages doivent être lus avant de créer l'interface graphique.
+				this.settings.Read ();
+
 				Window window = new Window ();
 				this.Window = window;
 				window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;
@@ -66,6 +69,7 @@ namespace Epsitec.Common.Designer
 
 				Point parentCenter;
 				Rectangle windowBounds;
+				bool isFullScreen = false;
 
 				if (parentWindow == null)
 				{
@@ -80,8 +84,15 @@ namespace Epsitec.Common.Designer
 				windowBounds = new Rectangle(parentCenter.X-1000/2, parentCenter.Y-700/2, 1000, 700);
 				windowBounds = ScreenInfo.FitIntoWorkingArea(windowBounds);
 
+				if (!this.settings.WindowBounds.IsSurfaceZero)
+				{
+					windowBounds = this.settings.WindowBounds;
+					isFullScreen = this.settings.IsFullScreen;
+				}
+
 				window.WindowBounds = windowBounds;
-				window.Root.MinSize = new Size(500, 400);
+				window.IsFullScreen = isFullScreen;
+				window.Root.MinSize = new Size (500, 400);
 				window.Text = Res.Strings.Application.Title;
 				window.Name = "Application";  // utilisé pour générer "QuitApplication" !
 				window.PreventAutoClose = true;
@@ -111,9 +122,6 @@ namespace Epsitec.Common.Designer
 				this.dlgGlyphs.Closed         += this.HandleDlgClosed;
 				this.dlgSearch.Closed         += this.HandleDlgClosed;
 				this.dlgInitialMessage.Closed += this.HandleDlgClosed;
-
-				//	Les réglages doivent être lus avant de créer l'interface graphique.
-				this.settings.Read();
 
 				this.InitCommands();
 				this.CreateLayout();
@@ -2614,6 +2622,9 @@ namespace Epsitec.Common.Designer
 			{
 				this.settings.Modules.Add(info.Module.ModuleId);
 			}
+
+			this.settings.WindowBounds = this.Window.WindowPlacementBounds;
+			this.settings.IsFullScreen = this.Window.IsFullScreen;
 			
 			return this.settings.Write();  // enregistre les réglages globaux
 

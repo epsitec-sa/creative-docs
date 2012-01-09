@@ -236,13 +236,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			{
 				if (this.hilitedElement == ActiveElement.CommentClose)
 				{
-					this.IsVisible = false;
-
-					ObjectConnection connection = this.attachObject as ObjectConnection;
-					if (connection != null)
-					{
-						connection.Field.HasComment = false;
-					}
+					this.CloseComment ();
 				}
 
 				if (this.hilitedElement == ActiveElement.CommentEdit)
@@ -398,6 +392,29 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			return false;
 		}
 
+
+		private void CloseComment()
+		{
+			//	Traite le cas d'un commentaire lié à une boîte.
+			if (this.attachObject is ObjectBox)
+			{
+				var box = this.attachObject as ObjectBox;
+
+				box.Comments.Remove (this);
+				this.editor.RemoveComment (this);
+
+				this.editor.UpdateAfterCommentChanged ();
+				this.editor.Module.AccessEntities.SetLocalDirty ();
+			}
+
+			//	Traite le cas d'un commentaire lié à une connexion.
+			ObjectConnection connection = this.attachObject as ObjectConnection;
+			if (connection != null)
+			{
+				this.IsVisible = false;
+				connection.Field.HasComment = false;
+			}
+		}
 
 		public void EditComment()
 		{
