@@ -1,4 +1,4 @@
-//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -37,5 +37,11 @@ namespace Epsitec.Common.Types
 		/// The field should be used to generate a descending index (n..0).
 		/// </summary>
 		IndexDescending=0x08,
+
+		/// <summary>
+		/// The field is virtual: it has no direct database backing and will
+		/// not be persisted as is.
+		/// </summary>
+		Virtual=0x10,
 	}
 }

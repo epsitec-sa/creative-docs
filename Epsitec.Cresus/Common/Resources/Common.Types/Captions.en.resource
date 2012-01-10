@@ -87,4 +87,5 @@
   <data id="K9">&lt;s:data id="_0" f:Labels="{Collection {Text 'Abstract class'}}" /&gt;</data>
   <data id="AN">&lt;s:data id="_0" f:Description="Allows creation of the entity in its own &amp;amp;quot;base&amp;amp;quot;" f:Labels="{Collection {Text 'Standalone creation'}}" /&gt;</data>
   <data id="AM">&lt;s:data id="_0" f:Description="Show the entity in its own &amp;amp;quot;base&amp;amp;quot;" f:Labels="{Collection {Text 'Standalone display'}}" /&gt;</data>
+  <data id="AO">&lt;s:data id="_0" f:Labels="{Collection {Text 'Virtual field'}}" /&gt;</data>
 </bundle>

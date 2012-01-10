@@ -297,6 +297,14 @@ namespace Epsitec.Common.Types
 						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 15));
 					}
 				}
+				//	designer:cap/10AO
+				public static global::Epsitec.Common.Types.Caption Virtual
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24));
+					}
+				}
 			}
 			
 			public static class FieldRelation
@@ -530,7 +538,7 @@ namespace Epsitec.Common.Types
 					}
 				}
 				//	designer:cap/10AN
-				public static global::Epsitec.Common.Types.Caption StandaloneCreate
+				public static global::Epsitec.Common.Types.Caption StandaloneCreation
 				{
 					get
 					{
@@ -824,6 +832,26 @@ namespace Epsitec.Common.Types
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
+			//	designer:str/10A
+			public static global::Epsitec.Common.Support.Druid CopyrightHolder
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (167772160);
+				}
+			}
+			//	designer:str/1
+			public static global::Epsitec.Common.Support.Druid Empty
+			{
+				get
+				{
+					return global::Epsitec.Common.Support.Druid.FromFieldId (0);
+				}
+			}
 		}
 		
 		static Res()
