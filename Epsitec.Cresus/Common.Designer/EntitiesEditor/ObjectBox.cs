@@ -1546,11 +1546,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Druid druid = Druid.Empty;
 			bool isNullable = false;
 			bool isPrivate = false;
+			bool isVirtual = false;
 			bool isCollection = false;
 			bool isIndexAscending = false;
 			bool isIndexDescending = false;
 
-			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isIndexAscending, ref isIndexDescending);
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isVirtual, ref isIndexAscending, ref isIndexDescending);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1625,6 +1626,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				fieldOptions &= ~FieldOptions.PrivateRelation;
+			}
+
+			if (isVirtual)
+			{
+				fieldOptions |= FieldOptions.Virtual;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.Virtual;
 			}
 
 			if (isIndexAscending)
@@ -1944,11 +1954,12 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			
 			bool isNullable = (options & FieldOptions.Nullable) != 0;
 			bool isPrivate = (options & FieldOptions.PrivateRelation) != 0;
+			bool isVirtual = (options & FieldOptions.Virtual) != 0;
 			bool isCollection = (rel == FieldRelation.Collection);
 			bool isIndexAscending = (options & FieldOptions.IndexAscending) != 0;
 			bool isIndexDescending = (options & FieldOptions.IndexDescending) != 0;
 
-			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isIndexAscending, ref isIndexDescending);
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isVirtual, ref isIndexAscending, ref isIndexDescending);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -2008,6 +2019,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			else
 			{
 				fieldOptions &= ~FieldOptions.PrivateRelation;
+			}
+
+			if (isVirtual)
+			{
+				fieldOptions |= FieldOptions.Virtual;
+			}
+			else
+			{
+				fieldOptions &= ~FieldOptions.Virtual;
 			}
 
 			if (isIndexAscending)

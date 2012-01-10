@@ -2771,10 +2771,10 @@ namespace Epsitec.Common.Designer
 			return this.dlgFieldName.SelectedName;
 		}
 
-		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, string prefix, ref string fieldName, ref Druid resource, ref bool isNullable, ref bool isCollection, ref bool isPrivate, ref bool isIndexAscending, ref bool isIndexDescending)
+		public Common.Dialogs.DialogResult DlgEntityField(Module baseModule, ResourceAccess.Type type, string prefix, ref string fieldName, ref Druid resource, ref bool isNullable, ref bool isCollection, ref bool isPrivate, ref bool isVirtual, ref bool isIndexAscending, ref bool isIndexDescending)
 		{
 			//	Ouvre le dialogue pour choisir les paramètres d'un champ d'une entité.
-			this.dlgEntityField.AccessOpen(baseModule, type, prefix, fieldName, resource, isNullable, isCollection, isPrivate, isIndexAscending, isIndexDescending);
+			this.dlgEntityField.AccessOpen (baseModule, type, prefix, fieldName, resource, isNullable, isCollection, isPrivate, isVirtual, isIndexAscending, isIndexDescending);
 
 			this.dlgEntityField.Show();  // choix dans le dialogue...
 			
@@ -2782,6 +2782,7 @@ namespace Epsitec.Common.Designer
 			isNullable = this.dlgEntityField.IsNullable;
 			isCollection = this.dlgEntityField.IsCollection;
 			isPrivate = this.dlgEntityField.IsPrivate;
+			isVirtual = this.dlgEntityField.IsVirtual;
 			isIndexAscending = this.dlgEntityField.IsIndexAscending;
 			isIndexDescending = this.dlgEntityField.IsIndexDescending;
 			

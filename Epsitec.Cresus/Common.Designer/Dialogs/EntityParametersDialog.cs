@@ -111,7 +111,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.generateSchemaButton     = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.GenerateSchema.DefaultLabel,     Types.StructuredTypeFlags.GenerateSchema);
 			this.generateRepositoryButton = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.GenerateRepository.DefaultLabel, Types.StructuredTypeFlags.GenerateRepository);
 			this.standaloneDisplayButton  = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.StandaloneDisplay.DefaultLabel,  Types.StructuredTypeFlags.StandaloneDisplay);
-			this.standaloneCreationButton = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.StandaloneCreate.DefaultLabel,   Types.StructuredTypeFlags.StandaloneCreation);
+			this.standaloneCreationButton = this.CreateCheckButton (topPane, Common.Types.Res.Values.StructuredTypeFlags.StandaloneCreation.DefaultLabel, Types.StructuredTypeFlags.StandaloneCreation);
 
 			//	Rempli la colonne de droite.
 			this.unknownButton = new RadioButton
