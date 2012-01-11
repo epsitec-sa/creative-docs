@@ -173,6 +173,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		{
 			return entityType.Fields.Values
 				.Where (f => f.Source == FieldSource.Value)
+				.Where (f => !f.Options.HasFlag (FieldOptions.Virtual))
 				.AsReadOnlyCollection ();
 		}
 

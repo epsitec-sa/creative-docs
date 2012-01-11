@@ -73,19 +73,21 @@ namespace Epsitec.Common.Support.CodeGeneration
 		{
 			public const string Global = "global";
 			public const string Return = "return";
-			public const string New    = "new";
-			public const string This   = "this";
-			public const string Throw  = "throw";
-			public const string If     = "if";
-			public const string As     = "as";
-			public const string Quote  = "\"";
+			public const string New = "new";
+			public const string This = "this";
+			public const string Throw = "throw";
+			public const string If = "if";
+			public const string As = "as";
+			public const string Quote = "\"";
 			public const string Override = "override";
-			public const string Base   = "base";
+			public const string Base = "base";
+			public const string Default = "default";
+			public const string Ref = "ref";
 
-			public const string Void   = "void";
+			public const string Void = "void";
 			public const string String = "string";
-			public const string Druid  = "global::Epsitec.Common.Support.Druid";
-			public const string Func   = "global::System.Func";
+			public const string Druid = "global::Epsitec.Common.Support.Druid";
+			public const string Func = "global::System.Func";
 			public const string LinqExpression = "global::System.Linq.Expressions.Expression";
 			public const string NotSupportedException = "global::System.NotSupportedException";
 			public const string QualifiedGenericRepositoryBase = "global::Epsitec.Cresus.Core.Repositories.Repository";
