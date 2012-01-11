@@ -167,6 +167,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity.EntityStructuredTypeId;
@@ -257,6 +258,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanged(string oldValue, string newValue);
 		partial void OnCountryChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.CountryEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -379,6 +381,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnRegionChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity newValue);
 		partial void OnRegionChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.RegionEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity.EntityStructuredTypeId;
@@ -427,6 +430,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		
 		partial void OnNumberChanging(string oldValue, string newValue);
 		partial void OnNumberChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -500,6 +504,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnComplementChanged(string oldValue, string newValue);
 		partial void OnStreetNameChanging(string oldValue, string newValue);
 		partial void OnStreetNameChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -597,6 +602,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnPostBoxChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PostBoxEntity newValue);
 		partial void OnLocationChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity newValue);
 		partial void OnLocationChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LocationEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -701,6 +707,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity.EntityStructuredTypeId;
@@ -786,6 +793,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity.EntityStructuredTypeId;
@@ -853,6 +861,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity.EntityStructuredTypeId;
@@ -919,6 +928,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1011,6 +1021,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonTypeEntity.EntityStructuredTypeId;
@@ -1059,6 +1070,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		
 		partial void OnTextChanging(string oldValue, string newValue);
 		partial void OnTextChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1145,6 +1157,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomTypeEntity.EntityStructuredTypeId;
@@ -1229,6 +1242,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1327,6 +1341,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnLegalPersonChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity newValue);
 		partial void OnLegalPersonChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LegalPersonEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AbstractContactEntity.EntityStructuredTypeId;
@@ -1387,6 +1402,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		
 		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity newValue);
 		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.LanguageEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1508,6 +1524,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnShortNameChanged(string oldValue, string newValue);
 		partial void OnComplementChanging(string oldValue, string newValue);
 		partial void OnComplementChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1642,6 +1659,44 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>FavouriteBeer</c> field.
+		///	designer:fld/J1AJ1/J1G002
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[J1G002]")]
+		public string FavouriteBeer
+		{
+			get
+			{
+				string value = default (string);
+				this.GetFavouriteBeer (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.FavouriteBeer;
+				if (oldValue != value || !this.IsFieldDefined("[J1G002]"))
+				{
+					this.OnFavouriteBeerChanging (oldValue, value);
+					this.SetFavouriteBeer (value);
+					this.OnFavouriteBeerChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>FavouriteBeerMates</c> field.
+		///	designer:fld/J1AJ1/J1G102
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[J1G102]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> FavouriteBeerMates
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity>);
+				this.GetFavouriteBeerMates (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnTitleChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity newValue);
 		partial void OnTitleChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonTitleEntity newValue);
@@ -1653,6 +1708,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnGenderChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.PersonGenderEntity newValue);
 		partial void OnBirthDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnBirthDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnFavouriteBeerChanging(string oldValue, string newValue);
+		partial void OnFavouriteBeerChanged(string oldValue, string newValue);
+		
+		partial void GetFavouriteBeer(ref string value);
+		partial void SetFavouriteBeer(string value);
+		partial void GetFavouriteBeerMates(ref global::System.Collections.Generic.IList<global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.NaturalPersonEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1726,6 +1787,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnComplementChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.AddressEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1824,6 +1886,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnExtensionChanging(string oldValue, string newValue);
 		partial void OnExtensionChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.TelecomContactEntity.EntityStructuredTypeId;
@@ -1896,6 +1959,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnUriSchemeChanged(global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity oldValue, global::Epsitec.Cresus.DataLayer.Tests.Vs.Entities.UriSchemeEntity newValue);
 		partial void OnUriChanging(string oldValue, string newValue);
 		partial void OnUriChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2161,6 +2225,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Entities
 		partial void OnStringValueChanged(string oldValue, string newValue);
 		partial void OnTimeValueChanging(global::Epsitec.Common.Types.Time oldValue, global::Epsitec.Common.Types.Time newValue);
 		partial void OnTimeValueChanged(global::Epsitec.Common.Types.Time oldValue, global::Epsitec.Common.Types.Time newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -72,6 +72,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\SimpleEnum.cs" />
     <Compile Include="Expressions\ExpressionHelper.cs" />
     <Compile Include="General\UnitTestConcurrencyDelete.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="General\UnitTestForeignEntities.cs" />
     <Compile Include="General\UnitTestReadOnly.cs" />
     <Compile Include="General\UnitTestThreadSafety.cs" />
+    <Compile Include="General\UnitTestVirtualFields.cs" />
     <Compile Include="Helpers\DataContextHelper.cs" />
     <Compile Include="Helpers\DatabaseCreator1.cs" />
     <Compile Include="Helpers\DatabaseCreator2.cs" />

@@ -276,6 +276,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 				
 				//	designer:cap/J1AO1
 				public static readonly global::Epsitec.Common.Support.Druid BirthDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 56);
+				//	designer:cap/J1G002
+				public static readonly global::Epsitec.Common.Support.Druid FavouriteBeer = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 0);
+				//	designer:cap/J1G102
+				public static readonly global::Epsitec.Common.Support.Druid FavouriteBeerMates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 1);
 				//	designer:cap/J1AL1
 				public static readonly global::Epsitec.Common.Support.Druid Firstname = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 53);
 				//	designer:cap/J1AN1
@@ -462,6 +466,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs
 			private static readonly global::Epsitec.Common.Support.ResourceBundle _stringsBundle = Res._manager.GetBundle ("Strings");
 			
 			#endregion
+		}
+		
+		public static class StringIds
+		{
 		}
 		
 		static Res()
