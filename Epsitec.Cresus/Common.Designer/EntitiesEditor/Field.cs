@@ -94,6 +94,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.definingRootEntityId = Druid.Empty;
 			this.destination = Druid.Empty;
 			this.isNullable = false;
+			this.isVirtual = false;
 			this.isPrivateRelation = false;
 			this.cultureMapSource = CultureMapSource.Invalid;
 			this.rank = -1;
@@ -155,6 +156,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.localExpression = localExpression;
 			this.inheritedExpression = inheritedExpression;
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
+			this.IsVirtual = (options & FieldOptions.Virtual) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
 			this.IsUnchangedInterfaceField = isInterfaceDefinition.HasValue && isInterfaceDefinition.Value;
 			this.cultureMapSource = source;
@@ -531,6 +533,23 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.isNullable = value;
 					this.UpdateTypeName();
+				}
+			}
+		}
+
+		public bool IsVirtual
+		{
+			//	Indique si le champ peut prendre la valeur "null".
+			get
+			{
+				return this.isVirtual;
+			}
+			set
+			{
+				if (this.isVirtual != value)
+				{
+					this.isVirtual = value;
+					this.UpdateTypeName ();
 				}
 			}
 		}
@@ -942,14 +961,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private void UpdateTypeName()
 		{
 			//	Met à jour le nom du type.
+			string text = this.fieldTypeName;
+
 			if (this.isNullable)
 			{
-				this.textLayoutType.Text = string.Concat("(", this.fieldTypeName, ")");
+				text = "(" + text + ")";
 			}
-			else
+
+			if (this.isVirtual)
 			{
-				this.textLayoutType.Text = this.fieldTypeName;
+				text = "<i>" + text + "</i>";
 			}
+
+			this.textLayoutType.Text = text;
 		}
 
 		
@@ -1371,6 +1395,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private Druid definingRootEntityId;
 		private Druid destination;
 		private bool isNullable;
+		private bool isVirtual;
 		private bool isPrivateRelation;
 		private CultureMapSource cultureMapSource;
 		private int rank;

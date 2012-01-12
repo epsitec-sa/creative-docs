@@ -655,7 +655,6 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
 
 			this.buttonIsPrivate.Enable = (this.resourceType == ResourceAccess.Type.Entities);
-			this.buttonIsVirtual.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 			this.buttonIsReference.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 			this.buttonIsCollection.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 		}
