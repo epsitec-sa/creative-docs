@@ -406,6 +406,38 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
+		public static string Join(this IEnumerable<string> strings, string separator)
+		{
+			strings.ThrowIfNull ("strings");
+			separator.ThrowIfNull ("separator");
+
+			return string.Join (separator, strings.ToArray ());
+		}
+
+		public static int CountOccurences(this string text, string substring)
+		{
+			substring.ThrowIfNullOrEmpty ("substring");
+
+			int nbOccurences = 0;
+
+			for (int i = 0; i + substring.Length <= text.Length; i++)
+			{
+				bool isOccurence = true;
+
+				for (int j = 0; j < substring.Length && isOccurence; j++)
+				{
+					isOccurence = text[i + j] == substring[j];
+				}
+
+				if (isOccurence)
+				{
+					nbOccurences++;
+				}
+			}
+
+			return nbOccurences;
+		}
+
 
 		static StringExtensions()
 		{

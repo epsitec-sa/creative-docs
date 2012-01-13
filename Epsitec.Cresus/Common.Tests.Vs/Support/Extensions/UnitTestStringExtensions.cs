@@ -114,5 +114,37 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 
 			ExceptionAssert.Throw<System.ArgumentException>	(() => "abcdef".TruncateAndAddEllipsis (2, "..."));
 		}
+
+		[TestMethod]
+		public void JoinTest()
+		{
+			Assert.AreEqual ("abc", new List<string> () { "a", "b", "c" }.Join (""));
+			Assert.AreEqual ("a b c", new List<string> () { "a", "b", "c"  }.Join (" "));
+			Assert.AreEqual ("a-b-c", new List<string> () { "a", "b", "c" }.Join ("-"));
+			Assert.AreEqual ("", new List<string> () { null }.Join (""));
+			Assert.AreEqual ("", new List<string> () { "" }.Join ("-"));
+			Assert.AreEqual ("a", new List<string> () { "a" }.Join (""));
+
+
+			ExceptionAssert.Throw<System.ArgumentNullException> (() => StringExtensions.Join (null, " "));
+			ExceptionAssert.Throw<System.ArgumentNullException> (() => new List<string> ().Join (null));
+		}
+
+		[TestMethod]
+		public void CountOccurencesTest()
+		{
+			Assert.AreEqual (1, "a".CountOccurences ("a"));
+			Assert.AreEqual (0, "b".CountOccurences ("a"));
+			Assert.AreEqual (1, "abcd".CountOccurences ("c"));
+			Assert.AreEqual (1, "abcd".CountOccurences ("ab"));
+			Assert.AreEqual (1, "abcd".CountOccurences ("bc"));
+			Assert.AreEqual (1, "abcd".CountOccurences ("cd"));
+			Assert.AreEqual (0, "a".CountOccurences ("ac"));
+			Assert.AreEqual (3, "aaa".CountOccurences ("a"));
+			Assert.AreEqual (3, "abababa".CountOccurences ("ab"));
+
+			ExceptionAssert.Throw<System.ArgumentException> (() => "".CountOccurences (null));
+			ExceptionAssert.Throw<System.ArgumentException> (() => "".CountOccurences (""));
+		}
 	}
 }
