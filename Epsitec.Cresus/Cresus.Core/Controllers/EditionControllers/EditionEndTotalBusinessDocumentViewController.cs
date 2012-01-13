@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile, 80, "Total arrêté TTC", Marshaler.Create (() => this.GetFixedPriceTTC (), this.SetFixedPriceTTC));
+			builder.CreateTextField (tile, 80, false, "Total arrêté TTC", Marshaler.Create (() => this.GetFixedPriceTTC (), this.SetFixedPriceTTC));
 		}
 
 

@@ -383,8 +383,9 @@ namespace Epsitec.Cresus.Core.Bricks
 
 				int    width  = InputProcessor.GetInputWidth (fieldProperties);
 				int    height = InputProcessor.GetInputHeight (fieldProperties);
+				bool   readOnly = InputProcessor.GetReadOnly (fieldProperties);
 				string title  = InputProcessor.GetInputTitle (fieldProperties);
-				
+
 				System.Collections.IEnumerable collection = InputProcessor.GetInputCollection (fieldProperties);
 				int? specialController = InputProcessor.GetSpecialController (fieldProperties);
 
@@ -392,7 +393,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
-					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController);
+					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, collection, specialController, readOnly);
 					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
@@ -418,7 +419,7 @@ namespace Epsitec.Cresus.Core.Bricks
 					//	Produce either a text field or a variation of such a widget (pull-down list, etc.)
 					//	based on the real type being edited.
 
-					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, collection);
+					var factory = DynamicFactories.TextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, height, readOnly, collection);
 					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
@@ -429,7 +430,7 @@ namespace Epsitec.Cresus.Core.Bricks
 					//	Produce an item picker for the list of entities. The field type is a collection
 					//	of entities represented as [ Field ]--->>* Entity in the Designer.
 
-					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController);
+					var factory = DynamicFactories.ItemPickerDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, specialController, readOnly);
 					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
@@ -442,7 +443,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					//	The field is an enumeration : use an AutoCompleteTextField for it.
 
-					var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width);
+					var factory = DynamicFactories.EnumAutoCompleteTextFieldDynamicFactory.Create<T> (business, lambda, this.controller.EntityGetter, title, width, readOnly);
 					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)) { FieldInfo = fieldMode });
 
 					return;
@@ -557,6 +558,11 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					return 0;
 				}
+			}
+
+			private static bool GetReadOnly(BrickPropertyCollection properties)
+			{
+				return properties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
 			}
 
 			private static string GetInputTitle(BrickPropertyCollection properties)

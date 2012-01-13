@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				var toolbar = this.toolbarController.CreateUI (replacementBox, null);
 				toolbar.Margins = new Margins (0, 0, 0, -1);
 
-				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, Marshaler.Create (() => this.GetArticleDescription (this.IsEditName), x => this.SetArticleDescription (x, this.IsEditName)));
+				this.articleDescriptionTextField = builder.CreateTextFieldMulti (replacementBox, DockStyle.None, 0, false, Marshaler.Create (() => this.GetArticleDescription (this.IsEditName), x => this.SetArticleDescription (x, this.IsEditName)));
 				this.articleDescriptionTextField.Dock = DockStyle.StackFill;
 				this.articleDescriptionTextField.Margins = new Margins (0);
 
@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			if (this.Quantity != null)
 			{
 				//	Quantité.
-				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
+				var quantityField = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Quantity.Quantity, x => this.Quantity.Quantity = x));
 				this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
 
 				//	Unité.

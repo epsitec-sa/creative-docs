@@ -611,7 +611,7 @@ namespace Epsitec.Cresus.Core
 
 
 		#region Account editor
-		public Widget CreateAccountEditor(EditionTile tile, string label, Marshaler marshaler)
+		public Widget CreateAccountEditor(EditionTile tile, string label, bool forceReadOnly, Marshaler marshaler)
 		{
 			//	Crée un widget AutoCompleteTextField permettant d'éditer un numéro de compte,
 			//	selon le plan comptable en cours. Si le plan comptable n'existe pas, on crée
@@ -626,7 +626,7 @@ namespace Epsitec.Cresus.Core
 
 			if (chart == null)  // aucun plan comptable trouvé ?
 			{
-				return this.CreateTextField (tile, 150, label, marshaler);  // crée une simple ligne éditable
+				return this.CreateTextField (tile, 150, forceReadOnly, label, marshaler);  // crée une simple ligne éditable
 			}
 
 			//	Crée les widgets.
@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.Core
 			var editor = new Widgets.AutoCompleteTextFieldEx
 			{
 				Parent = container,
-				IsReadOnly = this.ReadOnly,
+				IsReadOnly = this.ReadOnly || forceReadOnly,
 				MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
@@ -671,7 +671,7 @@ namespace Epsitec.Cresus.Core
 			var menuButton = new GlyphButton
 			{
 				Parent = container,
-				Enable = !this.ReadOnly,
+				Enable = !this.ReadOnly && !forceReadOnly,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
 				PreferredWidth = Library.UI.Constants.ComboButtonWidth,
@@ -764,12 +764,12 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 
-		public TextFieldEx CreateTextField(EditionTile tile, double width, string label, Marshaler marshaler)
+		public TextFieldEx CreateTextField(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler)
 		{
-			return this.CreateTextField(tile.Container, width, label, marshaler);
+			return this.CreateTextField (tile.Container, width, forceReadOnly, label, marshaler);
 		}
 
-		public TextFieldEx CreateTextField(FrameBox parent, double width, string label, Marshaler marshaler)
+		public TextFieldEx CreateTextField(FrameBox parent, double width, bool forceReadOnly, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -785,20 +785,20 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateTextField (parent, DockStyle.Stacked, width, marshaler);
+			return this.CreateTextField (parent, DockStyle.Stacked, width, forceReadOnly, marshaler);
 		}
 
 		public TextFieldEx CreateTextField(Marshaler marshaler, INamedType fieldType = null)
 		{
-			return this.CreateTextField (null, DockStyle.None, 0, marshaler, fieldType);
+			return this.CreateTextField (null, DockStyle.None, 0, false,  marshaler, fieldType);
 		}
 
-		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, Marshaler marshaler, INamedType fieldType = null)
+		public TextFieldEx CreateTextField(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, Marshaler marshaler, INamedType fieldType = null)
 		{
 			var textField = new TextFieldEx
 			{
 				Parent = parent,
-				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly,
+				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
 				PreferredHeight = 20,
 				Dock = dockStyle,
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
@@ -825,17 +825,17 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public CheckButton CreateCheckButton(EditionTile tile, double width, string label, Marshaler marshaler)
+		public CheckButton CreateCheckButton(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler)
 		{
-			return this.CreateCheckButton (tile.Container, DockStyle.Stacked, width, label, marshaler);
+			return this.CreateCheckButton (tile.Container, DockStyle.Stacked, width, forceReadOnly, label, marshaler);
 		}
 
-		public CheckButton CreateCheckButton(FrameBox parent, DockStyle dockStyle, double width, string label, Marshaler marshaler)
+		public CheckButton CreateCheckButton(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, string label, Marshaler marshaler)
 		{
 			var checkButton = new CheckButton
 			{
 				Parent = parent,
-				Enable = (this.ReadOnly || marshaler.IsReadOnly) ? false : true,
+				Enable = !this.ReadOnly && !marshaler.IsReadOnly && !forceReadOnly,
 				PreferredHeight = 20,
 				Text = label ?? "???",
 				Dock = dockStyle,
@@ -859,12 +859,12 @@ namespace Epsitec.Cresus.Core
 			return checkButton;
 		}
 
-		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, string label, Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(EditionTile tile, double height, bool forceReadOnly, string label, Marshaler marshaler)
 		{
-			return this.CreateTextFieldMulti (tile.Container, height, label, marshaler);
+			return this.CreateTextFieldMulti (tile.Container, height, forceReadOnly, label, marshaler);
 		}
 
-		public TextFieldMultiEx CreateTextFieldMulti(FrameBox parent, double height, string label, Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(FrameBox parent, double height, bool forceReadOnly, string label, Marshaler marshaler)
 		{
 			if (!string.IsNullOrEmpty (label))
 			{
@@ -880,15 +880,15 @@ namespace Epsitec.Cresus.Core
 				this.ContentListAdd (staticText);
 			}
 
-			return this.CreateTextFieldMulti (parent, DockStyle.Stacked, height, marshaler);
+			return this.CreateTextFieldMulti (parent, DockStyle.Stacked, height, forceReadOnly, marshaler);
 		}
 
-		public TextFieldMultiEx CreateTextFieldMulti(FrameBox container, DockStyle dockStyle, double height, Marshaler marshaler)
+		public TextFieldMultiEx CreateTextFieldMulti(FrameBox container, DockStyle dockStyle, double height, bool forceReadOnly, Marshaler marshaler)
 		{
 			var textField = new TextFieldMultiEx
 			{
 				Parent = container,
-				IsReadOnly = this.ReadOnly,
+				IsReadOnly = this.ReadOnly || forceReadOnly,
 				PreferredHeight = height,
 				Dock = dockStyle,
 				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
@@ -1045,12 +1045,12 @@ namespace Epsitec.Cresus.Core
 			return textField;
 		}
 
-		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems)
 		{
-			return this.CreateAutoCompleteTextField<T> (tile, width, label, marshaler, possibleItems, x => TextFormatter.FormatText (x));
+			return this.CreateAutoCompleteTextField<T> (tile, width, forceReadOnly, label, marshaler, possibleItems, x => TextFormatter.FormatText (x));
 		}
 
-		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
+		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler, IEnumerable<EnumKeyValues<T>> possibleItems, ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText)
 		{
 			//	possibleItems.Item1 est la 'key' !
 			if (!string.IsNullOrEmpty (label))
@@ -1084,7 +1084,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
-					IsReadOnly = this.ReadOnly,
+					IsReadOnly = this.ReadOnly || forceReadOnly,
 					MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
 					PreferredHeight = 20,
 					Dock = DockStyle.Fill,
@@ -1098,7 +1098,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
-					Enable = !this.ReadOnly,
+					Enable = !this.ReadOnly && !forceReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = Library.UI.Constants.ComboButtonWidth,
@@ -1113,7 +1113,7 @@ namespace Epsitec.Cresus.Core
 				textField = new Widgets.AutoCompleteTextFieldEx
 				{
 					Parent = container,
-					IsReadOnly = this.ReadOnly,
+					IsReadOnly = this.ReadOnly || forceReadOnly,
 					MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
 					PreferredWidth = width,
 					PreferredHeight = 20,
@@ -1128,7 +1128,7 @@ namespace Epsitec.Cresus.Core
 				menuButton = new GlyphButton
 				{
 					Parent = container,
-					Enable = !this.ReadOnly,
+					Enable = !this.ReadOnly && !forceReadOnly,
 					ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 					GlyphShape = GlyphShape.Menu,
 					PreferredWidth = Library.UI.Constants.ComboButtonWidth,
@@ -1155,17 +1155,17 @@ namespace Epsitec.Cresus.Core
 		}
 
 
-		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(string label, bool forceReadOnly, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var tile = this.CreateEditionTile ();
-			return this.CreateAutoCompleteTextField<T>(tile, label, controller);
+			return this.CreateAutoCompleteTextField<T>(tile, label, forceReadOnly, controller);
 		}
 
-		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, string label, SelectionController<T> controller)
+		public Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField<T>(EditionTile tile, string label, bool forceReadOnly, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
-			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, x => controller.SetValue (x as T), controller.ReferenceController);
+			var autoCompleteTextField = this.CreateAutoCompleteTextField (tile, label, forceReadOnly, x => controller.SetValue (x as T), controller.ReferenceController);
 
 			controller.Attach (autoCompleteTextField);
 			this.container.Add (controller);
@@ -1184,7 +1184,7 @@ namespace Epsitec.Cresus.Core
 			return autoCompleteTextField;
 		}
 
-		public Widget CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
+		public Widget CreateEditionDetailedItemPicker<T1, T2>(EditionTile tile, string name, T1 entity, string label, SelectionController<T2> controller, EnumValueCardinality cardinality, bool forceReadOnly, ViewControllerMode mode = ViewControllerMode.Summary, int controllerSubType = -1)
 			where T1 : AbstractEntity
 			where T2 : AbstractEntity, new ()
 		{
@@ -1192,10 +1192,15 @@ namespace Epsitec.Cresus.Core
 			GlyphButton tileButton;
 			GlyphButton dialogButton = null;
 			
+			// TODO Should we also use the this.IsReadonly property to know whether this widget
+			// should be readonly or not ?
+
 			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
 			{
 				//	S'il y a 5 choix ou moins, on utilise un ItemPicker, qui crée des CheckButtons.
 				var picker = this.CreateDetailedItemPickerButtons (tile, label, cardinality, out tileButton);
+				
+				picker.Enable = !forceReadOnly;
 
 				controller.Attach (picker);
 
@@ -1215,6 +1220,8 @@ namespace Epsitec.Cresus.Core
 				//	S'il y a plus de 5 choix, on utilise un ItemPickerCombo, qui crée un TextFieldCombo
 				//	qui occupera une place très réduite.
 				var picker = this.CreateDetailedItemPickerCombo (tile, label, cardinality, out tileButton, out dialogButton);
+
+				picker.IsReadOnly = forceReadOnly;
 
 				controller.Attach (picker);
 
@@ -1399,7 +1406,7 @@ namespace Epsitec.Cresus.Core
 			return editor;
 		}
 
-		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField(EditionTile tile, string label, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
+		private Widgets.AutoCompleteTextFieldEx CreateAutoCompleteTextField(EditionTile tile, string label, bool forceReadOnly, System.Action<AbstractEntity> valueSetter, ReferenceController referenceController)
 		{
 			System.Diagnostics.Debug.Assert (referenceController != null, "ReferenceController may not be null");
 
@@ -1430,7 +1437,7 @@ namespace Epsitec.Cresus.Core
 			var editor = new Widgets.AutoCompleteTextFieldEx
 			{
 				Parent = container,
-				IsReadOnly = this.ReadOnly,
+				IsReadOnly = this.ReadOnly || forceReadOnly,
 				MenuButtonWidth = Library.UI.Constants.ComboButtonWidth-1,
 				PreferredHeight = 20,
 				Dock = DockStyle.Fill,
@@ -1460,7 +1467,7 @@ namespace Epsitec.Cresus.Core
 			var menuButton = new GlyphButton
 			{
 				Parent = container,
-				Enable = !this.ReadOnly,
+				Enable = !this.ReadOnly && !forceReadOnly,
 				ButtonStyle = Common.Widgets.ButtonStyle.Combo,
 				GlyphShape = GlyphShape.Menu,
 				PreferredWidth = Library.UI.Constants.ComboButtonWidth,

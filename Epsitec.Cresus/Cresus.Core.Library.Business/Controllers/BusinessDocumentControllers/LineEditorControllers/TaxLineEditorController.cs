@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Textes.
 			{
-				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+				var field = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
 				this.PlaceLabelAndField (line1, 200, 400, "Texte pour la TVA", field);
 
 				this.firstFocusedWidget = field;

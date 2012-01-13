@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	internal static class EntityAutoCompleteTextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, int? specialController)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, System.Collections.IEnumerable collection, int? specialController, bool readOnly)
 		{
 			var getterLambda = lambda;
 			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			var setterFunc   = setterLambda == null ? null : setterLambda.Compile ();
 
 			var factoryType = typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection, specialController);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, collection, specialController, readOnly);
 
 			return (DynamicFactory) instance;
 		}
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			where TSource : AbstractEntity
 			where TField : AbstractEntity, new ()
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, int? specialController)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, System.Collections.IEnumerable collection, int? specialController, bool readOnly)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -55,6 +55,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				this.title  = title;
 				this.collection = collection == null ? null : collection.OfType<TField> ();
 				this.specialController = specialController;
+				this.readOnly = readOnly;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -136,7 +137,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 					var caption = DynamicFactory.GetInputCaption (this.lambda);
 					var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
 					var tile    = frame as EditionTile;
-					var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, sel);
+					var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, this.readOnly, sel);
 
 					if ((caption != null) &&
 						(caption.HasDescription))
@@ -157,6 +158,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			private readonly string title;
 			private readonly IEnumerable<TField> collection;
 			private readonly int? specialController;
+			private readonly bool readOnly;
 		}
 
 		#endregion

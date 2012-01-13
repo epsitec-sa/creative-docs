@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Bricks
 		Field,
 		Width,
 		Height,
+		ReadOnly,
 		Separator,
 		HorizontalGroup,
 		FromCollection,

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 	/// </summary>
 	internal static class TextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, int height, System.Collections.IEnumerable collection)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, int height, bool readOnly, System.Collections.IEnumerable collection)
 		{
 			var getterLambda = lambda;
 			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
@@ -60,11 +60,11 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 						var list  = new List<Druid> (collection as IEnumerable<Druid> ?? EntityInfo.GetAllTypeIds ());
 						var items = EnumKeyValues.FromEntityIds (list);
 
-						callback = (frame, builder, caption, marshaler) => builder.CreateAutoCompleteTextField<Druid> (frame as EditionTile, width, caption, marshaler, items);
+						callback = (frame, builder, caption, marshaler) => builder.CreateAutoCompleteTextField<Druid> (frame as EditionTile, width, readOnly, caption, marshaler, items);
 					}
 					else if (typeField.TypeId == Druid.Parse ("[CVAK]"))	//	Finance.BookAccount
 					{
-						callback = (frame, builder, caption, marshaler) => builder.CreateAccountEditor (frame as EditionTile, caption, marshaler);
+						callback = (frame, builder, caption, marshaler) => builder.CreateAccountEditor (frame as EditionTile, caption, readOnly, marshaler);
 					}
 				}
 
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				if ((fieldType == typeof (bool)) ||
 					(fieldType == typeof (bool?)))
 				{
-					callback = (frame, builder, caption, marshaler) => builder.CreateCheckButton (frame as EditionTile, width, caption, marshaler);
+					callback = (frame, builder, caption, marshaler) => builder.CreateCheckButton (frame as EditionTile, width, readOnly, caption, marshaler);
 				}
 			}
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			{
 				//	Default text field creation callback:
 
-				callback = (frame, builder, caption, marshaler) => TextFieldDynamicFactory.CreateTextField (frame, builder, caption, marshaler, width, height);
+				callback = (frame, builder, caption, marshaler) => TextFieldDynamicFactory.CreateTextField (frame, builder, caption, marshaler, width, height, readOnly);
 			}
 
 			var factoryType = (nullable ? typeof (NullableTextFieldFactory<,>) : typeof (TextFieldFactory<,>)).MakeGenericType (sourceType, fieldType);
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			return instance;
 		}
 
-		private static Widget CreateTextField(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, int height)
+		private static Widget CreateTextField(FrameBox frame, UIBuilder builder, string title, Marshaler marshaler, int width, int height, bool readOnly)
 		{
 			var tile = frame as EditionTile;
 			
@@ -106,22 +106,22 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			{
 				if (height > 0)
 				{
-					return builder.CreateTextFieldMulti (tile, height, title, marshaler);
+					return builder.CreateTextFieldMulti (tile, height, readOnly, title, marshaler);
 				}
 				else
 				{
-					return builder.CreateTextField (tile, width, title, marshaler);
+					return builder.CreateTextField (tile, width, readOnly, title, marshaler);
 				}
 			}
 			else
 			{
 				if (height > 0)
 				{
-					return builder.CreateTextFieldMulti (frame, DockStyle.Stacked, height, marshaler);
+					return builder.CreateTextFieldMulti (frame, DockStyle.Stacked, height, readOnly, marshaler);
 				}
 				else
 				{
-					return builder.CreateTextField (frame, DockStyle.Stacked, width, marshaler);
+					return builder.CreateTextField (frame, DockStyle.Stacked, width, readOnly, marshaler);
 				}
 			}
 		}

@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
 				toolbarController.CreateUI (frameBox, "Description courte");
 
-				var textField = builder.CreateTextField (frameBox, 0, null, Marshaler.Create (() => this.articleEntity.Name, x => this.articleEntity.Name = x));
+				var textField = builder.CreateTextField (frameBox, 0, false, null, Marshaler.Create (() => this.articleEntity.Name, x => this.articleEntity.Name = x));
 				toolbarController.UpdateUI (this.articleEntity, textField);
 			}
 
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				var toolbarController = new ArticleParameterControllers.ArticleParameterToolbarController (this.tileContainer);
 				toolbarController.CreateUI (frameBox, "Description longue");
 
-				var textField = builder.CreateTextFieldMulti (frameBox, 68, null, Marshaler.Create (() => this.articleEntity.Description, x => this.articleEntity.Description = x));
+				var textField = builder.CreateTextFieldMulti (frameBox, 68, false, null, Marshaler.Create (() => this.articleEntity.Description, x => this.articleEntity.Description = x));
 				toolbarController.UpdateUI (this.articleEntity, textField);
 			}
 		}

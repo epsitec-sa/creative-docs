@@ -40,10 +40,10 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 		{
 			var tile = builder.CreateEditionTile ();
 
-			builder.CreateTextField (tile,  0, "Description",        Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
-			builder.CreateTextField (tile, 80, "Taux de TVA",        Marshaler.Create (() => this.Entity.VatRate, x => this.Entity.VatRate = x));
-			builder.CreateTextField (tile, 80, "Montant de base HT", Marshaler.Create (() => this.Entity.TotalRevenue, x => this.Entity.TotalRevenue = x));
-			builder.CreateTextField (tile, 80, "TVA due",            Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
+			builder.CreateTextField (tile, 0, false, "Description", Marshaler.Create (() => this.Entity.Text, x => this.Entity.Text = x));
+			builder.CreateTextField (tile, 80, false, "Taux de TVA", Marshaler.Create (() => this.Entity.VatRate, x => this.Entity.VatRate = x));
+			builder.CreateTextField (tile, 80, false, "Montant de base HT", Marshaler.Create (() => this.Entity.TotalRevenue, x => this.Entity.TotalRevenue = x));
+			builder.CreateTextField (tile, 80, false, "TVA due", Marshaler.Create (() => this.Entity.ResultingTax, x => this.Entity.ResultingTax = x));
 		}
 	}
 }

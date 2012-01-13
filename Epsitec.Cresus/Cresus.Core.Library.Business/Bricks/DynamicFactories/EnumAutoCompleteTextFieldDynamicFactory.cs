@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
 	internal static class EnumAutoCompleteTextFieldDynamicFactory
 	{
-		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width)
+		public static DynamicFactory Create<T>(BusinessContext business, LambdaExpression lambda, System.Func<T> entityGetter, string title, int width, bool readOnly)
 		{
 			var getterLambda = lambda;
 			var setterLambda = ExpressionAnalyzer.CreateSetter (getterLambda);
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			}
 			
 			var factoryType = (nullable ? typeof (NullableFactory<,>) : typeof (Factory<,>)).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, readOnly);
 
 			return (DynamicFactory) instance;
 		}
@@ -54,15 +54,16 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			where TSource : AbstractEntity
 			where TField : struct
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, bool readOnly)
 			{
 				this.business = business;
 				this.lambda = lambda;
 				this.sourceGetter = sourceGetter;
 				this.getter = getter;
 				this.setter = setter;
-				this.title  = title;
-				this.width  = width;
+				this.title = title;
+				this.width = width;
+				this.readOnly = readOnly;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -90,8 +91,8 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				var marshaler = this.CreateMarshaler ();
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, title, marshaler, possibleItems);
-
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, readOnly, title, marshaler, possibleItems);
+				
 				if ((caption != null) &&
 					(caption.HasDescription))
 				{
@@ -109,6 +110,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			private readonly System.Delegate setter;
 			private readonly string title;
 			private readonly int width;
+			private readonly bool readOnly;
 		}
 
 		#endregion
@@ -119,15 +121,16 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			where TSource : AbstractEntity
 			where TField : struct
 		{
-			public NullableFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width)
+			public NullableFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, bool readOnly)
 			{
 				this.business = business;
 				this.lambda = lambda;
 				this.sourceGetter = sourceGetter;
 				this.getter = getter;
 				this.setter = setter;
-				this.title  = title;
-				this.width  = width;
+				this.title = title;
+				this.width = width;
+				this.readOnly = readOnly;
 			}
 
 			private System.Func<TField?> CreateGetter()
@@ -155,7 +158,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				var marshaler = this.CreateMarshaler ();
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, title, marshaler, possibleItems);
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, this.readOnly, title, marshaler, possibleItems);
 
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -174,6 +177,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			private readonly System.Delegate setter;
 			private readonly string title;
 			private readonly int width;
+			private readonly bool readOnly;
 		}
 
 		#endregion

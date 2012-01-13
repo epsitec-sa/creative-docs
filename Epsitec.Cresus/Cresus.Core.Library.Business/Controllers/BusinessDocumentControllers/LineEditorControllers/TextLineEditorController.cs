@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 
 			//	Partie gauche.
-			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
+			var textField = builder.CreateTextFieldMulti (null, DockStyle.None, 0, false, Marshaler.Create (() => this.SimpleText, x => this.SimpleText = x));
 			this.PlaceLabelAndField (leftFrame, 50, 0, this.TileTitle, textField);
 
 			this.firstFocusedWidget = textField;

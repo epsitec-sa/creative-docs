@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		private void CreateUIRightTopFrame(UIBuilder builder, FrameBox parent)
 		{
 			//	Quantité.
-			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
+			var quantityField = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.Quantity, x => this.Entity.Quantity = x));
 			this.PlaceLabelAndField (parent, 50, 80, "Quantité", quantityField);
 
 			this.firstFocusedWidget = quantityField;
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 				TabIndex = this.GetNextTabIndex (),
 			};
 
-			var dateField = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
+			var dateField = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.BeginDate, x => this.Entity.BeginDate = x));
 			var dateBox = this.PlaceLabelAndField (this.dateLine, 35, 100, "Date", dateField);
 			dateBox.Visibility = (typeWidget.Items.Count != 0);
 		}

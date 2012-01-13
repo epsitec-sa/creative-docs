@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Total arrêté.
 			{
-				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.FixedPriceAfterTax, x => this.Entity.FixedPriceAfterTax = x));
+				var field = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.FixedPriceAfterTax, x => this.Entity.FixedPriceAfterTax = x));
 				this.PlaceLabelAndField (line1, 200, 100, "Grand total arrêté", field);
 
 				this.firstFocusedWidget = field;
@@ -79,11 +79,11 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 			//	Textes.
 			{
-				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForPrice, x => this.Entity.TextForPrice = x));
+				var field = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.TextForPrice, x => this.Entity.TextForPrice = x));
 				this.PlaceLabelAndField (line2, 200, 400, "Texte pour le grand total", field);
 			}
 			{
-				var field = builder.CreateTextField (null, DockStyle.None, 0, Marshaler.Create (() => this.Entity.TextForFixedPrice, x => this.Entity.TextForFixedPrice = x));
+				var field = builder.CreateTextField (null, DockStyle.None, 0, false, Marshaler.Create (() => this.Entity.TextForFixedPrice, x => this.Entity.TextForFixedPrice = x));
 				this.PlaceLabelAndField (line3, 200, 400, "Texte pour le grand total arrêté", field);
 			}
 		}
