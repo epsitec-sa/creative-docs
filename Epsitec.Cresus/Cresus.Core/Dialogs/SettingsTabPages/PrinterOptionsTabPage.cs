@@ -120,7 +120,6 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 
 		private static readonly double panelWidth = 250;
 
-		private FrameBox								centerBox;
 		private FrameBox								optionsFrame;
 		private List<ConfirmationButton>				confirmationButtons;
 		private List<AbstractButton>					optionButtons;
