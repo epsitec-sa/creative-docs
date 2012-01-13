@@ -1,6 +1,10 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Aider.eCH;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+
+using System;
 
 
 namespace Epsitec.Aider.Entities
@@ -13,19 +17,28 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
+			var text = string.Join
 			(
-				"DisplayName: ", this.DisplayName, "\n",
-				"CallName: ", this.CallName
+				" ",
+				this.eCH_Person.PersonFirstNames,
+				this.eCH_Person.PersonOfficialName
 			);
+			
+			return TextFormatter.FormatText (text);
 		}
 
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.CallName);
+			return this.GetSummary ();
 		}
-		
+
+
+		public bool IsGovernmentDefined()
+		{
+			return this.eCH_Person.DataSource == eCH.DataSource.Government;
+		}
+
 
 	}
 

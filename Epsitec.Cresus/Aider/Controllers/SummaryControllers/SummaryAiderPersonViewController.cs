@@ -1,8 +1,13 @@
-﻿using Epsitec.Aider.Entities;
+﻿using Epsitec.Aider.eCH;
+using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+
+using System;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -16,6 +21,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick (x => x);
+
+			if (this.Entity.IsGovernmentDefined ())
+			{
+
+				wall.AddBrick (x => x.eCH_Person.Address);
+			}
+
+			wall.AddBrick (x => x.AdditionalAddress1);
+			// This lines crashes because of a bug in ActionItemGenerator
+			//wall.AddBrick (x => x.AdditionalAddress2);
+
+			wall.AddBrick (x => x.Household);
 		}
 
 

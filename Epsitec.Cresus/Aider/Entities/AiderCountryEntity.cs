@@ -13,17 +13,20 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-			(
-				"Nom: ", this.Name, "\n",
-				"Code: ", this.IsoCode 
-			);
+			var text = this.Name;
+
+			if (this.IsoCode != null)
+			{
+				text += " (" + this.IsoCode + ")";
+			}
+
+			return TextFormatter.FormatText (text);
 		}
 
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Name , " (", this.IsoCode, ")");
+			return TextFormatter.FormatText (this.Name);
 		}
 
 

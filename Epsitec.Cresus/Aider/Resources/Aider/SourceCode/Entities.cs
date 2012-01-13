@@ -341,6 +341,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DateOfBirth</c> field.
+		///	designer:fld/LVA/LVG602
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG602]")]
+		public string DateOfBirth
+		{
+			get
+			{
+				string value = default (string);
+				this.GetDateOfBirth (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.DateOfBirth;
+				if (oldValue != value || !this.IsFieldDefined("[LVG602]"))
+				{
+					this.OnDateOfBirthChanging (oldValue, value);
+					this.SetDateOfBirth (value);
+					this.OnDateOfBirthChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PersonSex</c> field.
 		///	designer:fld/LVA/LVA6
 		///	</summary>
@@ -501,6 +525,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonDateOfBirthYearChanged(int? oldValue, int? newValue);
 		partial void OnPersonDateOfBirthTypeChanging(global::Epsitec.Aider.eCH.DatePrecision oldValue, global::Epsitec.Aider.eCH.DatePrecision newValue);
 		partial void OnPersonDateOfBirthTypeChanged(global::Epsitec.Aider.eCH.DatePrecision oldValue, global::Epsitec.Aider.eCH.DatePrecision newValue);
+		partial void OnDateOfBirthChanging(string oldValue, string newValue);
+		partial void OnDateOfBirthChanged(string oldValue, string newValue);
 		partial void OnPersonSexChanging(global::Epsitec.Aider.eCH.PersonSex oldValue, global::Epsitec.Aider.eCH.PersonSex newValue);
 		partial void OnPersonSexChanged(global::Epsitec.Aider.eCH.PersonSex oldValue, global::Epsitec.Aider.eCH.PersonSex newValue);
 		partial void OnNationalityStatusChanging(global::Epsitec.Aider.eCH.PersonNationalityStatus oldValue, global::Epsitec.Aider.eCH.PersonNationalityStatus newValue);
@@ -513,6 +539,9 @@ namespace Epsitec.Aider.Entities
 		partial void OnAdultMaritalStatusChanged(global::Epsitec.Aider.eCH.PersonMaritalStatus oldValue, global::Epsitec.Aider.eCH.PersonMaritalStatus newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		
+		partial void GetDateOfBirth(ref string value);
+		partial void SetDateOfBirth(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -908,6 +937,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderPersonEntity.EntityStructuredTypeId;
@@ -1025,6 +1055,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnAdult2Changed(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1252,6 +1283,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCountryChanging(string oldValue, string newValue);
 		partial void OnCountryChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.eCH_AddressEntity.EntityStructuredTypeId;
@@ -1350,6 +1382,20 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Members</c> field.
+		///	designer:fld/LVAI2/LVG702
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG702]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> Members
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity>);
+				this.GetMembers (ref value);
+				return value;
+			}
+		}
 		
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
@@ -1357,6 +1403,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnHead1Changed(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnHead2Changing(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnHead2Changed(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		
+		partial void GetMembers(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1656,6 +1704,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderAddressEntity.EntityStructuredTypeId;
@@ -1819,6 +1868,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPerson2Changed(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1984,6 +2034,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderGroupParticipantEntity.EntityStructuredTypeId;
@@ -2138,6 +2189,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderEventEntity.EntityStructuredTypeId;
@@ -2267,6 +2319,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnEventChanged(global::Epsitec.Aider.Entities.AiderEventEntity oldValue, global::Epsitec.Aider.Entities.AiderEventEntity newValue);
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2445,6 +2498,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnDescriptionChanged(string oldValue, string newValue);
 		partial void OnAddressChanging(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAddressChanged(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2634,6 +2688,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCommentChanging(string oldValue, string newValue);
 		partial void OnCommentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderGroupEntity.EntityStructuredTypeId;
@@ -2798,6 +2853,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnOmmentChanging(string oldValue, string newValue);
 		partial void OnOmmentChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderGroupRelationshipEntity.EntityStructuredTypeId;
@@ -2928,6 +2984,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnCountryChanging(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderTownEntity.EntityStructuredTypeId;
@@ -3010,6 +3067,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderCountryEntity.EntityStructuredTypeId;
@@ -3091,6 +3149,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPlaceChanged(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
 		partial void OnGroupChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		partial void OnGroupChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3231,6 +3290,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
 		partial void OnPlaceChanging(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
 		partial void OnPlaceChanged(global::Epsitec.Aider.Entities.AiderPlaceEntity oldValue, global::Epsitec.Aider.Entities.AiderPlaceEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -3410,6 +3470,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnLanguageChanging(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Language oldValue, global::Epsitec.Aider.Language newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Aider.Entities.AiderLegalPersonEntity.EntityStructuredTypeId;
@@ -3563,6 +3624,7 @@ namespace Epsitec.Aider.Entities
 		partial void OnFirstNameChanged(string oldValue, string newValue);
 		partial void OnLastNameChanging(string oldValue, string newValue);
 		partial void OnLastNameChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

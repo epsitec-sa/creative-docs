@@ -13,21 +13,22 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
-			(
-				"Person1: ", this.Person1.GetCompactSummary(), "\n",
-				"Person2: ", this.Person2.GetCompactSummary(), "\n",
-				"Type: ", this.Type, "\n",
-				"StartDate: ", this.StartDate, "\n",
-				"EndDate: ", this.EndDate, "\n",
-				"Comment: ", this.Comment
-			);
+			return this.GetRelationText (this.Type, this.Person1, this.Person2);
 		}
 
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Type, ": ", this.Person1.GetCompactSummary (), " and ", this.Person2.GetCompactSummary ());
+			return this.GetRelationText (this.Type, this.Person1, this.Person2);
+		}
+
+
+		private FormattedText GetRelationText(PersonRelationshipType relationType, AiderPersonEntity person1, AiderPersonEntity person2)
+		{
+			var person1Text = person1.GetCompactSummary ();
+			var person2Text = person2.GetCompactSummary ();
+
+			return TextFormatter.FormatText (person1Text, " -> ", relationType, " <- ", person2Text);
 		}
 
 

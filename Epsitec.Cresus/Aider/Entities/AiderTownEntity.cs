@@ -13,18 +13,25 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText
+			var text = string.Join
 			(
-				"Nom: ", this.Name, "\n",
-				"Code postal: ", this.SwissZipCode, "\n",
-				"Pays: ", this.Country.Name
+				", ",
+				string.Join
+				(
+					" ",
+					string.Join ("-", this.Country.IsoCode, this.SwissZipCode),
+					this.Name
+				),
+				this.Country.Name
 			);
+
+			return TextFormatter.FormatText (text);
 		}
 
 
 		public override FormattedText GetCompactSummary()
 		{
-			return TextFormatter.FormatText (this.Country.IsoCode, "-", this.SwissZipCode, " ", this.Name);
+			return TextFormatter.FormatText (this.Name);
 		}
 
 

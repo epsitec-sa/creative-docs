@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Street)
 					.Field (x => x.HouseNumber)
 					.Field (x => x.HouseNumberComplement)
-					.Field (x => x.Town)	
+					.Field (x => x.Town)
 					.Field (x => x.Phone1)
 					.Field (x => x.Phone2)
 					.Field (x => x.Email)

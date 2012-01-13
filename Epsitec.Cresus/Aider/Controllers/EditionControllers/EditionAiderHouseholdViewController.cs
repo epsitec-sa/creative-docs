@@ -18,10 +18,8 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.Head1)
 					.Field (x => x.Head2)
+					.Field (x => x.Address)
 				.End ();
-
-			wall.AddBrick ()
-				.Include (x => x.Address);
 		}
 
 

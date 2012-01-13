@@ -1,0 +1,38 @@
+﻿using Epsitec.Aider.Entities;
+
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Core.Business;
+
+
+namespace Epsitec.Aider.Rules
+{
+	
+	
+	[BusinessRule]
+	internal class AiderPersonBusinessRules : GenericBusinessRule<AiderPersonEntity>
+	{
+
+
+		public override void ApplySetupRule(AiderPersonEntity aiderPerson)
+		{
+			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
+
+			var echPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
+			echPerson.CreationDate = Date.Today;
+			echPerson.DataSource = eCH.DataSource.Undefined;
+
+			aiderPerson.eCH_Person = echPerson;
+
+			var additionalAddress1 = businessContext.CreateEntity<AiderAddressEntity> ();
+			aiderPerson.AdditionalAddress1 = additionalAddress1;
+
+			var additionalAddress2 = businessContext.CreateEntity<AiderAddressEntity> ();
+			aiderPerson.AdditionalAddress2 = additionalAddress2;
+		}
+
+
+	}
+
+
+}

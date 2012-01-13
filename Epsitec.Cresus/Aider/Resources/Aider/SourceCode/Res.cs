@@ -1008,6 +1008,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Head1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 159);
 				//	designer:cap/LVA05
 				public static readonly global::Epsitec.Common.Support.Druid Head2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 160);
+				//	designer:cap/LVG702
+				public static readonly global::Epsitec.Common.Support.Druid Members = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 7);
 			}
 			
 			public static class AiderLegalPerson
@@ -1178,6 +1180,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 210);
 				//	designer:cap/LVAA
 				public static readonly global::Epsitec.Common.Support.Druid DataSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
+				//	designer:cap/LVG602
+				public static readonly global::Epsitec.Common.Support.Druid DateOfBirth = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 6);
 				//	designer:cap/LVAS2
 				public static readonly global::Epsitec.Common.Support.Druid DeclarationStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 				//	designer:cap/LVA7
