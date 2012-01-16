@@ -1,13 +1,8 @@
-﻿using Epsitec.Aider.eCH;
-using Epsitec.Aider.Entities;
-
-using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
-
-using System;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -24,7 +19,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (this.Entity.IsGovernmentDefined ())
 			{
-
 				wall.AddBrick (x => x.eCH_Person.Address);
 			}
 

@@ -4,10 +4,11 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Cresus.Bricks;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets;
 
 namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 {
@@ -32,6 +33,11 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 			}
 
 			base.Dispose (disposing);
+		}
+
+		protected override void CreateBricks(BrickWall<T> wall)
+		{
+			wall.AddBrick (x => x);
 		}
 	}
 }
