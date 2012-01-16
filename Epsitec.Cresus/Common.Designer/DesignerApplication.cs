@@ -2097,6 +2097,11 @@ namespace Epsitec.Common.Designer
 		{
 			ModuleInfo mi = this.CurrentModuleInfo;
 
+			if (mi == null)
+			{
+				return;
+			}
+
 			mi.ShowHideButton.GlyphShape = this.showModuleTitle ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 			mi.ModuleFrame.Visibility = this.showModuleTitle;
 		}
