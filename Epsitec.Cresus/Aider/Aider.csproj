@@ -69,6 +69,7 @@
     <Compile Include="Data\eCH_Importer.cs" />
     <Compile Include="eCH\DataSource.cs" />
     <Compile Include="eCH\DatePrecision.cs" />
+    <Compile Include="eCH\HouseholdMrMrs.cs" />
     <Compile Include="eCH\PersonDeclarationStatus.cs" />
     <Compile Include="eCH\PersonMaritalStatus.cs" />
     <Compile Include="eCH\PersonMrMrs.cs" />
