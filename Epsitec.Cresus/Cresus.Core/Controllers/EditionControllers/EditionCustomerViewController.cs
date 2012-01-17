@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 	{
 		protected override void CreateBricks(BrickWall<CustomerEntity> wall)
 		{
-			wall.AddBrick ()
+			wall.AddBrick (x => x)
 				.Input ()
 				  .Title ("N° de client").Field (x => x.IdA)
 				  .Field (x => x.CustomerCategory)

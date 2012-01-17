@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<CustomerEntity> wall)
 		{
-			wall.AddBrick (x => x)
+			wall.AddBrick ()
 				;
 			wall.AddBrick (x => x.MainRelation.Person.Contacts)
 				.OfType<MailContactEntity> ()

@@ -134,10 +134,9 @@ namespace Epsitec.Cresus.Core.Bricks
 		{
 			this.controller.CreateBridgeAndBuildBricks ();
 
-			if (this.bridges.Count > 0)
-			{
-				this.CreateTileDataItems ();
-			}
+			System.Diagnostics.Debug.Assert (this.bridges.Count > 0);
+
+			this.CreateTileDataItems ();
 
 			BridgeContext.instance = null;
 		}

@@ -816,6 +816,16 @@ namespace Epsitec.Cresus.Core.Controllers
 			bool devel = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.Developer);
 			bool power = this.userManager.IsAuthenticatedUserAtPowerLevel (UserPowerLevel.PowerUser);
 
+			if (System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.vshost.exe" || System.AppDomain.CurrentDomain.FriendlyName == "App.Aider.exe")
+			{
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 0)), SubMenuType.Customers);
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 1)), SubMenuType.Customers);
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 2)), SubMenuType.Customers);
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 3)), SubMenuType.Customers);
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 4)), SubMenuType.Customers);
+				yield return new SubMenuItem (Epsitec.Common.Widgets.Command.Get (new Epsitec.Common.Support.Druid (1013, 80, 5)), SubMenuType.Customers);
+			}
+
 			if (admin || devel || power)
 			{
 				yield return new SubMenuItem (Res.Commands.Base.ShowDocumentCategoryMapping, SubMenuType.Printing);
