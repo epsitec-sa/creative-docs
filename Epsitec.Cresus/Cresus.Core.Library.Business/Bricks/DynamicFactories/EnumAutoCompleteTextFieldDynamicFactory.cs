@@ -41,9 +41,9 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			{
 				fieldType = fieldType.GetNullableTypeUnderlyingType ();
 			}
-			
-			var factoryType = (nullable ? typeof (NullableFactory<,>) : typeof (Factory<,>)).MakeGenericType (sourceType, fieldType);
-			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, readOnly);
+
+			var factoryType =  typeof (Factory<,>).MakeGenericType (sourceType, fieldType);
+			var instance    = System.Activator.CreateInstance (factoryType, business, lambda, entityGetter, getterFunc, setterFunc, title, width, readOnly, nullable);
 
 			return (DynamicFactory) instance;
 		}
@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			where TSource : AbstractEntity
 			where TField : struct
 		{
-			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, bool readOnly)
+			public Factory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, bool readOnly, bool nullable)
 			{
 				this.business = business;
 				this.lambda = lambda;
@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				this.title = title;
 				this.width = width;
 				this.readOnly = readOnly;
+				this.nullable = nullable;
 			}
 
 			private System.Func<TField> CreateGetter()
@@ -78,9 +79,28 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 					(entity) => (TField) this.getter.DynamicInvoke (entity));
 			}
 
+			private System.Func<TField?> CreateNullableGetter()
+			{
+				return () => (TField?) this.getter.DynamicInvoke (this.sourceGetter ());
+			}
+
+			private System.Action<TField?> CreateNullableSetter()
+			{
+				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
+					(entity, field) => this.setter.DynamicInvoke (entity, field),
+					(entity) => (TField?) this.getter.DynamicInvoke (entity));
+			}
+
 			private Marshaler CreateMarshaler()
 			{
-				return new NonNullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
+				if (this.nullable)
+				{
+					return new NonNullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
+				}
+				else
+				{
+					return new NullableMarshaler<TField> (this.CreateNullableGetter (), this.CreateNullableSetter (), this.lambda);
+				}
 			}
 
 			public override object CreateUI(FrameBox frame, UIBuilder builder)
@@ -91,7 +111,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				var marshaler = this.CreateMarshaler ();
 				var caption = DynamicFactory.GetInputCaption (this.lambda);
 				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, readOnly, title, marshaler, possibleItems);
+				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, this.readOnly, title, marshaler, possibleItems);
 				
 				if ((caption != null) &&
 					(caption.HasDescription))
@@ -111,73 +131,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			private readonly string title;
 			private readonly int width;
 			private readonly bool readOnly;
-		}
-
-		#endregion
-
-		#region Factory Class
-
-		private sealed class NullableFactory<TSource, TField> : DynamicFactory
-			where TSource : AbstractEntity
-			where TField : struct
-		{
-			public NullableFactory(BusinessContext business, LambdaExpression lambda, System.Func<TSource> sourceGetter, System.Delegate getter, System.Delegate setter, string title, int width, bool readOnly)
-			{
-				this.business = business;
-				this.lambda = lambda;
-				this.sourceGetter = sourceGetter;
-				this.getter = getter;
-				this.setter = setter;
-				this.title = title;
-				this.width = width;
-				this.readOnly = readOnly;
-			}
-
-			private System.Func<TField?> CreateGetter()
-			{
-				return () => (TField?) this.getter.DynamicInvoke (this.sourceGetter ());
-			}
-
-			private System.Action<TField?> CreateSetter()
-			{
-				return x => BridgeSpy.ExecuteSetter (this.sourceGetter (), this.lambda, x,
-					(entity, field) => this.setter.DynamicInvoke (entity, field),
-					(entity) => (TField?) this.getter.DynamicInvoke (entity));
-			}
-
-			private Marshaler CreateMarshaler()
-			{
-				return new NullableMarshaler<TField> (this.CreateGetter (), this.CreateSetter (), this.lambda);
-			}
-
-			public override object CreateUI(FrameBox frame, UIBuilder builder)
-			{
-				IEnumerable<EnumKeyValues<TField>> possibleItems = EnumKeyValues.FromEnum<TField> ();
-
-				var tile    = frame as EditionTile;
-				var marshaler = this.CreateMarshaler ();
-				var caption = DynamicFactory.GetInputCaption (this.lambda);
-				var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
-				var widget  = builder.CreateAutoCompleteTextField<TField> (tile, this.width, this.readOnly, title, marshaler, possibleItems);
-
-				if ((caption != null) &&
-					(caption.HasDescription))
-				{
-					ToolTip.SetToolTipCaption (widget, caption);
-				}
-
-				return widget;
-			}
-
-
-			private readonly BusinessContext business;
-			private readonly LambdaExpression lambda;
-			private readonly System.Func<TSource> sourceGetter;
-			private readonly System.Delegate getter;
-			private readonly System.Delegate setter;
-			private readonly string title;
-			private readonly int width;
-			private readonly bool readOnly;
+			private readonly bool nullable;
 		}
 
 		#endregion

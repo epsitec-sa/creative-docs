@@ -14,6 +14,8 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
+	// TODO Refractor the descendants of this class because they share a lot of their code.
+
 	/// <summary>
 	/// The <c>DynamicFactory</c> class is used to dynamically create a piece of user
 	/// interface for a given entity field.
