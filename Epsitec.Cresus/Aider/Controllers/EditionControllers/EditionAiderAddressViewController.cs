@@ -18,7 +18,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 					.Field (x => x.Type)
-					.Field (x => x.Description)
 					.Field (x => x.AddressLine1)
 					.Field (x => x.PostBox)
 					.Field (x => x.Street)

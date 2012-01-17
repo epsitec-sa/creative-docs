@@ -24,7 +24,6 @@ namespace Epsitec.Aider.Entities
 				this.GetAddressText (),
 				this.GetPhonesText (),
 				this.GetEmailText (),
-				this.GetDescriptionText (),
 			};
 
 			var texts = parts.Where (p => !p.IsNullOrWhiteSpace);
@@ -96,12 +95,6 @@ namespace Epsitec.Aider.Entities
 		private FormattedText GetEmailText()
 		{
 			return this.GetLabeledText ("Addresse email", this.Email);
-		}
-
-
-		private FormattedText GetDescriptionText()
-		{
-			return this.GetLabeledText ("Description", this.Description);
 		}
 
 
