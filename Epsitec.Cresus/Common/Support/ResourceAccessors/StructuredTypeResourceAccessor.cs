@@ -667,12 +667,21 @@ namespace Epsitec.Common.Support.ResourceAccessors
 			{
 				foreach (StructuredData interfaceId in interfaceIds)
 				{
-					type.InterfaceIds.Add (StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId)));
+					Druid interfaceDruid = StructuredTypeResourceAccessor.ToDruid (interfaceId.GetValue (Res.Fields.InterfaceId.CaptionId));
+
+					if (interfaceDruid.IsValid)
+					{
+						type.InterfaceIds.Add (interfaceDruid);
+					}
+					else
+					{
+						System.Diagnostics.Debug.WriteLine ("Fixed damaged interface definition for " + caption.Name);
+					}
 				}
 			}
-			
+
 			IList<StructuredData> fieldsData = data.GetValue (Res.Fields.ResourceStructuredType.Fields) as IList<StructuredData>;
-			
+
 			int rank = 0;
 
 			if (fieldsData != null)
@@ -1129,8 +1138,16 @@ namespace Epsitec.Common.Support.ResourceAccessors
 					foreach (StructuredData interfaceData in interfaceIds)
 					{
 						Druid interfaceId = StructuredTypeResourceAccessor.ToDruid (interfaceData.GetValue (Res.Fields.InterfaceId.CaptionId));
-						updater.IncludeType (interfaceId, FieldMembership.Local);
-						updater.IncludeInterfaceId (interfaceId);
+
+						if (interfaceId.IsValid)
+						{
+							updater.IncludeType (interfaceId, FieldMembership.Local);
+							updater.IncludeInterfaceId (interfaceId);
+						}
+						else
+						{
+							System.Diagnostics.Debug.WriteLine ("Invalid interface ID found !");
+						}
 					}
 
 					StructuredTypeResourceAccessor.RemoveInheritedFields (item, fields, updater.InterfaceIds);
