@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -222,27 +222,11 @@ namespace Epsitec.Cresus.Core.Bricks
 					item.HideRemoveButton = true;
 					break;
 
-				case BrickMode.SpecialController0:
-				case BrickMode.SpecialController1:
-				case BrickMode.SpecialController2:
-				case BrickMode.SpecialController3:
-				case BrickMode.SpecialController4:
-				case BrickMode.SpecialController5:
-				case BrickMode.SpecialController6:
-				case BrickMode.SpecialController7:
-				case BrickMode.SpecialController8:
-				case BrickMode.SpecialController9:
-				case BrickMode.SpecialController10:
-				case BrickMode.SpecialController11:
-				case BrickMode.SpecialController12:
-				case BrickMode.SpecialController13:
-				case BrickMode.SpecialController14:
-				case BrickMode.SpecialController15:
-				case BrickMode.SpecialController16:
-				case BrickMode.SpecialController17:
-				case BrickMode.SpecialController18:
-				case BrickMode.SpecialController19:
-					item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
+				default:
+					if (value.IsSpecialController ())
+					{
+						item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
+					}
 					break;
 			}
 		}

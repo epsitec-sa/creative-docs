@@ -4,21 +4,20 @@ using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-
-
 	public sealed class SummaryAiderPersonViewController : SummaryViewController<AiderPersonEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick (x => x);
 			wall.AddBrick (x => x)
 				.Attribute (BrickMode.DefaultToSummarySubView)
+				.Attribute (BrickMode.SpecialController0)
+				.Title ("Informations confidentielles")
 				.Text ("Pour en savoir plus...");	//	Just to check that this is possible
 
 			if (this.Entity.IsGovernmentDefined ())
@@ -33,9 +32,16 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			wall.AddBrick (x => x.Household);
 		}
-
-
 	}
 
-
+	[ControllerSubType (0)]
+	public sealed class SummaryAiderPersonViewController0 : SummaryViewController<AiderPersonEntity>
+	{
+		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
+		{
+			wall.AddBrick ()
+				.Title ("Contrôleur spécifique zéro")
+				.Text ("Contenu spécifique<br/>Et bla bla bla...<br/>Juste pour prouver que c'est possible !");
+		}
+	}
 }
