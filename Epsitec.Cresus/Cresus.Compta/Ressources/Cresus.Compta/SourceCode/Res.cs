@@ -171,6 +171,12 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK81
+				public static readonly global::Epsitec.Common.Support.Druid Budget = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40);
+				//	designer:cap/OVK91
+				public static readonly global::Epsitec.Common.Support.Druid BudgetFutur = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41);
+				//	designer:cap/OVK71
+				public static readonly global::Epsitec.Common.Support.Druid BudgetPrécédent = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39);
 				//	designer:cap/OVK51
 				public static readonly global::Epsitec.Common.Support.Druid Catégorie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 37);
 				//	designer:cap/OVK7

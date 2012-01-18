@@ -50,6 +50,11 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Accessors\AbstractData.cs" />
+    <Compile Include="Accessors\AbstractDataAccessor.cs" />
+    <Compile Include="Accessors\AbstractEditionData.cs" />
+    <Compile Include="Accessors\AbstractOptions.cs" />
+    <Compile Include="Accessors\BudgetDisplayMode.cs" />
+    <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
@@ -84,6 +89,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
+      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
+      <Name>Cresus.Core.Library.Business</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
       <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>

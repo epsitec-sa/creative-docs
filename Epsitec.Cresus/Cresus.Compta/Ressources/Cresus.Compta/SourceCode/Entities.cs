@@ -408,6 +408,72 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>BudgetPrécédent</c> field.
+		///	designer:fld/OVK3/OVK71
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK71]")]
+		public global::System.Decimal? BudgetPrécédent
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVK71]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.BudgetPrécédent;
+				if (oldValue != value || !this.IsFieldDefined("[OVK71]"))
+				{
+					this.OnBudgetPrécédentChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVK71]", oldValue, value);
+					this.OnBudgetPrécédentChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Budget</c> field.
+		///	designer:fld/OVK3/OVK81
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK81]")]
+		public global::System.Decimal? Budget
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVK81]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.Budget;
+				if (oldValue != value || !this.IsFieldDefined("[OVK81]"))
+				{
+					this.OnBudgetChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVK81]", oldValue, value);
+					this.OnBudgetChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>BudgetFutur</c> field.
+		///	designer:fld/OVK3/OVK91
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK91]")]
+		public global::System.Decimal? BudgetFutur
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVK91]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.BudgetFutur;
+				if (oldValue != value || !this.IsFieldDefined("[OVK91]"))
+				{
+					this.OnBudgetFuturChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVK91]", oldValue, value);
+					this.OnBudgetFuturChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Niveau</c> field.
 		///	designer:fld/OVK3/OVKA
 		///	</summary>
@@ -446,6 +512,12 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
 		partial void OnMonnaieChanging(string oldValue, string newValue);
 		partial void OnMonnaieChanged(string oldValue, string newValue);
+		partial void OnBudgetPrécédentChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBudgetPrécédentChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBudgetChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBudgetChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBudgetFuturChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnBudgetFuturChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnNiveauChanging(int oldValue, int newValue);
 		partial void OnNiveauChanged(int oldValue, int newValue);
 		
