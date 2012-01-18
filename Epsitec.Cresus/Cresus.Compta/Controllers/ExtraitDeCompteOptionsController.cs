@@ -134,41 +134,10 @@ namespace Epsitec.Cresus.Compta
 
 		private bool CompteFilter(ComptabilitéCompteEntity compte)
 		{
-			if (this.radioActifs == null)
-			{
-				return true;
-			}
-
 			if (compte.Type != TypeDeCompte.Normal &&
 				compte.Type != TypeDeCompte.Groupe)
 			{
 				return false;
-			}
-
-			if (this.checkGroupe.ActiveState == ActiveState.No && compte.Type == TypeDeCompte.Groupe)
-			{
-				return false;
-			}
-
-			if (this.radioActifs.ActiveState == ActiveState.Yes)
-			{
-				return compte.Catégorie == CatégorieDeCompte.Actif;
-			}
-			else if (this.radioPassifs.ActiveState == ActiveState.Yes)
-			{
-				return compte.Catégorie == CatégorieDeCompte.Passif;
-			}
-			else if (this.radioCharges.ActiveState == ActiveState.Yes)
-			{
-				return compte.Catégorie == CatégorieDeCompte.Charge;
-			}
-			else if (this.radioProduits.ActiveState == ActiveState.Yes)
-			{
-				return compte.Catégorie == CatégorieDeCompte.Produit;
-			}
-			else if (this.radioExploitations.ActiveState == ActiveState.Yes)
-			{
-				return compte.Catégorie == CatégorieDeCompte.Exploitation;
 			}
 
 			return true;
@@ -186,7 +155,7 @@ namespace Epsitec.Cresus.Compta
 			}
 		}
 
-		private ExtraitDeCompteOptions Options
+		private new ExtraitDeCompteOptions Options
 		{
 			get
 			{
@@ -195,13 +164,6 @@ namespace Epsitec.Cresus.Compta
 		}
 
 
-		private RadioButton		radioTous;
-		private RadioButton		radioActifs;
-		private RadioButton		radioPassifs;
-		private RadioButton		radioCharges;
-		private RadioButton		radioProduits;
-		private RadioButton		radioExploitations;
-		private CheckButton		checkGroupe;
 		private StaticText		titleLabel;
 	}
 }

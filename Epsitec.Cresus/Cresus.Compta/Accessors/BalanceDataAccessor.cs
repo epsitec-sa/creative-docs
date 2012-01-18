@@ -141,37 +141,25 @@ namespace Epsitec.Cresus.Compta
 					return data.Titre;
 
 				case ColumnType.Débit:
-					return BalanceDataAccessor.GetMontant (data.Débit);
+					return AbstractDataAccessor.GetMontant (data.Débit);
 
 				case ColumnType.Crédit:
-					return BalanceDataAccessor.GetMontant (data.Crédit);
+					return AbstractDataAccessor.GetMontant (data.Crédit);
 
 				case ColumnType.SoldeDébit:
-					return BalanceDataAccessor.GetMontant (data.SoldeDébit);
+					return AbstractDataAccessor.GetMontant (data.SoldeDébit);
 
 				case ColumnType.SoldeCrédit:
-					return BalanceDataAccessor.GetMontant (data.SoldeCrédit);
+					return AbstractDataAccessor.GetMontant (data.SoldeCrédit);
 
 				case ColumnType.Budget:
-					return BalanceDataAccessor.GetMontant (data.Budget);
+					return AbstractDataAccessor.GetMontant (data.Budget);
 
 				default:
 					return FormattedText.Null;
 			}
 		}
 
-
-		private static FormattedText GetMontant(decimal? montant)
-		{
-			if (montant.HasValue)
-			{
-				return montant.Value.ToString ("0.00");
-			}
-			else
-			{
-				return FormattedText.Empty;
-			}
-		}
 
 		private BalanceOptions Options
 		{

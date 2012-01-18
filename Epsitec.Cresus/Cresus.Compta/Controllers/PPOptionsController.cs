@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta
 			};
 		}
 
-		private PPOptions Options
+		private new PPOptions Options
 		{
 			get
 			{
