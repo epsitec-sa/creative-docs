@@ -657,7 +657,6 @@ namespace Epsitec.Cresus.Compta
 			if (this.isDirtyScroller)
 			{
 				this.isDirtyScroller = false;
-				this.ignoreChange = true;
 
 				if (this.totalRows <= this.LineCount)
 				{
@@ -673,8 +672,6 @@ namespace Epsitec.Cresus.Compta
 					this.scroller.LargeChange = (decimal) this.LineCount-1;
 					this.scroller.SmallChange = (decimal) 1;
 				}
-
-				this.ignoreChange = false;
 			}
 		}
 
@@ -1223,7 +1220,6 @@ namespace Epsitec.Cresus.Compta
 		private int							selectedColumn = -1;
 		private List<int>					selectedRows;
 		private int							firstVisibleRow = 0;
-		private bool						ignoreChange = false;
 		private bool						isDirtyScroller = true;
 		private bool						isDirtySelected = true;
 		private bool						isDirtyGeometry = true;

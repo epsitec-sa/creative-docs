@@ -9,7 +9,6 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -82,7 +81,7 @@ namespace Epsitec.Cresus.Compta
 			{
 				var button = this.headerFrames[c];
 
-				button.BackColor = (c == column) ? TileColors.ThicknessHilitedColors.FirstOrDefault () : Color.Empty;
+				button.BackColor = (c == column) ? Color.FromHexa ("b3d7ff") : Color.Empty;
 			}
 		}
 

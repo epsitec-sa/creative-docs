@@ -9,11 +9,8 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using Epsitec.Cresus.Compta.Entities;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;

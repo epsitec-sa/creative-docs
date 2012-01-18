@@ -10,13 +10,10 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.Compta.Entities;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -231,7 +228,7 @@ namespace Epsitec.Cresus.Compta
 
 			if (this.dataAccessor.JustCreated)
 			{
-				this.arrayController.ColorSelection = Color.FromAlphaColor (0.4, TileColors.ThicknessHilitedColors.FirstOrDefault ());  // bleu pastel
+				this.arrayController.ColorSelection = Color.FromAlphaColor (0.4, Color.FromHexa ("b3d7ff"));  // bleu pastel
 			}
 			else
 			{
