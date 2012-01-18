@@ -1,7 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using Epsitec.Common.Debug;
+using Epsitec.Common.Splash;
 using Epsitec.Cresus.Compta;
 
 using System.Collections.Generic;
@@ -17,6 +17,23 @@ namespace Epsitec.Compta
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+			if (args.Length > 0)
+			{
+				Program.ExecuteCoreProgram (args, null);
+			}
+			else
+			{
+				using (var splash = new SplashScreen ("logo.png"))
+				{
+					Program.ExecuteCoreProgram (args, splash);
+				}
+			}
+		}
+
+
+		static void ExecuteCoreProgram(string[] args, SplashScreen splash)
+		{
+			//?Epsitec.Cresus.Core.CoreProgram.Main (args);
 			ComptaProgram.Main (args);
 		}
 	}

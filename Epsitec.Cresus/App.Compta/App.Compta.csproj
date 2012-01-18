@@ -56,6 +56,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Common.Splash\Common.Splash.csproj">
+      <Project>{28FBE9C0-881E-4BF0-BDFA-4F8BB9E31083}</Project>
+      <Name>Common.Splash</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
