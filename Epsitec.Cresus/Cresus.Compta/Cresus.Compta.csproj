@@ -81,6 +81,16 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="CatégorieDeCompte.cs" />
+    <Compile Include="Controllers\AbstractController.cs" />
+    <Compile Include="Controllers\AbstractFooterController.cs" />
+    <Compile Include="Controllers\AbstractOptionsController.cs" />
+    <Compile Include="Controllers\ArrayController.cs" />
+    <Compile Include="Controllers\BottomToolbarController.cs" />
+    <Compile Include="Controllers\ColumnMapper.cs" />
+    <Compile Include="Controllers\HeaderController.cs" />
+    <Compile Include="Controllers\SearchingController.cs" />
+    <Compile Include="Controllers\SearchingTabController.cs" />
+    <Compile Include="Controllers\TopToolbarController.cs" />
     <Compile Include="Entities\ComptabilitéCompteEntity.cs" />
     <Compile Include="Entities\ComptabilitéEcritureEntity.cs" />
     <Compile Include="Entities\ComptabilitéEntity.cs" />
@@ -128,9 +138,7 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
