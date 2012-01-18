@@ -20,7 +20,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Compta
+namespace Epsitec.Cresus.Compta
 {
 	/// <summary>
 	/// Ce contrôleur gère le ruban supérieur de la comptabilité.
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Core.Compta
 					case RibbonViewMode.Minimal:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (0);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+						buttonWidth = RibbonController.ButtonLargeWidth;
 						gapWidth    = 3;
 						titleHeight = 0;
 						titleSize   = 0;
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Compta
 					case RibbonViewMode.Compact:
 						frameGap    = -1;  // les sections se chevauchent
 						iconMargins = new Margins (3);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+						buttonWidth = RibbonController.ButtonLargeWidth;
 						gapWidth    = 5;
 						titleHeight = 0;
 						titleSize   = 0;
@@ -245,7 +245,7 @@ namespace Epsitec.Cresus.Core.Compta
 					case RibbonViewMode.Default:
 						frameGap    = 2;
 						iconMargins = new Margins (3, 3, 3, 3-1);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth;
+						buttonWidth = RibbonController.ButtonLargeWidth;
 						gapWidth    = 6;
 						titleHeight = 11;
 						titleSize   = 8;
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Core.Compta
 					case RibbonViewMode.Large:
 						frameGap    = 3;
 						iconMargins = new Margins (3, 3, 3, 3-1);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth+2;
+						buttonWidth = RibbonController.ButtonLargeWidth+2;
 						gapWidth    = 8;
 						titleHeight = 14;
 						titleSize   = 10;
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Core.Compta
 					case RibbonViewMode.Hires:
 						frameGap    = 4;
 						iconMargins = new Margins (5, 5, 5, 5-1);
-						buttonWidth = Library.UI.Constants.ButtonLargeWidth+6;
+						buttonWidth = RibbonController.ButtonLargeWidth+6;
 						gapWidth    = 10;
 						titleHeight = 18;
 						titleSize   = 12;
@@ -299,7 +299,7 @@ namespace Epsitec.Cresus.Core.Compta
 							{
 								var button = widget as IconButton;
 
-								if (button.PreferredIconSize.Width == Library.UI.Constants.IconSmallWidth)
+								if (button.PreferredIconSize.Width == RibbonController.IconSmallWidth)
 								{
 									button.PreferredSize = new Size (buttonWidth/2, buttonWidth/2);
 								}
@@ -400,8 +400,8 @@ namespace Epsitec.Cresus.Core.Compta
 				this.app.CommandDispatcher.Register (command, handler);
 			}
 
-			double buttonWidth = large ? Library.UI.Constants.ButtonLargeWidth : Library.UI.Constants.ButtonLargeWidth/2;
-			double iconWidth   = large ? Library.UI.Constants.IconLargeWidth   : Library.UI.Constants.IconSmallWidth;
+			double buttonWidth = large ? RibbonController.ButtonLargeWidth : RibbonController.ButtonLargeWidth/2;
+			double iconWidth   = large ? RibbonController.IconLargeWidth   : RibbonController.IconSmallWidth;
 
 			if (isActivable)
 			{
@@ -513,6 +513,12 @@ namespace Epsitec.Cresus.Core.Compta
 			Hires,		// pour grand écran
 		}
 
+
+		private const double ButtonLargeWidth	= 2 * ((RibbonController.IconLargeWidth + 1) / 2 + 5);
+		private const double ButtonSmallWidth	= 2 * ((RibbonController.IconSmallWidth + 1) / 2 + 5);
+
+		private const int IconSmallWidth		= 14;
+		private const int IconLargeWidth		= 32;
 
 		private readonly static double IconSize = 40;
 

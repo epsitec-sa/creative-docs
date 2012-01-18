@@ -88,6 +88,7 @@
     <Compile Include="Controllers\ExtraitDeCompteController.cs" />
     <Compile Include="Controllers\JournalController.cs" />
     <Compile Include="Controllers\JournalFooterController.cs" />
+    <Compile Include="Controllers\MainWindow.cs" />
     <Compile Include="Controllers\PlanComptableController.cs" />
     <Compile Include="Controllers\PlanComptableFooterController.cs" />
     <Compile Include="Controllers\PPController.cs" />
