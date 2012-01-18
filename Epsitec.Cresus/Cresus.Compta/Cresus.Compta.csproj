@@ -91,6 +91,8 @@
     <Compile Include="Controllers\PlanComptableController.cs" />
     <Compile Include="Controllers\PlanComptableFooterController.cs" />
     <Compile Include="Controllers\PPController.cs" />
+    <Compile Include="Controllers\RibbonController.cs" />
+    <Compile Include="Controllers\TypeDeDocumentComptable.cs" />
     <Compile Include="Entities\CatégorieDeCompte.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\AbstractFooterController.cs" />
@@ -132,6 +134,29 @@
     <Content Include="Ressources\Cresus.Compta\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Images\Comptabilité.Balance.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Bilan.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Budgets.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Change.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Compte.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.DécompteTVA.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Exploitation.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.Journal.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.PlanComptable.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.PP.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.RésuméPériodique.icon" />
+    <EmbeddedResource Include="Images\Comptabilité.RésuméTVA.icon" />
+    <EmbeddedResource Include="Images\Lines.Cancel.icon" />
+    <EmbeddedResource Include="Images\Lines.Delete.icon" />
+    <EmbeddedResource Include="Images\Lines.Down.icon" />
+    <EmbeddedResource Include="Images\Lines.Duplicate.icon" />
+    <EmbeddedResource Include="Images\Lines.Insert.icon" />
+    <EmbeddedResource Include="Images\Lines.Ok.icon" />
+    <EmbeddedResource Include="Images\Lines.Remove.icon" />
+    <EmbeddedResource Include="Images\Lines.Swap.icon" />
+    <EmbeddedResource Include="Images\Lines.TotalAutomatique.icon" />
+    <EmbeddedResource Include="Images\Lines.Up.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

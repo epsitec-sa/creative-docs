@@ -1,0 +1,22 @@
+//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
+namespace Epsitec.Cresus.Compta
+{
+	public enum TypeDeDocumentComptable
+	{
+		Aucun,
+		Journal,
+		PlanComptable,
+		Balance,
+		Extrait,
+		Bilan,
+		PP,
+		Exploitation,
+		Budgets,
+		Change,
+		RésuméPériodique,
+		RésuméTVA,
+		DécompteTVA,
+	};
+}

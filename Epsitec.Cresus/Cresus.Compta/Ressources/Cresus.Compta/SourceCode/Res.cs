@@ -10,6 +10,161 @@ namespace Epsitec.Cresus.Compta
 	{
 		//	Code mapping for 'Caption' resources
 		
+		public static class Commands
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Edit
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKN1
+				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
+				//	designer:cap/OVKO1
+				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
+				//	designer:cap/OVKQ1
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
+				//	designer:cap/OVKP1
+				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
+			}
+			
+			public static class Multi
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK02
+				public static readonly global::Epsitec.Common.Widgets.Command Auto = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 64));
+				//	designer:cap/OVKS1
+				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 60));
+				//	designer:cap/OVKU1
+				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 62));
+				//	designer:cap/OVKR1
+				public static readonly global::Epsitec.Common.Widgets.Command Insert = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
+				//	designer:cap/OVKV1
+				public static readonly global::Epsitec.Common.Widgets.Command Swap = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
+				//	designer:cap/OVKT1
+				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
+			}
+			
+			public static class Présentation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKD1
+				public static readonly global::Epsitec.Common.Widgets.Command Balance = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 45));
+				//	designer:cap/OVKF1
+				public static readonly global::Epsitec.Common.Widgets.Command Bilan = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 47));
+				//	designer:cap/OVKI1
+				public static readonly global::Epsitec.Common.Widgets.Command Budgets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
+				//	designer:cap/OVKJ1
+				public static readonly global::Epsitec.Common.Widgets.Command Change = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
+				//	designer:cap/OVKM1
+				public static readonly global::Epsitec.Common.Widgets.Command DécompteTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
+				//	designer:cap/OVKH1
+				public static readonly global::Epsitec.Common.Widgets.Command Exploitation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 49));
+				//	designer:cap/OVKE1
+				public static readonly global::Epsitec.Common.Widgets.Command Extrait = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
+				//	designer:cap/OVKB1
+				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
+				//	designer:cap/OVK12
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 65));
+				//	designer:cap/OVKC1
+				public static readonly global::Epsitec.Common.Widgets.Command PlanComptable = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
+				//	designer:cap/OVKG1
+				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
+				//	designer:cap/OVKK1
+				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
+				//	designer:cap/OVKL1
+				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
+			}
+		}
+		
+		public static class CommandIds
+		{
+			internal static void _Initialize()
+			{
+			}
+			
+			public static class Edit
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKN1
+				public const long Accept = 0x3F800014000037L;
+				//	designer:cap/OVKO1
+				public const long Cancel = 0x3F800014000038L;
+				//	designer:cap/OVKQ1
+				public const long Delete = 0x3F80001400003AL;
+				//	designer:cap/OVKP1
+				public const long Duplicate = 0x3F800014000039L;
+			}
+			
+			public static class Multi
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK02
+				public const long Auto = 0x3F800014000040L;
+				//	designer:cap/OVKS1
+				public const long Delete = 0x3F80001400003CL;
+				//	designer:cap/OVKU1
+				public const long Down = 0x3F80001400003EL;
+				//	designer:cap/OVKR1
+				public const long Insert = 0x3F80001400003BL;
+				//	designer:cap/OVKV1
+				public const long Swap = 0x3F80001400003FL;
+				//	designer:cap/OVKT1
+				public const long Up = 0x3F80001400003DL;
+			}
+			
+			public static class Présentation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKD1
+				public const long Balance = 0x3F80001400002DL;
+				//	designer:cap/OVKF1
+				public const long Bilan = 0x3F80001400002FL;
+				//	designer:cap/OVKI1
+				public const long Budgets = 0x3F800014000032L;
+				//	designer:cap/OVKJ1
+				public const long Change = 0x3F800014000033L;
+				//	designer:cap/OVKM1
+				public const long DécompteTVA = 0x3F800014000036L;
+				//	designer:cap/OVKH1
+				public const long Exploitation = 0x3F800014000031L;
+				//	designer:cap/OVKE1
+				public const long Extrait = 0x3F80001400002EL;
+				//	designer:cap/OVKB1
+				public const long Journal = 0x3F80001400002BL;
+				//	designer:cap/OVK12
+				public const long New = 0x3F800014000041L;
+				//	designer:cap/OVKC1
+				public const long PlanComptable = 0x3F80001400002CL;
+				//	designer:cap/OVKG1
+				public const long PP = 0x3F800014000030L;
+				//	designer:cap/OVKK1
+				public const long RésuméPériodique = 0x3F800014000034L;
+				//	designer:cap/OVKL1
+				public const long RésuméTVA = 0x3F800014000035L;
+			}
+			
+		}
+		
 		public static class Types
 		{
 			internal static void _Initialize()
@@ -283,6 +438,14 @@ namespace Epsitec.Cresus.Compta
 		{
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Compta");
+			Commands._Initialize ();
+			Commands.Edit._Initialize ();
+			Commands.Multi._Initialize ();
+			Commands.Présentation._Initialize ();
+			CommandIds._Initialize ();
+			CommandIds.Edit._Initialize ();
+			CommandIds.Multi._Initialize ();
+			CommandIds.Présentation._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();
