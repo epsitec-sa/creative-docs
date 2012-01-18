@@ -54,12 +54,16 @@
     <Compile Include="Accessors\AbstractEditionData.cs" />
     <Compile Include="Accessors\AbstractOptions.cs" />
     <Compile Include="Accessors\BalanceData.cs" />
+    <Compile Include="Accessors\BalanceOptions.cs" />
     <Compile Include="Accessors\BilanData.cs" />
+    <Compile Include="Accessors\BilanOptions.cs" />
     <Compile Include="Accessors\BudgetDisplayMode.cs" />
     <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
     <Compile Include="Accessors\ExploitationData.cs" />
+    <Compile Include="Accessors\ExploitationOptions.cs" />
     <Compile Include="Accessors\ExtraitDeCompteData.cs" />
+    <Compile Include="Accessors\ExtraitDeCompteOptions.cs" />
     <Compile Include="Accessors\PPData.cs" />
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
