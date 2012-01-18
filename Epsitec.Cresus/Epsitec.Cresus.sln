@@ -194,6 +194,8 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "Cresus.WebCore.Client", "Cr
 		StartServerOnDebug = "false"
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Cresus.Compta", "Cresus.Compta\Cresus.Compta.csproj", "{12FC693E-674E-4DE2-891D-B856239CD977}"
+EndProject
 Global
 	GlobalSection(TestCaseManagementSettings) = postSolution
 		CategoryFile = Epsitec.Cresus1.vsmdi
@@ -1487,6 +1489,24 @@ Global
 		{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}.Release|Mixed Platforms.Build.0 = Debug|Any CPU
 		{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}.Release|Win32.ActiveCfg = Debug|Any CPU
 		{8F9BA1C7-A50B-474E-A98E-E29DB41EAD51}.Release|x86.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|Any CPU.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|Any CPU.Build.0 = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|Mixed Platforms.Build.0 = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|Win32.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug .NET 2.0|x86.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|Any CPU.Build.0 = Release|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|Win32.ActiveCfg = Release|Any CPU
+		{12FC693E-674E-4DE2-891D-B856239CD977}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
