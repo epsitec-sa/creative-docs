@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Compta
 		}
 
 
-		//?[Command (Core.Library.Finance.Res.CommandIds.Compta.Edit.Accept)]
+		[Command (Cresus.Compta.Res.CommandIds.Edit.Accept)]
 		public virtual void AcceptAction()
 		{
 			if (!this.bottomToolbarController.AcceptEnable)
