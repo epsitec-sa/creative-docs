@@ -116,8 +116,8 @@
     <Compile Include="Entities\ComptabilitéEcritureEntity.cs" />
     <Compile Include="Entities\ComptabilitéEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Ressources\Cresus.Compta\SourceCode\Entities.cs" />
-    <Compile Include="Ressources\Cresus.Compta\SourceCode\Res.cs" />
+    <Compile Include="Resources\Cresus.Compta\SourceCode\Entities.cs" />
+    <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
     <Compile Include="Entities\TypeDeCompte.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />
@@ -127,13 +127,13 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="Epsitec.Cresus.snk" />
-    <Content Include="Ressources\Cresus.Compta\Captions.00.resource">
+    <Content Include="Resources\Cresus.Compta\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Ressources\Cresus.Compta\module.info">
+    <Content Include="Resources\Cresus.Compta\module.info">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Ressources\Cresus.Compta\Strings.00.resource">
+    <Content Include="Resources\Cresus.Compta\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <EmbeddedResource Include="Images\Présentation.Balance.icon" />
