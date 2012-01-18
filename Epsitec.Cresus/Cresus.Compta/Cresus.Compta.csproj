@@ -80,6 +80,16 @@
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
+    <Compile Include="Controllers\BalanceController.cs" />
+    <Compile Include="Controllers\BilanController.cs" />
+    <Compile Include="Controllers\BudgetsController.cs" />
+    <Compile Include="Controllers\BudgetsFooterController.cs" />
+    <Compile Include="Controllers\ExploitationController.cs" />
+    <Compile Include="Controllers\ExtraitDeCompteController.cs" />
+    <Compile Include="Controllers\JournalFooterController.cs" />
+    <Compile Include="Controllers\PlanComptableController.cs" />
+    <Compile Include="Controllers\PlanComptableFooterController.cs" />
+    <Compile Include="Controllers\PPController.cs" />
     <Compile Include="Entities\CatégorieDeCompte.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\AbstractFooterController.cs" />
