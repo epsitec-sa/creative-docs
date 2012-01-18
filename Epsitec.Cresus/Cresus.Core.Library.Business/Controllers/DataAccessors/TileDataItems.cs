@@ -1,5 +1,7 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +18,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.emptyItems          = new List<TileDataItem> ();
 			this.collectionItems     = new List<TileDataItem> ();
 			this.collectionAccessors = new List<CollectionAccessor> ();
+			this.countedNames        = new CountedStringDictionary ();
 		}
 
 
@@ -38,6 +41,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public void Add(TileDataItem data)
 		{
+			this.EnsureTileDataItemUniqueName (data);
+
 			int rank = this.emptyItems.Count + this.simpleItems.Count;
 
 			if (data.Rank == 0)
@@ -92,6 +97,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.RefreshAddNewItemFunctionForEmptyItems ();
 		}
 
+
+		/// <summary>
+		/// Ensures that the name of the tile data item is unique. This will add a suffix to the
+		/// name if the name is already present in the collection (such as <c>Foo@01</c>).
+		/// </summary>
+		/// <param name="data">The tile data item.</param>
+		private void EnsureTileDataItemUniqueName(TileDataItem data)
+		{
+			data.Name = this.countedNames.AddUnique (data.Name);
+		}
 
 		private void RefreshAddNewItemFunctionForEmptyItems()
 		{
@@ -248,6 +263,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		#endregion
 
+
 		private readonly object exclusion = new object ();
 
 		private readonly EntityViewController			controller;
@@ -255,5 +271,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		private readonly List<TileDataItem>				emptyItems;
 		private readonly List<TileDataItem>				collectionItems;
 		private readonly List<CollectionAccessor>		collectionAccessors;
+		private readonly CountedStringDictionary		countedNames;
 	}
 }
