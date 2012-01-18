@@ -617,6 +617,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>TotalAutomatique</c> field.
+		///	designer:fld/OVKB/OVKA1
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKA1]")]
+		public bool TotalAutomatique
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVKA1]");
+			}
+			set
+			{
+				bool oldValue = this.TotalAutomatique;
+				if (oldValue != value || !this.IsFieldDefined("[OVKA1]"))
+				{
+					this.OnTotalAutomatiqueChanging (oldValue, value);
+					this.SetField<bool> ("[OVKA1]", oldValue, value);
+					this.OnTotalAutomatiqueChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Débit</c> field.
 		///	designer:fld/OVKB/OVKE
 		///	</summary>
@@ -819,6 +841,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnMultiIdChanging(int oldValue, int newValue);
 		partial void OnMultiIdChanged(int oldValue, int newValue);
+		partial void OnTotalAutomatiqueChanging(bool oldValue, bool newValue);
+		partial void OnTotalAutomatiqueChanged(bool oldValue, bool newValue);
 		partial void OnDébitChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnDébitChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnCréditChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
