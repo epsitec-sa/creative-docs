@@ -13,12 +13,14 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 	{
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
-			wall.AddBrick (x => x);
-			wall.AddBrick (x => x)
+			wall.AddBrick ();
+
+			//	Just to check that this is possible :
+			wall.AddBrick ()
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController0)
 				.Title ("Informations confidentielles")
-				.Text ("Pour en savoir plus...");	//	Just to check that this is possible
+				.Text ("Pour en savoir plus...");
 
 			if (this.Entity.IsGovernmentDefined ())
 			{
