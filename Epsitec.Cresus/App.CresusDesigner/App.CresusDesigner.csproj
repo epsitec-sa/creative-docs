@@ -96,6 +96,10 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <ProjectReference Include="..\Cresus.Compta\Cresus.Compta.csproj">
+      <Project>{12FC693E-674E-4DE2-891D-B856239CD977}</Project>
+      <Name>Cresus.Compta</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Tool.Designer.Protocol.Contract\Tool.Designer.Protocol.Contract.csproj">
       <Project>{E5D2658F-7D33-48DF-9263-D740F821AE20}</Project>
       <Name>Tool.Designer.Protocol.Contract</Name>

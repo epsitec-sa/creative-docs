@@ -276,6 +276,50 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Catégorie</c> field.
+		///	designer:fld/OVK3/OVK51
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK51]")]
+		public global::Epsitec.Cresus.Compta.CatégorieDeCompte Catégorie
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVK51]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.CatégorieDeCompte oldValue = this.Catégorie;
+				if (oldValue != value || !this.IsFieldDefined("[OVK51]"))
+				{
+					this.OnCatégorieChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVK51]", oldValue, value);
+					this.OnCatégorieChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Type</c> field.
+		///	designer:fld/OVK3/OVK61
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK61]")]
+		public global::Epsitec.Cresus.Compta.TypeDeCompte Type
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVK61]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.TypeDeCompte oldValue = this.Type;
+				if (oldValue != value || !this.IsFieldDefined("[OVK61]"))
+				{
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVK61]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Groupe</c> field.
 		///	designer:fld/OVK3/OVK6
 		///	</summary>
@@ -390,6 +434,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnNuméroChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTitreChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnTitreChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnCatégorieChanging(global::Epsitec.Cresus.Compta.CatégorieDeCompte oldValue, global::Epsitec.Cresus.Compta.CatégorieDeCompte newValue);
+		partial void OnCatégorieChanged(global::Epsitec.Cresus.Compta.CatégorieDeCompte oldValue, global::Epsitec.Cresus.Compta.CatégorieDeCompte newValue);
+		partial void OnTypeChanging(global::Epsitec.Cresus.Compta.TypeDeCompte oldValue, global::Epsitec.Cresus.Compta.TypeDeCompte newValue);
+		partial void OnTypeChanged(global::Epsitec.Cresus.Compta.TypeDeCompte oldValue, global::Epsitec.Cresus.Compta.TypeDeCompte newValue);
 		partial void OnGroupeChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnGroupeChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnCompteOuvBouclChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
@@ -475,11 +523,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>IndexMulti</c> field.
+		///	The <c>MultiId</c> field.
 		///	designer:fld/OVKB/OVKD
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKD]")]
-		public int IndexMulti
+		public int MultiId
 		{
 			get
 			{
@@ -487,12 +535,12 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				int oldValue = this.IndexMulti;
+				int oldValue = this.MultiId;
 				if (oldValue != value || !this.IsFieldDefined("[OVKD]"))
 				{
-					this.OnIndexMultiChanging (oldValue, value);
+					this.OnMultiIdChanging (oldValue, value);
 					this.SetField<int> ("[OVKD]", oldValue, value);
-					this.OnIndexMultiChanged (oldValue, value);
+					this.OnMultiIdChanged (oldValue, value);
 				}
 			}
 		}
@@ -697,8 +745,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
-		partial void OnIndexMultiChanging(int oldValue, int newValue);
-		partial void OnIndexMultiChanged(int oldValue, int newValue);
+		partial void OnMultiIdChanging(int oldValue, int newValue);
+		partial void OnMultiIdChanged(int oldValue, int newValue);
 		partial void OnDébitChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnDébitChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
 		partial void OnCréditChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);

@@ -62,17 +62,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 				public static readonly Epsitec.Common.Types.EnumType VatCode = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 69));
 				//	designer:cap/CVAH5
 				public static readonly Epsitec.Common.Types.EnumType VatRateType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 177));
-				public static class Comptabilité
-				{
-					internal static void _Initialize()
-					{
-					}
-					
-					//	designer:cap/CVKH
-					public static readonly Epsitec.Common.Types.EnumType CatégorieDeCompte = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17));
-					//	designer:cap/CVKO
-					public static readonly Epsitec.Common.Types.EnumType TypeDeCompte = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24));
-				}
 			}
 			
 			public static class String
@@ -1232,7 +1221,6 @@ namespace Epsitec.Cresus.Core.Library.Finance
 			Types._Initialize ();
 			Types.Decimal._Initialize ();
 			Types.Enum._Initialize ();
-			Types.Enum.Comptabilité._Initialize ();
 			Types.String._Initialize ();
 			Values._Initialize ();
 			Values.Enum.BillingMode._Initialize ();

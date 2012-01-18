@@ -272,6 +272,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnIncomingBookAccountChanging(string oldValue, string newValue);
 		partial void OnIncomingBookAccountChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity.EntityStructuredTypeId;
@@ -467,6 +468,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnInstalmentRankChanged(int? oldValue, int? newValue);
 		partial void OnInstalmentNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnInstalmentNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -674,6 +676,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExchangeRateBaseCurrencyCodeChanging(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		partial void OnExchangeRateBaseCurrencyCodeChanged(global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode oldValue, global::Epsitec.Cresus.Core.Business.Finance.CurrencyCode newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.CurrencyEntity.EntityStructuredTypeId;
@@ -807,6 +810,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTypeChanged(global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType oldValue, global::Epsitec.Cresus.Core.Business.Finance.ExchangeRateSourceType newValue);
 		partial void OnOriginatorChanging(string oldValue, string newValue);
 		partial void OnOriginatorChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1001,6 +1005,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnIsrDefinitionChanged(global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity oldValue, global::Epsitec.Cresus.Core.Entities.IsrDefinitionEntity newValue);
 		partial void OnBookAccountChanging(string oldValue, string newValue);
 		partial void OnBookAccountChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1204,6 +1209,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDueDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDueDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.PaymentDetailEntity.EntityStructuredTypeId;
@@ -1394,6 +1400,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnRateChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnRateChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.VatDefinitionEntity.EntityStructuredTypeId;
@@ -1548,6 +1555,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnTaxModeChanging(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
 		partial void OnTaxModeChanged(global::Epsitec.Cresus.Core.Business.Finance.TaxMode oldValue, global::Epsitec.Cresus.Core.Business.Finance.TaxMode newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.TaxSettingsEntity.EntityStructuredTypeId;
@@ -1677,6 +1685,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnRoundingPolicyChanging(global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy newValue);
 		partial void OnRoundingPolicyChanged(global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.RoundingPolicy newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1831,6 +1840,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDiscountPolicyChanged(global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy oldValue, global::Epsitec.Cresus.Core.Business.Finance.DiscountPolicy newValue);
 		partial void OnRoundingModeChanging(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
 		partial void OnRoundingModeChanged(global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity oldValue, global::Epsitec.Cresus.Core.Entities.PriceRoundingModeEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2026,6 +2036,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDefaultMultiplyRatioChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnDefaultMultiplyRatioChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.PriceGroupEntity.EntityStructuredTypeId;
@@ -2177,6 +2188,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnSerializedDataChanged(global::System.Byte[] oldValue, global::System.Byte[] newValue);
 		partial void OnInformationsChanging(string oldValue, string newValue);
 		partial void OnInformationsChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2344,6 +2356,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnReducedVatCodeChanged(string oldValue, string newValue);
 		partial void OnSpecialVatCodeChanging(string oldValue, string newValue);
 		partial void OnSpecialVatCodeChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

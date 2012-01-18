@@ -178,12 +178,10 @@
   <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Charge" id="KL">&lt;s:data id="_0" f:Name="Charge" f:Labels="{Collection {Text 'Charge'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Produit" id="KM">&lt;s:data id="_0" f:Name="Produit" f:Labels="{Collection {Text 'Produit'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Exploitation" id="KN">&lt;s:data id="_0" f:Name="Exploitation" f:Labels="{Collection {Text 'Exploitation'}}" /&gt;</data>
-  <data name="Typ.Enum.Comptabilité.CatégorieDeCompte" id="KH">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.Comptabilité.CatégorieDeCompte" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.Finance.Comptabilité.CatégorieDeCompte, Cresus.Core.Library.Finance" f:_2.EnumValues="{Collection {Text '0 [CVKI]'}, {Text '1 [CVKJ]'}, {Text '2 [CVKK]'}, {Text '3 [CVKL]'}, {Text '4 [CVKM]'}, {Text '5 [CVKN]'}}" f:Labels="{Collection {Text 'Catégorie de compte'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.TypeDeCompte.Normal" id="KP">&lt;s:data id="_0" f:Name="Normal" f:Labels="{Collection {Text 'Normal'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.TypeDeCompte.Titre" id="KQ">&lt;s:data id="_0" f:Name="Titre" f:Labels="{Collection {Text 'Titre'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.TypeDeCompte.Groupe" id="KR">&lt;s:data id="_0" f:Name="Groupe" f:Labels="{Collection {Text 'Groupe'}}" /&gt;</data>
   <data name="Val.Enum.Comptabilité.TypeDeCompte.Bloqué" id="KS">&lt;s:data id="_0" f:Name="Bloqué" f:Labels="{Collection {Text 'Bloqué'}}" /&gt;</data>
-  <data name="Typ.Enum.Comptabilité.TypeDeCompte" id="KO">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.Comptabilité.TypeDeCompte" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.Finance.Comptabilité.TypeDeCompte, Cresus.Core.Library.Finance" f:_2.EnumValues="{Collection {Text '0 [CVKP]'}, {Text '1 [CVKQ]'}, {Text '2 [CVKR]'}, {Text '3 [CVKS]'}}" f:Labels="{Collection {Text 'Type de compte'}}" /&gt;</data>
   <data name="Fld.ComptabilitéCompte.Catégorie" id="KT">&lt;s:data id="_0" f:Name="Catégorie" f:Labels="{Collection {Text 'Catégorie'}}" /&gt;</data>
   <data name="Fld.ComptabilitéCompte.Type" id="KU">&lt;s:data id="_0" f:Name="Type" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
   <data name="Fld.ComptabilitéCompte.Groupe" id="KV">&lt;s:data id="_0" f:Name="Groupe" f:Labels="{Collection {Text 'Groupe'}}" /&gt;</data>
