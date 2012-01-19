@@ -80,7 +80,6 @@
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
-    <Compile Include="ComptaProgram.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
