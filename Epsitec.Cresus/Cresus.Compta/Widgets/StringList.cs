@@ -1,12 +1,15 @@
 //	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
-using System.Collections.Generic;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Cresus.Compta
+using Epsitec.Cresus.Compta.Accessors;
+
+using System.Collections.Generic;
+
+namespace Epsitec.Cresus.Compta.Widgets
 {
 	/// <summary>
 	/// Tableau d'une colonne de TextLayout (vus comme des string).

@@ -20,7 +20,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur gère le ruban supérieur de la comptabilité.
@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.Compta
 		private const double ButtonLargeWidth	= 2 * ((RibbonController.IconLargeWidth + 1) / 2 + 5);
 		private const double ButtonSmallWidth	= 2 * ((RibbonController.IconSmallWidth + 1) / 2 + 5);
 
-		private const int IconSmallWidth		= 14;
+		private const int IconSmallWidth		= 20;
 		private const int IconLargeWidth		= 32;
 
 		private readonly static double IconSize = 40;

@@ -11,12 +11,12 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Compta.Accessors;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la barre d'outil supérieure de recherche rapide pour la comptabilité.

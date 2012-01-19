@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Widgets
 {
 	/// <summary>
 	/// Tableau de plusieurs colonnes, où chaque colonne est un StringList.

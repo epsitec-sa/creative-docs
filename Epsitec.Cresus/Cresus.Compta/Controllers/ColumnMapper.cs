@@ -5,10 +5,12 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Compta.Accessors;
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class ColumnMapper
 	{

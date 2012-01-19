@@ -13,12 +13,13 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
 	/// Contrôleur générique pour la comptabilité, qui sert de base aux contrôleurs permettant l'édition
@@ -299,7 +300,7 @@ namespace Epsitec.Cresus.Compta
 
 				if (result == null)  // pas trouvé ?
 				{
-					if (!text.IsNullOrEmpty && !text.ToString ().StartsWith (StringArray.SpecialContentStart))
+					if (!text.IsNullOrEmpty && !text.ToString ().StartsWith (Compta.Widgets.StringArray.SpecialContentStart))
 					{
 						text = text.ApplyFontColor (SearchResult.TextOutsideSearch);  // gris
 					}

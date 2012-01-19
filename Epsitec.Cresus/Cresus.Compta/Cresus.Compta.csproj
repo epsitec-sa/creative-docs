@@ -95,7 +95,7 @@
     <Compile Include="Controllers\PPController.cs" />
     <Compile Include="Controllers\RibbonController.cs" />
     <Compile Include="Controllers\TypeDeDocumentComptable.cs" />
-    <Compile Include="Entities\CatégorieDeCompte.cs" />
+    <Compile Include="CatégorieDeCompte.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\AbstractFooterController.cs" />
     <Compile Include="Controllers\AbstractOptionsController.cs" />
@@ -118,7 +118,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
-    <Compile Include="Entities\TypeDeCompte.cs" />
+    <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />
   </ItemGroup>

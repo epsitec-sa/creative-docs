@@ -10,10 +10,13 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Widgets;
 
+using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur gère le tableau pour les données de la comptabilité.

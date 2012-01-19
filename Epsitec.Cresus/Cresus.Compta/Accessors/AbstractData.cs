@@ -7,10 +7,12 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Compta.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
 	/// Données génériques pour la comptabilité.

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Compta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
 	/// Gère l'accès aux données de la balance de vérification de la comptabilité.

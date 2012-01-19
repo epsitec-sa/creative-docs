@@ -8,12 +8,13 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
 	/// Gère l'accès à des données génériques de la comptabilité.

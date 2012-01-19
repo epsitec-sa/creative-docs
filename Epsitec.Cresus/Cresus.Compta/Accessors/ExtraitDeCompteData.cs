@@ -11,7 +11,7 @@ using Epsitec.Cresus.Compta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
 	/// Données pour un extrait de compte de la comptabilité.

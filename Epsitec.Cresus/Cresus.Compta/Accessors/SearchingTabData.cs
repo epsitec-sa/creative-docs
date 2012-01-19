@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Accessors
 {
 	public class SearchingTabData
 	{

@@ -17,12 +17,13 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Dialogs;
 
+using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class MainWindow : CoreDialog
 	{
