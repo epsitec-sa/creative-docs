@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core
 
 			var snapshotService = new Library.Business.CoreSnapshotService ();
 
-			using (var app = new CoreApplication ())
+			using (var app = CoreContext.CreateApplication<CoreInteractiveApp> () ?? new CoreApplication ())
 			{
 				System.Diagnostics.Debug.Assert (app.ResourceManagerPool.PoolName == "Core");
 

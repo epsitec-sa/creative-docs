@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		public CoreCommandHandler(CoreCommandDispatcher commandDispatcher)
 		{
 			this.commandDispatcher = commandDispatcher;
-			this.application = this.commandDispatcher.Host as CoreApplication;
+			this.application = this.commandDispatcher.Host as CoreInteractiveApp;
 		}
 
 
@@ -161,31 +161,40 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		private void HandleViewChanged(object sender)
 		{
-			this.UpdateCommandEnables ();
+			this.UpdateCommandEnables (this.Orchestrator);
 		}
 
-		private void UpdateCommandEnables()
+		private void UpdateCommandEnables(DataViewOrchestrator orchestrator)
 		{
-			this.application.SetEnable (Res.Commands.Edition.Print, this.Orchestrator.MainViewController.GetPrintCommandEnable ());
+			if (orchestrator != null)
+			{
+				this.application.SetEnable (Res.Commands.Edition.Print, orchestrator.MainViewController.GetPrintCommandEnable ());
+			}
 		}
 
 		#region ICommandHandler Members
 
 		void ICommandHandler.UpdateCommandStates(object sender)
 		{
+			var orchestrator = this.Orchestrator;
+
 			if (this.initialized == false)
 			{
 				this.initialized = true;
-				this.Orchestrator.ViewChanged += this.HandleViewChanged;
+
+				if (orchestrator != null)
+				{
+					orchestrator.ViewChanged += this.HandleViewChanged;
+				}
 			}
 
-			this.UpdateCommandEnables ();
+			this.UpdateCommandEnables (orchestrator);
 		}
 
 		#endregion
 
 		private readonly CoreCommandDispatcher	commandDispatcher;
-		private readonly CoreApplication		application;
+		private readonly CoreInteractiveApp		application;
 
 		private bool							initialized;
 	}

@@ -69,6 +69,20 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		public static T CreateApplication<T>()
+			where T : CoreApp
+		{
+			if (CoreContext.applicationType != null)
+			{
+				return System.Activator.CreateInstance (CoreContext.applicationType) as T;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
 		public static void StartAsInteractive()
 		{
 			CoreContext.startupCalled.WhenTrueThrow<System.InvalidOperationException> ("Start already called");
@@ -95,6 +109,12 @@ namespace Epsitec.Cresus.Core.Library
 			CoreContext.databaseName = name;
 			CoreContext.databaseHost = host;
 		}
+
+		public static void DefineApplicationClass(string assemblyName, string typeName)
+		{
+			var assembly = System.Reflection.Assembly.LoadFrom (assemblyName);
+			CoreContext.applicationType = assembly.GetType (typeName);
+		}			
 
 		/// <summary>
 		/// Parses the optional settings file. Every line in the file can specify a
@@ -190,5 +210,7 @@ namespace Epsitec.Cresus.Core.Library
 		private static CoreDatabaseType			databaseType;
 		private static string					databaseName;
 		private static string					databaseHost;
+
+		private static System.Type				applicationType;
 	}
 }

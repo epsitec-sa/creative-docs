@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		public void NotifyApplicationStarted(CoreApp app)
 		{
 			var dataViewOrchestrator   = app.FindActiveComponent<DataViewOrchestrator> ();
-			var navigationOrchestrator = dataViewOrchestrator.Navigator;
+			var navigationOrchestrator = dataViewOrchestrator == null ? null : dataViewOrchestrator.Navigator;
 
 			Window.GlobalFocusedWindowChanged += this.HandleGlobalFocusedWindowChanged;
 			Window.GlobalFocusedWidgetChanged += this.HandleGlobalFocusedWidgetChanged;
@@ -46,8 +46,11 @@ namespace Epsitec.Cresus.Core.Library.Business
 			
 			Widget.GlobalMouseDown += this.HandleWidgetGlobalMouseDown;
 
-			navigationOrchestrator.NodeAdded   += this.HandleNavigationOrchestratorNodeChanged;
-			navigationOrchestrator.NodeRemoved += this.HandleNavigationOrchestratorNodeChanged;
+			if (navigationOrchestrator != null)
+			{
+				navigationOrchestrator.NodeAdded   += this.HandleNavigationOrchestratorNodeChanged;
+				navigationOrchestrator.NodeRemoved += this.HandleNavigationOrchestratorNodeChanged;
+			}
 
 			CommandDispatcher.CommandDispatching       += this.HandleCommandDispatcherCommandDispatching;
 			CommandDispatcher.CommandDispatched        += this.HandleCommandDispatcherCommandDispatchFinished;

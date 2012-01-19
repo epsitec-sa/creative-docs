@@ -1,1 +1,2 @@
 DefineDatabase ("compta", "localhost");
+DefineApplicationClass ("Cresus.Compta.dll", "Epsitec.Cresus.Compta.ComptaApplication");

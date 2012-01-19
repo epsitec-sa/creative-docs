@@ -8,7 +8,7 @@
     <ProjectGuid>{12FC693E-674E-4DE2-891D-B856239CD977}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Cresus.Compta</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.Compta</RootNamespace>
     <AssemblyName>Cresus.Compta</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -80,6 +80,7 @@
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
+    <Compile Include="ComptaApplication.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
