@@ -6,12 +6,8 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-	
-	
 	public sealed class EditionAiderHouseholdViewController : EditionViewController<AiderHouseholdEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
 			wall.AddBrick ()
@@ -21,9 +17,5 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Address)
 				.End ();
 		}
-
-
 	}
-
-
 }

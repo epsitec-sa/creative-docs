@@ -90,6 +90,4 @@ namespace Epsitec.Aider.Entities
 	
 	
 	}
-
-
 }

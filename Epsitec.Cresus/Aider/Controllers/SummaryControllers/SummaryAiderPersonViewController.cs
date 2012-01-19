@@ -33,6 +33,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Title ("Adresse supplémentaire 2");
 
 			wall.AddBrick (x => x.Household);
+			wall.AddBrick (x => x.Comment);
 		}
 	}
 
