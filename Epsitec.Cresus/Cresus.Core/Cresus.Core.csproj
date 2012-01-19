@@ -6,7 +6,7 @@
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Epsitec.Cresus.Core</RootNamespace>
     <AssemblyName>Cresus.Core</AssemblyName>

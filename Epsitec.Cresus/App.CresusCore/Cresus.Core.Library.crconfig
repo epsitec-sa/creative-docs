@@ -1,1 +1,2 @@
 DefineDatabase ("core", "localhost");
+DefineApplicationClass ("Cresus.Core.dll", "Epsitec.Cresus.Core.CoreApplication");
