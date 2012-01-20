@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>
+    </ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{011FDF61-329C-4835-BA0B-B5DB7DF8AB4D}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Aider.Tests.Vs</RootNamespace>
+    <AssemblyName>Aider.Tests.Vs</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
+      <Visible>False</Visible>
+    </CodeAnalysisDependentAssemblyPaths>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UnitTestEChDataImport.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Aider\Aider.csproj">
+      <Project>{0F0E9452-EFE5-4007-B634-B0198E13E3DA}</Project>
+      <Name>Aider</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
+      <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
+      <Name>App.DebugService</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common.Document\Common.Document.csproj">
+      <Project>{B324896E-2CDE-45B8-91CE-B476687EA384}</Project>
+      <Name>Common.Document</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Address\Cresus.Core.Library.Address.csproj">
+      <Project>{5D9704AF-69C1-4E71-8DF3-4455DC41D731}</Project>
+      <Name>Cresus.Core.Library.Address</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
+      <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>
+      <Name>Cresus.Core.Library.Business</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Data\Cresus.Core.Library.Data.csproj">
+      <Project>{AA11E634-2A75-45C1-868D-7B7C045C80C3}</Project>
+      <Name>Cresus.Core.Library.Data</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Documents\Cresus.Core.Library.Documents.csproj">
+      <Project>{F2955C92-B208-498B-8ED4-E7B033AD284B}</Project>
+      <Name>Cresus.Core.Library.Documents</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Features\Cresus.Core.Library.Features.csproj">
+      <Project>{B29C4379-B4F0-4B94-A0CD-48E72AFCC540}</Project>
+      <Name>Cresus.Core.Library.Features</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Finance\Cresus.Core.Library.Finance.csproj">
+      <Project>{608DCEB5-9004-44C6-B221-755E9D95FBB2}</Project>
+      <Name>Cresus.Core.Library.Finance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Images\Cresus.Core.Library.Images.csproj">
+      <Project>{539FF5AF-51A0-44DB-8771-910482BCF2E2}</Project>
+      <Name>Cresus.Core.Library.Images</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Measures\Cresus.Core.Library.Measures.csproj">
+      <Project>{01B39E29-EDB1-4330-8E03-689DA987B6A5}</Project>
+      <Name>Cresus.Core.Library.Measures</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Print\Cresus.Core.Library.Print.csproj">
+      <Project>{B79C6B74-CEDB-4242-AAFF-18DCF45B259C}</Project>
+      <Name>Cresus.Core.Library.Print</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.UserManagement\Cresus.Core.Library.UserManagement.csproj">
+      <Project>{F5EA8D13-3119-4563-BC77-9E9D6CE94148}</Project>
+      <Name>Cresus.Core.Library.UserManagement</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.Workflows\Cresus.Core.Library.Workflows.csproj">
+      <Project>{97CAFD8C-770C-4ABC-BF65-86D87354FFD1}</Project>
+      <Name>Cresus.Core.Library.Workflows</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library\Cresus.Core.Library.csproj">
+      <Project>{91DA0241-F084-40C5-B76E-0240884D1841}</Project>
+      <Name>Cresus.Core.Library</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Maintenance\Cresus.Core.Maintenance.csproj">
+      <Project>{917EB960-42F9-48DF-A649-69A0065AA07C}</Project>
+      <Name>Cresus.Core.Maintenance</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core\Cresus.Core.csproj">
+      <Project>{543293D0-CAFB-4431-8202-6C6D5FF5403A}</Project>
+      <Name>Cresus.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database.Implementation\Cresus.Database.Implementation.csproj">
+      <Project>{C757AD58-605D-4480-BC2E-03E8076368B2}</Project>
+      <Name>Cresus.Database.Implementation</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Database\Cresus.Database.csproj">
+      <Project>{BBBFCDFF-5A53-4B82-80CB-B98B2EC1B349}</Project>
+      <Name>Cresus.Database</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.DataLayer\Cresus.DataLayer.csproj">
+      <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
+      <Name>Cresus.DataLayer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.WebCore.Server\Cresus.WebCore.Server.csproj">
+      <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
+      <Name>Cresus.WebCore.Server</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Solution Items\Epsitec.Cresus.snk">
+      <Link>Properties\Epsitec.Cresus.snk</Link>
+    </None>
+    <Content Include="Cresus.Core.Library.crconfig">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -68,7 +68,14 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonRelationshipViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderTownViewController.cs" />
+    <Compile Include="Data\EChAddress.cs" />
+    <Compile Include="Data\EChDataImporter.cs" />
+    <Compile Include="Data\EChDataLoader.cs" />
+    <Compile Include="Data\EChPerson.cs" />
+    <Compile Include="Data\EChPlace.cs" />
+    <Compile Include="Data\EChReportedPerson.cs" />
     <Compile Include="Data\eCH_Importer.cs" />
+    <Compile Include="Data\EChXmlTags.cs" />
     <Compile Include="eCH\DataSource.cs" />
     <Compile Include="eCH\DatePrecision.cs" />
     <Compile Include="eCH\HouseholdMrMrs.cs" />
@@ -108,6 +115,33 @@
     <Compile Include="ValidationState.cs" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0006-2-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0007-3-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0008-2-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0010-3-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0011-3-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0021-2-1.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eCH-0044-1-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eVD-0002-1-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\Xsd\eVD-0004-1-0.xsd">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

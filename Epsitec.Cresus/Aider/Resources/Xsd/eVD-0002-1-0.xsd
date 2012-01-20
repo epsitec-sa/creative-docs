@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+			xmlns:eCH-0044="http://www.ech.ch/xmlns/eCH-0044/1"
+			xmlns:eCH-0011="http://www.ech.ch/xmlns/eCH-0011/3"
+			xmlns:eCH-0010="http://www.ech.ch/xmlns/eCH-0010/3"
+			xmlns:eCH-0021="http://www.ech.ch/xmlns/eCH-0021/2"
+			xmlns:eCH-0008="http://www.ech.ch/xmlns/eCH-0008/2"
+			xmlns:eVD-0002="http://evd.vd.ch/xmlns/eVD-0002/1"
+			xmlns:eVD-0004="http://evd.vd.ch/xmlns/eVD-0004/1"
+			targetNamespace="http://evd.vd.ch/xmlns/eVD-0002/1"
+			elementFormDefault="qualified" attributeFormDefault="unqualified">
+
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0044/1"
+		schemaLocation="http://www.ech.ch/xmlns/eCH-0044/1/eCH-0044-1-0.xsd" />
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0011/3"
+		schemaLocation="http://www.ech.ch/xmlns/eCH-0011/3/eCH-0011-3-0.xsd" />
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0010/3"
+		schemaLocation="http://www.ech.ch/xmlns/eCH-0010/3/eCH-0010-3-0.xsd" />
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0021/2"
+		schemaLocation="http://www.ech.ch/xmlns/eCH-0021/2/eCH-0021-2-1.xsd" />
+	<xs:import namespace="http://www.ech.ch/xmlns/eCH-0008/2"
+		schemaLocation="http://www.ech.ch/xmlns/eCH-0008/2/eCH-0008-2-0.xsd" />
+
+	<xs:import namespace="http://evd.vd.ch/xmlns/eVD-0004/1"
+		schemaLocation="http://evd.vd.ch/xmlns/eVD-0004/1/eVD-0004-1-0.xsd" />
+
+	<xs:annotation>
+		<xs:documentation xml:lang="fr">
+			Extraction pour les autoritées religieuses (FEDEC)
+		</xs:documentation>
+	</xs:annotation>
+
+	<xs:complexType name="adultType">
+		<xs:sequence>
+			<xs:element name="person" type="eVD-0004:personIdentificationType" />
+			<xs:element name="nationality" type="eCH-0011:nationalityType" />
+			<xs:element name="origin" type="eCH-0011:placeOfOriginType" minOccurs="0" maxOccurs="unbounded"/>
+			<xs:element name="maritalStatus" type="eCH-0011:maritalDataType" minOccurs="0"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="childType">
+		<xs:sequence>
+			<xs:element name="person" type="eVD-0004:personIdentificationType" />
+			<xs:element name="nationality" type="eCH-0011:nationalityType" />
+			<xs:element name="origin" type="eCH-0011:placeOfOriginType" minOccurs="0" maxOccurs="unbounded"/>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="environment">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="2"/>
+			<xs:maxLength value="2"/>
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="familyType">
+		<xs:sequence>
+			<xs:element name="adult" type="eVD-0002:adultType" minOccurs="1" maxOccurs="2"/>
+			<xs:element name="children" minOccurs="0"  maxOccurs="1">
+				<xs:complexType>
+					<xs:sequence>
+						<xs:element name="child" type="eVD-0002:childType"  minOccurs="1" maxOccurs="unbounded" />
+					</xs:sequence>
+				</xs:complexType>
+			</xs:element>
+			<xs:sequence>
+				<xs:element name="cantonalStreetNumber" type="xs:positiveInteger" minOccurs="0" maxOccurs="1"/>
+				<xs:element name="address" type="eCH-0010:swissAddressInformationType" minOccurs="0" maxOccurs="1"/>
+			</xs:sequence>
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:element name="religiousAuthorityExtraction">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="extractionDate" type="xs:date" minOccurs="1" maxOccurs="1" />
+				<xs:element name="environment" type="eVD-0002:environment" minOccurs="1" maxOccurs="1" />
+				<xs:element name="reportedPerson" type="eVD-0002:familyType" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+</xs:schema>
