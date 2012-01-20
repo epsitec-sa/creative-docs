@@ -138,17 +138,17 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		{
 			#region IEntityPrinterFactory Members
 
-			public bool CanPrint(AbstractEntity entity, PrintingOptionDictionary options)
+			bool IEntityPrinterFactory.CanPrint(AbstractEntity entity, PrintingOptionDictionary options)
 			{
 				return entity is MailContactEntity;
 			}
 
-			public IEnumerable<System.Type> GetSupportedEntityTypes()
+			IEnumerable<System.Type> IEntityPrinterFactory.GetSupportedEntityTypes()
 			{
 				yield return typeof (MailContactEntity);
 			}
 
-			public DocumentType GetDocumentType(AbstractEntity entity)
+			DocumentType IEntityPrinterFactory.GetDocumentType(AbstractEntity entity)
 			{
 				if (entity is MailContactEntity)
 				{
@@ -157,13 +157,13 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 				return DocumentType.Unknown;
 			}
-			
-			public IEntityPrinter CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
+
+			IEntityPrinter IEntityPrinterFactory.CreatePrinter(IBusinessContext businessContext, AbstractEntity entity, PrintingOptionDictionary options, PrintingUnitDictionary printingUnits)
 			{
 				return new MailContactPrinter (businessContext, entity, options, printingUnits);
 			}
 
-			public IEnumerable<DocumentOption> GetRequiredDocumentOptions(DocumentType documentType)
+			IEnumerable<DocumentOption> IEntityPrinterFactory.GetRequiredDocumentOptions(DocumentType documentType)
 			{
 				switch (documentType)
 				{
@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				return null;
 			}
 
-			public IEnumerable<PageType> GetRequiredPageTypes(DocumentType documentType)
+			IEnumerable<PageType> IEntityPrinterFactory.GetRequiredPageTypes(DocumentType documentType)
 			{
 				switch (documentType)
 				{
