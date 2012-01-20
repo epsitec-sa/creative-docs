@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 namespace Epsitec.Common.Support
@@ -21,7 +21,7 @@ namespace Epsitec.Common.Support
 		}
 
 
-		public bool IsZero
+		public bool								IsZero
 		{
 			get
 			{
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public bool IsNotZero
+		public bool								IsNotZero
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Common.Support
 			}
 		}
 
-		public int Value
+		public int								Value
 		{
 			get
 			{
@@ -92,6 +92,6 @@ namespace Epsitec.Common.Support
 		}
 
 
-		private int value;
+		private int								value;
 	}
 }

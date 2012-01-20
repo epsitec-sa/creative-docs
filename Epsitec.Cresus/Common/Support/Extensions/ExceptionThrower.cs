@@ -1,15 +1,14 @@
-﻿namespace Epsitec.Common.Support.Extensions
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+namespace Epsitec.Common.Support.Extensions
 {
-
-
 	/// <summary>
 	/// The <c>ExceptionThrower</c> class contains extension methods that can be used to check
 	/// variables and throw <see cref="Exception"/> if some condition is not met.
 	/// </summary>
 	public static class ExceptionThrower
 	{
-
-
 		/// <summary>
 		/// Checks that <paramref name="element"/> is not null.
 		/// </summary>
@@ -95,7 +94,4 @@
 			}
 		}
 	}
-
-
-
 }
