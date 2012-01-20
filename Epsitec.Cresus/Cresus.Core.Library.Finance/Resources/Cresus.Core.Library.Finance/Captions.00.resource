@@ -159,39 +159,4 @@
   <data name="Fld.AccountingOperation.StandardVatCode" id="AO5">&lt;s:data id="_0" f:Name="StandardVatCode" f:Labels="{Collection {Text 'Code pour le taux normal'}}" /&gt;</data>
   <data name="Fld.AccountingOperation.ReducedVatCode" id="AP5">&lt;s:data id="_0" f:Name="ReducedVatCode" f:Labels="{Collection {Text 'Code pour le taux réduit'}}" /&gt;</data>
   <data name="Fld.AccountingOperation.SpecialVatCode" id="AQ5">&lt;s:data id="_0" f:Name="SpecialVatCode" f:Labels="{Collection {Text 'Code pour le taux spécial'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Numéro" id="K3">&lt;s:data id="_0" f:Name="Numéro" f:Labels="{Collection {Text 'Numéro'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Titre" id="K4">&lt;s:data id="_0" f:Name="Titre" f:Labels="{Collection {Text 'Titre'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Débit" id="K5">&lt;s:data id="_0" f:Name="Débit" f:Labels="{Collection {Text 'Débit'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Crédit" id="K6">&lt;s:data id="_0" f:Name="Crédit" f:Labels="{Collection {Text 'Crédit'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Pièce" id="K7">&lt;s:data id="_0" f:Name="Pièce" f:Labels="{Collection {Text 'Pièce'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Libellé" id="K8">&lt;s:data id="_0" f:Name="Libellé" f:Labels="{Collection {Text 'Libellé'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Montant" id="K9">&lt;s:data id="_0" f:Name="Montant" f:Labels="{Collection {Text 'Montant'}}" /&gt;</data>
-  <data name="Fld.Comptabilité.PlanComptable" id="KB">&lt;s:data id="_0" f:Name="PlanComptable" f:Labels="{Collection {Text 'Plan comptable'}}" /&gt;</data>
-  <data name="Fld.Comptabilité.Journal" id="KC">&lt;s:data id="_0" f:Name="Journal" f:Labels="{Collection {Text 'Journal des écritures'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.TypeTVA" id="KD">&lt;s:data id="_0" f:Name="TypeTVA" f:Labels="{Collection {Text 'Type TVA'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.NuméroTVA" id="KE">&lt;s:data id="_0" f:Name="NuméroTVA" f:Labels="{Collection {Text 'N° TVA'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.CodeTVA" id="KF">&lt;s:data id="_0" f:Name="CodeTVA" f:Labels="{Collection {Text 'Code TVA'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.CodeAnalytique" id="KG">&lt;s:data id="_0" f:Name="CodeAnalytique" f:Labels="{Collection {Text 'Code analytique'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Inconnu" id="KI">&lt;s:data id="_0" f:Name="Inconnu" f:Labels="{Collection {Text 'Inconnu'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Actif" id="KJ">&lt;s:data id="_0" f:Name="Actif" f:Labels="{Collection {Text 'Actif'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Passif" id="KK">&lt;s:data id="_0" f:Name="Passif" f:Labels="{Collection {Text 'Passif'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Charge" id="KL">&lt;s:data id="_0" f:Name="Charge" f:Labels="{Collection {Text 'Charge'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Produit" id="KM">&lt;s:data id="_0" f:Name="Produit" f:Labels="{Collection {Text 'Produit'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.CatégorieDeCompte.Exploitation" id="KN">&lt;s:data id="_0" f:Name="Exploitation" f:Labels="{Collection {Text 'Exploitation'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.TypeDeCompte.Normal" id="KP">&lt;s:data id="_0" f:Name="Normal" f:Labels="{Collection {Text 'Normal'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.TypeDeCompte.Titre" id="KQ">&lt;s:data id="_0" f:Name="Titre" f:Labels="{Collection {Text 'Titre'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.TypeDeCompte.Groupe" id="KR">&lt;s:data id="_0" f:Name="Groupe" f:Labels="{Collection {Text 'Groupe'}}" /&gt;</data>
-  <data name="Val.Enum.Comptabilité.TypeDeCompte.Bloqué" id="KS">&lt;s:data id="_0" f:Name="Bloqué" f:Labels="{Collection {Text 'Bloqué'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Catégorie" id="KT">&lt;s:data id="_0" f:Name="Catégorie" f:Labels="{Collection {Text 'Catégorie'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Type" id="KU">&lt;s:data id="_0" f:Name="Type" f:Labels="{Collection {Text 'Type'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Groupe" id="KV">&lt;s:data id="_0" f:Name="Groupe" f:Labels="{Collection {Text 'Groupe'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.TVA" id="K01">&lt;s:data id="_0" f:Name="TVA" f:Labels="{Collection {Text 'TVA'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.CompteOuvBoucl" id="K11">&lt;s:data id="_0" f:Name="CompteOuvBoucl" f:Labels="{Collection {Text 'Compte pour ouverture/bouclement'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.IndexOuvBoucl" id="K21">&lt;s:data id="_0" f:Name="IndexOuvBoucl" f:Labels="{Collection {Text 'Index pour ouverture/bouclement'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Monnaie" id="K31">&lt;s:data id="_0" f:Name="Monnaie" f:Labels="{Collection {Text 'Monnaie'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Date" id="K51">&lt;s:data id="_0" f:Name="Date" f:Labels="{Collection {Text 'Date'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Lignes" id="K61">&lt;s:data id="_0" f:Name="Lignes" f:Labels="{Collection {Text 'Ecritures'}}" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Date" id="K71">&lt;s:data id="_0" f:Name="Date" /&gt;</data>
-  <data name="Fld.ComptabilitéEcriture.Multi" id="K81">&lt;s:data id="_0" f:Name="Multi" /&gt;</data>
-  <data name="Fld.ComptabilitéCompte.Niveau" id="K91">&lt;s:data id="_0" f:Name="Niveau" /&gt;</data>
 </bundle>
