@@ -1,11 +1,13 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types
 {
 	using Assembly=System.Reflection.Assembly;
+	using Epsitec.Common.Support;
 	
 	/// <summary>
 	/// 
@@ -66,13 +68,11 @@ namespace Epsitec.Common.Types
 
 		static EnumLister()
 		{
-			EnumLister.domain     = System.AppDomain.CurrentDomain;
-			EnumLister.assemblies = new List<Assembly> ();
-			EnumLister.types      = new Dictionary<string, Record> ();
+			EnumLister.types = new Dictionary<string, Record> ();
 
-			Assembly[] assemblies = EnumLister.domain.GetAssemblies ();
+			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
 
-			EnumLister.domain.AssemblyLoad += EnumLister.HandleDomainAssemblyLoad;
+			AssemblyLoader.AssemblyLoaded += EnumLister.HandleDomainAssemblyLoaded;
 
 			foreach (Assembly assembly in assemblies)
 			{
@@ -99,11 +99,10 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-		private static void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
+		private static void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
-				EnumLister.assemblies.Add (args.LoadedAssembly);
 				EnumLister.Analyze (args.LoadedAssembly);
 			}
 		}
@@ -132,19 +131,17 @@ namespace Epsitec.Common.Types
 
 		#endregion
 
-		private static System.AppDomain domain;
-		private static List<Assembly> assemblies;
-		private static Dictionary<string, Record> types;
+		private static readonly Dictionary<string, Record> types;
 		private static int generation;
 
 		[System.ThreadStatic]
-		private static System.Type[] publicEnumCache;
+		private static System.Type[]			publicEnumCache;
 		[System.ThreadStatic]
-		private static int publicEnumCacheGeneration;
+		private static int						publicEnumCacheGeneration;
 		
 		[System.ThreadStatic]
-		private static System.Type[] designerVisibleEnumCache;
+		private static System.Type[]			designerVisibleEnumCache;
 		[System.ThreadStatic]
-		private static int designerVisibleEnumCacheGeneration;
+		private static int						designerVisibleEnumCacheGeneration;
 	}
 }

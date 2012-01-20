@@ -1,10 +1,12 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.UI.ItemViewFactories
 {
@@ -80,13 +82,11 @@ namespace Epsitec.Common.UI.ItemViewFactories
 
 		static Factory()
 		{
-			Factory.domain     = System.AppDomain.CurrentDomain;
-			Factory.assemblies = new List<Assembly> ();
-			Factory.cache      = new Dictionary<System.Type, IItemViewFactory> ();
+			Factory.cache = new Dictionary<System.Type, IItemViewFactory> ();
 
-			Assembly[] assemblies = Factory.domain.GetAssemblies ();
+			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
 
-			Factory.domain.AssemblyLoad += Factory.HandleDomainAssemblyLoad;
+			AssemblyLoader.AssemblyLoaded += Factory.HandleDomainAssemblyLoaded;
 
 			foreach (Assembly assembly in assemblies)
 			{
@@ -107,20 +107,17 @@ namespace Epsitec.Common.UI.ItemViewFactories
 			}
 		}
 
-		private static void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
+		private static void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
-				Factory.assemblies.Add (args.LoadedAssembly);
 				Factory.Analyze (args.LoadedAssembly);
 			}
 		}
 
 		#endregion
 
-		private static System.AppDomain domain;
-		private static List<Assembly> assemblies;
-		private static Dictionary<System.Type, IItemViewFactory> cache;
-		private static object exclusion = new object ();
+		private static readonly Dictionary<System.Type, IItemViewFactory> cache;
+		private static readonly object exclusion = new object ();
 	}
 }

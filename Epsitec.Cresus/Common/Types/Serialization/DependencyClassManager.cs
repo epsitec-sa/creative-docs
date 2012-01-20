@@ -1,7 +1,11 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Types.Serialization
 {
@@ -11,14 +15,12 @@ namespace Epsitec.Common.Types.Serialization
 	{
 		private DependencyClassManager()
 		{
-			this.domain     = System.AppDomain.CurrentDomain;
-			this.assemblies = new List<Assembly> ();
 			this.types      = new Dictionary<string, DependencyObjectType> ();
 			this.converters = new Dictionary<System.Type, ISerializationConverter> ();
 
-			Assembly[] assemblies = this.domain.GetAssemblies ();
+			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
 			
-			this.domain.AssemblyLoad += this.HandleDomainAssemblyLoad;
+			AssemblyLoader.AssemblyLoaded += this.HandleDomainAssemblyLoaded;
 
 			foreach (Assembly assembly in assemblies)
 			{
@@ -209,11 +211,10 @@ namespace Epsitec.Common.Types.Serialization
 			DependencyClassManager.ExecutePendingInitializationCode ();
 		}
 
-		private void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
+		private void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
-				this.assemblies.Add (args.LoadedAssembly);
 				this.Analyze (args.LoadedAssembly);
 			}
 		}
@@ -221,10 +222,8 @@ namespace Epsitec.Common.Types.Serialization
 		private static DependencyClassManager	current;
 		private static bool						isBooting;
 		
-		private System.AppDomain				domain;
-		private List<Assembly>					assemblies;
-		private Dictionary<string, DependencyObjectType> types;
-		private Dictionary<System.Type, ISerializationConverter> converters;
+		private readonly Dictionary<string, DependencyObjectType> types;
+		private readonly Dictionary<System.Type, ISerializationConverter> converters;
 
 		[System.ThreadStatic]
 		private static Queue<Support.SimpleCallback> pendingActions;
@@ -234,6 +233,6 @@ namespace Epsitec.Common.Types.Serialization
 		private static Queue<Support.SimpleCallback> bootingActions;
 
 		[System.ThreadStatic]
-		private static int analyseCount;
+		private static int							 analyseCount;
 	}
 }

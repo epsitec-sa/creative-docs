@@ -1,4 +1,4 @@
-//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -151,13 +151,11 @@ namespace Epsitec.Common.Support.PlugIns
 
 		static PlugInFactory()
 		{
-			PlugInFactory<TClass, TAttribute, TId>.domain     = System.AppDomain.CurrentDomain;
-			PlugInFactory<TClass, TAttribute, TId>.assemblies = new List<Assembly> ();
-			PlugInFactory<TClass, TAttribute, TId>.types      = new Dictionary<TId, Record> ();
+			PlugInFactory<TClass, TAttribute, TId>.types = new Dictionary<TId, Record> ();
 
-			Assembly[] assemblies = PlugInFactory<TClass, TAttribute, TId>.domain.GetAssemblies ();
+			Assembly[] assemblies = TypeEnumerator.Instance.GetLoadedAssemblies ().ToArray ();
 
-			PlugInFactory<TClass, TAttribute, TId>.domain.AssemblyLoad += PlugInFactory<TClass, TAttribute, TId>.HandleDomainAssemblyLoad;
+			AssemblyLoader.AssemblyLoaded += PlugInFactory<TClass, TAttribute, TId>.HandleDomainAssemblyLoaded;
 
 			foreach (Assembly assembly in assemblies)
 			{
@@ -170,18 +168,15 @@ namespace Epsitec.Common.Support.PlugIns
 
 		private static void Analyze(Assembly assembly)
 		{
-			System.Diagnostics.Debug.Assert (PlugInFactory<TClass, TAttribute, TId>.assemblies.Contains (assembly) == false);
 			System.Diagnostics.Debug.Assert (assembly.ReflectionOnly == false);
 
-			PlugInFactory<TClass, TAttribute, TId>.assemblies.Add (assembly);
-			
 			foreach (TAttribute attribute in PlugInFactory<TClass, TAttribute, TId>.GetRegisteredAttributes (assembly))
 			{
 				PlugInFactory<TClass, TAttribute, TId>.types[attribute.Id] = new Record (attribute.Type);
 			}
 		}
 
-		private static void HandleDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
+		private static void HandleDomainAssemblyLoaded(object sender, System.AssemblyLoadEventArgs args)
 		{
 			if (!args.LoadedAssembly.ReflectionOnly)
 			{
@@ -271,8 +266,6 @@ namespace Epsitec.Common.Support.PlugIns
 
 		#endregion
 
-		private static System.AppDomain domain;
-		private static List<Assembly> assemblies;
-		private static Dictionary<TId, Record> types;
+		private static readonly Dictionary<TId, Record>	types;
 	}
 }
