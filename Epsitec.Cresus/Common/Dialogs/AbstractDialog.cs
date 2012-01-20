@@ -417,6 +417,10 @@ namespace Epsitec.Common.Dialogs
 		{
 		}
 
+		protected void ReuseDialogWindow(Window window)
+		{
+			this.dialogWindow = window;
+		}
 
 		private void CreateDialogWindow()
 		{

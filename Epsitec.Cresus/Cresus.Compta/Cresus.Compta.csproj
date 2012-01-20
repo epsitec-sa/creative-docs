@@ -89,7 +89,7 @@
     <Compile Include="Controllers\ExtraitDeCompteController.cs" />
     <Compile Include="Controllers\JournalController.cs" />
     <Compile Include="Controllers\JournalFooterController.cs" />
-    <Compile Include="Controllers\MainWindow.cs" />
+    <Compile Include="Controllers\DocumentWindowController.cs" />
     <Compile Include="Controllers\PlanComptableController.cs" />
     <Compile Include="Controllers\PlanComptableFooterController.cs" />
     <Compile Include="Controllers\PPController.cs" />
@@ -165,6 +165,10 @@
     <ProjectReference Include="..\Common\Common.csproj">
       <Project>{1611E097-A82A-43E5-B616-D7DC6EFF3F0D}</Project>
       <Name>Common</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Cresus.Core.Library.BusinessLogic\Cresus.Core.Library.BusinessLogic.csproj">
+      <Project>{0B7976F1-6ABB-45EA-93AA-1A0740AFE87F}</Project>
+      <Name>Cresus.Core.Library.BusinessLogic</Name>
     </ProjectReference>
     <ProjectReference Include="..\Cresus.Core.Library.Business\Cresus.Core.Library.Business.csproj">
       <Project>{E70C6F16-A0BF-439B-845D-87B164510AA0}</Project>

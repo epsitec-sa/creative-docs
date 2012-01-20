@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
@@ -25,9 +25,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Controllers
 {
-	public class MainWindow : CoreDialog
+	public class DocumentWindowController : CoreDialog
 	{
-		public MainWindow(CoreApp app, List<AbstractController> controllers, BusinessContext businessContext, ComptabilitéEntity comptabilité, TypeDeDocumentComptable type)
+		public DocumentWindowController(CoreApp app, List<AbstractController> controllers, BusinessContext businessContext, ComptabilitéEntity comptabilité, TypeDeDocumentComptable type)
 			: base (app)
 		{
 			this.app             = app;
@@ -43,6 +43,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return this.mainFrame;
 			}
+		}
+
+		public void SetupApplicationWindow(Window window)
+		{
+			this.ReuseDialogWindow (window);
+			
+			this.SetupWindow (window);
+			this.SetupWidgets (window);
+
+			this.IsModal = false;
 		}
 
 		protected override void SetupWindow(Window window)
@@ -98,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void OpenNewWindow()
 		{
-			var window = new MainWindow (this.app, this.controllers, this.businessContext, this.comptabilité, this.selectedType);
+			var window = new DocumentWindowController (this.app, this.controllers, this.businessContext, this.comptabilité, this.selectedType);
 
 			window.IsModal = false;
 			window.OpenDialog ();
