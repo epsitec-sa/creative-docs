@@ -1,4 +1,4 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -13,6 +13,27 @@ namespace Epsitec.Common.Support
 	/// </summary>
 	public static class AssemblyLoader
 	{
+		static AssemblyLoader()
+		{
+			System.AppDomain.CurrentDomain.AssemblyLoad += AssemblyLoader.HandleCurrentDomainAssemblyLoad;
+		}
+
+
+		/// <summary>
+		/// Gets a value indicating whether the loader is currently loading an assembly.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if an assembly is being loaded; otherwise, <c>false</c>.
+		/// </value>
+		public static bool						IsLoading
+		{
+			get
+			{
+				return AssemblyLoader.recursionCount.IsNotZero;
+			}
+		}
+
+
 		/// <summary>
 		/// Loads the specified assembly. The assembly is searched in the same directory
 		/// as the Common.Support assembly.
@@ -22,16 +43,20 @@ namespace Epsitec.Common.Support
 		/// <returns>
 		/// The assembly if it could be found; otherwise, <c>null</c>.
 		/// </returns>
-		public static Assembly Load(string name, string subfolder = null)
+		public static Assembly Load(string name, string subfolder = null, bool loadDependencies = false)
 		{
 			string loadPath = AssemblyLoader.GetAssemblyLoadPath ();
 
-			if (subfolder != null)
-            {
+			if (string.IsNullOrEmpty (subfolder))
+			{
+				return AssemblyLoader.LoadFromPath (name, loadPath, loadDependencies);
+			}
+			else
+			{
 				loadPath = System.IO.Path.Combine (loadPath, subfolder);
-            }
-
-			return AssemblyLoader.LoadFromPath (name, loadPath);
+				
+				return AssemblyLoader.LoadFromPath (name, loadPath, loadDependencies);
+			}
 		}
 
 
@@ -47,39 +72,104 @@ namespace Epsitec.Common.Support
 		/// </returns>
 		public static Assembly LoadFromPath(string name, string loadPath, bool loadDependencies = false)
 		{
-			if (System.IO.Directory.Exists (loadPath))
+			lock (AssemblyLoader.exclusion)
 			{
-				foreach (string ext in new string[] { ".dll", ".exe" })
+				Assembly assembly;
+
+				if (AssemblyLoader.assemblies.TryGetValue (name, out assembly))
 				{
-					string fullName = System.IO.Path.Combine (loadPath, name + ext);
+					return assembly;
+				}
+			}
 
-					if (System.IO.File.Exists (fullName))
+			using (AssemblyLoader.recursionCount.Enter ().AndFinally (AssemblyLoader.DispatchPendingEvents))
+			{
+				var assembly = Assembly.LoadWithPartialName (name);
+
+				if (assembly != null)
+				{
+					lock (AssemblyLoader.exclusion)
 					{
-						try
-						{
-							var assembly = Assembly.LoadFrom (fullName);
+						AssemblyLoader.assemblies[name] = assembly;
+					}
 
-							if (assembly != null)
+					if (loadDependencies)
+					{
+						AssemblyLoader.LoadDependencies (assembly);
+					}
+
+					return assembly;
+				}
+				
+				if ((string.IsNullOrEmpty (loadPath) == false) &&
+					(System.IO.Directory.Exists (loadPath)))
+				{
+					foreach (string ext in new string[] { ".dll", ".exe" })
+					{
+						string fullName = System.IO.Path.Combine (loadPath, name + ext);
+
+						if (System.IO.File.Exists (fullName))
+						{
+							try
 							{
-								if (loadDependencies)
+								assembly = Assembly.LoadFrom (fullName);
+
+								if (assembly != null)
 								{
-									//	Force the dependencies to be resolved...
+									lock (AssemblyLoader.exclusion)
+									{
+										AssemblyLoader.assemblies[name] = assembly;
+									}
 
-									assembly.GetTypes ();
+									if (loadDependencies)
+									{
+										AssemblyLoader.LoadDependencies (assembly, loadPath);
+									}
+
+									return assembly;
 								}
-
-								return assembly;
 							}
-						}
-						catch (System.Exception ex)
-						{
-							System.Diagnostics.Debug.WriteLine ("Could not load assembly from file " + fullName + " : " + ex.Message);
+							catch (System.Exception ex)
+							{
+								System.Diagnostics.Debug.WriteLine ("Could not load assembly from file " + fullName + " : " + ex.Message);
+							}
 						}
 					}
 				}
 			}
 
+			System.Diagnostics.Debug.WriteLine ("Failed to load assembly " + name);
+			
 			return null;
+		}
+
+		/// <summary>
+		/// Loads the dependencies for the specified assembly.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="loadPath">The load path (which may be <c>null</c>).</param>
+		private static void LoadDependencies(Assembly assembly, string loadPath = null)
+		{
+			var token1 = assembly.GetName ().GetPublicKeyToken ();
+			var token2 = AssemblyLoader.CurrentAssembly.GetName ().GetPublicKeyToken ();
+
+			foreach (var name in assembly.GetReferencedAssemblies ())
+			{
+				var token = name.GetPublicKeyToken ();
+
+				//	Only load referenced assemblies which match either the assembly's public key,
+				//	or the standard Epsitec public key; this avoids that we recursively load tons
+				//	of assemblies from the .NET Framework.
+
+				if ((Comparer.Equal (token, token1)) ||
+					(Comparer.Equal (token, token2)))
+				{
+					if (AssemblyLoader.LoadFromPath (name.Name, loadPath, loadDependencies: true) == null)
+					{
+						System.Diagnostics.Debug.WriteLine (string.Format ("Failed to load assembly {0} referenced by {1}", name.FullName, assembly.FullName));
+					}
+				}
+			}
 		}
 
 		/// <summary>
@@ -160,7 +250,6 @@ namespace Epsitec.Common.Support
 			return loadPath;
 		}
 
-
 		/// <summary>
 		/// Checks the assembly name to see if it is compatible with the load mode.
 		/// </summary>
@@ -187,10 +276,65 @@ namespace Epsitec.Common.Support
 					throw new System.NotSupportedException (string.Format ("AssemblyLoadMode.{0} not supported", loadMode));
 			}
 		}
+
+		private static void HandleCurrentDomainAssemblyLoad(object sender, System.AssemblyLoadEventArgs args)
+		{
+			var handler = AssemblyLoader.AssemblyLoaded;
+
+			if (handler != null)
+			{
+				if (AssemblyLoader.IsLoading)
+				{
+					lock (AssemblyLoader.exclusion)
+					{
+						AssemblyLoader.pendingEvents.Enqueue (() => handler (sender, args));
+					}
+				}
+				else
+				{
+					handler (sender, args);
+				}
+			}
+		}
+
+		private static void DispatchPendingEvents()
+		{
+			while (AssemblyLoader.recursionCount.IsZero)
+			{
+				System.Action action = null;
+				
+				lock (AssemblyLoader.exclusion)
+				{
+					if (AssemblyLoader.pendingEvents.Count > 0)
+					{
+						action = AssemblyLoader.pendingEvents.Dequeue ();
+					}
+				}
+
+				if (action == null)
+				{
+					break;
+				}
+
+				action ();
+			}
+		}
+
+
+		/// <summary>
+		/// Occurs when an assembly has been loaded. Prefer this event to the <see cref="System.AppDomain.CurrentDomain.AssemblyLoad"/>
+		/// event, as it will fire only after all dependent assemblies were properly loaded too.
+		/// </summary>
+		public static event System.AssemblyLoadEventHandler AssemblyLoaded;
+
+		private readonly static object							exclusion      = new object ();
+		private readonly static Dictionary<string, Assembly>	assemblies     = new Dictionary<string, Assembly> ();
+		private readonly static SafeCounter						recursionCount = new SafeCounter ();
+		private readonly static Queue<System.Action>			pendingEvents  = new Queue<System.Action> ();
 		
+		private readonly static Assembly		CurrentAssembly	 = typeof (AssemblyLoader).Assembly;
+		private readonly static byte[]			EpsitecPublicKey = AssemblyLoader.CurrentAssembly.GetName ().GetPublicKey ();
 		
 		private static int						loadPathDifferences;
-		private static Assembly					CurrentAssembly  = typeof (AssemblyLoader).Assembly;
-		private static readonly byte[]			EpsitecPublicKey = AssemblyLoader.CurrentAssembly.GetName ().GetPublicKey ();
 	}
 }

@@ -23,13 +23,13 @@ namespace Epsitec.Cresus.Core.Library
 			this.plugIns = new List<PlugIns.ICorePlugIn> ();
 		}
 
-		public bool IsReady
+		public bool								IsReady
 		{
 			get;
 			private set;
 		}
 
-		public CoreData Data
+		public CoreData							Data
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public CoreCommandDispatcher Commands
+		public CoreCommandDispatcher			Commands
 		{
 			get
 			{
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Core.Library
 			}
 		}
 
-		public UserManager UserManager
+		public UserManager						UserManager
 		{
 			get
 			{

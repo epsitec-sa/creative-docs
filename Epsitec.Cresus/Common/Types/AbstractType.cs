@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 [assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Types.AbstractType))]
 
@@ -126,7 +126,7 @@ namespace Epsitec.Common.Types
 		/// Gets the type code for the type.
 		/// </summary>
 		/// <value>The type code.</value>
-		public abstract TypeCode TypeCode
+		public abstract TypeCode				TypeCode
 		{
 			get;
 		}
@@ -135,7 +135,7 @@ namespace Epsitec.Common.Types
 		/// Gets the default value for this type.
 		/// </summary>
 		/// <value>The default value or <c>null</c>.</value>
-		public virtual object DefaultValue
+		public virtual object					DefaultValue
 		{
 			get
 			{
@@ -147,7 +147,7 @@ namespace Epsitec.Common.Types
 		/// Gets the sample value for this type.
 		/// </summary>
 		/// <value>The sample value or <c>null</c>.</value>
-		public object SampleValue
+		public object							SampleValue
 		{
 			get
 			{
@@ -159,7 +159,7 @@ namespace Epsitec.Common.Types
 		/// Gets the module where this type is defined.
 		/// </summary>
 		/// <value>The module where this type is defined or <c>ResourceModuleId.Empty</c>.</value>
-		public Support.ResourceModuleId Module
+		public Support.ResourceModuleId			Module
 		{
 			get
 			{

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -1293,37 +1293,45 @@ namespace Epsitec.Common.Types
 			if (type == null)
 			{
 				//	This happens if the type belongs to an assembly which was loaded dynamically;
-				//	not sure why, however.
+				//	not sure why, however. Probably because we were walking the types before all
+				//	referenced assemblies were fully loaded; this was fixed in commit 17611.
 				//	http://stackoverflow.com/questions/3758209/why-would-system-type-gettypexyz-return-null-if-typeofxyz-exists
 
+				System.Diagnostics.Debug.WriteLine (string.Format ("TypeRosetta: The type '{0}' could not be resolved by System.Type.GetType; trying using TypeEnumerator.", name));
+
 				name = name.Split (',')[0];		//	keep just the type name and drop the assembly name
+				type = TypeEnumerator.Instance.GetTypesFromName (name).FirstOrDefault ();
 
-				for (int pass = 0; pass < 2; pass++)
+#if false
+				if (type == null)
 				{
-					var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
-								let typeInAssembly = assembly.GetType (name, false, false)
-								where typeInAssembly != null
-								select typeInAssembly;
-
-					type = types.FirstOrDefault ();
-
-					if (type != null)
+					for (int pass = 0; pass < 2; pass++)
 					{
-						break;
-					}
+						var types = from assembly in System.AppDomain.CurrentDomain.GetAssemblies ()
+									let typeInAssembly = assembly.GetType (name, false, false)
+									where typeInAssembly != null
+									select typeInAssembly;
 
-					//	The type could not be found in the known assemblies, by using GetType. However,
-					//	by calling GetTypes, we might load additional assemblies; we can do a second pass
-					//	after that...
+						type = types.FirstOrDefault ();
+
+						if (type != null)
+						{
+							break;
+						}
+
+						//	The type could not be found in the known assemblies, by using GetType. However,
+						//	by calling GetTypes, we might load additional assemblies; we can do a second pass
+						//	after that...
 					
-					System.AppDomain.CurrentDomain.GetAssemblies ().ForEach (assembly => assembly.GetTypes ());
+						System.AppDomain.CurrentDomain.GetAssemblies ().ForEach (assembly => assembly.GetTypes ());
+					}
 				}
+#endif
 
 				if (type == null)
 				{
-					System.Diagnostics.Debug.WriteLine (string.Format ("The type '{0}' is missing - not found in any loaded assembly.", name));
+					System.Diagnostics.Debug.WriteLine (string.Format ("TypeRosetta: The type '{0}' is missing - not found in any loaded assembly.", name));
 				}
-//-				System.Diagnostics.Debug.Assert (type != null, string.Format ("The type '{0}' is missing - not found in any loaded assembly.", name));
 			}
 			
 			return type;

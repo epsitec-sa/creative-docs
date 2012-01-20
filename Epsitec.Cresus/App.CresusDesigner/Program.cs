@@ -1,4 +1,4 @@
-//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Designer;
@@ -10,21 +10,8 @@ using System.Collections.Generic;
 
 namespace Epsitec.Designer
 {
-	static class Program
+	static partial class Program
 	{
-		/// <summary>
-		/// The main entry point for the application.
-		/// </summary>
-		[System.STAThread]
-		static void Main(string[] args)
-		{
-			//	Start the program in an isolated app domain, with active shadow copying, so
-			//	that we don't keep the DLLs open and therefore still allow the original DLLs
-			//	to be recompiled/changed while the Designer is running.
-			
-			AppDomainStarter.StartInIsolatedAppDomain ("main", args, Program.Start);
-		}
-
 		private static void Start(string[] args)
 		{
 			System.Diagnostics.Debug.Assert (System.Windows.Forms.Application.ExecutablePath.Contains ("vshost") == false,
@@ -34,20 +21,13 @@ namespace Epsitec.Designer
 			Epsitec.Common.Widgets.Widget.Initialize ();
 			Epsitec.Common.Document.Engine.Initialize ();
 
-//-			Epsitec.Common.Designer.ModuleSupport.ModuleGenerator.CreateLiveModules ();
-
-			string execPath = Epsitec.Common.Support.Globals.Directories.ExecutableRoot;
-			List<string> paths;
-
-			Epsitec.Common.Support.ResourceManagerPool pool = new Epsitec.Common.Support.ResourceManagerPool ("Common.Designer");
-			pool.DefaultPrefix = "file";
-			pool.SetupDefaultRootPaths ();
-			pool.ScanForAllModules ();
-
-			paths = new List<string> ();
-			paths.Add (System.IO.Path.Combine (execPath, "Resources"));
+			var pool  = Program.CreateResourceManagerPool ();
+			var paths = new List<string> ();
+			
+			paths.Add (System.IO.Path.Combine (Globals.Directories.ExecutableRoot, "Resources"));
 
 			//	Juste pour forcer le chargement des ressources manifest:... correspondantes.
+
 //-			var loadCresusAssets = typeof (Epsitec.Cresus.Assets.Res);
 //-			var loadCresusCoreApplication = typeof (Epsitec.Cresus.Core.CoreApplication);
 			var loadCresusGraphApplication = typeof (Epsitec.Cresus.Graph.GraphApplication);
@@ -58,10 +38,9 @@ namespace Epsitec.Designer
 //-			var loadCresusWebServer = typeof (Epsitec.Cresus.WebServer.Component);
 //-			var loadProductAider = typeof (Epsitec.Product.Aider.Res);
 
-			List<string> addPaths = new List<string> ();
+			var  addPaths       = new List<string> ();
 			bool noDefaultPaths = false;
-			int devId;
-
+			
 			for (int i = 0; i < args.Length; i++)
 			{
 				if (args[i].StartsWith (";"))
@@ -99,6 +78,7 @@ namespace Epsitec.Designer
 						break;
 
 					case "-dev-id":
+						int devId;
 						if (int.TryParse (args[++i], System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out devId))
 						{
 							Epsitec.Common.Designer.Settings.Default.IdentityCard = IdentityRepository.Default.FindIdentityCard (devId);
@@ -148,6 +128,19 @@ namespace Epsitec.Designer
 			Program.StopProtocolService ();
 		}
 
+		private static ResourceManagerPool CreateResourceManagerPool()
+		{
+			var pool = new ResourceManagerPool ("Common.Designer")
+			{
+				DefaultPrefix = "file"
+			};
+
+			pool.SetupDefaultRootPaths ();
+			pool.ScanForAllModules ();
+			
+			return pool;
+		}
+		
 		private static void StartProtocolService(DesignerApplication designerMainWindow)
 		{
 			Epsitec.Designer.Protocol.NavigatorService.DefineNavigateToStringAction (
