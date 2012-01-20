@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionData)
 			{
-				var compte = this.businessContext.CreateEntity<ComptabilitéCompteEntity> ();
+				var compte = this.CreateCompte ();
 				data.DataToEntity (compte);
 
 				int row = this.GetSortedRow (compte.Numéro);
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (row >= this.firstEditedRow+this.initialCountEditedRow)
 				{
 					//	Crée un compte manquant.
-					var compte = this.businessContext.CreateEntity<ComptabilitéCompteEntity> ();
+					var compte = this.CreateCompte ();
 					data.DataToEntity (compte);
 					this.comptabilitéEntity.PlanComptable.Insert (row, compte);
 				}
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			while (countToDelete > 0)
 			{
 				var compte = this.comptabilitéEntity.PlanComptable[row];
-				this.businessContext.DeleteEntity (compte);
+				this.DeleteCompte (compte);
 				this.comptabilitéEntity.PlanComptable.RemoveAt (row);
 
 				countToDelete--;
@@ -294,12 +294,37 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
 				{
 					var compte = this.comptabilitéEntity.PlanComptable[row];
-					this.businessContext.DeleteEntity (compte);
+					this.DeleteCompte (compte);
 					this.comptabilitéEntity.PlanComptable.RemoveAt (row);
 				}
 
 				this.SearchUpdate ();
 				this.StartCreationData ();
+			}
+		}
+
+
+		private ComptabilitéCompteEntity CreateCompte()
+		{
+			if (this.businessContext == null)
+			{
+				return new ComptabilitéCompteEntity ();
+			}
+			else
+			{
+				return this.businessContext.CreateEntity<ComptabilitéCompteEntity> ();
+			}
+		}
+
+		private void DeleteCompte(ComptabilitéCompteEntity compte)
+		{
+			if (this.businessContext == null)
+			{
+				// rien à faire
+			}
+			else
+			{
+				this.businessContext.DeleteEntity (compte);
 			}
 		}
 

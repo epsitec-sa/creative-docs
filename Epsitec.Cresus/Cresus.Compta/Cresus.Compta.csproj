@@ -80,11 +80,13 @@
     <Compile Include="Accessors\SearchingData.cs" />
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
+    <Compile Include="Application.cs" />
     <Compile Include="ComptaApplication.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\BudgetsFooterController.cs" />
+    <Compile Include="Controllers\WindowController.cs" />
     <Compile Include="Controllers\ExploitationController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteController.cs" />
     <Compile Include="Controllers\JournalController.cs" />
@@ -95,7 +97,7 @@
     <Compile Include="Controllers\PPController.cs" />
     <Compile Include="Controllers\RibbonController.cs" />
     <Compile Include="Controllers\TypeDeDocumentComptable.cs" />
-    <Compile Include="CatégorieDeCompte.cs" />
+    <Compile Include="Entities\CatégorieDeCompte.cs" />
     <Compile Include="Controllers\AbstractController.cs" />
     <Compile Include="Controllers\AbstractFooterController.cs" />
     <Compile Include="Controllers\AbstractOptionsController.cs" />
@@ -118,7 +120,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
-    <Compile Include="TypeDeCompte.cs" />
+    <Compile Include="Entities\TypeDeCompte.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />
   </ItemGroup>
@@ -160,6 +162,10 @@
     <EmbeddedResource Include="Images\Multi.Auto.icon" />
     <EmbeddedResource Include="Images\Multi.Up.icon" />
     <EmbeddedResource Include="Images\Présentation.New.icon" />
+    <EmbeddedResource Include="Images\File.Open.icon" />
+    <EmbeddedResource Include="Images\File.Print.icon" />
+    <EmbeddedResource Include="Images\File.Save.icon" />
+    <EmbeddedResource Include="Images\Global.Settings.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

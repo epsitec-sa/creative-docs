@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractController
 	{
-		public AbstractController(CoreApp app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
+		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
 		{
 			this.app                = app;
 			this.businessContext    = businessContext;
@@ -86,6 +87,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public AbstractFooterController FooterController
+		{
+			get
+			{
+				return this.footerController;
+			}
+		}
+
 		protected virtual void FinalUpdate()
 		{
 			this.ShowHideToolbar ();
@@ -117,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-
+		
 		#region Toolbar
 		private void CreateTopToolbar(FrameBox parent)
 		{
@@ -365,7 +374,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected readonly CoreApp								app;
+		public bool GetCommandEnable(Command command)
+		{
+			CommandState cs = this.app.CommandContext.GetCommandState (command);
+
+			if (cs == null)
+			{
+				return false;
+			}
+			else
+			{
+				return cs.Enable;
+			}
+		}
+
+		public void SetCommandEnable(Command command, bool enable)
+		{
+			CommandState cs = this.app.CommandContext.GetCommandState (command);
+
+			if (cs != null)
+			{
+				cs.Enable =enable;
+			}
+		}
+
+
+		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
 		protected readonly List<AbstractController>				controllers;

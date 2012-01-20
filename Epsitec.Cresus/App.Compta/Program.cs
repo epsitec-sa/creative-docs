@@ -17,6 +17,7 @@ namespace Epsitec.Compta
 		[System.STAThread]
 		static void Main(string[] args)
 		{
+#if false
 			if (args.Length > 0)
 			{
 				Program.ExecuteCoreProgram (args, null);
@@ -28,12 +29,16 @@ namespace Epsitec.Compta
 					Program.ExecuteCoreProgram (args, splash);
 				}
 			}
+#else
+			Program.ExecuteCoreProgram (args, null);
+#endif
 		}
 
 
 		static void ExecuteCoreProgram(string[] args, SplashScreen splash)
 		{
-			Epsitec.Cresus.Core.CoreProgram.Main (args);
+			//?Epsitec.Cresus.Core.CoreProgram.Main (args);
+			Epsitec.Cresus.Compta.Application.Start ("N");
 		}
 	}
 }

@@ -47,7 +47,14 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			get
 			{
-				return this.Journal.Max (x => x.MultiId) + 1;
+				if (this.Journal.Count == 0)
+				{
+					return 1;
+				}
+				else
+				{
+					return this.Journal.Max (x => x.MultiId) + 1;
+				}
 			}
 		}
 

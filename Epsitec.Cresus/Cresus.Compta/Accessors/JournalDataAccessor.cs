@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionData)
 			{
-				var écriture = this.businessContext.CreateEntity<ComptabilitéEcritureEntity> ();
+				var écriture = this.CreateEcriture ();
 				data.DataToEntity (écriture);
 				écriture.MultiId = multiId;
 
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (row >= this.firstEditedRow+this.initialCountEditedRow)
 				{
 					//	Crée une écriture manquante.
-					var écriture = this.businessContext.CreateEntity<ComptabilitéEcritureEntity> ();
+					var écriture = this.CreateEcriture ();
 					data.DataToEntity (écriture);
 					écriture.MultiId = multiId;
 					this.comptabilitéEntity.Journal.Insert (row, écriture);
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			while (countToDelete > 0)
             {
 				var écriture = this.comptabilitéEntity.Journal[row];
-				this.businessContext.DeleteEntity (écriture);
+				this.DeleteEcriture (écriture);
 				this.comptabilitéEntity.Journal.RemoveAt (row);
 
 				countToDelete--;
@@ -324,12 +324,37 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
 					var écriture = this.comptabilitéEntity.Journal[row];
-					this.businessContext.DeleteEntity (écriture);
+					this.DeleteEcriture (écriture);
 					this.comptabilitéEntity.Journal.RemoveAt (row);
                 }
 
 				this.SearchUpdate ();
 				this.StartCreationData ();
+			}
+		}
+
+
+		private ComptabilitéEcritureEntity CreateEcriture()
+		{
+			if (this.businessContext == null)
+			{
+				return new ComptabilitéEcritureEntity ();
+			}
+			else
+			{
+				return this.businessContext.CreateEntity<ComptabilitéEcritureEntity> ();
+			}
+		}
+
+		private void DeleteEcriture(ComptabilitéEcritureEntity  écriture)
+		{
+			if (this.businessContext == null)
+			{
+				// rien à faire
+			}
+			else
+			{
+				this.businessContext.DeleteEntity (écriture);
 			}
 		}
 

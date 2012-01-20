@@ -277,44 +277,44 @@ namespace Epsitec.Cresus.Compta.Entities
 		}
 		///	<summary>
 		///	The <c>Catégorie</c> field.
-		///	designer:fld/OVK3/OVK51
+		///	designer:fld/OVK3/OVKI2
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK51]")]
+		[global::Epsitec.Common.Support.EntityField ("[OVKI2]")]
 		public global::Epsitec.Cresus.Compta.CatégorieDeCompte Catégorie
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVK51]");
+				return this.GetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVKI2]");
 			}
 			set
 			{
 				global::Epsitec.Cresus.Compta.CatégorieDeCompte oldValue = this.Catégorie;
-				if (oldValue != value || !this.IsFieldDefined("[OVK51]"))
+				if (oldValue != value || !this.IsFieldDefined("[OVKI2]"))
 				{
 					this.OnCatégorieChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVK51]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.CatégorieDeCompte> ("[OVKI2]", oldValue, value);
 					this.OnCatégorieChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
 		///	The <c>Type</c> field.
-		///	designer:fld/OVK3/OVK61
+		///	designer:fld/OVK3/OVKJ2
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK61]")]
+		[global::Epsitec.Common.Support.EntityField ("[OVKJ2]")]
 		public global::Epsitec.Cresus.Compta.TypeDeCompte Type
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVK61]");
+				return this.GetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVKJ2]");
 			}
 			set
 			{
 				global::Epsitec.Cresus.Compta.TypeDeCompte oldValue = this.Type;
-				if (oldValue != value || !this.IsFieldDefined("[OVK61]"))
+				if (oldValue != value || !this.IsFieldDefined("[OVKJ2]"))
 				{
 					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVK61]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.TypeDeCompte> ("[OVKJ2]", oldValue, value);
 					this.OnTypeChanged (oldValue, value);
 				}
 			}

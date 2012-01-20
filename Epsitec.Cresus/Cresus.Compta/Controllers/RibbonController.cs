@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class RibbonController
 	{
-		public RibbonController(CoreApp app)
+		public RibbonController(Application app)
 		{
 			this.app = app;
 
@@ -68,18 +68,57 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.sectionTitleFrames.Clear ();
 			this.sectionTitles.Clear ();
 
+			//	|-->
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
+				var section = this.CreateSection (this.container, DockStyle.Left, "Fichier");
 
-				section.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Edit.Accept));
-				section.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Edit.Cancel));
+				Widget topSection, bottomSection;
+				this.CreateSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.File.Open, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.File.Save, large: false));
+
+				section.Children.Add (this.CreateButton (Res.Commands.File.Print));
+			}
+
+			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
+
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Journal));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait));
 				section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Edit.Duplicate, large: false));
-				bottomSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Edit.Delete, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Bilan, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PP, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Exploitation, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Budgets, large: false));
+
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
+
+				section.Children.Add (this.CreateGap ());
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.New));
+			}
+
+			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
+
+				section.Children.Add (this.CreateButton (Res.Commands.Edit.Accept));
+				section.Children.Add (this.CreateButton (Res.Commands.Edit.Cancel));
+				section.Children.Add (this.CreateGap ());
+
+				Widget topSection, bottomSection;
+				this.CreateSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
 			}
 
 			{
@@ -88,24 +127,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Insert, large: false));
-				topSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Up, large: false));
-				topSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Swap, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Insert, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Up, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Swap, large: false));
 
-				bottomSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Delete, large: false));
-				bottomSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Down, large: false));
-				bottomSection.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Multi.Auto, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Delete, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Down, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
 			}
 
+			//	<--|
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
+				var section = this.CreateSection (this.container, DockStyle.Right, "Général");
 
-				foreach (var command in this.PrésentationCommands)
-				{
-					section.Children.Add (this.CreateButton (command));
-				}
-
-				section.Children.Add (this.CreateButton (Cresus.Compta.Res.Commands.Présentation.New));
+				section.Children.Add (this.CreateButton (Res.Commands.Global.Settings));
 			}
 
 			this.UpdateRibbon ();
@@ -134,18 +169,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return Cresus.Compta.Res.Commands.Présentation.Journal;
-				yield return Cresus.Compta.Res.Commands.Présentation.PlanComptable;
-				yield return Cresus.Compta.Res.Commands.Présentation.Balance;
-				yield return Cresus.Compta.Res.Commands.Présentation.Extrait;
-				yield return Cresus.Compta.Res.Commands.Présentation.Bilan;
-				yield return Cresus.Compta.Res.Commands.Présentation.PP;
-				yield return Cresus.Compta.Res.Commands.Présentation.Exploitation;
-				yield return Cresus.Compta.Res.Commands.Présentation.Budgets;
-				yield return Cresus.Compta.Res.Commands.Présentation.Change;
-				yield return Cresus.Compta.Res.Commands.Présentation.RésuméPériodique;
-				yield return Cresus.Compta.Res.Commands.Présentation.RésuméTVA;
-				yield return Cresus.Compta.Res.Commands.Présentation.DécompteTVA;
+				yield return Res.Commands.Présentation.Journal;
+				yield return Res.Commands.Présentation.PlanComptable;
+				yield return Res.Commands.Présentation.Balance;
+				yield return Res.Commands.Présentation.Extrait;
+				yield return Res.Commands.Présentation.Bilan;
+				yield return Res.Commands.Présentation.PP;
+				yield return Res.Commands.Présentation.Exploitation;
+				yield return Res.Commands.Présentation.Budgets;
+				yield return Res.Commands.Présentation.Change;
+				yield return Res.Commands.Présentation.RésuméPériodique;
+				yield return Res.Commands.Présentation.RésuméTVA;
+				yield return Res.Commands.Présentation.DécompteTVA;
 			}
 		}
 
@@ -186,7 +221,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var item = new MenuItem ()
 			{
-				IconUri       = Misc.GetResourceIconUri(selected ? "Button.RadioYes" : "Button.RadioNo"),
+				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.RadioYes" : "Button.RadioNo"),
 				FormattedText = text,
 				Name          = mode.ToString (),
 			};
@@ -522,7 +557,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly static double IconSize = 40;
 
-		private readonly CoreApp					app;
+		private readonly Application				app;
 		private readonly List<FrameBox>				sectionGroupFrames;
 		private readonly List<FrameBox>				sectionIconFrames;
 		private readonly List<StaticText>			sectionTitleFrames;

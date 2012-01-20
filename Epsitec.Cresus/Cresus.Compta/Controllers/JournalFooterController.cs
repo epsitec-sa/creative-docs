@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -26,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalFooterController : AbstractFooterController
 	{
-		public JournalFooterController(CoreApp app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+		public JournalFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
 			: base (app, businessContext, comptabilitéEntity, dataAccessor, columnMappers, abstractController, arrayController)
 		{
 			this.infoShowed = true;
@@ -244,7 +245,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void AcceptAction()
 		{
-			if (!this.bottomToolbarController.AcceptEnable)
+			if (!this.abstractController.GetCommandEnable (Res.Commands.Edit.Accept))
 			{
 				return;
 			}
@@ -616,12 +617,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
-			this.bottomToolbarController.InsertLineEnable = count > 1;
-			this.bottomToolbarController.DeleteLineEnable = count > 2 && this.selectedLine != cp;
-			this.bottomToolbarController.LineUpEnable     = count > 1 && this.selectedLine > 0;
-			this.bottomToolbarController.LineDownEnable   = count > 1 && this.selectedLine < count-1;
-			this.bottomToolbarController.LineSwapEnable   = count > 1;
-			this.bottomToolbarController.LineAutoEnable   = count > 1 && this.selectedLine != cp;
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Insert, count > 1);
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Delete, count > 2 && this.selectedLine != cp);
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Up,     count > 1 && this.selectedLine > 0);
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Swap,   count > 1);
+			this.abstractController.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
 		}
 
 		private void UpdateInfoShowHideButton()

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PlanComptableController : AbstractController
 	{
-		public PlanComptableController(CoreApp app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
+		public PlanComptableController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
 			: base (app, businessContext, comptabilitéEntity, controllers)
 		{
 			this.dataAccessor = new PlanComptableDataAccessor (this.businessContext, this.comptabilitéEntity);

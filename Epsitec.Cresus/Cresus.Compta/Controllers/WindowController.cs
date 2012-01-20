@@ -25,49 +25,25 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Controllers
 {
-	public class DocumentWindowController : CoreDialog
+	public class WindowController
 	{
-		public DocumentWindowController(CoreApp app, List<AbstractController> controllers, BusinessContext businessContext, ComptabilitéEntity comptabilité, TypeDeDocumentComptable type)
-			: base (app)
+		public WindowController(Application app)
 		{
-			this.app             = app;
-			this.controllers     = controllers;
-			this.businessContext = businessContext;
-			this.comptabilité    = comptabilité;
-			this.selectedType    = type;
+			this.app = app;
+
+			this.controllers = new List<AbstractController> ();
+			this.selectedType = TypeDeDocumentComptable.Journal;
+
+			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
+
+			this.app.CommandDispatcher.RegisterController (this);
 		}
 
-		public FrameBox MainFrame
-		{
-			get
-			{
-				return this.mainFrame;
-			}
-		}
 
-		public void SetupApplicationWindow(Window window)
-		{
-			this.ReuseDialogWindow (window);
-			
-			this.SetupWindow (window);
-			this.SetupWidgets (window);
-
-			this.IsModal = false;
-		}
-
-		protected override void SetupWindow(Window window)
+		public void CreateUI(Window window)
 		{
 			this.window = window;
 
-			window.Text = "Crésus Comptabilité";
-			window.ClientSize = new Size (800, 500);
-			window.Root.WindowStyles = WindowStyles.DefaultDocumentWindow;  // pour avoir les boutons Minimize/Maximize/Close !
-		}
-
-		protected override void SetupWidgets(Window window)
-		{
-			//	Ce bouton est nécessaire pour que le bouton de fermeture [x] en haut à droite
-			//	de la fenêtre existe !
 			var button = new Button (Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Close)
 			{
 				Parent     = window.Root,
@@ -76,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			//	Crée les frames principales.
-			//?this.ribbonController = new RibbonController (this.app);
+			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 
 			//	Crée la zone éditable.
@@ -97,27 +73,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Command command = Command.Get (Cresus.Compta.Res.CommandIds.Présentation.Journal);
 				this.ribbonController.PrésentationCommandsUpdate (command);
 			}
-
-			{
-				Command command = Command.Get (Cresus.Compta.Res.CommandIds.Edit.Cancel);
-				CommandState cs = this.app.CommandContext.GetCommandState (command);
-				cs.Enable = false;
-			}
-		}
-
-
-		private void OpenNewWindow()
-		{
-			var window = new DocumentWindowController (this.app, this.controllers, this.businessContext, this.comptabilité, this.selectedType);
-
-			window.IsModal = false;
-			window.OpenDialog ();
-		}
-
-		private void UpdateTitle()
-		{
-			string title = string.Concat ("Crésus Comptabilité / ", this.comptabilité.GetCompactSummary (), " / ", this.GetToolbarDescription (this.selectedType));
-			this.window.Text = title;
 		}
 
 
@@ -128,35 +83,35 @@ namespace Epsitec.Cresus.Compta.Controllers
 			switch (this.selectedType)
 			{
 				case TypeDeDocumentComptable.Journal:
-					//?this.controller = new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.PlanComptable:
-					//?this.controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.Balance:
-					//?this.controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.Extrait:
-					//?this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.Bilan:
-					//?this.controller = new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.PP:
-					//?this.controller = new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.Exploitation:
-					//?this.controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
 				case TypeDeDocumentComptable.Budgets:
-					//?this.controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
+					this.controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 			}
 
@@ -185,6 +140,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainFrame.Children.Clear ();
 		}
 
+		private void UpdateTitle()
+		{
+			string title = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", this.GetToolbarDescription (this.selectedType));
+			this.window.Text = title;
+		}
 
 		private FormattedText GetToolbarDescription(TypeDeDocumentComptable type)
 		{
@@ -234,63 +194,44 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			switch (commandName)
 			{
-				case "Compta.Présentation.Journal":
+				case "Présentation.Journal":
 					return TypeDeDocumentComptable.Journal;
 
-				case "Compta.Présentation.PlanComptable":
+				case "Présentation.PlanComptable":
 					return TypeDeDocumentComptable.PlanComptable;
 
-				case "Compta.Présentation.Balance":
+				case "Présentation.Balance":
 					return TypeDeDocumentComptable.Balance;
 
-				case "Compta.Présentation.Extrait":
+				case "Présentation.Extrait":
 					return TypeDeDocumentComptable.Extrait;
 
-				case "Compta.Présentation.Bilan":
+				case "Présentation.Bilan":
 					return TypeDeDocumentComptable.Bilan;
 
-				case "Compta.Présentation.PP":
+				case "Présentation.PP":
 					return TypeDeDocumentComptable.PP;
 
-				case "Compta.Présentation.Exploitation":
+				case "Présentation.Exploitation":
 					return TypeDeDocumentComptable.Exploitation;
 
-				case "Compta.Présentation.Budgets":
+				case "Présentation.Budgets":
 					return TypeDeDocumentComptable.Budgets;
 
-				case "Compta.Présentation.Change":
+				case "Présentation.Change":
 					return TypeDeDocumentComptable.Change;
 
-				case "Compta.Présentation.RésuméPériodique":
+				case "Présentation.RésuméPériodique":
 					return TypeDeDocumentComptable.RésuméPériodique;
 
-				case "Compta.Présentation.RésuméTVA":
+				case "Présentation.RésuméTVA":
 					return TypeDeDocumentComptable.RésuméTVA;
 
-				case "Compta.Présentation.DécompteTVA":
+				case "Présentation.DécompteTVA":
 					return TypeDeDocumentComptable.DécompteTVA;
 			}
 
 			return TypeDeDocumentComptable.Journal;
-		}
-
-		private IEnumerable<TypeDeDocumentComptable> WindowTypes
-		{
-			get
-			{
-				yield return TypeDeDocumentComptable.Journal;
-				yield return TypeDeDocumentComptable.PlanComptable;
-				yield return TypeDeDocumentComptable.Balance;
-				yield return TypeDeDocumentComptable.Extrait;
-				yield return TypeDeDocumentComptable.Bilan;
-				yield return TypeDeDocumentComptable.PP;
-				yield return TypeDeDocumentComptable.Exploitation;
-				yield return TypeDeDocumentComptable.Budgets;
-				yield return TypeDeDocumentComptable.Change;
-				yield return TypeDeDocumentComptable.RésuméPériodique;
-				yield return TypeDeDocumentComptable.RésuméTVA;
-				yield return TypeDeDocumentComptable.DécompteTVA;
-			}
 		}
 
 
@@ -317,31 +258,116 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.OpenNewWindow ();
+			//?this.OpenNewWindow ();
+		}
+
+		[Command (Res.CommandIds.Edit.Accept)]
+		private void CommandEditAccept()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.AcceptAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Edit.Cancel)]
+		private void CommandEditCancel()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.CancelAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Edit.Duplicate)]
+		private void CommandEditDuplicate()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.DuplicateAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Edit.Delete)]
+		private void CommandEditDelete()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.DeleteAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Insert)]
+		private void CommandMultiInsert()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.InsertLineAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Delete)]
+		private void CommandMultiDelete()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.DeleteLineAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Up)]
+		private void CommandMultiUp()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.LineUpAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Down)]
+		private void CommandMultiDown()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.LineDownAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Swap)]
+		private void CommandMultiSwap()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.LineSwapAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Auto)]
+		private void CommandMultiAuto()
+		{
+			if (this.controller.FooterController != null)
+			{
+				this.controller.FooterController.LineAutoAction ();
+			}
 		}
 
 		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Close)]
 		private void ProcessClose()
 		{
 			this.DisposeController ();
-
-			this.Result = DialogResult.Cancel;
-			this.CloseDialog ();
 		}
 
 
-		private readonly static double IconSize = 40;
-
-		private readonly CoreApp						app;
+	
+		private readonly Application					app;
 		private readonly List<AbstractController>		controllers;
-		private readonly BusinessContext				businessContext;
-		private readonly ComptabilitéEntity				comptabilité;
 
 		private Window									window;
+		private BusinessContext							businessContext;
+		private ComptabilitéEntity						comptabilité;
+		private TypeDeDocumentComptable					selectedType;
+		private AbstractController						controller;
 		private RibbonController						ribbonController;
 		private FrameBox								mainFrame;
-		private TypeDeDocumentComptable					selectedType;
-
-		private AbstractController						controller;
 	}
 }

@@ -189,6 +189,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public static string GetResourceIconUri(string icon)
+		{
+			if (icon.Contains (':'))
+			{
+				return FormattedText.Escape (icon);
+			}
+			else
+			{
+				return string.Format ("manifest:Epsitec.Cresus.Compta.Images.{0}.icon", FormattedText.Escape (icon));
+			}
+		}
+
+	
 		private static readonly double ComboButtonWidth = 14;
 
 		public static readonly FormattedText							leftIndentText = "●  ";

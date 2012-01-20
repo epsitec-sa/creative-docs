@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.importButton = new IconButton
 			{
 				Parent          = this.toolbar,
-				IconUri         = Misc.GetResourceIconUri ("Import"),
+				IconUri         = UIBuilder.GetResourceIconUri ("Import"),
 				AutoFocus       = false,
 				Visibility      = false,
 				PreferredHeight = TopToolbarController.toolbarHeight,

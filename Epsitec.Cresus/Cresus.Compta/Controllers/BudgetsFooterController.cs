@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BudgetsFooterController : AbstractFooterController
 	{
-		public BudgetsFooterController(CoreApp app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+		public BudgetsFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
 			: base (app, businessContext, comptabilitéEntity, dataAccessor, columnMappers, abstractController, arrayController)
 		{
 		}

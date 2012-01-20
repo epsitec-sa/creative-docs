@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractFooterController
 	{
-		public AbstractFooterController(CoreApp app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+		public AbstractFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
 		{
 			this.app                = app;
 			this.businessContext    = businessContext;
@@ -40,8 +40,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.footerBoxes      = new List<List<FrameBox>> ();
 			this.footerContainers = new List<List<FrameBox>> ();
 			this.footerFields     = new List<List<AbstractTextField>> ();
-
-			this.app.CommandDispatcher.RegisterController (this);
 		}
 
 
@@ -52,8 +50,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.updateArrayContentAction = updateArrayContentAction;
 
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
-			this.bottomToolbarController.CreateUI (parent, this.AcceptAction, this.CancelAction, this.InsertLineAction, this.DeleteLineAction, this.LineUpAction, this.LineDownAction, this.LineSwapAction, this.LineAutoAction, this.DuplicateAction, this.DeleteAction);
-			this.bottomToolbarController.CancelEnable = true;
+			this.bottomToolbarController.CreateUI (parent);
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
 			this.parent.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
 			this.parent.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
@@ -147,9 +145,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateToolbar()
 		{
-			this.bottomToolbarController.AcceptEnable    =  this.dirty && !this.hasError;
-			this.bottomToolbarController.DuplicateEnable = !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable;
-			this.bottomToolbarController.DeleteEnable    = !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable;
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Duplicate, !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Delete,    !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 
 			if (this.arrayController.SelectedRow == -1 || this.dataAccessor.JustCreated)
 			{
@@ -206,10 +204,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		[Command (Cresus.Compta.Res.CommandIds.Edit.Accept)]
 		public virtual void AcceptAction()
 		{
-			if (!this.bottomToolbarController.AcceptEnable)
+			if (!this.abstractController.GetCommandEnable (Res.Commands.Edit.Accept))
 			{
 				return;
 			}
@@ -249,7 +246,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CancelAction()
 		{
-			if (this.bottomToolbarController.CancelEnable)
+			if (this.abstractController.GetCommandEnable (Res.Commands.Edit.Cancel))
 			{
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
@@ -258,6 +255,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.FooterSelect (0);
 			}
+		}
+
+		public void DuplicateAction()
+		{
+		}
+
+		public void DeleteAction()
+		{
 		}
 
 		public virtual void InsertLineAction()
@@ -281,14 +286,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public virtual void LineAutoAction()
-		{
-		}
-
-		public void DuplicateAction()
-		{
-		}
-
-		public void DeleteAction()
 		{
 		}
 
@@ -620,7 +617,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 
-		protected readonly CoreApp							app;
+		protected readonly Application						app;
 		protected readonly BusinessContext					businessContext;
 		protected readonly ComptabilitéEntity				comptabilitéEntity;
 		protected readonly AbstractDataAccessor				dataAccessor;
