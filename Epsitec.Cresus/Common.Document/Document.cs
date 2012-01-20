@@ -950,6 +950,48 @@ namespace Epsitec.Common.Document
 			return this.Read(stream, directory, null, false);
 		}
 
+		private GenericDeserializationBinder GetVersionDeserializationBinder()
+		{
+			return new GenericDeserializationBinder (
+				(assemblyName, typeName) =>
+				{
+					//	Retourne un type correspondant à l'application courante, afin
+					//	d'accepter de désérialiser un fichier généré par une application
+					//	ayant un autre numéro de révision.
+					//	Application courante: Version=1.0.1777.18519
+					//	Version dans le fichier: Version=1.0.1777.11504
+					if (typeName == "Epsitec.Common.Document.Document")
+					{
+						int i, j;
+						string v;
+
+						i = assemblyName.IndexOf ("Version=");
+						if (i >= 0)
+						{
+							i += 8;
+							j = assemblyName.IndexOf (".", i);
+							v = assemblyName.Substring (i, j-i);
+							long r1 = System.Int64.Parse (v, System.Globalization.CultureInfo.InvariantCulture);
+
+							i = j+1;
+							j = assemblyName.IndexOf (".", i);
+							v = assemblyName.Substring (i, j-i);
+							long r2 = System.Int64.Parse (v, System.Globalization.CultureInfo.InvariantCulture);
+
+							i = j+1;
+							j = assemblyName.IndexOf (".", i);
+							v = assemblyName.Substring (i, j-i);
+							long r3 = System.Int64.Parse (v, System.Globalization.CultureInfo.InvariantCulture);
+
+							Document.ReadRevision = (r1<<32) + (r2<<16) + r3;
+						}
+					}
+
+					return null;
+				}
+				);
+		}
+
 		private string Read(Stream stream, string directory, ZipFile zip, bool isCrDoc)
 		{
 			//	Ouvre un document sérialisé, zippé ou non.
@@ -976,7 +1018,7 @@ namespace Epsitec.Common.Document
 			if ( type == IOType.BinaryCompress )
 			{
 				BinaryFormatter formatter = new BinaryFormatter();
-				formatter.Binder = new VersionDeserializationBinder();
+				formatter.Binder = this.GetVersionDeserializationBinder ();
 
 				try
 				{
@@ -1014,7 +1056,7 @@ namespace Epsitec.Common.Document
 			if ( type == IOType.SoapUncompress )
 			{
 				SoapFormatter formatter = new SoapFormatter();
-				formatter.Binder = new VersionDeserializationBinder();
+				formatter.Binder = this.GetVersionDeserializationBinder ();
 
 				try
 				{
@@ -1138,52 +1180,6 @@ namespace Epsitec.Common.Document
 		}
 
 		
-		#region VersionDeserializationBinder Class
-		sealed class VersionDeserializationBinder : Common.IO.GenericDeserializationBinder
-		{
-			public VersionDeserializationBinder()
-			{
-			}
-			
-			public override System.Type BindToType(string assemblyName, string typeName) 
-			{
-				//	Retourne un type correspondant à l'application courante, afin
-				//	d'accepter de désérialiser un fichier généré par une application
-				//	ayant un autre numéro de révision.
-				//	Application courante: Version=1.0.1777.18519
-				//	Version dans le fichier: Version=1.0.1777.11504
-				if ( typeName == "Epsitec.Common.Document.Document" )
-				{
-					int i, j;
-					string v;
-
-					i = assemblyName.IndexOf("Version=");
-					if ( i >= 0 )
-					{
-						i += 8;
-						j = assemblyName.IndexOf(".", i);
-						v = assemblyName.Substring(i, j-i);
-						long r1 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
-
-						i = j+1;
-						j = assemblyName.IndexOf(".", i);
-						v = assemblyName.Substring(i, j-i);
-						long r2 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
-
-						i = j+1;
-						j = assemblyName.IndexOf(".", i);
-						v = assemblyName.Substring(i, j-i);
-						long r3 = System.Int64.Parse(v, System.Globalization.CultureInfo.InvariantCulture);
-
-						Document.ReadRevision = (r1<<32) + (r2<<16) + r3;
-					}
-				}
-
-				return base.BindToType(assemblyName, typeName);
-			}
-		}
-		#endregion
-
 		//	Utilisé par les constructeurs de désérialisation du genre:
 		//	protected Toto(SerializationInfo info, StreamingContext context)
 		public static Document ReadDocument = null;
@@ -2497,23 +2493,23 @@ namespace Epsitec.Common.Document
 		}
 
 		public string ExportICO(string filename)
-        {
-            //	Exporte le document.
-            System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
+		{
+			//	Exporte le document.
+			System.Diagnostics.Debug.Assert(this.mode == DocumentMode.Modify);
 
 			//	MainWindowSetFrozen évite des appels à ImageCache.SetResolution pendant l'exportation,
 			//	si la fenêtre doit être repeinte !
 			this.MainWindowSetFrozen();
 
-            if (this.imageCache != null)
-            {
-                this.imageCache.SetResolution(ImageCacheResolution.High);
-            }
-            string err = this.printer.ExportICO(filename);
+			if (this.imageCache != null)
+			{
+				this.imageCache.SetResolution(ImageCacheResolution.High);
+			}
+			string err = this.printer.ExportICO(filename);
 
 			this.MainWindowClearFrozen();
 			return err;
-        }
+		}
 
 
 		#region TextContext

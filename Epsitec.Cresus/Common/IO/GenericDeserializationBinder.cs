@@ -1,7 +1,10 @@
-//	Copyright © 2005-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.IO
 {
@@ -9,90 +12,89 @@ namespace Epsitec.Common.IO
 	/// La classe GenericDeserializationBinder permet de désérialiser des données
 	/// en ignorant explicitement la révision du type correspondant.
 	/// </summary>
-	public class GenericDeserializationBinder : System.Runtime.Serialization.SerializationBinder
+	public sealed class GenericDeserializationBinder : System.Runtime.Serialization.SerializationBinder
 	{
-		public GenericDeserializationBinder()
+		public GenericDeserializationBinder(System.Func<string, string, System.Type> bindToTypeFunc = null)
 		{
+			this.bindToTypeFunc = bindToTypeFunc;
 		}
 		
 		
-		public override System.Type BindToType(string assemblyName, string typeName) 
+		public override System.Type BindToType(string assemblyName, string typeName)
 		{
-			assemblyName = GenericDeserializationBinder.FixAssemblyName (assemblyName);
-
-			string fullName = string.Concat (typeName, ", ", assemblyName);
 			System.Type type;
 			
-			if (GenericDeserializationBinder.typeCache.TryGetValue (fullName, out type) == false)
+			if (this.bindToTypeFunc != null)
 			{
-				//	Premier essai: trouve le type exact correspondant à ce qui est
-				//	demandé par la désérialisation.
+				//	If there is a binding function, call it first; if it provides a type,
+				//	use it, otherwise, apply the default binding logic.
 
-				type = GenericDeserializationBinder.SafeGetType (fullName);
-				
-				if (type == null)
+				type = this.bindToTypeFunc (assemblyName, typeName);
+
+				if (type != null)
 				{
-					//	Second essai: trouve le type équivalent dans l'assembly avec la
-					//	version courante, plutôt que celle avec la version spécifiée.
-					
-					type = this.FindReplacementType (assemblyName, typeName);
+					return type;
 				}
-				
-				if (type == null)
-				{
-					//	Troisième essai: trouve le type équivalent dans une autre
-					//	assembly, avec une heuristique maison.
-					
-					if (assemblyName.StartsWith ("Common.Drawing,"))
-					{
-						assemblyName = assemblyName.Replace ("Common.Drawing,", "Common.Drawing.Agg,");
-						type = this.FindReplacementType (assemblyName, typeName);
-					}
-				}
+			}
+
+			//	Tons of old documents still reference old assembly names; we have to
+			//	map names such as "Common.Drawing.Agg" to "Common" :
+			
+			assemblyName = GenericDeserializationBinder.FixAssemblyName (assemblyName);
+
+			string fullName = GenericDeserializationBinder.GetFullName (assemblyName, typeName);
+
+			lock (GenericDeserializationBinder.typeCache)
+			{
+				GenericDeserializationBinder.typeCache.TryGetValue (fullName, out type);
+			}
+			
+			if (type == null)
+			{
+				type = GenericDeserializationBinder.SafeGetType (fullName)
+					?? this.FindReplacementType (assemblyName, typeName);
 				
 				System.Diagnostics.Debug.Assert (type != null);
-				GenericDeserializationBinder.typeCache[fullName] = type;
+				
+				lock (GenericDeserializationBinder.typeCache)
+				{
+					GenericDeserializationBinder.typeCache[fullName] = type;
+				}
 			}
 			
 			return type;
 		}
 
+
+		private static string GetFullName(string assemblyName, string typeName)
+		{
+			return string.Concat (typeName, ", ", assemblyName);
+		}
+
 		private static string FixAssemblyName(string assemblyFullName)
 		{
 			int pos = assemblyFullName.IndexOf (',');
-			string assemblyName = assemblyFullName.Substring (0, pos);
-			string assemblyInfo = assemblyFullName.Substring (pos);
-			bool replace = false;
 
-			if (assemblyName.StartsWith ("Common.Drawing"))
-			{
-				replace = true;
-			}
-			else
-			{
-				switch (assemblyName)
-				{
-					case "Common.Types":
-					case "Common.Support":
-					case "Common.Widgets":
-					case "Common.OpenType":
-						replace = true;
-						break;
-				}
-			}
+			var assemblyName = assemblyFullName.Substring (0, pos);
+			var assemblyInfo = assemblyFullName.Substring (pos);
 
-			if (replace)
+			switch (assemblyName)
 			{
-				return "Common" + assemblyInfo;
-			}
-			else
-			{
-				return assemblyFullName;
+				case "Common.Drawing":
+				case "Common.Drawing.Agg":
+				case "Common.Types":
+				case "Common.Support":
+				case "Common.Widgets":
+				case "Common.OpenType":
+					return "Common" + assemblyInfo;
+				
+				default:
+					return assemblyFullName;
 			}
 		}
 
 		[System.Diagnostics.DebuggerHidden]
-		public static System.Type SafeGetType(string name)
+		private static System.Type SafeGetType(string name)
 		{
 			try
 			{
@@ -164,38 +166,14 @@ namespace Epsitec.Common.IO
 				prefix = GenericDeserializationBinder.FixAssemblyName (prefix);
 			}
 
-			foreach (System.Reflection.Assembly assembly in GenericDeserializationBinder.assemblies)
-			{
-				if (assembly.FullName.StartsWith (prefix))
-				{
-					return string.Concat (typeName, ", ", assembly.FullName);
-				}
-			}
-
-			return null;
+			return TypeEnumerator.Instance.GetLoadedAssemblies ()
+				.Where (assembly => assembly.FullName.StartsWith (prefix))
+				.Select (assembly => GenericDeserializationBinder.GetFullName (assembly.FullName, typeName))
+				.FirstOrDefault ();
 		}
 		
-		
-		static GenericDeserializationBinder()
-		{
-			GenericDeserializationBinder.assemblies = new List<System.Reflection.Assembly> ();
-			GenericDeserializationBinder.typeCache = new Dictionary<string, System.Type> ();
+		static readonly Dictionary<string, System.Type>	typeCache = new Dictionary<string, System.Type> ();
 
-			GenericDeserializationBinder.assemblies.AddRange (System.AppDomain.CurrentDomain.GetAssemblies ());
-
-			System.AppDomain.CurrentDomain.AssemblyLoad += GenericDeserializationBinder.HandleAssemblyLoad;
-		}
-
-		private static void HandleAssemblyLoad(object sender, System.AssemblyLoadEventArgs e)
-		{
-			if (!e.LoadedAssembly.ReflectionOnly)
-			{
-				GenericDeserializationBinder.assemblies.Add (e.LoadedAssembly);
-			}
-		}
-		
-		
-		static List<System.Reflection.Assembly>	assemblies;
-		static Dictionary<string, System.Type>	typeCache;
+		private readonly System.Func<string, string, System.Type> bindToTypeFunc;
 	}
 }

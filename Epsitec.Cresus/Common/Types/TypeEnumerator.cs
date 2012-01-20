@@ -16,7 +16,7 @@ namespace Epsitec.Common.Types
 		public TypeEnumerator()
 		{
 			this.types         = new List<System.Type> ();
-			this.assemblies    = new List<System.Reflection.Assembly> ();
+			this.assemblies    = new List<Assembly> ();
 			this.typeNames     = new HashSet<string> ();
 			this.typeMap       = new Dictionary<string, List<System.Type>> ();
 			this.assemblyNames = new HashSet<string> ();
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types
 			this.AnalyseAssembly (args.LoadedAssembly);
 		}
 
-		private void AnalyseAssembly(System.Reflection.Assembly assembly)
+		private void AnalyseAssembly(Assembly assembly)
 		{
 #if DOTNET35
 			if (!assembly.ReflectionOnly)
