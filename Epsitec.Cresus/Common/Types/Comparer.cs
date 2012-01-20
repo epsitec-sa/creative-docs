@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -160,7 +160,7 @@ namespace Epsitec.Common.Types
 			
 			return true;
 		}
-		
+
 		public static bool Equal(int[] a, int[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
@@ -172,7 +172,7 @@ namespace Epsitec.Common.Types
 			{
 				return result;
 			}
-			
+
 			for (int i = 0; i < a.Length; i++)
 			{
 				if (a[i] != b[i])
@@ -180,10 +180,32 @@ namespace Epsitec.Common.Types
 					return false;
 				}
 			}
-			
+
 			return true;
 		}
-		
+
+		public static bool Equal(byte[] a, byte[] b)
+		{
+			//	Version optimisée pour comparer des tableaux à une dimension de bytes.
+
+			bool result;
+
+			if (Comparer.PreCompare (a, b, out result))
+			{
+				return result;
+			}
+
+			for (int i = 0; i < a.Length; i++)
+			{
+				if (a[i] != b[i])
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public static bool Equal(string[] a, string[] b)
 		{
 			//	Version optimisée pour comparer des tableaux à une dimension de
