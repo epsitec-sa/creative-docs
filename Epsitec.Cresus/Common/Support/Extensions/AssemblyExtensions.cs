@@ -2,7 +2,9 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 
 namespace Epsitec.Common.Support.Extensions
 {
@@ -17,7 +19,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
 		/// <returns>The version string (such as <c>"2.6.0.1013"</c>).</returns>
-		public static string GetVersionString(this System.Reflection.Assembly assembly)
+		public static string GetVersionString(this Assembly assembly)
 		{
 			return assembly.FullName.Split (',')[1].Split ('=')[1];
 		}
@@ -28,7 +30,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// </summary>
 		/// <param name="assembly">The assembly.</param>
 		/// <returns>The file path or <c>null</c>.</returns>
-		public static string GetCodeBaseFilePath(this System.Reflection.Assembly assembly)
+		public static string GetCodeBaseFilePath(this Assembly assembly)
 		{
 			string codeBase = assembly.CodeBase;
 
@@ -42,6 +44,20 @@ namespace Epsitec.Common.Support.Extensions
 			else
 			{
 				return null;
+			}
+		}
+
+		public static string GetResourceText(this Assembly assembly, string resourceName)
+		{
+			assembly.ThrowIfNull ("assembly");
+			resourceName.ThrowIfNullOrEmpty ("resourceName");
+
+			using (var stream = assembly.GetManifestResourceStream (resourceName))
+			{
+				using (var streamReader = new StreamReader (stream))
+				{
+					return streamReader.ReadToEnd ();
+				}
 			}
 		}
 	}

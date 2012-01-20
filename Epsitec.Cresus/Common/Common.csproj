@@ -576,6 +576,7 @@
     <Compile Include="Support\WeakEventListener.cs" />
     <Compile Include="Support\WeakEventListeners.cs" />
     <Compile Include="Support\Xml.cs" />
+    <Compile Include="Support\XmlValidator.cs" />
     <Compile Include="Text\Exchange\ClipboardData.cs" />
     <Compile Include="Text\Exchange\CopyPasteContext.cs" />
     <Compile Include="Text\Exchange\CresusWrapper.cs" />

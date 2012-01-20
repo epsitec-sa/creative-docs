@@ -1,0 +1,2671 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+        targetNamespace="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclarationContainer"
+        xmlns:tns="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclarationContainer"
+        xmlns:xs="http://www.w3.org/2001/XMLSchema"
+        xmlns:sd="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclaration"
+        elementFormDefault="qualified"
+        attributeFormDefault="unqualified"
+        version="0.0">
+
+    <!-- state of standardisation: FINAL
+         publication: 2009-12-22
+         a. boehm
+    -->
+
+    <xs:import namespace="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclaration"
+               schemaLocation="SalaryDeclaration.xsd"/>
+
+    <xs:complexType name="RequestContextType">
+        <xs:sequence>
+            <xs:element name="UserAgent" type="tns:UserAgentType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Applikationsinformation</translation>
+                        <description>
+                            <short>
+                                Beschreibung der wesentlichen System-Identifikations-Daten
+                            </short>
+                            <technical>
+                                Zur Qualitätsicherung des Übermittlungsprozesses werden die wesentlichen Informationen
+                                der beteiligten gesichert
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations concernant l'application</translation>
+                        <description>
+                            <short>
+                                Description des données essentielles d'identification de système
+                            </short>
+                            <technical>
+                                Pour l'assurance de la qualité, les informations essentielles des participants
+                                sont sauvegardées.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CompanyName" type="sd:CompanyNameType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Unternehmensdaten</translation>
+                        <description>
+                            <short>
+                                Beschreibung der wesentlichen Unternehmensdaten
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom de l'entreprise</translation>
+                        <description>
+                            <short>
+                                Nom de l'entreprise
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TransmissionDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Übertragungszeitpunkt</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Date et Temps de transmission</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="LanguageCode" type="tns:LanguageCodeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Sprachcode</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Code de langage</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TestCase" type="tns:EmptyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Testfall</translation>
+                        <description>
+                            <short>
+                                Testfall-Kennzeichnung
+                            </short>
+                            <technical>
+                                Die Daten sollen empfangen und quittiert werden.
+                                Aber OHNE PRODUKTIVE VERARBEITUNG!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Cas de test</translation>
+                        <description>
+                            <short>
+                                Identificateur pour des cas de test
+                            </short>
+                            <technical>
+                                Reception et quittance des données, mais
+                                SANS TRAITEMENT PRODUCTIF!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="MonitoringID" type="tns:IDType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>ÜberwachungsID</translation>
+                        <description>
+                            <short>
+                                ÜberwachungsID
+                            </short>
+                            <technical>
+                                Die ÜberwachungsID wird vorallem in der Referenzapplikation zur Aufteilung der Daten
+                                verwendet
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de surveillance</translation>
+                        <description>
+                            <short>
+                                Identificateur de surveillance
+                            </short>
+                            <technical>
+                                L'identificateur de surveillance est surtout utilisé dans l'application de
+                                référence pour le classement des données.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PartialDeclaration" type="tns:PartialDeclarationType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Teillieferung</translation>
+                        <description>
+                            <short>
+                                Meldung bestehend aus mehrern Übermittlungen
+                            </short>
+                            <technical>
+                                Im Moment noch nicht aktiviert!
+                                XXL-ELM muss noch spezifiziert werden.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Declaration partielle</translation>
+                        <description>
+                            <short>
+                                Declaration composée d'éléments de plusieurs transmissions
+                            </short>
+                            <technical>
+                                Pas encore disponible!
+                                XXL-ELM n'est pas spécifié complètement
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalaryDeclarationRequestType">
+        <xs:sequence>
+            <xs:element name="RequestContext" type="tns:RequestContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsKontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Job" type="tns:JobType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Arbeitsauftrag</translation>
+                        <description>
+                            <short>
+                                Arbeitsauftrag für sämtliche Empfänger (Distributor und Institutionen)
+                            </short>
+                            <technical>
+                                Hier sind alle Empfänger aufgeführt
+                                - Distributor
+                                - Institutions-Empfänger der Domänen
+                                - carbon copy Treuhänder und Broker
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Commande</translation>
+                        <description>
+                            <short>
+                                Commande pour tous les receveurs (distributeur et institutions)
+                            </short>
+                            <technical>
+                                Liste de tous les receveurs
+                                - distributeur
+                                - receveurs des institutions des domaines
+                                - receveurs "carbon copy" : agents fiduciaires, courtiers
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Substitution" type="tns:SubstitutionType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Substitution</translation>
+                        <description>
+                            <short>
+                                Substitution einer gültigen Meldung
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Substitution</translation>
+                        <description>
+                            <short>
+                                Substitution d'un avis valide
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SalaryDeclaration" type="sd:SalaryDeclarationType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Lohnmeldung</translation>
+                        <description>
+                            <short>
+                                Nutzdaten zur Lohnmeldung
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Avis de salaire</translation>
+                        <description>
+                            <short>
+                                Données utilitaires de l'avis de salaire
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GetStatusFromDeclareSalaryDeferredType">
+        <xs:sequence>
+            <xs:element name="RequestContext" type="tns:RequestContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsKontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="JobKey" type="tns:JobKeyType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Auftrags-Schlüssel</translation>
+                        <description>
+                            <short>
+                                Auftrags-Schlüssel für die zweite Operation: GetStatusFromDeferredDeclaration
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Clé de la commande</translation>
+                        <description>
+                            <short>
+                                Clé de la commande pour pouvaoir exécuter la deuxième opération:
+                                GetStatusFromDeferredDeclaration
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="JobType">
+        <xs:sequence>
+            <xs:element name="Addressees" type="tns:AddresseeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adressen</translation>
+                        <description>
+                            <short>
+                                Adressen der Empfänger
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Adresses</translation>
+                        <description>
+                            <short>
+                                Adresses des receveurs
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+                <xs:unique name="AHV-AVS-Ctrl">
+                    <xs:selector xpath="tns:AHV-AVS"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+                <xs:unique name="UVG-LAA-Ctrl">
+                    <xs:selector xpath="tns:UVG-LAA"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+                <xs:unique name="UVGZ-LAAC-Ctrl">
+                    <xs:selector xpath="tns:UVGZ-LAAC"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+                <xs:unique name="KTG-AMC-Ctrl">
+                    <xs:selector xpath="tns:KTG-AMC"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+                <xs:unique name="BVG-LPP-Ctrl">
+                    <xs:selector xpath="tns:BVG-LPP"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+                <xs:unique name="FAK-CAF-Ctrl">
+                    <xs:selector xpath="tns:FAK-CAF"/>
+                    <xs:field xpath="@institutionIDRef"/>
+                </xs:unique>
+            </xs:element>
+            <xs:element name="EndUserNotification" type="tns:UserNotificationType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Endbenutzer-Benachrichtigung</translation>
+                        <description>
+                            <short>
+                                Benachrichtigung des Endbenutzer mittels eMail über das Ende der Verteilung
+                                (Distributor)
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Notification de l'utilisateur final</translation>
+                        <description>
+                            <short>
+                                Notification de l'utilisateur final par e-mail, quand la distribution est terminée
+                                (distributeur)
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AddresseeType">
+        <xs:sequence>
+            <xs:element name="AHV-AVS" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AHV-UVG Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle AHV-UVG</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UVG-LAA" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>UVG-LAA Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle UVG-LAA</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UVGZ-LAAC" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>UVGZ-LAAC Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle UVGZ-LAAC</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="KTG-AMC" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>KTG-AMC Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle KTG-AMC</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BVG-LPP" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BVG-LPP Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle BVG-LPP</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FAK-CAF" type="tns:ControlsMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>FAK-CAF Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle FAK-CAF</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CantonalTaxAdministration" type="tns:ControlsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Kt.Stv. Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle administration fiscale cantonale</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SwissFederalStatisticalOffice" type="tns:ControlsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BFS Steuerung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle OFS</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ControlsType">
+        <xs:sequence>
+            <xs:element name="ProcessByDistributor" type="sd:SimpleBooleanType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Verteilung durch Distributor</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Distribution effectuée par le distributeur</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CompletionUnwanted" type="sd:EmptyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Completion nicht erwünscht</translation>
+                        <description>
+                            <short>
+                                Ein optionales Completion ist nur beim Vorabgleich zulässig!
+                                In der normalen Lohnmeldung muss der Endbenutzer immer
+                                ein Completion und damit die Freigabe der Meldung machen.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Complétion non souhaitée</translation>
+                        <description>
+                            <short>
+                                Une completion optionelle n'est possible que dans le cas d'un collationnement.
+                                Une declaration salariale normale doit toujours être libéré par l'utilisateur
+                                qui doit donc toujours exécuter la completion.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CCAddressee" type="tns:CarbonCopyAddresseeType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adresse für Datenkopie</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Adresse receveur pour une copie des données</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ControlsMultiType">
+        <xs:complexContent>
+            <xs:extension base="tns:ControlsType">
+                <xs:attribute name="institutionIDRef" type="sd:InstitutionIDType" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="UserNotificationType">
+        <xs:annotation>
+            <xs:documentation>EndBenutzer Benachrichtigung</xs:documentation>
+            <xs:documentation xml:lang="fr">Notification de l'utilisateur final</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Name</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="EmailAddress" type="tns:EmailAddressType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Email Adresse</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Adresse e-mail</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PhoneNumber" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Telefonnummer</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Numéro de téléphone</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SubstitutionType">
+        <xs:sequence>
+            <xs:element name="PredecessorRequestID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsID des Vorgänger</translation>
+                        <description>
+                            <short>
+                                AuftragsID der Meldung welche ersetzt werden soll
+                            </short>
+                            <technical>
+                                Es können nur gültige Meldungen ersetzt werden, d.h.
+                                Auftrag wurde AKZEPTIERT
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Numéro de la demande du prédécesseur</translation>
+                        <description>
+                            <short>
+                                Numéro de la demande de l'avis à remplacer
+                            </short>
+                            <technical>
+                                Le remplacement n'est possible que pour des avis valides,
+                                c.a.d. la commande a été ACCEPTÉE
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PredecessorResponseIDWithAcceptedState" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AntwortID des Vorgänger</translation>
+                        <description>
+                            <short>
+                                AntwortID der Meldung welche ersetzt werden soll
+                            </short>
+                            <technical>
+                                Es können nur gültige Meldungen ersetzt werden, d.h.
+                                Auftrag wurde AKZEPTIERT
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de réponse du prédécesseur</translation>
+                        <description>
+                            <short>
+                                Identificateur de l'avis à remplacer
+                            </short>
+                            <technical>
+                                Le remplacement n'est possible que pour des avis valides,
+                                c.a.d. la commande a été ACCEPTÉE
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CarbonCopyAddresseeType">
+        <xs:sequence>
+            <xs:element name="PartnerID" type="tns:IDType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Partneridentifikation</translation>
+                        <description>
+                            <short>Partneridentifikation gemäss seperater Liste</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de partenaire</translation>
+                        <description>
+                            <short>Identification de partenaire selon liste séparée</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Name</translation>
+                        <description>
+                            <short>Name (1. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom</translation>
+                        <description>
+                            <short>Nom (1e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ComplementaryLine" type="xs:string" minOccurs="0" maxOccurs="1">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Zusatzzeile</translation>
+                        <description>
+                            <short>Zusatzzeile für Postadresse (2. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Ligne accessoire</translation>
+                        <description>
+                            <short>Ligne accessoire pour adresse postale (2e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Street" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Strasse</translation>
+                        <description>
+                            <short>Strasse und Hausnummer (3. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Rue</translation>
+                        <description>
+                            <short>Rue et numéro (3e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Postbox" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Postfach</translation>
+                        <description>
+                            <short>Postfach (4. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Case postale</translation>
+                        <description>
+                            <short>Case postale (4e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ZIP-Code" type="tns:ZIP-CodeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Postleitzahl (PLZ)</translation>
+                        <description>
+                            <short>Postleitzahl (5. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Code postal (CP)</translation>
+                        <description>
+                            <short>Code postal (5e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="City" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Ort</translation>
+                        <description>
+                            <short>Ort (5. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Lieu</translation>
+                        <description>
+                            <short>Lieu (5e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Country" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Land</translation>
+                        <description>
+                            <short>Land für Postversand (6. Zeile)</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Pays</translation>
+                        <description>
+                            <short>Pays pour l'expédition (6e ligne)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:simpleType name="ZIP-CodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>PLZ Typ</translation>
+                <description>
+                    <short>Postleitzahl</short>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Type CP</translation>
+                <description>
+                    <short>Code postal</short>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:minLength value="4"/>
+            <xs:maxLength value="6"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <!-- response
+    -->
+    <xs:complexType name="ResponseContextType">
+        <xs:sequence>
+            <xs:element name="UserAgent" type="tns:UserAgentType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Applikationsinformation</translation>
+                        <description>
+                            <short>
+                                Beschreibung der wesentlichen System-Identifikations-Daten
+                            </short>
+                            <technical>
+                                Zur Qualitätsicherung des Übermittlungsprozesses werden die wesentlichen Informationen
+                                der beteiligten gesichert
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations concernant l'application</translation>
+                        <description>
+                            <short>
+                                Description des données essentielles d'identification de système
+                            </short>
+                            <technical>
+                                Pour l'assurance de la qualité, les informations essentielles des participants
+                                sont sauvegardées.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InstitutionName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Institutionsname</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom de l'institution</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TransmissionDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Übertragungszeitpunkt</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Temps de transmission</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DeclarationID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>MeldungsID</translation>
+                        <description>
+                            <short>
+                                Die MeldungsID wird vom Distributor vergeben und verwaltet.
+                                Damit lassen sich mehrere Prozess-Schritte "verknüpfen" und
+                                ergibt dadurch eine Fall- oder Supportnummer.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la declaration</translation>
+                        <description>
+                            <short>
+                                L'identificateur de la declaration est générée et gérée par le distributeur.
+                                Il permet de relier plusieures étapes d'un processus et peut donc être utilisée
+                                comme numéro de cas ou de support.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResponseID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AntwortID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Credentials" type="tns:CredentialsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Berechtigungsnachweis</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Preuve d'authentification</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Information" type="tns:AccessInformationType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Informationen</translation>
+                        <description>
+                            <short>
+                                Informationen für weitere Details der Verarbeitung
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations</translation>
+                        <description>
+                            <short>
+                                Informations concernant les détails de la transmission
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TestCase" type="tns:EmptyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Testfall</translation>
+                        <description>
+                            <short>
+                                Testfall-Kennzeichnung
+                            </short>
+                            <technical>
+                                Die Daten wurden empfangen und quittiert.
+                                Aber OHNE PRODUKTIVE VERARBEITUNG!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Cas de test</translation>
+                        <description>
+                            <short>
+                                Identificateur pour des cas de test
+                            </short>
+                            <technical>
+                                Reception et quittance des données, mais
+                                SANS TRAITEMENT PRODUCTIF!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AddresseeContextType">
+        <xs:sequence>
+            <xs:element name="UserAgent" type="tns:UserAgentType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Applikationsinformation</translation>
+                        <description>
+                            <short>
+                                Beschreibung der wesentlichen System-Identifikations-Daten
+                            </short>
+                            <technical>
+                                Zur Qualitätsicherung des Übermittlungsprozesses werden die wesentlichen Informationen
+                                der beteiligten gesichert
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations concernant l'application</translation>
+                        <description>
+                            <short>
+                                Description des données essentielles d'identification de système
+                            </short>
+                            <technical>
+                                Pour l'assurance de la qualité, les informations essentielles des participants
+                                sont sauvegardées.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InstitutionName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Institutionsname</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom de l'institution</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TransmissionDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Übertragungszeitpunkt</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Temps de transmission</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResponseID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AntwortID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Credentials" type="tns:CredentialsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Berechtigungsnachweis</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Preuve d'authentification</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Completion" type="tns:AccessInformationType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Komplettierungsinfomaton</translation>
+                        <description>
+                            <short>
+                                Information zur Komplettierung und Freigabe der Meldung
+                            </short>
+                            <technical>
+                                Information zur Komplettierung und Freigabe der Meldung
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations concèrnant le complètement</translation>
+                        <description>
+                            <short>
+                                Informations concèrnant le complètement et la libération de l'avis
+                            </short>
+                            <technical>
+                                Informations concèrnant le complètement et la libération de l'avis
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TestCase" type="tns:EmptyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Testfall</translation>
+                        <description>
+                            <short>
+                                Testfall-Kennzeichnung
+                            </short>
+                            <technical>
+                                Die Daten wurden empfangen und quittiert.
+                                Aber OHNE PRODUKTIVE VERARBEITUNG!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Cas de test</translation>
+                        <description>
+                            <short>
+                                Identificateur pour des cas de test
+                            </short>
+                            <technical>
+                                Reception et quittance des données, mais
+                                SANS TRAITEMENT PRODUCTIF!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PartialDeclarationResponse" type="tns:PartialDeclarationType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Teillieferung</translation>
+                        <description>
+                            <short>
+                                Meldung bestehend aus mehrern Übermittlungen
+                            </short>
+                            <technical>
+                                Im Moment noch nicht aktiviert!
+                                XXL-ELM muss noch spezifiziert werden.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Declaration partielle</translation>
+                        <description>
+                            <short>
+                                Declaration composée de plusieurs éléments transmis
+                            </short>
+                            <technical>
+                                La declaration partielle n'est pas encore activée.
+                                ELM-XXL doit d'abord être spécifié.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="FaultContextType">
+        <xs:sequence>
+            <xs:element name="UserAgent" type="tns:UserAgentType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Applikationsinformation</translation>
+                        <description>
+                            <short>
+                                Beschreibung der wesentlichen System-Identifikations-Daten
+                            </short>
+                            <technical>
+                                Zur Qualitätsicherung des Übermittlungsprozesses werden die wesentlichen Informationen
+                                der beteiligten gesichert
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations concernant l'application</translation>
+                        <description>
+                            <short>
+                                Description des données essentielles d'identification de système
+                            </short>
+                            <technical>
+                                Pour l'assurance de la qualité, les informations essentielles des participants
+                                sont sauvegardées.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="InstitutionName" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Institutionsname</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom de l'institution</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TransmissionDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Übertragungszeitpunkt</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Temps de transmission</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResponseID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AntwortID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="RequestID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsID</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="TestCase" type="tns:EmptyType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Testfall</translation>
+                        <description>
+                            <short>
+                                Testfall-Kennzeichnung
+                            </short>
+                            <technical>
+                                Die Daten wurden empfangen und quittiert.
+                                Aber OHNE PRODUKTIVE VERARBEITUNG!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Cas de test</translation>
+                        <description>
+                            <short>
+                                Identificateur pour des cas de test
+                            </short>
+                            <technical>
+                                Reception et quittance des données, mais
+                                SANS TRAITEMENT PRODUCTIF!!!
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalaryDeclarationFaultType">
+        <xs:sequence>
+            <xs:element name="FaultContext" type="tns:FaultContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Fehler-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte d'erreur</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FaultState" type="tns:FaultStateType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Fehler-Status</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>État de l'erreur</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DeclareSalaryDeferredResponseType">
+        <xs:sequence>
+            <xs:element name="ResponseContext" type="tns:ResponseContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Antwort-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="JobKey" type="tns:JobKeyType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Auftrags-Schlüssel</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Clé de la commande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalaryDeclarationStatusResponseType">
+        <xs:sequence>
+            <xs:element name="ResponseContext" type="tns:ResponseContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Antwort-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PlausibilityState" type="tns:PlausibilityStateType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Pausibilitäts-Status</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>État de la plausibilité</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="JobFinished" type="sd:SimpleBooleanType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Arbeistsauftrag beendet</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Commande terminée</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="JobStateType">
+        <xs:sequence>
+            <xs:element name="AHV-AVS" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AK-Nummer</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Numéro CC</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UVG-LAA" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>UVG-LAA</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>UVG-LAA</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="UVGZ-LAAC" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>UVGZ-LAAC</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>UVGZ-LAAC</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="KTG-AMC" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>KTG-AMC</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>KTG-AMC</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="BVG-LPP" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BVG-LPP</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>BVG-LPP</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FAK-CAF" type="tns:WorkingStateMultiType" minOccurs="0" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>FAK-CAF</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>FAK-CAF</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CantonalTaxAdministration" type="tns:TaxWorkingStateType" minOccurs="0"
+                        maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Kantonale Steuerverwaltung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Administration cantonale des contributions</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SwissFederalStatisticalOffice" type="tns:WorkingStateType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BFS</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>OFS</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="WorkingStateType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Arbeitszustandsdetail</xs:documentation>
+            <xs:documentation xml:lang="fr">Avancement du travail</xs:documentation>
+        </xs:annotation>
+        <xs:choice>
+            <xs:element name="Processing" type="tns:EmptyType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>in Verarbeitung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>en cours de traitement</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Delayed" type="tns:DelayedResponseType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Verarbeitung momentan nicht möglich</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Traitement impossible en ce moment</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Success" type="tns:SuccessResponseType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Verbeitung erfolgreich beendet</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Travail terminé avec succès</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Ignored" type="tns:EmptyType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adresse ignoriert</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Adresse ignorée</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Error" type="tns:ErrorResponseType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>
+                            Verarbeitung ist fehlgeschlagen, da empfänger einen Fehler gemeldet hat
+                        </translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>
+                            Traitement failli, causé par un problème du receveur
+                        </translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="ReducedWorkingStateType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Arbeitszustandsdetail</xs:documentation>
+            <xs:documentation xml:lang="fr">Avancement du travail</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="tns:WorkingStateType">
+                <xs:choice>
+                    <xs:element name="Success" type="tns:SuccessResponseType">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="de">
+                                <translation>Verbeitung erfolgreich beendet</translation>
+                            </xs:documentation>
+                            <xs:documentation xml:lang="fr">
+                                <translation>Travail terminé avec succès</translation>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:choice>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ReducedWorkingStateMultiType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Arbeitszustandsdetail</xs:documentation>
+            <xs:documentation xml:lang="fr">Avancement du travail</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="tns:WorkingStateMultiType">
+                <xs:choice>
+                    <xs:element name="Success" type="tns:SuccessResponseType">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="de">
+                                <translation>Verbeitung erfolgreich beendet</translation>
+                            </xs:documentation>
+                            <xs:documentation xml:lang="fr">
+                                <translation>Travail terminé avec succès</translation>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:choice>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="TaxWorkingStateType">
+        <xs:complexContent>
+            <xs:extension base="tns:WorkingStateType">
+                <xs:attribute name="canton" type="sd:CantonType" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="WorkingStateMultiType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Arbeitszustandsdetail</xs:documentation>
+            <xs:documentation xml:lang="fr">Avancement du travail</xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:extension base="tns:WorkingStateType">
+                <xs:attribute name="institutionIDRef" type="sd:InstitutionIDType" use="required"/>
+            </xs:extension>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="ErrorResponseType">
+        <xs:annotation>
+            <xs:documentation>Info</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="EndUserInformation" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Endbenutzer-Information</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations pour l'utilisateur final</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DetailInformation" type="xs:string" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>DetailInformation</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations détaillées</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="FaultInformation" type="tns:SalaryDeclarationFaultType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>FehlerInformation des Empfängers</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations du receveur concernant l'erreur</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DelayedResponseType">
+        <xs:sequence>
+            <xs:element name="EndUserInformation" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Endbenutzer-Information</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations pour l'utilisateur final</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SuccessResponseType">
+        <xs:sequence>
+            <xs:element name="AddresseeContext" type="tns:AddresseeContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adress-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte du destinataire</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ResponseState" type="tns:ResponseStateType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Antwort-Status</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>État de la réponse</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ResponseStateType">
+        <xs:sequence>
+            <xs:element name="Code" type="tns:ResponseCodeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Status-Code</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Code de l'état</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Warning" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Warnungen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Avertissements</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Info" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Informationen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="FaultStateType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Status</xs:documentation>
+            <xs:documentation xml:lang="fr">État</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Code" type="tns:FaultCodeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Fehler-Status-Code</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Erreur: Code de l'état</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Error" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Fehler</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Erreur</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Warning" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Warnungen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Avertissements</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Info" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Informationen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="AccessInformationType">
+        <xs:sequence>
+            <xs:element name="Url" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>URL</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>URL</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ExpiryDate" type="xs:dateTime">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Ablaufdatum</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Échéance</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="PartialDeclarationType">
+        <xs:sequence>
+            <xs:element name="ProtocolVersion" type="xs:integer">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Protokollversion</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Version du protocole</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="PacketID" type="tns:IDType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Paketidentifikation</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identification du paquet</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DeclarationID" type="tns:IDType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>MeldungsID</translation>
+                        <description>
+                            <short>
+                                Die MeldungsID wird vom Distributor vergeben und verwaltet.
+                                Damit lassen sich mehrere Prozess-Schritte "verknüpfen" und
+                                ergibt dadurch eine Fall- oder Supportnummer.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identificateur de la declaration</translation>
+                        <description>
+                            <short>
+                                L'identificateur de la declaration est générée et gérée par le distributeur.
+                                Il permet de relier plusieures étapes d'un processus et peut donc être utilisée
+                                comme numéro de cas ou de support.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="Explicit">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Explizit</translation>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>Explicite</translation>
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="ActualPart" type="xs:positiveInteger"/>
+                            <xs:element name="NumberOfParts" type="xs:positiveInteger"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="Implicit">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Implizit</translation>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>Implicite</translation>
+                        </xs:documentation>
+                    </xs:annotation>
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:choice>
+                                <xs:element name="ExpectMoreParts" type="tns:EmptyType"/>
+                                <xs:element name="LastPart" type="tns:EmptyType"/>
+                            </xs:choice>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="CredentialsType">
+        <xs:sequence>
+            <xs:element name="Key" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Schlüssel</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Clé</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Password" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Passwort</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Mot de passe</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NotificationsType">
+        <xs:sequence>
+            <xs:element name="Notification" type="tns:NotificationType" maxOccurs="unbounded">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Hinweise</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Remarques</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="NotificationType">
+        <xs:sequence>
+            <xs:element name="QualityLevel" type="tns:QualityLevelType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Qualitäts-Stufe</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Niveau de qualité</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="DescriptionCode" type="tns:DescriptionCodeType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Code der Beschreibung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Code de la description</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Description" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Beschreibungstext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Description</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- response distributor-part -->
+    <xs:complexType name="PlausibilityStateType">
+        <xs:choice>
+            <xs:element name="ValidityPlausibilityChecking" type="tns:EmptyType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Prüfen Validierung Plausibilisierung</translation>
+                        <description>
+                            <short>
+                                Prüfen der Stufen Validierung und Plausibilisierung
+                            </short>
+                            <technical>
+                                Der Distributor hat die Validierungs- und Plausibilitätsprüfung noch nicht
+                                abgeschlossen
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle de validité et plausibilité</translation>
+                        <description>
+                            <short>
+                                Contrôle des niveaux de validité et de plausibilité
+                            </short>
+                            <technical>
+                                Le distributeur n'a pas encore terminé avec le contrôle de
+                                validité et de plausibilité.
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Plausible" type="tns:PlausibleNotificationsType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Plausibilisiert</translation>
+                        <description>
+                            <short>
+                                Validierung und Plausibilisierung sind abgeschlossen
+                            </short>
+                            <technical>
+                                Die Meldung ist valid und plausibel
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contrôle de plausibilité terminé avec succès</translation>
+                        <description>
+                            <short>
+                                Contrôle de validité et de plausibilité terminé avec succès
+                            </short>
+                            <technical>
+                                L'avis est valide et plausible
+                            </technical>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="PlausibleNotificationsType">
+        <xs:sequence>
+            <xs:element name="Warning" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Warnungen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Avertissements</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Info" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Informationen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="JobState" type="tns:JobStateType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Arbeitsauftrags-Status</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>État de la commande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <!-- shared types
+    -->
+    <xs:complexType name="UserAgentType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">Benutzeragent</xs:documentation>
+            <xs:documentation xml:lang="fr">Agent utilisateur</xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Producer" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Applikations-Hersteller</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Producteur de l'application</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Name" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Produkt-Name</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Nom du produit</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Version" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Produkt-Version</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Version du produit</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Certificate" type="xs:string">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Zertifikat</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Certificat</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ELM-SalaryStandardVersion" type="xs:decimal">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Lohnstandard-CH (ELM) Version</translation>
+                        <technical>
+                            Die Version des Lohnstandard-CH (ELM) nach der die Zertifizierung
+                            durchgeführt wurde.(3.0 oder höher)
+                            Achtung:
+                            Der Distributor kann zum Teil Versionen transfomieren und wird
+                            dann eine tiefer Version automatisch setzen (z.B. 2.2).
+                        </technical>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Version du standard salaire CH (ELM)</translation>
+                        <technical>
+                            La version du standard salaire CH (ELM) qui a été la base de la certification. (3.0 ou plus)
+                            Attention:
+                            Le distributeur est capable de transformer des versions au cas où un receveur n'est compatible
+                            qu'avec des versions plus basses. Ces transformations ce font automatiquement.
+                        </technical>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="GetContributionsFromDeclareSalaryType">
+        <xs:sequence>
+            <xs:element name="RequestContext" type="tns:RequestContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsKontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Domain" type="tns:DomainIdentificationType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Domäne gemäss swissdec</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Domaine selon swissdec</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="DomainIdentificationType">
+        <xs:choice minOccurs="1" maxOccurs="1">
+            <xs:element name="BVG-LPP-Identification" type="sd:BVG-LPP-IdentificationType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BVG-LPP Identifikation</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Identification BVG-LPP</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:choice>
+    </xs:complexType>
+    <xs:complexType name="GetContributionsFromDeclareSalaryResponseType">
+        <xs:sequence>
+            <xs:element name="ResponseContext" type="tns:ResponseContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>AuftragsKontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte de la demande</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="SalaryResult" type="tns:SalaryResultType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Resultat zur Lohnmeldung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Resultat de la declaration salariale</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalaryResultType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Domäne</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Domaine</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="BVG-LPP" type="tns:BVG-LPP-SalaryResultType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>BVG</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>LPP</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="BVG-LPP-SalaryResultType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Resultat zur Lohnmeldung</translation>
+                <description>
+                    <short>
+                        Resultat zur Lohnmeldung mit den fachlich relevanten Rückmeldungsdaten.
+                    </short>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Résultat du message salarial</translation>
+                <description>
+                    <short>Résultat du message salarial contenant les informations pertinentes de la réponse</short>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="Warning" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Warnungen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Avertissements</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Info" type="tns:NotificationsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Informationen</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Informations</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:choice>
+                <xs:element name="CompletionReleaseIsMissing" type="tns:CompletionReleaseIsMissingType">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Freigabe in der Completion fehlt</translation>
+                            <description>
+                                <short>
+                                    Eine Freigabe durch den Endbenutzer(Unternehmen) in der Completion fehlt
+                                    und wird vom Endempfänger zwingend verlangt.
+                                    Mögliche Fälle:
+                                    a) Vorabgleich und Element CompletionUnwanted wurde nicht gesetzt
+                                    b) Lohnmeldung
+                                </short>
+                            </description>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>La transmission n'a pas été libérée (Completion)</translation>
+                            <description>
+                                <short>La libération de la transmission n'a pas été effectuée par l'utilisateur
+                                mais est demandée impérativement par le receveur.
+                                Cas possibles:
+                                a) Collationnement sans avoir mis en place l'élément CompletionUnwanted
+                                b) Declaration salariale</short>
+                            </description>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Processing" type="tns:ProcessingType">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Verarbeitung</translation>
+                            <description>
+                                <short>
+                                    System ist noch am Verarbeiten
+                                </short>
+                            </description>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>Traitement</translation>
+                            <description>
+                                <short>Système en cours de traitement</short>
+                            </description>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Success" type="tns:SuccessType">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Erfolgreich</translation>
+                            <description>
+                                <short>
+                                    Verarbeitung war erfolgreich
+                                </short>
+                            </description>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>Succès</translation>
+                            <description>
+                                <short>Traitement terminé avec succès</short>
+                            </description>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+                <xs:element name="Error" type="tns:ErrorResponseType">
+                    <xs:annotation>
+                        <xs:documentation xml:lang="de">
+                            <translation>Fehler</translation>
+                            <description>
+                                <short>
+                                    Verarbeitung war nicht erfolgreich und es gab Fehler.
+                                </short>
+                            </description>
+                        </xs:documentation>
+                        <xs:documentation xml:lang="fr">
+                            <translation>Erreur</translation>
+                            <description>
+                                <short>Le traitement a été abandonné dû à des erreurs</short>
+                            </description>
+                        </xs:documentation>
+                    </xs:annotation>
+                </xs:element>
+            </xs:choice>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SalaryResultConsumerType">
+        <xs:sequence>
+            <xs:element name="SalaryResult" type="tns:ReducedSalaryResultType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Resultat aus der Lohnmeldung</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Résultat de la transmission salariale</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ReducedSalaryResultType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Domäne</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Domaine</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="tns:SalaryResultType">
+                <xs:sequence>
+                    <xs:element name="BVG-LPP" type="tns:BVG-LPP-ReducedSalaryResultType">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="de">
+                                <translation>BVG</translation>
+                            </xs:documentation>
+                            <xs:documentation xml:lang="fr">
+                                <translation>LPP</translation>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="BVG-LPP-ReducedSalaryResultType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Reduziertes Resultat aus der Lohmeldung</translation>
+                <description>
+                    <short>
+                        Reduziertes Resultat aus der Lohmeldung für die Kommunikation zwischen
+                        Distributor und Endempfänger.
+                    </short>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Résultat réduit de la transmission salariale</translation>
+                <description>
+                    <short>Résultat réduit de la transmission salariale, utilisé pour la communication entre
+                    le distributeur et le receveur final.</short>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:complexContent>
+            <xs:restriction base="tns:BVG-LPP-SalaryResultType">
+                <xs:sequence>
+                    <xs:element name="Warning" type="tns:NotificationsType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="de">
+                                <translation>Warnungen</translation>
+                            </xs:documentation>
+                            <xs:documentation xml:lang="fr">
+                                <translation>Avertissements</translation>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:element name="Info" type="tns:NotificationsType" minOccurs="0">
+                        <xs:annotation>
+                            <xs:documentation xml:lang="de">
+                                <translation>Informationen</translation>
+                            </xs:documentation>
+                            <xs:documentation xml:lang="fr">
+                                <translation>Informations</translation>
+                            </xs:documentation>
+                        </xs:annotation>
+                    </xs:element>
+                    <xs:choice>
+                        <xs:element name="CompletionReleaseIsMissing" type="tns:CompletionReleaseIsMissingType">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="de">
+                                    <translation>Freigabe in der Completion fehlt</translation>
+                                    <description>
+                                        <short>
+                                            Eine Freigabe durch den Endbenutzer(Unternehmen) in der Completion fehlt
+                                            und wird vom Endempfänger zwingend verlangt.
+                                            Mögliche Fälle:
+                                            a) Vorabgleich und Element CompletionUnwanted wurde nicht gesetzt
+                                            b) Lohnmeldung
+                                        </short>
+                                    </description>
+                                </xs:documentation>
+                                <xs:documentation xml:lang="fr">
+                                    <translation>La transmission n'a pas été libérée (Completion)</translation>
+                            <description>
+                                <short>La libération de la transmission n'a pas été effectuée par l'utilisateur
+                                mais est demandée impérativement par le receveur.
+                                Cas possibles:
+                                a) Collationnement sans avoir mis en place l'élément CompletionUnwanted
+                                b) Declaration salariale</short>
+                                    </description>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Processing" type="tns:ProcessingType">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="de">
+                                    <translation>Verarbeiten</translation>
+                                    <description>
+                                        <short>
+                                            System ist noch am Verarbeiten
+                                        </short>
+                                    </description>
+                                </xs:documentation>
+                                <xs:documentation xml:lang="fr">
+                                    <translation>Traitement</translation>
+                                    <description>
+                                        <short>Le système est en cours de traitement</short>
+                                    </description>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                        <xs:element name="Success" type="tns:SuccessType">
+                            <xs:annotation>
+                                <xs:documentation xml:lang="de">
+                                    <translation>Erfolgreich</translation>
+                                    <description>
+                                        <short>
+                                            Verarbeitung war erfolgreich
+                                        </short>
+                                    </description>
+                                </xs:documentation>
+                                <xs:documentation xml:lang="fr">
+                                    <translation>Succès</translation>
+                                    <description>
+                                        <short>Traitement terminé avec succès</short>
+                                    </description>
+                                </xs:documentation>
+                            </xs:annotation>
+                        </xs:element>
+                    </xs:choice>
+                </xs:sequence>
+            </xs:restriction>
+        </xs:complexContent>
+    </xs:complexType>
+    <xs:complexType name="CompletionReleaseIsMissingType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Freigabe in der Completion fehlt</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>La transmission n'a pas été libérée (Completion)</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AddresseeContext" type="tns:AddresseeContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adress-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte du destinataire</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Insurance" type="sd:BVG-LPP-CustomerIdentificationMultiType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Versicherer</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Assurance</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="ProcessingType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>in Verarbeitung</translation>
+                <description>
+                    <short>Die Bereitstellung der Beiträge ist in Verarbeitung</short>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Traitement</translation>
+                <description>
+                    <short>La préparation des contributions est en cours de traitement</short>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AddresseeContext" type="tns:AddresseeContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adress-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte du destinataire</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Insurance" type="sd:BVG-LPP-CustomerIdentificationMultiType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Versicherer</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Assurance</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ExpectedAvailability" type="xs:date" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Erwartete Verfügbarkeit</translation>
+                        <description>
+                            <short>
+                                Erwartete Verfügbarkeit der Rückmeldung
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Disponibilité attendue</translation>
+                        <description>
+                            <short>Disponibilité attendue des contributions</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+    <xs:complexType name="SuccessType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>erfolgreich</translation>
+                <description>
+                    <short>Erfolgreiche Bereitstellung der Beiträge</short>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Succès</translation>
+                <description>
+                    <short>Préparation des contributions avec succès</short>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:sequence>
+            <xs:element name="AddresseeContext" type="tns:AddresseeContextType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Adress-Kontext</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Contexte du destinataire</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Insurance" type="sd:BVG-LPP-CustomerIdentificationMultiType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Versicherer</translation>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Assurance</translation>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="ChangesConsideredUpTo" type="xs:date">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Änderungen berücksichtigt bis</translation>
+                        <description>
+                            <short>
+                                Änderungen berücksichtigt bis zu diesem Datum
+                                (z.B. Mutationen, Eintritte oder Austritte)
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Modifications pris en considération jusqu'au (date))</translation>
+                        <description>
+                            <short>Modifications pris en considération jusqu'au (date)
+                        (p.e. mutations, entrées et sorties)</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="CodeDescriptions" type="sd:BVG-LPP-CodeDescriptionsType" minOccurs="0">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Codes-Beschreibungen</translation>
+                        <description>
+                            <short>Kurz-Beschreibungen der BVG-Codes</short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Description des codes</translation>
+                        <description>
+                            <short>Courte description des codes LPP</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Staff" type="sd:ContributionsStaffType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Beschäftigte</translation>
+                        <description>
+                            <short>
+                                Beschäftigte (Mitarbeiter) des Unternehmens
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Employés</translation>
+                        <description>
+                            <short>Employés de l'entreprise</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+            <xs:element name="Summary" type="sd:SummaryType">
+                <xs:annotation>
+                    <xs:documentation xml:lang="de">
+                        <translation>Zusammenfassung</translation>
+                        <description>
+                            <short>
+                                Zusammenfassung bzw. Überblick der wesentlichen Informationen
+                                einer Rückmeldung.
+                            </short>
+                        </description>
+                    </xs:documentation>
+                    <xs:documentation xml:lang="fr">
+                        <translation>Résumé</translation>
+                        <description>
+                            <short>Résumé des informations pertinentes d'une réponse</short>
+                        </description>
+                    </xs:documentation>
+                </xs:annotation>
+            </xs:element>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="EmptyType"/>
+    <!-- simple types
+    -->
+    <xs:simpleType name="QualityLevelType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Qualitäts-Stufen</translation>
+                <description>
+                    <short>
+                        Qualtäts-Stufen der Übermittlung
+                    </short>
+                    <technical>
+                        Folgende Stufen gelten
+                        Validity: erste Stufe
+                        Plausibility: zweite Stufe
+                        Acceptance: dritte Stufe
+                    </technical>
+                </description>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Niveaux de qualité</translation>
+                <description>
+                    <short>
+                        Niveaux de qualité de la transmission
+                    </short>
+                    <technical>
+                        Il existe les niveaux suivants:
+                        Validity: premier niveau
+                        Plausibility: deuxième niveau
+                        Acceptance: troisième niveau
+                    </technical>
+                </description>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="Validity"/>
+            <xs:enumeration value="Plausibility"/>
+            <xs:enumeration value="Acceptance"/>
+            <!-- Validity:      first level check -->
+            <!-- Plausibility:  second level check -->
+            <!-- Acceptance:    third level check -->
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="ResponseCodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Antwort-Code</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Code de la réponse</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="accepted"/>
+            <xs:enumeration value="acceptedWithWarning"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="FaultCodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Fehler-Code</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Code de l'erreur</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="NOT_accepted"/>
+            <xs:enumeration value="NOT_plausible"/>
+            <xs:enumeration value="NOT_valid"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="DescriptionCodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Beschreibungscode</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Code de la description</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:nonNegativeInteger">
+            <xs:totalDigits value="7"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="LanguageCodeType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Sprachcode</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Code de langage</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:NMTOKEN">
+            <xs:enumeration value="de"/>
+            <xs:enumeration value="fr"/>
+            <xs:enumeration value="it"/>
+            <xs:enumeration value="en"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="JobKeyType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Eindeutiger Bezeichner für den Job
+                </translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Identificateur unique pour la commande
+                </translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:minLength value="10"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="IDType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="255"/>
+        </xs:restriction>
+    </xs:simpleType>
+    <xs:simpleType name="EmailAddressType">
+        <xs:annotation>
+            <xs:documentation xml:lang="de">
+                <translation>Email Adresse</translation>
+            </xs:documentation>
+            <xs:documentation xml:lang="fr">
+                <translation>Adresse e-mail</translation>
+            </xs:documentation>
+        </xs:annotation>
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[^@]+@[^\.]+\..+"/>
+        </xs:restriction>
+    </xs:simpleType>
+</xs:schema>

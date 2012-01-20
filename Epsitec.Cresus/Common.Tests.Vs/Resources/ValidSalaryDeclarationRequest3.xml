@@ -1,0 +1,167 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<DeclareSalary xmlns="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclarationServiceTypes" xmlns:ct="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclarationContainer" xmlns:sd="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclaration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <!-- state of standardisation: DRAFT
+        publication: 2009-07-08
+        a. boehm
+        
+        business-view  = NOK  d.h. Werte sind zum Teil nicht sinnvoll 
+        technical-view = OK    
+    -->
+  <ct:RequestContext>
+    <ct:UserAgent>
+      <ct:Producer>itServe AG</ct:Producer>
+      <ct:Name>DRAFT</ct:Name>
+      <ct:Version>0.1</ct:Version>
+      <ct:Certificate>None</ct:Certificate>
+      <ct:ELM-SalaryStandardVersion>3.0</ct:ELM-SalaryStandardVersion>
+    </ct:UserAgent>
+    <ct:CompanyName>
+      <sd:HR-RC-Name>String</sd:HR-RC-Name>
+    </ct:CompanyName>
+    <ct:TransmissionDate>2011-11-28T16:21:49.8458566+01:00</ct:TransmissionDate>
+    <ct:RequestID>EPSI-634580905098458566</ct:RequestID>
+    <ct:LanguageCode>fr</ct:LanguageCode>
+    <ct:MonitoringID>epsitec</ct:MonitoringID>
+  </ct:RequestContext>
+  <ct:Job>
+    <ct:Addressees>
+      <ct:BVG-LPP institutionIDRef="#Oldsoft">
+        <ct:ProcessByDistributor>true</ct:ProcessByDistributor>
+      </ct:BVG-LPP>
+    </ct:Addressees>
+  </ct:Job>
+  <ct:SalaryDeclaration schemaVersion="0.0" xmlns="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclaration" xmlns:ct="http://www.swissdec.ch/schema/sd/20090803/SalaryDeclarationContainer">
+    <Company>
+      <CompanyDescription>
+        <Name>
+          <HR-RC-Name>ICHAG</HR-RC-Name>
+        </Name>
+        <Address>
+          <Street>Länggassstrasse 26</Street>
+          <Postbox>690</Postbox>
+          <ZIP-Code>3000</ZIP-Code>
+          <City>Bern 9</City>
+        </Address>
+        <UID-EHRA>CH-645.1.234.567-3</UID-EHRA>
+        <UID-BFS>CHE-123.456.789</UID-BFS>
+        <BUR-REE>
+          <BUR-REE-Number>12345678</BUR-REE-Number>
+          <Address>
+            <Street>Überstrasse 12</Street>
+            <Postbox>3973</Postbox>
+            <ZIP-Code>3000</ZIP-Code>
+            <City>Bern</City>
+          </Address>
+          <CompanyWorkingTime CompanyWorkingTimeID="#123">
+            <WeeklyHoursAndLessons>
+              <WeeklyHours>45.00</WeeklyHours>
+              <WeeklyLessons>34</WeeklyLessons>
+            </WeeklyHoursAndLessons>
+          </CompanyWorkingTime>
+          <CompanyWorkingTime CompanyWorkingTimeID="#123y">
+            <WeeklyHoursAndLessons>
+              <WeeklyHours>42.00</WeeklyHours>
+              <WeeklyLessons>31</WeeklyLessons>
+            </WeeklyHoursAndLessons>
+          </CompanyWorkingTime>
+        </BUR-REE>
+        <BUR-REE>
+          <!-- BUR-REE-Number unique -->
+          <BUR-REE-Number>87654321</BUR-REE-Number>
+          <Address>
+            <Street>Überstrasse 12</Street>
+            <Postbox>3973</Postbox>
+            <ZIP-Code>3000</ZIP-Code>
+            <City>Bern</City>
+          </Address>
+          <CompanyWorkingTime CompanyWorkingTimeID="#123x">
+            <WeeklyHoursAndLessons>
+              <WeeklyHours>45.00</WeeklyHours>
+              <WeeklyLessons>34</WeeklyLessons>
+            </WeeklyHoursAndLessons>
+          </CompanyWorkingTime>
+        </BUR-REE>
+      </CompanyDescription>
+      <!-- ===================================== -->
+      <!-- staffs -->
+      <!-- ===================================== -->
+      <Staff>
+        <Person>
+          <Particulars>
+            <Social-InsuranceIdentification>
+              <AHV-AVS-Number>123.45.178.128</AHV-AVS-Number>
+            </Social-InsuranceIdentification>
+            <EmployeeNumber>0100</EmployeeNumber>
+            <Lastname>Balmer</Lastname>
+            <Firstname>Fredi</Firstname>
+            <Sex>M</Sex>
+            <DateOfBirth>1945-03-16</DateOfBirth>
+            <Nationality>CH</Nationality>
+            <CivilStatus>married</CivilStatus>
+            <Address>
+              <Street>Länggassstrasse 26</Street>
+              <Postbox>690</Postbox>
+              <Locality>Länggassquartier</Locality>
+              <ZIP-Code>3000</ZIP-Code>
+              <City>Bern 9</City>
+              <Country>CH</Country>
+            </Address>
+            <ResidenceCanton>ZG</ResidenceCanton>
+          </Particulars>
+          <Work>
+            <ActivityRate>99</ActivityRate>
+            <WorkplaceCanton>BE</WorkplaceCanton>
+          </Work>
+          <BVG-LPP-Salaries>
+            <BVG-LPP-Salary institutionIDRef="#Oldsoft">
+              <ValidAsOf>2005-01-01</ValidAsOf>
+              <BVG-LPP-Code>MM</BVG-LPP-Code>
+              <BVG-LPP-AnnualBasis>65000.00</BVG-LPP-AnnualBasis>
+            </BVG-LPP-Salary>
+          </BVG-LPP-Salaries>
+        </Person>
+      </Staff>
+      <!-- ===================================== -->
+      <!-- Insurances -->
+      <!-- ===================================== -->
+      <Insurances>
+        <BVG-LPP institutionID="#Oldsoft">
+          <InsuranceID>2600.88 1</InsuranceID>
+          <InsuranceCompanyName>Pensionskasse Oldsoft</InsuranceCompanyName>
+          <CustomerIdentity>1099-8777.1</CustomerIdentity>
+          <ContractIdentity>4500-0</ContractIdentity>
+          <PayrollUnit>ABC</PayrollUnit>
+          <GeneralValidAsOf>2009-01-01</GeneralValidAsOf>
+        </BVG-LPP>
+      </Insurances>
+      <!-- ===================================== -->
+      <!-- SalaryTotals -->
+      <!-- ===================================== -->
+      <SalaryTotals />
+      <SalaryCounters>
+        <NumberOf-AHV-AVS-Salary-Tags>0</NumberOf-AHV-AVS-Salary-Tags>
+        <NumberOf-UVG-LAA-Salary-Tags>0</NumberOf-UVG-LAA-Salary-Tags>
+        <NumberOf-UVGZ-LAAC-Salary-Tags>0</NumberOf-UVGZ-LAAC-Salary-Tags>
+        <NumberOf-KTG-AMC-Salary-Tags>0</NumberOf-KTG-AMC-Salary-Tags>
+        <NumberOf-BVG-LPP-Salary-Tags>1</NumberOf-BVG-LPP-Salary-Tags>
+        <NumberOf-FAK-CAF-Salary-Tags>0</NumberOf-FAK-CAF-Salary-Tags>
+        <NumberOf-TaxAnnuity-Tags>0</NumberOf-TaxAnnuity-Tags>
+        <NumberOf-TaxSalary-Tags>0</NumberOf-TaxSalary-Tags>
+        <NumberOf-StatisticSalary-Tags>0</NumberOf-StatisticSalary-Tags>
+      </SalaryCounters>
+      <Statistic>
+        <PayAgreement>individualContract</PayAgreement>
+      </Statistic>
+    </Company>
+    <GeneralSalaryDeclarationDescription>
+      <CreationDate>2005-09-04T14:14:00</CreationDate>
+      <AccountingPeriod>2005</AccountingPeriod>
+      <ContactPerson>
+        <Name>Marcel René Müller</Name>
+        <EmailAddress>ichag@xxxxx.ch</EmailAddress>
+        <PhoneNumber>031 345 23 87</PhoneNumber>
+      </ContactPerson>
+      <Comments>Bitte senden Sie eine Suva-Apotheke an hôtel-garçon in genève</Comments>
+    </GeneralSalaryDeclarationDescription>
+  </ct:SalaryDeclaration>
+</DeclareSalary>

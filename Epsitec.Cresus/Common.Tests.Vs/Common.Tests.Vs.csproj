@@ -44,6 +44,8 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.XML" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDependentAssemblyPaths Condition=" '$(VS100COMNTOOLS)' != '' " Include="$(VS100COMNTOOLS)..\IDE\PrivateAssemblies">
@@ -56,6 +58,7 @@
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Res.cs" />
     <Compile Include="Support\EntityEngine\UnitTestEntities.cs" />
     <Compile Include="Support\EntityEngine\UnitTestEntityNullReferenceVirtualizer.cs" />
+    <Compile Include="Support\Extensions\UnitTestAssemblyExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestDictionaryExtensions.cs" />
     <Compile Include="Support\Extensions\UnitTestEntityModifications.cs" />
     <Compile Include="Support\Extensions\UnitTestEnumerableExtensions.cs" />
@@ -67,6 +70,7 @@
     <Compile Include="Support\UnitTestDisposableWrapper.cs" />
     <Compile Include="Support\UnitTestSafeCounter.cs" />
     <Compile Include="Support\UnitTestTimedReaderWriterLock.cs" />
+    <Compile Include="Support\UnitTestXmlValidator.cs" />
     <Compile Include="TestHelper.cs" />
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
     <Compile Include="Support\UnitTestLambdaComparer.cs" />
@@ -76,6 +80,28 @@
     <Compile Include="Types\UnitTestIReadOnly.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Resources\InvalidSalaryDeclarationRequest4.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InvalidSalaryDeclarationRequest1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InvalidSalaryDeclarationRequest2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\InvalidSalaryDeclarationRequest3.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="Resources\TextResource.txt" />
+    <Content Include="Resources\ValidSalaryDeclarationRequest1.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ValidSalaryDeclarationRequest2.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\ValidSalaryDeclarationRequest3.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
@@ -88,6 +114,18 @@
     <Content Include="Resources\Common.Tests.Vs\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="Resources\SalaryDeclaration.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SalaryDeclarationContainer.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Resources\SalaryDeclarationServiceTypes.xsd">
+      <SubType>Designer</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common.UnitTesting\Common.UnitTesting.csproj">

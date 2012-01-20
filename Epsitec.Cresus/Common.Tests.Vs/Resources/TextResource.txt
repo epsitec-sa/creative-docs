@@ -1,0 +1,2 @@
+﻿I am a super text resource and I am waiting to be read by this
+wonderfull method called AssemblyExtensions.GetResourceDataAsString() !
