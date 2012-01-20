@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System;
@@ -16,19 +16,29 @@ namespace Epsitec.Common.Support
 		/// Initializes a new instance of the <see cref="AppDomainStarter"/> class.
 		/// </summary>
 		/// <param name="name">The name of the application domain (defaults to a GUID).</param>
-		/// <param name="info">The application domain setup information (defaults to shadow copying files).</param>
-		public AppDomainStarter(string name = null, AppDomainSetup info = null)
+		/// <param name="shadowCopyFiles">If set to <c>true</c>, loads assemblies as shadow copy files (defaults to <c>true</c>).</param>
+		public AppDomainStarter(string name = null, bool shadowCopyFiles = true)
 		{
 			this.name = name ?? System.Guid.NewGuid ().ToString ("D");
 
-			if (info == null)
+			var info = new System.AppDomainSetup
 			{
-				info = new System.AppDomainSetup
-				{
-					ShadowCopyFiles = "true"
-				};
-			}
-			
+				ShadowCopyFiles = shadowCopyFiles ? "true" : "false"
+			};
+
+			this.domain = System.AppDomain.CreateDomain (this.name, null, info);
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="AppDomainStarter"/> class.
+		/// </summary>
+		/// <param name="name">The name of the application domain.</param>
+		/// <param name="info">The application domain setup information.</param>
+		public AppDomainStarter(string name, AppDomainSetup info)
+		{
+			System.Diagnostics.Debug.Assert (name != null);
+			System.Diagnostics.Debug.Assert (info != null);
+
 			this.domain = System.AppDomain.CreateDomain (this.name, null, info);
 		}
 

@@ -1,5 +1,5 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 
@@ -40,6 +40,15 @@ namespace Epsitec.Common.Support
 				this.action ();
 
 				this.actionDone = true;
+
+				if (this.actionFinally != null)
+				{
+					while (this.actionFinally.Count > 0)
+					{
+						var actionFinally = this.actionFinally.Dequeue ();
+						actionFinally ();
+					}
+				}
 			}
 
 			System.GC.SuppressFinalize (this);
@@ -63,6 +72,18 @@ namespace Epsitec.Common.Support
 			return new DisposableWrapper (action);
 		}
 
+		/// <summary>
+		/// Gets an instance of <see cref="IDisposable"/> that will call <paramref name="action"/>
+		/// when disposed for the first time and that will throw an <see cref="System.InvalidOperationException"/>
+		/// if not disposed.
+		/// </summary>
+		/// <typeparam name="T">The type of the value.</typeparam>
+		/// <param name="action">The <see cref="Action"/> to execute when disposed.</param>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// The <see cref="IDisposable"/> object
+		/// </returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="action"/> is <c>null</c>.</exception>
 		public static DisposableWrapper<T> CreateDisposable<T>(System.Action action, T value)
 		{
 			return DisposableWrapper<T>.CreateDisposable (action, value);
@@ -122,7 +143,19 @@ namespace Epsitec.Common.Support
 		}
 
 
+		protected void EnqueueFinallyAction(System.Action action)
+		{
+			if (this.actionFinally == null)
+			{
+				this.actionFinally = new Queue<System.Action> ();
+			}
+
+			this.actionFinally.Enqueue (action);
+		}
+
+
 		private readonly System.Action			action;
+		private Queue<System.Action>			actionFinally;
 		private bool							actionDone;
 	}
 }
