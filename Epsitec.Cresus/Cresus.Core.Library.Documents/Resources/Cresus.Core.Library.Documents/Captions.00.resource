@@ -57,12 +57,6 @@
   <data name="Val.DocumentType.RelationSummary" id="K">&lt;s:data id="_0" f:Name="RelationSummary" f:Labels="{Collection {Text 'Résumé d&amp;amp;apos;un client'}}" /&gt;</data>
   <data name="Val.DocumentType.ArticleDefinitionSummary" id="K1">&lt;s:data id="_0" f:Name="ArticleDefinitionSummary" f:Labels="{Collection {Text 'Résumé d&amp;amp;apos;un article'}}" /&gt;</data>
   <data name="Val.DocumentType.MailContactLabel" id="K2">&lt;s:data id="_0" f:Name="MailContactLabel" f:Labels="{Collection {Text 'Etiquette pour un client'}}" /&gt;</data>
-  <data name="Val.PrintableEntities.None" id="K4">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text 'Aucun'}}" /&gt;</data>
-  <data name="Val.PrintableEntities.DocumentMetadata" id="K5">&lt;s:data id="_0" f:Name="DocumentMetadata" f:Labels="{Collection {Text 'Document commercial'}}" /&gt;</data>
-  <data name="Val.PrintableEntities.MailContact" id="K6">&lt;s:data id="_0" f:Name="MailContact" f:Labels="{Collection {Text 'Adresse'}}" /&gt;</data>
-  <data name="Val.PrintableEntities.Relation" id="K7">&lt;s:data id="_0" f:Name="Relation" f:Labels="{Collection {Text 'Client'}}" /&gt;</data>
-  <data name="Val.PrintableEntities.ArticleDefinition" id="K8">&lt;s:data id="_0" f:Name="ArticleDefinition" f:Labels="{Collection {Text 'Article'}}" /&gt;</data>
-  <data name="Typ.PrintableEntities" id="K3">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="PrintableEntities" f:_1.SystemType="E:Epsitec.Cresus.Core.Business.PrintableEntities, Cresus.Core.Library.Documents" f:_2.EnumValues="{Collection {Text '0 [HVK4]'}, {Text '1 [HVK5]'}, {Text '2 [HVK6]'}, {Text '3 [HVK7]'}, {Text '4 [HVK8]'}}" f:Labels="{Collection {Text 'Documents imprimables'}}" /&gt;</data>
   <data name="Val.PageType.Unknown" id="AQ1">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Inconnu'}}" /&gt;</data>
   <data name="Val.PageType.All" id="AR1">&lt;s:data id="_0" f:Name="All" f:Labels="{Collection {Text 'Toutes'}}" /&gt;</data>
   <data name="Val.PageType.Copy" id="AS1">&lt;s:data id="_0" f:Name="Copy" f:Labels="{Collection {Text 'Copies'}}" /&gt;</data>
