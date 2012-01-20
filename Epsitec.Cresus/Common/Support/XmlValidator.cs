@@ -97,12 +97,28 @@ namespace Epsitec.Common.Support
 		}
 
 
+		public static XmlValidator Create(FileInfo xsdFile)
+		{
+			var xsdFiles = new List<FileInfo> () { xsdFile };
+
+			return XmlValidator.Create (xsdFiles);
+		}
+
+
 		public static XmlValidator Create(IEnumerable<FileInfo> xsdFiles)
 		{
 			var xsdContents = from xsdFile in xsdFiles
 							  select File.ReadAllText (xsdFile.FullName);
 
 			return new XmlValidator (xsdContents);
+		}
+
+
+		public static XmlValidator Create(Assembly assembly, string xsdResourceName)
+		{
+			var xsdResourceNames = new List<string> () { xsdResourceName };
+
+			return XmlValidator.Create (assembly, xsdResourceNames);
 		}
 
 
