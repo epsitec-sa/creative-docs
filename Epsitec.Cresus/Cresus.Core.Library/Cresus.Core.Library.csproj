@@ -86,7 +86,6 @@
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
-    <Compile Include="Widgets\CatcherFrameBox.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
     <Compile Include="Workflows\WorkflowActionAttribute.cs" />
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
