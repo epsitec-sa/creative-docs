@@ -38,11 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.optionsController = new BilanOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as BilanOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
-		}
-
-		protected override void FinalizeOptions(FrameBox parent)
-		{
-			this.optionsController.FinalizeUI (parent);
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
 		protected override void OptinsChanged()
@@ -58,8 +54,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.FinalUpdate ();
 		}
 
-		public override void UpdateData()
+
+		public override bool HasShowSearchPanel
 		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override bool HasShowOptionsPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override bool HasShowInfoPanel
+		{
+			get
+			{
+				return false;
+			}
 		}
 
 

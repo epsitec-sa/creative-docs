@@ -27,8 +27,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.comptabilitéEntity = comptabilitéEntity;
 			this.options            = options;
-
-			this.toolbarShowed = true;
 		}
 
 
@@ -37,6 +35,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.options;
+			}
+		}
+
+		public bool ShowPanel
+		{
+			get
+			{
+				return this.showPanel;
+			}
+			set
+			{
+				this.showPanel = value;
+				this.toolbar.Visibility = this.showPanel;
 			}
 		}
 
@@ -444,51 +455,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		public void FinalizeUI(FrameBox parent)
-		{
-			//	Widgets créés en dernier, pour être par-dessus tout le reste.
-			this.showHideButton = new GlyphButton
-			{
-				Parent        = parent,
-				Anchor        = AnchorStyles.TopRight,
-				PreferredSize = new Size (16, 16),
-				ButtonStyle   = ButtonStyle.Slider,
-			};
-
-			this.showHideButton.Clicked += delegate
-			{
-				this.toolbarShowed = !this.toolbarShowed;
-				this.UpdateShowHideButton ();
-			};
-
-			this.UpdateShowHideButton ();
-		}
-
-		public double TopOffset
-		{
-			set
-			{
-				if (this.topOffset != value)
-				{
-					this.topOffset = value;
-					this.UpdateShowHideButton ();
-				}
-			}
-		}
-
-
-		private void UpdateShowHideButton()
-		{
-			//	Met à jour le bouton pour montrer/cacher la barre d'icône.
-			this.showHideButton.GlyphShape = this.toolbarShowed ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			this.showHideButton.Margins = new Margins (0, 0, this.toolbarShowed ? this.topOffset+20 : this.topOffset+0, 0);
-
-			ToolTip.Default.SetToolTip (this.showHideButton, this.toolbarShowed ? "Cache les options" : "Montre les options");
-
-			this.toolbar.Visibility   = this.toolbarShowed;
-		}
-
-
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
 		protected readonly AbstractOptions						options;
 
@@ -504,8 +470,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected StaticText									frameBudgetDisplayMode;
 		protected TextFieldCombo								fieldBudgetDisplayMode;
 
-		protected GlyphButton									showHideButton;
-		protected bool											toolbarShowed;
-		protected double										topOffset;
+		protected bool											showPanel;
 	}
 }

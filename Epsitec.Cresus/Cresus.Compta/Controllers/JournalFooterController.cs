@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
 			: base (app, businessContext, comptabilitéEntity, dataAccessor, columnMappers, abstractController, arrayController)
 		{
-			this.infoShowed = true;
 		}
 
 
@@ -106,23 +105,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
-
-			//	Crée le bouton pour montrer/cacher.
-			this.infoShowHideButton = new GlyphButton
-			{
-				Parent        = parent,
-				Anchor        = AnchorStyles.BottomRight,
-				PreferredSize = new Size (16, 16),
-				ButtonStyle   = ButtonStyle.Slider,
-			};
-
-			this.infoShowHideButton.Clicked += delegate
-			{
-				this.infoShowed = !this.infoShowed;
-				this.UpdateInfoShowHideButton ();
-			};
-
-			this.UpdateInfoShowHideButton ();
 
 			base.CreateUI (parent, updateArrayContentAction);
 		}
@@ -234,7 +216,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void FinalUpdate()
 		{
-			this.UpdateInfoShowHideButton ();
+			this.UpdateAfterShowInfoPanelChanged ();
 		}
 
 		protected override FormattedText GetOperationDescription(bool modify)
@@ -587,7 +569,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateFooterInfo()
 		{
-			if (!this.infoShowed)
+			if (!this.ShowInfoPanel)
 			{
 				return;
 			}
@@ -598,7 +580,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateFooterInfo(FormattedText numéro, bool isDébit)
 		{
-			if (!this.infoShowed)
+			if (!this.ShowInfoPanel)
 			{
 				return;
 			}
@@ -625,23 +607,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.abstractController.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
 		}
 
-		private void UpdateInfoShowHideButton()
+		protected override void UpdateAfterShowInfoPanelChanged()
 		{
-			//	Met à jour le bouton pour montrer/cacher la barre d'icône.
-			this.infoShowHideButton.GlyphShape = this.infoShowed ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			this.infoShowHideButton.Margins = new Margins (0, 0, 0, this.infoShowed ? 47 : 2);
+			this.infoFrameSeparator.Visibility = this.ShowInfoPanel;
+			this.infoFrameBox.Visibility       = this.ShowInfoPanel;
 
-			ToolTip.Default.SetToolTip (this.infoShowHideButton, this.infoShowed ? "Cache les informations sur les comptes" : "Montre les informations sur les comptes");
-
-			this.infoFrameSeparator.Visibility = this.infoShowed;
-			this.infoFrameBox.Visibility       = this.infoShowed;
-
-			if (this.bottomToolbarController != null)
-			{
-				this.bottomToolbarController.BottomOffset = this.infoShowed ? 44 : 0;
-			}
-
-			if (this.infoShowed)
+			if (this.ShowInfoPanel)
 			{
 				this.UpdateFooterInfo ();
 			}
@@ -673,9 +644,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Separator							créditInfoSeparator;
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
-		private GlyphButton							infoShowHideButton;
 
 		private bool								isMulti;
-		private bool								infoShowed;
 	}
 }

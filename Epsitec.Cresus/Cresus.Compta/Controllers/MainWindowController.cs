@@ -45,6 +45,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
 
+			this.showSearchPanel  = false;
+			this.showOptionsPanel = false;
+			this.showInfoPanel    = true;
+
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 
@@ -157,6 +161,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controller.CreateUI (this.mainFrame);
 				this.controllers.Add (this.controller);
 			}
+
+			this.UpdatePanels ();
 		}
 
 		private AbstractController CreateController(Window parentWindow, Command command)
@@ -249,6 +255,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 			foreach (var controller in this.controllers)
 			{
 				controller.Update ();
+			}
+		}
+
+		private void UpdatePanels()
+		{
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
+				cs.ActiveState = this.showSearchPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowSearchPanel;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
+				cs.ActiveState = this.showOptionsPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowOptionsPanel;
+			}
+			
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Info);
+				cs.ActiveState = this.showInfoPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowInfoPanel;
+			}
+
+			if (this.controller != null)
+			{
+				this.controller.ShowSearchPanel  = this.showSearchPanel;
+				this.controller.ShowOptionsPanel = this.showOptionsPanel;
+				this.controller.ShowInfoPanel    = this.showInfoPanel;
 			}
 		}
 
@@ -401,6 +435,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.OpenNewWindow (e.Command);
 		}
 
+
+		[Command (Res.CommandIds.Panel.Search)]
+		private void CommandPanelSearch()
+		{
+			this.showSearchPanel = !this.showSearchPanel;
+			this.UpdatePanels ();
+		}
+
+		[Command (Res.CommandIds.Panel.Options)]
+		private void CommandPanelOptions()
+		{
+			this.showOptionsPanel = !this.showOptionsPanel;
+			this.UpdatePanels ();
+		}
+
+		[Command (Res.CommandIds.Panel.Info)]
+		private void CommandPanelInfo()
+		{
+			this.showInfoPanel = !this.showInfoPanel;
+			this.UpdatePanels ();
+		}
+
+
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{
@@ -509,5 +566,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private RibbonController						ribbonController;
 		private FrameBox								mainFrame;
 		private bool									dirty;
+		private bool									showSearchPanel;
+		private bool									showOptionsPanel;
+		private bool									showInfoPanel;
 	}
 }

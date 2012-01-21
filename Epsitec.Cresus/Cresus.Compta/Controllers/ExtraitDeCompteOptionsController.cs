@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
 				PreferredHeight     = 81,
 				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 20, 0, 6),
+				Margins             = new Margins (0, 0, 0, 6),
 				Padding             = new Margins (5),
 			};
 

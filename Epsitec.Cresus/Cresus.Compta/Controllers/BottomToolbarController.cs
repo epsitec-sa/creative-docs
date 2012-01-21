@@ -26,7 +26,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public BottomToolbarController(BusinessContext businessContext)
 		{
 			this.businessContext = businessContext;
-			this.toolbarShowed = true;
+		}
+
+
+		public bool ShowPanel
+		{
+			get
+			{
+				return this.showPanel;
+			}
+			set
+			{
+				this.showPanel = value;
+				this.toolbar.Visibility = this.showPanel;
+			}
 		}
 
 
@@ -53,23 +66,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public double BottomOffset
-		{
-			get
-			{
-				return this.bottomOffset;
-			}
-			set
-			{
-				if (this.bottomOffset != value)
-				{
-					this.bottomOffset = value;
-					this.UpdateShowHideButton ();
-				}
-			}
-		}
-
-
 		public void SetOperationDescription(FormattedText text, bool hilited)
 		{
 #if false
@@ -90,47 +86,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void FinalizeUI(FrameBox parent)
-		{
-			//	Widgets créés en dernier, pour être par-dessus tout le reste.
-			this.showHideButton = new GlyphButton
-			{
-				Parent        = parent,
-				Anchor        = AnchorStyles.BottomRight,
-				PreferredSize = new Size (16, 16),
-				ButtonStyle   = ButtonStyle.Slider,
-			};
-
-			this.showHideButton.Clicked += delegate
-			{
-				this.toolbarShowed = !this.toolbarShowed;
-				this.UpdateShowHideButton ();
-			};
-
-			this.UpdateShowHideButton ();
-		}
-
-
-		private void UpdateShowHideButton()
-		{
-			//	Met à jour le bouton pour montrer/cacher la barre d'icône.
-			this.showHideButton.GlyphShape = this.toolbarShowed ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
-			this.showHideButton.Margins = new Margins (0, 0, 0, this.toolbarShowed ? 25+this.bottomOffset : 2);
-
-			ToolTip.Default.SetToolTip (this.showHideButton, this.toolbarShowed ? "Cache la barre d'information" : "Montre la barre d'information");
-
-			this.toolbar.Visibility   = this.toolbarShowed;
-		}
-
-
 		private static readonly double			toolbarHeight = 20;
 
 		private readonly BusinessContext		businessContext;
 
 		private FrameBox						toolbar;
 		private StaticText						operationLabel;
-		private GlyphButton						showHideButton;
-		private double							bottomOffset;
-		private bool							toolbarShowed;
+		private bool							showPanel;
 	}
 }

@@ -112,7 +112,7 @@
     <Compile Include="Controllers\PPOptionsController.cs" />
     <Compile Include="Controllers\SearchingController.cs" />
     <Compile Include="Controllers\SearchingTabController.cs" />
-    <Compile Include="Controllers\TopToolbarController.cs" />
+    <Compile Include="Controllers\TopSearchingController.cs" />
     <Compile Include="Controllers\UIBuilder.cs" />
     <Compile Include="Entities\ComptabilitéCompteEntity.cs" />
     <Compile Include="Entities\ComptabilitéEcritureEntity.cs" />
@@ -168,6 +168,9 @@
     <EmbeddedResource Include="Images\Global.Settings.icon" />
     <EmbeddedResource Include="Images\File.New.icon" />
     <EmbeddedResource Include="Images\File.SaveAs.icon" />
+    <EmbeddedResource Include="Images\Panel.Info.icon" />
+    <EmbeddedResource Include="Images\Panel.Options.icon" />
+    <EmbeddedResource Include="Images\Panel.Search.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

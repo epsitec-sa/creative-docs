@@ -43,6 +43,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public bool ShowInfoPanel
+		{
+			get
+			{
+				return this.bottomToolbarController.ShowPanel;
+			}
+			set
+			{
+				this.bottomToolbarController.ShowPanel = value;
+				this.UpdateAfterShowInfoPanelChanged ();
+			}
+		}
+
+		protected virtual void UpdateAfterShowInfoPanelChanged()
+		{
+		}
+
+
 		public virtual void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
 			this.parent = parent;
@@ -134,11 +152,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-
-		public void FinalizeUI(FrameBox parent)
-		{
-			this.bottomToolbarController.FinalizeUI (parent);
-		}
 
 		public virtual void FinalUpdate()
 		{

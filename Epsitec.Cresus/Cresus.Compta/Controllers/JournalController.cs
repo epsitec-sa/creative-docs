@@ -34,6 +34,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasShowSearchPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override bool HasShowOptionsPanel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public override bool HasShowInfoPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+
 		protected override void FinalUpdate()
 		{
 			base.FinalUpdate ();
@@ -52,15 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.footerController = new JournalFooterController (this.app, this.businessContext, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
-		}
-
-		protected override void FinalizeFooter(FrameBox parent)
-		{
-			this.footerController.FinalizeUI (parent);
-		}
-
-		public override void UpdateData()
-		{
+			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
 		}
 
 

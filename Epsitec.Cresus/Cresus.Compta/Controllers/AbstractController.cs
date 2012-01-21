@@ -68,13 +68,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock	= DockStyle.Fill,
 			};
 
-			this.CreateTopToolbar (this.frameBox);
+			this.CreateTopSearching (this.frameBox);
 			this.CreateOptions (this.frameBox);
 			this.CreateArray (this.frameBox);
 			this.CreateFooter (this.frameBox);
-			this.FinalizeToolbars (this.frameBox);
-			this.FinalizeOptions (this.frameBox);
-			this.FinalizeFooter (this.frameBox);
 
 			this.UpdateArrayContent ();
 
@@ -112,43 +109,106 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected virtual void FinalUpdate()
 		{
-			this.ShowHideToolbar ();
-
 			if (this.footerController != null)
 			{
 				this.footerController.FinalUpdate ();
 			}
 		}
 
-		public virtual void UpdateData()
+
+		public virtual bool HasShowSearchPanel
 		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public virtual bool HasShowOptionsPanel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public virtual bool HasShowInfoPanel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public bool ShowSearchPanel
+		{
+			get
+			{
+				return this.topSearchingController.ShowPanel;
+			}
+			set
+			{
+				this.topSearchingController.ShowPanel = value;
+			}
+		}
+
+		public bool ShowOptionsPanel
+		{
+			get
+			{
+				if (this.optionsController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.optionsController.ShowPanel;
+				}
+			}
+			set
+			{
+				if (this.optionsController != null)
+				{
+					this.optionsController.ShowPanel = value;
+				}
+			}
+		}
+
+		public bool ShowInfoPanel
+		{
+			get
+			{
+				if (this.footerController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.footerController.ShowInfoPanel;
+				}
+			}
+			set
+			{
+				if (this.footerController != null)
+				{
+					this.footerController.ShowInfoPanel = value;
+				}
+			}
 		}
 
 		
-		#region Toolbar
-		private void CreateTopToolbar(FrameBox parent)
+		#region Searching panel
+		private void CreateTopSearching(FrameBox parent)
 		{
-			this.topToolbarController = new TopToolbarController (this.businessContext, this.columnMappers);
-			this.topToolbarController.CreateUI (parent, this.ShowHideToolbar, this.SearchStartAction, this.SearchNextAction);
-		}
-
-		private void FinalizeToolbars(FrameBox parent)
-		{
-			this.topToolbarController.FinalizeUI (parent);
-		}
-
-		private void ShowHideToolbar()
-		{
-			if (this.optionsController != null)
-			{
-				this.optionsController.TopOffset = this.topToolbarController.TopOffset;
-			}
+			this.topSearchingController = new TopSearchingController (this.businessContext, this.columnMappers);
+			this.topSearchingController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
+			this.topSearchingController.ShowPanel = this.ShowSearchPanel;
 		}
 
 		private void SearchStartAction()
 		{
 			//	Appelé lorsque le critère de recherche a été modifié, et qu'il faut commencer une recherche.
-			this.dataAccessor.SearchUpdate (this.columnMappers.Select (x => x.Column), this.topToolbarController.SearchingData);
+			this.dataAccessor.SearchUpdate (this.columnMappers.Select (x => x.Column), this.topSearchingController.SearchingData);
 			this.BaseUpdateArrayContent ();
 			this.SearchUpdateLocator (true);
 			this.SearchUpdateTopToolbar ();
@@ -178,24 +238,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public void SearchUpdateAfterModification()
 		{
 			//	Appelé lorsque les données ont été modifiées, et qu'il faut mettre à jour les recherches.
-			this.dataAccessor.SearchUpdate (this.columnMappers.Select (x => x.Column), this.topToolbarController.SearchingData);
+			this.dataAccessor.SearchUpdate (this.columnMappers.Select (x => x.Column), this.topSearchingController.SearchingData);
 			this.SearchUpdateLocator (false);
 			this.SearchUpdateTopToolbar ();
 		}
 
 		public void SearchUpdateTopToolbar()
 		{
-			this.topToolbarController.SetSearchingCount (this.dataAccessor.Count, this.dataAccessor.SearchCount);
+			this.topSearchingController.SetSearchingCount (this.dataAccessor.Count, this.dataAccessor.SearchCount);
 		}
 		#endregion
 
 
 		#region Options
 		protected virtual void CreateOptions(FrameBox parent)
-		{
-		}
-
-		protected virtual void FinalizeOptions(FrameBox parent)
 		{
 		}
 
@@ -363,15 +419,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		#region Footer
 		protected virtual void CreateFooter(FrameBox parent)
 		{
 		}
-
-		protected virtual void FinalizeFooter(FrameBox parent)
-		{
-		}
-		#endregion
 
 
 		protected void InitializeColumnMapper()
@@ -429,7 +479,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractDataAccessor							dataAccessor;
 		protected List<ColumnMapper>							columnMappers;
 
-		protected TopToolbarController							topToolbarController;
+		protected TopSearchingController						topSearchingController;
 		protected AbstractOptionsController						optionsController;
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;

@@ -112,6 +112,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Panneaux");
+
+				Widget topSection, bottomSection;
+				this.CreateSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Search, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Options, large: false));
+
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Info, large: false));
+			}
+
+			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Accept));

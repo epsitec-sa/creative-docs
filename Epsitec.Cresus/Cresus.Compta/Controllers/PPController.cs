@@ -34,15 +34,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasShowSearchPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override bool HasShowOptionsPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		public override bool HasShowInfoPanel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new PPOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as PPOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
-		}
-
-		protected override void FinalizeOptions(FrameBox parent)
-		{
-			this.optionsController.FinalizeUI (parent);
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
 		protected override void OptinsChanged()
@@ -56,10 +77,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void FinalUpdate()
 		{
 			base.FinalUpdate ();
-		}
-
-		public override void UpdateData()
-		{
 		}
 
 
