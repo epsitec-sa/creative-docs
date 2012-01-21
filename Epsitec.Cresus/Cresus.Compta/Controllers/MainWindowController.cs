@@ -18,6 +18,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Dialogs;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.IO;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -317,7 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = ImportExport.Import (this.comptabilité, filename);
+				string err = CrésusComptabilité.ImportPlanComptable (this.comptabilité, filename);
 				this.UpdateControllers ();
 
 				if (!string.IsNullOrEmpty (err))

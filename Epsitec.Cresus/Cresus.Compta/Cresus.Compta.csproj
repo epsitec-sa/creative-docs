@@ -81,7 +81,7 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="ImportExport.cs" />
+    <Compile Include="IO\CrésusComptabilité.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
