@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Compta.IO
 	/// <summary>
 	/// Cette classe s'occupe des import/export avec l'ancien logiciel Crésus Comptabilité.
 	/// </summary>
-	public static class CrésusComptabilité
+	public class CrésusComptabilité
 	{
-		public static string ImportPlanComptable(ComptabilitéEntity comptabilité, string filename)
+		public string ImportPlanComptable(ComptabilitéEntity comptabilité, string filename)
 		{
 			//	Importe un plan comptable "crp".
 			string ext = System.IO.Path.GetExtension (filename).ToLower ();
@@ -27,11 +27,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			try
 			{
-				var lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+				this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
 
 				try
 				{
-					return CrésusComptabilité.ImportPlanComptable (comptabilité, lines);
+					return this.ImportPlanComptable (comptabilité);
 				}
 				catch (System.Exception ex)
 				{
@@ -44,45 +44,45 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private static string ImportPlanComptable(ComptabilitéEntity comptabilité, string[] lines)
+		private string ImportPlanComptable(ComptabilitéEntity comptabilité)
 		{
 			comptabilité.Journal.Clear ();
 			comptabilité.PlanComptable.Clear ();
 
 			//	Importe les données globales.
 			{
-				int i = CrésusComptabilité.IndexOfLine (lines, "TITLE=");
+				int i = this.IndexOfLine ("TITLE=");
 				if (i != -1)
 				{
-					comptabilité.Name = lines[i].Substring (6);
+					comptabilité.Name = this.lines[i].Substring (6);
 				}
 			}
 
 			{
-				int i = CrésusComptabilité.IndexOfLine (lines, "DATEBEG=");
+				int i = this.IndexOfLine ("DATEBEG=");
 				if (i != -1)
 				{
-					comptabilité.BeginDate = CrésusComptabilité.GetDate (lines[i].Substring (8));
+					comptabilité.BeginDate = this.GetDate (this.lines[i].Substring (8));
 				}
 			}
 
 			{
-				int i = CrésusComptabilité.IndexOfLine (lines, "DATEEND=");
+				int i = this.IndexOfLine ("DATEEND=");
 				if (i != -1)
 				{
-					comptabilité.EndDate = CrésusComptabilité.GetDate (lines[i].Substring (8));
+					comptabilité.EndDate = this.GetDate (this.lines[i].Substring (8));
 				}
 			}
 
 			//	Importe tous les comptes.
-			int indexCompte = CrésusComptabilité.IndexOfLine (lines, "BEGIN=COMPTES");
+			int indexCompte = this.IndexOfLine ("BEGIN=COMPTES");
 
 			var groups  = new Dictionary<string, string> ();
 			var boucles = new Dictionary<string, string> ();
 
-			while (++indexCompte < lines.Length)
+			while (++indexCompte < this.lines.Length)
 			{
-				var line = lines[indexCompte];
+				var line = this.lines[indexCompte];
 
 				if (string.IsNullOrEmpty (line))
 				{
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (line.StartsWith ("ENTRY"))
 				{
-					var numéro = CrésusComptabilité.GetEntryContentText (lines, indexCompte, "NUM");
-					var titre  = CrésusComptabilité.GetEntryContentText (lines, indexCompte, "NAME");
+					var numéro = this.GetEntryContentText (indexCompte, "NUM");
+					var titre  = this.GetEntryContentText (indexCompte, "NAME");
 
 					if (string.IsNullOrEmpty (numéro) || numéro.Contains ("/") || string.IsNullOrEmpty (titre))
 					{
@@ -108,29 +108,29 @@ namespace Epsitec.Cresus.Compta.IO
 
 					compte.Numéro    = numéro;
 					compte.Titre     = titre;
-					compte.Catégorie = CrésusComptabilité.GetEntryContentCatégorie (lines, indexCompte, "CAT");
-					compte.Type      = CrésusComptabilité.GetEntryContentType      (lines, indexCompte, "STATUS");
-					//compte.Monnaie   = CrésusComptabilité.GetEntryContentText      (lines, indexCompte, "CURRENCY");
+					compte.Catégorie = this.GetEntryContentCatégorie (indexCompte, "CAT");
+					compte.Type      = this.GetEntryContentType      (indexCompte, "STATUS");
+					//compte.Monnaie   = this.GetEntryContentText      (indexCompte, "CURRENCY");
 
-					var niveau = CrésusComptabilité.GetEntryContentInt (lines, indexCompte, "LEVEL");
+					var niveau = this.GetEntryContentInt (indexCompte, "LEVEL");
 					if (niveau.HasValue)
 					{
 						compte.Niveau = niveau.Value;
 					}
 
-					var ordre = CrésusComptabilité.GetEntryContentInt (lines, indexCompte, "ORDER");
+					var ordre = this.GetEntryContentInt (indexCompte, "ORDER");
 					if (ordre.HasValue)
 					{
 						compte.IndexOuvBoucl = ordre.Value;
 					}
 
-					var group = CrésusComptabilité.GetEntryContentText (lines, indexCompte, "GROUP");
+					var group = this.GetEntryContentText (indexCompte, "GROUP");
 					if (!string.IsNullOrEmpty (group))
 					{
 						groups.Add (numéro, group);
 					}
 
-					var boucle = CrésusComptabilité.GetEntryContentText (lines, indexCompte, "BOUCLE");
+					var boucle = this.GetEntryContentText (indexCompte, "BOUCLE");
 					if (!string.IsNullOrEmpty (boucle))
 					{
 						boucles.Add (numéro, boucle);
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;  // ok
 		}
 
-		private static Date? GetDate(string text)
+		private Date? GetDate(string text)
 		{
 			System.DateTime d;
 
@@ -180,9 +180,9 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;
 		}
 
-		private static CatégorieDeCompte GetEntryContentCatégorie(string[] lines, int index, string key)
+		private CatégorieDeCompte GetEntryContentCatégorie(int index, string key)
 		{
-			var value = CrésusComptabilité.GetEntryContentInt (lines, index, key);
+			var value = this.GetEntryContentInt (index, key);
 
 			if (value.HasValue)
 			{
@@ -204,9 +204,9 @@ namespace Epsitec.Cresus.Compta.IO
 			return CatégorieDeCompte.Inconnu;
 		}
 
-		private static TypeDeCompte GetEntryContentType(string[] lines, int index, string key)
+		private TypeDeCompte GetEntryContentType(int index, string key)
 		{
-			var value = CrésusComptabilité.GetEntryContentInt (lines, index, key);
+			var value = this.GetEntryContentInt (index, key);
 
 			if (value.HasValue)
 			{
@@ -229,9 +229,9 @@ namespace Epsitec.Cresus.Compta.IO
 			return TypeDeCompte.Normal;
 		}
 
-		private static int? GetEntryContentInt(string[] lines, int index, string key)
+		private int? GetEntryContentInt(int index, string key)
 		{
-			var text = CrésusComptabilité.GetEntryContentText (lines, index, key);
+			var text = this.GetEntryContentText (index, key);
 
 			if (!string.IsNullOrEmpty (text))
 			{
@@ -245,19 +245,19 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;
 		}
 
-		private static string GetEntryContentText(string[] lines, int index, string key)
+		private string GetEntryContentText(int index, string key)
 		{
 			key = key+"=";
 
-			while (++index < lines.Length)
+			while (++index < this.lines.Length)
 			{
-				if (lines[index].StartsWith (key))
+				if (this.lines[index].StartsWith (key))
 				{
-					return lines[index].Substring (key.Length).Trim ();
+					return this.lines[index].Substring (key.Length).Trim ();
 				}
 
-				if (lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrée suivante ?
-					lines[index].StartsWith ("END="))     // fin du bloc ?
+				if (this.lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrée suivante ?
+					this.lines[index].StartsWith ("END="))     // fin du bloc ?
 				{
 					break;
 				}
@@ -266,11 +266,11 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;
 		}
 
-		private static int IndexOfLine(string[] lines, string key)
+		private int IndexOfLine(string key)
 		{
-			for (int i = 0; i < lines.Length; i++)
+			for (int i = 0; i < this.lines.Length; i++)
 			{
-				if (lines[i].StartsWith (key))
+				if (this.lines[i].StartsWith (key))
 				{
 					return i;
 				}
@@ -278,5 +278,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 			return -1;
 		}
+
+
+		private string[] lines;
 	}
 }

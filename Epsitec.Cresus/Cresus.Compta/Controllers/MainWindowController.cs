@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = CrésusComptabilité.ImportPlanComptable (this.comptabilité, filename);
+				string err = new CrésusComptabilité ().ImportPlanComptable (this.comptabilité, filename);
 				this.UpdateControllers ();
 
 				if (!string.IsNullOrEmpty (err))
