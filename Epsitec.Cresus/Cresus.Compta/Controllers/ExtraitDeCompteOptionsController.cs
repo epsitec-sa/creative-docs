@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				DrawFullFrame       = true,
 				BackColor           = Color.FromBrightness (0.96),  // gris très clair
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				PreferredHeight     = 81,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 6),
 				Padding             = new Margins (5),
@@ -46,9 +45,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.CreateEditionUI (this.toolbar, optionsChanged);
 			this.CreateDatesUI (this.toolbar, optionsChanged);
-			this.CreateTitleUI (this.toolbar);
-
-			this.UpdateTitle ();
 		}
 
 		private void CreateEditionUI(FrameBox parent, System.Action optionsChanged)
@@ -90,7 +86,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			field.TextChanged += delegate
 			{
 				this.NuméroCompte = field.FormattedText;
-				this.UpdateTitle ();
 				optionsChanged ();
 			};
 
@@ -99,36 +94,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 				optionsChanged ();
 			};
-		}
-
-		private void CreateTitleUI(FrameBox parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.titleLabel = new StaticText
-			{
-				Parent           = frame,
-				ContentAlignment = Common.Drawing.ContentAlignment.BottomLeft,
-				Dock             = DockStyle.Fill,
-			};
-		}
-
-		private void UpdateTitle()
-		{
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == this.Options.NuméroCompte).FirstOrDefault ();
-
-			if (compte == null)
-			{
-				this.titleLabel.FormattedText = null;
-			}
-			else
-			{
-				this.titleLabel.FormattedText = TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre).ApplyBold ().ApplyFontSize (14.0);
-			}
 		}
 
 
@@ -162,8 +127,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.options as ExtraitDeCompteOptions;
 			}
 		}
-
-
-		private StaticText		titleLabel;
 	}
 }

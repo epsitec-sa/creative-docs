@@ -62,6 +62,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Multi.Swap, false);
 			this.SetCommandEnable (Res.Commands.Multi.Auto, false);
 
+			this.mainWindowController.SetTitleComplement (null);
+
 			this.frameBox = new FrameBox
 			{
 				Parent	= parent,

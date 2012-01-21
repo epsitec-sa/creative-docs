@@ -244,9 +244,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindow.Text = this.GetTitle (this.selectedCommandDocument);
 		}
 
+		public void SetTitleComplement(string text)
+		{
+			this.titleComplement = text;
+			this.UpdateTitle ();
+		}
+
 		public string GetTitle(Command command)
 		{
-			return string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
+			string text = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
+
+			if (!string.IsNullOrEmpty (this.titleComplement))
+			{
+				text += string.Concat (" / ", this.titleComplement);
+			}
+
+			return text;
 		}
 
 		private void UpdateControllers()
@@ -565,6 +578,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private AbstractController						controller;
 		private RibbonController						ribbonController;
 		private FrameBox								mainFrame;
+		private string									titleComplement;
 		private bool									dirty;
 		private bool									showSearchPanel;
 		private bool									showOptionsPanel;

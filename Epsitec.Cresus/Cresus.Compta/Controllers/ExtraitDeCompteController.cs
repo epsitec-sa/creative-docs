@@ -70,8 +70,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.InitializeColumnMapper ();
 			this.UpdateArray ();
+			this.UpdateTitle ();
 
 			base.OptinsChanged ();
+		}
+
+		private void UpdateTitle()
+		{
+			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+
+			if (compte == null)
+			{
+				this.mainWindowController.SetTitleComplement (null);
+			}
+			else
+			{
+				this.mainWindowController.SetTitleComplement (string.Concat (compte.Numéro, " ", compte.Titre));
+			}
 		}
 
 		protected override void FinalUpdate()
