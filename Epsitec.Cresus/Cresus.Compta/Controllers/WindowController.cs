@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
+using Epsitec.Common.Dialogs;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -79,9 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var newWindow = new Window ();
 
-			var bounds = this.mainWindow.WindowBounds;
-			bounds.Offset (50, -50);
-			newWindow.WindowBounds = bounds;
+			newWindow.WindowBounds = new Rectangle (this.mainWindow.WindowBounds.Left+50, this.mainWindow.WindowBounds.Top-600-80, 800, 600);
 			newWindow.Root.MinSize = new Size (640, 480);
 			newWindow.Text = this.GetTitle (command);
 
@@ -188,6 +187,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
 		private void UpdateTitle()
 		{
 			this.mainWindow.Text = this.GetTitle (this.selectedCommandDocument);
@@ -198,7 +198,109 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
 		}
 
-	
+
+		#region Dialogs
+		private string FileOpenDialog(string filename)
+		{
+			var dialog = new FileOpenDialog ();
+
+			//dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+			dialog.FileName = filename;
+			dialog.Title = "Ouverture d'une comptabilité";
+			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
+			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.OwnerWindow = this.mainWindow;
+			dialog.OpenDialog ();
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return null;
+			}
+
+			return dialog.FileName;
+		}
+
+		private string FileSaveDialog(string filename)
+		{
+			var dialog = new FileSaveDialog ();
+
+			//dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+			dialog.FileName = filename;
+			dialog.Title = "Enregistrement de la comptabilité";
+			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
+			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.PromptForOverwriting = true;
+			dialog.OwnerWindow = this.mainWindow;
+			dialog.OpenDialog ();
+			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			{
+				return null;
+			}
+
+			return dialog.FileName;
+		}
+		#endregion
+
+
+		private void UpdateControllers()
+		{
+			//	Met à jour tous les contrôleurs.
+			foreach (var controller in this.controllers)
+			{
+				controller.Update ();
+			}
+
+		}
+
+		#region Command handlers
+		[Command (Res.CommandIds.File.New)]
+		private void CommandFileNew()
+		{
+			this.comptabilité.Journal.Clear ();
+			this.comptabilité.PlanComptable.Clear ();
+			this.UpdateControllers ();
+		}
+
+		[Command (Res.CommandIds.File.Open)]
+		private void CommandFileOpen()
+		{
+			var filename = this.FileOpenDialog (null);
+
+			if (!string.IsNullOrEmpty (filename))
+			{
+				string err = ImportExport.Import (this.comptabilité, filename);
+				this.UpdateControllers ();
+
+				if (!string.IsNullOrEmpty (err))
+				{
+				}
+			}
+		}
+
+		[Command (Res.CommandIds.File.Save)]
+		private void CommandFileSave()
+		{
+			var filename = this.FileSaveDialog (null);
+
+			if (!string.IsNullOrEmpty (filename))
+			{
+			}
+		}
+
+		[Command (Res.CommandIds.File.SaveAs)]
+		private void CommandFileSaveAs()
+		{
+			var filename = this.FileSaveDialog (null);
+
+			if (!string.IsNullOrEmpty (filename))
+			{
+			}
+		}
+
+		[Command (Res.CommandIds.File.Print)]
+		private void CommandFilePrint()
+		{
+		}
+
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PlanComptable)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
@@ -222,7 +324,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ribbonController.ShowNouvellePrésentationMenu ();
+			this.ribbonController.ShowNewWindowMenu ();
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Balance)]
@@ -242,7 +344,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.AcceptAction ();
 			}
@@ -251,7 +353,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Cancel)]
 		private void CommandEditCancel()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.CancelAction ();
 			}
@@ -260,7 +362,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Duplicate)]
 		private void CommandEditDuplicate()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.DuplicateAction ();
 			}
@@ -269,7 +371,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Delete)]
 		private void CommandEditDelete()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.DeleteAction ();
 			}
@@ -278,7 +380,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Insert)]
 		private void CommandMultiInsert()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.InsertLineAction ();
 			}
@@ -287,7 +389,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Delete)]
 		private void CommandMultiDelete()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.DeleteLineAction ();
 			}
@@ -296,7 +398,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Up)]
 		private void CommandMultiUp()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.LineUpAction ();
 			}
@@ -305,7 +407,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Down)]
 		private void CommandMultiDown()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.LineDownAction ();
 			}
@@ -314,7 +416,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Swap)]
 		private void CommandMultiSwap()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.LineSwapAction ();
 			}
@@ -323,13 +425,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Multi.Auto)]
 		private void CommandMultiAuto()
 		{
-			if (this.controller.FooterController != null)
+			if (this.controller != null && this.controller.FooterController != null)
 			{
 				this.controller.FooterController.LineAutoAction ();
 			}
 		}
 
-	
+		[Command (Res.CommandIds.Global.Settings)]
+		private void CommandGlobalSettings()
+		{
+		}
+		#endregion
+
+
 		private readonly Application					app;
 		private readonly List<AbstractController>		controllers;
 

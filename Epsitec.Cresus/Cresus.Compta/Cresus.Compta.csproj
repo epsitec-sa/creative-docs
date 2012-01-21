@@ -81,6 +81,7 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="ImportExport.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
@@ -164,6 +165,8 @@
     <EmbeddedResource Include="Images\File.Print.icon" />
     <EmbeddedResource Include="Images\File.Save.icon" />
     <EmbeddedResource Include="Images\Global.Settings.icon" />
+    <EmbeddedResource Include="Images\File.New.icon" />
+    <EmbeddedResource Include="Images\File.SaveAs.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -38,12 +38,16 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVKT2
+				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 93));
 				//	designer:cap/OVK22
 				public static readonly global::Epsitec.Common.Widgets.Command Open = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 66));
 				//	designer:cap/OVK42
 				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 68));
 				//	designer:cap/OVK32
 				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 67));
+				//	designer:cap/OVKU2
+				public static readonly global::Epsitec.Common.Widgets.Command SaveAs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 94));
 			}
 			
 			public static class Global
@@ -165,12 +169,16 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVKT2
+				public const long New = 0x3F80001400005DL;
 				//	designer:cap/OVK22
 				public const long Open = 0x3F800014000042L;
 				//	designer:cap/OVK42
 				public const long Print = 0x3F800014000044L;
 				//	designer:cap/OVK32
 				public const long Save = 0x3F800014000043L;
+				//	designer:cap/OVKU2
+				public const long SaveAs = 0x3F80001400005EL;
 			}
 			
 			public static class Global

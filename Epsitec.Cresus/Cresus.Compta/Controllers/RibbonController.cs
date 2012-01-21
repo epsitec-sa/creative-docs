@@ -75,8 +75,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Res.Commands.File.Open, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.File.Save, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.File.New, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.File.Save, large: false));
+
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.File.Open, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.File.SaveAs, large: false));
 
 				section.Children.Add (this.CreateButton (Res.Commands.File.Print));
 			}
@@ -238,26 +241,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		#region Menu nouvelle présentation
-		public void ShowNouvellePrésentationMenu()
+		#region New window menu
+		public void ShowNewWindowMenu()
 		{
-			this.ShowNouvellePrésentationMenu (this.présentationButton);
+			this.ShowNewWindowMenu (this.présentationButton);
 		}
 
-		private void ShowNouvellePrésentationMenu(Widget parentButton)
+		private void ShowNewWindowMenu(Widget parentButton)
 		{
 			//	Affiche le menu permettant de choisir le mode pour le ruban.
 			var menu = new VMenu ();
 
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Balance);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Extrait);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Bilan);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.PP);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Exploitation);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Change);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméTVA);
-			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.DécompteTVA);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Balance);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Extrait);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Bilan);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.PP);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Exploitation);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Change);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméTVA);
+			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.DécompteTVA);
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
@@ -265,7 +268,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
 
-		private void AddNouvellePrésentationToMenu(VMenu menu, Druid commandId)
+		private void AddNewWindowToMenu(VMenu menu, Druid commandId)
 		{
 			var item = new MenuItem ()
 			{

@@ -266,6 +266,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		public void Update()
+		{
+			this.dataAccessor.UpdateAfterOptionsChanged ();
+			this.BaseUpdateArrayContent ();
+
+			if (this.footerController != null)
+			{
+				this.footerController.UpdateFooterContent ();
+			}
+		}
+
 		protected void UpdateArrayContent()
 		{
 			//	Met à jour le contenu du tableau.
