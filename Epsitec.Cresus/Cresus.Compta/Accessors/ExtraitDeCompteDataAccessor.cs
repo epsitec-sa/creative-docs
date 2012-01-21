@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class ExtraitDeCompteDataAccessor : AbstractDataAccessor
 	{
-		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
-			: base (businessContext, comptabilitéEntity)
+		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
+			: base (businessContext, comptabilitéEntity, windowController)
 		{
 			this.options = new ExtraitDeCompteOptions (this.comptabilitéEntity);
 

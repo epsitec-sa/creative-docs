@@ -29,55 +29,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractController
 	{
-		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
 		{
-			this.app                = app;
-			this.businessContext    = businessContext;
-			this.comptabilitéEntity = comptabilitéEntity;
+			this.app                  = app;
+			this.businessContext      = businessContext;
+			this.comptabilitéEntity   = comptabilitéEntity;
+			this.mainWindowController = mainWindowController;
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 
-
-		public WindowController WindowController
+		public void SetVariousParameters(Window parentWindow, Command commandDocument)
 		{
-			get
-			{
-				return this.windowController;
-			}
-			set
-			{
-				this.windowController = value;
-			}
-		}
-
-		public Window ParentWindow
-		{
-			get
-			{
-				return this.parentWindow;
-			}
-			set
-			{
-				this.parentWindow = value;
-			}
-		}
-
-		public Command CommandDocument
-		{
-			get
-			{
-				return this.commandDocument;
-			}
-			set
-			{
-				this.commandDocument = value;
-			}
+			this.parentWindow    = parentWindow;
+			this.commandDocument = commandDocument;
 		}
 
 
 		public FrameBox CreateUI(FrameBox parent)
 		{
+			System.Diagnostics.Debug.Assert (this.parentWindow != null);
+			System.Diagnostics.Debug.Assert (this.commandDocument != null);
+
 			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
 			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
 			this.SetCommandEnable (Res.Commands.Edit.Duplicate, false);
@@ -91,8 +64,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.frameBox = new FrameBox
 			{
-				Parent        = parent,
-				Dock          = DockStyle.Fill,
+				Parent	= parent,
+				Dock	= DockStyle.Fill,
 			};
 
 			this.CreateTopToolbar (this.frameBox);
@@ -305,6 +278,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void Update()
 		{
+			//	Met à jour l'ensemble du contrôleur.
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.BaseUpdateArrayContent ();
 
@@ -313,15 +287,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.footerController.UpdateFooterContent ();
 			}
 
-			this.parentWindow.Text = this.windowController.GetTitle (this.commandDocument);
+			this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
 		}
 
 		protected void UpdateArrayContent()
 		{
-			//	Met à jour le contenu du tableau.
+			//	Met à jour le contenu du tableau, ainsi que des tableaux des fenêtre associées.
 			this.BaseUpdateArrayContent ();
 
-			foreach (var controller in this.windowController.Controllers)
+			foreach (var controller in this.mainWindowController.Controllers)
 			{
 				if (controller != this)
 				{
@@ -442,7 +416,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
 
-		protected WindowController								windowController;
+		protected MainWindowController							mainWindowController;
 		protected Window										parentWindow;
 		protected Command										commandDocument;
 

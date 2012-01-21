@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PlanComptableController : AbstractController
 	{
-		public PlanComptableController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
-			: base (app, businessContext, comptabilitéEntity)
+		public PlanComptableController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptabilitéEntity, mainWindowController)
 		{
-			this.dataAccessor = new PlanComptableDataAccessor (this.businessContext, this.comptabilitéEntity);
+			this.dataAccessor = new PlanComptableDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 

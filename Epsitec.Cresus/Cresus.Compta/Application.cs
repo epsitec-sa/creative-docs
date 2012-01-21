@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta
 			//?this.editor.Dock = DockStyle.Fill;
 			//?this.editor.SetParent(window.Root);
 
-			this.windowController = new WindowController (this);
+			this.windowController = new MainWindowController (this);
 			this.windowController.CreateUI (window);
 
 			window.Show ();
@@ -130,6 +130,6 @@ namespace Epsitec.Cresus.Compta
 		private static string			mode;
 		
 		//?private DocumentEditor			editor;
-		private WindowController		windowController;
+		private MainWindowController		windowController;
 	}
 }

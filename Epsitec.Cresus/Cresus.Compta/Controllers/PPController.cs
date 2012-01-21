@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PPController : AbstractController
 	{
-		public PPController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
-			: base (app, businessContext, comptabilitéEntity)
+		public PPController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptabilitéEntity, mainWindowController)
 		{
-			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptabilitéEntity);
+			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 

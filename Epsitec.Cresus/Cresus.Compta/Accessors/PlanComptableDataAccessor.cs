@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -20,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PlanComptableDataAccessor : AbstractDataAccessor
 	{
-		public PlanComptableDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
-			: base (businessContext, comptabilitéEntity)
+		public PlanComptableDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
+			: base (businessContext, comptabilitéEntity, windowController)
 		{
 			this.StartCreationData ();
 		}
@@ -203,6 +204,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.comptabilitéEntity.PlanComptableUpdate ();
 			this.SearchUpdate ();
+			this.windowController.Dirty = true;
 		}
 
 		private void UpdateCreationData()
@@ -306,6 +308,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptabilitéCompteEntity CreateCompte()
 		{
+			this.windowController.Dirty = true;
+
 			if (this.businessContext == null)
 			{
 				return new ComptabilitéCompteEntity ();
@@ -318,6 +322,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteCompte(ComptabilitéCompteEntity compte)
 		{
+			this.windowController.Dirty = true;
+
 			if (this.businessContext == null)
 			{
 				// rien à faire

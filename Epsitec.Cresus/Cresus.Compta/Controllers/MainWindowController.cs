@@ -7,7 +7,6 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Dialogs;
 using Epsitec.Common.Support;
-using Epsitec.Common.Dialogs;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -26,9 +25,13 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Controllers
 {
-	public class WindowController
+	/// <summary>
+	/// Ce contrôleur gère l'unique fenêtre principale, c'est-à-dire celle qui contient le ruban.
+	/// La fermeture de cette fenêtre ferme l'application.
+	/// </summary>
+	public class MainWindowController
 	{
-		public WindowController(Application app)
+		public MainWindowController(Application app)
 		{
 			this.app = app;
 
@@ -36,6 +39,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controllers = new List<AbstractController> ();
 
 			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
+
+			this.dirty = true;  // pour forcer la màj
+			this.Dirty = false;
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
@@ -64,9 +70,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public List<AbstractController> Controllers
 		{
+			//	Retourne la liste de contrôleurs de toutes les fenêtres ouvertes.
 			get
 			{
 				return this.controllers;
+			}
+		}
+
+		public bool Dirty
+		{
+			get
+			{
+				return this.dirty;
+			}
+			set
+			{
+				if (this.dirty != value)
+				{
+					this.dirty = value;
+
+					CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Save);
+					cs.Enable = this.dirty;
+				}
 			}
 		}
 
@@ -88,30 +113,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void OpenNewWindow(Command command)
 		{
-			var newWindow = new Window ();
+			//	Ouvre une nouvelle fenêtre contenant une présentation fixe donnée (command).
+			//	Cette fenêtre n'a pas de ruban, et les présentations ne peuvent pas être éditées.
+			var secondaryWindow = new Window ();
 
-			newWindow.WindowBounds = new Rectangle (this.mainWindow.WindowBounds.Left+50, this.mainWindow.WindowBounds.Top-600-80, 800, 600);
-			newWindow.Root.MinSize = new Size (640, 480);
-			newWindow.Text = this.GetTitle (command);
+			secondaryWindow.WindowBounds = new Rectangle (this.mainWindow.WindowBounds.Left+50, this.mainWindow.WindowBounds.Top-600-80, 800, 600);
+			secondaryWindow.Root.MinSize = new Size (640, 480);
+			secondaryWindow.Text = this.GetTitle (command);
 
-			var frame = new FrameBox
+			var secondaryFrame = new FrameBox
 			{
-				Parent  = newWindow.Root,
+				Parent  = secondaryWindow.Root,
 				Dock    = DockStyle.Fill,
 				Padding = new Margins (3),
 			};
 
-			var controller = this.CreateController (newWindow, command);
-			controller.CreateUI (frame);
+			var controller = this.CreateController (secondaryWindow, command);
+			controller.CreateUI (secondaryFrame);
 			controllers.Add (controller);
 
-			newWindow.Show ();
-			newWindow.MakeActive ();
+			secondaryWindow.Show ();
+			secondaryWindow.MakeActive ();
 
-			newWindow.WindowCloseClicked += delegate
+			secondaryWindow.WindowCloseClicked += delegate
 			{
 				this.DisposeController (controller);
-				newWindow.Close ();
+				secondaryWindow.Close ();
 			};
 		}
 
@@ -135,49 +162,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (command.Name.EndsWith ("Présentation.Journal"))
 			{
-				controller = new JournalController (this.app, this.businessContext, this.comptabilité);
+				controller = new JournalController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PlanComptable"))
 			{
-				controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité);
+				controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Balance"))
 			{
-				controller = new BalanceController (this.app, this.businessContext, this.comptabilité);
+				controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Extrait"))
 			{
-				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité);
+				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Bilan"))
 			{
-				controller = new BilanController (this.app, this.businessContext, this.comptabilité);
+				controller = new BilanController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PP"))
 			{
-				controller = new PPController (this.app, this.businessContext, this.comptabilité);
+				controller = new PPController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Exploitation"))
 			{
-				controller = new ExploitationController (this.app, this.businessContext, this.comptabilité);
+				controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Budgets"))
 			{
-				controller = new BudgetsController (this.app, this.businessContext, this.comptabilité);
+				controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this);
 			}
 
 			if (controller != null)
 			{
-				controller.WindowController = this;
-				controller.ParentWindow     = parentWindow;
-				controller.CommandDocument  = command;
+				controller.SetVariousParameters (parentWindow, command);
 			}
 
 			return controller;
@@ -282,6 +307,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.comptabilité.Journal.Clear ();
 			this.comptabilité.PlanComptable.Clear ();
 			this.UpdateControllers ();
+			this.Dirty = false;
 		}
 
 		[Command (Res.CommandIds.File.Open)]
@@ -298,6 +324,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.ErrorDialog (err);
 				}
+
+				this.Dirty = false;
 			}
 		}
 
@@ -308,6 +336,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
+				this.Dirty = false;
 			}
 		}
 
@@ -473,5 +502,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private AbstractController						controller;
 		private RibbonController						ribbonController;
 		private FrameBox								mainFrame;
+		private bool									dirty;
 	}
 }

@@ -87,7 +87,7 @@
     <Compile Include="Controllers\BilanController.cs" />
     <Compile Include="Controllers\BudgetsController.cs" />
     <Compile Include="Controllers\BudgetsFooterController.cs" />
-    <Compile Include="Controllers\WindowController.cs" />
+    <Compile Include="Controllers\MainWindowController.cs" />
     <Compile Include="Controllers\ExploitationController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteController.cs" />
     <Compile Include="Controllers\JournalController.cs" />

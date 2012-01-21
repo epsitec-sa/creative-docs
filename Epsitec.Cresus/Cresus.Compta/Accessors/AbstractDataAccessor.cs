@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Entities;
 
@@ -21,10 +22,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractDataAccessor
 	{
-		public AbstractDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+		public AbstractDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
 		{
 			this.businessContext    = businessContext;
 			this.comptabilitéEntity = comptabilitéEntity;
+			this.windowController   = windowController;
 
 			this.readonlyData = new List<AbstractData> ();
 			this.editionData = new List<AbstractEditionData> ();
@@ -562,6 +564,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected readonly BusinessContext				businessContext;
 		protected readonly ComptabilitéEntity			comptabilitéEntity;
+		protected readonly MainWindowController			windowController;
 		protected readonly List<AbstractData>			readonlyData;
 		protected readonly List<AbstractEditionData>	editionData;
 		protected readonly List<SearchResult>			searchResults;
