@@ -272,6 +272,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public void ClearHilite()
+		{
+			this.arrayController.IgnoreChanged = true;
+			this.arrayController.SelectedRow = -1;
+			this.arrayController.SetHilitedRows (-1, 0);
+			this.arrayController.IgnoreChanged = false;
+
+			this.dataAccessor.StartCreationData ();
+		}
+
 		public void Update()
 		{
 			//	Met à jour l'ensemble du contrôleur.

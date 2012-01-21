@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controllers = new List<AbstractController> ();
 
 			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
+			new NewComptabilité ().NewEmpty (this.comptabilité);
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -66,6 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SelectDefaultPrésentation ();
 			this.CreateController ();
+			this.UpdateTitle ();
 		}
 
 
@@ -305,8 +307,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.File.New)]
 		private void CommandFileNew()
 		{
-			this.comptabilité.Journal.Clear ();
-			this.comptabilité.PlanComptable.Clear ();
+			new NewComptabilité ().NewEmpty (this.comptabilité);
+
+			this.controller.ClearHilite();
 			this.UpdateControllers ();
 			this.Dirty = false;
 		}
@@ -319,6 +322,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (!string.IsNullOrEmpty (filename))
 			{
 				string err = new CrésusComptabilité ().ImportPlanComptable (this.comptabilité, filename);
+
+				this.controller.ClearHilite ();
 				this.UpdateControllers ();
 
 				if (!string.IsNullOrEmpty (err))

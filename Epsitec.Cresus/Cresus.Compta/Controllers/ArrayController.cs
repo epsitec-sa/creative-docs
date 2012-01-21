@@ -108,6 +108,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour le contenu du tableau.
 			this.array.TotalRows = rowCount;
 
+			this.AdjustRows ();
+
 			int first       = this.array.FirstVisibleRow;
 			int columnCount = this.array.Columns;
 
@@ -144,6 +146,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.array.SetLineBottomSeparator (column, row, false);
 					}
 				}
+			}
+		}
+
+		private void AdjustRows()
+		{
+			int sel = this.SelectedRow;
+
+			if (sel != -1)
+			{
+				this.SelectedRow = System.Math.Min (sel, this.array.TotalRows-1);
+			}
+
+			int firstRow, countRow;
+			this.GetHilitedRows (out firstRow, out countRow);
+
+			if (firstRow != -1)
+			{
+				int lastRow = firstRow+countRow;
+
+				firstRow = System.Math.Min (firstRow, this.array.TotalRows-1);
+				lastRow  = System.Math.Min (lastRow, this.array.TotalRows-1);
+				countRow = System.Math.Max (lastRow-firstRow, 1);
+
+				this.SetHilitedRows (firstRow, countRow);
 			}
 		}
 
