@@ -57,7 +57,6 @@ namespace Epsitec.Cresus.Compta
 
 			this.Window = window;
 
-			window.IsValidDropTarget = true;
 			window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", typeof (Application).Assembly);
 			window.Root.MinSize = new Size(640, 480);
 			window.WindowBounds = new Rectangle (100, 100, 800, 600);

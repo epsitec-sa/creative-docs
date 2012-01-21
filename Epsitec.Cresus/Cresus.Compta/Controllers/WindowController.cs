@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.app = app;
 
+			this.businessContext = null;
 			this.controllers = new List<AbstractController> ();
 
 			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
@@ -41,20 +42,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(Window window)
 		{
-			this.window = window;
+			this.mainWindow = window;
 
-			var button = new Button (Epsitec.Common.Dialogs.Res.Commands.Dialog.Generic.Close)
-			{
-				Parent     = window.Root,
-				Anchor     = AnchorStyles.TopLeft,
-				Visibility = false,
-			};
-
-			//	Crée les frames principales.
+			//	Crée le ruban tout en haut.
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 
-			//	Crée la zone éditable.
+			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox
 			{
 				Parent  = window.Root,
@@ -81,44 +75,43 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private void OpenNewWindow(Command command)
+		{
+			var newWindow = new Window ();
+
+			var bounds = this.mainWindow.WindowBounds;
+			bounds.Offset (50, -50);
+			newWindow.WindowBounds = bounds;
+			newWindow.Root.MinSize = new Size (640, 480);
+			newWindow.Text = this.GetTitle (command);
+
+			var frame = new FrameBox
+			{
+				Parent  = newWindow.Root,
+				Dock    = DockStyle.Fill,
+				Padding = new Margins (3),
+			};
+
+			var controller = this.CreateController (command);
+			controller.CreateUI (frame);
+			controllers.Add (controller);
+
+			newWindow.Show ();
+			newWindow.MakeActive ();
+
+			newWindow.WindowCloseClicked += delegate
+			{
+				this.DisposeController (controller);
+				newWindow.Close ();
+			};
+		}
+
+
 		private void CreateController()
 		{
 			this.DisposeController ();
 
-			switch (this.selectedCommandDocument.Name)
-			{
-				case "Présentation.Journal":
-					this.controller = new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.PlanComptable":
-					this.controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.Balance":
-					this.controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.Extrait":
-					this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.Bilan":
-					this.controller = new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.PP":
-					this.controller = new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.Exploitation":
-					this.controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-
-				case "Présentation.Budgets":
-					this.controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
-					break;
-			}
+			this.controller = this.CreateController (this.selectedCommandDocument);
 
 			if (this.controller != null)
 			{
@@ -129,29 +122,83 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateTitle ();
 		}
 
+		private AbstractController CreateController(Command command)
+		{
+			if (command.Name.EndsWith ("Présentation.Journal"))
+			{
+				return new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.PlanComptable"))
+			{
+				return new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Balance"))
+			{
+				return new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Extrait"))
+			{
+				return new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Bilan"))
+			{
+				return new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.PP"))
+			{
+				return new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Exploitation"))
+			{
+				return new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Budgets"))
+			{
+				return new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
+			}
+
+			return null;
+		}
+
 		private void DisposeController()
 		{
-			if (this.controller != null)
-			{
-				if (this.controllers.Contains (this.controller))
-				{
-					this.controllers.Remove (this.controller);
-				}
-
-				this.controller.Dispose ();
-				this.controller = null;
-			}
+			this.DisposeController (this.controller);
+			this.controller = null;
 
 			this.mainFrame.Children.Clear ();
 		}
 
-		private void UpdateTitle()
+		private void DisposeController(AbstractController controller)
 		{
-			string title = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", this.selectedCommandDocument.Description);
-			this.window.Text = title;
+			if (controller != null)
+			{
+				if (this.controllers.Contains (controller))
+				{
+					this.controllers.Remove (controller);
+				}
+
+				controller.Dispose ();
+			}
 		}
 
+		private void UpdateTitle()
+		{
+			this.mainWindow.Text = this.GetTitle (this.selectedCommandDocument);
+		}
 
+		private string GetTitle(Command command)
+		{
+			return string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
+		}
+
+	
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PlanComptable)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
@@ -175,7 +222,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			//?this.OpenNewWindow ();
+			this.ribbonController.ShowNouvellePrésentationMenu ();
+		}
+
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Balance)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Extrait)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Bilan)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.PP)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Exploitation)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Change)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.RésuméPériodique)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.RésuméTVA)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.DécompteTVA)]
+		private void ProcessShowNouvellePrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.OpenNewWindow (e.Command);
 		}
 
 		[Command (Res.CommandIds.Edit.Accept)]
@@ -268,18 +329,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		[Command (Epsitec.Common.Dialogs.Res.CommandIds.Dialog.Generic.Close)]
-		private void ProcessClose()
-		{
-			this.DisposeController ();
-		}
-
-
 	
 		private readonly Application					app;
 		private readonly List<AbstractController>		controllers;
 
-		private Window									window;
+		private Window									mainWindow;
 		private BusinessContext							businessContext;
 		private ComptabilitéEntity						comptabilité;
 		private Command									selectedCommandDocument;

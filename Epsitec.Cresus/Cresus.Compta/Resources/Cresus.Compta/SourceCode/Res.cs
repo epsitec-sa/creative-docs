@@ -76,6 +76,32 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
 			}
 			
+			public static class NouvellePrésentation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKK2
+				public static readonly global::Epsitec.Common.Widgets.Command Balance = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 84));
+				//	designer:cap/OVKL2
+				public static readonly global::Epsitec.Common.Widgets.Command Bilan = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 85));
+				//	designer:cap/OVKM2
+				public static readonly global::Epsitec.Common.Widgets.Command Change = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 86));
+				//	designer:cap/OVKN2
+				public static readonly global::Epsitec.Common.Widgets.Command DécompteTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 87));
+				//	designer:cap/OVKO2
+				public static readonly global::Epsitec.Common.Widgets.Command Exploitation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 88));
+				//	designer:cap/OVKP2
+				public static readonly global::Epsitec.Common.Widgets.Command Extrait = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 89));
+				//	designer:cap/OVKQ2
+				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 90));
+				//	designer:cap/OVKR2
+				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 91));
+				//	designer:cap/OVKS2
+				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 92));
+			}
+			
 			public static class Présentation
 			{
 				internal static void _Initialize()
@@ -175,6 +201,32 @@ namespace Epsitec.Cresus.Compta
 				public const long Swap = 0x3F80001400003FL;
 				//	designer:cap/OVKT1
 				public const long Up = 0x3F80001400003DL;
+			}
+			
+			public static class NouvellePrésentation
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKK2
+				public const long Balance = 0x3F800014000054L;
+				//	designer:cap/OVKL2
+				public const long Bilan = 0x3F800014000055L;
+				//	designer:cap/OVKM2
+				public const long Change = 0x3F800014000056L;
+				//	designer:cap/OVKN2
+				public const long DécompteTVA = 0x3F800014000057L;
+				//	designer:cap/OVKO2
+				public const long Exploitation = 0x3F800014000058L;
+				//	designer:cap/OVKP2
+				public const long Extrait = 0x3F800014000059L;
+				//	designer:cap/OVKQ2
+				public const long PP = 0x3F80001400005AL;
+				//	designer:cap/OVKR2
+				public const long RésuméPériodique = 0x3F80001400005BL;
+				//	designer:cap/OVKS2
+				public const long RésuméTVA = 0x3F80001400005CL;
 			}
 			
 			public static class Présentation
@@ -491,12 +543,14 @@ namespace Epsitec.Cresus.Compta
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
 			Commands.Multi._Initialize ();
+			Commands.NouvellePrésentation._Initialize ();
 			Commands.Présentation._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Edit._Initialize ();
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();
 			CommandIds.Multi._Initialize ();
+			CommandIds.NouvellePrésentation._Initialize ();
 			CommandIds.Présentation._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();

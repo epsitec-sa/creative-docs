@@ -104,7 +104,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
 
 				section.Children.Add (this.CreateGap ());
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.New));
+				this.présentationButton = this.CreateButton (Res.Commands.Présentation.New);
+				section.Children.Add (this.présentationButton);
 			}
 
 			{
@@ -235,8 +236,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 			menu.Items.Add (item);
 		}
 		#endregion
-		
-		
+
+
+		#region Menu nouvelle présentation
+		public void ShowNouvellePrésentationMenu()
+		{
+			this.ShowNouvellePrésentationMenu (this.présentationButton);
+		}
+
+		private void ShowNouvellePrésentationMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir le mode pour le ruban.
+			var menu = new VMenu ();
+
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Balance);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Extrait);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Bilan);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.PP);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Exploitation);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.Change);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméTVA);
+			this.AddNouvellePrésentationToMenu (menu, Res.CommandIds.NouvellePrésentation.DécompteTVA);
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = this.container;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddNouvellePrésentationToMenu(VMenu menu, Druid commandId)
+		{
+			var item = new MenuItem ()
+			{
+				CommandId = commandId,
+			};
+
+			menu.Items.Add (item);
+		}
+		#endregion
+
+	
 		private void UpdateRibbon()
 		{
 			//	Met à jour le faux ruban en fonction du RibbonViewMode en cours.
@@ -555,8 +595,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private const int IconSmallWidth		= 20;
 		private const int IconLargeWidth		= 32;
 
-		private readonly static double IconSize = 40;
-
 		private readonly Application				app;
 		private readonly List<FrameBox>				sectionGroupFrames;
 		private readonly List<FrameBox>				sectionIconFrames;
@@ -565,5 +603,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Widget								container;
 		private RibbonViewMode						ribbonViewMode;
+		private IconButton							présentationButton;
 	}
 }
