@@ -129,16 +129,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateTopToolbar(FrameBox parent)
 		{
 			this.topToolbarController = new TopToolbarController (this.businessContext, this.columnMappers);
-			this.topToolbarController.CreateUI (parent, this.ImportAction, this.ShowHideToolbar, this.SearchStartAction, this.SearchNextAction);
+			this.topToolbarController.CreateUI (parent, this.ShowHideToolbar, this.SearchStartAction, this.SearchNextAction);
 		}
 
 		private void FinalizeToolbars(FrameBox parent)
 		{
 			this.topToolbarController.FinalizeUI (parent);
-		}
-
-		protected virtual void ImportAction()
-		{
 		}
 
 		private void ShowHideToolbar()

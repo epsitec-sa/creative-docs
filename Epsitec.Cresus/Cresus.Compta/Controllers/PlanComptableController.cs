@@ -37,14 +37,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void FinalUpdate()
 		{
 			base.FinalUpdate ();
-			this.topToolbarController.ImportEnable = true;
-		}
-
-		protected override void ImportAction()
-		{
-			this.PlanComptableImport ();
-			this.UpdateArrayContent ();
-			this.footerController.UpdateFooterContent ();
 		}
 
 
@@ -98,57 +90,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.IndexOuvBoucl,  0.05, "",                "Ordre utilisé lors des bouclements ou réouvertures");
 				yield return new ColumnMapper (ColumnType.Monnaie,        0.20, "Monnaie",         "Monnaie de ce compte");
 			}
-		}
-
-
-		private void PlanComptableImport()
-		{
-#if false
-			this.comptabilitéEntity.Journal.Clear ();
-			this.comptabilitéEntity.PlanComptable.Clear ();
-
-			var businessSettings = this.businessContext.GetCachedBusinessSettings ();
-			var financeSettings  = businessSettings.Finance;
-
-			System.Diagnostics.Debug.Assert (financeSettings != null);
-			var chart = financeSettings.GetChartOfAccountsOrDefaultToNearest (this.businessContext.GetReferenceDate ());
-			var comptes = Epsitec.Cresus.Core.Business.Accounting.CresusChartOfAccountsConnector.Import (chart);
-
-			foreach (var c in comptes)
-			{
-				var compte = this.businessContext.DataContext.CreateEntity<ComptabilitéCompteEntity> ();
-
-				compte.Numéro         = c.Numéro;
-				compte.Titre          = c.Titre;
-				compte.Catégorie      = c.Catégorie;
-				compte.Type           = c.Type;
-//				compte.Groupe         = c.Groupe;
-//				compte.CompteOuvBoucl = c.CompteOuvBoucl;
-				compte.IndexOuvBoucl  = c.IndexOuvBoucl;
-
-				this.comptabilitéEntity.PlanComptable.Add (compte);
-			}
-
-			foreach (var c in comptes)
-			{
-				if (c.Groupe != null && !c.Groupe.Numéro.IsNullOrEmpty)
-				{
-					var compte    = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Numéro).FirstOrDefault ();
-					compte.Groupe = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Groupe.Numéro).FirstOrDefault ();
-				}
-			}
-
-			foreach (var c in comptes)
-			{
-				if (c.CompteOuvBoucl != null && !c.CompteOuvBoucl.Numéro.IsNullOrEmpty)
-				{
-					var compte            = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.Numéro).FirstOrDefault ();
-					compte.CompteOuvBoucl = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == c.CompteOuvBoucl.Numéro).FirstOrDefault ();
-				}
-			}
-
-			this.comptabilitéEntity.UpdateNiveauCompte ();
-#endif
 		}
 	}
 }

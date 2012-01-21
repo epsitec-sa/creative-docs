@@ -37,14 +37,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void FinalUpdate()
 		{
 			base.FinalUpdate ();
-			this.topToolbarController.ImportEnable = true;
-		}
-
-		protected override void ImportAction()
-		{
-			this.CreateManyEcritures ();
-			this.UpdateArrayContent ();
-			this.footerController.UpdateFooterContent ();
 		}
 
 
@@ -85,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-
+#if false
 		private void CreateManyEcritures()
 		{
 			var débit  = this.comptabilitéEntity.PlanComptable.Where(x => x.Numéro == "1000").FirstOrDefault ();
@@ -105,5 +97,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.comptabilitéEntity.Journal.Add (écriture);
 			}
 		}
+#endif
 	}
 }

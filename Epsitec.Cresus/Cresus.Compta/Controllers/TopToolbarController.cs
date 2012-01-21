@@ -27,12 +27,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.businessContext = businessContext;
 			this.columnMappers = columnMappers;
+
 			this.searchingData = new SearchingData ();
 			this.toolbarShowed = true;
 		}
 
 
-		public void CreateUI(FrameBox parent, System.Action importAction, System.Action showHideAction, System.Action searchStartAction, System.Action<int> searchNextAction)
+		public void CreateUI(FrameBox parent, System.Action showHideAction, System.Action searchStartAction, System.Action<int> searchNextAction)
 		{
 			this.showHideAction = showHideAction;
 
@@ -49,25 +50,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.searchingController = new SearchingController (this.searchingData, this.columnMappers);
 			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
-
-			//	<--|
-			this.importButton = new IconButton
-			{
-				Parent          = this.toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("Import"),
-				AutoFocus       = false,
-				Visibility      = false,
-				PreferredHeight = TopToolbarController.toolbarHeight,
-				Dock            = DockStyle.Right,
-				Margins         = new Margins (0, 0, 0, 0),
-			};
-
-			this.importButton.Clicked += delegate
-			{
-				importAction ();
-			};
-
-			ToolTip.Default.SetToolTip (this.importButton, "Importe le plan comptable de l'année courante");
 		}
 
 		public void FinalizeUI(FrameBox parent)
@@ -114,19 +96,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public bool ImportEnable
-		{
-			get
-			{
-				return this.importButton.Visibility;
-			}
-			set
-			{
-				this.importButton.Visibility = value;
-			}
-		}
-
-
 		private void UpdateShowHideButton()
 		{
 			//	Met à jour le bouton pour montrer/cacher la barre d'icône.
@@ -147,7 +116,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private FrameBox						toolbar;
 		private SearchingController				searchingController;
-		private IconButton						importButton;
 		private GlyphButton						showHideButton;
 		private bool							toolbarShowed;
 		private System.Action					showHideAction;
