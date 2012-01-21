@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
 			this.bottomToolbarController.CreateUI (parent);
+
 			this.abstractController.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
 			this.parent.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);

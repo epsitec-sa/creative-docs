@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.app = app;
 
 			this.controllers = new List<AbstractController> ();
-			this.selectedType = TypeDeDocumentComptable.Journal;
 
 			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
 
@@ -69,10 +68,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SelectDefaultPrésentation()
 		{
+			if (this.comptabilité.PlanComptable.Any ())
 			{
-				Command command = Command.Get (Cresus.Compta.Res.CommandIds.Présentation.Journal);
-				this.ribbonController.PrésentationCommandsUpdate (command);
+				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
 			}
+			else  // plan comptable vide ?
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.PlanComptable;
+			}
+
+			this.ribbonController.PrésentationCommandsUpdate (this.selectedCommandDocument);
 		}
 
 
@@ -80,37 +85,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.DisposeController ();
 
-			switch (this.selectedType)
+			switch (this.selectedCommandDocument.Name)
 			{
-				case TypeDeDocumentComptable.Journal:
+				case "Présentation.Journal":
 					this.controller = new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.PlanComptable:
+				case "Présentation.PlanComptable":
 					this.controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.Balance:
+				case "Présentation.Balance":
 					this.controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.Extrait:
+				case "Présentation.Extrait":
 					this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.Bilan:
+				case "Présentation.Bilan":
 					this.controller = new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.PP:
+				case "Présentation.PP":
 					this.controller = new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.Exploitation:
+				case "Présentation.Exploitation":
 					this.controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 
-				case TypeDeDocumentComptable.Budgets:
+				case "Présentation.Budgets":
 					this.controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
 					break;
 			}
@@ -142,96 +147,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateTitle()
 		{
-			string title = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", this.GetToolbarDescription (this.selectedType));
+			string title = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", this.selectedCommandDocument.Description);
 			this.window.Text = title;
-		}
-
-		private FormattedText GetToolbarDescription(TypeDeDocumentComptable type)
-		{
-			switch (type)
-			{
-				case TypeDeDocumentComptable.Journal:
-					return "Journal des écritures";
-
-				case TypeDeDocumentComptable.PlanComptable:
-					return "Plan comptable";
-
-				case TypeDeDocumentComptable.Balance:
-					return "Balance";
-
-				case TypeDeDocumentComptable.Extrait:
-					return "Extrait de compte";
-
-				case TypeDeDocumentComptable.Bilan:
-					return "Bilan";
-
-				case TypeDeDocumentComptable.PP:
-					return "Pertes et Profits";
-
-				case TypeDeDocumentComptable.Exploitation:
-					return "Compte d'exploitation";
-
-				case TypeDeDocumentComptable.Budgets:
-					return "Budgets";
-
-				case TypeDeDocumentComptable.Change:
-					return "Différences de change";
-
-				case TypeDeDocumentComptable.RésuméPériodique:
-					return "Résumé périodique";
-
-				case TypeDeDocumentComptable.RésuméTVA:
-					return "Résumé TVA";
-
-				case TypeDeDocumentComptable.DécompteTVA:
-					return "Décompte TVA";
-			}
-
-			return FormattedText.Empty;
-		}
-
-		private TypeDeDocumentComptable GetToolbarCommand(string commandName)
-		{
-			switch (commandName)
-			{
-				case "Présentation.Journal":
-					return TypeDeDocumentComptable.Journal;
-
-				case "Présentation.PlanComptable":
-					return TypeDeDocumentComptable.PlanComptable;
-
-				case "Présentation.Balance":
-					return TypeDeDocumentComptable.Balance;
-
-				case "Présentation.Extrait":
-					return TypeDeDocumentComptable.Extrait;
-
-				case "Présentation.Bilan":
-					return TypeDeDocumentComptable.Bilan;
-
-				case "Présentation.PP":
-					return TypeDeDocumentComptable.PP;
-
-				case "Présentation.Exploitation":
-					return TypeDeDocumentComptable.Exploitation;
-
-				case "Présentation.Budgets":
-					return TypeDeDocumentComptable.Budgets;
-
-				case "Présentation.Change":
-					return TypeDeDocumentComptable.Change;
-
-				case "Présentation.RésuméPériodique":
-					return TypeDeDocumentComptable.RésuméPériodique;
-
-				case "Présentation.RésuméTVA":
-					return TypeDeDocumentComptable.RésuméTVA;
-
-				case "Présentation.DécompteTVA":
-					return TypeDeDocumentComptable.DécompteTVA;
-			}
-
-			return TypeDeDocumentComptable.Journal;
 		}
 
 
@@ -251,7 +168,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.ribbonController.PrésentationCommandsUpdate (e.Command);
 
-			this.selectedType = this.GetToolbarCommand (e.Command.Name);
+			this.selectedCommandDocument = e.Command;
 			this.CreateController ();
 		}
 
@@ -365,7 +282,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Window									window;
 		private BusinessContext							businessContext;
 		private ComptabilitéEntity						comptabilité;
-		private TypeDeDocumentComptable					selectedType;
+		private Command									selectedCommandDocument;
 		private AbstractController						controller;
 		private RibbonController						ribbonController;
 		private FrameBox								mainFrame;

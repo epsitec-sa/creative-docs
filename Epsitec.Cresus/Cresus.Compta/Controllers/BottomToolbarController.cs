@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.showHideButton.GlyphShape = this.toolbarShowed ? GlyphShape.ArrowDown : GlyphShape.ArrowUp;
 			this.showHideButton.Margins = new Margins (0, 0, 0, this.toolbarShowed ? 25+this.bottomOffset : 2);
 
-			ToolTip.Default.SetToolTip (this.showHideButton, this.toolbarShowed ? "Cache la barre d'outils" : "Montre la barre d'outils");
+			ToolTip.Default.SetToolTip (this.showHideButton, this.toolbarShowed ? "Cache la barre d'information" : "Montre la barre d'information");
 
 			this.toolbar.Visibility   = this.toolbarShowed;
 		}

@@ -12,9 +12,9 @@ using Epsitec.Cresus.Compta.Controllers;
 
 namespace Epsitec.Cresus.Compta
 {
-	public class ComptaApplication : CoreInteractiveApp
+	public class CoreApplication : CoreInteractiveApp
 	{
-		public ComptaApplication()
+		public CoreApplication()
 		{
 		}
 
@@ -67,8 +67,8 @@ namespace Epsitec.Cresus.Compta
 			var comptabilité = this.Data.GetRepository<ComptabilitéEntity> ().GetAllEntities ().FirstOrDefault ();
 
 			var window = this.Window;
-			var controller = new DocumentWindowController (this, new List<AbstractController> (), this.businessContext, comptabilité, TypeDeDocumentComptable.Journal);
-			controller.SetupApplicationWindow (window);
+			//var controller = new DocumentWindowController (this, new List<AbstractController> (), this.businessContext, comptabilité, TypeDeDocumentComptable.Journal);
+			//controller.SetupApplicationWindow (window);
 			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
 		}
 

@@ -42,16 +42,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public FrameBox CreateUI(FrameBox parent)
 		{
-			this.frameBox = new CatcherFrameBox
+			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
+			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
+			this.SetCommandEnable (Res.Commands.Edit.Duplicate, false);
+			this.SetCommandEnable (Res.Commands.Edit.Delete, false);
+			this.SetCommandEnable (Res.Commands.Multi.Insert, false);
+			this.SetCommandEnable (Res.Commands.Multi.Delete, false);
+			this.SetCommandEnable (Res.Commands.Multi.Up, false);
+			this.SetCommandEnable (Res.Commands.Multi.Down, false);
+			this.SetCommandEnable (Res.Commands.Multi.Swap, false);
+			this.SetCommandEnable (Res.Commands.Multi.Auto, false);
+
+			this.frameBox = new FrameBox
 			{
 				Parent        = parent,
 				Dock          = DockStyle.Fill,
-				CatcherAction = this.CatcherAction,
 			};
-
-			this.frameBox.KeyCodes.Add (KeyCode.Return);
-			this.frameBox.KeyCodes.Add (KeyCode.NumericEnter);
-			this.frameBox.KeyCodes.Add (KeyCode.Escape);
 
 			this.CreateTopToolbar (this.frameBox);
 			this.CreateOptions (this.frameBox);
@@ -102,23 +108,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.footerController != null)
 			{
 				this.footerController.FinalUpdate ();
-			}
-		}
-
-		private void CatcherAction(KeyCode keyCode, bool isShiftPressed)
-		{
-			if (this.footerController != null)
-			{
-				if (keyCode == KeyCode.Return      ||
-					keyCode == KeyCode.NumericEnter)
-				{
-					this.footerController.AcceptAction ();
-				}
-
-				if (keyCode == KeyCode.Escape)
-				{
-					this.footerController.CancelAction ();
-				}
 			}
 		}
 
@@ -411,6 +400,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractOptionsController						optionsController;
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;
-		protected CatcherFrameBox								frameBox;
+		protected FrameBox										frameBox;
 	}
 }
