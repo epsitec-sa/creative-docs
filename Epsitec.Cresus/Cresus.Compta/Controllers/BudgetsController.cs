@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BudgetsController : AbstractController
 	{
-		public BudgetsController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
-			: base (app, businessContext, comptabilitéEntity, controllers)
+		public BudgetsController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
+			: base (app, businessContext, comptabilitéEntity)
 		{
 			this.dataAccessor = new BudgetsDataAccessor (this.businessContext, this.comptabilitéEntity);
 			this.InitializeColumnMapper ();

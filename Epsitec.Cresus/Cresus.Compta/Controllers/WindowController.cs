@@ -61,6 +61,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateController ();
 		}
 
+
+		public List<AbstractController> Controllers
+		{
+			get
+			{
+				return this.controllers;
+			}
+		}
+
+		
 		private void SelectDefaultPrésentation()
 		{
 			if (this.comptabilité.PlanComptable.Any ())
@@ -91,7 +101,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding = new Margins (3),
 			};
 
-			var controller = this.CreateController (command);
+			var controller = this.CreateController (newWindow, command);
 			controller.CreateUI (frame);
 			controllers.Add (controller);
 
@@ -110,60 +120,67 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.DisposeController ();
 
-			this.controller = this.CreateController (this.selectedCommandDocument);
+			this.controller = this.CreateController (this.mainWindow, this.selectedCommandDocument);
 
 			if (this.controller != null)
 			{
 				this.controller.CreateUI (this.mainFrame);
 				this.controllers.Add (this.controller);
 			}
-
-			this.UpdateTitle ();
 		}
 
-		private AbstractController CreateController(Command command)
+		private AbstractController CreateController(Window parentWindow, Command command)
 		{
+			AbstractController controller = null;
+
 			if (command.Name.EndsWith ("Présentation.Journal"))
 			{
-				return new JournalController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new JournalController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PlanComptable"))
 			{
-				return new PlanComptableController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Balance"))
 			{
-				return new BalanceController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new BalanceController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Extrait"))
 			{
-				return new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Bilan"))
 			{
-				return new BilanController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new BilanController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PP"))
 			{
-				return new PPController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new PPController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Exploitation"))
 			{
-				return new ExploitationController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new ExploitationController (this.app, this.businessContext, this.comptabilité);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Budgets"))
 			{
-				return new BudgetsController (this.app, this.businessContext, this.comptabilité, this.controllers);
+				controller = new BudgetsController (this.app, this.businessContext, this.comptabilité);
 			}
 
-			return null;
+			if (controller != null)
+			{
+				controller.WindowController = this;
+				controller.ParentWindow     = parentWindow;
+				controller.CommandDocument  = command;
+			}
+
+			return controller;
 		}
 
 		private void DisposeController()
@@ -193,9 +210,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindow.Text = this.GetTitle (this.selectedCommandDocument);
 		}
 
-		private string GetTitle(Command command)
+		public string GetTitle(Command command)
 		{
 			return string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
+		}
+
+		private void UpdateControllers()
+		{
+			//	Met à jour tous les contrôleurs.
+			foreach (var controller in this.controllers)
+			{
+				controller.Update ();
+			}
 		}
 
 
@@ -238,18 +264,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return dialog.FileName;
 		}
+
+		private void ErrorDialog(string message)
+		{
+			var dialog = MessageDialog.CreateOk ("Erreur", Common.Dialogs.DialogIcon.Warning, message);
+
+			dialog.OwnerWindow = this.mainWindow;
+			dialog.OpenDialog ();
+		}
 		#endregion
 
-
-		private void UpdateControllers()
-		{
-			//	Met à jour tous les contrôleurs.
-			foreach (var controller in this.controllers)
-			{
-				controller.Update ();
-			}
-
-		}
 
 		#region Command handlers
 		[Command (Res.CommandIds.File.New)]
@@ -272,6 +296,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (!string.IsNullOrEmpty (err))
 				{
+					this.ErrorDialog (err);
 				}
 			}
 		}

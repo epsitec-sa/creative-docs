@@ -29,14 +29,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractController
 	{
-		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, List<AbstractController> controllers)
+		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity)
 		{
 			this.app                = app;
 			this.businessContext    = businessContext;
 			this.comptabilitéEntity = comptabilitéEntity;
-			this.controllers        = controllers;
 
 			this.app.CommandDispatcher.RegisterController (this);
+		}
+
+
+		public WindowController WindowController
+		{
+			get
+			{
+				return this.windowController;
+			}
+			set
+			{
+				this.windowController = value;
+			}
+		}
+
+		public Window ParentWindow
+		{
+			get
+			{
+				return this.parentWindow;
+			}
+			set
+			{
+				this.parentWindow = value;
+			}
+		}
+
+		public Command CommandDocument
+		{
+			get
+			{
+				return this.commandDocument;
+			}
+			set
+			{
+				this.commandDocument = value;
+			}
 		}
 
 
@@ -276,6 +312,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.footerController.UpdateFooterContent ();
 			}
+
+			this.parentWindow.Text = this.windowController.GetTitle (this.commandDocument);
 		}
 
 		protected void UpdateArrayContent()
@@ -283,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour le contenu du tableau.
 			this.BaseUpdateArrayContent ();
 
-			foreach (var controller in this.controllers)
+			foreach (var controller in this.windowController.Controllers)
 			{
 				if (controller != this)
 				{
@@ -403,7 +441,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptabilitéEntity					comptabilitéEntity;
-		protected readonly List<AbstractController>				controllers;
+
+		protected WindowController								windowController;
+		protected Window										parentWindow;
+		protected Command										commandDocument;
 
 		protected AbstractDataAccessor							dataAccessor;
 		protected List<ColumnMapper>							columnMappers;

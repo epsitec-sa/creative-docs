@@ -15,10 +15,25 @@ namespace Epsitec.Cresus.Compta
 	{
 		public static string Import(ComptabilitéEntity comptabilité, string filename)
 		{
+			//	Importe un plan comptable "crp".
+			string ext = System.IO.Path.GetExtension (filename).ToLower ();
+			if (ext != ".crp")
+			{
+				return "Le fichier ne contient pas un plan comptable.";
+			}
+
 			try
 			{
 				var lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
-				return ImportExport.Import (comptabilité, lines);
+
+				try
+				{
+					return ImportExport.Import (comptabilité, lines);
+				}
+				catch (System.Exception ex)
+				{
+					return string.Concat ("Le fichier ne contient pas un plan comptable.<br/>", ex.Message);
+				}
 			}
 			catch (System.Exception ex)
 			{
@@ -31,6 +46,7 @@ namespace Epsitec.Cresus.Compta
 			comptabilité.Journal.Clear ();
 			comptabilité.PlanComptable.Clear ();
 
+			//	Importe les données globales.
 			{
 				int i = ImportExport.IndexOfLine (lines, "TITLE=");
 				if (i != -1)
@@ -55,7 +71,7 @@ namespace Epsitec.Cresus.Compta
 				}
 			}
 
-			//	Importe tous les comptes
+			//	Importe tous les comptes.
 			int indexCompte = ImportExport.IndexOfLine (lines, "BEGIN=COMPTES");
 
 			var groups  = new Dictionary<string, string> ();
@@ -121,7 +137,7 @@ namespace Epsitec.Cresus.Compta
 				}
 			}
 
-			//	Met après-coup les champs de type pointeur.
+			//	Met après-coup les champs qui pointent sur des comptes.
 			foreach (var item in groups)
 			{
 				var c1 = comptabilité.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
@@ -237,7 +253,8 @@ namespace Epsitec.Cresus.Compta
 					return lines[index].Substring (key.Length).Trim ();
 				}
 
-				if (lines[index].StartsWith ("ENTRY"))  // est-on sur l'entrée suivante ?
+				if (lines[index].StartsWith ("ENTRY") ||  // est-on sur l'entrée suivante ?
+					lines[index].StartsWith ("END="))     // fin du bloc ?
 				{
 					break;
 				}
