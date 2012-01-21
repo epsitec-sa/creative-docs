@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1016" name="Cresus.Compta" layer="A" textMode="FormattedText" assemblies="Cresus.Compta" namespace="Epsitec.Cresus.Compta">
   <Versions>
-    <Version id="2" build="23" date="2012-01-21T08:04:44.6695944Z" />
+    <Version id="2" build="24" date="2012-01-21T15:57:11.5846688Z" />
   </Versions>
 </ModuleInfo>
