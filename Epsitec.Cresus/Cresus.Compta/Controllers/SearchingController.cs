@@ -121,15 +121,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.searchButtonClear.Clicked += delegate
 			{
-				while (this.data.TabsData.Count > 1)
-				{
-					this.data.TabsData.RemoveAt (1);
-				}
-
-				this.data.TabsData[0].Clear ();
-
-				this.CreateMiddleUI ();
-				this.searchStartAction ();
+				this.SearchClear ();
 			};
 
 			ToolTip.Default.SetToolTip (this.searchButtonClear, "Termine la recherche");
@@ -250,6 +242,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		public void SetFocus()
+		{
+			this.tabControllers[0].SetFocus ();
+		}
+
+		public void SearchClear()
+		{
+			while (this.data.TabsData.Count > 1)
+			{
+				this.data.TabsData.RemoveAt (1);
+			}
+
+			this.data.TabsData[0].Clear ();
+
+			this.CreateMiddleUI ();
+			this.searchStartAction ();
+		}
 
 		public void SetSearchingCount(int dataCount, int? count)
 		{

@@ -40,8 +40,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			set
 			{
-				this.showPanel = value;
-				this.toolbar.Visibility = this.showPanel;
+				if (this.showPanel != value)
+				{
+					this.showPanel = value;
+					this.toolbar.Visibility = this.showPanel;
+
+					if (this.showPanel)
+					{
+						this.searchingController.SetFocus ();
+					}
+					else
+					{
+						this.searchingController.SearchClear ();
+					}
+				}
 			}
 		}
 
@@ -57,6 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 6),
 				Padding         = new Margins (5),
+				Visibility      = false,
 			};
 
 			this.searchingController = new SearchingController (this.searchingData, this.columnMappers);

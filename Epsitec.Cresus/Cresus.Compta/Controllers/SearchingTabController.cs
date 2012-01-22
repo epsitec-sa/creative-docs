@@ -131,6 +131,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return frameBox;
 		}
 
+		public void SetFocus()
+		{
+			if (this.searchingFieldEx.Visibility)
+			{
+				this.searchingFieldEx.Focus ();
+			}
+			else
+			{
+				this.searchingField.Focus ();
+			}
+		}
+
 		public void UpdateColumns(List<ColumnMapper> columnMappers)
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
@@ -181,7 +193,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (desc.IsNullOrEmpty)
 					{
-						desc = string.Format ("colonne {0}", (i+1).ToString ());
+						desc = string.Format ("colonne n° {0}", (i+1).ToString ());
 					}
 
 					this.columnField.Items.Add ("Dans " + desc);
