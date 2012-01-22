@@ -21,9 +21,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class ExtraitDeCompteOptions : AbstractOptions
 	{
-		public ExtraitDeCompteOptions(ComptaEntity comptaEntity)
-			: base (comptaEntity)
+		public override void SetComptaEntity(ComptaEntity compta)
 		{
+			base.SetComptaEntity (compta);
+
 			//	Utilise le premier compte normal par défaut.
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 

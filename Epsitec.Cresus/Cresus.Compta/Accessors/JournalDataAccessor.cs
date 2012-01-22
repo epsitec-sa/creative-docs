@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
 			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new JournalOptions (this.comptaEntity);
+			this.options = this.windowController.GetSettingsOptions<JournalOptions> ("Présentation.JournalOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 			this.StartCreationData ();

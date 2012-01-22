@@ -7,6 +7,8 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Compta.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +19,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public interface ISettingsData
 	{
-		string GetKey ();
+		// Devra contenir des méthodes pour sérialiser/désérialiser le contenu.
 	}
 }

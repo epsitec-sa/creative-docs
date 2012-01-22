@@ -21,14 +21,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalOptions : AbstractOptions
 	{
-		public JournalOptions(ComptaEntity comptaEntity)
-			: base (comptaEntity)
+		public override void SetComptaEntity(ComptaEntity compta)
 		{
+			base.SetComptaEntity (compta);
+
 			this.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
 		}
 
 
 		public ComptaJournalEntity Journal
+		{
+			get;
+			set;
+		}
+
+		public bool IsExtended
 		{
 			get;
 			set;

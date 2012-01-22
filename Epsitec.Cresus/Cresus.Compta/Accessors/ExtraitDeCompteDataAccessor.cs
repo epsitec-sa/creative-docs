@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
 			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new ExtraitDeCompteOptions (this.comptaEntity);
+			this.options = this.windowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompteOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}

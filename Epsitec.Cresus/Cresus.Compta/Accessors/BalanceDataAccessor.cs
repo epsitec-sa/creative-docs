@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BalanceDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
 			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new BalanceOptions (this.comptaEntity);
+			this.options = this.windowController.GetSettingsOptions<BalanceOptions> ("Présentation.BalanceOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}

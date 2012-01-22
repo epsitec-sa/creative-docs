@@ -26,9 +26,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalOptionsController(ComptaEntity comptaEntity, JournalOptions options)
 			: base (comptaEntity, options)
 		{
+#if false
 			//	S'il n'y a qu'un journal, on ouvre le panneau en mode étendu, car la seule chose
 			//	à faire est éventuellement d'en créer un.
 			this.isExtended = (this.comptaEntity.Journaux.Count == 1);
+#endif
 		}
 
 
@@ -362,19 +364,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.modeButton.Clicked += delegate
 			{
-				this.isExtended = !this.isExtended;
+				this.Options.IsExtended = !this.Options.IsExtended;
 				this.UpdateMode ();
 			};
 		}
 
 		private void UpdateMode()
 		{
-			this.modeButton.GlyphShape = this.isExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			this.modeButton.Margins = new Margins (0, 0, 0, this.isExtended ? 0 : 3);
-			ToolTip.Default.SetToolTip (this.modeButton, this.isExtended ? "Réduit le panneau" : "Etend le panneau pour permettre de modifier la liste des journaux");
+			this.modeButton.GlyphShape = this.Options.IsExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
+			this.modeButton.Margins = new Margins (0, 0, 0, this.Options.IsExtended ? 0 : 3);
+			ToolTip.Default.SetToolTip (this.modeButton, this.Options.IsExtended ? "Réduit le panneau" : "Etend le panneau pour permettre de modifier la liste des journaux");
 
-			this.comptactFrame.Visibility = !this.isExtended;
-			this.extendedFrame.Visibility =  this.isExtended;
+			this.comptactFrame.Visibility = !this.Options.IsExtended;
+			this.extendedFrame.Visibility =  this.Options.IsExtended;
 		}
 
 
@@ -462,7 +464,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static readonly double JournauxWidth = 200;
 
-		private bool					isExtended;
 		private GlyphButton				modeButton;
 
 		private FrameBox				comptactFrame;

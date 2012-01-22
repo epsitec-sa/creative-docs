@@ -19,11 +19,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Cette classe décrit les options d'affichage génériques de la comptabilité.
 	/// </summary>
-	public abstract class AbstractOptions
+	public abstract class AbstractOptions : ISettingsData
 	{
-		public AbstractOptions(ComptaEntity comptaEntity)
+		public AbstractOptions()
 		{
-			this.comptaEntity = comptaEntity;
+		}
+
+		public virtual void SetComptaEntity(ComptaEntity compta)
+		{
+			this.comptaEntity = compta;
 		}
 
 
@@ -108,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected readonly ComptaEntity				comptaEntity;
+		protected ComptaEntity						comptaEntity;
 
 		protected int?								profondeur;
 		protected Date?								dateDébut;

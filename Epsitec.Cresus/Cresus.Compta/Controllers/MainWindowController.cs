@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.businessContext = null;
 			this.controllers = new List<AbstractController> ();
+			this.settingsDatas = new Dictionary<string, ISettingsData> ();
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
@@ -568,20 +569,41 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		private readonly Application					app;
-		private readonly List<AbstractController>		controllers;
+		#region Settings data
+		public AbstractOptions GetSettingsOptions<T>(string key, ComptaEntity compta)
+			where T : AbstractOptions, new ()
+		{
+			ISettingsData result;
+			if (this.settingsDatas.TryGetValue (key, out result))
+			{
+				return result as AbstractOptions;
+			}
 
-		private Window									mainWindow;
-		private BusinessContext							businessContext;
-		private ComptaEntity							compta;
-		private Command									selectedCommandDocument;
-		private AbstractController						controller;
-		private RibbonController						ribbonController;
-		private FrameBox								mainFrame;
-		private string									titleComplement;
-		private bool									dirty;
-		private bool									showSearchPanel;
-		private bool									showOptionsPanel;
-		private bool									showInfoPanel;
+			AbstractOptions data = new T ();
+			data.SetComptaEntity (compta);
+
+			this.settingsDatas.Add (key, data);
+
+			return data;
+		}
+		#endregion
+
+
+		private readonly Application						app;
+		private readonly List<AbstractController>			controllers;
+		private readonly Dictionary<string, ISettingsData>	settingsDatas;
+
+		private Window										mainWindow;
+		private BusinessContext								businessContext;
+		private ComptaEntity								compta;
+		private Command										selectedCommandDocument;
+		private AbstractController							controller;
+		private RibbonController							ribbonController;
+		private FrameBox									mainFrame;
+		private string										titleComplement;
+		private bool										dirty;
+		private bool										showSearchPanel;
+		private bool										showOptionsPanel;
+		private bool										showInfoPanel;
 	}
 }

@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PPDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
 			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new PPOptions (this.comptaEntity);
+			this.options = this.windowController.GetSettingsOptions<PPOptions> ("Présentation.PPOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}

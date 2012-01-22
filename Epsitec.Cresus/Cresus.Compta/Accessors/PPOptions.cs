@@ -21,12 +21,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PPOptions : AbstractOptions
 	{
-		public PPOptions(ComptaEntity comptaEntity)
-			: base (comptaEntity)
-		{
-		}
-
-
 		public bool ComptesNuls
 		{
 			//	Affiche les comptes dont le solde est nul ?
