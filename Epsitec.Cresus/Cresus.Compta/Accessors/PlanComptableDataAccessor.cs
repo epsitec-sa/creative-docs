@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			if (row > 0 && row < this.comptaEntity.PlanComptable.Count-1 && this.Compare (row+1, numéro) < 0)
+			if (row < this.comptaEntity.PlanComptable.Count-1 && this.Compare (row+1, numéro) < 0)
 			{
 				return false;
 			}

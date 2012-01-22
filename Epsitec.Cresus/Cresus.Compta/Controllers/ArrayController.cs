@@ -155,7 +155,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (sel != -1)
 			{
-				this.SelectedRow = System.Math.Min (sel, this.array.TotalRows-1);
+				int adjustedSel = System.Math.Min (sel, this.array.TotalRows-1);
+
+				if (adjustedSel != sel)
+				{
+					this.ignoreChanged = true;
+					this.SelectedRow = sel;
+					this.ignoreChanged = false;
+				}
 			}
 
 			int firstRow, countRow;
@@ -165,11 +172,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				int lastRow = firstRow+countRow;
 
-				firstRow = System.Math.Min (firstRow, this.array.TotalRows-1);
-				lastRow  = System.Math.Min (lastRow, this.array.TotalRows-1);
-				countRow = System.Math.Max (lastRow-firstRow, 1);
+				int adjustedFirstRow = System.Math.Min (firstRow, this.array.TotalRows-1);
+				int adjustedLastRow  = System.Math.Min (lastRow, this.array.TotalRows-1);
+				int adjustedCountRow = System.Math.Max (lastRow-firstRow, 1);
 
-				this.SetHilitedRows (firstRow, countRow);
+				if (adjustedFirstRow != firstRow || adjustedCountRow != countRow)
+				{
+					this.SetHilitedRows (adjustedFirstRow, adjustedCountRow);
+				}
 			}
 		}
 

@@ -257,7 +257,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int row = this.GetSortedRow (écriture.Date);
 				this.journal.Insert (row, écriture);
 
-				int globalRow = this.GetGlobalSortedRow (écriture.Date);
+				int globalRow = this.GetSortedRow (écriture.Date, global: true);
 				this.comptaEntity.Journal.Insert (globalRow, écriture);
 
 				if (firstRow == -1)
@@ -284,12 +284,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			//	On passe dans l'espace global.
 			row = this.comptaEntity.Journal.IndexOf (initialEcriture);
+			int globalFirstEditerRow = row;
 
 			int multiId = this.comptaEntity.Journal[row].MultiId;
 
 			foreach (var data in this.editionData)
 			{
-				if (row >= this.firstEditedRow+this.initialCountEditedRow)
+				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{
 					//	Crée une écriture manquante.
 					var écriture = this.CreateEcriture ();
@@ -321,19 +322,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.countEditedRow = this.editionData.Count;
 
 			//	Vérifie si les écritures modifiées doivent changer de place.
-			if (!this.HasCorrectOrder (this.firstEditedRow) ||
-				!this.HasCorrectOrder (this.firstEditedRow+this.countEditedRow-1))
+			if (!this.HasCorrectOrder (globalFirstEditerRow, global: true) ||
+				!this.HasCorrectOrder (globalFirstEditerRow+this.countEditedRow-1, global: true))
 			{
 				var temp = new List<ComptaEcritureEntity> ();
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var écriture = this.comptaEntity.Journal[this.firstEditedRow];
+					var écriture = this.comptaEntity.Journal[globalFirstEditerRow];
                     temp.Add (écriture);
-					this.comptaEntity.Journal.RemoveAt (this.firstEditedRow);
+					this.comptaEntity.Journal.RemoveAt (globalFirstEditerRow);
                 }
 
-				int newRow = this.GetSortedRow (temp[0].Date);
+				int newRow = this.GetSortedRow (temp[0].Date, global: true);
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
@@ -341,7 +342,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.comptaEntity.Journal.Insert (newRow+i, écriture);
                 }
 
-				this.firstEditedRow = newRow;
+				globalFirstEditerRow = newRow;
 			}
 
 			//	On revient dans l'espace spécifique.
@@ -403,20 +404,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private bool HasCorrectOrder(int row)
+		private bool HasCorrectOrder(int row, bool global = false)
 		{
-			var écriture = this.journal[row];
-			return this.HasCorrectOrder (row, écriture.Date);
+			var journal = this.GetJournal (global);
+			var écriture = journal[row];
+			return this.HasCorrectOrder (row, écriture.Date, global);
 		}
 
-		private bool HasCorrectOrder(int row, Date date)
+		private bool HasCorrectOrder(int row, Date date, bool global = false)
 		{
-			if (row > 0 && this.Compare (row-1, date) > 0)
+			var journal = this.GetJournal (global);
+
+			if (row > 0 && this.Compare (row-1, date, global) > 0)
 			{
 				return false;
 			}
 
-			if (row > 0 && row < this.journal.Count-1 && this.Compare (row+1, date) < 0)
+			if (row < journal.Count-1 && this.Compare (row+1, date, global) < 0)
 			{
 				return false;
 			}
@@ -424,24 +428,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return true;
 		}
 
-		private int Compare(int row, Date date)
+		private int Compare(int row, Date date, bool global)
 		{
-			var écriture = this.journal[row];
+			var journal = this.GetJournal (global);
+			var écriture = journal[row];
 			return écriture.Date.CompareTo (date);
 		}
 
-		private int GetSortedRow(Date date)
+		private int GetSortedRow(Date date, bool global = false)
 		{
-			return JournalDataAccessor.GetSortedRow (this.journal, date);
-		}
+			var journal = this.GetJournal (global);
 
-		private int GetGlobalSortedRow(Date date)
-		{
-			return JournalDataAccessor.GetSortedRow (this.comptaEntity.Journal, date);
-		}
-
-		private static int GetSortedRow(IList<ComptaEcritureEntity> journal, Date date)
-		{
 #if false
 			for (int row = count-1; row >= 0; row--)
             {
@@ -504,6 +501,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 #endif
 		}
 
+		private IList<ComptaEcritureEntity> GetJournal(bool global)
+		{
+			if (global)
+			{
+				return this.comptaEntity.Journal;
+			}
+			else
+			{
+				return this.journal;
+			}
+		}
+
 		private void ExploreMulti(int row, out int firstRow, out int countRow)
 		{
 			//	A partir d'une ligne quelconque d'une écriture multiple, retourne la première et le nombre (1..n).
@@ -535,12 +544,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (écriture.MultiId != multiId)
 				{
-					firstRow = row+1;
+					row++;
 					break;
 				}
+
+				firstRow = row;
 			}
 
-			row++;
 			countRow = 0;
 			while (row < this.Count)
 			{

@@ -281,6 +281,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.Options.Journal.Name = this.extendedFieldName.FormattedText;
 					this.UpdateCombo ();
 					this.UpdateList ();
+					optionsChanged ();
 				}
 			};
 
