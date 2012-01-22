@@ -111,6 +111,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public AbstractOptionsController OptionsController
+		{
+			get
+			{
+				return this.optionsController;
+			}
+		}
+
 		protected void FinalUpdate()
 		{
 			if (this.footerController != null)

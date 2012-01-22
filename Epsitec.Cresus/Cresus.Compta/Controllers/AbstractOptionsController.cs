@@ -48,11 +48,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.showPanel = value;
 				this.toolbar.Visibility = this.showPanel;
+
+				if (this.showPanel)
+				{
+					this.UpdateContent ();
+				}
 			}
 		}
 
 
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
+		{
+		}
+
+		public virtual void UpdateContent()
 		{
 		}
 

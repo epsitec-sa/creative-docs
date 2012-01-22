@@ -49,7 +49,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateExtendedJournalUI (this.toolbar, optionsChanged);
 			this.CreateModeButtonUI (this.toolbar);
 			this.UpdateMode ();
+			this.UpdateSummary ();
 		}
+
+		public override void UpdateContent()
+		{
+			if (this.showPanel)
+			{
+				this.UpdateSummary ();
+			}
+		}
+
 
 		private void CreateComptactJournalUI(FrameBox parent, System.Action optionsChanged)
 		{
@@ -69,7 +79,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.comboJournaux = new TextFieldCombo
+			this.compactComboJournaux = new TextFieldCombo
 			{
 				Parent          = this.comptactFrame,
 				PreferredWidth  = JournalOptionsController.JournauxWidth,
@@ -78,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.summary = new StaticText
+			this.compactSummary = new StaticText
 			{
 				Parent  = this.comptactFrame,
 				Dock    = DockStyle.Fill,
@@ -86,13 +96,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.UpdateCombo ();
-			this.UpdateSummary ();
 
-			this.comboJournaux.TextChanged += delegate
+			this.compactComboJournaux.TextChanged += delegate
 			{
 				if (!this.ignoreChange)
 				{
-					var journal = this.comptaEntity.Journaux.Where (x => x.Name == this.comboJournaux.FormattedText).FirstOrDefault ();
+					var journal = this.comptaEntity.Journaux.Where (x => x.Name == this.compactComboJournaux.FormattedText).FirstOrDefault ();
 					if (journal != null)
 					{
 						this.Options.Journal = journal;
@@ -131,8 +140,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var rightFrame = new FrameBox
 			{
 				Parent          = this.extendedFrame,
-				PreferredWidth  = 80,
-				Dock            = DockStyle.Left,
+				Dock            = DockStyle.Fill,
 			};
 
 			//	Panneau de gauche.
@@ -145,14 +153,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			//	Panneau du milieu.
-			this.listJournaux = new ScrollList
+			this.extendedListJournaux = new ScrollList
 			{
 				Parent  = centerFrame,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (0, 0, 0, 2),
 			};
 
-			this.fieldName = new TextFieldEx
+			this.extendedFieldName = new TextFieldEx
 			{
 				Parent                       = centerFrame,
 				PreferredHeight              = 20,
@@ -163,50 +171,101 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			//	Panneau de droite.
-			this.addButton = new Button
 			{
-				Parent          = rightFrame,
-				Text            = "Nouveau",
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 10),
-			};
+				var frame = new FrameBox
+				{
+					Parent          = rightFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, 10),
+				};
 
-			this.upButton = new Button
-			{
-				Parent          = rightFrame,
-				Text            = "Monter",
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 1),
-			};
+				this.extendedAddButton = new Button
+				{
+					Parent          = frame,
+					Text            = "Nouveau",
+					PreferredHeight = 20,
+					PreferredWidth  = 80,
+					Dock            = DockStyle.Left,
+				};
+			}
 
-			this.downButton = new Button
 			{
-				Parent          = rightFrame,
-				Text            = "Descendre",
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 13),
-			};
+				var frame = new FrameBox
+				{
+					Parent          = rightFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, 1),
+				};
 
-			this.removeButton = new Button
+				this.extendedUpButton = new Button
+				{
+					Parent          = frame,
+					Text            = "Monter",
+					PreferredHeight = 20,
+					PreferredWidth  = 80,
+					Dock            = DockStyle.Left,
+				};
+			}
+
 			{
-				Parent          = rightFrame,
-				Text            = "Supprimer",
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
+				var frame = new FrameBox
+				{
+					Parent          = rightFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				this.extendedDownButton = new Button
+				{
+					Parent          = frame,
+					Text            = "Descendre",
+					PreferredHeight = 20,
+					PreferredWidth  = 80,
+					Dock            = DockStyle.Left,
+				};
+			}
+
+			{
+				var frame = new FrameBox
+				{
+					Parent          = rightFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Bottom,
+				};
+
+				this.extendedRemoveButton = new Button
+				{
+					Parent          = frame,
+					Text            = "Supprimer",
+					PreferredHeight = 20,
+					PreferredWidth  = 80,
+					Dock            = DockStyle.Left,
+				};
+
+				this.extendedSummary = new StaticText
+				{
+					Parent  = frame,
+					Dock    = DockStyle.Fill,
+					Margins = new Margins (20, 0, 0, 0),
+				};
+			}
+
+			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Crée un nouveau journal pouvant contenir des écritures");
+			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le journal d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le journal d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le journal (il ne contient aucune écriture)");
 
 			//	Connexions.
 			this.UpdateList ();
 			this.UpdateButtons ();
 
-			this.listJournaux.SelectedItemChanged += delegate
+			this.extendedListJournaux.SelectedItemChanged += delegate
 			{
-				if (!this.ignoreChange && this.listJournaux.SelectedItemIndex != -1)
+				if (!this.ignoreChange && this.extendedListJournaux.SelectedItemIndex != -1)
 				{
-					this.Options.Journal = this.comptaEntity.Journaux[this.listJournaux.SelectedItemIndex];
+					this.Options.Journal = this.comptaEntity.Journaux[this.extendedListJournaux.SelectedItemIndex];
 					this.UpdateCombo ();
 					this.UpdateList ();
 					this.UpdateButtons ();
@@ -215,17 +274,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			};
 
-			this.fieldName.EditionAccepted += delegate
+			this.extendedFieldName.EditionAccepted += delegate
 			{
 				if (!this.ignoreChange)
 				{
-					this.Options.Journal.Name = this.fieldName.FormattedText;
+					this.Options.Journal.Name = this.extendedFieldName.FormattedText;
 					this.UpdateCombo ();
 					this.UpdateList ();
 				}
 			};
 
-			this.addButton.Clicked += delegate
+			this.extendedAddButton.Clicked += delegate
 			{
 				var nouveauJournal = new ComptaJournalEntity ();
 				nouveauJournal.Name = this.NewJournalName;
@@ -238,13 +297,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateSummary ();
 				optionsChanged ();
 
-				this.fieldName.SelectAll ();
-				this.fieldName.Focus ();
+				this.extendedFieldName.SelectAll ();
+				this.extendedFieldName.Focus ();
 			};
 
-			this.upButton.Clicked += delegate
+			this.extendedUpButton.Clicked += delegate
 			{
-				int sel = this.listJournaux.SelectedItemIndex;
+				int sel = this.extendedListJournaux.SelectedItemIndex;
 
 				var j1 = this.comptaEntity.Journaux[sel-1];
 				var j2 = this.comptaEntity.Journaux[sel];
@@ -257,9 +316,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateButtons ();
 			};
 
-			this.downButton.Clicked += delegate
+			this.extendedDownButton.Clicked += delegate
 			{
-				int sel = this.listJournaux.SelectedItemIndex;
+				int sel = this.extendedListJournaux.SelectedItemIndex;
 
 				var j1 = this.comptaEntity.Journaux[sel+1];
 				var j2 = this.comptaEntity.Journaux[sel];
@@ -272,9 +331,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateButtons ();
 			};
 
-			this.removeButton.Clicked += delegate
+			this.extendedRemoveButton.Clicked += delegate
 			{
-				int sel = this.listJournaux.SelectedItemIndex;
+				int sel = this.extendedListJournaux.SelectedItemIndex;
 				this.comptaEntity.Journaux.RemoveAt (sel);
 
 				sel = System.Math.Min (sel, this.comptaEntity.Journaux.Count-1);
@@ -320,47 +379,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateCombo()
 		{
-			this.comboJournaux.Items.Clear ();
+			this.compactComboJournaux.Items.Clear ();
 
 			foreach (var journal in this.comptaEntity.Journaux)
 			{
-				this.comboJournaux.Items.Add (journal.Name);
+				this.compactComboJournaux.Items.Add (journal.Name);
 			}
 
 			this.ignoreChange = true;
-			this.comboJournaux.FormattedText = this.Options.Journal.Name;
+			this.compactComboJournaux.FormattedText = this.Options.Journal.Name;
 			this.ignoreChange = false;
 		}
 
 		private void UpdateList()
 		{
-			this.listJournaux.Items.Clear ();
+			this.extendedListJournaux.Items.Clear ();
 
 			foreach (var journal in this.comptaEntity.Journaux)
 			{
-				this.listJournaux.Items.Add (journal.Name);
+				this.extendedListJournaux.Items.Add (journal.Name);
 			}
 
 			this.ignoreChange = true;
-			this.listJournaux.SelectedItemIndex = this.comptaEntity.Journaux.IndexOf (this.Options.Journal);
-			this.fieldName.FormattedText = this.Options.Journal.Name;
+			this.extendedListJournaux.SelectedItemIndex = this.comptaEntity.Journaux.IndexOf (this.Options.Journal);
+			this.extendedFieldName.FormattedText = this.Options.Journal.Name;
 			this.ignoreChange = false;
 		}
 
 		private void UpdateButtons()
 		{
-			int sel = this.listJournaux.SelectedItemIndex;
-			int count = this.listJournaux.Items.Count;
+			int sel = this.extendedListJournaux.SelectedItemIndex;
+			int count = this.extendedListJournaux.Items.Count;
 			int n = this.comptaEntity.GetJournalCount (this.Options.Journal);
 
-			this.upButton.Enable     = (sel != -1 && sel > 0);
-			this.downButton.Enable   = (sel != -1 && sel < count-1);
-			this.removeButton.Enable = (sel != -1 && count > 1 && n == 0);
+			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
+			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
+			this.extendedRemoveButton.Enable = (sel != -1 && count > 1 && n == 0);
 		}
 
 		private void UpdateSummary()
 		{
-			this.summary.Text = this.comptaEntity.GetJournalSummary (this.Options.Journal);
+			var summary = this.comptaEntity.GetJournalSummary (this.Options.Journal);
+
+			this.compactSummary.Text = summary;
+			this.extendedSummary.Text = summary;
 		}
 
 
@@ -403,16 +465,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private GlyphButton				modeButton;
 
 		private FrameBox				comptactFrame;
-		private TextFieldCombo			comboJournaux;
-		private StaticText				summary;
+		private TextFieldCombo			compactComboJournaux;
+		private StaticText				compactSummary;
 
 		private FrameBox				extendedFrame;
-		private ScrollList				listJournaux;
-		private TextFieldEx				fieldName;
-		private Button					addButton;
-		private Button					upButton;
-		private Button					downButton;
-		private Button					removeButton;
+		private ScrollList				extendedListJournaux;
+		private TextFieldEx				extendedFieldName;
+		private Button					extendedAddButton;
+		private Button					extendedUpButton;
+		private Button					extendedDownButton;
+		private Button					extendedRemoveButton;
+		private StaticText				extendedSummary;
 
 		private bool					ignoreChange;
 	}

@@ -252,6 +252,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			
 			this.arrayController.IgnoreChanged = false;
 
+			if (this.abstractController.OptionsController != null)
+			{
+				this.abstractController.OptionsController.UpdateContent ();
+			}
+
 			this.UpdateFooterContent ();
 			this.FooterSelect (this.arrayController.SelectedColumn);
 			this.ShowSelection ();
