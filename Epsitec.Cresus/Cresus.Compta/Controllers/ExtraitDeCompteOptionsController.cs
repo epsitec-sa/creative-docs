@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = Color.FromBrightness (0.96),  // gris très clair
+				BackColor           = AbstractOptionsController.backColor,
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 6),
@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x)).OrderBy (x => x.Numéro);
 			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
 			UIBuilder.CreateAutoCompleteTextField (frame, comptes, out container, out field);
+			field.FormattedText = this.NuméroCompte;
 			container.PreferredWidth = 100;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins (0, 20, 0, 0);

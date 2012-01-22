@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent          = parent,
 				PreferredHeight = TopSearchingController.toolbarHeight,
 				DrawFullFrame   = true,
-				BackColor       = Color.FromBrightness (0.96),  // gris très clair
+				BackColor       = Color.FromHexa ("ffffdd"),  // jaune pastel
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 6),
 				Padding         = new Margins (5),
@@ -61,6 +61,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.searchingController = new SearchingController (this.searchingData, this.columnMappers);
 			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
+		}
+
+
+		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		{
+			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
+			this.columnMappers = columnMappers;
+
+			this.searchingController.UpdateColumns (columnMappers);
 		}
 
 
@@ -81,9 +90,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private static readonly double			toolbarHeight = 20;
 
 		private readonly BusinessContext		businessContext;
-		private readonly List<ColumnMapper>		columnMappers;
 		private readonly SearchingData			searchingData;
 
+		private List<ColumnMapper>				columnMappers;
 		private FrameBox						toolbar;
 		private SearchingController				searchingController;
 		protected bool							showPanel;

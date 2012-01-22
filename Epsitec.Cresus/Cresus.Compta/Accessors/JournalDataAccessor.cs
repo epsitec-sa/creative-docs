@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalDataAccessor : AbstractDataAccessor
 	{
-		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
-			: base (businessContext, comptaEntity, windowController)
+		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, mainWindowController)
 		{
-			this.options = this.windowController.GetSettingsOptions<JournalOptions> ("Présentation.JournalOptions", this.comptaEntity);
+			this.options = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.JournalOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 			this.StartCreationData ();
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.SearchUpdate ();
-			this.windowController.Dirty = true;
+			this.mainWindowController.Dirty = true;
 		}
 
 		private void UpdateCreationData()
@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaEcritureEntity CreateEcriture()
 		{
-			this.windowController.Dirty = true;
+			this.mainWindowController.Dirty = true;
 
 			ComptaEcritureEntity écriture;
 
@@ -391,7 +391,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteEcriture(ComptaEcritureEntity  écriture)
 		{
-			this.windowController.Dirty = true;
+			this.mainWindowController.Dirty = true;
 
 			if (this.businessContext == null)
 			{

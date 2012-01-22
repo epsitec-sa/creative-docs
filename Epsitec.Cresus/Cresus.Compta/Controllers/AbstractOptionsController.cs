@@ -464,6 +464,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		protected static readonly Color backColor = Color.FromHexa ("f0faff");  // bleu pastel
+
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly AbstractOptions						options;
 

@@ -14,23 +14,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class ColumnMapper
 	{
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool hideForSearch)
+			: this (column, relativeWidth, alignment, description, FormattedText.Null, hideForSearch)
+		{
+		}
+
 		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description)
-			: this (column, relativeWidth, alignment, description, FormattedText.Null)
+			: this (column, relativeWidth, alignment, description, FormattedText.Null, false)
 		{
 		}
 
 		public ColumnMapper(ColumnType column, double relativeWidth, FormattedText description, FormattedText tooltip)
-			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip)
+			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip, false)
 		{
 		}
 
 		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip)
+			: this (column, relativeWidth, alignment, description, tooltip, false)
+		{
+		}
+
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool hideForSearch)
 		{
 			this.Column        = column;
 			this.RelativeWidth = relativeWidth;
 			this.Alignment     = alignment;
 			this.Description   = description;
 			this.Tooltip       = tooltip;
+			this.HideForSearch = hideForSearch;
 		}
 
 		public ColumnType Column
@@ -58,6 +69,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public FormattedText Tooltip
+		{
+			get;
+			private set;
+		}
+
+		public bool HideForSearch
 		{
 			get;
 			private set;

@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController = new PPOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as PPOptions);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+
+			this.InitializeColumnMapper ();
 		}
 
 		protected override void OptionsChanged()
@@ -118,15 +120,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (options.HasGraphics)
 				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "");
+					yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "", true);
 				}
 
-				if (options.BudgetEnable)
+				if (options.BudgetEnable && this.optionsController != null)
 				{
 					yield return new ColumnMapper (ColumnType.BudgetGauche, 0.20, ContentAlignment.MiddleRight, this.optionsController.Options.BudgetColumnDescription);
 				}
 
-				yield return new ColumnMapper (ColumnType.Espace,       0.01, ContentAlignment.MiddleLeft,  "");
+				yield return new ColumnMapper (ColumnType.Espace, 0.01, ContentAlignment.MiddleLeft, "", true);
 
 				yield return new ColumnMapper (ColumnType.NuméroDroite, 0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (ColumnType.TitreDroite,  0.60, ContentAlignment.MiddleLeft,  "Produits");
@@ -134,10 +136,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (options.HasGraphics)
 				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "");
+					yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "", true);
 				}
 
-				if (options.BudgetEnable)
+				if (options.BudgetEnable && this.optionsController != null)
 				{
 					yield return new ColumnMapper (ColumnType.BudgetDroite, 0.20, ContentAlignment.MiddleRight, this.optionsController.Options.BudgetColumnDescription);
 				}

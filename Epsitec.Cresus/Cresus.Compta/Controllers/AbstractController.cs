@@ -478,6 +478,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.columnMappers.Add (mapper);
 			}
+
+			if (this.topSearchingController != null)
+			{
+				this.topSearchingController.UpdateColumns (this.columnMappers);
+			}
 		}
 
 		protected virtual IEnumerable<ColumnMapper> ColumnMappers

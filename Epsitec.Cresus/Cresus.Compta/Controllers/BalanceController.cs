@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController = new BalanceOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as BalanceOptions);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+
+			this.InitializeColumnMapper ();
 		}
 
 		protected override void UpdateTitle()

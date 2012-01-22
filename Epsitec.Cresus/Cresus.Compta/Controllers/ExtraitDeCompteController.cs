@@ -64,6 +64,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController = new ExtraitDeCompteOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+
+			this.InitializeColumnMapper ();
 		}
 
 		protected override void OptionsChanged()
@@ -137,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if ((this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).HasGraphics)
 				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "");
+					yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", true);
 				}
 
 				if (this.comptaEntity.Journaux.Count > 1)

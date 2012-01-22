@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class ExtraitDeCompteDataAccessor : AbstractDataAccessor
 	{
-		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
-			: base (businessContext, comptaEntity, windowController)
+		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, mainWindowController)
 		{
-			this.options = this.windowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompteOptions", this.comptaEntity);
+			this.options = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompteOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}

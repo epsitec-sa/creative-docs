@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PPDataAccessor : AbstractDataAccessor
 	{
-		public PPDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
-			: base (businessContext, comptaEntity, windowController)
+		public PPDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, mainWindowController)
 		{
-			this.options = this.windowController.GetSettingsOptions<PPOptions> ("Présentation.PPOptions", this.comptaEntity);
+			this.options = this.mainWindowController.GetSettingsOptions<PPOptions> ("Présentation.PPOptions", this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}

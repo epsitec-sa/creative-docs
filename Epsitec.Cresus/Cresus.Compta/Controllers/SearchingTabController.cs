@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.tabData       = tabData;
 			this.columnMappers = columnMappers;
+
+			this.columnIndexes = new List<int> ();
 		}
 
 
@@ -99,17 +101,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.columnField.SelectedItemChanged += delegate
 			{
-				int sel = this.columnField.SelectedItemIndex - 1;
-				if (sel < 0)
+				if (!this.ignoreChange)
 				{
-					this.tabData.Column = ColumnType.None;
-				}
-				else
-				{
-					this.tabData.Column = this.columnMappers[sel].Column;
-				}
+					int sel = this.columnField.SelectedItemIndex - 1;
+					if (sel < 0)
+					{
+						this.tabData.Column = ColumnType.None;
+					}
+					else
+					{
+						int column = this.columnIndexes[sel];
+						this.tabData.Column = this.columnMappers[column].Column;
+					}
 
-				searchStartAction ();
+					searchStartAction ();
+				}
 			};
 
 			this.addRemoveButton.Clicked += delegate
@@ -123,6 +129,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			ToolTip.Default.SetToolTip (this.columnField,      "Colonne où chercher");
 
 			return frameBox;
+		}
+
+		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		{
+			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
+			this.columnMappers = columnMappers;
+
+			this.InitializeCombo ();
 		}
 
 		public bool AddAction
@@ -151,23 +165,40 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void InitializeCombo()
 		{
 			this.columnField.Items.Clear ();
+			this.columnIndexes.Clear ();
 
 			int sel = 0;
 			this.columnField.Items.Add ("Partout");
+			int index = 1;
 
 			for (int i = 0; i < this.columnMappers.Count; i++)
 			{
 				var mapper = this.columnMappers[i];
 
-				this.columnField.Items.Add ("Dans " + mapper.Description);
-
-				if (mapper.Column == this.tabData.Column)
+				if (!mapper.HideForSearch)
 				{
-					sel = 1+i;
+					FormattedText desc = mapper.Description;
+
+					if (desc.IsNullOrEmpty)
+					{
+						desc = string.Format ("colonne {0}", (i+1).ToString ());
+					}
+
+					this.columnField.Items.Add ("Dans " + desc);
+
+					if (mapper.Column == this.tabData.Column)
+					{
+						sel = index;
+					}
+
+					this.columnIndexes.Add (i);
+					index++;
 				}
 			}
 
+			this.ignoreChange = true;
 			this.columnField.SelectedItemIndex = sel;
+			this.ignoreChange = false;
 		}
 
 		private void UpdateButtons()
@@ -178,14 +209,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private readonly SearchingTabData	tabData;
-		private readonly List<ColumnMapper>	columnMappers;
+		private readonly SearchingTabData		tabData;
+		private readonly List<int>				columnIndexes;
 
-		private TextField					searchingField;
-		private TextFieldEx					searchingFieldEx;
-		private TextFieldCombo				columnField;
-		private GlyphButton					addRemoveButton;
+		private List<ColumnMapper>				columnMappers;
+		private TextField						searchingField;
+		private TextFieldEx						searchingFieldEx;
+		private TextFieldCombo					columnField;
+		private GlyphButton						addRemoveButton;
 
-		private bool						addAction;
+		private bool							addAction;
+		private bool							ignoreChange;
 	}
 }

@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = Color.FromBrightness (0.96),  // gris très clair
+				BackColor           = AbstractOptionsController.backColor,
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 6),

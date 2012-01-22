@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.data          = data;
 			this.columnMappers = columnMappers;
 
+			this.tabControllers = new List<SearchingTabController> ();
+
 			if (this.data.TabsData.Count == 0)
 			{
 				this.data.TabsData.Add (new SearchingTabData ());
@@ -76,6 +78,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return frame;
 		}
 
+
+		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		{
+			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
+			this.columnMappers = columnMappers;
+
+			foreach (var controller in this.tabControllers)
+			{
+				controller.UpdateColumns (columnMappers);
+			}
+		}
+
+	
 		private void CreateLeftUI(FrameBox parent)
 		{
 			var header = new FrameBox
@@ -123,6 +138,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateMiddleUI()
 		{
 			this.middleFrame.Children.Clear ();
+			this.tabControllers.Clear ();
 
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
@@ -135,6 +151,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				frame.TabIndex = i+1;
 				frame.Margins = new Margins (0, 0, 0, (count > 1 && i < count-1) ? 1 : 0);
+
+				this.tabControllers.Add (controller);
 			}
 
 			this.modeFrame.Visibility = (this.data.TabsData.Count > 1);
@@ -299,18 +317,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private readonly SearchingData			data;
-		private readonly List<ColumnMapper>		columnMappers;
+		private readonly SearchingData					data;
+		private readonly List<SearchingTabController>	tabControllers;
 
-		private bool							bigDataInterface;
-		private System.Action					searchStartAction;
-		private System.Action<int>				searchNextAction;
+		private List<ColumnMapper>						columnMappers;
+		private bool									bigDataInterface;
+		private System.Action							searchStartAction;
+		private System.Action<int>						searchNextAction;
 
-		private FrameBox						middleFrame;
-		private GlyphButton						searchButtonClear;
-		private GlyphButton						searchButtonNext;
-		private GlyphButton						searchButtonPrev;
-		private StaticText						searchResult;
-		private FrameBox						modeFrame;
+		private FrameBox								middleFrame;
+		private GlyphButton								searchButtonClear;
+		private GlyphButton								searchButtonNext;
+		private GlyphButton								searchButtonPrev;
+		private StaticText								searchResult;
+		private FrameBox								modeFrame;
 	}
 }
