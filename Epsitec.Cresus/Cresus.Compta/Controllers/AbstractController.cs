@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.CreateTopSearching (this.frameBox);
 			this.CreateOptions (this.frameBox);
+			this.CreateTitle (this.frameBox);
 			this.CreateArray (this.frameBox);
 			this.CreateFooter (this.frameBox);
 
@@ -84,6 +85,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.FinalUpdate ();
+			this.UpdateTitle ();
 			
 			if (this.footerController != null)
 			{
@@ -257,13 +259,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		protected virtual void OptinsChanged()
+		protected virtual void OptionsChanged()
 		{
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.UpdateArrayContent ();
+			this.UpdateTitle ();
 		}
 		#endregion
 
+
+		#region Title
+		private void CreateTitle(FrameBox parent)
+		{
+			this.titleLabel = new StaticText
+			{
+				Parent           = this.frameBox,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Top,
+				Margins          = new Margins (0, 0, 0, 4),
+				Visibility       = false,
+			};
+		}
+
+		protected virtual void UpdateTitle()
+		{
+		}
+
+		protected void SetTitle(FormattedText title)
+		{
+			if (title.IsNullOrEmpty)
+			{
+				this.titleLabel.FormattedText = null;
+				this.titleLabel.Visibility = false;
+			}
+			else
+			{
+				this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
+				this.titleLabel.Visibility = true;
+			}
+		}
+		#endregion
 
 		#region Array
 		private void CreateArray(FrameBox parent)
@@ -486,5 +522,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;
 		protected FrameBox										frameBox;
+		protected StaticText									titleLabel;
 	}
 }

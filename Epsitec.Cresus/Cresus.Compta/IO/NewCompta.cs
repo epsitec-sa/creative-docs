@@ -16,11 +16,25 @@ namespace Epsitec.Cresus.Compta.IO
 	/// </summary>
 	public class NewCompta
 	{
+		public void NewNull(ComptaEntity compta)
+		{
+			compta.Name          = "vide";
+			compta.Description   = null;
+			compta.BeginDate     = null;
+			compta.EndDate       = null;
+			compta.DernièreDate  = null;
+			compta.DernièrePièce = null;
+
+			compta.Journal.Clear ();
+			compta.PlanComptable.Clear ();
+			compta.Journaux.Clear ();
+		}
+
 		public void NewEmpty(ComptaEntity compta)
 		{
 			var now = Date.Today;
-			var beginDate = new Date(now.Year,  1,  1);  // 1 janvier
-			var endDate   = new Date(now.Year, 12, 31);  // 31 décembre
+			var beginDate = new Date (now.Year, 1, 1);  // 1 janvier
+			var endDate   = new Date (now.Year, 12, 31);  // 31 décembre
 
 			compta.Name          = "vide";
 			compta.Description   = null;

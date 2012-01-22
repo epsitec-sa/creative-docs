@@ -34,7 +34,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateAfterOptionsChanged()
 		{
 			var j = (this.options as JournalOptions).Journal;
-			this.journal = this.comptaEntity.Journal.Where (x => x.Journal == j).ToList ();
+
+			if (j == null)
+			{
+				this.journal = this.comptaEntity.Journal;
+			}
+			else
+			{
+				this.journal = this.comptaEntity.Journal.Where (x => x.Journal == j).ToList ();
+			}
 		}
 
 	
@@ -608,6 +616,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static readonly FormattedText		multi = "...";
 
-		private List<ComptaEcritureEntity>			journal;
+		private IList<ComptaEcritureEntity>			journal;
 	}
 }

@@ -37,16 +37,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new JournalOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as JournalOptions);
-			this.optionsController.CreateUI (parent, this.OptinsChanged);
+			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
-		protected override void OptinsChanged()
+		protected override void OptionsChanged()
 		{
+			this.dataAccessor.UpdateAfterOptionsChanged ();
+			this.ClearHilite ();
 			this.InitializeColumnMapper ();
 			this.UpdateArray ();
+			this.footerController.UpdateFooterContent ();
+			this.UpdateArrayContent ();
+			this.UpdateTitle ();
+		}
 
-			base.OptinsChanged ();
+		protected override void UpdateTitle()
+		{
+			var name = (this.optionsController.Options as JournalOptions).Journal.Name;
+			this.SetTitle (TextFormatter.FormatText ("Journal", name));
 		}
 
 

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (comptaEntity)
 		{
 			//	Utilise le premier compte normal par défaut.
-			var compte = this.comptaEntity.PlanComptable.OrderBy (x => x.Numéro).Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
 			if (compte != null)
 			{

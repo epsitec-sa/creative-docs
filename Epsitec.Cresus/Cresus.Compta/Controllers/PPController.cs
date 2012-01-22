@@ -62,16 +62,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new PPOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as PPOptions);
-			this.optionsController.CreateUI (parent, this.OptinsChanged);
+			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
-		protected override void OptinsChanged()
+		protected override void OptionsChanged()
 		{
 			this.InitializeColumnMapper ();
 			this.UpdateArray ();
 
-			base.OptinsChanged ();
+			base.OptionsChanged ();
+		}
+
+		protected override void UpdateTitle()
+		{
+			this.SetTitle ("Pertes et Profits");
 		}
 
 

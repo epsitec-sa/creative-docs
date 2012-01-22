@@ -24,9 +24,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.scroller = new VScroller(this);
 			this.scroller.IsInverted = true;
 			this.scroller.ValueChanged += this.HandleScrollerValueChanged;
-
-			this.searchLocatorRow    = -1;
-			this.searchLocatorColumn = -1;
 		}
 
 		public StringArray(Widget embedder) : this()
@@ -1226,11 +1223,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int							lastLineCount = 0;
 		private int							absoluteColumn = -1;
 		private double						absoluteWidth;
-		private int							hilitedFirstRow;
-		private int							hilitedCountRow;
+		private int							hilitedFirstRow = -1;
+		private int							hilitedCountRow = 0;
 		private int							insertionPointRow = -1;
-		private int							searchLocatorRow;
-		private int							searchLocatorColumn;
+		private int							searchLocatorRow = -1;
+		private int							searchLocatorColumn = -1;
 
 		private int							widthDraggingRank = -1;
 		private double[]					widthDraggingAbsolutes;

@@ -363,8 +363,15 @@ namespace Epsitec.Cresus.Compta.Entities
 		#endregion
 
 
+		public int GetJournalCount(ComptaJournalEntity journal)
+		{
+			//	Retourne le nombre d'écritures d'un journal.
+			return this.Journal.Where (x => x.Journal == journal).Count ();
+		}
+
 		public string GetJournalSummary(ComptaJournalEntity journal)
 		{
+			//	Retourne le résumé d'un journal d'écritures.
 			var écritures = this.Journal.Where (x => x.Journal == journal);
 			int count = écritures.Count();
 
@@ -379,9 +386,17 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			else
 			{
-				var beginDate = écritures.First ().Date.ToString ();
-				var endDate   = écritures.Last ().Date.ToString ();
-				return string.Format ("{0} écritures, du {1} au {2}", count.ToString (), beginDate, endDate);
+				var beginDate = écritures.First ().Date;
+				var endDate   = écritures.Last  ().Date;
+
+				if (beginDate == endDate)
+				{
+					return string.Format ("{0} écritures, le {1}", count.ToString (), beginDate.ToString ());
+				}
+				else
+				{
+					return string.Format ("{0} écritures, du {1} au {2}", count.ToString (), beginDate.ToString (), endDate.ToString ());
+				}
 			}
 		}
 

@@ -37,8 +37,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new BalanceOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as BalanceOptions);
-			this.optionsController.CreateUI (parent, this.OptinsChanged);
+			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+		}
+
+		protected override void UpdateTitle()
+		{
+			this.SetTitle ("Balance de vérification");
 		}
 
 

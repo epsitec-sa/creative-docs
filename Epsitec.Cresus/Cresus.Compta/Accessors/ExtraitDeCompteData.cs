@@ -64,5 +64,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get;
 			set;
 		}
+
+		public FormattedText Journal
+		{
+			get;
+			set;
+		}
 	}
 }

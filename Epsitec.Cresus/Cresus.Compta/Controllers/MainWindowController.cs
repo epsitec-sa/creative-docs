@@ -308,8 +308,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 			dialog.FileName = filename;
 			dialog.Title = "Ouverture d'une comptabilité";
-			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
@@ -327,8 +327,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//dialog.InitialDirectory = this.globalSettings.InitialDirectory;
 			dialog.FileName = filename;
 			dialog.Title = "Enregistrement de la comptabilité";
-			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
 			dialog.PromptForOverwriting = true;
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();

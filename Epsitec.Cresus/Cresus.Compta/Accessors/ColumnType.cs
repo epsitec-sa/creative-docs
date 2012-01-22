@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Budget,
 		BudgetPrécédent,
 		BudgetFutur,
+		Journal,
 
 		//---------------------
 

@@ -48,8 +48,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private string ImportPlanComptable()
 		{
-			this.compta.Journal.Clear ();
-			this.compta.PlanComptable.Clear ();
+			new NewCompta ().NewNull (this.compta);
 
 			//	Importe les données globales.
 			{
@@ -74,6 +73,42 @@ namespace Epsitec.Cresus.Compta.IO
 				{
 					this.compta.EndDate = this.GetDate (this.lines[i].Substring (8));
 				}
+			}
+
+			//	Importe tous les journaux.
+			int indexJournal = this.IndexOfLine ("BEGIN=JOURNAUX");
+
+			var journaux = new Dictionary<int?, string> ();
+
+			while (++indexJournal < this.lines.Length)
+			{
+				var line = this.lines[indexJournal];
+
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				if (line.StartsWith ("END=JOURNAUX"))
+				{
+					break;
+				}
+
+				if (line.StartsWith ("ENTRY"))
+				{
+					var rank = this.GetEntryContentInt  (indexJournal, "NUM");
+					var name = this.GetEntryContentText (indexJournal, "NAME");
+					journaux.Add (rank, name);
+				}
+			}
+
+			var journauxTriés = journaux.OrderBy (x => x.Key);
+
+			foreach (var j in journauxTriés)
+			{
+				var journal = new ComptaJournalEntity ();
+				journal.Name = j.Value;
+				this.compta.Journaux.Add (journal);
 			}
 
 			//	Importe tous les comptes.

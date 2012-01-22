@@ -26,6 +26,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalOptionsController(ComptaEntity comptaEntity, JournalOptions options)
 			: base (comptaEntity, options)
 		{
+			//	S'il n'y a qu'un journal, on ouvre le panneau en mode étendu, car la seule chose
+			//	à faire est éventuellement d'en créer un.
+			this.isExtended = (this.comptaEntity.Journaux.Count == 1);
 		}
 
 
@@ -106,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.extendedFrame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 147,
+				PreferredHeight = 15*5+29,
 				Dock            = DockStyle.Top,
 			};
 
@@ -184,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Text            = "Descendre",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 10),
+				Margins         = new Margins (0, 0, 0, 13),
 			};
 
 			this.removeButton = new Button
@@ -206,6 +209,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.Options.Journal = this.comptaEntity.Journaux[this.listJournaux.SelectedItemIndex];
 					this.UpdateCombo ();
 					this.UpdateList ();
+					this.UpdateButtons ();
 					this.UpdateSummary ();
 					optionsChanged ();
 				}
@@ -224,7 +228,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.addButton.Clicked += delegate
 			{
 				var nouveauJournal = new ComptaJournalEntity ();
-				nouveauJournal.Name = "Nouveau";
+				nouveauJournal.Name = this.NewJournalName;
 				this.comptaEntity.Journaux.Add (nouveauJournal);
 
 				this.Options.Journal = nouveauJournal;
@@ -347,15 +351,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			int sel = this.listJournaux.SelectedItemIndex;
 			int count = this.listJournaux.Items.Count;
+			int n = this.comptaEntity.GetJournalCount (this.Options.Journal);
 
 			this.upButton.Enable     = (sel != -1 && sel > 0);
 			this.downButton.Enable   = (sel != -1 && sel < count-1);
-			this.removeButton.Enable = (sel != -1 && count > 1);
+			this.removeButton.Enable = (sel != -1 && count > 1 && n == 0);
 		}
 
 		private void UpdateSummary()
 		{
 			this.summary.Text = this.comptaEntity.GetJournalSummary (this.Options.Journal);
+		}
+
+
+		private string NewJournalName
+		{
+			get
+			{
+				int i = 1;
+
+				while (true)
+				{
+					string name = "Nouveau" + ((i == 1) ? "" : " " + i.ToString ());
+
+					if (this.comptaEntity.Journaux.Where (x => x.Name == name).Any ())
+					{
+						i++;
+					}
+					else
+					{
+						return name;
+					}
+				}
+			}
 		}
 
 
@@ -369,7 +397,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private static readonly double JournauxWidth = 250;
+		private static readonly double JournauxWidth = 200;
 
 		private bool					isExtended;
 		private GlyphButton				modeButton;

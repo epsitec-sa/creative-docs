@@ -62,20 +62,35 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new ExtraitDeCompteOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions);
-			this.optionsController.CreateUI (parent, this.OptinsChanged);
+			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
-		protected override void OptinsChanged()
+		protected override void OptionsChanged()
 		{
 			this.InitializeColumnMapper ();
 			this.UpdateArray ();
-			this.UpdateTitle ();
+			this.UpdateWindowTitle ();
 
-			base.OptinsChanged ();
+			base.OptionsChanged ();
 		}
 
-		private void UpdateTitle()
+		protected override void UpdateTitle()
+		{
+			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+
+			if (compte == null)
+			{
+				this.SetTitle (null);
+			}
+			else
+			{
+				this.SetTitle (TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
+			}
+		}
+
+		private void UpdateWindowTitle()
 		{
 			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
@@ -123,6 +138,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if ((this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).HasGraphics)
 				{
 					yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "");
+				}
+
+				if (this.comptaEntity.Journaux.Count > 1)
+				{
+					yield return new ColumnMapper (ColumnType.Journal, 0.20, ContentAlignment.MiddleLeft, "Journal");
 				}
 			}
 		}
