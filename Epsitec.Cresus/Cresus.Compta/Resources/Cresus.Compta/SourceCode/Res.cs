@@ -325,6 +325,8 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType ComptaCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/OVKB
 			public static readonly Epsitec.Common.Types.StructuredType ComptaEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+			//	designer:cap/OVK23
+			public static readonly Epsitec.Common.Types.StructuredType ComptaJournal = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 98));
 		}
 		
 		public static class Values
@@ -452,6 +454,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid DernièrePièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2);
 				//	designer:cap/OVKO
 				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 24);
+				//	designer:cap/OVK33
+				public static readonly global::Epsitec.Common.Support.Druid Journaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 99);
 				//	designer:cap/OVKN
 				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
 			}
@@ -504,6 +508,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 12);
 				//	designer:cap/OVKE
 				public static readonly global::Epsitec.Common.Support.Druid Débit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 14);
+				//	designer:cap/OVK43
+				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 100);
 				//	designer:cap/OVKH
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17);
 				//	designer:cap/OVKI

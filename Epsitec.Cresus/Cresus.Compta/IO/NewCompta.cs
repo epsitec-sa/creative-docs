@@ -31,6 +31,13 @@ namespace Epsitec.Cresus.Compta.IO
 
 			compta.Journal.Clear ();
 			compta.PlanComptable.Clear ();
+			compta.Journaux.Clear ();
+
+			//	Crée un journal principal.
+			var journal = new ComptaJournalEntity ();
+			journal.Name = "Principal";
+
+			compta.Journaux.Add (journal);
 		}
 
 		public void NewModel(ComptaEntity compta)

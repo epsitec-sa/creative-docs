@@ -49,11 +49,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.OptinsChanged ();
 		}
 
-		protected override void FinalUpdate()
-		{
-			base.FinalUpdate ();
-		}
-
 
 		public override bool HasShowSearchPanel
 		{

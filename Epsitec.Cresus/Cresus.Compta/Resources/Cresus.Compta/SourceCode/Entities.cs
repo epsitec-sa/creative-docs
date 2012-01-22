@@ -7,6 +7,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCompteEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK23]", typeof (Epsitec.Cresus.Compta.Entities.ComptaJournalEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -128,6 +129,18 @@ namespace Epsitec.Cresus.Compta.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> ("[OVKO]");
+			}
+		}
+		///	<summary>
+		///	The <c>Journaux</c> field.
+		///	designer:fld/OVK/OVK33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK33]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> Journaux
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> ("[OVK33]");
 			}
 		}
 		///	<summary>
@@ -836,6 +849,28 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Journal</c> field.
+		///	designer:fld/OVKB/OVK43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK43]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity Journal
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> ("[OVK43]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue = this.Journal;
+				if (oldValue != value || !this.IsFieldDefined("[OVK43]"))
+				{
+					this.OnJournalChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> ("[OVK43]", oldValue, value);
+					this.OnJournalChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
@@ -861,6 +896,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCodeTVAChanged(string oldValue, string newValue);
 		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
 		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
+		partial void OnJournalChanging(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
+		partial void OnJournalChanged(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -876,6 +913,75 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaEcritureEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaJournal Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaJournal</c> entity.
+	///	designer:cap/OVK23
+	///	</summary>
+	public partial class ComptaJournalEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription
+	{
+		#region INameDescription Members
+		///	<summary>
+		///	The <c>Name</c> field.
+		///	designer:fld/OVK23/8VA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
+		public global::Epsitec.Common.Types.FormattedText Name
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/OVK23/8VA8
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+			}
+		}
+		#endregion
+		
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 98);	// [OVK23]
+		public static readonly string EntityStructuredTypeKey = "[OVK23]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaJournalEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

@@ -64,6 +64,7 @@
     <Compile Include="Accessors\BudgetsEditionData.cs" />
     <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
+    <Compile Include="Accessors\JournalOptions.cs" />
     <Compile Include="Accessors\ExploitationData.cs" />
     <Compile Include="Accessors\ExploitationDataAccessor.cs" />
     <Compile Include="Accessors\ExploitationOptions.cs" />
@@ -81,6 +82,7 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />
     <Compile Include="CoreApplication.cs" />

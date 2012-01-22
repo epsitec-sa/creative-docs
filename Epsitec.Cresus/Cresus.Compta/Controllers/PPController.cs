@@ -74,11 +74,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.OptinsChanged ();
 		}
 
-		protected override void FinalUpdate()
-		{
-			base.FinalUpdate ();
-		}
-
 
 		protected override FormattedText GetArrayText(int row, int column)
 		{

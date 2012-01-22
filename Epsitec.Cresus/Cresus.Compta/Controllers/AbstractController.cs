@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected virtual void FinalUpdate()
+		protected void FinalUpdate()
 		{
 			if (this.footerController != null)
 			{

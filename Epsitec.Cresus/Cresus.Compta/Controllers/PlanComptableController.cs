@@ -59,12 +59,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void FinalUpdate()
-		{
-			base.FinalUpdate ();
-		}
-
-
 		protected override FormattedText GetArrayText(int row, int column)
 		{
 			//	Retourne le texte contenu dans une cellule.

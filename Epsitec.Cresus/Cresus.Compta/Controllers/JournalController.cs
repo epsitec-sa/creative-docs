@@ -34,6 +34,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override void CreateOptions(FrameBox parent)
+		{
+			this.optionsController = new JournalOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as JournalOptions);
+			this.optionsController.CreateUI (parent, this.OptinsChanged);
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+		}
+
+		protected override void OptinsChanged()
+		{
+			this.InitializeColumnMapper ();
+			this.UpdateArray ();
+
+			base.OptinsChanged ();
+		}
+
+
 		public override bool HasShowSearchPanel
 		{
 			get
@@ -46,7 +62,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -56,12 +72,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return true;
 			}
-		}
-
-
-		protected override void FinalUpdate()
-		{
-			base.FinalUpdate ();
 		}
 
 

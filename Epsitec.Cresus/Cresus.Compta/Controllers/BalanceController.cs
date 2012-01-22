@@ -41,11 +41,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
 
-		protected override void FinalUpdate()
-		{
-			base.FinalUpdate ();
-		}
-
 
 		public override bool HasShowSearchPanel
 		{

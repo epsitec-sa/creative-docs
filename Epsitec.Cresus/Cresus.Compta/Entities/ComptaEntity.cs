@@ -363,6 +363,29 @@ namespace Epsitec.Cresus.Compta.Entities
 		#endregion
 
 
+		public string GetJournalSummary(ComptaJournalEntity journal)
+		{
+			var écritures = this.Journal.Where (x => x.Journal == journal);
+			int count = écritures.Count();
+
+			if (count == 0)
+			{
+				return "Aucune écriture";
+			}
+			else if (count == 1)
+			{
+				var date = écritures.First ().Date.ToString ();
+				return string.Format ("1 écriture, le {0}", date);
+			}
+			else
+			{
+				var beginDate = écritures.First ().Date.ToString ();
+				var endDate   = écritures.Last ().Date.ToString ();
+				return string.Format ("{0} écritures, du {1} au {2}", count.ToString (), beginDate, endDate);
+			}
+		}
+
+
 		private Dictionary<FormattedText, decimal?> soldesDébit;
 		private Dictionary<FormattedText, decimal?> soldesCrédit;
 	}
