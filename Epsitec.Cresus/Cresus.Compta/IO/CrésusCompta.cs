@@ -12,13 +12,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.IO
 {
 	/// <summary>
-	/// Cette classe s'occupe des import/export avec l'ancien logiciel Crésus Comptabilité.
+	/// Cette classe s'occupe des import/export avec l'ancien logiciel Crésus Comptabilité (DR/MW).
 	/// </summary>
-	public class CrésusComptabilité
+	public class CrésusCompta
 	{
-		public string ImportPlanComptable(ComptabilitéEntity comptabilité, string filename)
+		public string ImportPlanComptable(ComptaEntity compta, string filename)
 		{
 			//	Importe un plan comptable "crp".
+			this.compta = compta;
+
 			string ext = System.IO.Path.GetExtension (filename).ToLower ();
 			if (ext != ".crp")
 			{
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				try
 				{
-					return this.ImportPlanComptable (comptabilité);
+					return this.ImportPlanComptable ();
 				}
 				catch (System.Exception ex)
 				{
@@ -44,17 +46,17 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private string ImportPlanComptable(ComptabilitéEntity comptabilité)
+		private string ImportPlanComptable()
 		{
-			comptabilité.Journal.Clear ();
-			comptabilité.PlanComptable.Clear ();
+			this.compta.Journal.Clear ();
+			this.compta.PlanComptable.Clear ();
 
 			//	Importe les données globales.
 			{
 				int i = this.IndexOfLine ("TITLE=");
 				if (i != -1)
 				{
-					comptabilité.Name = this.lines[i].Substring (6);
+					this.compta.Name = this.lines[i].Substring (6);
 				}
 			}
 
@@ -62,7 +64,7 @@ namespace Epsitec.Cresus.Compta.IO
 				int i = this.IndexOfLine ("DATEBEG=");
 				if (i != -1)
 				{
-					comptabilité.BeginDate = this.GetDate (this.lines[i].Substring (8));
+					this.compta.BeginDate = this.GetDate (this.lines[i].Substring (8));
 				}
 			}
 
@@ -70,7 +72,7 @@ namespace Epsitec.Cresus.Compta.IO
 				int i = this.IndexOfLine ("DATEEND=");
 				if (i != -1)
 				{
-					comptabilité.EndDate = this.GetDate (this.lines[i].Substring (8));
+					this.compta.EndDate = this.GetDate (this.lines[i].Substring (8));
 				}
 			}
 
@@ -104,7 +106,7 @@ namespace Epsitec.Cresus.Compta.IO
 						continue;
 					}
 
-					var compte = new ComptabilitéCompteEntity ();
+					var compte = new ComptaCompteEntity ();
 
 					compte.Numéro    = numéro;
 					compte.Titre     = titre;
@@ -136,15 +138,15 @@ namespace Epsitec.Cresus.Compta.IO
 						boucles.Add (numéro, boucle);
 					}
 
-					comptabilité.PlanComptable.Add (compte);
+					this.compta.PlanComptable.Add (compte);
 				}
 			}
 
 			//	Met après-coup les champs qui pointent sur des comptes.
 			foreach (var item in groups)
 			{
-				var c1 = comptabilité.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
-				var c2 = comptabilité.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
+				var c1 = this.compta.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
+				var c2 = this.compta.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
 
 				if (c1 != null && c2 != null)
 				{
@@ -154,8 +156,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 			foreach (var item in boucles)
 			{
-				var c1 = comptabilité.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
-				var c2 = comptabilité.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
+				var c1 = this.compta.PlanComptable.Where (x => x.Numéro == item.Key).FirstOrDefault ();
+				var c2 = this.compta.PlanComptable.Where (x => x.Numéro == item.Value).FirstOrDefault ();
 
 				if (c1 != null && c2 != null)
 				{
@@ -163,7 +165,7 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			comptabilité.UpdateNiveauCompte ();
+			this.compta.UpdateNiveauCompte ();
 
 			return null;  // ok
 		}
@@ -280,6 +282,7 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private string[] lines;
+		private ComptaEntity		compta;
+		private string[]			lines;
 	}
 }

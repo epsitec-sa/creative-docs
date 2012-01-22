@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractController
 	{
-		public AbstractController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
+		public AbstractController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 		{
 			this.app                  = app;
 			this.businessContext      = businessContext;
-			this.comptabilitéEntity   = comptabilitéEntity;
+			this.comptaEntity         = comptaEntity;
 			this.mainWindowController = mainWindowController;
 
 			this.app.CommandDispatcher.RegisterController (this);
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
-		protected readonly ComptabilitéEntity					comptabilitéEntity;
+		protected readonly ComptaEntity							comptaEntity;
 
 		protected MainWindowController							mainWindowController;
 		protected Window										parentWindow;

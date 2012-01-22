@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class ExtraitDeCompteOptions : AbstractOptions
 	{
-		public ExtraitDeCompteOptions(ComptabilitéEntity comptabilitéEntity)
-			: base (comptabilitéEntity)
+		public ExtraitDeCompteOptions(ComptaEntity comptaEntity)
+			: base (comptaEntity)
 		{
 			//	Utilise le premier compte normal par défaut.
-			var compte = this.comptabilitéEntity.PlanComptable.OrderBy (x => x.Numéro).Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.OrderBy (x => x.Numéro).Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
 			if (compte != null)
 			{

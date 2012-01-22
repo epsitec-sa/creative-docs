@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalFooterController : AbstractFooterController
 	{
-		public JournalFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
-			: base (app, businessContext, comptabilitéEntity, dataAccessor, columnMappers, abstractController, arrayController)
+		public JournalFooterController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+			: base (app, businessContext, comptaEntity, dataAccessor, columnMappers, abstractController, arrayController)
 		{
 		}
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.linesFrames.Add (footerFrame);
 			int line = this.linesFrames.Count - 1;
 
-			var comptes = this.comptabilitéEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).OrderBy (x => x.Numéro);
+			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).OrderBy (x => x.Numéro);
 
 			int columnCount = this.columnMappers.Count;
 
@@ -622,7 +622,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
 		{
 			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
 			{
@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				titre = compte.Titre;
-				solde = this.comptabilitéEntity.GetSoldeCompte (compte);
+				solde = this.comptaEntity.GetSoldeCompte (compte);
 			}
 		}
 

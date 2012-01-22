@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Entities
 {
-	public partial class ComptabilitéCompteEntity
+	public partial class ComptaCompteEntity
 	{
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{

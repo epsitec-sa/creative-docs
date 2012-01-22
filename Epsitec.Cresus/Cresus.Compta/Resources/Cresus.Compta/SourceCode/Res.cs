@@ -320,11 +320,11 @@ namespace Epsitec.Cresus.Compta
 			}
 			
 			//	designer:cap/OVK
-			public static readonly Epsitec.Common.Types.StructuredType Comptabilité = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+			public static readonly Epsitec.Common.Types.StructuredType Compta = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/OVK3
-			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
+			public static readonly Epsitec.Common.Types.StructuredType ComptaCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/OVKB
-			public static readonly Epsitec.Common.Types.StructuredType ComptabilitéEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
+			public static readonly Epsitec.Common.Types.StructuredType ComptaEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 		}
 		
 		public static class Values
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Compta
 		
 		public static class Fields
 		{
-			public static class Comptabilité
+			public static class Compta
 			{
 				internal static void _Initialize()
 				{
@@ -456,7 +456,7 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
 			}
 			
-			public static class ComptabilitéCompte
+			public static class ComptaCompte
 			{
 				internal static void _Initialize()
 				{
@@ -488,7 +488,7 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 83);
 			}
 			
-			public static class ComptabilitéEcriture
+			public static class ComptaEcriture
 			{
 				internal static void _Initialize()
 				{
@@ -595,9 +595,9 @@ namespace Epsitec.Cresus.Compta
 			Values._Initialize ();
 			Values.Enum.CatégorieDeCompte._Initialize ();
 			Values.Enum.TypeDeCompte._Initialize ();
-			Fields.Comptabilité._Initialize ();
-			Fields.ComptabilitéCompte._Initialize ();
-			Fields.ComptabilitéEcriture._Initialize ();
+			Fields.Compta._Initialize ();
+			Fields.ComptaCompte._Initialize ();
+			Fields.ComptaEcriture._Initialize ();
 		}
 		
 		public static void Initialize()

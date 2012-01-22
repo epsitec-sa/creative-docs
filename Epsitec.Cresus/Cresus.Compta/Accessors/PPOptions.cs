@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PPOptions : AbstractOptions
 	{
-		public PPOptions(ComptabilitéEntity comptabilitéEntity)
-			: base (comptabilitéEntity)
+		public PPOptions(ComptaEntity comptaEntity)
+			: base (comptaEntity)
 		{
 		}
 

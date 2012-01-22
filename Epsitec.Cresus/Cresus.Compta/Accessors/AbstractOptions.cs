@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractOptions
 	{
-		public AbstractOptions(ComptabilitéEntity comptabilitéEntity)
+		public AbstractOptions(ComptaEntity comptaEntity)
 		{
-			this.comptabilitéEntity = comptabilitéEntity;
+			this.comptaEntity = comptaEntity;
 		}
 
 
@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-	
-		protected readonly ComptabilitéEntity		comptabilitéEntity;
+
+		protected readonly ComptaEntity				comptaEntity;
 
 		protected int?								profondeur;
 		protected Date?								dateDébut;

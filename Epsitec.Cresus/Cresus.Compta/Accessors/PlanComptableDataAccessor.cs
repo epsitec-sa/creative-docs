@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PlanComptableDataAccessor : AbstractDataAccessor
 	{
-		public PlanComptableDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public PlanComptableDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
 			this.StartCreationData ();
 		}
@@ -32,19 +32,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptabilitéEntity.PlanComptable.Count;
+				return this.comptaEntity.PlanComptable.Count;
 			}
 		}
 
 		public override AbstractEntity GetEditionData(int row)
 		{
-			if (row < 0 || row >= this.comptabilitéEntity.PlanComptable.Count)
+			if (row < 0 || row >= this.comptaEntity.PlanComptable.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptabilitéEntity.PlanComptable[row];
+				return this.comptaEntity.PlanComptable[row];
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Null;
 			}
 
-			var compte = this.comptabilitéEntity.PlanComptable[row];
+			var compte = this.comptaEntity.PlanComptable[row];
 
 			switch (column)
 			{
@@ -106,8 +106,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var compte1 = this.comptabilitéEntity.PlanComptable[row];
-			var compte2 = this.comptabilitéEntity.PlanComptable[row+1];
+			var compte1 = this.comptaEntity.PlanComptable[row];
+			var compte2 = this.comptaEntity.PlanComptable[row+1];
 
 			return compte1.Catégorie != compte2.Catégorie;
 		}
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new PlanComptableEditionData (this.comptabilitéEntity);
+			var newData = new PlanComptableEditionData (this.comptaEntity);
 
 			if (index == -1)
 			{
@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new PlanComptableEditionData (this.comptabilitéEntity));
+			this.editionData.Add (new PlanComptableEditionData (this.comptaEntity));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -174,10 +174,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptabilitéEntity.PlanComptable.Count)
+			if (row >= 0 && row < this.comptaEntity.PlanComptable.Count)
 			{
-				var data = new PlanComptableEditionData (this.comptabilitéEntity);
-				var compte = this.comptabilitéEntity.PlanComptable[row];
+				var data = new PlanComptableEditionData (this.comptaEntity);
+				var compte = this.comptaEntity.PlanComptable[row];
 				data.EntityToData (compte);
 
 				this.editionData.Add (data);
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = true;
 			}
 
-			this.comptabilitéEntity.PlanComptableUpdate ();
+			this.comptaEntity.PlanComptableUpdate ();
 			this.SearchUpdate ();
 			this.windowController.Dirty = true;
 		}
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.DataToEntity (compte);
 
 				int row = this.GetSortedRow (compte.Numéro);
-				this.comptabilitéEntity.PlanComptable.Insert (row, compte);
+				this.comptaEntity.PlanComptable.Insert (row, compte);
 
 				if (firstRow == -1)
 				{
@@ -239,12 +239,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					//	Crée un compte manquant.
 					var compte = this.CreateCompte ();
 					data.DataToEntity (compte);
-					this.comptabilitéEntity.PlanComptable.Insert (row, compte);
+					this.comptaEntity.PlanComptable.Insert (row, compte);
 				}
 				else
 				{
 					//	Met à jour un compte existante.
-					var compte = this.comptabilitéEntity.PlanComptable[row];
+					var compte = this.comptaEntity.PlanComptable[row];
 					data.DataToEntity (compte);
 				}
 
@@ -255,9 +255,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int countToDelete  = this.initialCountEditedRow - this.editionData.Count;
 			while (countToDelete > 0)
 			{
-				var compte = this.comptabilitéEntity.PlanComptable[row];
+				var compte = this.comptaEntity.PlanComptable[row];
 				this.DeleteCompte (compte);
-				this.comptabilitéEntity.PlanComptable.RemoveAt (row);
+				this.comptaEntity.PlanComptable.RemoveAt (row);
 
 				countToDelete--;
 			}
@@ -268,13 +268,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (!this.HasCorrectOrder (this.firstEditedRow) ||
 				!this.HasCorrectOrder (this.firstEditedRow+this.countEditedRow-1))
 			{
-				var temp = new List<ComptabilitéCompteEntity> ();
+				var temp = new List<ComptaCompteEntity> ();
 
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
-					var compte = this.comptabilitéEntity.PlanComptable[this.firstEditedRow];
+					var compte = this.comptaEntity.PlanComptable[this.firstEditedRow];
 					temp.Add (compte);
-					this.comptabilitéEntity.PlanComptable.RemoveAt (this.firstEditedRow);
+					this.comptaEntity.PlanComptable.RemoveAt (this.firstEditedRow);
 				}
 
 				int newRow = this.GetSortedRow (temp[0].Numéro);
@@ -282,7 +282,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
 					var compte = temp[i];
-					this.comptabilitéEntity.PlanComptable.Insert (newRow+i, compte);
+					this.comptaEntity.PlanComptable.Insert (newRow+i, compte);
 				}
 
 				this.firstEditedRow = newRow;
@@ -295,9 +295,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
 				{
-					var compte = this.comptabilitéEntity.PlanComptable[row];
+					var compte = this.comptaEntity.PlanComptable[row];
 					this.DeleteCompte (compte);
-					this.comptabilitéEntity.PlanComptable.RemoveAt (row);
+					this.comptaEntity.PlanComptable.RemoveAt (row);
 				}
 
 				this.SearchUpdate ();
@@ -306,21 +306,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptabilitéCompteEntity CreateCompte()
+		private ComptaCompteEntity CreateCompte()
 		{
 			this.windowController.Dirty = true;
 
 			if (this.businessContext == null)
 			{
-				return new ComptabilitéCompteEntity ();
+				return new ComptaCompteEntity ();
 			}
 			else
 			{
-				return this.businessContext.CreateEntity<ComptabilitéCompteEntity> ();
+				return this.businessContext.CreateEntity<ComptaCompteEntity> ();
 			}
 		}
 
-		private void DeleteCompte(ComptabilitéCompteEntity compte)
+		private void DeleteCompte(ComptaCompteEntity compte)
 		{
 			this.windowController.Dirty = true;
 
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private bool HasCorrectOrder(int row)
 		{
-			var compte = this.comptabilitéEntity.PlanComptable[row];
+			var compte = this.comptaEntity.PlanComptable[row];
 			return this.HasCorrectOrder (row, compte.Numéro);
 		}
 
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			if (row > 0 && row < this.comptabilitéEntity.PlanComptable.Count-1 && this.Compare (row+1, numéro) < 0)
+			if (row > 0 && row < this.comptaEntity.PlanComptable.Count-1 && this.Compare (row+1, numéro) < 0)
 			{
 				return false;
 			}
@@ -358,18 +358,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private int Compare(int row, FormattedText numéro)
 		{
-			var compte = this.comptabilitéEntity.PlanComptable[row];
+			var compte = this.comptaEntity.PlanComptable[row];
 			return compte.Numéro.ToSimpleText ().CompareTo (numéro.ToSimpleText ());
 		}
 
 		private int GetSortedRow(FormattedText numéro)
 		{
 			string n = numéro.ToSimpleText ();
-			int count = this.comptabilitéEntity.PlanComptable.Count;
+			int count = this.comptaEntity.PlanComptable.Count;
 
 			for (int row = count-1; row >= 0; row--)
 			{
-				var compte = this.comptabilitéEntity.PlanComptable[row];
+				var compte = this.comptaEntity.PlanComptable[row];
 
 				int c = compte.Numéro.ToSimpleText ().CompareTo (n);
 				if (c <= 0)
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static FormattedText GetNuméro(ComptabilitéCompteEntity compte)
+		public static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null)
 			{
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public static ComptabilitéCompteEntity GetCompte(ComptabilitéEntity comptabilité, FormattedText numéro)
+		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
 			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
 
@@ -404,7 +404,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return comptabilité.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+				return compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 			}
 		}
 
@@ -423,14 +423,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return description;
 		}
 
-		public static ComptabilitéCompteEntity GetCompteEntity(ComptabilitéEntity comptabilité, FormattedText description)
+		public static ComptaCompteEntity GetCompteEntity(ComptaEntity compta, FormattedText description)
 		{
 			//	Retourne le compte, à partir de la description "numéro titre".
 			description = PlanComptableDataAccessor.GetCompteNuméro (description);
-			return comptabilité.PlanComptable.Where (x => x.Numéro == description).FirstOrDefault ();
+			return compta.PlanComptable.Where (x => x.Numéro == description).FirstOrDefault ();
 		}
 
-		public static FormattedText GetCompteDescription(ComptabilitéCompteEntity compte)
+		public static FormattedText GetCompteDescription(ComptaCompteEntity compte)
 		{
 			//	Retourne la description "numéro titre" d'un compte.
 			return TextFormatter.FormatText (compte.Numéro, compte.Titre);

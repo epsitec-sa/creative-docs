@@ -26,17 +26,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BalanceController : AbstractController
 	{
-		public BalanceController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptabilitéEntity, mainWindowController)
+		public BalanceController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new BalanceDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
+			this.dataAccessor = new BalanceDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new BalanceOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as BalanceOptions);
+			this.optionsController = new BalanceOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as BalanceOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}

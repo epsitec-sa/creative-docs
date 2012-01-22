@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	public static class UIBuilder
 	{
 		#region AutoCompleteTextField pour choisir un compte
-		public static void CreateAutoCompleteTextField(Widget parent, IEnumerable<ComptabilitéCompteEntity> comptes, out FrameBox container, out AbstractTextField field)
+		public static void CreateAutoCompleteTextField(Widget parent, IEnumerable<ComptaCompteEntity> comptes, out FrameBox container, out AbstractTextField field)
 		{
 			//	Crée un widget permettant de saisir un numéro de compte.
 			container = new FrameBox
@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				textField.Items.Add (compte);
 			}
 
-			textField.ValueToDescriptionConverter = value => UIBuilder.GetCompteText (value as ComptabilitéCompteEntity);
-			textField.HintComparer                = (value, text) => UIBuilder.MatchCompteText (value as ComptabilitéCompteEntity, text);
+			textField.ValueToDescriptionConverter = value => UIBuilder.GetCompteText (value as ComptaCompteEntity);
+			textField.HintComparer                = (value, text) => UIBuilder.MatchCompteText (value as ComptaCompteEntity, text);
 			textField.HintComparisonConverter     = x => HintComparer.GetComparableText (x);
 
 			menuButton.Clicked += delegate
@@ -74,13 +74,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			field = textField;
 		}
 
-		private static FormattedText GetCompteText(ComptabilitéCompteEntity compte)
+		private static FormattedText GetCompteText(ComptaCompteEntity compte)
 		{
 			//	Retourne le texte complet à utiliser pour un compte donné.
 			return TextFormatter.FormatText (compte.Numéro, compte.Titre);
 		}
 
-		private static HintComparerResult MatchCompteText(ComptabilitéCompteEntity compte, string userText)
+		private static HintComparerResult MatchCompteText(ComptaCompteEntity compte, string userText)
 		{
 			//	Compare un compte avec le texte partiel entré par l'utilisateur.
 			if (string.IsNullOrWhiteSpace (userText))

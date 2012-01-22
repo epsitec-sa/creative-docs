@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalDataAccessor : AbstractDataAccessor
 	{
-		public JournalDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
 			this.StartCreationData ();
 		}
@@ -32,19 +32,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptabilitéEntity.Journal.Count;
+				return this.comptaEntity.Journal.Count;
 			}
 		}
 
 		public override AbstractEntity GetEditionData(int row)
 		{
-			if (row < 0 || row >= this.comptabilitéEntity.Journal.Count)
+			if (row < 0 || row >= this.comptaEntity.Journal.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptabilitéEntity.Journal[row];
+				return this.comptaEntity.Journal[row];
 			}
 		}
 
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Null;
 			}
 
-			var écriture = this.comptabilitéEntity.Journal[row];
+			var écriture = this.comptaEntity.Journal[row];
 
 			switch (column)
 			{
@@ -96,8 +96,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var écriture1 = this.comptabilitéEntity.Journal[row];
-			var écriture2 = this.comptabilitéEntity.Journal[row+1];
+			var écriture1 = this.comptaEntity.Journal[row];
+			var écriture2 = this.comptaEntity.Journal[row+1];
 
 			return écriture1.MultiId != écriture2.MultiId;
 		}
@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new JournalEditionData (this.comptabilitéEntity);
+			var newData = new JournalEditionData (this.comptaEntity);
 
 			if (index == -1)
 			{
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new JournalEditionData (this.comptabilitéEntity));
+			this.editionData.Add (new JournalEditionData (this.comptaEntity));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -171,8 +171,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionData[line].SetText (ColumnType.Date,    this.comptabilitéEntity.ProchaineDate.ToString ());
-			this.editionData[line].SetText (ColumnType.Pièce,   this.comptabilitéEntity.ProchainePièce);
+			this.editionData[line].SetText (ColumnType.Date,  this.comptaEntity.ProchaineDate.ToString ());
+			this.editionData[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
 			this.editionData[line].SetText (ColumnType.Montant, "0.00");
 		}
 
@@ -190,8 +190,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var data = new JournalEditionData (this.comptabilitéEntity);
-					var écriture = this.comptabilitéEntity.Journal[this.firstEditedRow+i];
+					var data = new JournalEditionData (this.comptaEntity);
+					var écriture = this.comptaEntity.Journal[this.firstEditedRow+i];
 					data.EntityToData (écriture);
 
 					this.editionData.Add (data);
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int multiId = 0;
 			if (this.editionData.Count > 1)
 			{
-				multiId = this.comptabilitéEntity.ProchainMultiId;
+				multiId = this.comptaEntity.ProchainMultiId;
 			}
 
 			foreach (var data in this.editionData)
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.MultiId = multiId;
 
 				int row = this.GetSortedRow (écriture.Date);
-				this.comptabilitéEntity.Journal.Insert (row, écriture);
+				this.comptaEntity.Journal.Insert (row, écriture);
 
 				if (firstRow == -1)
 				{
@@ -247,11 +247,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Date date;
 			this.ParseDate (this.editionData[0].GetText (ColumnType.Date), out date);
-			this.comptabilitéEntity.DernièreDate = date;
+			this.comptaEntity.DernièreDate = date;
 			this.editionData[0].SetText (ColumnType.Date, date.ToString ());
 
-			this.comptabilitéEntity.DernièrePièce = this.editionData[0].GetText (ColumnType.Pièce);
-			this.editionData[0].SetText (ColumnType.Pièce, this.comptabilitéEntity.ProchainePièce);
+			this.comptaEntity.DernièrePièce = this.editionData[0].GetText (ColumnType.Pièce);
+			this.editionData[0].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
 
 			this.firstEditedRow = firstRow;
 		}
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void UpdateModificationData()
 		{
 			int row = this.firstEditedRow;
-			int multiId = this.comptabilitéEntity.Journal[row].MultiId;
+			int multiId = this.comptaEntity.Journal[row].MultiId;
 
 			foreach (var data in this.editionData)
 			{
@@ -269,12 +269,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var écriture = this.CreateEcriture ();
 					data.DataToEntity (écriture);
 					écriture.MultiId = multiId;
-					this.comptabilitéEntity.Journal.Insert (row, écriture);
+					this.comptaEntity.Journal.Insert (row, écriture);
 				}
 				else
 				{
 					//	Met à jour une écriture existante.
-					var écriture = this.comptabilitéEntity.Journal[row];
+					var écriture = this.comptaEntity.Journal[row];
 					data.DataToEntity (écriture);
 				}
 
@@ -285,9 +285,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int countToDelete  = this.initialCountEditedRow - this.editionData.Count;
 			while (countToDelete > 0)
             {
-				var écriture = this.comptabilitéEntity.Journal[row];
+				var écriture = this.comptaEntity.Journal[row];
 				this.DeleteEcriture (écriture);
-				this.comptabilitéEntity.Journal.RemoveAt (row);
+				this.comptaEntity.Journal.RemoveAt (row);
 
 				countToDelete--;
             }
@@ -298,13 +298,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (!this.HasCorrectOrder (this.firstEditedRow) ||
 				!this.HasCorrectOrder (this.firstEditedRow+this.countEditedRow-1))
 			{
-				var temp = new List<ComptabilitéEcritureEntity> ();
+				var temp = new List<ComptaEcritureEntity> ();
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var écriture = this.comptabilitéEntity.Journal[this.firstEditedRow];
+					var écriture = this.comptaEntity.Journal[this.firstEditedRow];
                     temp.Add (écriture);
-					this.comptabilitéEntity.Journal.RemoveAt (this.firstEditedRow);
+					this.comptaEntity.Journal.RemoveAt (this.firstEditedRow);
                 }
 
 				int newRow = this.GetSortedRow (temp[0].Date);
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
 					var écriture = temp[i];
-					this.comptabilitéEntity.Journal.Insert (newRow+i, écriture);
+					this.comptaEntity.Journal.Insert (newRow+i, écriture);
                 }
 
 				this.firstEditedRow = newRow;
@@ -325,9 +325,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var écriture = this.comptabilitéEntity.Journal[row];
+					var écriture = this.comptaEntity.Journal[row];
 					this.DeleteEcriture (écriture);
-					this.comptabilitéEntity.Journal.RemoveAt (row);
+					this.comptaEntity.Journal.RemoveAt (row);
                 }
 
 				this.SearchUpdate ();
@@ -336,21 +336,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptabilitéEcritureEntity CreateEcriture()
+		private ComptaEcritureEntity CreateEcriture()
 		{
 			this.windowController.Dirty = true;
 
 			if (this.businessContext == null)
 			{
-				return new ComptabilitéEcritureEntity ();
+				return new ComptaEcritureEntity ();
 			}
 			else
 			{
-				return this.businessContext.CreateEntity<ComptabilitéEcritureEntity> ();
+				return this.businessContext.CreateEntity<ComptaEcritureEntity> ();
 			}
 		}
 
-		private void DeleteEcriture(ComptabilitéEcritureEntity  écriture)
+		private void DeleteEcriture(ComptaEcritureEntity  écriture)
 		{
 			this.windowController.Dirty = true;
 
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private bool HasCorrectOrder(int row)
 		{
-			var écriture = this.comptabilitéEntity.Journal[row];
+			var écriture = this.comptaEntity.Journal[row];
 			return this.HasCorrectOrder (row, écriture.Date);
 		}
 
@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			if (row > 0 && row < this.comptabilitéEntity.Journal.Count-1 && this.Compare (row+1, date) < 0)
+			if (row > 0 && row < this.comptaEntity.Journal.Count-1 && this.Compare (row+1, date) < 0)
 			{
 				return false;
 			}
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private int Compare(int row, Date date)
 		{
-			var écriture = this.comptabilitéEntity.Journal[row];
+			var écriture = this.comptaEntity.Journal[row];
 			return écriture.Date.CompareTo (date);
 		}
 
@@ -397,7 +397,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 #if false
 			for (int row = count-1; row >= 0; row--)
             {
-				var écriture = this.comptabilitéEntity.Journal[row];
+				var écriture = this.comptaEntity.Journal[row];
             	
 				if (écriture.Date <= date)
 				{
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return 0;
 #else
 			//	Effectue une recherche ultra-rapide, par bissection.
-			int count = this.comptabilitéEntity.Journal.Count;
+			int count = this.comptaEntity.Journal.Count;
 
 			if (count == 0)
 			{
@@ -419,13 +419,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int mid = 0;        // borne médiane
 			int sup = count-1;  // borne supérieure
 
-			ComptabilitéEcritureEntity écriture;
+			ComptaEcritureEntity écriture;
 
 			//	Recherche grossière dans un premier temps.
 			while (inf < sup-1)
 			{
 				mid = (inf+sup)/2;
-				écriture = this.comptabilitéEntity.Journal[mid];
+				écriture = this.comptaEntity.Journal[mid];
 
 				if (écriture.Date == date)
 				{
@@ -442,12 +442,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			//	Affine la recherche dans un deuxième temps.
-			while (mid > 0 && this.comptabilitéEntity.Journal[mid].Date > date)
+			while (mid > 0 && this.comptaEntity.Journal[mid].Date > date)
 			{
 				mid--;
 			}
 
-			while (mid < count && this.comptabilitéEntity.Journal[mid].Date <= date)
+			while (mid < count && this.comptaEntity.Journal[mid].Date <= date)
 			{
 				mid++;
 			}
@@ -467,7 +467,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
-			var écriture = this.comptabilitéEntity.Journal[row];
+			var écriture = this.comptaEntity.Journal[row];
 
 			if (écriture == null)
 			{
@@ -483,7 +483,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			while (row > 0)
 			{
-				écriture = this.comptabilitéEntity.Journal[--row];
+				écriture = this.comptaEntity.Journal[--row];
 
 				if (écriture.MultiId != multiId)
 				{
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			countRow = 0;
 			while (row < this.Count)
 			{
-				écriture = this.comptabilitéEntity.Journal[row++];
+				écriture = this.comptaEntity.Journal[row++];
 
 				if (écriture.MultiId != multiId)
 				{
@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static FormattedText GetNuméro(ComptabilitéCompteEntity compte)
+		public static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null || compte.Numéro.IsNullOrEmpty)
 			{
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public static ComptabilitéCompteEntity GetCompte(ComptabilitéEntity comptabilité, FormattedText numéro)
+		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
 			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
 
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return comptabilité.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+				return compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 			}
 		}
 
@@ -544,15 +544,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				date = new Date (d);
 
-				if (this.comptabilitéEntity.BeginDate.HasValue && date < this.comptabilitéEntity.BeginDate.Value)
+				if (this.comptaEntity.BeginDate.HasValue && date < this.comptaEntity.BeginDate.Value)
 				{
-					date = this.comptabilitéEntity.BeginDate.Value;
+					date = this.comptaEntity.BeginDate.Value;
 					return false;
 				}
 
-				if (this.comptabilitéEntity.EndDate.HasValue && date > this.comptabilitéEntity.EndDate.Value)
+				if (this.comptaEntity.EndDate.HasValue && date > this.comptaEntity.EndDate.Value)
 				{
-					date = this.comptabilitéEntity.EndDate.Value;
+					date = this.comptaEntity.EndDate.Value;
 					return false;
 				}
 

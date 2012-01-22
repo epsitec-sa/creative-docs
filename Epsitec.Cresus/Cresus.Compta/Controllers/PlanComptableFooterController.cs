@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PlanComptableFooterController : AbstractFooterController
 	{
-		public PlanComptableFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
-			: base (app, businessContext, comptabilitéEntity, dataAccessor, columnMappers, abstractController, arrayController)
+		public PlanComptableFooterController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+			: base (app, businessContext, comptaEntity, dataAccessor, columnMappers, abstractController, arrayController)
 		{
 		}
 
@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 				else if (mapper.Column == ColumnType.Groupe)
 				{
-					var comptes = this.comptabilitéEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe).OrderBy (x => x.Numéro);
+					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe).OrderBy (x => x.Numéro);
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
 					field.Name = this.GetWidgetName (column, line);
 
@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.CompteOuvBoucl)
 				{
-					var comptes = this.comptabilitéEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation).OrderBy (x => x.Numéro);
+					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation).OrderBy (x => x.Numéro);
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
 					field.Name = this.GetWidgetName (column, line);
 

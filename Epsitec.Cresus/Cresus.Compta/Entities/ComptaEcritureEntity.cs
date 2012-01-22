@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Entities
 {
-	public partial class ComptabilitéEcritureEntity
+	public partial class ComptaEcritureEntity
 	{
 		public override FormattedText GetCompactSummary()
 		{

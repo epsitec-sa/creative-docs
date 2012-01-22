@@ -21,10 +21,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BudgetsDataAccessor : AbstractDataAccessor
 	{
-		public BudgetsDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public BudgetsDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
-			this.comptabilitéEntity.PlanComptableUpdate ();
+			this.comptaEntity.PlanComptableUpdate ();
 			this.StartCreationData ();
 		}
 
@@ -42,19 +42,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptabilitéEntity.PlanComptable.Count;
+				return this.comptaEntity.PlanComptable.Count;
 			}
 		}
 
 		public override AbstractEntity GetEditionData(int row)
 		{
-			if (row < 0 || row >= this.comptabilitéEntity.PlanComptable.Count)
+			if (row < 0 || row >= this.comptaEntity.PlanComptable.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptabilitéEntity.PlanComptable[row];
+				return this.comptaEntity.PlanComptable[row];
 			}
 		}
 
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Null;
 			}
 
-			var compte = this.comptabilitéEntity.PlanComptable[row];
+			var compte = this.comptaEntity.PlanComptable[row];
 
 			switch (column)
 			{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return compte.Titre;
 
 				case ColumnType.Solde:
-					decimal? solde = this.comptabilitéEntity.GetSoldeCompte (compte);
+					decimal? solde = this.comptaEntity.GetSoldeCompte (compte);
 					if (solde.HasValue && solde.Value != 0)
 					{
 						return AbstractDataAccessor.GetMontant (solde);
@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var compte1 = this.comptabilitéEntity.PlanComptable[row];
-			var compte2 = this.comptabilitéEntity.PlanComptable[row+1];
+			var compte1 = this.comptaEntity.PlanComptable[row];
+			var compte2 = this.comptaEntity.PlanComptable[row+1];
 
 			return compte1.Catégorie != compte2.Catégorie;
 		}
@@ -132,10 +132,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptabilitéEntity.PlanComptable.Count)
+			if (row >= 0 && row < this.comptaEntity.PlanComptable.Count)
 			{
-				var data = new BudgetsEditionData (this.comptabilitéEntity);
-				var compte = this.comptabilitéEntity.PlanComptable[row];
+				var data = new BudgetsEditionData (this.comptaEntity);
+				var compte = this.comptaEntity.PlanComptable[row];
 				data.EntityToData (compte);
 
 				this.editionData.Add (data);
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = false;
 			}
 
-			this.comptabilitéEntity.PlanComptableUpdate ();
+			this.comptaEntity.PlanComptableUpdate ();
 			this.SearchUpdate ();
 		}
 
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var compte = this.comptabilitéEntity.PlanComptable[row];
+			var compte = this.comptaEntity.PlanComptable[row];
 			this.editionData[0].DataToEntity (compte);
 		}
 	}

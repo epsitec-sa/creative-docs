@@ -19,9 +19,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractEditionData
 	{
-		public AbstractEditionData(ComptabilitéEntity comptabilité)
+		public AbstractEditionData(ComptaEntity comptaEntity)
 		{
-			this.comptabilité = comptabilité;
+			this.comptaEntity = comptaEntity;
+
 			this.datas = new Dictionary<ColumnType, FormattedText> ();
 			this.errors = new Dictionary<ColumnType, FormattedText> ();
 		}
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected readonly ComptabilitéEntity						comptabilité;
+		protected readonly ComptaEntity								comptaEntity;
 		protected readonly Dictionary<ColumnType, FormattedText>	datas;
 		protected readonly Dictionary<ColumnType, FormattedText>	errors;
 	}

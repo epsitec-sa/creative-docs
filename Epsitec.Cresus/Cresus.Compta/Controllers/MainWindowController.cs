@@ -39,8 +39,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.businessContext = null;
 			this.controllers = new List<AbstractController> ();
 
-			this.comptabilité = new ComptabilitéEntity ();  // crée une compta vide !!!
-			new NewComptabilité ().NewEmpty (this.comptabilité);
+			this.compta = new ComptaEntity ();  // crée une compta vide !!!
+			new NewCompta ().NewEmpty (this.compta);
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		
 		private void SelectDefaultPrésentation()
 		{
-			if (this.comptabilité.PlanComptable.Any ())
+			if (this.compta.PlanComptable.Any ())
 			{
 				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
 			}
@@ -171,42 +171,42 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (command.Name.EndsWith ("Présentation.Journal"))
 			{
-				controller = new JournalController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new JournalController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PlanComptable"))
 			{
-				controller = new PlanComptableController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new PlanComptableController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Balance"))
 			{
-				controller = new BalanceController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new BalanceController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Extrait"))
 			{
-				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Bilan"))
 			{
-				controller = new BilanController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new BilanController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PP"))
 			{
-				controller = new PPController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new PPController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Exploitation"))
 			{
-				controller = new ExploitationController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new ExploitationController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Budgets"))
 			{
-				controller = new BudgetsController (this.app, this.businessContext, this.comptabilité, this);
+				controller = new BudgetsController (this.app, this.businessContext, this.compta, this);
 			}
 
 			if (controller != null)
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public string GetTitle(Command command)
 		{
-			string text = string.Concat ("Crésus MCH-2 / ", this.comptabilité.GetCompactSummary (), " / ", command.Description);
+			string text = string.Concat ("Crésus MCH-2 / ", this.compta.GetCompactSummary (), " / ", command.Description);
 
 			if (!string.IsNullOrEmpty (this.titleComplement))
 			{
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.File.New)]
 		private void CommandFileNew()
 		{
-			new NewComptabilité ().NewEmpty (this.comptabilité);
+			new NewCompta ().NewEmpty (this.compta);
 
 			this.controller.ClearHilite();
 			this.UpdateControllers ();
@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = new CrésusComptabilité ().ImportPlanComptable (this.comptabilité, filename);
+				string err = new CrésusCompta ().ImportPlanComptable (this.compta, filename);
 
 				this.controller.ClearHilite ();
 				this.UpdateControllers ();
@@ -573,7 +573,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Window									mainWindow;
 		private BusinessContext							businessContext;
-		private ComptabilitéEntity						comptabilité;
+		private ComptaEntity							compta;
 		private Command									selectedCommandDocument;
 		private AbstractController						controller;
 		private RibbonController						ribbonController;

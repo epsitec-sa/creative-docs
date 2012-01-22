@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalController : AbstractController
 	{
-		public JournalController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptabilitéEntity, mainWindowController)
+		public JournalController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new JournalDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
+			this.dataAccessor = new JournalDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new JournalFooterController (this.app, this.businessContext, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
+			this.footerController = new JournalFooterController (this.app, this.businessContext, this.comptaEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
 		}
@@ -97,12 +97,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 #if false
 		private void CreateManyEcritures()
 		{
-			var débit  = this.comptabilitéEntity.PlanComptable.Where(x => x.Numéro == "1000").FirstOrDefault ();
-			var crédit = this.comptabilitéEntity.PlanComptable.Where(x => x.Numéro == "1020").FirstOrDefault ();
+			var débit  = this.comptaEntity.PlanComptable.Where(x => x.Numéro == "1000").FirstOrDefault ();
+			var crédit = this.comptaEntity.PlanComptable.Where(x => x.Numéro == "1020").FirstOrDefault ();
 
 			for (int i = 0; i < 10000; i++)
 			{
-				var écriture = this.businessContext.DataContext.CreateEntity<ComptabilitéEcritureEntity> ();
+				var écriture = this.businessContext.DataContext.CreateEntity<ComptaEcritureEntity> ();
 
 				écriture.Date    = new Date (2011, 3, (i/1000)%31+1);
 				écriture.Débit   = débit;
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				écriture.Libellé = string.Format ("Virement {0}", i.ToString ());
 				écriture.Montant = i%100+1;
 
-				this.comptabilitéEntity.Journal.Add (écriture);
+				this.comptaEntity.Journal.Add (écriture);
 			}
 		}
 #endif

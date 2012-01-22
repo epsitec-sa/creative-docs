@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BilanOptions : AbstractOptions
 	{
-		public BilanOptions(ComptabilitéEntity comptabilitéEntity)
-			: base (comptabilitéEntity)
+		public BilanOptions(ComptaEntity comptaEntity)
+			: base (comptaEntity)
 		{
 		}
 

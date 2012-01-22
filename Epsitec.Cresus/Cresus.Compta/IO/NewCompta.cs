@@ -14,29 +14,29 @@ namespace Epsitec.Cresus.Compta.IO
 	/// <summary>
 	/// Cette classe s'occupe de créer une nouvelle comptabilité de toutes pièces.
 	/// </summary>
-	public class NewComptabilité
+	public class NewCompta
 	{
-		public void NewEmpty(ComptabilitéEntity comptabilité)
+		public void NewEmpty(ComptaEntity compta)
 		{
 			var now = Date.Today;
 			var beginDate = new Date(now.Year,  1,  1);  // 1 janvier
 			var endDate   = new Date(now.Year, 12, 31);  // 31 décembre
 
-			comptabilité.Name          = "vide";
-			comptabilité.Description   = null;
-			comptabilité.BeginDate     = beginDate;
-			comptabilité.EndDate       = endDate;
-			comptabilité.DernièreDate  = beginDate;
-			comptabilité.DernièrePièce = "0";
+			compta.Name          = "vide";
+			compta.Description   = null;
+			compta.BeginDate     = beginDate;
+			compta.EndDate       = endDate;
+			compta.DernièreDate  = beginDate;
+			compta.DernièrePièce = "0";
 
-			comptabilité.Journal.Clear ();
-			comptabilité.PlanComptable.Clear ();
+			compta.Journal.Clear ();
+			compta.PlanComptable.Clear ();
 		}
 
-		public void NewModel(ComptabilitéEntity comptabilité)
+		public void NewModel(ComptaEntity compta)
 		{
 			// TODO...
-			this.NewEmpty (comptabilité);
+			this.NewEmpty (compta);
 		}
 	}
 }

@@ -81,8 +81,8 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="IO\NewComptabilité.cs" />
-    <Compile Include="IO\CrésusComptabilité.cs" />
+    <Compile Include="IO\NewCompta.cs" />
+    <Compile Include="IO\CrésusCompta.cs" />
     <Compile Include="CoreApplication.cs" />
     <Compile Include="Controllers\BalanceController.cs" />
     <Compile Include="Controllers\BilanController.cs" />
@@ -114,9 +114,9 @@
     <Compile Include="Controllers\SearchingTabController.cs" />
     <Compile Include="Controllers\TopSearchingController.cs" />
     <Compile Include="Controllers\UIBuilder.cs" />
-    <Compile Include="Entities\ComptabilitéCompteEntity.cs" />
-    <Compile Include="Entities\ComptabilitéEcritureEntity.cs" />
-    <Compile Include="Entities\ComptabilitéEntity.cs" />
+    <Compile Include="Entities\ComptaCompteEntity.cs" />
+    <Compile Include="Entities\ComptaEcritureEntity.cs" />
+    <Compile Include="Entities\ComptaEntity.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />

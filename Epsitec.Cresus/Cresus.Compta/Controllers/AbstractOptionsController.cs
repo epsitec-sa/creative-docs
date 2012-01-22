@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractOptionsController
 	{
-		public AbstractOptionsController(ComptabilitéEntity comptabilitéEntity, AbstractOptions options)
+		public AbstractOptionsController(ComptaEntity comptaEntity, AbstractOptions options)
 		{
-			this.comptabilitéEntity = comptabilitéEntity;
-			this.options            = options;
+			this.comptaEntity = comptaEntity;
+			this.options      = options;
 		}
 
 
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CheckDate(TextFieldEx field, SetDate setDate, System.Action optionsChanged)
 		{
 			Date? date;
-			if (this.comptabilitéEntity.ParseDate (field.FormattedText, out date))
+			if (this.comptaEntity.ParseDate (field.FormattedText, out date))
 			{
 				setDate (date);
 				field.FormattedText = date.HasValue ? date.ToString () : FormattedText.Empty;
@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		protected readonly ComptabilitéEntity					comptabilitéEntity;
+		protected readonly ComptaEntity							comptaEntity;
 		protected readonly AbstractOptions						options;
 
 		protected int											tabIndex;

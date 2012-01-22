@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalEditionData : AbstractEditionData
 	{
-		public JournalEditionData(ComptabilitéEntity comptabilité)
-			: base (comptabilité)
+		public JournalEditionData(ComptaEntity compta)
+			: base (compta)
 		{
 		}
 
@@ -68,15 +68,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			Date? date;
-			if (this.comptabilité.ParseDate (text, out date) && date.HasValue)
+			if (this.comptaEntity.ParseDate (text, out date) && date.HasValue)
 			{
 				text = date.ToString ();
 				return FormattedText.Empty;
 			}
 			else
 			{
-				var b = (this.comptabilité.BeginDate.HasValue) ? this.comptabilité.BeginDate.Value.ToString () : "?";
-				var e = (this.comptabilité  .EndDate.HasValue) ? this.comptabilité  .EndDate.Value.ToString () : "?";
+				var b = (this.comptaEntity.BeginDate.HasValue) ? this.comptaEntity.BeginDate.Value.ToString () : "?";
+				var e = (this.comptaEntity  .EndDate.HasValue) ? this.comptaEntity  .EndDate.Value.ToString () : "?";
 
 				return string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
 			}
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilité.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 
 			if (compte == null)
 			{
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var écriture = entity as ComptabilitéEcritureEntity;
+			var écriture = entity as ComptaEcritureEntity;
 
 			this.SetText (ColumnType.Date,             écriture.Date.ToString ());
 			this.SetText (ColumnType.Débit,            JournalDataAccessor.GetNuméro (écriture.Débit));
@@ -159,16 +159,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var écriture = entity as ComptabilitéEcritureEntity;
+			var écriture = entity as ComptaEcritureEntity;
 
 			Date? date;
-			if (this.comptabilité.ParseDate (this.GetText (ColumnType.Date), out date))
+			if (this.comptaEntity.ParseDate (this.GetText (ColumnType.Date), out date))
 			{
 				écriture.Date = date.Value;
 			}
 
-			écriture.Débit  = JournalDataAccessor.GetCompte (this.comptabilité, this.GetText (ColumnType.Débit));
-			écriture.Crédit = JournalDataAccessor.GetCompte (this.comptabilité, this.GetText (ColumnType.Crédit));
+			écriture.Débit  = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Débit));
+			écriture.Crédit = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Crédit));
 
 			écriture.Pièce   = this.GetText (ColumnType.Pièce);
 			écriture.Libellé = this.GetText (ColumnType.Libellé);

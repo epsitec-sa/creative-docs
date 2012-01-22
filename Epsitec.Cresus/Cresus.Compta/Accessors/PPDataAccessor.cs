@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PPDataAccessor : AbstractDataAccessor
 	{
-		public PPDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public PPDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new PPOptions (this.comptabilitéEntity);
+			this.options = new PPOptions (this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -37,16 +37,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalGauche = 0;
 			decimal totalDroite = 0;
 
-			this.comptabilitéEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
+			this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
 
-			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Charge))
+			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Charge))
 			{
 				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
 				{
 					continue;
 				}
 
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte);
+				var solde = this.comptaEntity.GetSoldeCompte (compte);
 
 				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
 				{
@@ -71,14 +71,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			int rank = 0;
-			foreach (var compte in this.comptabilitéEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Produit))
+			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Produit))
 			{
 				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
 				{
 					continue;
 				}
 
-				var solde = this.comptabilitéEntity.GetSoldeCompte (compte);
+				var solde = this.comptaEntity.GetSoldeCompte (compte);
 
 				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
 				{
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private bool HasSolde(ComptabilitéCompteEntity compte)
+		private bool HasSolde(ComptaCompteEntity compte)
 		{
 			//	Indique si le solde du compte doit figurer dans le tableau.
 			//	Si la profondeur n'est pas spécifiée, on accepte tous les comptes normaux.
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private static FormattedText GetNuméro(ComptabilitéCompteEntity compte)
+		private static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null)
 			{

@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class ExtraitDeCompteDataAccessor : AbstractDataAccessor
 	{
-		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public ExtraitDeCompteDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new ExtraitDeCompteOptions (this.comptabilitéEntity);
+			this.options = new ExtraitDeCompteOptions (this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -40,13 +40,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
-			var compte = this.comptabilitéEntity.PlanComptable.Where(x => x.Numéro == filter).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();
 
 			decimal solde       = 0;
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
 
-			foreach (var écriture in this.comptabilitéEntity.Journal.OrderBy (x => x.Date))
+			foreach (var écriture in this.comptaEntity.Journal.OrderBy (x => x.Date))
 			{
 				if (!this.options.DateInRange (écriture.Date))
 				{
@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private static FormattedText GetNuméro(ComptabilitéCompteEntity compte)
+		private static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null)
 			{
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private static bool Match(ComptabilitéCompteEntity compte, FormattedText numéro)
+		private static bool Match(ComptaCompteEntity compte, FormattedText numéro)
 		{
 			//	Retroune true si le compte ou ses fils correspond au numéro.
 			while (compte != null && !compte.Numéro.IsNullOrEmpty)

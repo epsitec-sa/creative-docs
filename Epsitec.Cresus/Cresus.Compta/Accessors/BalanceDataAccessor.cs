@@ -20,10 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BalanceDataAccessor : AbstractDataAccessor
 	{
-		public BalanceDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
-			: base (businessContext, comptabilitéEntity, windowController)
+		public BalanceDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
+			: base (businessContext, comptaEntity, windowController)
 		{
-			this.options = new BalanceOptions (this.comptabilitéEntity);
+			this.options = new BalanceOptions (this.comptaEntity);
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -33,15 +33,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.readonlyData.Clear ();
 
-			ComptabilitéCompteEntity lastCompte = null;
+			ComptaCompteEntity lastCompte = null;
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
 			decimal totalSoldeD = 0;
 			decimal totalSoldeC = 0;
 
-			this.comptabilitéEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
+			this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
 
-			foreach (var compte in this.comptabilitéEntity.PlanComptable.OrderBy (x => x.Numéro))
+			foreach (var compte in this.comptaEntity.PlanComptable.OrderBy (x => x.Numéro))
 			{
 				if (compte.Catégorie == CatégorieDeCompte.Inconnu ||
 					compte.Catégorie == CatégorieDeCompte.Exploitation)
@@ -54,8 +54,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				var soldeDébit  = this.comptabilitéEntity.GetSoldeCompteDébit  (compte);
-				var soldeCrédit = this.comptabilitéEntity.GetSoldeCompteCrédit (compte);
+				var soldeDébit  = this.comptaEntity.GetSoldeCompteDébit  (compte);
+				var soldeCrédit = this.comptaEntity.GetSoldeCompteCrédit (compte);
 				var différence = soldeCrédit.GetValueOrDefault () - soldeDébit.GetValueOrDefault ();
 
 				if (!this.Options.ComptesNuls && soldeDébit.GetValueOrDefault () == 0 && soldeCrédit.GetValueOrDefault () == 0)

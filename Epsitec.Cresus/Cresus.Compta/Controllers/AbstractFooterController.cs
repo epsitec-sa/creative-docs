@@ -26,11 +26,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractFooterController
 	{
-		public AbstractFooterController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+		public AbstractFooterController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
 		{
 			this.app                = app;
 			this.businessContext    = businessContext;
-			this.comptabilitéEntity = comptabilitéEntity;
+			this.comptaEntity       = comptaEntity;
 			this.dataAccessor       = dataAccessor;
 			this.columnMappers      = columnMappers;
 			this.arrayController    = arrayController;
@@ -633,7 +633,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected readonly Application						app;
 		protected readonly BusinessContext					businessContext;
-		protected readonly ComptabilitéEntity				comptabilitéEntity;
+		protected readonly ComptaEntity						comptaEntity;
 		protected readonly AbstractDataAccessor				dataAccessor;
 		protected readonly List<ColumnMapper>				columnMappers;
 		protected readonly AbstractController				abstractController;

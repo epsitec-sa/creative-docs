@@ -44,10 +44,10 @@ namespace Epsitec.Cresus.Compta
 			
 			Hack.PopulateUsers (dataContext);
 
-			var comptabilité = dataContext.CreateEntity<ComptabilitéEntity> ();
-			var logic = new Logic (comptabilité);
+			var compta = dataContext.CreateEntity<ComptaEntity> ();
+			var logic = new Logic (compta);
 
-			logic.ApplyRule (RuleType.Setup, comptabilité);
+			logic.ApplyRule (RuleType.Setup, compta);
 
 			dataContext.SaveChanges ();
 		}
@@ -64,10 +64,10 @@ namespace Epsitec.Cresus.Compta
 		private void InitializeApplication()
 		{
 			this.businessContext = new BusinessContext (this.Data);
-			var comptabilité = this.Data.GetRepository<ComptabilitéEntity> ().GetAllEntities ().FirstOrDefault ();
+			var compta = this.Data.GetRepository<ComptaEntity> ().GetAllEntities ().FirstOrDefault ();
 
 			var window = this.Window;
-			//var controller = new DocumentWindowController (this, new List<AbstractController> (), this.businessContext, comptabilité, TypeDeDocumentComptable.Journal);
+			//var controller = new DocumentWindowController (this, new List<AbstractController> (), this.businessContext, compta, TypeDeDocumentComptable.Journal);
 			//controller.SetupApplicationWindow (window);
 			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
 		}

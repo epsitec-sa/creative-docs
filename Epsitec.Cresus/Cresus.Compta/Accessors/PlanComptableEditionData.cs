@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PlanComptableEditionData : AbstractEditionData
 	{
-		public PlanComptableEditionData(ComptabilitéEntity comptabilité)
-			: base (comptabilité)
+		public PlanComptableEditionData(ComptaEntity compta)
+			: base (compta)
 		{
 		}
 
@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var t = text;
-			var compte = this.comptabilité.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
 			if (compte == null)
 			{
 				return FormattedText.Empty;
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilité.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 			if (compte == null)
 			{
 				return "Ce compte n'existe pas";
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptabilité.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 			if (compte == null)
 			{
 				return "Ce compte n'existe pas";
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var compte = entity as ComptabilitéCompteEntity;
+			var compte = entity as ComptaCompteEntity;
 
 			this.SetText (ColumnType.Numéro,         compte.Numéro);
 			this.SetText (ColumnType.Titre,          compte.Titre);
@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var compte = entity as ComptabilitéCompteEntity;
+			var compte = entity as ComptaCompteEntity;
 
 			compte.Numéro = this.GetText (ColumnType.Numéro);
 			compte.Titre  = this.GetText (ColumnType.Titre);
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				compte.Type = type;
 			}
 
-			compte.Groupe = PlanComptableDataAccessor.GetCompte (this.comptabilité, this.GetText (ColumnType.Groupe));
+			compte.Groupe = PlanComptableDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Groupe));
 
 #if false
 			VatCode tva;
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 #endif
 
-			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.comptabilité, this.GetText (ColumnType.CompteOuvBoucl));
+			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.CompteOuvBoucl));
 
 			int index;
 			if (int.TryParse (this.GetText (ColumnType.IndexOuvBoucl).ToSimpleText (), out index) && index >= 1 && index <= 9)

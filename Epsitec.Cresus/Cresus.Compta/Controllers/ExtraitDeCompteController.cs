@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ExtraitDeCompteController : AbstractController
 	{
-		public ExtraitDeCompteController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptabilitéEntity, mainWindowController)
+		public ExtraitDeCompteController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new ExtraitDeCompteDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
+			this.dataAccessor = new ExtraitDeCompteDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new ExtraitDeCompteOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions);
+			this.optionsController = new ExtraitDeCompteOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateTitle()
 		{
 			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
-			var compte = this.comptabilitéEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
 			{

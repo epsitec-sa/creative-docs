@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-		public ComptabilitéCompteEntity CP
+		public ComptaCompteEntity CP
 		{
 			get;
 			set;

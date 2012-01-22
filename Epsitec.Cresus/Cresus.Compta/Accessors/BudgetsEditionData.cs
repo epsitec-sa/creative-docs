@@ -19,8 +19,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BudgetsEditionData : AbstractEditionData
 	{
-		public BudgetsEditionData(ComptabilitéEntity comptabilité)
-			: base (comptabilité)
+		public BudgetsEditionData(ComptaEntity compta)
+			: base (compta)
 		{
 		}
 
@@ -69,11 +69,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var compte = entity as ComptabilitéCompteEntity;
+			var compte = entity as ComptaCompteEntity;
 
 			this.SetText    (ColumnType.Numéro,          compte.Numéro);
 			this.SetText    (ColumnType.Titre,           compte.Titre);
-			this.SetMontant (ColumnType.Solde,           this.comptabilité.GetSoldeCompte (compte));
+			this.SetMontant (ColumnType.Solde,           this.comptaEntity.GetSoldeCompte (compte));
 			this.SetMontant (ColumnType.Budget,          compte.Budget);
 			this.SetMontant (ColumnType.BudgetPrécédent, compte.BudgetPrécédent);
 			this.SetMontant (ColumnType.BudgetFutur,     compte.BudgetFutur);
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var compte = entity as ComptabilitéCompteEntity;
+			var compte = entity as ComptaCompteEntity;
 
 			compte.Budget          = this.GetMontant (ColumnType.Budget);
 			compte.BudgetPrécédent = this.GetMontant (ColumnType.BudgetPrécédent);

@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PlanComptableController : AbstractController
 	{
-		public PlanComptableController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptabilitéEntity, mainWindowController)
+		public PlanComptableController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new PlanComptableDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
+			this.dataAccessor = new PlanComptableDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (mapper.Column == ColumnType.Titre)
 			{
-				var compte = this.dataAccessor.GetEditionData (row) as ComptabilitéCompteEntity;
+				var compte = this.dataAccessor.GetEditionData (row) as ComptaCompteEntity;
 
 				for (int i = 0; i < compte.Niveau; i++)
 				{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new PlanComptableFooterController (this.app, this.businessContext, this.comptabilitéEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
+			this.footerController = new PlanComptableFooterController (this.app, this.businessContext, this.comptaEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
 		}

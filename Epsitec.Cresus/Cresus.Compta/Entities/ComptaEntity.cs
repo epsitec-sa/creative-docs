@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Entities
 {
-	public partial class ComptabilitéEntity
+	public partial class ComptaEntity
 	{
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
@@ -194,7 +194,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		private void UpdateNiveauCompte(ComptabilitéCompteEntity compte)
+		private void UpdateNiveauCompte(ComptaCompteEntity compte)
 		{
 			//	Met à jour le niveau d'imbrication (0..n) d'un compte.
 			var c = compte;
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 
 			//	Génère une fois pour toutes le journal à prendre en compte.
-			var journal = this.Journal.Where (x => ComptabilitéEntity.Match (dateDébut, dateFin, x.Date));
+			var journal = this.Journal.Where (x => ComptaEntity.Match (dateDébut, dateFin, x.Date));
 
 			//	Cummule les totaux de tous les comptes finaux.
 			foreach (var écriture in journal)
@@ -287,7 +287,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			return true;
 		}
 
-		public decimal? GetSoldeCompte(ComptabilitéCompteEntity compte)
+		public decimal? GetSoldeCompte(ComptaCompteEntity compte)
 		{
 			//	Retourne le solde d'un compte (selon PlanComptableUpdate).
 			if (compte.Type != TypeDeCompte.Normal &&
@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		public decimal? GetSoldeCompteDébit(ComptabilitéCompteEntity compte)
+		public decimal? GetSoldeCompteDébit(ComptaCompteEntity compte)
 		{
 			//	Retourne le solde d'un compte au débit (selon PlanComptableUpdate).
 			decimal? solde;
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		public decimal? GetSoldeCompteCrédit(ComptabilitéCompteEntity compte)
+		public decimal? GetSoldeCompteCrédit(ComptaCompteEntity compte)
 		{
 			//	Retourne le solde d'un compte au crédit (selon PlanComptableUpdate).
 			decimal? solde;
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		private void AddSoldeCompteDébit(ComptabilitéCompteEntity compte, decimal montant)
+		private void AddSoldeCompteDébit(ComptaCompteEntity compte, decimal montant)
 		{
 			decimal? solde;
 			if (!this.soldesDébit.TryGetValue (compte.Numéro, out solde))
@@ -348,7 +348,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			this.soldesDébit[compte.Numéro] = solde;
 		}
 
-		private void AddSoldeCompteCrédit(ComptabilitéCompteEntity compte, decimal montant)
+		private void AddSoldeCompteCrédit(ComptaCompteEntity compte, decimal montant)
 		{
 			decimal? solde;
 			if (!this.soldesCrédit.TryGetValue (compte.Numéro, out solde))

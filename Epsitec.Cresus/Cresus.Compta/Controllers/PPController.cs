@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PPController : AbstractController
 	{
-		public PPController(Application app, BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptabilitéEntity, mainWindowController)
+		public PPController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptabilitéEntity, this.mainWindowController);
+			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
 			this.InitializeColumnMapper ();
 		}
 
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new PPOptionsController (this.comptabilitéEntity, this.dataAccessor.AccessorOptions as PPOptions);
+			this.optionsController = new PPOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as PPOptions);
 			this.optionsController.CreateUI (parent, this.OptinsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 		}

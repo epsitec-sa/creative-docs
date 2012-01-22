@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ExtraitDeCompteOptionsController : AbstractOptionsController
 	{
-		public ExtraitDeCompteOptionsController(ComptabilitéEntity comptabilitéEntity, ExtraitDeCompteOptions options)
-			: base (comptabilitéEntity, options)
+		public ExtraitDeCompteOptionsController(ComptaEntity comptaEntity, ExtraitDeCompteOptions options)
+			: base (comptaEntity, options)
 		{
 		}
 
@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			FrameBox container;
 			AbstractTextField field;
-			var comptes = this.comptabilitéEntity.PlanComptable.Where (x => this.CompteFilter (x)).OrderBy (x => x.Numéro);
+			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x)).OrderBy (x => x.Numéro);
 			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
 			UIBuilder.CreateAutoCompleteTextField (frame, comptes, out container, out field);
 			container.PreferredWidth = 100;
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private bool CompteFilter(ComptabilitéCompteEntity compte)
+		private bool CompteFilter(ComptaCompteEntity compte)
 		{
 			if (compte.Type != TypeDeCompte.Normal &&
 				compte.Type != TypeDeCompte.Groupe)

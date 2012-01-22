@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractDataAccessor
 	{
-		public AbstractDataAccessor(BusinessContext businessContext, ComptabilitéEntity comptabilitéEntity, MainWindowController windowController)
+		public AbstractDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController windowController)
 		{
-			this.businessContext    = businessContext;
-			this.comptabilitéEntity = comptabilitéEntity;
-			this.windowController   = windowController;
+			this.businessContext  = businessContext;
+			this.comptaEntity     = comptaEntity;
+			this.windowController = windowController;
 
 			this.readonlyData = new List<AbstractData> ();
 			this.editionData = new List<AbstractEditionData> ();
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected decimal? GetBudget(ComptabilitéCompteEntity compte)
+		protected decimal? GetBudget(ComptaCompteEntity compte)
 		{
 			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
 			if (!this.options.BudgetEnable)
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					var écriture = this.comptabilitéEntity.Journal.LastOrDefault ();
+					var écriture = this.comptaEntity.Journal.LastOrDefault ();
 					if (écriture != null)
 					{
 						day = écriture.Date.DayOfYear;
@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		protected readonly BusinessContext				businessContext;
-		protected readonly ComptabilitéEntity			comptabilitéEntity;
+		protected readonly ComptaEntity					comptaEntity;
 		protected readonly MainWindowController			windowController;
 		protected readonly List<AbstractData>			readonlyData;
 		protected readonly List<AbstractEditionData>	editionData;

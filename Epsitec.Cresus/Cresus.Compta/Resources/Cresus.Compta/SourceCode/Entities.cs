@@ -4,17 +4,17 @@
 //  toute modification sera perdue. 
 //  --------------------------------------------------------------------------- 
 
-[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK]", typeof (Epsitec.Cresus.Compta.Entities.ComptabilitéEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK3]", typeof (Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB]", typeof (Epsitec.Cresus.Compta.Entities.ComptabilitéEcritureEntity))]
-#region Epsitec.Cresus.Compta.Comptabilité Entity
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCompteEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity))]
+#region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
 	///	<summary>
-	///	The <c>Comptabilité</c> entity.
+	///	The <c>Compta</c> entity.
 	///	designer:cap/OVK
 	///	</summary>
-	public partial class ComptabilitéEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ComptaEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.INameDescription
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -111,11 +111,11 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVK/OVKN
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKN]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> PlanComptable
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> PlanComptable
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVKN]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKN]");
 			}
 		}
 		///	<summary>
@@ -123,11 +123,11 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVK/OVKO
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKO]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptabilitéEcritureEntity> Journal
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> Journal
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptabilitéEcritureEntity> ("[OVKO]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> ("[OVKO]");
 			}
 		}
 		///	<summary>
@@ -183,17 +183,17 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 0);	// [OVK]
 		public static readonly string EntityStructuredTypeKey = "[OVK]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -204,14 +204,14 @@ namespace Epsitec.Cresus.Compta.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Compta.ComptabilitéCompte Entity
+#region Epsitec.Cresus.Compta.ComptaCompte Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
 	///	<summary>
-	///	The <c>ComptabilitéCompte</c> entity.
+	///	The <c>ComptaCompte</c> entity.
 	///	designer:cap/OVK3
 	///	</summary>
-	public partial class ComptabilitéCompteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaCompteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -324,19 +324,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVK3/OVK6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK6]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity Groupe
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity Groupe
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVK6]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVK6]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue = this.Groupe;
+				global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue = this.Groupe;
 				if (oldValue != value || !this.IsFieldDefined("[OVK6]"))
 				{
 					this.OnGroupeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVK6]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVK6]", oldValue, value);
 					this.OnGroupeChanged (oldValue, value);
 				}
 			}
@@ -346,19 +346,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVK3/OVK7
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK7]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity CompteOuvBoucl
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity CompteOuvBoucl
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVK7]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVK7]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue = this.CompteOuvBoucl;
+				global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue = this.CompteOuvBoucl;
 				if (oldValue != value || !this.IsFieldDefined("[OVK7]"))
 				{
 					this.OnCompteOuvBouclChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVK7]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVK7]", oldValue, value);
 					this.OnCompteOuvBouclChanged (oldValue, value);
 				}
 			}
@@ -504,10 +504,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCatégorieChanged(global::Epsitec.Cresus.Compta.CatégorieDeCompte oldValue, global::Epsitec.Cresus.Compta.CatégorieDeCompte newValue);
 		partial void OnTypeChanging(global::Epsitec.Cresus.Compta.TypeDeCompte oldValue, global::Epsitec.Cresus.Compta.TypeDeCompte newValue);
 		partial void OnTypeChanged(global::Epsitec.Cresus.Compta.TypeDeCompte oldValue, global::Epsitec.Cresus.Compta.TypeDeCompte newValue);
-		partial void OnGroupeChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnGroupeChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnCompteOuvBouclChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnCompteOuvBouclChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnGroupeChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnGroupeChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnCompteOuvBouclChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnCompteOuvBouclChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnIndexOuvBouclChanging(int oldValue, int newValue);
 		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
 		partial void OnMonnaieChanging(string oldValue, string newValue);
@@ -524,17 +524,17 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 3);	// [OVK3]
 		public static readonly string EntityStructuredTypeKey = "[OVK3]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéCompteEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaCompteEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
@@ -545,14 +545,14 @@ namespace Epsitec.Cresus.Compta.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Compta.ComptabilitéEcriture Entity
+#region Epsitec.Cresus.Compta.ComptaEcriture Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
 	///	<summary>
-	///	The <c>ComptabilitéEcriture</c> entity.
+	///	The <c>ComptaEcriture</c> entity.
 	///	designer:cap/OVKB
 	///	</summary>
-	public partial class ComptabilitéEcritureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaEcritureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -643,19 +643,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVKB/OVKE
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKE]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity Débit
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity Débit
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVKE]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKE]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue = this.Débit;
+				global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue = this.Débit;
 				if (oldValue != value || !this.IsFieldDefined("[OVKE]"))
 				{
 					this.OnDébitChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVKE]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKE]", oldValue, value);
 					this.OnDébitChanged (oldValue, value);
 				}
 			}
@@ -665,19 +665,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVKB/OVKF
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKF]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity Crédit
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity Crédit
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVKF]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKF]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue = this.Crédit;
+				global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue = this.Crédit;
 				if (oldValue != value || !this.IsFieldDefined("[OVKF]"))
 				{
 					this.OnCréditChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity> ("[OVKF]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKF]", oldValue, value);
 					this.OnCréditChanged (oldValue, value);
 				}
 			}
@@ -843,10 +843,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnMultiIdChanged(int oldValue, int newValue);
 		partial void OnTotalAutomatiqueChanging(bool oldValue, bool newValue);
 		partial void OnTotalAutomatiqueChanged(bool oldValue, bool newValue);
-		partial void OnDébitChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnDébitChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnCréditChanging(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
-		partial void OnCréditChanged(global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptabilitéCompteEntity newValue);
+		partial void OnDébitChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnDébitChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnCréditChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnCréditChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnPièceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnPièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -865,17 +865,17 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéEcritureEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptabilitéEcritureEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 11);	// [OVKB]
 		public static readonly string EntityStructuredTypeKey = "[OVKB]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptabilitéEcritureEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaEcritureEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{
