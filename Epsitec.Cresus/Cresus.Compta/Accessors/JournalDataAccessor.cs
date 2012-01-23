@@ -102,6 +102,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					return montant;
 
+				case ColumnType.Journal:
+					return écriture.Journal.Name;
+
 				default:
 					return FormattedText.Null;
 			}
@@ -257,8 +260,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int row = this.GetSortedRow (écriture.Date);
 				this.journal.Insert (row, écriture);
 
-				int globalRow = this.GetSortedRow (écriture.Date, global: true);
-				this.comptaEntity.Journal.Insert (globalRow, écriture);
+				if (!this.IsAllJournaux)
+				{
+					int globalRow = this.GetSortedRow (écriture.Date, global: true);
+					this.comptaEntity.Journal.Insert (globalRow, écriture);
+				}
 
 				if (firstRow == -1)
 				{
@@ -384,7 +390,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture = this.businessContext.CreateEntity<ComptaEcritureEntity> ();
 			}
 
-			écriture.Journal = (this.options as JournalOptions).Journal;
+			//	Utilise le journal choisi dans les options.
+			//	Si on est en mode "tous les journaux", on laisse null, car le bon sera mis plus tard.
+			var journal = (this.options as JournalOptions).Journal;
+			if (journal != null)  // dans un journal spécifique ?
+			{
+				écriture.Journal = journal;
+			}
 
 			return écriture;
 		}
@@ -592,6 +604,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public static ComptaJournalEntity GetJournal(ComptaEntity compta, FormattedText name)
+		{
+			if (name.IsNullOrEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return compta.Journaux.Where (x => x.Name == name).FirstOrDefault ();
+			}
+		}
+
 
 		public bool ParseDate(FormattedText text, out Date date)
 		{
@@ -620,6 +644,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				date = Date.Today;
 				return false;
+			}
+		}
+
+
+		private bool IsAllJournaux
+		{
+			get
+			{
+				return (this.options as JournalOptions).Journal == null;
 			}
 		}
 

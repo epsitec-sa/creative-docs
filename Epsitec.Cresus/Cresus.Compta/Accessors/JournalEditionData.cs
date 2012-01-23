@@ -52,6 +52,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Montant:
 					error = this.ValidateMontant (ref text);
 					break;
+
+				case ColumnType.Journal:
+					error = this.ValidateJournal (ref text);
+					break;
 			}
 
 			this.SetText (columnType, text);
@@ -141,6 +145,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return "Le montant n'est pas correct";
 			}
 		}
+
+		private FormattedText ValidateJournal(ref FormattedText text)
+		{
+			if (text.IsNullOrEmpty)
+			{
+				return "Il manque le journal";
+			}
+
+			var t = text;
+			if (this.comptaEntity.Journaux.Where (x => x.Name == t).Any ())
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return "Ce journal n'existe pas";
+			}
+		}
 		#endregion
 
 
@@ -155,6 +177,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Libellé,          écriture.Libellé);
 			this.SetText (ColumnType.Montant,          écriture.Montant.ToString ("0.00"));
 			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
+			this.SetText (ColumnType.Journal,          écriture.Journal.Name);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -180,6 +203,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
+
+			var journal = JournalDataAccessor.GetJournal (this.comptaEntity, this.GetText (ColumnType.Journal));
+			if (journal == null)  // dans un journal spécifique ?
+			{
+				//	Normalement, le journal a déjà été initialisé. Mais si ce n'est pas le cas, on met le premier,
+				//	car il est impératif qu'une écriture ait un journal !
+				if (écriture.Journal == null)
+				{
+					écriture.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
+				}
+			}
+			else  // mode "tous les journaux" ?
+			{
+				//	Utilise le journal choisi par l'utilisateur dans le widget ad-hoc.
+				écriture.Journal = journal;
+			}
 		}
 	}
 }

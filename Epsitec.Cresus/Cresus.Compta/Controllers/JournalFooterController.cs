@@ -260,12 +260,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionData[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
 			this.dataAccessor.EditionData[1].SetText (ColumnType.Pièce,            this.dataAccessor.EditionData[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionData[1].SetText (ColumnType.Montant,          "0.00");
+			this.dataAccessor.EditionData[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionData[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
 			this.dataAccessor.EditionData[2].SetText (ColumnType.Date,             this.dataAccessor.EditionData[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionData[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 			this.dataAccessor.EditionData[2].SetText (ColumnType.Pièce,            this.dataAccessor.EditionData[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionData[2].SetText (ColumnType.Libellé,          "Total");
+			this.dataAccessor.EditionData[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionData[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionData[2].SetText (ColumnType.TotalAutomatique, "True");
 
 			this.UpdateFooterContent ();
@@ -290,8 +292,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Date,     this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
-				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Pièce,    this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
+				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
+				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Pièce,   this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
+				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionData[cp].GetText (ColumnType.Journal));
 			}
 
 			this.dirty = true;
@@ -389,8 +392,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bool totalAutomatique = (this.dataAccessor.EditionData[line].GetText (ColumnType.TotalAutomatique) == "True");
 
-				this.SetWidgetVisibility (ColumnType.Date,  line, totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.Pièce,   line, totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
 
 				this.GetTextField (ColumnType.Montant, line).IsReadOnly = totalAutomatique;
 				this.GetTextField (ColumnType.Montant, line).Invalidate ();  // pour contourner un bug
@@ -411,8 +415,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					if (line != cp)
 					{
-						this.dataAccessor.EditionData[line].SetText (ColumnType.Date,  this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
-						this.dataAccessor.EditionData[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
+						this.dataAccessor.EditionData[line].SetText (ColumnType.Date,    this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
+						this.dataAccessor.EditionData[line].SetText (ColumnType.Pièce,   this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
+						this.dataAccessor.EditionData[line].SetText (ColumnType.Journal, this.dataAccessor.EditionData[cp].GetText (ColumnType.Journal));
 
 						var text = this.dataAccessor.EditionData[line].GetText (ColumnType.Montant).ToSimpleText ();
 						decimal montant = 0;
@@ -514,20 +519,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void UpdateFooterContent()
 		{
-			int row   = this.dataAccessor.FirstEditedRow;
+			this.UpdateArrayColumns ();
+
 			int count = this.dataAccessor.CountEditedRow;
-
-			//	Adapte l'interface pour accueillir le nombre de lignes requis.
-			if (this.linesFrames.Count != count)
-			{
-				this.ResetLineUI ();
-
-				for (int i = 0; i < count-1; i++)
-				{
-					this.CreateLineUI ();
-				}
-			}
-
 			this.selectedLine = System.Math.Min (this.selectedLine, count-1);
 			this.isMulti = (count > 1);
 
@@ -544,6 +538,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void UpdateFooterGeometry()
 		{
+			this.UpdateArrayColumns ();
+
 			int columnCount = this.columnMappers.Count;
 
 			for (int line = 0; line < this.linesFrames.Count; line++)
@@ -564,6 +560,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.débitInfoFrame.PreferredWidth  = w1+w2;
 			this.créditInfoFrame.PreferredWidth = w1+w2-1;
+		}
+
+		private void UpdateArrayColumns()
+		{
+			//	Si nécessaire, adapte l'interface pour accueillir le nombre de lignes et de colonnes requis.
+			int count = this.dataAccessor.CountEditedRow;
+
+			if (this.linesFrames.Count != count ||
+				this.footerFields[0].Count != this.columnMappers.Count)
+			{
+				this.ResetLineUI ();
+
+				for (int i = 0; i < count-1; i++)
+				{
+					this.CreateLineUI ();
+				}
+			}
 		}
 
 

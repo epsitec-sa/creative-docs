@@ -56,8 +56,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var name = (this.optionsController.Options as JournalOptions).Journal.Name;
-			this.SetTitle (TextFormatter.FormatText ("Journal", name));
+			var journal = (this.optionsController.Options as JournalOptions).Journal;
+
+			if (journal == null)  // tous les journaux ?
+			{
+				var name = TextFormatter.FormatText (JournalOptionsController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
+				this.SetTitle (name);
+			}
+			else
+			{
+				this.SetTitle (TextFormatter.FormatText ("Journal", journal.Name));
+			}
 		}
 
 
@@ -112,6 +121,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Pièce,   0.20, ContentAlignment.MiddleLeft,  "Pièce",   "Numéro de la pièce comptable correspondant à l'écriture");
 				yield return new ColumnMapper (ColumnType.Libellé, 0.80, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
 				yield return new ColumnMapper (ColumnType.Montant, 0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
+
+				if (this.optionsController  != null && (this.optionsController.Options as JournalOptions).Journal == null) // tous les journaux ?
+				{
+					yield return new ColumnMapper (ColumnType.Journal, 0.25, ContentAlignment.MiddleLeft, "Journal", "Journal auquel appartient l'écriture");
+				}
 			}
 		}
 

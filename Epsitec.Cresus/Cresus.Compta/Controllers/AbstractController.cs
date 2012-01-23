@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.comptaEntity         = comptaEntity;
 			this.mainWindowController = mainWindowController;
 
+			this.columnMappers = new List<ColumnMapper> ();
+
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 
@@ -472,7 +474,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void InitializeColumnMapper()
 		{
-			this.columnMappers = new List<ColumnMapper> ();
+			this.columnMappers.Clear ();
 
 			foreach (var mapper in this.ColumnMappers)
 			{
@@ -522,13 +524,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							comptaEntity;
+		protected readonly List<ColumnMapper>					columnMappers;
 
 		protected MainWindowController							mainWindowController;
 		protected Window										parentWindow;
 		protected Command										commandDocument;
 
 		protected AbstractDataAccessor							dataAccessor;
-		protected List<ColumnMapper>							columnMappers;
 
 		protected TopSearchingController						topSearchingController;
 		protected AbstractOptionsController						optionsController;

@@ -366,13 +366,30 @@ namespace Epsitec.Cresus.Compta.Entities
 		public int GetJournalCount(ComptaJournalEntity journal)
 		{
 			//	Retourne le nombre d'écritures d'un journal.
-			return this.Journal.Where (x => x.Journal == journal).Count ();
+			if (journal == null)  // tous les journaux ?
+			{
+				return this.Journal.Count ();
+			}
+			else
+			{
+				return this.Journal.Where (x => x.Journal == journal).Count ();
+			}
 		}
 
 		public string GetJournalSummary(ComptaJournalEntity journal)
 		{
 			//	Retourne le résumé d'un journal d'écritures.
-			var écritures = this.Journal.Where (x => x.Journal == journal);
+			IEnumerable<ComptaEcritureEntity> écritures;
+
+			if (journal == null)  // tous les journaux ?
+			{
+				écritures = this.Journal;
+			}
+			else
+			{
+				écritures = this.Journal.Where (x => x.Journal == journal);
+			}
+
 			int count = écritures.Count();
 
 			if (count == 0)

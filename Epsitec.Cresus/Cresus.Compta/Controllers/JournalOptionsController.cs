@@ -99,18 +99,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateCombo ();
 
-			this.compactComboJournaux.TextChanged += delegate
+			this.compactComboJournaux.SelectedItemChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (!this.ignoreChange && this.compactComboJournaux.SelectedItemIndex != -1)
 				{
-					var journal = this.comptaEntity.Journaux.Where (x => x.Name == this.compactComboJournaux.FormattedText).FirstOrDefault ();
-					if (journal != null)
+					if (this.compactComboJournaux.SelectedItemIndex == this.comptaEntity.Journaux.Count)  // tous les journaux ?
 					{
-						this.Options.Journal = journal;
-						this.UpdateSummary ();
-						this.UpdateList ();
-						optionsChanged ();
+						this.Options.Journal = null;
 					}
+					else
+					{
+						this.Options.Journal = this.comptaEntity.Journaux[this.compactComboJournaux.SelectedItemIndex];
+					}
+
+					this.UpdateList ();
+					this.UpdateButtons ();
+					this.UpdateSummary ();
+					optionsChanged ();
 				}
 			};
 		}
@@ -267,7 +272,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (!this.ignoreChange && this.extendedListJournaux.SelectedItemIndex != -1)
 				{
-					this.Options.Journal = this.comptaEntity.Journaux[this.extendedListJournaux.SelectedItemIndex];
+					if (this.extendedListJournaux.SelectedItemIndex == this.comptaEntity.Journaux.Count)  // tous les journaux ?
+					{
+						this.Options.Journal = null;
+					}
+					else
+					{
+						this.Options.Journal = this.comptaEntity.Journaux[this.extendedListJournaux.SelectedItemIndex];
+					}
+
 					this.UpdateCombo ();
 					this.UpdateList ();
 					this.UpdateButtons ();
@@ -389,8 +402,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.compactComboJournaux.Items.Add (journal.Name);
 			}
 
+			this.compactComboJournaux.Items.Add (JournalOptionsController.AllJournaux);
+
 			this.ignoreChange = true;
-			this.compactComboJournaux.FormattedText = this.Options.Journal.Name;
+			this.compactComboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Name;
 			this.ignoreChange = false;
 		}
 
@@ -403,21 +418,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.extendedListJournaux.Items.Add (journal.Name);
 			}
 
+			this.extendedListJournaux.Items.Add (JournalOptionsController.AllJournaux);
+
 			this.ignoreChange = true;
-			this.extendedListJournaux.SelectedItemIndex = this.comptaEntity.Journaux.IndexOf (this.Options.Journal);
-			this.extendedFieldName.FormattedText = this.Options.Journal.Name;
+			this.extendedListJournaux.SelectedItemIndex = (this.Options.Journal == null) ? this.comptaEntity.Journaux.Count : this.comptaEntity.Journaux.IndexOf (this.Options.Journal);
+			this.extendedFieldName.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Name;
 			this.ignoreChange = false;
 		}
 
 		private void UpdateButtons()
 		{
 			int sel = this.extendedListJournaux.SelectedItemIndex;
-			int count = this.extendedListJournaux.Items.Count;
-			int n = this.comptaEntity.GetJournalCount (this.Options.Journal);
+			int count = this.comptaEntity.Journaux.Count;
+			int n = this.comptaEntity.GetJournalCount (this.Options.Journal);  // nb d'écritures dans le journal courant
+			bool allJournaux = (sel == count);
 
-			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
-			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
-			this.extendedRemoveButton.Enable = (sel != -1 && count > 1 && n == 0);
+			this.extendedUpButton.Enable     = (!allJournaux && sel != -1 && sel > 0);
+			this.extendedDownButton.Enable   = (!allJournaux && sel != -1 && sel < count-1);
+			this.extendedRemoveButton.Enable = (!allJournaux && sel != -1 && count > 1 && n == 0);
 		}
 
 		private void UpdateSummary()
@@ -463,6 +481,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private static readonly double JournauxWidth = 200;
+		public static readonly string AllJournaux = "Tous les journaux";
 
 		private GlyphButton				modeButton;
 

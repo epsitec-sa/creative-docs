@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				int column, line;
 				if (this.GetWidgetColumnLine (e.OldFocus.Name, out column, out line))
 				{
-					if (line < this.dataAccessor.EditionData.Count)
+					if (line < this.dataAccessor.EditionData.Count && column < this.columnMappers.Count)
 					{
 						var mapper = this.columnMappers[column];
 						var field = e.OldFocus as AbstractTextField;
