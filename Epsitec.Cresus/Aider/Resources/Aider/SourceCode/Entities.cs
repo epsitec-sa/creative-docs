@@ -463,11 +463,11 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Address</c> field.
+		///	The <c>Address1</c> field.
 		///	designer:fld/LVA/LVAC2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAC2]")]
-		public global::Epsitec.Aider.Entities.eCH_AddressEntity Address
+		public global::Epsitec.Aider.Entities.eCH_AddressEntity Address1
 		{
 			get
 			{
@@ -475,12 +475,34 @@ namespace Epsitec.Aider.Entities
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue = this.Address;
+				global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue = this.Address1;
 				if (oldValue != value || !this.IsFieldDefined("[LVAC2]"))
 				{
-					this.OnAddressChanging (oldValue, value);
+					this.OnAddress1Changing (oldValue, value);
 					this.SetField<global::Epsitec.Aider.Entities.eCH_AddressEntity> ("[LVAC2]", oldValue, value);
-					this.OnAddressChanged (oldValue, value);
+					this.OnAddress1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Address2</c> field.
+		///	designer:fld/LVA/LVG802
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVG802]")]
+		public global::Epsitec.Aider.Entities.eCH_AddressEntity Address2
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.eCH_AddressEntity> ("[LVG802]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue = this.Address2;
+				if (oldValue != value || !this.IsFieldDefined("[LVG802]"))
+				{
+					this.OnAddress2Changing (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.eCH_AddressEntity> ("[LVG802]", oldValue, value);
+					this.OnAddress2Changed (oldValue, value);
 				}
 			}
 		}
@@ -523,8 +545,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnOriginsChanged(string oldValue, string newValue);
 		partial void OnAdultMaritalStatusChanging(global::Epsitec.Aider.eCH.PersonMaritalStatus oldValue, global::Epsitec.Aider.eCH.PersonMaritalStatus newValue);
 		partial void OnAdultMaritalStatusChanged(global::Epsitec.Aider.eCH.PersonMaritalStatus oldValue, global::Epsitec.Aider.eCH.PersonMaritalStatus newValue);
-		partial void OnAddressChanging(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
-		partial void OnAddressChanged(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		partial void OnAddress1Changing(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		partial void OnAddress1Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		partial void OnAddress2Changing(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
+		partial void OnAddress2Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		
 		partial void GetDateOfBirth(ref string value);
 		partial void SetDateOfBirth(string value);

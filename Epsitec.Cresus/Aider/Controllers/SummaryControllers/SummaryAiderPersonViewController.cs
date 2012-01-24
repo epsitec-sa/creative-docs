@@ -2,9 +2,10 @@
 
 using Epsitec.Cresus.Bricks;
 
-using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
+using Epsitec.Cresus.Core.Controllers.SummaryControllers;
+using Epsitec.Cresus.Core.Entities;
 
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
@@ -24,7 +25,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 
 			if (this.Entity.IsGovernmentDefined ())
 			{
-				wall.AddBrick (x => x.eCH_Person.Address);
+				wall.AddBrick (x => x.eCH_Person.Address1);
+
+				if (this.Entity.eCH_Person.Address2.IsNotNull ())
+				{
+					wall.AddBrick (x => x.eCH_Person.Address2);
+				}
 			}
 
 			wall.AddBrick (x => x.AdditionalAddress1)

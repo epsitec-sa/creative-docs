@@ -45,7 +45,7 @@ namespace Epsitec.Aider.Data
 					businessContext = businessContextCreator ();
 
 					// NOTE This dictionary will store the mapping between the eChpersonIds and the
-					// entities for the entities that have been processed but not yet savec to the
+					// entities for the entities that have been processed but not yet saved to the
 					// database.
 
 					var eChPersonIdToEntity = new Dictionary<string, AiderPersonEntity> ();
@@ -149,7 +149,7 @@ namespace Epsitec.Aider.Data
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPerson, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
+		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
 		{
 			EntityKey entityKey;
 			AiderPersonEntity aiderPersonEntity;
@@ -173,16 +173,14 @@ namespace Epsitec.Aider.Data
 			{
 				var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
-				eChPersonEntity.ReportedPerson2 = eChReportedPerson;
-
-				// NOTE We should probably also set the address somewhere, but we currently can't
-				// because an EChPersonEntity has only one. It should probably have two.
+				eChPersonEntity.ReportedPerson2 = eChReportedPersonEntity;
+				eChPersonEntity.Address2 = eChAddressEntity;				
 
 				return Tuple.Create (eChPersonEntity, aiderPersonEntity);
 			}
 			else
 			{
-				var result = EChDataImporter.Import (businessContext, eChPerson, eChReportedPerson, eChAddressEntity, houseHold);
+				var result = EChDataImporter.Import (businessContext, eChPerson, eChReportedPersonEntity, eChAddressEntity, houseHold);
 
 				// NOTE We add the newly created entity to the dictionary of the entities that have
 				// been created but not yet saved.
@@ -194,7 +192,7 @@ namespace Epsitec.Aider.Data
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPerson, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
+		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
 		{
 			var aiderPersonEntity = businessContext.CreateEntity<AiderPersonEntity> ();
 			aiderPersonEntity.Household = houseHold;
@@ -221,8 +219,8 @@ namespace Epsitec.Aider.Data
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
 			eChPersonEntity.RemovalReason = RemovalReason.None;
 
-			eChPersonEntity.ReportedPerson1 = eChReportedPerson;
-			eChPersonEntity.Address = eChAddressEntity;
+			eChPersonEntity.ReportedPerson1 = eChReportedPersonEntity;
+			eChPersonEntity.Address1 = eChAddressEntity;
 
 			return Tuple.Create (eChPersonEntity, aiderPersonEntity);
 		}

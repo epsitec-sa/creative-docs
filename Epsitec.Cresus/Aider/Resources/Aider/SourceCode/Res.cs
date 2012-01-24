@@ -1323,7 +1323,9 @@ namespace Epsitec.Aider
 				}
 				
 				//	designer:cap/LVAC2
-				public static readonly global::Epsitec.Common.Support.Druid Address = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+				public static readonly global::Epsitec.Common.Support.Druid Address1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
+				//	designer:cap/LVG802
+				public static readonly global::Epsitec.Common.Support.Druid Address2 = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 8);
 				//	designer:cap/LVA9
 				public static readonly global::Epsitec.Common.Support.Druid AdultMaritalStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 9);
 				//	designer:cap/LVAI6
