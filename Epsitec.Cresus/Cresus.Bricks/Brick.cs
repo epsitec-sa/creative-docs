@@ -1,5 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -32,32 +34,28 @@ namespace Epsitec.Cresus.Bricks
 
 		public System.Delegate GetResolver(System.Type expectedReturnType)
 		{
-			var lambda = this.resolver as LambdaExpression;
+			var lambda = this.GetLambda ();
 
 			if (lambda == null)
 			{
 				return null;
 			}
 
-#if false
-			var templateType     = typeof (Zzz<,,>);
-			var templateTypeArg1 = lambda.Parameters[0].Type;
-			var templateTypeArg2 = expectedReturnType;
-			var templateTypeArg3 = lambda.ReturnType;
-			var constructedTemplateType = templateType.MakeGenericType (templateTypeArg1, templateTypeArg2, templateTypeArg3);
-
-			var factory = System.Activator.CreateInstance (constructedTemplateType);
-
-			var result  = constructedTemplateType.InvokeMember ("CreateFunction",
-				BindingFlags.Public | BindingFlags.Instance | BindingFlags.InvokeMethod,
-				null,
-				factory,
-				new object[] { lambda });
-
-			return result as System.Delegate;
-#else
 			return lambda.Compile ();
-#endif
+		}
+
+		public System.Delegate CreateResolverSetter(System.Type expectedTargetType)
+		{
+			var lambda = this.GetLambda ();
+
+			if (lambda == null)
+			{
+				return null;
+			}
+			
+			lambda = ExpressionAnalyzer.CreateSetter (lambda);
+
+			return lambda.Compile ();
 		}
 
 		public LambdaExpression GetLambda()

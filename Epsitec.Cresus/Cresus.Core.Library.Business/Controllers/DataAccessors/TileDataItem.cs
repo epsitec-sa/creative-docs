@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Orchestrators.Navigation;
 using Epsitec.Cresus.Core.Widgets.Tiles;
@@ -343,6 +344,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			private set;
 		}
 
+		public System.Func<AbstractEntity, AbstractEntity> EntityMarshalerAutoCreator
+		{
+			get;
+			private set;
+		}
+
 		public Accessor<FormattedText>			TitleAccessor
 		{
 			set
@@ -439,6 +446,43 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		public void SetEntityAutoCreator(Epsitec.Cresus.Core.Business.BusinessContext context, System.Type childType, System.Delegate setter)
+		{
+			if (setter == null)
+			{
+				this.EntityMarshalerAutoCreator = null;
+			}
+			else
+			{
+				this.EntityMarshalerAutoCreator =
+					delegate (AbstractEntity entity)
+					{
+						var child = context.CreateEntity (EntityInfo.GetTypeId (childType));
+						setter.DynamicInvoke (entity, child);
+						return child;
+					};
+			}
+		}
+
+		public void SetEntityAutoCreator<T>(Epsitec.Cresus.Core.Business.BusinessContext context, System.Delegate setter)
+			where T : AbstractEntity, new ()
+		{
+			if (setter == null)
+			{
+				this.EntityMarshalerAutoCreator = null;
+			}
+			else
+			{
+				this.EntityMarshalerAutoCreator =
+					delegate (AbstractEntity entity)
+					{
+						var child = context.CreateEntity<T> ();
+						setter.DynamicInvoke (entity, child);
+						return child;
+					};
+			}
+		}
+
 
 		public static string BuildName(string prefix, int index)
 		{
@@ -498,7 +542,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 				if (converter != null)
 				{
-					entity = converter (entity);
+					var root = entity;
+					
+					entity = converter (root);
+
+					if (entity.IsNull ())
+					{
+						var creator = this.EntityMarshalerAutoCreator;
+
+						if (creator != null)
+						{
+							entity = creator (root);
+						}
+					}
 				}
 
 				navigationPathElement = new TileNavigationPathElement (this.Name);

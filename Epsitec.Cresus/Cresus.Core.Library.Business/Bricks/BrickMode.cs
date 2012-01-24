@@ -16,6 +16,11 @@ namespace Epsitec.Cresus.Core.Bricks
 		AutoGroup,
 
 		/// <summary>
+		/// Automatically create a missing entity.
+		/// </summary>
+		AutoCreateNullEntity,
+
+		/// <summary>
 		/// Default the sub-view to <see cref="ViewControllerMode.Summary"/> rather
 		/// than <see cref="ViewControllerMode.Edition"/>.
 		/// </summary>

@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				}
 			}
 		}
-		
+
 		private TileDataItem CreateTileDataItem(TileDataItems data, Brick brick)
 		{
 			var item = new TileDataItem ();
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					Bridge.CreateDefaultTextProperties (templateBrick);
 				}
-				
+
 				if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
 				{
 					Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Text, CollectionTemplate.DefaultEmptyText));
@@ -124,11 +124,13 @@ namespace Epsitec.Cresus.Core.Bricks
 
 			this.ProcessProperty (brick, BrickPropertyKey.Name, x => item.Name = x);
 			this.ProcessProperty (brick, BrickPropertyKey.Icon, x => item.IconUri = x);
-			
+
 			this.ProcessProperty (brick, BrickPropertyKey.Title, x => item.Title = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TitleCompact, x => item.CompactTitle = x);
 			this.ProcessProperty (brick, BrickPropertyKey.Text, x => item.Text = x);
 			this.ProcessProperty (brick, BrickPropertyKey.TextCompact, x => item.CompactText = x);
+
+			this.PreProcessAttributes ();
 
 			this.ProcessProperty (brick, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
 			this.ProcessProperty (brick, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
@@ -170,7 +172,9 @@ namespace Epsitec.Cresus.Core.Bricks
 				{
 					item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
 
-					if (brick.GetFieldType () == typeof (T))
+					System.Type fieldType = brick.GetFieldType ();
+
+					if (fieldType == typeof (T))
 					{
 						//	Type already ok.
 
@@ -188,13 +192,24 @@ namespace Epsitec.Cresus.Core.Bricks
 					}
 					else
 					{
-						item.SetEntityConverter<T> (brick.GetResolver (brick.GetFieldType ()));
+						item.SetEntityConverter<T> (brick.GetResolver (fieldType));
+
+						if (this.autoCreateNullEntity)
+						{
+							item.SetEntityAutoCreator (this.controller.BusinessContext, fieldType, brick.CreateResolverSetter (fieldType));
+						}
 					}
+					
 					data.Add (item);
 				}
 			}
 
 			return item;
+		}
+
+		private void PreProcessAttributes()
+		{
+			this.autoCreateNullEntity = false;
 		}
 
 
@@ -204,6 +219,10 @@ namespace Epsitec.Cresus.Core.Bricks
 			{
 				case BrickMode.AutoGroup:
 					item.AutoGroup = true;
+					break;
+
+				case BrickMode.AutoCreateNullEntity:
+					this.autoCreateNullEntity = true;
 					break;
 				
 				case BrickMode.DefaultToSummarySubView:
@@ -820,5 +839,7 @@ namespace Epsitec.Cresus.Core.Bricks
 
 		private readonly EntityViewController<T> controller;
 		private readonly List<BrickWall<T>> walls;
+
+		private bool autoCreateNullEntity;
 	}
 }

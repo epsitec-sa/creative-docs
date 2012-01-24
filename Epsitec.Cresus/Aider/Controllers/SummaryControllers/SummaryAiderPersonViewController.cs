@@ -28,12 +28,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.AdditionalAddress1)
+				.Attribute (BrickMode.AutoCreateNullEntity)
 				.Title ("Adresse supplémentaire 1");
+			
 			wall.AddBrick (x => x.AdditionalAddress2)
+				.Attribute (BrickMode.AutoCreateNullEntity)
 				.Title ("Adresse supplémentaire 2");
 
-			wall.AddBrick (x => x.Household);
-			wall.AddBrick (x => x.Comment);
+			wall.AddBrick (x => x.Household)
+				.Attribute (BrickMode.AutoCreateNullEntity);
+			
+			wall.AddBrick (x => x.Comment)
+				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
 
