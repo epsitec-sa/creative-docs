@@ -5,6 +5,12 @@ using System;
 
 namespace Epsitec.Common.Support
 {
+
+	// NOTE Disables the warning about conflicting types. Here we can do this because it is on
+	// purpose that we include this file in the projet App.Designer which results in the type being
+	// defined twice in this project. See commit #17610 and commit #17611 for more details.
+	#pragma warning disable 436
+
 	/// <summary>
 	/// The <c>AppDomainStarter</c> class creates an <see cref="AppDomain"/> and
 	/// launches an action in that context. The action may not be a lambda with a
