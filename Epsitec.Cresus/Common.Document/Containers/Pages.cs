@@ -142,6 +142,7 @@ namespace Epsitec.Common.Document.Containers
 				this.styleField.Items.Add("");
 				this.styleField.Items.Add("Normal");
 				this.styleField.Items.Add("Cursor");
+				this.styleField.Items.Add("Active");
 				this.styleField.Dock = DockStyle.Left;
 				this.styleField.Margins = new Margins(0, 0, 0, 0);
 				this.styleField.TextChanged += this.HandleStyleChanged;
