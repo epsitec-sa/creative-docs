@@ -4,9 +4,9 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Common.Widgets;
-
 using Epsitec.Cresus.Core.Business;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System;
 
@@ -15,6 +15,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.Linq;
+using Epsitec.Aider.eCH;
 
 
 namespace Epsitec.Aider.Data
@@ -27,68 +28,82 @@ namespace Epsitec.Aider.Data
 
 		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IList<EChReportedPerson> eChReportedPersons)
 		{
-			var maxBatchSize = 1000;
-			var currentBatchSize = 0;
+			int batchSize = 1000;
+			int nbBatches = 0;
 
-			BusinessContext businessContext = null;
-			try
+			// NOTE This dictionary will store the mapping between the eChPersonIds and the entity
+			// key for the entities that have been processed and saved to the database.
+			
+			var eChPersonIdToEntityKey = new Dictionary<string, EntityKey> ();
+			
+			foreach (var batch in EChDataImporter.GetBatches (eChReportedPersons, batchSize))
 			{
-				businessContext = EChDataImporter.InitializeBusinessContext (businessContextCreator);
+				BusinessContext businessContext = null;
 
-				int currentIndex = 0;
-				int total = eChReportedPersons.Count;
-
-				foreach (var eChReportedPerson in eChReportedPersons)
+				try
 				{
-					EChDataImporter.Import (businessContext, eChReportedPerson);
+					businessContext = businessContextCreator ();
 
-					if (currentBatchSize == maxBatchSize)
+					// NOTE This dictionary will store the mapping between the eChpersonIds and the
+					// entities for the entities that have been processed but not yet savec to the
+					// database.
+
+					var eChPersonIdToEntity = new Dictionary<string, AiderPersonEntity> ();
+					
+					foreach (var eChReportedPerson in batch)
+					{
+						EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson);
+					}
+
+					businessContext.SaveChanges ();
+
+					// NOTE Now that the changes are saved, the newly created entities have an
+					// entity key which we can store in the dictionary.
+
+					foreach (var item in eChPersonIdToEntity)
+					{
+						var entityKey = businessContext.DataContext.GetNormalizedEntityKey (item.Value).Value;
+
+						eChPersonIdToEntityKey[item.Key] = entityKey;
+					}
+				}
+				finally
+				{
+					if (businessContext != null)
 					{
 						businessContext.Dispose ();
 						businessContextCleaner (businessContext);
-
-						businessContext = EChDataImporter.InitializeBusinessContext (businessContextCreator);
-
-						currentBatchSize = 0;
 					}
-					else
-					{
-						currentBatchSize += 1;
-					}
-
-					currentIndex++;
-
-					EChDataImporter.ReportProgress (currentIndex, total);
 				}
 
-				EChDataImporter.ReportProgress (currentIndex, total);
+				nbBatches++;
+
+				Debug.WriteLine (string.Format ("[{0}]\tImported: {1}/{2}", DateTime.Now, nbBatches * batchSize, eChReportedPersons.Count));
 			}
-			finally
+		}
+
+
+		private static IEnumerable<IEnumerable<EChReportedPerson>> GetBatches(IList<EChReportedPerson> eChReportedPersons, int batchSize)
+		{		
+			for (int index = 0; index < eChReportedPersons.Count; index += batchSize)
 			{
-				businessContext.Dispose ();
+				yield return EChDataImporter.GetBatch (eChReportedPersons, index, batchSize);
 			}
 		}
 
 
-		private static void ReportProgress(int currentIndex, int total)
+		private static IEnumerable<EChReportedPerson> GetBatch(IList<EChReportedPerson> eChReportedPerson, int startIndex, int size)
 		{
-			if (currentIndex % 100 == 0)
+			int upperBound = Math.Min (startIndex + size, eChReportedPerson.Count);
+
+			for (int i = startIndex; i < upperBound; i++)
 			{
-				var format = "[{0}]\tImported: {1}/{2}";
-				var text = string.Format (format, DateTime.Now, currentIndex, total);
-
-				Debug.WriteLine (text);
+				yield return eChReportedPerson[i];
 			}
 		}
 
 
-		private static BusinessContext InitializeBusinessContext(Func<BusinessContext> businessContextCreator)
-		{
-			return businessContextCreator ();
-		}
-
-
-		private static eCH_ReportedPersonEntity Import(BusinessContext businessContext, EChReportedPerson eChReportedPerson)
+		private static eCH_ReportedPersonEntity Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson)
 		{
 			var eChReportedPersonEntity = businessContext.CreateEntity<eCH_ReportedPersonEntity> ();
 			var aiderHouseHold = businessContext.CreateEntity<AiderHouseholdEntity> ();
@@ -107,7 +122,7 @@ namespace Epsitec.Aider.Data
 
 			if (eChAdult1 != null)
 			{
-				var result = EChDataImporter.Import (businessContext, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
 				
 				eChReportedPersonEntity.Adult1 = result.Item1;
 				aiderHouseHold.Head1 = result.Item2;
@@ -117,7 +132,7 @@ namespace Epsitec.Aider.Data
 
 			if (eChAdult2 != null)
 			{
-				var result = EChDataImporter.Import (businessContext, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
 
 				eChReportedPersonEntity.Adult1 = result.Item1;
 				aiderHouseHold.Head2 = result.Item2;
@@ -125,7 +140,7 @@ namespace Epsitec.Aider.Data
 
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
-				var result = EChDataImporter.Import (businessContext, eChChild, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
 
 				eChReportedPersonEntity.Children.Add (result.Item1);
 			}
@@ -134,11 +149,56 @@ namespace Epsitec.Aider.Data
 		}
 
 
+		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPerson, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
+		{
+			EntityKey entityKey;
+			AiderPersonEntity aiderPersonEntity;
+
+			// NOTE Before we create the entities for an EChPerson, we check if it has already been
+			// created. We check that by looking at the entities that have already been created but
+			// not yet saved and at the entities that have already been saved.
+
+			if (eChPersonIdToEntity.TryGetValue (eChPerson.Id, out aiderPersonEntity))
+			{
+				// NOTE Nothing to do here. We simply want the side effect of the boolean
+				// expression.
+			}
+			else if (eChPersonIdToEntityKey.TryGetValue (eChPerson.Id, out entityKey))
+			{
+				aiderPersonEntity = (AiderPersonEntity) businessContext.DataContext.ResolveEntity (entityKey);
+			}
+
+
+			if (aiderPersonEntity != null)
+			{
+				var eChPersonEntity = aiderPersonEntity.eCH_Person;
+
+				eChPersonEntity.ReportedPerson2 = eChReportedPerson;
+
+				// NOTE We should probably also set the address somewhere, but we currently can't
+				// because an EChPersonEntity has only one. It should probably have two.
+
+				return Tuple.Create (eChPersonEntity, aiderPersonEntity);
+			}
+			else
+			{
+				var result = EChDataImporter.Import (businessContext, eChPerson, eChReportedPerson, eChAddressEntity, houseHold);
+
+				// NOTE We add the newly created entity to the dictionary of the entities that have
+				// been created but not yet saved.
+
+				eChPersonIdToEntity[eChPerson.Id] = result.Item2;
+
+				return result;
+			}
+		}
+
+
 		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPerson, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
 		{
 			var aiderPersonEntity = businessContext.CreateEntity<AiderPersonEntity> ();
-			aiderPersonEntity.Household = houseHold;			
-			
+			aiderPersonEntity.Household = houseHold;
+
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
 			eChPersonEntity.PersonId = eChPerson.Id;
@@ -158,15 +218,11 @@ namespace Epsitec.Aider.Data
 
 			eChPersonEntity.CreationDate = Date.Today;
 			eChPersonEntity.DataSource = eCH.DataSource.Government;
-			eChPersonEntity.DeclarationStatus = eCH.PersonDeclarationStatus.Declared;
-			eChPersonEntity.RemovalReason = eCH.RemovalReason.None;
+			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
+			eChPersonEntity.RemovalReason = RemovalReason.None;
 
 			eChPersonEntity.ReportedPerson1 = eChReportedPerson;
 			eChPersonEntity.Address = eChAddressEntity;
-
-			// What is echPersonEntity.ReportedPerson2 ?
-			// Should we make some kind of join ?
-			// There are some duplicates in the xml file, where a person is in two family.
 
 			return Tuple.Create (eChPersonEntity, aiderPersonEntity);
 		}
