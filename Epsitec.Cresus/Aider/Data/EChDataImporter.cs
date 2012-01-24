@@ -4,14 +4,17 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core.Business;
 
 using System;
 
 using System.Collections.Generic;
 
-using System.Linq;
 using System.Diagnostics;
+
+using System.Linq;
 
 
 namespace Epsitec.Aider.Data
@@ -22,22 +25,18 @@ namespace Epsitec.Aider.Data
 	{
 
 
-		public static void Import(Func<BusinessContext> businessContextCreator, IEnumerable<EChReportedPerson> eChReportedPersons)
+		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IList<EChReportedPerson> eChReportedPersons)
 		{
 			var maxBatchSize = 1000;
 			var currentBatchSize = 0;
 
-			var tmp = eChReportedPersons.ToList (); // TMP
-			eChReportedPersons = tmp; // TMP
-			
 			BusinessContext businessContext = null;
 			try
 			{
 				businessContext = EChDataImporter.InitializeBusinessContext (businessContextCreator);
 
-				int nb = 0; // TMP
-
-				var stopwatch = Stopwatch.StartNew (); // TMP
+				int currentIndex = 0;
+				int total = eChReportedPersons.Count;
 
 				foreach (var eChReportedPerson in eChReportedPersons)
 				{
@@ -45,7 +44,8 @@ namespace Epsitec.Aider.Data
 
 					if (currentBatchSize == maxBatchSize)
 					{
-						EChDataImporter.SaveAndDisposeBusinessContext (businessContext);
+						businessContext.Dispose ();
+						businessContextCleaner (businessContext);
 
 						businessContext = EChDataImporter.InitializeBusinessContext (businessContextCreator);
 
@@ -56,26 +56,28 @@ namespace Epsitec.Aider.Data
 						currentBatchSize += 1;
 					}
 
-					nb++; // TMP
+					currentIndex++;
 
-					if (nb % 100 == 0) // TMP
-					{
-						System.Diagnostics.Debug.WriteLine ("[" + DateTime.Now + "] Imported: " + nb + "/" + tmp.Count); // TMP
-					}
+					EChDataImporter.ReportProgress (currentIndex, total);
 				}
 
-				stopwatch.Stop (); // TMP
-
-				if (nb % 100 != 0) // TMP
-				{
-					System.Diagnostics.Debug.WriteLine ("[" + DateTime.Now + "] Imported: " + nb + "/" + tmp.Count); // TMP
-				}
-
-				System.Diagnostics.Debug.WriteLine ("Total time: " + stopwatch.Elapsed); // TMP
+				EChDataImporter.ReportProgress (currentIndex, total);
 			}
 			finally
 			{
-				EChDataImporter.SaveAndDisposeBusinessContext (businessContext);
+				businessContext.Dispose ();
+			}
+		}
+
+
+		private static void ReportProgress(int currentIndex, int total)
+		{
+			if (currentIndex % 100 == 0)
+			{
+				var format = "[{0}]\tImported: {1}/{2}";
+				var text = string.Format (format, DateTime.Now, currentIndex, total);
+
+				Debug.WriteLine (text);
 			}
 		}
 
@@ -83,16 +85,6 @@ namespace Epsitec.Aider.Data
 		private static BusinessContext InitializeBusinessContext(Func<BusinessContext> businessContextCreator)
 		{
 			return businessContextCreator ();
-		}
-
-
-		private static void SaveAndDisposeBusinessContext(BusinessContext businessContext)
-		{
-			if (businessContext != null)
-			{
-				businessContext.SaveChanges ();
-				businessContext.Dispose ();
-			}
 		}
 
 
