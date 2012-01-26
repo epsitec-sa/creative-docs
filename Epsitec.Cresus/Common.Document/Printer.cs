@@ -26,7 +26,7 @@ namespace Epsitec.Common.Document
 			this.imageCrop = ExportImageCrop.Page;
 			this.imageOnlySelected = false;
 			this.imageFormat = ImageFormat.Unknown;
-			this.imageDpi = 100;
+			this.imageDpi = (this.document.Type == DocumentType.Pictogram) ? 254 : 100;
 			this.imageCompression = ImageCompression.None;
 			this.imageDepth = 24;
 			this.imageQuality = 0.85;
