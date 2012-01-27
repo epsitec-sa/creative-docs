@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					count = 1;
 				}
 			}
-			else
+			else  // SearchingMode.Fragment ou SearchingMode.WholeWord ?
 			{
 				count = this.FragmentSearch (ref simple);
 
@@ -222,14 +222,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						if (this.mode == SearchingMode.WholeWord)
+						if (this.mode == SearchingMode.WholeWord)  // mot entier ?
 						{
+							//	Vérifie la présence d'un séparateur de mots avant la chaîne.
 							if (i > 0 && !SearchingText.IsWordSeparator (prepared[i-1]))
 							{
 								i++;
 								continue;
 							}
 
+							//	Vérifie la présence d'un séparateur de mots après la chaîne.
 							if (i+this.preparedFromText.Length < prepared.Length && !SearchingText.IsWordSeparator (prepared[i+this.preparedFromText.Length]))
 							{
 								i++;

@@ -19,23 +19,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class SearchResult
 	{
-		public SearchResult(int row, ColumnType column, FormattedText text, SearchingTabData tab)
+		public SearchResult(int row, ColumnType column, FormattedText hilitedText)
 		{
-			//?System.Diagnostics.Debug.WriteLine (string.Format("row={0} column={1} text={2}", row, column, text));
 			this.Row    = row;
 			this.Column = column;
 
-			if (tab.IsEmpty)
-			{
-				return;
-			}
-
-			this.Count = tab.SearchingText.Search (ref text);
-
-			if (this.Count != 0)
-			{
-				this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchingTarget, TextFormatter.FormatText (text).ApplyFontColor (SearchResult.TextOutsideSearch));
-			}
+			this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchingTarget, TextFormatter.FormatText (hilitedText).ApplyFontColor (SearchResult.TextOutsideSearch));
 		}
 
 		public int Row
@@ -45,12 +34,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 		public ColumnType Column
-		{
-			get;
-			internal set;
-		}
-
-		public int Count
 		{
 			get;
 			internal set;

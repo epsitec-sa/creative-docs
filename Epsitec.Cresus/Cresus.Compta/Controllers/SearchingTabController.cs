@@ -434,9 +434,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			menu.Items.Add (item);
 		}
+		#endregion
+
 
 		private string ModeDescription
 		{
+			//	Retourne un texte court qui résume le mode.
 			get
 			{
 				string text = SearchingTabController.GetModeDescription (this.tabData.SearchingText.Mode);
@@ -474,6 +477,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static string GetModeDescription(SearchingMode mode)
 		{
+			//	Retourne la description courte d'un mode.
 			switch (mode)
 			{
 				case SearchingMode.Fragment:
@@ -502,7 +506,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			}
 		}
-		#endregion
 
 
 		private readonly SearchingTabData		tabData;

@@ -69,8 +69,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					foreach (var column in this.searchingColumns)
 					{
-						var text = this.GetText (row, column);
-
 						foreach (var tab in this.searchingData.TabsData)
 						{
 							if (tab.Column != ColumnType.None && tab.Column != column)
@@ -78,10 +76,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 								continue;
 							}
 
-							var result = new SearchResult (row, column, text, tab);
-							if (result.Count > 0)
+							if (tab.IsEmpty)
 							{
-								list.Add (result);
+								continue;
+							}
+
+							var text = this.GetText (row, column);
+							int n = tab.SearchingText.Search (ref text);
+
+							if (n != 0)  // trouvé ?
+							{
+								list.Add (new SearchResult (row, column, text));
 
 								if (this.searchingData.OrMode)
 								{
