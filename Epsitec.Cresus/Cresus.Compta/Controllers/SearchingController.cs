@@ -23,8 +23,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class SearchingController
 	{
-		public SearchingController(SearchingData data, List<ColumnMapper> columnMappers)
+		public SearchingController(ComptaEntity comptaEntity, SearchingData data, List<ColumnMapper> columnMappers)
 		{
+			this.comptaEntity  = comptaEntity;
 			this.data          = data;
 			this.columnMappers = columnMappers;
 
@@ -32,7 +33,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.data.TabsData.Count == 0)
 			{
-				this.data.TabsData.Add (new SearchingTabData ());
+				this.data.TabsData.Add (new SearchingTabData (this.comptaEntity));
 			}
 		}
 
@@ -261,7 +262,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchStartAction ();
 		}
 
-		public void SetSearchingCount(int dataCount, int? count)
+		public void SetSearchingCount(int dataCount, int? count, int? locator)
 		{
 			this.BigDataInterface = (dataCount >= 1000);  // limite arbitraire au-delà de laquelle les recherches deviennent trop lentes !
 
@@ -280,8 +281,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
+				int l = locator.GetValueOrDefault () + 1;
 				int c = count.Value;
-				this.searchResult.Text = string.Format ("{0} resultat{1}", c.ToString (), (c == 1) ? "" : "s");
+				this.searchResult.Text = string.Format ("{0}/{1} resultat{2}", l.ToString (), c.ToString (), (c == 1) ? "" : "s");
 			}
 		}
 
@@ -290,7 +292,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (index == 0)
 			{
-				this.data.TabsData.Add (new SearchingTabData ());
+				this.data.TabsData.Add (new SearchingTabData (this.comptaEntity));
 			}
 			else
 			{
@@ -327,6 +329,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly ComptaEntity					comptaEntity;
 		private readonly SearchingData					data;
 		private readonly List<SearchingTabController>	tabControllers;
 

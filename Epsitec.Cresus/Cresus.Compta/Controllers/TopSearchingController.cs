@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,10 +24,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class TopSearchingController
 	{
-		public TopSearchingController(BusinessContext businessContext, List<ColumnMapper> columnMappers)
+		public TopSearchingController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers)
 		{
+			this.comptaEntity    = comptaEntity;
 			this.businessContext = businessContext;
-			this.columnMappers = columnMappers;
+			this.columnMappers   = columnMappers;
 
 			this.searchingData = new SearchingData ();
 		}
@@ -72,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchingController = new SearchingController (this.searchingData, this.columnMappers);
+			this.searchingController = new SearchingController (this.comptaEntity, this.searchingData, this.columnMappers);
 			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
@@ -94,14 +96,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void SetSearchingCount(int dataCount, int? count)
+		public void SetSearchingCount(int dataCount, int? count, int? locator)
 		{
-			this.searchingController.SetSearchingCount (dataCount, count);
+			this.searchingController.SetSearchingCount (dataCount, count, locator);
 		}
 
 
 		private static readonly double			toolbarHeight = 20;
 
+		private readonly ComptaEntity			comptaEntity;
 		private readonly BusinessContext		businessContext;
 		private readonly SearchingData			searchingData;
 

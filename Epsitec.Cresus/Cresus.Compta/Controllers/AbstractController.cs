@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Searching panel
 		private void CreateTopSearching(FrameBox parent)
 		{
-			this.topSearchingController = new TopSearchingController (this.businessContext, this.columnMappers);
+			this.topSearchingController = new TopSearchingController (this.comptaEntity, this.businessContext, this.columnMappers);
 			this.topSearchingController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
 			this.topSearchingController.ShowPanel = this.ShowSearchPanel;
 		}
@@ -232,6 +232,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor.SearchMoveLocator (direction);
 			this.SearchUpdateLocator (true);
+			this.SearchUpdateTopToolbar ();
 		}
 
 		private void SearchUpdateLocator(bool show)
@@ -259,7 +260,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SearchUpdateTopToolbar()
 		{
-			this.topSearchingController.SetSearchingCount (this.dataAccessor.Count, this.dataAccessor.SearchCount);
+			this.topSearchingController.SetSearchingCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
 		}
 		#endregion
 

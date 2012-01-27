@@ -64,6 +64,8 @@
     <Compile Include="Accessors\BudgetsEditionData.cs" />
     <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
+    <Compile Include="Accessors\SearchingText.cs" />
+    <Compile Include="Accessors\SearchingMode.cs" />
     <Compile Include="Accessors\ISettingsData.cs" />
     <Compile Include="Accessors\JournalOptions.cs" />
     <Compile Include="Accessors\ExploitationData.cs" />

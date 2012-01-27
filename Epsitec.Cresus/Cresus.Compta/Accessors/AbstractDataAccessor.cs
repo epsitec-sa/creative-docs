@@ -124,6 +124,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public int? SearchLocator
+		{
+			get
+			{
+				if (this.searchingData == null || this.searchingData.IsEmpty)
+				{
+					return null;
+				}
+				else
+				{
+					return this.searchLocator;
+				}
+			}
+		}
+
 		public void SearchLocatorInfo(out int row, out ColumnType columnType)
 		{
 			if (this.searchResults.Count == 0)
