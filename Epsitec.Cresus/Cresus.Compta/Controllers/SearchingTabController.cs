@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public FrameBox CreateUI(FrameBox parent, bool bigDataInterface, System.Action searchStartAction, System.Action<int> addRemoveAction)
 		{
 			this.bigDataInterface = bigDataInterface;
+			this.searchStartAction = searchStartAction;
 
 			var frameBox = new FrameBox
 			{
@@ -132,14 +133,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
-				Margins         = new Margins (1, 0, 0, 0),
+				Margins         = new Margins (5, 0, 0, 0),
 			};
 
-			this.modeField = new TextFieldCombo
+			this.modeField = new TextField
 			{
 				Parent          = frameBox,
+				Text            = this.ModeDescription,
 				IsReadOnly      = true,
-				PreferredWidth  = 80,
+				PreferredWidth  = 110,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
 				Margins         = new Margins (1, 0, 0, 0),
@@ -158,7 +160,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.InitializeColumnsCombo ();
-			this.InitializeModeCombo ();
 			this.UpdateFields ();
 			this.UpdateButtons ();
 
@@ -167,14 +168,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (!this.ignoreChange)
 				{
 					this.tabData.SearchingText.FromText = this.searchingField1.Text;
-					searchStartAction ();
+					this.searchStartAction ();
 				}
 			};
 
 			this.searchingFieldEx1.EditionAccepted += delegate
 			{
 				this.tabData.SearchingText.FromText = this.searchingFieldEx1.Text;
-				searchStartAction ();
+				this.searchStartAction ();
 			};
 
 			this.searchingField2.TextChanged += delegate
@@ -182,14 +183,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (!this.ignoreChange)
 				{
 					this.tabData.SearchingText.ToText = this.searchingField2.Text;
-					searchStartAction ();
+					this.searchStartAction ();
 				}
 			};
 
 			this.searchingFieldEx2.EditionAccepted += delegate
 			{
 				this.tabData.SearchingText.ToText = this.searchingFieldEx2.Text;
-				searchStartAction ();
+				this.searchStartAction ();
 			};
 
 			this.columnField.SelectedItemChanged += delegate
@@ -207,15 +208,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.tabData.Column = this.columnMappers[column].Column;
 					}
 
-					searchStartAction ();
+					this.searchStartAction ();
 				}
 			};
 
-			this.modeField.SelectedItemChanged += delegate
+			this.modeField.Clicked += delegate
 			{
-				this.tabData.SearchingText.Mode = (SearchingMode) this.modeField.SelectedItemIndex;
-				this.UpdateFields ();
-				searchStartAction ();
+				this.ShowModeMenu (this.modeField);
 			};
 
 			this.addRemoveButton.Clicked += delegate
@@ -311,23 +310,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ignoreChange = false;
 		}
 
-		private void InitializeModeCombo()
-		{
-			this.modeField.Items.Clear ();
-
-			//	Doit correspondre à l'ordre dans SearchingMode.
-			//	TODO: faire mieux un jour...
-			this.modeField.Items.Add ("Normal");
-			this.modeField.Items.Add ("Mot entier");
-			this.modeField.Items.Add ("Exact");
-			this.modeField.Items.Add ("Intervalle");
-			this.modeField.Items.Add ("Vide");
-
-			this.ignoreChange = true;
-			this.modeField.SelectedItemIndex = (int) this.tabData.SearchingText.Mode;
-			this.ignoreChange = false;
-		}
-
 
 		private void UpdateFields()
 		{
@@ -380,10 +362,154 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		#region Mode menu
+		private void ShowModeMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir le mode pour le ruban.
+			var menu = new VMenu ();
+
+			this.AddModeToMenu (menu, SearchingMode.Fragment);
+			this.AddModeToMenu (menu, SearchingMode.WholeWord);
+			this.AddModeToMenu (menu, SearchingMode.StartsWith);
+			this.AddModeToMenu (menu, SearchingMode.EndsWith);
+			this.AddModeToMenu (menu, SearchingMode.WholeContent);
+			this.AddModeToMenu (menu, SearchingMode.Interval);
+			this.AddModeToMenu (menu, SearchingMode.Empty);
+
+			if (this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+				this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+			{
+				menu.Items.Add (new MenuSeparator ());
+				this.AddModeToMenu (menu, "a ≠ A", () => !this.tabData.SearchingText.ConvertCase, x => this.tabData.SearchingText.ConvertCase = !x);
+				this.AddModeToMenu (menu, "é ≠ e", () => !this.tabData.SearchingText.ConvertDiacritics, x => this.tabData.SearchingText.ConvertDiacritics = !x);
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddModeToMenu(VMenu menu, SearchingMode mode)
+		{
+			bool selected = (this.tabData.SearchingText.Mode == mode);
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.RadioYes" : "Button.RadioNo"),
+				FormattedText = SearchingTabController.GetModeDescription (mode),
+				Name          = mode.ToString (),
+			};
+
+			item.Clicked += delegate
+			{
+				this.tabData.SearchingText.Mode = (SearchingMode) System.Enum.Parse (typeof (SearchingMode), item.Name);
+				
+				this.modeField.Text = this.ModeDescription;
+				this.UpdateFields ();
+				this.searchStartAction ();
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void AddModeToMenu(VMenu menu, FormattedText text, System.Func<bool> getter, System.Action<bool> setter)
+		{
+			bool selected = getter ();
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.CheckYes" : "Button.CheckNo"),
+				FormattedText = text,
+			};
+
+			item.Clicked += delegate
+			{
+				setter (!getter ());
+
+				this.modeField.Text = this.ModeDescription;
+				this.UpdateFields ();
+				this.searchStartAction ();
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private string ModeDescription
+		{
+			get
+			{
+				string text = SearchingTabController.GetModeDescription (this.tabData.SearchingText.Mode);
+
+				if (this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+					this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+				{
+					if (!this.tabData.SearchingText.ConvertCase      ||
+						!this.tabData.SearchingText.ConvertDiacritics)
+					{
+						text += " (";
+
+						if (!this.tabData.SearchingText.ConvertCase)
+						{
+							text += "a≠A";
+						}
+
+						if (!this.tabData.SearchingText.ConvertDiacritics)
+						{
+							if (text[text.Length-1] != '(')
+							{
+								text += " ";
+							}
+
+							text += "é≠e";
+						}
+
+						text += ")";
+					}
+				}
+
+				return text;
+			}
+		}
+
+		private static string GetModeDescription(SearchingMode mode)
+		{
+			switch (mode)
+			{
+				case SearchingMode.Fragment:
+					return "Fragment";
+
+				case SearchingMode.WholeWord:
+					return "Mot entier";
+
+				case SearchingMode.StartsWith:
+					return "Au début";
+
+				case SearchingMode.EndsWith:
+					return "À la fin";
+
+				case SearchingMode.WholeContent:
+					return "Tout";
+
+				case SearchingMode.Interval:
+					return "Intervalle";
+
+				case SearchingMode.Empty:
+					return "Vide";
+
+				default:
+					return "?";
+
+			}
+		}
+		#endregion
+
+
 		private readonly SearchingTabData		tabData;
 		private readonly List<int>				columnIndexes;
 
 		private List<ColumnMapper>				columnMappers;
+		private System.Action					searchStartAction;
 		private FrameBox						searchingFromFrame;
 		private StaticText						searchingFromLabel;
 		private TextField						searchingField1;
@@ -393,7 +519,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private TextField						searchingField2;
 		private TextFieldEx						searchingFieldEx2;
 		private TextFieldCombo					columnField;
-		private TextFieldCombo					modeField;
+		private TextField						modeField;
 		private GlyphButton						addRemoveButton;
 
 		private bool							bigDataInterface;

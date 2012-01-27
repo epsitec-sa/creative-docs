@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public SearchingText(ComptaEntity comptaEntity)
 		{
 			this.comptaEntity = comptaEntity;
+			this.Clear ();
 		}
 
 
@@ -66,12 +67,48 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public bool ConvertDiacritics
+		{
+			get
+			{
+				return this.convertDiacritics;
+			}
+			set
+			{
+				if (this.convertDiacritics != value)
+				{
+					this.convertDiacritics = value;
+					this.PreparesSearching ();
+				}
+			}
+		}
+
+		public bool ConvertCase
+		{
+			get
+			{
+				return this.convertCase;
+			}
+			set
+			{
+				if (this.convertCase != value)
+				{
+					this.convertCase = value;
+					this.PreparesSearching ();
+				}
+			}
+		}
+
+
+
 
 		public void Clear()
 		{
-			this.fromText = null;
-			this.toText   = null;
-			this.mode     = SearchingMode.Normal;
+			this.fromText          = null;
+			this.toText            = null;
+			this.mode              = SearchingMode.Fragment;
+			this.convertDiacritics = true;
+			this.convertCase       = true;
 
 			this.PreparesSearching ();
 		}
@@ -110,9 +147,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			int count = 0;
 
-			if (this.mode == SearchingMode.Exact)
+			if (this.mode == SearchingMode.WholeContent)
 			{
-				count = this.ExactSearch (ref simple);
+				count = this.WholeContentSearch (ref simple);
+
+				if (count != 0)
+				{
+					target = simple;
+				}
+			}
+			else if (this.mode == SearchingMode.StartsWith)
+			{
+				count = this.StartsWithSearch (ref simple);
+
+				if (count != 0)
+				{
+					target = simple;
+				}
+			}
+			else if (this.mode == SearchingMode.EndsWith)
+			{
+				count = this.EndsWithSearch (ref simple);
 
 				if (count != 0)
 				{
@@ -137,7 +192,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				count = this.NormalSearch (ref simple);
+				count = this.FragmentSearch (ref simple);
 
 				if (count != 0)
 				{
@@ -148,7 +203,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return count;
 		}
 
-		private int NormalSearch(ref string target)
+		private int FragmentSearch(ref string target)
 		{
 			int count = 0;
 
@@ -169,7 +224,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 					{
 						if (this.mode == SearchingMode.WholeWord)
 						{
-							// TODO: ...
+							if (i > 0 && !SearchingText.IsWordSeparator (prepared[i-1]))
+							{
+								i++;
+								continue;
+							}
+
+							if (i+this.preparedFromText.Length < prepared.Length && !SearchingText.IsWordSeparator (prepared[i+this.preparedFromText.Length]))
+							{
+								i++;
+								continue;
+							}
 						}
 
 						count++;
@@ -187,41 +252,64 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return count;
 		}
 
-		private int ExactSearch(ref string target)
+		private static bool IsWordSeparator(char c)
+		{
+			return !((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9') || c == '_'); 
+		}
+
+		private int StartsWithSearch(ref string target)
 		{
 			int count = 0;
 
 			if (!string.IsNullOrEmpty (target))
 			{
-				if (this.preparedFromDecimal.HasValue)
-				{
-					decimal value;
-					if (decimal.TryParse (target, out value))
-					{
-						if (value == this.preparedFromDecimal)
-						{
-							count = 1;
-						}
-					}
-				}
-				else if (this.preparedFromDate.HasValue)
-				{
-					var date = this.ParseDate (target);
-					if (date.HasValue && date.Value == this.preparedFromDate)
-					{
-						count = 1;
-					}
-				}
-				else
-				{
-					if (target == this.preparedFromText)
-					{
-						count = 1;
-					}
-				}
+				string prepared = this.PrepareForSearching (target);
 
-				if (count != 0)
+				if (prepared.StartsWith (this.preparedFromText))
 				{
+					count = 1;
+
+					int i = this.preparedFromText.Length;
+					var found = TextFormatter.FormatText (target.Substring (0, i)).ApplyFontColor (SearchResult.TextInsideSearch).ApplyBold ().ToString ();
+					target = found + target.Substring (i);
+				}
+			}
+
+			return count;
+		}
+
+		private int EndsWithSearch(ref string target)
+		{
+			int count = 0;
+
+			if (!string.IsNullOrEmpty (target))
+			{
+				string prepared = this.PrepareForSearching (target);
+
+				if (prepared.EndsWith (this.preparedFromText))
+				{
+					count = 1;
+
+					int i = target.Length - this.preparedFromText.Length;
+					var found = TextFormatter.FormatText (target.Substring (i)).ApplyFontColor (SearchResult.TextInsideSearch).ApplyBold ().ToString ();
+					target = target.Substring (0, i) + found;
+				}
+			}
+
+			return count;
+		}
+
+		private int WholeContentSearch(ref string target)
+		{
+			int count = 0;
+
+			if (!string.IsNullOrEmpty (target))
+			{
+				string prepared = this.PrepareForSearching (target);
+
+				if (prepared == this.preparedFromText)
+				{
+					count = 1;
 					target = TextFormatter.FormatText (target).ApplyFontColor (SearchResult.TextInsideSearch).ApplyBold ().ToString ();
 				}
 			}
@@ -305,21 +393,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private string PrepareForSearching(string text)
 		{
-			if (string.IsNullOrEmpty (text))
+			if (!string.IsNullOrEmpty (text))
 			{
-				return text;
-			}
-			else
-			{
-				if (this.mode == SearchingMode.Exact)
+				if (this.convertDiacritics)
 				{
-					return text;
+					text = SearchingText.RemoveDiacritics (text);
 				}
-				else
+
+				if (this.convertCase)
 				{
-					return SearchingText.RemoveDiacritics (text.ToLower ());
+					text = text.ToLower();
 				}
 			}
+
+			return text;
 		}
 
 		private static string RemoveDiacritics(string text)
@@ -336,7 +423,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			return (builder.ToString ().Normalize (System.Text.NormalizationForm.FormC));
+			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
 
 
@@ -357,6 +444,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private string					fromText;
 		private string					toText;
 		private SearchingMode			mode;
+		private bool					convertDiacritics;
+		private bool					convertCase;
 
 		private string					preparedFromText;
 		private string					preparedToText;

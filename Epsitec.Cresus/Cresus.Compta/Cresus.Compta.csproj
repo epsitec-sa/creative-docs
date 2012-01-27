@@ -176,6 +176,10 @@
     <EmbeddedResource Include="Images\Panel.Info.icon" />
     <EmbeddedResource Include="Images\Panel.Options.icon" />
     <EmbeddedResource Include="Images\Panel.Search.icon" />
+    <EmbeddedResource Include="Images\Button.CheckNo.icon" />
+    <EmbeddedResource Include="Images\Button.CheckYes.icon" />
+    <EmbeddedResource Include="Images\Button.RadioNo.icon" />
+    <EmbeddedResource Include="Images\Button.RadioYes.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
