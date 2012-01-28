@@ -41,9 +41,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.AutoCreateNullEntity)
 				.Title ("Adresse supplémentaire 2");
 
-			wall.AddBrick (x => x.Household)
+			wall.AddBrick (x => x.Household1)
 				.Attribute (BrickMode.AutoCreateNullEntity);
-			
+
+//			wall.AddBrick (x => x.Household2)
+				//.Attribute (BrickMode.AutoCreateNullEntity);
+
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);
 		}

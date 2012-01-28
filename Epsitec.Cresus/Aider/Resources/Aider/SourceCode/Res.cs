@@ -89,14 +89,18 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType EventParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 110));
 				//	designer:cap/LVAT3
 				public static readonly Epsitec.Common.Types.EnumType EventType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 125));
+				//	designer:cap/LVA64
+				public static readonly Epsitec.Common.Types.EnumType FunctionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134));
+				//	designer:cap/LVATA
+				public static readonly Epsitec.Common.Types.EnumType GroupCategory = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 349));
 				//	designer:cap/LVA26
 				public static readonly Epsitec.Common.Types.EnumType GroupLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 194));
 				//	designer:cap/LVAG3
 				public static readonly Epsitec.Common.Types.EnumType GroupParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 112));
 				//	designer:cap/LVAR4
 				public static readonly Epsitec.Common.Types.EnumType GroupRelationshipType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 155));
-				//	designer:cap/LVA64
-				public static readonly Epsitec.Common.Types.EnumType GroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134));
+				//	designer:cap/LVANA
+				public static readonly Epsitec.Common.Types.EnumType GroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 343));
 				//	designer:cap/LVA09
 				public static readonly Epsitec.Common.Types.EnumType HousholdMrMrs = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 288));
 				//	designer:cap/LVAK7
@@ -143,8 +147,12 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderEvent = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 105));
 			//	designer:cap/LVAA3
 			public static readonly Epsitec.Common.Types.StructuredType AiderEventParticipant = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 106));
+			//	designer:cap/LVA7A
+			public static readonly Epsitec.Common.Types.StructuredType AiderFunctionDef = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 327));
 			//	designer:cap/LVA54
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroup = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 133));
+			//	designer:cap/LVA2A
+			public static readonly Epsitec.Common.Types.StructuredType AiderGroupDef = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 322));
 			//	designer:cap/LVA48
 			public static readonly Epsitec.Common.Types.StructuredType AiderGroupEvent = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 260));
 			//	designer:cap/LVA73
@@ -357,6 +365,78 @@ namespace Epsitec.Aider
 					}
 				}
 				
+				public static class FunctionType
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVAIA
+					public static global::Epsitec.Common.Types.Caption GroupParticipant
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 338));
+						}
+					}
+					//	designer:cap/LVAKA
+					public static global::Epsitec.Common.Types.Caption LegalPersonContact
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 340));
+						}
+					}
+					//	designer:cap/LVA74
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 135));
+						}
+					}
+					//	designer:cap/LVAJA
+					public static global::Epsitec.Common.Types.Caption PlacePerson
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 339));
+						}
+					}
+				}
+				
+				public static class GroupCategory
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVA0B
+					public static global::Epsitec.Common.Types.Caption Customizable
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 352));
+						}
+					}
+					//	designer:cap/LVAUA
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 350));
+						}
+					}
+					//	designer:cap/LVAVA
+					public static global::Epsitec.Common.Types.Caption SystemDefined
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 351));
+						}
+					}
+				}
+				
 				public static class GroupLevel
 				{
 					internal static void _Initialize()
@@ -395,6 +475,22 @@ namespace Epsitec.Aider
 					{
 					}
 					
+					//	designer:cap/LVAMA
+					public static global::Epsitec.Common.Types.Caption Exclusion
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 342));
+						}
+					}
+					//	designer:cap/LVALA
+					public static global::Epsitec.Common.Types.Caption Inclusion
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 341));
+						}
+					}
 					//	designer:cap/LVAS4
 					public static global::Epsitec.Common.Types.Caption None
 					{
@@ -411,12 +507,44 @@ namespace Epsitec.Aider
 					{
 					}
 					
-					//	designer:cap/LVA74
+					//	designer:cap/LVASA
+					public static global::Epsitec.Common.Types.Caption Leaf
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 348));
+						}
+					}
+					//	designer:cap/LVAQA
+					public static global::Epsitec.Common.Types.Caption Node
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 346));
+						}
+					}
+					//	designer:cap/LVARA
+					public static global::Epsitec.Common.Types.Caption NodeAndLeaf
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 347));
+						}
+					}
+					//	designer:cap/LVAOA
 					public static global::Epsitec.Common.Types.Caption None
 					{
 						get
 						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 135));
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 344));
+						}
+					}
+					//	designer:cap/LVAPA
+					public static global::Epsitec.Common.Types.Caption Root
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 345));
 						}
 					}
 				}
@@ -1024,6 +1152,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Date = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 122);
 				//	designer:cap/LVAR3
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 123);
+				//	designer:cap/LVABA
+				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 331);
 				//	designer:cap/LVA14
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 129);
 				//	designer:cap/LVA04
@@ -1044,6 +1174,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 109);
 			}
 			
+			public static class AiderFunctionDef
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVA8A
+				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 328);
+				//	designer:cap/LVAFA
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 335);
+			}
+			
 			public static class AiderGroup
 			{
 				internal static void _Initialize()
@@ -1052,14 +1194,38 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVAB4
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 139);
-				//	designer:cap/LVAF6
-				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 207);
+				//	designer:cap/LVADA
+				public static readonly global::Epsitec.Common.Support.Druid GroupDef = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 333);
 				//	designer:cap/LVAA4
 				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 138);
 				//	designer:cap/LVAJ8
 				public static readonly global::Epsitec.Common.Support.Druid Participants = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 275);
-				//	designer:cap/LVAC4
-				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 140);
+				//	designer:cap/LVAHA
+				public static readonly global::Epsitec.Common.Support.Druid Root = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 337);
+			}
+			
+			public static class AiderGroupDef
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVA2B
+				public static readonly global::Epsitec.Common.Support.Druid Category = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 354);
+				//	designer:cap/LVA9A
+				public static readonly global::Epsitec.Common.Support.Druid Functions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 329);
+				//	designer:cap/LVAAA
+				public static readonly global::Epsitec.Common.Support.Druid Level = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 330);
+				//	designer:cap/LVA6A
+				public static readonly global::Epsitec.Common.Support.Druid MaxOccurs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 326);
+				//	designer:cap/LVA5A
+				public static readonly global::Epsitec.Common.Support.Druid MinOccurs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 325);
+				//	designer:cap/LVA3A
+				public static readonly global::Epsitec.Common.Support.Druid Name = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 323);
+				//	designer:cap/LVA4A
+				public static readonly global::Epsitec.Common.Support.Druid Subgroups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 324);
+				//	designer:cap/LVA1B
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 353);
 			}
 			
 			public static class AiderGroupEvent
@@ -1080,12 +1246,16 @@ namespace Epsitec.Aider
 				{
 				}
 				
+				//	designer:cap/LVACA
+				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 332);
 				//	designer:cap/LVA84
 				public static readonly global::Epsitec.Common.Support.Druid Group = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 136);
+				//	designer:cap/LVA0A
+				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 320);
+				//	designer:cap/LVA1A
+				public static readonly global::Epsitec.Common.Support.Druid LegalPersonContact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 321);
 				//	designer:cap/LVA94
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 137);
-				//	designer:cap/LVAI3
-				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 114);
 				//	designer:cap/LVAK8
 				public static readonly global::Epsitec.Common.Support.Druid ValidationState = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 276);
 			}
@@ -1130,6 +1300,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Head2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 160);
 				//	designer:cap/LVAG8
 				public static readonly global::Epsitec.Common.Support.Druid HouseholdMrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 272);
+				//	designer:cap/LVAH9
+				public static readonly global::Epsitec.Common.Support.Druid HouseholdName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 305);
 				//	designer:cap/LVG702
 				public static readonly global::Epsitec.Common.Support.Druid Members = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 7);
 			}
@@ -1158,10 +1330,26 @@ namespace Epsitec.Aider
 				{
 				}
 				
-				//	designer:cap/LVA68
-				public static readonly global::Epsitec.Common.Support.Druid Contact = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 262);
+				//	designer:cap/LVAP9
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 313);
+				//	designer:cap/LVAQ9
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 314);
+				//	designer:cap/LVAT9
+				public static readonly global::Epsitec.Common.Support.Druid FirstName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 317);
+				//	designer:cap/LVAGA
+				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 336);
+				//	designer:cap/LVAU9
+				public static readonly global::Epsitec.Common.Support.Druid LastName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 318);
 				//	designer:cap/LVA58
 				public static readonly global::Epsitec.Common.Support.Druid LegalPerson = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 261);
+				//	designer:cap/LVAR9
+				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 315);
+				//	designer:cap/LVAV9
+				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 319);
+				//	designer:cap/LVAS9
+				public static readonly global::Epsitec.Common.Support.Druid PersonSex = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 316);
+				//	designer:cap/LVAM9
+				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 310);
 			}
 			
 			public static class AiderPerson
@@ -1174,6 +1362,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 150);
 				//	designer:cap/LVAU4
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 158);
+				//	designer:cap/LVAI9
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress3 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 306);
+				//	designer:cap/LVAJ9
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress4 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 307);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 				//	designer:cap/LVAM2
@@ -1195,7 +1387,9 @@ namespace Epsitec.Aider
 				//	designer:cap/LVAR8
 				public static readonly global::Epsitec.Common.Support.Druid Groups = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 283);
 				//	designer:cap/LVAL4
-				public static readonly global::Epsitec.Common.Support.Druid Household = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
+				public static readonly global::Epsitec.Common.Support.Druid Household1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
+				//	designer:cap/LVAG9
+				public static readonly global::Epsitec.Common.Support.Druid Household2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 304);
 				//	designer:cap/LVAO7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/LVAT
@@ -1254,12 +1448,12 @@ namespace Epsitec.Aider
 				{
 				}
 				
+				//	designer:cap/LVAEA
+				public static readonly global::Epsitec.Common.Support.Druid Function = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 334);
 				//	designer:cap/LVAS5
 				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 188);
 				//	designer:cap/LVAR5
 				public static readonly global::Epsitec.Common.Support.Druid Place = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 187);
-				//	designer:cap/LVAG6
-				public static readonly global::Epsitec.Common.Support.Druid Role = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 208);
 			}
 			
 			public static class AiderRelationshipType
@@ -1575,6 +1769,8 @@ namespace Epsitec.Aider
 			Values.Enum.DatePrecision._Initialize ();
 			Values.Enum.EventParticipantRole._Initialize ();
 			Values.Enum.EventType._Initialize ();
+			Values.Enum.FunctionType._Initialize ();
+			Values.Enum.GroupCategory._Initialize ();
 			Values.Enum.GroupLevel._Initialize ();
 			Values.Enum.GroupParticipantRole._Initialize ();
 			Values.Enum.GroupRelationshipType._Initialize ();
@@ -1601,7 +1797,9 @@ namespace Epsitec.Aider
 			Fields.AiderDataManager._Initialize ();
 			Fields.AiderEvent._Initialize ();
 			Fields.AiderEventParticipant._Initialize ();
+			Fields.AiderFunctionDef._Initialize ();
 			Fields.AiderGroup._Initialize ();
+			Fields.AiderGroupDef._Initialize ();
 			Fields.AiderGroupEvent._Initialize ();
 			Fields.AiderGroupParticipant._Initialize ();
 			Fields.AiderGroupPlace._Initialize ();

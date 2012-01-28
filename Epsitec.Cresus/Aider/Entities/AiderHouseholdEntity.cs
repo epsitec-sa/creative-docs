@@ -58,7 +58,7 @@ namespace Epsitec.Aider.Entities
 
 			var example = new AiderPersonEntity ()
 			{
-				Household = this,
+				Household1 = this,
 			};
 
 			DataContext dataContext = null;

@@ -95,9 +95,11 @@
     <Compile Include="Entities\eCH_PersonEntity.cs" />
     <Compile Include="EventParticipantRole.cs" />
     <Compile Include="EventType.cs" />
+    <Compile Include="GroupCategory.cs" />
     <Compile Include="GroupLevel.cs" />
     <Compile Include="GroupParticipantRole.cs" />
     <Compile Include="GroupRelationshipType.cs" />
+    <Compile Include="FunctionType.cs" />
     <Compile Include="GroupType.cs" />
     <Compile Include="Language.cs" />
     <Compile Include="LegalPersonType.cs" />

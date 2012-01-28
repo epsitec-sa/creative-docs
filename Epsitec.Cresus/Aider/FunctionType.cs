@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -9,11 +9,12 @@ using System.Linq;
 namespace Epsitec.Aider
 {
 	[DesignerVisible]
-	public enum GroupRelationshipType
+	public enum FunctionType
 	{
 		None = 0,
 
-		Inclusion = 1,
-		Exclusion = 2,
+		GroupParticipant,
+		PlacePerson,
+		LegalPersonContact,
 	}
 }

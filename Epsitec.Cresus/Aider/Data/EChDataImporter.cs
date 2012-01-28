@@ -195,7 +195,7 @@ namespace Epsitec.Aider.Data
 		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
 		{
 			var aiderPersonEntity = businessContext.CreateEntity<AiderPersonEntity> ();
-			aiderPersonEntity.Household = houseHold;
+			aiderPersonEntity.Household1 = houseHold;
 
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
