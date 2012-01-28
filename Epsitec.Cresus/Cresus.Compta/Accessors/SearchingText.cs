@@ -2,11 +2,14 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Entities;
+
+using System.Text.RegularExpressions;
 
 namespace Epsitec.Cresus.Compta.Accessors
 {
@@ -67,48 +70,63 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public bool ConvertDiacritics
+		public bool MatchCase
 		{
 			get
 			{
-				return this.convertDiacritics;
+				return this.matchCase;
 			}
 			set
 			{
-				if (this.convertDiacritics != value)
+				if (this.matchCase != value)
 				{
-					this.convertDiacritics = value;
+					this.matchCase = value;
 					this.PreparesSearching ();
 				}
 			}
 		}
 
-		public bool ConvertCase
+		public bool WholeWord
 		{
 			get
 			{
-				return this.convertCase;
+				return this.wholeWord;
 			}
 			set
 			{
-				if (this.convertCase != value)
+				if (this.wholeWord != value)
 				{
-					this.convertCase = value;
+					this.wholeWord = value;
 					this.PreparesSearching ();
 				}
 			}
 		}
 
-
+		public bool Invert
+		{
+			get
+			{
+				return this.invert;
+			}
+			set
+			{
+				if (this.invert != value)
+				{
+					this.invert = value;
+					this.PreparesSearching ();
+				}
+			}
+		}
 
 
 		public void Clear()
 		{
-			this.fromText          = null;
-			this.toText            = null;
-			this.mode              = SearchingMode.Fragment;
-			this.convertDiacritics = true;
-			this.convertCase       = true;
+			this.fromText  = null;
+			this.toText    = null;
+			this.mode      = SearchingMode.Fragment;
+			this.matchCase = false;
+			this.wholeWord = false;
+			this.invert    = false;
 
 			this.PreparesSearching ();
 		}
@@ -183,6 +201,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 					target = simple;
 				}
 			}
+			else if (this.mode == SearchingMode.Jokers)
+			{
+				count = this.RegExSearch (ref simple);
+
+				if (count != 0)
+				{
+					target = simple;
+				}
+			}
 			else if (this.mode == SearchingMode.Empty)
 			{
 				if (string.IsNullOrEmpty (simple))
@@ -190,7 +217,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					count = 1;
 				}
 			}
-			else  // SearchingMode.Fragment ou SearchingMode.WholeWord ?
+			else
 			{
 				count = this.FragmentSearch (ref simple);
 
@@ -222,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						if (this.mode == SearchingMode.WholeWord)  // mot entier ?
+						if (this.wholeWord)  // mot entier ?
 						{
 							//	Vérifie la présence d'un séparateur de mots avant la chaîne.
 							if (i > 0 && !SearchingText.IsWordSeparator (prepared[i-1]))
@@ -269,6 +296,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (prepared.StartsWith (this.preparedFromText))
 				{
+					if (this.wholeWord)  // mot entier ?
+					{
+						//	Vérifie la présence d'un séparateur de mots après la chaîne.
+						if (this.preparedFromText.Length < prepared.Length && !SearchingText.IsWordSeparator (prepared[this.preparedFromText.Length]))
+						{
+							return count;
+						}
+					}
+
 					count = 1;
 
 					int i = this.preparedFromText.Length;
@@ -290,6 +326,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (prepared.EndsWith (this.preparedFromText))
 				{
+					if (this.wholeWord)  // mot entier ?
+					{
+						//	Vérifie la présence d'un séparateur de mots avant la chaîne.
+						if (this.preparedFromText.Length < prepared.Length && !SearchingText.IsWordSeparator (prepared[prepared.Length-this.preparedFromText.Length-1]))
+						{
+							return count;
+						}
+					}
+
 					count = 1;
 
 					int i = target.Length - this.preparedFromText.Length;
@@ -310,6 +355,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 				string prepared = this.PrepareForSearching (target);
 
 				if (prepared == this.preparedFromText)
+				{
+					count = 1;
+					target = TextFormatter.FormatText (target).ApplyFontColor (SearchResult.TextInsideSearch).ApplyBold ().ToString ();
+				}
+			}
+
+			return count;
+		}
+
+		private int RegExSearch(ref string target)
+		{
+			int count = 0;
+
+			if (!string.IsNullOrEmpty (target))
+			{
+				string prepared = this.PrepareForSearching (target);
+
+				if (this.preparedRegEx != null && this.preparedRegEx.IsMatch (prepared))
 				{
 					count = 1;
 					target = TextFormatter.FormatText (target).ApplyFontColor (SearchResult.TextInsideSearch).ApplyBold ().ToString ();
@@ -366,6 +429,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.preparedFromDate = null;
 			this.preparedToDate   = null;
 
+			this.preparedRegEx = null;
+
 			if (!string.IsNullOrEmpty (this.fromText))
 			{
 				decimal value;
@@ -391,20 +456,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.preparedToDate = this.ParseDate (this.toText);
 				}
 			}
+
+			if (!string.IsNullOrEmpty (this.fromText))
+			{
+				var options = RegexFactory.Options.Compiled;
+
+				if (!this.matchCase)
+				{
+					options |= RegexFactory.Options.IgnoreCase;
+				}
+
+				this.preparedRegEx = RegexFactory.FromSimpleJoker (this.fromText, options);
+			}
 		}
 
 		private string PrepareForSearching(string text)
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				if (this.convertDiacritics)
+				if (!this.matchCase)
 				{
-					text = SearchingText.RemoveDiacritics (text);
-				}
-
-				if (this.convertCase)
-				{
-					text = text.ToLower();
+					text = SearchingText.RemoveDiacritics (text).ToLower ();
 				}
 			}
 
@@ -446,8 +518,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private string					fromText;
 		private string					toText;
 		private SearchingMode			mode;
-		private bool					convertDiacritics;
-		private bool					convertCase;
+		private bool					matchCase;
+		private bool					wholeWord;
+		private bool					invert;
 
 		private string					preparedFromText;
 		private string					preparedToText;
@@ -455,5 +528,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private decimal?				preparedToDecimal;
 		private Date?					preparedFromDate;
 		private Date?					preparedToDate;
+		private Regex					preparedRegEx;
 	}
 }

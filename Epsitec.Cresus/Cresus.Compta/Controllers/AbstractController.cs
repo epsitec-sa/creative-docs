@@ -73,6 +73,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateTopSearching (this.frameBox);
+			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
 			this.CreateTitle (this.frameBox);
 			this.CreateArray (this.frameBox);
@@ -138,6 +139,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public virtual bool HasShowFilterPanel
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		public virtual bool HasShowOptionsPanel
 		{
 			get
@@ -163,6 +172,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.topSearchingController.ShowPanel = value;
+			}
+		}
+
+		public bool ShowFilterPanel
+		{
+			get
+			{
+				return this.topFilterController.ShowPanel;
+			}
+			set
+			{
+				this.topFilterController.ShowPanel = value;
 			}
 		}
 
@@ -261,6 +282,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public void SearchUpdateTopToolbar()
 		{
 			this.topSearchingController.SetSearchingCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
+		}
+		#endregion
+
+
+		#region Filter panel
+		private void CreateTopFilter(FrameBox parent)
+		{
+			this.topFilterController = new TopFilterController (this.comptaEntity, this.businessContext, this.columnMappers);
+			this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
+			this.topFilterController.ShowPanel = this.ShowSearchPanel;
+		}
+
+		private void FilterStartAction()
+		{
+		}
+
+		private void FilterNextAction(int direction)
+		{
 		}
 		#endregion
 
@@ -534,6 +573,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractDataAccessor							dataAccessor;
 
 		protected TopSearchingController						topSearchingController;
+		protected TopFilterController							topFilterController;
 		protected AbstractOptionsController						optionsController;
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;

@@ -23,11 +23,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class SearchingController
 	{
-		public SearchingController(ComptaEntity comptaEntity, SearchingData data, List<ColumnMapper> columnMappers)
+		public SearchingController(ComptaEntity comptaEntity, SearchingData data, List<ColumnMapper> columnMappers, bool isFilter)
 		{
 			this.comptaEntity  = comptaEntity;
 			this.data          = data;
 			this.columnMappers = columnMappers;
+			this.isFilter      = isFilter;
 
 			this.tabControllers = new List<SearchingTabController> ();
 
@@ -114,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent          = header,
-				Text            = "Rechercher",
+				Text            = this.isFilter ? "Filtrer" : "Rechercher",
 				PreferredWidth  = 64,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -125,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SearchClear ();
 			};
 
-			ToolTip.Default.SetToolTip (this.searchButtonClear, "Termine la recherche");
+			ToolTip.Default.SetToolTip (this.searchButtonClear, this.isFilter ? "Termine le filtre" : "Termine la recherche");
 		}
 
 		private void CreateMiddleUI()
@@ -136,7 +137,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchingTabController (this.data.TabsData[i], this.columnMappers);
+				var controller = new SearchingTabController (this.data.TabsData[i], this.columnMappers, this.isFilter);
 
 				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction);
 				controller.Index = i;
@@ -192,8 +193,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.searchStartAction ();
 				};
 
-				ToolTip.Default.SetToolTip (andButton, "Cherche les données qui répondent à tous les critères");
-				ToolTip.Default.SetToolTip (orButton,  "Cherche les données qui répondent à au moins un critère");
+				ToolTip.Default.SetToolTip (andButton, this.isFilter ? "Filtre les données qui répondent à tous les critères"   : "Cherche les données qui répondent à tous les critères");
+				ToolTip.Default.SetToolTip (orButton,  this.isFilter ? "Filtre les données qui répondent à au moins un critère" : "Cherche les données qui répondent à au moins un critère");
 			}
 
 			{
@@ -206,6 +207,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock            = DockStyle.Left,
 					Enable          = false,
 					Margins         = new Margins (0, 0, 0, 0),
+					Visibility      = !this.isFilter,
 				};
 
 				this.searchButtonNext = new GlyphButton
@@ -217,6 +219,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock            = DockStyle.Left,
 					Enable          = false,
 					Margins         = new Margins (-1, 10, 0, 0),
+					Visibility      = !this.isFilter,
 				};
 
 				this.searchResult = new StaticText
@@ -226,6 +229,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Margins         = new Margins (0, 0, 0, 0),
+					Visibility      = !this.isFilter,
+				};
+
+				new FrameBox
+				{
+					Parent          = footer,
+					PreferredWidth  = 30+30+120-1+10,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Visibility      = this.isFilter,
 				};
 
 				this.searchButtonPrev.Clicked += delegate
@@ -259,6 +272,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.data.TabsData[0].Clear ();
 
 			this.CreateMiddleUI ();
+			this.UpdateButtons ();
 			this.searchStartAction ();
 		}
 
@@ -332,6 +346,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly ComptaEntity					comptaEntity;
 		private readonly SearchingData					data;
 		private readonly List<SearchingTabController>	tabControllers;
+		private readonly bool							isFilter;
 
 		private List<ColumnMapper>						columnMappers;
 		private bool									bigDataInterface;

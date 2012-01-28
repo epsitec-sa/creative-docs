@@ -20,11 +20,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la barre d'outil supérieure de recherche rapide pour la comptabilité.
+	/// Ce contrôleur gère la barre d'outil supérieure de filtre pour la comptabilité.
 	/// </summary>
-	public class TopSearchingController
+	public class TopFilterController
 	{
-		public TopSearchingController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers)
+		public TopFilterController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers)
 		{
 			this.comptaEntity    = comptaEntity;
 			this.businessContext = businessContext;
@@ -65,16 +65,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = TopSearchingController.toolbarHeight,
+				PreferredHeight = TopFilterController.toolbarHeight,
 				DrawFullFrame   = true,
-				BackColor       = Color.FromHexa ("ffffcc"),  // jaune pastel
+				BackColor       = Color.FromHexa ("ccffcc"),  // vert pastel
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 6),
 				Padding         = new Margins (5),
 				Visibility      = false,
 			};
 
-			this.searchingController = new SearchingController (this.comptaEntity, this.searchingData, this.columnMappers, false);
+			this.searchingController = new SearchingController (this.comptaEntity, this.searchingData, this.columnMappers, true);
 			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 

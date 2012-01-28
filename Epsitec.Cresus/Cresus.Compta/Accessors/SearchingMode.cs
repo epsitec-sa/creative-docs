@@ -6,10 +6,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	public enum SearchingMode
 	{
 		Fragment,		// contenu partiel
-		WholeWord,		// mot entier
 		StartsWith,		// au début
 		EndsWith,		// à la fin
 		WholeContent,	// contenu complet
+		Jokers,			// avec jokers
 		Interval,		// intervalle de nombres décimaux ou de dates
 		Empty,			// doit être vide
 	}

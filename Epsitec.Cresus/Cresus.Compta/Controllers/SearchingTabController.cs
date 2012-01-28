@@ -23,10 +23,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class SearchingTabController
 	{
-		public SearchingTabController(SearchingTabData tabData, List<ColumnMapper> columnMappers)
+		public SearchingTabController(SearchingTabData tabData, List<ColumnMapper> columnMappers, bool isFilter)
 		{
 			this.tabData       = tabData;
 			this.columnMappers = columnMappers;
+			this.isFilter      = isFilter;
 
 			this.columnIndexes = new List<int> ();
 		}
@@ -136,17 +137,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (5, 0, 0, 0),
 			};
 
-			this.modeField = new TextField
 			{
-				Parent          = frameBox,
-				Text            = this.ModeDescription,
-				IsReadOnly      = true,
-				PreferredWidth  = 110,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Right,
-				Margins         = new Margins (1, 0, 0, 0),
-				TabIndex        = 4,
-			};
+				this.modeButton = new GlyphButton
+				{
+					Parent          = frameBox,
+					GlyphShape      = GlyphShape.Menu,
+					PreferredWidth  = 16,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Right,
+					Margins         = new Margins (-1, 0, 0, 0),
+				};
+
+				var frame = new FrameBox
+				{
+					Parent          = frameBox,
+					DrawFullFrame   = true,
+					BackColor       = Color.FromBrightness (0.96),
+					PreferredWidth  = 80,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Right,
+					Margins         = new Margins (1, 0, 0, 0),
+				};
+
+				this.modeField = new StaticText
+				{
+					Parent           = frame,
+					Text             = this.ModeDescription,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+					PreferredHeight  = 20,
+					Dock             = DockStyle.Fill,
+				};
+			}
 
 			this.columnField = new TextFieldCombo
 			{
@@ -217,13 +238,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.ShowModeMenu (this.modeField);
 			};
 
+			this.modeButton.Clicked += delegate
+			{
+				this.ShowModeMenu (this.modeField);
+			};
+
 			this.addRemoveButton.Clicked += delegate
 			{
 				addRemoveAction (this.Index);
 			};
 
-			ToolTip.Default.SetToolTip (this.columnField, "Colonne où chercher ?");
-			ToolTip.Default.SetToolTip (this.modeField,   "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.columnField, this.isFilter ? "Colonne à filtrer" : "Colonne où chercher ?");
+			ToolTip.Default.SetToolTip (this.modeField,   this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.modeButton,  this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
 
 			return frameBox;
 		}
@@ -329,11 +356,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.tabData.SearchingText.Mode == SearchingMode.Interval)
 			{
-				textField = "Que chercher (depuis, inclu) ?";
+				textField = this.isFilter ? "Que filtrer (depuis, inclu) ?" : "Que chercher (depuis, inclu) ?";
 				ToolTip.Default.SetToolTip (this.searchingField1, textField);
 				ToolTip.Default.SetToolTip (this.searchingFieldEx1, textField);
 
-				textField = "Que chercher (jusqu'à, inclu) ?";
+				textField = this.isFilter ? "Que filtrer (jusqu'à, inclu) ?" : "Que chercher (jusqu'à, inclu) ?";
 				ToolTip.Default.SetToolTip (this.searchingField2, textField);
 				ToolTip.Default.SetToolTip (this.searchingFieldEx2, textField);
 			}
@@ -342,13 +369,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.searchingField1.Text   = null;
 				this.searchingFieldEx1.Text = null;
 
-				textField = "Cherche les données vides";
+				textField = this.isFilter ? "Filtre les données vides" : "Cherche les données vides";
 				ToolTip.Default.SetToolTip (this.searchingField1,   textField);
 				ToolTip.Default.SetToolTip (this.searchingFieldEx1, textField);
 			}
 			else
 			{
-				textField = "Que chercher ?";
+				textField = this.isFilter ? "Que filtrer ?" : "Que chercher ?";
 				ToolTip.Default.SetToolTip (this.searchingField1,   textField);
 				ToolTip.Default.SetToolTip (this.searchingFieldEx1, textField);
 			}
@@ -358,7 +385,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.addRemoveButton.GlyphShape = this.addAction ? GlyphShape.Plus : GlyphShape.Minus;
 
-			ToolTip.Default.SetToolTip (this.addRemoveButton, this.addAction ? "Ajoute un nouveau critère de recherche" : "Supprime le critère de recherche");
+			if (this.addAction)
+			{
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre" : "Ajoute un nouveau critère de recherche");
+			}
+			else
+			{
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre" : "Supprime le critère de recherche");
+			}
 		}
 
 
@@ -369,19 +403,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var menu = new VMenu ();
 
 			this.AddModeToMenu (menu, SearchingMode.Fragment);
-			this.AddModeToMenu (menu, SearchingMode.WholeWord);
 			this.AddModeToMenu (menu, SearchingMode.StartsWith);
 			this.AddModeToMenu (menu, SearchingMode.EndsWith);
 			this.AddModeToMenu (menu, SearchingMode.WholeContent);
 			this.AddModeToMenu (menu, SearchingMode.Interval);
 			this.AddModeToMenu (menu, SearchingMode.Empty);
+			this.AddModeToMenu (menu, SearchingMode.Jokers);
+
+			bool separator = false;
 
 			if (this.tabData.SearchingText.Mode != SearchingMode.Interval &&
 				this.tabData.SearchingText.Mode != SearchingMode.Empty    )
 			{
-				menu.Items.Add (new MenuSeparator ());
-				this.AddModeToMenu (menu, "a ≠ A", () => !this.tabData.SearchingText.ConvertCase, x => this.tabData.SearchingText.ConvertCase = !x);
-				this.AddModeToMenu (menu, "é ≠ e", () => !this.tabData.SearchingText.ConvertDiacritics, x => this.tabData.SearchingText.ConvertDiacritics = !x);
+				if (!separator)
+				{
+					menu.Items.Add (new MenuSeparator ());
+					separator = true;
+				}
+
+				this.AddModeToMenu (menu, "Respecter la casse", () => this.tabData.SearchingText.MatchCase, x => this.tabData.SearchingText.MatchCase = x);
+			}
+
+			if (this.tabData.SearchingText.Mode != SearchingMode.Jokers   &&
+				this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+				this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+			{
+				if (!separator)
+				{
+					menu.Items.Add (new MenuSeparator ());
+					separator = true;
+				}
+
+				this.AddModeToMenu (menu, "Mot entier", () => this.tabData.SearchingText.WholeWord, x => this.tabData.SearchingText.WholeWord = x);
+			}
+
+			if (this.isFilter)
+			{
+				if (!separator)
+				{
+					menu.Items.Add (new MenuSeparator ());
+					separator = true;
+				}
+
+				this.AddModeToMenu (menu, "Inverser", () => this.tabData.SearchingText.Invert, x => this.tabData.SearchingText.Invert = x);
 			}
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
@@ -442,33 +506,52 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Retourne un texte court qui résume le mode.
 			get
 			{
-				string text = SearchingTabController.GetModeDescription (this.tabData.SearchingText.Mode);
+				string text = " " + SearchingTabController.GetModeDescription (this.tabData.SearchingText.Mode);
 
-				if (this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+				bool separator = false;
+
+				if (this.tabData.SearchingText.MatchCase &&
+					this.tabData.SearchingText.Mode != SearchingMode.Interval &&
 					this.tabData.SearchingText.Mode != SearchingMode.Empty    )
 				{
-					if (!this.tabData.SearchingText.ConvertCase      ||
-						!this.tabData.SearchingText.ConvertDiacritics)
+					if (!separator)
 					{
 						text += " (";
-
-						if (!this.tabData.SearchingText.ConvertCase)
-						{
-							text += "a≠A";
-						}
-
-						if (!this.tabData.SearchingText.ConvertDiacritics)
-						{
-							if (text[text.Length-1] != '(')
-							{
-								text += " ";
-							}
-
-							text += "é≠e";
-						}
-
-						text += ")";
+						separator = true;
 					}
+
+					text += "c";
+				}
+
+				if (this.tabData.SearchingText.WholeWord &&
+					this.tabData.SearchingText.Mode != SearchingMode.Jokers   &&
+					this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+					this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+				{
+					if (!separator)
+					{
+						text += " (";
+						separator = true;
+					}
+
+					text += "m";
+				}
+
+				if (this.tabData.SearchingText.Invert &&
+					this.isFilter)
+				{
+					if (!separator)
+					{
+						text += " (";
+						separator = true;
+					}
+
+					text += "i";
+				}
+
+				if (separator)
+				{
+					text += ")";
 				}
 
 				return text;
@@ -483,9 +566,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				case SearchingMode.Fragment:
 					return "Fragment";
 
-				case SearchingMode.WholeWord:
-					return "Mot entier";
-
 				case SearchingMode.StartsWith:
 					return "Au début";
 
@@ -494,6 +574,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				case SearchingMode.WholeContent:
 					return "Tout";
+
+				case SearchingMode.Jokers:
+					return "Jokers";
 
 				case SearchingMode.Interval:
 					return "Intervalle";
@@ -510,6 +593,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly SearchingTabData		tabData;
 		private readonly List<int>				columnIndexes;
+		private readonly bool					isFilter;
 
 		private List<ColumnMapper>				columnMappers;
 		private System.Action					searchStartAction;
@@ -522,7 +606,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private TextField						searchingField2;
 		private TextFieldEx						searchingFieldEx2;
 		private TextFieldCombo					columnField;
-		private TextField						modeField;
+		private StaticText						modeField;
+		private GlyphButton						modeButton;
 		private GlyphButton						addRemoveButton;
 
 		private bool							bigDataInterface;

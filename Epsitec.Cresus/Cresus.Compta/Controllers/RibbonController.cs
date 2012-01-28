@@ -118,8 +118,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Search, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Options, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Filter, large: false));
 
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Options, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Info, large: false));
 			}
 

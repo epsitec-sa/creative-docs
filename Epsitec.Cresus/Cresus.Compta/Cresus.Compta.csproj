@@ -85,6 +85,7 @@
     <Compile Include="Accessors\SearchingTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />
@@ -180,6 +181,7 @@
     <EmbeddedResource Include="Images\Button.CheckYes.icon" />
     <EmbeddedResource Include="Images\Button.RadioNo.icon" />
     <EmbeddedResource Include="Images\Button.RadioYes.icon" />
+    <EmbeddedResource Include="Images\Panel.Filter.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

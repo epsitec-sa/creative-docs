@@ -42,6 +42,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public override bool HasShowFilterPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override bool HasShowOptionsPanel
 		{
 			get
