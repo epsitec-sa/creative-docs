@@ -252,6 +252,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			ToolTip.Default.SetToolTip (this.modeField,   this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
 			ToolTip.Default.SetToolTip (this.modeButton,  this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
 
+			if (this.bigDataInterface)
+			{
+				this.searchingFieldEx1.SelectAll ();
+				this.searchingFieldEx1.Focus ();
+			}
+			else
+			{
+				this.searchingField1.SelectAll ();
+				this.searchingField1.Focus ();
+			}
+
 			return frameBox;
 		}
 
@@ -412,8 +423,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			bool separator = false;
 
-			if (this.tabData.SearchingText.Mode != SearchingMode.Interval &&
-				this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+			if (this.HasMatchCase)
 			{
 				if (!separator)
 				{
@@ -424,9 +434,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.AddModeToMenu (menu, "Respecter la casse", () => this.tabData.SearchingText.MatchCase, x => this.tabData.SearchingText.MatchCase = x);
 			}
 
-			if (this.tabData.SearchingText.Mode != SearchingMode.Jokers   &&
-				this.tabData.SearchingText.Mode != SearchingMode.Interval &&
-				this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+			if (this.HasWholeWord)
 			{
 				if (!separator)
 				{
@@ -437,7 +445,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.AddModeToMenu (menu, "Mot entier", () => this.tabData.SearchingText.WholeWord, x => this.tabData.SearchingText.WholeWord = x);
 			}
 
-			if (this.isFilter)
+			if (this.HasInvert)
 			{
 				if (!separator)
 				{
@@ -510,9 +518,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bool separator = false;
 
-				if (this.tabData.SearchingText.MatchCase &&
-					this.tabData.SearchingText.Mode != SearchingMode.Interval &&
-					this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+				if (this.tabData.SearchingText.MatchCase && this.HasMatchCase)
 				{
 					if (!separator)
 					{
@@ -523,10 +529,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					text += "c";
 				}
 
-				if (this.tabData.SearchingText.WholeWord &&
-					this.tabData.SearchingText.Mode != SearchingMode.Jokers   &&
-					this.tabData.SearchingText.Mode != SearchingMode.Interval &&
-					this.tabData.SearchingText.Mode != SearchingMode.Empty    )
+				if (this.tabData.SearchingText.WholeWord && this.HasWholeWord)
 				{
 					if (!separator)
 					{
@@ -537,8 +540,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					text += "m";
 				}
 
-				if (this.tabData.SearchingText.Invert &&
-					this.isFilter)
+				if (this.tabData.SearchingText.Invert && this.HasInvert)
 				{
 					if (!separator)
 					{
@@ -587,6 +589,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 				default:
 					return "?";
 
+			}
+		}
+
+		private bool HasMatchCase
+		{
+			get
+			{
+				return this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+					   this.tabData.SearchingText.Mode != SearchingMode.Empty;
+			}
+		}
+
+		private bool HasWholeWord
+		{
+			get
+			{
+				return this.tabData.SearchingText.Mode != SearchingMode.Jokers   &&
+					   this.tabData.SearchingText.Mode != SearchingMode.Interval &&
+					   this.tabData.SearchingText.Mode != SearchingMode.Empty;
+			}
+		}
+
+		private bool HasInvert
+		{
+			get
+			{
+				return this.isFilter;
 			}
 		}
 

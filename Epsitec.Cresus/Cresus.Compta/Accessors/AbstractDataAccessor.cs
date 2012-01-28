@@ -28,9 +28,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.comptaEntity         = comptaEntity;
 			this.mainWindowController = mainWindowController;
 
+			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData = new List<AbstractData> ();
 			this.editionData = new List<AbstractEditionData> ();
 			this.searchResults = new List<SearchResult> ();
+			this.filterData = new SearchingData ();
 		}
 
 
@@ -39,6 +41,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.options;
+			}
+		}
+
+		public SearchingData FilterData
+		{
+			get
+			{
+				return this.filterData;
 			}
 		}
 
@@ -63,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (this.searchingData != null && !this.searchingData.IsEmpty)
 			{
 				int count = this.Count;
-				for (int row = 0; row < this.Count; row++)
+				for (int row = 0; row < count; row++)
 				{
 					var list = new List<SearchResult> ();
 
@@ -187,30 +197,120 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public virtual int Count
+		public void FilterUpdate(IEnumerable<ColumnType> columns)
 		{
-			get
+			//	Met à jour le filtre.
+			this.filterColumns = columns;
+
+			this.FilterUpdate ();
+		}
+
+		protected void FilterUpdate()
+		{
+			this.readonlyData.Clear ();
+
+			if (this.filterData.IsEmpty)
 			{
-				if (this.readonlyData != null)
+				this.readonlyData.AddRange (this.readonlyAllData);
+			}
+			else
+			{
+				int count = this.readonlyAllData.Count;
+				for (int row = 0; row < count; row++)
 				{
-					return this.readonlyData.Count;
-				}
-				else
-				{
-					return 0;
+					bool take = false;
+
+					if (this.readonlyAllData[row].NeverFiltered)
+					{
+						take = true;
+					}
+					else
+					{
+						foreach (var column in this.filterColumns)
+						{
+							foreach (var tab in this.filterData.TabsData)
+							{
+								if (tab.Column != ColumnType.None && tab.Column != column)
+								{
+									continue;
+								}
+
+								if (tab.IsEmpty)
+								{
+									continue;
+								}
+
+								var text = this.GetText (row, column, true);
+								int n = tab.SearchingText.Search (ref text);
+
+								if (n != 0)  // trouvé ?
+								{
+									take = true;
+									break;
+								}
+							}
+						}
+					}
+
+					if (take)
+					{
+						this.readonlyData.Add (this.readonlyAllData[row]);
+					}
 				}
 			}
 		}
 
-		public AbstractData GetReadOnlyData(int row)
+
+		public virtual int AllCount
 		{
-			if (this.readonlyData == null || row < 0 || row >= this.readonlyData.Count)
+			get
+			{
+				if (this.readonlyAllData == null)
+				{
+					return this.Count;
+				}
+				else
+				{
+					return this.readonlyAllData.Count;
+				}
+			}
+		}
+
+		public virtual int Count
+		{
+			get
+			{
+				if (this.readonlyData == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return this.readonlyData.Count;
+				}
+			}
+		}
+
+		public AbstractData GetReadOnlyData(int row, bool all = false)
+		{
+			List<AbstractData> data;
+
+			if (all)
+			{
+				data = this.readonlyAllData;
+			}
+			else
+			{
+				data = this.readonlyData;
+			}
+
+			if (data == null || row < 0 || row >= data.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.readonlyData[row];
+				return data[row];
 			}
 		}
 
@@ -219,7 +319,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return null;
 		}
 
-		public virtual FormattedText GetText(int row, ColumnType column)
+		public virtual FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
 			return FormattedText.Empty;
 		}
@@ -585,9 +685,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly BusinessContext				businessContext;
 		protected readonly ComptaEntity					comptaEntity;
 		protected readonly MainWindowController			mainWindowController;
+		protected readonly List<AbstractData>			readonlyAllData;
 		protected readonly List<AbstractData>			readonlyData;
 		protected readonly List<AbstractEditionData>	editionData;
 		protected readonly List<SearchResult>			searchResults;
+		protected readonly SearchingData				filterData;
 
 		protected AbstractOptions						options;
 		protected int									firstEditedRow;
@@ -600,5 +702,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected SearchingData							searchingData;
 		protected decimal								minValue;
 		protected decimal								maxValue;
+		protected IEnumerable<ColumnType>				filterColumns;
 	}
 }

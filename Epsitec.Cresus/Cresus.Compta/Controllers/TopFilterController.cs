@@ -24,13 +24,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class TopFilterController
 	{
-		public TopFilterController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers)
+		public TopFilterController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers, AbstractDataAccessor dataAccessor)
 		{
 			this.comptaEntity    = comptaEntity;
 			this.businessContext = businessContext;
 			this.columnMappers   = columnMappers;
-
-			this.searchingData = new SearchingData ();
+			this.dataAccessor    = dataAccessor;
 		}
 
 
@@ -74,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchingController = new SearchingController (this.comptaEntity, this.searchingData, this.columnMappers, true);
+			this.searchingController = new SearchingController (this.comptaEntity, this.dataAccessor.FilterData, this.columnMappers, true);
 			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
@@ -88,17 +87,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public SearchingData SearchingData
+		public void SetFilterCount(int dataCount, int count, int allCount)
 		{
-			get
-			{
-				return this.searchingData;
-			}
-		}
-
-		public void SetSearchingCount(int dataCount, int? count, int? locator)
-		{
-			this.searchingController.SetSearchingCount (dataCount, count, locator);
+			this.searchingController.SetFilterCount (dataCount, count, allCount);
 		}
 
 
@@ -107,6 +98,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly ComptaEntity			comptaEntity;
 		private readonly BusinessContext		businessContext;
 		private readonly SearchingData			searchingData;
+		private readonly AbstractDataAccessor	dataAccessor;
 
 		private List<ColumnMapper>				columnMappers;
 		private FrameBox						toolbar;

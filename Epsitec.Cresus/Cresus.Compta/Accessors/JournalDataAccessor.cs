@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public override FormattedText GetText(int row, ColumnType column)
+		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
 			if (row < 0 || row >= this.Count)
 			{

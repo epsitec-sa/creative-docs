@@ -156,74 +156,71 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Effectue une recherche et retourne le nombre d'occurences trouvées.
 
 			//	Attention: Les mécanismes ci-dessous sont totalement incompatibles avec des textes contenants des tags !
+			int count = 0;
 			string simple = target.ToSimpleText ();
 
-			if (!string.IsNullOrEmpty (simple) && simple.StartsWith (StringArray.SpecialContentStart))
+			if (string.IsNullOrEmpty (simple) || !simple.StartsWith (StringArray.SpecialContentStart))
 			{
-				return 0;
-			}
-
-			int count = 0;
-
-			if (this.mode == SearchingMode.WholeContent)
-			{
-				count = this.WholeContentSearch (ref simple);
-
-				if (count != 0)
+				if (this.mode == SearchingMode.WholeContent)
 				{
-					target = simple;
+					count = this.WholeContentSearch (ref simple);
+
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
-			}
-			else if (this.mode == SearchingMode.StartsWith)
-			{
-				count = this.StartsWithSearch (ref simple);
+				else if (this.mode == SearchingMode.StartsWith)
+				{
+					count = this.StartsWithSearch (ref simple);
 
-				if (count != 0)
-				{
-					target = simple;
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
-			}
-			else if (this.mode == SearchingMode.EndsWith)
-			{
-				count = this.EndsWithSearch (ref simple);
+				else if (this.mode == SearchingMode.EndsWith)
+				{
+					count = this.EndsWithSearch (ref simple);
 
-				if (count != 0)
-				{
-					target = simple;
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
-			}
-			else if (this.mode == SearchingMode.Interval)
-			{
-				count = this.IntervalSearch (ref simple);
+				else if (this.mode == SearchingMode.Interval)
+				{
+					count = this.IntervalSearch (ref simple);
 
-				if (count != 0)
-				{
-					target = simple;
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
-			}
-			else if (this.mode == SearchingMode.Jokers)
-			{
-				count = this.RegExSearch (ref simple);
+				else if (this.mode == SearchingMode.Jokers)
+				{
+					count = this.RegExSearch (ref simple);
 
-				if (count != 0)
-				{
-					target = simple;
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
-			}
-			else if (this.mode == SearchingMode.Empty)
-			{
-				if (string.IsNullOrEmpty (simple))
+				else if (this.mode == SearchingMode.Empty)
 				{
-					count = 1;
+					if (string.IsNullOrEmpty (simple))
+					{
+						count = 1;
+					}
 				}
-			}
-			else
-			{
-				count = this.FragmentSearch (ref simple);
+				else
+				{
+					count = this.FragmentSearch (ref simple);
 
-				if (count != 0)
-				{
-					target = simple;
+					if (count != 0)
+					{
+						target = simple;
+					}
 				}
 			}
 

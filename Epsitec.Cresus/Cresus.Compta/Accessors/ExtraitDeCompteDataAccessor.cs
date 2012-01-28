@@ -127,14 +127,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override FormattedText GetText(int row, ColumnType column)
+		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			if (row < 0 || row >= this.Count)
+			var data = this.GetReadOnlyData (row, all) as ExtraitDeCompteData;
+
+			if (data == null)
 			{
 				return FormattedText.Null;
 			}
-
-			var data = this.readonlyData[row] as ExtraitDeCompteData;
 
 			switch (column)
 			{

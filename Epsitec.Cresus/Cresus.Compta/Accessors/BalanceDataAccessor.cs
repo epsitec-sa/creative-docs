@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void UpdateAfterOptionsChanged()
 		{
-			this.readonlyData.Clear ();
+			this.readonlyAllData.Clear ();
 
 			ComptaCompteEntity lastCompte = null;
 			decimal totalDébit  = 0;
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				lastCompte = compte;
 
-				this.readonlyData.Add (data);
+				this.readonlyAllData.Add (data);
 			}
 
 			this.SetBottomSeparatorToPreviousLine ();
@@ -112,26 +112,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new BalanceData ();
 
-				data.Titre       = "Mouvement";
-				data.Débit       = totalDébit;
-				data.Crédit      = totalCrédit;
-				data.SoldeDébit  = totalSoldeD;
-				data.SoldeCrédit = totalSoldeC;
-				data.IsItalic    = true;
+				data.Titre         = "Mouvement";
+				data.Débit         = totalDébit;
+				data.Crédit        = totalCrédit;
+				data.SoldeDébit    = totalSoldeD;
+				data.SoldeCrédit   = totalSoldeC;
+				data.IsItalic      = true;
+				data.NeverFiltered = true;
 
-				this.readonlyData.Add (data);
+				this.readonlyAllData.Add (data);
 			}
+
+			this.FilterUpdate ();
 		}
 
 
-		public override FormattedText GetText(int row, ColumnType column)
+		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			if (row < 0 || row >= this.Count)
+			var data = this.GetReadOnlyData (row, all) as BalanceData;
+
+			if (data == null)
 			{
 				return FormattedText.Null;
 			}
-
-			var data = this.readonlyData[row] as BalanceData;
 
 			switch (column)
 			{

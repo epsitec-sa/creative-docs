@@ -45,6 +45,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public bool NeverFiltered
+		{
+			get;
+			set;
+		}
+
 
 		public FormattedText Typo(FormattedText value)
 		{

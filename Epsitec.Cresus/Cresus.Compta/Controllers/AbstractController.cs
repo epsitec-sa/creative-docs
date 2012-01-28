@@ -289,17 +289,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Filter panel
 		private void CreateTopFilter(FrameBox parent)
 		{
-			this.topFilterController = new TopFilterController (this.comptaEntity, this.businessContext, this.columnMappers);
+			this.topFilterController = new TopFilterController (this.comptaEntity, this.businessContext, this.columnMappers, this.dataAccessor);
 			this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
 			this.topFilterController.ShowPanel = this.ShowSearchPanel;
+
+			this.dataAccessor.FilterUpdate (this.columnMappers.Select (x => x.Column));
 		}
 
 		private void FilterStartAction()
 		{
+			this.dataAccessor.FilterUpdate (this.columnMappers.Select (x => x.Column));
+			this.BaseUpdateArrayContent ();
+			this.FilterUpdateTopToolbar ();
 		}
 
 		private void FilterNextAction(int direction)
 		{
+		}
+
+		public void FilterUpdateTopToolbar()
+		{
+			this.topFilterController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
 		}
 		#endregion
 

@@ -222,6 +222,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Visibility      = !this.isFilter,
 				};
 
+				new FrameBox
+				{
+					Parent          = footer,
+					PreferredWidth  = 30+30-1+10,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Visibility      = this.isFilter,
+				};
+
 				this.searchResult = new StaticText
 				{
 					Parent          = footer,
@@ -229,16 +238,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Margins         = new Margins (0, 0, 0, 0),
-					Visibility      = !this.isFilter,
-				};
-
-				new FrameBox
-				{
-					Parent          = footer,
-					PreferredWidth  = 30+30+120-1+10,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Visibility      = this.isFilter,
 				};
 
 				this.searchButtonPrev.Clicked += delegate
@@ -298,6 +297,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 				int l = locator.GetValueOrDefault () + 1;
 				int c = count.Value;
 				this.searchResult.Text = string.Format ("{0}/{1} resultat{2}", l.ToString (), c.ToString (), (c == 1) ? "" : "s");
+			}
+		}
+
+		public void SetFilterCount(int dataCount, int count, int allCount)
+		{
+			this.BigDataInterface = (dataCount >= 1000);  // limite arbitraire au-delà de laquelle les recherches deviennent trop lentes !
+
+			this.UpdateButtons ();
+
+			if (count == allCount)
+			{
+				this.searchResult.Text = string.Format ("{0} (tous)", allCount.ToString ());
+			}
+			else
+			{
+				this.searchResult.Text = string.Format ("{0} sur {1}", count.ToString (), allCount.ToString ());
 			}
 		}
 

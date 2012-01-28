@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return true;
+				return false;
 			}
 		}
 
