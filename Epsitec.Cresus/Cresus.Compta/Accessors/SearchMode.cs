@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Compta.Accessors
 {
-	public enum SearchingMode
+	public enum SearchMode
 	{
 		Fragment,		// contenu partiel
 		StartsWith,		// au début

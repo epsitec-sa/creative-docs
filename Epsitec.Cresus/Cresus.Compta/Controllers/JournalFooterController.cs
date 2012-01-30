@@ -126,10 +126,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line = this.linesFrames.Count - 1;
 
 			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).OrderBy (x => x.Numéro);
+			int tabIndex = 0;
 
-			int columnCount = this.columnMappers.Count;
-
-			for (int column = 0; column < columnCount; column++)
+			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				var box = new FrameBox
 				{
@@ -137,10 +136,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					DrawFullFrame = true,
 					Dock          = DockStyle.Left,
 					Margins       = new Margins (0, 1, 0, 0),
-					TabIndex      = column+1,
+					TabIndex      = ++tabIndex,
 				};
-
-				var mapper = this.columnMappers[column];
 
 				FrameBox container;
 				AbstractTextField field;
@@ -148,7 +145,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (mapper.Column == ColumnType.Débit)
 				{
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
-					field.Name = this.GetWidgetName (column, line);
+					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
 					{
@@ -158,7 +155,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.Crédit)
 				{
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
-					field.Name = this.GetWidgetName (column, line);
+					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
 					{
@@ -178,7 +175,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						Parent   = container,
 						Dock     = DockStyle.Fill,
-						Name     = this.GetWidgetName (column, line),
+						Name     = this.GetWidgetName (mapper.Column, line),
 						TabIndex = 1,
 					};
 
@@ -490,8 +487,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void FooterTextChanged(AbstractTextField field)
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
-			int column, line;
-			this.GetWidgetColumnLine (field.Name, out column, out line);
+			ColumnType columnType;
+			int line;
+			this.GetWidgetColumnLine (field.Name, out columnType, out line);
 
 			if (!this.arrayController.IgnoreChanged)
 			{
@@ -504,13 +502,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateInsertionRow ();
 			}
 
-			var mapper = this.columnMappers[column];
-
-			if (mapper.Column == ColumnType.Débit)
+			if (columnType == ColumnType.Débit)
 			{
 				this.UpdateFooterInfo (field.FormattedText, true);
 			}
-			else if (mapper.Column == ColumnType.Crédit)
+			else if (columnType == ColumnType.Crédit)
 			{
 				this.UpdateFooterInfo (field.FormattedText, false);
 			}
@@ -540,7 +536,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.UpdateArrayColumns ();
 
-			int columnCount = this.columnMappers.Count;
+			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
 
 			for (int line = 0; line < this.linesFrames.Count; line++)
 			{
@@ -568,7 +564,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.dataAccessor.CountEditedRow;
 
 			if (this.linesFrames.Count != count ||
-				this.footerFields[0].Count != this.columnMappers.Count)
+				this.footerFields[0].Count != this.columnMappers.Where (x => x.Show).Count ())
 			{
 				this.ResetLineUI ();
 

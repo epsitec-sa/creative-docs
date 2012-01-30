@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private new PPOptions Options
+		private PPOptions Options
 		{
 			get
 			{

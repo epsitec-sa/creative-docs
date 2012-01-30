@@ -30,14 +30,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public AbstractOptions Options
-		{
-			get
-			{
-				return this.options;
-			}
-		}
-
 		public bool ShowPanel
 		{
 			get

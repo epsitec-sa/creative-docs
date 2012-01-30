@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public BudgetsController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new BudgetsDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
-			this.InitializeColumnMapper ();
+			this.dataAccessor = new BudgetsDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
 		}
 
 
@@ -73,13 +72,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override FormattedText GetArrayText(int row, int column)
+		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			var mapper = this.columnMappers[column];
-			var text = this.dataAccessor.GetText (row, mapper.Column);
+			var text = this.dataAccessor.GetText (row, columnType);
 
-			if (mapper.Column == ColumnType.Titre)
+			if (columnType == ColumnType.Titre)
 			{
 				var compte = this.dataAccessor.GetEditionData (row) as ComptaCompteEntity;
 

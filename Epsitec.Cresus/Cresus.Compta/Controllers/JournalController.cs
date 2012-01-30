@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new JournalDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
-			this.InitializeColumnMapper ();
+			this.dataAccessor = new JournalDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
 		}
 
 
@@ -40,14 +39,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 		}
 
 		protected override void OptionsChanged()
 		{
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.ClearHilite ();
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 			this.UpdateArray ();
 			this.footerController.UpdateFooterContent ();
 			this.UpdateArrayContent ();
@@ -56,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var journal = (this.optionsController.Options as JournalOptions).Journal;
+			var journal = (this.dataAccessor.AccessorOptions as JournalOptions).Journal;
 
 			if (journal == null)  // tous les journaux ?
 			{
@@ -103,11 +102,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override FormattedText GetArrayText(int row, int column)
+		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			var mapper = this.columnMappers[column];
-			return this.dataAccessor.GetText (row, mapper.Column);
+			return this.dataAccessor.GetText (row, columnType);
 		}
 
 
@@ -129,12 +127,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Pièce,   0.20, ContentAlignment.MiddleLeft,  "Pièce",   "Numéro de la pièce comptable correspondant à l'écriture");
 				yield return new ColumnMapper (ColumnType.Libellé, 0.80, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
 				yield return new ColumnMapper (ColumnType.Montant, 0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
-
-				if (this.optionsController  != null && (this.optionsController.Options as JournalOptions).Journal == null) // tous les journaux ?
-				{
-					yield return new ColumnMapper (ColumnType.Journal, 0.25, ContentAlignment.MiddleLeft, "Journal", "Journal auquel appartient l'écriture");
-				}
+				yield return new ColumnMapper (ColumnType.Journal, 0.25, ContentAlignment.MiddleLeft,  "Journal", "Journal auquel appartient l'écriture");
 			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			var options = this.dataAccessor.AccessorOptions as JournalOptions;
+
+			//?this.ShowHideColumn (ColumnType.Journal, this.optionsController != null && (this.optionsController.Options as JournalOptions).Journal == null);
+			this.ShowHideColumn (ColumnType.Journal, options != null && options.Journal == null);  // tous les journaux ?
 		}
 
 #if false

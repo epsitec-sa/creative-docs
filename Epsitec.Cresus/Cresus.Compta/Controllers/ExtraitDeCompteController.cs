@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public ExtraitDeCompteController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new ExtraitDeCompteDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
-			this.InitializeColumnMapper ();
+			this.dataAccessor = new ExtraitDeCompteDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
 		}
 
 
@@ -73,12 +72,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 		}
 
 		protected override void OptionsChanged()
 		{
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 			this.UpdateArray ();
 			this.UpdateWindowTitle ();
 
@@ -87,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
@@ -102,7 +101,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWindowTitle()
 		{
-			var numéro = (this.optionsController.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
@@ -116,14 +115,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override FormattedText GetArrayText(int row, int column)
+		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			var mapper = this.columnMappers[column];
-			var text = this.dataAccessor.GetText (row, mapper.Column);
+			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as ExtraitDeCompteData;
 
-			if (mapper.Column == ColumnType.Solde &&
+			if (columnType == ColumnType.Solde &&
 				row == this.dataAccessor.Count-2)  // total sur l'avant-dernière ligne ?
 			{
 				text = text.ApplyBold ();
@@ -137,24 +135,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Date,      0.20, ContentAlignment.MiddleLeft, "Date");
-				yield return new ColumnMapper (ColumnType.CP,        0.20, ContentAlignment.MiddleLeft,  "C/P");
-				yield return new ColumnMapper (ColumnType.Pièce,     0.20, ContentAlignment.MiddleLeft,  "Pièce");
-				yield return new ColumnMapper (ColumnType.Libellé,   0.60, ContentAlignment.MiddleLeft,  "Libellé");
-				yield return new ColumnMapper (ColumnType.Débit,     0.20, ContentAlignment.MiddleRight, "Débit");
-				yield return new ColumnMapper (ColumnType.Crédit,    0.20, ContentAlignment.MiddleRight, "Crédit");
-				yield return new ColumnMapper (ColumnType.Solde,     0.20, ContentAlignment.MiddleRight, "Solde");
-
-				if ((this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).HasGraphics)
-				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", true);
-				}
-
-				if (this.comptaEntity.Journaux.Count > 1)
-				{
-					yield return new ColumnMapper (ColumnType.Journal, 0.20, ContentAlignment.MiddleLeft, "Journal");
-				}
+				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft, "Date");
+				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P");
+				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce");
+				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé");
+				yield return new ColumnMapper (ColumnType.Débit,          0.20, ContentAlignment.MiddleRight, "Débit");
+				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit");
+				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde");
+				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", true);
+				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft, "Journal");
 			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			var options = this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions;
+
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.Journal,        this.comptaEntity.Journaux.Count > 1);
 		}
 	}
 }

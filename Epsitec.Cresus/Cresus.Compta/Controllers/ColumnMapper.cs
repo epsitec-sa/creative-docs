@@ -42,6 +42,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.Description   = description;
 			this.Tooltip       = tooltip;
 			this.HideForSearch = hideForSearch;
+
+			this.Show = true;
 		}
 
 		public ColumnType Column
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public FormattedText Description
 		{
 			get;
-			private set;
+			set;
 		}
 
 		public FormattedText Tooltip
@@ -78,6 +80,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get;
 			private set;
+		}
+
+		public bool Show
+		{
+			get;
+			set;
 		}
 	}
 }

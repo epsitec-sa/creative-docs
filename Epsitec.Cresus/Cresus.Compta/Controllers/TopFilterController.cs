@@ -24,11 +24,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class TopFilterController
 	{
-		public TopFilterController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers, AbstractDataAccessor dataAccessor)
+		public TopFilterController(ComptaEntity comptaEntity, BusinessContext businessContext, AbstractDataAccessor dataAccessor)
 		{
 			this.comptaEntity    = comptaEntity;
 			this.businessContext = businessContext;
-			this.columnMappers   = columnMappers;
 			this.dataAccessor    = dataAccessor;
 		}
 
@@ -48,11 +47,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (this.showPanel)
 					{
-						this.searchingController.SetFocus ();
+						this.searchController.SetFocus ();
 					}
 					else
 					{
-						this.searchingController.SearchClear ();
+						this.searchController.SearchClear ();
 					}
 				}
 			}
@@ -73,23 +72,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchingController = new SearchingController (this.comptaEntity, this.dataAccessor.FilterData, this.columnMappers, true);
-			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
+			this.searchController = new SearchController (this.comptaEntity, this.dataAccessor.FilterData, this.dataAccessor.ColumnMappers, true);
+			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
 
-		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-			this.columnMappers = columnMappers;
-
-			this.searchingController.UpdateColumns (columnMappers);
+			this.searchController.UpdateColumns ();
 		}
 
 
 		public void SetFilterCount(int dataCount, int count, int allCount)
 		{
-			this.searchingController.SetFilterCount (dataCount, count, allCount);
+			this.searchController.SetFilterCount (dataCount, count, allCount);
 		}
 
 
@@ -97,12 +94,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly ComptaEntity			comptaEntity;
 		private readonly BusinessContext		businessContext;
-		private readonly SearchingData			searchingData;
 		private readonly AbstractDataAccessor	dataAccessor;
 
-		private List<ColumnMapper>				columnMappers;
 		private FrameBox						toolbar;
-		private SearchingController				searchingController;
+		private SearchController				searchController;
 		protected bool							showPanel;
 	}
 }

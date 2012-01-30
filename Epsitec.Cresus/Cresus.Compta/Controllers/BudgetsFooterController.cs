@@ -58,10 +58,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.linesFrames.Add (footerFrame);
 			int line = this.linesFrames.Count - 1;
+			int tabIndex = 0;
 
-			int columnCount = this.columnMappers.Count;
-
-			for (int column = 0; column < columnCount; column++)
+			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				var box = new FrameBox
 				{
@@ -69,10 +68,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					DrawFullFrame = true,
 					Dock          = DockStyle.Left,
 					Margins       = new Margins (0, 1, 0, 0),
-					TabIndex      = column+1,
+					TabIndex      = ++tabIndex,
 				};
-
-				var mapper = this.columnMappers[column];
 
 				FrameBox container;
 				AbstractTextField field;
@@ -89,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						Parent   = container,
 						Dock     = DockStyle.Fill,
-						Name     = this.GetWidgetName (column, line),
+						Name     = this.GetWidgetName (mapper.Column, line),
 						TabIndex = 1,
 					};
 

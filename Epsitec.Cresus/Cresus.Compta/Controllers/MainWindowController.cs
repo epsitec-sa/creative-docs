@@ -601,6 +601,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return data;
 		}
+
+		public SearchData GetSettingsSearchData<T>(string key)
+			where T : SearchData, new ()
+		{
+			ISettingsData result;
+			if (this.settingsDatas.TryGetValue (key, out result))
+			{
+				return result as SearchData;
+			}
+
+			SearchData data = new T ();
+
+			this.settingsDatas.Add (key, data);
+
+			return data;
+		}
 		#endregion
 
 

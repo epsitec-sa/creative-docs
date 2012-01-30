@@ -21,9 +21,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BudgetsDataAccessor : AbstractDataAccessor
 	{
-		public BudgetsDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, mainWindowController)
+		public BudgetsDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
 		{
+			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
+
 			this.comptaEntity.PlanComptableUpdate ();
 			this.StartCreationData ();
 		}

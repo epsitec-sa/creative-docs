@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private new BalanceOptions Options
+		private BalanceOptions Options
 		{
 			get
 			{

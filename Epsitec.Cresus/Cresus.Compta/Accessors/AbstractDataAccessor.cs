@@ -22,19 +22,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractDataAccessor
 	{
-		public AbstractDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+		public AbstractDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
 		{
 			this.businessContext      = businessContext;
 			this.comptaEntity         = comptaEntity;
+			this.columnMappers        = columnMappers;
 			this.mainWindowController = mainWindowController;
 
 			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData = new List<AbstractData> ();
 			this.editionData = new List<AbstractEditionData> ();
 			this.searchResults = new List<SearchResult> ();
-			this.filterData = new SearchingData ();
 		}
 
+
+		public List<ColumnMapper> ColumnMappers
+		{
+			get
+			{
+				return this.columnMappers;
+			}
+		}
 
 		public AbstractOptions AccessorOptions
 		{
@@ -44,7 +52,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public SearchingData FilterData
+		public SearchData SearchData
+		{
+			get
+			{
+				return this.searchData;
+			}
+		}
+
+		public SearchData FilterData
 		{
 			get
 			{
@@ -57,29 +73,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public void SearchUpdate(IEnumerable<ColumnType> columns, SearchingData data)
+		public void SearchUpdate()
 		{
 			//	Met à jour les recherches, en fonction d'une nouvelle chaîne cherchée.
-			this.searchingColumns = columns;
-			this.searchingData    = data;
-
-			this.SearchUpdate ();
-		}
-
-		protected void SearchUpdate()
-		{
 			this.searchResults.Clear ();
 
-			if (this.searchingData != null && !this.searchingData.IsEmpty)
+			if (this.searchData != null && !this.searchData.IsEmpty)
 			{
 				int count = this.Count;
 				for (int row = 0; row < count; row++)
 				{
 					var list = new List<SearchResult> ();
 
-					foreach (var column in this.searchingColumns)
+					foreach (var column in this.columnMappers.Where (x => x.Show).Select (x => x.Column))
 					{
-						foreach (var tab in this.searchingData.TabsData)
+						foreach (var tab in this.searchData.TabsData)
 						{
 							if (tab.Column != ColumnType.None && tab.Column != column)
 							{
@@ -92,13 +100,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 							}
 
 							var text = this.GetText (row, column);
-							int n = tab.SearchingText.Search (ref text);
+							int n = tab.SearchText.Search (ref text);
 
 							if (n != 0)  // trouvé ?
 							{
 								list.Add (new SearchResult (row, column, text));
 
-								if (this.searchingData.OrMode)
+								if (this.searchData.OrMode)
 								{
 									break;
 								}
@@ -106,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						}
 					}
 
-					if (this.searchingData.OrMode || list.Count == this.searchingData.TabsData.Count)
+					if (this.searchData.OrMode || list.Count == this.searchData.TabsData.Count)
 					{
 						list.ForEach (x => this.searchResults.Add (x));
 					}
@@ -128,7 +136,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchingData == null || this.searchingData.IsEmpty)
+				if (this.searchData == null || this.searchData.IsEmpty)
 				{
 					return null;
 				}
@@ -143,7 +151,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchingData == null || this.searchingData.IsEmpty)
+				if (this.searchData == null || this.searchData.IsEmpty)
 				{
 					return null;
 				}
@@ -197,19 +205,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public void FilterUpdate(IEnumerable<ColumnType> columns)
+		public void FilterUpdate()
 		{
 			//	Met à jour le filtre.
-			this.filterColumns = columns;
-
-			this.FilterUpdate ();
-		}
-
-		protected void FilterUpdate()
-		{
 			this.readonlyData.Clear ();
 
-			if (this.filterData.IsEmpty)
+			if (this.filterData == null || this.filterData.IsEmpty)
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
@@ -218,15 +219,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int count = this.readonlyAllData.Count;
 				for (int row = 0; row < count; row++)
 				{
-					bool take = false;
+					int founds = 0;
 
 					if (this.readonlyAllData[row].NeverFiltered)
 					{
-						take = true;
+						founds = this.filterData.TabsData.Count;
 					}
 					else
 					{
-						foreach (var column in this.filterColumns)
+
+						foreach (var column in this.columnMappers.Select (x => x.Column))
 						{
 							foreach (var tab in this.filterData.TabsData)
 							{
@@ -241,18 +243,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 								}
 
 								var text = this.GetText (row, column, true);
-								int n = tab.SearchingText.Search (ref text);
+								int n = tab.SearchText.Search (ref text);
 
 								if (n != 0)  // trouvé ?
 								{
-									take = true;
-									break;
+									founds++;
+
+									if (this.filterData.OrMode)
+									{
+										break;
+									}
 								}
 							}
 						}
 					}
 
-					if (take)
+					if (founds != 0 && (this.filterData.OrMode || founds == this.filterData.TabsData.Count))
 					{
 						this.readonlyData.Add (this.readonlyAllData[row]);
 					}
@@ -684,13 +690,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected readonly BusinessContext				businessContext;
 		protected readonly ComptaEntity					comptaEntity;
+		protected readonly List<ColumnMapper>			columnMappers;
 		protected readonly MainWindowController			mainWindowController;
 		protected readonly List<AbstractData>			readonlyAllData;
 		protected readonly List<AbstractData>			readonlyData;
 		protected readonly List<AbstractEditionData>	editionData;
 		protected readonly List<SearchResult>			searchResults;
-		protected readonly SearchingData				filterData;
 
+		protected SearchData							filterData;
+		protected SearchData							searchData;
 		protected AbstractOptions						options;
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
@@ -698,10 +706,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected bool									isModification;
 		protected bool									justCreated;
 		protected int									searchLocator;
-		protected IEnumerable<ColumnType>				searchingColumns;
-		protected SearchingData							searchingData;
 		protected decimal								minValue;
 		protected decimal								maxValue;
-		protected IEnumerable<ColumnType>				filterColumns;
 	}
 }

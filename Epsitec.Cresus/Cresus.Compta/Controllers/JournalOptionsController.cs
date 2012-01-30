@@ -471,7 +471,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 
-		private new JournalOptions Options
+		private JournalOptions Options
 		{
 			get
 			{

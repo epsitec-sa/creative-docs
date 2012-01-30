@@ -64,8 +64,8 @@
     <Compile Include="Accessors\BudgetsEditionData.cs" />
     <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
-    <Compile Include="Accessors\SearchingText.cs" />
-    <Compile Include="Accessors\SearchingMode.cs" />
+    <Compile Include="Accessors\SearchText.cs" />
+    <Compile Include="Accessors\SearchMode.cs" />
     <Compile Include="Accessors\ISettingsData.cs" />
     <Compile Include="Accessors\JournalOptions.cs" />
     <Compile Include="Accessors\ExploitationData.cs" />
@@ -81,10 +81,11 @@
     <Compile Include="Accessors\PPData.cs" />
     <Compile Include="Accessors\PPDataAccessor.cs" />
     <Compile Include="Accessors\PPOptions.cs" />
-    <Compile Include="Accessors\SearchingData.cs" />
-    <Compile Include="Accessors\SearchingTabData.cs" />
+    <Compile Include="Accessors\SearchData.cs" />
+    <Compile Include="Accessors\SearchTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="IO\NewCompta.cs" />
@@ -116,9 +117,9 @@
     <Compile Include="Controllers\ExtraitDeCompteOptionsController.cs" />
     <Compile Include="Controllers\HeaderController.cs" />
     <Compile Include="Controllers\PPOptionsController.cs" />
-    <Compile Include="Controllers\SearchingController.cs" />
-    <Compile Include="Controllers\SearchingTabController.cs" />
-    <Compile Include="Controllers\TopSearchingController.cs" />
+    <Compile Include="Controllers\SearchController.cs" />
+    <Compile Include="Controllers\SearchTabController.cs" />
+    <Compile Include="Controllers\TopSearchController.cs" />
     <Compile Include="Controllers\UIBuilder.cs" />
     <Compile Include="Entities\ComptaCompteEntity.cs" />
     <Compile Include="Entities\ComptaEcritureEntity.cs" />

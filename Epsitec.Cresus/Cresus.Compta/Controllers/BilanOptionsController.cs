@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private new BilanOptions Options
+		private BilanOptions Options
 		{
 			get
 			{

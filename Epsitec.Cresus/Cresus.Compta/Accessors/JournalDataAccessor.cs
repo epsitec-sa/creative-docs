@@ -21,10 +21,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalDataAccessor : AbstractDataAccessor
 	{
-		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, mainWindowController)
+		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
 		{
-			this.options = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.JournalOptions", this.comptaEntity);
+			this.options    = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.comptaEntity);
+			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journal.Search");
 
 			this.UpdateAfterOptionsChanged ();
 			this.StartCreationData ();

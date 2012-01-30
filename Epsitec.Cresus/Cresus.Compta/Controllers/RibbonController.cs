@@ -111,6 +111,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				section.Children.Add (this.présentationButton);
 			}
 
+#if false
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Panneaux");
 
@@ -123,6 +124,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Options, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Info, large: false));
 			}
+#endif
 
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");

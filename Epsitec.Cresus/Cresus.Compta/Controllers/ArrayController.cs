@@ -23,15 +23,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ArrayController
 	{
-		public ArrayController()
+		public ArrayController(List<ColumnMapper> columnMappers)
 		{
+			this.columnMappers = columnMappers;
 		}
 
 
 		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged)
 		{
 			//	Crée l'en-tête en dessus du tableau.
-			this.headerController = new HeaderController ();
+			this.headerController = new HeaderController (this.columnMappers);
 			this.headerController.CreateUI (parent);
 
 			//	Crée le tableau.
@@ -67,21 +68,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void UpdateColumnsHeader(IEnumerable<FormattedText> descriptions, IEnumerable<double> relativeWidths, IEnumerable<ContentAlignment> alignments)
+		public void UpdateColumnsHeader()
 		{
-			int columnCount = relativeWidths.Count ();
-			System.Diagnostics.Debug.Assert (columnCount == descriptions.Count ());
-			System.Diagnostics.Debug.Assert (columnCount == alignments.Count ());
+			this.headerController.UpdateColumns ();
 
-			this.headerController.UpdateColumns (descriptions);
+			this.columnMappersShowed = this.columnMappers.Where (x => x.Show).ToList ();
+			this.array.Columns = this.columnMappersShowed.Count ();
+			int column = 0;
 
-			this.array.Columns = columnCount;
-
-			for (int column = 0; column < columnCount; column++)
+			foreach (var mapper in this.columnMappersShowed)
 			{
-				this.array.SetColumnsRelativeWidth (column, relativeWidths.ElementAt (column));
+				this.array.SetColumnsRelativeWidth (column, mapper.RelativeWidth);
 				this.array.SetColumnBreakMode      (column, TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine);
-				this.array.SetColumnAlignment      (column, alignments.ElementAt (column));
+				this.array.SetColumnAlignment      (column, mapper.Alignment);
+
+				column++;
 			}
 		}
 
@@ -98,12 +99,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void SetSearchLocator(int row, int column)
+		public void SetSearchLocator(int row, ColumnType columnType)
 		{
-			this.array.SetSearchLocator (row, column);
+			this.array.SetSearchLocator (row, this.GetColumnIndex (columnType));
 		}
 
-		public void UpdateArrayContent(int rowCount, System.Func<int, int, FormattedText> getCellText, System.Func<int, bool> getBottomSeparator)
+		public void UpdateArrayContent(int rowCount, System.Func<int, ColumnType, FormattedText> getCellText, System.Func<int, bool> getBottomSeparator)
 		{
 			//	Met à jour le contenu du tableau.
 			this.array.TotalRows = rowCount;
@@ -122,12 +123,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					for (int column = 0; column < columnCount; column++)
 					{
-						string text = getCellText (row, column).ToString ();
+						string text = getCellText (row, this.columnMappersShowed[column].Column).ToString ();
 						var color = Color.Empty;
 
-						if (!string.IsNullOrEmpty (text) && text.StartsWith (StringArray.SpecialContentSearchingTarget))
+						if (!string.IsNullOrEmpty (text) && text.StartsWith (StringArray.SpecialContentSearchTarget))
 						{
-							text = text.Substring (StringArray.SpecialContentSearchingTarget.Length);
+							text = text.Substring (StringArray.SpecialContentSearchTarget.Length);
 							color = SearchResult.BackOutsideSearch;  // jaune pâle
 						}
 
@@ -183,10 +184,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void HiliteHeaderColumn(int column)
+		public void HiliteHeaderColumn(ColumnType columnType)
 		{
 			//	Met en évidence une en-tête de colonne à choix.
-			this.headerController.HiliteColumn (column);
+			this.headerController.HiliteColumn (columnType);
 		}
 
 		public void SetHilitedRows(int firstRow, int countRow)
@@ -266,6 +267,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private int GetColumnIndex(ColumnType columnType)
+		{
+			return this.columnMappersShowed.FindIndex (x => x.Column == columnType);
+		}
+
+
 		public bool IgnoreChanged
 		{
 			get
@@ -279,6 +286,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly List<ColumnMapper>		columnMappers;
+
+		private List<ColumnMapper>				columnMappersShowed;
 		private HeaderController				headerController;
 		private StringArray						array;
 		private bool							ignoreChanged;

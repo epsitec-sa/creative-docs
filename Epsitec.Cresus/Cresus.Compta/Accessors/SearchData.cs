@@ -11,16 +11,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Accessors
 {
-	public class SearchingData
+	public class SearchData : ISettingsData
 	{
-		public SearchingData()
+		public SearchData()
 		{
-			this.tabsData = new List<SearchingTabData> ();
+			this.tabsData = new List<SearchTabData> ();
 			this.OrMode = true;
 		}
 
 
-		public List<SearchingTabData> TabsData
+		public List<SearchTabData> TabsData
 		{
 			get
 			{
@@ -50,7 +50,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public bool GetIntervalDates(out Date? beginDate, out Date? endDate)
+		{
+			foreach (var data in this.tabsData)
+			{
+				if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
+				{
+					return true;
+				}
+			}
 
-		private readonly List<SearchingTabData>		tabsData;
+			beginDate = null;
+			endDate   = null;
+			return false;
+		}
+
+
+		private readonly List<SearchTabData>		tabsData;
 	}
 }

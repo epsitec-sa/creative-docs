@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private new ExtraitDeCompteOptions Options
+		private ExtraitDeCompteOptions Options
 		{
 			get
 			{

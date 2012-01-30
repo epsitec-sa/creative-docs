@@ -23,8 +23,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class HeaderController
 	{
-		public HeaderController()
+		public HeaderController(List<ColumnMapper> columnMappers)
 		{
+			this.columnMappers = columnMappers;
 			this.headerFrames = new List<FrameBox> ();
 		}
 
@@ -41,12 +42,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return this.headerFrame;
 		}
 
-		public void UpdateColumns(IEnumerable<FormattedText> descriptions)
+		public void UpdateColumns()
 		{
 			this.headerFrames.Clear ();
 			this.headerFrame.Children.Clear ();
 
-			foreach (var description in descriptions)
+			this.columnMappersShowed = this.columnMappers.Where (x => x.Show).ToList ();
+
+			foreach (var description in this.columnMappersShowed.Select (x => x.Description))
 			{
 				var frame = new FrameBox
 				{
@@ -77,20 +80,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void HiliteColumn(int column)
+		public void HiliteColumn(ColumnType columnType)
 		{
 			//	Met en évidence une colonne à choix, en bleu clair.
-			for (int c = 0; c < this.headerFrames.Count; c++)
-			{
-				var button = this.headerFrames[c];
+			int column = 0;
 
-				button.BackColor = (c == column) ? Color.FromHexa ("b3d7ff") : Color.Empty;
+			foreach (var mapper in this.columnMappersShowed)
+			{
+				var button = this.headerFrames[column++];
+				button.BackColor = (mapper.Column == columnType) ? Color.FromHexa ("b3d7ff") : Color.Empty;
 			}
 		}
 
 
+		private readonly List<ColumnMapper>		columnMappers;
 		private readonly List<FrameBox>			headerFrames;
 
+		private List<ColumnMapper>				columnMappersShowed;
 		private FrameBox						headerFrame;
 	}
 }

@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public PPController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
-			this.InitializeColumnMapper ();
+			this.dataAccessor = new PPDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
 		}
 
 
@@ -73,12 +72,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 		}
 
 		protected override void OptionsChanged()
 		{
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 			this.UpdateArray ();
 
 			base.OptionsChanged ();
@@ -90,21 +89,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override FormattedText GetArrayText(int row, int column)
+		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			var mapper = this.columnMappers[column];
-			var text = this.dataAccessor.GetText (row, mapper.Column);
+			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as PPData;
 
-			if (mapper.Column == ColumnType.TitreGauche)
+			if (columnType == ColumnType.TitreGauche)
 			{
 				for (int i = 0; i < data.NiveauGauche; i++)
 				{
 					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
 				}
 			}
-			else if (mapper.Column == ColumnType.TitreDroite)
+			else if (columnType == ColumnType.TitreDroite)
 			{
 				for (int i = 0; i < data.NiveauDroite; i++)
 				{
@@ -120,38 +118,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				var options = this.dataAccessor.AccessorOptions as PPOptions;
-
-				yield return new ColumnMapper (ColumnType.NuméroGauche, 0.20, ContentAlignment.MiddleLeft,  "");
-				yield return new ColumnMapper (ColumnType.TitreGauche,  0.60, ContentAlignment.MiddleLeft,  "Charges");
-				yield return new ColumnMapper (ColumnType.SoldeGauche,  0.20, ContentAlignment.MiddleRight, "");
-
-				if (options.HasGraphics)
-				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "", true);
-				}
-
-				if (options.BudgetEnable && this.optionsController != null)
-				{
-					yield return new ColumnMapper (ColumnType.BudgetGauche, 0.20, ContentAlignment.MiddleRight, this.optionsController.Options.BudgetColumnDescription);
-				}
+				yield return new ColumnMapper (ColumnType.NuméroGauche, 0.20, ContentAlignment.MiddleLeft, "");
+				yield return new ColumnMapper (ColumnType.TitreGauche,          0.60, ContentAlignment.MiddleLeft,  "Charges");
+				yield return new ColumnMapper (ColumnType.SoldeGauche,          0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "", true);
+				yield return new ColumnMapper (ColumnType.BudgetGauche,         0.20, ContentAlignment.MiddleRight, "");
 
 				yield return new ColumnMapper (ColumnType.Espace, 0.01, ContentAlignment.MiddleLeft, "", true);
 
-				yield return new ColumnMapper (ColumnType.NuméroDroite, 0.20, ContentAlignment.MiddleLeft,  "");
-				yield return new ColumnMapper (ColumnType.TitreDroite,  0.60, ContentAlignment.MiddleLeft,  "Produits");
-				yield return new ColumnMapper (ColumnType.SoldeDroite,  0.20, ContentAlignment.MiddleRight, "");
-
-				if (options.HasGraphics)
-				{
-					yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "", true);
-				}
-
-				if (options.BudgetEnable && this.optionsController != null)
-				{
-					yield return new ColumnMapper (ColumnType.BudgetDroite, 0.20, ContentAlignment.MiddleRight, this.optionsController.Options.BudgetColumnDescription);
-				}
+				yield return new ColumnMapper (ColumnType.NuméroDroite,         0.20, ContentAlignment.MiddleLeft,  "");
+				yield return new ColumnMapper (ColumnType.TitreDroite,          0.60, ContentAlignment.MiddleLeft,  "Produits");
+				yield return new ColumnMapper (ColumnType.SoldeDroite,          0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "", true);
+				yield return new ColumnMapper (ColumnType.BudgetDroite,         0.20, ContentAlignment.MiddleRight, "");
 			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			var options = this.dataAccessor.AccessorOptions as PPOptions;
+
+			this.ShowHideColumn (ColumnType.SoldeGraphiqueGauche, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.BudgetGauche,         options.BudgetEnable && this.optionsController != null);
+			this.ShowHideColumn (ColumnType.SoldeGraphiqueDroite, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.BudgetDroite,         options.BudgetEnable && this.optionsController != null);
+
+			this.SetColumnDescription (ColumnType.BudgetGauche, options.BudgetColumnDescription);
+			this.SetColumnDescription (ColumnType.BudgetDroite, options.BudgetColumnDescription);
 		}
 	}
 }

@@ -20,10 +20,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BalanceDataAccessor : AbstractDataAccessor
 	{
-		public BalanceDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, mainWindowController)
+		public BalanceDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
+			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
 		{
-			this.options = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.BalanceOptions", this.comptaEntity);
+			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.comptaEntity);
+			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -39,7 +41,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeD = 0;
 			decimal totalSoldeC = 0;
 
-			this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
+			Date? beginDate, endDate;
+			this.filterData.GetIntervalDates (out beginDate, out endDate);
+
+			//?this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
+			this.comptaEntity.PlanComptableUpdate (beginDate, endDate);
 
 			foreach (var compte in this.comptaEntity.PlanComptable.OrderBy (x => x.Numéro))
 			{

@@ -89,16 +89,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	sera remplacé par "20.03.2012".
 			if (e.OldFocus != null)
 			{
-				int column, line;
-				if (this.GetWidgetColumnLine (e.OldFocus.Name, out column, out line))
+				ColumnType columnType;
+				int line;
+				if (this.GetWidgetColumnLine (e.OldFocus.Name, out columnType, out line))
 				{
-					if (line < this.dataAccessor.EditionData.Count && column < this.columnMappers.Count)
+					if (line < this.dataAccessor.EditionData.Count && this.columnMappers.Where (x => x.Show && x.Column == columnType).Any ())
 					{
-						var mapper = this.columnMappers[column];
 						var field = e.OldFocus as AbstractTextField;
 						System.Diagnostics.Debug.Assert (field != null);
 
-						var currentText = this.dataAccessor.GetEditionText (line, mapper.Column);
+						var currentText = this.dataAccessor.GetEditionText (line, columnType);
 
 						if (field.FormattedText != currentText)
 						{
@@ -124,11 +124,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (focused != null)
 				{
-					int column, line;
-					if (this.GetWidgetColumnLine (focused.Name, out column, out line))
+					ColumnType columnType;
+					int line;
+					if (this.GetWidgetColumnLine (focused.Name, out columnType, out line))
 					{
-						this.arrayController.HiliteHeaderColumn (column);
-						this.selectedColumn = column;
+						this.arrayController.HiliteHeaderColumn (columnType);
+						this.selectedColumn = columnType;
 
 						if (this.selectedLine != line)
 						{
@@ -144,7 +145,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 
-				this.arrayController.HiliteHeaderColumn (-1);
+				this.arrayController.HiliteHeaderColumn (ColumnType.None);
 			}
 		}
 
@@ -349,11 +350,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
 			{
-				for (int column = 0; column < this.columnMappers.Count; column++)
+				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
-					var mapper = this.columnMappers[column];
-					var field = this.GetTextField (column, line);
-
+					var field = this.GetTextField (mapper.Column, line);
 					field.FormattedText = this.dataAccessor.EditionData[line].GetText (mapper.Column);
 				}
 			}
@@ -366,11 +365,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Effectue le transfert widgets éditables -> this.dataAccessor.EditionData.
 			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
 			{
-				for (int column = 0; column < this.columnMappers.Count; column++)
+				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
-					var mapper = this.columnMappers[column];
-					var field = this.GetTextField (column, line);
-
+					var field = this.GetTextField (mapper.Column, line);
 					this.dataAccessor.EditionData[line].SetText (mapper.Column, field.FormattedText);
 				}
 			}
@@ -402,11 +399,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FooterValidate(int line)
 		{
-			int columnCount = this.columnMappers.Count;
-
-			for (int column = 0; column < columnCount; column++)
+			int column = 0;
+			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				var mapper = this.columnMappers[column];
 				var field = this.footerFields[line][column];
 				var text = field.FormattedText;
 
@@ -442,6 +437,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.hasError = true;
 					}
 				}
+
+				column++;
 			}
 		}
 
@@ -537,7 +534,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateFooterGeometry()
 		{
-			int columnCount = this.columnMappers.Count;
+			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
 
 			for (int line = 0; line < this.footerBoxes.Count; line++)
 			{
@@ -600,14 +597,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected string GetWidgetName(int column, int line)
+		protected string GetWidgetName(ColumnType columnType, int line)
 		{
-			return string.Concat ("WidgwetComptatiliéDaniel.", line.ToString (System.Globalization.CultureInfo.InvariantCulture), ".", column.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			return string.Concat ("WidgwetComptatiliéDaniel.", line.ToString (System.Globalization.CultureInfo.InvariantCulture), ".", columnType.ToString ());
 		}
 
-		protected bool GetWidgetColumnLine(string name, out int column, out int line)
+		protected bool GetWidgetColumnLine(string name, out ColumnType columnType, out int line)
 		{
-			column = -1;
+			columnType = ColumnType.None;
 			line = -1;
 
 			if (string.IsNullOrEmpty (name) || !name.StartsWith ("WidgwetComptatiliéDaniel."))
@@ -626,7 +623,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return false;
 			}
 
-			if (!int.TryParse (part[2], out column))
+			if (!System.Enum.TryParse<ColumnType> (part[2], out columnType))
 			{
 				return false;
 			}
@@ -651,7 +648,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected FrameBox									parent;
 		protected System.Action								updateArrayContentAction;
 		protected BottomToolbarController					bottomToolbarController;
-		protected int										selectedColumn;
+		protected ColumnType								selectedColumn;
 		protected int										selectedLine;
 		protected bool										dirty;
 		protected bool										hasError;

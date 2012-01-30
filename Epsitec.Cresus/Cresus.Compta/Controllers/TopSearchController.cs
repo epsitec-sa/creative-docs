@@ -22,15 +22,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère la barre d'outil supérieure de recherche rapide pour la comptabilité.
 	/// </summary>
-	public class TopSearchingController
+	public class TopSearchController
 	{
-		public TopSearchingController(ComptaEntity comptaEntity, BusinessContext businessContext, List<ColumnMapper> columnMappers)
+		public TopSearchController(ComptaEntity comptaEntity, BusinessContext businessContext, AbstractDataAccessor dataAccessor)
 		{
 			this.comptaEntity    = comptaEntity;
 			this.businessContext = businessContext;
-			this.columnMappers   = columnMappers;
-
-			this.searchingData = new SearchingData ();
+			this.dataAccessor    = dataAccessor;
 		}
 
 
@@ -49,11 +47,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (this.showPanel)
 					{
-						this.searchingController.SetFocus ();
+						this.searchController.SetFocus ();
 					}
 					else
 					{
-						this.searchingController.SearchClear ();
+						this.searchController.SearchClear ();
 					}
 				}
 			}
@@ -65,7 +63,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = TopSearchingController.toolbarHeight,
+				PreferredHeight = TopSearchController.toolbarHeight,
 				DrawFullFrame   = true,
 				BackColor       = Color.FromHexa ("ffffcc"),  // jaune pastel
 				Dock            = DockStyle.Top,
@@ -74,31 +72,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchingController = new SearchingController (this.comptaEntity, this.searchingData, this.columnMappers, false);
-			this.searchingController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
+			this.searchController = new SearchController (this.comptaEntity, this.dataAccessor.SearchData, this.dataAccessor.ColumnMappers, false);
+			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
 
-		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-			this.columnMappers = columnMappers;
-
-			this.searchingController.UpdateColumns (columnMappers);
+			this.searchController.UpdateColumns ();
 		}
 
 
-		public SearchingData SearchingData
+		public void SetSearchCount(int dataCount, int? count, int? locator)
 		{
-			get
-			{
-				return this.searchingData;
-			}
-		}
-
-		public void SetSearchingCount(int dataCount, int? count, int? locator)
-		{
-			this.searchingController.SetSearchingCount (dataCount, count, locator);
+			this.searchController.SetSearchCount (dataCount, count, locator);
 		}
 
 
@@ -106,11 +94,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly ComptaEntity			comptaEntity;
 		private readonly BusinessContext		businessContext;
-		private readonly SearchingData			searchingData;
+		private readonly AbstractDataAccessor	dataAccessor;
 
-		private List<ColumnMapper>				columnMappers;
 		private FrameBox						toolbar;
-		private SearchingController				searchingController;
+		private SearchController				searchController;
 		protected bool							showPanel;
 	}
 }

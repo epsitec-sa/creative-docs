@@ -21,20 +21,20 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Controllers
 {
-	public class SearchingController
+	public class SearchController
 	{
-		public SearchingController(ComptaEntity comptaEntity, SearchingData data, List<ColumnMapper> columnMappers, bool isFilter)
+		public SearchController(ComptaEntity comptaEntity, SearchData data, List<ColumnMapper> columnMappers, bool isFilter)
 		{
 			this.comptaEntity  = comptaEntity;
 			this.data          = data;
 			this.columnMappers = columnMappers;
 			this.isFilter      = isFilter;
 
-			this.tabControllers = new List<SearchingTabController> ();
+			this.tabControllers = new List<SearchTabController> ();
 
 			if (this.data.TabsData.Count == 0)
 			{
-				this.data.TabsData.Add (new SearchingTabData (this.comptaEntity));
+				this.data.TabsData.Add (new SearchTabData (this.comptaEntity));
 			}
 		}
 
@@ -81,14 +81,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void UpdateColumns(List<ColumnMapper> columnMappers)
+		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-			this.columnMappers = columnMappers;
-
 			foreach (var controller in this.tabControllers)
 			{
-				controller.UpdateColumns (columnMappers);
+				controller.UpdateColumns ();
 			}
 		}
 
@@ -137,7 +135,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchingTabController (this.data.TabsData[i], this.columnMappers, this.isFilter);
+				var controller = new SearchTabController (this.data.TabsData[i], this.columnMappers, this.isFilter);
 
 				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction);
 				controller.Index = i;
@@ -275,7 +273,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchStartAction ();
 		}
 
-		public void SetSearchingCount(int dataCount, int? count, int? locator)
+		public void SetSearchCount(int dataCount, int? count, int? locator)
 		{
 			this.BigDataInterface = (dataCount >= 1000);  // limite arbitraire au-delà de laquelle les recherches deviennent trop lentes !
 
@@ -321,7 +319,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (index == 0)
 			{
-				this.data.TabsData.Add (new SearchingTabData (this.comptaEntity));
+				this.data.TabsData.Add (new SearchTabData (this.comptaEntity));
 			}
 			else
 			{
@@ -359,11 +357,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private readonly ComptaEntity					comptaEntity;
-		private readonly SearchingData					data;
-		private readonly List<SearchingTabController>	tabControllers;
+		private readonly SearchData					data;
+		private readonly List<ColumnMapper>				columnMappers;
+		private readonly List<SearchTabController>	tabControllers;
 		private readonly bool							isFilter;
 
-		private List<ColumnMapper>						columnMappers;
 		private bool									bigDataInterface;
 		private System.Action							searchStartAction;
 		private System.Action<int>						searchNextAction;

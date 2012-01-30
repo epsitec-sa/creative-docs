@@ -29,8 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public BalanceController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new BalanceDataAccessor (this.businessContext, this.comptaEntity, this.mainWindowController);
-			this.InitializeColumnMapper ();
+			this.dataAccessor = new BalanceDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
 		}
 
 
@@ -40,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
-			this.InitializeColumnMapper ();
+			this.UpdateColumnMappers ();
 		}
 
 		protected override void UpdateTitle()
@@ -82,25 +81,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override FormattedText GetArrayText(int row, int column)
+		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			var mapper = this.columnMappers[column];
-			var text = this.dataAccessor.GetText (row, mapper.Column);
+			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as BalanceData;
 
-			if (mapper.Column == ColumnType.Titre)
+			if (columnType == ColumnType.Titre)
 			{
 				for (int i = 0; i < data.Niveau; i++)
 				{
 					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
 				}
 			}
-			else if (mapper.Column == ColumnType.Débit ||
-					 mapper.Column == ColumnType.Crédit ||
-					 mapper.Column == ColumnType.SoldeDébit ||
-					 mapper.Column == ColumnType.SoldeCrédit ||
-					 mapper.Column == ColumnType.Budget)
+			else if (columnType == ColumnType.Débit ||
+					 columnType == ColumnType.Crédit ||
+					 columnType == ColumnType.SoldeDébit ||
+					 columnType == ColumnType.SoldeCrédit ||
+					 columnType == ColumnType.Budget)
 			{
 				for (int i = 0; i < data.Niveau; i++)
 				{

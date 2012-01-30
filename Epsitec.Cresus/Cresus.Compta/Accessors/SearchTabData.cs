@@ -13,19 +13,19 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Accessors
 {
-	public class SearchingTabData
+	public class SearchTabData
 	{
-		public SearchingTabData(ComptaEntity comptaEntity)
+		public SearchTabData(ComptaEntity comptaEntity)
 		{
 			this.comptaEntity = comptaEntity;
-			this.searchingText = new SearchingText (this.comptaEntity);
+			this.searchText = new SearchText (this.comptaEntity);
 		}
 
-		public SearchingText SearchingText
+		public SearchText SearchText
 		{
 			get
 			{
-				return this.searchingText;
+				return this.searchText;
 			}
 		}
 
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Clear()
 		{
-			this.searchingText.Clear ();
+			this.searchText.Clear ();
 			this.Column = ColumnType.None;
 		}
 
@@ -45,12 +45,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.searchingText == null || this.searchingText.IsEmpty;
+				return this.searchText == null || this.searchText.IsEmpty;
 			}
 		}
 
 
 		private readonly ComptaEntity		comptaEntity;
-		private readonly SearchingText		searchingText;
+		private readonly SearchText			searchText;
 	}
 }
