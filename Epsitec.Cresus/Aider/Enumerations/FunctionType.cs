@@ -6,13 +6,15 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider.eCH
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum PersonNationalityStatus
+	public enum FunctionType
 	{
-		Unknown = 0,
-		None = 1,
-		Defined = 1,
+		None = 0,
+
+		GroupParticipant,
+		PlacePerson,
+		LegalPersonContact,
 	}
 }

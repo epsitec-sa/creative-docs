@@ -8,7 +8,6 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using System.Linq;
 
@@ -50,44 +49,61 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public FormattedText GetAddressSummary()
+		{
+			return this.Address.GetSummary ();
+		}
+
+
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
-			var members = new List<AiderPersonEntity> ();
+			var members = new HashSet<AiderPersonEntity> ();
 
-			value = members.AsReadOnly ();
-
-			var example = new AiderPersonEntity ()
+			var example1 = new AiderPersonEntity ()
 			{
 				Household1 = this,
 			};
 
-			DataContext dataContext = null;
-			
+			var example2 = new AiderPersonEntity ()
+			{
+				Household2 = this,
+			};
+
 			// TODO Obtain the DataContext.
 
+			DataContext dataContext = null;
+
+			members.AddRange (this.Blabla (dataContext, example1));
+			members.AddRange (this.Blabla (dataContext, example2));
+
+			value = members.AsReadOnlyCollection ();
+		}
+
+
+		private IEnumerable<AiderPersonEntity> Blabla(DataContext dataContext, AiderPersonEntity example)
+		{
 			if (dataContext == null)
 			{
 				// TMP stuff to have something in the collection.
 
+				List<AiderPersonEntity> result = new List<AiderPersonEntity> ();
+
 				if (this.Head1.UnwrapNullEntity () != null)
 				{
-					members.Add (this.Head1);
+					result.Add (this.Head1);
 				}
 
 				if (this.Head2.UnwrapNullEntity () != null)
 				{
-					members.Add (this.Head2);
+					result.Add (this.Head2);
 				}
 
-				return;
+				return result;
 			}
 
-			// TODO Add ordering ?
-			var result = dataContext.GetByExample (example);
-
-			members.AddRange (result);
+			return dataContext.GetByExample (example);
 		}
-	
-	
+
+
 	}
 }

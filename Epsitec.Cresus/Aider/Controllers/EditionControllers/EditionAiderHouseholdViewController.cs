@@ -1,7 +1,6 @@
 ﻿using Epsitec.Aider.Entities;
-
 using Epsitec.Cresus.Bricks;
-
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
@@ -12,10 +11,16 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+					.Field (x => x.HouseholdMrMrs)
 					.Field (x => x.Head1)
 					.Field (x => x.Head2)
-					.Field (x => x.Address)
 				.End ();
+
+			wall.AddBrick ()
+				.Include (x => x.Address);
+
+			wall.AddBrick (x => x.Comment)
+				.Attribute (BrickMode.AutoCreateNullEntity);
 		}
 	}
 }

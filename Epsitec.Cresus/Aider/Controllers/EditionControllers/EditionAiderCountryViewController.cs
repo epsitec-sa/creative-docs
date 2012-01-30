@@ -19,7 +19,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.Input ()
 					.Field (x => x.IsoCode)
 					.Field (x => x.Name)
-				.End ();					
+				.End ();
 		}
 
 

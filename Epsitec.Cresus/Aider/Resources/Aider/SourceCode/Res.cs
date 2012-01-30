@@ -659,12 +659,108 @@ namespace Epsitec.Aider
 					{
 					}
 					
+					//	designer:cap/LVGB02
+					public static global::Epsitec.Common.Types.Caption Anglican
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 11));
+						}
+					}
+					//	designer:cap/LVGG02
+					public static global::Epsitec.Common.Types.Caption Buddhist
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 16));
+						}
+					}
+					//	designer:cap/LVG902
+					public static global::Epsitec.Common.Types.Caption Catholic
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 9));
+						}
+					}
+					//	designer:cap/LVGC02
+					public static global::Epsitec.Common.Types.Caption Darbyst
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 12));
+						}
+					}
+					//	designer:cap/LVGD02
+					public static global::Epsitec.Common.Types.Caption Evangelic
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 13));
+						}
+					}
+					//	designer:cap/LVGH02
+					public static global::Epsitec.Common.Types.Caption Israelite
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 17));
+						}
+					}
+					//	designer:cap/LVGJ02
+					public static global::Epsitec.Common.Types.Caption JehovahsWitness
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 19));
+						}
+					}
+					//	designer:cap/LVGI02
+					public static global::Epsitec.Common.Types.Caption Muslim
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 18));
+						}
+					}
+					//	designer:cap/LVGE02
+					public static global::Epsitec.Common.Types.Caption NewApostolic
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 14));
+						}
+					}
+					//	designer:cap/LVGK02
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 20));
+						}
+					}
+					//	designer:cap/LVGA02
+					public static global::Epsitec.Common.Types.Caption Orthodox
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 10));
+						}
+					}
 					//	designer:cap/LVAL5
 					public static global::Epsitec.Common.Types.Caption Protestant
 					{
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 181));
+						}
+					}
+					//	designer:cap/LVGF02
+					public static global::Epsitec.Common.Types.Caption SalvationArmy
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 80, 15));
 						}
 					}
 					//	designer:cap/LVAK5
@@ -1368,6 +1464,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress4 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 307);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
+				//	designer:cap/LVGL02
+				public static readonly global::Epsitec.Common.Support.Druid Children = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 21);
 				//	designer:cap/LVAM2
 				public static readonly global::Epsitec.Common.Support.Druid CodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 86);
 				//	designer:cap/LVAI5
@@ -1390,12 +1488,16 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
 				//	designer:cap/LVAG9
 				public static readonly global::Epsitec.Common.Support.Druid Household2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 304);
+				//	designer:cap/LVGN02
+				public static readonly global::Epsitec.Common.Support.Druid Housemates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 23);
 				//	designer:cap/LVAO7
 				public static readonly global::Epsitec.Common.Support.Druid Language = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 248);
 				//	designer:cap/LVAT
 				public static readonly global::Epsitec.Common.Support.Druid MrMrs = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 29);
 				//	designer:cap/LVAL2
 				public static readonly global::Epsitec.Common.Support.Druid OriginalName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
+				//	designer:cap/LVGM02
+				public static readonly global::Epsitec.Common.Support.Druid Parents = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 22);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
 				//	designer:cap/LVAU

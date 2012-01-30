@@ -3,17 +3,12 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider.eCH
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum DatePrecision
+	public enum GroupLevel
 	{
-		None = 0,
-		YearMonthDay = 1,
-		YearMonth = 2,
-		Year = 3,
+		Default = 0,
 	}
 }

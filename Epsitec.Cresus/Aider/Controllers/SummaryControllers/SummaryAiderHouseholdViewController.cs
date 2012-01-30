@@ -12,11 +12,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
 			wall.AddBrick ();
-
-			wall.AddBrick (x => x.Members)
-				.OfType<AiderPersonEntity> ()
-				.Template ()
-				.End ();
 		}
 	}
 }

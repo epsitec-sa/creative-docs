@@ -1,5 +1,5 @@
-﻿using Epsitec.Common.Types;
-
+﻿using Epsitec.Aider.Enumerations;
+using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 
 

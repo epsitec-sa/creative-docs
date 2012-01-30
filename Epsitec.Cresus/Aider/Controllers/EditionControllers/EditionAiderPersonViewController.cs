@@ -34,16 +34,16 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.eCH_Person.PersonOfficialName)
 					.Field (x => x.OriginalName)
 					.Field (x => x.eCH_Person.DateOfBirth)
+					.Field (x => x.DateOfDeath)
 					.Field (x => x.eCH_Person.PersonSex)
-					.Field (x => x.Title)
 					.Field (x => x.MrMrs)
+					.Field (x => x.Title)
 					.Field (x => x.eCH_Person.AdultMaritalStatus)
 					.Field (x => x.Confession)
 					.Field (x => x.Profession)
 					.Field (x => x.Language)
 					.Field (x => x.eCH_Person.NationalityCountryCode)
 					.Field (x => x.eCH_Person.Origins)
-					.Field (x => x.Comment)
 				.End ();
 		}
 
@@ -59,10 +59,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.OriginalName)
 					.Field (x => x.eCH_Person.DateOfBirth)
 						.ReadOnly ()
+					.Field (x => x.DateOfDeath)
 					.Field (x => x.eCH_Person.PersonSex)
 						.ReadOnly ()
-					.Field (x => x.Title)
 					.Field (x => x.MrMrs)
+					.Field (x => x.Title)
 					.Field (x => x.eCH_Person.AdultMaritalStatus)
 						.ReadOnly ()
 					.Field (x => x.Confession)
@@ -72,7 +73,6 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.eCH_Person.Origins)
 						.ReadOnly ()
-					.Field (x => x.Comment)
 				.End ();
 		}
 

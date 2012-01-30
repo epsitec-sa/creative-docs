@@ -5,8 +5,6 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {

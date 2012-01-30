@@ -3,14 +3,13 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum EventType
+	public enum Language
 	{
-		None = 0,
+		French		= 0,
+		German		= 1,
 	}
 }

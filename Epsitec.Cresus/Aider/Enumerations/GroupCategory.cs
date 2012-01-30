@@ -6,16 +6,14 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider.eCH
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum HouseholdMrMrs
+	public enum GroupCategory
 	{
 		None = 0,
-		Auto = 1,
 
-		MonsieurEtMadame = 10,
-		MadameEtMonsieur = 11,
-		Famille = 12,
+		SystemDefined,
+		Customizable,
 	}
 }

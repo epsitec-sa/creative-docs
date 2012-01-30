@@ -5,8 +5,8 @@ using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	
-	
+
+
 	public sealed class SummaryAiderPersonRelationshipViewController : SummaryViewController<AiderPersonRelationshipEntity>
 	{
 

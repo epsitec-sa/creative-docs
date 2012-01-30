@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
 	public enum GroupType

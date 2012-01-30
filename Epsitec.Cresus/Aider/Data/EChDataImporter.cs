@@ -1,11 +1,10 @@
 ﻿using Epsitec.Aider.Entities;
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
-
 using Epsitec.Cresus.DataLayer.Context;
 
 using System;
@@ -15,7 +14,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.Linq;
-using Epsitec.Aider.eCH;
 
 
 namespace Epsitec.Aider.Data
@@ -33,9 +31,9 @@ namespace Epsitec.Aider.Data
 
 			// NOTE This dictionary will store the mapping between the eChPersonIds and the entity
 			// key for the entities that have been processed and saved to the database.
-			
+
 			var eChPersonIdToEntityKey = new Dictionary<string, EntityKey> ();
-			
+
 			foreach (var batch in EChDataImporter.GetBatches (eChReportedPersons, batchSize))
 			{
 				BusinessContext businessContext = null;
@@ -49,7 +47,7 @@ namespace Epsitec.Aider.Data
 					// database.
 
 					var eChPersonIdToEntity = new Dictionary<string, AiderPersonEntity> ();
-					
+
 					foreach (var eChReportedPerson in batch)
 					{
 						EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson);
@@ -84,7 +82,7 @@ namespace Epsitec.Aider.Data
 
 
 		private static IEnumerable<IEnumerable<EChReportedPerson>> GetBatches(IList<EChReportedPerson> eChReportedPersons, int batchSize)
-		{		
+		{
 			for (int index = 0; index < eChReportedPersons.Count; index += batchSize)
 			{
 				yield return EChDataImporter.GetBatch (eChReportedPersons, index, batchSize);
@@ -123,7 +121,7 @@ namespace Epsitec.Aider.Data
 			if (eChAdult1 != null)
 			{
 				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
-				
+
 				eChReportedPersonEntity.Adult1 = result.Item1;
 				aiderHouseHold.Head1 = result.Item2;
 			}
@@ -168,13 +166,14 @@ namespace Epsitec.Aider.Data
 				aiderPersonEntity = (AiderPersonEntity) businessContext.DataContext.ResolveEntity (entityKey);
 			}
 
-
 			if (aiderPersonEntity != null)
 			{
+				aiderPersonEntity.Household2 = houseHold;
+
 				var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
 				eChPersonEntity.ReportedPerson2 = eChReportedPersonEntity;
-				eChPersonEntity.Address2 = eChAddressEntity;				
+				eChPersonEntity.Address2 = eChAddressEntity;
 
 				return Tuple.Create (eChPersonEntity, aiderPersonEntity);
 			}
@@ -215,7 +214,7 @@ namespace Epsitec.Aider.Data
 			eChPersonEntity.AdultMaritalStatus = eChPerson.MaritalStatus;
 
 			eChPersonEntity.CreationDate = Date.Today;
-			eChPersonEntity.DataSource = eCH.DataSource.Government;
+			eChPersonEntity.DataSource = Enumerations.DataSource.Government;
 			eChPersonEntity.DeclarationStatus = PersonDeclarationStatus.Declared;
 			eChPersonEntity.RemovalReason = RemovalReason.None;
 

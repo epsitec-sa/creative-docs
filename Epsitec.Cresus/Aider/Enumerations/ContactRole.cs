@@ -3,19 +3,12 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum ValidationState
+	public enum ContactRole
 	{
-		Undefined = 0,
-
-		Valid = 1,
-		Pending = 2,
-		Invalid = 3,
-		Deleted = 4,
+		None = 0,
 	}
 }

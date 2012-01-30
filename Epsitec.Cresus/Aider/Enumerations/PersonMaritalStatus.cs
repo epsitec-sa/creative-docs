@@ -3,14 +3,19 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum GroupParticipantRole
+	public enum PersonMaritalStatus
 	{
 		None = 0,
+		Single = 1,
+		Married = 2,
+		Widowed = 3,
+		Divorced = 4,
+		Unmarried = 5,
+		Pacs = 6,
+		Dissolved = 7,
 	}
 }

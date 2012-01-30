@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.eCH;
+﻿using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 

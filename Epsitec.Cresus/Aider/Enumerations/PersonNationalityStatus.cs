@@ -3,16 +3,14 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider.eCH
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum DataSource
+	public enum PersonNationalityStatus
 	{
-		Undefined = 0,
-		Government = 1,
-
+		Unknown = 0,
+		None = 1,
+		Defined = 1,
 	}
 }

@@ -7,8 +7,8 @@ using Epsitec.Cresus.Core.Business;
 
 namespace Epsitec.Aider.Rules
 {
-	
-	
+
+
 	[BusinessRule]
 	internal class AiderPersonBusinessRules : GenericBusinessRule<AiderPersonEntity>
 	{
@@ -20,7 +20,7 @@ namespace Epsitec.Aider.Rules
 
 			var echPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
 			echPerson.CreationDate = Date.Today;
-			echPerson.DataSource = eCH.DataSource.Undefined;
+			echPerson.DataSource = Enumerations.DataSource.Undefined;
 
 			aiderPerson.eCH_Person = echPerson;
 
@@ -29,6 +29,12 @@ namespace Epsitec.Aider.Rules
 
 			var additionalAddress2 = businessContext.CreateEntity<AiderAddressEntity> ();
 			aiderPerson.AdditionalAddress2 = additionalAddress2;
+
+			var additionalAddress3 = businessContext.CreateEntity<AiderAddressEntity> ();
+			aiderPerson.AdditionalAddress3 = additionalAddress3;
+
+			var additionalAddress4 = businessContext.CreateEntity<AiderAddressEntity> ();
+			aiderPerson.AdditionalAddress4 = additionalAddress4;
 		}
 
 

@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
@@ -6,19 +7,20 @@ using Epsitec.Cresus.Core;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Aider.Tools;
 
 
 namespace Epsitec.Aider.Entities
 {
-	
-	
+
+
 	public partial class eCH_AddressEntity
 	{
 
 
 		public override FormattedText GetSummary()
 		{
-			var lines = this.GetConcanatedAddressLines("\n");
+			var lines = this.GetConcanatedAddressLines ("\n");
 
 			return TextFormatter.FormatText (lines);
 		}
@@ -43,9 +45,9 @@ namespace Epsitec.Aider.Entities
 		private IEnumerable<string> GetAddressLines()
 		{
 			yield return this.AddressLine1;
-			yield return string.Join (" ", this.Street, this.HouseNumber);
-			yield return string.Join (" ", this.SwissZipCode, this.Town);
-			yield return this.Country;
+			yield return StringUtils.Join (" ", this.Street, this.HouseNumber);
+			yield return StringUtils.Join (" ", this.SwissZipCode, this.Town);
+			yield return IsoCountryNames.Instance[this.Country];
 		}
 
 

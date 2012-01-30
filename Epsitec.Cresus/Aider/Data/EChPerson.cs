@@ -1,9 +1,10 @@
-﻿using Epsitec.Aider.eCH;
+﻿using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
 
 
 namespace Epsitec.Aider.Data

@@ -1,25 +1,27 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support;
+
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 
 
 namespace Epsitec.Aider.Entities
 {
-	
-	
+
+
 	public partial class AiderTownEntity
 	{
 
 
 		public override FormattedText GetSummary()
 		{
-			var text = string.Join
+			var text = StringUtils.Join
 			(
 				", ",
-				string.Join
+				StringUtils.Join
 				(
 					" ",
-					string.Join ("-", this.Country.IsoCode, this.SwissZipCode),
+					StringUtils.Join ("-", this.Country.IsoCode, this.ZipCode),
 					this.Name
 				),
 				this.Country.Name

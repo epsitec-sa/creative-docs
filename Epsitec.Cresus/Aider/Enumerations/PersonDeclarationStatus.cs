@@ -3,20 +3,15 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider.eCH
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum RemovalReason
+	public enum PersonDeclarationStatus
 	{
-		None = 0,
-
-		Unknown,
-
-		Deleted,
-		Departed,
-		Deceased,
+		Undefined = 0,
+		Declared = 1,
+		NotDeclared = 2,
+		Removed = 3,
 	}
 }

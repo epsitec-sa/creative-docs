@@ -3,15 +3,12 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum PersonConfession
+	public enum EventType
 	{
-		Unknown = 0,
-		Protestant = 1,
+		None = 0,
 	}
 }

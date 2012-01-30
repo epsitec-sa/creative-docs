@@ -3,17 +3,12 @@
 
 using Epsitec.Common.Types;
 
-using System.Collections.Generic;
-using System.Linq;
 
-namespace Epsitec.Aider
+namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum AddressType
+	public enum PlacePersonRole
 	{
-		Default      = 0,
-		Professional = 1,
-		Private      = 2,
-		Secondary    = 4,
+		None = 0,
 	}
 }

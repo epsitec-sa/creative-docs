@@ -7,8 +7,8 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-	
-	
+
+
 	public sealed class EditionAiderPersonRelationshipViewController : EditionViewController<AiderPersonRelationshipEntity>
 	{
 

@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.eCH;
+﻿using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -6,9 +6,6 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Linq;
-
-using System.Text.RegularExpressions;
 
 using System.Threading;
 
@@ -103,15 +100,15 @@ namespace Epsitec.Aider.Entities
 
 			int? year = null;
 			bool yearIsValid = (yearAsString == null)
-			    || (eCH_PersonEntity.ParseInt (yearAsString, out year) &&  eCH_PersonEntity.IsYearValid (year.Value));
+                || (eCH_PersonEntity.ParseInt (yearAsString, out year) &&  eCH_PersonEntity.IsYearValid (year.Value));
 
 			int? month = null;
 			bool monthIsValid = (monthAsString == null)
-			    || (eCH_PersonEntity.ParseInt (monthAsString, out month) && eCH_PersonEntity.IsMonthValid (month.Value));
+                || (eCH_PersonEntity.ParseInt (monthAsString, out month) && eCH_PersonEntity.IsMonthValid (month.Value));
 
 			int? day = null;
 			bool dayIsValid = (dayAsString == null)
-			    || (eCH_PersonEntity.ParseInt (dayAsString, out day) && eCH_PersonEntity.IsDayValid (day.Value) && eCH_PersonEntity.IsDateValid (year.Value, month.Value, day.Value));
+                || (eCH_PersonEntity.ParseInt (dayAsString, out day) && eCH_PersonEntity.IsDayValid (day.Value) && eCH_PersonEntity.IsDateValid (year.Value, month.Value, day.Value));
 
 			if (!yearIsValid || !monthIsValid || !dayIsValid)
 			{

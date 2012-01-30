@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Aider.Enumerations;
+
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
@@ -6,6 +8,7 @@ using Epsitec.Cresus.Core;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Common.Support;
 
 
 namespace Epsitec.Aider.Entities
@@ -20,10 +23,10 @@ namespace Epsitec.Aider.Entities
 		{
 			var parts = new List<FormattedText> ()
 			{
-				this.GetTypeText (),
 				this.GetAddressText (),
 				this.GetPhonesText (),
 				this.GetEmailText (),
+				this.GetWebsiteText (),
 			};
 
 			var texts = parts.Where (p => !p.IsNullOrWhiteSpace);
@@ -39,7 +42,7 @@ namespace Epsitec.Aider.Entities
 				?? this.Phone2
 				?? this.Email;
 
-			var part2 = this.GetTypeText (this.Type);
+			var part2 = this.Type.AsText ();
 
 			if (part1 == null)
 			{
@@ -57,44 +60,51 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetTypeText()
-		{
-			return this.GetLabeledText ("Type d'adresse", this.GetTypeText (this.Type));
-		}
-
-
 		private FormattedText GetAddressText()
 		{
-			return this.GetLabeledText ("Addresse", this.GetAddressLines ());
+			return this.GetLabeledText ("Addresse postale", this.GetAddressLines ());
 		}
 
 
-		private IEnumerable<string> GetAddressLines()
+		public IEnumerable<string> GetAddressLines()
 		{
 			yield return this.AddressLine1;
-			yield return string.Join (" ", this.Street, this.HouseNumber, this.HouseNumberComplement);
+			yield return StringUtils.Join (" ", this.Street, this.HouseNumber, this.HouseNumberComplement);
 			yield return this.PostBox;
-			yield return string.Join (" ", string.Join ("-", this.Town.Country.IsoCode, this.Town.SwissZipCode), this.Town.Name);
+			yield return StringUtils.Join (" ", StringUtils.Join ("-", this.Town.Country.IsoCode, this.Town.ZipCode), this.Town.Name);
 			yield return this.Town.Country.Name;
 		}
 
 
 		private FormattedText GetPhonesText()
 		{
-			return this.GetLabeledText ("Téléphones", this.GetPhoneLines ());
+			return this.GetLabeledText ("Numéros de téléphones", this.GetPhones ());
 		}
 
 
-		private IEnumerable<string> GetPhoneLines()
+		public IEnumerable<string> GetPhones()
 		{
-			yield return this.Phone1;
-			yield return this.Phone2;
+			if (!this.Phone1.IsNullOrWhiteSpace ())
+			{
+				yield return this.Phone1;
+			}
+
+			if (!this.Phone2.IsNullOrWhiteSpace ())
+			{
+				yield return this.Phone2;
+			}
 		}
 
 
 		private FormattedText GetEmailText()
 		{
-			return this.GetLabeledText ("Addresse email", this.Email);
+			return this.GetLabeledText ("Addresse éléctronique", this.Email);
+		}
+
+
+		private FormattedText GetWebsiteText()
+		{
+			return this.GetLabeledText ("Site internet", this.Web);
 		}
 
 
