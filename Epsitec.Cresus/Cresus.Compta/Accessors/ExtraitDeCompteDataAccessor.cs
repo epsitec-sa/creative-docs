@@ -25,14 +25,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.ExtraitDeCompte.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.ExtraitDeCompte.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}
 
 
+		public override void FilterUpdate()
+		{
+			Date? beginDate, endDate;
+			this.filterData.GetIntervalDates (out beginDate, out endDate);
+
+			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
+			{
+				this.UpdateAfterOptionsChanged ();
+			}
+
+			base.FilterUpdate ();
+		}
+
 		public override void UpdateAfterOptionsChanged()
 		{
-			this.readonlyData.Clear ();
+			this.readonlyAllData.Clear ();
 			this.MinMaxClear ();
 
 			FormattedText filter = this.Options.NuméroCompte;
@@ -41,15 +55,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
+			this.filterData.GetIntervalDates (out this.lastBeginDate, out this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
+
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();
 
 			decimal solde       = 0;
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
 
-			foreach (var écriture in this.comptaEntity.Journal.OrderBy (x => x.Date))
+			foreach (var écriture in this.comptaEntity.Journal)
 			{
-				if (!this.options.DateInRange (écriture.Date))
+				if (!SearchData.DateInRange (écriture.Date, this.lastBeginDate, this.lastEndDate))
 				{
 					continue;
 				}
@@ -72,15 +89,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 					totalDébit   += écriture.Montant;
 
 					if (compte != null &&
-						(compte.Catégorie == CatégorieDeCompte.Passif) ||
-						(compte.Catégorie == CatégorieDeCompte.Produit))
+						(compte.Catégorie == CatégorieDeCompte.Passif ||
+						 compte.Catégorie == CatégorieDeCompte.Produit))
 					{
 						solde = -solde;
 					}
 
 					data.Solde = solde;
 
-					this.readonlyData.Add (data);
+					this.readonlyAllData.Add (data);
 				}
 
 				if (crédit)
@@ -98,15 +115,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 					totalCrédit  += écriture.Montant;
 
 					if (compte != null &&
-						(compte.Catégorie == CatégorieDeCompte.Passif) ||
-						(compte.Catégorie == CatégorieDeCompte.Produit))
+						(compte.Catégorie == CatégorieDeCompte.Passif ||
+						 compte.Catégorie == CatégorieDeCompte.Produit))
 					{
 						solde = -solde;
 					}
 
 					data.Solde = solde;
 
-					this.readonlyData.Add (data);
+					this.readonlyAllData.Add (data);
 				}
 
 				this.SetMinMaxValue (solde);
@@ -118,13 +135,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new ExtraitDeCompteData ();
 
-				data.Libellé  = "Mouvement";
-				data.Débit    = totalDébit;
-				data.Crédit   = totalCrédit;
-				data.IsItalic = true;
+				data.Libellé       = "Mouvement";
+				data.Débit         = totalDébit;
+				data.Crédit        = totalCrédit;
+				data.IsItalic      = true;
+				data.NeverFiltered = true;
 
-				this.readonlyData.Add (data);
+				this.readonlyAllData.Add (data);
 			}
+
+			this.FilterUpdate ();
 		}
 
 

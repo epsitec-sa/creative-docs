@@ -118,10 +118,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.NuméroGauche, 0.20, ContentAlignment.MiddleLeft, "");
+				yield return new ColumnMapper (ColumnType.NuméroGauche,         0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (ColumnType.TitreGauche,          0.60, ContentAlignment.MiddleLeft,  "Actif");
 				yield return new ColumnMapper (ColumnType.SoldeGauche,          0.20, ContentAlignment.MiddleRight, "");
-				yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "", true);
+				yield return new ColumnMapper (ColumnType.SoldeGraphiqueGauche, 0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
 				yield return new ColumnMapper (ColumnType.BudgetGauche,         0.20, ContentAlignment.MiddleRight, "");
 
 				yield return new ColumnMapper (ColumnType.Espace, 0.01, ContentAlignment.MiddleLeft, "", true);
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.NuméroDroite,         0.20, ContentAlignment.MiddleLeft,  "");
 				yield return new ColumnMapper (ColumnType.TitreDroite,          0.60, ContentAlignment.MiddleLeft,  "Passif");
 				yield return new ColumnMapper (ColumnType.SoldeDroite,          0.20, ContentAlignment.MiddleRight, "");
-				yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "", true);
+				yield return new ColumnMapper (ColumnType.SoldeGraphiqueDroite, 0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
 				yield return new ColumnMapper (ColumnType.BudgetDroite,         0.20, ContentAlignment.MiddleRight, "");
 			}
 		}

@@ -44,7 +44,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateEditionUI (this.toolbar, optionsChanged);
-			this.CreateDatesUI (this.toolbar, optionsChanged);
 		}
 
 		private void CreateEditionUI(FrameBox parent, System.Action optionsChanged)
@@ -66,7 +65,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			FrameBox container;
 			AbstractTextField field;
-			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x)).OrderBy (x => x.Numéro);
+			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
 			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
 			UIBuilder.CreateAutoCompleteTextField (frame, comptes, out container, out field);
 			field.FormattedText = this.NuméroCompte;

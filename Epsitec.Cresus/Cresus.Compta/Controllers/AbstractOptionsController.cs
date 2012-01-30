@@ -129,126 +129,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		#region Dates
-		protected FrameBox CreateDatesUI(FrameBox parent, System.Action optionsChanged)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 5, 0),
-				TabIndex        = ++this.tabIndex,
-			};
-
-			new StaticText
-			{
-				Parent         = frame,
-				FormattedText  = "Depuis le",
-				PreferredWidth = 64,
-				Dock           = DockStyle.Left,
-			};
-
-			this.fieldDateDébut = new TextFieldEx
-			{
-				Parent                       = frame,
-				PreferredWidth               = 100,
-				PreferredHeight              = 20,
-				FormattedText                = this.options.DateDébut.HasValue ? this.options.DateDébut.ToString () : FormattedText.Empty,
-				Dock                         = DockStyle.Left,
-				Margins                      = new Margins (0, 20, 0, 0),
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-				TabIndex                     = ++this.tabIndex,
-			};
-
-			new StaticText
-			{
-				Parent         = frame,
-				FormattedText  = "Jusqu'au",
-				PreferredWidth = 64,
-				Dock           = DockStyle.Left,
-			};
-
-			this.fieldDateFin = new TextFieldEx
-			{
-				Parent                       = frame,
-				PreferredWidth               = 100,
-				PreferredHeight              = 20,
-				FormattedText                = this.options.DateFin.HasValue ? this.options.DateFin.ToString () : FormattedText.Empty,
-				Dock                         = DockStyle.Left,
-				Margins                      = new Margins (0, 20, 0, 0),
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-				TabIndex                     = ++this.tabIndex,
-			};
-
-			this.clearButton = new GlyphButton
-			{
-				Parent        = frame,
-				GlyphShape    = GlyphShape.Close,
-				PreferredSize = new Size (20, 20),
-				Dock          = DockStyle.Left,
-				TabIndex      = ++this.tabIndex,
-			};
-
-			this.fieldDateDébut.EditionAccepted += delegate
-			{
-				this.CheckDate (this.fieldDateDébut, x => this.options.DateDébut = x, optionsChanged);
-			};
-
-			this.fieldDateFin.EditionAccepted += delegate
-			{
-				this.CheckDate (this.fieldDateFin, x => this.options.DateFin = x, optionsChanged);
-			};
-
-			this.clearButton.Clicked += delegate
-			{
-				this.fieldDateDébut.FormattedText = null;
-				this.fieldDateFin.FormattedText   = null;
-				this.options.DateDébut = null;
-				this.options.DateFin   = null;
-				this.UpdateClearButton ();
-				optionsChanged ();
-			};
-
-			ToolTip.Default.SetToolTip (this.fieldDateDébut, "Filtre depuis cette date (inclus)");
-			ToolTip.Default.SetToolTip (this.fieldDateFin,   "Filtre jusqu'à cette date (inclus)");
-			ToolTip.Default.SetToolTip (this.clearButton,    "Annule le filtre");
-
-			this.UpdateClearButton ();
-
-			return frame;
-		}
-
-		private delegate void SetDate(Date? date);
-
-		private void CheckDate(TextFieldEx field, SetDate setDate, System.Action optionsChanged)
-		{
-			Date? date;
-			if (this.comptaEntity.ParseDate (field.FormattedText, out date))
-			{
-				setDate (date);
-				field.FormattedText = date.HasValue ? date.ToString () : FormattedText.Empty;
-				field.SetError (false);
-				this.UpdateClearButton ();
-				optionsChanged ();
-			}
-			else
-			{
-				field.SetError (true);
-			}
-		}
-
-		private void UpdateClearButton()
-		{
-			this.clearButton.Enable = this.options.DateDébut.HasValue || this.options.DateFin.HasValue;
-		}
-		#endregion
-
-
 		#region Budget
 		protected FrameBox CreateBudgetUI(FrameBox parent, System.Action optionsChanged)
 		{
@@ -463,10 +343,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected int											tabIndex;
 		protected FrameBox										toolbar;
-
-		protected TextFieldEx									fieldDateDébut;
-		protected TextFieldEx									fieldDateFin;
-		protected GlyphButton									clearButton;
 
 		protected CheckButton									buttonBudgetEnable;
 		protected TextFieldCombo								fieldBudgetShowed;

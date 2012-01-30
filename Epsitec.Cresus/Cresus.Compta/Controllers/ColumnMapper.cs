@@ -14,36 +14,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class ColumnMapper
 	{
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool hideForSearch)
-			: this (column, relativeWidth, alignment, description, FormattedText.Null, hideForSearch)
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool show = true, bool hideForSearch = false)
+			: this (column, relativeWidth, alignment, description, FormattedText.Null, show, hideForSearch)
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description)
-			: this (column, relativeWidth, alignment, description, FormattedText.Null, false)
+		public ColumnMapper(ColumnType column, double relativeWidth, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false)
+			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip, show, hideForSearch)
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, FormattedText description, FormattedText tooltip)
-			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip, false)
-		{
-		}
-
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip)
-			: this (column, relativeWidth, alignment, description, tooltip, false)
-		{
-		}
-
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool hideForSearch)
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false)
 		{
 			this.Column        = column;
 			this.RelativeWidth = relativeWidth;
 			this.Alignment     = alignment;
 			this.Description   = description;
 			this.Tooltip       = tooltip;
+			this.Show          = show;
 			this.HideForSearch = hideForSearch;
-
-			this.Show = true;
 		}
 
 		public ColumnType Column

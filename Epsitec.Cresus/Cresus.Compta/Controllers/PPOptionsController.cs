@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				DrawFullFrame       = true,
 				BackColor           = AbstractOptionsController.backColor,
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				PreferredHeight     = 55,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 6),
 				Padding             = new Margins (5),
@@ -45,7 +44,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.CreateCheckUI (this.toolbar, optionsChanged);
 			this.CreateBudgetUI (this.toolbar, optionsChanged);
-			this.CreateDatesUI (this.toolbar, optionsChanged);
 		}
 
 		protected void CreateCheckUI(FrameBox parent, System.Action optionsChanged)

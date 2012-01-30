@@ -92,6 +92,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.footerController.UpdateFooterContent ();
 			}
 
+			this.SearchStartAction ();
+			this.FilterUpdateTopToolbar ();
 			this.FinalUpdate ();
 			this.UpdateTitle ();
 			
@@ -319,7 +321,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void FilterUpdateTopToolbar()
 		{
-			this.topFilterController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
+			if (this.topFilterController != null)
+			{
+				this.topFilterController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
+			}
 		}
 		#endregion
 
@@ -334,6 +339,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
+			this.FilterUpdateTopToolbar ();
 		}
 		#endregion
 

@@ -30,6 +30,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public CatégorieDeCompte Catégorie
+		{
+			get;
+			set;
+		}
+
+		public TypeDeCompte Type
+		{
+			get;
+			set;
+		}
+
 		public decimal? Débit
 		{
 			get;

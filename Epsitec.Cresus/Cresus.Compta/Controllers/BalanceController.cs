@@ -116,6 +116,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				yield return new ColumnMapper (ColumnType.Numéro,      0.15, ContentAlignment.MiddleLeft,  "Numéro");
 				yield return new ColumnMapper (ColumnType.Titre,       0.60, ContentAlignment.MiddleLeft,  "Titre du compte");
+				yield return new ColumnMapper (ColumnType.Catégorie,   0.20, ContentAlignment.MiddleLeft,  "Catégorie", show: false);
+				yield return new ColumnMapper (ColumnType.Type,        0.20, ContentAlignment.MiddleLeft,  "Type",      show: false);
 				yield return new ColumnMapper (ColumnType.Débit,       0.20, ContentAlignment.MiddleRight, "Débit");
 				yield return new ColumnMapper (ColumnType.Crédit,      0.20, ContentAlignment.MiddleRight, "Crédit");
 				yield return new ColumnMapper (ColumnType.SoldeDébit,  0.20, ContentAlignment.MiddleRight, "Solde D");

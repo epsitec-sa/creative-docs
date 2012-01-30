@@ -37,38 +37,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-		public Date? DateDébut
-		{
-			get;
-			set;
-		}
-
-		public Date? DateFin
-		{
-			get;
-			set;
-		}
-
-
-		public bool DateInRange(Date? date)
-		{
-			if (date.HasValue)
-			{
-				if (this.DateDébut.HasValue && date.Value < this.DateDébut.Value)
-				{
-					return false;
-				}
-
-				if (this.DateFin.HasValue && date.Value > this.DateFin.Value)
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-
 
 		public bool BudgetEnable
 		{
@@ -113,9 +81,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		protected ComptaEntity						comptaEntity;
-
 		protected int?								profondeur;
-		protected Date?								dateDébut;
-		protected Date?								dateFin;
 	}
 }

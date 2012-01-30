@@ -44,6 +44,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public CatégorieDeCompte Catégorie
+		{
+			get;
+			set;
+		}
+
+		public bool MontreComptesVides
+		{
+			get;
+			set;
+		}
+
+		public bool MontreComptesCentralisateurs
+		{
+			get;
+			set;
+		}
+
 		public bool HasGraphics
 		{
 			get;

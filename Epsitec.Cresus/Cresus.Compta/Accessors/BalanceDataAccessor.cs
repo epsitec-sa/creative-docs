@@ -31,6 +31,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override void FilterUpdate()
+		{
+			Date? beginDate, endDate;
+			this.filterData.GetIntervalDates (out beginDate, out endDate);
+
+			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
+			{
+				this.UpdateAfterOptionsChanged ();
+			}
+
+			base.FilterUpdate ();
+		}
+
 		public override void UpdateAfterOptionsChanged()
 		{
 			this.readonlyAllData.Clear ();
@@ -41,13 +54,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeD = 0;
 			decimal totalSoldeC = 0;
 
-			Date? beginDate, endDate;
-			this.filterData.GetIntervalDates (out beginDate, out endDate);
+			this.filterData.GetIntervalDates (out this.lastBeginDate, out this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
 
-			//?this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
-			this.comptaEntity.PlanComptableUpdate (beginDate, endDate);
-
-			foreach (var compte in this.comptaEntity.PlanComptable.OrderBy (x => x.Numéro))
+			foreach (var compte in this.comptaEntity.PlanComptable)
 			{
 				if (compte.Catégorie == CatégorieDeCompte.Inconnu ||
 					compte.Catégorie == CatégorieDeCompte.Exploitation)
@@ -71,11 +81,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				var data = new BalanceData ();
 
-				data.Numéro = compte.Numéro;
-				data.Titre  = compte.Titre;
-				data.Niveau = compte.Niveau;
-				data.Débit  = soldeDébit .GetValueOrDefault () == 0 ? null : soldeDébit;
-				data.Crédit = soldeCrédit.GetValueOrDefault () == 0 ? null : soldeCrédit;
+				data.Numéro    = compte.Numéro;
+				data.Titre     = compte.Titre;
+				data.Catégorie = compte.Catégorie;
+				data.Type      = compte.Type;
+				data.Niveau    = compte.Niveau;
+				data.Débit     = soldeDébit .GetValueOrDefault () == 0 ? null : soldeDébit;
+				data.Crédit    = soldeCrédit.GetValueOrDefault () == 0 ? null : soldeCrédit;
 
 				if (différence < 0)
 				{
@@ -149,6 +161,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.Titre:
 					return data.Titre;
+
+				case ColumnType.Catégorie:
+					return PlanComptableDataAccessor.CatégorieToText (data.Catégorie);
+
+				case ColumnType.Type:
+					return PlanComptableDataAccessor.TypeToText (data.Type);
 
 				case ColumnType.Débit:
 					return AbstractDataAccessor.GetMontant (data.Débit);

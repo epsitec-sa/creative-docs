@@ -25,20 +25,35 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<BilanOptions> ("Présentation.Bilan.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Bilan.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Bilan.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}
 
 
+		public override void FilterUpdate()
+		{
+			Date? beginDate, endDate;
+			this.filterData.GetIntervalDates (out beginDate, out endDate);
+
+			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
+			{
+				this.UpdateAfterOptionsChanged ();
+			}
+
+			base.FilterUpdate ();
+		}
+
 		public override void UpdateAfterOptionsChanged()
 		{
-			this.readonlyData.Clear ();
+			this.readonlyAllData.Clear ();
 			this.MinMaxClear ();
 
 			decimal totalGauche = 0;
 			decimal totalDroite = 0;
 
-			this.comptaEntity.PlanComptableUpdate (this.options.DateDébut, this.options.DateFin);
+			this.filterData.GetIntervalDates (out this.lastBeginDate, out this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
 
 			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Actif))
 			{
@@ -55,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				var data = new BilanData ();
-				this.readonlyData.Add (data);
+				this.readonlyAllData.Add (data);
 
 				data.NuméroGauche = compte.Numéro;
 				data.TitreGauche  = compte.Titre;
@@ -88,14 +103,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				BilanData data;
 
-				if (rank >= this.readonlyData.Count)
+				if (rank >= this.readonlyAllData.Count)
 				{
 					data = new BilanData ();
-					this.readonlyData.Add (data);
+					this.readonlyAllData.Add (data);
 				}
 				else
 				{
-					data = this.readonlyData[rank] as BilanData;
+					data = this.readonlyAllData[rank] as BilanData;
 				}
 
 				data.NuméroDroite = compte.Numéro;
@@ -143,22 +158,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.SetMinMaxValue (data.SoldeDroite);
 				}
 
-				this.readonlyData.Add (data);
+				data.NeverFiltered = true;
+
+				this.readonlyAllData.Add (data);
 			}
 
 			//	Dernière ligne
 			{
 				var data = new BilanData ();
 
-				data.SoldeGauche = totalGauche;
-				data.SoldeDroite = totalDroite;
-				data.IsBold      = true;
+				data.SoldeGauche   = totalGauche;
+				data.SoldeDroite   = totalDroite;
+				data.IsBold        = true;
+				data.NeverFiltered = true;
 
-				this.readonlyData.Add (data);
+				this.readonlyAllData.Add (data);
 
 				this.SetMinMaxValue (data.SoldeGauche);
 				this.SetMinMaxValue (data.SoldeDroite);
 			}
+
+			this.FilterUpdate ();
 		}
 
 		private bool HasSolde(ComptaCompteEntity compte)

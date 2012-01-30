@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 				else if (mapper.Column == ColumnType.Groupe)
 				{
-					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe).OrderBy (x => x.Numéro);
+					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe);
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.CompteOuvBoucl)
 				{
-					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation).OrderBy (x => x.Numéro);
+					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
 					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 

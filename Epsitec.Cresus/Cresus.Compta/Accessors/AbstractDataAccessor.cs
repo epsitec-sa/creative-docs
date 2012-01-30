@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public void FilterUpdate()
+		public virtual void FilterUpdate()
 		{
 			//	Met à jour le filtre.
 			this.readonlyData.Clear ();
@@ -529,13 +529,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				int day = 0;
 
-				if (this.options.DateFin.HasValue)
+				if (this.lastEndDate.HasValue)
 				{
-					day = this.options.DateFin.Value.DayOfYear;
+					day = this.lastEndDate.Value.DayOfYear;
 
-					if (this.options.DateDébut.HasValue)
+					if (this.lastBeginDate.HasValue)
 					{
-						day -= this.options.DateDébut.Value.DayOfYear;
+						day -= this.lastBeginDate.Value.DayOfYear;
 					}
 				}
 				else
@@ -708,5 +708,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected int									searchLocator;
 		protected decimal								minValue;
 		protected decimal								maxValue;
+		protected Date?									lastBeginDate;
+		protected Date?									lastEndDate;
 	}
 }

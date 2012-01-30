@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.linesFrames.Add (footerFrame);
 			int line = this.linesFrames.Count - 1;
 
-			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).OrderBy (x => x.Numéro);
+			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 			int tabIndex = 0;
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))

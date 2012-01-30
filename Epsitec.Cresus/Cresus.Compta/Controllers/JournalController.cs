@@ -51,6 +51,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.footerController.UpdateFooterContent ();
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
+			this.FilterUpdateTopToolbar ();
 		}
 
 		protected override void UpdateTitle()

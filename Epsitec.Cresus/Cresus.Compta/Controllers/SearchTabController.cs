@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var mapper = this.columnMappers[i];
 
-				if (!mapper.HideForSearch)
+				if (!mapper.HideForSearch && (this.isFilter || mapper.Show))
 				{
 					FormattedText desc = mapper.Description;
 

@@ -77,6 +77,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateRightUI  (rightFrame);
 			this.CreateMiddleUI ();
 
+			this.UpdateButtons ();
+
 			return frame;
 		}
 
@@ -357,9 +359,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private readonly ComptaEntity					comptaEntity;
-		private readonly SearchData					data;
+		private readonly SearchData						data;
 		private readonly List<ColumnMapper>				columnMappers;
-		private readonly List<SearchTabController>	tabControllers;
+		private readonly List<SearchTabController>		tabControllers;
 		private readonly bool							isFilter;
 
 		private bool									bigDataInterface;
