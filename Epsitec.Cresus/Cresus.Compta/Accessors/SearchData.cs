@@ -15,8 +15,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 	{
 		public SearchData()
 		{
+			this.Specific = true;
 			this.tabsData = new List<SearchTabData> ();
 			this.OrMode = true;
+		}
+
+
+		public bool Specific
+		{
+			get;
+			set;
 		}
 
 
@@ -50,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+
 		public bool GetIntervalDates(out Date? beginDate, out Date? endDate)
 		{
 			foreach (var data in this.tabsData)
@@ -64,6 +73,172 @@ namespace Epsitec.Cresus.Compta.Accessors
 			endDate   = null;
 			return false;
 		}
+
+		public SearchTabData GetIntervalDatesData()
+		{
+			foreach (var data in this.tabsData)
+			{
+				Date? beginDate, endDate;
+				if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
+				{
+					data.Column = ColumnType.Date;
+					return data;
+				}
+			}
+
+			//	Si on n'a pas trouvé un intervalle de dates, on prend n'importe lequel.
+			foreach (var data in this.tabsData)
+			{
+				if (data.SearchText.Mode == SearchMode.Interval)
+				{
+					data.Column = ColumnType.Date;
+					return data;
+				}
+			}
+
+			//	Si on n'a trouvé aucun invervalle, on en crée un.
+			var interval = new SearchTabData (null);
+			this.tabsData.Add (interval);
+
+			interval.Column = ColumnType.Date;
+			interval.SearchText.Mode = SearchMode.Interval;
+
+			return interval;
+		}
+
+
+		public CatégorieDeCompte Catégorie
+		{
+			get
+			{
+				var data = this.GetCatégorieData ();
+				return SearchData.StringToCatégories (data.SearchText.FromText);
+			}
+			set
+			{
+				var data = this.GetCatégorieData ();
+				data.SearchText.FromText = SearchData.CatégoriesToString (value);
+			}
+		}
+
+		public SearchTabData GetCatégorieData()
+		{
+			foreach (var data in this.tabsData)
+			{
+				if (data.Column == ColumnType.Catégorie)
+				{
+					data.SearchText.Mode = SearchMode.Jokers;
+					return data;
+				}
+			}
+
+			//	Si on n'a trouvé aucune catégorie, on en crée une.
+			var cat = new SearchTabData (null);
+			this.tabsData.Add (cat);
+
+			cat.Column = ColumnType.Catégorie;
+			cat.SearchText.Mode = SearchMode.Jokers;
+
+			return cat;
+		}
+
+		private static string CatégoriesToString(CatégorieDeCompte catégorie)
+		{
+			var list = new List<string> ();
+
+			if ((catégorie & CatégorieDeCompte.Actif) != 0)
+			{
+				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Actif));
+			}
+
+			if ((catégorie & CatégorieDeCompte.Passif) != 0)
+			{
+				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Passif));
+			}
+
+			if ((catégorie & CatégorieDeCompte.Charge) != 0)
+			{
+				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Charge));
+			}
+
+			if ((catégorie & CatégorieDeCompte.Produit) != 0)
+			{
+				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Produit));
+			}
+
+			if ((catégorie & CatégorieDeCompte.Exploitation) != 0)
+			{
+				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Exploitation));
+			}
+
+			return string.Join ("|", list);
+		}
+
+		private static CatégorieDeCompte StringToCatégories(string text)
+		{
+			var catégorie = CatégorieDeCompte.Inconnu;
+
+			if (!string.IsNullOrEmpty (text))
+			{
+				var words = text.Split ('|');
+
+				foreach (var word in words)
+				{
+					catégorie |= SearchData.StringToCatégorie (word);
+				}
+			}
+
+			return catégorie;
+		}
+
+		private static string CatégorieToString(CatégorieDeCompte catégorie)
+		{
+			switch (catégorie)
+			{
+				case CatégorieDeCompte.Actif:
+					return "Actif";
+
+				case CatégorieDeCompte.Passif:
+					return "Passif";
+
+				case CatégorieDeCompte.Charge:
+					return "Charge";
+
+				case CatégorieDeCompte.Produit:
+					return "Produit";
+
+				case CatégorieDeCompte.Exploitation:
+					return "Exploitation";
+
+				default:
+					return "?";
+			}
+		}
+
+		private static CatégorieDeCompte StringToCatégorie(string text)
+		{
+			switch (text)
+			{
+				case "Actif":
+					return CatégorieDeCompte.Actif;
+
+				case "Passif":
+					return CatégorieDeCompte.Passif;
+
+				case "Charge":
+					return CatégorieDeCompte.Charge;
+
+				case "Produit":
+					return CatégorieDeCompte.Produit;
+
+				case "Exploitation":
+					return CatégorieDeCompte.Exploitation;
+
+				default:
+					return CatégorieDeCompte.Inconnu;
+			}
+		}
+
 
 		public static bool DateInRange(Date? date, Date? beginDate, Date? endDate)
 		{

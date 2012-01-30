@@ -65,14 +65,46 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			FrameBox container;
 			AbstractTextField field;
-			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
 			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
-			UIBuilder.CreateAutoCompleteTextField (frame, comptes, out container, out field);
-			field.FormattedText = this.NuméroCompte;
+			UIBuilder.CreateAutoCompleteTextField (frame, null, out container, out field);
+			this.fieldCompte = field as AutoCompleteTextField;
+			this.fieldCompte.FormattedText = this.NuméroCompte;
 			container.PreferredWidth = 100;
 			container.Dock = DockStyle.Left;
-			container.Margins = new Margins (0, 20, 0, 0);
+			container.Margins = new Margins (0, 1, 0, 0);
 			container.TabIndex = ++this.tabIndex;
+
+			{
+				var comboFrame = new FrameBox
+				{
+					Parent          = frame,
+					DrawFullFrame   = true,
+					BackColor       = Color.FromBrightness (0.96),
+					PreferredWidth  = 100,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (1, 0, 0, 0),
+				};
+
+				this.comboModeField = new StaticText
+				{
+					Parent           = comboFrame,
+					Text             = this.ComboModeDescription,
+					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+					PreferredHeight  = 20,
+					Dock             = DockStyle.Fill,
+				};
+
+				this.comboModeButton = new GlyphButton
+				{
+					Parent          = frame,
+					GlyphShape      = GlyphShape.Menu,
+					PreferredWidth  = UIBuilder.ComboButtonWidth,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (-1, 20, 0, 0),
+				};
+			}
 
 			var graphicsButton = new CheckButton
 			{
@@ -83,10 +115,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock           = DockStyle.Left,
 			};
 
-			field.TextChanged += delegate
+			ToolTip.Default.SetToolTip (container,            "Choix du compte");
+			ToolTip.Default.SetToolTip (this.comboModeField,  "Filtre pour le choix du compte");
+			ToolTip.Default.SetToolTip (this.comboModeButton, "Filtre pour le choix du compte");
+
+			//	Connexion des événements.
+			this.fieldCompte.TextChanged += delegate
 			{
-				this.NuméroCompte = field.FormattedText;
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.NuméroCompte = this.fieldCompte.FormattedText;
+					optionsChanged ();
+				}
+			};
+
+			this.comboModeField.Clicked += delegate
+			{
+				this.ShowComboModeMenu (this.comboModeField);
+			};
+
+			this.comboModeButton.Clicked += delegate
+			{
+				this.ShowComboModeMenu (this.comboModeField);
 			};
 
 			graphicsButton.ActiveStateChanged += delegate
@@ -94,13 +144,172 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 				optionsChanged ();
 			};
+
+			this.UpdateComptes ();
 		}
 
+
+		#region Combo mode menu
+		private void ShowComboModeMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir le mode pour le filtre.
+			var menu = new VMenu ();
+
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Inconnu);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Actif);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Passif);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Charge);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Produit);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Exploitation);
+
+			menu.Items.Add (new MenuSeparator ());
+
+			this.AddComboModeToMenu (menu, "Comptes vides",           () => this.Options.MontreComptesVides,           x => this.Options.MontreComptesVides           = x);
+			this.AddComboModeToMenu (menu, "Comptes centralisateurs", () => this.Options.MontreComptesCentralisateurs, x => this.Options.MontreComptesCentralisateurs = x);
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddComboModeToMenu(VMenu menu, CatégorieDeCompte catégorie)
+		{
+			bool selected = (this.Options.CatégorieMontrée == catégorie);
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.RadioYes" : "Button.RadioNo"),
+				FormattedText = ExtraitDeCompteOptionsController.GetCatégorieDescription (catégorie),
+				Name          = catégorie.ToString (),
+			};
+
+			item.Clicked += delegate
+			{
+				this.Options.CatégorieMontrée = (CatégorieDeCompte) System.Enum.Parse (typeof (CatégorieDeCompte), item.Name);
+
+				this.comboModeField.Text = this.ComboModeDescription;
+				this.UpdateComptes ();
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void AddComboModeToMenu(VMenu menu, FormattedText text, System.Func<bool> getter, System.Action<bool> setter)
+		{
+			bool selected = getter ();
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.CheckYes" : "Button.CheckNo"),
+				FormattedText = text,
+			};
+
+			item.Clicked += delegate
+			{
+				setter (!getter ());
+
+				this.comboModeField.Text = this.ComboModeDescription;
+				this.UpdateComptes ();
+			};
+
+			menu.Items.Add (item);
+		}
+		#endregion
+
+
+		private string ComboModeDescription
+		{
+			get
+			{
+				string text = " " + ExtraitDeCompteOptionsController.GetCatégorieDescription (this.Options.CatégorieMontrée);
+
+				if (this.Options.MontreComptesVides ||
+					this.Options.MontreComptesCentralisateurs)
+				{
+					text += " (+";
+
+					if (this.Options.MontreComptesVides)
+					{
+						text += "v";
+					}
+
+					if (this.Options.MontreComptesCentralisateurs)
+					{
+						text += "c";
+					}
+
+					text += ")";
+				}
+
+				return text;
+			}
+		}
+
+		private static string GetCatégorieDescription(CatégorieDeCompte catégorie)
+		{
+			switch (catégorie)
+			{
+				case CatégorieDeCompte.Actif:
+					return "Actifs";
+
+				case CatégorieDeCompte.Passif:
+					return "Passifs";
+
+				case CatégorieDeCompte.Charge:
+					return "Charges";
+
+				case CatégorieDeCompte.Produit:
+					return "Produits";
+
+				case CatégorieDeCompte.Exploitation:
+					return "Exploitations";
+
+				default:
+					return "Tous";
+			}
+		}
+
+
+		private void UpdateComptes()
+		{
+			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
+
+			this.fieldCompte.Items.Clear ();
+
+			foreach (var compte in comptes)
+			{
+				this.fieldCompte.Items.Add (compte);
+			}
+
+			this.ignoreChange = true;
+			this.fieldCompte.FormattedText = this.NuméroCompte;
+			this.ignoreChange = false;
+		}
 
 		private bool CompteFilter(ComptaCompteEntity compte)
 		{
 			if (compte.Type != TypeDeCompte.Normal &&
 				compte.Type != TypeDeCompte.Groupe)
+			{
+				return false;
+			}
+
+			if (this.Options.CatégorieMontrée != CatégorieDeCompte.Inconnu && compte.Catégorie != this.Options.CatégorieMontrée)
+			{
+				return false;
+			}
+
+			if (!this.Options.MontreComptesVides)
+			{
+				var solde = this.comptaEntity.GetSoldeCompte (compte);
+				if (solde.GetValueOrDefault () == 0)
+				{
+					return false;
+				}
+			}
+
+			if (!this.Options.MontreComptesCentralisateurs && compte.Type == TypeDeCompte.Groupe)
 			{
 				return false;
 			}
@@ -127,5 +336,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.options as ExtraitDeCompteOptions;
 			}
 		}
+
+
+		private AutoCompleteTextField			fieldCompte;
+		private StaticText						comboModeField;
+		private GlyphButton						comboModeButton;
+		private bool							ignoreChange;
 	}
 }

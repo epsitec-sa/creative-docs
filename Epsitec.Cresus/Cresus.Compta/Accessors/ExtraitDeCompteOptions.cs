@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			base.SetComptaEntity (compta);
 
+			this.MontreComptesVides = true;
+
 			//	Utilise le premier compte normal par défaut.
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
@@ -44,7 +46,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-		public CatégorieDeCompte Catégorie
+		public CatégorieDeCompte CatégorieMontrée
 		{
 			get;
 			set;

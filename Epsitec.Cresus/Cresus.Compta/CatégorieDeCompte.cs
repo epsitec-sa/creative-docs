@@ -12,10 +12,10 @@ namespace Epsitec.Cresus.Compta
 	public enum CatégorieDeCompte
 	{
 		Inconnu			= 0,
-		Actif			= 1,
-		Passif			= 2,
-		Charge			= 3,
-		Produit			= 4,
-		Exploitation	= 5,
+		Actif			= 0x01,
+		Passif			= 0x02,
+		Charge			= 0x04,
+		Produit			= 0x08,
+		Exploitation	= 0x10,
 	}
 }

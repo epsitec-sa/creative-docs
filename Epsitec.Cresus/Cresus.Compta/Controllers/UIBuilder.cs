@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var textField = new AutoCompleteTextField
 			{
 				Parent          = container,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -55,9 +55,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				AutoFocus       = false,
 			};
 
-			foreach (var compte in comptes)
+			if (comptes != null)
 			{
-				textField.Items.Add (compte);
+				foreach (var compte in comptes)
+				{
+					textField.Items.Add (compte);
+				}
 			}
 
 			textField.ValueToDescriptionConverter = value => UIBuilder.GetCompteText (value as ComptaCompteEntity);
@@ -107,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var textField = new AutoCompleteTextField
 			{
 				Parent          = container,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth-1,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -202,7 +205,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 	
-		private static readonly double ComboButtonWidth = 14;
+		public static readonly double ComboButtonWidth = 14;
 
 		public static readonly FormattedText							leftIndentText = "●  ";
 		public static readonly FormattedText							rightIndentText = "  ";

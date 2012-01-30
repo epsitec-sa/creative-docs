@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = frameBox,
 					GlyphShape      = GlyphShape.Menu,
-					PreferredWidth  = 16,
+					PreferredWidth  = UIBuilder.ComboButtonWidth,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Right,
 					Margins         = new Margins (-1, 0, 0, 0),
@@ -173,6 +173,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = frameBox,
 				IsReadOnly      = true,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				PreferredWidth  = 130,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
@@ -284,19 +285,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.InitializeColumnsCombo ();
 		}
 
-		public bool AddAction
+		public void SetAddAction(bool add, bool enable)
 		{
-			get
+			if (this.addAction != add || this.addActionEnable != enable)
 			{
-				return this.addAction;
-			}
-			set
-			{
-				if (this.addAction != value)
-				{
-					this.addAction = value;
-					this.UpdateButtons ();
-				}
+				this.addAction       = add;
+				this.addActionEnable = enable;
+
+				this.UpdateButtons ();
 			}
 		}
 
@@ -393,6 +389,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateButtons()
 		{
 			this.addRemoveButton.GlyphShape = this.addAction ? GlyphShape.Plus : GlyphShape.Minus;
+			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
 
 			if (this.addAction)
 			{
@@ -408,7 +405,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Mode menu
 		private void ShowModeMenu(Widget parentButton)
 		{
-			//	Affiche le menu permettant de choisir le mode pour le ruban.
+			//	Affiche le menu permettant de choisir le mode.
 			var menu = new VMenu ();
 
 			this.AddModeToMenu (menu, SearchMode.Fragment);
@@ -639,6 +636,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private bool							bigDataInterface;
 		private bool							addAction;
+		private bool							addActionEnable;
 		private bool							ignoreChange;
 	}
 }
