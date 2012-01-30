@@ -372,6 +372,7 @@
     <Compile Include="Support\Extensions\EventHandlerExtensions.cs" />
     <Compile Include="Support\GroupedException.cs" />
     <Compile Include="Support\SafeCounter.cs" />
+    <Compile Include="Support\StringUtils.cs" />
     <Compile Include="Support\ThreadUtils.cs" />
     <Compile Include="Support\TimedReaderWriterLock.cs" />
     <Compile Include="Support\SimpleCallback.cs" />
