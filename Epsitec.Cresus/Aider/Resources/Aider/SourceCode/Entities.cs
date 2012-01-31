@@ -5871,19 +5871,19 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVA2A/LVA2B
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVA2B]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum Category
+		public global::Epsitec.Aider.Enumerations.GroupCategory Category
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[LVA2B]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.GroupCategory> ("[LVA2B]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.Category;
+				global::Epsitec.Aider.Enumerations.GroupCategory oldValue = this.Category;
 				if (oldValue != value || !this.IsFieldDefined("[LVA2B]"))
 				{
 					this.OnCategoryChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[LVA2B]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.GroupCategory> ("[LVA2B]", oldValue, value);
 					this.OnCategoryChanged (oldValue, value);
 				}
 			}
@@ -5963,8 +5963,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLevelChanged(global::Epsitec.Aider.Enumerations.GroupLevel oldValue, global::Epsitec.Aider.Enumerations.GroupLevel newValue);
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
-		partial void OnCategoryChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnCategoryChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnCategoryChanging(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
+		partial void OnCategoryChanged(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		partial void OnMinOccursChanging(int oldValue, int newValue);
 		partial void OnMinOccursChanged(int oldValue, int newValue);
 		partial void OnMaxOccursChanging(int oldValue, int newValue);
@@ -6082,19 +6082,19 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVA7A/LVAFA
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAFA]")]
-		public global::Epsitec.Common.Types.UnresolvedEnum Type
+		public global::Epsitec.Aider.Enumerations.FunctionType Type
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[LVAFA]");
+				return this.GetField<global::Epsitec.Aider.Enumerations.FunctionType> ("[LVAFA]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.UnresolvedEnum oldValue = this.Type;
+				global::Epsitec.Aider.Enumerations.FunctionType oldValue = this.Type;
 				if (oldValue != value || !this.IsFieldDefined("[LVAFA]"))
 				{
 					this.OnTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.UnresolvedEnum> ("[LVAFA]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.FunctionType> ("[LVAFA]", oldValue, value);
 					this.OnTypeChanged (oldValue, value);
 				}
 			}
@@ -6102,8 +6102,8 @@ namespace Epsitec.Aider.Entities
 		
 		partial void OnNameChanging(string oldValue, string newValue);
 		partial void OnNameChanged(string oldValue, string newValue);
-		partial void OnTypeChanging(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
-		partial void OnTypeChanged(global::Epsitec.Common.Types.UnresolvedEnum oldValue, global::Epsitec.Common.Types.UnresolvedEnum newValue);
+		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.FunctionType oldValue, global::Epsitec.Aider.Enumerations.FunctionType newValue);
+		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.FunctionType oldValue, global::Epsitec.Aider.Enumerations.FunctionType newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
