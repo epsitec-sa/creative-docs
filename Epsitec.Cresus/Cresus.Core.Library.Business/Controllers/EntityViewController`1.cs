@@ -36,13 +36,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			: base (EntityViewControllerFactory.Default.ControllerName)
 		{
 			this.uiControllers = new List<EntityViewController> ();
-			
+
+			this.entity        = EntityViewControllerFactory.Default.Entity as T;
+
 			if (EntityViewControllerFactory.Default.ResolutionMode == Resolvers.ResolutionMode.InspectOnly)
 			{
 				return;
 			}
-
-			this.entity        = EntityViewControllerFactory.Default.Entity as T;
 
 			System.Diagnostics.Debug.Assert (this.DataContext != null, "No DataContext");
 			System.Diagnostics.Debug.Assert ((this.Orchestrator.Data.IsDummyEntity (this.entity)) || (this.DataContext.Contains (this.entity)), "Invalid entity");
