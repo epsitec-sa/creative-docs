@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <ModuleInfo id="1013" name="Aider" layer="A" textMode="FormattedText" assemblies="Aider" namespace="Epsitec.Aider">
   <Versions>
-    <Version id="8" build="21" date="2012-01-30T09:45:48.8855467Z" />
     <Version id="1" build="113" date="2012-01-31T06:07:34.1080383Z" />
+    <Version id="8" build="22" date="2012-01-31T15:46:29.7465211Z" />
   </Versions>
 </ModuleInfo>
