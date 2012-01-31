@@ -85,6 +85,7 @@
     <Compile Include="Accessors\SearchTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
@@ -183,6 +184,8 @@
     <EmbeddedResource Include="Images\Button.RadioNo.icon" />
     <EmbeddedResource Include="Images\Button.RadioYes.icon" />
     <EmbeddedResource Include="Images\Panel.Filter.icon" />
+    <EmbeddedResource Include="Images\Level.Beginner.icon" />
+    <EmbeddedResource Include="Images\Level.Specialist.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

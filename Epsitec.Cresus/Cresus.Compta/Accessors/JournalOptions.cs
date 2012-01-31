@@ -34,11 +34,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get;
 			set;
 		}
-
-		public bool IsExtended
-		{
-			get;
-			set;
-		}
 	}
 }

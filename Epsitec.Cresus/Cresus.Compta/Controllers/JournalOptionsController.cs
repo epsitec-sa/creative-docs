@@ -36,23 +36,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
-			this.toolbar = new FrameBox
-			{
-				Parent              = parent,
-				DrawFullFrame       = true,
-				BackColor           = AbstractOptionsController.backColor,
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 6),
-				Padding             = new Margins (5),
-			};
+			base.CreateUI (parent, optionsChanged);
 
-			this.CreateComptactJournalUI (this.toolbar, optionsChanged);
-			this.CreateExtendedJournalUI (this.toolbar, optionsChanged);
-			this.CreateModeButtonUI (this.toolbar);
-			this.UpdateMode ();
+			this.CreateComptactJournalUI (this.mainFrame, optionsChanged);
+			this.CreateExtendedJournalUI (this.mainFrame, optionsChanged);
+
+			this.UpdateLevel ();
 			this.UpdateSummary ();
 		}
+
+		protected override void LevelChangedAction()
+		{
+			base.LevelChangedAction ();
+
+			this.UpdateLevel ();
+		}
+
+		private void UpdateLevel()
+		{
+			this.comptactFrame.Visibility = !this.options.Specialist;
+			this.extendedFrame.Visibility =  this.options.Specialist;
+
+			this.levelController.Specialist = this.options.Specialist;
+		}
+
 
 		public override void UpdateContent()
 		{
@@ -365,34 +372,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CreateModeButtonUI(FrameBox parent)
-		{
-			this.modeButton = new GlyphButton
-			{
-				Parent        = parent,
-				ButtonStyle   = ButtonStyle.ToolItem,
-				PreferredSize = new Size (14, 14),
-				Anchor        = AnchorStyles.BottomRight,
-			};
-
-			this.modeButton.Clicked += delegate
-			{
-				this.Options.IsExtended = !this.Options.IsExtended;
-				this.UpdateMode ();
-			};
-		}
-
-		private void UpdateMode()
-		{
-			this.modeButton.GlyphShape = this.Options.IsExtended ? GlyphShape.ArrowUp : GlyphShape.ArrowDown;
-			this.modeButton.Margins = new Margins (0, 0, 0, this.Options.IsExtended ? 0 : 3);
-			ToolTip.Default.SetToolTip (this.modeButton, this.Options.IsExtended ? "Réduit le panneau" : "Etend le panneau pour permettre de modifier la liste des journaux");
-
-			this.comptactFrame.Visibility = !this.Options.IsExtended;
-			this.extendedFrame.Visibility =  this.Options.IsExtended;
-		}
-
-
 		private void UpdateCombo()
 		{
 			this.compactComboJournaux.Items.Clear ();
@@ -482,8 +461,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static readonly double JournauxWidth = 200;
 		public static readonly string AllJournaux = "Tous les journaux";
-
-		private GlyphButton				modeButton;
 
 		private FrameBox				comptactFrame;
 		private TextFieldCombo			compactComboJournaux;

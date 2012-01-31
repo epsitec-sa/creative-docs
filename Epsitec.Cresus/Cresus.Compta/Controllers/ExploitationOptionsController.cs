@@ -31,18 +31,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
-			this.toolbar = new FrameBox
-			{
-				Parent              = parent,
-				DrawFullFrame       = true,
-				BackColor           = AbstractOptionsController.backColor,
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 6),
-				Padding             = new Margins (5),
-			};
+			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.toolbar, optionsChanged);
+			this.CreateCheckUI (this.mainFrame, optionsChanged);
 		}
 
 		protected void CreateCheckUI(FrameBox parent, System.Action optionsChanged)

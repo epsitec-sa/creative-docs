@@ -15,13 +15,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 	{
 		public SearchData()
 		{
-			this.Specific = true;
 			this.tabsData = new List<SearchTabData> ();
 			this.OrMode = true;
 		}
 
 
-		public bool Specific
+		public bool Specialist
 		{
 			get;
 			set;

@@ -32,18 +32,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
-			this.toolbar = new FrameBox
-			{
-				Parent              = parent,
-				DrawFullFrame       = true,
-				BackColor           = AbstractOptionsController.backColor,
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
-				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 6),
-				Padding             = new Margins (5),
-			};
+			base.CreateUI (parent, optionsChanged);
 
-			this.CreateEditionUI (this.toolbar, optionsChanged);
+			this.CreateEditionUI (this.mainFrame, optionsChanged);
 		}
 
 		private void CreateEditionUI(FrameBox parent, System.Action optionsChanged)

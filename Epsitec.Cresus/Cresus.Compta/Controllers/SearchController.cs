@@ -66,6 +66,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 20, 0, 0),
 			};
 
+			var levelFrame = new FrameBox
+			{
+				Parent          = frame,
+				PreferredWidth  = 20*2,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Right,
+				Margins         = new Margins (10, 0, 0, 0),
+			};
+
 			var rightFrame = new FrameBox
 			{
 				Parent          = frame,
@@ -73,9 +82,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Right,
 			};
 
-			this.CreateLeftUI   (leftFrame);
+			this.CreateLeftUI (leftFrame);
 			this.CreateRightUI  (rightFrame);
 			this.CreateMiddleUI ();
+			this.CreateLevelUI (levelFrame);
 
 			this.UpdateButtons ();
 
@@ -92,7 +102,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-	
+
 		private void CreateLeftUI(FrameBox parent)
 		{
 			var frame = new FrameBox
@@ -109,15 +119,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredSize   = new Size (20, 20),
 				Dock            = DockStyle.Left,
 				Enable          = false,
-				Margins         = new Margins (0, 1, 0, 0),
-			};
-
-			this.buttonSpecific = new GlyphButton
-			{
-				Parent          = frame,
-				GlyphShape      = GlyphShape.TriangleRight,
-				PreferredSize   = new Size (20, 20),
-				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
@@ -135,13 +136,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SearchClear ();
 			};
 
-			this.buttonSpecific.Clicked += delegate
-			{
-				this.SpecificInvert ();
-			};
-
-			ToolTip.Default.SetToolTip (this.buttonClear,    this.isFilter ? "Termine le filtre" : "Termine la recherche");
-			ToolTip.Default.SetToolTip (this.buttonSpecific, this.isFilter ? "Filtre standard ou spécial" : "Recherche standard ou spéciale");
+			ToolTip.Default.SetToolTip (this.buttonClear, this.isFilter ? "Termine le filtre" : "Termine la recherche");
 		}
 
 		private void CreateMiddleUI()
@@ -149,34 +144,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.middleFrame.Children.Clear ();
 			this.tabControllers.Clear ();
 
-			if (this.data.Specific)
+			if (this.data.Specialist)
 			{
-				this.CreateMiddleSpecificUI ();
+				this.CreateMiddleSpecialistUI ();
 			}
 			else
 			{
-				this.CreateMiddleGeneralUI ();
+				this.CreateMiddleBeginnerUI ();
 			}
 		}
 
-		private void CreateMiddleSpecificUI()
+		private void CreateMiddleBeginnerUI()
 		{
 			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
 
 			if (this.isFilter)
 			{
-				this.CreateMiddleSpecificCatégorieUI ();
-				this.CreateMiddleSpecificDatesUI ();
+				this.CreateMiddleBeginnerCatégorieUI ();
+				this.CreateMiddleBeginnerDatesUI ();
 			}
 			else
 			{
-				this.CreateMiddleSpecificSearchUI ();
+				this.CreateMiddleBeginnerSearchUI ();
 			}
 
 			this.modeFrame.Visibility = false;
 		}
 
-		private void CreateMiddleSpecificCatégorieUI()
+		private void CreateMiddleBeginnerCatégorieUI()
 		{
 			var frame = new GroupBox
 			{
@@ -204,7 +199,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var catégorie = this.data.Catégorie;
 
 			{
-				this.specificCatégorieActif = new CheckButton
+				this.beginnerCatégorieActif = new CheckButton
 				{
 					Parent         = frame1,
 					Text           = "Actif",
@@ -213,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.specificCatégorieCharge = new CheckButton
+				this.beginnerCatégorieCharge = new CheckButton
 				{
 					Parent         = frame1,
 					Text           = "Charge",
@@ -222,7 +217,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.specificCatégorieExploitation = new CheckButton
+				this.beginnerCatégorieExploitation = new CheckButton
 				{
 					Parent         = frame1,
 					Text           = "Exploitation",
@@ -233,7 +228,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			{
-				this.specificCatégoriePassif = new CheckButton
+				this.beginnerCatégoriePassif = new CheckButton
 				{
 					Parent         = frame2,
 					Text           = "Passif",
@@ -242,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.specificCatégorieProduit = new CheckButton
+				this.beginnerCatégorieProduit = new CheckButton
 				{
 					Parent         = frame2,
 					Text           = "Produit",
@@ -252,38 +247,38 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
-			this.specificCatégorieActif       .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
-			this.specificCatégoriePassif      .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
-			this.specificCatégorieCharge      .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
-			this.specificCatégorieProduit     .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
-			this.specificCatégorieExploitation.ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
+			this.beginnerCatégorieActif       .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
+			this.beginnerCatégoriePassif      .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
+			this.beginnerCatégorieCharge      .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
+			this.beginnerCatégorieProduit     .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
+			this.beginnerCatégorieExploitation.ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
 		}
 
 		private void HandleCheckButtonCatégorie(object sender)
 		{
 			var catégorie = CatégorieDeCompte.Inconnu;
 
-			if (this.specificCatégorieActif.ActiveState == ActiveState.Yes)
+			if (this.beginnerCatégorieActif.ActiveState == ActiveState.Yes)
 			{
 				catégorie |= CatégorieDeCompte.Actif;
 			}
 
-			if (this.specificCatégoriePassif.ActiveState == ActiveState.Yes)
+			if (this.beginnerCatégoriePassif.ActiveState == ActiveState.Yes)
 			{
 				catégorie |= CatégorieDeCompte.Passif;
 			}
 
-			if (this.specificCatégorieCharge.ActiveState == ActiveState.Yes)
+			if (this.beginnerCatégorieCharge.ActiveState == ActiveState.Yes)
 			{
 				catégorie |= CatégorieDeCompte.Charge;
 			}
 
-			if (this.specificCatégorieProduit.ActiveState == ActiveState.Yes)
+			if (this.beginnerCatégorieProduit.ActiveState == ActiveState.Yes)
 			{
 				catégorie |= CatégorieDeCompte.Produit;
 			}
 
-			if (this.specificCatégorieExploitation.ActiveState == ActiveState.Yes)
+			if (this.beginnerCatégorieExploitation.ActiveState == ActiveState.Yes)
 			{
 				catégorie |= CatégorieDeCompte.Exploitation;
 			}
@@ -292,7 +287,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchStartAction ();
 		}
 
-		private void CreateMiddleSpecificDatesUI()
+		private void CreateMiddleBeginnerDatesUI()
 		{
 			var frame = new GroupBox
 			{
@@ -328,7 +323,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.specificBeginDateField = new TextField
+				this.beginnerBeginDateField = new TextField
 				{
 					Parent          = frame1,
 					Text            = beginDate.HasValue ? beginDate.Value.ToString() : null,
@@ -348,7 +343,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.specificEndDateField = new TextField
+				this.beginnerEndDateField = new TextField
 				{
 					Parent          = frame2,
 					Text            = endDate.HasValue ? endDate.Value.ToString () : null,
@@ -359,31 +354,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
-			this.specificBeginDateField.TextChanged += delegate
+			this.beginnerBeginDateField.TextChanged += delegate
 			{
 				var data = this.data.GetIntervalDatesData ();
-				data.SearchText.FromText = this.specificBeginDateField.Text;
+				data.SearchText.FromText = this.beginnerBeginDateField.Text;
 				this.searchStartAction ();
 			};
 
-			this.specificEndDateField.TextChanged += delegate
+			this.beginnerEndDateField.TextChanged += delegate
 			{
 				var data = this.data.GetIntervalDatesData ();
-				data.SearchText.ToText = this.specificEndDateField.Text;
+				data.SearchText.ToText = this.beginnerEndDateField.Text;
 				this.searchStartAction ();
 			};
 
-			ToolTip.Default.SetToolTip (this.specificBeginDateField, "Date initiale incluse");
-			ToolTip.Default.SetToolTip (this.specificEndDateField,   "Date finale incluse");
+			ToolTip.Default.SetToolTip (this.beginnerBeginDateField, "Date initiale incluse");
+			ToolTip.Default.SetToolTip (this.beginnerEndDateField,   "Date finale incluse");
 		}
 
-		private void CreateMiddleGeneralUI()
+		private void CreateMiddleSpecialistUI()
 		{
 			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-			this.specificSearchField    = null;
-			this.specificBeginDateField = null;
-			this.specificEndDateField   = null;
+			this.beginnerSearchField    = null;
+			this.beginnerBeginDateField = null;
+			this.beginnerEndDateField   = null;
 
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
@@ -517,9 +512,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ignoreChange = false;
 		}
 
-		private void CreateMiddleSpecificSearchUI()
+		private void CreateMiddleBeginnerSearchUI()
 		{
-			this.specificSearchField = new TextField
+			this.beginnerSearchField = new TextField
 			{
 				Parent          = this.middleFrame,
 				Text            = this.data.TabsData[0].SearchText.FromText,
@@ -527,30 +522,48 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			this.specificSearchField.TextChanged += delegate
+			this.beginnerSearchField.TextChanged += delegate
 			{
-				this.data.TabsData[0].SearchText.FromText = this.specificSearchField.Text;
+				this.data.TabsData[0].SearchText.FromText = this.beginnerSearchField.Text;
 				this.searchStartAction ();
 			};
 
-			ToolTip.Default.SetToolTip (this.specificSearchField, "Texte cherché n'importe où");
+			ToolTip.Default.SetToolTip (this.beginnerSearchField, "Texte cherché n'importe où");
+		}
+
+
+		private void CreateLevelUI(FrameBox parent)
+		{
+			this.levelController = new LevelController ();
+			this.levelController.CreateUI (parent, this.LevelChangedAction);
+			this.levelController.Specialist = this.data.Specialist;
+		}
+
+		private void LevelChangedAction()
+		{
+			this.data.Specialist = this.levelController.Specialist;
+
+			this.CreateMiddleUI ();
+			this.UpdateButtons ();
+			this.UpdateOrMode ();
+			this.searchStartAction ();
 		}
 
 
 		public void SetFocus()
 		{
-			if (this.data.Specific)
-			{
-				if (!this.isFilter && this.specificSearchField != null)
-				{
-					this.specificSearchField.Focus ();
-				}
-			}
-			else
+			if (this.data.Specialist)
 			{
 				if (this.tabControllers.Count != 0)
 				{
 					this.tabControllers[0].SetFocus ();
+				}
+			}
+			else
+			{
+				if (!this.isFilter && this.beginnerSearchField != null)
+				{
+					this.beginnerSearchField.Focus ();
 				}
 			}
 		}
@@ -570,9 +583,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchStartAction ();
 		}
 
+#if false
 		private void SpecificInvert()
 		{
-			this.data.Specific = !this.data.Specific;
+			this.data.Specialist = !this.data.Specialist;
 
 			//	Adapte les données.
 			{
@@ -617,6 +631,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
+#endif
 
 
 		public void SetSearchCount(int dataCount, int? count, int? locator)
@@ -714,21 +729,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private FrameBox								middleFrame;
 		private GlyphButton								buttonClear;
-		private GlyphButton								buttonSpecific;
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
 		private StaticText								resultLabel;
 		private FrameBox								modeFrame;
-		private TextField								specificSearchField;
-		private CheckButton								specificCatégorieActif;
-		private CheckButton								specificCatégoriePassif;
-		private CheckButton								specificCatégorieCharge;
-		private CheckButton								specificCatégorieProduit;
-		private CheckButton								specificCatégorieExploitation;
-		private TextField								specificBeginDateField;
-		private TextField								specificEndDateField;
+		private TextField								beginnerSearchField;
+		private CheckButton								beginnerCatégorieActif;
+		private CheckButton								beginnerCatégoriePassif;
+		private CheckButton								beginnerCatégorieCharge;
+		private CheckButton								beginnerCatégorieProduit;
+		private CheckButton								beginnerCatégorieExploitation;
+		private TextField								beginnerBeginDateField;
+		private TextField								beginnerEndDateField;
 		private RadioButton								andButton;
 		private RadioButton								orButton;
+		private LevelController							levelController;
 		private bool									ignoreChange;
 	}
 }

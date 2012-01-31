@@ -51,7 +51,41 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
+			this.toolbar = new FrameBox
+			{
+				Parent              = parent,
+				DrawFullFrame       = true,
+				BackColor           = AbstractOptionsController.backColor,
+				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
+				Dock                = DockStyle.Top,
+				Margins             = new Margins (0, 0, 0, 6),
+				Padding             = new Margins (5),
+			};
+
+			this.mainFrame = new FrameBox
+			{
+				Parent = this.toolbar,
+				Dock   = DockStyle.Fill,
+			};
+
+			var levelFrame = new FrameBox
+			{
+				Parent         = this.toolbar,
+				PreferredWidth = 20*2,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (10, 0, 0, 0),
+			};
+
+			this.levelController = new LevelController ();
+			this.levelController.CreateUI (levelFrame, this.LevelChangedAction);
+			this.levelController.Specialist = this.options.Specialist;
 		}
+
+		protected virtual void LevelChangedAction()
+		{
+			this.options.Specialist = this.levelController.Specialist;
+		}
+
 
 		public virtual void UpdateContent()
 		{
@@ -343,11 +377,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected int											tabIndex;
 		protected FrameBox										toolbar;
+		protected FrameBox										mainFrame;
 
 		protected CheckButton									buttonBudgetEnable;
 		protected TextFieldCombo								fieldBudgetShowed;
 		protected StaticText									frameBudgetDisplayMode;
 		protected TextFieldCombo								fieldBudgetDisplayMode;
+		protected LevelController								levelController;
 
 		protected bool											showPanel;
 	}

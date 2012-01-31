@@ -31,6 +31,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public bool Specialist
+		{
+			get;
+			set;
+		}
+
 		public int? Profondeur
 		{
 			get;
