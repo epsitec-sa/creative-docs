@@ -89,6 +89,7 @@
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
+    <Compile Include="Misc.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />
     <Compile Include="CoreApplication.cs" />

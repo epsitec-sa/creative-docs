@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.searchFromLabel = new StaticText
 				{
 					Parent          = this.searchFromFrame,
-					Text            = "de",
+					Text            = "De",
 					PreferredWidth  = 20,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.searchToLabel = new StaticText
 				{
 					Parent          = this.searchToFrame,
-					Text            = "à",
+					Text            = "À",
 					PreferredWidth  = 12,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,

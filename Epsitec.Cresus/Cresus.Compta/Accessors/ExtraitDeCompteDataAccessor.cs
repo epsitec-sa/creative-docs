@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void FilterUpdate()
 		{
 			Date? beginDate, endDate;
-			this.filterData.GetIntervalDates (out beginDate, out endDate);
+			this.filterData.GetBeginnerDates (out beginDate, out endDate);
 
 			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
 			{
@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
-			this.filterData.GetIntervalDates (out this.lastBeginDate, out this.lastEndDate);
+			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
 
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();

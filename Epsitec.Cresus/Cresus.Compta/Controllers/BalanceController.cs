@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.SoldeCrédit, 0.20, ContentAlignment.MiddleRight, "Solde C");
 				yield return new ColumnMapper (ColumnType.Budget,      0.20, ContentAlignment.MiddleRight, "Budget");
 
-				yield return new ColumnMapper (ColumnType.Date,        0.20, ContentAlignment.MiddleRight, "Date", show: false);
+				yield return new ColumnMapper (ColumnType.Date, 0.20, ContentAlignment.MiddleRight, "Date", show: false);
 			}
 		}
 	}

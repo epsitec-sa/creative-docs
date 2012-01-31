@@ -16,7 +16,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public SearchData()
 		{
 			this.tabsData = new List<SearchTabData> ();
+			this.Clear ();
+		}
+
+
+		public void Clear()
+		{
+			this.tabsData.Clear ();
+			this.Adjust ();
+
 			this.OrMode = true;
+		}
+
+		public void Adjust()
+		{
+			if (!this.tabsData.Any ())
+			{
+				this.tabsData.Add (new SearchTabData ());
+			}
 		}
 
 
@@ -58,184 +75,176 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public bool GetIntervalDates(out Date? beginDate, out Date? endDate)
-		{
-			foreach (var data in this.tabsData)
-			{
-				if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
-				{
-					return true;
-				}
-			}
-
-			beginDate = null;
-			endDate   = null;
-			return false;
-		}
-
-		public SearchTabData GetIntervalDatesData()
-		{
-			foreach (var data in this.tabsData)
-			{
-				Date? beginDate, endDate;
-				if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
-				{
-					data.Column = ColumnType.Date;
-					return data;
-				}
-			}
-
-			//	Si on n'a pas trouvé un intervalle de dates, on prend n'importe lequel.
-			foreach (var data in this.tabsData)
-			{
-				if (data.SearchText.Mode == SearchMode.Interval)
-				{
-					data.Column = ColumnType.Date;
-					return data;
-				}
-			}
-
-			//	Si on n'a trouvé aucun invervalle, on en crée un.
-			var interval = new SearchTabData (null);
-			this.tabsData.Add (interval);
-
-			interval.Column = ColumnType.Date;
-			interval.SearchText.Mode = SearchMode.Interval;
-
-			return interval;
-		}
-
-
-		public CatégorieDeCompte Catégorie
+		public string BeginnerSearch
 		{
 			get
 			{
-				var data = this.GetCatégorieData ();
-				return SearchData.StringToCatégories (data.SearchText.FromText);
+				return this.tabsData[0].SearchText.FromText;
 			}
 			set
 			{
-				var data = this.GetCatégorieData ();
-				data.SearchText.FromText = SearchData.CatégoriesToString (value);
+				this.tabsData[0].SearchText.FromText = value;
+				this.BeginnerAdjust (false);
 			}
 		}
 
-		public SearchTabData GetCatégorieData()
+
+		public CatégorieDeCompte BeginnerCatégories
 		{
-			foreach (var data in this.tabsData)
+			get
 			{
-				if (data.Column == ColumnType.Catégorie)
+				var data = this.BeginnerCatégoriesData;
+
+				if (data == null)
 				{
-					data.SearchText.Mode = SearchMode.Jokers;
-					return data;
+					return CatégorieDeCompte.Tous;
+				}
+				else
+				{
+					return Misc.StringToCatégories (data.SearchText.FromText);
+				}
+			}
+			set
+			{
+				var data = this.BeginnerCatégoriesData;
+
+				if (value == CatégorieDeCompte.Tous || value == CatégorieDeCompte.Inconnu)
+				{
+					if (data != null)
+					{
+						this.tabsData.Remove (data);
+						this.Adjust ();
+					}
+				}
+				else
+				{
+					if (data == null)
+					{
+						//	Si on n'a trouvé aucune catégorie, on en crée une.
+						data = new SearchTabData ();
+						this.tabsData.Add (data);
+					}
+
+					data.Column              = ColumnType.Catégorie;
+					data.SearchText.Mode     = SearchMode.Jokers;
+					data.SearchText.FromText = Misc.CatégoriesToString (value);
+
+					this.BeginnerAdjust (true);
+				}
+			}
+		}
+
+		private SearchTabData BeginnerCatégoriesData
+		{
+			get
+			{
+				return this.tabsData.Where (x => x.Column == ColumnType.Catégorie).FirstOrDefault ();
+			}
+		}
+
+
+		public void GetBeginnerDates(out Date? beginDate, out Date? endDate)
+		{
+			var data = this.BeginnerDatesData;
+
+			if (data == null)
+			{
+				beginDate = null;
+				endDate   = null;
+			}
+			else
+			{
+				data.SearchText.GetIntervalDates (out beginDate, out endDate);
+			}
+		}
+
+		public void SetBeginnerDates(Date? beginDate, Date? endDate)
+		{
+			var data = this.BeginnerDatesData;
+
+			if (beginDate == null && endDate == null)
+			{
+				if (data != null)
+				{
+					this.tabsData.Remove (data);
+					this.Adjust ();
+				}
+			}
+			else
+			{
+				if (data == null)
+				{
+					//	Si on n'a trouvé aucune date, on en crée une.
+					data = new SearchTabData ();
+					this.tabsData.Add (data);
+				}
+
+				data.Column              = ColumnType.Date;
+				data.SearchText.Mode     = SearchMode.Interval;
+				data.SearchText.FromText = Misc.DateToString (beginDate);
+				data.SearchText.ToText   = Misc.DateToString (endDate);
+
+				this.BeginnerAdjust (true);
+			}
+		}
+
+		private SearchTabData BeginnerDatesData
+		{
+			get
+			{
+				foreach (var data in this.tabsData)
+				{
+					Date? beginDate, endDate;
+					if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
+					{
+						return data;
+					}
+				}
+
+				//	Si on n'a pas trouvé un intervalle de dates, on prend n'importe lequel.
+				foreach (var data in this.tabsData)
+				{
+					if (data.SearchText.Mode == SearchMode.Interval)
+					{
+						return data;
+					}
+				}
+
+				return null;
+			}
+		}
+
+
+		public void BeginnerAdjust(bool isFilter)
+		{
+			if (isFilter)  // filtre ?
+			{
+				var dataCatégories = this.BeginnerCatégoriesData;
+				var dataDates      = this.BeginnerDatesData;
+
+				this.tabsData.Clear ();
+
+				if (dataCatégories != null)
+				{
+					this.tabsData.Add (dataCatégories);
+				}
+
+				if (dataDates != null)
+				{
+					this.tabsData.Add (dataDates);
+				}
+
+				this.OrMode = false;
+			}
+			else  // recherche ?
+			{
+				while (this.tabsData.Count > 1)
+				{
+					this.tabsData.RemoveAt (1);
 				}
 			}
 
-			//	Si on n'a trouvé aucune catégorie, on en crée une.
-			var cat = new SearchTabData (null);
-			this.tabsData.Add (cat);
-
-			cat.Column = ColumnType.Catégorie;
-			cat.SearchText.Mode = SearchMode.Jokers;
-
-			return cat;
-		}
-
-		private static string CatégoriesToString(CatégorieDeCompte catégorie)
-		{
-			var list = new List<string> ();
-
-			if ((catégorie & CatégorieDeCompte.Actif) != 0)
-			{
-				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Actif));
-			}
-
-			if ((catégorie & CatégorieDeCompte.Passif) != 0)
-			{
-				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Passif));
-			}
-
-			if ((catégorie & CatégorieDeCompte.Charge) != 0)
-			{
-				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Charge));
-			}
-
-			if ((catégorie & CatégorieDeCompte.Produit) != 0)
-			{
-				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Produit));
-			}
-
-			if ((catégorie & CatégorieDeCompte.Exploitation) != 0)
-			{
-				list.Add (SearchData.CatégorieToString (CatégorieDeCompte.Exploitation));
-			}
-
-			return string.Join ("|", list);
-		}
-
-		private static CatégorieDeCompte StringToCatégories(string text)
-		{
-			var catégorie = CatégorieDeCompte.Inconnu;
-
-			if (!string.IsNullOrEmpty (text))
-			{
-				var words = text.Split ('|');
-
-				foreach (var word in words)
-				{
-					catégorie |= SearchData.StringToCatégorie (word);
-				}
-			}
-
-			return catégorie;
-		}
-
-		private static string CatégorieToString(CatégorieDeCompte catégorie)
-		{
-			switch (catégorie)
-			{
-				case CatégorieDeCompte.Actif:
-					return "Actif";
-
-				case CatégorieDeCompte.Passif:
-					return "Passif";
-
-				case CatégorieDeCompte.Charge:
-					return "Charge";
-
-				case CatégorieDeCompte.Produit:
-					return "Produit";
-
-				case CatégorieDeCompte.Exploitation:
-					return "Exploitation";
-
-				default:
-					return "?";
-			}
-		}
-
-		private static CatégorieDeCompte StringToCatégorie(string text)
-		{
-			switch (text)
-			{
-				case "Actif":
-					return CatégorieDeCompte.Actif;
-
-				case "Passif":
-					return CatégorieDeCompte.Passif;
-
-				case "Charge":
-					return CatégorieDeCompte.Charge;
-
-				case "Produit":
-					return CatégorieDeCompte.Produit;
-
-				case "Exploitation":
-					return CatégorieDeCompte.Exploitation;
-
-				default:
-					return CatégorieDeCompte.Inconnu;
-			}
+			this.Adjust ();
 		}
 
 

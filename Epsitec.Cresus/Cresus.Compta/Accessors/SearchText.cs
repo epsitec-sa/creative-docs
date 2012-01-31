@@ -15,9 +15,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 {
 	public class SearchText
 	{
-		public SearchText(ComptaEntity comptaEntity)
+		public SearchText()
 		{
-			this.comptaEntity = comptaEntity;
 			this.Clear ();
 		}
 
@@ -429,7 +428,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else if (this.preparedFromDate.HasValue || this.preparedToDate.HasValue)
 				{
-					var date = this.ParseDate (target);
+					var date = Misc.ParseDate (target);
 					if (date.HasValue)
 					{
 						if (this.preparedFromDate.HasValue && date.Value < this.preparedFromDate.Value)
@@ -472,7 +471,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedFromDate = this.ParseDate (this.fromText);
+					this.preparedFromDate = Misc.ParseDate (this.fromText);
 				}
 			}
 
@@ -485,7 +484,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedToDate = this.ParseDate (this.toText);
+					this.preparedToDate = Misc.ParseDate (this.toText);
 				}
 			}
 
@@ -533,23 +532,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private Date? ParseDate(string text)
-		{
-			System.DateTime d;
-			if (System.DateTime.TryParse (text, out d))
-			{
-				return new Date (d);
-			}
-
-			return null;
-		}
-
-
-		private readonly ComptaEntity	comptaEntity;
-
 		private string					fromText;
 		private string					toText;
-		private SearchMode			mode;
+		private SearchMode				mode;
 		private bool					matchCase;
 		private bool					wholeWord;
 		private bool					invert;

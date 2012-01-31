@@ -17,5 +17,6 @@ namespace Epsitec.Cresus.Compta
 		Charge			= 0x04,
 		Produit			= 0x08,
 		Exploitation	= 0x10,
+		Tous			= 0x1f,
 	}
 }

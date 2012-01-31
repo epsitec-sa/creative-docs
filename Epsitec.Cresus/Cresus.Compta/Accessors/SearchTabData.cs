@@ -15,10 +15,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 {
 	public class SearchTabData
 	{
-		public SearchTabData(ComptaEntity comptaEntity)
+		public SearchTabData()
 		{
-			this.comptaEntity = comptaEntity;
-			this.searchText = new SearchText (this.comptaEntity);
+			this.searchText = new SearchText ();
 		}
 
 		public SearchText SearchText
@@ -50,7 +49,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private readonly ComptaEntity		comptaEntity;
 		private readonly SearchText			searchText;
 	}
 }

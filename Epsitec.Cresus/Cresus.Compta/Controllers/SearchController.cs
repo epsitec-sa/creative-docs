@@ -31,11 +31,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.isFilter      = isFilter;
 
 			this.tabControllers = new List<SearchTabController> ();
-
-			if (this.data.TabsData.Count == 0)
-			{
-				this.data.TabsData.Add (new SearchTabData (this.comptaEntity));
-			}
 		}
 
 
@@ -72,7 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth  = 20*2,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
-				Margins         = new Margins (10, 0, 0, 0),
+				Margins         = new Margins (2, 0, 0, 0),
 			};
 
 			var rightFrame = new FrameBox
@@ -160,8 +155,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.isFilter)
 			{
-				this.CreateMiddleBeginnerCatégorieUI ();
-				this.CreateMiddleBeginnerDatesUI ();
+				if (this.columnMappers.Where (x => x.Column == ColumnType.Catégorie).Any ())
+				{
+					this.CreateMiddleBeginnerCatégorieUI ();
+				}
+
+				if (this.columnMappers.Where (x => x.Column == ColumnType.Date).Any ())
+				{
+					this.CreateMiddleBeginnerDatesUI ();
+				}
 			}
 			else
 			{
@@ -175,11 +177,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent  = this.middleFrame,
-				Text    = "Catégories",
-				Dock    = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
-				Padding = new Margins (5, 5, 2, 2),
+				Parent          = this.middleFrame,
+				Text            = "Catégories",
+				PreferredHeight = 65,  // pour aider le layout !
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				Padding         = new Margins (5, 5, 2, 2),
 			};
 
 			int buttonWidth = 65;
@@ -196,7 +199,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock   = DockStyle.Top,
 			};
 
-			var catégorie = this.data.Catégorie;
+			var catégorie = this.data.BeginnerCatégories;
 
 			{
 				this.beginnerCatégorieActif = new CheckButton
@@ -283,7 +286,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				catégorie |= CatégorieDeCompte.Exploitation;
 			}
 
-			this.data.Catégorie = catégorie;
+			this.data.BeginnerCatégories = catégorie;
+			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
 
@@ -291,11 +295,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent  = this.middleFrame,
-				Text    = "Dates",
-				Dock    = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
-				Padding = new Margins (5, 5, 2, 2),
+				Parent          = this.middleFrame,
+				Text            = "Dates",
+				PreferredWidth  = 150,  // pour aider le layout !
+				PreferredHeight = 65,  // pour aider le layout !
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				Padding         = new Margins (5, 5, 2, 2),
 			};
 
 			var frame1 = new FrameBox
@@ -312,7 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			Date? beginDate, endDate;
-			this.data.GetIntervalDates (out beginDate, out endDate);
+			this.data.GetBeginnerDates (out beginDate, out endDate);
 
 			{
 				new StaticText
@@ -356,15 +362,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.beginnerBeginDateField.TextChanged += delegate
 			{
-				var data = this.data.GetIntervalDatesData ();
-				data.SearchText.FromText = this.beginnerBeginDateField.Text;
+				beginDate = Misc.ParseDate (this.beginnerBeginDateField.Text);
+				endDate   = Misc.ParseDate (this.beginnerEndDateField.Text);
+				data.SetBeginnerDates (beginDate, endDate);
+
+				this.UpdateOrMode ();
 				this.searchStartAction ();
 			};
 
 			this.beginnerEndDateField.TextChanged += delegate
 			{
-				var data = this.data.GetIntervalDatesData ();
-				data.SearchText.ToText = this.beginnerEndDateField.Text;
+				beginDate = Misc.ParseDate (this.beginnerBeginDateField.Text);
+				endDate   = Misc.ParseDate (this.beginnerEndDateField.Text);
+				data.SetBeginnerDates (beginDate, endDate);
+
+				this.UpdateOrMode ();
 				this.searchStartAction ();
 			};
 
@@ -483,7 +495,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.resultLabel = new StaticText
 				{
 					Parent          = footer,
-					PreferredWidth  = 120,
+					PreferredWidth  = 110,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Margins         = new Margins (0, 0, 0, 0),
@@ -517,14 +529,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.beginnerSearchField = new TextField
 			{
 				Parent          = this.middleFrame,
-				Text            = this.data.TabsData[0].SearchText.FromText,
+				Text            = this.data.BeginnerSearch,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 			};
 
 			this.beginnerSearchField.TextChanged += delegate
 			{
-				this.data.TabsData[0].SearchText.FromText = this.beginnerSearchField.Text;
+				this.data.BeginnerSearch = this.beginnerSearchField.Text;
 				this.searchStartAction ();
 			};
 
@@ -542,6 +554,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void LevelChangedAction()
 		{
 			this.data.Specialist = this.levelController.Specialist;
+			this.data.BeginnerAdjust (this.isFilter);
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
@@ -582,57 +595,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateButtons ();
 			this.searchStartAction ();
 		}
-
-#if false
-		private void SpecificInvert()
-		{
-			this.data.Specialist = !this.data.Specialist;
-
-			//	Adapte les données.
-			{
-				var d1 = this.data.GetCatégorieData ();
-				var d2 = this.data.GetIntervalDatesData ();
-
-				if (string.IsNullOrEmpty (d1.SearchText.FromText))
-				{
-					d1 = null;
-				}
-
-				if (string.IsNullOrEmpty (d2.SearchText.FromText) && string.IsNullOrEmpty (d2.SearchText.ToText))
-				{
-					d2 = null;
-				}
-
-				this.data.TabsData.Clear ();
-
-				if (d1 != null)
-				{
-					this.data.TabsData.Add (d1);
-				}
-
-				if (d2 != null)
-				{
-					this.data.TabsData.Add (d2);
-				}
-
-				if (this.data.TabsData.Count == 0)
-				{
-					this.data.TabsData.Add (new SearchTabData (null));
-				}
-
-				if (this.data.TabsData.Count > 1)
-				{
-					this.data.OrMode = false;
-				}
-			}
-
-			this.CreateMiddleUI ();
-			this.UpdateButtons ();
-			this.UpdateOrMode ();
-			this.searchStartAction ();
-		}
-#endif
-
 
 		public void SetSearchCount(int dataCount, int? count, int? locator)
 		{
@@ -680,7 +642,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (index == 0)
 			{
-				this.data.TabsData.Add (new SearchTabData (this.comptaEntity));
+				this.data.TabsData.Add (new SearchTabData ());
 			}
 			else
 			{
