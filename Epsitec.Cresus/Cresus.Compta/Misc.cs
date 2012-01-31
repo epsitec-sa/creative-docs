@@ -93,21 +93,26 @@ namespace Epsitec.Cresus.Compta
 
 		public static CatégorieDeCompte StringToCatégorie(string text)
 		{
-			switch (text)
+			switch (text.ToLower ())
 			{
-				case "Actif":
+				case "actif":
+				case "actifs":
 					return CatégorieDeCompte.Actif;
 
-				case "Passif":
+				case "passif":
+				case "passifs":
 					return CatégorieDeCompte.Passif;
 
-				case "Charge":
+				case "charge":
+				case "charges":
 					return CatégorieDeCompte.Charge;
 
-				case "Produit":
+				case "produit":
+				case "produits":
 					return CatégorieDeCompte.Produit;
 
-				case "Exploitation":
+				case "exploitation":
+				case "exploitations":
 					return CatégorieDeCompte.Exploitation;
 
 				default:
@@ -116,7 +121,7 @@ namespace Epsitec.Cresus.Compta
 		}
 
 
-		public static IEnumerable<CatégorieDeCompte> Catégories
+		private static IEnumerable<CatégorieDeCompte> Catégories
 		{
 			get
 			{

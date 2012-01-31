@@ -33,11 +33,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.mainFrame, optionsChanged);
-			this.CreateBudgetUI (this.mainFrame, optionsChanged);
+			this.CreateCheckUI (this.mainFrame);
+			this.CreateBudgetUI (this.mainFrame);
+
+			this.UpdateWidgets ();
 		}
 
-		protected void CreateCheckUI(FrameBox parent, System.Action optionsChanged)
+		protected void CreateCheckUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -47,39 +49,62 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.CreateProfondeurUI (frame, optionsChanged);
+			this.CreateProfondeurUI (frame);
 
-			var nullButton = new CheckButton
+			this.nullButton = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche les comptes dont le solde est nul",
 				PreferredWidth = 230,
-				ActiveState    = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,
 			};
 
-			var graphicsButton = new CheckButton
+			this.graphicsButton = new CheckButton
 			{
 				Parent         = frame,
 				Text           = "Graphique du solde",
 				PreferredWidth = 120,
-				ActiveState    = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,
 			};
 
-			nullButton.ActiveStateChanged += delegate
+			this.nullButton.ActiveStateChanged += delegate
 			{
-				this.Options.ComptesNuls = (nullButton.ActiveState == ActiveState.Yes);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.Options.ComptesNuls = (nullButton.ActiveState == ActiveState.Yes);
+					this.OptionsChanged ();
+				}
 			};
 
-			graphicsButton.ActiveStateChanged += delegate
+			this.graphicsButton.ActiveStateChanged += delegate
 			{
-				this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
+					this.OptionsChanged ();
+				}
 			};
+		}
+
+		protected override void OptionsChanged()
+		{
+			this.UpdateWidgets ();
+			base.OptionsChanged ();
+		}
+
+		protected override void UpdateWidgets()
+		{
+			this.UpdateProfondeur ();
+			this.UpdateBudget ();
+
+			this.ignoreChange = true;
+			this.nullButton    .ActiveState = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No;
+			this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+			this.ignoreChange = false;
+
+			base.UpdateWidgets ();
 		}
 
 		private BilanOptions Options
@@ -89,5 +114,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.options as BilanOptions;
 			}
 		}
+
+
+		private CheckButton			nullButton;
+		private CheckButton			graphicsButton;
 	}
 }

@@ -67,8 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				DrawFullFrame   = true,
 				BackColor       = Color.FromHexa ("ccffcc"),  // vert pastel
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 6),
-				Padding         = new Margins (5),
+				Margins         = new Margins (0, 0, 0, 5),
 				Visibility      = false,
 			};
 

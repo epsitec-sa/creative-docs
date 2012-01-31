@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
-			this.addRemoveButton = new GlyphButton
+			this.addRemoveButton = new IconButton
 			{
 				Parent          = frameBox,
 				PreferredWidth  = 20,
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateButtons()
 		{
-			this.addRemoveButton.GlyphShape = this.addAction ? GlyphShape.Plus : GlyphShape.Minus;
+			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Multi.Insert" : "Multi.Delete");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
 
 			if (this.addAction)
@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private TextFieldCombo					columnField;
 		private StaticText						modeField;
 		private GlyphButton						modeButton;
-		private GlyphButton						addRemoveButton;
+		private IconButton						addRemoveButton;
 
 		private bool							bigDataInterface;
 		private bool							addAction;

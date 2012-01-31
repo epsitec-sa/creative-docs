@@ -46,11 +46,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			var leftFrame = new FrameBox
+			var labelFrame = new FrameBox
 			{
 				Parent          = frame,
+				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
+				Padding         = new Margins (5, 0, 5, 5),
 			};
 
 			this.middleFrame = new FrameBox
@@ -58,16 +60,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent          = frame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 20, 0, 0),
+				Padding         = new Margins (0, 5, 5, 5),
 			};
 
 			var levelFrame = new FrameBox
 			{
 				Parent          = frame,
-				PreferredWidth  = 20*2,
+				DrawFullFrame   = true,
+				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
-				Margins         = new Margins (2, 0, 0, 0),
+				Padding         = new Margins (5),
 			};
 
 			var rightFrame = new FrameBox
@@ -75,9 +78,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent          = frame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
+				Padding         = new Margins (5, 0, 5, 5),
 			};
 
-			this.CreateLeftUI (leftFrame);
+			this.CreateLabelUI (labelFrame);
 			this.CreateRightUI  (rightFrame);
 			this.CreateMiddleUI ();
 			this.CreateLevelUI (levelFrame);
@@ -98,40 +102,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CreateLeftUI(FrameBox parent)
+		private void CreateLabelUI(FrameBox parent)
 		{
-			var frame = new FrameBox
+			new StaticText
 			{
 				Parent          = parent,
+				Text            = this.isFilter ? "Filtrer" : "Rechercher",
+				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
-
-			this.buttonClear = new GlyphButton
-			{
-				Parent          = frame,
-				GlyphShape      = GlyphShape.Close,
-				PreferredSize   = new Size (20, 20),
-				Dock            = DockStyle.Left,
-				Enable          = false,
-				Margins         = new Margins (0, 10, 0, 0),
-			};
-
-			new StaticText
-			{
-				Parent          = frame,
-				Text            = this.isFilter ? "Filtrer" : "Rechercher",
-				PreferredWidth  = 64,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-			};
-
-			this.buttonClear.Clicked += delegate
-			{
-				this.SearchClear ();
-			};
-
-			ToolTip.Default.SetToolTip (this.buttonClear, this.isFilter ? "Termine le filtre" : "Termine la recherche");
 		}
 
 		private void CreateMiddleUI()
@@ -547,8 +527,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateLevelUI(FrameBox parent)
 		{
 			this.levelController = new LevelController ();
-			this.levelController.CreateUI (parent, this.LevelChangedAction);
+			this.levelController.CreateUI (parent, isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.data.Specialist;
+		}
+
+		private void ClearAction()
+		{
+			this.SearchClear ();
+			this.SetFocus ();
 		}
 
 		private void LevelChangedAction()
@@ -656,7 +642,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateButtons()
 		{
-			this.buttonClear.Enable = !this.data.IsEmpty || this.data.TabsData.Count > 1;
+			this.levelController.ClearEnable = !this.data.IsEmpty || this.data.TabsData.Count > 1;
 		}
 
 
@@ -690,7 +676,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private System.Action<int>						searchNextAction;
 
 		private FrameBox								middleFrame;
-		private GlyphButton								buttonClear;
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
 		private StaticText								resultLabel;

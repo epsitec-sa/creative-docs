@@ -51,39 +51,66 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
+			this.optionsChanged = optionsChanged;
+
 			this.toolbar = new FrameBox
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = AbstractOptionsController.backColor,
+				BackColor           = Color.FromHexa ("d2f0ff"),  // bleu pastel
 				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 6),
-				Padding             = new Margins (5),
+				Margins             = new Margins (0, 0, 0, 5),
 			};
 
+			//	Crée les frames gauche, centrale et droite.
 			this.mainFrame = new FrameBox
 			{
-				Parent = this.toolbar,
-				Dock   = DockStyle.Fill,
+				Parent         = this.toolbar,
+				Dock           = DockStyle.Fill,
+				Padding        = new Margins (5),
 			};
 
 			var levelFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
-				PreferredWidth = 20*2,
+				DrawFullFrame  = true,
+				PreferredWidth = 20,
 				Dock           = DockStyle.Right,
-				Margins        = new Margins (10, 0, 0, 0),
+				Padding        = new Margins (5),
 			};
 
+			//	Remplissage de la frame gauche.
+			//	Remplissage de la frame centrale.
 			this.levelController = new LevelController ();
-			this.levelController.CreateUI (levelFrame, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.options.Specialist;
+		}
+
+		protected virtual void OptionsChanged()
+		{
+			this.optionsChanged ();
+		}
+
+		private void ClearAction()
+		{
+			this.options.Clear ();
+			this.OptionsChanged ();
 		}
 
 		protected virtual void LevelChangedAction()
 		{
 			this.options.Specialist = this.levelController.Specialist;
+
+			if (this.budgtetFrame != null)
+			{
+				this.budgtetFrame.Visibility = this.levelController.Specialist;
+			}
+		}
+
+		protected virtual void UpdateWidgets()
+		{
+			this.levelController.ClearEnable = !this.options.IsEmpty;
 		}
 
 
@@ -92,7 +119,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected FrameBox CreateProfondeurUI(FrameBox parent, System.Action optionsChanged)
+		#region Profondeur
+		protected FrameBox CreateProfondeurUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -108,32 +136,43 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent         = frame,
 				FormattedText  = "Profondeur",
-				PreferredWidth = 64,
+				PreferredWidth = UIBuilder.LeftLabelWidth,
 				Dock           = DockStyle.Left,
 			};
 
-			var field = new TextFieldCombo
+			this.fieldProfondeur = new TextFieldCombo
 			{
 				Parent          = frame,
 				IsReadOnly      = true,
 				PreferredHeight = 20,
-				FormattedText   = this.ProfondeurToDescription (this.options.Profondeur),
 				Dock            = DockStyle.Fill,
 			};
 
 			for (int i = 1; i <= 6; i++)
             {
-				field.Items.Add (this.ProfondeurToDescription (i));  // 1..6
+				this.fieldProfondeur.Items.Add (this.ProfondeurToDescription (i));  // 1..6
             }
-			field.Items.Add (this.ProfondeurToDescription (null));  // Tout
+			this.fieldProfondeur.Items.Add (this.ProfondeurToDescription (null));  // Tout
 
-			field.TextChanged += delegate
+			this.UpdateProfondeur ();
+
+			this.fieldProfondeur.TextChanged += delegate
 			{
-				this.options.Profondeur = this.DescriptionToProfondeur (field.FormattedText);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.options.Profondeur = this.DescriptionToProfondeur (this.fieldProfondeur.FormattedText);
+					this.OptionsChanged ();
+				}
 			};
 
 			return frame;
+		}
+
+		protected void UpdateProfondeur()
+		{
+			this.ignoreChange = true;
+			this.fieldProfondeur.FormattedText = this.ProfondeurToDescription (this.options.Profondeur);
+			this.ignoreChange = false;
 		}
 
 		private FormattedText ProfondeurToDescription(int? profondeur)
@@ -152,21 +191,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var t = text.ToSimpleText();
 
-			if (string.IsNullOrEmpty (t)|| t.Length != 1 || t[0] < '1' || t[0] < '9')
-			{
-				return t[0] - '0';
-			}
-			else
+			if (string.IsNullOrEmpty (t) || t.Length != 1 || t[0] < '1' || t[0] > '9')
 			{
 				return null;
 			}
+			else
+			{
+				return t[0] - '0';
+			}
 		}
+		#endregion
 
 
 		#region Budget
-		protected FrameBox CreateBudgetUI(FrameBox parent, System.Action optionsChanged)
+		protected FrameBox CreateBudgetUI(FrameBox parent)
 		{
-			var frame = new FrameBox
+			this.budgtetFrame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
@@ -177,17 +217,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.buttonBudgetEnable = new CheckButton
 			{
-				Parent          = frame,
+				Parent          = this.budgtetFrame,
 				PreferredWidth  = 120,
 				PreferredHeight = 20,
-				ActiveState     = this.options.BudgetEnable ? ActiveState.Yes : ActiveState.No,
 				Dock            = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,
 			};
 
 			this.fieldBudgetShowed = new TextFieldCombo
 			{
-				Parent          = frame,
+				Parent          = this.budgtetFrame,
 				IsReadOnly      = true,
 				PreferredWidth  = 150,
 				PreferredHeight = 20,
@@ -198,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.frameBudgetDisplayMode = new StaticText
 			{
-				Parent         = frame,
+				Parent         = this.budgtetFrame,
 				FormattedText  = "Affichage",
 				PreferredWidth = 55,
 				Dock           = DockStyle.Left,
@@ -206,7 +245,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.fieldBudgetDisplayMode = new TextFieldCombo
 			{
-				Parent          = frame,
+				Parent          = this.budgtetFrame,
 				IsReadOnly      = true,
 				PreferredWidth  = 200,
 				PreferredHeight = 20,
@@ -218,42 +257,58 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.BudgetShowedInitialize (this.fieldBudgetShowed);
 			this.BudgetDisplayModeInitialize (this.fieldBudgetDisplayMode);
 
-			this.SetBudgetShowed (this.fieldBudgetShowed, this.options.BudgetShowed);
-			this.SetBudgetDisplayMode (this.fieldBudgetDisplayMode, this.options.BudgetDisplayMode);
+			this.UpdateBudget ();
 
 			//	Gestion des événements.
 			this.buttonBudgetEnable.ActiveStateChanged += delegate
 			{
-				this.options.BudgetEnable = (this.buttonBudgetEnable.ActiveState == ActiveState.Yes);
-				this.UpdateBudget ();
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.options.BudgetEnable = (this.buttonBudgetEnable.ActiveState == ActiveState.Yes);
+					this.OptionsChanged ();
+				}
 			};
 
 			this.fieldBudgetShowed.TextChanged += delegate
 			{
-				this.options.BudgetShowed = this.GetBudgetShowed (this.fieldBudgetShowed);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.options.BudgetShowed = this.GetBudgetShowed (this.fieldBudgetShowed);
+					this.OptionsChanged ();
+				}
 			};
 
 			this.fieldBudgetDisplayMode.TextChanged += delegate
 			{
-				this.options.BudgetDisplayMode = this.GetBudgetDisplayMode (this.fieldBudgetDisplayMode);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.options.BudgetDisplayMode = this.GetBudgetDisplayMode (this.fieldBudgetDisplayMode);
+					this.OptionsChanged ();
+				}
 			};
 
-			this.UpdateBudget ();
-
-			return frame;
+			return this.budgtetFrame;
 		}
 
-		private void UpdateBudget()
+		protected void UpdateBudget()
 		{
+			this.ignoreChange = true;
+
+			this.budgtetFrame.Visibility = this.levelController.Specialist;
+
 			bool enable = this.options.BudgetEnable;
 
+			this.buttonBudgetEnable.ActiveState = this.options.BudgetEnable ? ActiveState.Yes : ActiveState.No;
 			this.buttonBudgetEnable.Text = enable ? "Comparaison avec" : "Comparaison";
-			this.fieldBudgetShowed.Visibility = enable;
+
+			this.fieldBudgetShowed     .Visibility = enable;
 			this.frameBudgetDisplayMode.Visibility = enable;
 			this.fieldBudgetDisplayMode.Visibility = enable;
+
+			this.fieldBudgetShowed     .Text = this.GetBudgetDescription (this.options.BudgetShowed);
+			this.fieldBudgetDisplayMode.Text = this.GetBudgetDescription (this.options.BudgetDisplayMode);
+
+			this.ignoreChange = false;
 		}
 
 
@@ -266,11 +321,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Futur));
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.FuturProrata));
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Précédent));
-		}
-
-		private void SetBudgetShowed(TextFieldCombo combo, BudgetShowed budget)
-		{
-			combo.Text = this.GetBudgetDescription (budget);
 		}
 
 		private BudgetShowed GetBudgetShowed(TextFieldCombo combo)
@@ -324,11 +374,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.Graphique));
 		}
 
-		private void SetBudgetDisplayMode(TextFieldCombo combo, BudgetDisplayMode budget)
-		{
-			combo.Text = this.GetBudgetDescription (budget);
-		}
-
 		private BudgetDisplayMode GetBudgetDisplayMode(TextFieldCombo combo)
 		{
 			foreach (var value in System.Enum.GetValues (typeof (BudgetDisplayMode)))
@@ -370,15 +415,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		protected static readonly Color backColor = Color.FromHexa ("d2f0ff");  // bleu pastel
-
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly AbstractOptions						options;
+
+		protected System.Action									optionsChanged;
 
 		protected int											tabIndex;
 		protected FrameBox										toolbar;
 		protected FrameBox										mainFrame;
+		protected FrameBox										budgtetFrame;
 
+		protected TextFieldCombo								fieldProfondeur;
 		protected CheckButton									buttonBudgetEnable;
 		protected TextFieldCombo								fieldBudgetShowed;
 		protected StaticText									frameBudgetDisplayMode;
@@ -386,5 +433,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected LevelController								levelController;
 
 		protected bool											showPanel;
+		protected bool											ignoreChange;
 	}
 }

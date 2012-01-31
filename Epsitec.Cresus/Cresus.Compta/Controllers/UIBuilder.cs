@@ -204,8 +204,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-	
-		public static readonly double ComboButtonWidth = 14;
+
+		public static readonly double LeftLabelWidth	= 64;
+		public static readonly double ComboButtonWidth	= 14;
 
 		public static readonly FormattedText							leftIndentText = "●  ";
 		public static readonly FormattedText							rightIndentText = "  ";

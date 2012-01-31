@@ -25,8 +25,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			base.SetComptaEntity (compta);
 
-			this.MontreComptesVides = true;
-
 			//	Utilise le premier compte normal par défaut.
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
@@ -35,7 +33,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.NuméroCompte = compte.Numéro;
 			}
 
-			this.HasGraphics = true;
+			this.Clear ();
+		}
+
+
+		public override void Clear()
+		{
+			base.Clear ();
+
+			this.CatégorieMontrée             = CatégorieDeCompte.Tous;
+			this.MontreComptesVides           = true;
+			this.MontreComptesCentralisateurs = false;
+			this.HasGraphics                  = true;
 		}
 
 
@@ -68,6 +77,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get;
 			set;
+		}
+
+
+		protected override void CreateEmpty()
+		{
+			this.emptyOptions = new ExtraitDeCompteOptions ();
+			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+		}
+
+		public override bool CompareTo(AbstractOptions other)
+		{
+			if (!base.CompareTo (other))
+			{
+				return false;
+			}
+
+			var o = other as ExtraitDeCompteOptions;
+
+			return this.CatégorieMontrée == o.CatégorieMontrée &&
+				   this.MontreComptesVides == o.MontreComptesVides &&
+				   this.MontreComptesCentralisateurs == o.MontreComptesCentralisateurs &&
+				   this.HasGraphics == o.HasGraphics;
 		}
 	}
 }

@@ -31,6 +31,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public virtual void Clear()
+		{
+			this.Profondeur        = null;
+			this.BudgetEnable      = false;
+			this.BudgetShowed      = BudgetShowed.Budget;
+			this.BudgetDisplayMode = BudgetDisplayMode.Montant;
+		}
+
+
 		public bool Specialist
 		{
 			get;
@@ -62,6 +71,40 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+
+		public bool IsEmpty
+		{
+			get
+			{
+				if (this.emptyOptions == null)
+				{
+					this.CreateEmpty ();
+				}
+
+				if (this.emptyOptions == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.CompareTo (this.emptyOptions);
+				}
+			}
+		}
+
+		protected virtual void CreateEmpty()
+		{
+		}
+
+		public virtual bool CompareTo(AbstractOptions other)
+		{
+			return this.Profondeur == other.Profondeur &&
+				   this.BudgetEnable == other.BudgetEnable &&
+				   this.BudgetShowed == other.BudgetShowed &&
+				   this.BudgetDisplayMode == other.BudgetDisplayMode;
+		}
+
+
 		public FormattedText BudgetColumnDescription
 		{
 			get
@@ -87,6 +130,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		protected ComptaEntity						comptaEntity;
-		protected int?								profondeur;
+		protected AbstractOptions					emptyOptions;
 	}
 }

@@ -21,19 +21,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, System.Action levelChangedAction)
+		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action clearAction, System.Action levelChangedAction)
 		{
 			var frame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredWidth  = 20*2,
+				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
 
-			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner",   "Mode simple");
-			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Mode avancé");
+			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner", "Simple");
+			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
+
+			this.buttonClear = new IconButton
+			{
+				Parent        = frame,
+				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Cancel"),
+				PreferredSize = new Size (20, 20),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (8, 0, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.buttonClear, clearText);
+
 			this.UpdateButtons ();
+
+			this.buttonClear.Clicked += delegate
+			{
+				clearAction ();
+			};
 
 			this.beginnerButton.Clicked += delegate
 			{
@@ -48,6 +65,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			return frame;
+		}
+
+		public bool ClearEnable
+		{
+			get
+			{
+				return this.buttonClear.Enable;
+			}
+			set
+			{
+				this.buttonClear.Enable = value;
+			}
 		}
 
 		public bool Beginner
@@ -104,8 +133,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private bool					specialist;
-		private RibbonIconButton		beginnerButton;
-		private RibbonIconButton		specialistButton;
+		private bool							specialist;
+		private IconButton						buttonClear;
+		private RibbonIconButton				beginnerButton;
+		private RibbonIconButton				specialistButton;
 	}
 }

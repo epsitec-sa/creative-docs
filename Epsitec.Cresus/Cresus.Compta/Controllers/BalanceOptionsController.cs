@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.mainFrame, optionsChanged);
+			this.CreateCheckUI (this.mainFrame);
 		}
 
-		protected void CreateCheckUI(FrameBox parent, System.Action optionsChanged)
+		protected void CreateCheckUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -46,24 +46,44 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.CreateProfondeurUI (frame, optionsChanged);
+			this.CreateProfondeurUI (frame);
 
-			var button = new CheckButton
+			this.buttonComptesNuls = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche les comptes dont le solde est nul",
 				PreferredWidth = 220,
-				ActiveState    = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
 
-			button.ActiveStateChanged += delegate
+			this.UpdateWidgets ();
+
+			this.buttonComptesNuls.ActiveStateChanged += delegate
 			{
-				this.Options.ComptesNuls = !this.Options.ComptesNuls;
-				button.ActiveState = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No;
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.Options.ComptesNuls = !this.Options.ComptesNuls;
+					this.OptionsChanged ();
+				}
 			};
+		}
+
+		protected override void OptionsChanged()
+		{
+			this.UpdateWidgets ();
+			base.OptionsChanged ();
+		}
+
+		protected override void UpdateWidgets()
+		{
+			this.UpdateProfondeur ();
+
+			this.ignoreChange = true;
+			this.buttonComptesNuls.ActiveState = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No;
+			this.ignoreChange = false;
+
+			base.UpdateWidgets ();
 		}
 
 		private BalanceOptions Options
@@ -73,5 +93,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.options as BalanceOptions;
 			}
 		}
+
+
+		private CheckButton			buttonComptesNuls;
 	}
 }

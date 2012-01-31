@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateEditionUI (this.mainFrame, optionsChanged);
+			this.CreateEditionUI (this.mainFrame);
 		}
 
-		private void CreateEditionUI(FrameBox parent, System.Action optionsChanged)
+		private void CreateEditionUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent         = frame,
 				FormattedText  = "Compte",
-				PreferredWidth = 64,
+				PreferredWidth = UIBuilder.LeftLabelWidth,
 				Dock           = DockStyle.Left,
 			};
 
@@ -59,7 +59,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
 			UIBuilder.CreateAutoCompleteTextField (frame, null, out container, out field);
 			this.fieldCompte = field as AutoCompleteTextField;
-			this.fieldCompte.FormattedText = this.NuméroCompte;
 			container.PreferredWidth = 100;
 			container.Dock = DockStyle.Left;
 			container.Margins = new Margins (0, 1, 0, 0);
@@ -80,7 +79,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.comboModeField = new StaticText
 				{
 					Parent           = comboFrame,
-					Text             = this.ComboModeDescription,
 					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
 					PreferredHeight  = 20,
 					Dock             = DockStyle.Fill,
@@ -97,14 +95,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
-			var graphicsButton = new CheckButton
+			this.graphicsButton = new CheckButton
 			{
 				Parent         = frame,
 				Text           = "Graphique du solde",
 				PreferredWidth = 120,
-				ActiveState    = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 			};
+
+			this.UpdateWidgets ();
 
 			ToolTip.Default.SetToolTip (container,            "Choix du compte");
 			ToolTip.Default.SetToolTip (this.comboModeField,  "Filtre pour le choix du compte");
@@ -116,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (!this.ignoreChange)
 				{
 					this.NuméroCompte = this.fieldCompte.FormattedText;
-					optionsChanged ();
+					this.OptionsChanged ();
 				}
 			};
 
@@ -130,13 +129,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.ShowComboModeMenu (this.comboModeField);
 			};
 
-			graphicsButton.ActiveStateChanged += delegate
+			this.graphicsButton.ActiveStateChanged += delegate
 			{
-				this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
-				optionsChanged ();
+				if (!this.ignoreChange)
+				{
+					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
+					this.OptionsChanged ();
+				}
 			};
+		}
 
+		protected override void OptionsChanged()
+		{
+			this.UpdateWidgets ();
+			base.OptionsChanged ();
+		}
+
+		protected override void UpdateWidgets()
+		{
 			this.UpdateComptes ();
+			this.comboModeField.Text = this.ComboModeDescription;
+
+			this.ignoreChange = true;
+			this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+			this.ignoreChange = false;
+
+			base.UpdateWidgets ();
 		}
 
 
@@ -179,8 +197,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.Options.CatégorieMontrée = (CatégorieDeCompte) System.Enum.Parse (typeof (CatégorieDeCompte), item.Name);
 
-				this.comboModeField.Text = this.ComboModeDescription;
-				this.UpdateComptes ();
+				this.UpdateWidgets ();
+				this.OptionsChanged ();
 			};
 
 			menu.Items.Add (item);
@@ -200,8 +218,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				setter (!getter ());
 
-				this.comboModeField.Text = this.ComboModeDescription;
-				this.UpdateComptes ();
+				this.UpdateWidgets ();
+				this.OptionsChanged ();
 			};
 
 			menu.Items.Add (item);
@@ -286,7 +304,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return false;
 			}
 
-			if (this.Options.CatégorieMontrée != CatégorieDeCompte.Inconnu && compte.Catégorie != this.Options.CatégorieMontrée)
+			if (this.Options.CatégorieMontrée != CatégorieDeCompte.Tous && compte.Catégorie != this.Options.CatégorieMontrée)
 			{
 				return false;
 			}
@@ -332,6 +350,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private AutoCompleteTextField			fieldCompte;
 		private StaticText						comboModeField;
 		private GlyphButton						comboModeButton;
-		private bool							ignoreChange;
+		private CheckButton						graphicsButton;
 	}
 }

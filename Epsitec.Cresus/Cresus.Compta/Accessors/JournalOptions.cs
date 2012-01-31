@@ -24,6 +24,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void SetComptaEntity(ComptaEntity compta)
 		{
 			base.SetComptaEntity (compta);
+			this.Clear ();
+		}
+
+
+		public override void Clear()
+		{
+			base.Clear ();
 
 			this.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
 		}
@@ -33,6 +40,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get;
 			set;
+		}
+
+
+		protected override void CreateEmpty()
+		{
+			this.emptyOptions = new JournalOptions ();
+			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+		}
+
+		public override bool CompareTo(AbstractOptions other)
+		{
+			if (!base.CompareTo (other))
+			{
+				return false;
+			}
+
+			var o = other as JournalOptions;
+
+			return this.Journal == o.Journal;
 		}
 	}
 }

@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Clear()
 		{
+			//	Vide les données et prépare une unique ligne.
 			this.tabsData.Clear ();
 			this.Adjust ();
 
@@ -30,6 +31,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Adjust()
 		{
+			//	Adapte les données pour avoir une ligne au minimum.
 			if (!this.tabsData.Any ())
 			{
 				this.tabsData.Add (new SearchTabData ());
@@ -39,6 +41,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public bool Specialist
 		{
+			//	false -> mode débutant
+			//	true  -> mode spécialiste
 			get;
 			set;
 		}
@@ -46,6 +50,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public List<SearchTabData> TabsData
 		{
+			//	Retourne toutes les lignes de données.
 			get
 			{
 				return this.tabsData;
@@ -54,6 +59,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public bool OrMode
 		{
+			//	false -> mode "and"
+			//	true  -> mode "or"
 			get;
 			set;
 		}
@@ -77,6 +84,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public string BeginnerSearch
 		{
+			//	Texte unique de recherche en mode débutant.
 			get
 			{
 				return this.tabsData[0].SearchText.FromText;
@@ -91,6 +99,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public CatégorieDeCompte BeginnerCatégories
 		{
+			//	Catégories à filtrer en mode débutant.
 			get
 			{
 				var data = this.BeginnerCatégoriesData;
@@ -145,6 +154,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void GetBeginnerDates(out Date? beginDate, out Date? endDate)
 		{
+			//	Retourne les dates à filtrer en mode débutant.
 			var data = this.BeginnerDatesData;
 
 			if (data == null)
@@ -160,6 +170,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void SetBeginnerDates(Date? beginDate, Date? endDate)
 		{
+			//	Modifie les dates à filtrer en mode débutant.
 			var data = this.BeginnerDatesData;
 
 			if (beginDate == null && endDate == null)
@@ -217,13 +228,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void BeginnerAdjust(bool isFilter)
 		{
+			//	Ajuste les données après une modification en mode débutant.
+			//	Il faut supprimer les données surnuméraires, afin d'obtenir un résultat
+			//	conforme à ce qui est visible.
 			if (isFilter)  // filtre ?
 			{
+				//	1) Cherche les données effectives.
 				var dataCatégories = this.BeginnerCatégoriesData;
 				var dataDates      = this.BeginnerDatesData;
 
+				//	2) Supprime toutes les données-
 				this.tabsData.Clear ();
 
+				//	3) Puis remet les données effectives, dans le bon ordre.
 				if (dataCatégories != null)
 				{
 					this.tabsData.Add (dataCatégories);
@@ -234,17 +251,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.tabsData.Add (dataDates);
 				}
 
+				//	4) Met au moins une ligne s'il n'y a plus rien.
+				this.Adjust ();
+
+				//	Si plusieurs lignes sont utilisées, il faut mettre le mode "and".
 				this.OrMode = false;
 			}
 			else  // recherche ?
 			{
+				//	Ne conserve que la première ligne.
 				while (this.tabsData.Count > 1)
 				{
 					this.tabsData.RemoveAt (1);
 				}
 			}
-
-			this.Adjust ();
 		}
 
 

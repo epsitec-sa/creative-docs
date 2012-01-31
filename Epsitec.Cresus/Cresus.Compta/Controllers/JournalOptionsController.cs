@@ -38,11 +38,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateComptactJournalUI (this.mainFrame, optionsChanged);
-			this.CreateExtendedJournalUI (this.mainFrame, optionsChanged);
+			this.CreateComptactJournalUI (this.mainFrame);
+			this.CreateExtendedJournalUI (this.mainFrame);
 
+			this.UpdateWidgets ();
+		}
+
+		protected override void OptionsChanged()
+		{
+			this.UpdateWidgets ();
+			base.OptionsChanged ();
+		}
+
+		protected override void UpdateWidgets()
+		{
+			this.UpdateCombo ();
+			this.UpdateList ();
+			this.UpdateButtons ();
 			this.UpdateLevel ();
 			this.UpdateSummary ();
+
+			base.UpdateWidgets ();
 		}
 
 		protected override void LevelChangedAction()
@@ -70,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CreateComptactJournalUI(FrameBox parent, System.Action optionsChanged)
+		private void CreateComptactJournalUI(FrameBox parent)
 		{
 			this.comptactFrame = new FrameBox
 			{
@@ -119,15 +135,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.Options.Journal = this.comptaEntity.Journaux[this.compactComboJournaux.SelectedItemIndex];
 					}
 
-					this.UpdateList ();
-					this.UpdateButtons ();
-					this.UpdateSummary ();
-					optionsChanged ();
+					this.OptionsChanged ();
 				}
 			};
 		}
 
-		private void CreateExtendedJournalUI(FrameBox parent, System.Action optionsChanged)
+		private void CreateExtendedJournalUI(FrameBox parent)
 		{
 			this.extendedFrame = new FrameBox
 			{
@@ -288,11 +301,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.Options.Journal = this.comptaEntity.Journaux[this.extendedListJournaux.SelectedItemIndex];
 					}
 
-					this.UpdateCombo ();
-					this.UpdateList ();
-					this.UpdateButtons ();
-					this.UpdateSummary ();
-					optionsChanged ();
+					this.OptionsChanged ();
 				}
 			};
 
@@ -301,9 +310,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (!this.ignoreChange)
 				{
 					this.Options.Journal.Name = this.extendedFieldName.FormattedText;
-					this.UpdateCombo ();
-					this.UpdateList ();
-					optionsChanged ();
+					this.OptionsChanged ();
 				}
 			};
 
@@ -314,11 +321,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.comptaEntity.Journaux.Add (nouveauJournal);
 
 				this.Options.Journal = nouveauJournal;
-				this.UpdateCombo ();
-				this.UpdateList ();
-				this.UpdateButtons ();
-				this.UpdateSummary ();
-				optionsChanged ();
+				this.OptionsChanged ();
 
 				this.extendedFieldName.SelectAll ();
 				this.extendedFieldName.Focus ();
@@ -363,11 +366,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var journal = this.comptaEntity.Journaux[sel];
 
 				this.Options.Journal = journal;
-				this.UpdateCombo ();
-				this.UpdateList ();
-				this.UpdateButtons ();
-				this.UpdateSummary ();
-				optionsChanged ();
+				this.OptionsChanged ();
 			};
 		}
 
@@ -474,7 +473,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Button					extendedDownButton;
 		private Button					extendedRemoveButton;
 		private StaticText				extendedSummary;
-
-		private bool					ignoreChange;
 	}
 }
