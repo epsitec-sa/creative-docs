@@ -227,35 +227,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-
-						foreach (var column in this.columnMappers.Select (x => x.Column))
-						{
-							foreach (var tab in this.filterData.TabsData)
-							{
-								if (tab.Column != ColumnType.None && tab.Column != column)
-								{
-									continue;
-								}
-
-								if (tab.IsEmpty)
-								{
-									continue;
-								}
-
-								var text = this.GetText (row, column, true);
-								int n = tab.SearchText.Search (ref text);
-
-								if (n != 0)  // trouvé ?
-								{
-									founds++;
-
-									if (this.filterData.OrMode)
-									{
-										break;
-									}
-								}
-							}
-						}
+						founds = this.FilterLine (row);
 					}
 
 					if (founds != 0 && (this.filterData.OrMode || founds == this.filterData.TabsData.Count))
@@ -264,6 +236,42 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 			}
+		}
+
+		protected int FilterLine(int row)
+		{
+			int founds = 0;
+
+			foreach (var column in this.columnMappers.Select (x => x.Column))
+			{
+				foreach (var tab in this.filterData.TabsData)
+				{
+					if (tab.Column != ColumnType.None && tab.Column != column)
+					{
+						continue;
+					}
+
+					if (tab.IsEmpty)
+					{
+						continue;
+					}
+
+					var text = this.GetText (row, column, true);
+					int n = tab.SearchText.Search (ref text);
+
+					if (n != 0)  // trouvé ?
+					{
+						founds++;
+
+						if (this.filterData.OrMode)
+						{
+							break;
+						}
+					}
+				}
+			}
+
+			return founds;
 		}
 
 

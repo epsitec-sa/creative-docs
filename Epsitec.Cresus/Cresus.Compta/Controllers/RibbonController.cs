@@ -136,7 +136,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
+				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
+
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
 			}
 

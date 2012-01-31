@@ -28,8 +28,12 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
 				//	designer:cap/OVKQ1
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
+				//	designer:cap/OVK73
+				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 103));
 				//	designer:cap/OVKP1
 				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
+				//	designer:cap/OVK63
+				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 102));
 			}
 			
 			public static class File
@@ -175,8 +179,12 @@ namespace Epsitec.Cresus.Compta
 				public const long Cancel = 0x3F800014000038L;
 				//	designer:cap/OVKQ1
 				public const long Delete = 0x3F80001400003AL;
+				//	designer:cap/OVK73
+				public const long Down = 0x3F800014000067L;
 				//	designer:cap/OVKP1
 				public const long Duplicate = 0x3F800014000039L;
+				//	designer:cap/OVK63
+				public const long Up = 0x3F800014000066L;
 			}
 			
 			public static class File

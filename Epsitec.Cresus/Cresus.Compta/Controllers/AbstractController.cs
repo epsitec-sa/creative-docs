@@ -60,6 +60,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
 			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
+			this.SetCommandEnable (Res.Commands.Edit.Up, false);
+			this.SetCommandEnable (Res.Commands.Edit.Down, false);
 			this.SetCommandEnable (Res.Commands.Edit.Duplicate, false);
 			this.SetCommandEnable (Res.Commands.Edit.Delete, false);
 			this.SetCommandEnable (Res.Commands.Multi.Insert, false);

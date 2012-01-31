@@ -161,6 +161,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public virtual void UpdateToolbar()
 		{
 			this.abstractController.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.abstractController.SetCommandEnable (Res.Commands.Edit.Down,      !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 			this.abstractController.SetCommandEnable (Res.Commands.Edit.Duplicate, !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 			this.abstractController.SetCommandEnable (Res.Commands.Edit.Delete,    !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 
@@ -277,11 +279,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void DuplicateAction()
+		public virtual void MoveAction(int direction)
 		{
 		}
 
-		public void DeleteAction()
+		public virtual void DuplicateAction()
+		{
+		}
+
+		public virtual void DeleteAction()
 		{
 		}
 

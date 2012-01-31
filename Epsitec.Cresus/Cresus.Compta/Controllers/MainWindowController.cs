@@ -505,6 +505,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		[Command (Res.CommandIds.Edit.Up)]
+		private void CommandEditUp()
+		{
+			if (this.controller != null && this.controller.FooterController != null)
+			{
+				this.controller.FooterController.MoveAction (-1);
+			}
+		}
+
+		[Command (Res.CommandIds.Edit.Down)]
+		private void CommandEditDown()
+		{
+			if (this.controller != null && this.controller.FooterController != null)
+			{
+				this.controller.FooterController.MoveAction (1);
+			}
+		}
+
 		[Command (Res.CommandIds.Edit.Duplicate)]
 		private void CommandEditDuplicate()
 		{

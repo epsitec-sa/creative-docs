@@ -26,27 +26,61 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journal.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journal.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 			this.StartCreationData ();
 		}
 
 
+		public override void FilterUpdate()
+		{
+			this.UpdateAfterOptionsChanged ();
+		}
+
 		public override void UpdateAfterOptionsChanged()
 		{
-			var j = (this.options as JournalOptions).Journal;
-
-			if (j == null)
+			if (this.IsAllJournaux)
 			{
-				this.journal = this.comptaEntity.Journal;
+				this.journalAll = this.comptaEntity.Journal;
 			}
 			else
 			{
-				this.journal = this.comptaEntity.Journal.Where (x => x.Journal == j).ToList ();
+				var j = (this.options as JournalOptions).Journal;
+				this.journalAll = this.comptaEntity.Journal.Where (x => x.Journal == j).ToList ();
+			}
+
+			if (this.filterData == null || this.filterData.IsEmpty)
+			{
+				this.journal = this.journalAll;
+			}
+			else
+			{
+				this.journal = new List<ComptaEcritureEntity> ();
+				this.journal.Clear ();
+
+				int count = this.journalAll.Count;
+				for (int row = 0; row < count; row++)
+				{
+					int founds = this.FilterLine (row);
+
+					if (founds != 0 && (this.filterData.OrMode || founds == this.filterData.TabsData.Count))
+					{
+						this.journal.Add (this.journalAll[row]);
+					}
+				}
 			}
 		}
 
-	
+
+		public override int AllCount
+		{
+			get
+			{
+				return this.journalAll.Count;
+			}
+		}
+
 		public override int Count
 		{
 			get
@@ -69,12 +103,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			if (row < 0 || row >= this.Count)
+			var journal = all ? this.journalAll : this.journal;
+
+			if (row < 0 || row >= journal.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var écriture = this.journal[row];
+			var écriture = journal[row];
 
 			switch (column)
 			{
@@ -660,6 +696,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static readonly FormattedText		multi = "...";
 
+		private IList<ComptaEcritureEntity>			journalAll;
 		private IList<ComptaEcritureEntity>			journal;
 	}
 }

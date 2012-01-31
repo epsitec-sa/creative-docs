@@ -187,6 +187,8 @@
     <EmbeddedResource Include="Images\Panel.Filter.icon" />
     <EmbeddedResource Include="Images\Level.Beginner.icon" />
     <EmbeddedResource Include="Images\Level.Specialist.icon" />
+    <EmbeddedResource Include="Images\Edit.Down.icon" />
+    <EmbeddedResource Include="Images\Edit.Up.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
 
 			this.comptaEntity.PlanComptableUpdate ();
 			this.StartCreationData ();
@@ -40,34 +41,76 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override void FilterUpdate()
+		{
+			this.UpdateAfterOptionsChanged ();
+		}
+
+		public override void UpdateAfterOptionsChanged()
+		{
+			this.planComptableAll = this.comptaEntity.PlanComptable;
+
+			if (this.filterData == null || this.filterData.IsEmpty)
+			{
+				this.planComptable = this.planComptableAll;
+			}
+			else
+			{
+				this.planComptable = new List<ComptaCompteEntity> ();
+				this.planComptable.Clear ();
+
+				int count = this.planComptableAll.Count;
+				for (int row = 0; row < count; row++)
+				{
+					int founds = this.FilterLine (row);
+
+					if (founds != 0 && (this.filterData.OrMode || founds == this.filterData.TabsData.Count))
+					{
+						this.planComptable.Add (this.planComptableAll[row]);
+					}
+				}
+			}
+		}
+
+
+		public override int AllCount
+		{
+			get
+			{
+				return this.planComptableAll.Count;
+			}
+		}
+
 		public override int Count
 		{
 			get
 			{
-				return this.comptaEntity.PlanComptable.Count;
+				return this.planComptable.Count;
 			}
 		}
 
 		public override AbstractEntity GetEditionData(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.PlanComptable.Count)
+			if (row < 0 || row >= this.planComptable.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.PlanComptable[row];
+				return this.planComptable[row];
 			}
 		}
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			if (row < 0 || row >= this.Count)
+			var planComptable = all ? this.planComptableAll : this.planComptable;
+
+			if (row < 0 || row >= planComptable.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var compte = this.comptaEntity.PlanComptable[row];
+			var compte = planComptable[row];
 
 			switch (column)
 			{
@@ -109,8 +152,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var compte1 = this.comptaEntity.PlanComptable[row];
-			var compte2 = this.comptaEntity.PlanComptable[row+1];
+			var compte1 = this.planComptable[row];
+			var compte2 = this.planComptable[row+1];
 
 			return compte1.Catégorie != compte2.Catégorie;
 		}
@@ -134,10 +177,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.PlanComptable.Count)
+			if (row >= 0 && row < this.planComptable.Count)
 			{
 				var data = new BudgetsEditionData (this.comptaEntity);
-				var compte = this.comptaEntity.PlanComptable[row];
+				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 
 				this.editionData.Add (data);
@@ -165,8 +208,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var compte = this.comptaEntity.PlanComptable[row];
+			var compte = this.planComptable[row];
 			this.editionData[0].DataToEntity (compte);
 		}
+
+
+		private IList<ComptaCompteEntity>			planComptableAll;
+		private IList<ComptaCompteEntity>			planComptable;
 	}
 }
