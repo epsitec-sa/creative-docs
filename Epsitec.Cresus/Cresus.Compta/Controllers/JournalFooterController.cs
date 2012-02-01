@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateMultiWidgets()
 		{
 			//	Met à jour toutes les données en édition d'une écriture multiple.
-			if (!this.isMulti || this.arrayController.IgnoreChanged)
+			if (!this.isMulti || this.controller.IgnoreChanged)
 			{
 				return;
 			}
@@ -473,9 +473,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.arrayController.SelectedRow != sel)
 			{
-				this.arrayController.IgnoreChanged = true;
+				this.controller.IgnoreChanged = true;
 				this.arrayController.SelectedRow = sel;
-				this.arrayController.IgnoreChanged = false;
+				this.controller.IgnoreChanged = false;
 			}
 #endif
 
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line;
 			this.GetWidgetColumnLine (field.Name, out columnType, out line);
 
-			if (!this.arrayController.IgnoreChanged)
+			if (!this.controller.IgnoreChanged)
 			{
 				this.dirty = true;
 				this.WidgetToEditionData ();

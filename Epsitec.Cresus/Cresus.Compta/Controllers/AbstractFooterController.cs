@@ -102,10 +102,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 						if (field.FormattedText != currentText)
 						{
-							this.arrayController.IgnoreChanged = true;
+							this.controller.IgnoreChanged = true;
 							field.FormattedText = currentText;
 							field.HintText = null;
-							this.arrayController.IgnoreChanged = false;
+							this.controller.IgnoreChanged = false;
 						}
 					}
 				}
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateToolbar ();
 			this.updateArrayContentAction ();
 
-			this.arrayController.IgnoreChanged = true;  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
+			this.controller.IgnoreChanged = true;  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
 
 			this.arrayController.SelectedRow = this.dataAccessor.FirstEditedRow;
 
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 			this.dataAccessor.ResetCreationData ();
 			
-			this.arrayController.IgnoreChanged = false;
+			this.controller.IgnoreChanged = false;
 
 			if (this.controller.OptionsController != null)
 			{
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected void EditionDataToWidgets()
 		{
 			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
-			this.arrayController.IgnoreChanged = true;
+			this.controller.IgnoreChanged = true;
 
 			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
 			{
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			this.arrayController.IgnoreChanged = false;
+			this.controller.IgnoreChanged = false;
 		}
 
 		protected void WidgetToEditionData()
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected virtual void FooterTextChanged(AbstractTextField field)
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
-			if (!this.arrayController.IgnoreChanged)
+			if (!this.controller.IgnoreChanged)
 			{
 				this.dirty = true;
 				this.WidgetToEditionData ();

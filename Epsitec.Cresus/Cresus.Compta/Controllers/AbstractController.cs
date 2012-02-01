@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.arrayController.IgnoreChanged)
+			if (this.IgnoreChanged)
 			{
 				return;
 			}
@@ -489,10 +489,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ClearHilite()
 		{
-			this.arrayController.IgnoreChanged = true;
+			this.IgnoreChanged = true;
 			this.arrayController.SelectedRow = -1;
 			this.arrayController.SetHilitedRows (-1, 0);
-			this.arrayController.IgnoreChanged = false;
+			this.IgnoreChanged = false;
 
 			this.dataAccessor.StartCreationData ();
 		}
@@ -648,6 +648,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				cs.Enable =enable;
 			}
+		}
+
+
+		public bool IgnoreChanged
+		{
+			get;
+			set;
 		}
 
 

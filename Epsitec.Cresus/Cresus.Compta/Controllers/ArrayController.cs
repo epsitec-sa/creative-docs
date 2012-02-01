@@ -274,19 +274,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public bool IgnoreChanged
-		{
-			get
-			{
-				return this.ignoreChanged;
-			}
-			set
-			{
-				this.ignoreChanged = value;
-			}
-		}
-
-
 		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
 
