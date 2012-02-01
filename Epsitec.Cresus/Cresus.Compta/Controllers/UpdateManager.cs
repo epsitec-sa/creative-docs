@@ -8,6 +8,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class UpdateManager
 	{
+		public UpdateManager(AbstractController controller)
+		{
+			this.controller = controller;
+		}
+
 		public void Clear()
 		{
 			this.UpdateArrayContent = false;
@@ -25,5 +30,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get;
 			set;
 		}
+
+
+		public void SetDirty()
+		{
+			this.controller.MainWindowController.SetDirty ();
+		}
+
+
+		private readonly AbstractController				controller;
 	}
 }

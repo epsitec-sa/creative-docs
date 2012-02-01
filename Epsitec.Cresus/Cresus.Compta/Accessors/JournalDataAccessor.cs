@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.SearchUpdate ();
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 		}
 
 		private void UpdateCreationData()
@@ -414,7 +414,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaEcritureEntity CreateEcriture()
 		{
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 
 			ComptaEcritureEntity écriture;
 
@@ -440,7 +440,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteEcriture(ComptaEcritureEntity  écriture)
 		{
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 
 			if (this.businessContext == null)
 			{

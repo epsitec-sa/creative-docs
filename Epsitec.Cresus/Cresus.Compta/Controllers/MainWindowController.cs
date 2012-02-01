@@ -86,7 +86,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool Dirty
+
+		public void SetDirty()
+		{
+			this.Dirty = true;
+		}
+
+		private bool Dirty
 		{
 			get
 			{

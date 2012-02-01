@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.comptaEntity.PlanComptableUpdate ();
 			this.SearchUpdate ();
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 		}
 
 		private void UpdateCreationData()
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaCompteEntity CreateCompte()
 		{
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 
 			if (this.businessContext == null)
 			{
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteCompte(ComptaCompteEntity compte)
 		{
-			this.mainWindowController.Dirty = true;
+			this.controller.UpdateManager.SetDirty ();
 
 			if (this.businessContext == null)
 			{

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindowController = mainWindowController;
 
 			this.columnMappers = this.InitialColumnMappers.ToList ();
-			this.updateManager = new UpdateManager ();
+			this.updateManager = new UpdateManager (this);
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
