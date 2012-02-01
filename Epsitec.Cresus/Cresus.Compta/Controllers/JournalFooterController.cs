@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalFooterController : AbstractFooterController
 	{
-		public JournalFooterController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
-			: base (app, businessContext, comptaEntity, dataAccessor, columnMappers, abstractController, arrayController)
+		public JournalFooterController(AbstractController controller)
+			: base (controller)
 		{
 		}
 
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void AcceptAction()
 		{
-			if (!this.abstractController.GetCommandEnable (Res.Commands.Edit.Accept))
+			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
 			{
 				return;
 			}
@@ -608,12 +608,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Insert, count > 1);
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Delete, count > 2 && this.selectedLine != cp);
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Up,     count > 1 && this.selectedLine > 0);
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Swap,   count > 1);
-			this.abstractController.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, count > 1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, count > 2 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     count > 1 && this.selectedLine > 0);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   count > 1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
 		}
 
 		protected override void UpdateAfterShowInfoPanelChanged()

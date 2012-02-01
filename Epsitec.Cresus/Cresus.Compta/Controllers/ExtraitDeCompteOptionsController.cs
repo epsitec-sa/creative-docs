@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ExtraitDeCompteOptionsController : AbstractOptionsController
 	{
-		public ExtraitDeCompteOptionsController(ComptaEntity comptaEntity, ExtraitDeCompteOptions options)
-			: base (comptaEntity, options)
+		public ExtraitDeCompteOptionsController(AbstractController controller)
+			: base (controller)
 		{
 		}
 

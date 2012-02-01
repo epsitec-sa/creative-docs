@@ -23,10 +23,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractOptionsController
 	{
-		public AbstractOptionsController(ComptaEntity comptaEntity, AbstractOptions options)
+		public AbstractOptionsController(AbstractController controller)
 		{
-			this.comptaEntity = comptaEntity;
-			this.options      = options;
+			this.controller = controller;
+
+			this.comptaEntity = this.controller.ComptaEntity;
+			this.options      = this.controller.DataAccessor.AccessorOptions;
 		}
 
 
@@ -82,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//	Remplissage de la frame gauche.
 			//	Remplissage de la frame centrale.
-			this.levelController = new LevelController ();
+			this.levelController = new LevelController (this.controller);
 			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.options.Specialist;
 		}
@@ -415,6 +417,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		protected readonly AbstractController					controller;
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly AbstractOptions						options;
 

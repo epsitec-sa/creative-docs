@@ -23,9 +23,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class HeaderController
 	{
-		public HeaderController(List<ColumnMapper> columnMappers)
+		public HeaderController(AbstractController controller)
 		{
-			this.columnMappers = columnMappers;
+			this.controller = controller;
+			this.columnMappers = this.controller.ColumnMappers;
+
 			this.headerFrames = new List<FrameBox> ();
 		}
 
@@ -93,6 +95,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
 		private readonly List<FrameBox>			headerFrames;
 

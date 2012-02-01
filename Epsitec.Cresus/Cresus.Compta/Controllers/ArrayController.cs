@@ -23,16 +23,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ArrayController
 	{
-		public ArrayController(List<ColumnMapper> columnMappers)
+		public ArrayController(AbstractController controller)
 		{
-			this.columnMappers = columnMappers;
+			this.controller = controller;
+			this.columnMappers = this.controller.ColumnMappers;
 		}
 
 
 		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged)
 		{
 			//	Crée l'en-tête en dessus du tableau.
-			this.headerController = new HeaderController (this.columnMappers);
+			this.headerController = new HeaderController (this.controller);
 			this.headerController.CreateUI (parent);
 
 			//	Crée le tableau.
@@ -286,6 +287,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
 
 		private List<ColumnMapper>				columnMappersShowed;

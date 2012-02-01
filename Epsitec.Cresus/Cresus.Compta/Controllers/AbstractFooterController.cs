@@ -26,15 +26,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractFooterController
 	{
-		public AbstractFooterController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, AbstractDataAccessor dataAccessor, List<ColumnMapper> columnMappers, AbstractController abstractController, ArrayController arrayController)
+		public AbstractFooterController(AbstractController controller)
 		{
-			this.app                = app;
-			this.businessContext    = businessContext;
-			this.comptaEntity       = comptaEntity;
-			this.dataAccessor       = dataAccessor;
-			this.columnMappers      = columnMappers;
-			this.arrayController    = arrayController;
-			this.abstractController = abstractController;
+			this.controller = controller;
+
+			this.comptaEntity    = this.controller.ComptaEntity;
+			this.columnMappers   = this.controller.ColumnMappers;
+			this.dataAccessor    = this.controller.DataAccessor;
+			this.arrayController = this.controller.ArrayController;
+			this.businessContext = this.controller.BusinessContext;
 
 			this.linesFrames      = new List<FrameBox> ();
 			this.footerBoxes      = new List<List<FrameBox>> ();
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
 			this.bottomToolbarController.CreateUI (parent);
 
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Cancel, true);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
 			this.parent.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
 			this.parent.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
@@ -160,11 +160,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateToolbar()
 		{
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Down,      !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Duplicate, !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
-			this.abstractController.SetCommandEnable (Res.Commands.Edit.Delete,    !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Down,      !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Duplicate, !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Delete,    !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 
 			if (this.arrayController.SelectedRow == -1 || this.dataAccessor.JustCreated)
 			{
@@ -223,7 +223,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void AcceptAction()
 		{
-			if (!this.abstractController.GetCommandEnable (Res.Commands.Edit.Accept))
+			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
 			{
 				return;
 			}
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.UpdateEditionData ();
 			this.EditionDataToWidgets ();
 
-			this.abstractController.SearchUpdateAfterModification ();
+			this.controller.SearchUpdateAfterModification ();
 
 			this.dirty = false;
 			this.UpdateToolbar ();
@@ -255,9 +255,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			
 			this.arrayController.IgnoreChanged = false;
 
-			if (this.abstractController.OptionsController != null)
+			if (this.controller.OptionsController != null)
 			{
-				this.abstractController.OptionsController.UpdateContent ();
+				this.controller.OptionsController.UpdateContent ();
 			}
 
 			this.UpdateFooterContent ();
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CancelAction()
 		{
-			if (this.abstractController.GetCommandEnable (Res.Commands.Edit.Cancel))
+			if (this.controller.GetCommandEnable (Res.Commands.Edit.Cancel))
 			{
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
@@ -638,14 +638,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-
-		protected readonly Application						app;
-		protected readonly BusinessContext					businessContext;
+		protected readonly AbstractController				controller;
 		protected readonly ComptaEntity						comptaEntity;
-		protected readonly AbstractDataAccessor				dataAccessor;
 		protected readonly List<ColumnMapper>				columnMappers;
-		protected readonly AbstractController				abstractController;
+		protected readonly AbstractDataAccessor				dataAccessor;
 		protected readonly ArrayController					arrayController;
+		protected readonly BusinessContext					businessContext;
 		protected readonly List<FrameBox>					linesFrames;
 		protected readonly List<List<FrameBox>>				footerBoxes;
 		protected readonly List<List<FrameBox>>				footerContainers;

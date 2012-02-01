@@ -36,12 +36,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.comptaEntity         = comptaEntity;
 			this.mainWindowController = mainWindowController;
 
-			this.columnMappers = new List<ColumnMapper> ();
-
-			foreach (var mapper in this.ColumnMappers)
-			{
-				this.columnMappers.Add (mapper);
-			}
+			this.columnMappers = this.InitialColumnMappers.ToList ();
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
@@ -50,6 +45,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.parentWindow    = parentWindow;
 			this.commandDocument = commandDocument;
+		}
+
+
+		public ComptaEntity ComptaEntity
+		{
+			get
+			{
+				return this.comptaEntity;
+			}
+		}
+
+		public List<ColumnMapper> ColumnMappers
+		{
+			get
+			{
+				return this.columnMappers;
+			}
+		}
+
+		public AbstractDataAccessor DataAccessor
+		{
+			get
+			{
+				return this.dataAccessor;
+			}
+		}
+
+		public ArrayController ArrayController
+		{
+			get
+			{
+				return this.arrayController;
+			}
+		}
+
+		public BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.businessContext;
+			}
 		}
 
 
@@ -247,7 +283,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Search panel
 		private void CreateTopSearch(FrameBox parent)
 		{
-			this.topSearchController = new TopSearchController (this.comptaEntity, this.businessContext, this.dataAccessor);
+			this.topSearchController = new TopSearchController (this);
 			this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
 			this.topSearchController.ShowPanel = this.ShowSearchPanel;
 		}
@@ -302,7 +338,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.dataAccessor.FilterData != null)
 			{
-				this.topFilterController = new TopFilterController (this.comptaEntity, this.businessContext, this.dataAccessor);
+				this.topFilterController = new TopFilterController (this);
 				this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
 				this.topFilterController.ShowPanel = this.ShowSearchPanel;
 
@@ -357,7 +393,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 0, 4),
 			};
 
-			var toolbar = new PanelsToolbarController (this.comptaEntity);
+			var toolbar = new PanelsToolbarController (this);
 			toolbar.CreateUI (frame);
 
 			this.titleLabel = new StaticText
@@ -394,7 +430,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateArray(FrameBox parent)
 		{
 			//	Crée le tableau principal avec son en-tête.
-			this.arrayController = new ArrayController (this.columnMappers);
+			this.arrayController = new ArrayController (this);
 			this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged);
 
 			this.UpdateArray ();
@@ -545,7 +581,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected virtual IEnumerable<ColumnMapper> ColumnMappers
+		protected virtual IEnumerable<ColumnMapper> InitialColumnMappers
 		{
 			get
 			{

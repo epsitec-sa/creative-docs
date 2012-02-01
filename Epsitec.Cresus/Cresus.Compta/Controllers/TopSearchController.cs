@@ -24,11 +24,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class TopSearchController
 	{
-		public TopSearchController(ComptaEntity comptaEntity, BusinessContext businessContext, AbstractDataAccessor dataAccessor)
+		public TopSearchController(AbstractController controller)
 		{
-			this.comptaEntity    = comptaEntity;
-			this.businessContext = businessContext;
-			this.dataAccessor    = dataAccessor;
+			this.controller = controller;
+
+			this.comptaEntity    = this.controller.ComptaEntity;
+			this.dataAccessor    = this.controller.DataAccessor;
+			this.businessContext = this.controller.BusinessContext;
 		}
 
 
@@ -71,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchController = new SearchController (this.comptaEntity, this.dataAccessor.SearchData, this.dataAccessor.ColumnMappers, false);
+			this.searchController = new SearchController (this.controller, this.dataAccessor.SearchData, false);
 			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
@@ -91,6 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static readonly double			toolbarHeight = 20;
 
+		private readonly AbstractController		controller;
 		private readonly ComptaEntity			comptaEntity;
 		private readonly BusinessContext		businessContext;
 		private readonly AbstractDataAccessor	dataAccessor;

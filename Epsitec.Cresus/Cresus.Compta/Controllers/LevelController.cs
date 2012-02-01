@@ -16,8 +16,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class LevelController
 	{
-		public LevelController()
+		public LevelController(AbstractController controller)
 		{
+			this.controller = controller;
 		}
 
 
@@ -132,6 +133,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return button;
 		}
 
+
+		private readonly AbstractController		controller;
 
 		private bool							specialist;
 		private IconButton						buttonClear;

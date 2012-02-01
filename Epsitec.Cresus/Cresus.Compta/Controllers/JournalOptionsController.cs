@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalOptionsController : AbstractOptionsController
 	{
-		public JournalOptionsController(ComptaEntity comptaEntity, JournalOptions options)
-			: base (comptaEntity, options)
+		public JournalOptionsController(AbstractController controller)
+			: base (controller)
 		{
 #if false
 			//	S'il n'y a qu'un journal, on ouvre le panneau en mode étendu, car la seule chose

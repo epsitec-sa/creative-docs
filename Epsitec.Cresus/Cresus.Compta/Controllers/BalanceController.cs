@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new BalanceOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as BalanceOptions);
+			this.optionsController = new BalanceOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override IEnumerable<ColumnMapper> ColumnMappers
+		protected override IEnumerable<ColumnMapper> InitialColumnMappers
 		{
 			get
 			{

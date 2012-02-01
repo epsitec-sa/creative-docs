@@ -23,12 +23,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class SearchController
 	{
-		public SearchController(ComptaEntity comptaEntity, SearchData data, List<ColumnMapper> columnMappers, bool isFilter)
+		public SearchController(AbstractController controller, SearchData data, bool isFilter)
 		{
-			this.comptaEntity  = comptaEntity;
-			this.data          = data;
-			this.columnMappers = columnMappers;
-			this.isFilter      = isFilter;
+			this.controller = controller;
+			this.data       = data;
+			this.isFilter   = isFilter;
+
+			this.comptaEntity  = this.controller.ComptaEntity;
+			this.columnMappers = this.controller.ColumnMappers;
 
 			this.tabControllers = new List<SearchTabController> ();
 		}
@@ -375,7 +377,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchTabController (this.data.TabsData[i], this.columnMappers, this.isFilter);
+				var controller = new SearchTabController (this.controller, this.data.TabsData[i], this.isFilter);
 
 				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction);
 				controller.Index = i;
@@ -526,7 +528,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateLevelUI(FrameBox parent)
 		{
-			this.levelController = new LevelController ();
+			this.levelController = new LevelController (this.controller);
 			this.levelController.CreateUI (parent, isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.data.Specialist;
 		}
@@ -665,9 +667,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly AbstractController				controller;
 		private readonly ComptaEntity					comptaEntity;
-		private readonly SearchData						data;
 		private readonly List<ColumnMapper>				columnMappers;
+		private readonly SearchData						data;
 		private readonly List<SearchTabController>		tabControllers;
 		private readonly bool							isFilter;
 

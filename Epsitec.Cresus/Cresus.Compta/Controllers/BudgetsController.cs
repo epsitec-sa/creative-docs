@@ -93,12 +93,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new BudgetsFooterController (this.app, this.businessContext, this.comptaEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
+			this.footerController = new BudgetsFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 		}
 
 
-		protected override IEnumerable<ColumnMapper> ColumnMappers
+		protected override IEnumerable<ColumnMapper> InitialColumnMappers
 		{
 			get
 			{

@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
-			this.optionsController = new JournalOptionsController (this.comptaEntity, this.dataAccessor.AccessorOptions as JournalOptions);
+			this.optionsController = new JournalOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
@@ -112,13 +112,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new JournalFooterController (this.app, this.businessContext, this.comptaEntity, this.dataAccessor, this.columnMappers, this, this.arrayController);
+			this.footerController = new JournalFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
 		}
 
 
-		protected override IEnumerable<ColumnMapper> ColumnMappers
+		protected override IEnumerable<ColumnMapper> InitialColumnMappers
 		{
 			get
 			{

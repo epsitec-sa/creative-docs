@@ -23,11 +23,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class SearchTabController
 	{
-		public SearchTabController(SearchTabData tabData, List<ColumnMapper> columnMappers, bool isFilter)
+		public SearchTabController(AbstractController controller, SearchTabData tabData, bool isFilter)
 		{
-			this.tabData       = tabData;
-			this.columnMappers = columnMappers;
-			this.isFilter      = isFilter;
+			this.controller = controller;
+			this.tabData    = tabData;
+			this.isFilter   = isFilter;
+
+			this.columnMappers = this.controller.ColumnMappers;
 
 			this.columnIndexes = new List<int> ();
 		}
@@ -615,8 +617,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private readonly SearchTabData			tabData;
+		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
+		private readonly SearchTabData			tabData;
 		private readonly List<int>				columnIndexes;
 		private readonly bool					isFilter;
 

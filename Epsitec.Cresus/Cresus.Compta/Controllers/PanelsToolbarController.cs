@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PanelsToolbarController
 	{
-		public PanelsToolbarController(ComptaEntity comptaEntity)
+		public PanelsToolbarController(AbstractController controller)
 		{
-			this.comptaEntity = comptaEntity;
+			this.controller = controller;
 		}
 
 
@@ -63,6 +63,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static readonly double			toolbarHeight = 20;
 
-		private readonly ComptaEntity			comptaEntity;
+		private readonly AbstractController		controller;
 	}
 }
