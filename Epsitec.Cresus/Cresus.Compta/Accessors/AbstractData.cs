@@ -17,7 +17,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données génériques pour la comptabilité.
 	/// </summary>
-	public abstract class AbstractData	{
+	public abstract class AbstractData
+	{
 		public AbstractEntity Entity
 		{
 			get

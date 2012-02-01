@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BalanceDataAccessor : AbstractDataAccessor
 	{
-		public BalanceDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
+		public BalanceDataAccessor(AbstractController controller)
+			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Search");

@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PPDataAccessor : AbstractDataAccessor
 	{
-		public PPDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
+		public PPDataAccessor(AbstractController controller)
+			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<PPOptions> ("Présentation.PP.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PP.Search");

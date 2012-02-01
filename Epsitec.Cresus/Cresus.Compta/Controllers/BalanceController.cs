@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public BalanceController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
 			: base (app, businessContext, comptaEntity, mainWindowController)
 		{
-			this.dataAccessor = new BalanceDataAccessor (this.businessContext, this.comptaEntity, this.columnMappers, this.mainWindowController);
+			this.dataAccessor = new BalanceDataAccessor (this);
 		}
 
 

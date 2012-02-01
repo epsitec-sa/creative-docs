@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class JournalDataAccessor : AbstractDataAccessor
 	{
-		public JournalDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
+		public JournalDataAccessor(AbstractController controller)
+			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journal.Search");
@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new JournalEditionData (this.comptaEntity);
+			var newData = new JournalEditionData (this.controller);
 
 			if (index == -1)
 			{
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new JournalEditionData (this.comptaEntity));
+			this.editionData.Add (new JournalEditionData (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var data = new JournalEditionData (this.comptaEntity);
+					var data = new JournalEditionData (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
 					data.EntityToData (écriture);
 

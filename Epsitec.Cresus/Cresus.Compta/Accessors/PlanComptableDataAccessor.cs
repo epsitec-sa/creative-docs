@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PlanComptableDataAccessor : AbstractDataAccessor
 	{
-		public PlanComptableDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
+		public PlanComptableDataAccessor(AbstractController controller)
+			: base (controller)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Filter");
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new PlanComptableEditionData (this.comptaEntity);
+			var newData = new PlanComptableEditionData (this.controller);
 
 			if (index == -1)
 			{
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new PlanComptableEditionData (this.comptaEntity));
+			this.editionData.Add (new PlanComptableEditionData (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (row >= 0 && row < this.planComptable.Count)
 			{
-				var data = new PlanComptableEditionData (this.comptaEntity);
+				var data = new PlanComptableEditionData (this.controller);
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 

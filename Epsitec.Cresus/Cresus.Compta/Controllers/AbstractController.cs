@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindowController = mainWindowController;
 
 			this.columnMappers = this.InitialColumnMappers.ToList ();
+			this.updateManager = new UpdateManager ();
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
@@ -85,6 +86,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.businessContext;
+			}
+		}
+
+		public UpdateManager UpdateManager
+		{
+			get
+			{
+				return this.updateManager;
+			}
+		}
+
+		public MainWindowController MainWindowController
+		{
+			get
+			{
+				return this.mainWindowController;
 			}
 		}
 
@@ -662,6 +679,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly List<ColumnMapper>					columnMappers;
+		protected readonly UpdateManager						updateManager;
 
 		protected MainWindowController							mainWindowController;
 		protected Window										parentWindow;

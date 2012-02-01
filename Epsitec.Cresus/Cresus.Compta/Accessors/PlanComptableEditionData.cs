@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -19,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class PlanComptableEditionData : AbstractEditionData
 	{
-		public PlanComptableEditionData(ComptaEntity compta)
-			: base (compta)
+		public PlanComptableEditionData(AbstractController controller)
+			: base (controller)
 		{
 		}
 

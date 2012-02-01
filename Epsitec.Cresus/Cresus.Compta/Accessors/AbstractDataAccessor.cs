@@ -22,12 +22,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractDataAccessor
 	{
-		public AbstractDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
+		public AbstractDataAccessor(AbstractController controller)
 		{
-			this.businessContext      = businessContext;
-			this.comptaEntity         = comptaEntity;
-			this.columnMappers        = columnMappers;
-			this.mainWindowController = mainWindowController;
+			this.controller = controller;
+
+			this.businessContext      = this.controller.BusinessContext;
+			this.comptaEntity         = this.controller.ComptaEntity;
+			this.columnMappers        = this.controller.ColumnMappers;
+			this.mainWindowController = this.controller.MainWindowController;
 
 			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData = new List<AbstractData> ();
@@ -696,6 +698,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#endregion
 
 
+		protected readonly AbstractController			controller;
 		protected readonly BusinessContext				businessContext;
 		protected readonly ComptaEntity					comptaEntity;
 		protected readonly List<ColumnMapper>			columnMappers;

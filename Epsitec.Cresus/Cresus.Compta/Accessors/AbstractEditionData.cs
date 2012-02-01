@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -19,9 +20,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractEditionData
 	{
-		public AbstractEditionData(ComptaEntity comptaEntity)
+		public AbstractEditionData(AbstractController controller)
 		{
-			this.comptaEntity = comptaEntity;
+			this.controller = controller;
+			this.comptaEntity = this.controller.ComptaEntity;
 
 			this.datas = new Dictionary<ColumnType, FormattedText> ();
 			this.errors = new Dictionary<ColumnType, FormattedText> ();
@@ -78,6 +80,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		protected readonly AbstractController						controller;
 		protected readonly ComptaEntity								comptaEntity;
 		protected readonly Dictionary<ColumnType, FormattedText>	datas;
 		protected readonly Dictionary<ColumnType, FormattedText>	errors;

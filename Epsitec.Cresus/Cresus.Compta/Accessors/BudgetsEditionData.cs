@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Entities;
 
+using Epsitec.Cresus.Compta.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -19,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BudgetsEditionData : AbstractEditionData
 	{
-		public BudgetsEditionData(ComptaEntity compta)
-			: base (compta)
+		public BudgetsEditionData(AbstractController controller)
+			: base (controller)
 		{
 		}
 

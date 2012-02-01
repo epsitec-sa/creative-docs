@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public class BudgetsDataAccessor : AbstractDataAccessor
 	{
-		public BudgetsDataAccessor(BusinessContext businessContext, ComptaEntity comptaEntity, List<ColumnMapper> columnMappers, MainWindowController mainWindowController)
-			: base (businessContext, comptaEntity, columnMappers, mainWindowController)
+		public BudgetsDataAccessor(AbstractController controller)
+			: base (controller)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (row >= 0 && row < this.planComptable.Count)
 			{
-				var data = new BudgetsEditionData (this.comptaEntity);
+				var data = new BudgetsEditionData (this.controller);
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 
