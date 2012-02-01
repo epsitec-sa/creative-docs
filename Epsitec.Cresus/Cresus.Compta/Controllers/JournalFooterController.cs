@@ -480,6 +480,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 
 			this.UpdateToolbar ();
+			this.UpdateInsertionRow ();
 			this.UpdateFooterInfo ();
 		}
 
@@ -500,15 +501,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.FooterValidate ();
 				this.UpdateToolbar ();
 				this.UpdateInsertionRow ();
-			}
-
-			if (columnType == ColumnType.Débit)
-			{
-				this.UpdateFooterInfo (field.FormattedText, true);
-			}
-			else if (columnType == ColumnType.Crédit)
-			{
-				this.UpdateFooterInfo (field.FormattedText, false);
+				this.UpdateFooterInfo ();
 			}
 		}
 
@@ -534,17 +527,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void UpdateFooterGeometry()
 		{
-			this.UpdateArrayColumns ();
-
-			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
-
-			for (int line = 0; line < this.linesFrames.Count; line++)
-			{
-				for (int column = 0; column < columnCount; column++)
-				{
-					this.footerBoxes[line][column].PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
-				}
-			}
+			base.UpdateFooterGeometry ();
 
 			double w1 = this.arrayController.GetColumnsAbsoluteWidth (0);
 			double w2 = this.arrayController.GetColumnsAbsoluteWidth (1);
@@ -558,7 +541,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.créditInfoFrame.PreferredWidth = w1+w2-1;
 		}
 
-		private void UpdateArrayColumns()
+		protected override void UpdateArrayColumns()
 		{
 			//	Si nécessaire, adapte l'interface pour accueillir le nombre de lignes et de colonnes requis.
 			int count = this.dataAccessor.CountEditedRow;
@@ -583,8 +566,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			this.UpdateFooterInfo (this.GetTextField (ColumnType.Débit,  this.selectedLine).FormattedText, isDébit: true);
-			this.UpdateFooterInfo (this.GetTextField (ColumnType.Crédit, this.selectedLine).FormattedText, isDébit: false);
+			this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
+			this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
 		}
 
 		private void UpdateFooterInfo(FormattedText numéro, bool isDébit)

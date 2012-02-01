@@ -174,8 +174,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.bottomToolbarController.SetOperationDescription (this.GetOperationDescription (modify: true), hilited: true);
 			}
-
-			this.UpdateInsertionRow ();
 		}
 
 		protected virtual FormattedText GetOperationDescription(bool modify)
@@ -235,6 +233,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = false;
 			this.UpdateToolbar ();
+			this.UpdateInsertionRow ();
 			this.updateArrayContentAction ();
 
 			this.controller.IgnoreChanged = true;  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
@@ -388,6 +387,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.WidgetToEditionData ();
 				this.FooterValidate ();
 				this.UpdateToolbar ();
+				this.UpdateInsertionRow ();
 			}
 		}
 
@@ -401,6 +401,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.UpdateToolbar ();
+			this.UpdateInsertionRow ();
 		}
 
 		private void FooterValidate(int line)
@@ -540,6 +541,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateFooterGeometry()
 		{
+			this.UpdateArrayColumns ();
+
 			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
 
 			for (int line = 0; line < this.footerBoxes.Count; line++)
@@ -550,6 +553,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 		}
+
+		protected virtual void UpdateArrayColumns()
+		{
+		}
+
 
 		protected void FooterSelect(ColumnType columnType)
 		{

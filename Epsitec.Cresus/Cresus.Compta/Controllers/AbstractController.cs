@@ -366,8 +366,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void FilterStartAction()
 		{
 			this.dataAccessor.FilterUpdate ();
+			this.dataAccessor.SearchUpdate ();
 			this.BaseUpdateArrayContent ();
 			this.FilterUpdateTopToolbar ();
+			this.SearchUpdateLocator (true);
+			this.SearchUpdateTopToolbar ();
 		}
 
 		private void FilterNextAction(int direction)
