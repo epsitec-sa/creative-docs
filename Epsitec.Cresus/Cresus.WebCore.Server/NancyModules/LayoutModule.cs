@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers;
 
@@ -9,6 +10,7 @@ using Epsitec.Cresus.WebCore.Server.UserInterface;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System;
+
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -26,27 +28,22 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LayoutModule(ServerContext serverContext)
 			: base (serverContext, "/layout")
 		{
-			Get["/{mode}/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
+			Get["/{mode}/{controllerSubTypeId}/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{
 				var context = coreSession.GetBusinessContext ();
 
 				var entityKey = EntityKey.Parse (parameters.id);
 				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-				ViewControllerMode mode = LayoutModule.GetMode (parameters.mode);
+				ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
+				int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);
 
-				var s = PanelBuilder.BuildController (entity, mode, coreSession);
+				var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, coreSession);
 
 				return Response.AsCoreSuccess (s);
 			});
 		}
-
-
-		private static ViewControllerMode GetMode(string mode)
-		{
-			return (ViewControllerMode) Enum.Parse (typeof (ViewControllerMode), mode, true);
-		}
-
+		
 
 	}
 

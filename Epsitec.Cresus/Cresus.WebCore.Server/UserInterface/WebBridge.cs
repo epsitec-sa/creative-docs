@@ -102,17 +102,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode)
+		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId)
 		{
-			using (var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, resolutionMode: ResolutionMode.InspectOnly))
+			using (var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, controllerSubTypeId, null, ResolutionMode.InspectOnly))
 			{
 				var brickWall = controller.CreateBrickWallForInspection ();
-				
+
 				brickWall.BrickAdded += WebBridge.HandleBrickWallBrickAdded;
 				brickWall.BrickPropertyAdded += WebBridge.HandleBrickWallBrickPropertyAdded;
-				
+
 				controller.BuildBricksForInspection (brickWall);
-				
+
 				return brickWall;
 			}
 		}
@@ -219,12 +219,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static void ProcessProperty(Brick brick, BrickPropertyKey key, Action<BrickMode> setter)
 		{
-			foreach (var attributeValue in Brick.GetProperties (brick, key).Select (x => x.AttributeValue))
+			var attributeValues = Brick.GetProperties (brick, key).Select (x => x.AttributeValue);
+
+			foreach (var attributeValue in attributeValues)
 			{
-				if ((attributeValue != null) &&
-					(attributeValue.ContainsValue<BrickMode> ()))
+				if (attributeValue != null && attributeValue.ContainsValue<BrickMode> ())
 				{
-					setter (attributeValue.GetValue<BrickMode> ());
+					var value = attributeValue.GetValue<BrickMode> ();
+
+					setter (value);
 				}
 			}
 		}
@@ -238,8 +241,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					item.AutoGroup = true;
 					break;
 
+				case BrickMode.AutoCreateNullEntity:
+					// TODO					
+					break;
+
 				case BrickMode.DefaultToSummarySubView:
-					item.DefaultMode = ViewControllerMode.Summary;
+					item.SubViewControllerMode = ViewControllerMode.Summary;
 					break;
 
 				case BrickMode.HideAddButton:
@@ -253,7 +260,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				case BrickMode.HideRemoveButton:
 					item.HideRemoveButton = true;
 					break;
+
+				default:
+					if (value.IsSpecialController ())
+					{
+						item.SubViewControllerSubTypeId = value.GetControllerSubTypeId ();
+					}
+					break;
 			}
+
 		}
 
 

@@ -47,9 +47,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		/// <param name="entity">Entity to use to create the panelBuilder</param>
 		/// <param name="mode">Controller mode</param>
 		/// <returns></returns>
-		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
+		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
 		{
-			return new PanelBuilder (entity, mode, coreSession).Run ();
+			return new PanelBuilder (entity, mode, controllerSubTypeId, coreSession).Run ();
 		}
 
 
@@ -59,10 +59,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, CoreSession coreSession)
+		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
 		{
 			this.rootEntity = entity;
 			this.controllerMode = mode;
+			this.controllerSubTypeId = controllerSubTypeId;
 			this.coreSession = coreSession;
 		}
 
@@ -75,12 +76,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
-			var brickWall = WebBridge.GetBrickWall (this.rootEntity, this.controllerMode);
+			var brickWall = WebBridge.GetBrickWall (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
 
 			dic["parentEntity"] = this.GetEntityKey (this.rootEntity);
+			dic["controllerMode"] = Tools.ViewControllerModeToString (this.controllerMode);
+			dic["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (this.controllerSubTypeId);
 
 			var items = new List<Dictionary<string, object>> ();
 			dic["items"] = items;
@@ -181,10 +184,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var entityKey = this.GetEntityKey (entity);
 			parent["entityId"] = entityKey;
 
-			if (item.DefaultMode == ViewControllerMode.Summary)
-			{
-				parent["clickToEdit"] = false;
-			}
+			parent["subViewControllerMode"] = Tools.ViewControllerModeToString (item.SubViewControllerMode);
+			parent["subViewControllerSubTypeId"] = Tools.ControllerSubTypeIdToString (item.SubViewControllerSubTypeId);
 
 			this.AddControllerSpecificData (parent, brick, item, entity);
 
@@ -569,7 +570,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				}
 
 				// Recursively build the panels
-				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.coreSession);
+				var childPanel = PanelBuilder.BuildController (child, this.controllerMode, this.controllerSubTypeId, this.coreSession);
 				list.AddRange (childPanel["items"] as List<Dictionary<string, object>>);
 			}
 
@@ -622,67 +623,71 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private readonly AbstractEntity rootEntity;
 		private readonly ViewControllerMode controllerMode;
+		private readonly int? controllerSubTypeId;
 		private readonly CoreSession coreSession;
 
 
-		/*
-		 * 
-		 * Code:
-		 * + : Complete
-		 * - : Does not apply here
-		 * ~ : To check
-		 *   : TODO
-		 * 
-		 * */
+		
+		
+// Code :
+// + : Complete
+// - : Does not apply here
+// ~ : To check
+//   : TODO
+		
+		
+//BrickPropertyKey : 
+//    +Name,
+//    +Icon,
+//    +Title,
+//    +TitleCompact,
+//    +Text,
+//    +TextCompact,
+//    ~Attribute,
+//    ~Template,
+//    -OfType,
+//    +Input,
+//    +Field,
+//    -Width,
+//    -Height,
+//	  -ReadOnly
+//    +Separator,
+//    +HorizontalGroup,
+//    ~FromCollection,
+//    -SpecialController,
+//    +GlobalWarning,
+//    CollectionAnnotation,
+//    +Include
+ 
 
-		/*
-		public enum BrickPropertyKey
-		{
-			+Name,
-			+Icon,
-			+Title,
-			+TitleCompact,
-			+Text,
-			+TextCompact,
-
-			~Attribute,
-
-			~Template,
-			-OfType,
-
-			+Input,
-			+Field,
-			-Width,
-			-Height,
-			+Separator,
-			+HorizontalGroup,
-			~FromCollection,
-			-SpecialController,
-			+GlobalWarning,
-
-			CollectionAnnotation,
-			+Include,
-		}
-		 */
-
-		/*
-		public enum BrickMode
-		{
-			-AutoGroup,
-
-			+DefaultToSummarySubview,
-
-			+HideAddButton,
-			+HideRemoveButton,
-
-			-SpecialController0,
-			-SpecialController1,
-			-SpecialController2,
-			-SpecialController3,
-
-			-FullHeightStretch,
-		}*/
-
+// BrickMode :
+//    -AutoGroup,
+//    -AutoCreateNullEntity,
+//    +DefaultToSummarySubview,
+//    +HideAddButton,
+//    +HideRemoveButton,
+//    -SpecialController0,
+//    -SpecialController1,
+//    -SpecialController2,
+//    -SpecialController3,
+//    -SpecialController4,
+//    -SpecialController5,
+//    -SpecialController6,
+//    -SpecialController7,
+//    -SpecialController8,
+//    -SpecialController9,
+//    -SpecialController10,
+//    -SpecialController11,
+//    -SpecialController12,
+//    -SpecialController13,
+//    -SpecialController14,
+//    -SpecialController15,
+//    -SpecialController16,
+//    -SpecialController17,
+//    -SpecialController18,
+//    -SpecialController19,
+//    -FullHeightStretch
+		
 
 	}
 

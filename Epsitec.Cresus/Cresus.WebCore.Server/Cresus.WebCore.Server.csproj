@@ -8,7 +8,7 @@
     <ProjectGuid>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Epsitec.Cresus.Core.Server</RootNamespace>
+    <RootNamespace>Epsitec.Cresus.WebCore.Server</RootNamespace>
     <AssemblyName>Cresus.Core.Server</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -63,6 +63,7 @@
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NGinxServer.cs" />
+    <Compile Include="Tools.cs" />
     <Compile Include="UserInterface\WebBridge.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />

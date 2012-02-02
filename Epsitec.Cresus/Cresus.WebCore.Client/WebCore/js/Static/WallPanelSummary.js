@@ -13,7 +13,8 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     lambda : null,
     entityType : null,
     isRoot : false,
-    clickToEdit : true,
+    subViewControllerMode : 'edition',
+    subViewControllerSubTypeId : 'null',
     hideRemoveButton : false,
     hideAddButton : false,
     selectedPanelCls : 'selected-entity',
@@ -91,13 +92,13 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     // Overriden by WallPanelEmptySummary
     bodyClicked : function ()
     {
-      this.showEntityColumn(this.clickToEdit, this.entityId, this);
+        this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, this.entityId, this);
     },
-    
-    showEntityColumn : function (clickToEdit, entityId, panel)
+
+    showEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel)
     {
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.showEntity(clickToEdit, entityId, panel, 1);
+      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 1);
     },
     
     refreshEntity : function ()
@@ -105,11 +106,11 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       var columnMgr = Ext.getCmp('columnmgr');
       columnMgr.refreshColumn(this.ownerCt);
     },
-    
-    showNewEntityColumn : function (clickToEdit, entityId, panel)
+
+    showNewEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel)
     {
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.showEntity(clickToEdit, entityId, panel, 3);
+      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 3);
     },
     
     deleteEntity : function ()
@@ -164,8 +165,8 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
               options.failure.apply(arguments);
               return;
             }
-            
-            this.showNewEntityColumn(this.clickToEdit, json.content, this);
+
+            this.showNewEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, json.content, this);
             
           },
           failure : function ()

@@ -100,7 +100,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
         var entityId = record.get('uniqueId');
         
         var columnMgr = Ext.getCmp('columnmgr');
-        columnMgr.showEntity(false, entityId, this, 0);
+        columnMgr.showEntity('summary', 'null', entityId, this, 0);
         
         var tabMgr = Ext.getCmp('tabmgr');
         tabMgr.showEntityTab();

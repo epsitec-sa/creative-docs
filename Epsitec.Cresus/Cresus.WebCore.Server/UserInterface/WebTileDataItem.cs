@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public WebTileDataItem()
 		{
-			this.DefaultMode = ViewControllerMode.Edition;
+			this.SubViewControllerMode = ViewControllerMode.Edition;
 			this.InitialVisibility = true;
 		}
 
@@ -187,7 +187,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public ViewControllerMode DefaultMode
+		public ViewControllerMode SubViewControllerMode
+		{
+			get;
+			set;
+		}
+
+
+		public int? SubViewControllerSubTypeId
 		{
 			get;
 			set;
