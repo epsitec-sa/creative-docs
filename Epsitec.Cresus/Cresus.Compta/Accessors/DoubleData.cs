@@ -14,71 +14,48 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Données pour les pertes et profits de la comptabilité.
+	/// Données doubles (bilan avec actif/passif ou PP avec charge/produit) de la comptabilité.
 	/// </summary>
-	public class PPData : AbstractData
+	public class DoubleData : AbstractData
 	{
-		public PPData()
+		public DoubleData()
 		{
 		}
 
 
-		public FormattedText NuméroGauche
+		public bool Gauche
+		{
+			//	true  -> actif ou charge
+			//	false -> passif ou produit
+			get;
+			set;
+		}
+
+		public FormattedText Numéro
 		{
 			get;
 			set;
 		}
 
-		public FormattedText TitreGauche
+		public FormattedText Titre
 		{
 			get;
 			set;
 		}
 
-		public int NiveauGauche
+		public int Niveau
 		{
 			get;
 			set;
 		}
 
-		public decimal? SoldeGauche
+		public decimal? Solde
 		{
 			get;
 			set;
 		}
 
-		public decimal? BudgetGauche
-		{
-			get;
-			set;
-		}
-
-
-		public FormattedText NuméroDroite
-		{
-			get;
-			set;
-		}
-
-		public FormattedText TitreDroite
-		{
-			get;
-			set;
-		}
-
-		public int NiveauDroite
-		{
-			get;
-			set;
-		}
-
-		public decimal? SoldeDroite
-		{
-			get;
-			set;
-		}
-
-		public decimal? BudgetDroite
+		public decimal? Budget
 		{
 			get;
 			set;

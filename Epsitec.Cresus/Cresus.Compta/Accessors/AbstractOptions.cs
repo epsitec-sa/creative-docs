@@ -21,10 +21,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// </summary>
 	public abstract class AbstractOptions : ISettingsData
 	{
-		public AbstractOptions()
-		{
-		}
-
 		public virtual void SetComptaEntity(ComptaEntity compta)
 		{
 			this.comptaEntity = compta;
@@ -33,7 +29,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void Clear()
 		{
-			this.Profondeur        = null;
 			this.BudgetEnable      = false;
 			this.BudgetShowed      = BudgetShowed.Budget;
 			this.BudgetDisplayMode = BudgetDisplayMode.Montant;
@@ -41,12 +36,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		public bool Specialist
-		{
-			get;
-			set;
-		}
-
-		public int? Profondeur
 		{
 			get;
 			set;
@@ -98,8 +87,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			return this.Profondeur == other.Profondeur &&
-				   this.BudgetEnable == other.BudgetEnable &&
+			return this.BudgetEnable == other.BudgetEnable &&
 				   this.BudgetShowed == other.BudgetShowed &&
 				   this.BudgetDisplayMode == other.BudgetDisplayMode;
 		}

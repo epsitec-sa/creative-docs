@@ -24,14 +24,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void Clear()
 		{
 			base.Clear ();
-
-			this.ComptesNuls = false;
+			this.HideZero = true;
 		}
 
 
-		public bool ComptesNuls
+		public bool HideZero
 		{
-			//	Affiche les comptes dont le solde est nul ?
+			//	Affiche en blanc les montants nuls ?
 			get;
 			set;
 		}
@@ -41,6 +40,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.emptyOptions = new BalanceOptions ();
 			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+			this.emptyOptions.Clear ();
 		}
 
 		public override bool CompareTo(AbstractOptions other)
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			var o = other as BalanceOptions;
 
-			return this.ComptesNuls == o.ComptesNuls;
+			return this.HideZero == o.HideZero;
 		}
 	}
 }

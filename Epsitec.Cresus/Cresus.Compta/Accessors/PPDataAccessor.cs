@@ -18,12 +18,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Gère l'accès aux données des pertes et profits de la comptabilité.
 	/// </summary>
-	public class PPDataAccessor : AbstractDataAccessor
+	public class PPDataAccessor : DoubleDataAccessor
 	{
 		public PPDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<PPOptions> ("Présentation.PP.Options", this.comptaEntity);
+			this.options    = this.mainWindowController.GetSettingsOptions<DoubleOptions> ("Présentation.PP.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PP.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PP.Filter");
 
@@ -31,240 +31,38 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void FilterUpdate()
-		{
-			Date? beginDate, endDate;
-			this.filterData.GetBeginnerDates (out beginDate, out endDate);
-
-			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
-			{
-				this.UpdateAfterOptionsChanged ();
-			}
-
-			base.FilterUpdate ();
-		}
-
-		public override void UpdateAfterOptionsChanged()
-		{
-			this.readonlyAllData.Clear ();
-			this.MinMaxClear ();
-
-			decimal totalGauche = 0;
-			decimal totalDroite = 0;
-
-			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
-
-			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Charge))
-			{
-				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
-				{
-					continue;
-				}
-
-				var solde = this.comptaEntity.GetSoldeCompte (compte);
-
-				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
-				{
-					continue;
-				}
-
-				var data = new PPData ();
-				this.readonlyAllData.Add (data);
-
-				data.NuméroGauche = compte.Numéro;
-				data.TitreGauche  = compte.Titre;
-				data.NiveauGauche = compte.Niveau;
-
-				if (this.HasSolde (compte))
-				{
-					data.SoldeGauche = solde;
-					totalGauche += solde.GetValueOrDefault ();
-					this.SetMinMaxValue (solde);
-				}
-
-				data.BudgetGauche = this.GetBudget (compte);
-			}
-
-			int rank = 0;
-			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == CatégorieDeCompte.Produit))
-			{
-				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
-				{
-					continue;
-				}
-
-				var solde = this.comptaEntity.GetSoldeCompte (compte);
-
-				if (!this.Options.ComptesNuls && solde.GetValueOrDefault () == 0)
-				{
-					continue;
-				}
-
-				PPData data;
-
-				if (rank >= this.readonlyAllData.Count)
-				{
-					data = new PPData ();
-					this.readonlyAllData.Add (data);
-				}
-				else
-				{
-					data = this.readonlyAllData[rank] as PPData;
-				}
-
-				data.NuméroDroite = compte.Numéro;
-				data.TitreDroite  = compte.Titre;
-				data.NiveauDroite = compte.Niveau;
-
-				if (this.HasSolde (compte))
-				{
-					data.SoldeDroite = solde;
-					totalDroite += solde.GetValueOrDefault ();
-					this.SetMinMaxValue (solde);
-				}
-
-				data.BudgetDroite = this.GetBudget (compte);
-
-				rank++;
-			}
-
-			this.SetBottomSeparatorToPreviousLine ();
-
-			//	Avant-dernière ligne.
-			if (totalGauche != totalDroite)
-			{
-				var data = new PPData ();
-
-				if (totalGauche < totalDroite)
-				{
-					data.TitreGauche = "Différence (bénéfice)";
-					data.SoldeGauche = totalDroite - totalGauche;
-					data.IsBold      = true;
-
-					totalGauche = totalDroite;
-
-					this.SetMinMaxValue (data.SoldeGauche);
-				}
-
-				if (totalGauche > totalDroite)
-				{
-					data.TitreDroite = "Différence (perte)";
-					data.SoldeDroite = totalGauche - totalDroite;
-					data.IsBold      = true;
-
-					totalDroite = totalGauche;
-
-					this.SetMinMaxValue (data.SoldeDroite);
-				}
-
-				data.NeverFiltered = true;
-
-				this.readonlyAllData.Add (data);
-			}
-
-			//	Dernière ligne
-			{
-				var data = new PPData ();
-
-				data.SoldeGauche   = totalGauche;
-				data.SoldeDroite   = totalDroite;
-				data.IsBold        = true;
-				data.NeverFiltered = true;
-
-				this.readonlyAllData.Add (data);
-
-				this.SetMinMaxValue (data.SoldeGauche);
-				this.SetMinMaxValue (data.SoldeDroite);
-			}
-
-			this.FilterUpdate ();
-		}
-
-		private bool HasSolde(ComptaCompteEntity compte)
-		{
-			//	Indique si le solde du compte doit figurer dans le tableau.
-			//	Si la profondeur n'est pas spécifiée, on accepte tous les comptes normaux.
-			//	Si la profondeur est spécifiée, on accepte les comptes qui ont exactement cette profondeur.
-			if (compte.Type == TypeDeCompte.Normal)
-			{
-				return true;
-			}
-
-			if (this.Options.Profondeur.HasValue && compte.Niveau+1 == this.Options.Profondeur.Value)
-			{
-				return true;
-			}
-
-			return false;
-		}
-
-
-		public override FormattedText GetText(int row, ColumnType column, bool all = false)
-		{
-			var data = this.GetReadOnlyData (row, all) as PPData;
-
-			if (data == null)
-			{
-				return FormattedText.Null;
-			}
-
-			switch (column)
-			{
-				case ColumnType.NuméroGauche:
-					return data.NuméroGauche;
-
-				case ColumnType.TitreGauche:
-					return data.TitreGauche;
-
-				case ColumnType.SoldeGauche:
-					return AbstractDataAccessor.GetMontant (data.SoldeGauche);
-
-				case ColumnType.SoldeGraphiqueGauche:
-					return this.GetMinMaxText (data.SoldeGauche);
-
-				case ColumnType.BudgetGauche:
-					return this.GetBudgetText (data.SoldeGauche, data.BudgetGauche);
-
-				case ColumnType.NuméroDroite:
-					return data.NuméroDroite;
-
-				case ColumnType.TitreDroite:
-					return data.TitreDroite;
-
-				case ColumnType.SoldeDroite:
-					return AbstractDataAccessor.GetMontant (data.SoldeDroite);
-
-				case ColumnType.SoldeGraphiqueDroite:
-					return this.GetMinMaxText (data.SoldeDroite);
-
-				case ColumnType.BudgetDroite:
-					return this.GetBudgetText (data.SoldeDroite, data.BudgetDroite);
-
-				default:
-					return FormattedText.Null;
-			}
-		}
-
-
-		private static FormattedText GetNuméro(ComptaCompteEntity compte)
-		{
-			if (compte == null)
-			{
-				return JournalDataAccessor.multi;
-			}
-			else
-			{
-				return compte.Numéro;
-			}
-		}
-
-		private PPOptions Options
+		protected override CatégorieDeCompte CatégorieGauche
 		{
 			get
 			{
-				return this.options as PPOptions;
+				return CatégorieDeCompte.Charge;
 			}
 		}
+
+		protected override CatégorieDeCompte CatégorieDroite
+		{
+			get
+			{
+				return CatégorieDeCompte.Produit;
+			}
+		}
+
+
+		protected override FormattedText DifferenceGaucheDescription
+		{
+			get
+			{
+				return "Différence (bénéfice)";
+			}
+		}
+
+		protected override FormattedText DifferenceDroiteDescription
+		{
+			get
+			{
+				return "Différence (perte)";
+			}
+		}
+
 	}
 }

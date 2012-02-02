@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.emptyOptions = new ExtraitDeCompteOptions ();
 			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+			this.emptyOptions.Clear ();
 		}
 
 		public override bool CompareTo(AbstractOptions other)

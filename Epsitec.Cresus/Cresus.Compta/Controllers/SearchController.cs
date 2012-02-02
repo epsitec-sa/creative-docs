@@ -142,6 +142,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.CreateMiddleBeginnerCatégorieUI ();
 				}
 
+				if (this.columnMappers.Where (x => x.Column == ColumnType.Profondeur).Any ())
+				{
+					this.CreateMiddleBeginnerProfondeurUI ();
+				}
+
+				if (this.columnMappers.Where (x => x.Column == ColumnType.Solde).Any ())
+				{
+					this.CreateMiddleBeginnerSoldeUI ();
+				}
+
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Date).Any ())
 				{
 					this.CreateMiddleBeginnerDatesUI ();
@@ -154,6 +164,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.modeFrame.Visibility = false;
 		}
+
 
 		private void CreateMiddleBeginnerCatégorieUI()
 		{
@@ -273,12 +284,199 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchStartAction ();
 		}
 
+
+		private void CreateMiddleBeginnerProfondeurUI()
+		{
+			var frame = new GroupBox
+			{
+				Parent          = this.middleFrame,
+				Text            = "Profondeur",
+				PreferredWidth  = 20+60,  // pour aider le layout !
+				PreferredHeight = 65,  // pour aider le layout !
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				Padding         = new Margins (5, 5, 2, 2),
+			};
+
+			var frame1 = new FrameBox
+			{
+				Parent  = frame,
+				Dock    = DockStyle.Top,
+				Margins = new Margins (0, 0, 0, 1),
+			};
+
+			var frame2 = new FrameBox
+			{
+				Parent = frame,
+				Dock   = DockStyle.Top,
+			};
+
+			{
+				new StaticText
+				{
+					Parent         = frame1,
+					Text           = "De",
+					PreferredWidth = 20,
+					Dock           = DockStyle.Left,
+				};
+
+				this.beginnerFromProfondeurField = new TextFieldCombo
+				{
+					Parent          = frame1,
+					IsReadOnly      = true,
+					PreferredWidth  = 60,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					TabIndex        = 1,
+				};
+			}
+
+			{
+				new StaticText
+				{
+					Parent         = frame2,
+					Text           = "À",
+					PreferredWidth = 20,
+					Dock           = DockStyle.Left,
+				};
+
+				this.beginnerToProfondeurField = new TextFieldCombo
+				{
+					Parent          = frame2,
+					IsReadOnly      = true,
+					PreferredWidth  = 60,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					TabIndex        = 2,
+				};
+			}
+
+			this.InitializeProfondeurs ();
+
+			int from, to;
+			this.data.GetBeginnerProfondeurs (out from, out to);
+
+			this.ignoreChange = true;
+			this.beginnerFromProfondeurField.FormattedText = this.ProfondeurToDescription (from);
+			this.beginnerToProfondeurField.FormattedText   = this.ProfondeurToDescription (to);
+			this.ignoreChange = false;
+
+			this.beginnerFromProfondeurField.TextChanged += delegate
+			{
+				this.UpdateProfondeur ();
+			};
+
+			this.beginnerToProfondeurField.TextChanged += delegate
+			{
+				this.UpdateProfondeur ();
+			};
+		}
+
+		private void InitializeProfondeurs()
+		{
+			int from, to;
+			this.data.GetBeginnerProfondeurs (out from, out to);
+
+			this.InitializeProfondeur (this.beginnerFromProfondeurField, 1, to);
+			this.InitializeProfondeur (this.beginnerToProfondeurField, from, int.MaxValue);
+		}
+
+		private void InitializeProfondeur(TextFieldCombo combo, int min, int max)
+		{
+			combo.Items.Clear ();
+
+			for (int i = 1; i <= 6; i++)
+			{
+				if (i >= min && i <= max)
+				{
+					combo.Items.Add (this.ProfondeurToDescription (i));  // 1..6
+				}
+			}
+
+			if (max == int.MaxValue)
+			{
+				combo.Items.Add (this.ProfondeurToDescription (int.MaxValue));  // Tout
+			}
+		}
+
+		private void UpdateProfondeur()
+		{
+			if (!this.ignoreChange)
+			{
+				var from = this.DescriptionToProfondeur (this.beginnerFromProfondeurField.FormattedText);
+				var to   = this.DescriptionToProfondeur (this.beginnerToProfondeurField.FormattedText);
+				this.data.SetBeginnerProfondeurs (from, to);
+
+				this.InitializeProfondeurs ();
+
+				this.UpdateOrMode ();
+				this.searchStartAction ();
+			}
+		}
+
+		private FormattedText ProfondeurToDescription(int profondeur)
+		{
+			if (profondeur == int.MaxValue)
+			{
+				return "Tout";
+			}
+			else
+			{
+				return profondeur.ToString ();  // 1..9
+			}
+		}
+
+		private int DescriptionToProfondeur(FormattedText text)
+		{
+			var t = text.ToSimpleText ();
+
+			if (string.IsNullOrEmpty (t) || t.Length != 1 || t[0] < '1' || t[0] > '9')
+			{
+				return int.MaxValue;
+			}
+			else
+			{
+				return t[0] - '0';  // 1..n
+			}
+		}
+
+
+		private void CreateMiddleBeginnerSoldeUI()
+		{
+			var frame = new GroupBox
+			{
+				Parent          = this.middleFrame,
+				Text            = "Soldes",
+				PreferredHeight = 65,  // pour aider le layout !
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				Padding         = new Margins (5, 5, 2, 2),
+			};
+
+			var button = new CheckButton
+			{
+				Parent      = frame,
+				Text        = "Soldes nuls",
+				ActiveState = this.data.BeginnerSoldesNuls ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Top,
+			};
+
+			button.ActiveStateChanged += delegate
+			{
+				this.data.BeginnerSoldesNuls = (button.ActiveState == ActiveState.Yes);
+
+				this.UpdateOrMode ();
+				this.searchStartAction ();
+			};
+		}
+
+
 		private void CreateMiddleBeginnerDatesUI()
 		{
 			var frame = new GroupBox
 			{
 				Parent          = this.middleFrame,
-				Text            = "Dates",
+				Text            = "Période",
 				PreferredWidth  = 150,  // pour aider le layout !
 				PreferredHeight = 65,  // pour aider le layout !
 				Dock            = DockStyle.Left,
@@ -366,6 +564,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			ToolTip.Default.SetToolTip (this.beginnerEndDateField,   "Date finale incluse");
 		}
 
+
 		private void CreateMiddleSpecialistUI()
 		{
 			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
@@ -391,6 +590,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.modeFrame.Visibility = (this.data.TabsData.Count > 1);
 		}
+
 
 		private void CreateRightUI(FrameBox parent)
 		{
@@ -689,6 +889,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private CheckButton								beginnerCatégorieCharge;
 		private CheckButton								beginnerCatégorieProduit;
 		private CheckButton								beginnerCatégorieExploitation;
+		private TextFieldCombo							beginnerFromProfondeurField;
+		private TextFieldCombo							beginnerToProfondeurField;
 		private TextField								beginnerBeginDateField;
 		private TextField								beginnerEndDateField;
 		private RadioButton								andButton;

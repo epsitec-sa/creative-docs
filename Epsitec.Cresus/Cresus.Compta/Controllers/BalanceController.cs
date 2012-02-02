@@ -87,6 +87,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as BalanceData;
 
+			var options = this.dataAccessor.AccessorOptions as BalanceOptions;
+
 			if (columnType == ColumnType.Titre)
 			{
 				for (int i = 0; i < data.Niveau; i++)
@@ -100,9 +102,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 					 columnType == ColumnType.SoldeCrédit ||
 					 columnType == ColumnType.Budget)
 			{
-				for (int i = 0; i < data.Niveau; i++)
+				if (!data.NeverFiltered && options.HideZero && text == "0.00")
 				{
-					text = FormattedText.Concat (text, UIBuilder.rightIndentText);
+					text = FormattedText.Empty;
+				}
+				
+				if (!text.IsNullOrEmpty)
+				{
+					for (int i = 0; i < data.Niveau; i++)
+					{
+						text = FormattedText.Concat (text, UIBuilder.rightIndentText);
+					}
 				}
 			}
 
@@ -124,7 +134,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.SoldeCrédit, 0.20, ContentAlignment.MiddleRight, "Solde C");
 				yield return new ColumnMapper (ColumnType.Budget,      0.20, ContentAlignment.MiddleRight, "Budget");
 
-				yield return new ColumnMapper (ColumnType.Date, 0.20, ContentAlignment.MiddleRight, "Date", show: false);
+				yield return new ColumnMapper (ColumnType.Date,        0.20, ContentAlignment.MiddleLeft,  "Date",       show: false);
+				yield return new ColumnMapper (ColumnType.Solde,       0.20, ContentAlignment.MiddleLeft,  "Solde",      show: false);
+				yield return new ColumnMapper (ColumnType.Profondeur,  0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
 			}
 		}
 	}

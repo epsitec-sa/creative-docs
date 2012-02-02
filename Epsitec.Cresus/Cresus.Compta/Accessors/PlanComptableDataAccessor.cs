@@ -139,6 +139,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Monnaie:
 					return compte.Monnaie;
 
+				case ColumnType.Profondeur:
+					return (compte.Niveau+1).ToString ();
+
 				default:
 					return FormattedText.Null;
 			}

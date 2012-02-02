@@ -32,21 +32,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		BudgetPrécédent,
 		BudgetFutur,
 		Journal,
-
-		//---------------------
-
-		NuméroGauche,
-		TitreGauche,
-		SoldeGauche,
-		SoldeGraphiqueGauche,
-		BudgetGauche,
-
-		Espace,
-		
-		NuméroDroite,
-		TitreDroite,
-		SoldeDroite,
-		SoldeGraphiqueDroite,
-		BudgetDroite,
+		Profondeur,
 	}
 }

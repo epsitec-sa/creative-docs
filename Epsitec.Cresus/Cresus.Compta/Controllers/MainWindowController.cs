@@ -620,13 +620,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			AbstractOptions data = new T ();
 			data.SetComptaEntity (compta);
+			data.Clear ();
 
 			this.settingsDatas.Add (key, data);
 
 			return data;
 		}
 
-		public SearchData GetSettingsSearchData<T>(string key)
+		public SearchData GetSettingsSearchData<T>(string key, System.Action<SearchData> initialize = null)
 			where T : SearchData, new ()
 		{
 			ISettingsData result;
@@ -636,6 +637,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			SearchData data = new T ();
+
+			if (initialize != null)
+			{
+				initialize (data);
+			}
 
 			this.settingsDatas.Add (key, data);
 

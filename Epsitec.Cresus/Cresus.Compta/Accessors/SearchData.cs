@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (data == null)
 					{
-						//	Si on n'a trouvé aucune catégorie, on en crée une.
+						//	Si on n'a trouvé aucune ligne, on en crée une.
 						data = new SearchTabData ();
 						this.tabsData.Add (data);
 					}
@@ -148,6 +148,121 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.tabsData.Where (x => x.Column == ColumnType.Catégorie).FirstOrDefault ();
+			}
+		}
+
+
+		public void GetBeginnerProfondeurs(out int from, out int to)
+		{
+			from = 1;
+			to   = int.MaxValue;  // de 1 à tous
+
+			var data = this.BeginnerProfondeurData;
+
+			if (data != null)
+			{
+				int p;
+
+				if (int.TryParse (data.SearchText.FromText, out p))
+				{
+					from = p;
+				}
+				
+				if (int.TryParse (data.SearchText.ToText, out p))
+				{
+					to = p;
+				}
+			}
+		}
+
+		public void SetBeginnerProfondeurs(int from, int to)
+		{
+			var data = this.BeginnerProfondeurData;
+
+			if (from == 1 && to == int.MaxValue)  // tous ?
+			{
+				if (data != null)
+				{
+					this.tabsData.Remove (data);
+					this.Adjust ();
+				}
+			}
+			else
+			{
+				if (data == null)
+				{
+					//	Si on n'a trouvé aucune ligne, on en crée une.
+					data = new SearchTabData ();
+					this.tabsData.Add (data);
+				}
+
+				data.Column              = ColumnType.Profondeur;
+				data.SearchText.Mode     = SearchMode.Interval;
+				data.SearchText.FromText = (from == int.MaxValue) ? null : from.ToString ();
+				data.SearchText.ToText   = (to   == int.MaxValue) ? null : to  .ToString ();
+
+				this.BeginnerAdjust (true);
+			}
+		}
+
+		private SearchTabData BeginnerProfondeurData
+		{
+			get
+			{
+				return this.tabsData.Where (x => x.Column == ColumnType.Profondeur).FirstOrDefault ();
+			}
+		}
+
+
+		public bool BeginnerSoldesNuls
+		{
+			get
+			{
+				var data = this.BeginnerSoldesNulsData;
+
+				if (data != null && data.SearchText.Invert && data.SearchText.FromText == "0.00")
+				{
+					return false;
+				}
+
+				return true;
+			}
+			set
+			{
+				var data = this.BeginnerSoldesNulsData;
+
+				if (value)  // affiche les comptes dont le solde est nul ?
+				{
+					if (data != null)
+					{
+						this.tabsData.Remove (data);
+						this.Adjust ();
+					}
+				}
+				else
+				{
+					if (data == null)
+					{
+						//	Si on n'a trouvé aucune ligne, on en crée une.
+						data = new SearchTabData ();
+						this.tabsData.Add (data);
+					}
+
+					data.Column              = ColumnType.Solde;
+					data.SearchText.Mode     = SearchMode.WholeContent;
+					data.SearchText.Invert   = true;
+					data.SearchText.FromText = "0.00";
+
+					this.BeginnerAdjust (true);
+				}
+			}
+		}
+
+		private SearchTabData BeginnerSoldesNulsData
+		{
+			get
+			{
+				return this.tabsData.Where (x => x.Column == ColumnType.Solde).FirstOrDefault ();
 			}
 		}
 
@@ -185,7 +300,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (data == null)
 				{
-					//	Si on n'a trouvé aucune date, on en crée une.
+					//	Si on n'a trouvé aucune ligne, on en crée une.
 					data = new SearchTabData ();
 					this.tabsData.Add (data);
 				}
@@ -212,6 +327,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 
+#if false
 				//	Si on n'a pas trouvé un intervalle de dates, on prend n'importe lequel.
 				foreach (var data in this.tabsData)
 				{
@@ -220,6 +336,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						return data;
 					}
 				}
+#endif
 
 				return null;
 			}
@@ -235,6 +352,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				//	1) Cherche les données effectives.
 				var dataCatégories = this.BeginnerCatégoriesData;
+				var dataProfondeur = this.BeginnerProfondeurData;
+				var dataSoldesNuls = this.BeginnerSoldesNulsData;
 				var dataDates      = this.BeginnerDatesData;
 
 				//	2) Supprime toutes les données-
@@ -244,6 +363,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (dataCatégories != null)
 				{
 					this.tabsData.Add (dataCatégories);
+				}
+
+				if (dataProfondeur != null)
+				{
+					this.tabsData.Add (dataProfondeur);
+				}
+
+				if (dataSoldesNuls != null)
+				{
+					this.tabsData.Add (dataSoldesNuls);
 				}
 
 				if (dataDates != null)

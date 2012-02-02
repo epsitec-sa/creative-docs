@@ -49,13 +49,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.CreateProfondeurUI (frame);
-
 			this.nullButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Affiche les comptes dont le solde est nul",
-				PreferredWidth = 230,
+				FormattedText  = "Affiche en blanc les montants nuls",
+				PreferredWidth = 200,
 				Dock           = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,
 			};
@@ -73,7 +71,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (!this.ignoreChange)
 				{
-					this.Options.ComptesNuls = (nullButton.ActiveState == ActiveState.Yes);
+					this.Options.HideZero = (nullButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
@@ -96,22 +94,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateProfondeur ();
 			this.UpdateBudget ();
 
 			this.ignoreChange = true;
-			this.nullButton    .ActiveState = this.Options.ComptesNuls ? ActiveState.Yes : ActiveState.No;
+			this.nullButton    .ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
 			this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
 			this.ignoreChange = false;
 
 			base.UpdateWidgets ();
 		}
 
-		private BilanOptions Options
+		private DoubleOptions Options
 		{
 			get
 			{
-				return this.options as BilanOptions;
+				return this.options as DoubleOptions;
 			}
 		}
 

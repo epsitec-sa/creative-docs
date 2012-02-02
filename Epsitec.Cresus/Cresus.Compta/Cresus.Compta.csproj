@@ -56,14 +56,15 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
-    <Compile Include="Accessors\BilanData.cs" />
+    <Compile Include="Accessors\DoubleData.cs" />
     <Compile Include="Accessors\BilanDataAccessor.cs" />
-    <Compile Include="Accessors\BilanOptions.cs" />
+    <Compile Include="Accessors\DoubleOptions.cs" />
     <Compile Include="Accessors\BudgetDisplayMode.cs" />
     <Compile Include="Accessors\BudgetsDataAccessor.cs" />
     <Compile Include="Accessors\BudgetsEditionData.cs" />
     <Compile Include="Accessors\BudgetShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
+    <Compile Include="Accessors\DoubleDataAccessor.cs" />
     <Compile Include="Accessors\SearchText.cs" />
     <Compile Include="Accessors\SearchMode.cs" />
     <Compile Include="Accessors\ISettingsData.cs" />
@@ -78,9 +79,7 @@
     <Compile Include="Accessors\JournalEditionData.cs" />
     <Compile Include="Accessors\PlanComptableDataAccessor.cs" />
     <Compile Include="Accessors\PlanComptableEditionData.cs" />
-    <Compile Include="Accessors\PPData.cs" />
     <Compile Include="Accessors\PPDataAccessor.cs" />
-    <Compile Include="Accessors\PPOptions.cs" />
     <Compile Include="Accessors\SearchData.cs" />
     <Compile Include="Accessors\SearchTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />

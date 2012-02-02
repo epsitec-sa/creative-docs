@@ -26,8 +26,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter");
+			//?this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter", this.FilterInitialize);
 
 			this.UpdateAfterOptionsChanged ();
+		}
+
+		private void FilterInitialize(SearchData data)
+		{
+			data.TabsData[0].Column              = ColumnType.Solde;
+			data.TabsData[0].SearchText.Mode     = SearchMode.WholeContent;
+			data.TabsData[0].SearchText.Invert   = true;
+			data.TabsData[0].SearchText.FromText = "0.00";
 		}
 
 
@@ -42,13 +51,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			base.FilterUpdate ();
+			this.UpdateTypo ();
 		}
 
 		public override void UpdateAfterOptionsChanged()
 		{
 			this.readonlyAllData.Clear ();
 
-			ComptaCompteEntity lastCompte = null;
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
 			decimal totalSoldeD = 0;
@@ -59,25 +68,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var compte in this.comptaEntity.PlanComptable)
 			{
-				if (compte.Catégorie == CatégorieDeCompte.Inconnu ||
-					compte.Catégorie == CatégorieDeCompte.Exploitation)
+				if (compte.Catégorie == CatégorieDeCompte.Inconnu)
 				{
 					continue;
 				}
 
-				if (this.Options.Profondeur.HasValue && compte.Niveau >= this.Options.Profondeur.Value)
-				{
-					continue;
-				}
-
-				var soldeDébit  = this.comptaEntity.GetSoldeCompteDébit  (compte);
-				var soldeCrédit = this.comptaEntity.GetSoldeCompteCrédit (compte);
-				var différence = soldeCrédit.GetValueOrDefault () - soldeDébit.GetValueOrDefault ();
-
-				if (!this.Options.ComptesNuls && soldeDébit.GetValueOrDefault () == 0 && soldeCrédit.GetValueOrDefault () == 0)
-				{
-					continue;
-				}
+				var soldeDébit  = this.comptaEntity.GetSoldeCompteDébit  (compte).GetValueOrDefault ();
+				var soldeCrédit = this.comptaEntity.GetSoldeCompteCrédit (compte).GetValueOrDefault ();
+				var différence = soldeCrédit - soldeDébit;
 
 				var data = new BalanceData ();
 
@@ -86,8 +84,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.Catégorie = compte.Catégorie;
 				data.Type      = compte.Type;
 				data.Niveau    = compte.Niveau;
-				data.Débit     = soldeDébit .GetValueOrDefault () == 0 ? null : soldeDébit;
-				data.Crédit    = soldeCrédit.GetValueOrDefault () == 0 ? null : soldeCrédit;
+				data.Débit     = soldeDébit;
+				data.Crédit    = soldeCrédit;
 
 				if (différence < 0)
 				{
@@ -100,8 +98,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (compte.Type == TypeDeCompte.Normal)
 				{
-					totalDébit  += soldeDébit.GetValueOrDefault ();
-					totalCrédit += soldeCrédit.GetValueOrDefault ();
+					totalDébit  += soldeDébit;
+					totalCrédit += soldeCrédit;
 
 					if (différence < 0)
 					{
@@ -112,14 +110,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 						totalSoldeC += différence;
 					}
 				}
-
-				if (lastCompte == null || lastCompte.Catégorie != compte.Catégorie)  // changement de catégorie ?
-				{
-					data.IsBold = true;
-					this.SetBottomSeparatorToPreviousLine ();
-				}
-
-				lastCompte = compte;
 
 				this.readonlyAllData.Add (data);
 			}
@@ -142,6 +132,30 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.FilterUpdate ();
+		}
+
+		private void UpdateTypo()
+		{
+			BalanceData lastData = null;
+
+			foreach (var d in this.readonlyData)
+			{
+				var data = d as BalanceData;
+
+				if (lastData != null)
+				{
+					lastData.HasBottomSeparator = (lastData.Catégorie != data.Catégorie);
+				}
+
+				data.IsBold = !data.NeverFiltered && (lastData == null || lastData.Catégorie != data.Catégorie);
+
+				lastData = data;
+			}
+
+			if (this.readonlyData.Any ())
+			{
+				this.readonlyData.Last ().HasBottomSeparator = true;
+			}
 		}
 
 
@@ -182,6 +196,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.Budget:
 					return AbstractDataAccessor.GetMontant (data.Budget);
+
+				case ColumnType.Solde:
+					if (data.Catégorie == CatégorieDeCompte.Passif ||
+						data.Catégorie == CatégorieDeCompte.Produit)
+					{
+						return AbstractDataAccessor.GetMontant (data.Crédit.GetValueOrDefault () - data.Débit.GetValueOrDefault ());
+					}
+					else
+					{
+						return AbstractDataAccessor.GetMontant (data.Débit.GetValueOrDefault () - data.Crédit.GetValueOrDefault ());
+					}
+
+				case ColumnType.Profondeur:
+					return (data.Niveau+1).ToString ();
 
 				default:
 					return FormattedText.Null;
