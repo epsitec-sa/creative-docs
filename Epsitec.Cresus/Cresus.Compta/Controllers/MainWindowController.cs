@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.FileName = filename;
 			dialog.Title = "Ouverture d'une comptabilité";
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
-			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
+			dialog.Filters.Add ("txt", "Texte tabulé", "*.txt");
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
@@ -343,7 +343,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.FileName = filename;
 			dialog.Title = "Enregistrement de la comptabilité";
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
-			dialog.Filters.Add ("cre", "Comptbilité", "*.cre");
+			dialog.Filters.Add ("txt", "Texte tabulé", "*.txt");
 			dialog.PromptForOverwriting = true;
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = new CrésusCompta ().ImportPlanComptable (this.compta, filename);
+				string err = new CrésusCompta ().ImportFile (this.compta, filename);
 
 				this.controller.ClearHilite ();
 				this.UpdateControllers ();

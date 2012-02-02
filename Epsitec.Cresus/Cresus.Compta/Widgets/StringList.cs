@@ -658,7 +658,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 						this.cells[i].TextLayout.Alignment = this.alignment;
 						this.cells[i].TextLayout.BreakMode = this.breakMode;
 						this.cells[i].TextLayout.LayoutSize = new Size (rect.Width-5, rect.Height);
-						adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
+						adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom+2), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
 					}
 				}
 
@@ -969,7 +969,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private static readonly Color		colorGreen = Color.FromHexa ("00bb00");
 
 		private Color						colorSelection = Color.FromName ("Gold");
-		private double						lineHeight = 20;
+		private double						lineHeight = 14;
 		private double						relativeWidth = 0;
 		private ContentAlignment			alignment = ContentAlignment.MiddleLeft;
 		private TextBreakMode				breakMode = TextBreakMode.None;

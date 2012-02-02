@@ -40,7 +40,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.array = new StringArray
 			{
 				Parent            = parent,
-				LineHeight        = 18,
 				Dock              = DockStyle.Fill,
 				TabNavigationMode = TabNavigationMode.ActivateOnTab,
 				Margins           = new Margins (0, 0, 0, 1),

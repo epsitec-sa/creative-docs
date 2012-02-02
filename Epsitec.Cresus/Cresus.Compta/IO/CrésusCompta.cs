@@ -16,17 +16,30 @@ namespace Epsitec.Cresus.Compta.IO
 	/// </summary>
 	public class CrésusCompta
 	{
-		public string ImportPlanComptable(ComptaEntity compta, string filename)
+		public string ImportFile(ComptaEntity compta, string filename)
 		{
-			//	Importe un plan comptable "crp".
 			this.compta = compta;
 
 			string ext = System.IO.Path.GetExtension (filename).ToLower ();
-			if (ext != ".crp")
+
+			if (ext == ".crp")
 			{
-				return "Le fichier ne contient pas un plan comptable.";
+				return this.ImportPlanComptable(compta, filename);
 			}
 
+			if (ext == ".txt")
+			{
+				return this.ImportEcritures (compta, filename);
+			}
+
+			return "Le fichier ne contient pas des données connues.";
+		}
+
+
+		#region Plan comptable
+		private string ImportPlanComptable(ComptaEntity compta, string filename)
+		{
+			//	Importe un plan comptable "crp".
 			try
 			{
 				this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
@@ -315,6 +328,138 @@ namespace Epsitec.Cresus.Compta.IO
 
 			return -1;
 		}
+		#endregion
+
+
+		#region Ecritures tabulées
+		private string ImportEcritures(ComptaEntity compta, string filename)
+		{
+			//	Importe un texte tabulé "txt".
+			try
+			{
+				this.lines = System.IO.File.ReadAllLines (filename, System.Text.Encoding.Default);
+
+				try
+				{
+					return this.ImportEcritures ();
+				}
+				catch (System.Exception ex)
+				{
+					return string.Concat ("Le fichier ne contient pas un texte tabulé conforme.<br/>", ex.Message);
+				}
+			}
+			catch (System.Exception ex)
+			{
+				return ex.Message;
+			}
+		}
+
+		private string ImportEcritures()
+		{
+			int count = 0;
+			ComptaEcritureEntity lastEcriture = null;
+
+			foreach (var line in lines)
+			{
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				var words = line.Split ('\t');
+
+				if (words.Length < 9)
+				{
+					continue;
+				}
+
+				var date    = Misc.ParseDate (words[0]);
+				var débit   = this.GetCompte (words[1]);
+				var crédit  = this.GetCompte (words[2]);
+				var pièce   = words[3];
+				var libellé = words[4];
+				var montant = this.GetMontant (words[5]);
+				var multi   = this.GetInt (words[8]);
+				var journal = this.compta.Journaux[0];
+
+				if (!date.HasValue)
+				{
+					continue;
+				}
+
+				if (débit == null && crédit == null)
+				{
+					continue;
+				}
+
+				var écriture = new ComptaEcritureEntity
+				{
+					Date    = date.Value,
+					Débit   = débit,
+					Crédit  = crédit,
+					Pièce   = pièce,
+					Libellé = libellé,
+					Montant = montant,
+					MultiId = multi,
+					Journal = journal,
+				};
+
+				this.compta.Journal.Add (écriture);
+
+				if (lastEcriture != null && lastEcriture.MultiId != 0 && lastEcriture.MultiId != écriture.MultiId)
+				{
+					lastEcriture.TotalAutomatique = true;
+				}
+
+				lastEcriture = écriture;
+				count++;
+			}
+
+			if (lastEcriture != null && lastEcriture.MultiId != 0)
+			{
+				lastEcriture.TotalAutomatique = true;
+			}
+
+			if (count == 0)
+			{
+				return "Le fichier ne contient aucune écriture.";
+			}
+
+			return null;  // ok
+		}
+
+		private ComptaCompteEntity GetCompte(string text)
+		{
+			if (!string.IsNullOrEmpty (text) && text != "...")
+			{
+				return this.compta.PlanComptable.Where (x => x.Numéro == text).FirstOrDefault ();
+			}
+
+			return null;
+		}
+
+		private decimal GetMontant(string text)
+		{
+			decimal m;
+			if (decimal.TryParse (text, out m))
+			{
+				return m;
+			}
+
+			return 0;
+		}
+
+		private int GetInt(string text)
+		{
+			int n;
+			if (int.TryParse (text, out n))
+			{
+				return n;
+			}
+
+			return 0;
+		}
+		#endregion
 
 
 		private ComptaEntity		compta;
