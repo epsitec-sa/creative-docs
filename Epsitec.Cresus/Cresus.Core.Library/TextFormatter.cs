@@ -333,8 +333,13 @@ namespace Epsitec.Cresus.Core
 
 			for (int i = 0; i < count; i++)
 			{
+				bool isLast = (i == count-1);
+				string text = items[i] ?? "";
+				string next = isLast ? "" : items[i+1];
+
 				if (weKnowItemIsEmpty)
 				{
+					buffer.Append (text);
 					emptyItem = true;
 					weKnowItemIsEmpty = false;
 					continue;
@@ -342,14 +347,11 @@ namespace Epsitec.Cresus.Core
 
 				weKnowItemIsEmpty = false;
 
-				bool isLast = (i == count-1);
-				string text = items[i];
-				string next = isLast ? "" : items[i+1];
-
 				conditionalParentheses = text.EndsWith ("(~");
 
 				if (TextFormatter.IsEmptyItem (text, conditionalParentheses))
 				{
+					buffer.Append (text);
 					emptyItem = true;
 					continue;
 				}
