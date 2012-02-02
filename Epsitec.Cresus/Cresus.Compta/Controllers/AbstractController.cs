@@ -149,7 +149,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SearchStartAction ();
 			this.FilterUpdateTopToolbar ();
-			this.FinalUpdate ();
 			this.UpdateTitle ();
 			
 			if (this.footerController != null)
@@ -181,14 +180,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.optionsController;
-			}
-		}
-
-		protected void FinalUpdate()
-		{
-			if (this.footerController != null)
-			{
-				this.footerController.FinalUpdate ();
 			}
 		}
 

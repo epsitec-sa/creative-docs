@@ -52,12 +52,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.bottomToolbarController.ShowPanel = value;
-				this.UpdateAfterShowInfoPanelChanged ();
+				this.UpdateFooterInfo ();
 			}
-		}
-
-		protected virtual void UpdateAfterShowInfoPanelChanged()
-		{
 		}
 
 
@@ -154,10 +150,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public virtual void FinalUpdate()
-		{
-		}
-
 		public virtual void UpdateToolbar()
 		{
 			this.controller.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
@@ -184,35 +176,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SetWidgetVisibility(ColumnType columnType, int line, bool visibility)
 		{
-			//?this.GetTextField (columnType, line).IsReadOnly = !visibility;
-			this.GetContainer (columnType, line).Visibility = visibility;
+			var container = this.GetContainer (columnType, line);
+
+			if (container != null)
+			{
+				container.Visibility = visibility;
+			}
 		}
 
-		public Widget GetContainer(ColumnType columnType, int line = 0)
+		private Widget GetContainer(ColumnType columnType, int line = 0)
 		{
 			var column = this.GetMapperColumnRank (columnType);
-			return this.GetContainer (column, line);
-		}
 
-		public Widget GetContainer(int column, int line = 0)
-		{
-			return this.footerContainers[line][column];
+			if (column < 0 || column >= this.footerContainers[line].Count)
+			{
+				return null;
+			}
+			else
+			{
+				return this.footerContainers[line][column];
+			}
 		}
 
 
 		public AbstractTextField GetTextField(ColumnType columnType, int line = 0)
 		{
 			var column = this.GetMapperColumnRank (columnType);
-			return this.GetTextField (column, line);
+
+			if (column < 0 || column >= this.footerContainers[line].Count)
+			{
+				return null;
+			}
+			else
+			{
+				return this.footerFields[line][column];
+			}
 		}
 
-		public AbstractTextField GetTextField(int column, int line = 0)
-		{
-			return this.footerFields[line][column];
-		}
 
-
-		protected int GetMapperColumnRank(ColumnType columnType)
+		private int GetMapperColumnRank(ColumnType columnType)
 		{
 			var mapper = this.columnMappers.Where (x => x.Column == columnType).FirstOrDefault ();
 			return this.columnMappers.IndexOf (mapper);
@@ -378,15 +380,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected virtual void FooterTextChanged(AbstractTextField field)
+		protected virtual void UpdateEditionWidgets()
+		{
+		}
+
+		protected void FooterTextChanged(AbstractTextField field)
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
 			if (!this.controller.IgnoreChanged)
 			{
 				this.dirty = true;
 				this.WidgetToEditionData ();
+
+				this.UpdateEditionWidgets ();
+				this.EditionDataToWidgets ();  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
+
 				this.FooterValidate ();
 				this.UpdateToolbar ();
+				this.UpdateFooterInfo ();
 				this.UpdateInsertionRow ();
 			}
 		}
@@ -536,6 +547,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		public virtual void UpdateFooterContent()
+		{
+			this.UpdateEditionWidgets ();
+			this.EditionDataToWidgets ();
+			this.FooterValidate ();
+			this.UpdateFooterInfo ();
+		}
+
+		protected virtual void UpdateFooterInfo()
 		{
 		}
 

@@ -167,12 +167,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			return modify ? "Modification d'un compte :" : "Création d'un compte :";
 		}
-
-
-		public override void UpdateFooterContent()
-		{
-			this.EditionDataToWidgets ();
-			this.FooterValidate ();
-		}
 	}
 }

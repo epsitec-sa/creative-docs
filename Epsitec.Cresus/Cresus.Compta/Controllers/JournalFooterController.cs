@@ -211,11 +211,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//?this.FooterSelect (0);
 		}
 
-		public override void FinalUpdate()
-		{
-			this.UpdateAfterShowInfoPanelChanged ();
-		}
-
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
 			return modify ? "Modification d'une écriture :" : "Création d'une écriture :";
@@ -365,7 +360,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void UpdateMultiWidgets()
+		protected override void UpdateEditionWidgets()
 		{
 			//	Met à jour toutes les données en édition d'une écriture multiple.
 			if (!this.isMulti || this.controller.IgnoreChanged)
@@ -485,27 +480,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void FooterTextChanged(AbstractTextField field)
-		{
-			//	Appelé lorsqu'un texte éditable a changé.
-			ColumnType columnType;
-			int line;
-			this.GetWidgetColumnLine (field.Name, out columnType, out line);
-
-			if (!this.controller.IgnoreChanged)
-			{
-				this.dirty = true;
-				this.WidgetToEditionData ();
-				this.UpdateMultiWidgets ();
-				this.EditionDataToWidgets ();  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
-				this.FooterValidate ();
-				this.UpdateToolbar ();
-				this.UpdateInsertionRow ();
-				this.UpdateFooterInfo ();
-			}
-		}
-
-
 		public override void UpdateFooterContent()
 		{
 			this.UpdateArrayColumns ();
@@ -514,14 +488,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedLine = System.Math.Min (this.selectedLine, count-1);
 			this.isMulti = (count > 1);
 
-			if (this.isMulti)
-			{
-				this.UpdateMultiWidgets ();
-			}
-
-			this.EditionDataToWidgets ();
-			this.FooterValidate ();
-			this.UpdateFooterInfo ();
+			base.UpdateFooterContent ();
 		}
 
 
@@ -559,24 +526,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void UpdateFooterInfo()
+		protected override void UpdateFooterInfo()
 		{
-			if (!this.ShowInfoPanel)
-			{
-				return;
-			}
+			this.infoFrameSeparator.Visibility = this.ShowInfoPanel;
+			this.infoFrameBox.Visibility       = this.ShowInfoPanel;
 
-			this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
-			this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
+			if (this.ShowInfoPanel)
+			{
+				this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
+				this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
+			}
 		}
 
 		private void UpdateFooterInfo(FormattedText numéro, bool isDébit)
 		{
-			if (!this.ShowInfoPanel)
-			{
-				return;
-			}
-
 			FormattedText title;
 			decimal? solde;
 
@@ -597,17 +560,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   count > 1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
-		}
-
-		protected override void UpdateAfterShowInfoPanelChanged()
-		{
-			this.infoFrameSeparator.Visibility = this.ShowInfoPanel;
-			this.infoFrameBox.Visibility       = this.ShowInfoPanel;
-
-			if (this.ShowInfoPanel)
-			{
-				this.UpdateFooterInfo ();
-			}
 		}
 
 

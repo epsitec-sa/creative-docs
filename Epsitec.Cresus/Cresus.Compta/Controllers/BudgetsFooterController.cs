@@ -122,8 +122,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				field.Visibility = this.dataAccessor.IsModification;
 			}
 
-			this.EditionDataToWidgets ();
-			this.FooterValidate ();
+			base.UpdateFooterContent ();
 		}
 	}
 }
