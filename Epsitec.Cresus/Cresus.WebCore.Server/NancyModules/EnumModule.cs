@@ -10,6 +10,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -31,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var type = Type.GetType (typeName);
 				var fetcherType = typeof (Fetcher<>).MakeGenericType (type);
 				var fetcherInst = Activator.CreateInstance (fetcherType) as Fetcher;
-				var list = fetcherInst.GetValues ();
+				var list = fetcherInst.GetValues ().ToList ();
 
 				var res = Response.AsJson (list);
 
@@ -40,9 +42,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		// NOTE Here we need this weird class & reflexion stuff because we need the generic type
+		// parameter in order to invoke the FromEnum<T> method, and we don't have that from scratch.
+		// Too bad, especially because the FromEnum<T> converts back the type parameter to a
+		// System.Type instance. I should come back here to correct this when I'll have more time.
+
+
 		private abstract class Fetcher
 		{
-			public abstract List<object> GetValues();
+			public abstract IEnumerable<object> GetValues();
 		}
 
 
@@ -51,25 +59,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 
 
-			public override List<object> GetValues()
+			public override IEnumerable<object> GetValues()
 			{
-				IEnumerable<EnumKeyValues<T>> possibleItems = EnumKeyValues.FromEnum<T> ();
-
-				var list = new List<object> ();
-
-				possibleItems.ForEach (c =>
+				foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())
 				{
-					c.Values.ForEach (v =>
+					foreach (var value in enumKeyValues.Values)
 					{
-						list.Add (new
-						{
-							id = c.Key.ToString (),
-							name = v.ToString ()
-						});
-					});
-				});
+						string id = enumKeyValues.Key.ToString ();
+						string name = value.ToString ();
 
-				return list;
+						yield return new { id = id, name = name };
+					}
+				}
 			}
 
 
