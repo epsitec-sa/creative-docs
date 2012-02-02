@@ -39,5 +39,10 @@ namespace Epsitec.Cresus.Core.Bricks
 					return false;
 			}
 		}
+
+		public static int GetControllerSubTypeId(this BrickMode mode)
+		{
+			return (int) (mode - BrickMode.SpecialController0);
+		}
 	}
 }

@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				default:
 					if (value.IsSpecialController ())
 					{
-						item.ControllerSubTypeId = (int) (value - BrickMode.SpecialController0);
+						item.ControllerSubTypeId = value.GetControllerSubTypeId ();
 					}
 					break;
 			}
