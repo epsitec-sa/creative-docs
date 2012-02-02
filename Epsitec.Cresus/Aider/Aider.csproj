@@ -50,6 +50,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
+    <Compile Include="Entities\Helpers\AiderPersonAdditionalContactAddressList.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />
     <Compile Include="Enumerations\ContactRole.cs" />

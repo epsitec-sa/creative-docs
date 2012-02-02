@@ -60,6 +60,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			wall.AddBrick (x => x.AdditionalAddress4)
 				.Attribute (BrickMode.AutoCreateNullEntity)
 				.Title (this.GetAdditionalAddressTitle (this.Entity.AdditionalAddress4));
+
+			wall.AddBrick (x => x.AdditionalAddresses)
+				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+				.End ();
 		}
 
 

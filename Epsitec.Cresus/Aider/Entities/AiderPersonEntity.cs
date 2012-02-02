@@ -317,6 +317,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
+		{
+			if (this.additionalAddresses == null)
+			{
+				this.additionalAddresses = new Helpers.AiderPersonAdditionalContactAddressList (this);
+			}
+
+			value = this.additionalAddresses;
+		}
+
+
+		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
 	}
 
 

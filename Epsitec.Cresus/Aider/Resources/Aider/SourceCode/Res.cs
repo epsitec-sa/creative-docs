@@ -1462,6 +1462,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress3 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 306);
 				//	designer:cap/LVAJ9
 				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddress4 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 307);
+				//	designer:cap/LVA3B
+				public static readonly global::Epsitec.Common.Support.Druid AdditionalAddresses = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 355);
 				//	designer:cap/LVAK2
 				public static readonly global::Epsitec.Common.Support.Druid CallName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 84);
 				//	designer:cap/LVGL02

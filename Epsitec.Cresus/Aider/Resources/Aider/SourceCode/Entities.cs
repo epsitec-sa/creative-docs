@@ -1119,6 +1119,20 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>AdditionalAddresses</c> field.
+		///	designer:fld/LVAF/LVA3B
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA3B]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> AdditionalAddresses
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity>);
+				this.GetAdditionalAddresses (ref value);
+				return value;
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1163,6 +1177,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetChildren(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetParents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetHousemates(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
+		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
