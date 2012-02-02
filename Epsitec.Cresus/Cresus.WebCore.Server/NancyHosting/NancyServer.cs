@@ -2,11 +2,7 @@
 
 using Nancy;
 
-using Nancy.Bootstrapper;
-
 using Nancy.IO;
-
-using Nancy.Cookies;
 
 using Nancy.Extensions;
 
@@ -15,6 +11,8 @@ using Nancy.Helpers;
 using System;
 
 using System.Collections.Generic;
+
+using System.Diagnostics;
 
 using System.Globalization;
 
@@ -68,18 +66,31 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		private void ProcessRequest(HttpListenerContext requestContext)
 		{
-			HttpListenerRequest httpRequest = requestContext.Request;
-
-			using (HttpListenerResponse httpResponse = requestContext.Response)
+			try
 			{
-				var nancyRequest = ConvertHttpRequestToNancyRequest (httpRequest);
+				HttpListenerRequest httpRequest = requestContext.Request;
 
-				using (var nancyContext = this.engine.HandleRequest (nancyRequest))
+				Debug.WriteLine ("[" + DateTime.Now + "] Received http request: " + httpRequest.Url);
+
+				using (HttpListenerResponse httpResponse = requestContext.Response)
 				{
-					var nancyResponse = nancyContext.Response;
+					var nancyRequest = ConvertHttpRequestToNancyRequest (httpRequest);
 
-					NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
+					using (var nancyContext = this.engine.HandleRequest (nancyRequest))
+					{
+						var nancyResponse = nancyContext.Response;
+
+						NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
+					}
 				}
+			}
+			catch (Exception e)
+			{
+				// TODO Log the exception
+
+				Debug.WriteLine ("[" + DateTime.Now + "] Uncaught exception while processing http request : " + e.Message);
+
+				Debug.Assert (false);
 			}
 		}
 
