@@ -5,6 +5,8 @@ using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
@@ -68,17 +70,9 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		}
 
 
-		private string GetAdditionalAddressTitle(AiderAddressEntity address)
+		private FormattedText GetAdditionalAddressTitle(AiderAddressEntity address)
 		{
-			var title = "Coordonées supplémentaires";
-			var type = address.Type.AsText ();
-
-			if (!string.IsNullOrEmpty (type))
-			{
-				title += " (" + type + ")";
-			}
-
-			return title;
+			return TextFormatter.FormatText ("Coordonées supplémentaires", "(~", address.Type, "~)");
 		}
 
 

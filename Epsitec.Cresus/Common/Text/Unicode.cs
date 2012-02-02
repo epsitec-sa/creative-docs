@@ -1,4 +1,4 @@
-﻿//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text
@@ -231,8 +231,8 @@ namespace Epsitec.Common.Text
 			Hyphen					= 0x2010,
 			NonBreakingHyphen		= 0x2011,
 			FigureDash				= 0x2012,		//	non-breaking, same width as a digit
-			EnDash					= 0x2013,
-			EmDash					= 0x2014,
+			EnDash					= 0x2013,		//	–
+			EmDash					= 0x2014,		//	—
 			QuotationDash			= 0x2015,
 
 			//	Mathematical:

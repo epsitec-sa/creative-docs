@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
@@ -9,25 +12,19 @@ using System.Collections.Generic;
 
 using System.Linq;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderAddressEntity
 	{
-
-
 		public override FormattedText GetSummary()
 		{
-			var parts = new List<FormattedText> ()
-			{
-				this.GetAddressText (),
-				this.GetPhonesText (),
-				this.GetEmailText (),
-				this.GetWebsiteText (),
-			};
+			var parts = new List<FormattedText> () { this.GetAddressText (),
+			this.GetPhonesText (),
+			this.GetEmailText (),
+			this.GetWebsiteText () };
 
 			var texts = parts.Where (p => !p.IsNullOrWhiteSpace);
 
@@ -38,31 +35,27 @@ namespace Epsitec.Aider.Entities
 		public override FormattedText GetCompactSummary()
 		{
 			var part1 = this.Town.Name
-				?? this.Phone1
-				?? this.Phone2
-				?? this.Email;
+			?? this.Phone1
+			?? this.Phone2
+			?? this.Email;
 
-			var part2 = this.Type.AsText ();
-
-			if (part1 == null)
-			{
-				return null;
-			}
-
-			if (part2 == null)
-			{
-				return part1;
-			}
-
-			var text = part1 + " (" + part2 + ")";
-
-			return FormattedText.FromSimpleText (text);
+			return TextFormatter.FormatText (part1, "(~", this.Type, "~)");
 		}
 
 
-		private FormattedText GetAddressText()
+		public override EntityStatus GetEntityStatus()
 		{
-			return this.GetLabeledText ("Addresse postale", this.GetAddressLines ());
+			using (var a = new EntityStatusAccumulator ())
+			{
+				//a.Accumulate (this.IdA.GetEntityStatus ());
+				//a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
+				//a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
+				//a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
+				//a.Accumulate (this.MainRelation, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
+				//a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
+
+				return a.EntityStatus;
+			}
 		}
 
 
@@ -73,12 +66,6 @@ namespace Epsitec.Aider.Entities
 			yield return this.PostBox;
 			yield return StringUtils.Join (" ", StringUtils.Join ("-", this.Town.Country.IsoCode, this.Town.ZipCode), this.Town.Name);
 			yield return this.Town.Country.Name;
-		}
-
-
-		private FormattedText GetPhonesText()
-		{
-			return this.GetLabeledText ("Numéros de téléphones", this.GetPhones ());
 		}
 
 
@@ -93,6 +80,18 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return this.Phone2;
 			}
+		}
+
+
+		private FormattedText GetAddressText()
+		{
+			return this.GetLabeledText ("Addresse postale", this.GetAddressLines ());
+		}
+
+
+		private FormattedText GetPhonesText()
+		{
+			return this.GetLabeledText ("Numéros de téléphones", this.GetPhones ());
 		}
 
 
@@ -111,8 +110,8 @@ namespace Epsitec.Aider.Entities
 		private FormattedText GetLabeledText(string label, IEnumerable<string> lines)
 		{
 			var text = lines
-				   .Where (l => !l.IsNullOrWhiteSpace ())
-				   .Join ("\n");
+			.Where (l => !l.IsNullOrWhiteSpace ())
+			.Join ("\n");
 
 			if (text.IsNullOrWhiteSpace ())
 			{
@@ -132,33 +131,7 @@ namespace Epsitec.Aider.Entities
 
 			var formattedLabel = TextFormatter.FormatText (label).ApplyBold ();
 
-			return TextFormatter.FormatText(formattedLabel, "\n", text);
+			return TextFormatter.FormatText (formattedLabel, "\n", text);
 		}
-
-
-		private string GetTypeText(AddressType type)
-		{
-			switch (type)
-			{
-				case AddressType.Default:
-					return null;
-
-				case AddressType.Private:
-					return "Privé";
-
-				case AddressType.Professional:
-					return "Professionnel";
-
-				case AddressType.Secondary:
-					return "Secondaire";
-
-				default:
-					return null;
-			}
-		}
-
-
 	}
-
-
 }

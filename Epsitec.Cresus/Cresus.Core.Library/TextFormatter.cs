@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Library.Internal;
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
+using Epsitec.Common.Text;
 
 namespace Epsitec.Cresus.Core
 {
@@ -326,15 +327,28 @@ namespace Epsitec.Cresus.Core
 		{
 			bool emptyItem = true;
 			bool skipSpace = true;
+			bool weKnowItemIsEmpty = false;
+			bool conditionalParentheses = false;
 			int  count     = items.Count;
 
 			for (int i = 0; i < count; i++)
 			{
+				if (weKnowItemIsEmpty)
+				{
+					emptyItem = true;
+					weKnowItemIsEmpty = false;
+					continue;
+				}
+
+				weKnowItemIsEmpty = false;
+
 				bool isLast = (i == count-1);
 				string text = items[i];
 				string next = isLast ? "" : items[i+1];
 
-				if (text.Length == 0)
+				conditionalParentheses = text.EndsWith ("(~");
+
+				if (TextFormatter.IsEmptyItem (text, conditionalParentheses))
 				{
 					emptyItem = true;
 					continue;
@@ -357,8 +371,9 @@ namespace Epsitec.Cresus.Core
 
 				if (suffix == Suffix.SkipItemIfNextEmpty)
 				{
-					if (next.Length == 0)
+					if (TextFormatter.IsEmptyItem (next, conditionalParentheses))
 					{
+						weKnowItemIsEmpty = true;
 						continue;
 					}
 
@@ -391,11 +406,31 @@ namespace Epsitec.Cresus.Core
 					buffer.Append (text);
 				}
 
-				emptyItem = text.EndsWith (FormattedText.HtmlBreak) || string.IsNullOrEmpty (text.RemoveTag ());
+				emptyItem = TextFormatter.IsEmptyItem (text, conditionalParentheses);
 				skipSpace = emptyItem;
 			}
 		}
 
+
+		public static bool IsEmptyItem(string text, bool betweenParentheses = false)
+		{
+			if (text == null)
+			{
+				return true;
+			}
+			if (betweenParentheses && (text == Unicode.ToString (Unicode.Code.EmDash)))
+			{
+				return true;
+			}
+			if (text.EndsWith (FormattedText.HtmlBreak))
+			{
+				return true;
+			}
+
+			text = text.RemoveTag ();
+
+			return string.IsNullOrWhiteSpace (text);
+		}
 
 		#region UsingCultureHelper Class
 

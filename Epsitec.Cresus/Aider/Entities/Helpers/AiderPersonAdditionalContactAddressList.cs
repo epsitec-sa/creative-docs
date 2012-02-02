@@ -44,6 +44,70 @@ namespace Epsitec.Aider.Entities.Helpers
 			}
 		}
 
+		public override void Add(AiderAddressEntity item)
+		{
+			if (this.Contains (item))
+			{
+				throw new System.InvalidOperationException ("Duplicate address");
+			}
+
+			if (this.person.AdditionalAddress1.IsNull ())
+			{
+				this.person.AdditionalAddress1 = item;
+			}
+			else if (this.person.AdditionalAddress2.IsNull ())
+			{
+				this.person.AdditionalAddress2 = item;
+			}
+			else if (this.person.AdditionalAddress3.IsNull ())
+			{
+				this.person.AdditionalAddress3 = item;
+			}
+			else if (this.person.AdditionalAddress4.IsNull ())
+			{
+				this.person.AdditionalAddress4 = item;
+			}
+			else
+			{
+				return;
+			}
+			
+			base.Add (item);
+		}
+
+		public override bool Remove(AiderAddressEntity item)
+		{
+			if (this.person.AdditionalAddress1 == item)
+			{
+				this.person.AdditionalAddress1 = this.person.AdditionalAddress2;
+				this.person.AdditionalAddress2 = this.person.AdditionalAddress3;
+				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
+				this.person.AdditionalAddress4 = null;
+			}
+			else if (this.person.AdditionalAddress2 == item)
+			{
+				this.person.AdditionalAddress2 = this.person.AdditionalAddress3;
+				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
+				this.person.AdditionalAddress4 = null;
+			}
+			else if (this.person.AdditionalAddress3 == item)
+			{
+				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
+				this.person.AdditionalAddress4 = null;
+			}
+			else if (this.person.AdditionalAddress4 == item)
+			{
+				this.person.AdditionalAddress4 = null;
+			}
+			else
+			{
+				return false;
+			}
+
+			this.ReplaceWithRange (this.GetAddresses ());
+
+			return true;
+		}
 
 		private readonly AiderPersonEntity person;
 	}

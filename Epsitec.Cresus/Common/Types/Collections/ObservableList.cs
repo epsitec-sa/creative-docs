@@ -340,7 +340,7 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		public bool Remove(T item)
+		public virtual bool Remove(T item)
 		{
 			int index = this.list.IndexOf (item);
 			if (index >= 0)

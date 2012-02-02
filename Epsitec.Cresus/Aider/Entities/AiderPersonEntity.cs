@@ -50,7 +50,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var lines = this.GetPersonalDataSummaryLines ();
 
-			return TextFormatter.FormatText (lines.Join ("\n"));
+			return TextFormatter.FormatText (lines.Select (x => x.AppendLine ()));
 		}
 
 
@@ -105,57 +105,14 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<string> GetPersonalDataSummaryLines()
+		public IEnumerable<FormattedText> GetPersonalDataSummaryLines()
 		{
 			// Gets the text with the title and honorific
-			var honorific = this.MrMrs.AsText ();
-			var title = this.Title;
-
-			var honorificTitleText = "";
-
-			if (!honorific.IsNullOrWhiteSpace ())
-			{
-				honorificTitleText = honorific;
-			}
-
-			if (!title.IsNullOrWhiteSpace ())
-			{
-				if (honorificTitleText.IsNullOrWhiteSpace ())
-				{
-					honorificTitleText = title;
-				}
-				else
-				{
-					honorificTitleText += " (" + title + ")";
-				}
-			}
-
-			if (!honorificTitleText.IsNullOrWhiteSpace ())
-			{
-				yield return honorificTitleText;
-			}
+			
+			yield return TextFormatter.FormatText (this.MrMrs, "~(~", this.Title, "~)");
 
 			// Gets the text for the name sex and language
-			var fullNameText = this.GetFullName ();
-
-			if (!fullNameText.IsNullOrWhiteSpace ())
-			{
-				var sexText = this.eCH_Person.PersonSex.AsShortText();
-
-				if (!sexText.IsNullOrWhiteSpace ())
-				{
-					fullNameText += " (" + sexText + ")";
-				}
-
-				var languageText = this.Language.AsShortText ();
-
-				if (!languageText.IsNullOrWhiteSpace ())
-				{
-					fullNameText += " (" + languageText + ")";
-				}
-
-				yield return fullNameText;
-			}
+			yield return TextFormatter.FormatText (this.GetFullName (), "(", this.eCH_Person.PersonSex.AsShortText (), ",", this.Language.AsShortText (), ")");
 
 			// Gets the text for the dates of birth and death.
 			var datesText = this.eCH_Person.DateOfBirth;
@@ -172,21 +129,8 @@ namespace Epsitec.Aider.Entities
 				yield return datesText;
 			}
 
-			// Gets the text for the confession
-			var confessionText = this.Confession.AsText ();
-
-			if (!confessionText.IsNullOrWhiteSpace ())
-			{
-				yield return confessionText;
-			}
-
-			// Gets the text for the profession
-			var professionText = this.Profession;
-
-			if (!professionText.IsNullOrWhiteSpace ())
-			{
-				yield return professionText;
-			}
+			yield return TextFormatter.FormatText (this.Confession);
+			yield return this.Profession;
 		}
 
 
