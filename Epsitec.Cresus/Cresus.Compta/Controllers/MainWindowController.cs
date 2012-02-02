@@ -493,6 +493,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		[Command (Res.CommandIds.Select.Up)]
+		private void CommandSelectUp()
+		{
+			this.controller.ArrayController.MoveSelection (-1);
+		}
+
+		[Command (Res.CommandIds.Select.Down)]
+		private void CommandSelectDown()
+		{
+			this.controller.ArrayController.MoveSelection (1);
+		}
+
+		[Command (Res.CommandIds.Select.Home)]
+		private void CommandSelectHome()
+		{
+			this.controller.ArrayController.MoveSelection (0);
+		}
+
+
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{

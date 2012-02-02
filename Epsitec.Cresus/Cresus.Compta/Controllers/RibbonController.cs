@@ -127,20 +127,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 
 			{
+				Widget topSection1, bottomSection1;
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
+
+				this.CreateSubsections (section, out topSection1, out bottomSection1);
+
+				topSection1.Children.Add (this.CreateButton (Res.Commands.Select.Up, large: false));
+				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Down, large: false));
+				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Home, large: false));
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Accept));
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Cancel));
 				section.Children.Add (this.CreateGap ());
 
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				Widget topSection2, bottomSection2;
+				this.CreateSubsections (section, out topSection2, out bottomSection2);
 
-				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
+				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
+				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
 
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
+				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
+				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
 			}
 
 			{

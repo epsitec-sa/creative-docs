@@ -190,6 +190,9 @@
     <EmbeddedResource Include="Images\Level.Specialist.icon" />
     <EmbeddedResource Include="Images\Edit.Down.icon" />
     <EmbeddedResource Include="Images\Edit.Up.icon" />
+    <EmbeddedResource Include="Images\Select.Down.icon" />
+    <EmbeddedResource Include="Images\Select.Up.icon" />
+    <EmbeddedResource Include="Images\Select.Home.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

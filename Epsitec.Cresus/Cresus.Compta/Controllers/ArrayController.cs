@@ -61,7 +61,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (!this.ignoreChanged)
 				{
 					selectedRowChanged ();
+					this.UpdateCommands ();
 				}
+			};
+
+			this.array.FirstVisibleRowChanged += delegate
+			{
+				this.UpdateCommands ();
 			};
 
 			return this.array;
@@ -84,6 +90,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				column++;
 			}
+		}
+
+
+		public void MoveSelection(int direction)
+		{
+			int firstRow, countRow, sel;
+			this.GetHilitedRows (out firstRow, out countRow);
+
+			if (direction == 0)
+			{
+				this.array.ShowRow (firstRow, countRow);
+			}
+			else
+			{
+				if (direction < 0)
+				{
+					sel = firstRow+direction;
+				}
+				else
+				{
+					sel = firstRow+countRow;
+				}
+
+				if (sel >= 0 && sel < this.array.TotalRows)
+				{
+					this.SelectedRow = sel;
+				}
+			}
+		}
+
+		private void UpdateCommands()
+		{
+			int firstRow, countRow;
+			this.GetHilitedRows (out firstRow, out countRow);
+
+			this.controller.SetCommandEnable (Res.Commands.Select.Up,   firstRow != -1 && firstRow > 0);
+			this.controller.SetCommandEnable (Res.Commands.Select.Down, firstRow != -1 && firstRow+countRow < this.array.TotalRows);
+
+			this.controller.SetCommandEnable (Res.Commands.Select.Home, !this.array.IsShowedRow (firstRow, countRow));
 		}
 
 

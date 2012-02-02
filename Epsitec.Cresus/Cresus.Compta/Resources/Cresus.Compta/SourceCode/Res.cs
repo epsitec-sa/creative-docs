@@ -159,6 +159,20 @@ namespace Epsitec.Cresus.Compta
 				//	designer:cap/OVKL1
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 			}
+			
+			public static class Select
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK93
+				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 105));
+				//	designer:cap/OVKA3
+				public static readonly global::Epsitec.Common.Widgets.Command Home = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 106));
+				//	designer:cap/OVK83
+				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 104));
+			}
 		}
 		
 		public static class CommandIds
@@ -309,6 +323,20 @@ namespace Epsitec.Cresus.Compta
 				public const long RésuméPériodique = 0x3F800014000034L;
 				//	designer:cap/OVKL1
 				public const long RésuméTVA = 0x3F800014000035L;
+			}
+			
+			public static class Select
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK93
+				public const long Down = 0x3F800014000069L;
+				//	designer:cap/OVKA3
+				public const long Home = 0x3F80001400006AL;
+				//	designer:cap/OVK83
+				public const long Up = 0x3F800014000068L;
 			}
 			
 		}
@@ -600,6 +628,7 @@ namespace Epsitec.Cresus.Compta
 			Commands.NouvellePrésentation._Initialize ();
 			Commands.Panel._Initialize ();
 			Commands.Présentation._Initialize ();
+			Commands.Select._Initialize ();
 			CommandIds._Initialize ();
 			CommandIds.Edit._Initialize ();
 			CommandIds.File._Initialize ();
@@ -608,6 +637,7 @@ namespace Epsitec.Cresus.Compta
 			CommandIds.NouvellePrésentation._Initialize ();
 			CommandIds.Panel._Initialize ();
 			CommandIds.Présentation._Initialize ();
+			CommandIds.Select._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
 			Values._Initialize ();

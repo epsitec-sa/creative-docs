@@ -566,6 +566,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.isDirtyScroller = true;
 					this.isDirtySelected = true;
 					this.OnUpdateCellContent();
+					this.OnFirstVisibleRowChanged ();
 				}
 			}
 		}
@@ -579,9 +580,27 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public void ShowRow(int firstRow, int countRow)
 		{
 			//	Montre une ligne.
+			var first = this.GetFirstRowToShow (firstRow, countRow);
+
+			if (first.HasValue)
+			{
+				this.FirstVisibleRow = first.Value;
+			}
+		}
+
+		public bool IsShowedRow(int firstRow, int countRow)
+		{
+			//	Retourne true si la sélection est actuellement intégralement visible.
+			return !this.GetFirstRowToShow (firstRow, countRow).HasValue;
+		}
+
+		private int? GetFirstRowToShow(int firstRow, int countRow)
+		{
+			//	Retourne la ligne qui doit servir de première ligne visible, ou null
+			//	si la sélection est actuellement intégralement visible.
 			if (firstRow == -1)
 			{
-				return;
+				return null;
 			}
 
 			int lines = this.LineCount;
@@ -592,15 +611,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 			int lastRow = firstRow+countRow-1;
 
 			if ((firstRow < this.FirstVisibleRow || firstRow >= this.FirstVisibleRow+lines) ||
-			(lastRow  < this.FirstVisibleRow || lastRow  >= this.FirstVisibleRow+lines))
+				(lastRow  < this.FirstVisibleRow || lastRow  >= this.FirstVisibleRow+lines))
 			{
 				int middleRow = (firstRow+lastRow)/2;
 
 				middleRow = System.Math.Min (middleRow+lines/2, this.TotalRows);
 				middleRow = System.Math.Max (middleRow-lines+1, 0);
 
-				this.FirstVisibleRow = middleRow;
+				return middleRow;
 			}
+
+			return null;
 		}
 
 
@@ -1176,6 +1197,29 @@ namespace Epsitec.Cresus.Compta.Widgets
 			remove
 			{
 				this.RemoveUserEventHandler("SelectedRowChanged", value);
+			}
+		}
+
+
+		protected virtual void OnFirstVisibleRowChanged()
+		{
+			//	Génère un événement pour dire que la ligne sélectionnée a changé.
+			var handler = this.GetUserEventHandler ("FirstVisibleRowChanged");
+			if (handler != null)
+			{
+				handler (this);
+			}
+		}
+
+		public event EventHandler FirstVisibleRowChanged
+		{
+			add
+			{
+				this.AddUserEventHandler ("FirstVisibleRowChanged", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("FirstVisibleRowChanged", value);
 			}
 		}
 

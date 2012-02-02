@@ -658,7 +658,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 						this.cells[i].TextLayout.Alignment = this.alignment;
 						this.cells[i].TextLayout.BreakMode = this.breakMode;
 						this.cells[i].TextLayout.LayoutSize = new Size (rect.Width-5, rect.Height);
-						adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom+2), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
+						adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom+1), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
 					}
 				}
 

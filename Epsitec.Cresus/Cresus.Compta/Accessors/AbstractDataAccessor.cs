@@ -429,6 +429,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void StartCreationData()
 		{
+			this.firstEditedRow = -1;
+			this.countEditedRow = 1;
 		}
 
 		public virtual void ResetCreationData()
@@ -441,6 +443,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void StartModificationData(int row)
 		{
+			this.firstEditedRow = row;
+			this.countEditedRow = 1;
 		}
 
 		public virtual void UpdateEditionData()

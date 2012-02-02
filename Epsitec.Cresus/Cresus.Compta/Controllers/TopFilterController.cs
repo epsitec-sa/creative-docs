@@ -49,11 +49,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (this.showPanel)
 					{
-						this.searchController.SetFocus ();
+						this.filterController.SetFocus ();
 					}
 					else
 					{
-						this.searchController.SearchClear ();
+						//	Il ne faut pas remettre à zéro le filtre lorsqu'on ferme la panneau du filtre,
+						//	contrairement au panneau des recherches !
 					}
 				}
 			}
@@ -73,21 +74,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility      = false,
 			};
 
-			this.searchController = new SearchController (this.controller, this.dataAccessor.FilterData, true);
-			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
+			this.filterController = new SearchController (this.controller, this.dataAccessor.FilterData, true);
+			this.filterController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
 
 		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-			this.searchController.UpdateColumns ();
+			this.filterController.UpdateColumns ();
 		}
 
 
 		public void SetFilterCount(int dataCount, int count, int allCount)
 		{
-			this.searchController.SetFilterCount (dataCount, count, allCount);
+			this.filterController.SetFilterCount (dataCount, count, allCount);
 		}
 
 
@@ -99,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly AbstractDataAccessor	dataAccessor;
 
 		private FrameBox						toolbar;
-		private SearchController				searchController;
+		private SearchController				filterController;
 		protected bool							showPanel;
 	}
 }
