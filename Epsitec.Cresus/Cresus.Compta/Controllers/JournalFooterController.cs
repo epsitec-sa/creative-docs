@@ -558,7 +558,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, count > 2 && this.selectedLine != cp);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     count > 1 && this.selectedLine > 0);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   count > 1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   count != 0);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
 		}
 

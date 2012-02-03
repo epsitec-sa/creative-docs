@@ -145,24 +145,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
 				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
+				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Insert, large: false));
+				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Up, large: false));
+				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Swap, large: false));
 
 				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
 				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
-			}
-
-			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Ecriture multiple");
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Insert, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Up, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Swap, large: false));
-
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Delete, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Down, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
+				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Delete, large: false));
+				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Down, large: false));
+				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
 			}
 
 			//	<--|
