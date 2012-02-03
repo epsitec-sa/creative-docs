@@ -53,12 +53,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public static string GetLambdaFieldName(string entityKey)
-		{
-			return string.Concat ("lambda_", entityKey);
-		}
-
-
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
 		{
 			this.rootEntity = entity;
@@ -88,15 +82,22 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var items = new List<Dictionary<string, object>> ();
 			dic["items"] = items;
 
+			bool first = true;
+
 			foreach (var brick in brickWall.Bricks)
 			{
 				var panels = this.GetPanels (brick);
-				
+
+				// The very first item is the root
+				if (first)
+				{
+					panels.First ()["isRoot"] = true;
+
+					first = false;
+				}
+
 				items.AddRange (panels);
 			}
-
-			// The very first item is the root
-			items.First ()["isRoot"] = true;
 
 			return dic;
 		}
@@ -212,7 +213,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			var panel = new Dictionary<string, object> ();
 
-			var controllerName = this.GetControllerName ();
+			var controllerName = this.controllerMode.ToString ().ToLower (CultureInfo.InvariantCulture);
 			panel["xtype"] = controllerName;
 
 			string title = item.Title.ToSimpleText ();
@@ -355,7 +356,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			string fieldName = caption.Id.ToString ().Trim ('[', ']');
 
 			lambdaDictionnary["xtype"] = "hiddenfield";
-			lambdaDictionnary["name"] = PanelBuilder.GetLambdaFieldName (fieldName);
+			lambdaDictionnary["name"] = Tools.GetLambdaFieldName (fieldName);
 			lambdaDictionnary["value"] = accessor == null ? "-1" : accessor.Id.ToString (CultureInfo.InvariantCulture);
 
 			entityDictionnary["xtype"] = "textfield";
@@ -578,13 +579,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		}
 
-
-		private string GetControllerName()
-		{
-			return this.controllerMode.ToString ().ToLower (CultureInfo.InvariantCulture);
-		}
-
-
 		private string GetEntityKey(AbstractEntity entity)
 		{
 			if (entity == null)
@@ -666,26 +660,26 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 //    +DefaultToSummarySubview,
 //    +HideAddButton,
 //    +HideRemoveButton,
-//    -SpecialController0,
-//    -SpecialController1,
-//    -SpecialController2,
-//    -SpecialController3,
-//    -SpecialController4,
-//    -SpecialController5,
-//    -SpecialController6,
-//    -SpecialController7,
-//    -SpecialController8,
-//    -SpecialController9,
-//    -SpecialController10,
-//    -SpecialController11,
-//    -SpecialController12,
-//    -SpecialController13,
-//    -SpecialController14,
-//    -SpecialController15,
-//    -SpecialController16,
-//    -SpecialController17,
-//    -SpecialController18,
-//    -SpecialController19,
+//    +SpecialController0,
+//    +SpecialController1,
+//    +SpecialController2,
+//    +SpecialController3,
+//    +SpecialController4,
+//    +SpecialController5,
+//    +SpecialController6,
+//    +SpecialController7,
+//    +SpecialController8,
+//    +SpecialController9,
+//    +SpecialController10,
+//    +SpecialController11,
+//    +SpecialController12,
+//    +SpecialController13,
+//    +SpecialController14,
+//    +SpecialController15,
+//    +SpecialController16,
+//    +SpecialController17,
+//    +SpecialController18,
+//    +SpecialController19,
 //    -FullHeightStretch
 		
 

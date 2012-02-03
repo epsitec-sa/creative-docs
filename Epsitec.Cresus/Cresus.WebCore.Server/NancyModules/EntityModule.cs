@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					try
 					{
 						var value = formData[memberKey];
-						var lambda = formData[PanelBuilder.GetLambdaFieldName ((string) memberKey)];
+						var lambda = formData[Tools.GetLambdaFieldName (memberKey)];
 
 						if (lambda.HasValue)
 						{
