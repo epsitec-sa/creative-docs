@@ -33,5 +33,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		BudgetFutur,
 		Journal,
 		Profondeur,
+		DateDébut,
+		DateFin,
+		Résumé,
 	}
 }

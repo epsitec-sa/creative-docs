@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeC = 0;
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
 
 			foreach (var compte in this.comptaEntity.PlanComptable)
 			{

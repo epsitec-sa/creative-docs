@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Compta.IO
 	/// </summary>
 	public class CrésusCompta
 	{
-		public string ImportFile(ComptaEntity compta, string filename)
+		public string ImportFile(ComptaEntity compta, ref ComptaPériodeEntity période, string filename)
 		{
 			this.compta = compta;
 
@@ -24,12 +24,20 @@ namespace Epsitec.Cresus.Compta.IO
 
 			if (ext == ".crp")
 			{
-				return this.ImportPlanComptable(compta, filename);
+				var err = this.ImportPlanComptable(filename);
+
+				if (!string.IsNullOrEmpty (err))
+				{
+					return err;
+				}
+
+				période = this.compta.Périodes.First ();
+				return null;  // ok
 			}
 
 			if (ext == ".txt")
 			{
-				return this.ImportEcritures (compta, filename);
+				return this.ImportEcritures (filename, ref période);
 			}
 
 			return "Le fichier ne contient pas des données connues.";
@@ -37,7 +45,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 		#region Plan comptable
-		private string ImportPlanComptable(ComptaEntity compta, string filename)
+		private string ImportPlanComptable(string filename)
 		{
 			//	Importe un plan comptable "crp".
 			try
@@ -72,11 +80,15 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
+			var période = new ComptaPériodeEntity ();
+			this.compta.Périodes.Add (période);
+
 			{
 				int i = this.IndexOfLine ("DATEBEG=");
 				if (i != -1)
 				{
-					this.compta.BeginDate = this.GetDate (this.lines[i].Substring (8));
+					période.DateDébut = this.GetDate (this.lines[i].Substring (8));
+					période.DernièreDate = période.DateDébut;
 				}
 			}
 
@@ -84,7 +96,7 @@ namespace Epsitec.Cresus.Compta.IO
 				int i = this.IndexOfLine ("DATEEND=");
 				if (i != -1)
 				{
-					this.compta.EndDate = this.GetDate (this.lines[i].Substring (8));
+					période.DateFin = this.GetDate (this.lines[i].Substring (8));
 				}
 			}
 
@@ -218,16 +230,15 @@ namespace Epsitec.Cresus.Compta.IO
 			return null;  // ok
 		}
 
-		private Date? GetDate(string text)
+		private Date GetDate(string text)
 		{
 			System.DateTime d;
-
 			if (System.DateTime.TryParse (text, out d))
 			{
 				return new Date (d);
 			}
 
-			return null;
+			return Date.Today;
 		}
 
 		private CatégorieDeCompte GetEntryContentCatégorie(int index, string key)
@@ -332,7 +343,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 		#region Ecritures tabulées
-		private string ImportEcritures(ComptaEntity compta, string filename)
+		private string ImportEcritures(string filename, ref ComptaPériodeEntity période)
 		{
 			//	Importe un texte tabulé "txt".
 			try
@@ -341,7 +352,16 @@ namespace Epsitec.Cresus.Compta.IO
 
 				try
 				{
-					return this.ImportEcritures ();
+					var journal = new List<ComptaEcritureEntity> ();
+					var err = this.ImportEcritures (journal);
+
+					if (!string.IsNullOrEmpty (err))
+					{
+						return err;
+					}
+
+					période = this.CreatePériode (journal);
+					return null;  // ok
 				}
 				catch (System.Exception ex)
 				{
@@ -354,7 +374,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private string ImportEcritures()
+		private string ImportEcritures(List<ComptaEcritureEntity> journal)
 		{
 			int count = 0;
 			ComptaEcritureEntity lastEcriture = null;
@@ -380,7 +400,7 @@ namespace Epsitec.Cresus.Compta.IO
 				var libellé = words[4];
 				var montant = this.GetMontant (words[5]);
 				var multi   = this.GetInt (words[8]);
-				var journal = this.compta.Journaux[0];
+				var jp      = this.compta.Journaux[0];
 
 				if (!date.HasValue)
 				{
@@ -401,10 +421,10 @@ namespace Epsitec.Cresus.Compta.IO
 					Libellé = libellé,
 					Montant = montant,
 					MultiId = multi,
-					Journal = journal,
+					Journal = jp,
 				};
 
-				this.compta.Journal.Add (écriture);
+				journal.Add (écriture);
 
 				if (lastEcriture != null && lastEcriture.MultiId != 0 && lastEcriture.MultiId != écriture.MultiId)
 				{
@@ -426,6 +446,42 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return null;  // ok
+		}
+
+		private ComptaPériodeEntity CreatePériode(List<ComptaEcritureEntity> journal)
+		{
+			Date beginDate, endDate;
+			this.GetYear (journal,  out beginDate, out endDate);
+
+			//	Cherche si lles écritures lues sont compatibles avec une période existante.
+			foreach (var p in this.compta.Périodes)
+			{
+				if (beginDate >= p.DateDébut && endDate <= p.DateFin)
+				{
+					p.Journal.Clear ();
+					journal.ForEach (x => p.Journal.Add (x));
+					return p;
+				}
+			}
+
+			//	Crée une nouvelle période.
+			var np = new ComptaPériodeEntity ();
+
+			beginDate = new Date (beginDate.Year,  1,  1);
+			endDate   = new Date (  endDate.Year, 12, 31);
+
+			np.DateDébut    = beginDate;
+			np.DateFin      =   endDate;
+			np.DernièreDate = beginDate;
+
+			this.compta.Périodes.Add (np);
+			return np;
+		}
+
+		private void GetYear(List<ComptaEcritureEntity> journal, out Date beginDate, out Date endDate)
+		{
+			beginDate = journal.First ().Date;
+			endDate   = journal.Last  ().Date;
 		}
 
 		private ComptaCompteEntity GetCompte(string text)
@@ -462,7 +518,8 @@ namespace Epsitec.Cresus.Compta.IO
 		#endregion
 
 
-		private ComptaEntity		compta;
-		private string[]			lines;
+		private ComptaEntity			compta;
+		private ComptaPériodeEntity		période;
+		private string[]				lines;
 	}
 }

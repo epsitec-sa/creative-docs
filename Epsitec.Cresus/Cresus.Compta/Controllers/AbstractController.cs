@@ -29,12 +29,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractController
 	{
-		public AbstractController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
+		public AbstractController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 		{
 			this.app                  = app;
 			this.businessContext      = businessContext;
-			this.comptaEntity         = comptaEntity;
 			this.mainWindowController = mainWindowController;
+
+			this.comptaEntity  = this.mainWindowController.Compta;
+			this.périodeEntity = this.mainWindowController.Période;
 
 			this.columnMappers = this.InitialColumnMappers.ToList ();
 			this.updateManager = new UpdateManager (this);
@@ -54,6 +56,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.comptaEntity;
+			}
+		}
+
+		public ComptaPériodeEntity PériodeEntity
+		{
+			get
+			{
+				return this.périodeEntity;
 			}
 		}
 
@@ -140,6 +150,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateFooter (this.frameBox);
 
 			this.UpdateArrayContent ();
+			this.InitialUpdate ();
 
 			if (this.footerController != null)
 			{
@@ -157,6 +168,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			return this.frameBox;
+		}
+
+		protected virtual void InitialUpdate()
+		{
 		}
 
 		public void Dispose()
@@ -220,11 +235,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.topSearchController.ShowPanel;
+				return this.topSearchController != null && this.topSearchController.ShowPanel;
 			}
 			set
 			{
-				this.topSearchController.ShowPanel = value;
+				if (this.topSearchController != null)
+				{
+					this.topSearchController.ShowPanel = value;
+				}
 			}
 		}
 
@@ -291,9 +309,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Search panel
 		private void CreateTopSearch(FrameBox parent)
 		{
-			this.topSearchController = new TopSearchController (this);
-			this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
-			this.topSearchController.ShowPanel = this.ShowSearchPanel;
+			if (this.dataAccessor.SearchData != null)
+			{
+				this.topSearchController = new TopSearchController (this);
+				this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
+				this.topSearchController.ShowPanel = this.ShowSearchPanel;
+			}
 		}
 
 		private void SearchStartAction()
@@ -336,7 +357,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SearchUpdateTopToolbar()
 		{
-			this.topSearchController.SetSearchCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
+			if (this.topSearchController != null)
+			{
+				this.topSearchController.SetSearchCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
+			}
 		}
 		#endregion
 
@@ -414,7 +438,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (20, 0, 0, 0),
-				Visibility       = false,
+			};
+
+			this.subtitleLabel = new StaticText
+			{
+				Parent           = frame,
+				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				PreferredWidth   = 200,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Right,
+				Margins          = new Margins (0, 20, 0, 0),
 			};
 		}
 
@@ -424,16 +457,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetTitle(FormattedText title)
 		{
-			if (title.IsNullOrEmpty)
-			{
-				this.titleLabel.FormattedText = null;
-				this.titleLabel.Visibility = false;
-			}
-			else
-			{
-				this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
-				this.titleLabel.Visibility = true;
-			}
+			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
+		}
+
+		protected void SetSubtitle(FormattedText subtitle)
+		{
+			this.subtitleLabel.FormattedText = subtitle.ApplyBold ().ApplyFontSize (13.0);
 		}
 		#endregion
 
@@ -672,6 +701,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							comptaEntity;
+		protected readonly ComptaPériodeEntity					périodeEntity;
 		protected readonly List<ColumnMapper>					columnMappers;
 		protected readonly UpdateManager						updateManager;
 
@@ -688,5 +718,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractFooterController						footerController;
 		protected FrameBox										frameBox;
 		protected StaticText									titleLabel;
+		protected StaticText									subtitleLabel;
 	}
 }

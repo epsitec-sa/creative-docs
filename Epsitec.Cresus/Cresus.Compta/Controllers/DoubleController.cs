@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class DoubleController : AbstractController
 	{
-		public DoubleController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public DoubleController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 		}
 

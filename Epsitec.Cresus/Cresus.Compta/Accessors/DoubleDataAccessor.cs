@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.MinMaxClear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
 
 			//	Partie "gauche" (actif ou charge).
 			int lignesGauches = this.readonlyAllData.Count ();

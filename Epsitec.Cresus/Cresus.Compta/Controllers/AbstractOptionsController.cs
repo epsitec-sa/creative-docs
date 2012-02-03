@@ -27,8 +27,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.controller = controller;
 
-			this.comptaEntity = this.controller.ComptaEntity;
-			this.options      = this.controller.DataAccessor.AccessorOptions;
+			this.comptaEntity  = this.controller.ComptaEntity;
+			this.périodeEntity = this.controller.PériodeEntity;
+			this.options       = this.controller.DataAccessor.AccessorOptions;
 		}
 
 
@@ -335,6 +336,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected readonly AbstractController					controller;
 		protected readonly ComptaEntity							comptaEntity;
+		protected readonly ComptaPériodeEntity					périodeEntity;
 		protected readonly AbstractOptions						options;
 
 		protected System.Action									optionsChanged;

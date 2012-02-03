@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BilanController : DoubleController
 	{
-		public BilanController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public BilanController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BilanDataAccessor (this);
 		}
@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Bilan intermédiaire");
+			this.SetSubtitle (this.périodeEntity.ShortTitle);
 		}
 	}
 }

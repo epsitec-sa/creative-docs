@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BalanceController : AbstractController
 	{
-		public BalanceController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public BalanceController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BalanceDataAccessor (this);
 		}
@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Balance de vérification");
+			this.SetSubtitle (this.périodeEntity.ShortTitle);
 		}
 
 

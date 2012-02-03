@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
 
-			this.comptaEntity.PlanComptableUpdate ();
+			this.comptaEntity.PlanComptableUpdate (this.périodeEntity);
 			this.StartCreationData ();
 		}
 
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = false;
 			}
 
-			this.comptaEntity.PlanComptableUpdate ();
+			this.comptaEntity.PlanComptableUpdate (this.périodeEntity);
 			this.SearchUpdate ();
 		}
 

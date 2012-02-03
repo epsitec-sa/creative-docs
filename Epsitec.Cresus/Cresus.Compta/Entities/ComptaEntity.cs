@@ -13,51 +13,6 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
-		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
-		{
-			yield return TextFormatter.FormatText (this.BeginDate);
-			yield return TextFormatter.FormatText (this.Name);
-		}
-		
-		public override FormattedText GetCompactSummary()
-		{
-			return this.GetSummary ();
-		}
-		
-		public override FormattedText GetSummary()
-		{
-			if (this.BeginDate.HasValue && this.EndDate.HasValue)
-			{
-				var b = this.BeginDate.Value;
-				var e = this.EndDate.Value;
-
-				if (b.Year == e.Year &&
-					b.Day ==  1 && b.Month ==  1 &&
-					e.Day == 31 && e.Month == 12)  // du 1.1 au 31.12 ?
-				{
-					return TextFormatter.FormatText (b.Year.ToString (), this.Name);
-				}
-			}
-
-			return TextFormatter.FormatText (this.BeginDate, "—", this.EndDate, this.Name);
-		}
-
-
-		public int ProchainMultiId
-		{
-			get
-			{
-				if (this.Journal.Count == 0)
-				{
-					return 1;
-				}
-				else
-				{
-					return this.Journal.Max (x => x.MultiId) + 1;
-				}
-			}
-		}
-
 		public FormattedText ProchainePièce
 		{
 			//	A partir de "AB102", retourne "AB103" (par exemple).
@@ -93,94 +48,6 @@ namespace Epsitec.Cresus.Compta.Entities
 
 				return pièce;
 			}
-		}
-
-		public Date ProchaineDate
-		{
-			//	Retourne la date par défaut pour la prochaine écriture.
-			get
-			{
-				if (this.DernièreDate.HasValue)
-				{
-					return this.DernièreDate.Value;
-				}
-
-				if (this.Journal.Count == 0)
-				{
-					if (this.BeginDate.HasValue)
-					{
-						return this.BeginDate.Value;
-					}
-					else
-					{
-						return new Date (System.DateTime.Now);
-					}
-				}
-				else
-				{
-					return this.Journal.Last ().Date;
-				}
-			}
-		}
-
-		public bool ParseDate(FormattedText text, out Date? date)
-		{
-			//	Transforme un texte en une date valide pour la comptabilité.
-			if (text.IsNullOrEmpty)
-			{
-				date = null;
-				return true;
-			}
-
-			var brut = text.ToSimpleText ();
-			brut = brut.Replace (".", " ");
-			brut = brut.Replace (",", " ");
-			brut = brut.Replace ("/", " ");
-			brut = brut.Replace ("-", " ");
-			brut = brut.Replace (":", " ");
-			brut = brut.Replace (";", " ");
-			brut = brut.Replace ("  ", " ");
-			brut = brut.Replace ("  ", " ");
-
-			var words = brut.Split (' ');
-			var defaultDate = this.ProchaineDate;
-			int day, month, year;
-
-			int.TryParse (words[0], out day);
-
-			if (words.Length <= 1 || !int.TryParse (words[1], out month))
-			{
-				month = defaultDate.Month;
-			}
-
-			if (words.Length <= 2 || !int.TryParse (words[2], out year))
-			{
-				year = defaultDate.Year;
-			}
-
-			try
-			{
-				date = new Date (year, month, day);
-			}
-			catch
-			{
-				date = defaultDate;
-				return false;
-			}
-
-			if (this.BeginDate.HasValue && date < this.BeginDate.Value)
-			{
-				date = this.BeginDate.Value;
-				return false;
-			}
-
-			if (this.EndDate.HasValue && date > this.EndDate.Value)
-			{
-				date = this.EndDate.Value;
-				return false;
-			}
-
-			return true;
 		}
 
 
@@ -221,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Entities
 
 
 		#region Soldes des comptes
-		public void PlanComptableUpdate(Date? dateDébut = null, Date? dateFin = null)
+		public void PlanComptableUpdate(ComptaPériodeEntity période, Date? dateDébut = null, Date? dateFin = null)
 		{
 			//	Met à jour tous les soldes des comptes, pour une période donnée.
 			if (this.soldesCrédit == null)
@@ -236,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 
 			//	Génère une fois pour toutes le journal à prendre en compte.
-			var journal = this.Journal.Where (x => ComptaEntity.Match (dateDébut, dateFin, x.Date));
+			var journal = période.Journal.Where (x => ComptaEntity.Match (dateDébut, dateFin, x.Date));
 
 			//	Cummule les totaux de tous les comptes finaux.
 			foreach (var écriture in journal)
@@ -361,61 +228,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			this.soldesCrédit[compte.Numéro] = solde;
 		}
 		#endregion
-
-
-		public int GetJournalCount(ComptaJournalEntity journal)
-		{
-			//	Retourne le nombre d'écritures d'un journal.
-			if (journal == null)  // tous les journaux ?
-			{
-				return this.Journal.Count ();
-			}
-			else
-			{
-				return this.Journal.Where (x => x.Journal == journal).Count ();
-			}
-		}
-
-		public string GetJournalSummary(ComptaJournalEntity journal)
-		{
-			//	Retourne le résumé d'un journal d'écritures.
-			IEnumerable<ComptaEcritureEntity> écritures;
-
-			if (journal == null)  // tous les journaux ?
-			{
-				écritures = this.Journal;
-			}
-			else
-			{
-				écritures = this.Journal.Where (x => x.Journal == journal);
-			}
-
-			int count = écritures.Count();
-
-			if (count == 0)
-			{
-				return "Aucune écriture";
-			}
-			else if (count == 1)
-			{
-				var date = écritures.First ().Date.ToString ();
-				return string.Format ("1 écriture, le {0}", date);
-			}
-			else
-			{
-				var beginDate = écritures.First ().Date;
-				var endDate   = écritures.Last  ().Date;
-
-				if (beginDate == endDate)
-				{
-					return string.Format ("{0} écritures, le {1}", count.ToString (), beginDate.ToString ());
-				}
-				else
-				{
-					return string.Format ("{0} écritures, du {1} au {2}", count.ToString (), beginDate.ToString (), endDate.ToString ());
-				}
-			}
-		}
 
 
 		private Dictionary<FormattedText, decimal?> soldesDébit;

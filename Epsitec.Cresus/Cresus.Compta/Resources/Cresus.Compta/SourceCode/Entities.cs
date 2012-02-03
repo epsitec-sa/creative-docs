@@ -8,6 +8,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCompteEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK23]", typeof (Epsitec.Cresus.Compta.Entities.ComptaJournalEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKC3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>Compta</c> entity.
 	///	designer:cap/OVK
 	///	</summary>
-	public partial class ComptaEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.IDateRange, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ComptaEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
 	{
 		#region ILifetime Members
 		///	<summary>
@@ -52,26 +53,6 @@ namespace Epsitec.Cresus.Compta.Entities
 				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
 			}
 		}
-		#endregion
-		#region IDateRange Members
-		///	<summary>
-		///	The <c>BeginDate</c> field.
-		///	designer:fld/OVK/8VAO
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAO]")]
-		public global::Epsitec.Common.Types.Date? BeginDate
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetBeginDate (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetBeginDate (this, value);
-			}
-		}
-		#endregion
-		#region INameDescription Members
 		///	<summary>
 		///	The <c>Description</c> field.
 		///	designer:fld/OVK/8VA8
@@ -89,24 +70,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		#endregion
-		#region IDateRange Members
-		///	<summary>
-		///	The <c>EndDate</c> field.
-		///	designer:fld/OVK/8VAP
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VAP]")]
-		public global::Epsitec.Common.Types.Date? EndDate
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>PlanComptable</c> field.
 		///	designer:fld/OVK/OVKN
@@ -120,49 +83,27 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Journal</c> field.
-		///	designer:fld/OVK/OVKO
+		///	The <c>Périodes</c> field.
+		///	designer:fld/OVK/OVKF3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKO]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> Journal
+		[global::Epsitec.Common.Support.EntityField ("[OVKF3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity> Périodes
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> ("[OVKO]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity> ("[OVKF3]");
 			}
 		}
 		///	<summary>
 		///	The <c>Journaux</c> field.
-		///	designer:fld/OVK/OVK33
+		///	designer:fld/OVK/OVKH3
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK33]")]
+		[global::Epsitec.Common.Support.EntityField ("[OVKH3]")]
 		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> Journaux
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> ("[OVK33]");
-			}
-		}
-		///	<summary>
-		///	The <c>DernièreDate</c> field.
-		///	designer:fld/OVK/OVK1
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK1]")]
-		public global::Epsitec.Common.Types.Date? DernièreDate
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVK1]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.Date? oldValue = this.DernièreDate;
-				if (oldValue != value || !this.IsFieldDefined("[OVK1]"))
-				{
-					this.OnDernièreDateChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVK1]", oldValue, value);
-					this.OnDernièreDateChanged (oldValue, value);
-				}
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity> ("[OVKH3]");
 			}
 		}
 		///	<summary>
@@ -188,8 +129,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		
-		partial void OnDernièreDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDernièreDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDernièrePièceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDernièrePièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
@@ -982,6 +921,167 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaJournalEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaPériode Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaPériode</c> entity.
+	///	designer:cap/OVKC3
+	///	</summary>
+	public partial class ComptaPériodeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	{
+		#region ILifetime Members
+		///	<summary>
+		///	The <c>IsArchive</c> field.
+		///	designer:fld/OVKC3/8VA3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
+		public bool IsArchive
+		{
+			get
+			{
+				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+			}
+			set
+			{
+				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>DateDébut</c> field.
+		///	designer:fld/OVKC3/OVKJ3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKJ3]")]
+		public global::Epsitec.Common.Types.Date DateDébut
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[OVKJ3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date oldValue = this.DateDébut;
+				if (oldValue != value || !this.IsFieldDefined("[OVKJ3]"))
+				{
+					this.OnDateDébutChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[OVKJ3]", oldValue, value);
+					this.OnDateDébutChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DateFin</c> field.
+		///	designer:fld/OVKC3/OVKK3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKK3]")]
+		public global::Epsitec.Common.Types.Date DateFin
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[OVKK3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date oldValue = this.DateFin;
+				if (oldValue != value || !this.IsFieldDefined("[OVKK3]"))
+				{
+					this.OnDateFinChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[OVKK3]", oldValue, value);
+					this.OnDateFinChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/OVKC3/OVKL3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKL3]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[OVKL3]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL3]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Journal</c> field.
+		///	designer:fld/OVKC3/OVKD3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKD3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> Journal
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity> ("[OVKD3]");
+			}
+		}
+		///	<summary>
+		///	The <c>DernièreDate</c> field.
+		///	designer:fld/OVKC3/OVKE3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKE3]")]
+		public global::Epsitec.Common.Types.Date? DernièreDate
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVKE3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.DernièreDate;
+				if (oldValue != value || !this.IsFieldDefined("[OVKE3]"))
+				{
+					this.OnDernièreDateChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVKE3]", oldValue, value);
+					this.OnDernièreDateChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnDateDébutChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateDébutChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateFinChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateFinChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDernièreDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDernièreDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 108);	// [OVKC3]
+		public static readonly string EntityStructuredTypeKey = "[OVKC3]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaPériodeEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

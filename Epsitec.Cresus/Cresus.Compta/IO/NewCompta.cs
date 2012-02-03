@@ -20,38 +20,49 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			compta.Name          = "vide";
 			compta.Description   = null;
-			compta.BeginDate     = null;
-			compta.EndDate       = null;
-			compta.DernièreDate  = null;
 			compta.DernièrePièce = null;
 
-			compta.Journal.Clear ();
 			compta.PlanComptable.Clear ();
+			compta.Périodes.Clear ();
 			compta.Journaux.Clear ();
 		}
 
 		public void NewEmpty(ComptaEntity compta)
 		{
-			var now = Date.Today;
-			var beginDate = new Date (now.Year, 1, 1);  // 1 janvier
-			var endDate   = new Date (now.Year, 12, 31);  // 31 décembre
-
 			compta.Name          = "vide";
 			compta.Description   = null;
-			compta.BeginDate     = beginDate;
-			compta.EndDate       = endDate;
-			compta.DernièreDate  = beginDate;
 			compta.DernièrePièce = "0";
 
-			compta.Journal.Clear ();
 			compta.PlanComptable.Clear ();
+			compta.Périodes.Clear ();
 			compta.Journaux.Clear ();
 
+			compta.Périodes.Add (this.CreatePériode ());
+			compta.Journaux.Add (this.CreateJournal ());
+		}
+
+		private ComptaPériodeEntity CreatePériode()
+		{
+			//	Crée une première période.
+			var now = Date.Today;
+			var beginDate = new Date (now.Year,  1,  1);  // du 1 janvier
+			var endDate   = new Date (now.Year, 12, 31);  // au 31 décembre
+
+			var période = new ComptaPériodeEntity ();
+			période.DateDébut    = beginDate;
+			période.DateFin      = endDate;
+			période.DernièreDate = beginDate;
+
+			return période;
+		}
+
+		private ComptaJournalEntity CreateJournal()
+		{
 			//	Crée un journal principal.
 			var journal = new ComptaJournalEntity ();
 			journal.Name = "Principal";
 
-			compta.Journaux.Add (journal);
+			return journal;
 		}
 
 		public void NewModel(ComptaEntity compta)

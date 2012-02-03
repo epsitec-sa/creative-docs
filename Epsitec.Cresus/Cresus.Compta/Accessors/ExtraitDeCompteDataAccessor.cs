@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.lastBeginDate, this.lastEndDate);
+			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
 
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();
 
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
 
-			foreach (var écriture in this.comptaEntity.Journal)
+			foreach (var écriture in this.périodeEntity.Journal)
 			{
 				if (!SearchData.DateInRange (écriture.Date, this.lastBeginDate, this.lastEndDate))
 				{

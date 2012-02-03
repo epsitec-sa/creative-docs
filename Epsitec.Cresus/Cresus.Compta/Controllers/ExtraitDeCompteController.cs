@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ExtraitDeCompteController : AbstractController
 	{
-		public ExtraitDeCompteController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public ExtraitDeCompteController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);
 		}
@@ -97,6 +97,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.SetTitle (TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
+
+			this.SetSubtitle (this.périodeEntity.ShortTitle);
 		}
 
 		private void UpdateWindowTitle()

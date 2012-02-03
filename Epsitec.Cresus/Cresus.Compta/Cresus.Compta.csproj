@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
+    <Compile Include="Accessors\PériodesEditionData.cs" />
+    <Compile Include="Accessors\PériodesDataAccessor.cs" />
     <Compile Include="Accessors\DoubleData.cs" />
     <Compile Include="Accessors\BilanDataAccessor.cs" />
     <Compile Include="Accessors\DoubleOptions.cs" />
@@ -84,12 +86,15 @@
     <Compile Include="Accessors\SearchTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\PériodeFooterController.cs" />
+    <Compile Include="Controllers\PériodesController.cs" />
     <Compile Include="Controllers\DoubleController.cs" />
     <Compile Include="Controllers\UpdateManager.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
+    <Compile Include="Entities\ComptaPériodeEntity.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />
@@ -193,6 +198,7 @@
     <EmbeddedResource Include="Images\Select.Down.icon" />
     <EmbeddedResource Include="Images\Select.Up.icon" />
     <EmbeddedResource Include="Images\Select.Home.icon" />
+    <EmbeddedResource Include="Images\Présentation.Période.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

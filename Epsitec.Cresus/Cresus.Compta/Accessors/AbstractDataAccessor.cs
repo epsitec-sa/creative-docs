@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.businessContext      = this.controller.BusinessContext;
 			this.comptaEntity         = this.controller.ComptaEntity;
+			this.périodeEntity        = this.controller.PériodeEntity;
 			this.columnMappers        = this.controller.ColumnMappers;
 			this.mainWindowController = this.controller.MainWindowController;
 
@@ -554,7 +555,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					var écriture = this.comptaEntity.Journal.LastOrDefault ();
+					var écriture = this.périodeEntity.Journal.LastOrDefault ();
 					if (écriture != null)
 					{
 						day = écriture.Date.DayOfYear;
@@ -705,6 +706,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly AbstractController			controller;
 		protected readonly BusinessContext				businessContext;
 		protected readonly ComptaEntity					comptaEntity;
+		protected readonly ComptaPériodeEntity			périodeEntity;
 		protected readonly List<ColumnMapper>			columnMappers;
 		protected readonly MainWindowController			mainWindowController;
 		protected readonly List<AbstractData>			readonlyAllData;

@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent           = this.toolbar,
 				ContentAlignment = ContentAlignment.MiddleLeft,
-				PreferredWidth   = 200,
+				PreferredWidth   = 300,
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
 				Dock             = DockStyle.Left,
 			};

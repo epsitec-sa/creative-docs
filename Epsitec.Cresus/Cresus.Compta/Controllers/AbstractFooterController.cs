@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller = controller;
 
 			this.comptaEntity    = this.controller.ComptaEntity;
+			this.périodeEntity   = this.controller.PériodeEntity;
 			this.columnMappers   = this.controller.ColumnMappers;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.arrayController = this.controller.ArrayController;
@@ -667,6 +668,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected readonly AbstractController				controller;
 		protected readonly ComptaEntity						comptaEntity;
+		protected readonly ComptaPériodeEntity				périodeEntity;
 		protected readonly List<ColumnMapper>				columnMappers;
 		protected readonly AbstractDataAccessor				dataAccessor;
 		protected readonly ArrayController					arrayController;

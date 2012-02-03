@@ -73,15 +73,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			Date? date;
-			if (this.comptaEntity.ParseDate (text, out date) && date.HasValue)
+			if (this.périodeEntity.ParseDate (text, out date) && date.HasValue)
 			{
 				text = date.ToString ();
 				return FormattedText.Empty;
 			}
 			else
 			{
-				var b = (this.comptaEntity.BeginDate.HasValue) ? this.comptaEntity.BeginDate.Value.ToString () : "?";
-				var e = (this.comptaEntity  .EndDate.HasValue) ? this.comptaEntity  .EndDate.Value.ToString () : "?";
+				var b = this.périodeEntity.DateDébut.ToString ();
+				var e = this.périodeEntity.DateFin.ToString ();
 
 				return string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
 			}
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var écriture = entity as ComptaEcritureEntity;
 
 			Date? date;
-			if (this.comptaEntity.ParseDate (this.GetText (ColumnType.Date), out date))
+			if (this.périodeEntity.ParseDate (this.GetText (ColumnType.Date), out date))
 			{
 				écriture.Date = date.Value;
 			}

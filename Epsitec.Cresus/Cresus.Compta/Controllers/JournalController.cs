@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalController : AbstractController
 	{
-		public JournalController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public JournalController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new JournalDataAccessor (this);
 		}
@@ -67,6 +67,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.SetTitle (TextFormatter.FormatText ("Journal", journal.Name));
 			}
+
+			this.SetSubtitle (this.périodeEntity.ShortTitle);
 		}
 
 

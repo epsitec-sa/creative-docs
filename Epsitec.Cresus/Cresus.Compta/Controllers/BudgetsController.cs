@@ -26,8 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BudgetsController : AbstractController
 	{
-		public BudgetsController(Application app, BusinessContext businessContext, ComptaEntity comptaEntity, MainWindowController mainWindowController)
-			: base (app, businessContext, comptaEntity, mainWindowController)
+		public BudgetsController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BudgetsDataAccessor (this);
 		}
@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Budget");
+			this.SetSubtitle (this.périodeEntity.ShortTitle);
 		}
 
 

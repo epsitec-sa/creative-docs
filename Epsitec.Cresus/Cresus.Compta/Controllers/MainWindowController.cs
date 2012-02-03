@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
+			this.période = this.compta.Périodes.FirstOrDefault ();
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -76,6 +77,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateTitle ();
 		}
 
+
+		public ComptaEntity Compta
+		{
+			get
+			{
+				return this.compta;
+			}
+		}
+
+		public ComptaPériodeEntity Période
+		{
+			get
+			{
+				return this.période;
+			}
+		}
+
+		public int PériodeIndex
+		{
+			get
+			{
+				return this.compta.Périodes.IndexOf (this.période);
+			}
+			set
+			{
+				if (value >= 0 && value < this.compta.Périodes.Count)
+				{
+					this.période = this.compta.Périodes[value];
+				}
+			}
+		}
 
 		public List<AbstractController> Controllers
 		{
@@ -177,44 +209,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			AbstractController controller = null;
 
+			if (command.Name.EndsWith ("Présentation.Périodes"))
+			{
+				controller = new PériodesController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Journal"))
 			{
-				controller = new JournalController (this.app, this.businessContext, this.compta, this);
+				controller = new JournalController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PlanComptable"))
 			{
-				controller = new PlanComptableController (this.app, this.businessContext, this.compta, this);
+				controller = new PlanComptableController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Balance"))
 			{
-				controller = new BalanceController (this.app, this.businessContext, this.compta, this);
+				controller = new BalanceController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Extrait"))
 			{
-				controller = new ExtraitDeCompteController (this.app, this.businessContext, this.compta, this);
+				controller = new ExtraitDeCompteController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Bilan"))
 			{
-				controller = new BilanController (this.app, this.businessContext, this.compta, this);
+				controller = new BilanController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.PP"))
 			{
-				controller = new PPController (this.app, this.businessContext, this.compta, this);
+				controller = new PPController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Exploitation"))
 			{
-				controller = new ExploitationController (this.app, this.businessContext, this.compta, this);
+				controller = new ExploitationController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Budgets"))
 			{
-				controller = new BudgetsController (this.app, this.businessContext, this.compta, this);
+				controller = new BudgetsController (this.app, this.businessContext, this);
 			}
 
 			if (controller != null)
@@ -383,7 +420,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = new CrésusCompta ().ImportFile (this.compta, filename);
+				string err = new CrésusCompta ().ImportFile (this.compta, ref this.période, filename);
 
 				this.controller.ClearHilite ();
 				this.UpdateControllers ();
@@ -423,6 +460,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Périodes)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PlanComptable)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
@@ -676,6 +714,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Window										mainWindow;
 		private BusinessContext								businessContext;
 		private ComptaEntity								compta;
+		private ComptaPériodeEntity							période;
 		private Command										selectedCommandDocument;
 		private AbstractController							controller;
 		private RibbonController							ribbonController;

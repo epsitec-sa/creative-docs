@@ -42,12 +42,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsAllJournaux)
 			{
-				this.journalAll = this.comptaEntity.Journal;
+				this.journalAll = this.périodeEntity.Journal;
 			}
 			else
 			{
 				var j = (this.options as JournalOptions).Journal;
-				this.journalAll = this.comptaEntity.Journal.Where (x => x.Journal == j).ToList ();
+				this.journalAll = this.périodeEntity.Journal.Where (x => x.Journal == j).ToList ();
 			}
 
 			if (this.filterData == null || this.filterData.IsEmpty)
@@ -229,7 +229,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionData[line].SetText (ColumnType.Date,  this.comptaEntity.ProchaineDate.ToString ());
+			this.editionData[line].SetText (ColumnType.Date,  this.périodeEntity.ProchaineDate.ToString ());
 			this.editionData[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
 			this.editionData[line].SetText (ColumnType.Montant, "0.00");
 		}
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int multiId = 0;
 			if (this.editionData.Count > 1)
 			{
-				multiId = this.comptaEntity.ProchainMultiId;
+				multiId = this.périodeEntity.ProchainMultiId;
 			}
 
 			foreach (var data in this.editionData)
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (!this.IsAllJournaux)
 				{
 					int globalRow = this.GetSortedRow (écriture.Date, global: true);
-					this.comptaEntity.Journal.Insert (globalRow, écriture);
+					this.périodeEntity.Journal.Insert (globalRow, écriture);
 				}
 
 				if (firstRow == -1)
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Date date;
 			this.ParseDate (this.editionData[0].GetText (ColumnType.Date), out date);
-			this.comptaEntity.DernièreDate = date;
+			this.périodeEntity.DernièreDate = date;
 			this.editionData[0].SetText (ColumnType.Date, date.ToString ());
 
 			this.comptaEntity.DernièrePièce = this.editionData[0].GetText (ColumnType.Pièce);
@@ -326,10 +326,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var initialEcriture = this.journal[row];
 
 			//	On passe dans l'espace global.
-			row = this.comptaEntity.Journal.IndexOf (initialEcriture);
+			row = this.périodeEntity.Journal.IndexOf (initialEcriture);
 			int globalFirstEditerRow = row;
 
-			int multiId = this.comptaEntity.Journal[row].MultiId;
+			int multiId = this.périodeEntity.Journal[row].MultiId;
 
 			foreach (var data in this.editionData)
 			{
@@ -339,12 +339,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var écriture = this.CreateEcriture ();
 					data.DataToEntity (écriture);
 					écriture.MultiId = multiId;
-					this.comptaEntity.Journal.Insert (row, écriture);
+					this.périodeEntity.Journal.Insert (row, écriture);
 				}
 				else
 				{
 					//	Met à jour une écriture existante.
-					var écriture = this.comptaEntity.Journal[row];
+					var écriture = this.périodeEntity.Journal[row];
 					data.DataToEntity (écriture);
 				}
 
@@ -355,9 +355,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int countToDelete  = this.initialCountEditedRow - this.editionData.Count;
 			while (countToDelete > 0)
             {
-				var écriture = this.comptaEntity.Journal[row];
+				var écriture = this.périodeEntity.Journal[row];
 				this.DeleteEcriture (écriture);
-				this.comptaEntity.Journal.RemoveAt (row);
+				this.périodeEntity.Journal.RemoveAt (row);
 
 				countToDelete--;
             }
@@ -372,9 +372,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var écriture = this.comptaEntity.Journal[globalFirstEditerRow];
+					var écriture = this.périodeEntity.Journal[globalFirstEditerRow];
                     temp.Add (écriture);
-					this.comptaEntity.Journal.RemoveAt (globalFirstEditerRow);
+					this.périodeEntity.Journal.RemoveAt (globalFirstEditerRow);
                 }
 
 				int newRow = this.GetSortedRow (temp[0].Date, global: true);
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
 					var écriture = temp[i];
-					this.comptaEntity.Journal.Insert (newRow+i, écriture);
+					this.périodeEntity.Journal.Insert (newRow+i, écriture);
                 }
 
 				globalFirstEditerRow = newRow;
@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.DeleteEcriture (écriture);
 					this.journal.RemoveAt (row);
 
-					this.comptaEntity.Journal.Remove (écriture);
+					this.périodeEntity.Journal.Remove (écriture);
                 }
 
 				this.SearchUpdate ();
@@ -554,7 +554,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (global)
 			{
-				return this.comptaEntity.Journal;
+				return this.périodeEntity.Journal;
 			}
 			else
 			{
@@ -663,15 +663,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				date = new Date (d);
 
-				if (this.comptaEntity.BeginDate.HasValue && date < this.comptaEntity.BeginDate.Value)
+				if (date < this.périodeEntity.DateDébut)
 				{
-					date = this.comptaEntity.BeginDate.Value;
+					date = this.périodeEntity.DateDébut;
 					return false;
 				}
 
-				if (this.comptaEntity.EndDate.HasValue && date > this.comptaEntity.EndDate.Value)
+				if (date > this.périodeEntity.DateFin)
 				{
-					date = this.comptaEntity.EndDate.Value;
+					date = this.périodeEntity.DateFin;
 					return false;
 				}
 

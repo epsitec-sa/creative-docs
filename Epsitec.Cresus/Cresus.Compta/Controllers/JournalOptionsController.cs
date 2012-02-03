@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			int sel = this.extendedListJournaux.SelectedItemIndex;
 			int count = this.comptaEntity.Journaux.Count;
-			int n = this.comptaEntity.GetJournalCount (this.Options.Journal);  // nb d'écritures dans le journal courant
+			int n = this.périodeEntity.GetJournalCount (this.Options.Journal);  // nb d'écritures dans le journal courant
 			bool allJournaux = (sel == count);
 
 			this.extendedUpButton.Enable     = (!allJournaux && sel != -1 && sel > 0);
@@ -418,7 +418,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateSummary()
 		{
-			var summary = this.comptaEntity.GetJournalSummary (this.Options.Journal);
+			var summary = this.périodeEntity.GetJournalSummary (this.Options.Journal);
 
 			this.compactSummary.Text = summary;
 			this.extendedSummary.Text = summary;
