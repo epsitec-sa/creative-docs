@@ -20,10 +20,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		public WebTileDataItem()
 		{
 			this.SubViewControllerMode = ViewControllerMode.Edition;
-			this.InitialVisibility = true;
 		}
 
-
+		// Not really used. Should be taken care of the hardcore way !!!
 		public string Name
 		{
 			get;
@@ -37,22 +36,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			set;
 		}
 
-
+		// Not really used. Should be taken care of the hardcore way !!!
 		public bool AutoGroup
-		{
-			get;
-			set;
-		}
-
-
-		public bool IsCompact
-		{
-			get;
-			set;
-		}
-
-
-		public bool Frameless
 		{
 			get;
 			set;
@@ -72,14 +57,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			set;
 		}
 
-
-		public bool InitialVisibility
-		{
-			get;
-			set;
-		}
-
-
+		// Not really used. Should be taken care of the hardcore way !!!
 		public bool FullHeightStretch
 		{
 			get;
@@ -107,83 +85,18 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			set;
 		}
 
-
-
+		// Not really used. Should be taken care of the hardcore way !!!
 		public FormattedText CompactTitle
 		{
 			get;
 			set;
 		}
 
-
+		// Not really used. Should be taken care of the hardcore way !!!
 		public FormattedText CompactText
 		{
 			get;
 			set;
-		}
-
-
-		public FormattedText DisplayedTitle
-		{
-			get
-			{
-				if (this.displayedTitle.IsNullOrEmpty)
-				{
-					return this.Title;
-				}
-				else
-				{
-					return this.displayedTitle;
-				}
-			}
-		}
-
-
-		public FormattedText DisplayedText
-		{
-			get
-			{
-				if (this.displayedText.IsNullOrEmpty)
-				{
-					return this.Text;
-				}
-				else
-				{
-					return this.displayedText;
-				}
-			}
-		}
-
-
-		public FormattedText DisplayedCompactText
-		{
-			get
-			{
-				if (this.displayedCompactText.IsNullOrEmpty)
-				{
-					return this.CompactText;
-				}
-				else
-				{
-					return this.displayedCompactText;
-				}
-			}
-		}
-
-
-		public FormattedText DisplayedCompactTitle
-		{
-			get
-			{
-				if (this.displayedCompactTitle.IsNullOrEmpty)
-				{
-					return this.CompactTitle;
-				}
-				else
-				{
-					return this.displayedCompactTitle;
-				}
-			}
 		}
 
 
@@ -201,10 +114,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private FormattedText displayedTitle;
-		private FormattedText displayedText;
-		private FormattedText displayedCompactTitle;
-		private FormattedText displayedCompactText;
 	}
 
 
