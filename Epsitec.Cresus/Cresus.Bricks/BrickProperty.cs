@@ -162,32 +162,6 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 		
-		
-		public System.Func<T, FormattedText> GetFormatter<T>()
-		{
-			var value = this.ExpressionValue as LambdaExpression;
-
-			if (value != null)
-			{
-				Expression<System.Func<T, FormattedText>> expression = value as Expression<System.Func<T, FormattedText>>;
-
-				if (expression != null)
-				{
-					//	OK, expression is already what we need.
-				}
-				else
-				{
-					expression = Expression.Lambda<System.Func<T, FormattedText>> (value.Body, value.Parameters);
-				}
-				
-				return expression.Compile ();
-			}
-			else
-			{
-				return null;
-			}
-		}
-		
 		public override string ToString()
 		{
 			return string.Format ("{0} = {1}", this.key, this.value ?? "<null>");
