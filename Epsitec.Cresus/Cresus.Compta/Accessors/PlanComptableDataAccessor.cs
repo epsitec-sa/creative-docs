@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
 			this.SearchUpdate ();
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 		}
 
 		private void UpdateCreationData()
@@ -373,7 +373,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaCompteEntity CreateCompte()
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{
@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteCompte(ComptaCompteEntity compte)
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{

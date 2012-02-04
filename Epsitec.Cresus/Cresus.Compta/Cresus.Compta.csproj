@@ -94,7 +94,6 @@
     <Compile Include="Controllers\PériodeFooterController.cs" />
     <Compile Include="Controllers\PériodesController.cs" />
     <Compile Include="Controllers\DoubleController.cs" />
-    <Compile Include="Controllers\UpdateManager.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />

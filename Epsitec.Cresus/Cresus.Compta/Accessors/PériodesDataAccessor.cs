@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.SearchUpdate ();
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 		}
 
 		private void UpdateCreationData()
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaPériodeEntity CreatePériode()
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeletePériode(ComptaPériodeEntity période)
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{

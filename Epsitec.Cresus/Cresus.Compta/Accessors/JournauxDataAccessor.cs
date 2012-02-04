@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.SearchUpdate ();
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 		}
 
 		private void UpdateCreationData()
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaJournalEntity CreateJournal()
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void DeleteJournal(ComptaJournalEntity journal)
 		{
-			this.controller.UpdateManager.SetDirty ();
+			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{
