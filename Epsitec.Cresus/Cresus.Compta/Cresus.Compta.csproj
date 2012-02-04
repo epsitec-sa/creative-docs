@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
+    <Compile Include="Accessors\JournauxEditionData.cs" />
+    <Compile Include="Accessors\JournauxDataAccessor.cs" />
     <Compile Include="Accessors\PériodesEditionData.cs" />
     <Compile Include="Accessors\PériodesDataAccessor.cs" />
     <Compile Include="Accessors\DoubleData.cs" />
@@ -86,6 +88,8 @@
     <Compile Include="Accessors\SearchTabData.cs" />
     <Compile Include="Accessors\SearchResult.cs" />
     <Compile Include="Application.cs" />
+    <Compile Include="Controllers\JournauxFooterController.cs" />
+    <Compile Include="Controllers\JournauxController.cs" />
     <Compile Include="Controllers\PériodeFooterController.cs" />
     <Compile Include="Controllers\PériodesController.cs" />
     <Compile Include="Controllers\DoubleController.cs" />
@@ -199,6 +203,7 @@
     <EmbeddedResource Include="Images\Select.Up.icon" />
     <EmbeddedResource Include="Images\Select.Home.icon" />
     <EmbeddedResource Include="Images\Présentation.Période.icon" />
+    <EmbeddedResource Include="Images\Présentation.Journaux.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

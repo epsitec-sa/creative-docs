@@ -100,4 +100,5 @@
   <data name="Fld.ComptaPériode.DateDébut" id="KJ3">&lt;s:data id="_0" f:Name="DateDébut" /&gt;</data>
   <data name="Fld.ComptaPériode.DateFin" id="KK3">&lt;s:data id="_0" f:Name="DateFin" /&gt;</data>
   <data name="Fld.ComptaPériode.Description" id="KL3">&lt;s:data id="_0" f:Name="Description" /&gt;</data>
+  <data name="Cmd.Présentation.Journaux" id="KM3">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Présentation.Journaux" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Présentation.Journaux.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Journaux'}}" /&gt;</data>
 </bundle>

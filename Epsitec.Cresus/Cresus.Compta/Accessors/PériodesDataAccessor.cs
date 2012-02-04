@@ -166,13 +166,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		protected override void PrepareEditionLine(int line)
-		{
-			this.editionData[line].SetText (ColumnType.Date,  this.périodeEntity.ProchaineDate.ToString ());
-			this.editionData[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
-			this.editionData[line].SetText (ColumnType.Montant, "0.00");
-		}
-
 		public override void StartModificationData(int row)
 		{
 			this.editionData.Clear ();

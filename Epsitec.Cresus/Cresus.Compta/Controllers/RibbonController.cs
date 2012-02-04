@@ -100,11 +100,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PP, large: false));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Exploitation, large: false));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Budgets, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
 
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
 
 				section.Children.Add (this.CreateGap ());
@@ -191,6 +192,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				yield return Res.Commands.Présentation.Périodes;
+				yield return Res.Commands.Présentation.Journaux;
 				yield return Res.Commands.Présentation.Journal;
 				yield return Res.Commands.Présentation.PlanComptable;
 				yield return Res.Commands.Présentation.Balance;

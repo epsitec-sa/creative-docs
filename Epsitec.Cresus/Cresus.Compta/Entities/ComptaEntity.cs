@@ -13,6 +13,55 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public FormattedText JournalRésumé(ComptaJournalEntity journal)
+		{
+			//	Retourne le résumé d'un journal.
+			int totalEcritures = 0;
+			int totalPériodes = 0;
+
+			foreach (var période in this.Périodes)
+			{
+				int total = période.Journal.Where (x => x.Journal == journal).Count ();
+
+				if (total != 0)
+				{
+					totalEcritures += total;
+					totalPériodes++;
+				}
+			}
+
+			string écrituresRésumé, périodesRésumé;
+
+			if (totalEcritures == 0)
+			{
+				return "Vide";
+			}
+			else if (totalEcritures == 1)
+			{
+				écrituresRésumé = "1 écriture";
+			}
+			else
+			{
+				écrituresRésumé = string.Format ("{0} écritures", totalEcritures.ToString ());
+			}
+
+			if (totalPériodes == 0)
+			{
+				périodesRésumé = "aucune période";
+			}
+			else if (totalPériodes == 1)
+			{
+				périodesRésumé = "1 période";
+			}
+			else
+			{
+				périodesRésumé = string.Format ("{0} périodes", totalPériodes.ToString ());
+			}
+
+			return écrituresRésumé + " dans " + périodesRésumé;
+		}
+
+
 		public FormattedText ProchainePièce
 		{
 			//	A partir de "AB102", retourne "AB103" (par exemple).
