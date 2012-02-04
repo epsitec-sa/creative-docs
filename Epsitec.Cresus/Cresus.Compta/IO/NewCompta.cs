@@ -37,16 +37,26 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Périodes.Clear ();
 			compta.Journaux.Clear ();
 
-			compta.Périodes.Add (this.CreatePériode ());
+			this.CreatePériodes (compta);
 			compta.Journaux.Add (this.CreateJournal ());
 		}
 
-		private ComptaPériodeEntity CreatePériode()
+		public void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
 		{
-			//	Crée une première période.
+			compta.Périodes.Clear ();
+
 			var now = Date.Today;
-			var beginDate = new Date (now.Year,  1,  1);  // du 1 janvier
-			var endDate   = new Date (now.Year, 12, 31);  // au 31 décembre
+			for (int year = now.Year+pastCount; year < now.Year+postCount; year++)
+			{
+				compta.Périodes.Add (this.CreatePériode (year));
+			}
+		}
+
+		private ComptaPériodeEntity CreatePériode(int year)
+		{
+			//	Crée une période couvrant une année.
+			var beginDate = new Date (year,  1,  1);  // du 1 janvier
+			var endDate   = new Date (year, 12, 31);  // au 31 décembre
 
 			var période = new ComptaPériodeEntity ();
 			période.DateDébut    = beginDate;

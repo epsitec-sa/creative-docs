@@ -24,15 +24,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			if (ext == ".crp")
 			{
-				var err = this.ImportPlanComptable(filename);
-
-				if (!string.IsNullOrEmpty (err))
-				{
-					return err;
-				}
-
-				période = this.compta.Périodes.First ();
-				return null;  // ok
+				return this.ImportPlanComptable(filename, ref période);
 			}
 
 			if (ext == ".txt")
@@ -45,7 +37,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 		#region Plan comptable
-		private string ImportPlanComptable(string filename)
+		private string ImportPlanComptable(string filename, ref ComptaPériodeEntity période)
 		{
 			//	Importe un plan comptable "crp".
 			try
@@ -54,7 +46,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				try
 				{
-					return this.ImportPlanComptable ();
+					return this.ImportPlanComptable (ref période);
 				}
 				catch (System.Exception ex)
 				{
@@ -67,9 +59,14 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private string ImportPlanComptable()
+		private string ImportPlanComptable(ref ComptaPériodeEntity période)
 		{
-			new NewCompta ().NewNull (this.compta);
+			var nc = new NewCompta ();
+			nc.NewNull (this.compta);
+			nc.CreatePériodes (this.compta);
+
+			var now = Date.Today;
+			période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
 
 			//	Importe les données globales.
 			{
@@ -80,23 +77,12 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 			}
 
-			var période = new ComptaPériodeEntity ();
-			this.compta.Périodes.Add (période);
-
 			{
 				int i = this.IndexOfLine ("DATEBEG=");
 				if (i != -1)
 				{
-					période.DateDébut = this.GetDate (this.lines[i].Substring (8));
-					période.DernièreDate = période.DateDébut;
-				}
-			}
-
-			{
-				int i = this.IndexOfLine ("DATEEND=");
-				if (i != -1)
-				{
-					période.DateFin = this.GetDate (this.lines[i].Substring (8));
+					var date = this.GetDate (this.lines[i].Substring (8));
+					période = this.compta.Périodes.Where (x => x.DateDébut.Year == date.Year).FirstOrDefault ();
 				}
 			}
 
@@ -519,7 +505,6 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 		private ComptaEntity			compta;
-		private ComptaPériodeEntity		période;
 		private string[]				lines;
 	}
 }

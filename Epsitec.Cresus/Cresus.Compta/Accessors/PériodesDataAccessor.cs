@@ -79,6 +79,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			switch (column)
 			{
+				case ColumnType.Utilise:
+					return (période == this.mainWindowController.Période) ? PériodesDataAccessor.PériodeCourante : PériodesDataAccessor.AutrePériode;
+
 				case ColumnType.DateDébut:
 					return période.DateDébut.ToString ();
 
@@ -89,7 +92,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return période.Description;
 
 				case ColumnType.Résumé:
-					return période.Résumé;
+					return période.GetJournalSummary (null);
 
 				default:
 					return FormattedText.Null;
@@ -349,5 +352,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 		}
+
+
+		public static readonly FormattedText	PériodeCourante = TextFormatter.FormatText ("Oui").ApplyBold ();
+		public static readonly FormattedText	AutrePériode    = TextFormatter.FormatText ("Non");
 	}
 }

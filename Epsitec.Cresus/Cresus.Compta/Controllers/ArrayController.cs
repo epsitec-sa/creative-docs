@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void UpdateColumnsHeader()
+		public void UpdateColumnsHeader(int lineHeight)
 		{
 			this.headerController.UpdateColumns ();
 
@@ -90,6 +90,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				column++;
 			}
+
+			this.array.LineHeight = lineHeight;
 		}
 
 

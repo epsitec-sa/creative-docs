@@ -150,7 +150,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateFooter (this.frameBox);
 
 			this.UpdateArrayContent ();
-			this.InitialUpdate ();
 
 			if (this.footerController != null)
 			{
@@ -168,10 +167,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			return this.frameBox;
-		}
-
-		protected virtual void InitialUpdate()
-		{
 		}
 
 		public void Dispose()
@@ -478,7 +473,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void UpdateArray()
 		{
-			this.arrayController.UpdateColumnsHeader ();
+			this.arrayController.UpdateColumnsHeader (this.ArrayLineHeight);
+		}
+
+		protected virtual int ArrayLineHeight
+		{
+			get
+			{
+				return 14;
+			}
 		}
 
 		private void ArrayUpdateCellContent()

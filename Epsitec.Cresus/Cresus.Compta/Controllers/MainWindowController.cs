@@ -42,7 +42,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
-			this.période = this.compta.Périodes.FirstOrDefault ();
+
+			var now = Date.Today;
+			this.période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
+			if (this.période == null)
+			{
+				this.période = this.compta.Périodes.First ();
+			}
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -92,20 +98,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return this.période;
 			}
-		}
-
-		public int PériodeIndex
-		{
-			get
-			{
-				return this.compta.Périodes.IndexOf (this.période);
-			}
 			set
 			{
-				if (value >= 0 && value < this.compta.Périodes.Count)
-				{
-					this.période = this.compta.Périodes[value];
-				}
+				this.période = value;
 			}
 		}
 

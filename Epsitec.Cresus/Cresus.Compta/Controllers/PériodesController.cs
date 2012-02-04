@@ -33,16 +33,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void InitialUpdate()
-		{
-			int sel = this.mainWindowController.PériodeIndex;
-
-			if (sel != -1)
-			{
-				this.arrayController.SelectedRow = sel;
-			}
-		}
-
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Périodes comptables");
@@ -82,6 +72,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override int ArrayLineHeight
+		{
+			get
+			{
+				return 20;
+			}
+		}
+
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
@@ -101,10 +99,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.DateDébut, 0.20, ContentAlignment.MiddleLeft, "Date début",  "Date de début de la période");
-				yield return new ColumnMapper (ColumnType.DateFin,   0.20, ContentAlignment.MiddleLeft, "Date fin",    "Date de fin de la période");
-				yield return new ColumnMapper (ColumnType.Titre,     1.20, ContentAlignment.MiddleLeft, "Commentaire", "Commentaire sur la période comptable");
-				yield return new ColumnMapper (ColumnType.Résumé,    0.40, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Utilise,   0.20, ContentAlignment.MiddleCenter, "En cours",    "Détermine la période comptable en cours");
+				yield return new ColumnMapper (ColumnType.DateDébut, 0.20, ContentAlignment.MiddleLeft,   "Date début",  "Date de début de la période");
+				yield return new ColumnMapper (ColumnType.DateFin,   0.20, ContentAlignment.MiddleLeft,   "Date fin",    "Date de fin de la période");
+				yield return new ColumnMapper (ColumnType.Titre,     0.80, ContentAlignment.MiddleLeft,   "Commentaire", "Commentaire affiché entre parenthèses après la période");
+				yield return new ColumnMapper (ColumnType.Résumé,    0.60, ContentAlignment.MiddleLeft,   "Résumé");
 			}
 		}
 	}

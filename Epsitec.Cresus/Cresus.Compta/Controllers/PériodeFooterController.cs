@@ -74,6 +74,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				FrameBox container;
 				AbstractTextField field;
 
+				if (mapper.Column == ColumnType.Utilise)
+				{
+					IEnumerable<EnumKeyValues<CatégorieDeCompte>> possibleItems = EnumKeyValues.FromEnum<CatégorieDeCompte> ();
+
+					UIBuilder.CreateAutoCompleteTextField<CatégorieDeCompte> (box, possibleItems, out container, out field);
+					field.Name = this.GetWidgetName (mapper.Column, line);
+
+					field.TextChanged += delegate
+					{
+						this.FooterTextChanged (field);
+					};
+				}
+				else
 				{
 					container = new FrameBox
 					{
@@ -111,16 +124,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			return modify ? "Modification d'une période comptable :" : "Création d'une période comptable :";
 		}
-
-		protected override void UpdateFooterInfo()
-		{
-			int sel = this.arrayController.SelectedRow;
-
-			if (sel != -1)
-			{
-				this.controller.MainWindowController.PériodeIndex = sel;
-			}
-		}
-
 	}
 }

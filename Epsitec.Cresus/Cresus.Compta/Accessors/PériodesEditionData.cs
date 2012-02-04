@@ -73,6 +73,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var période = entity as ComptaPériodeEntity;
 
+			bool sel = (this.controller.MainWindowController.Période == entity);
+
+			this.SetText (ColumnType.Utilise,   sel ? PériodesDataAccessor.PériodeCourante : PériodesDataAccessor.AutrePériode);
 			this.SetText (ColumnType.DateDébut, période.DateDébut.ToString ());
 			this.SetText (ColumnType.DateFin,   période.DateFin.ToString ());
 			this.SetText (ColumnType.Titre,     période.Description);
@@ -81,6 +84,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var période = entity as ComptaPériodeEntity;
+
+			if (this.GetText (ColumnType.Utilise).ToSimpleText ().ToLower () == PériodesDataAccessor.PériodeCourante.ToSimpleText ().ToLower ())
+			{
+				this.controller.MainWindowController.Période = période;
+			}
 
 			Date date;
 

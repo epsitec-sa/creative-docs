@@ -69,6 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Plan comptable");
+			this.SetSubtitle ("Toutes les périodes");
 		}
 
 
