@@ -375,12 +375,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FilterStartAction()
 		{
+			if (this.footerController != null)
+			{
+				this.footerController.Dirty = false;
+			}
+
+			this.arrayController.SelectedRow = -1;
+			this.dataAccessor.StartCreationData ();
+			this.arrayController.ColorSelection = Color.FromName ("Gold");
+			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+
 			this.dataAccessor.FilterUpdate ();
 			this.dataAccessor.SearchUpdate ();
 			this.BaseUpdateArrayContent ();
+
 			this.FilterUpdateTopToolbar ();
 			this.SearchUpdateLocator (true);
 			this.SearchUpdateTopToolbar ();
+
+			if (this.footerController != null)
+			{
+				this.footerController.FooterValidate ();
+			}
 		}
 
 		private void FilterNextAction(int direction)

@@ -157,6 +157,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.array.TotalRows = rowCount;
 
 			this.AdjustRows ();
+			this.array.AdjustFirstVisibleRow ();
 
 			int first       = this.array.FirstVisibleRow;
 			int columnCount = this.array.Columns;

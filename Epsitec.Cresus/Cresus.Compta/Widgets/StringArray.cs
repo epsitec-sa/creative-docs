@@ -550,17 +550,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			set
 			{
-				if (this.TotalRows <= this.LineCount)
-				{
-					value = 0;
-				}
-				else
-				{
-					value = System.Math.Min (value, this.TotalRows-this.LineCount+1);
-					value = System.Math.Max (value, 0);
-				}
+				int old = this.firstVisibleRow;
 
-				if (this.firstVisibleRow != value)
+				this.firstVisibleRow = value;
+				this.AdjustFirstVisibleRow ();
+
+				if (this.firstVisibleRow != old)
 				{
 					this.firstVisibleRow = value;
 					this.isDirtyScroller = true;
@@ -569,6 +564,23 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.OnFirstVisibleRowChanged ();
 				}
 			}
+		}
+
+		public void AdjustFirstVisibleRow()
+		{
+			int first = this.firstVisibleRow;
+
+			if (this.TotalRows <= this.LineCount)
+			{
+				first = 0;
+			}
+			else
+			{
+				first = System.Math.Min (first, this.TotalRows-this.LineCount+1);
+				first = System.Math.Max (first, 0);
+			}
+
+			this.firstVisibleRow = first;
 		}
 
 		private void ShowSelectedRow()

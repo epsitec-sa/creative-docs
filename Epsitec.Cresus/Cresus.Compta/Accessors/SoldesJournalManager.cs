@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public void Initialize(IEnumerable<ComptaEcritureEntity> journal, Date? dateDébut, Date? dateFin)
+		public void Initialize(IEnumerable<ComptaEcritureEntity> journal, Date? dateDébut = null, Date? dateFin = null)
 		{
 			this.journal   = journal;
 			this.dateDébut = dateDébut;
@@ -38,6 +38,35 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.UpdateSoldes ();
 		}
+
+
+#if false
+		public void AddEcriture(ComptaEcritureEntity écriture)
+		{
+			if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
+			{
+				this.AddSoldeCompteDébit (écriture.Débit, écriture.Montant);
+			}
+
+			if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
+			{
+				this.AddSoldeCompteCrédit (écriture.Crédit, écriture.Montant);
+			}
+		}
+
+		public void SubEcriture(ComptaEcritureEntity écriture)
+		{
+			if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
+			{
+				this.AddSoldeCompteDébit (écriture.Débit, -écriture.Montant);
+			}
+
+			if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
+			{
+				this.AddSoldeCompteCrédit (écriture.Crédit, -écriture.Montant);
+			}
+		}
+#endif
 
 
 		public decimal? GetSolde(ComptaCompteEntity compte)
@@ -99,6 +128,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void UpdateSoldes()
 		{
+			//	Met à jour tous les totaux, pour le journal et la période choisie.
 			this.soldesDébit.Clear ();
 			this.soldesCrédit.Clear ();
 

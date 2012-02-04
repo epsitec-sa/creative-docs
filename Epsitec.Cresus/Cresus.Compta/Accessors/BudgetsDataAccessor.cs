@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
 
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, null, null);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
 			this.StartCreationData ();
 		}
 
