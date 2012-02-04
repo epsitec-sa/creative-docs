@@ -29,15 +29,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void FilterUpdate()
 		{
 			this.UpdateReadonlyAllData ();
-			base.FilterUpdate ();
-			this.UpdateTypo ();
 		}
 
 		public override void UpdateAfterOptionsChanged()
 		{
 			this.UpdateReadonlyAllData ();
-			base.FilterUpdate ();
-			this.UpdateTypo ();
 		}
 
 		private void UpdateReadonlyAllData()
@@ -46,7 +42,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.MinMaxClear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
 
 			//	Partie "gauche" (actif ou charge).
 			int lignesGauches = this.readonlyAllData.Count ();
@@ -89,6 +85,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 					lignesDroites++;
 				}
 			}
+
+			base.FilterUpdate ();
+			this.UpdateTypo ();
 		}
 
 		private decimal UpdateReadonlyAllData(CatégorieDeCompte catégorie, bool gauche)
@@ -104,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == catégorie))
 			{
-				var solde = this.comptaEntity.GetSoldeCompte (compte).GetValueOrDefault ();
+				var solde = this.soldesJournalManager.GetSolde (compte).GetValueOrDefault ();
 
 				if (!soldesNuls && solde == 0)
 				{

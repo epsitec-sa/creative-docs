@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!this.Options.MontreComptesVides)
 			{
-				var solde = this.comptaEntity.GetSoldeCompte (compte);
+				var solde = this.controller.DataAccessor.SoldesJournalManager.GetSolde (compte);
 				if (solde.GetValueOrDefault () == 0)
 				{
 					return false;

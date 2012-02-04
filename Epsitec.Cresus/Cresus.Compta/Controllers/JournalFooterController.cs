@@ -576,7 +576,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				titre = compte.Titre;
-				solde = this.comptaEntity.GetSoldeCompte (compte);
+				solde = this.dataAccessor.SoldesJournalManager.GetSolde (compte);
 			}
 		}
 

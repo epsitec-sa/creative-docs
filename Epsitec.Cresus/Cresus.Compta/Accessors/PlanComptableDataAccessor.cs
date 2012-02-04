@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = true;
 			}
 
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, null, null);
 			this.SearchUpdate ();
 			this.controller.UpdateManager.SetDirty ();
 		}

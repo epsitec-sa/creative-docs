@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText    (ColumnType.Numéro,          compte.Numéro);
 			this.SetText    (ColumnType.Titre,           compte.Titre);
-			this.SetMontant (ColumnType.Solde,           this.comptaEntity.GetSoldeCompte (compte));
+			this.SetMontant (ColumnType.Solde,           this.controller.DataAccessor.SoldesJournalManager.GetSolde (compte));
 			this.SetMontant (ColumnType.Budget,          compte.Budget);
 			this.SetMontant (ColumnType.BudgetPrécédent, compte.BudgetPrécédent);
 			this.SetMontant (ColumnType.BudgetFutur,     compte.BudgetFutur);

@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
 
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();
 

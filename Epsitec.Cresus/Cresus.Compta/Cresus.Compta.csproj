@@ -56,6 +56,7 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
+    <Compile Include="Accessors\SoldesJournalManager.cs" />
     <Compile Include="Accessors\JournauxEditionData.cs" />
     <Compile Include="Accessors\JournauxDataAccessor.cs" />
     <Compile Include="Accessors\PériodesEditionData.cs" />

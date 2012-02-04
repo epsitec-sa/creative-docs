@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
 
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, null, null);
 			this.StartCreationData ();
 		}
 
@@ -70,6 +70,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 			}
+
+			Date? dateDébut, dateFin;
+			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, dateDébut, dateFin);
 		}
 
 
@@ -121,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return compte.Titre;
 
 				case ColumnType.Solde:
-					decimal? solde = this.comptaEntity.GetSoldeCompte (compte);
+					decimal? solde = this.soldesJournalManager.GetSolde (compte);
 					if (solde.HasValue && solde.Value != 0)
 					{
 						return AbstractDataAccessor.GetMontant (solde);
@@ -200,7 +204,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = false;
 			}
 
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity);
 			this.SearchUpdate ();
 		}
 

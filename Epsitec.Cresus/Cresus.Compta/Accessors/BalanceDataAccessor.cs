@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeC = 0;
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.comptaEntity.PlanComptableUpdate (this.périodeEntity, this.lastBeginDate, this.lastEndDate);
+			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
 
 			foreach (var compte in this.comptaEntity.PlanComptable)
 			{
@@ -73,8 +73,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				var soldeDébit  = this.comptaEntity.GetSoldeCompteDébit  (compte).GetValueOrDefault ();
-				var soldeCrédit = this.comptaEntity.GetSoldeCompteCrédit (compte).GetValueOrDefault ();
+				var soldeDébit  = this.soldesJournalManager.GetSoldeDébit  (compte).GetValueOrDefault ();
+				var soldeCrédit = this.soldesJournalManager.GetSoldeCrédit (compte).GetValueOrDefault ();
 				var différence = soldeCrédit - soldeDébit;
 
 				var data = new BalanceData ();
