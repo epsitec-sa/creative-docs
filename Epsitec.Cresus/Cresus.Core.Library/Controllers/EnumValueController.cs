@@ -43,29 +43,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		/// <summary>
-		/// Attaches the specified widget to the data source.
-		/// </summary>
-		/// <param name="widget">The widget.</param>
-		public void Attach(AutoCompleteTextField widget)
-		{
-			this.AddItems (widget);
-
-			widget.ValueToDescriptionConverter = value => this.getUserText (value as EnumKeyValues<T>);
-			widget.HintComparer                = (value, text) => EnumValueController<T>.MatchUserText (value as EnumKeyValues<T>, text);
-			widget.HintComparisonConverter     = x => Widgets.HintComparer.GetComparableText (x);
-
-			this.widget = widget;
-			this.Update ();
-
-			widget.TextChanged += delegate
-			{
-				int    index = widget.SelectedItemIndex;
-				string key   = index < 0 ? null : widget.Items.GetKey (index);
-				this.marshaler.SetStringValue (key);
-			};
-		}
-
 		public void Attach(AutoCompleteTextFieldEx widget)
 		{
 			this.AddItems (widget);
@@ -83,25 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers
 				string key   = index < 0 ? null : widget.Items.GetKey (index);
 				this.marshaler.SetStringValue (key);
 			};
-		}
-
-		private void AddItems(AutoCompleteTextField widget)
-		{
-			foreach (var item in this.possibleItems)
-			{
-				string key;
-
-				if (typeof (T).IsEnum)
-				{
-					key = EnumConverter<T>.ConvertToNumericString (item.Key);
-				}
-				else
-				{
-					key = item.Key.ToString ();
-				}
-
-				widget.Items.Add (key, item);
-			}
 		}
 
 		private void AddItems(AutoCompleteTextFieldEx widget)
@@ -146,11 +104,6 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		public void Update()
 		{
-			if (this.widget != null)
-			{
-				this.widget.SelectedItemIndex = this.widget.Items.FindIndexByKey (this.marshaler.GetStringValue ());
-			}
-
 			if (this.widgetEx != null)
 			{
 				this.widgetEx.SelectedItemIndex = this.widgetEx.Items.FindIndexByKey (this.marshaler.GetStringValue ());
@@ -162,7 +115,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		private readonly Marshaler marshaler;
 		private readonly IEnumerable<EnumKeyValues<T>> possibleItems;
 		private readonly ValueToFormattedTextConverter<EnumKeyValues<T>> getUserText;
-		private AutoCompleteTextField widget;
 		private AutoCompleteTextFieldEx widgetEx;
 	}
 }
