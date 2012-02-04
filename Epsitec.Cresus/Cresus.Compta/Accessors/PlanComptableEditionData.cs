@@ -92,17 +92,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Empty;
 			}
 
-#if false
-			var himself = (this.footerController.JustCreate) ? null : this.arrayController.SelectedData as PlanComptableData;
+			var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionData (this.controller.DataAccessor.FirstEditedRow) as ComptaCompteEntity;
 			if (himself != null && himself.Numéro == text)
 			{
 				return FormattedText.Empty;
 			}
 
 			return "Ce numéro de compte existe déjà";
-#else
-			return FormattedText.Empty;
-#endif
 		}
 
 		private FormattedText ValidateTitre(ref FormattedText text)
