@@ -138,30 +138,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.AccessorOptions as JournalOptions;
 
-			//?this.ShowHideColumn (ColumnType.Journal, this.optionsController != null && (this.optionsController.Options as JournalOptions).Journal == null);
 			this.ShowHideColumn (ColumnType.Journal, options != null && options.Journal == null);  // tous les journaux ?
 		}
-
-#if false
-		private void CreateManyEcritures()
-		{
-			var débit  = this.comptaEntity.PlanComptable.Where(x => x.Numéro == "1000").FirstOrDefault ();
-			var crédit = this.comptaEntity.PlanComptable.Where(x => x.Numéro == "1020").FirstOrDefault ();
-
-			for (int i = 0; i < 10000; i++)
-			{
-				var écriture = this.businessContext.DataContext.CreateEntity<ComptaEcritureEntity> ();
-
-				écriture.Date    = new Date (2011, 3, (i/1000)%31+1);
-				écriture.Débit   = débit;
-				écriture.Crédit  = crédit;
-				écriture.Pièce   = "Test";
-				écriture.Libellé = string.Format ("Virement {0}", i.ToString ());
-				écriture.Montant = i%100+1;
-
-				this.comptaEntity.Journal.Add (écriture);
-			}
-		}
-#endif
 	}
 }

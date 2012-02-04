@@ -9,10 +9,10 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
