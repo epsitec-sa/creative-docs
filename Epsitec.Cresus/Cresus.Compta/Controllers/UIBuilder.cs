@@ -21,8 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public static class UIBuilder
 	{
-		#region AutoCompleteTextField pour choisir un compte
-		public static void CreateAutoCompleteTextField(Widget parent, IEnumerable<ComptaCompteEntity> comptes, out FrameBox container, out AbstractTextField field)
+		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field)
 		{
 			//	Crée un widget permettant de saisir un numéro de compte.
 			container = new FrameBox
@@ -39,82 +38,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (0, 0, 0, 0),
-				HintEditorMode  = HintEditorMode.DisplayMenu,
-				TabIndex        = 1,
-			};
-
-			var menuButton = new GlyphButton
-			{
-				Parent          = container,
-				ButtonStyle     = Common.Widgets.ButtonStyle.Combo,
-				GlyphShape      = GlyphShape.Menu,
-				PreferredWidth  = UIBuilder.ComboButtonWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Right,
-				Margins         = new Margins (-1, 0, 0, 0),
-				AutoFocus       = false,
-			};
-
-			if (comptes != null)
-			{
-				foreach (var compte in comptes)
-				{
-					textField.Items.Add (compte);
-				}
-			}
-
-			textField.ValueToDescriptionConverter = value => UIBuilder.GetCompteText (value as ComptaCompteEntity);
-			textField.HintComparer                = (value, text) => UIBuilder.MatchCompteText (value as ComptaCompteEntity, text);
-			textField.HintComparisonConverter     = x => HintComparer.GetComparableText (x);
-
-			menuButton.Clicked += delegate
-			{
-				textField.SelectAll ();
-				textField.Focus ();
-				textField.OpenComboMenu ();
-			};
-
-			field = textField;
-		}
-
-		private static FormattedText GetCompteText(ComptaCompteEntity compte)
-		{
-			//	Retourne le texte complet à utiliser pour un compte donné.
-			return TextFormatter.FormatText (compte.Numéro, compte.Titre);
-		}
-
-		private static HintComparerResult MatchCompteText(ComptaCompteEntity compte, string userText)
-		{
-			//	Compare un compte avec le texte partiel entré par l'utilisateur.
-			if (string.IsNullOrWhiteSpace (userText))
-			{
-				return HintComparerResult.NoMatch;
-			}
-
-			var itemText = HintComparer.GetComparableText (UIBuilder.GetCompteText (compte).ToSimpleText ());
-			return HintComparer.Compare (itemText, userText);
-		}
-		#endregion
-
-
-		public static void CreateAutoCompleteTextField<T>(Widget parent, IEnumerable<EnumKeyValues<T>> possibleItems, out FrameBox container, out AbstractTextField field)
-		{
-			//	possibleItems.Item1 est la 'key' !
-			container = new FrameBox
-			{
-				Parent   = parent,
-				Dock     = DockStyle.Fill,
-				TabIndex = 1,
-			};
-
-			var textField = new AutoCompleteTextField
-			{
-				Parent          = container,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 0, 0, 0),
-				HintEditorMode  = HintEditorMode.DisplayMenu,
 				TabIndex        = 1,
 			};
 
@@ -135,10 +58,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 				textField.OpenComboMenu ();
 			};
 
-			//?var valueController = new EnumValueController<T> (marshaler, possibleItems, x => TextFormatter.FormatText (x));
-			//?valueController.Attach (textField);
-
 			field = textField;
+		}
+
+		public static void UpdateAutoCompleteTextField(AbstractTextField field, IEnumerable<ComptaCompteEntity> comptes)
+		{
+			var auto = field as AutoCompleteTextField;
+			System.Diagnostics.Debug.Assert (auto != null);
+
+			auto.PrimaryTexts.Clear ();
+			auto.SecondaryTexts.Clear ();
+
+			foreach (var compte in comptes)
+			{
+				auto.PrimaryTexts.Add (compte.Numéro.ToSimpleText ());
+				auto.SecondaryTexts.Add (compte.Titre.ToSimpleText ());
+			}
+		}
+
+		public static void UpdateAutoCompleteTextField(AbstractTextField field, params string[] texts)
+		{
+			var auto = field as AutoCompleteTextField;
+			System.Diagnostics.Debug.Assert (auto != null);
+
+			auto.PrimaryTexts.Clear ();
+			auto.SecondaryTexts.Clear ();
+
+			foreach (var text in texts)
+			{
+				auto.PrimaryTexts.Add (text);
+			}
 		}
 
 

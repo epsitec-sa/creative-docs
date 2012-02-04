@@ -10,7 +10,6 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 
@@ -144,7 +143,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Débit)
 				{
-					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
@@ -154,7 +154,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Crédit)
 				{
-					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate

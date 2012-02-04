@@ -9,10 +9,10 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -56,8 +56,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			FrameBox container;
 			AbstractTextField field;
-			//?var marshaler = Marshaler.Create<FormattedText> (() => this.NuméroCompte, x => this.NuméroCompte = x);
-			UIBuilder.CreateAutoCompleteTextField (frame, null, out container, out field);
+			UIBuilder.CreateAutoCompleteTextField (frame, out container, out field);
 			this.fieldCompte = field as AutoCompleteTextField;
 			container.PreferredWidth = 100;
 			container.Dock = DockStyle.Left;
@@ -164,7 +163,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Affiche le menu permettant de choisir le mode pour le filtre.
 			var menu = new VMenu ();
 
-			this.AddComboModeToMenu (menu, CatégorieDeCompte.Inconnu);
+			this.AddComboModeToMenu (menu, CatégorieDeCompte.Tous);
 			this.AddComboModeToMenu (menu, CatégorieDeCompte.Actif);
 			this.AddComboModeToMenu (menu, CatégorieDeCompte.Passif);
 			this.AddComboModeToMenu (menu, CatégorieDeCompte.Charge);
@@ -283,13 +282,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateComptes()
 		{
 			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
-
-			this.fieldCompte.Items.Clear ();
-
-			foreach (var compte in comptes)
-			{
-				this.fieldCompte.Items.Add (compte);
-			}
+			UIBuilder.UpdateAutoCompleteTextField (this.fieldCompte, comptes);
 
 			this.ignoreChange = true;
 			this.fieldCompte.FormattedText = this.NuméroCompte;

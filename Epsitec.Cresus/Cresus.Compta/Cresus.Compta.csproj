@@ -141,13 +141,8 @@
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
-    <Compile Include="Widgets\HintComparer.cs" />
-    <Compile Include="Widgets\HintComparerPredicate.cs" />
-    <Compile Include="Widgets\HintComparerResult.cs" />
-    <Compile Include="Widgets\HintEditorMode.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />
-    <Compile Include="Widgets\ValueToFormattedTextConverter.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

@@ -10,7 +10,6 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 

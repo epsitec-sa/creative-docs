@@ -9,7 +9,6 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 
@@ -76,9 +75,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Catégorie)
 				{
-					IEnumerable<EnumKeyValues<CatégorieDeCompte>> possibleItems = EnumKeyValues.FromEnum<CatégorieDeCompte> ();
-
-					UIBuilder.CreateAutoCompleteTextField<CatégorieDeCompte> (box, possibleItems, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, "Actif", "Passif", "Charge", "Produit", "Exploitation");
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
@@ -88,9 +86,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Type)
 				{
-					IEnumerable<EnumKeyValues<TypeDeCompte>> possibleItems = EnumKeyValues.FromEnum<TypeDeCompte> ();
-
-					UIBuilder.CreateAutoCompleteTextField<TypeDeCompte> (box, possibleItems, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, "Normal", "Titre", "Groupe");
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
@@ -115,7 +112,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.Groupe)
 				{
 					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe);
-					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
@@ -126,7 +124,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.CompteOuvBoucl)
 				{
 					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
-					UIBuilder.CreateAutoCompleteTextField (box, comptes, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate

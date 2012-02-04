@@ -9,7 +9,6 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
 
@@ -78,7 +77,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					IEnumerable<EnumKeyValues<CatégorieDeCompte>> possibleItems = EnumKeyValues.FromEnum<CatégorieDeCompte> ();
 
-					UIBuilder.CreateAutoCompleteTextField<CatégorieDeCompte> (box, possibleItems, out container, out field);
+					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
+					UIBuilder.UpdateAutoCompleteTextField (field, "Oui", "Non");
 					field.Name = this.GetWidgetName (mapper.Column, line);
 
 					field.TextChanged += delegate
