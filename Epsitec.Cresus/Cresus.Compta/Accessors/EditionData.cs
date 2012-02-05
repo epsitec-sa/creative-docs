@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Validate()
 		{
-			//	Valide le contenu, en adaptant éventuellement son contenu.
+			//	Valide le contenu, en l'adaptant éventuellement.
 			if (this.validateAction != null)
 			{
 				this.validateAction (this);

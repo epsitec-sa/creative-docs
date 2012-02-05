@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Validate(ColumnType columnType)
 		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			foreach (var data in this.datas.Values)
+			//	Valide le contenu d'une colonne, en l'adaptant éventuellement.
+			if (this.datas.ContainsKey (columnType))
 			{
-				data.Validate ();
+				this.datas[columnType].Validate ();
 			}
 		}
 
@@ -78,7 +78,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.datas[columnType].Text = text;
-
 		}
 
 		public FormattedText GetText(ColumnType columnType)
