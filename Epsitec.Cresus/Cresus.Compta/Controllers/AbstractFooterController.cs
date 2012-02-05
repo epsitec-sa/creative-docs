@@ -366,7 +366,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
 					var field = this.GetTextField (mapper.Column, line);
-					field.FormattedText = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
+					var text = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
+
+					if (field is AutoCompleteTextField)
+					{
+						var auto = field as AutoCompleteTextField;
+						auto.SetSilentFormattedText (text);
+					}
+					else
+					{
+						field.FormattedText = text;
+					}
 				}
 			}
 

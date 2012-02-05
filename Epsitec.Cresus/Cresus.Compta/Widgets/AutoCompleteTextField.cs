@@ -36,6 +36,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public void SetSilentFormattedText(FormattedText text)
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.FormattedText = text;
+			}
+		}
+
 		public List<string> PrimaryTexts
 		{
 			get
