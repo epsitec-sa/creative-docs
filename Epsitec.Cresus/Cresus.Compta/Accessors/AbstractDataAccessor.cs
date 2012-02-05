@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData    = new List<AbstractData> ();
-			this.editionData     = new List<AbstractEditionData> ();
+			this.editionData     = new List<AbstractEditionLine> ();
 			this.searchResults   = new List<SearchResult> ();
 		}
 
@@ -380,7 +380,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public List<AbstractEditionData> EditionData
+		public List<AbstractEditionLine> EditionData
 		{
 			get
 			{
@@ -722,7 +722,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly SoldesJournalManager			soldesJournalManager;
 		protected readonly List<AbstractData>			readonlyAllData;
 		protected readonly List<AbstractData>			readonlyData;
-		protected readonly List<AbstractEditionData>	editionData;
+		protected readonly List<AbstractEditionLine>	editionData;
 		protected readonly List<SearchResult>			searchResults;
 
 		protected SearchData							filterData;

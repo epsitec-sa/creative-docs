@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables pour un journal de la comptabilité.
 	/// </summary>
-	public class JournauxEditionData : AbstractEditionData
+	public class JournauxEditionLine : AbstractEditionLine
 	{
-		public JournauxEditionData(AbstractController controller)
+		public JournauxEditionLine(AbstractController controller)
 			: base (controller)
 		{
 		}

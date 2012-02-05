@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new PlanComptableEditionData (this.controller);
+			var newData = new PlanComptableEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new PlanComptableEditionData (this.controller));
+			this.editionData.Add (new PlanComptableEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (row >= 0 && row < this.planComptable.Count)
 			{
-				var data = new PlanComptableEditionData (this.controller);
+				var data = new PlanComptableEditionLine (this.controller);
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 

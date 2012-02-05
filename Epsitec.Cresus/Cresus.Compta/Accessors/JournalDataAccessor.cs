@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new JournalEditionData (this.controller);
+			var newData = new JournalEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new JournalEditionData (this.controller));
+			this.editionData.Add (new JournalEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				for (int i = 0; i < this.countEditedRow; i++)
                 {
-					var data = new JournalEditionData (this.controller);
+					var data = new JournalEditionLine (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
 					data.EntityToData (écriture);
 

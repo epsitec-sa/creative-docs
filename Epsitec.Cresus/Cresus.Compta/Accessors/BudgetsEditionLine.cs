@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables pour les budgets du plan comptable de la comptabilité.
 	/// </summary>
-	public class BudgetsEditionData : AbstractEditionData
+	public class BudgetsEditionLine : AbstractEditionLine
 	{
-		public BudgetsEditionData(AbstractController controller)
+		public BudgetsEditionLine(AbstractController controller)
 			: base (controller)
 		{
 		}

@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (row >= 0 && row < this.planComptable.Count)
 			{
-				var data = new BudgetsEditionData (this.controller);
+				var data = new BudgetsEditionLine (this.controller);
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 

@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables génériques pour la comptabilité.
 	/// </summary>
-	public abstract class AbstractEditionData
+	public abstract class AbstractEditionLine
 	{
-		public AbstractEditionData(AbstractController controller)
+		public AbstractEditionLine(AbstractController controller)
 		{
 			this.controller = controller;
 			this.comptaEntity = this.controller.ComptaEntity;

@@ -18,9 +18,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables pour une période comptable de la comptabilité.
 	/// </summary>
-	public class PériodesEditionData : AbstractEditionData
+	public class PériodesEditionLine : AbstractEditionLine
 	{
-		public PériodesEditionData(AbstractController controller)
+		public PériodesEditionLine(AbstractController controller)
 			: base (controller)
 		{
 		}

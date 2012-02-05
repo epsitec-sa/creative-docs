@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionData(int index)
 		{
-			var newData = new PériodesEditionData (this.controller);
+			var newData = new PériodesEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationData()
 		{
 			this.editionData.Clear ();
-			this.editionData.Add (new PériodesEditionData (this.controller));
+			this.editionData.Add (new PériodesEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (row >= 0 && row < this.comptaEntity.Périodes.Count)
 			{
-				var data = new PériodesEditionData (this.controller);
+				var data = new PériodesEditionLine (this.controller);
 				var période = this.comptaEntity.Périodes[row];
 				data.EntityToData (période);
 
