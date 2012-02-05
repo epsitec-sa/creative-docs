@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData    = new List<AbstractData> ();
-			this.editionData     = new List<AbstractEditionLine> ();
+			this.editionLine     = new List<AbstractEditionLine> ();
 			this.searchResults   = new List<SearchResult> ();
 		}
 
@@ -380,22 +380,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public List<AbstractEditionLine> EditionData
+		public List<AbstractEditionLine> EditionLine
 		{
 			get
 			{
-				return this.editionData;
+				return this.editionLine;
 			}
 		}
 
-		public virtual void InsertEditionData(int index)
+		public virtual void InsertEditionLine(int index)
 		{
 		}
 
-		public void RemoveAtEditionData(int index)
+		public void RemoveAtEditionLine(int index)
 		{
-			this.editionData.RemoveAt (index);
-			this.countEditedRow = this.editionData.Count;
+			this.editionLine.RemoveAt (index);
+			this.countEditedRow = this.editionLine.Count;
 		}
 
 		public int FirstEditedRow
@@ -438,13 +438,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public virtual void StartCreationData()
+		public virtual void StartCreationLine()
 		{
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
 		}
 
-		public virtual void ResetCreationData()
+		public virtual void ResetCreationLine()
 		{
 		}
 
@@ -452,26 +452,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 		}
 
-		public virtual void StartModificationData(int row)
+		public virtual void StartModificationLine(int row)
 		{
 			this.firstEditedRow = row;
 			this.countEditedRow = 1;
 		}
 
-		public virtual void UpdateEditionData()
+		public virtual void UpdateEditionLine()
 		{
 		}
 
-		public virtual void RemoveModificationData()
+		public virtual void RemoveModificationLine()
 		{
 		}
 
 
 		public FormattedText GetEditionText(int row, ColumnType columnType)
 		{
-			if (row >= 0 && row < this.editionData.Count)
+			if (row >= 0 && row < this.editionLine.Count)
 			{
-				return this.editionData[row].GetText (columnType);
+				return this.editionLine[row].GetText (columnType);
 			}
 
 			return FormattedText.Null;
@@ -479,17 +479,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void Validate(int row, ColumnType columnType)
 		{
-			if (row >= 0 && row < this.editionData.Count)
+			if (row >= 0 && row < this.editionLine.Count)
 			{
-				this.editionData[row].Validate (columnType);
+				this.editionLine[row].Validate (columnType);
 			}
 		}
 
 		public bool HasEditionError(int row, ColumnType columnType)
 		{
-			if (row >= 0 && row < this.editionData.Count)
+			if (row >= 0 && row < this.editionLine.Count)
 			{
-				return this.editionData[row].HasError (columnType);
+				return this.editionLine[row].HasError (columnType);
 			}
 
 			return false;
@@ -497,9 +497,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public FormattedText GetEditionError(int row, ColumnType columnType)
 		{
-			if (row >= 0 && row < this.editionData.Count)
+			if (row >= 0 && row < this.editionLine.Count)
 			{
-				return this.editionData[row].GetError (columnType);
+				return this.editionLine[row].GetError (columnType);
 			}
 
 			return FormattedText.Null;
@@ -722,7 +722,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly SoldesJournalManager			soldesJournalManager;
 		protected readonly List<AbstractData>			readonlyAllData;
 		protected readonly List<AbstractData>			readonlyData;
-		protected readonly List<AbstractEditionLine>	editionData;
+		protected readonly List<AbstractEditionLine>	editionLine;
 		protected readonly List<SearchResult>			searchResults;
 
 		protected SearchData							filterData;

@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journal.Filter");
 
 			this.UpdateAfterOptionsChanged ();
-			this.StartCreationData ();
+			this.StartCreationLine ();
 		}
 
 
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				var text = this.editionData[0].GetText (ColumnType.Date);
+				var text = this.editionLine[0].GetText (ColumnType.Date);
 
 				Date date;
 				this.ParseDate (text, out date);
@@ -185,26 +185,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void InsertEditionData(int index)
+		public override void InsertEditionLine(int index)
 		{
 			var newData = new JournalEditionLine (this.controller);
 
 			if (index == -1)
 			{
-				this.editionData.Add (newData);
+				this.editionLine.Add (newData);
 			}
 			else
 			{
-				this.editionData.Insert (index, newData);
+				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionData.Count;
+			this.countEditedRow = this.editionLine.Count;
 		}
 
-		public override void StartCreationData()
+		public override void StartCreationLine()
 		{
-			this.editionData.Clear ();
-			this.editionData.Add (new JournalEditionLine (this.controller));
+			this.editionLine.Clear ();
+			this.editionLine.Add (new JournalEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -214,15 +214,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void ResetCreationData()
+		public override void ResetCreationLine()
 		{
 			if (this.justCreated)
 			{
 				this.PrepareEditionLine (0);
 
-				while (this.editionData.Count > 1)
+				while (this.editionLine.Count > 1)
 				{
-					this.editionData.RemoveAt (1);
+					this.editionLine.RemoveAt (1);
 				}
 
 				this.countEditedRow = 1;
@@ -231,14 +231,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionData[line].SetText (ColumnType.Date,  this.périodeEntity.ProchaineDate.ToString ());
-			this.editionData[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
-			this.editionData[line].SetText (ColumnType.Montant, "0.00");
+			this.editionLine[line].SetText (ColumnType.Date,  this.périodeEntity.ProchaineDate.ToString ());
+			this.editionLine[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+			this.editionLine[line].SetText (ColumnType.Montant, "0.00");
 		}
 
-		public override void StartModificationData(int row)
+		public override void StartModificationLine(int row)
 		{
-			this.editionData.Clear ();
+			this.editionLine.Clear ();
 
 			int firstRow, countRow;
 			this.ExploreMulti (row, out firstRow, out countRow);
@@ -254,7 +254,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var écriture = this.journal[this.firstEditedRow+i];
 					data.EntityToData (écriture);
 
-					this.editionData.Add (data);
+					this.editionLine.Add (data);
                 }
 			}
 
@@ -263,7 +263,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void UpdateEditionData()
+		public override void UpdateEditionLine()
 		{
 			if (this.isModification)
 			{
@@ -285,12 +285,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int firstRow = -1;
 
 			int multiId = 0;
-			if (this.editionData.Count > 1)
+			if (this.editionLine.Count > 1)
 			{
 				multiId = this.périodeEntity.ProchainMultiId;
 			}
 
-			foreach (var data in this.editionData)
+			foreach (var data in this.editionLine)
 			{
 				var écriture = this.CreateEcriture ();
 				data.DataToEntity (écriture);
@@ -312,12 +312,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			Date date;
-			this.ParseDate (this.editionData[0].GetText (ColumnType.Date), out date);
+			this.ParseDate (this.editionLine[0].GetText (ColumnType.Date), out date);
 			this.périodeEntity.DernièreDate = date;
-			this.editionData[0].SetText (ColumnType.Date, date.ToString ());
+			this.editionLine[0].SetText (ColumnType.Date, date.ToString ());
 
-			this.comptaEntity.DernièrePièce = this.editionData[0].GetText (ColumnType.Pièce);
-			this.editionData[0].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+			this.comptaEntity.DernièrePièce = this.editionLine[0].GetText (ColumnType.Pièce);
+			this.editionLine[0].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
 
 			this.firstEditedRow = firstRow;
 		}
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			int multiId = this.périodeEntity.Journal[row].MultiId;
 
-			foreach (var data in this.editionData)
+			foreach (var data in this.editionLine)
 			{
 				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			//	Supprime les écritures surnuméraires.
-			int countToDelete  = this.initialCountEditedRow - this.editionData.Count;
+			int countToDelete  = this.initialCountEditedRow - this.editionLine.Count;
 			while (countToDelete > 0)
             {
 				var écriture = this.périodeEntity.Journal[row];
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				countToDelete--;
             }
 
-			this.countEditedRow = this.editionData.Count;
+			this.countEditedRow = this.editionLine.Count;
 
 			//	Vérifie si les écritures modifiées doivent changer de place.
 			if (!this.HasCorrectOrder (globalFirstEditerRow, global: true) ||
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 		}
 
-		public override void RemoveModificationData()
+		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
 			{
@@ -409,7 +409,7 @@ namespace Epsitec.Cresus.Compta.Accessors
                 }
 
 				this.SearchUpdate ();
-				this.StartCreationData ();
+				this.StartCreationLine ();
 			}
 		}
 

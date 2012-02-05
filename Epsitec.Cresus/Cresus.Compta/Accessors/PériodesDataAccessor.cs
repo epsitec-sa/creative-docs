@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PériodesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.StartCreationData ();
+			this.StartCreationLine ();
 		}
 
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				var text = this.editionData[0].GetText (ColumnType.DateDébut);
+				var text = this.editionLine[0].GetText (ColumnType.DateDébut);
 
 				Date date;
 				PériodesDataAccessor.ParseDate (text, out date);
@@ -122,26 +122,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void InsertEditionData(int index)
+		public override void InsertEditionLine(int index)
 		{
 			var newData = new PériodesEditionLine (this.controller);
 
 			if (index == -1)
 			{
-				this.editionData.Add (newData);
+				this.editionLine.Add (newData);
 			}
 			else
 			{
-				this.editionData.Insert (index, newData);
+				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionData.Count;
+			this.countEditedRow = this.editionLine.Count;
 		}
 
-		public override void StartCreationData()
+		public override void StartCreationLine()
 		{
-			this.editionData.Clear ();
-			this.editionData.Add (new PériodesEditionLine (this.controller));
+			this.editionLine.Clear ();
+			this.editionLine.Add (new PériodesEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -151,24 +151,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void ResetCreationData()
+		public override void ResetCreationLine()
 		{
 			if (this.justCreated)
 			{
 				this.PrepareEditionLine (0);
 
-				while (this.editionData.Count > 1)
+				while (this.editionLine.Count > 1)
 				{
-					this.editionData.RemoveAt (1);
+					this.editionLine.RemoveAt (1);
 				}
 
 				this.countEditedRow = 1;
 			}
 		}
 
-		public override void StartModificationData(int row)
+		public override void StartModificationLine(int row)
 		{
-			this.editionData.Clear ();
+			this.editionLine.Clear ();
 
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var période = this.comptaEntity.Périodes[row];
 				data.EntityToData (période);
 
-				this.editionData.Add (data);
+				this.editionLine.Add (data);
 				this.countEditedRow++;
 			}
 
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void UpdateEditionData()
+		public override void UpdateEditionLine()
 		{
 			if (this.isModification)
 			{
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int firstRow = -1;
 
-			foreach (var data in this.editionData)
+			foreach (var data in this.editionLine)
 			{
 				var période = this.CreatePériode ();
 				data.DataToEntity (période);
@@ -231,10 +231,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int row = this.firstEditedRow;
 
 			var période = this.comptaEntity.Périodes[row];
-			this.editionData[0].DataToEntity (période);
+			this.editionLine[0].DataToEntity (période);
 		}
 
-		public override void RemoveModificationData()
+		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
 			{
@@ -246,7 +246,7 @@ namespace Epsitec.Cresus.Compta.Accessors
                 }
 
 				this.SearchUpdate ();
-				this.StartCreationData ();
+				this.StartCreationLine ();
 			}
 		}
 

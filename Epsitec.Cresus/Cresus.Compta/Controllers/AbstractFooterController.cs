@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				int line;
 				if (this.GetWidgetColumnLine (e.OldFocus.Name, out columnType, out line))
 				{
-					if (line < this.dataAccessor.EditionData.Count && this.columnMappers.Where (x => x.Show && x.Column == columnType).Any ())
+					if (line < this.dataAccessor.EditionLine.Count && this.columnMappers.Where (x => x.Show && x.Column == columnType).Any ())
 					{
 						var field = e.OldFocus as AbstractTextField;
 						System.Diagnostics.Debug.Assert (field != null);
@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			this.dataAccessor.UpdateEditionData ();
+			this.dataAccessor.UpdateEditionLine ();
 			this.EditionDataToWidgets ();
 
 			this.controller.SearchUpdateAfterModification ();
@@ -258,7 +258,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
-			this.dataAccessor.ResetCreationData ();
+			this.dataAccessor.ResetCreationLine ();
 			
 			this.controller.IgnoreChanged = false;
 
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
-				this.dataAccessor.StartCreationData ();
+				this.dataAccessor.StartCreationLine ();
 				this.arrayController.ColorSelection = Color.FromName ("Gold");
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.FooterSelect (0);
@@ -361,12 +361,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
 			this.controller.IgnoreChanged = true;
 
-			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
 				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
 					var field = this.GetTextField (mapper.Column, line);
-					field.FormattedText = this.dataAccessor.EditionData[line].GetText (mapper.Column);
+					field.FormattedText = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
 				}
 			}
 
@@ -376,12 +376,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected void WidgetToEditionData()
 		{
 			//	Effectue le transfert widgets éditables -> this.dataAccessor.EditionData.
-			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
 				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
 					var field = this.GetTextField (mapper.Column, line);
-					this.dataAccessor.EditionData[line].SetText (mapper.Column, field.FormattedText);
+					this.dataAccessor.EditionLine[line].SetText (mapper.Column, field.FormattedText);
 				}
 			}
 		}
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var field = this.footerFields[line][column];
 				var text = field.FormattedText;
 
-				if (line >= this.dataAccessor.EditionData.Count)
+				if (line >= this.dataAccessor.EditionLine.Count)
 				{
 					ToolTip.Default.SetToolTip (this.footerBoxes[line][column], mapper.Tooltip);
 				}
@@ -446,7 +446,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						if (mapper.Column == ColumnType.Date)
 						{
-							var hint = this.dataAccessor.EditionData[line].GetText (mapper.Column);
+							var hint = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
 							field.HintText = AbstractFooterController.AdjustHintDate (field.FormattedText, hint);
 						}
 					}

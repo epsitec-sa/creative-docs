@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Filter");
 
-			this.StartCreationData ();
+			this.StartCreationLine ();
 		}
 
 
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				var numéro = this.editionData[0].GetText (ColumnType.Numéro);
+				var numéro = this.editionLine[0].GetText (ColumnType.Numéro);
 
 				if (!this.justCreated && this.firstEditedRow != -1 && this.countEditedRow != 0)
 				{
@@ -180,26 +180,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void InsertEditionData(int index)
+		public override void InsertEditionLine(int index)
 		{
 			var newData = new PlanComptableEditionLine (this.controller);
 
 			if (index == -1)
 			{
-				this.editionData.Add (newData);
+				this.editionLine.Add (newData);
 			}
 			else
 			{
-				this.editionData.Insert (index, newData);
+				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionData.Count;
+			this.countEditedRow = this.editionLine.Count;
 		}
 
-		public override void StartCreationData()
+		public override void StartCreationLine()
 		{
-			this.editionData.Clear ();
-			this.editionData.Add (new PlanComptableEditionLine (this.controller));
+			this.editionLine.Clear ();
+			this.editionLine.Add (new PlanComptableEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -211,13 +211,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionData[line].SetText (ColumnType.Type,          "Normal");
-			this.editionData[line].SetText (ColumnType.IndexOuvBoucl, "1");
+			this.editionLine[line].SetText (ColumnType.Type,          "Normal");
+			this.editionLine[line].SetText (ColumnType.IndexOuvBoucl, "1");
 		}
 
-		public override void StartModificationData(int row)
+		public override void StartModificationLine(int row)
 		{
-			this.editionData.Clear ();
+			this.editionLine.Clear ();
 
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 
-				this.editionData.Add (data);
+				this.editionLine.Add (data);
 				this.countEditedRow++;
 			}
 
@@ -237,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void UpdateEditionData()
+		public override void UpdateEditionLine()
 		{
 			if (this.isModification)
 			{
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int firstRow = -1;
 
-			foreach (var data in this.editionData)
+			foreach (var data in this.editionLine)
 			{
 				var compte = this.CreateCompte ();
 				data.DataToEntity (compte);
@@ -291,7 +291,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			row = this.comptaEntity.PlanComptable.IndexOf (initialCompte);
 			int globalFirstEditerRow = row;
 
-			foreach (var data in this.editionData)
+			foreach (var data in this.editionLine)
 			{
 				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			//	Supprime les comptes surnuméraires.
-			int countToDelete  = this.initialCountEditedRow - this.editionData.Count;
+			int countToDelete  = this.initialCountEditedRow - this.editionLine.Count;
 			while (countToDelete > 0)
 			{
 				var compte = this.comptaEntity.PlanComptable[row];
@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				countToDelete--;
 			}
 
-			this.countEditedRow = this.editionData.Count;
+			this.countEditedRow = this.editionLine.Count;
 
 			//	Vérifie si les comptes modifiés doivent changer de place.
 			if (!this.HasCorrectOrder (globalFirstEditerRow, global: true) ||
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = this.planComptable.IndexOf (initialCompte);
 		}
 
-		public override void RemoveModificationData()
+		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
 			{
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				this.SearchUpdate ();
-				this.StartCreationData ();
+				this.StartCreationLine ();
 			}
 		}
 

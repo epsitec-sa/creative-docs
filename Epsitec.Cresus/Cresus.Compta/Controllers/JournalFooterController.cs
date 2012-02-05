@@ -245,23 +245,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 			var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
-			this.dataAccessor.InsertEditionData (-1);  // 2ème ligne
-			this.dataAccessor.InsertEditionData (-1);  // contrepartie
+			this.dataAccessor.InsertEditionLine (-1);  // 2ème ligne
+			this.dataAccessor.InsertEditionLine (-1);  // contrepartie
 
 			//	Met à jour les données de la 2ème ligne.
-			this.dataAccessor.EditionData[1].SetText (ColumnType.Date,             this.dataAccessor.EditionData[0].GetText (ColumnType.Date));
-			this.dataAccessor.EditionData[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionData[1].SetText (ColumnType.Pièce,            this.dataAccessor.EditionData[0].GetText (ColumnType.Pièce));
-			this.dataAccessor.EditionData[1].SetText (ColumnType.Montant,          "0.00");
-			this.dataAccessor.EditionData[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionData[0].GetText (ColumnType.Journal));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,            this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          "0.00");
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
-			this.dataAccessor.EditionData[2].SetText (ColumnType.Date,             this.dataAccessor.EditionData[0].GetText (ColumnType.Date));
-			this.dataAccessor.EditionData[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
-			this.dataAccessor.EditionData[2].SetText (ColumnType.Pièce,            this.dataAccessor.EditionData[0].GetText (ColumnType.Pièce));
-			this.dataAccessor.EditionData[2].SetText (ColumnType.Libellé,          "Total");
-			this.dataAccessor.EditionData[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionData[0].GetText (ColumnType.Journal));
-			this.dataAccessor.EditionData[2].SetText (ColumnType.TotalAutomatique, "True");
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce,            this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "True");
 
 			this.UpdateFooterContent ();
 
@@ -278,16 +278,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
 			this.selectedLine++;
-			this.dataAccessor.InsertEditionData (this.selectedLine);
+			this.dataAccessor.InsertEditionLine (this.selectedLine);
 
-			this.dataAccessor.EditionData[this.selectedLine].SetText (multiInactiveColumn, JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[this.selectedLine].SetText (multiInactiveColumn, JournalDataAccessor.multi);
 
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
-				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Pièce,   this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
-				this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionData[cp].GetText (ColumnType.Journal));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 			}
 
 			this.dirty = true;
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void DeleteLineAction()
 		{
 			//	Supprime la ligne courante.
-			this.dataAccessor.RemoveAtEditionData (this.selectedLine);
+			this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
@@ -330,11 +330,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void LineSwapAction()
 		{
 			//	Permute le débit et le crédit dans la ligne courante.
-			var débit  = this.dataAccessor.EditionData[this.selectedLine].GetText (ColumnType.Débit);
-			var crédit = this.dataAccessor.EditionData[this.selectedLine].GetText (ColumnType.Crédit);
+			var débit  = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit);
+			var crédit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit);
 
-			this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Débit,  crédit);
-			this.dataAccessor.EditionData[this.selectedLine].SetText (ColumnType.Crédit, débit);
+			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Débit,  crédit);
+			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Crédit, débit);
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
@@ -343,9 +343,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void LineAutoAction()
 		{
 			//	Met le total automatique dans la ligne courante.
-			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
-				this.dataAccessor.EditionData[line].SetText (ColumnType.TotalAutomatique, (line == this.selectedLine) ? "True" : "False");
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.TotalAutomatique, (line == this.selectedLine) ? "True" : "False");
 			}
 
 			this.dirty = true;
@@ -355,9 +355,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void SwapLine(int line1, int line2)
 		{
 			//	Permute deux lignes (pour les opérations monte/descend).
-			var t                                = this.dataAccessor.EditionData[line2];
-			this.dataAccessor.EditionData[line2] = this.dataAccessor.EditionData[line1];
-			this.dataAccessor.EditionData[line1] = t;
+			var t                                = this.dataAccessor.EditionLine[line2];
+			this.dataAccessor.EditionLine[line2] = this.dataAccessor.EditionLine[line1];
+			this.dataAccessor.EditionLine[line1] = t;
 		}
 
 
@@ -369,7 +369,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
 				if (this.IsDébitMulti (line))
 				{
@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Crédit, line, false);
 				}
 
-				bool totalAutomatique = (this.dataAccessor.EditionData[line].GetText (ColumnType.TotalAutomatique) == "True");
+				bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "True");
 
 				this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
 				this.SetWidgetVisibility (ColumnType.Pièce,   line, totalAutomatique);
@@ -404,15 +404,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				decimal totalDébit  = 0;
 				decimal totalCrédit = 0;
 
-				for (int line = 0; line < this.dataAccessor.EditionData.Count; line++)
+				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
 					if (line != cp)
 					{
-						this.dataAccessor.EditionData[line].SetText (ColumnType.Date,    this.dataAccessor.EditionData[cp].GetText (ColumnType.Date));
-						this.dataAccessor.EditionData[line].SetText (ColumnType.Pièce,   this.dataAccessor.EditionData[cp].GetText (ColumnType.Pièce));
-						this.dataAccessor.EditionData[line].SetText (ColumnType.Journal, this.dataAccessor.EditionData[cp].GetText (ColumnType.Journal));
+						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+						this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
-						var text = this.dataAccessor.EditionData[line].GetText (ColumnType.Montant).ToSimpleText ();
+						var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant).ToSimpleText ();
 						decimal montant = 0;
 						decimal.TryParse (text, out montant);
 
@@ -431,25 +431,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.IsDébitMulti (cp))
 				{
 					decimal montant = totalDébit - totalCrédit;
-					this.dataAccessor.EditionData[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
 				}
 
 				if (this.IsCréditMulti (cp))
 				{
 					decimal montant = totalCrédit - totalDébit;
-					this.dataAccessor.EditionData[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
 				}
 			}
 		}
 
 		private bool IsDébitMulti(int line)
 		{
-			return this.dataAccessor.EditionData[line].GetText (ColumnType.Débit) == JournalDataAccessor.multi;
+			return this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit) == JournalDataAccessor.multi;
 		}
 
 		private bool IsCréditMulti(int line)
 		{
-			return this.dataAccessor.EditionData[line].GetText (ColumnType.Crédit) == JournalDataAccessor.multi;
+			return this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit) == JournalDataAccessor.multi;
 		}
 
 		private int IndexTotalAutomatique
@@ -457,7 +457,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Retourne l'index de la ligne qui contient le total automatique.
 			get
 			{
-				return this.dataAccessor.EditionData.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "True");
+				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "True");
 			}
 		}
 

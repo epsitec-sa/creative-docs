@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.arrayController.SelectedRow = -1;
-			this.dataAccessor.StartCreationData ();
+			this.dataAccessor.StartCreationLine ();
 			this.arrayController.ColorSelection = Color.FromName ("Gold");
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
@@ -517,11 +517,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (row == -1)
 			{
-				this.dataAccessor.StartCreationData ();
+				this.dataAccessor.StartCreationLine ();
 			}
 			else
 			{
-				this.dataAccessor.StartModificationData (row);
+				this.dataAccessor.StartModificationLine (row);
 			}
 
 			this.arrayController.ColorSelection = Color.FromName ("Gold");
@@ -543,7 +543,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.arrayController.SetHilitedRows (-1, 0);
 			this.IgnoreChanged = false;
 
-			this.dataAccessor.StartCreationData ();
+			this.dataAccessor.StartCreationLine ();
 		}
 
 		public void Update()

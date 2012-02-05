@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
 
 			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
-			this.StartCreationData ();
+			this.StartCreationLine ();
 		}
 
 
@@ -163,9 +163,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void StartCreationData()
+		public override void StartCreationLine()
 		{
-			this.editionData.Clear ();
+			this.editionLine.Clear ();
 
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
@@ -174,9 +174,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void StartModificationData(int row)
+		public override void StartModificationLine(int row)
 		{
-			this.editionData.Clear ();
+			this.editionLine.Clear ();
 
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var compte = this.planComptable[row];
 				data.EntityToData (compte);
 
-				this.editionData.Add (data);
+				this.editionLine.Add (data);
 				this.countEditedRow++;
 			}
 
@@ -196,7 +196,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
-		public override void UpdateEditionData()
+		public override void UpdateEditionLine()
 		{
 			if (this.isModification)
 			{
@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int row = this.firstEditedRow;
 
 			var compte = this.planComptable[row];
-			this.editionData[0].DataToEntity (compte);
+			this.editionLine[0].DataToEntity (compte);
 		}
 
 
