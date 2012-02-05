@@ -26,9 +26,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Crée un widget permettant de saisir un numéro de compte.
 			container = new FrameBox
 			{
-				Parent   = parent,
-				Dock     = DockStyle.Fill,
-				TabIndex = 1,
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+				TabIndex        = 1,
 			};
 
 			var textField = new AutoCompleteTextField

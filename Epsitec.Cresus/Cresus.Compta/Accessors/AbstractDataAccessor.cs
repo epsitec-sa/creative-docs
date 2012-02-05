@@ -380,6 +380,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public EditionData GetEditionData(int line, ColumnType columnType)
+		{
+			if (line < 0 || line >= this.editionLine.Count)
+			{
+				return null;
+			}
+			else
+			{
+				return this.editionLine[line].GetData (columnType);
+			}
+		}
+
 		public List<AbstractEditionLine> EditionLine
 		{
 			get

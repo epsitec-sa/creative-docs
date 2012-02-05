@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,9 +34,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.footerBoxes.Clear ();
-			this.footerContainers.Clear ();
-			this.footerFields.Clear ();
+			this.fieldControllers.Clear ();
 
 			this.CreateLineUI (parent);
 
@@ -44,15 +43,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateLineUI(Widget parent)
 		{
-			this.footerBoxes.Add (new List<FrameBox> ());
-			this.footerContainers.Add (new List<FrameBox> ());
-			this.footerFields.Add (new List<AbstractTextField> ());
+			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
 			var footerFrame = new FrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 1, 0),
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Bottom,
+				Margins         = new Margins (0, 0, 1, 0),
 			};
 
 			this.linesFrames.Add (footerFrame);
@@ -61,50 +59,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				var box = new FrameBox
+				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+				field.CreateUI (footerFrame);
+
+				if (mapper.Column == ColumnType.Numéro ||
+					mapper.Column == ColumnType.Titre  ||
+					mapper.Column == ColumnType.Solde)
 				{
-					Parent        = footerFrame,
-					DrawFullFrame = true,
-					Dock          = DockStyle.Left,
-					Margins       = new Margins (0, 1, 0, 0),
-					TabIndex      = ++tabIndex,
-				};
-
-				FrameBox container;
-				AbstractTextField field;
-
-				{
-					container = new FrameBox
-					{
-						Parent   = box,
-						Dock     = DockStyle.Fill,
-						TabIndex = 1,
-					};
-
-					field = new TextField
-					{
-						Parent   = container,
-						Dock     = DockStyle.Fill,
-						Name     = this.GetWidgetName (mapper.Column, line),
-						TabIndex = 1,
-					};
-
-					if (mapper.Column == ColumnType.Numéro ||
-						mapper.Column == ColumnType.Titre  ||
-						mapper.Column == ColumnType.Solde  )
-					{
-						field.IsReadOnly = true;
-					}
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
+					field.IsReadOnly = true;
 				}
 
-				this.footerBoxes     [line].Add (box);
-				this.footerContainers[line].Add (container);
-				this.footerFields    [line].Add (field);
+				field.Box.TabIndex = ++tabIndex;
+
+				this.fieldControllers[line].Add (field);
 			}
 		}
 
@@ -116,9 +83,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void UpdateFooterContent()
 		{
-			foreach (var field in this.footerFields[0])
+			foreach (var field in this.fieldControllers[0])
 			{
-				field.Visibility = this.dataAccessor.IsModification;
+				field.EditWidget.Visibility = this.dataAccessor.IsModification;
 			}
 
 			base.UpdateFooterContent ();

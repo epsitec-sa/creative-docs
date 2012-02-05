@@ -92,6 +92,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Controllers\AbstractFieldController.cs" />
     <Compile Include="Controllers\AutoCompleteFieldController.cs" />
+    <Compile Include="Controllers\TextFieldController.cs" />
     <Compile Include="Controllers\DateFieldController.cs" />
     <Compile Include="Controllers\JournauxFooterController.cs" />
     <Compile Include="Controllers\JournauxController.cs" />

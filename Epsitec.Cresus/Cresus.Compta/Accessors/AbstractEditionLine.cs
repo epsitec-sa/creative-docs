@@ -31,6 +31,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public EditionData GetData(ColumnType columnType)
+		{
+			if (this.datas.ContainsKey (columnType))
+			{
+				return this.datas[columnType];
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 		public void Validate(ColumnType columnType)
 		{
 			//	Valide le contenu d'une colonne, en l'adaptant éventuellement.

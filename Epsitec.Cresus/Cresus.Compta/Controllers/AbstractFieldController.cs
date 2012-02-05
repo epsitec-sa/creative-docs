@@ -26,19 +26,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public abstract class AbstractFieldController
 	{
-		public AbstractFieldController(AbstractController controller, EditionData editionData, FormattedText description, System.Action contentChangedAction = null, System.Action<EditionData> validateAction = null, System.Func<FormattedText, FormattedText, string> adjustHintFunction = null)
+		public AbstractFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
 		{
 			this.controller           = controller;
-			this.editionData          = editionData;
-			this.description          = description;
+			this.line                 = line;
+			this.columnMapper         = columnMapper;
+			this.setFocusAction       = setFocusAction;
 			this.contentChangedAction = contentChangedAction;
-			this.validateAction       = validateAction;
-			this.adjustHintFunction   = adjustHintFunction;
 		}
 
 
 		public virtual void CreateUI(Widget parent)
 		{
+		}
+
+		public EditionData EditionData
+		{
+			get
+			{
+				return this.editionData;
+			}
+			set
+			{
+				this.editionData = value;
+			}
 		}
 
 		public FrameBox Box
@@ -57,27 +68,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public Widget Field
+		public Widget EditWidget
 		{
 			get
 			{
-				return this.field;
+				return this.editWidget;
 			}
 		}
 
 
-		public FormattedText Text
+		public virtual bool IsReadOnly
 		{
 			get
 			{
-				return this.editionData.Text;
+				return false;
 			}
 			set
 			{
-				this.editionData.Text = value;
 			}
 		}
 
+		public virtual void SetFocus()
+		{
+		}
+
+		public virtual void EditionDataToController()
+		{
+		}
+
+		public virtual void ControllerToEditionData()
+		{
+		}
+
+		public virtual void Validate()
+		{
+		}
+
+
+		protected void SetFocusAction()
+		{
+			if (this.setFocusAction != null)
+			{
+				this.setFocusAction (this.line, this.columnMapper.Column);
+			}
+		}
 
 		protected void ContentChangedAction()
 		{
@@ -87,36 +121,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected void ValidateAction()
-		{
-			if (this.validateAction != null)
-			{
-				this.validateAction (this.editionData);
-			}
-		}
-
-		protected string AdjustHintFunction()
-		{
-			if (this.adjustHintFunction == null)
-			{
-				return null;
-			}
-			else
-			{
-				return this.adjustHintFunction (this.field.FormattedText, this.editionData.Text);
-			}
-		}
-
 
 		protected readonly AbstractController					controller;
-		protected readonly EditionData							editionData;
-		protected readonly FormattedText						description;
+		protected readonly int									line;
+		protected readonly ColumnMapper							columnMapper;
+		protected readonly System.Action<int, ColumnType>		setFocusAction;
 		protected readonly System.Action						contentChangedAction;
-		protected readonly System.Action<EditionData>			validateAction;
-		protected readonly System.Func<FormattedText, FormattedText, string> adjustHintFunction;
 
+		protected EditionData									editionData;
 		protected FrameBox										box;
 		protected FrameBox										container;
-		protected Widget										field;
+		protected Widget										editWidget;
+		protected bool											ignoreChange;
 	}
 }

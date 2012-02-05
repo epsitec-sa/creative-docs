@@ -38,9 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.businessContext = this.controller.BusinessContext;
 
 			this.linesFrames      = new List<FrameBox> ();
-			this.footerBoxes      = new List<List<FrameBox>> ();
-			this.footerContainers = new List<List<FrameBox>> ();
-			this.footerFields     = new List<List<AbstractTextField>> ();
+			this.fieldControllers = new List<List<AbstractFieldController>> ();
 		}
 
 
@@ -81,6 +79,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void HandleFocusedWidgetChanging(object sender, FocusChangingEventArgs e)
 		{
+#if false
 			//	Le focus va changer de widget. Il faut modifier le contenu du widget initial, en
 			//	fonction de la validation. Par exemple, si on a tapé "20" dans une date, ce texte
 			//	sera remplacé par "20.03.2012".
@@ -112,10 +111,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
+#endif
 		}
 
 		private void HandleFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+#if false
 			//	Le focus a changé de widget. Il faut mettre en évidence la colonne correspondant au
 			//	nouveau widget, dans l'en-tête du tableau principal.
 			var window = sender as Window;
@@ -149,6 +150,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.arrayController.HiliteHeaderColumn (ColumnType.None);
 			}
+#endif
 		}
 
 		protected virtual void UpdateAfterSelectedLineChanged()
@@ -180,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void SetWidgetVisibility(ColumnType columnType, int line, bool visibility)
+		protected void SetWidgetVisibility(ColumnType columnType, int line, bool visibility)
 		{
 			var container = this.GetContainer (columnType, line);
 
@@ -192,30 +194,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Widget GetContainer(ColumnType columnType, int line = 0)
 		{
-			var column = this.GetMapperColumnRank (columnType);
+			var controller = this.GetFieldController (columnType, line);
 
-			if (column < 0 || column >= this.footerContainers[line].Count)
+			if (controller == null)
 			{
 				return null;
 			}
 			else
 			{
-				return this.footerContainers[line][column];
+				return controller.Container;
 			}
 		}
 
+		protected void SetTextFieldReadonly(ColumnType columnType, int line, bool readOnly)
+		{
+			var controller = this.GetFieldController (columnType, line);
 
-		public AbstractTextField GetTextField(ColumnType columnType, int line = 0)
+			if (controller != null)
+			{
+				controller.IsReadOnly = readOnly;
+			}
+		}
+
+		private AbstractFieldController GetFieldController(ColumnType columnType, int line = 0)
 		{
 			var column = this.GetMapperColumnRank (columnType);
 
-			if (column < 0 || column >= this.footerContainers[line].Count)
+			if (column < 0 || column >= this.fieldControllers[line].Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.footerFields[line][column];
+				return this.fieldControllers[line][column];
 			}
 		}
 
@@ -365,17 +376,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
-					var field = this.GetTextField (mapper.Column, line);
-					var text = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
+					var controller = this.GetFieldController (mapper.Column, line);
 
-					if (field is AutoCompleteTextField)
+					if (controller != null)
 					{
-						var auto = field as AutoCompleteTextField;
-						auto.SetSilentFormattedText (text);
-					}
-					else
-					{
-						field.FormattedText = text;
+						controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
+						controller.EditionDataToController ();
 					}
 				}
 			}
@@ -383,6 +389,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.IgnoreChanged = false;
 		}
 
+#if false
 		protected void WidgetToEditionData()
 		{
 			//	Effectue le transfert widgets éditables -> this.dataAccessor.EditionData.
@@ -390,23 +397,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				foreach (var mapper in this.columnMappers.Where (x => x.Show))
 				{
-					var field = this.GetTextField (mapper.Column, line);
-					this.dataAccessor.EditionLine[line].SetText (mapper.Column, field.FormattedText);
+					var controller = this.GetFieldController (mapper.Column, line);
+
+					if (controller != null)
+					{
+						controller.ControllerToEditionData ();
+					}
 				}
 			}
 		}
+#endif
 
 		protected virtual void UpdateEditionWidgets()
 		{
 		}
 
-		protected void FooterTextChanged(AbstractTextField field)
+		protected void FooterTextChanged()
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
 			if (!this.controller.IgnoreChanged)
 			{
 				this.dirty = true;
-				this.WidgetToEditionData ();
+				//?this.WidgetToEditionData ();
 
 				this.UpdateEditionWidgets ();
 				this.EditionDataToWidgets ();  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
@@ -415,6 +427,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateToolbar ();
 				this.UpdateFooterInfo ();
 				this.UpdateInsertionRow ();
+			}
+		}
+
+		protected void HandleSetFocus(int line, ColumnType columnType)
+		{
+			this.arrayController.HiliteHeaderColumn (columnType);
+			this.selectedColumn = columnType;
+
+			if (this.selectedLine != line)
+			{
+				this.selectedLine = line;
+
+				if (this.selectedLine != -1)
+				{
+					this.UpdateAfterSelectedLineChanged ();
+				}
 			}
 		}
 
@@ -433,9 +461,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FooterValidate(int line)
 		{
-			int column = 0;
+			//?int column = 0;
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
+				var controller = this.GetFieldController (mapper.Column, line);
+
+				if (controller != null)
+				{
+					controller.Validate ();
+
+					if (controller.EditionData != null && controller.EditionData.HasError)
+					{
+						this.hasError = true;
+					}
+				}
+
+#if false
 				var field = this.footerFields[line][column];
 				var text = field.FormattedText;
 
@@ -473,92 +514,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				column++;
+#endif
 			}
-		}
-
-		private static string AdjustHintDate(FormattedText entered, FormattedText hint)
-		{
-			//	Ajuste le texte 'hint' en fonction du texte entré, pour une date.
-			//
-			//	entered = "5"     hint = "05.03.2012" out = "5.03.2012"
-			//	entered = "5."    hint = "05.03.2012" out = "5.03.2012"
-			//	entered = "5.3"   hint = "05.03.2012" out = "5.3.2012"
-			//	entered = "5.3."  hint = "05.03.2012" out = "5.3.2012"
-			//	entered = "5.3.2" hint = "05.03.2012" out = "5.3.2"
-			//	entered = "5 3"   hint = "05.03.2012" out = "5 3.2012"
-
-			if (entered.IsNullOrEmpty || hint.IsNullOrEmpty)
-			{
-				return hint.ToSimpleText ();
-			}
-
-			//	Décompose le texte 'entered', en mots et en séparateurs.
-			var brut = entered.ToSimpleText ();
-
-			var we = new List<string> ();
-			var se = new List<string> ();
-
-			int j = 0;
-			bool n = true;
-			for (int i = 0; i <= brut.Length; i++)
-			{
-				bool isDigit;
-				
-				if (i < brut.Length)
-				{
-					isDigit = brut[i] >= '0' && brut[i] <= '9';
-				}
-				else
-				{
-					isDigit = !n;
-				}
-
-				if (n && !isDigit)
-				{
-					we.Add (brut.Substring (j, i-j));
-					j = i;
-					n = false;
-				}
-
-				if (!n && isDigit)
-				{
-					se.Add (brut.Substring (j, i-j));
-					j = i;
-					n = true;
-				}
-			}
-
-			//	Décompose le texte 'hint', en mots.
-			var wh = hint.ToSimpleText ().Split ('.');
-
-			//	
-			int count = System.Math.Min (we.Count, wh.Length);
-			for (int i = 0; i < count; i++)
-			{
-				if (!string.IsNullOrEmpty (we[i]))
-				{
-					wh[i] = we[i];
-				}
-			}
-
-			//	Recompose la chaîne finale.
-			var builder = new System.Text.StringBuilder ();
-
-			for (int i = 0; i < wh.Length; i++)
-			{
-				builder.Append (wh[i]);
-
-				if (i < se.Count)
-				{
-					builder.Append (se[i]);
-				}
-				else
-				{
-					builder.Append (".");
-				}
-			}
-
-			return builder.ToString ();
 		}
 
 
@@ -580,11 +537,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
 
-			for (int line = 0; line < this.footerBoxes.Count; line++)
+			for (int line = 0; line < this.fieldControllers.Count; line++)
 			{
 				for (int column = 0; column < columnCount; column++)
 				{
-					this.footerBoxes[line][column].PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
+					this.fieldControllers[line][column].Box.PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
 				}
 			}
 		}
@@ -604,8 +561,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (column != -1)
 			{
-				this.footerFields[this.selectedLine][column].SelectAll ();
-				this.footerFields[this.selectedLine][column].Focus ();
+				this.fieldControllers[this.selectedLine][column].SetFocus ();
 			}
 		}
 
@@ -646,6 +602,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+#if false
 		protected string GetWidgetName(ColumnType columnType, int line)
 		{
 			return string.Concat ("WidgwetComptatiliéDaniel.", line.ToString (System.Globalization.CultureInfo.InvariantCulture), ".", columnType.ToString ());
@@ -679,26 +636,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return true;
 		}
+#endif
 
 
-		protected readonly AbstractController				controller;
-		protected readonly ComptaEntity						comptaEntity;
-		protected readonly ComptaPériodeEntity				périodeEntity;
-		protected readonly List<ColumnMapper>				columnMappers;
-		protected readonly AbstractDataAccessor				dataAccessor;
-		protected readonly ArrayController					arrayController;
-		protected readonly BusinessContext					businessContext;
-		protected readonly List<FrameBox>					linesFrames;
-		protected readonly List<List<FrameBox>>				footerBoxes;
-		protected readonly List<List<FrameBox>>				footerContainers;
-		protected readonly List<List<AbstractTextField>>	footerFields;
+		protected readonly AbstractController					controller;
+		protected readonly ComptaEntity							comptaEntity;
+		protected readonly ComptaPériodeEntity					périodeEntity;
+		protected readonly List<ColumnMapper>					columnMappers;
+		protected readonly AbstractDataAccessor					dataAccessor;
+		protected readonly ArrayController						arrayController;
+		protected readonly BusinessContext						businessContext;
+		protected readonly List<FrameBox>						linesFrames;
+		protected readonly List<List<AbstractFieldController>>	fieldControllers;
 
-		protected FrameBox									parent;
-		protected System.Action								updateArrayContentAction;
-		protected BottomToolbarController					bottomToolbarController;
-		protected ColumnType								selectedColumn;
-		protected int										selectedLine;
-		protected bool										dirty;
-		protected bool										hasError;
+		protected FrameBox										parent;
+		protected System.Action									updateArrayContentAction;
+		protected BottomToolbarController						bottomToolbarController;
+		protected ColumnType									selectedColumn;
+		protected int											selectedLine;
+		protected bool											dirty;
+		protected bool											hasError;
 	}
 }

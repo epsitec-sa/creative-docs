@@ -27,8 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class AutoCompleteFieldController : AbstractFieldController
 	{
-		public AutoCompleteFieldController(AbstractController controller, EditionData editionData, FormattedText description, System.Action contentChangedAction = null, System.Action<EditionData> validateAction = null, System.Func<FormattedText, FormattedText, string> adjustHintFunction = null)
-			: base (controller, editionData, description, contentChangedAction, validateAction, adjustHintFunction)
+		public AutoCompleteFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
+			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
 		{
 		}
 
@@ -37,47 +37,131 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.box = new FrameBox
 			{
-				Parent        = parent,
-				DrawFullFrame = true,
-				Dock          = DockStyle.Left,
-				Margins       = new Margins (0, 1, 0, 0),
+				Parent          = parent,
+				DrawFullFrame   = true,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 1, 0, 0),
 			};
 
 			this.container = new FrameBox
 			{
-				Parent   = this.box,
-				Dock     = DockStyle.Fill,
-				TabIndex = 1,
+				Parent          = this.box,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+				TabIndex        = 1,
 			};
 
 			AbstractTextField textField;
-			UIBuilder.CreateAutoCompleteTextField (this.box, out this.container, out textField);
-			this.field = textField;
+			UIBuilder.CreateAutoCompleteTextField (this.container, out this.container, out textField);
+			this.editWidget = textField;
 
-			this.field.TextChanged += new EventHandler (this.HandleTextChanged);
-			this.field.IsFocusedChanged += new EventHandler<DependencyPropertyChangedEventArgs> (this.HandleIsFocusedChanged);
+			this.editWidget.TextChanged += new EventHandler (this.HandleTextChanged);
+			this.editWidget.IsFocusedChanged += new EventHandler<DependencyPropertyChangedEventArgs> (this.HandleIsFocusedChanged);
 		}
 
-		private void HandleTextChanged(object sender)
-		{
-			this.ValidateAction ();
 
-			this.field.SetError (this.editionData.HasError);
+		public List<string> PrimaryTexts
+		{
+			get
+			{
+				return this.InternalField.PrimaryTexts;
+			}
+		}
+
+		public List<string> SecondaryTexts
+		{
+			get
+			{
+				return this.InternalField.SecondaryTexts;
+			}
+		}
+
+
+		public override bool IsReadOnly
+		{
+			get
+			{
+				return this.InternalField.IsReadOnly;
+			}
+			set
+			{
+				this.InternalField.IsReadOnly = value;
+				this.InternalField.Invalidate ();  // pour contourner un bug !
+			}
+		}
+
+		public override void SetFocus()
+		{
+			this.InternalField.SelectAll ();
+			this.InternalField.Focus ();
+		}
+
+		public override void EditionDataToController()
+		{
+			if (this.editionData != null)
+			{
+				this.ignoreChange = true;
+				this.InternalField.SetSilentFormattedText (this.editionData.Text);
+				this.ignoreChange = false;
+			}
+		}
+
+		public override void ControllerToEditionData()
+		{
+			if (this.editionData != null)
+			{
+				this.editionData.Text = this.InternalField.FormattedText;
+				this.editionData.Validate ();
+			}
+		}
+
+		public override void Validate()
+		{
+			if (this.editionData == null)
+			{
+				return;
+			}
+
+			this.ControllerToEditionData ();
+
+			this.editWidget.SetError (this.editionData.HasError);
 
 			if (this.editionData.HasError)
 			{
-				ToolTip.Default.SetToolTip (this.field, this.editionData.Error);
+				ToolTip.Default.SetToolTip (this.editWidget, this.editionData.Error);
 			}
 			else
 			{
-				ToolTip.Default.SetToolTip (this.field, this.description);
+				ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
+			}
+		}
+
+
+		private void HandleTextChanged(object sender)
+		{
+			if (this.ignoreChange || this.editionData == null)
+			{
+				return;
 			}
 
+			this.Validate ();
 			this.ContentChangedAction ();
 		}
 
 		private void HandleIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
+			if (this.editionData == null)
+			{
+				return;
+			}
+
+			bool focused = (bool) e.NewValue;
+
+			if (focused)  // prise du focus ?
+			{
+				this.SetFocusAction ();
+			}
 		}
 
 
@@ -85,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.field as AutoCompleteTextField;
+				return this.editWidget as AutoCompleteTextField;
 			}
 		}
 	}
