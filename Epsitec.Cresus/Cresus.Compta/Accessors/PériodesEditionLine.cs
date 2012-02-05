@@ -23,47 +23,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PériodesEditionLine(AbstractController controller)
 			: base (controller)
 		{
-		}
-
-
-		public override void Validate(ColumnType columnType)
-		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			var text = this.GetText (columnType);
-			var error = FormattedText.Null;
-
-			switch (columnType)
-            {
-				case ColumnType.DateDébut:
-					error = this.ValidateDate (ref text);
-					break;
-
-				case ColumnType.DateFin:
-					error = this.ValidateDate (ref text);
-					break;
-			}
-
-			this.SetText (columnType, text);
-			this.errors[columnType] = error;
+			this.datas.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
+			this.datas.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
 		}
 
 
 		#region Validators
-		private FormattedText ValidateDate(ref FormattedText text)
+		private void ValidateDate(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque la date";
-			}
+			data.ClearError ();
 
-			Date date;
-			if (PériodesDataAccessor.ParseDate (text, out date))
+			if (data.HasText)
 			{
-				return FormattedText.Empty;
+				Date date;
+				if (!PériodesDataAccessor.ParseDate (data.Text, out date))
+				{
+					data.Error = "La date est incorrecte";
+				}
 			}
 			else
 			{
-				return "La date est incorrecte";
+				data.Error = "Il manque la date";
 			}
 		}
 		#endregion

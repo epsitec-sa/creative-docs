@@ -23,221 +23,174 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PlanComptableEditionLine(AbstractController controller)
 			: base (controller)
 		{
-		}
-
-
-		public override void Validate(ColumnType columnType)
-		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			var text = this.GetText (columnType);
-			var error = FormattedText.Null;
-
-			switch (columnType)
-			{
-				case ColumnType.Numéro:
-					error = this.ValidateNuméro (ref text);
-					break;
-
-				case ColumnType.Titre:
-					error = this.ValidateTitre (ref text);
-					break;
-
-				case ColumnType.Catégorie:
-					error = this.ValidateCatégorie (ref text);
-					break;
-
-				case ColumnType.Type:
-					error = this.ValidateType (ref text);
-					break;
-
-				case ColumnType.Groupe:
-					error = this.ValidateGroupe (ref text);
-					break;
-
-				case ColumnType.TVA:
-					error = this.ValidateTVA (ref text);
-					break;
-
-				case ColumnType.CompteOuvBoucl:
-					error = this.ValidateCompteOuvBoucl (ref text);
-					break;
-
-				case ColumnType.IndexOuvBoucl:
-					error = this.ValidateIndexOuvBoucl (ref text);
-					break;
-			}
-
-			this.SetText (columnType, text);
-			this.errors[columnType] = error;
+			this.datas.Add (ColumnType.Numéro,         new EditionData (this.controller, this.ValidateNuméro));
+			this.datas.Add (ColumnType.Titre,          new EditionData (this.controller, this.ValidateTitre));
+			this.datas.Add (ColumnType.Catégorie,      new EditionData (this.controller, this.ValidateCatégorie));
+			this.datas.Add (ColumnType.Type,           new EditionData (this.controller, this.ValidateType));
+			this.datas.Add (ColumnType.Groupe,         new EditionData (this.controller, this.ValidateGroupe));
+			this.datas.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
+			this.datas.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
+			this.datas.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
 		}
 
 
 		#region Validators
-		private FormattedText ValidateNuméro(ref FormattedText text)
+		private void ValidateNuméro(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le numéro du compte";
-			}
+			data.ClearError ();
 
-			if (text.ToSimpleText ().Contains (' '))
+			if (data.HasText)
 			{
-				return "Le numéro du compte ne peut pas contenir d'espace";
-			}
-
-			var t = text;
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
-			if (compte == null)
-			{
-				return FormattedText.Empty;
-			}
-
-			var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionData (this.controller.DataAccessor.FirstEditedRow) as ComptaCompteEntity;
-			if (himself != null && himself.Numéro == text)
-			{
-				return FormattedText.Empty;
-			}
-
-			return "Ce numéro de compte existe déjà";
-		}
-
-		private FormattedText ValidateTitre(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le titre du compte";
-			}
-			else
-			{
-				return FormattedText.Empty;
-			}
-		}
-
-		private FormattedText ValidateCatégorie(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque la catégorie du compte";
-			}
-
-			CatégorieDeCompte catégorie;
-			if (PlanComptableDataAccessor.TextToCatégorie (text, out catégorie))
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return "La catégorie du compte n'est pas correcte";
-			}
-		}
-
-		private FormattedText ValidateType(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le type du compte";
-			}
-
-			TypeDeCompte type;
-			if (PlanComptableDataAccessor.TextToType (text, out type))
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return "Le type du compte n'est pas correct";
-			}
-		}
-
-		private FormattedText ValidateTVA(ref FormattedText text)
-		{
-			return FormattedText.Empty;  //?
-#if false
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque la TVA du compte";
-			}
-
-			VatCode tva;
-			if (PlanComptableDataAccessor.TextToTVA (text, out tva))
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return "La TVA du compte n'est pas correcte";
-			}
-#endif
-		}
-
-		private FormattedText ValidateGroupe(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return FormattedText.Empty;
-			}
-
-			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
-			if (compte == null)
-			{
-				return "Ce compte n'existe pas";
-			}
-
-			if (compte.Type != TypeDeCompte.Groupe)
-			{
-				return "Ce n'est pas un compte de groupement";
-			}
-
-			text = n;
-			return FormattedText.Empty;
-		}
-
-		private FormattedText ValidateCompteOuvBoucl(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return FormattedText.Empty;
-			}
-
-			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
-			if (compte == null)
-			{
-				return "Ce compte n'existe pas";
-			}
-
-			if (compte.Type != TypeDeCompte.Normal)
-			{
-				return "Ce compte n'a pas le type \"Normal\"";
-			}
-
-			if (compte.Catégorie != CatégorieDeCompte.Exploitation)
-			{
-				return "Ce n'est pas un compte d'exploitation";
-			}
-
-			text = n;
-			return FormattedText.Empty;
-		}
-
-		private FormattedText ValidateIndexOuvBoucl(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return FormattedText.Empty;
-			}
-
-			int n;
-			if (int.TryParse (text.ToSimpleText (), out n))
-			{
-				if (n >= 1 && n <= 9)
+				if (data.Text.ToSimpleText ().Contains (' '))
 				{
-					return FormattedText.Empty;
+					data.Error = "Le numéro du compte ne peut pas contenir d'espace";
+					return;
+				}
+
+				var t = data.Text;
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
+				if (compte == null)
+				{
+					return;
+				}
+
+				var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionData (this.controller.DataAccessor.FirstEditedRow) as ComptaCompteEntity;
+				if (himself != null && himself.Numéro == data.Text)
+				{
+					return;
+				}
+
+				data.Error = "Ce numéro de compte existe déjà";
+			}
+			else
+			{
+				data.Error = "Il manque le numéro du compte";
+			}
+		}
+
+		private void ValidateTitre(EditionData data)
+		{
+			data.ClearError ();
+
+			if (!data.HasText)
+			{
+				data.Error = "Il manque le titre du compte";
+			}
+		}
+
+		private void ValidateCatégorie(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				CatégorieDeCompte catégorie;
+				if (!PlanComptableDataAccessor.TextToCatégorie (data.Text, out catégorie))
+				{
+					data.Error = "La catégorie du compte n'est pas correcte";
 				}
 			}
+			else
+			{
+				data.Error = "Il manque la catégorie du compte";
+			}
+		}
 
-			return "Vous devez donner un numéro d'ordre compris entre 1 et 9";
+		private void ValidateType(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				TypeDeCompte type;
+				if (!PlanComptableDataAccessor.TextToType (data.Text, out type))
+				{
+					data.Error = "Le type du compte n'est pas correct";
+				}
+			}
+			else
+			{
+				data.Error = "Il manque le type du compte";
+			}
+
+		}
+
+		private void ValidateTVA(EditionData data)
+		{
+			data.ClearError ();
+		}
+
+		private void ValidateGroupe(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				if (compte == null)
+				{
+					data.Error = "Ce compte n'existe pas";
+					return;
+				}
+
+				if (compte.Type != TypeDeCompte.Groupe)
+				{
+					data.Error = "Ce n'est pas un compte de groupement";
+					return;
+				}
+
+				data.Text = n;
+			}
+		}
+
+		private void ValidateCompteOuvBoucl(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				if (compte == null)
+				{
+					data.Error = "Ce compte n'existe pas";
+					return;
+				}
+
+				if (compte.Type != TypeDeCompte.Normal)
+				{
+					data.Error = "Ce compte n'a pas le type \"Normal\"";
+					return;
+				}
+
+				if (compte.Catégorie != CatégorieDeCompte.Exploitation)
+				{
+					data.Error = "Ce n'est pas un compte d'exploitation";
+					return;
+				}
+
+				data.Text = n;
+			}
+		}
+
+		private void ValidateIndexOuvBoucl(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				int n;
+				if (int.TryParse (data.Text.ToSimpleText (), out n))
+				{
+					if (n >= 1 && n <= 9)
+					{
+						return;
+					}
+				}
+
+				data.Error = "Vous devez donner un numéro d'ordre compris entre 1 et 9";
+			}
 		}
 		#endregion
 

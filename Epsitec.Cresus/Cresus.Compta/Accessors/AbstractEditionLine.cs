@@ -16,36 +16,76 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Données éditables génériques pour la comptabilité.
+	/// Données éditables génériques pour une ligne de la comptabilité.
 	/// </summary>
 	public abstract class AbstractEditionLine
 	{
 		public AbstractEditionLine(AbstractController controller)
 		{
 			this.controller = controller;
-			this.comptaEntity = this.controller.ComptaEntity;
+
+			this.comptaEntity  = this.controller.ComptaEntity;
 			this.périodeEntity = this.controller.PériodeEntity;
 
-			this.datas = new Dictionary<ColumnType, FormattedText> ();
-			this.errors = new Dictionary<ColumnType, FormattedText> ();
+			this.datas = new Dictionary<ColumnType, EditionData> ();
 		}
 
 
-		public virtual void Validate(ColumnType columnType)
+		public void Validate(ColumnType columnType)
 		{
 			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
+			foreach (var data in this.datas.Values)
+			{
+				data.Validate ();
+			}
 		}
+
+
+		protected void SetMontant(ColumnType columnType, decimal? value)
+		{
+			if (value.HasValue)
+			{
+				this.SetText (columnType, value.Value.ToString ("0.00"));
+			}
+			else
+			{
+				this.SetText (columnType, FormattedText.Empty);
+			}
+		}
+
+		protected decimal? GetMontant(ColumnType columnType)
+		{
+			var text = this.GetText (columnType);
+
+			if (!text.IsNullOrEmpty)
+			{
+				decimal d;
+				if (decimal.TryParse (text.ToSimpleText (), out d))
+				{
+					return d;
+				}
+			}
+
+			return null;
+		}
+
 
 		public void SetText(ColumnType columnType, FormattedText text)
 		{
-			this.datas[columnType] = text;
+			if (!this.datas.ContainsKey (columnType))
+			{
+				this.datas.Add (columnType, new EditionData (this.controller));
+			}
+
+			this.datas[columnType].Text = text;
+
 		}
 
 		public FormattedText GetText(ColumnType columnType)
 		{
 			if (this.datas.ContainsKey (columnType))
 			{
-				return this.datas[columnType];
+				return this.datas[columnType].Text;
 			}
 			else
 			{
@@ -61,9 +101,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public FormattedText GetError(ColumnType columnType)
 		{
-			if (this.errors.ContainsKey (columnType))
+			if (this.datas.ContainsKey (columnType))
 			{
-				return this.errors[columnType];
+				return this.datas[columnType].Error;
 			}
 			else
 			{
@@ -84,7 +124,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly AbstractController						controller;
 		protected readonly ComptaEntity								comptaEntity;
 		protected readonly ComptaPériodeEntity						périodeEntity;
-		protected readonly Dictionary<ColumnType, FormattedText>	datas;
-		protected readonly Dictionary<ColumnType, FormattedText>	errors;
+		protected readonly Dictionary<ColumnType, EditionData>		datas;
 	}
 }

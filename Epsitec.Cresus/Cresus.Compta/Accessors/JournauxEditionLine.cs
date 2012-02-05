@@ -23,36 +23,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournauxEditionLine(AbstractController controller)
 			: base (controller)
 		{
-		}
-
-
-		public override void Validate(ColumnType columnType)
-		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			var text = this.GetText (columnType);
-			var error = FormattedText.Null;
-
-			switch (columnType)
-            {
-				case ColumnType.Titre:
-					error = this.ValidateTitle (ref text);
-					break;
-			}
-
-			this.SetText (columnType, text);
-			this.errors[columnType] = error;
+			this.datas.Add (ColumnType.Titre, new EditionData (this.controller, this.ValidateTitle));
 		}
 
 
 		#region Validators
-		private FormattedText ValidateTitle(ref FormattedText text)
+		private void ValidateTitle(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le titre du journal";
-			}
+			data.ClearError ();
 
-			return FormattedText.Empty;
+			if (!data.HasText)
+			{
+				data.Error = "Il manque le titre du journal";
+			}
 		}
 		#endregion
 

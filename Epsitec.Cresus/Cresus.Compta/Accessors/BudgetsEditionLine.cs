@@ -23,46 +23,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BudgetsEditionLine(AbstractController controller)
 			: base (controller)
 		{
-		}
-
-
-		public override void Validate(ColumnType columnType)
-		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			var text = this.GetText (columnType);
-			var error = FormattedText.Null;
-
-			switch (columnType)
-			{
-				case ColumnType.Budget:
-				case ColumnType.BudgetPrécédent:
-				case ColumnType.BudgetFutur:
-					error = this.ValidateMontant (ref text);
-					break;
-			}
-
-			this.SetText (columnType, text);
-			this.errors[columnType] = error;
+			this.datas.Add (ColumnType.Budget,          new EditionData (this.controller, this.ValidateMontant));
+			this.datas.Add (ColumnType.BudgetPrécédent, new EditionData (this.controller, this.ValidateMontant));
+			this.datas.Add (ColumnType.BudgetFutur,     new EditionData (this.controller, this.ValidateMontant));
 		}
 
 
 		#region Validators
-		private FormattedText ValidateMontant(ref FormattedText text)
+		private void ValidateMontant(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return FormattedText.Empty;
-			}
+			data.ClearError ();
 
-			decimal montant;
-			if (decimal.TryParse (text.ToSimpleText (), out montant))
+			if (data.HasText)
 			{
-				text = montant.ToString ("0.00");
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return "Le montant n'est pas correct";
+				decimal montant;
+				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
+				{
+					data.Text = montant.ToString ("0.00");
+				}
+				else
+				{
+					data.Error = "Le montant n'est pas correct";
+				}
 			}
 		}
 		#endregion
@@ -87,35 +69,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			compte.Budget          = this.GetMontant (ColumnType.Budget);
 			compte.BudgetPrécédent = this.GetMontant (ColumnType.BudgetPrécédent);
 			compte.BudgetFutur     = this.GetMontant (ColumnType.BudgetFutur);
-		}
-
-
-		private void SetMontant(ColumnType columnType, decimal? value)
-		{
-			if (value.HasValue)
-			{
-				this.SetText (columnType, value.Value.ToString ("0.00"));
-			}
-			else
-			{
-				this.SetText (columnType, FormattedText.Empty);
-			}
-		}
-
-		private decimal? GetMontant(ColumnType columnType)
-		{
-			var text = this.GetText (columnType);
-
-			if (!text.IsNullOrEmpty)
-			{
-				decimal d;
-				if (decimal.TryParse (text.ToSimpleText (), out d))
-				{
-					return d;
-				}
-			}
-
-			return null;
 		}
 	}
 }

@@ -23,145 +23,122 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalEditionLine(AbstractController controller)
 			: base (controller)
 		{
-		}
-
-
-		public override void Validate(ColumnType columnType)
-		{
-			//	Valide le contenu d'une colonne, en adaptant éventuellement son contenu.
-			var text = this.GetText (columnType);
-			var error = FormattedText.Null;
-
-			switch (columnType)
-            {
-				case ColumnType.Date:
-					error = this.ValidateDate (ref text);
-					break;
-
-				case ColumnType.Débit:
-					error = this.ValidateCompte (ref text);
-					break;
-
-				case ColumnType.Crédit:
-					error = this.ValidateCompte (ref text);
-					break;
-
-				case ColumnType.Libellé:
-					error = this.ValidateLibellé (ref text);
-					break;
-
-				case ColumnType.Montant:
-					error = this.ValidateMontant (ref text);
-					break;
-
-				case ColumnType.Journal:
-					error = this.ValidateJournal (ref text);
-					break;
-			}
-
-			this.SetText (columnType, text);
-			this.errors[columnType] = error;
+			this.datas.Add (ColumnType.Date,    new EditionData (this.controller, this.ValidateDate));
+			this.datas.Add (ColumnType.Débit,   new EditionData (this.controller, this.ValidateCompte));
+			this.datas.Add (ColumnType.Crédit,  new EditionData (this.controller, this.ValidateCompte));
+			this.datas.Add (ColumnType.Libellé, new EditionData (this.controller, this.ValidateLibellé));
+			this.datas.Add (ColumnType.Montant, new EditionData (this.controller, this.ValidateMontant));
+			this.datas.Add (ColumnType.Journal, new EditionData (this.controller, this.ValidateJournal));
 		}
 
 
 		#region Validators
-		private FormattedText ValidateDate(ref FormattedText text)
+		private void ValidateDate(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque la date";
-			}
+			data.ClearError ();
 
-			Date? date;
-			if (this.périodeEntity.ParseDate (text, out date) && date.HasValue)
+			if (data.HasText)
 			{
-				text = date.ToString ();
-				return FormattedText.Empty;
+				Date? date;
+				if (this.périodeEntity.ParseDate (data.Text, out date) && date.HasValue)
+				{
+					data.Text = date.ToString ();
+				}
+				else
+				{
+					var b = this.périodeEntity.DateDébut.ToString ();
+					var e = this.périodeEntity.DateFin.ToString ();
+
+					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
+				}
 			}
 			else
 			{
-				var b = this.périodeEntity.DateDébut.ToString ();
-				var e = this.périodeEntity.DateFin.ToString ();
-
-				return string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
+				data.Error = "Il manque la date";
 			}
 		}
 
-		private FormattedText ValidateCompte(ref FormattedText text)
+		private void ValidateCompte(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
+			data.ClearError ();
+
+			if (data.HasText)
 			{
-				return "Il manque le numéro du compte";
-			}
+				if (data.Text == JournalDataAccessor.multi)
+				{
+					return;
+				}
 
-			if (text == JournalDataAccessor.multi)
-			{
-				return FormattedText.Empty;
-			}
+				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 
-			var n = PlanComptableDataAccessor.GetCompteNuméro (text);
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				if (compte == null)
+				{
+					data.Error = "Ce compte n'existe pas";
+					return;
+				}
 
-			if (compte == null)
-			{
-				return "Ce compte n'existe pas";
-			}
+				if (compte.Type != TypeDeCompte.Normal)
+				{
+					data.Error = "Ce compte n'a pas le type \"Normal\"";
+					return;
+				}
 
-			if (compte.Type != TypeDeCompte.Normal)
-			{
-				return "Ce compte n'a pas le type \"Normal\"";
-			}
-
-			text = n;
-			return FormattedText.Empty;
-		}
-
-		private FormattedText ValidateLibellé(ref FormattedText text)
-		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le libellé";
+				data.Text = n;
 			}
 			else
 			{
-				return FormattedText.Empty;
+				data.Error = "Il manque le numéro du compte";
 			}
 		}
 
-		private FormattedText ValidateMontant(ref FormattedText text)
+		private void ValidateLibellé(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le montant";
-			}
+			data.ClearError ();
 
-			decimal montant;
-			if (decimal.TryParse (text.ToSimpleText (), out montant))
+			if (!data.HasText)
 			{
-				text = montant.ToString ("0.00");
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return "Le montant n'est pas correct";
+				data.Error = "Il manque le libellé";
 			}
 		}
 
-		private FormattedText ValidateJournal(ref FormattedText text)
+		private void ValidateMontant(EditionData data)
 		{
-			if (text.IsNullOrEmpty)
-			{
-				return "Il manque le journal";
-			}
+			data.ClearError ();
 
-			var t = text;
-			if (this.comptaEntity.Journaux.Where (x => x.Name == t).Any ())
+			if (data.HasText)
 			{
-				return FormattedText.Empty;
+				decimal montant;
+				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
+				{
+					data.Text = montant.ToString ("0.00");
+				}
+				else
+				{
+					data.Error = "Le montant n'est pas correct";
+				}
 			}
 			else
 			{
-				return "Ce journal n'existe pas";
+				data.Error = "Il manque le montant";
+			}
+		}
+
+		private void ValidateJournal(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var t = data.Text;
+				if (!this.comptaEntity.Journaux.Where (x => x.Name == t).Any ())
+				{
+					data.Error = "Ce journal n'existe pas";
+				}
+			}
+			else
+			{
+				data.Error = "Il manque le journal";
 			}
 		}
 		#endregion
