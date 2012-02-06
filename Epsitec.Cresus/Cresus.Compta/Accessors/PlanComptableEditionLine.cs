@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -70,12 +71,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateTitre(EditionData data)
 		{
-			data.ClearError ();
-
-			if (!data.HasText)
-			{
-				data.Error = "Il manque le titre du compte";
-			}
+			Validators.ValidateText (data, "Il manque le titre du compte");
 		}
 
 		private void ValidateCatégorie(EditionData data)

@@ -11,24 +11,72 @@ using Epsitec.Cresus.Compta.Controllers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta
+namespace Epsitec.Cresus.Compta.Helpers
 {
-	public static class Misc
+	public static class Validators
 	{
-		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
+		public static void ValidateText(EditionData data, FormattedText error)
 		{
-			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
-			fieldController.CreateUI (parent);
-			fieldController.Box.PreferredWidth = 80;
-			fieldController.EditionData = new EditionData (controller, validateAction);
-			fieldController.EditionData.Text = initialDate;
-			fieldController.Validate ();
+			//	Valide un texte libre.
+			data.ClearError ();
 
-			return fieldController;
+			if (!data.HasText)
+			{
+				data.Error = error;
+			}
+		}
+
+		public static void ValidateMontant(EditionData data, bool emptyAccepted)
+		{
+			//	Valide un montant.
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				decimal montant;
+				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
+				{
+					data.Text = montant.ToString ("0.00");
+				}
+				else
+				{
+					data.Error = "Le montant n'est pas correct";
+				}
+			}
+			else
+			{
+				if (!emptyAccepted)
+				{
+					data.Error = "Il manque le montant";
+				}
+			}
+		}
+
+		public static void ValidateDate(EditionData data, bool emptyAccepted)
+		{
+			//	Valide une date située dans n'importe quelle période.
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				Date date;
+				if (!PériodesDataAccessor.ParseDate (data.Text, out date))
+				{
+					data.Error = "La date est incorrecte";
+				}
+			}
+			else
+			{
+				if (!emptyAccepted)
+				{
+					data.Error = "Il manque la date";
+				}
+			}
 		}
 
 		public static void ValidateDate(ComptaPériodeEntity période, EditionData data, bool emptyAccepted)
 		{
+			//	Valide une date située dans une période donnée.
 			data.ClearError ();
 
 			if (data.HasText)
@@ -54,6 +102,7 @@ namespace Epsitec.Cresus.Compta
 				}
 			}
 		}
+
 
 		public static Date? ParseDate(string text)
 		{
@@ -83,11 +132,11 @@ namespace Epsitec.Cresus.Compta
 		{
 			var list = new List<string> ();
 
-			foreach (var c in Misc.Catégories)
+			foreach (var c in Validators.Catégories)
 			{
 				if ((catégorie & c) != 0)
 				{
-					list.Add (Misc.CatégorieToString (c));
+					list.Add (Validators.CatégorieToString (c));
 				}
 			}
 
@@ -104,7 +153,7 @@ namespace Epsitec.Cresus.Compta
 
 				foreach (var word in words)
 				{
-					catégorie |= Misc.StringToCatégorie (word);
+					catégorie |= Validators.StringToCatégorie (word);
 				}
 			}
 

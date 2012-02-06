@@ -8,7 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Helpers;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 	{
 		public AutoCompleteTextField()
 		{
-			this.MenuButtonWidth = Epsitec.Cresus.Compta.Controllers.UIBuilder.ComboButtonWidth;
+			this.MenuButtonWidth = UIBuilder.ComboButtonWidth;
 
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;

@@ -104,7 +104,7 @@
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="Entities\ComptaPériodeEntity.cs" />
-    <Compile Include="Misc.cs" />
+    <Compile Include="Helpers\Validators.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />
     <Compile Include="CoreApplication.cs" />
@@ -137,7 +137,7 @@
     <Compile Include="Controllers\SearchController.cs" />
     <Compile Include="Controllers\SearchTabController.cs" />
     <Compile Include="Controllers\TopSearchController.cs" />
-    <Compile Include="Controllers\UIBuilder.cs" />
+    <Compile Include="Helpers\UIBuilder.cs" />
     <Compile Include="Entities\ComptaCompteEntity.cs" />
     <Compile Include="Entities\ComptaEcritureEntity.cs" />
     <Compile Include="Entities\ComptaEntity.cs" />

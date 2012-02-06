@@ -6,6 +6,8 @@ using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Widgets;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 

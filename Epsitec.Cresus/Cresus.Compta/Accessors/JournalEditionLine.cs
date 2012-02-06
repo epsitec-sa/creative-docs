@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateDate(EditionData data)
 		{
-			Misc.ValidateDate (this.périodeEntity, data, emptyAccepted: false);
+			Validators.ValidateDate (this.périodeEntity, data, emptyAccepted: false);
 		}
 
 		private void ValidateCompte(EditionData data)
@@ -74,34 +75,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateLibellé(EditionData data)
 		{
-			data.ClearError ();
-
-			if (!data.HasText)
-			{
-				data.Error = "Il manque le libellé";
-			}
+			Validators.ValidateText (data, "Il manque le libellé");
 		}
 
 		private void ValidateMontant(EditionData data)
 		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				decimal montant;
-				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
-				{
-					data.Text = montant.ToString ("0.00");
-				}
-				else
-				{
-					data.Error = "Le montant n'est pas correct";
-				}
-			}
-			else
-			{
-				data.Error = "Il manque le montant";
-			}
+			Validators.ValidateMontant (data, emptyAccepted: false);
 		}
 
 		private void ValidateJournal(EditionData data)

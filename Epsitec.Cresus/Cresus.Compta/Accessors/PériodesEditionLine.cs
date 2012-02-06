@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,20 +32,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateDate(EditionData data)
 		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				Date date;
-				if (!PériodesDataAccessor.ParseDate (data.Text, out date))
-				{
-					data.Error = "La date est incorrecte";
-				}
-			}
-			else
-			{
-				data.Error = "Il manque la date";
-			}
+			Validators.ValidateDate (data, emptyAccepted: false);
 		}
 		#endregion
 

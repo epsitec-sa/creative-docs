@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -386,7 +387,7 @@ namespace Epsitec.Cresus.Compta.IO
 					continue;
 				}
 
-				var date    = Misc.ParseDate (words[0]);
+				var date    = Validators.ParseDate (words[0]);
 				var débit   = this.GetCompte (words[1]);
 				var crédit  = this.GetCompte (words[2]);
 				var pièce   = words[3];

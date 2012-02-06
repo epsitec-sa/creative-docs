@@ -11,16 +11,32 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Library;
 
+using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Controllers
+namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
+		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
+		{
+			//	Crée un contrôleur permettant de saisir une date.
+			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
+			fieldController.CreateUI (parent);
+			fieldController.Box.PreferredWidth = 80;
+			fieldController.EditionData = new EditionData (controller, validateAction);
+			fieldController.EditionData.Text = initialDate;
+			fieldController.Validate ();
+
+			return fieldController;
+		}
+
+	
 		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field)
 		{
 			//	Crée un widget permettant de saisir un numéro de compte.

@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using Epsitec.Cresus.Compta.Controllers;
 using System.Collections.Generic;
@@ -32,20 +33,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateMontant(EditionData data)
 		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				decimal montant;
-				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
-				{
-					data.Text = montant.ToString ("0.00");
-				}
-				else
-				{
-					data.Error = "Le montant n'est pas correct";
-				}
-			}
+			Validators.ValidateMontant (data, emptyAccepted: true);
 		}
 		#endregion
 

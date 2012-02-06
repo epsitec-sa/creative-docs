@@ -6,7 +6,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Library;
@@ -14,6 +13,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 
 				var initialDate = beginDate.HasValue ? beginDate.Value.ToString () : null;
-				this.beginnerBeginDateController = Misc.CreateDateField (this.controller, frame1, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
+				this.beginnerBeginDateController = UIBuilder.CreateDateField (this.controller, frame1, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
 
 			{
@@ -522,19 +522,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 
 				var initialDate = endDate.HasValue ? endDate.Value.ToString () : null;
-				this.beginnerEndDateController = Misc.CreateDateField (this.controller, frame2, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
+				this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame2, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
 		}
 
 		private void BeginnerValidateDate(EditionData data)
 		{
-			Misc.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
+			Validators.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
 		}
 
 		private void BeginnerDateChanged()
 		{
-			Date? beginDate = Misc.ParseDate (this.beginnerBeginDateController.EditionData.Text.ToSimpleText ());
-			Date? endDate   = Misc.ParseDate (this.beginnerEndDateController  .EditionData.Text.ToSimpleText ());
+			Date? beginDate = Validators.ParseDate (this.beginnerBeginDateController.EditionData.Text.ToSimpleText ());
+			Date? endDate   = Validators.ParseDate (this.beginnerEndDateController.EditionData.Text.ToSimpleText ());
 			data.SetBeginnerDates (beginDate, endDate);
 
 			this.UpdateOrMode ();

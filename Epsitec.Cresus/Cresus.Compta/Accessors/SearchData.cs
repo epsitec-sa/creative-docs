@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -110,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					return Misc.StringToCatégories (data.SearchText.FromText);
+					return Validators.StringToCatégories (data.SearchText.FromText);
 				}
 			}
 			set
@@ -136,7 +138,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					data.Column              = ColumnType.Catégorie;
 					data.SearchText.Mode     = SearchMode.Jokers;
-					data.SearchText.FromText = Misc.CatégoriesToString (value);
+					data.SearchText.FromText = Validators.CatégoriesToString (value);
 
 					this.BeginnerAdjust (true);
 				}
@@ -307,8 +309,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				data.Column              = ColumnType.Date;
 				data.SearchText.Mode     = SearchMode.Interval;
-				data.SearchText.FromText = Misc.DateToString (beginDate);
-				data.SearchText.ToText   = Misc.DateToString (endDate);
+				data.SearchText.FromText = Validators.DateToString (beginDate);
+				data.SearchText.ToText   = Validators.DateToString (endDate);
 
 				this.BeginnerAdjust (true);
 			}

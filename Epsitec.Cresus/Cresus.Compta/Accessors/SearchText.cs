@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core;
 
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Text.RegularExpressions;
 
@@ -428,7 +429,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else if (this.preparedFromDate.HasValue || this.preparedToDate.HasValue)
 				{
-					var date = Misc.ParseDate (target);
+					var date = Validators.ParseDate (target);
 					if (date.HasValue)
 					{
 						if (this.preparedFromDate.HasValue && date.Value < this.preparedFromDate.Value)
@@ -471,7 +472,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedFromDate = Misc.ParseDate (this.fromText);
+					this.preparedFromDate = Validators.ParseDate (this.fromText);
 				}
 			}
 
@@ -484,7 +485,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedToDate = Misc.ParseDate (this.toText);
+					this.preparedToDate = Validators.ParseDate (this.toText);
 				}
 			}
 
