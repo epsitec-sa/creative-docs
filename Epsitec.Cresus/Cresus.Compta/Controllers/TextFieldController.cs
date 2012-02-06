@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.InternalField.Focus ();
 		}
 
-		public override void EditionDataToController()
+		public override void EditionDataToWidget()
 		{
 			if (this.editionData != null)
 			{
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override void ControllerToEditionData()
+		public override void WidgetToEditionData()
 		{
 			if (this.editionData != null)
 			{
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			this.ControllerToEditionData ();
+			this.WidgetToEditionData ();
 
 			this.editWidget.SetError (this.editionData.HasError);
 
@@ -142,11 +142,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			bool focused = (bool) e.NewValue;
+			this.hasFocus = (bool) e.NewValue;
 
-			if (focused)  // prise du focus ?
+			if (this.hasFocus)  // prise du focus ?
 			{
 				this.SetFocusAction ();
+			}
+			else  // perte du focus ?
+			{
+				//	Lorsqu'on perd le focus, il faut mettre à jour le contenu. Par exemple, si on a entré "123"
+				//	dans un champ monétaire, il faut le replacer par "123.00" lorsque le focus passe à un autre
+				//	widget.
+				var text = this.editionData.Text;
+
+				if (this.InternalField.FormattedText != text)
+				{
+					this.InternalField.FormattedText = text;
+					//?this.ContentChangedAction ();  // TODO: Normalement inutile ?
+				}
 			}
 		}
 

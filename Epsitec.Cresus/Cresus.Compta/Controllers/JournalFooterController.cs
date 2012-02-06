@@ -62,7 +62,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			//	Crée les lignes éditables.
-			this.CreateLineUI ();
+			this.CreateLineUI (this.linesContainer);
 
 			//	Crée les informations.
 			this.débitInfoSeparator = new Separator
@@ -107,15 +107,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.CreateUI (parent, updateArrayContentAction);
 		}
 
-		private void CreateLineUI()
+		private void CreateLineUI(Widget parent)
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
 			var footerFrame = new FrameBox
 			{
-				Parent          = this.linesContainer,
+				Parent          = parent,
 				PreferredHeight = 20,
-				Dock            = DockStyle.Bottom,
+				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 1, 0),
 			};
 
@@ -123,20 +123,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
+			footerFrame.TabIndex = line+1;
+
 			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Débit)
+				if (mapper.Column == ColumnType.Date)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
-				else if (mapper.Column == ColumnType.Crédit)
+				else if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
@@ -149,77 +149,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
+				if (mapper.Column == ColumnType.Montant)
+				{
+					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
+				}
+
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);
-
-#if false
-				var box = new FrameBox
-				{
-					Parent        = footerFrame,
-					DrawFullFrame = true,
-					Dock          = DockStyle.Left,
-					Margins       = new Margins (0, 1, 0, 0),
-					TabIndex      = ++tabIndex,
-				};
-
-				FrameBox container;
-				AbstractTextField field;
-
-				if (mapper.Column == ColumnType.Débit)
-				{
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else if (mapper.Column == ColumnType.Crédit)
-				{
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else
-				{
-					container = new FrameBox
-					{
-						Parent   = box,
-						Dock     = DockStyle.Fill,
-						TabIndex = 1,
-					};
-
-					field = new TextField
-					{
-						Parent   = container,
-						Dock     = DockStyle.Fill,
-						Name     = this.GetWidgetName (mapper.Column, line),
-						TabIndex = 1,
-					};
-
-					if (mapper.Column == ColumnType.Date)
-					{
-						field.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
-					}
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-
-				this.footerBoxes     [line].Add (box);
-				this.footerContainers[line].Add (container);
-				this.footerFields    [line].Add (field);
-#endif
 			}
 		}
 
@@ -232,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//?this.selectedLine = 0;
 
-			this.CreateLineUI ();
+			this.CreateLineUI (this.linesContainer);
 			//?this.FooterSelect (0);
 		}
 
@@ -421,6 +358,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateMultiEditionData()
 		{
+			//	Recalcule le total de l'écriture multiple.
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
@@ -544,7 +482,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				for (int i = 0; i < count-1; i++)
 				{
-					this.CreateLineUI ();
+					this.CreateLineUI (this.linesContainer);
 				}
 			}
 		}

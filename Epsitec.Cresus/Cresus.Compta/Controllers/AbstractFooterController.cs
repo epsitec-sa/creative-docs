@@ -381,7 +381,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 					if (controller != null)
 					{
 						controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
-						controller.EditionDataToController ();
+
+						//	Le widget en cours d'édition ne doit absolument pas être modifié.
+						//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
+						//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
+						//	catastrophe !
+						if (!controller.HasFocus)
+						{
+							controller.EditionDataToWidget ();
+						}
 					}
 				}
 			}

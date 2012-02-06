@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
+			footerFrame.TabIndex = line+1;
+
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				AbstractFieldController field;
@@ -100,93 +102,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);
-
-#if false
-				var box = new FrameBox
-				{
-					Parent        = footerFrame,
-					DrawFullFrame = true,
-					Dock          = DockStyle.Left,
-					Margins       = new Margins (0, 1, 0, 0),
-					TabIndex      = ++tabIndex,
-				};
-
-				FrameBox container;
-				AbstractTextField field;
-
-				if (mapper.Column == ColumnType.Catégorie)
-				{
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, "Actif", "Passif", "Charge", "Produit", "Exploitation");
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else if (mapper.Column == ColumnType.Type)
-				{
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, "Normal", "Titre", "Groupe");
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else if (mapper.Column == ColumnType.Groupe)
-				{
-					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe);
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else if (mapper.Column == ColumnType.CompteOuvBoucl)
-				{
-					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
-					UIBuilder.CreateAutoCompleteTextField (box, out container, out field);
-					UIBuilder.UpdateAutoCompleteTextField (field, comptes);
-					field.Name = this.GetWidgetName (mapper.Column, line);
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-				else
-				{
-					container = new FrameBox
-					{
-						Parent   = box,
-						Dock     = DockStyle.Fill,
-						TabIndex = 1,
-					};
-
-					field = new TextField
-					{
-						Parent   = container,
-						Dock     = DockStyle.Fill,
-						Name     = this.GetWidgetName (mapper.Column, line),
-						TabIndex = 1,
-					};
-
-					field.TextChanged += delegate
-					{
-						this.FooterTextChanged (field);
-					};
-				}
-
-				this.footerBoxes     [line].Add (box);
-				this.footerContainers[line].Add (container);
-				this.footerFields    [line].Add (field);
-#endif
 			}
 		}
 

@@ -88,15 +88,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public bool HasFocus
+		{
+			get
+			{
+				return this.hasFocus;
+			}
+		}
+
 		public virtual void SetFocus()
 		{
 		}
 
-		public virtual void EditionDataToController()
+		public virtual void EditionDataToWidget()
 		{
 		}
 
-		public virtual void ControllerToEditionData()
+		public virtual void WidgetToEditionData()
 		{
 		}
 
@@ -132,6 +140,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected FrameBox										box;
 		protected FrameBox										container;
 		protected Widget										editWidget;
+		protected bool											hasFocus;
 		protected bool											ignoreChange;
 	}
 }

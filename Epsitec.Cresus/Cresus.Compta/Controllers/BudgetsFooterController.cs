@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
+			footerFrame.TabIndex = line+1;
+
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
@@ -67,6 +69,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					mapper.Column == ColumnType.Solde)
 				{
 					field.IsReadOnly = true;
+				}
+
+				if (mapper.Column == ColumnType.BudgetPrécédent ||
+					mapper.Column == ColumnType.Budget          ||
+					mapper.Column == ColumnType.BudgetFutur     )
+				{
+					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
 
 				field.Box.TabIndex = ++tabIndex;

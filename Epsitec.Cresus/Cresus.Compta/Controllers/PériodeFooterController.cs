@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
+			footerFrame.TabIndex = line+1;
+
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				AbstractFieldController field;

@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.InternalField.Focus ();
 		}
 
-		public override void EditionDataToController()
+		public override void EditionDataToWidget()
 		{
 			if (this.editionData != null)
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override void ControllerToEditionData()
+		public override void WidgetToEditionData()
 		{
 			if (this.editionData != null)
 			{
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			this.ControllerToEditionData ();
+			this.WidgetToEditionData ();
 
 			this.editWidget.SetError (this.editionData.HasError);
 
@@ -156,11 +156,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			bool focused = (bool) e.NewValue;
+			this.hasFocus = (bool) e.NewValue;
 
-			if (focused)  // prise du focus ?
+			if (this.hasFocus)  // prise du focus ?
 			{
 				this.SetFocusAction ();
+			}
+			else  // perte du focus ?
+			{
+				//	La mise à jour du contenu lors de la perte du focus est déjà gérée par le widget lui-même.
 			}
 		}
 

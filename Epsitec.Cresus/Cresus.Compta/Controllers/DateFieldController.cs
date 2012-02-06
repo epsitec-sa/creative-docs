@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.InternalField.Focus ();
 		}
 
-		public override void EditionDataToController()
+		public override void EditionDataToWidget()
 		{
 			if (this.editionData != null)
 			{
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override void ControllerToEditionData()
+		public override void WidgetToEditionData()
 		{
 			if (this.editionData != null)
 			{
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			this.ControllerToEditionData ();
+			this.WidgetToEditionData ();
 
 			this.InternalField.HintText = DateFieldController.AdjustHintDate (this.InternalField.FormattedText, this.editionData.Text);
 
@@ -145,9 +145,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			bool focused = (bool) e.NewValue;
+			this.hasFocus = (bool) e.NewValue;
 
-			if (focused)  // prise du focus ?
+			if (this.hasFocus)  // prise du focus ?
 			{
 				this.SetFocusAction ();
 			}
