@@ -117,7 +117,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.hideAddButton || this.AddNewItem == null;
+				return this.hideAddButton || this.AddNewItem == null || this.GroupController == null || !this.GroupController.CanAdd ();
 			}
 			set
 			{
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.hideRemoveButton || this.DeleteItem == null;
+				return this.hideRemoveButton || this.DeleteItem == null || this.GroupController == null || !this.GroupController.CanRemove (this.GetGroupedItemIndex ());
 			}
 			set
 			{
@@ -624,12 +624,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.GroupController == null)
-				{
-					return 0;
-				}
-
-				return this.GroupController.GetItemIndex ();
+				return this.GetGroupedItemIndex ();
 			}
 			set
 			{
@@ -656,6 +651,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		#endregion
+
+		private int GetGroupedItemIndex()
+		{
+			if (this.GroupController == null)
+			{
+				return 0;
+			}
+			else
+			{
+				return this.GroupController.GetItemIndex ();
+			}
+		}
 
 
 		private readonly HashSet<AccessorBinding>	bindings;

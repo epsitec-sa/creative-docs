@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 	/// needed to manipulate a list of items belonging to the same logical group
 	/// in the user interface (e.g. all mail contacts in a person's contact list).
 	/// </summary>
-	public class GroupedItemController
+	public class GroupedItemController : ICollectionModificationCapabilities
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="GroupedItemController"/> class.
@@ -31,14 +31,91 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			this.item   = item;
 			this.filter = filter ?? GroupedItemController.defaultFilter;
 			
-			var items = this.collectionAccessor.GetItemCollection ();
+			var items = this.Items;
 			
 			System.Diagnostics.Debug.Assert (items.Contains (item));
 			System.Diagnostics.Debug.Assert (filter (item));
 		}
 
 
-		
+		#region ICollectionModificationCapabilities Members
+
+		public bool CanInsert(int index)
+		{
+			if (this.collectionAccessor.IsReadOnly)
+			{
+				return false;
+			}
+
+			var items = this.Items;
+			var caps  = items as ICollectionModificationCapabilities;
+
+			if (caps != null)
+			{
+				return caps.CanInsert (index);
+			}
+
+			if ((index < 0) ||
+				(index > items.Count ()))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public bool CanRemove(int index)
+		{
+			if (this.collectionAccessor.IsReadOnly)
+			{
+				return false;
+			}
+
+			var items = this.Items;
+			var caps  = items as ICollectionModificationCapabilities;
+
+			if (caps != null)
+			{
+				return caps.CanRemove (index);
+			}
+
+			if ((index < 0) ||
+				(index >= items.Count ()))
+			{
+				return false;
+			}
+
+			return true;
+		}
+
+		public bool CanBeReordered
+		{
+			get
+			{
+				if (this.collectionAccessor.IsReadOnly)
+				{
+					return false;
+				}
+
+				var items = this.Items;
+				var caps  = items as ICollectionModificationCapabilities;
+
+				if (caps != null)
+				{
+					return caps.CanBeReordered;
+				}
+
+				return true;
+			}
+		}
+
+		#endregion
+
+		public bool CanAdd()
+		{
+			return this.CanInsert (this.GetItemCount ());
+		}
+
 		public int GetItemCount()
 		{
 			return this.CompatibleItems.Count ();
@@ -50,7 +127,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <returns>The index of the item.</returns>
 		public int GetItemIndex()
 		{
-			return this.CompatibleItems.ToList ().IndexOf (this.item);
+			return this.CompatibleItems.IndexOf (this.item);
 		}
 
 		/// <summary>
@@ -64,7 +141,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.MoveItemInReadOnlyCollectionAccessor (newIndex);
 			}
 
-			var compatibleItems = this.CompatibleItems.ToList ();
+			var compatibleItems = this.GetItemsList ();
 			int oldIndex  = compatibleItems.IndexOf (this.item);
 
 			if ((newIndex == oldIndex) ||
@@ -77,7 +154,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			//	collection, not relative to all items. We have to map from the index in the
 			//	filtered array to the one in the real array :
 
-			var items      = this.collectionAccessor.GetItemCollection ();
+			var items      = this.Items;
 			var collection = items as ISuspendCollectionChanged;
 
 			if (collection == null)
@@ -90,7 +167,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				{
 					this.UpdateCollection (newIndex, compatibleItems);
 				}
-				
+			}
+		}
+
+		
+		private IEnumerable<AbstractEntity> Items
+		{
+			get
+			{
+				return this.collectionAccessor.GetItemCollection ();
 			}
 		}
 
@@ -98,14 +183,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				var items = this.collectionAccessor.GetItemCollection ();
-				return items.Where (x => this.filter (x));
+				return this.Items.Where (x => this.filter (x));
 			}
 		}
-		
+
+		private List<AbstractEntity> GetItemsList()
+		{
+			return this.CompatibleItems.ToList ();
+		}
+
 		private void MoveItemInReadOnlyCollectionAccessor(int newIndex)
 		{
-			var compatibleItems = this.CompatibleItems.ToList ();
+			var compatibleItems = this.GetItemsList ();
 			int itemCurrentIndex = compatibleItems.IndexOf (this.item);
 
 			if ((itemCurrentIndex == newIndex) ||
@@ -130,7 +219,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		private void UpdateCollection(int newIndex, List<AbstractEntity> compatibleItems)
 		{
-			var items = this.collectionAccessor.GetItemCollection ();
+			var items = this.Items;
 
 			int itemCount    = compatibleItems.Count;
 			int realOldIndex = items.IndexOf (this.item);
@@ -154,11 +243,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.collectionAccessor.InsertItem (realNewIndex, this.item);
 			}
 
-			compatibleItems = this.CompatibleItems.ToList ();
+			compatibleItems = this.GetItemsList ();
 
 			GroupedItemController.RenumberItemRanks (compatibleItems);
 		}
 
+		
 		private static bool RenumberItemRanks(List<AbstractEntity> compatibleItems)
 		{
 			int changeCount = 0;

@@ -160,6 +160,7 @@
     <Compile Include="Controllers\ComplexControllers\ChartsOfAccountsController.cs" />
     <Compile Include="Controllers\ComplexControllers\FooterTextController.cs" />
     <Compile Include="Controllers\ComplexControllers\SerializedDocumentBlobController.cs" />
+    <Compile Include="Controllers\DataAccessors\ICollectionModificationCapabilities.cs" />
     <Compile Include="Controllers\SpecialControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
