@@ -133,7 +133,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
+				if (this.columnMapper != null)
+				{
+					ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
+				}
 			}
 		}
 

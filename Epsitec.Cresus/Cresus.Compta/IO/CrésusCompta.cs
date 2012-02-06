@@ -46,7 +46,14 @@ namespace Epsitec.Cresus.Compta.IO
 
 				try
 				{
-					return this.ImportPlanComptable (ref période);
+					string err = this.ImportPlanComptable (ref période);
+
+					if (string.IsNullOrEmpty (err) && this.compta.Name.IsNullOrEmpty)
+					{
+						this.compta.Name = System.IO.Path.GetFileNameWithoutExtension (filename);
+					}
+
+					return err;
 				}
 				catch (System.Exception ex)
 				{
@@ -439,7 +446,7 @@ namespace Epsitec.Cresus.Compta.IO
 			Date beginDate, endDate;
 			this.GetYear (journal,  out beginDate, out endDate);
 
-			//	Cherche si lles écritures lues sont compatibles avec une période existante.
+			//	Cherche si les écritures lues sont compatibles avec une période existante.
 			foreach (var p in this.compta.Périodes)
 			{
 				if (beginDate >= p.DateDébut && endDate <= p.DateFin)

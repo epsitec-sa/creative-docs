@@ -35,27 +35,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateDate(EditionData data)
 		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				Date? date;
-				if (this.périodeEntity.ParseDate (data.Text, out date) && date.HasValue)
-				{
-					data.Text = date.ToString ();
-				}
-				else
-				{
-					var b = this.périodeEntity.DateDébut.ToString ();
-					var e = this.périodeEntity.DateFin.ToString ();
-
-					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
-				}
-			}
-			else
-			{
-				data.Error = "Il manque la date";
-			}
+			Misc.ValidateDate (this.périodeEntity, data, emptyAccepted: false);
 		}
 
 		private void ValidateCompte(EditionData data)

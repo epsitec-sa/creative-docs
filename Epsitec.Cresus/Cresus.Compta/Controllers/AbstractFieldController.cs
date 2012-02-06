@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetFocusAction()
 		{
-			if (this.setFocusAction != null)
+			if (this.setFocusAction != null && this.columnMapper != null)
 			{
 				this.setFocusAction (this.line, this.columnMapper.Column);
 			}

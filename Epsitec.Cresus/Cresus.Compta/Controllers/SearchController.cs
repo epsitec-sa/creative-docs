@@ -508,15 +508,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.beginnerBeginDateField = new TextField
-				{
-					Parent          = frame1,
-					Text            = beginDate.HasValue ? beginDate.Value.ToString() : null,
-					PreferredWidth  = 80,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					TabIndex        = 1,
-				};
+				var initialDate = beginDate.HasValue ? beginDate.Value.ToString () : null;
+				this.beginnerBeginDateController = Misc.CreateDateField (this.controller, frame1, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
 
 			{
@@ -528,39 +521,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				this.beginnerEndDateField = new TextField
-				{
-					Parent          = frame2,
-					Text            = endDate.HasValue ? endDate.Value.ToString () : null,
-					PreferredWidth  = 80,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					TabIndex        = 2,
-				};
+				var initialDate = endDate.HasValue ? endDate.Value.ToString () : null;
+				this.beginnerEndDateController = Misc.CreateDateField (this.controller, frame2, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
+		}
 
-			this.beginnerBeginDateField.TextChanged += delegate
-			{
-				beginDate = Misc.ParseDate (this.beginnerBeginDateField.Text);
-				endDate   = Misc.ParseDate (this.beginnerEndDateField.Text);
-				data.SetBeginnerDates (beginDate, endDate);
+		private void BeginnerValidateDate(EditionData data)
+		{
+			Misc.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
+		}
 
-				this.UpdateOrMode ();
-				this.searchStartAction ();
-			};
+		private void BeginnerDateChanged()
+		{
+			Date? beginDate = Misc.ParseDate (this.beginnerBeginDateController.EditionData.Text.ToSimpleText ());
+			Date? endDate   = Misc.ParseDate (this.beginnerEndDateController  .EditionData.Text.ToSimpleText ());
+			data.SetBeginnerDates (beginDate, endDate);
 
-			this.beginnerEndDateField.TextChanged += delegate
-			{
-				beginDate = Misc.ParseDate (this.beginnerBeginDateField.Text);
-				endDate   = Misc.ParseDate (this.beginnerEndDateField.Text);
-				data.SetBeginnerDates (beginDate, endDate);
-
-				this.UpdateOrMode ();
-				this.searchStartAction ();
-			};
-
-			ToolTip.Default.SetToolTip (this.beginnerBeginDateField, "Date initiale incluse");
-			ToolTip.Default.SetToolTip (this.beginnerEndDateField,   "Date finale incluse");
+			this.UpdateOrMode ();
+			this.searchStartAction ();
 		}
 
 
@@ -568,9 +546,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
 
-			this.beginnerSearchField    = null;
-			this.beginnerBeginDateField = null;
-			this.beginnerEndDateField   = null;
+			this.beginnerSearchField         = null;
+			this.beginnerBeginDateController = null;
+			this.beginnerEndDateController   = null;
 
 			int count = this.data.TabsData.Count;
 			for (int i = 0; i < count; i++)
@@ -890,8 +868,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private CheckButton								beginnerCatégorieExploitation;
 		private TextFieldCombo							beginnerFromProfondeurField;
 		private TextFieldCombo							beginnerToProfondeurField;
-		private TextField								beginnerBeginDateField;
-		private TextField								beginnerEndDateField;
+		private DateFieldController						beginnerBeginDateController;
+		private DateFieldController						beginnerEndDateController;
 		private RadioButton								andButton;
 		private RadioButton								orButton;
 		private LevelController							levelController;

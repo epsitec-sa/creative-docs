@@ -14,6 +14,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class ColumnMapper
 	{
+		public ColumnMapper(FormattedText tooltip)
+			: this (ColumnType.None, 0, ContentAlignment.MiddleLeft, FormattedText.Empty, tooltip, true, false)
+		{
+		}
+
 		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool show = true, bool hideForSearch = false)
 			: this (column, relativeWidth, alignment, description, FormattedText.Null, show, hideForSearch)
 		{
