@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.TextDisplayMode = TextFieldDisplayMode.ActiveHint;
 			this.DefocusAction = Common.Widgets.DefocusAction.AcceptEdition;
 
-			this.primaryTexts = new List<string> ();
-			this.secondaryTexts = new List<string> ();
+			this.primaryTexts = new List<FormattedText> ();
+			this.secondaryTexts = new List<FormattedText> ();
 
 			this.ignoreChanges = new SafeCounter ();
 
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		public List<string> PrimaryTexts
+		public List<FormattedText> PrimaryTexts
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		public List<string> SecondaryTexts
+		public List<FormattedText> SecondaryTexts
 		{
 			get
 			{
@@ -320,17 +320,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 					if (this.hintListIndex.Count != 0 || this.selectedHint != -1)  // pas un texte erroné ?
 					{
 						this.HintText = null;
-						this.TextNavigator.TextLayout.Text = this.GetItemText (i, true);
+						this.TextNavigator.TextLayout.FormattedText = this.GetItemText (i, true);
 						this.SelectAll ();
 					}
 				}
 				else
 				{
-					this.HintText = this.AdjustHintText (this.GetItemText (i), this.Text);
+					this.HintText = this.AdjustHintText (this.GetItemText (i).ToSimpleText (), this.Text);
 
 					if (selectedHintMode == SelectedHintMode.StartEdition)
 					{
-						this.TextNavigator.TextLayout.Text = this.GetItemText (i, true);
+						this.TextNavigator.TextLayout.FormattedText = this.GetItemText (i, true);
 						this.OnTextEdited ();
 						this.SelectAll ();
 					}
@@ -344,7 +344,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	une casse différente.
 			if (!string.IsNullOrEmpty (hint) && !string.IsNullOrEmpty (typed))
 			{
-				int i = hint.ToLower ().IndexOf (typed.ToLower ());
+				int i = Converters.PreparingForSearh (hint).IndexOf (Converters.PreparingForSearh (typed));
 				if (i != -1)
 				{
 					hint = hint.Substring (0, i) + typed + hint.Substring (i+typed.Length);
@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return hint;
 		}
 
-		private string GetItemText(int index, bool onlyPrimary = false)
+		private FormattedText GetItemText(int index, bool onlyPrimary = false)
 		{
 			if (index < 0 || index >= this.primaryTexts.Count)
 			{
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				if (!onlyPrimary && this.primaryTexts.Count == this.secondaryTexts.Count)
 				{
-					return this.primaryTexts[index] + " " + this.secondaryTexts[index];
+					return FormattedText.Concat (this.primaryTexts[index], " ", this.secondaryTexts[index]);
 				}
 				else
 				{
@@ -611,13 +611,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private const string SelectedItemChangedEvent = "SelectedItemChanged";
 
 
-		private readonly List<string>		primaryTexts;
-		private readonly List<string>		secondaryTexts;
-		private readonly List<int>			hintListIndex;
-		private readonly SafeCounter		ignoreChanges;
+		private readonly List<FormattedText>		primaryTexts;
+		private readonly List<FormattedText>		secondaryTexts;
+		private readonly List<int>					hintListIndex;
+		private readonly SafeCounter				ignoreChanges;
 		
-		private int							selectedHint;
-		private Window						window;
-		private ScrollList					scrollList;
+		private int									selectedHint;
+		private Window								window;
+		private ScrollList							scrollList;
 	}
 }

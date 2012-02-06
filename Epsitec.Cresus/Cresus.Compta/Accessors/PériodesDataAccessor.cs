@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PériodesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Périodes.Search");
+
 			this.StartCreationLine ();
 		}
 
@@ -149,21 +151,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.isModification = false;
 			this.justCreated = false;
-		}
-
-		public override void ResetCreationLine()
-		{
-			if (this.justCreated)
-			{
-				this.PrepareEditionLine (0);
-
-				while (this.editionLine.Count > 1)
-				{
-					this.editionLine.RemoveAt (1);
-				}
-
-				this.countEditedRow = 1;
-			}
 		}
 
 		public override void StartModificationLine(int row)

@@ -209,6 +209,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new PériodesController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.Libellés"))
+			{
+				controller = new LibellésController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Journaux"))
 			{
 				controller = new JournauxController (this.app, this.businessContext, this);
@@ -461,6 +466,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Périodes)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Libellés)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journaux)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PlanComptable)]

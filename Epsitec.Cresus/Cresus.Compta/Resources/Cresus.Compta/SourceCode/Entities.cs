@@ -9,6 +9,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB]", typeof (Epsitec.Cresus.Compta.Entities.ComptaEcritureEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK23]", typeof (Epsitec.Cresus.Compta.Entities.ComptaJournalEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKC3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKN3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -126,6 +127,18 @@ namespace Epsitec.Cresus.Compta.Entities
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK2]", oldValue, value);
 					this.OnDernièrePièceChanged (oldValue, value);
 				}
+			}
+		}
+		///	<summary>
+		///	The <c>Libellés</c> field.
+		///	designer:fld/OVK/OVKQ3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKQ3]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity> Libellés
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity> ("[OVKQ3]");
 			}
 		}
 		
@@ -1082,6 +1095,89 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaPériodeEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaLibellé Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaLibellé</c> entity.
+	///	designer:cap/OVKN3
+	///	</summary>
+	public partial class ComptaLibelléEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Libellé</c> field.
+		///	designer:fld/OVKN3/OVKO3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKO3]")]
+		public global::Epsitec.Common.Types.FormattedText Libellé
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO3]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Libellé;
+				if (oldValue != value || !this.IsFieldDefined("[OVKO3]"))
+				{
+					this.OnLibelléChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO3]", oldValue, value);
+					this.OnLibelléChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Permanant</c> field.
+		///	designer:fld/OVKN3/OVKP3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKP3]")]
+		public bool Permanant
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVKP3]");
+			}
+			set
+			{
+				bool oldValue = this.Permanant;
+				if (oldValue != value || !this.IsFieldDefined("[OVKP3]"))
+				{
+					this.OnPermanantChanging (oldValue, value);
+					this.SetField<bool> ("[OVKP3]", oldValue, value);
+					this.OnPermanantChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnLibelléChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPermanantChanging(bool oldValue, bool newValue);
+		partial void OnPermanantChanged(bool oldValue, bool newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 119);	// [OVKN3]
+		public static readonly string EntityStructuredTypeKey = "[OVKN3]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaLibelléEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

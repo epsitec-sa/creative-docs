@@ -17,14 +17,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Gère l'accès aux journaux de la comptabilité.
+	/// Gère l'accès aux libellés usuels de la comptabilité.
 	/// </summary>
-	public class JournauxDataAccessor : AbstractDataAccessor
+	public class LibellésDataAccessor : AbstractDataAccessor
 	{
-		public JournauxDataAccessor(AbstractController controller)
+		public LibellésDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journaux.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Libellés.Search");
 
 			this.StartCreationLine ();
 		}
@@ -52,43 +52,40 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Journaux.Count;
+				return this.comptaEntity.Libellés.Count;
 			}
 		}
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Journaux.Count)
+			if (row < 0 || row >= this.comptaEntity.Libellés.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Journaux[row];
+				return this.comptaEntity.Libellés[row];
 			}
 		}
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var journaux = comptaEntity.Journaux;
+			var libellés = comptaEntity.Libellés;
 
-			if (row < 0 || row >= journaux.Count)
+			if (row < 0 || row >= libellés.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var journal = journaux[row];
+			var libellé = libellés[row];
 
 			switch (column)
 			{
-				case ColumnType.Titre:
-					return journal.Name;
+				case ColumnType.Permanant:
+					return libellé.Permanant ? LibellésDataAccessor.Permanant : LibellésDataAccessor.Volatile;
 
 				case ColumnType.Libellé:
-					return journal.Description;
-
-				case ColumnType.Résumé:
-					return this.comptaEntity.JournalRésumé (journal);
+					return libellé.Libellé;
 
 				default:
 					return FormattedText.Null;
@@ -98,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionLine(int index)
 		{
-			var newData = new JournauxEditionLine (this.controller);
+			var newData = new LibellésEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -115,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationLine()
 		{
 			this.editionLine.Clear ();
-			this.editionLine.Add (new JournauxEditionLine (this.controller));
+			this.editionLine.Add (new LibellésEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -125,6 +122,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
+		protected override void PrepareEditionLine(int line)
+		{
+			this.editionLine[line].SetText (ColumnType.Permanant, LibellésDataAccessor.Permanant);
+		}
+
 		public override void StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
@@ -132,11 +134,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Journaux.Count)
+			if (row >= 0 && row < this.comptaEntity.Libellés.Count)
 			{
-				var data = new JournauxEditionLine (this.controller);
-				var journal = this.comptaEntity.Journaux[row];
-				data.EntityToData (journal);
+				var data = new LibellésEditionLine (this.controller);
+				var libellé = this.comptaEntity.Libellés[row];
+				data.EntityToData (libellé);
 
 				this.editionLine.Add (data);
 				this.countEditedRow++;
@@ -170,14 +172,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var journal = this.CreateJournal ();
-				data.DataToEntity (journal);
+				var libellé = this.CreateLibellé ();
+				data.DataToEntity (libellé);
 
-				this.comptaEntity.Journaux.Add (journal);
+				this.comptaEntity.Libellés.Insert (0, libellé);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.Journaux.Count-1;
+					firstRow = 0;
 				}
 			}
 
@@ -188,8 +190,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var journal = this.comptaEntity.Journaux[row];
-			this.editionLine[0].DataToEntity (journal);
+			var libellé = this.comptaEntity.Libellés[row];
+			this.editionLine[0].DataToEntity (libellé);
 		}
 
 		public override void RemoveModificationLine()
@@ -198,9 +200,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var journal = this.comptaEntity.Journaux[row];
-					this.DeleteJournal (journal);
-					this.comptaEntity.Journaux.RemoveAt (row);
+					var libellé = this.comptaEntity.Libellés[row];
+					this.DeleteLibellé (libellé);
+					this.comptaEntity.Libellés.RemoveAt (row);
                 }
 
 				this.SearchUpdate ();
@@ -213,11 +215,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Journaux[this.firstEditedRow];
-				var t2 = this.comptaEntity.Journaux[this.firstEditedRow+direction];
+				var t1 = this.comptaEntity.Libellés[this.firstEditedRow];
+				var t2 = this.comptaEntity.Libellés[this.firstEditedRow+direction];
 
-				this.comptaEntity.Journaux[this.firstEditedRow] = t2;
-				this.comptaEntity.Journaux[this.firstEditedRow+direction] = t1;
+				this.comptaEntity.Libellés[this.firstEditedRow] = t2;
+				this.comptaEntity.Libellés[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -240,21 +242,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptaJournalEntity CreateJournal()
+		private ComptaLibelléEntity CreateLibellé()
 		{
 			this.controller.MainWindowController.SetDirty ();
 
 			if (this.businessContext == null)
 			{
-				return new ComptaJournalEntity ();
+				return new ComptaLibelléEntity ();
 			}
 			else
 			{
-				return this.businessContext.CreateEntity<ComptaJournalEntity> ();
+				return this.businessContext.CreateEntity<ComptaLibelléEntity> ();
 			}
 		}
 
-		private void DeleteJournal(ComptaJournalEntity journal)
+		private void DeleteLibellé(ComptaLibelléEntity libellé)
 		{
 			this.controller.MainWindowController.SetDirty ();
 
@@ -264,8 +266,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.businessContext.DeleteEntity (journal);
+				this.businessContext.DeleteEntity (libellé);
 			}
 		}
+
+
+		public static readonly FormattedText	Permanant = TextFormatter.FormatText ("Oui").ApplyBold ();
+		public static readonly FormattedText	Volatile  = TextFormatter.FormatText ("Non");
 	}
 }

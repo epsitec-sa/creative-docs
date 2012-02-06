@@ -150,6 +150,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
 				//	designer:cap/OVKM3
 				public static readonly global::Epsitec.Common.Widgets.Command Journaux = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 118));
+				//	designer:cap/OVKR3
+				public static readonly global::Epsitec.Common.Widgets.Command Libellés = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
 				//	designer:cap/OVK12
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 65));
 				//	designer:cap/OVKI3
@@ -319,6 +321,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Journal = 0x3F80001400002BL;
 				//	designer:cap/OVKM3
 				public const long Journaux = 0x3F800014000076L;
+				//	designer:cap/OVKR3
+				public const long Libellés = 0x3F80001400007BL;
 				//	designer:cap/OVK12
 				public const long New = 0x3F800014000041L;
 				//	designer:cap/OVKI3
@@ -375,6 +379,8 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType ComptaEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
 			//	designer:cap/OVK23
 			public static readonly Epsitec.Common.Types.StructuredType ComptaJournal = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 98));
+			//	designer:cap/OVKN3
+			public static readonly Epsitec.Common.Types.StructuredType ComptaLibellé = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 119));
 			//	designer:cap/OVKC3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaPériode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 108));
 		}
@@ -510,6 +516,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid DernièrePièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2);
 				//	designer:cap/OVKH3
 				public static readonly global::Epsitec.Common.Support.Druid Journaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 113);
+				//	designer:cap/OVKQ3
+				public static readonly global::Epsitec.Common.Support.Druid Libellés = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 122);
 				//	designer:cap/OVKF3
 				public static readonly global::Epsitec.Common.Support.Druid Périodes = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 111);
 				//	designer:cap/OVKN
@@ -580,6 +588,18 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
 				//	designer:cap/OVKJ
 				public static readonly global::Epsitec.Common.Support.Druid TypeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19);
+			}
+			
+			public static class ComptaLibellé
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKO3
+				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 120);
+				//	designer:cap/OVKP3
+				public static readonly global::Epsitec.Common.Support.Druid Permanant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 121);
 			}
 			
 			public static class ComptaPériode
@@ -680,6 +700,7 @@ namespace Epsitec.Cresus.Compta
 			Fields.Compta._Initialize ();
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
+			Fields.ComptaLibellé._Initialize ();
 			Fields.ComptaPériode._Initialize ();
 		}
 		

@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private AbstractFieldController GetFieldController(ColumnType columnType, int line = 0)
+		protected AbstractFieldController GetFieldController(ColumnType columnType, int line = 0)
 		{
 			var column = this.GetMapperColumnRank (columnType);
 

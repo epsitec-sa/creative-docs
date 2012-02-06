@@ -372,6 +372,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+#if false
 		public override bool MoveEditionLine(int direction)
 		{
 			if (this.IsMoveEditionLineEnable (direction))
@@ -401,6 +402,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			return this.firstEditedRow+direction >= 0 && this.firstEditedRow+direction < this.Count;
 		}
+#endif
 
 
 		private ComptaCompteEntity CreateCompte()

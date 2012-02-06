@@ -131,7 +131,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static IEnumerable<string> CatégorieDescriptions
+		public static IEnumerable<FormattedText> CatégorieDescriptions
 		{
 			//	Retourne une liste de tous les noms de catégories possibles.
 			get
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static IEnumerable<string> TypeDescriptions
+		public static IEnumerable<FormattedText> TypeDescriptions
 		{
 			//	Retourne une liste de tous les types de comptes possibles.
 			get

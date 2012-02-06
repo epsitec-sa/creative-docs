@@ -13,6 +13,60 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public IEnumerable<FormattedText> LibellésDescriptions
+		{
+			//	Retourne la liste des libellés usuels.
+			get
+			{
+				return this.Libellés.Select (x => x.Libellé);
+			}
+		}
+
+		public void AddLibellé(FormattedText libellé)
+		{
+			//	Insère un nouveau libellé volatile. S'il est déjà dans la liste, on le remet au sommet.
+			var exist = this.Libellés.Where (x => x.Libellé == libellé).FirstOrDefault ();
+
+			if (exist == null)
+			{
+				int index = 0;
+
+				var firstPermanant = this.Libellés.Where (x => x.Permanant).LastOrDefault ();
+				if (firstPermanant != null)
+				{
+					//	On insère un libellé volatile après le dernier libellé volatile.
+					index = this.Libellés.IndexOf (firstPermanant) + 1;
+				}
+
+				var nouveau = new ComptaLibelléEntity ()
+				{
+					Libellé   = libellé,
+					Permanant = false,
+				};
+
+				this.Libellés.Insert (index, nouveau);
+
+				this.PurgeVolatileLibellés (20);
+			}
+			else
+			{
+				this.Libellés.Remove (exist);
+				this.Libellés.Insert (0, exist);  // déplace au sommet
+			}
+		}
+
+		private void PurgeVolatileLibellés(int limit)
+		{
+			int count = this.Libellés.Where (x => !x.Permanant).Count ();
+
+			while (count > limit)
+			{
+				var last = this.Libellés.Where (x => !x.Permanant).LastOrDefault ();
+				this.Libellés.Remove (last);
+			}
+		}
+
+
 		public FormattedText JournalRésumé(ComptaJournalEntity journal)
 		{
 			//	Retourne le résumé d'un journal.

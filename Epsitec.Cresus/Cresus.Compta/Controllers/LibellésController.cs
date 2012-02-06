@@ -21,20 +21,20 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère les journaux de la comptabilité.
+	/// Ce contrôleur gère les périodes comptables de la comptabilité.
 	/// </summary>
-	public class JournauxController : AbstractController
+	public class LibellésController : AbstractController
 	{
-		public JournauxController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public LibellésController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.dataAccessor = new JournauxDataAccessor (this);
+			this.dataAccessor = new LibellésDataAccessor (this);
 		}
 
 
 		protected override void UpdateTitle()
 		{
-			this.SetTitle ("Journaux d'écritures");
+			this.SetTitle ("Libellés usuels");
 		}
 
 
@@ -71,14 +71,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override int ArrayLineHeight
-		{
-			get
-			{
-				return 20;
-			}
-		}
-
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
@@ -88,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new JournauxFooterController (this);
+			this.footerController = new LibellésFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
 		}
@@ -98,9 +90,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Titre,   0.50, ContentAlignment.MiddleLeft, "Nom",         "Nom court du journal");
-				yield return new ColumnMapper (ColumnType.Libellé, 1.00, ContentAlignment.MiddleLeft, "Description", "Description détaillée du journal");
-				yield return new ColumnMapper (ColumnType.Résumé,  0.50, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Libellé,   1.60, ContentAlignment.MiddleLeft,   "Libellé",   "Texte du libellé usuel qui est conservé");
+				yield return new ColumnMapper (ColumnType.Permanant, 0.20, ContentAlignment.MiddleCenter, "Permamant", "Détermine si le libellé est permamant");
 			}
 		}
 	}

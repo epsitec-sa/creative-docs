@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public List<string> PrimaryTexts
+		public List<FormattedText> PrimaryTexts
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public List<string> SecondaryTexts
+		public List<FormattedText> SecondaryTexts
 		{
 			get
 			{

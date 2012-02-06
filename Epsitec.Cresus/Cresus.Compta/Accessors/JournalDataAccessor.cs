@@ -292,6 +292,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
+				this.comptaEntity.AddLibellé (data.GetText (ColumnType.Libellé));
+
 				var écriture = this.CreateEcriture ();
 				data.DataToEntity (écriture);
 				écriture.MultiId = multiId;
@@ -335,6 +337,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
+				this.comptaEntity.AddLibellé (data.GetText (ColumnType.Libellé));
+
 				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{
 					//	Crée une écriture manquante.

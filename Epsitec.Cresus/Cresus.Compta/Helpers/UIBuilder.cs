@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static void UpdateAutoCompleteTextField(AbstractTextField field, params string[] texts)
+		public static void UpdateAutoCompleteTextField(AbstractTextField field, params FormattedText[] texts)
 		{
 			var auto = field as AutoCompleteTextField;
 			System.Diagnostics.Debug.Assert (auto != null);

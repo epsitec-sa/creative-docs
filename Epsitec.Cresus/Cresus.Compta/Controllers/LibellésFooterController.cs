@@ -24,9 +24,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class PériodeFooterController : AbstractFooterController
+	public class LibellésFooterController : AbstractFooterController
 	{
-		public PériodeFooterController(AbstractController controller)
+		public LibellésFooterController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -63,12 +63,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Utilise)
+				if (mapper.Column == ColumnType.Permanant)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, PériodesDataAccessor.PériodeCourante, PériodesDataAccessor.AutrePériode);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, LibellésDataAccessor.Permanant, LibellésDataAccessor.Volatile);
 				}
 				else
 				{
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'une période comptable :" : "Création d'une période comptable :";
+			return modify ? "Modification d'un libellé usuel :" : "Création d'un libellé usuel :";
 		}
 	}
 }
