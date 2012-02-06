@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 	{
 		public static Date? ParseDate(string text)
 		{
+			//	Parse une date située dans n'importe quelle période.
 			System.DateTime d;
 			if (System.DateTime.TryParse (text, out d))
 			{
@@ -41,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string CatégoriesToString(CatégorieDeCompte catégorie)
 		{
+			//	Conversion de plusieurs catégories en une chaîne où elles sont séparées par des "|".
 			var list = new List<string> ();
 
 			foreach (var c in Converters.Catégories)
@@ -56,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static CatégorieDeCompte StringToCatégories(string text)
 		{
+			//	Conversion de plusieurs catégories séparées par des "|".
 			var catégorie = CatégorieDeCompte.Inconnu;
 
 			if (!string.IsNullOrEmpty (text))
@@ -74,6 +77,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string CatégorieToString(CatégorieDeCompte catégorie)
 		{
+			//	Conversion d'une catégorie en chaîne.
 			switch (catégorie)
 			{
 				case CatégorieDeCompte.Actif:
@@ -98,7 +102,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static CatégorieDeCompte StringToCatégorie(string text)
 		{
-			switch (text.ToLower ())
+			//	Conversion d'une chaîne en catégorie.
+			switch (Converters.PreparingForSearh (text))
 			{
 				case "actif":
 				case "actifs":
@@ -126,18 +131,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string[] CatégorieDescriptions
+		public static IEnumerable<string> CatégorieDescriptions
 		{
+			//	Retourne une liste de tous les noms de catégories possibles.
 			get
 			{
-				var list = new List<string> ();
-
 				foreach (var catégorie in Converters.Catégories)
 				{
-					list.Add (Converters.CatégorieToString (catégorie));
+					yield return Converters.CatégorieToString (catégorie);
 				}
-
-				return list.ToArray ();
 			}
 		}
 
@@ -156,6 +158,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string TypeToString(TypeDeCompte type)
 		{
+			//	Conversion d'un type de compte en chaîne.
 			switch (type)
 			{
 				case TypeDeCompte.Normal:
@@ -177,7 +180,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static TypeDeCompte StringToType(string text)
 		{
-			switch (text.ToLower ())
+			//	Conversion d'une chaîne en type de compte.
+			switch (Converters.PreparingForSearh (text))
 			{
 				case "titre":
 					return TypeDeCompte.Titre;
@@ -185,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case "groupe":
 					return TypeDeCompte.Groupe;
 
-				case "bloqué":
+				case "bloque":
 					return TypeDeCompte.Bloqué;
 
 				default:
@@ -194,18 +198,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string[] TypeDescriptions
+		public static IEnumerable<string> TypeDescriptions
 		{
+			//	Retourne une liste de tous les types de comptes possibles.
 			get
 			{
-				var list = new List<string> ();
-
 				foreach (var type in Converters.Types)
 				{
-					list.Add (Converters.TypeToString (type));
+					yield return Converters.TypeToString (type);
 				}
-
-				return list.ToArray ();
 			}
 		}
 
@@ -217,6 +218,39 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return TypeDeCompte.Titre;
 				yield return TypeDeCompte.Groupe;
 			}
+		}
+
+
+		public static string PreparingForSearh(FormattedText text)
+		{
+			return Converters.PreparingForSearh (text.ToSimpleText ());
+		}
+
+		public static string PreparingForSearh(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				return Converters.RemoveDiacritics (text).ToLower ();
+			}
+
+			return text;
+		}
+
+		private static string RemoveDiacritics(string text)
+		{
+			string norm = text.Normalize (System.Text.NormalizationForm.FormD);
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i = 0; i < norm.Length; i++)
+			{
+				var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory (norm[i]);
+				if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+				{
+					builder.Append (norm[i]);
+				}
+			}
+
+			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
 	}
 }

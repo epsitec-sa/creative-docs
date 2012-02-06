@@ -122,14 +122,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			if (!string.IsNullOrEmpty (typed))
 			{
-				typed = typed.ToLower ();
+				typed = Converters.PreparingForSearh (typed);
 
 				bool two = (this.primaryTexts.Count == this.secondaryTexts.Count);
 
 				for (int i=0; i<this.primaryTexts.Count; i++)
 				{
-					string primary = this.primaryTexts[i].ToLower ();
-					string secondary = two ? this.secondaryTexts[i].ToLower () : "";
+					string primary   =       Converters.PreparingForSearh (this.primaryTexts[i]);
+					string secondary = two ? Converters.PreparingForSearh (this.secondaryTexts[i]) : "";
 
 					if (typed == primary || typed == secondary)
 					{
