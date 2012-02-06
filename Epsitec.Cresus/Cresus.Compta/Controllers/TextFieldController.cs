@@ -22,7 +22,8 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Contrôleur générique permettant l'édition d'un champ "texte".
+	/// Contrôleur générique permettant l'édition d'un champ "texte". Les champs monétaires sont
+	/// gérés comme des champs textuels.
 	/// </summary>
 	public class TextFieldController : AbstractFieldController
 	{
