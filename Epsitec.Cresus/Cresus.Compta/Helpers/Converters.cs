@@ -126,6 +126,21 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static string[] CatégorieDescriptions
+		{
+			get
+			{
+				var list = new List<string> ();
+
+				foreach (var catégorie in Converters.Catégories)
+				{
+					list.Add (Converters.CatégorieToString (catégorie));
+				}
+
+				return list.ToArray ();
+			}
+		}
+
 		private static IEnumerable<CatégorieDeCompte> Catégories
 		{
 			get
@@ -135,6 +150,72 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return CatégorieDeCompte.Charge;
 				yield return CatégorieDeCompte.Produit;
 				yield return CatégorieDeCompte.Exploitation;
+			}
+		}
+
+
+		public static string TypeToString(TypeDeCompte type)
+		{
+			switch (type)
+			{
+				case TypeDeCompte.Normal:
+					return "Normal";
+
+				case TypeDeCompte.Titre:
+					return "Titre";
+
+				case TypeDeCompte.Groupe:
+					return "Groupe";
+
+				case TypeDeCompte.Bloqué:
+					return "Bloqué";
+
+				default:
+					return "?";
+			}
+		}
+
+		public static TypeDeCompte StringToType(string text)
+		{
+			switch (text.ToLower ())
+			{
+				case "titre":
+					return TypeDeCompte.Titre;
+
+				case "groupe":
+					return TypeDeCompte.Groupe;
+
+				case "bloqué":
+					return TypeDeCompte.Bloqué;
+
+				default:
+					return TypeDeCompte.Normal;
+			}
+		}
+
+
+		public static string[] TypeDescriptions
+		{
+			get
+			{
+				var list = new List<string> ();
+
+				foreach (var type in Converters.Types)
+				{
+					list.Add (Converters.TypeToString (type));
+				}
+
+				return list.ToArray ();
+			}
+		}
+
+		private static IEnumerable<TypeDeCompte> Types
+		{
+			get
+			{
+				yield return TypeDeCompte.Normal;
+				yield return TypeDeCompte.Titre;
+				yield return TypeDeCompte.Groupe;
 			}
 		}
 	}

@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -211,7 +212,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Type,          "Normal");
+			this.editionLine[line].SetText (ColumnType.Type, Converters.TypeToString (TypeDeCompte.Normal));
 			this.editionLine[line].SetText (ColumnType.IndexOuvBoucl, "1");
 		}
 

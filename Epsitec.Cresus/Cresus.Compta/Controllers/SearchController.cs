@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.beginnerCatégorieActif = new CheckButton
 				{
 					Parent         = frame1,
-					Text           = "Actif",
+					Text           = Converters.CatégorieToString (CatégorieDeCompte.Actif),
 					ActiveState    = ((catégorie & CatégorieDeCompte.Actif) != 0) ? ActiveState.Yes : ActiveState.No,
 					PreferredWidth = buttonWidth,
 					Dock           = DockStyle.Left,
@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.beginnerCatégorieCharge = new CheckButton
 				{
 					Parent         = frame1,
-					Text           = "Charge",
+					Text           = Converters.CatégorieToString (CatégorieDeCompte.Charge),
 					ActiveState    = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
 					PreferredWidth = buttonWidth,
 					Dock           = DockStyle.Left,
@@ -215,7 +215,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.beginnerCatégorieExploitation = new CheckButton
 				{
 					Parent         = frame1,
-					Text           = "Exploitation",
+					Text           = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
 					ActiveState    = ((catégorie & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No,
 					PreferredWidth = buttonWidth+20,
 					Dock           = DockStyle.Left,
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.beginnerCatégoriePassif = new CheckButton
 				{
 					Parent         = frame2,
-					Text           = "Passif",
+					Text           = Converters.CatégorieToString (CatégorieDeCompte.Passif),
 					ActiveState    = ((catégorie & CatégorieDeCompte.Passif) != 0) ? ActiveState.Yes : ActiveState.No,
 					PreferredWidth = buttonWidth,
 					Dock           = DockStyle.Left,
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.beginnerCatégorieProduit = new CheckButton
 				{
 					Parent         = frame2,
-					Text           = "Produit",
+					Text           = Converters.CatégorieToString (CatégorieDeCompte.Produit),
 					ActiveState    = ((catégorie & CatégorieDeCompte.Produit) != 0) ? ActiveState.Yes : ActiveState.No,
 					PreferredWidth = buttonWidth,
 					Dock           = DockStyle.Left,
