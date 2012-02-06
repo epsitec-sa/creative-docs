@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					return Validators.StringToCatégories (data.SearchText.FromText);
+					return Converters.StringToCatégories (data.SearchText.FromText);
 				}
 			}
 			set
@@ -138,7 +138,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					data.Column              = ColumnType.Catégorie;
 					data.SearchText.Mode     = SearchMode.Jokers;
-					data.SearchText.FromText = Validators.CatégoriesToString (value);
+					data.SearchText.FromText = Converters.CatégoriesToString (value);
 
 					this.BeginnerAdjust (true);
 				}
@@ -309,8 +309,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				data.Column              = ColumnType.Date;
 				data.SearchText.Mode     = SearchMode.Interval;
-				data.SearchText.FromText = Validators.DateToString (beginDate);
-				data.SearchText.ToText   = Validators.DateToString (endDate);
+				data.SearchText.FromText = Converters.DateToString (beginDate);
+				data.SearchText.ToText   = Converters.DateToString (endDate);
 
 				this.BeginnerAdjust (true);
 			}

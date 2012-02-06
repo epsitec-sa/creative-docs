@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else if (this.preparedFromDate.HasValue || this.preparedToDate.HasValue)
 				{
-					var date = Validators.ParseDate (target);
+					var date = Converters.ParseDate (target);
 					if (date.HasValue)
 					{
 						if (this.preparedFromDate.HasValue && date.Value < this.preparedFromDate.Value)
@@ -472,7 +472,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedFromDate = Validators.ParseDate (this.fromText);
+					this.preparedFromDate = Converters.ParseDate (this.fromText);
 				}
 			}
 
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.preparedToDate = Validators.ParseDate (this.toText);
+					this.preparedToDate = Converters.ParseDate (this.toText);
 				}
 			}
 

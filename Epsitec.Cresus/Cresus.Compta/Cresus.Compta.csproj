@@ -104,6 +104,7 @@
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="Entities\ComptaPériodeEntity.cs" />
+    <Compile Include="Helpers\Converters.cs" />
     <Compile Include="Helpers\Validators.cs" />
     <Compile Include="IO\NewCompta.cs" />
     <Compile Include="IO\CrésusCompta.cs" />

@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Compta.IO
 					continue;
 				}
 
-				var date    = Validators.ParseDate (words[0]);
+				var date    = Converters.ParseDate (words[0]);
 				var débit   = this.GetCompte (words[1]);
 				var crédit  = this.GetCompte (words[2]);
 				var pièce   = words[3];
