@@ -13,16 +13,13 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
-		public IEnumerable<FormattedText> LibellésDescriptions
+		public IEnumerable<FormattedText> GetLibellésDescriptions(ComptaPériodeEntity période)
 		{
 			//	Retourne la liste des libellés usuels.
-			get
-			{
-				return this.Libellés.Select (x => x.Libellé);
-			}
+			return this.Libellés.Select (x => x.Libellé);
 		}
 
-		public void AddLibellé(FormattedText libellé)
+		public void AddLibellé(ComptaPériodeEntity période, FormattedText libellé)
 		{
 			//	Insère un nouveau libellé volatile. S'il est déjà dans la liste, on le remet au sommet.
 			var exist = this.Libellés.Where (x => x.Libellé == libellé).FirstOrDefault ();
@@ -46,7 +43,7 @@ namespace Epsitec.Cresus.Compta.Entities
 
 				this.Libellés.Insert (index, nouveau);
 
-				this.PurgeVolatileLibellés (20);
+				//?this.PurgeVolatileLibellés (20);
 			}
 			else
 			{

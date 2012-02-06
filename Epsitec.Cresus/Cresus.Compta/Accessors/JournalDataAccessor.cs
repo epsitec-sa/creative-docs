@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				this.comptaEntity.AddLibellé (data.GetText (ColumnType.Libellé));
+				this.comptaEntity.AddLibellé (this.périodeEntity, data.GetText (ColumnType.Libellé));
 
 				var écriture = this.CreateEcriture ();
 				data.DataToEntity (écriture);
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				this.comptaEntity.AddLibellé (data.GetText (ColumnType.Libellé));
+				this.comptaEntity.AddLibellé (this.périodeEntity, data.GetText (ColumnType.Libellé));
 
 				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{

@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.LibellésDescriptions.ToArray ());
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
 				}
 				else
 				{
@@ -211,10 +211,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateLibellés()
 		{
 			//	Met à jour les libellés usuels dans les widgets combo pour les libellés.
+			var libellés = this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ();
+
 			for (int line = 0; line < this.fieldControllers.Count; line++)
 			{
 				var field = this.GetFieldController (ColumnType.Libellé, line);
-				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.LibellésDescriptions.ToArray ());
+				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, libellés);
 			}
 		}
 

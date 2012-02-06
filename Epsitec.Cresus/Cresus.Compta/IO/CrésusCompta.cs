@@ -355,6 +355,13 @@ namespace Epsitec.Cresus.Compta.IO
 					}
 
 					période = this.CreatePériode (journal);
+
+					//	Met tous les libellés des écritures dans les libellés usuels.
+					foreach (var écriture in journal)
+					{
+						this.compta.AddLibellé (période, écriture.Libellé);
+					}
+
 					return null;  // ok
 				}
 				catch (System.Exception ex)

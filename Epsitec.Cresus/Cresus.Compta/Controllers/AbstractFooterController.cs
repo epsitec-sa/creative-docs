@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var column = this.GetMapperColumnRank (columnType);
 
-			if (line < 0 || line >= this.fieldControllers.Count ||
+			if (line   < 0 || line   >= this.fieldControllers.Count      ||
 				column < 0 || column >= this.fieldControllers[line].Count)
 			{
 				return null;
