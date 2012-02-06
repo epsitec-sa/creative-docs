@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override void InsertLineAction()
+		public override void MultiInsertLineAction()
 		{
 			//	Insère une nouvelle ligne après la ligne courante.
 			bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.FooterSelect (multiActiveColumn);
 		}
 
-		public override void DeleteLineAction()
+		public override void MultiDeleteLineAction()
 		{
 			//	Supprime la ligne courante.
 			this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
@@ -266,29 +266,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.FooterSelect (this.selectedColumn);
 		}
 
-		public override void LineUpAction()
+		public override void MultiMoveLineAction(int direction)
 		{
-			//	Monte la ligne courante.
-			this.SwapLine (this.selectedLine, this.selectedLine-1);
-			this.selectedLine--;
+			//	Monte ou descend la ligne courante.
+			this.SwapLine (this.selectedLine, this.selectedLine+direction);
+			this.selectedLine += direction;
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
 			this.FooterSelect (this.selectedColumn);
 		}
 
-		public override void LineDownAction()
-		{
-			//	Descend la ligne courante.
-			this.SwapLine (this.selectedLine, this.selectedLine+1);
-			this.selectedLine++;
-
-			this.dirty = true;
-			this.UpdateFooterContent ();
-			this.FooterSelect (this.selectedColumn);
-		}
-
-		public override void LineSwapAction()
+		public override void MultiLineSwapAction()
 		{
 			//	Permute le débit et le crédit dans la ligne courante.
 			var débit  = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit);
@@ -301,7 +290,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateFooterContent ();
 		}
 
-		public override void LineAutoAction()
+		public override void MultiLineAutoAction()
 		{
 			//	Met le total automatique dans la ligne courante.
 			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)

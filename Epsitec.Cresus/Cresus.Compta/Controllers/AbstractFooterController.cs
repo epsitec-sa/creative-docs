@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dataAccessor.UpdateEditionLine ();
-			this.EditionDataToWidgets (false);
+			this.EditionDataToWidgets (ignoreFocusField: false);
 
 			this.controller.SearchUpdateAfterModification ();
 
@@ -310,27 +310,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public virtual void InsertLineAction()
+		public virtual void MultiInsertLineAction()
 		{
 		}
 
-		public virtual void DeleteLineAction()
+		public virtual void MultiDeleteLineAction()
 		{
 		}
 
-		public virtual void LineUpAction()
+		public virtual void MultiMoveLineAction(int direction)
 		{
 		}
 
-		public virtual void LineDownAction()
+		public virtual void MultiLineSwapAction()
 		{
 		}
 
-		public virtual void LineSwapAction()
-		{
-		}
-
-		public virtual void LineAutoAction()
+		public virtual void MultiLineAutoAction()
 		{
 		}
 
@@ -430,7 +426,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//?this.WidgetToEditionData ();
 
 				this.UpdateEditionWidgets ();
-				this.EditionDataToWidgets (true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
+				this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
 
 				this.FooterValidate ();
 				this.UpdateToolbar ();
@@ -531,7 +527,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public virtual void UpdateFooterContent()
 		{
 			this.UpdateEditionWidgets ();
-			this.EditionDataToWidgets (false);
+			this.EditionDataToWidgets (ignoreFocusField: false);
 			this.FooterValidate ();
 			this.UpdateFooterInfo ();
 		}

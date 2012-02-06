@@ -610,7 +610,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.InsertLineAction ();
+				this.controller.FooterController.MultiInsertLineAction ();
 			}
 		}
 
@@ -619,7 +619,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.DeleteLineAction ();
+				this.controller.FooterController.MultiDeleteLineAction ();
 			}
 		}
 
@@ -628,7 +628,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.LineUpAction ();
+				this.controller.FooterController.MultiMoveLineAction (-1);
 			}
 		}
 
@@ -637,7 +637,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.LineDownAction ();
+				this.controller.FooterController.MultiMoveLineAction (1);
 			}
 		}
 
@@ -646,7 +646,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.LineSwapAction ();
+				this.controller.FooterController.MultiLineSwapAction ();
 			}
 		}
 
@@ -655,7 +655,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null && this.controller.FooterController != null)
 			{
-				this.controller.FooterController.LineAutoAction ();
+				this.controller.FooterController.MultiLineAutoAction ();
 			}
 		}
 
