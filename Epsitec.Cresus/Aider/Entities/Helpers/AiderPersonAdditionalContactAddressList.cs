@@ -6,6 +6,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
@@ -13,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Aider.Entities.Helpers
 {
-	class AiderPersonAdditionalContactAddressList : ObservableList<AiderAddressEntity>
+	class AiderPersonAdditionalContactAddressList : ObservableList<AiderAddressEntity>, ICollectionModificationCapabilities
 	{
 		public AiderPersonAdditionalContactAddressList(AiderPersonEntity person)
 		{
@@ -44,71 +45,105 @@ namespace Epsitec.Aider.Entities.Helpers
 			}
 		}
 
-		public override void Add(AiderAddressEntity item)
+		public override void Insert(int index, AiderAddressEntity item)
 		{
 			if (this.Contains (item))
 			{
 				throw new System.InvalidOperationException ("Duplicate address");
 			}
 
-			if (this.person.AdditionalAddress1.IsNull ())
-			{
-				this.person.AdditionalAddress1 = item;
-			}
-			else if (this.person.AdditionalAddress2.IsNull ())
-			{
-				this.person.AdditionalAddress2 = item;
-			}
-			else if (this.person.AdditionalAddress3.IsNull ())
-			{
-				this.person.AdditionalAddress3 = item;
-			}
-			else if (this.person.AdditionalAddress4.IsNull ())
-			{
-				this.person.AdditionalAddress4 = item;
-			}
-			else
-			{
-				return;
-			}
-			
-			base.Add (item);
+			this.Apply (list => list.Insert (index, item));
+			base.Insert (index, item);
 		}
 
-		public override bool Remove(AiderAddressEntity item)
+		public override void RemoveAt(int index)
 		{
-			if (this.person.AdditionalAddress1 == item)
+			this.Apply (list => list.RemoveAt (index));
+			base.RemoveAt (index);
+		}
+
+		public override AiderAddressEntity this[int index]
+		{
+			get
 			{
-				this.person.AdditionalAddress1 = this.person.AdditionalAddress2;
-				this.person.AdditionalAddress2 = this.person.AdditionalAddress3;
-				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
-				this.person.AdditionalAddress4 = null;
+				return base[index];
 			}
-			else if (this.person.AdditionalAddress2 == item)
+			set
 			{
-				this.person.AdditionalAddress2 = this.person.AdditionalAddress3;
-				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
-				this.person.AdditionalAddress4 = null;
+				this.Apply (list => list[index] = value);
+				base[index] = value;
 			}
-			else if (this.person.AdditionalAddress3 == item)
-			{
-				this.person.AdditionalAddress3 = this.person.AdditionalAddress4;
-				this.person.AdditionalAddress4 = null;
-			}
-			else if (this.person.AdditionalAddress4 == item)
-			{
-				this.person.AdditionalAddress4 = null;
-			}
-			else
+		}
+
+		public override void Clear()
+		{
+			this.Apply (list => list.Clear ());
+			base.Clear ();
+		}
+
+
+		private void Apply(System.Action<IList<AiderAddressEntity>> action)
+		{
+			var list = this.GetAddresses ().ToList ();
+			action (list);
+			this.ApplyList (list);
+		}
+
+		private void ApplyList(IList<AiderAddressEntity> list)
+		{
+			int n = list.Count;
+
+			System.Diagnostics.Debug.Assert (n <= AiderPersonAdditionalContactAddressList.NumAddresses);
+
+			this.person.AdditionalAddress1 = n > 0 ? list[0] : null;
+			this.person.AdditionalAddress2 = n > 1 ? list[1] : null;
+			this.person.AdditionalAddress3 = n > 2 ? list[2] : null;
+			this.person.AdditionalAddress4 = n > 3 ? list[3] : null;
+		}
+
+		#region ICollectionModificationCapabilities Members
+
+		bool ICollectionModificationCapabilities.CanInsert(int index)
+		{
+			if ((index < 0) || (index >= AiderPersonAdditionalContactAddressList.NumAddresses))
 			{
 				return false;
 			}
-
-			this.ReplaceWithRange (this.GetAddresses ());
-
-			return true;
+			else if (this.GetAddresses ().Count () == AiderPersonAdditionalContactAddressList.NumAddresses)
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
 		}
 
-		private readonly AiderPersonEntity person;
+		bool ICollectionModificationCapabilities.CanRemove(int index)
+		{
+			if ((index < 0) || (index >= this.GetAddresses ().Count ()))
+			{
+				return false;
+			}
+			else
+			{
+				return true;
+			}
+		}
+
+		bool ICollectionModificationCapabilities.CanBeReordered
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		#endregion
+
+
+		private const int						NumAddresses = 4;
+
+		private readonly AiderPersonEntity		person;
 	}
 }
