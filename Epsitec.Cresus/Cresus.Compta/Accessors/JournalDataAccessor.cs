@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public override AbstractEntity GetEditionData(int row)
+		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.journal.Count)
 			{
@@ -411,6 +411,78 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SearchUpdate ();
 				this.StartCreationLine ();
 			}
+		}
+
+
+		public override bool MoveEditionLine(int direction)
+		{
+			if (this.IsMoveEditionLineEnable (direction))
+			{
+				var deleted = new List<ComptaEcritureEntity> ();
+
+				for (int i = 0; i < this.countEditedRow; i++)
+				{
+					deleted.Add (this.journal[this.firstEditedRow]);
+					this.journal.RemoveAt (this.firstEditedRow);
+				}
+
+				int row = (direction > 0) ? this.firstEditedRow : this.firstEditedRow-1;
+				int firstRow, countRow;
+				this.ExploreMulti(row, out firstRow, out countRow);
+
+				this.firstEditedRow = (direction > 0) ? firstRow+countRow : firstRow;
+				row = this.firstEditedRow;
+
+				foreach (var écriture in deleted)
+				{
+					this.journal.Insert (row++, écriture);
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override bool IsMoveEditionLineEnable(int direction)
+		{
+			if (this.firstEditedRow == -1)
+			{
+				return false;
+			}
+
+			int firstRow, countRow;
+			this.ExploreMulti (this.firstEditedRow, out firstRow, out countRow);
+
+			if (direction < 0)  // monte ?
+			{
+				if (firstRow+direction < 0)
+				{
+					return false;
+				}
+
+				if (this.journal[firstRow].Date != this.journal[firstRow-1].Date)
+				{
+					return false;
+				}
+			}
+
+			if (direction > 0)  // descend ?
+			{
+				if (firstRow+countRow >= this.Count)
+				{
+					return false;
+				}
+
+				if (this.journal[firstRow].Date != this.journal[firstRow+countRow].Date)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 

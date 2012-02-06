@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public override AbstractEntity GetEditionData(int row)
+		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.planComptable.Count)
 			{

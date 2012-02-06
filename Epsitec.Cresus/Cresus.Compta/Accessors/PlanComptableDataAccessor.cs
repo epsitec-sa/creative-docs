@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public override AbstractEntity GetEditionData(int row)
+		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.planComptable.Count)
 			{
@@ -369,6 +369,37 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SearchUpdate ();
 				this.StartCreationLine ();
 			}
+		}
+
+
+		public override bool MoveEditionLine(int direction)
+		{
+			if (this.IsMoveEditionLineEnable (direction))
+			{
+				var t1 = this.planComptable[this.firstEditedRow];
+				var t2 = this.planComptable[this.firstEditedRow+direction];
+
+				this.planComptable[this.firstEditedRow] = t2;
+				this.planComptable[this.firstEditedRow+direction] = t1;
+
+				this.firstEditedRow += direction;
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+		public override bool IsMoveEditionLineEnable(int direction)
+		{
+			if (this.firstEditedRow == -1)
+			{
+				return false;
+			}
+
+			return this.firstEditedRow+direction >= 0 && this.firstEditedRow+direction < this.Count;
 		}
 
 

@@ -622,7 +622,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = footer,
 					GlyphShape      = Common.Widgets.GlyphShape.TriangleLeft,
-					PreferredWidth  = 30,
+					PreferredWidth  = 20,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Enable          = false,
@@ -634,7 +634,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = footer,
 					GlyphShape      = Common.Widgets.GlyphShape.TriangleRight,
-					PreferredWidth  = 30,
+					PreferredWidth  = 20,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Enable          = false,
@@ -645,7 +645,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				new FrameBox
 				{
 					Parent          = footer,
-					PreferredWidth  = 30+30-1+10,
+					PreferredWidth  = 20+20-1+10,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Visibility      = this.isFilter,

@@ -130,6 +130,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Select.Down, firstRow != -1 && firstRow+countRow < this.array.TotalRows);
 
 			this.controller.SetCommandEnable (Res.Commands.Select.Home, !this.array.IsShowedRow (firstRow, countRow));
+
+			this.controller.SetCommandEnable (Res.Commands.Edit.Up,   this.controller.DataAccessor.IsMoveEditionLineEnable (-1));
+			this.controller.SetCommandEnable (Res.Commands.Edit.Down, this.controller.DataAccessor.IsMoveEditionLineEnable (1));
 		}
 
 

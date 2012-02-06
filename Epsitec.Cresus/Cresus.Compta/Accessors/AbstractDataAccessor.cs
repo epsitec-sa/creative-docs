@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public virtual AbstractEntity GetEditionData(int row)
+		public virtual AbstractEntity GetEditionEntity(int row)
 		{
 			return null;
 		}
@@ -408,6 +408,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.editionLine.RemoveAt (index);
 			this.countEditedRow = this.editionLine.Count;
+		}
+
+		public virtual bool MoveEditionLine(int direction)
+		{
+			return false;
+		}
+
+		public virtual bool IsMoveEditionLineEnable(int direction)
+		{
+			return false;
 		}
 
 		public int FirstEditedRow

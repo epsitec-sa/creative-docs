@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (columnType == ColumnType.Titre)
 			{
-				var compte = this.dataAccessor.GetEditionData (row) as ComptaCompteEntity;
+				var compte = this.dataAccessor.GetEditionEntity (row) as ComptaCompteEntity;
 
 				for (int i = 0; i < compte.Niveau; i++)
 				{

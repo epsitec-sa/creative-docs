@@ -300,6 +300,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void MoveAction(int direction)
 		{
+			//	Déplace la ou les lignes sélectionnées vers le haut ou vers le bas.
+			if (this.dataAccessor.MoveEditionLine (direction))
+			{
+				int firstRow = this.dataAccessor.FirstEditedRow;
+				int countRow = this.dataAccessor.CountEditedRow;
+
+				this.updateArrayContentAction ();
+
+				this.arrayController.SelectedRow = firstRow;
+				this.arrayController.SetHilitedRows (firstRow, countRow);
+				this.arrayController.ShowRow (firstRow, countRow);
+			}
 		}
 
 		public virtual void DuplicateAction()
