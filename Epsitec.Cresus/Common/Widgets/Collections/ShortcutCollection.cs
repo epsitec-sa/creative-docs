@@ -1,7 +1,8 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Collections
@@ -103,11 +104,11 @@ namespace Epsitec.Common.Widgets.Collections
 		}
 
 		/// <summary>
-		/// Adds the specified shortcut if it is not yet in the collection.
+		/// Inserts the specified shortcut if it is not yet in the collection.
 		/// Empty shortcuts will be ignored.
 		/// </summary>
 		/// <param name="shortcut">The shortcut.</param>
-		public override void Add(Shortcut shortcut)
+		public override void Insert(int index, Shortcut shortcut)
 		{
 			if ((this.Contains (shortcut)) &&
 				(! shortcut.IsEmpty))
@@ -118,7 +119,7 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 			else
 			{
-				base.Add (shortcut);
+				base.Insert (index, shortcut);
 			}
 		}
 	}

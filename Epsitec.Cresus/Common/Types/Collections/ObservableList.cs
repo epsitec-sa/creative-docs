@@ -256,14 +256,14 @@ namespace Epsitec.Common.Types.Collections
 			return this.list.IndexOf (item);
 		}
 
-		public void Insert(int index, T item)
+		public virtual void Insert(int index, T item)
 		{
 			ObservableList<T> that = this.NotifyBeforeChange ();
 			that.list.Insert (index, item);
 			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
 		}
 
-		public void RemoveAt(int index)
+		public virtual void RemoveAt(int index)
 		{
 			ObservableList<T> that = this.NotifyBeforeChange ();
 			T value = that.list[index];
@@ -271,7 +271,7 @@ namespace Epsitec.Common.Types.Collections
 			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { value }));
 		}
 
-		public T this[int index]
+		public virtual T this[int index]
 		{
 			get
 			{
@@ -295,15 +295,13 @@ namespace Epsitec.Common.Types.Collections
 
 		#region ICollection<T> Members
 
-		public virtual void Add(T item)
+		public void Add(T item)
 		{
-			ObservableList<T> that = this.NotifyBeforeChange ();
-			int index = that.list.Count;
-			that.list.Add (item);
-			that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Add, index, new object[] { item }));
+			int index = this.list.Count;
+			this.Insert (index, item);
 		}
 
-		public void Clear()
+		public virtual void Clear()
 		{
 			if (this.list.Count > 0)
 			{
@@ -340,14 +338,12 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
-		public virtual bool Remove(T item)
+		public bool Remove(T item)
 		{
 			int index = this.list.IndexOf (item);
 			if (index >= 0)
 			{
-				ObservableList<T> that = this.NotifyBeforeChange ();
-				that.list.RemoveAt (index);
-				that.OnCollectionChanged (new CollectionChangedEventArgs (CollectionChangedAction.Remove, -1, null, index, new object[] { item }));
+				this.RemoveAt (index);
 				return true;
 			}
 			else
