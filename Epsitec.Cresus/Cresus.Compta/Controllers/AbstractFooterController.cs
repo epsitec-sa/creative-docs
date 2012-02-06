@@ -530,10 +530,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateFooterContent()
 		{
+			this.ClearFocus ();
 			this.UpdateEditionWidgets ();
 			this.EditionDataToWidgets ();
 			this.FooterValidate ();
 			this.UpdateFooterInfo ();
+		}
+
+		private void ClearFocus()
+		{
+			//	Cette opération consiste à faire croire que plus personne n'a le focus, même si ce n'est pas vrai.
+			//	Ainsi, même le contenu du champ en édition sera mis à jour.
+			for (int line = 0; line < this.fieldControllers.Count; line++)
+			{
+				int columnCount = this.fieldControllers[line].Count ();
+
+				for (int column = 0; column < columnCount; column++)
+				{
+					this.fieldControllers[line][column].ClearFocus ();
+				}
+			}
 		}
 
 		protected virtual void UpdateFooterInfo()

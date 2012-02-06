@@ -96,6 +96,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public void ClearFocus()
+		{
+			this.hasFocus = false;
+		}
+
 		public virtual void SetFocus()
 		{
 		}
