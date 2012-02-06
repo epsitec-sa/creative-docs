@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			this.collectionAccessor = collectionAccessor;
 			this.item   = item;
-			this.filter = filter;
+			this.filter = filter ?? GroupedItemController.defaultFilter;
 			
 			var items = this.collectionAccessor.GetItemCollection ();
 			
@@ -37,14 +37,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			System.Diagnostics.Debug.Assert (filter (item));
 		}
 
-		private IEnumerable<AbstractEntity> CompatibleItems
-		{
-			get
-			{
-				var items = this.collectionAccessor.GetItemCollection ();
-				return items.Where (x => this.filter (x));
-			}
-		}
 
 		
 		public int GetItemCount()
@@ -102,6 +94,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+		private IEnumerable<AbstractEntity> CompatibleItems
+		{
+			get
+			{
+				var items = this.collectionAccessor.GetItemCollection ();
+				return items.Where (x => this.filter (x));
+			}
+		}
+		
 		private void MoveItemInReadOnlyCollectionAccessor(int newIndex)
 		{
 			var compatibleItems = this.CompatibleItems.ToList ();
@@ -181,8 +182,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		readonly ICollectionAccessor collectionAccessor;
-		readonly AbstractEntity item;
-		readonly System.Predicate<AbstractEntity> filter;
+		private static readonly System.Predicate<AbstractEntity> defaultFilter = x => true;
+
+		private readonly ICollectionAccessor				collectionAccessor;
+		private readonly AbstractEntity						item;
+		private readonly System.Predicate<AbstractEntity>	filter;
 	}
 }

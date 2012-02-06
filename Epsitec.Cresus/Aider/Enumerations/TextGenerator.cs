@@ -2,12 +2,8 @@
 
 namespace Epsitec.Aider.Enumerations
 {
-
-
 	public static class TextGenerator
 	{
-
-
 		public static string AsShortText(this PersonSex sex)
 		{
 			switch (sex)
@@ -41,32 +37,5 @@ namespace Epsitec.Aider.Enumerations
 					throw new NotImplementedException ();
 			}
 		}
-
-
-		public static string AsText(this PersonMrMrs honorific)
-		{
-			switch (honorific)
-			{
-				case PersonMrMrs.Madame:
-					return "Madame";
-
-				case PersonMrMrs.Mademoiselle:
-					return "Mademoiselle";
-
-				case PersonMrMrs.Monsieur:
-					return "Monsieur";
-
-				case PersonMrMrs.None:
-					return null;
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-
 	}
-
-
 }
