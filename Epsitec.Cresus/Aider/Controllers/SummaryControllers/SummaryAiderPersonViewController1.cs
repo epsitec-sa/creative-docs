@@ -65,9 +65,10 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 #endif
 
 			wall.AddBrick (x => x.AdditionalAddresses)
-			.Attribute (BrickMode.AutoGroup)
-			.Template ()
-			.End ();
+//				.Attribute (BrickMode.AutoGroup)
+				.Template ()
+					.Title (x => TextFormatter.FormatText (x.Type))
+				.End ();
 		}
 
 

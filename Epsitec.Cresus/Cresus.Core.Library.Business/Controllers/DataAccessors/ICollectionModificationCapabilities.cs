@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// Gets a value indicating whether this collection can be reordered.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if this this collection can be reordered; otherwise, <c>false</c>.
+		/// 	<c>true</c> if this collection can be reordered; otherwise, <c>false</c>.
 		/// </value>
 		bool CanBeReordered
 		{

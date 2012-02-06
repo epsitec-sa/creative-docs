@@ -21,10 +21,13 @@ namespace Epsitec.Aider.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			var parts = new List<FormattedText> () { this.GetAddressText (),
-			this.GetPhonesText (),
-			this.GetEmailText (),
-			this.GetWebsiteText () };
+			var parts = new List<FormattedText> ()
+			{
+				this.GetAddressText (),
+				this.GetPhonesText (),
+				this.GetEmailText (),
+				this.GetWebsiteText ()
+			};
 
 			var texts = parts.Where (p => !p.IsNullOrWhiteSpace);
 
@@ -34,12 +37,7 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			var part1 = this.Town.Name
-			?? this.Phone1
-			?? this.Phone2
-			?? this.Email;
-
-			return TextFormatter.FormatText (part1, "(~", this.Type, "~)");
+			return TextFormatter.FormatText (this.Type);
 		}
 
 

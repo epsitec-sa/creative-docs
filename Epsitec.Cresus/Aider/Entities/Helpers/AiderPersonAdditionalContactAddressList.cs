@@ -14,6 +14,10 @@ using System.Linq;
 
 namespace Epsitec.Aider.Entities.Helpers
 {
+	/// <summary>
+	/// The <c>AiderPersonAdditionalContactAddressList</c> class gives access to the additional
+	/// address fields defined in <see cref="AiderPersonEntity"/> as if they belonged to a list.
+	/// </summary>
 	class AiderPersonAdditionalContactAddressList : ObservableList<AiderAddressEntity>, ICollectionModificationCapabilities
 	{
 		public AiderPersonAdditionalContactAddressList(AiderPersonEntity person)
@@ -22,29 +26,7 @@ namespace Epsitec.Aider.Entities.Helpers
 			this.AddRange (this.GetAddresses ());
 		}
 
-		private IEnumerable<AiderAddressEntity> GetAddresses()
-		{
-			if (this.person.AdditionalAddress1.IsNotNull ())
-			{
-				yield return this.person.AdditionalAddress1;
-			}
-
-			if (this.person.AdditionalAddress2.IsNotNull ())
-			{
-				yield return this.person.AdditionalAddress2;
-			}
-
-			if (this.person.AdditionalAddress3.IsNotNull ())
-			{
-				yield return this.person.AdditionalAddress3;
-			}
-
-			if (this.person.AdditionalAddress4.IsNotNull ())
-			{
-				yield return this.person.AdditionalAddress4;
-			}
-		}
-
+		
 		public override void Insert(int index, AiderAddressEntity item)
 		{
 			if (this.Contains (item))
@@ -82,19 +64,45 @@ namespace Epsitec.Aider.Entities.Helpers
 		}
 
 
+		private IEnumerable<AiderAddressEntity> GetAddresses()
+		{
+			if (this.person.AdditionalAddress1.IsNotNull ())
+			{
+				yield return this.person.AdditionalAddress1;
+			}
+
+			if (this.person.AdditionalAddress2.IsNotNull ())
+			{
+				yield return this.person.AdditionalAddress2;
+			}
+
+			if (this.person.AdditionalAddress3.IsNotNull ())
+			{
+				yield return this.person.AdditionalAddress3;
+			}
+
+			if (this.person.AdditionalAddress4.IsNotNull ())
+			{
+				yield return this.person.AdditionalAddress4;
+			}
+		}
+
 		private void Apply(System.Action<IList<AiderAddressEntity>> action)
 		{
 			var list = this.GetAddresses ().ToList ();
 			action (list);
-			this.ApplyList (list);
+			this.ReplaceAddresses (list);
 		}
 
-		private void ApplyList(IList<AiderAddressEntity> list)
+		private void ReplaceAddresses(IList<AiderAddressEntity> list)
 		{
 			int n = list.Count;
 
 			System.Diagnostics.Debug.Assert (n <= AiderPersonAdditionalContactAddressList.NumAddresses);
 
+			//	Should we somehow suspend the events here in order to avoid sending
+			//	notifications while the person is in a transient state ?
+			
 			this.person.AdditionalAddress1 = n > 0 ? list[0] : null;
 			this.person.AdditionalAddress2 = n > 1 ? list[1] : null;
 			this.person.AdditionalAddress3 = n > 2 ? list[2] : null;

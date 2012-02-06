@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -216,9 +216,9 @@ namespace Epsitec.Common.Types.Collections
 		public ReadOnlyObservableList<T> AsReadOnly()
 		{
 			if (this.readOnlyList == null)
-            {
+			{
 				this.readOnlyList = new ReadOnlyObservableList<T> (this);
-            }
+			}
 
 			return this.readOnlyList;
 		}
@@ -295,6 +295,10 @@ namespace Epsitec.Common.Types.Collections
 
 		#region ICollection<T> Members
 
+		/// <summary>
+		/// Adds the specified item. Internally, this method relies on <see cref="Insert"/>.
+		/// </summary>
+		/// <param name="item">The item to add at the end of the collection.</param>
 		public void Add(T item)
 		{
 			int index = this.list.Count;
@@ -338,6 +342,11 @@ namespace Epsitec.Common.Types.Collections
 			}
 		}
 
+		/// <summary>
+		/// Removes the specified item. Internally, this method relies on <see cref="RemoveAt"/>.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <returns><c>true</c> if the item was removed; otherwise, <c>false</c>.</returns>
 		public bool Remove(T item)
 		{
 			int index = this.list.IndexOf (item);
