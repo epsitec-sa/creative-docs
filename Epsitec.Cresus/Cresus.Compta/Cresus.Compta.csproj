@@ -111,6 +111,7 @@
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
+    <Compile Include="Entities\ComptaModèleEntity.cs" />
     <Compile Include="RaccourciModèle.cs" />
     <Compile Include="Entities\ComptaPériodeEntity.cs" />
     <Compile Include="Helpers\Converters.cs" />

@@ -149,6 +149,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
+
+
+					this.CreateButtonMedèleUI (field, line);
 				}
 				else
 				{
@@ -551,6 +554,100 @@ namespace Epsitec.Cresus.Compta.Controllers
 				solde = this.dataAccessor.SoldesJournalManager.GetSolde (compte);
 			}
 		}
+
+
+		#region Menu des écritures modèles
+		private void CreateButtonMedèleUI(AbstractFieldController fieldController, int line)
+		{
+			if (this.comptaEntity.Modèles.Any ())
+			{
+				var button = new Button
+				{
+					Parent         = fieldController.Box,
+					ButtonStyle    = ButtonStyle.Icon,
+					Text           = "M",
+					Index          = line,
+					PreferredWidth = UIBuilder.ComboButtonWidth,
+					Dock           = DockStyle.Right,
+					Margins        = new Margins (-1, 0, 0, 0),
+				};
+
+				button.Clicked += delegate
+				{
+					this.ShowMenuModèles (button, button.Index);
+				};
+
+				ToolTip.Default.SetToolTip (button, "Choix d'une écriture modèle");
+			}
+		}
+
+		private void ShowMenuModèles(Widget parentButton, int line)
+		{
+			//	Affiche le menu permettant de choisir le mode.
+			var menu = new VMenu ();
+
+			int index = 0;
+			foreach (var modèle in this.comptaEntity.Modèles)
+			{
+				var item = new MenuItem ()
+				{
+					FormattedText = modèle.ShortSummary,
+					Index         = index++,
+				};
+
+				item.Clicked += delegate
+				{
+					this.InsertModèle (this.comptaEntity.Modèles[item.Index], line);
+				};
+
+				menu.Items.Add (item);
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void InsertModèle(ComptaModèleEntity modèle, int line)
+		{
+			if (modèle.Débit != null)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Débit, modèle.Débit.Numéro);
+			}
+
+			if (modèle.Crédit != null)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Crédit, modèle.Crédit.Numéro);
+			}
+
+			if (!modèle.Pièce.IsNullOrEmpty)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, modèle.Pièce);
+			}
+
+			int cursor = -1;
+			if (!modèle.Libellé.IsNullOrEmpty)
+			{
+				cursor = modèle.Libellé.ToString ().IndexOf ("@");
+				var m = modèle.Libellé.ToString ().Replace ("@", "");
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Libellé, m);
+			}
+
+			if (modèle.Montant.HasValue)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, modèle.Montant.Value.ToString ("0.00"));
+			}
+
+			this.UpdateFooterContent ();
+			this.FooterSelect (ColumnType.Libellé);
+
+			var fc = this.GetFieldController (ColumnType.Libellé, line);
+			var field = fc.EditWidget as AbstractTextField;
+			field.Focus ();
+			field.Cursor = (cursor == -1) ? field.Text.Length : cursor;
+		}
+		#endregion
 
 
 		private FrameBox							linesContainer;
