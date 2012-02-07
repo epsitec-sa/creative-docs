@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class MailContactEntity
 	{
-		public FormattedText GetTitle()
+		public override FormattedText GetTitle()
 		{
 			return TextFormatter.FormatText ("Adresse", "(", FormattedText.Join (", ", this.ContactGroups.Select (role => role.Name).ToArray ()), ")");
 		}

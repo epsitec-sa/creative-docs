@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.IdA);
 		}
 
-		public FormattedText GetTitle()
+		public override FormattedText GetTitle()
 		{
 			return this.GetCompactSummary ();
 		}

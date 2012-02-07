@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 
-		public FormattedText GetTitle()
+		public override FormattedText GetTitle()
 		{
 			return this.GetCompactSummary ();
 		}

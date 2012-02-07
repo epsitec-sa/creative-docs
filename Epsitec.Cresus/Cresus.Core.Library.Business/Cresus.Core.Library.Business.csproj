@@ -208,7 +208,6 @@
     <Compile Include="Controllers\DataAccessors\ICollectionAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor.cs" />
     <Compile Include="Controllers\DataAccessors\IndirectAccessor`2.cs" />
-    <Compile Include="Bricks\Helpers\Invoker.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItem.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataItems.cs" />
     <Compile Include="Controllers\DataAccessors\TileDataType.cs" />

@@ -205,6 +205,11 @@ namespace Epsitec.Common.Support.EntityEngine
 			return FormattedText.Empty;
 		}
 
+		public virtual FormattedText GetTitle()
+		{
+			return FormattedText.Empty;
+		}
+
 		/// <summary>
 		/// Retourne la liste des mots-clé de l'entité, en vue d'une recherche.
 		/// </summary>

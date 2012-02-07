@@ -88,17 +88,10 @@ namespace Epsitec.Cresus.Core.Bricks
 
 		protected static void CreateDefaultTitleProperties(Brick brick)
 		{
-			if (Brick.ContainsProperty (brick, BrickPropertyKey.Title))
+			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Title))
 			{
-				return;
-			}
-
-			var fieldType = brick.GetFieldType ();
-			var invoker   = Invoker.GetInvoker (fieldType, "GetTitle");
-
-			if (invoker.IsValid)
-			{
-				invoker.Bind (brick, BrickPropertyKey.Title);
+				Expression<System.Func<AbstractEntity, FormattedText>> expression = x => x.GetTitle ();
+				Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Title, expression).MarkAsDefaultProperty ());
 			}
 		}
 
