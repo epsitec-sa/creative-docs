@@ -1,26 +1,18 @@
-﻿using Epsitec.Common.Types;
+﻿using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderCountryEntity
 	{
-
-
 		public override FormattedText GetSummary()
 		{
-			var text = this.Name;
-
-			if (this.IsoCode != null)
-			{
-				text += " (" + this.IsoCode + ")";
-			}
-
-			return TextFormatter.FormatText (text);
+			return TextFormatter.FormatText (this.Name, "(~", this.IsoCode, "~)");
 		}
 
 
@@ -29,8 +21,15 @@ namespace Epsitec.Aider.Entities
 			return TextFormatter.FormatText (this.Name);
 		}
 
-
+		public override EntityStatus GetEntityStatus()
+		{
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.Name.GetEntityStatus ());
+				a.Accumulate (this.IsoCode.GetEntityStatus ().TreatAsOptional ());
+				
+				return a.EntityStatus;
+			}
+		}
 	}
-
-
 }

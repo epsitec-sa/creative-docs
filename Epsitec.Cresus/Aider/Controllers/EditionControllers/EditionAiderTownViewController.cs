@@ -7,24 +7,16 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-
-
 	public sealed class EditionAiderTownViewController : EditionViewController<AiderTownEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderTownEntity> wall)
 		{
 			wall.AddBrick ()
 				.Input ()
-					.Field (x => x.SwissZipCode)
+					.Field (x => x.ZipCode)
 					.Field (x => x.Name)
 					.Field (x => x.Country)
 				.End ();
 		}
-
-
 	}
-
-
 }

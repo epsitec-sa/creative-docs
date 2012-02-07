@@ -19,11 +19,21 @@ namespace Epsitec.Aider.Entities
 {
 	public partial class AiderAddressEntity
 	{
+		public FormattedText GetPostalAddress()
+		{
+			return TextFormatter.FormatText (
+				this.AddressLine1, "\n",
+				this.Street, this.HouseNumber, this.HouseNumberComplement, "\n",
+				this.Town.ZipCode, this.Town.Name, "\n",
+				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
+		}
+
+
 		public override FormattedText GetSummary()
 		{
 			var parts = new List<FormattedText> ()
 			{
-				this.GetAddressText (),
+				TextFormatter.FormatText ("<b>Adresse</b>\n~", this.GetPostalAddress ()),
 				this.GetPhonesText (),
 				this.GetEmailText (),
 				this.GetWebsiteText ()
@@ -88,12 +98,6 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
-		}
-
-
-		private FormattedText GetAddressText()
-		{
-			return this.GetLabeledText ("Addresse postale", this.GetAddressLines ());
 		}
 
 

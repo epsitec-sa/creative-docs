@@ -493,6 +493,7 @@ namespace Epsitec.Cresus.Core
 			public const string Ignore				= "‼ignore";
 			public const string Mark				= "‼mark";
 			public const string ClearToMarkIfEmpty	= "‼clearToMarkIfEmpty";
+			public const string ClearToMarkIfEqual	= "‼clearToMarkIfEqual";
 			public const string Format				= "‼format";
 		}
 		
@@ -515,11 +516,41 @@ namespace Epsitec.Cresus.Core
 					(command[0] == Prefix.CommandEscape))
 				{
 					if ((command == Command.ClearToMarkIfEmpty) &&
-						(i > 0) &&
-						(string.IsNullOrWhiteSpace (items[i-1])))
+						(i > 0))
 					{
-						TextFormatter.ClearGroup (items, i);
-						TextFormatter.ProcessTags (items);
+						if (string.IsNullOrWhiteSpace (items[i-1]))
+						{
+							TextFormatter.ClearGroup (items, i);
+							TextFormatter.IgnoreMark (items, i);
+							TextFormatter.ProcessTags (items);
+						}
+						else
+						{
+							TextFormatter.IgnoreMark (items, i);
+							TextFormatter.ProcessTags (items);
+						}
+						break;
+					}
+
+					if ((command == Command.ClearToMarkIfEqual) &&
+						(i > 2))
+					{
+						if (items[i-2] == items[i-1])
+						{
+							//	mark, "a", "b", "x", "y", clearToMarkIfEqual => 6 x ignore
+							TextFormatter.ClearGroup (items, i);
+							TextFormatter.IgnoreMark (items, i);
+							TextFormatter.ProcessTags (items);
+						}
+						else
+						{
+							//	mark, "a", "b", "x", "x", clearToMarkIfEqual => ignore, "a", "b", 3 x ignore
+							items[i-2] = Command.Ignore;
+							items[i-1] = Command.Ignore;
+							items[i-0] = Command.Ignore;
+							TextFormatter.IgnoreMark (items, i);
+							TextFormatter.ProcessTags (items);
+						}
 						break;
 					}
 
@@ -584,9 +615,24 @@ namespace Epsitec.Cresus.Core
 			items.RemoveAll (x => Command.Ignore == x);
 		}
 
+		private static void IgnoreMark(List<string> items, int index)
+		{
+			index = System.Math.Min (items.Count, index);
+
+			for (int i = index-1; i > 0; i--)
+			{
+				if (items[i] == Command.Mark)
+				{
+					items[i] = Command.Ignore;
+					break;
+				}
+			}
+		}
 
 		private static void ClearGroup(List<string> items, int index)
 		{
+			index = System.Math.Min (items.Count, index);
+
 			int startIndex = 0;
 
 			for (int i = index-1; i > 0; i--)
