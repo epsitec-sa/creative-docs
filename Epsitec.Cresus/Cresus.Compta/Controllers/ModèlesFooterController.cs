@@ -65,7 +65,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
+				if (mapper.Column == ColumnType.Raccourci)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, Converters.RaccourciDescriptions.ToArray ());
+				}
+				else if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);

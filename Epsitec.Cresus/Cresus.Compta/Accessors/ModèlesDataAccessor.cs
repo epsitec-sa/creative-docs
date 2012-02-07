@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -144,6 +145,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
+		protected override void PrepareEditionLine(int line)
+		{
+			this.editionLine[line].SetText (ColumnType.Raccourci, Converters.RaccourciToString (RaccourciModèle.None));
+		}
+
 		public override void StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
@@ -192,11 +198,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var modèle = this.CreateModèle ();
 				data.DataToEntity (modèle);
 
-				this.comptaEntity.Modèles.Insert (0, modèle);
+				this.comptaEntity.Modèles.Add (modèle);
 
 				if (firstRow == -1)
 				{
-					firstRow = 0;
+					firstRow = this.comptaEntity.Modèles.Count-1;
 				}
 			}
 

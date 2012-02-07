@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.Date,    new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.Débit,   new EditionData (this.controller, this.ValidateCompte));
 			this.datas.Add (ColumnType.Crédit,  new EditionData (this.controller, this.ValidateCompte));
+			this.datas.Add (ColumnType.Pièce,   new EditionData (this.controller));
 			this.datas.Add (ColumnType.Libellé, new EditionData (this.controller, this.ValidateLibellé));
 			this.datas.Add (ColumnType.Montant, new EditionData (this.controller, this.ValidateMontant));
 			this.datas.Add (ColumnType.Journal, new EditionData (this.controller, this.ValidateJournal));

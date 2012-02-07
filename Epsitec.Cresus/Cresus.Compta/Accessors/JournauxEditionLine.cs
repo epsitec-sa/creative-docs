@@ -24,7 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournauxEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Titre, new EditionData (this.controller, this.ValidateTitle));
+			this.datas.Add (ColumnType.Titre,   new EditionData (this.controller, this.ValidateTitle));
+			this.datas.Add (ColumnType.Libellé, new EditionData (this.controller));
 		}
 
 

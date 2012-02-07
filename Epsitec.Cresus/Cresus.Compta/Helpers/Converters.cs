@@ -221,6 +221,118 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static string RaccourciToString(RaccourciModèle raccourci)
+		{
+			//	Conversion d'un raccourci en chaîne.
+			switch (raccourci)
+			{
+				case RaccourciModèle.Ctrl0:
+					return "Ctrl+0";
+
+				case RaccourciModèle.Ctrl1:
+					return "Ctrl+1";
+
+				case RaccourciModèle.Ctrl2:
+					return "Ctrl+2";
+
+				case RaccourciModèle.Ctrl3:
+					return "Ctrl+3";
+
+				case RaccourciModèle.Ctrl4:
+					return "Ctrl+4";
+
+				case RaccourciModèle.Ctrl5:
+					return "Ctrl+5";
+
+				case RaccourciModèle.Ctrl6:
+					return "Ctrl+6";
+
+				case RaccourciModèle.Ctrl7:
+					return "Ctrl+7";
+
+				case RaccourciModèle.Ctrl8:
+					return "Ctrl+8";
+
+				case RaccourciModèle.Ctrl9:
+					return "Ctrl+9";
+
+				default:
+					return "Aucun";
+			}
+		}
+
+		public static RaccourciModèle StringToRaccourci(string text)
+		{
+			//	Conversion d'une chaîne en raccourci.
+			switch (Converters.PreparingForSearh (text))
+			{
+				case "ctrl+0":
+					return RaccourciModèle.Ctrl0;
+
+				case "ctrl+1":
+					return RaccourciModèle.Ctrl1;
+
+				case "ctrl+2":
+					return RaccourciModèle.Ctrl2;
+
+				case "ctrl+3":
+					return RaccourciModèle.Ctrl3;
+
+				case "ctrl+4":
+					return RaccourciModèle.Ctrl4;
+
+				case "ctrl+5":
+					return RaccourciModèle.Ctrl5;
+
+				case "ctrl+6":
+					return RaccourciModèle.Ctrl6;
+
+				case "ctrl+7":
+					return RaccourciModèle.Ctrl7;
+
+				case "ctrl+8":
+					return RaccourciModèle.Ctrl8;
+
+				case "ctrl+9":
+					return RaccourciModèle.Ctrl9;
+
+				default:
+					return RaccourciModèle.None;
+			}
+		}
+
+
+		public static IEnumerable<FormattedText> RaccourciDescriptions
+		{
+			//	Retourne une liste de tous les raccourcis possibles.
+			get
+			{
+				foreach (var raccourci in Converters.Raccourcis)
+				{
+					yield return Converters.RaccourciToString (raccourci);
+				}
+			}
+		}
+
+		private static IEnumerable<RaccourciModèle> Raccourcis
+		{
+			get
+			{
+				yield return RaccourciModèle.None;
+				yield return RaccourciModèle.Ctrl0;
+				yield return RaccourciModèle.Ctrl1;
+				yield return RaccourciModèle.Ctrl2;
+				yield return RaccourciModèle.Ctrl3;
+				yield return RaccourciModèle.Ctrl4;
+				yield return RaccourciModèle.Ctrl5;
+				yield return RaccourciModèle.Ctrl6;
+				yield return RaccourciModèle.Ctrl7;
+				yield return RaccourciModèle.Ctrl8;
+				yield return RaccourciModèle.Ctrl9;
+			}
+		}
+
+
 		public static string PreparingForSearh(FormattedText text)
 		{
 			return Converters.PreparingForSearh (text.ToSimpleText ());
