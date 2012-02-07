@@ -152,6 +152,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Journaux = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 118));
 				//	designer:cap/OVKR3
 				public static readonly global::Epsitec.Common.Widgets.Command Libellés = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
+				//	designer:cap/OVKS3
+				public static readonly global::Epsitec.Common.Widgets.Command Modèles = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 124));
 				//	designer:cap/OVK12
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 65));
 				//	designer:cap/OVKI3
@@ -323,6 +325,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Journaux = 0x3F800014000076L;
 				//	designer:cap/OVKR3
 				public const long Libellés = 0x3F80001400007BL;
+				//	designer:cap/OVKS3
+				public const long Modèles = 0x3F80001400007CL;
 				//	designer:cap/OVK12
 				public const long New = 0x3F800014000041L;
 				//	designer:cap/OVKI3
@@ -381,6 +385,8 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType ComptaJournal = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 98));
 			//	designer:cap/OVKN3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaLibellé = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 119));
+			//	designer:cap/OVKT3
+			public static readonly Epsitec.Common.Types.StructuredType ComptaModèle = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 125));
 			//	designer:cap/OVKC3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaPériode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 108));
 		}
@@ -518,6 +524,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Journaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 113);
 				//	designer:cap/OVKQ3
 				public static readonly global::Epsitec.Common.Support.Druid Libellés = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 122);
+				//	designer:cap/OVK54
+				public static readonly global::Epsitec.Common.Support.Druid Modèles = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 133);
 				//	designer:cap/OVKF3
 				public static readonly global::Epsitec.Common.Support.Druid Périodes = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 111);
 				//	designer:cap/OVKN
@@ -600,6 +608,28 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 120);
 				//	designer:cap/OVKP3
 				public static readonly global::Epsitec.Common.Support.Druid Permanant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 121);
+			}
+			
+			public static class ComptaModèle
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKU3
+				public static readonly global::Epsitec.Common.Support.Druid Code = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 126);
+				//	designer:cap/OVK14
+				public static readonly global::Epsitec.Common.Support.Druid Crédit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 129);
+				//	designer:cap/OVK04
+				public static readonly global::Epsitec.Common.Support.Druid Débit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 128);
+				//	designer:cap/OVK34
+				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 131);
+				//	designer:cap/OVK44
+				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 132);
+				//	designer:cap/OVK24
+				public static readonly global::Epsitec.Common.Support.Druid Pièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 130);
+				//	designer:cap/OVKV3
+				public static readonly global::Epsitec.Common.Support.Druid Raccourci = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 127);
 			}
 			
 			public static class ComptaPériode
@@ -701,6 +731,7 @@ namespace Epsitec.Cresus.Compta
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
 			Fields.ComptaLibellé._Initialize ();
+			Fields.ComptaModèle._Initialize ();
 			Fields.ComptaPériode._Initialize ();
 		}
 		

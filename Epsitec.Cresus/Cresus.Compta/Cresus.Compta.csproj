@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
+    <Compile Include="Accessors\ModèlesDataAccessor.cs" />
+    <Compile Include="Accessors\ModèlesEditionLine.cs" />
     <Compile Include="Accessors\LibellésDataAccessor.cs" />
     <Compile Include="Accessors\LibellésEditionLine.cs" />
     <Compile Include="Accessors\EditionData.cs" />
@@ -94,6 +96,8 @@
     <Compile Include="Application.cs" />
     <Compile Include="Controllers\AbstractFieldController.cs" />
     <Compile Include="Controllers\AutoCompleteFieldController.cs" />
+    <Compile Include="Controllers\ModèlesFooterController.cs" />
+    <Compile Include="Controllers\ModèlesController.cs" />
     <Compile Include="Controllers\LibellésFooterController.cs" />
     <Compile Include="Controllers\LibellésController.cs" />
     <Compile Include="Controllers\TextFieldController.cs" />
@@ -216,6 +220,7 @@
     <EmbeddedResource Include="Images\Présentation.Période.icon" />
     <EmbeddedResource Include="Images\Présentation.Journaux.icon" />
     <EmbeddedResource Include="Images\Présentation.Libellés.icon" />
+    <EmbeddedResource Include="Images\Présentation.Modèles.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
