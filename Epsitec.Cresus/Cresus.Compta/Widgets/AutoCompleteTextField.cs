@@ -122,6 +122,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			if (!string.IsNullOrEmpty (typed))
 			{
+				var list1 = new List<int> ();
+				var list2 = new List<int> ();
+
 				typed = Converters.PreparingForSearh (typed);
 
 				bool two = (this.primaryTexts.Count == this.secondaryTexts.Count);
@@ -133,16 +136,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					if (typed == primary || typed == secondary)
 					{
-						this.hintListIndex.Clear ();
-						this.hintListIndex.Add (i);  // met une seule proposition, la bonne
+						list1.Clear ();
+						list2.Clear ();
+
+						list1.Add (i);  // met une seule proposition, la bonne
 						break;
 					}
 
-					if (primary.Contains (typed) || secondary.Contains (typed))
+					if (primary.StartsWith (typed) || secondary.StartsWith (typed))
 					{
-						this.hintListIndex.Add (i);
+						list1.Add (i);
+					}
+					else if (primary.Contains (typed) || secondary.Contains (typed))
+					{
+						list2.Add (i);
 					}
 				}
+
+				this.hintListIndex.AddRange (list1);
+				this.hintListIndex.AddRange (list2);
 			}
 		}
 
@@ -218,10 +230,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.Navigate (1);
 					return true;
 
+				case KeyCode.Return:
+				case KeyCode.NumericEnter:
+					if (this.IsComboMenuOpen)
+					{
+						this.selectedHint = this.scrollList.SelectedItemIndex;
+						this.UseSelectedHint (SelectedHintMode.AcceptEdition);
+						this.CloseComboMenu ();
+						base.OnTextChanged ();
+
+						message.Swallowed = true;
+					}
+					break;
+
 				case KeyCode.Escape:
 					if (this.IsComboMenuOpen)
 					{
 						this.CloseComboMenu ();
+
+						message.Swallowed = true;
 					}
 					break;
 			}

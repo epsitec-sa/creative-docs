@@ -150,7 +150,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
 
-
 					this.CreateButtonMedèleUI (field, line);
 				}
 				else
@@ -575,13 +574,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var button = new Button
 				{
-					Parent         = fieldController.Box,
-					ButtonStyle    = ButtonStyle.Icon,
-					Text           = "M",
-					Index          = line,
-					PreferredWidth = UIBuilder.ComboButtonWidth,
-					Dock           = DockStyle.Right,
-					Margins        = new Margins (-1, 0, 0, 0),
+					Parent          = fieldController.Box,
+					ButtonStyle     = ButtonStyle.Icon,
+					Text            = "M",
+					Index           = line,
+					PreferredWidth  = UIBuilder.ComboButtonWidth,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Right,
+					Margins         = new Margins (-1, 0, 0, 0),
 				};
 
 				button.Clicked += delegate

@@ -22,6 +22,11 @@ namespace Epsitec.Cresus.Compta.Entities
 		public void AddLibellé(ComptaPériodeEntity période, FormattedText libellé)
 		{
 			//	Insère un nouveau libellé volatile. S'il est déjà dans la liste, on le remet au sommet.
+			if (libellé.IsNullOrEmpty)
+			{
+				return;
+			}
+
 			var exist = this.Libellés.Where (x => x.Libellé == libellé).FirstOrDefault ();
 
 			if (exist == null)

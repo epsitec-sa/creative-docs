@@ -177,18 +177,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding         = new Margins (5, 5, 2, 2),
 			};
 
-			int buttonWidth = 65;
+			int buttonWidth = 60;
 
 			var frame1 = new FrameBox
 			{
-				Parent = frame,
-				Dock   = DockStyle.Top,
+				Parent          = frame,
+				PreferredHeight = 16,
+				Dock            = DockStyle.Top,
 			};
 
 			var frame2 = new FrameBox
 			{
-				Parent = frame,
-				Dock   = DockStyle.Top,
+				Parent          = frame,
+				PreferredHeight = 16,
+				Dock            = DockStyle.Top,
+			};
+
+			var frame3 = new FrameBox
+			{
+				Parent          = frame,
+				PreferredHeight = 16,
+				Dock            = DockStyle.Top,
 			};
 
 			var catégorie = this.data.BeginnerCatégories;
@@ -196,49 +205,55 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.beginnerCatégorieActif = new CheckButton
 				{
-					Parent         = frame1,
-					Text           = Converters.CatégorieToString (CatégorieDeCompte.Actif),
-					ActiveState    = ((catégorie & CatégorieDeCompte.Actif) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth = buttonWidth,
-					Dock           = DockStyle.Left,
+					Parent          = frame1,
+					Text            = Converters.CatégorieToString (CatégorieDeCompte.Actif),
+					ActiveState     = ((catégorie & CatégorieDeCompte.Actif) != 0) ? ActiveState.Yes : ActiveState.No,
+					PreferredWidth  = buttonWidth,
+					PreferredHeight = 16,
+					Dock            = DockStyle.Left,
 				};
 
 				this.beginnerCatégorieCharge = new CheckButton
 				{
-					Parent         = frame1,
-					Text           = Converters.CatégorieToString (CatégorieDeCompte.Charge),
-					ActiveState    = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth = buttonWidth,
-					Dock           = DockStyle.Left,
-				};
-
-				this.beginnerCatégorieExploitation = new CheckButton
-				{
-					Parent         = frame1,
-					Text           = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
-					ActiveState    = ((catégorie & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth = buttonWidth+20,
-					Dock           = DockStyle.Left,
+					Parent          = frame1,
+					Text            = Converters.CatégorieToString (CatégorieDeCompte.Charge),
+					ActiveState     = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
+					PreferredWidth  = buttonWidth,
+					PreferredHeight = 16,
+					Dock            = DockStyle.Left,
 				};
 			}
 
 			{
 				this.beginnerCatégoriePassif = new CheckButton
 				{
-					Parent         = frame2,
-					Text           = Converters.CatégorieToString (CatégorieDeCompte.Passif),
-					ActiveState    = ((catégorie & CatégorieDeCompte.Passif) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth = buttonWidth,
-					Dock           = DockStyle.Left,
+					Parent          = frame2,
+					Text            = Converters.CatégorieToString (CatégorieDeCompte.Passif),
+					ActiveState     = ((catégorie & CatégorieDeCompte.Passif) != 0) ? ActiveState.Yes : ActiveState.No,
+					PreferredWidth  = buttonWidth,
+					PreferredHeight = 16,
+					Dock            = DockStyle.Left,
 				};
 
 				this.beginnerCatégorieProduit = new CheckButton
 				{
-					Parent         = frame2,
-					Text           = Converters.CatégorieToString (CatégorieDeCompte.Produit),
-					ActiveState    = ((catégorie & CatégorieDeCompte.Produit) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth = buttonWidth,
-					Dock           = DockStyle.Left,
+					Parent          = frame2,
+					Text            = Converters.CatégorieToString (CatégorieDeCompte.Produit),
+					ActiveState     = ((catégorie & CatégorieDeCompte.Produit) != 0) ? ActiveState.Yes : ActiveState.No,
+					PreferredWidth  = buttonWidth,
+					Dock            = DockStyle.Left,
+				};
+			}
+
+			{
+				this.beginnerCatégorieExploitation = new CheckButton
+				{
+					Parent          = frame3,
+					Text            = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
+					ActiveState     = ((catégorie & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No,
+					PreferredWidth  = buttonWidth+40,
+					PreferredHeight = 16,
+					Dock            = DockStyle.Left,
 				};
 			}
 
@@ -290,7 +305,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = this.middleFrame,
 				Text            = "Profondeur",
-				PreferredWidth  = 20+60,  // pour aider le layout !
+				PreferredWidth  = 20+50,  // pour aider le layout !
 				PreferredHeight = 65,  // pour aider le layout !
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
@@ -299,15 +314,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var frame1 = new FrameBox
 			{
-				Parent  = frame,
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 1),
+				Parent         = frame,
+				PreferredWidth = 20+50,  // pour aider le layout !
+				Dock           = DockStyle.Top,
+				Margins        = new Margins (0, 0, 0, 1),
 			};
 
 			var frame2 = new FrameBox
 			{
-				Parent = frame,
-				Dock   = DockStyle.Top,
+				Parent         = frame,
+				PreferredWidth = 20+50,  // pour aider le layout !
+				Dock           = DockStyle.Top,
 			};
 
 			{
@@ -323,7 +340,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = frame1,
 					IsReadOnly      = true,
-					PreferredWidth  = 60,
+					PreferredWidth  = 50,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					TabIndex        = 1,
@@ -343,7 +360,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = frame2,
 					IsReadOnly      = true,
-					PreferredWidth  = 60,
+					PreferredWidth  = 50,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					TabIndex        = 2,
@@ -476,7 +493,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = this.middleFrame,
 				Text            = "Période",
-				PreferredWidth  = 150,  // pour aider le layout !
+				PreferredWidth  = 100,  // pour aider le layout !
 				PreferredHeight = 65,  // pour aider le layout !
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
@@ -503,8 +520,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				new StaticText
 				{
 					Parent         = frame1,
-					Text           = "Depuis le",
-					PreferredWidth = 55,
+					Text           = "Du",
+					PreferredWidth = 20,
 					Dock           = DockStyle.Left,
 				};
 
@@ -516,8 +533,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				new StaticText
 				{
 					Parent         = frame2,
-					Text           = "Jusqu'au",
-					PreferredWidth = 55,
+					Text           = "Au",
+					PreferredWidth = 20,
 					Dock           = DockStyle.Left,
 				};
 
