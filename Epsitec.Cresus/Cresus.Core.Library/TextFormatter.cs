@@ -365,7 +365,6 @@ namespace Epsitec.Cresus.Core
 				{
 					buffer.Append (text);
 					emptyItem = true;
-					skipSpace = true;
 					weKnowItemIsEmpty = false;
 					continue;
 				}
@@ -373,14 +372,6 @@ namespace Epsitec.Cresus.Core
 				weKnowItemIsEmpty = false;
 
 				conditionalParentheses = text.EndsWith ("(~");
-
-				if (TextFormatter.IsEmptyItem (text, conditionalParentheses))
-				{
-					buffer.Append (text);
-					emptyItem = true;
-					skipSpace = true;
-					continue;
-				}
 
 				char prefix = text.RemoveTag ().FirstCharacter ();
 
@@ -409,6 +400,14 @@ namespace Epsitec.Cresus.Core
 					suffix = text.RemoveTag ().LastCharacter ();
 				}
 
+				if (TextFormatter.IsEmptyItem (text, conditionalParentheses))
+				{
+					buffer.Append (text);
+					emptyItem = true;
+					skipSpace = skipSpace || TextFormatter.EndsWithWhiteSpace (text);
+					continue;
+				}
+
 				char lastCharacter = buffer.LastCharacter ();
 
 				if ((prefix.IsPunctuationMark ()) &&
@@ -435,8 +434,22 @@ namespace Epsitec.Cresus.Core
 				}
 
 				emptyItem = TextFormatter.IsEmptyItem (text, conditionalParentheses);
-				skipSpace = emptyItem;
+				skipSpace = (emptyItem && skipSpace) || (!emptyItem && TextFormatter.EndsWithWhiteSpace (text));
 			}
+		}
+
+		private static bool EndsWithWhiteSpace(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return false;
+			}
+			if (text.EndsWith (FormattedText.HtmlBreak))
+			{
+				return true;
+			}
+			
+			return char.IsWhiteSpace (text.LastCharacter ());
 		}
 
 		private static bool IsEmptyItem(string text, bool betweenParentheses = false)
@@ -446,10 +459,6 @@ namespace Epsitec.Cresus.Core
 				return true;
 			}
 			if (betweenParentheses && (text == Unicode.ToString (Unicode.Code.EmDash)))
-			{
-				return true;
-			}
-			if (text.EndsWith (FormattedText.HtmlBreak))
 			{
 				return true;
 			}

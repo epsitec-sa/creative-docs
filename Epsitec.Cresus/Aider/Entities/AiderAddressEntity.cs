@@ -1,19 +1,16 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Aider.Enumerations;
-
+using Epsitec.Common.Support;
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
-
 using System.Linq;
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-
 
 namespace Epsitec.Aider.Entities
 {
@@ -31,17 +28,14 @@ namespace Epsitec.Aider.Entities
 
 		public override FormattedText GetSummary()
 		{
-			var parts = new List<FormattedText> ()
-			{
-				TextFormatter.FormatText ("<b>Adresse</b>\n~", this.GetPostalAddress ()),
-				this.GetPhonesText (),
-				this.GetEmailText (),
-				this.GetWebsiteText ()
-			};
-
-			var texts = parts.Where (p => !p.IsNullOrWhiteSpace);
-
-			return TextFormatter.Join (FormattedText.HtmlBreak + FormattedText.HtmlBreak, texts);
+			return TextFormatter.FormatText (
+				"<b>Adresse</b>\n~", this.GetPostalAddress (), "~\n",
+				this.Phone1, "~(fixe 1)\n",
+				this.Phone2, "~(fixe 2)\n",
+				this.Mobile, "~(mobile)\n",
+				this.Fax, "~(fax)\n",
+				this.Email, "~\n",
+				this.Web);
 		}
 
 
