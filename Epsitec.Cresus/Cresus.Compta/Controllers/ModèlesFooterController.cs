@@ -85,6 +85,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
+				if (mapper.Column == ColumnType.Montant)
+				{
+					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
+				}
+
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);

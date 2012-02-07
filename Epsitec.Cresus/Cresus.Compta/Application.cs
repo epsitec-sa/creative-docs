@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta
 		private void HandleWindowCloseClicked(object sender)
 		{
 			this.Window.Close ();
-			// TODO: Comment quitter ?
+			System.Windows.Forms.Application.Exit ();
 		}
 		
 		public override string ShortWindowTitle
