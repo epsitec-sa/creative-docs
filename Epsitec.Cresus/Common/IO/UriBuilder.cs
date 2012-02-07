@@ -35,18 +35,16 @@ namespace Epsitec.Common.IO
 			this.SchemeSuffix = UriBuilder.GetSchemeSuffix (schemeName, fullUri);
 
 			string part1 = fullUri.Substring (this.Scheme.Length + this.SchemeSuffix.Length);
-			string part2;
+			string part2 = "";
 
 			int posPart2 = part1.IndexOf ('/');
 
-			if (posPart2 < 0)
+			if (posPart2 >= 0)
 			{
-				throw new System.UriFormatException ("Missing host/path separator");
+				part2 = part1.Substring (posPart2+1);
+				part1 = part1.Substring (0, posPart2);
 			}
-
-			part2 = part1.Substring (posPart2+1);
-			part1 = part1.Substring (0, posPart2);
-
+			
 			int posHost = part1.IndexOf ('@');
 
 			if (posHost >= 0)
@@ -215,8 +213,8 @@ namespace Epsitec.Common.IO
 
 			if (schemeName.Length == 0)
 			{
-				if ((!schemeName.StartsWith ("www")) &&
-					(schemeName.Contains ("@")))
+				if ((!fullUri.StartsWith ("www")) &&
+					(fullUri.Contains ("@")))
 				{
 					officialName   = "mailto";
 					officialSuffix = ":";
@@ -323,7 +321,12 @@ namespace Epsitec.Common.IO
 				buffer.Append (this.PortNumber.ToString (System.Globalization.CultureInfo.InvariantCulture));
 			}
 
-			buffer.Append ("/");
+			if ((!string.IsNullOrEmpty (this.Path)) ||
+				(!string.IsNullOrEmpty (this.Query)) ||
+				(!string.IsNullOrEmpty (this.Fragment)))
+			{
+				buffer.Append ("/");
+			}
 
 			if (!string.IsNullOrEmpty (this.Path))
 			{
