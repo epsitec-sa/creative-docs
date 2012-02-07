@@ -102,47 +102,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public static BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId)
-		{
-			using (var controller = EntityViewControllerFactory.Create ("js", entity, mode, null, null, controllerSubTypeId, null, ResolutionMode.InspectOnly))
-			{
-				var brickWall = controller.CreateBrickWallForInspection ();
-
-				brickWall.BrickAdded += WebBridge.HandleBrickWallBrickAdded;
-				brickWall.BrickPropertyAdded += WebBridge.HandleBrickWallBrickPropertyAdded;
-
-				controller.BuildBricksForInspection (brickWall);
-
-				return brickWall;
-			}
-		}
-
-
-		private static void CreateDefaultProperties(Brick brick, Type type)
-		{
-			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
-
-			if ((typeInfo == null) ||
-				(typeInfo.Caption == null))
-			{
-				return;
-			}
-
-			var typeName = typeInfo.Caption.Name;
-			var typeIcon = typeInfo.Caption.Icon ?? "Data." + typeName;
-			var labels   = typeInfo.Caption.Labels;
-
-			BrickProperty nameProperty = new BrickProperty (BrickPropertyKey.Name, typeName);
-			BrickProperty iconProperty = new BrickProperty (BrickPropertyKey.Icon, typeIcon);
-
-			Brick.AddProperty (brick, nameProperty);
-			Brick.AddProperty (brick, iconProperty);
-
-			WebBridge.CreateLabelProperty (brick, labels, 0, BrickPropertyKey.Title);
-			WebBridge.CreateLabelProperty (brick, labels, 1, BrickPropertyKey.TitleCompact);
-		}
-
-
 		private static void CreateDefaultTextProperties(Brick brick)
 		{
 			if (!Brick.ContainsProperty (brick, BrickPropertyKey.Text))
@@ -171,38 +130,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 			Expression<Func<AbstractEntity, FormattedText>> expression = x => (FormattedText) methodInfo.Invoke (x, new object[0]);
 			Brick.AddProperty (brick, new BrickProperty (BrickPropertyKey.Title, expression));
-		}
-
-
-		private static void CreateLabelProperty(Brick brick, IList<string> labels, int i, BrickPropertyKey key)
-		{
-			if (i < labels.Count)
-			{
-				BrickProperty property = new BrickProperty (key, labels[i]);
-				Brick.AddProperty (brick, property);
-			}
-		}
-
-
-		private static void HandleBrickWallBrickAdded(object sender, BrickAddedEventArgs e)
-		{
-			var brick = e.Brick;
-			var type  = e.FieldType;
-
-			WebBridge.CreateDefaultProperties (brick, type);
-		}
-
-
-		private static void HandleBrickWallBrickPropertyAdded(object sender, BrickPropertyAddedEventArgs e)
-		{
-			var brick    = e.Brick;
-			var property = e.Property;
-
-			if (property.Key == BrickPropertyKey.OfType)
-			{
-				var type = property.Brick.GetFieldType ();
-				WebBridge.CreateDefaultProperties (brick, type);
-			}
 		}
 
 

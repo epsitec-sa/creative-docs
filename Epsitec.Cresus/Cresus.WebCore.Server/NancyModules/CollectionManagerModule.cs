@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				string deleteEntity = Request.Form.deleteEntity;
 				var deleteKey = EntityKey.Parse (deleteEntity);
 
-				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambda));
+				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
 
 				if (!accessor.IsCollectionType)
 				{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var o = m.Invoke (context, new object[0]);
 				var newEntity = o as AbstractEntity;
 
-				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambda));
+				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
 
 				if (!accessor.IsCollectionType)
 				{

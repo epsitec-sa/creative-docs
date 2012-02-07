@@ -1,0 +1,334 @@
+﻿using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.Bricks;
+
+using Epsitec.Cresus.Core.Bricks;
+using Epsitec.Cresus.Core.Controllers;
+
+using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
+
+using System;
+
+using System.Collections.Generic;
+
+using System.Linq;
+using System.Linq.Expressions;
+
+
+namespace Epsitec.Cresus.WebCore.Server.UserInterface
+{
+
+
+	/// <summary>
+	/// The goal of the Carpenter class is to transform brick walls in tiles. It takes as input the
+	/// a BrickWall which is a definition for the tiles. With the brick wall and the root entity
+	/// that is associated with it, it builds AbstractData objects which contain the data of the
+	/// tiles that must be displayed.
+	/// </summary>
+	internal static class Carpenter
+	{
+
+
+		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, ViewControllerMode mode)
+		{
+			foreach (var brick in brickWall.Bricks)
+			{
+				yield return Carpenter.BuildTileData (brick, mode);
+			}
+		}
+
+
+		private static ITileData BuildTileData(Brick brick, ViewControllerMode mode)
+		{
+			switch (mode)
+			{
+				case ViewControllerMode.Creation:
+					throw new NotImplementedException ();
+
+				case ViewControllerMode.Edition:
+					return Carpenter.BuildEditionTileDataItem (brick);
+
+				case ViewControllerMode.None:
+					throw new NotImplementedException ();
+
+				case ViewControllerMode.Summary:
+					return Carpenter.BuildSummaryTileDataItem (brick);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static SummaryTileData BuildSummaryTileDataItem(Brick brick)
+		{
+			var summaryTileData = Carpenter.CreateSummaryTileData ();
+
+			var summaryBrick = Carpenter.GetSummaryBrick (brick);
+
+			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData);
+
+			return summaryTileData;
+		}
+
+
+		private static SummaryTileData CreateSummaryTileData()
+		{
+			return new SummaryTileData ()
+			{
+				SubViewControllerMode = ViewControllerMode.Edition
+			};
+		}
+
+
+		private static Brick GetSummaryBrick(Brick brick)
+		{
+			Brick result = null;
+
+			var currentBrick = brick;
+
+			while (currentBrick != null)
+			{
+				result = currentBrick;
+
+				currentBrick = Brick.GetProperty (currentBrick, BrickPropertyKey.OfType).Brick;
+			}
+
+			return result;
+		}
+
+
+		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData)
+		{
+			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
+			
+			summaryTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
+			
+			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
+			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
+
+			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData);
+
+			summaryTileData.Template = Carpenter.GetOptionalTemplate (brick);
+		}
+
+
+		private static Func<AbstractEntity, AbstractEntity> GetEntityGetter(Brick brick)
+		{
+			var resolver = brick.GetResolver (null);
+
+			if (resolver == null)
+			{
+				return x => x;
+			}
+			else
+			{
+				return x => (AbstractEntity) resolver.DynamicInvoke (x);
+			}
+		}
+
+
+		private static string GetMandatoryValue(Brick brick, BrickPropertyKey key)
+		{
+			return Carpenter.GetMandatoryBrickProperty (brick, key).StringValue;
+		}
+
+
+		private static Func<AbstractEntity, FormattedText> GetOptionalGetter(Brick brick, BrickPropertyKey key)
+		{
+			var property = Carpenter.GetOptionalBrickProperty (brick, key);
+
+			Func<AbstractEntity, FormattedText> textGetter = null;
+
+			if (property.HasValue)
+			{
+				textGetter = Carpenter.GetBrickValueFromString (property.Value)
+						  ?? Carpenter.GetBrickValueFromExpression (brick, property.Value);
+			}
+
+			return textGetter;
+		}
+
+
+		private static Func<AbstractEntity, FormattedText> GetMandatoryGetter(Brick brick, BrickPropertyKey key)
+		{
+			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
+
+			var textGetter = Carpenter.GetBrickValueFromString (property)
+						  ?? Carpenter.GetBrickValueFromExpression (brick, property);
+
+			if (textGetter == null)
+			{
+				throw new InvalidOperationException ("Text should have a value");
+			}
+
+			return textGetter;
+		}
+
+
+		private static Func<AbstractEntity, FormattedText> GetBrickValueFromString(BrickProperty property)
+		{
+			Func<AbstractEntity, FormattedText> textGetter = null;
+
+			var stringValue = property.StringValue;
+
+			if (stringValue != null)
+			{
+				textGetter = _ => (FormattedText) stringValue;
+			}
+
+			return textGetter;
+		}
+
+
+		private static Func<AbstractEntity, FormattedText> GetBrickValueFromExpression(Brick brick, BrickProperty property)
+		{
+			var expressionValue = property.ExpressionValue as LambdaExpression;
+
+			Func<AbstractEntity, FormattedText> textGetter = null;
+
+			if (expressionValue != null)
+			{
+				var expression = expressionValue.Compile ();
+
+				Func<AbstractEntity, FormattedText> rawTextGetter = x => (FormattedText) expression.DynamicInvoke (x);
+
+				var resolver = brick.GetResolver (null);
+
+				if (resolver == null)
+				{
+					textGetter = rawTextGetter;
+				}
+				else
+				{
+					textGetter = x => rawTextGetter ((AbstractEntity) resolver.DynamicInvoke (x));
+				}
+			}
+
+			return textGetter;
+		}
+
+
+		private static BrickProperty? GetOptionalBrickProperty(Brick brick, BrickPropertyKey key)
+		{
+			if (Brick.ContainsProperty (brick, key))
+			{
+				return Brick.GetProperty (brick, key);
+			}
+			else
+			{
+				return null;
+			}			
+		}
+
+
+		private static BrickProperty GetMandatoryBrickProperty(Brick brick, BrickPropertyKey key)
+		{
+			if (!Brick.ContainsProperty (brick, key))
+			{
+				throw new InvalidOperationException ("brick property is missing !");
+			}
+
+			return Brick.GetProperty (brick, key);
+		}
+
+
+
+		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData)
+		{
+			foreach (var brickMode in Carpenter.GetBrickModes (brick))
+			{
+				Carpenter.PupulateSummaryTileDataWithAttribute (brickMode, summaryTileData);
+			}
+		}
+
+
+		private static IEnumerable<BrickMode> GetBrickModes(Brick brick)
+		{
+			return from attribute in Brick.GetProperties (brick, BrickPropertyKey.Attribute)
+				   let value = attribute.AttributeValue
+				   where value != null
+				   where value.ContainsValue<BrickMode> ()
+				   select value.GetValue<BrickMode> ();
+		}
+
+
+		private static void PupulateSummaryTileDataWithAttribute(BrickMode brickMode, SummaryTileData summaryTileData)
+		{
+			// TODO Implement other brick modes ?
+
+			switch (brickMode)
+			{
+				case BrickMode.DefaultToSummarySubView:
+					summaryTileData.SubViewControllerMode = ViewControllerMode.Summary;
+					break;
+
+				case BrickMode.HideAddButton:
+					summaryTileData.HideAddButton = true;
+					break;
+
+				case BrickMode.HideRemoveButton:
+					summaryTileData.HideRemoveButton = true;
+					break;
+
+				default:
+					if (brickMode.IsSpecialController ())
+					{
+						summaryTileData.SubViewControllerSubTypeId = brickMode.GetControllerSubTypeId ();
+					}
+					break;
+			}
+		}
+
+
+		private static TemplateTileData GetOptionalTemplate(Brick brick)
+		{
+			var templateBrickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
+
+			if (templateBrickProperty.HasValue)
+			{
+				var templateBrick = templateBrickProperty.Value.Brick;
+
+				return Carpenter.GetTemplate (brick, templateBrick);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		private static TemplateTileData GetTemplate(Brick brick, Brick templateBrick)
+		{
+			return new TemplateTileData ()
+			{
+				CollectionGetter = Carpenter.GetCollectionGetter(brick),
+				EntityType = templateBrick.GetFieldType (),
+				Icon = Carpenter.GetMandatoryValue (templateBrick, BrickPropertyKey.Icon),
+				Lambda = brick.GetLambda(),
+				TitleGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Title),
+				TextGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Text),
+			};
+		}
+
+
+		private static Func<AbstractEntity, IEnumerable<AbstractEntity>> GetCollectionGetter(Brick brick)
+		{
+			var resolver = brick.GetResolver (null);
+
+			return x => (IEnumerable<AbstractEntity>) resolver.DynamicInvoke (x);
+		}
+
+
+		private static EditionTileData BuildEditionTileDataItem(Brick brick)
+		{
+			throw new NotImplementedException ();
+		}
+
+
+	}
+
+
+}

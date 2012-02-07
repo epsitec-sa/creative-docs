@@ -11,22 +11,21 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.WebCore.Server.CoreServer;
-
 using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using System;
 
-using System.Diagnostics;
-
 using System.Collections;
 using System.Collections.Generic;
+
+using System.Diagnostics;
 
 using System.Globalization;
 
 using System.Linq;
 using System.Linq.Expressions;
-
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -70,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
-			var brickWall = WebBridge.GetBrickWall (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
+			var brickWall = Mason.BuildBrickWall (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
 
 			// Open the main panel
 			var dic = new Dictionary<string, object> ();
@@ -82,22 +81,26 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var items = new List<Dictionary<string, object>> ();
 			dic["items"] = items;
 
-			bool first = true;
-
-			foreach (var brick in brickWall.Bricks)
+			// TODO Change this to activate the new way of generating the panels.
+			if (false && this.controllerMode == ViewControllerMode.Summary)
 			{
-				var panels = this.GetPanels (brick);
-
-				// The very first item is the root
-				if (first)
-				{
-					panels.First ()["isRoot"] = true;
-
-					first = false;
-				}
+				var tileData = Carpenter.BuildTileData (brickWall, this.controllerMode).ToList();
+				var tiles = tileData.SelectMany (td => td.ToTiles (this.rootEntity, e => this.GetEntityKey (e).ToString (), i => IconManager.GetCSSClassName (i, IconSize.Sixteen), l => InvariantConverter.ToString (this.coreSession.PanelFieldAccessorCache.Get (l).Id), t => t.AssemblyQualifiedName)).ToList();
+				var panels = tiles.Select (t => t.ToDictionary ()).ToList ();
 
 				items.AddRange (panels);
 			}
+			else
+			{
+				foreach (var brick in brickWall.Bricks)
+				{
+					var panels = this.GetPanels (brick);
+
+					items.AddRange (panels);
+				}
+			}
+
+			items.First ()["isRoot"] = true;
 
 			return dic;
 		}
@@ -142,7 +145,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					foreach (var e in col)
 					{
 						var panels = this.CreatePanelsForEntity (brick, item, e);
-						panels.ForEach (p => p["lambda"] = accessor.Id.ToString (CultureInfo.InvariantCulture));
+						panels.ForEach (p => p["lambdaId"] = accessor.Id.ToString (CultureInfo.InvariantCulture));
 						panels.ForEach (p => p["entityType"] = brickType.AssemblyQualifiedName);
 						list.AddRange (panels);
 					}
@@ -152,7 +155,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					// This collection is empty, but we want to show its empty panel
 					// so the user will be able to add one.
 					var panel = this.CreateEmptyPanel (item);
-					panel["lambda"] = accessor.Id.ToString (CultureInfo.InvariantCulture);
+					panel["lambdaId"] = accessor.Id.ToString (CultureInfo.InvariantCulture);
 					panel["entityType"] = brickType.AssemblyQualifiedName;
 					list.Add (panel);
 				}
@@ -619,68 +622,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		private readonly ViewControllerMode controllerMode;
 		private readonly int? controllerSubTypeId;
 		private readonly CoreSession coreSession;
-
-
-		
-		
-// Code :
-// + : Complete
-// - : Does not apply here
-// ~ : To check
-//   : TODO
-		
-		
-//BrickPropertyKey : 
-//    +Name,
-//    +Icon,
-//    +Title,
-//    +TitleCompact,
-//    +Text,
-//    +TextCompact,
-//    ~Attribute,
-//    ~Template,
-//    -OfType,
-//    +Input,
-//    +Field,
-//    -Width,
-//    -Height,
-//	  -ReadOnly
-//    +Separator,
-//    +HorizontalGroup,
-//    ~FromCollection,
-//    -SpecialController,
-//    +GlobalWarning,
-//    CollectionAnnotation,
-//    +Include
- 
-
-// BrickMode :
-//    -AutoGroup,
-//    -AutoCreateNullEntity,
-//    +DefaultToSummarySubview,
-//    +HideAddButton,
-//    +HideRemoveButton,
-//    +SpecialController0,
-//    +SpecialController1,
-//    +SpecialController2,
-//    +SpecialController3,
-//    +SpecialController4,
-//    +SpecialController5,
-//    +SpecialController6,
-//    +SpecialController7,
-//    +SpecialController8,
-//    +SpecialController9,
-//    +SpecialController10,
-//    +SpecialController11,
-//    +SpecialController12,
-//    +SpecialController13,
-//    +SpecialController14,
-//    +SpecialController15,
-//    +SpecialController16,
-//    +SpecialController17,
-//    +SpecialController18,
-//    +SpecialController19,
-//    -FullHeightStretch
 		
 
 	}
