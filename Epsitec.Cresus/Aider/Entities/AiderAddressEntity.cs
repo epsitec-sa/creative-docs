@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<string> GetAddressLines()
+		public IEnumerable<FormattedText> GetAddressLines()
 		{
 			yield return this.AddressLine1;
 			yield return StringUtils.Join (" ", this.Street, this.HouseNumber, this.HouseNumberComplement);
@@ -67,16 +67,26 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<string> GetPhones()
+		public IEnumerable<FormattedText> GetPhones()
 		{
 			if (!this.Phone1.IsNullOrWhiteSpace ())
 			{
-				yield return this.Phone1;
+				yield return TextFormatter.FormatField (() => this.Phone1);
 			}
 
 			if (!this.Phone2.IsNullOrWhiteSpace ())
 			{
-				yield return this.Phone2;
+				yield return TextFormatter.FormatField (() => this.Phone2);
+			}
+
+			if (!this.Mobile.IsNullOrWhiteSpace ())
+			{
+				yield return TextFormatter.FormatField (() => this.Mobile);
+			}
+
+			if (!this.Fax.IsNullOrWhiteSpace ())
+			{
+				yield return TextFormatter.FormatField (() => this.Fax);
 			}
 		}
 
@@ -105,13 +115,11 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetLabeledText(string label, IEnumerable<string> lines)
+		private FormattedText GetLabeledText(string label, IEnumerable<FormattedText> lines)
 		{
-			var text = lines
-			.Where (l => !l.IsNullOrWhiteSpace ())
-			.Join ("\n");
+			var text = TextFormatter.Join ("<br/>", lines.Where (l => !l.IsNullOrWhiteSpace));
 
-			if (text.IsNullOrWhiteSpace ())
+			if (text.IsNullOrWhiteSpace)
 			{
 				return null;
 			}
@@ -120,9 +128,9 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private FormattedText GetLabeledText(string label, string text)
+		private FormattedText GetLabeledText(string label, FormattedText text)
 		{
-			if (text.IsNullOrWhiteSpace ())
+			if (text.IsNullOrWhiteSpace)
 			{
 				return null;
 			}

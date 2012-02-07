@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.widget = widget;
 
-			widget.MultilingualEditionCalled += new Common.Support.EventHandler (this.HandleTextFieldMultilingualEditionCalled);
+			widget.MultilingualEditionCalled += this.HandleTextFieldMultilingualEditionCalled;
 
 			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 

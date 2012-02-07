@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using Epsitec.Common.Text;
+using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core
 {
@@ -96,6 +97,29 @@ namespace Epsitec.Cresus.Core
 
 			return new FormattedText (string.Join (FormattedText.HtmlBreak, buffer.ToString ().Split (new string[] { FormattedText.HtmlBreak }, System.StringSplitOptions.RemoveEmptyEntries)).Replace ("()", ""));
 		}
+
+		public static FormattedText FormatField<T>(Expression<System.Func<T>> expression)
+		{
+			var marshaler = Epsitec.Common.Types.Converters.Marshaler.Create (expression);
+			var fieldType = EntityInfo.GetFieldType (expression);
+			
+			return TextFormatter.FormatField (fieldType, marshaler.GetStringValue ());
+		}
+
+		public static FormattedText FormatField(INamedType type, string value)
+		{
+			var binder = Epsitec.Cresus.Core.Factories.FieldBinderFactory.Create (type);
+
+			if (binder != null)
+			{
+				return binder.ConvertToUI (value);
+			}
+			else
+			{
+				return value;
+			}
+		}
+
 
 		public static Caption GetCurrentCultureCaption(Druid captionId)
 		{
@@ -341,6 +365,7 @@ namespace Epsitec.Cresus.Core
 				{
 					buffer.Append (text);
 					emptyItem = true;
+					skipSpace = true;
 					weKnowItemIsEmpty = false;
 					continue;
 				}
@@ -353,6 +378,7 @@ namespace Epsitec.Cresus.Core
 				{
 					buffer.Append (text);
 					emptyItem = true;
+					skipSpace = true;
 					continue;
 				}
 
@@ -413,8 +439,7 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
-
-		public static bool IsEmptyItem(string text, bool betweenParentheses = false)
+		private static bool IsEmptyItem(string text, bool betweenParentheses = false)
 		{
 			if (text == null)
 			{

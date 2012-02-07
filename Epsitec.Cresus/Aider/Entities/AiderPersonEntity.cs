@@ -42,7 +42,7 @@ namespace Epsitec.Aider.Entities
 		{
 			var lines = this.GetCoordinatesSummaryLines ();
 
-			return TextFormatter.FormatText (lines.Join ("\n"));
+			return TextFormatter.FormatText (lines.Select (x => x.AppendLineIfNotNull ()));
 		}
 
 
@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<string> GetCoordinatesSummaryLines()
+		public IEnumerable<FormattedText> GetCoordinatesSummaryLines()
 		{
 			// Gets the full name
 			var fullNameText = this.GetFullName ();
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Entities
 			{
 				var addressLines = defaultMailaddress
 					.GetAddressLines ()
-					.Where (l => !l.IsNullOrWhiteSpace ());
+					.Where (l => !l.IsNullOrWhiteSpace);
 
 				foreach (var mailAddressLine in addressLines)
 				{
@@ -167,7 +167,7 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		public IEnumerable<string> GetPhones()
+		public IEnumerable<FormattedText> GetPhones()
 		{
 			return this.GetAddresses ().SelectMany (a => a.GetPhones ());
 		}
