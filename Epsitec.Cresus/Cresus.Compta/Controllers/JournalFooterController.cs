@@ -152,6 +152,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.CreateButtonMedèleUI (field, line);
 				}
+				else if (mapper.Column == ColumnType.Journal)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+
+					var journaux = this.comptaEntity.Journaux.Select (x => x.Name);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
+				}
 				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);

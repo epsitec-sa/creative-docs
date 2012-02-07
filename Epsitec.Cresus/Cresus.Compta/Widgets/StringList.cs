@@ -770,24 +770,22 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
-			double sep = rect.Width * (double) -min  / (double) (max-min);
-			double val = rect.Width * (double) value / (double) (max-min);
+			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
+			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
 
 			if (val < 0)
 			{
-				var r = new Rectangle (rect.Left+sep+val, rect.Bottom, -val, rect.Height);
+				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
 				graphics.AddFilledRectangle (r);
 				graphics.RenderSolid (StringList.colorRed);
 			}
 
 			if (val > 0)
 			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val, rect.Height);
+				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
 				graphics.AddFilledRectangle (r);
 				graphics.RenderSolid (StringList.colorGreen);
 			}
-
-			sep = System.Math.Floor (sep);
 
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
 			graphics.RenderSolid (Color.FromBrightness (0));
@@ -815,28 +813,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
-			double sep = rect.Width * (double) -min  / (double) (max-min);
-			double val = rect.Width * (double) value / (double) (max-min);
-			double sol = rect.Width * (double) solde / (double) (max-min);
+			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
+			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
+			double sol = System.Math.Floor (rect.Width * (double) solde / (double) (max-min));
 
 			var color = value >= solde ? StringList.colorGreen : StringList.colorRed;
 
 			if (val < 0)
 			{
-				var r = new Rectangle (rect.Left+sep+val, rect.Bottom, -val, rect.Height);
+				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
 				graphics.AddFilledRectangle (r);
 				graphics.RenderSolid (color);
 			}
 
 			if (val > 0)
 			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val, rect.Height);
+				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
 				graphics.AddFilledRectangle (r);
 				graphics.RenderSolid (color);
 			}
-
-			sep = System.Math.Floor (sep);
-			sol = System.Math.Floor (sol);
 
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
 			graphics.AddLine (rect.Left+sol, rect.Bottom, rect.Left+sol, rect.Top);
