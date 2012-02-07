@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.IO;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
@@ -30,12 +31,12 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (
 				"<b>Adresse</b>\n~", this.GetPostalAddress (), "~\n",
-				this.Phone1, "~(fixe 1)\n",
-				this.Phone2, "~(fixe 2)\n",
-				this.Mobile, "~(mobile)\n",
-				this.Fax, "~(fax)\n",
-				this.Email, "~\n",
-				this.Web);
+				TextFormatter.FormatField (() => this.Phone1), "~(fixe 1)\n",
+				TextFormatter.FormatField (() => this.Phone2), "~(fixe 2)\n",
+				TextFormatter.FormatField (() => this.Mobile), "~(mobile)\n",
+				TextFormatter.FormatField (() => this.Fax), "~(fax)\n",
+				UriFormatter.ToFormattedText (this.Email), "~\n",
+				UriFormatter.ToFormattedText (this.Web));
 		}
 
 
@@ -92,24 +93,6 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
-		}
-
-
-		private FormattedText GetPhonesText()
-		{
-			return this.GetLabeledText ("Numéros de téléphones", this.GetPhones ());
-		}
-
-
-		private FormattedText GetEmailText()
-		{
-			return this.GetLabeledText ("Addresse éléctronique", this.Email);
-		}
-
-
-		private FormattedText GetWebsiteText()
-		{
-			return this.GetLabeledText ("Site internet", this.Web);
 		}
 
 
