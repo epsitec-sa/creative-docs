@@ -131,6 +131,16 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType ValidationState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 200));
 			}
 			
+			public static class String
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVA7B
+				public static readonly Epsitec.Common.Types.StringType PhoneNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 359));
+			}
+			
 			//	designer:cap/LVAJ2
 			public static readonly Epsitec.Common.Types.StructuredType AiderAddress = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 83));
 			//	designer:cap/LVA78
@@ -1156,10 +1166,14 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid AddressLine1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 161);
 				//	designer:cap/LVAN5
 				public static readonly global::Epsitec.Common.Support.Druid Email = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 183);
+				//	designer:cap/LVA5B
+				public static readonly global::Epsitec.Common.Support.Druid Fax = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 357);
 				//	designer:cap/LVA35
 				public static readonly global::Epsitec.Common.Support.Druid HouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 163);
 				//	designer:cap/LVA45
 				public static readonly global::Epsitec.Common.Support.Druid HouseNumberComplement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 164);
+				//	designer:cap/LVA6B
+				public static readonly global::Epsitec.Common.Support.Druid Mobile = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 358);
 				//	designer:cap/LVAE5
 				public static readonly global::Epsitec.Common.Support.Druid Phone1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 174);
 				//	designer:cap/LVAM5
@@ -1874,6 +1888,7 @@ namespace Epsitec.Aider
 			CommandIds.Base._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
+			Types.String._Initialize ();
 			Values._Initialize ();
 			Values.Enum.AddressType._Initialize ();
 			Values.Enum.ContactRole._Initialize ();

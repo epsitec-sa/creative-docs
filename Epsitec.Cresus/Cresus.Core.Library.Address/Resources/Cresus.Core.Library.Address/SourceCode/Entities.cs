@@ -89,6 +89,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity.EntityStructuredTypeId;
@@ -147,6 +148,7 @@ namespace Epsitec.Cresus.Core.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Core.Entities.ContactGroupEntity> ("[FVA7]");
 			}
 		}
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -294,6 +296,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnContactGroupTypeChanging(global::Epsitec.Cresus.Core.Business.ContactGroupType oldValue, global::Epsitec.Cresus.Core.Business.ContactGroupType newValue);
 		partial void OnContactGroupTypeChanged(global::Epsitec.Cresus.Core.Business.ContactGroupType oldValue, global::Epsitec.Cresus.Core.Business.ContactGroupType newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -461,6 +464,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnDateOfBirthChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDateOfBirthChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity.EntityStructuredTypeId;
@@ -590,6 +594,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnComplementChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnComplementChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -721,6 +726,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.PersonTitleEntity.EntityStructuredTypeId;
@@ -841,6 +847,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -970,6 +977,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnShortNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnShortNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1124,6 +1132,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnPostBoxNumberChanged(string oldValue, string newValue);
 		partial void OnLocationChanging(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		partial void OnLocationChanged(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1339,6 +1348,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnLanguage2Changing(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		partial void OnLanguage2Changed(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.LocationEntity.EntityStructuredTypeId;
@@ -1463,6 +1473,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCountryChanging(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		partial void OnCountryChanged(global::Epsitec.Cresus.Core.Entities.CountryEntity oldValue, global::Epsitec.Cresus.Core.Entities.CountryEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.StateProvinceCountyEntity.EntityStructuredTypeId;
@@ -1580,6 +1591,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnCountryCodeChanged(string oldValue, string newValue);
 		partial void OnNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -1703,6 +1715,7 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.TelecomTypeEntity.EntityStructuredTypeId;
@@ -1809,6 +1822,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnExtensionChanging(string oldValue, string newValue);
 		partial void OnExtensionChanged(string oldValue, string newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.TelecomContactEntity.EntityStructuredTypeId;
@@ -1890,6 +1904,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnUriTypeChanged(global::Epsitec.Cresus.Core.Entities.UriTypeEntity oldValue, global::Epsitec.Cresus.Core.Entities.UriTypeEntity newValue);
 		partial void OnUriChanging(string oldValue, string newValue);
 		partial void OnUriChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2018,6 +2033,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnProtocolChanging(string oldValue, string newValue);
 		partial void OnProtocolChanged(string oldValue, string newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -2215,6 +2231,7 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnNaturalPersonChanging(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		partial void OnNaturalPersonChanged(global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.NaturalPersonEntity newValue);
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.PeopleEntity.EntityStructuredTypeId;
@@ -2319,6 +2336,7 @@ namespace Epsitec.Cresus.Core.Entities
 		#endregion
 		
 		
+		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
 			return global::Epsitec.Cresus.Core.Entities.PeopleGroupEntity.EntityStructuredTypeId;
@@ -2421,6 +2439,7 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		#endregion
+		
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -2544,6 +2563,7 @@ namespace Epsitec.Cresus.Core.Entities
 		
 		partial void OnPersonChanging(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
 		partial void OnPersonChanged(global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity oldValue, global::Epsitec.Cresus.Core.Entities.AbstractPersonEntity newValue);
+		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

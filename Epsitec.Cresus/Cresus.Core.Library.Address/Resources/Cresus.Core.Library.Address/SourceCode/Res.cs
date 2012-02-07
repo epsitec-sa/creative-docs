@@ -88,6 +88,16 @@ namespace Epsitec.Cresus.Core.Library.Address
 				public static readonly Epsitec.Common.Types.EnumType ContactGroupType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 62));
 			}
 			
+			public static class String
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/FVAQ2
+				public static readonly Epsitec.Common.Types.StringType PhoneNumber = (global::Epsitec.Common.Types.StringType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 90));
+			}
+			
 			//	designer:cap/FVA1
 			public static readonly Epsitec.Common.Types.StructuredType AbstractContact = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 			//	designer:cap/FVA
@@ -539,6 +549,7 @@ namespace Epsitec.Cresus.Core.Library.Address
 			CaptionIds.ActionButton._Initialize ();
 			Types._Initialize ();
 			Types.Enum._Initialize ();
+			Types.String._Initialize ();
 			Values._Initialize ();
 			Values.Enum.ContactGroupType._Initialize ();
 			Fields.AbstractContact._Initialize ();

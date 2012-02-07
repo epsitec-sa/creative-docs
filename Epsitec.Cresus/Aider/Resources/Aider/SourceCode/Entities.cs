@@ -1996,6 +1996,50 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Mobile</c> field.
+		///	designer:fld/LVAJ2/LVA6B
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA6B]")]
+		public string Mobile
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA6B]");
+			}
+			set
+			{
+				string oldValue = this.Mobile;
+				if (oldValue != value || !this.IsFieldDefined("[LVA6B]"))
+				{
+					this.OnMobileChanging (oldValue, value);
+					this.SetField<string> ("[LVA6B]", oldValue, value);
+					this.OnMobileChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Fax</c> field.
+		///	designer:fld/LVAJ2/LVA5B
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA5B]")]
+		public string Fax
+		{
+			get
+			{
+				return this.GetField<string> ("[LVA5B]");
+			}
+			set
+			{
+				string oldValue = this.Fax;
+				if (oldValue != value || !this.IsFieldDefined("[LVA5B]"))
+				{
+					this.OnFaxChanging (oldValue, value);
+					this.SetField<string> ("[LVA5B]", oldValue, value);
+					this.OnFaxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Email</c> field.
 		///	designer:fld/LVAJ2/LVAN5
 		///	</summary>
@@ -2058,6 +2102,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnPhone1Changed(string oldValue, string newValue);
 		partial void OnPhone2Changing(string oldValue, string newValue);
 		partial void OnPhone2Changed(string oldValue, string newValue);
+		partial void OnMobileChanging(string oldValue, string newValue);
+		partial void OnMobileChanged(string oldValue, string newValue);
+		partial void OnFaxChanging(string oldValue, string newValue);
+		partial void OnFaxChanged(string oldValue, string newValue);
 		partial void OnEmailChanging(string oldValue, string newValue);
 		partial void OnEmailChanged(string oldValue, string newValue);
 		partial void OnWebChanging(string oldValue, string newValue);

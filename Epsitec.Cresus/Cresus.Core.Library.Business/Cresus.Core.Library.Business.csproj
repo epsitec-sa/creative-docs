@@ -48,6 +48,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Binders\NumericFieldBinder.cs" />
+    <Compile Include="Binders\PhoneNumberFieldBinder.cs" />
     <Compile Include="Bricks\BrickModeExtensions.cs" />
     <Compile Include="Bricks\BridgeSpy.cs" />
     <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
@@ -347,6 +348,10 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Epsitec\dot.net\Epsitec.TwixClip\Epsitec.TwixClip\Epsitec.TwixClip.csproj">
+      <Project>{B4D96BD8-5B65-486D-99B1-16D7948FED61}</Project>
+      <Name>Epsitec.TwixClip</Name>
+    </ProjectReference>
     <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
       <Project>{1D3F4D00-84AE-4714-BDD5-6DDB19BE6AAF}</Project>
       <Name>App.DebugService</Name>
