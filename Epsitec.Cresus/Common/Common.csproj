@@ -306,6 +306,7 @@
     <Compile Include="IO\TemporaryFile.cs" />
     <Compile Include="IO\Tools.cs" />
     <Compile Include="IO\UriBuilder.cs" />
+    <Compile Include="IO\UriFormatter.cs" />
     <Compile Include="IO\WaitCondition.cs" />
     <Compile Include="IO\ZipFile.cs" />
     <Compile Include="OpenType\Font.cs" />

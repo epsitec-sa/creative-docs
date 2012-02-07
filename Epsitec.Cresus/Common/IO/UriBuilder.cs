@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -24,16 +24,17 @@ namespace Epsitec.Common.IO
 				return;
 			}
 
-			int schemeEnd = fullUri.IndexOf ("://");
+			var schemeName = UriBuilder.GetSchemeName (fullUri);
 
-			if (schemeEnd < 0)
+			if (schemeName.Length == 0)
 			{
 				throw new System.UriFormatException ("No URI scheme specified");
 			}
 
-			this.Scheme = fullUri.Substring (0, schemeEnd);
+			this.Scheme       = schemeName;
+			this.SchemeSuffix = UriBuilder.GetSchemeSuffix (schemeName, fullUri);
 
-			string part1 = fullUri.Substring (schemeEnd+3);
+			string part1 = fullUri.Substring (this.Scheme.Length + this.SchemeSuffix.Length);
 			string part2;
 
 			int posPart2 = part1.IndexOf ('/');
@@ -70,6 +71,12 @@ namespace Epsitec.Common.IO
 		/// </summary>
 		/// <value>The URI scheme.</value>
 		public string							Scheme
+		{
+			get;
+			set;
+		}
+
+		public string							SchemeSuffix
 		{
 			get;
 			set;
@@ -159,6 +166,105 @@ namespace Epsitec.Common.IO
 		}
 
 
+		public static string GetSchemeName(string fullUri)
+		{
+			if (string.IsNullOrEmpty (fullUri))
+			{
+				return "";
+			}
+			else
+			{
+				int schemeEnd = fullUri.IndexOf (':');
+				
+				if (schemeEnd < 0)
+				{
+					return "";
+				}
+				else
+				{
+					return fullUri.Substring (0, schemeEnd);
+				}
+			}
+		}
+
+		private static string GetSchemeSuffix(string schemeName, string fullUri)
+		{
+			int schemeNameLength = schemeName.Length;
+
+			if (schemeNameLength == 0)
+			{
+				return "";
+			}
+			else
+			{
+				return fullUri.IndexOf ("://", schemeNameLength) == schemeNameLength ? "://" : ":";
+			}
+		}
+
+		public static string FixScheme(string fullUri)
+		{
+			if (string.IsNullOrEmpty (fullUri))
+			{
+				return fullUri;
+			}
+
+			string officialSuffix = null;
+			string officialName;
+			
+			var schemeName = UriBuilder.GetSchemeName (fullUri);
+
+			if (schemeName.Length == 0)
+			{
+				if ((!schemeName.StartsWith ("www")) &&
+					(schemeName.Contains ("@")))
+				{
+					officialName   = "mailto";
+					officialSuffix = ":";
+				}
+				else
+				{
+					officialName = "http";
+				}
+			}
+			else
+			{
+				if (schemeName.StartsWith ("www"))
+				{
+					schemeName   = "";
+					officialName = "http";
+				}
+				else
+				{
+					officialName = schemeName;
+				}
+			}
+
+			var schemeSuffix = UriBuilder.GetSchemeSuffix (schemeName, fullUri);
+
+			switch (schemeName)
+			{
+				case "http":
+				case "https":
+				case "ftp":
+				case "file":
+					officialSuffix = "://";
+					break;
+				default:
+					officialSuffix = officialSuffix ?? schemeSuffix;
+					break;
+			}
+
+			if (officialSuffix == schemeSuffix)
+			{
+				return fullUri;
+			}
+			else
+			{
+				return officialName + officialSuffix + fullUri.Substring (schemeName.Length + schemeSuffix.Length);
+			}
+		}
+
+
 		#region IEquatable<UriBuilder> Members
 
 		public bool Equals(UriBuilder other)
@@ -189,7 +295,7 @@ namespace Epsitec.Common.IO
 			}
 
 			buffer.Append (this.Scheme);
-			buffer.Append ("://");
+			buffer.Append (this.SchemeSuffix ?? "://");
 
 			string separator = "";
 
@@ -272,10 +378,10 @@ namespace Epsitec.Common.IO
 			else
 			{
 				if (posFragment < 0)
-                {
+				{
 					this.Path  = System.Uri.UnescapeDataString (value.Substring (0, posQuery));
 					this.Query = System.Uri.UnescapeDataString (value.Substring (posQuery+1));
-                }
+				}
 				else if (posQuery < posFragment)
 				{
 					this.Path     = System.Uri.UnescapeDataString (value.Substring (0, posQuery));
@@ -320,6 +426,6 @@ namespace Epsitec.Common.IO
 		}
 
 
-		private string path;
+		private string							path;
 	}
 }
