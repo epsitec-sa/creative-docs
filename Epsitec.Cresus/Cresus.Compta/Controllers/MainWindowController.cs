@@ -671,6 +671,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		[Command (Res.CommandIds.Modèle.Insert0)]
+		[Command (Res.CommandIds.Modèle.Insert1)]
+		[Command (Res.CommandIds.Modèle.Insert2)]
+		[Command (Res.CommandIds.Modèle.Insert3)]
+		[Command (Res.CommandIds.Modèle.Insert4)]
+		[Command (Res.CommandIds.Modèle.Insert5)]
+		[Command (Res.CommandIds.Modèle.Insert6)]
+		[Command (Res.CommandIds.Modèle.Insert7)]
+		[Command (Res.CommandIds.Modèle.Insert8)]
+		[Command (Res.CommandIds.Modèle.Insert9)]
+		private void CommandModèleInsert(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			int n = e.Command.Name.Last () - '0';  // 0..9
+			this.controller.FooterController.InsertModèle (n);
+		}
+
 		[Command (Res.CommandIds.Global.Settings)]
 		private void CommandGlobalSettings()
 		{

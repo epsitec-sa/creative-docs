@@ -334,6 +334,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[line1] = t;
 		}
 
+		public override void InsertModèle(int n)
+		{
+			RaccourciModèle rm = RaccourciModèle.Ctrl0 + n;
+			string srm = Converters.RaccourciToString (rm);
+			var modèle = this.comptaEntity.Modèles.Where (x => x.Raccourci == srm).FirstOrDefault ();
+
+			if (modèle != null)
+			{
+				this.InsertModèle (modèle, this.selectedLine);
+			}
+		}
+
 
 		protected override void UpdateEditionWidgets()
 		{

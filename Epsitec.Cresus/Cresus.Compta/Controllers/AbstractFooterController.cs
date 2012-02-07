@@ -342,6 +342,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		public virtual void InsertModèle(int n)
+		{
+		}
+
 
 		public void ShowSelection()
 		{

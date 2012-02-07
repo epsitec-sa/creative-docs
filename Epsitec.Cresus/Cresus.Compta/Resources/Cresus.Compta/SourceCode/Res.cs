@@ -64,6 +64,34 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Settings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 69));
 			}
 			
+			public static class Modèle
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK74
+				public static readonly global::Epsitec.Common.Widgets.Command Insert0 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 135));
+				//	designer:cap/OVK64
+				public static readonly global::Epsitec.Common.Widgets.Command Insert1 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 134));
+				//	designer:cap/OVK84
+				public static readonly global::Epsitec.Common.Widgets.Command Insert2 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 136));
+				//	designer:cap/OVK94
+				public static readonly global::Epsitec.Common.Widgets.Command Insert3 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 137));
+				//	designer:cap/OVKA4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert4 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 138));
+				//	designer:cap/OVKB4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert5 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 139));
+				//	designer:cap/OVKC4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert6 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 140));
+				//	designer:cap/OVKD4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert7 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 141));
+				//	designer:cap/OVKE4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert8 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 142));
+				//	designer:cap/OVKF4
+				public static readonly global::Epsitec.Common.Widgets.Command Insert9 = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 143));
+			}
+			
 			public static class Multi
 			{
 				internal static void _Initialize()
@@ -235,6 +263,34 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVK52
 				public const long Settings = 0x3F800014000045L;
+			}
+			
+			public static class Modèle
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVK74
+				public const long Insert0 = 0x3F800014000087L;
+				//	designer:cap/OVK64
+				public const long Insert1 = 0x3F800014000086L;
+				//	designer:cap/OVK84
+				public const long Insert2 = 0x3F800014000088L;
+				//	designer:cap/OVK94
+				public const long Insert3 = 0x3F800014000089L;
+				//	designer:cap/OVKA4
+				public const long Insert4 = 0x3F80001400008AL;
+				//	designer:cap/OVKB4
+				public const long Insert5 = 0x3F80001400008BL;
+				//	designer:cap/OVKC4
+				public const long Insert6 = 0x3F80001400008CL;
+				//	designer:cap/OVKD4
+				public const long Insert7 = 0x3F80001400008DL;
+				//	designer:cap/OVKE4
+				public const long Insert8 = 0x3F80001400008EL;
+				//	designer:cap/OVKF4
+				public const long Insert9 = 0x3F80001400008FL;
 			}
 			
 			public static class Multi
@@ -708,6 +764,7 @@ namespace Epsitec.Cresus.Compta
 			Commands.Edit._Initialize ();
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
+			Commands.Modèle._Initialize ();
 			Commands.Multi._Initialize ();
 			Commands.NouvellePrésentation._Initialize ();
 			Commands.Panel._Initialize ();
@@ -717,6 +774,7 @@ namespace Epsitec.Cresus.Compta
 			CommandIds.Edit._Initialize ();
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();
+			CommandIds.Modèle._Initialize ();
 			CommandIds.Multi._Initialize ();
 			CommandIds.NouvellePrésentation._Initialize ();
 			CommandIds.Panel._Initialize ();

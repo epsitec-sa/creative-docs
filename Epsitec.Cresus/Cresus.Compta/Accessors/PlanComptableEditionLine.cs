@@ -48,8 +48,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				var t = data.Text;
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == t).FirstOrDefault ();
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					return;

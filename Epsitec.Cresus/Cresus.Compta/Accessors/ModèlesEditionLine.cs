@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.datas.Add (ColumnType.Code,      new EditionData (this.controller, this.ValidateCode));
-			this.datas.Add (ColumnType.Raccourci, new EditionData (this.controller));
+			this.datas.Add (ColumnType.Raccourci, new EditionData (this.controller, this.ValidateRaccourci));
 			this.datas.Add (ColumnType.Débit,     new EditionData (this.controller, this.ValidateCompte));
 			this.datas.Add (ColumnType.Crédit,    new EditionData (this.controller, this.ValidateCompte));
 			this.datas.Add (ColumnType.Pièce,     new EditionData (this.controller));
@@ -37,7 +37,60 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateCode(EditionData data)
 		{
-			Validators.ValidateText (data, "Il manque le code");
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				if (data.Text == Converters.RaccourciToString (RaccourciModèle.None))
+				{
+					return;  // plusieurs écritures modèles peuvent avoir "aucun" raccourci !
+				}
+
+				var compte = this.comptaEntity.Modèles.Where (x => x.Code == data.Text).FirstOrDefault ();
+				if (compte == null)
+				{
+					return;
+				}
+
+				var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaModèleEntity;
+				if (himself != null && himself.Code == data.Text)
+				{
+					return;
+				}
+
+				data.Error = "Ce code est déjà utilisé";
+			}
+			else
+			{
+				data.Error = "Il manque le code";
+			}
+		}
+
+		private void ValidateRaccourci(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				if (data.Text == Converters.RaccourciToString (RaccourciModèle.None))
+				{
+					return;  // plusieurs écritures modèles peuvent avoir "aucun" raccourci !
+				}
+
+				var compte = this.comptaEntity.Modèles.Where (x => x.Raccourci == data.Text).FirstOrDefault ();
+				if (compte == null)
+				{
+					return;
+				}
+
+				var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaModèleEntity;
+				if (himself != null && himself.Raccourci == data.Text)
+				{
+					return;
+				}
+
+				data.Error = "Ce raccourci est déjà utilisé";
+			}
 		}
 
 		private void ValidateCompte(EditionData data)
