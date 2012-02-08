@@ -60,6 +60,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
+		public bool AcceptFreeText
+		{
+			//	false -> Les choix sont limités à ceux contenus dans PrimaryTexts
+			//	true  -> Un texte libre quelconque est accepté
+			//	Ainsi, le mode 'true' permet d'entrer des libellés du type "solde", même s'il existe
+			//	un texte "Solde à nouveau" dans les contenus usuels de PrimaryTexts.
+			get;
+			set;
+		}
+
 		public double MenuButtonWidth
 		{
 			get;
@@ -163,12 +173,20 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			bool focused = (bool) e.NewValue;
 
-			if (focused)
+			if (focused)  // prise du focus ?
 			{
 			}
-			else
+			else  // perte du focus ?
 			{
-				this.UseSelectedHint (SelectedHintMode.AcceptEdition);
+				if (this.AcceptFreeText)
+				{
+					this.HintText = null;
+				}
+				else
+				{
+					this.UseSelectedHint (SelectedHintMode.AcceptEdition);
+				}
+
 				this.CloseComboMenu ();
 				base.OnTextChanged ();
 			}
@@ -229,6 +247,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 				case KeyCode.ArrowDown:
 					this.Navigate (1);
 					return true;
+
+				case KeyCode.ArrowLeft:
+				case KeyCode.ArrowRight:
+					if (this.IsComboMenuOpen)
+					{
+						this.selectedHint = this.scrollList.SelectedItemIndex;
+						this.UseSelectedHint (SelectedHintMode.AcceptEdition);
+						this.CloseComboMenu ();
+						base.OnTextChanged ();
+						return true;
+					}
+					break;
 
 				case KeyCode.Return:
 				case KeyCode.NumericEnter:
@@ -317,6 +347,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public override bool AcceptEdition()
+		{
+			if (this.IsEditing && this.CheckAcceptEdition ())
+			{
+				this.IsEditing = false;
+
+				this.OnEditionAccepted ();
+
+				//	Contraitement au AcceptEdition standard qui sélectionne tout le texte,
+				//	on met ici le curseur à la fin.
+				this.Cursor = this.Text.Length;  // met le curseur à la fin
+
+				return true;
+			}
+
+			return false;
+		}
+
+
 		private enum SelectedHintMode
 		{
 			Searching,
@@ -348,7 +397,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.HintText = null;
 						this.TextNavigator.TextLayout.FormattedText = this.GetItemText (i, true);
-						this.SelectAll ();
+						this.Cursor = this.Text.Length;  // met le curseur à la fin
 					}
 				}
 				else

@@ -324,7 +324,7 @@ namespace Epsitec.Common.Widgets
 			{
 				return this.isEditing;
 			}
-			private set
+			set
 			{
 				if (this.isEditing != value)
 				{

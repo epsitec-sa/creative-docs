@@ -147,6 +147,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
+					(field.EditWidget as AutoCompleteTextField).AcceptFreeText = true;
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
 

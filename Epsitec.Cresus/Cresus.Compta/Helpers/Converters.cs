@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (montant.HasValue)
 			{
-				return montant.Value.ToString ("0.00");
+				return montant.Value.ToString ("C", Converters.numberFormatMontant);
 			}
 			else
 			{
@@ -399,5 +399,22 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
+
+
+		static Converters()
+		{
+			Converters.numberFormatMontant = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
+
+			Converters.numberFormatMontant.CurrencySymbol           = "";
+			Converters.numberFormatMontant.CurrencyDecimalDigits    = 2;
+			Converters.numberFormatMontant.CurrencyDecimalSeparator = ".";
+			Converters.numberFormatMontant.CurrencyGroupSeparator   = "'";
+			Converters.numberFormatMontant.CurrencyGroupSizes       = new int[] { 3 };
+			Converters.numberFormatMontant.CurrencyPositivePattern  = 1;  // $n
+			Converters.numberFormatMontant.CurrencyNegativePattern  = 1;  // -$n
+			//Converters.numberFormatMontant.CurrencyNegativePattern  = 0;  // ($n)
+		}
+
+		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
 	}
 }

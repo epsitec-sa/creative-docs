@@ -59,8 +59,11 @@ namespace Epsitec.Cresus.Compta
 
 			window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", typeof (Application).Assembly);
 			window.Root.MinSize = new Size(640, 480);
+#if false
 			window.WindowBounds = new Rectangle (100, 50, 800, 600);
-			//window.WindowBounds = new Rectangle (2560+100, 1600-600-100, 800, 600);  // coin sup/gauche de mon 2ème écran 2560x1600 !!!
+#else
+			window.WindowBounds = new Rectangle (2560+100, 1600-600-100, 800, 600);  // coin sup/gauche de mon 2ème écran 2560x1600 !!!
+#endif
 			//?window.WindowBounds = this.editor.GlobalSettings.MainWindowBounds;
 			//?window.IsFullScreen = this.editor.GlobalSettings.IsFullScreen;
 			window.Text = "Crésus MCH-2";
