@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			data.TabsData[0].Column              = ColumnType.Solde;
 			data.TabsData[0].SearchText.Mode     = SearchMode.WholeContent;
 			data.TabsData[0].SearchText.Invert   = true;
-			data.TabsData[0].SearchText.FromText = "0.00";
+			data.TabsData[0].SearchText.FromText = Converters.MontantToString (0);
 		}
 
 
@@ -183,29 +184,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return PlanComptableDataAccessor.TypeToText (data.Type);
 
 				case ColumnType.Débit:
-					return AbstractDataAccessor.GetMontant (data.Débit);
+					return Converters.MontantToString (data.Débit);
 
 				case ColumnType.Crédit:
-					return AbstractDataAccessor.GetMontant (data.Crédit);
+					return Converters.MontantToString (data.Crédit);
 
 				case ColumnType.SoldeDébit:
-					return AbstractDataAccessor.GetMontant (data.SoldeDébit);
+					return Converters.MontantToString (data.SoldeDébit);
 
 				case ColumnType.SoldeCrédit:
-					return AbstractDataAccessor.GetMontant (data.SoldeCrédit);
+					return Converters.MontantToString (data.SoldeCrédit);
 
 				case ColumnType.Budget:
-					return AbstractDataAccessor.GetMontant (data.Budget);
+					return Converters.MontantToString (data.Budget);
 
 				case ColumnType.Solde:
 					if (data.Catégorie == CatégorieDeCompte.Passif ||
 						data.Catégorie == CatégorieDeCompte.Produit)
 					{
-						return AbstractDataAccessor.GetMontant (data.Crédit.GetValueOrDefault () - data.Débit.GetValueOrDefault ());
+						return Converters.MontantToString (data.Crédit.GetValueOrDefault () - data.Débit.GetValueOrDefault ());
 					}
 					else
 					{
-						return AbstractDataAccessor.GetMontant (data.Débit.GetValueOrDefault () - data.Crédit.GetValueOrDefault ());
+						return Converters.MontantToString (data.Débit.GetValueOrDefault () - data.Crédit.GetValueOrDefault ());
 					}
 
 				case ColumnType.Profondeur:

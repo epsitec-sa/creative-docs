@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -189,7 +190,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Titre;
 
 				case ColumnType.Solde:
-					return AbstractDataAccessor.GetMontant (data.Solde);
+					return Converters.MontantToString (data.Solde);
 
 				case ColumnType.SoldeGraphique:
 					return this.GetMinMaxText (data.Solde);

@@ -101,14 +101,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return modèle.Libellé;
 
 				case ColumnType.Montant:
-					if (modèle.Montant.HasValue)
-					{
-						return TextFormatter.FormatText (modèle.Montant.Value.ToString ("0.00"));
-					}
-					else
-					{
-						return FormattedText.Empty;
-					}
+					return Converters.MontantToString (modèle.Montant);
 
 				default:
 					return FormattedText.Null;

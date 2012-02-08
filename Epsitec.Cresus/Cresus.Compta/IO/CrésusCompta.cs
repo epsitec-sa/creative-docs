@@ -497,13 +497,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private decimal GetMontant(string text)
 		{
-			decimal m;
-			if (decimal.TryParse (text, out m))
-			{
-				return m;
-			}
-
-			return 0;
+			return Converters.ParseMontant (text).GetValueOrDefault ();
 		}
 
 		private int GetInt(string text)

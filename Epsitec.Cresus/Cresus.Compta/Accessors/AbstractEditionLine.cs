@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -55,30 +56,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected void SetMontant(ColumnType columnType, decimal? value)
 		{
-			if (value.HasValue)
-			{
-				this.SetText (columnType, value.Value.ToString ("0.00"));
-			}
-			else
-			{
-				this.SetText (columnType, FormattedText.Empty);
-			}
+			this.SetText (columnType, Converters.MontantToString (value));
 		}
 
 		protected decimal? GetMontant(ColumnType columnType)
 		{
-			var text = this.GetText (columnType);
-
-			if (!text.IsNullOrEmpty)
-			{
-				decimal d;
-				if (decimal.TryParse (text.ToSimpleText (), out d))
-				{
-					return d;
-				}
-			}
-
-			return null;
+			return Converters.ParseMontant (this.GetText (columnType));
 		}
 
 

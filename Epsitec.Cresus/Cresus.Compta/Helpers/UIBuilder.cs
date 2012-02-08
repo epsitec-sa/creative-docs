@@ -147,14 +147,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			s1.FormattedText = titre;
 
 			var s2 = box.Children[2] as StaticText;
-			if (solde.HasValue)
-			{
-				s2.FormattedText = solde.Value.ToString ("0.00");
-			}
-			else
-			{
-				s2.FormattedText = null;
-			}
+			s2.FormattedText = Converters.MontantToString (solde);
 		}
 
 

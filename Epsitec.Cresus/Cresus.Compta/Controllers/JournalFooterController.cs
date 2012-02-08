@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,            this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
-			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          "0.00");
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          Converters.MontantToString (0));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
@@ -406,8 +406,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
 						var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant).ToSimpleText ();
-						decimal montant = 0;
-						decimal.TryParse (text, out montant);
+						decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
 
 						if (this.IsDébitMulti (line))
 						{
@@ -424,13 +423,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.IsDébitMulti (cp))
 				{
 					decimal montant = totalDébit - totalCrédit;
-					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (montant));
 				}
 
 				if (this.IsCréditMulti (cp))
 				{
 					decimal montant = totalCrédit - totalDébit;
-					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, montant.ToString ("0.00"));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (montant));
 				}
 			}
 		}
@@ -656,7 +655,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (modèle.Montant.HasValue)
 			{
-				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, modèle.Montant.Value.ToString ("0.00"));
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (modèle.Montant));
 			}
 
 			this.UpdateFooterContent ();

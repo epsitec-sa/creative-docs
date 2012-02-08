@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -125,24 +126,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return compte.Titre;
 
 				case ColumnType.Solde:
-					decimal? solde = this.soldesJournalManager.GetSolde (compte);
-					if (solde.HasValue && solde.Value != 0)
-					{
-						return AbstractDataAccessor.GetMontant (solde);
-					}
-					else
-					{
-						return FormattedText.Empty;
-					}
+					return Converters.MontantToString (this.soldesJournalManager.GetSolde (compte));
 
 				case ColumnType.Budget:
-					return AbstractDataAccessor.GetMontant (compte.Budget);
+					return Converters.MontantToString (compte.Budget);
 
 				case ColumnType.BudgetPrécédent:
-					return AbstractDataAccessor.GetMontant (compte.BudgetPrécédent);
+					return Converters.MontantToString (compte.BudgetPrécédent);
 
 				case ColumnType.BudgetFutur:
-					return AbstractDataAccessor.GetMontant (compte.BudgetFutur);
+					return Converters.MontantToString (compte.BudgetFutur);
 
 				default:
 					return FormattedText.Null;

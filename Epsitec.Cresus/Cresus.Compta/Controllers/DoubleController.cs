@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else if (columnType == ColumnType.Solde)
 			{
-				if (!data.NeverFiltered && options.HideZero && text == "0.00")
+				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0))
 				{
 					text = FormattedText.Empty;
 				}

@@ -15,6 +15,41 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Converters
 	{
+		public static decimal? ParseMontant(FormattedText text)
+		{
+			return Converters.ParseMontant (text.ToSimpleText ());
+		}
+
+		public static decimal? ParseMontant(string text)
+		{
+			//	Parse un montant en francs.
+			decimal d;
+			if (decimal.TryParse (text, out d))
+			{
+				return d;
+			}
+
+			return null;
+		}
+
+		public static string MontantToString(decimal? montant)
+		{
+			if (montant.HasValue)
+			{
+				return montant.Value.ToString ("0.00");
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		public static Date? ParseDate(FormattedText text)
+		{
+			return Converters.ParseDate (text.ToSimpleText ());
+		}
+
 		public static Date? ParseDate(string text)
 		{
 			//	Parse une date située dans n'importe quelle période.

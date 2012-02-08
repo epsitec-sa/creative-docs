@@ -550,8 +550,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void BeginnerDateChanged()
 		{
-			Date? beginDate = Converters.ParseDate (this.beginnerBeginDateController.EditionData.Text.ToSimpleText ());
-			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text.ToSimpleText ());
+			Date? beginDate = Converters.ParseDate (this.beginnerBeginDateController.EditionData.Text);
+			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);
 			data.SetBeginnerDates (beginDate, endDate);
 
 			this.UpdateOrMode ();

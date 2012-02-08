@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 
@@ -716,38 +717,26 @@ namespace Epsitec.Cresus.Compta.Widgets
 				return;
 			}
 
-			decimal min, max, value1, value2 = 0;
+			decimal? min    = Converters.ParseMontant (words[1]);
+			decimal? max    = Converters.ParseMontant (words[2]);
+			decimal? value1 = Converters.ParseMontant (words[3]);
+			decimal? value2 = (words.Length >= 5) ? Converters.ParseMontant (words[4]) : 0;
 
-			if (!decimal.TryParse (words[1], out min))
+			if (!min.HasValue || !max.HasValue || !value1.HasValue || !value2.HasValue)
 			{
 				return;
 			}
 
-			if (!decimal.TryParse (words[2], out max))
-			{
-				return;
-			}
-
-			if (!decimal.TryParse (words[3], out value1))
-			{
-				return;
-			}
-
-			if (words.Length >= 5 && !decimal.TryParse (words[4], out value2))
-			{
-				return;
-			}
-
-			min = System.Math.Min (min, 0);
-			max = System.Math.Max (max, 0);
+			min = System.Math.Min (min.Value, 0);
+			max = System.Math.Max (max.Value, 0);
 
 			if (words.Length == 5)
 			{
-				this.PaintGraphicValue (graphics, rect, min, max, value1, value2);
+				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, value1.Value, value2.Value);
 			}
 			else
 			{
-				this.PaintGraphicValue (graphics, rect, min, max, value1);
+				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, value1.Value);
 			}
 		}
 

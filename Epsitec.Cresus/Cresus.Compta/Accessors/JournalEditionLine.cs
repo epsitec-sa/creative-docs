@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Crédit,           JournalDataAccessor.GetNuméro (écriture.Crédit));
 			this.SetText (ColumnType.Pièce,            écriture.Pièce);
 			this.SetText (ColumnType.Libellé,          écriture.Libellé);
-			this.SetText (ColumnType.Montant,          écriture.Montant.ToString ("0.00"));
+			this.SetText (ColumnType.Montant,          Converters.MontantToString (écriture.Montant));
 			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
 			this.SetText (ColumnType.Journal,          écriture.Journal.Name);
 		}
@@ -131,15 +131,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			écriture.Débit  = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Débit));
 			écriture.Crédit = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Crédit));
 
-			écriture.Pièce   = this.GetText (ColumnType.Pièce);
-			écriture.Libellé = this.GetText (ColumnType.Libellé);
-
-			decimal montant;
-			if (decimal.TryParse (this.GetText (ColumnType.Montant).ToSimpleText (), out montant))
-			{
-				écriture.Montant = montant;
-			}
-
+			écriture.Pièce            = this.GetText (ColumnType.Pièce);
+			écriture.Libellé          = this.GetText (ColumnType.Libellé);
+			écriture.Montant          = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
 
 			var journal = JournalDataAccessor.GetJournal (this.comptaEntity, this.GetText (ColumnType.Journal));

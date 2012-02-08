@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -132,7 +133,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Libellé;
 
 				case ColumnType.Montant:
-					var montant = TextFormatter.FormatText (écriture.Montant.ToString ("0.00"));
+					var montant = TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
 
 					if (écriture.TotalAutomatique)
 					{
@@ -231,9 +232,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Date,  this.périodeEntity.ProchaineDate.ToString ());
-			this.editionLine[line].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
-			this.editionLine[line].SetText (ColumnType.Montant, "0.00");
+			this.editionLine[line].SetText (ColumnType.Date,    this.périodeEntity.ProchaineDate.ToString ());
+			this.editionLine[line].SetText (ColumnType.Pièce,   this.comptaEntity.ProchainePièce);
+			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
 		}
 
 		public override void StartModificationLine(int row)

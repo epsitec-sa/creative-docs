@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -179,13 +180,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Libellé;
 
 				case ColumnType.Débit:
-					return AbstractDataAccessor.GetMontant (data.Débit);
+					return Converters.MontantToString (data.Débit);
 
 				case ColumnType.Crédit:
-					return AbstractDataAccessor.GetMontant (data.Crédit);
+					return Converters.MontantToString (data.Crédit);
 
 				case ColumnType.Solde:
-					return AbstractDataAccessor.GetMontant (data.Solde);
+					return Converters.MontantToString (data.Solde);
 
 				case ColumnType.SoldeGraphique:
 					return this.GetMinMaxText (data.Solde);

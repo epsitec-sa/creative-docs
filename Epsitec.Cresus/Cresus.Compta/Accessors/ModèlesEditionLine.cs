@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Crédit,    ModèlesDataAccessor.GetNuméro (modèle.Crédit));
 			this.SetText (ColumnType.Pièce,     modèle.Pièce);
 			this.SetText (ColumnType.Libellé,   modèle.Libellé);
-			this.SetText (ColumnType.Montant,   modèle.Montant.HasValue ? modèle.Montant.Value.ToString ("0.00") : FormattedText.Empty);
+			this.SetText (ColumnType.Montant,   Converters.MontantToString (modèle.Montant));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -154,16 +154,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			modèle.Raccourci = this.GetText (ColumnType.Raccourci).ToSimpleText ();
 			modèle.Pièce     = this.GetText (ColumnType.Pièce);
 			modèle.Libellé   = this.GetText (ColumnType.Libellé);
-
-			decimal montant;
-			if (decimal.TryParse (this.GetText (ColumnType.Montant).ToSimpleText (), out montant))
-			{
-				modèle.Montant = montant;
-			}
-			else
-			{
-				modèle.Montant = null;
-			}
+			modèle.Montant   = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 		}
 	}
 }

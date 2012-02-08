@@ -413,15 +413,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (this.preparedFromDecimal.HasValue || this.preparedToDecimal.HasValue)
 				{
-					decimal value;
-					if (decimal.TryParse (target, out value))
+					decimal? value = Converters.ParseMontant (target);
+					if (value.HasValue)
 					{
-						if (this.preparedFromDecimal.HasValue && value < this.preparedFromDecimal.Value)
+						if (this.preparedFromDecimal.HasValue && value.Value < this.preparedFromDecimal.Value)
 						{
 							return 0;
 						}
 
-						if (this.preparedToDecimal.HasValue && value > this.preparedToDecimal.Value)
+						if (this.preparedToDecimal.HasValue && value.Value > this.preparedToDecimal.Value)
 						{
 							return 0;
 						}
@@ -465,10 +465,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (!string.IsNullOrEmpty (this.fromText))
 			{
-				decimal value;
-				if (decimal.TryParse (this.fromText, out value))
+				decimal? value = Converters.ParseMontant (this.fromText);
+				if (value.HasValue)
 				{
-					this.preparedFromDecimal = value;
+					this.preparedFromDecimal = value.Value;
 				}
 				else
 				{
@@ -478,10 +478,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (!string.IsNullOrEmpty (this.toText))
 			{
-				decimal value;
-				if (decimal.TryParse (this.toText, out value))
+				decimal? value = Converters.ParseMontant (this.toText);
+				if (value.HasValue)
 				{
-					this.preparedToDecimal = value;
+					this.preparedToDecimal = value.Value;
 				}
 				else
 				{

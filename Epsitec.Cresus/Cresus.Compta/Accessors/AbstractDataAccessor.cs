@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -612,7 +613,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (this.options.BudgetDisplayMode == BudgetDisplayMode.Montant)
 			{
-				return AbstractDataAccessor.GetMontant (budget);
+				return Converters.MontantToString (budget);
 			}
 			else
 			{
@@ -623,9 +624,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				else if (this.options.BudgetDisplayMode == BudgetDisplayMode.PourcentMontant)
 				{
 					var percent = AbstractDataAccessor.GetPercent (solde, budget);
-					var montant = AbstractDataAccessor.GetMontant (budget);
+					var montant = Converters.MontantToString (budget);
 
-					if (percent.IsNullOrEmpty || montant.IsNullOrEmpty)
+					if (percent.IsNullOrEmpty || string.IsNullOrEmpty (montant))
 					{
 						return FormattedText.Empty;
 					}
@@ -640,7 +641,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					return AbstractDataAccessor.GetMontant (budget-solde);
+					return Converters.MontantToString (budget-solde);
 				}
 			}
 		}
@@ -651,18 +652,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				int n = (int) (m1.Value/m2.Value*100);
 				return n.ToString () + "%";
-			}
-			else
-			{
-				return FormattedText.Empty;
-			}
-		}
-
-		protected static FormattedText GetMontant(decimal? montant)
-		{
-			if (montant.HasValue)
-			{
-				return montant.Value.ToString ("0.00");
 			}
 			else
 			{
@@ -700,11 +689,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 					(
 						StringArray.SpecialContentGraphicValue,
 						"/",
-						AbstractDataAccessor.GetMontant (this.minValue),
+						Converters.MontantToString (this.minValue),
 						"/",
-						AbstractDataAccessor.GetMontant (this.maxValue),
+						Converters.MontantToString (this.maxValue),
 						"/",
-						AbstractDataAccessor.GetMontant (value)
+						Converters.MontantToString (value)
 					);
 			}
 		}
@@ -722,13 +711,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					(
 						StringArray.SpecialContentGraphicValue,
 						"/",
-						AbstractDataAccessor.GetMontant (this.minValue),
+						Converters.MontantToString (this.minValue),
 						"/",
-						AbstractDataAccessor.GetMontant (this.maxValue),
+						Converters.MontantToString (this.maxValue),
 						"/",
-						AbstractDataAccessor.GetMontant (value1),
+						Converters.MontantToString (value1),
 						"/",
-						AbstractDataAccessor.GetMontant (value2)
+						Converters.MontantToString (value2)
 					);
 			}
 		}

@@ -96,13 +96,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
 				}
 			}
-			else if (columnType == ColumnType.Débit ||
-					 columnType == ColumnType.Crédit ||
-					 columnType == ColumnType.SoldeDébit ||
+			else if (columnType == ColumnType.Débit       ||
+					 columnType == ColumnType.Crédit      ||
+					 columnType == ColumnType.SoldeDébit  ||
 					 columnType == ColumnType.SoldeCrédit ||
-					 columnType == ColumnType.Budget)
+					 columnType == ColumnType.Budget      )
 			{
-				if (!data.NeverFiltered && options.HideZero && text == "0.00")
+				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0))
 				{
 					text = FormattedText.Empty;
 				}

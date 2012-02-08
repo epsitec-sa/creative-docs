@@ -33,10 +33,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			if (data.HasText)
 			{
-				decimal montant;
-				if (decimal.TryParse (data.Text.ToSimpleText (), out montant))
+				decimal? montant = Converters.ParseMontant (data.Text);
+				if (montant.HasValue)
 				{
-					data.Text = montant.ToString ("0.00");
+					data.Text = Converters.MontantToString (montant);
 				}
 				else
 				{
