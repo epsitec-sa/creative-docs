@@ -437,6 +437,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public virtual ColumnType ColumnForInsertionPoint
+		{
+			get
+			{
+				return ColumnType.None;
+			}
+		}
+
 		public virtual int InsertionPointRow
 		{
 			get

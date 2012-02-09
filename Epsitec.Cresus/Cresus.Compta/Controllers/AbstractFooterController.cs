@@ -589,11 +589,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void UpdateInsertionRow()
 		{
-			this.arrayController.InsertionPointRow = this.dataAccessor.InsertionPointRow;
-
-			if (this.arrayController.InsertionPointRow != -1)
+			if (this.selectedColumn == this.dataAccessor.ColumnForInsertionPoint)
 			{
-				this.arrayController.ShowRow (this.arrayController.InsertionPointRow, 1);
+				this.arrayController.InsertionPointRow = this.dataAccessor.InsertionPointRow;
+
+				if (this.arrayController.InsertionPointRow != -1)
+				{
+					this.arrayController.ShowRow (this.arrayController.InsertionPointRow, 1);
+				}
 			}
 		}
 

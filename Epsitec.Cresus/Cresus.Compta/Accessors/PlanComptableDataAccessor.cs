@@ -162,6 +162,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override ColumnType ColumnForInsertionPoint
+		{
+			get
+			{
+				return ColumnType.Numéro;
+			}
+		}
+
 		public override int InsertionPointRow
 		{
 			get
