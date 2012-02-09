@@ -537,39 +537,39 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected decimal? GetBudget(ComptaCompteEntity compte)
+		protected decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
 		{
 			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
-			if (!this.options.BudgetEnable)
+			if (!this.options.ComparisonEnable)
 			{
 				return null;
 			}
 
 			decimal? budget;
 
-			switch (this.options.BudgetShowed)
+			switch (type)
 			{
-				case BudgetShowed.Budget:
+				case ComparisonShowed.Budget:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte);
 					break;
 
-				case BudgetShowed.Prorata:
+				case ComparisonShowed.BudgetProrata:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte) * this.ProrataFactor;
 					break;
 
-				case BudgetShowed.Futur:
+				case ComparisonShowed.BudgetFutur:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte);
 					break;
 
-				case BudgetShowed.FuturProrata:
+				case ComparisonShowed.BudgetFuturProrata:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte) * this.ProrataFactor;
 					break;
 
-				case BudgetShowed.Précédent:
+				case ComparisonShowed.PériodePrécédente:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, -1, compte);
 					break;
 
-				case BudgetShowed.Pénultième:
+				case ComparisonShowed.PériodePénultième:
 					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, -2, compte);
 					break;
 
@@ -618,22 +618,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected FormattedText GetBudgetText(decimal? solde, decimal? budget)
 		{
 			//	Retourne le texte permettant d'afficher le budget, de différentes manières.
-			if (!this.options.BudgetEnable)
+			if (!this.options.ComparisonEnable)
 			{
 				return FormattedText.Empty;
 			}
 
-			if (this.options.BudgetDisplayMode == BudgetDisplayMode.Montant)
+			if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Montant)
 			{
 				return Converters.MontantToString (budget);
 			}
 			else
 			{
-				if (this.options.BudgetDisplayMode == BudgetDisplayMode.Pourcent)
+				if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Pourcent)
 				{
 					return AbstractDataAccessor.GetPercent (solde, budget);
 				}
-				else if (this.options.BudgetDisplayMode == BudgetDisplayMode.PourcentMontant)
+				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.PourcentMontant)
 				{
 					var percent = AbstractDataAccessor.GetPercent (solde, budget);
 					var montant = Converters.MontantToString (budget);
@@ -647,7 +647,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						return TextFormatter.FormatText (percent, "de", montant);
 					}
 				}
-				else if (this.options.BudgetDisplayMode == BudgetDisplayMode.Graphique)
+				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Graphique)
 				{
 					return this.GetMinMaxText (budget, solde);
 				}

@@ -28,9 +28,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Monnaie,
 		TotalAutomatique,
 		SoldeGraphique,
+
 		Budget,
-		BudgetPrécédent,
+		BudgetProrata,
 		BudgetFutur,
+		BudgetFuturProrata,
+		PériodePrécédente,
+		PériodePénultième,
+		BudgetPrécédent,
+		
 		Journal,
 		Profondeur,
 		Utilise,

@@ -126,7 +126,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.SetMinMaxValue (solde);
 				}
 
-				data.Budget = this.GetBudget (compte);
+				data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
+				data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
+				data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
+				data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
+				data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
+				data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
 			}
 
 			return total;
@@ -197,6 +202,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.Budget:
 					return this.GetBudgetText (data.Solde, data.Budget);
+
+				case ColumnType.BudgetProrata:
+					return this.GetBudgetText (data.Solde, data.BudgetProrata);
+
+				case ColumnType.BudgetFutur:
+					return this.GetBudgetText (data.Solde, data.BudgetFutur);
+
+				case ColumnType.BudgetFuturProrata:
+					return this.GetBudgetText (data.Solde, data.BudgetFuturProrata);
+
+				case ColumnType.PériodePrécédente:
+					return this.GetBudgetText (data.Solde, data.PériodePrécédente);
+
+				case ColumnType.PériodePénultième:
+					return this.GetBudgetText (data.Solde, data.PériodePénultième);
 
 				case ColumnType.Profondeur:
 					return (data.Niveau+1).ToString ();

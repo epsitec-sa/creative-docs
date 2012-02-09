@@ -5,12 +5,12 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent              = parent,
 				DrawFullFrame       = true,
 				BackColor           = Color.FromHexa ("d2f0ff"),  // bleu pastel
-				ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.VerticalFlow,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),
 			};
@@ -121,8 +121,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		#region Budget
-		protected FrameBox CreateBudgetUI(FrameBox parent)
+		#region Comparaison
+		protected FrameBox CreateComparisonUI(FrameBox parent, ComparisonShowed possibleMode)
 		{
 			this.budgtetFrame = new FrameBox
 			{
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.buttonBudgetEnable = new CheckButton
+			this.buttonComparisonEnable = new CheckButton
 			{
 				Parent          = this.budgtetFrame,
 				PreferredWidth  = 120,
@@ -142,7 +142,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.fieldBudgetShowed = new TextFieldCombo
+			{
+				this.frameComparisonShowed = UIBuilder.CreatePseudoCombo (this.budgtetFrame, out this.fieldComparisonShowed, out this.buttonComparisonShowed);
+				this.frameComparisonShowed.PreferredWidth = 150;
+				this.frameComparisonShowed.Margins = new Margins (0, 20, 0, 0);
+			}
+
+			this.labelComparisonDisplayMode = new StaticText
+			{
+				Parent         = this.budgtetFrame,
+				FormattedText  = "Affichage",
+				PreferredWidth = 55,
+				Dock           = DockStyle.Left,
+			};
+
+			this.fieldComparisonDisplayMode = new TextFieldCombo
 			{
 				Parent          = this.budgtetFrame,
 				IsReadOnly      = true,
@@ -153,54 +167,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.frameBudgetDisplayMode = new StaticText
-			{
-				Parent         = this.budgtetFrame,
-				FormattedText  = "Affichage",
-				PreferredWidth = 55,
-				Dock           = DockStyle.Left,
-			};
-
-			this.fieldBudgetDisplayMode = new TextFieldCombo
-			{
-				Parent          = this.budgtetFrame,
-				IsReadOnly      = true,
-				PreferredWidth  = 200,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 20, 0, 0),
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.BudgetShowedInitialize (this.fieldBudgetShowed);
-			this.BudgetDisplayModeInitialize (this.fieldBudgetDisplayMode);
-
-			this.UpdateBudget ();
+			this.ComparisonDisplayModeInitialize (this.fieldComparisonDisplayMode);
+			this.UpdateComparison ();
 
 			//	Gestion des événements.
-			this.buttonBudgetEnable.ActiveStateChanged += delegate
+			this.buttonComparisonEnable.ActiveStateChanged += delegate
 			{
 				if (!this.ignoreChange)
 				{
-					this.options.BudgetEnable = (this.buttonBudgetEnable.ActiveState == ActiveState.Yes);
+					this.options.ComparisonEnable = (this.buttonComparisonEnable.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
 
-			this.fieldBudgetShowed.TextChanged += delegate
+			this.fieldComparisonShowed.Clicked += delegate
 			{
-				if (!this.ignoreChange)
-				{
-					this.options.BudgetShowed = this.GetBudgetShowed (this.fieldBudgetShowed);
-					this.OptionsChanged ();
-				}
+				this.ShowComparisonShoedMenu (this.frameComparisonShowed, possibleMode);
 			};
 
-			this.fieldBudgetDisplayMode.TextChanged += delegate
+			this.buttonComparisonShowed.Clicked += delegate
+			{
+				this.ShowComparisonShoedMenu (this.frameComparisonShowed, possibleMode);
+			};
+
+			this.fieldComparisonDisplayMode.TextChanged += delegate
 			{
 				if (!this.ignoreChange)
 				{
-					this.options.BudgetDisplayMode = this.GetBudgetDisplayMode (this.fieldBudgetDisplayMode);
+					this.options.ComparisonDisplayMode = this.GetComparisonDisplayMode (this.fieldComparisonDisplayMode);
 					this.OptionsChanged ();
 				}
 			};
@@ -208,131 +202,92 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return this.budgtetFrame;
 		}
 
-		protected void UpdateBudget()
+		protected void UpdateComparison()
 		{
 			this.ignoreChange = true;
 
 			this.budgtetFrame.Visibility = this.levelController.Specialist;
 
-			bool enable = this.options.BudgetEnable;
+			bool enable = this.options.ComparisonEnable;
 
-			this.buttonBudgetEnable.ActiveState = this.options.BudgetEnable ? ActiveState.Yes : ActiveState.No;
-			this.buttonBudgetEnable.Text = enable ? "Comparaison avec" : "Comparaison";
+			this.buttonComparisonEnable.ActiveState = this.options.ComparisonEnable ? ActiveState.Yes : ActiveState.No;
+			this.buttonComparisonEnable.Text = enable ? "Comparaison avec" : "Comparaison";
 
-			this.fieldBudgetShowed     .Visibility = enable;
-			this.frameBudgetDisplayMode.Visibility = enable;
-			this.fieldBudgetDisplayMode.Visibility = enable;
+			this.frameComparisonShowed.Visibility = enable;
+			this.fieldComparisonShowed.Visibility = enable;
+			this.buttonComparisonShowed.Visibility = enable;
+			this.fieldComparisonDisplayMode.Visibility = enable;
+			this.labelComparisonDisplayMode.Visibility = enable;
 
-			this.fieldBudgetShowed     .Text = this.GetBudgetDescription (this.options.BudgetShowed);
-			this.fieldBudgetDisplayMode.Text = this.GetBudgetDescription (this.options.BudgetDisplayMode);
+			this.fieldComparisonShowed.Text = Converters.GetComparisonShowedListDescription (this.options.ComparisonShowed);
+			this.fieldComparisonDisplayMode.Text = Converters.GetComparisonDisplayModeDescription (this.options.ComparisonDisplayMode);
 
 			this.ignoreChange = false;
 		}
 
-
-		private void BudgetShowedInitialize(TextFieldCombo combo)
+		private void ShowComparisonShoedMenu(Widget parentButton, ComparisonShowed possibleMode)
 		{
-			combo.Items.Clear ();
+			//	Affiche le menu permettant de choisir le mode.
+			var menu = new VMenu ();
 
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Budget));
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Prorata));
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Futur));
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.FuturProrata));
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Précédent));
-			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Pénultième));
-		}
-
-		private BudgetShowed GetBudgetShowed(TextFieldCombo combo)
-		{
-			foreach (var value in System.Enum.GetValues (typeof (BudgetShowed)))
+			foreach (var mode in Converters.ComparisonsShowed)
 			{
-				var budget = (BudgetShowed) value;
-
-				if (combo.Text == this.GetBudgetDescription (budget))
+				if ((mode & possibleMode) != 0)
 				{
-					return budget;
+					this.AddComparisonShoedMenu (menu, mode, (this.options.ComparisonShowed & mode) != 0);
 				}
 			}
 
-			return BudgetShowed.Budget;
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
 
-		private string GetBudgetDescription(BudgetShowed budget)
+		private void AddComparisonShoedMenu(VMenu menu, ComparisonShowed mode, bool active)
 		{
-			switch (budget)
+			var item = new MenuItem ()
 			{
-				case BudgetShowed.Budget:
-					return "Budget";
+				IconUri       = UIBuilder.GetResourceIconUri (active ? "Button.CheckYes" : "Button.CheckNo"),
+				FormattedText = Converters.GetComparisonShowedDescription (mode),
+				Name          = mode.ToString (),
+			};
 
-				case BudgetShowed.Prorata:
-					return "Budget au prorata";
+			item.Clicked += delegate
+			{
+				var m = (ComparisonShowed) System.Enum.Parse (typeof (ComparisonShowed), item.Name);
+				this.options.ComparisonShowed ^= m;
+				this.OptionsChanged ();
+			};
 
-				case BudgetShowed.Futur:
-					return "Budget futur";
-
-				case BudgetShowed.FuturProrata:
-					return "Budget futur au prorata";
-
-				case BudgetShowed.Précédent:
-					return "Période précédente";
-
-				case BudgetShowed.Pénultième:
-					return "Période pénultième";
-
-				default:
-					return "?";
-			}
+			menu.Items.Add (item);
 		}
 
 
-		private void BudgetDisplayModeInitialize(TextFieldCombo combo)
+		private void ComparisonDisplayModeInitialize(TextFieldCombo combo)
 		{
 			combo.Items.Clear ();
 
-			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.Montant));
-			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.Différence));
-			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.Pourcent));
-			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.PourcentMontant));
-			combo.Items.Add (this.GetBudgetDescription (BudgetDisplayMode.Graphique));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Montant));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Différence));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Pourcent));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.PourcentMontant));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Graphique));
 		}
 
-		private BudgetDisplayMode GetBudgetDisplayMode(TextFieldCombo combo)
+		private ComparisonDisplayMode GetComparisonDisplayMode(TextFieldCombo combo)
 		{
-			foreach (var value in System.Enum.GetValues (typeof (BudgetDisplayMode)))
+			foreach (var value in System.Enum.GetValues (typeof (ComparisonDisplayMode)))
 			{
-				var budget = (BudgetDisplayMode) value;
+				var mode = (ComparisonDisplayMode) value;
 
-				if (combo.Text == this.GetBudgetDescription (budget))
+				if (combo.Text == Converters.GetComparisonDisplayModeDescription (mode))
 				{
-					return budget;
+					return mode;
 				}
 			}
 
-			return BudgetDisplayMode.Montant;
-		}
-
-		private string GetBudgetDescription(BudgetDisplayMode budget)
-		{
-			switch (budget)
-			{
-				case BudgetDisplayMode.Montant:
-					return "Montant";
-
-				case BudgetDisplayMode.Différence:
-					return "Différence en francs";
-
-				case BudgetDisplayMode.Pourcent:
-					return "Comparaison en %";
-
-				case BudgetDisplayMode.PourcentMontant:
-					return "Comparaison en % avec montant";
-
-				case BudgetDisplayMode.Graphique:
-					return "Graphique";
-
-				default:
-					return "?";
-			}
+			return ComparisonDisplayMode.Montant;
 		}
 		#endregion
 
@@ -350,10 +305,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected FrameBox										budgtetFrame;
 
 		protected TextFieldCombo								fieldProfondeur;
-		protected CheckButton									buttonBudgetEnable;
-		protected TextFieldCombo								fieldBudgetShowed;
-		protected StaticText									frameBudgetDisplayMode;
-		protected TextFieldCombo								fieldBudgetDisplayMode;
+
+		protected CheckButton									buttonComparisonEnable;
+		protected FrameBox										frameComparisonShowed;
+		protected StaticText									fieldComparisonShowed;
+		protected GlyphButton									buttonComparisonShowed;
+		protected StaticText									labelComparisonDisplayMode;
+		protected TextFieldCombo								fieldComparisonDisplayMode;
+
 		protected LevelController								levelController;
 
 		protected bool											showPanel;

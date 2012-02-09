@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void Clear()
 		{
-			this.BudgetEnable      = false;
-			this.BudgetShowed      = BudgetShowed.Budget;
-			this.BudgetDisplayMode = BudgetDisplayMode.Montant;
+			this.ComparisonEnable      = false;
+			this.ComparisonShowed      = ComparisonShowed.None;
+			this.ComparisonDisplayMode = ComparisonDisplayMode.Montant;
 		}
 
 
@@ -42,19 +42,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public bool BudgetEnable
+		public bool ComparisonEnable
 		{
 			get;
 			set;
 		}
 
-		public BudgetShowed BudgetShowed
+		public ComparisonShowed ComparisonShowed
 		{
 			get;
 			set;
 		}
 
-		public BudgetDisplayMode BudgetDisplayMode
+		public ComparisonDisplayMode ComparisonDisplayMode
 		{
 			get;
 			set;
@@ -87,36 +87,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			return this.BudgetEnable == other.BudgetEnable &&
-				   this.BudgetShowed == other.BudgetShowed &&
-				   this.BudgetDisplayMode == other.BudgetDisplayMode;
-		}
-
-
-		public FormattedText BudgetColumnDescription
-		{
-			get
-			{
-				switch (this.BudgetShowed)
-				{
-					case BudgetShowed.Budget:
-					case BudgetShowed.Prorata:
-						return "Budget";
-
-					case BudgetShowed.Futur:
-					case BudgetShowed.FuturProrata:
-						return "Budget futur";
-
-					case BudgetShowed.Précédent:
-						return "Précédent";
-
-					case BudgetShowed.Pénultième:
-						return "Pénultième";
-
-					default:
-						return FormattedText.Empty;
-				}
-			}
+			return this.ComparisonEnable == other.ComparisonEnable &&
+				   this.ComparisonShowed == other.ComparisonShowed &&
+				   this.ComparisonDisplayMode == other.ComparisonDisplayMode;
 		}
 
 

@@ -128,11 +128,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Solde:
 					return Converters.MontantToString (this.soldesJournalManager.GetSolde (compte));
 
-				case ColumnType.Budget:
-					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte));
-
 				case ColumnType.BudgetPrécédent:
 					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, -1, compte));
+
+				case ColumnType.Budget:
+					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte));
 
 				case ColumnType.BudgetFutur:
 					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte));

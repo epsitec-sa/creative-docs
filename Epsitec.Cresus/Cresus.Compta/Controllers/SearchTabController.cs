@@ -139,35 +139,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			{
-				this.modeButton = new GlyphButton
-				{
-					Parent          = frameBox,
-					GlyphShape      = GlyphShape.Menu,
-					PreferredWidth  = UIBuilder.ComboButtonWidth,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Right,
-					Margins         = new Margins (-1, 0, 0, 0),
-				};
-
-				var frame = new FrameBox
-				{
-					Parent          = frameBox,
-					DrawFullFrame   = true,
-					BackColor       = Color.FromBrightness (0.96),
-					PreferredWidth  = 80,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Right,
-					Margins         = new Margins (1, 0, 0, 0),
-				};
-
-				this.modeField = new StaticText
-				{
-					Parent           = frame,
-					Text             = this.ModeDescription,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
-					PreferredHeight  = 20,
-					Dock             = DockStyle.Fill,
-				};
+				this.modeFrame = UIBuilder.CreatePseudoCombo (frameBox, out this.modeField, out this.modeButton);
+				this.modeField.Text = this.ModeDescription;
+				this.modeFrame.Dock = DockStyle.Right;
 			}
 
 			this.columnField = new TextFieldCombo
@@ -237,12 +211,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.modeField.Clicked += delegate
 			{
-				this.ShowModeMenu (this.modeField);
+				this.ShowModeMenu (this.modeFrame);
 			};
 
 			this.modeButton.Clicked += delegate
 			{
-				this.ShowModeMenu (this.modeField);
+				this.ShowModeMenu (this.modeFrame);
 			};
 
 			this.addRemoveButton.Clicked += delegate
@@ -510,7 +484,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Retourne un texte court qui résume le mode.
 			get
 			{
-				string text = " " + SearchTabController.GetModeDescription (this.tabData.SearchText.Mode);
+				string text = SearchTabController.GetModeDescription (this.tabData.SearchText.Mode);
 
 				bool separator = false;
 
@@ -632,6 +606,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private TextField						searchField2;
 		private TextFieldEx						searchFieldEx2;
 		private TextFieldCombo					columnField;
+		private FrameBox						modeFrame;
 		private StaticText						modeField;
 		private GlyphButton						modeButton;
 		private IconButton						addRemoveButton;

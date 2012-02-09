@@ -3,7 +3,7 @@
 
 namespace Epsitec.Cresus.Compta.Accessors
 {
-	public enum BudgetDisplayMode
+	public enum ComparisonDisplayMode
 	{
 		Montant,
 		Différence,

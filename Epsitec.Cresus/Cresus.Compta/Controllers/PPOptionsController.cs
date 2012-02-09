@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.CreateUI (parent, optionsChanged);
 
 			this.CreateCheckUI (this.mainFrame);
-			this.CreateBudgetUI (this.mainFrame);
+			this.CreateComparisonUI (this.mainFrame, ComparisonShowed.All);
 
 			this.UpdateWidgets ();
 		}
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateBudget ();
+			this.UpdateComparison ();
 
 			this.ignoreChange = true;
 			this.nullButton    .ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;

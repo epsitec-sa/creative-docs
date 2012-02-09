@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BudgetsEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Budget,          new EditionData (this.controller, this.ValidateMontant));
 			this.datas.Add (ColumnType.BudgetPrécédent, new EditionData (this.controller, this.ValidateMontant));
+			this.datas.Add (ColumnType.Budget,          new EditionData (this.controller, this.ValidateMontant));
 			this.datas.Add (ColumnType.BudgetFutur,     new EditionData (this.controller, this.ValidateMontant));
 		}
 
@@ -61,6 +61,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void SetBudget(ComptaCompteEntity compte, decimal? montant, int offset)
 		{
+			//	Modifie un montant au budget dans une période actuelle, précédente ou suivante.
+			//	Selon la nécessité, l'entité ComptaBudgetEntity est créée ou supprimée.
 			var période = this.comptaEntity.GetPériode (this.périodeEntity, offset);
 
 			if (période == null)
@@ -74,6 +76,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (budget == null)
 				{
+					//	Si l'entité ComptaBudgetEntity n'existe pas, on la crée.
 					if (this.controller.BusinessContext == null)
 					{
 						budget = new ComptaBudgetEntity ();
@@ -93,6 +96,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (budget != null)
 				{
+					//	Si l'entité ComptaBudgetEntity n'est plus nécessaire, on la supprime.
 					if (this.controller.BusinessContext != null)
 					{
 						this.controller.BusinessContext.DeleteEntity (budget);

@@ -36,6 +36,49 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return fieldController;
 		}
 
+
+		public static FrameBox CreatePseudoCombo(Widget parent, out StaticText field, out GlyphButton button)
+		{
+			//	Crée un widget qui ressemble à un TextFieldCombo.
+			var frame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 100,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (1, 0, 0, 0),
+			};
+
+			var frameField = new FrameBox
+			{
+				Parent          = frame,
+				DrawFullFrame   = true,
+				BackColor       = Color.FromBrightness (0.96),
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+			};
+
+			field = new StaticText
+			{
+				Parent           = frameField,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Fill,
+				Margins          = new Margins (3, 0, 0, 1),
+			};
+
+			button = new GlyphButton
+			{
+				Parent          = frame,
+				GlyphShape      = GlyphShape.Menu,
+				PreferredWidth  = UIBuilder.ComboButtonWidth,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Right,
+				Margins         = new Margins (-1, 0, 0, 0),
+			};
+
+			return frame;
+		}
+
 	
 		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field)
 		{
@@ -150,6 +193,21 @@ namespace Epsitec.Cresus.Compta.Helpers
 			s2.FormattedText = Converters.MontantToString (solde);
 		}
 
+
+		public static string GetIconCheckState(bool state)
+		{
+			return state ? "Button.CheckYes" : "Button.CheckNo";
+		}
+
+		public static string GetIconRadioState(bool state)
+		{
+			return state ? "Button.RadioYes" : "Button.RadioNo";
+		}
+
+		public static string GetTextIconUri(string icon)
+		{
+			return string.Format (@"<img src=""{0}""/>", UIBuilder.GetResourceIconUri (icon));
+		}
 
 		public static string GetResourceIconUri(string icon)
 		{

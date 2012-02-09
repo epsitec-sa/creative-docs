@@ -368,6 +368,90 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static string GetComparisonShowedListDescription(ComparisonShowed mode)
+		{
+			int n = Converters.ComparisonsShowed.Where (x => (mode & x) != 0).Count ();
+
+			if (n == 0)
+			{
+				return "Aucun";
+			}
+			else if (n == 1)
+			{
+				return Converters.GetComparisonShowedDescription (mode);
+			}
+			else
+			{
+				return "Plusieurs";
+			}
+		}
+
+		public static string GetComparisonShowedDescription(ComparisonShowed mode)
+		{
+			switch (mode)
+			{
+				case ComparisonShowed.Budget:
+					return "Budget";
+
+				case ComparisonShowed.BudgetProrata:
+					return "Budget au prorata";
+
+				case ComparisonShowed.BudgetFutur:
+					return "Budget futur";
+
+				case ComparisonShowed.BudgetFuturProrata:
+					return "Budget futur au prorata";
+
+				case ComparisonShowed.PériodePrécédente:
+					return "Période précédente";
+
+				case ComparisonShowed.PériodePénultième:
+					return "Période pénultième";
+
+				default:
+					return "?";
+			}
+		}
+
+		public static IEnumerable<ComparisonShowed> ComparisonsShowed
+		{
+			get
+			{
+				yield return ComparisonShowed.Budget;
+				yield return ComparisonShowed.BudgetProrata;
+				yield return ComparisonShowed.BudgetFutur;
+				yield return ComparisonShowed.BudgetFuturProrata;
+				yield return ComparisonShowed.PériodePrécédente;
+				yield return ComparisonShowed.PériodePénultième;
+			}
+		}
+
+
+		public static string GetComparisonDisplayModeDescription(ComparisonDisplayMode mode)
+		{
+			switch (mode)
+			{
+				case ComparisonDisplayMode.Montant:
+					return "Montant";
+
+				case ComparisonDisplayMode.Différence:
+					return "Différence en francs";
+
+				case ComparisonDisplayMode.Pourcent:
+					return "Comparaison en %";
+
+				case ComparisonDisplayMode.PourcentMontant:
+					return "Comparaison en % avec montant";
+
+				case ComparisonDisplayMode.Graphique:
+					return "Graphique";
+
+				default:
+					return "?";
+			}
+		}
+
+	
 		public static string PreparingForSearh(FormattedText text)
 		{
 			return Converters.PreparingForSearh (text.ToSimpleText ());

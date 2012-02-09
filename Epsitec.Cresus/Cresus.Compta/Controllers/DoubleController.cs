@@ -105,11 +105,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Numéro,         0.20, ContentAlignment.MiddleLeft,  "Numéro");
-				yield return new ColumnMapper (ColumnType.Titre,          1.20, ContentAlignment.MiddleLeft,  "Titre du compte");
-				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Montant");
-				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
-				yield return new ColumnMapper (ColumnType.Budget,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Numéro,             0.20, ContentAlignment.MiddleLeft,  "Numéro");
+				yield return new ColumnMapper (ColumnType.Titre,              1.20, ContentAlignment.MiddleLeft,  "Titre du compte");
+				yield return new ColumnMapper (ColumnType.Solde,              0.20, ContentAlignment.MiddleRight, "Montant");
+				yield return new ColumnMapper (ColumnType.SoldeGraphique,     0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
+				yield return new ColumnMapper (ColumnType.PériodePénultième,  0.20, ContentAlignment.MiddleRight, "Période pénul.");
+				yield return new ColumnMapper (ColumnType.PériodePrécédente,  0.20, ContentAlignment.MiddleRight, "Période préc.");
+				yield return new ColumnMapper (ColumnType.Budget,             0.20, ContentAlignment.MiddleRight, "Budget");
+				yield return new ColumnMapper (ColumnType.BudgetProrata,      0.20, ContentAlignment.MiddleRight, "Budget prorata");
+				yield return new ColumnMapper (ColumnType.BudgetFutur,        0.20, ContentAlignment.MiddleRight, "Budget futur");
+				yield return new ColumnMapper (ColumnType.BudgetFuturProrata, 0.20, ContentAlignment.MiddleRight, "Budget fut. pro.");
 
 				yield return new ColumnMapper (ColumnType.Date,       0.20, ContentAlignment.MiddleLeft, "Date",       show: false);
 				yield return new ColumnMapper (ColumnType.Profondeur, 0.20, ContentAlignment.MiddleLeft, "Profondeur", show: false);
@@ -121,9 +126,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var options = this.dataAccessor.AccessorOptions as DoubleOptions;
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
-			this.ShowHideColumn (ColumnType.Budget,         options.BudgetEnable && this.optionsController != null);
 
-			this.SetColumnDescription (ColumnType.Budget, options.BudgetColumnDescription);
+			if (options.ComparisonEnable && this.optionsController != null)
+			{
+				this.ShowHideColumn (ColumnType.Budget,             (options.ComparisonShowed & ComparisonShowed.Budget            ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetProrata,      (options.ComparisonShowed & ComparisonShowed.BudgetProrata     ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetFutur,        (options.ComparisonShowed & ComparisonShowed.BudgetFutur       ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetFuturProrata, (options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0);
+				this.ShowHideColumn (ColumnType.PériodePrécédente,  (options.ComparisonShowed & ComparisonShowed.PériodePrécédente ) != 0);
+				this.ShowHideColumn (ColumnType.PériodePénultième,  (options.ComparisonShowed & ComparisonShowed.PériodePénultième ) != 0);
+			}
+			else
+			{
+				this.ShowHideColumn (ColumnType.Budget,             false);
+				this.ShowHideColumn (ColumnType.BudgetProrata,      false);
+				this.ShowHideColumn (ColumnType.BudgetFutur,        false);
+				this.ShowHideColumn (ColumnType.BudgetFuturProrata, false);
+				this.ShowHideColumn (ColumnType.PériodePrécédente,  false);
+				this.ShowHideColumn (ColumnType.PériodePénultième,  false);
+			}
 		}
 	}
 }

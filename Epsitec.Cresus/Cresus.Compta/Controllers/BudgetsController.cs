@@ -106,8 +106,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Titre,           0.80, ContentAlignment.MiddleLeft,  "Titre du compte", "Titre du compte");
 				yield return new ColumnMapper (ColumnType.Solde,           0.20, ContentAlignment.MiddleRight, "Solde",           "Solde du compte");
 				yield return new ColumnMapper (ColumnType.BudgetPrécédent, 0.20, ContentAlignment.MiddleRight, "Période préc.",   "Budget de la période précédente");
-				yield return new ColumnMapper (ColumnType.Budget,          0.20, ContentAlignment.MiddleRight, "Budget",          "Budget actuel");
-				yield return new ColumnMapper (ColumnType.BudgetFutur,     0.20, ContentAlignment.MiddleRight, "Budget futur",    "Budget futur");
+				yield return new ColumnMapper (ColumnType.Budget,          0.20, ContentAlignment.MiddleRight, "Budget",          "Budget de la période actuelle");
+				yield return new ColumnMapper (ColumnType.BudgetFutur,     0.20, ContentAlignment.MiddleRight, "Budget futur",    "Budget de la période future");
 			}
 		}
 	}

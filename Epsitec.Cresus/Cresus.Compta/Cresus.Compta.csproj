@@ -70,10 +70,10 @@
     <Compile Include="Accessors\DoubleData.cs" />
     <Compile Include="Accessors\BilanDataAccessor.cs" />
     <Compile Include="Accessors\DoubleOptions.cs" />
-    <Compile Include="Accessors\BudgetDisplayMode.cs" />
+    <Compile Include="Accessors\ComparisonDisplayMode.cs" />
     <Compile Include="Accessors\BudgetsDataAccessor.cs" />
     <Compile Include="Accessors\BudgetsEditionLine.cs" />
-    <Compile Include="Accessors\BudgetShowed.cs" />
+    <Compile Include="Accessors\ComparisonShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
     <Compile Include="Accessors\DoubleDataAccessor.cs" />
     <Compile Include="Accessors\SearchText.cs" />
