@@ -210,7 +210,7 @@ namespace Aider.Tests.Vs
 
 			if (dice.NextDouble () > 0.8)
 			{
-				aiderPerson.DateOfDeath = this.GetRandomDate ();
+				aiderPerson.eCH_Person.PersonDateOfDeath = this.GetRandomDate ();
 			}
 
 			if (dice.NextDouble () > 0.1)

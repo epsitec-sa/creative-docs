@@ -126,10 +126,7 @@ namespace Epsitec.Aider.Data
 			string id = null;
 			string officialName = null;
 			string firstNames = null;
-			DatePrecision dateOfBirthPrecision  = DatePrecision.None;
-			int? dateOfBirthYear = null;
-			int? dateOfBirthMonth = null;
-			int? dateOfBirthDay = null;
+			DateTime dateOfBirth = new DateTime ();
 			PersonSex sex = PersonSex.Unknown;
 
 			var xPerson = xEChPerson.Element (EChXmlTags.EVd0002.Person);
@@ -139,13 +136,7 @@ namespace Epsitec.Aider.Data
 				id = EChDataLoader.GetEChPersonId (xPerson);
 				officialName = EChDataLoader.GetEChPersonOfficialName (xPerson);
 				firstNames = EChDataLoader.GetEChPersonFirstNames (xPerson);
-
-				var dateOfBirth = EChDataLoader.GetEchPersonDateOfBirth (xPerson);
-				dateOfBirthPrecision = dateOfBirth.Item1;
-				dateOfBirthYear = dateOfBirth.Item2;
-				dateOfBirthMonth = dateOfBirth.Item3;
-				dateOfBirthDay = dateOfBirth.Item4;
-
+				dateOfBirth = EChDataLoader.GetEchPersonDateOfBirth (xPerson);
 				sex = EChDataLoader.GetEchPersonSex (xPerson);
 			}
 
@@ -173,7 +164,7 @@ namespace Epsitec.Aider.Data
 				maritalStatus = EChDataLoader.GetEChPersonMaritalStatus (xMaritalStatus);
 			}
 
-			return new EChPerson (id, officialName, firstNames, dateOfBirthDay, dateOfBirthMonth, dateOfBirthYear, dateOfBirthPrecision, sex, nationalityStatus, nationalCountryCode, originPlaces, maritalStatus);
+			return new EChPerson (id, officialName, firstNames, dateOfBirth, sex, nationalityStatus, nationalCountryCode, originPlaces, maritalStatus);
 		}
 
 
@@ -204,46 +195,24 @@ namespace Epsitec.Aider.Data
 		}
 
 
-		private static Tuple<DatePrecision, int?, int?, int?> GetEchPersonDateOfBirth(XElement xPerson)
+		private static DateTime GetEchPersonDateOfBirth(XElement xPerson)
 		{
 			var xDateOfBirth = xPerson.Element (EChXmlTags.EVd0004.DateOfBirth);
 
-			Tuple<DatePrecision, int?, int?, int?> result;
-
-			if (xDateOfBirth != null)
+			if (xDateOfBirth == null)
 			{
-				var xDateOfBirthChild = xDateOfBirth.Elements ().Single ();
-				var xDateOfBirthChildName = xDateOfBirthChild.Name;
-
-				if (xDateOfBirthChildName == EChXmlTags.ECh0044.Year)
-				{
-					var date = DateTime.ParseExact (xDateOfBirthChild.Value, EChDataLoader.yearFormats, CultureInfo.InvariantCulture, DateTimeStyles.None);
-
-					result = Tuple.Create<DatePrecision, int?, int?, int?> (DatePrecision.Year, date.Year, null, null);
-				}
-				else if (xDateOfBirthChildName == EChXmlTags.ECh0044.YearMonth)
-				{
-					var date = (DateTime) xDateOfBirthChild;
-
-					result = Tuple.Create<DatePrecision, int?, int?, int?> (DatePrecision.YearMonth, date.Year, date.Month, null);
-				}
-				else if (xDateOfBirthChildName == EChXmlTags.ECh0044.YearMonthDay)
-				{
-					var date = (DateTime) xDateOfBirthChild;
-
-					result = Tuple.Create<DatePrecision, int?, int?, int?> (DatePrecision.YearMonthDay, date.Year, date.Month, date.Day);
-				}
-				else
-				{
-					throw new FormatException ();
-				}
-			}
-			else
-			{
-				result = Tuple.Create<DatePrecision, int?, int?, int?> (DatePrecision.None, null, null, null);
+				throw new FormatException ("No date of birth");
 			}
 
-			return result;
+			var xDateOfBirthChild = xDateOfBirth.Elements ().Single ();
+			var xDateOfBirthChildName = xDateOfBirthChild.Name;
+
+			if (xDateOfBirthChildName != EChXmlTags.ECh0044.YearMonthDay)
+			{
+				throw new FormatException ("Partial dates are not supported.");
+			}
+			
+			return (DateTime) xDateOfBirthChild;
 		}
 
 
