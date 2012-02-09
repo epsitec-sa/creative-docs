@@ -49,7 +49,7 @@
   <data name="Val.Enum.PersonMrMrs.Madame" id="AJ1">&lt;s:data id="_0" f:Name="Madame" f:Labels="{Collection {Text 'Madame'}, {Text 'Mme'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrs.Monsieur" id="AK1">&lt;s:data id="_0" f:Name="Monsieur" f:Labels="{Collection {Text 'Monsieur'}, {Text 'M.'}}" /&gt;</data>
   <data name="Val.Enum.PersonMrMrs.Mademoiselle" id="AL1">&lt;s:data id="_0" f:Name="Mademoiselle" f:Labels="{Collection {Text 'Mademoiselle'}, {Text 'Mlle'}}" /&gt;</data>
-  <data name="Typ.Enum.PersonMrMrs" id="AH1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.PersonMrMrs" f:_1.SystemType="E:Epsitec.Aider.Enumerations.PersonMrMrs, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAI1]'}, {Text '1 [LVAJ1]'}, {Text '2 [LVAK1]'}, {Text '3 [LVAL1]'}}" /&gt;</data>
+  <data name="Typ.Enum.PersonMrMrs" id="AH1">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.PersonMrMrs" f:_1.SystemType="E:Epsitec.Aider.Enumerations.PersonMrMrs, Aider" f:_2.EnumValues="{Collection {Text '0 [LVAI1]'}, {Text '1 [LVAK1]'}, {Text '2 [LVAJ1]'}, {Text '3 [LVAL1]'}}" f:_1.DefaultValue="Epsitec.Aider.Enumerations.PersonMrMrs, Aider/None" /&gt;</data>
   <data name="Val.Enum.PersonSex.Unknown" id="AN1">&lt;s:data id="_0" f:Name="Unknown" f:Labels="{Collection {Text 'Inconnu'}}" /&gt;</data>
   <data name="Val.Enum.PersonSex.Male" id="AO1">&lt;s:data id="_0" f:Name="Male" f:Labels="{Collection {Text 'Homme'}}" /&gt;</data>
   <data name="Val.Enum.PersonSex.Female" id="AP1">&lt;s:data id="_0" f:Name="Female" f:Labels="{Collection {Text 'Femme'}}" /&gt;</data>
