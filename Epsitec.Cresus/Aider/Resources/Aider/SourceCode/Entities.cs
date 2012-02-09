@@ -674,7 +674,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	Nom de jeune fille
+		///	The <c>OriginalName</c> field.
 		///	designer:fld/LVAF/LVAL2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAL2]")]
