@@ -353,6 +353,30 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Nationality</c> field.
+		///	designer:fld/LVA/LVACB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVACB]")]
+		public global::Epsitec.Aider.Entities.AiderCountryEntity Nationality
+		{
+			get
+			{
+				global::Epsitec.Aider.Entities.AiderCountryEntity value = default (global::Epsitec.Aider.Entities.AiderCountryEntity);
+				this.GetNationality (ref value);
+				return value;
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderCountryEntity oldValue = this.Nationality;
+				if (oldValue != value || !this.IsFieldDefined("[LVACB]"))
+				{
+					this.OnNationalityChanging (oldValue, value);
+					this.SetNationality (value);
+					this.OnNationalityChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Origins</c> field.
 		///	designer:fld/LVA/LVAB
 		///	</summary>
@@ -469,6 +493,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnNationalityStatusChanged(global::Epsitec.Aider.Enumerations.PersonNationalityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonNationalityStatus newValue);
 		partial void OnNationalityCountryCodeChanging(string oldValue, string newValue);
 		partial void OnNationalityCountryCodeChanged(string oldValue, string newValue);
+		partial void OnNationalityChanging(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
+		partial void OnNationalityChanged(global::Epsitec.Aider.Entities.AiderCountryEntity oldValue, global::Epsitec.Aider.Entities.AiderCountryEntity newValue);
 		partial void OnOriginsChanging(string oldValue, string newValue);
 		partial void OnOriginsChanged(string oldValue, string newValue);
 		partial void OnAdultMaritalStatusChanging(global::Epsitec.Aider.Enumerations.PersonMaritalStatus oldValue, global::Epsitec.Aider.Enumerations.PersonMaritalStatus newValue);
@@ -478,6 +504,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnAddress2Changing(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddress2Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		
+		partial void GetNationality(ref global::Epsitec.Aider.Entities.AiderCountryEntity value);
+		partial void SetNationality(global::Epsitec.Aider.Entities.AiderCountryEntity value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

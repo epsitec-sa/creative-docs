@@ -32,5 +32,11 @@ namespace Epsitec.Aider.Entities
 				return names[0];
 			}
 		}
+
+		partial void GetNationality(ref AiderCountryEntity value)
+		{
+
+			this.NationalityStatus;
+		}
 	}
 }

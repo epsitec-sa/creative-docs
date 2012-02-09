@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
@@ -13,22 +16,13 @@ using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
-using System.Linq.Expressions;
-
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {
-
-
 	public class CoreSession : CoreApp
 	{
-
-
 		public CoreSession(string id)
 		{
 			this.id = id;
@@ -39,7 +33,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		public string Id
+		public string							Id
 		{
 			get
 			{
@@ -47,34 +41,39 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			}
 		}
 
-
-		public CoreData CoreData
+		public CoreData							CoreData
 		{
 			get
 			{
 				return this.coreData;
 			}
 		}
+
+		public override string					ApplicationIdentifier
+		{
+			get
+			{
+				return "CoreSession";
+			}
+		}
+
+		public override string					ShortWindowTitle
+		{
+			get
+			{
+				return "CoreSession";
+			}
+		}
+
+		internal PanelFieldAccessorCache		PanelFieldAccessorCache
+		{
+			get
+			{
+				return this.panelFieldAccessorCache;
+			}
+		}
+
 		
-
-		public override string ApplicationIdentifier
-		{
-			get
-			{
-				return "CoreSession";
-			}
-		}
-
-
-		public override string ShortWindowTitle
-		{
-			get
-			{
-				return "CoreSession";
-			}
-		}
-
-
 		public BusinessContext GetBusinessContext()
 		{
 			if (this.businessContext == null)
@@ -84,7 +83,6 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 			return this.businessContext;
 		}
-
 
 		public void DisposeBusinessContext()
 		{
@@ -97,15 +95,6 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		internal PanelFieldAccessorCache PanelFieldAccessorCache
-		{
-			get
-			{
-				return this.panelFieldAccessorCache;
-			}
-		}
-
-
 		protected override void Dispose(bool disposing)
 		{
 			this.DisposeBusinessContext ();
@@ -114,19 +103,9 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		private readonly string id;
-
-
-		private readonly CoreData coreData;
-
-
+		private readonly string					id;
+		private readonly CoreData				coreData;
 		private readonly PanelFieldAccessorCache panelFieldAccessorCache;
-
-
-		private BusinessContext businessContext;
-
-
+		private BusinessContext					businessContext;
 	}
-
-
 }

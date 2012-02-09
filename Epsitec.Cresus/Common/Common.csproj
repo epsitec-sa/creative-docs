@@ -783,6 +783,7 @@
     <Compile Include="Types\CollectionChangedAction.cs" />
     <Compile Include="Types\CollectionChangedEventArgs.cs" />
     <Compile Include="Types\Collections\AbstractObservableList.cs" />
+    <Compile Include="Types\Collections\Concurrent\BlockingQueue.cs" />
     <Compile Include="Types\Collections\CircularBuffer.cs" />
     <Compile Include="Types\Collections\CircularList.cs" />
     <Compile Include="Types\Collections\CountedStringDictionary.cs" />

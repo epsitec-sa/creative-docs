@@ -1,23 +1,16 @@
 ﻿using Epsitec.Common.Support;
-
-using System;
-
-using System.Collections.Concurrent;
+using Epsitec.Common.Types.Collections.Concurrent;
 
 using System.Threading;
 
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {
-	
-	
-	internal sealed class Worker : IDisposable 
+	internal sealed class Worker : System.IDisposable
 	{
-
-
 		public Worker()
 		{
-			this.actionQueue = new BlockingCollection<Action> (new ConcurrentQueue<Action> ());
+			this.actionQueue = new BlockingQueue<System.Action> ();
 			this.stopTokenCancellationSource = new CancellationTokenSource ();
 
 			this.workerThreadStop = new ManualResetEvent (false);
@@ -26,11 +19,11 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		public void Execute(Action action)
+		public void Execute(System.Action action)
 		{
 			using (var actionWaitHandle = new ManualResetEvent (false))
 			{
-				Action actionWithSignal = () =>
+				System.Action actionWithSignal = () =>
 				{
 					try
 					{
@@ -48,11 +41,10 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 				if (firedWaitHandle == this.workerThreadStop)
 				{
-					throw new OperationCanceledException ("The operation has been canceled.");
+					throw new System.OperationCanceledException ("The operation has been canceled.");
 				}
 			}
 		}
-
 
 		public void Dispose()
 		{
@@ -63,7 +55,6 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			this.workerThreadStop.Dispose ();
 			this.actionQueue.Dispose ();
 		}
-
 
 		private void DoWork()
 		{
@@ -79,7 +70,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 					action ();
 				}
-				catch (OperationCanceledException e)
+				catch (System.OperationCanceledException e)
 				{
 					if (e.CancellationToken == cancellationToken)
 					{
@@ -92,19 +83,9 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		private readonly Thread workerThread;
-
-
-		private readonly ManualResetEvent workerThreadStop;
-
-
-		private readonly CancellationTokenSource stopTokenCancellationSource;
-
-
-		private readonly BlockingCollection<Action> actionQueue;
-
-
+		private readonly Thread						workerThread;
+		private readonly ManualResetEvent			workerThreadStop;
+		private readonly CancellationTokenSource	stopTokenCancellationSource;
+		private readonly BlockingQueue<System.Action> actionQueue;
 	}
-
-
 }
