@@ -1496,10 +1496,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Confession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 178);
 				//	designer:cap/LVAS8
 				public static readonly global::Epsitec.Common.Support.Druid Data = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 284);
-				//	designer:cap/LVAT8
-				public static readonly global::Epsitec.Common.Support.Druid DateOfBirth = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 285);
-				//	designer:cap/LVAU8
-				public static readonly global::Epsitec.Common.Support.Druid DateOfDeath = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 286);
 				//	designer:cap/LVAI4
 				public static readonly global::Epsitec.Common.Support.Druid DisplayName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 146);
 				//	designer:cap/LVAU1
@@ -1652,8 +1648,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid CreationDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 210);
 				//	designer:cap/LVAA
 				public static readonly global::Epsitec.Common.Support.Druid DataSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
-				//	designer:cap/LVG602
-				public static readonly global::Epsitec.Common.Support.Druid DateOfBirth = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 6);
 				//	designer:cap/LVAS2
 				public static readonly global::Epsitec.Common.Support.Druid DeclarationStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 				//	designer:cap/LVA7
@@ -1662,14 +1656,10 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid NationalityStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 8);
 				//	designer:cap/LVAB
 				public static readonly global::Epsitec.Common.Support.Druid Origins = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 11);
-				//	designer:cap/LVAD2
-				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirthDay = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
-				//	designer:cap/LVAE2
-				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirthMonth = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
-				//	designer:cap/LVA5
-				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirthType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 5);
-				//	designer:cap/LVAF2
-				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirthYear = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 79);
+				//	designer:cap/LVA8B
+				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfBirth = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 360);
+				//	designer:cap/LVA9B
+				public static readonly global::Epsitec.Common.Support.Druid PersonDateOfDeath = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 361);
 				//	designer:cap/LVA3
 				public static readonly global::Epsitec.Common.Support.Druid PersonFirstNames = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 				//	designer:cap/LVA1

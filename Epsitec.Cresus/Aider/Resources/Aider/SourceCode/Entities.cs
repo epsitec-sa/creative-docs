@@ -243,114 +243,46 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>PersonDateOfBirthDay</c> field.
-		///	designer:fld/LVA/LVAD2
+		///	The <c>PersonDateOfBirth</c> field.
+		///	designer:fld/LVA/LVA8B
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAD2]")]
-		public int? PersonDateOfBirthDay
+		[global::Epsitec.Common.Support.EntityField ("[LVA8B]")]
+		public global::Epsitec.Common.Types.Date? PersonDateOfBirth
 		{
 			get
 			{
-				return this.GetField<int?> ("[LVAD2]");
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVA8B]");
 			}
 			set
 			{
-				int? oldValue = this.PersonDateOfBirthDay;
-				if (oldValue != value || !this.IsFieldDefined("[LVAD2]"))
+				global::Epsitec.Common.Types.Date? oldValue = this.PersonDateOfBirth;
+				if (oldValue != value || !this.IsFieldDefined("[LVA8B]"))
 				{
-					this.OnPersonDateOfBirthDayChanging (oldValue, value);
-					this.SetField<int?> ("[LVAD2]", oldValue, value);
-					this.OnPersonDateOfBirthDayChanged (oldValue, value);
+					this.OnPersonDateOfBirthChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVA8B]", oldValue, value);
+					this.OnPersonDateOfBirthChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>PersonDateOfBirthMonth</c> field.
-		///	designer:fld/LVA/LVAE2
+		///	The <c>PersonDateOfDeath</c> field.
+		///	designer:fld/LVA/LVA9B
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAE2]")]
-		public int? PersonDateOfBirthMonth
+		[global::Epsitec.Common.Support.EntityField ("[LVA9B]")]
+		public global::Epsitec.Common.Types.Date? PersonDateOfDeath
 		{
 			get
 			{
-				return this.GetField<int?> ("[LVAE2]");
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVA9B]");
 			}
 			set
 			{
-				int? oldValue = this.PersonDateOfBirthMonth;
-				if (oldValue != value || !this.IsFieldDefined("[LVAE2]"))
+				global::Epsitec.Common.Types.Date? oldValue = this.PersonDateOfDeath;
+				if (oldValue != value || !this.IsFieldDefined("[LVA9B]"))
 				{
-					this.OnPersonDateOfBirthMonthChanging (oldValue, value);
-					this.SetField<int?> ("[LVAE2]", oldValue, value);
-					this.OnPersonDateOfBirthMonthChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PersonDateOfBirthYear</c> field.
-		///	designer:fld/LVA/LVAF2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAF2]")]
-		public int? PersonDateOfBirthYear
-		{
-			get
-			{
-				return this.GetField<int?> ("[LVAF2]");
-			}
-			set
-			{
-				int? oldValue = this.PersonDateOfBirthYear;
-				if (oldValue != value || !this.IsFieldDefined("[LVAF2]"))
-				{
-					this.OnPersonDateOfBirthYearChanging (oldValue, value);
-					this.SetField<int?> ("[LVAF2]", oldValue, value);
-					this.OnPersonDateOfBirthYearChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>PersonDateOfBirthType</c> field.
-		///	designer:fld/LVA/LVA5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA5]")]
-		public global::Epsitec.Aider.Enumerations.DatePrecision PersonDateOfBirthType
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Aider.Enumerations.DatePrecision> ("[LVA5]");
-			}
-			set
-			{
-				global::Epsitec.Aider.Enumerations.DatePrecision oldValue = this.PersonDateOfBirthType;
-				if (oldValue != value || !this.IsFieldDefined("[LVA5]"))
-				{
-					this.OnPersonDateOfBirthTypeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Enumerations.DatePrecision> ("[LVA5]", oldValue, value);
-					this.OnPersonDateOfBirthTypeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DateOfBirth</c> field.
-		///	designer:fld/LVA/LVG602
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVG602]")]
-		public string DateOfBirth
-		{
-			get
-			{
-				string value = default (string);
-				this.GetDateOfBirth (ref value);
-				return value;
-			}
-			set
-			{
-				string oldValue = this.DateOfBirth;
-				if (oldValue != value || !this.IsFieldDefined("[LVG602]"))
-				{
-					this.OnDateOfBirthChanging (oldValue, value);
-					this.SetDateOfBirth (value);
-					this.OnDateOfBirthChanged (oldValue, value);
+					this.OnPersonDateOfDeathChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVA9B]", oldValue, value);
+					this.OnPersonDateOfDeathChanged (oldValue, value);
 				}
 			}
 		}
@@ -527,16 +459,10 @@ namespace Epsitec.Aider.Entities
 		partial void OnPersonOfficialNameChanged(string oldValue, string newValue);
 		partial void OnPersonFirstNamesChanging(string oldValue, string newValue);
 		partial void OnPersonFirstNamesChanged(string oldValue, string newValue);
-		partial void OnPersonDateOfBirthDayChanging(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthDayChanged(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthMonthChanging(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthMonthChanged(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthYearChanging(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthYearChanged(int? oldValue, int? newValue);
-		partial void OnPersonDateOfBirthTypeChanging(global::Epsitec.Aider.Enumerations.DatePrecision oldValue, global::Epsitec.Aider.Enumerations.DatePrecision newValue);
-		partial void OnPersonDateOfBirthTypeChanged(global::Epsitec.Aider.Enumerations.DatePrecision oldValue, global::Epsitec.Aider.Enumerations.DatePrecision newValue);
-		partial void OnDateOfBirthChanging(string oldValue, string newValue);
-		partial void OnDateOfBirthChanged(string oldValue, string newValue);
+		partial void OnPersonDateOfBirthChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPersonDateOfBirthChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPersonDateOfDeathChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnPersonDateOfDeathChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnPersonSexChanging(global::Epsitec.Aider.Enumerations.PersonSex oldValue, global::Epsitec.Aider.Enumerations.PersonSex newValue);
 		partial void OnPersonSexChanged(global::Epsitec.Aider.Enumerations.PersonSex oldValue, global::Epsitec.Aider.Enumerations.PersonSex newValue);
 		partial void OnNationalityStatusChanging(global::Epsitec.Aider.Enumerations.PersonNationalityStatus oldValue, global::Epsitec.Aider.Enumerations.PersonNationalityStatus newValue);
@@ -552,8 +478,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnAddress2Changing(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddress2Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		
-		partial void GetDateOfBirth(ref string value);
-		partial void SetDateOfBirth(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
@@ -948,50 +872,6 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DateOfBirth</c> field.
-		///	designer:fld/LVAF/LVAT8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAT8]")]
-		public global::Epsitec.Common.Types.Date? DateOfBirth
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVAT8]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.Date? oldValue = this.DateOfBirth;
-				if (oldValue != value || !this.IsFieldDefined("[LVAT8]"))
-				{
-					this.OnDateOfBirthChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVAT8]", oldValue, value);
-					this.OnDateOfBirthChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DateOfDeath</c> field.
-		///	designer:fld/LVAF/LVAU8
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVAU8]")]
-		public global::Epsitec.Common.Types.Date? DateOfDeath
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[LVAU8]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.Date? oldValue = this.DateOfDeath;
-				if (oldValue != value || !this.IsFieldDefined("[LVAU8]"))
-				{
-					this.OnDateOfDeathChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[LVAU8]", oldValue, value);
-					this.OnDateOfDeathChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Confession</c> field.
 		///	designer:fld/LVAF/LVAI5
 		///	</summary>
@@ -1162,10 +1042,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnAdditionalAddress3Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAdditionalAddress4Changing(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
 		partial void OnAdditionalAddress4Changed(global::Epsitec.Aider.Entities.AiderAddressEntity oldValue, global::Epsitec.Aider.Entities.AiderAddressEntity newValue);
-		partial void OnDateOfBirthChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateOfBirthChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateOfDeathChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateOfDeathChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnConfessionChanging(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnProfessionChanging(string oldValue, string newValue);

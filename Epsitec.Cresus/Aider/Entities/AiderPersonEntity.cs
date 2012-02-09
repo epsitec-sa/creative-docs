@@ -1,4 +1,7 @@
-﻿using Epsitec.Aider.Enumerations;
+﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -108,20 +111,10 @@ namespace Epsitec.Aider.Entities
 			yield return TextFormatter.FormatText (this.GetFullName (), "(", this.eCH_Person.PersonSex.AsShortText (), ",", this.Language.AsShortText (), ")");
 
 			// Gets the text for the dates of birth and death.
-			var datesText = this.eCH_Person.DateOfBirth;
+			var dateOfBirth = this.eCH_Person.PersonDateOfBirth;
+			var dateOfDeath = this.eCH_Person.PersonDateOfDeath;
 
-			var dateOfDeath = this.DateOfDeath;
-
-			if (!datesText.IsNullOrWhiteSpace () && dateOfDeath.HasValue)
-			{
-				datesText += " - " + dateOfDeath.Value.ToDateTime ().ToShortDateString ();
-			}
-
-			if (!datesText.IsNullOrWhiteSpace ())
-			{
-				yield return datesText;
-			}
-
+			yield return TextFormatter.FormatText (dateOfBirth, "~-~", dateOfDeath);
 			yield return TextFormatter.FormatText (this.Confession);
 			yield return this.Profession;
 		}

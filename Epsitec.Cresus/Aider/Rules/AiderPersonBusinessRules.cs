@@ -19,23 +19,11 @@ namespace Epsitec.Aider.Rules
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
 			var echPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
+			
 			echPerson.CreationDate = Date.Today;
-			echPerson.DataSource = Enumerations.DataSource.Undefined;
+			echPerson.DataSource   = Enumerations.DataSource.Undefined;
 
 			person.eCH_Person = echPerson;
-#if false
-			var additionalAddress1 = businessContext.CreateEntity<AiderAddressEntity> ();
-			aiderPerson.AdditionalAddress1 = additionalAddress1;
-
-			var additionalAddress2 = businessContext.CreateEntity<AiderAddressEntity> ();
-			aiderPerson.AdditionalAddress2 = additionalAddress2;
-
-			var additionalAddress3 = businessContext.CreateEntity<AiderAddressEntity> ();
-			aiderPerson.AdditionalAddress3 = additionalAddress3;
-
-			var additionalAddress4 = businessContext.CreateEntity<AiderAddressEntity> ();
-			aiderPerson.AdditionalAddress4 = additionalAddress4;
-#endif
 		}
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)
