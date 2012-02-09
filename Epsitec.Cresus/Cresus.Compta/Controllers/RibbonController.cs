@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true, bool isActivable = false)
+		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true)
 		{
 			if (command != null && handler != null)
 			{
@@ -506,34 +506,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			double buttonWidth = large ? RibbonController.ButtonLargeWidth : RibbonController.ButtonLargeWidth/2;
 			double iconWidth   = large ? RibbonController.IconLargeWidth   : RibbonController.IconSmallWidth;
 
-			if (isActivable)
+			return new IconButton
 			{
-				return new IconButton
-				{
-					CommandObject       = command,
-					PreferredIconSize   = new Size (iconWidth, iconWidth),
-					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = dockStyle,
-					Name                = (command == null) ? null : command.Name,
-					VerticalAlignment   = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus           = false,
-				};
-			}
-			else
-			{
-				return new RibbonIconButton
-				{
-					CommandObject       = command,
-					PreferredIconSize   = new Size (iconWidth, iconWidth),
-					PreferredSize       = new Size (buttonWidth, buttonWidth),
-					Dock                = dockStyle,
-					Name                = (command == null) ? null : command.Name,
-					VerticalAlignment   = VerticalAlignment.Top,
-					HorizontalAlignment = HorizontalAlignment.Center,
-					AutoFocus           = false,
-				};
-			}
+				CommandObject       = command,
+				PreferredIconSize   = new Size (iconWidth, iconWidth),
+				PreferredSize       = new Size (buttonWidth, buttonWidth),
+				Dock                = dockStyle,
+				Name                = (command == null) ? null : command.Name,
+				VerticalAlignment   = VerticalAlignment.Top,
+				HorizontalAlignment = HorizontalAlignment.Center,
+				AutoFocus           = false,
+			};
 		}
 
 		private Widget CreateGap()

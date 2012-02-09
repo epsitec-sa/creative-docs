@@ -18,60 +18,52 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>Compta</c> entity.
 	///	designer:cap/OVK
 	///	</summary>
-	public partial class ComptaEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ComptaEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
 		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/OVK/8VA3
+		///	The <c>Nom</c> field.
+		///	designer:fld/OVK/OVKI4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
+		[global::Epsitec.Common.Support.EntityField ("[OVKI4]")]
+		public global::Epsitec.Common.Types.FormattedText Nom
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKI4]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
-		#region INameDescription Members
-		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/OVK/8VA7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
+				if (oldValue != value || !this.IsFieldDefined("[OVKI4]"))
+				{
+					this.OnNomChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKI4]", oldValue, value);
+					this.OnNomChanged (oldValue, value);
+				}
 			}
 		}
 		///	<summary>
 		///	The <c>Description</c> field.
-		///	designer:fld/OVK/8VA8
+		///	designer:fld/OVK/OVKJ4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		[global::Epsitec.Common.Support.EntityField ("[OVKJ4]")]
 		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKJ4]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[OVKJ4]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKJ4]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
 			}
 		}
-		#endregion
 		///	<summary>
 		///	The <c>PlanComptable</c> field.
 		///	designer:fld/OVK/OVKN
@@ -155,6 +147,10 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		
+		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDernièrePièceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDernièrePièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
@@ -189,26 +185,8 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>ComptaCompte</c> entity.
 	///	designer:cap/OVK3
 	///	</summary>
-	public partial class ComptaCompteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaCompteEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/OVK3/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>Numéro</c> field.
 		///	designer:fld/OVK3/OVK4
@@ -530,26 +508,8 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>ComptaEcriture</c> entity.
 	///	designer:cap/OVKB
 	///	</summary>
-	public partial class ComptaEcritureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaEcritureEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/OVKB/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>Date</c> field.
 		///	designer:fld/OVKB/OVKC
@@ -895,43 +855,57 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>ComptaJournal</c> entity.
 	///	designer:cap/OVK23
 	///	</summary>
-	public partial class ComptaJournalEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.INameDescription
+	public partial class ComptaJournalEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region INameDescription Members
 		///	<summary>
-		///	The <c>Name</c> field.
-		///	designer:fld/OVK23/8VA7
+		///	The <c>Nom</c> field.
+		///	designer:fld/OVK23/OVKG4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA7]")]
-		public global::Epsitec.Common.Types.FormattedText Name
+		[global::Epsitec.Common.Support.EntityField ("[OVKG4]")]
+		public global::Epsitec.Common.Types.FormattedText Nom
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetName (this);
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKG4]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetName (this, value);
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
+				if (oldValue != value || !this.IsFieldDefined("[OVKG4]"))
+				{
+					this.OnNomChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKG4]", oldValue, value);
+					this.OnNomChanged (oldValue, value);
+				}
 			}
 		}
 		///	<summary>
 		///	The <c>Description</c> field.
-		///	designer:fld/OVK23/8VA8
+		///	designer:fld/OVK23/OVKH4
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA8]")]
+		[global::Epsitec.Common.Support.EntityField ("[OVKH4]")]
 		public global::Epsitec.Common.Types.FormattedText Description
 		{
 			get
 			{
-				return global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.GetDescription (this);
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKH4]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Core.Entities.INameDescriptionInterfaceImplementation.SetDescription (this, value);
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[OVKH4]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKH4]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
 			}
 		}
-		#endregion
 		
+		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -964,26 +938,8 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>ComptaPériode</c> entity.
 	///	designer:cap/OVKC3
 	///	</summary>
-	public partial class ComptaPériodeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaPériodeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/OVKC3/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>DateDébut</c> field.
 		///	designer:fld/OVKC3/OVKJ3
@@ -1208,26 +1164,8 @@ namespace Epsitec.Cresus.Compta.Entities
 	///	The <c>ComptaModèle</c> entity.
 	///	designer:cap/OVKT3
 	///	</summary>
-	public partial class ComptaModèleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Cresus.Core.Entities.ILifetime
+	public partial class ComptaModèleEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
-		#region ILifetime Members
-		///	<summary>
-		///	The <c>IsArchive</c> field.
-		///	designer:fld/OVKT3/8VA3
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[8VA3]")]
-		public bool IsArchive
-		{
-			get
-			{
-				return global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.GetIsArchive (this);
-			}
-			set
-			{
-				global::Epsitec.Cresus.Core.Entities.ILifetimeInterfaceImplementation.SetIsArchive (this, value);
-			}
-		}
-		#endregion
 		///	<summary>
 		///	The <c>Code</c> field.
 		///	designer:fld/OVKT3/OVKU3

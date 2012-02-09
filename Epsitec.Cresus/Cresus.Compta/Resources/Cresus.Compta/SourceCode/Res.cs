@@ -576,12 +576,16 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVK2
 				public static readonly global::Epsitec.Common.Support.Druid DernièrePièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 2);
+				//	designer:cap/OVKJ4
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 147);
 				//	designer:cap/OVKH3
 				public static readonly global::Epsitec.Common.Support.Druid Journaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 113);
 				//	designer:cap/OVKQ3
 				public static readonly global::Epsitec.Common.Support.Druid Libellés = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 122);
 				//	designer:cap/OVK54
 				public static readonly global::Epsitec.Common.Support.Druid Modèles = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 133);
+				//	designer:cap/OVKI4
+				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 146);
 				//	designer:cap/OVKF3
 				public static readonly global::Epsitec.Common.Support.Druid Périodes = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 111);
 				//	designer:cap/OVKN
@@ -652,6 +656,18 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
 				//	designer:cap/OVKJ
 				public static readonly global::Epsitec.Common.Support.Druid TypeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19);
+			}
+			
+			public static class ComptaJournal
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKH4
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 145);
+				//	designer:cap/OVKG4
+				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 144);
 			}
 			
 			public static class ComptaLibellé
@@ -788,6 +804,7 @@ namespace Epsitec.Cresus.Compta
 			Fields.Compta._Initialize ();
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
+			Fields.ComptaJournal._Initialize ();
 			Fields.ComptaLibellé._Initialize ();
 			Fields.ComptaModèle._Initialize ();
 			Fields.ComptaPériode._Initialize ();
