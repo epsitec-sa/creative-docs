@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Libellé = écriture.Libellé;
 					data.CP      = écriture.Crédit;
 					data.Débit   = écriture.Montant;
-					data.Journal = écriture.Journal.Name;
+					data.Journal = écriture.Journal.Nom;
 
 					solde        += écriture.Montant;
 					totalDébit   += écriture.Montant;
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Libellé = écriture.Libellé;
 					data.CP      = écriture.Débit;
 					data.Crédit  = écriture.Montant;
-					data.Journal = écriture.Journal.Name;
+					data.Journal = écriture.Journal.Nom;
 
 					solde        -= écriture.Montant;
 					totalCrédit  += écriture.Montant;

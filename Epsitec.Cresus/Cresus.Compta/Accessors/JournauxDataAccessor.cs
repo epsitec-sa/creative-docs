@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Titre:
-					return journal.Name;
+					return journal.Nom;
 
 				case ColumnType.Libellé:
 					return journal.Description;

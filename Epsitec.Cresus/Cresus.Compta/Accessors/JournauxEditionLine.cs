@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var journal = entity as ComptaJournalEntity;
 
-			this.SetText (ColumnType.Titre,   journal.Name);
+			this.SetText (ColumnType.Titre,   journal.Nom);
 			this.SetText (ColumnType.Libellé, journal.Description);
 		}
 
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var journal = entity as ComptaJournalEntity;
 
-			journal.Name        = this.GetText (ColumnType.Titre);
+			journal.Nom         = this.GetText (ColumnType.Titre);
 			journal.Description = this.GetText (ColumnType.Libellé);
 		}
 	}

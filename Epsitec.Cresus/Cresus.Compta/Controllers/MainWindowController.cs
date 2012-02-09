@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public string GetTitle(Command command)
 		{
-			string text = string.Concat ("Crésus MCH-2 / ", this.compta.Name, " / ", command.Description);
+			string text = string.Concat ("Crésus MCH-2 / ", this.compta.Nom, " / ", command.Description);
 
 			if (!string.IsNullOrEmpty (this.titleComplement))
 			{

@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Compta.IO
 	{
 		public void NewNull(ComptaEntity compta)
 		{
-			compta.Name          = "vide";
+			compta.Nom           = "vide";
 			compta.Description   = null;
 			compta.DernièrePièce = null;
 
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public void NewEmpty(ComptaEntity compta)
 		{
-			compta.Name          = "vide";
+			compta.Nom           = "vide";
 			compta.Description   = null;
 			compta.DernièrePièce = "0";
 
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			//	Crée un journal principal.
 			var journal = new ComptaJournalEntity ();
-			journal.Name = "Principal";
+			journal.Nom = "Principal";
 
 			return journal;
 		}

@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return montant;
 
 				case ColumnType.Journal:
-					return écriture.Journal.Name;
+					return écriture.Journal.Nom;
 
 				default:
 					return FormattedText.Null;
@@ -728,7 +728,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return compta.Journaux.Where (x => x.Name == name).FirstOrDefault ();
+				return compta.Journaux.Where (x => x.Nom == name).FirstOrDefault ();
 			}
 		}
 

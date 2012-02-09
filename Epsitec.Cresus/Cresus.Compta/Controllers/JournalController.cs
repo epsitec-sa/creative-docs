@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.SetTitle (TextFormatter.FormatText ("Journal", journal.Name));
+				this.SetTitle (TextFormatter.FormatText ("Journal", journal.Nom));
 			}
 
 			this.SetSubtitle (this.périodeEntity.ShortTitle);

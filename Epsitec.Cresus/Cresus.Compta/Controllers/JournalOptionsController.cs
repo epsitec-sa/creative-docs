@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (!this.ignoreChange)
 				{
-					this.Options.Journal.Name = this.extendedFieldName.FormattedText;
+					this.Options.Journal.Nom = this.extendedFieldName.FormattedText;
 					this.OptionsChanged ();
 				}
 			};
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.extendedAddButton.Clicked += delegate
 			{
 				var nouveauJournal = new ComptaJournalEntity ();
-				nouveauJournal.Name = this.NewJournalName;
+				nouveauJournal.Nom = this.NewJournalName;
 				this.comptaEntity.Journaux.Add (nouveauJournal);
 
 				this.Options.Journal = nouveauJournal;
@@ -376,13 +376,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var journal in this.comptaEntity.Journaux)
 			{
-				this.compactComboJournaux.Items.Add (journal.Name);
+				this.compactComboJournaux.Items.Add (journal.Nom);
 			}
 
 			this.compactComboJournaux.Items.Add (JournalOptionsController.AllJournaux);
 
 			this.ignoreChange = true;
-			this.compactComboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Name;
+			this.compactComboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
 			this.ignoreChange = false;
 		}
 
@@ -392,14 +392,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var journal in this.comptaEntity.Journaux)
 			{
-				this.extendedListJournaux.Items.Add (journal.Name);
+				this.extendedListJournaux.Items.Add (journal.Nom);
 			}
 
 			this.extendedListJournaux.Items.Add (JournalOptionsController.AllJournaux);
 
 			this.ignoreChange = true;
 			this.extendedListJournaux.SelectedItemIndex = (this.Options.Journal == null) ? this.comptaEntity.Journaux.Count : this.comptaEntity.Journaux.IndexOf (this.Options.Journal);
-			this.extendedFieldName.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Name;
+			this.extendedFieldName.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
 			this.ignoreChange = false;
 		}
 
@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					string name = "Nouveau" + ((i == 1) ? "" : " " + i.ToString ());
 
-					if (this.comptaEntity.Journaux.Where (x => x.Name == name).Any ())
+					if (this.comptaEntity.Journaux.Where (x => x.Nom == name).Any ())
 					{
 						i++;
 					}

@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (data.HasText)
 			{
 				var t = data.Text;
-				if (!this.comptaEntity.Journaux.Where (x => x.Name == t).Any ())
+				if (!this.comptaEntity.Journaux.Where (x => x.Nom == t).Any ())
 				{
 					data.Error = "Ce journal n'existe pas";
 				}
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Libellé,          écriture.Libellé);
 			this.SetText (ColumnType.Montant,          Converters.MontantToString (écriture.Montant));
 			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
-			this.SetText (ColumnType.Journal,          écriture.Journal.Name);
+			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

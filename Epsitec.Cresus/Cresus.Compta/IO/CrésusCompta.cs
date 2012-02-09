@@ -49,9 +49,9 @@ namespace Epsitec.Cresus.Compta.IO
 				{
 					string err = this.ImportPlanComptable (ref période);
 
-					if (string.IsNullOrEmpty (err) && this.compta.Name.IsNullOrEmpty)
+					if (string.IsNullOrEmpty (err) && this.compta.Nom.IsNullOrEmpty)
 					{
-						this.compta.Name = System.IO.Path.GetFileNameWithoutExtension (filename);
+						this.compta.Nom = System.IO.Path.GetFileNameWithoutExtension (filename);
 					}
 
 					return err;
@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Compta.IO
 				int i = this.IndexOfLine ("TITLE=");
 				if (i != -1)
 				{
-					this.compta.Name = this.lines[i].Substring (6);
+					this.compta.Nom = this.lines[i].Substring (6);
 				}
 			}
 
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.IO
 			foreach (var j in journauxTriés)
 			{
 				var journal = new ComptaJournalEntity ();
-				journal.Name = j.Value;
+				journal.Nom = j.Value;
 				this.compta.Journaux.Add (journal);
 			}
 

@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
 
-					var journaux = this.comptaEntity.Journaux.Select (x => x.Name);
+					var journaux = this.comptaEntity.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
 				else
