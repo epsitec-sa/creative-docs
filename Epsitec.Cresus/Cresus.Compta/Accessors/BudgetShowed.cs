@@ -10,5 +10,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Futur,
 		FuturProrata,
 		Précédent,
+		Pénultième,
 	}
 }

@@ -239,6 +239,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Futur));
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.FuturProrata));
 			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Précédent));
+			combo.Items.Add (this.GetBudgetDescription (BudgetShowed.Pénultième));
 		}
 
 		private BudgetShowed GetBudgetShowed(TextFieldCombo combo)
@@ -273,7 +274,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return "Budget futur au prorata";
 
 				case BudgetShowed.Précédent:
-					return "Année précédente";
+					return "Période précédente";
+
+				case BudgetShowed.Pénultième:
+					return "Période pénultième";
 
 				default:
 					return "?";

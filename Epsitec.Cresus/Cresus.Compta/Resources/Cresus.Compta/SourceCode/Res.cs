@@ -433,6 +433,8 @@ namespace Epsitec.Cresus.Compta
 			
 			//	designer:cap/OVK
 			public static readonly Epsitec.Common.Types.StructuredType Compta = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
+			//	designer:cap/OVKK4
+			public static readonly Epsitec.Common.Types.StructuredType ComptaBudget = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 148));
 			//	designer:cap/OVK3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/OVKB
@@ -592,18 +594,28 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
 			}
 			
+			public static class ComptaBudget
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKO4
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 152);
+				//	designer:cap/OVKM4
+				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 150);
+				//	designer:cap/OVKP4
+				public static readonly global::Epsitec.Common.Support.Druid Période = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 153);
+			}
+			
 			public static class ComptaCompte
 			{
 				internal static void _Initialize()
 				{
 				}
 				
-				//	designer:cap/OVK81
-				public static readonly global::Epsitec.Common.Support.Druid Budget = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 40);
-				//	designer:cap/OVK91
-				public static readonly global::Epsitec.Common.Support.Druid BudgetFutur = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 41);
-				//	designer:cap/OVK71
-				public static readonly global::Epsitec.Common.Support.Druid BudgetPrécédent = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 39);
+				//	designer:cap/OVKQ4
+				public static readonly global::Epsitec.Common.Support.Druid Budgets = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 154);
 				//	designer:cap/OVKI2
 				public static readonly global::Epsitec.Common.Support.Druid Catégorie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 82);
 				//	designer:cap/OVK7
@@ -802,6 +814,7 @@ namespace Epsitec.Cresus.Compta
 			Values.Enum.CatégorieDeCompte._Initialize ();
 			Values.Enum.TypeDeCompte._Initialize ();
 			Fields.Compta._Initialize ();
+			Fields.ComptaBudget._Initialize ();
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
 			Fields.ComptaJournal._Initialize ();

@@ -45,18 +45,62 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText    (ColumnType.Numéro,          compte.Numéro);
 			this.SetText    (ColumnType.Titre,           compte.Titre);
 			this.SetMontant (ColumnType.Solde,           this.controller.DataAccessor.SoldesJournalManager.GetSolde (compte));
-			this.SetMontant (ColumnType.Budget,          compte.Budget);
-			this.SetMontant (ColumnType.BudgetPrécédent, compte.BudgetPrécédent);
-			this.SetMontant (ColumnType.BudgetFutur,     compte.BudgetFutur);
+			this.SetMontant (ColumnType.BudgetPrécédent, this.comptaEntity.GetMontantBudget (this.périodeEntity, -1, compte));
+			this.SetMontant (ColumnType.Budget,          this.comptaEntity.GetMontantBudget (this.périodeEntity,  0, compte));
+			this.SetMontant (ColumnType.BudgetFutur,     this.comptaEntity.GetMontantBudget (this.périodeEntity,  1, compte));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var compte = entity as ComptaCompteEntity;
 
-			compte.Budget          = this.GetMontant (ColumnType.Budget);
-			compte.BudgetPrécédent = this.GetMontant (ColumnType.BudgetPrécédent);
-			compte.BudgetFutur     = this.GetMontant (ColumnType.BudgetFutur);
+			this.SetBudget (compte, this.GetMontant (ColumnType.BudgetPrécédent), -1);
+			this.SetBudget (compte, this.GetMontant (ColumnType.Budget         ),  0);
+			this.SetBudget (compte, this.GetMontant (ColumnType.BudgetFutur    ),  1);
+		}
+
+		private void SetBudget(ComptaCompteEntity compte, decimal? montant, int offset)
+		{
+			var période = this.comptaEntity.GetPériode (this.périodeEntity, offset);
+
+			if (période == null)
+			{
+				return;
+			}
+
+			var budget = compte.GetBudget (période);
+
+			if (montant.HasValue)
+			{
+				if (budget == null)
+				{
+					if (this.controller.BusinessContext == null)
+					{
+						budget = new ComptaBudgetEntity ();
+					}
+					else
+					{
+						budget = this.controller.BusinessContext.CreateEntity<ComptaBudgetEntity> ();
+					}
+
+					budget.Période = période;
+					compte.Budgets.Add (budget);
+				}
+
+				budget.Montant = montant.Value;
+			}
+			else
+			{
+				if (budget != null)
+				{
+					if (this.controller.BusinessContext != null)
+					{
+						this.controller.BusinessContext.DeleteEntity (budget);
+					}
+
+					compte.Budgets.Remove (budget);
+				}
+			}
 		}
 	}
 }

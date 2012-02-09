@@ -110,6 +110,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 					case BudgetShowed.Précédent:
 						return "Précédent";
 
+					case BudgetShowed.Pénultième:
+						return "Pénultième";
+
 					default:
 						return FormattedText.Empty;
 				}

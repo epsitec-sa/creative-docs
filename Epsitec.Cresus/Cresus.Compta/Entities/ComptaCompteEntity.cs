@@ -13,6 +13,12 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaCompteEntity
 	{
+		public ComptaBudgetEntity GetBudget(ComptaPériodeEntity période)
+		{
+			return this.Budgets.Where (x => x.Période == période).FirstOrDefault ();
+		}
+
+
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return TextFormatter.FormatText (this.Numéro);

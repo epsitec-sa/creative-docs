@@ -550,23 +550,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (this.options.BudgetShowed)
 			{
 				case BudgetShowed.Budget:
-					budget = compte.Budget;
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte);
 					break;
 
 				case BudgetShowed.Prorata:
-					budget = compte.Budget * this.ProrataFactor;
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte) * this.ProrataFactor;
 					break;
 
 				case BudgetShowed.Futur:
-					budget = compte.BudgetFutur;
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte);
 					break;
 
 				case BudgetShowed.FuturProrata:
-					budget = compte.BudgetFutur * this.ProrataFactor;
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte) * this.ProrataFactor;
 					break;
 
 				case BudgetShowed.Précédent:
-					budget = compte.BudgetPrécédent;
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, -1, compte);
+					break;
+
+				case BudgetShowed.Pénultième:
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, -2, compte);
 					break;
 
 				default:
@@ -597,13 +601,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				else
 				{
 					var écriture = this.périodeEntity.Journal.LastOrDefault ();
-					if (écriture != null)
+					if (écriture == null)
 					{
-						day = écriture.Date.DayOfYear;
+						day = Date.Today.DayOfYear;
 					}
 					else
 					{
-						day = Date.Today.DayOfYear / 365;
+						day = écriture.Date.DayOfYear;
 					}
 				}
 

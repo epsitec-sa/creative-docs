@@ -11,6 +11,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKC3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKN3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaLibelléEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKT3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaModèleEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKK4]", typeof (Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -364,72 +365,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>BudgetPrécédent</c> field.
-		///	designer:fld/OVK3/OVK71
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK71]")]
-		public global::System.Decimal? BudgetPrécédent
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[OVK71]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.BudgetPrécédent;
-				if (oldValue != value || !this.IsFieldDefined("[OVK71]"))
-				{
-					this.OnBudgetPrécédentChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[OVK71]", oldValue, value);
-					this.OnBudgetPrécédentChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Budget</c> field.
-		///	designer:fld/OVK3/OVK81
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK81]")]
-		public global::System.Decimal? Budget
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[OVK81]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.Budget;
-				if (oldValue != value || !this.IsFieldDefined("[OVK81]"))
-				{
-					this.OnBudgetChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[OVK81]", oldValue, value);
-					this.OnBudgetChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>BudgetFutur</c> field.
-		///	designer:fld/OVK3/OVK91
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK91]")]
-		public global::System.Decimal? BudgetFutur
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[OVK91]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.BudgetFutur;
-				if (oldValue != value || !this.IsFieldDefined("[OVK91]"))
-				{
-					this.OnBudgetFuturChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[OVK91]", oldValue, value);
-					this.OnBudgetFuturChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Niveau</c> field.
 		///	designer:fld/OVK3/OVKA
 		///	</summary>
@@ -451,6 +386,18 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>Budgets</c> field.
+		///	designer:fld/OVK3/OVKQ4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKQ4]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity> Budgets
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity> ("[OVKQ4]");
+			}
+		}
 		
 		partial void OnNuméroChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNuméroChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -468,12 +415,6 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
 		partial void OnMonnaieChanging(string oldValue, string newValue);
 		partial void OnMonnaieChanged(string oldValue, string newValue);
-		partial void OnBudgetPrécédentChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBudgetPrécédentChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBudgetChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBudgetChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBudgetFuturChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnBudgetFuturChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnNiveauChanging(int oldValue, int newValue);
 		partial void OnNiveauChanged(int oldValue, int newValue);
 		
@@ -1350,6 +1291,113 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaModèleEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaBudget Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaBudget</c> entity.
+	///	designer:cap/OVKK4
+	///	</summary>
+	public partial class ComptaBudgetEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Période</c> field.
+		///	designer:fld/OVKK4/OVKP4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKP4]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity Période
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity> ("[OVKP4]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity oldValue = this.Période;
+				if (oldValue != value || !this.IsFieldDefined("[OVKP4]"))
+				{
+					this.OnPériodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity> ("[OVKP4]", oldValue, value);
+					this.OnPériodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Montant</c> field.
+		///	designer:fld/OVKK4/OVKM4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKM4]")]
+		public global::System.Decimal Montant
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[OVKM4]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Montant;
+				if (oldValue != value || !this.IsFieldDefined("[OVKM4]"))
+				{
+					this.OnMontantChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[OVKM4]", oldValue, value);
+					this.OnMontantChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/OVKK4/OVKO4
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKO4]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO4]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[OVKO4]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO4]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnPériodeChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity newValue);
+		partial void OnPériodeChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPériodeEntity newValue);
+		partial void OnMontantChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 148);	// [OVKK4]
+		public static readonly string EntityStructuredTypeKey = "[OVKK4]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaBudgetEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

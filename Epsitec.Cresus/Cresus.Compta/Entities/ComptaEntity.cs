@@ -13,6 +13,53 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public decimal? GetMontantBudget(ComptaPériodeEntity période, int offset, ComptaCompteEntity compte)
+		{
+			var budget = this.GetBudget (période, offset, compte);
+
+			if (budget == null)
+			{
+				return null;
+			}
+			else
+			{
+				return budget.Montant;
+			}
+		}
+
+		public ComptaBudgetEntity GetBudget(ComptaPériodeEntity période, int offset, ComptaCompteEntity compte)
+		{
+			période = this.GetPériode (période, offset);
+
+			if (période == null)
+			{
+				return null;
+			}
+			else
+			{
+				return compte.GetBudget (période);
+			}
+		}
+
+		public ComptaPériodeEntity GetPériode(ComptaPériodeEntity période, int offset)
+		{
+			//	Retourne la période précédente (offset = -1) ou suivante (offset = 1).
+			if (offset == 0)
+			{
+				return période;
+			}
+
+			int i = this.Périodes.IndexOf (période);
+
+			if (i == -1 || i+offset < 0 || i+offset >= this.Périodes.Count)
+			{
+				return null;
+			}
+
+			return this.Périodes[i+offset];
+		}
+
+
 		public IEnumerable<FormattedText> GetLibellésDescriptions(ComptaPériodeEntity période)
 		{
 			//	Retourne la liste des libellés usuels.
