@@ -179,6 +179,12 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+
+		internal static string GetDefaultFirstName(eCH_PersonEntity person)
+		{
+			string[] names = person.PersonFirstNames.Split (' ');
+			return names[0];
+		}
 	}
 
 

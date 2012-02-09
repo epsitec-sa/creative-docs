@@ -776,19 +776,19 @@ namespace Epsitec.Aider.Entities
 		///	designer:fld/LVAF/LVAI4
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAI4]")]
-		public string DisplayName
+		public global::Epsitec.Common.Types.FormattedText DisplayName
 		{
 			get
 			{
-				return this.GetField<string> ("[LVAI4]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[LVAI4]");
 			}
 			set
 			{
-				string oldValue = this.DisplayName;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.DisplayName;
 				if (oldValue != value || !this.IsFieldDefined("[LVAI4]"))
 				{
 					this.OnDisplayNameChanging (oldValue, value);
-					this.SetField<string> ("[LVAI4]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[LVAI4]", oldValue, value);
 					this.OnDisplayNameChanged (oldValue, value);
 				}
 			}
@@ -1146,8 +1146,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnCallNameChanged(string oldValue, string newValue);
 		partial void OnOriginalNameChanging(string oldValue, string newValue);
 		partial void OnOriginalNameChanged(string oldValue, string newValue);
-		partial void OnDisplayNameChanging(string oldValue, string newValue);
-		partial void OnDisplayNameChanged(string oldValue, string newValue);
+		partial void OnDisplayNameChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDisplayNameChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLanguageChanging(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
 		partial void OnLanguageChanged(global::Epsitec.Aider.Enumerations.Language oldValue, global::Epsitec.Aider.Enumerations.Language newValue);
 		partial void OnHousehold1Changing(global::Epsitec.Aider.Entities.AiderHouseholdEntity oldValue, global::Epsitec.Aider.Entities.AiderHouseholdEntity newValue);

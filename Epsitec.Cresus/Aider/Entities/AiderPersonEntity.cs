@@ -18,17 +18,11 @@ using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
-
-
 	public partial class AiderPersonEntity
 	{
-
-
 		public override FormattedText GetCompactSummary()
 		{
-			var fullName = this.GetFullName ();
-
-			return TextFormatter.FormatText (fullName);
+			return TextFormatter.FormatText (this.DisplayName);
 		}
 
 
@@ -78,8 +72,8 @@ namespace Epsitec.Aider.Entities
 			if (defaultMailaddress.IsNotNull ())
 			{
 				var addressLines = defaultMailaddress
-					.GetAddressLines ()
-					.Where (l => !l.IsNullOrWhiteSpace);
+				.GetAddressLines ()
+				.Where (l => !l.IsNullOrWhiteSpace);
 
 				foreach (var mailAddressLine in addressLines)
 				{
@@ -108,7 +102,6 @@ namespace Epsitec.Aider.Entities
 		public IEnumerable<FormattedText> GetPersonalDataSummaryLines()
 		{
 			// Gets the text with the title and honorific
-			
 			yield return TextFormatter.FormatText (this.MrMrs, "~(~", this.Title, "~)");
 
 			// Gets the text for the name sex and language
@@ -154,9 +147,9 @@ namespace Epsitec.Aider.Entities
 		{
 			return StringUtils.Join
 			(
-				" ",
-				this.eCH_Person.PersonFirstNames,
-				this.eCH_Person.PersonOfficialName
+			" ",
+			this.eCH_Person.PersonFirstNames,
+			this.eCH_Person.PersonOfficialName
 			);
 		}
 
@@ -271,9 +264,13 @@ namespace Epsitec.Aider.Entities
 			value = this.additionalAddresses;
 		}
 
+		
+		internal static FormattedText GetDisplayName(AiderPersonEntity person)
+		{
+			return TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
+		}
+
 
 		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
 	}
-
-
 }

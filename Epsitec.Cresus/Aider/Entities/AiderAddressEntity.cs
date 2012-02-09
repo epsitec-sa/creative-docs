@@ -50,12 +50,31 @@ namespace Epsitec.Aider.Entities
 		{
 			using (var a = new EntityStatusAccumulator ())
 			{
-				//a.Accumulate (this.IdA.GetEntityStatus ());
-				//a.Accumulate (this.IdB.GetEntityStatus ().TreatAsOptional ());
-				//a.Accumulate (this.IdC.GetEntityStatus ().TreatAsOptional ());
-				//a.Accumulate (this.Affairs.Select (x => x.GetEntityStatus ()));
-				//a.Accumulate (this.MainRelation, EntityStatusAccumulationMode.NoneIsPartiallyCreated);
-				//a.Accumulate (this.SalesRepresentative.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Type == Enumerations.AddressType.None ? EntityStatus.Empty : EntityStatus.Valid);
+				a.Accumulate (this.AddressLine1.GetEntityStatus ().TreatAsOptional ());
+
+				if (string.IsNullOrWhiteSpace (this.Street))
+				{
+					//	If no street is specified, this will be considered to be valid only if
+					//	no house number is specified :
+
+					if ((this.HouseNumber.HasValue) ||
+						(string.IsNullOrWhiteSpace (this.HouseNumberComplement) == false))
+					{
+						a.Accumulate (EntityStatus.Empty);
+					}
+					else
+					{
+						a.Accumulate (EntityStatus.Empty | EntityStatus.Valid);
+					}
+				}
+
+				a.Accumulate (this.PostBox.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Town);
+				a.Accumulate (this.Phone1.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Phone2.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Mobile.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.Fax.GetEntityStatus ().TreatAsOptional ());
 
 				return a.EntityStatus;
 			}
@@ -93,32 +112,6 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
-		}
-
-
-		private FormattedText GetLabeledText(string label, IEnumerable<FormattedText> lines)
-		{
-			var text = TextFormatter.Join ("<br/>", lines.Where (l => !l.IsNullOrWhiteSpace));
-
-			if (text.IsNullOrWhiteSpace)
-			{
-				return null;
-			}
-
-			return this.GetLabeledText (label, text);
-		}
-
-
-		private FormattedText GetLabeledText(string label, FormattedText text)
-		{
-			if (text.IsNullOrWhiteSpace)
-			{
-				return null;
-			}
-
-			var formattedLabel = TextFormatter.FormatText (label).ApplyBold ();
-
-			return TextFormatter.FormatText (formattedLabel, "\n", text);
 		}
 	}
 }
