@@ -647,7 +647,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			firstRow = row;
 			countRow = 1;
 
-			if (row == -1)
+			if (row < 0 || row >= this.journal.Count)  // garde-fou
 			{
 				return;
 			}

@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.array.SelectedRowChanged += delegate
 			{
-				if (!this.ignoreChanged)
+				if (!this.ignoreChanged && !this.controller.IgnoreChanged)
 				{
 					selectedRowChanged ();
 					this.UpdateCommands ();
