@@ -42,6 +42,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.Field (x => x.eCH_Person.PersonDateOfDeath)
 					.End ()
 					.Field (x => x.eCH_Person.PersonSex)
+						.ReadOnly ()
 					.Field (x => x.MrMrs)
 					.Field (x => x.Title)
 					.Field (x => x.eCH_Person.AdultMaritalStatus)

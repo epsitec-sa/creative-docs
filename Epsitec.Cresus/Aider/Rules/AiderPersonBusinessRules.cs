@@ -34,7 +34,26 @@ namespace Epsitec.Aider.Rules
 			}
 
 			person.DisplayName = AiderPersonEntity.GetDisplayName (person);
+			
+			if (person.eCH_Person.DataSource != Enumerations.DataSource.Government)
+			{
+				switch (person.MrMrs)
+				{
+					case Enumerations.PersonMrMrs.Madame:
+					case Enumerations.PersonMrMrs.Mademoiselle:
+						person.eCH_Person.PersonSex = Enumerations.PersonSex.Female;
+						break;
+
+					case Enumerations.PersonMrMrs.Monsieur:
+						person.eCH_Person.PersonSex = Enumerations.PersonSex.Male;
+						break;
+				}
+			}
 		}
 
+		public override void ApplyValidateRule(AiderPersonEntity entity)
+		{
+			//	TODO: ensure that person's MrMrs is compatible with person's sex
+		}
 	}
 }
