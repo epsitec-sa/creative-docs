@@ -35,8 +35,7 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetNationality(ref AiderCountryEntity value)
 		{
-
-			this.NationalityStatus;
+			//	TODO: find the country based on the country code / need to access CoreData here !
 		}
 	}
 }
