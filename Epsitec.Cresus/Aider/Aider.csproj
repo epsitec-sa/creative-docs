@@ -49,7 +49,10 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
+    <Compile Include="Entities\AiderGroupEntity.cs" />
     <Compile Include="Entities\Helpers\AiderPersonAdditionalContactAddressList.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />

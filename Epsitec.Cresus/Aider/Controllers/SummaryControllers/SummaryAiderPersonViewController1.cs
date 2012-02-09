@@ -1,3 +1,6 @@
+//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
@@ -19,7 +22,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
-			.Text (x => x.GetPersonalDataSummary ());
+				.Text (x => x.GetPersonalDataSummary ());
 
 			if (this.Entity.IsGovernmentDefined ())
 			{

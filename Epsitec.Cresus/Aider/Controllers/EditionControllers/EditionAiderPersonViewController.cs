@@ -1,7 +1,11 @@
-﻿using Epsitec.Aider.Entities;
+﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Aider.Entities;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 
@@ -33,8 +37,10 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.eCH_Person.PersonFirstNames)
 					.Field (x => x.eCH_Person.PersonOfficialName)
 					.Field (x => x.OriginalName)
-					.Field (x => x.eCH_Person.PersonDateOfBirth)
-					.Field (x => x.eCH_Person.PersonDateOfDeath)
+					.HorizontalGroup ("Dates de naissance et de décès")
+						.Field (x => x.eCH_Person.PersonDateOfBirth)
+						.Field (x => x.eCH_Person.PersonDateOfDeath)
+					.End ()
 					.Field (x => x.eCH_Person.PersonSex)
 					.Field (x => x.MrMrs)
 					.Field (x => x.Title)
@@ -44,6 +50,9 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.Language)
 					.Field (x => x.eCH_Person.NationalityCountryCode)
 					.Field (x => x.eCH_Person.Origins)
+				.End ()
+				.Input ()
+					.Field (x => x.Parish)
 				.End ();
 		}
 
@@ -73,11 +82,11 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 						.ReadOnly ()
 					.Field (x => x.eCH_Person.Origins)
 						.ReadOnly ()
+				.End ()
+				.Input ()
+					.Field (x => x.Parish)
 				.End ();
 		}
-
-
 	}
-
 
 }

@@ -1,6 +1,11 @@
+//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
 using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+
 using Epsitec.Cresus.Bricks;
+
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.SummaryControllers;

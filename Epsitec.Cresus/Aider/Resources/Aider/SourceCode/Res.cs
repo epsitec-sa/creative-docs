@@ -1518,8 +1518,12 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid OriginalName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 85);
 				//	designer:cap/LVGM02
 				public static readonly global::Epsitec.Common.Support.Druid Parents = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 22);
+				//	designer:cap/LVABB
+				public static readonly global::Epsitec.Common.Support.Druid Parish = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 363);
 				//	designer:cap/LVAP7
 				public static readonly global::Epsitec.Common.Support.Druid Profession = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 249);
+				//	designer:cap/LVAAB
+				public static readonly global::Epsitec.Common.Support.Druid Relationships = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 362);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
 			}

@@ -674,7 +674,7 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>OriginalName</c> field.
+		///	Nom de jeune fille
 		///	designer:fld/LVAF/LVAL2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[LVAL2]")]
@@ -916,6 +916,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Parish</c> field.
+		///	designer:fld/LVAF/LVABB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVABB]")]
+		public global::Epsitec.Aider.Entities.AiderGroupEntity Parish
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVABB]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Parish;
+				if (oldValue != value || !this.IsFieldDefined("[LVABB]"))
+				{
+					this.OnParishChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVABB]", oldValue, value);
+					this.OnParishChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Events</c> field.
 		///	designer:fld/LVAF/LVAQ8
 		///	</summary>
@@ -1013,6 +1035,20 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>Relationships</c> field.
+		///	designer:fld/LVAF/LVAAB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAAB]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> Relationships
+		{
+			get
+			{
+				global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value = default (global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity>);
+				this.GetRelationships (ref value);
+				return value;
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1046,6 +1082,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnProfessionChanging(string oldValue, string newValue);
 		partial void OnProfessionChanged(string oldValue, string newValue);
+		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
 		
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
@@ -1054,6 +1092,7 @@ namespace Epsitec.Aider.Entities
 		partial void GetParents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetHousemates(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonEntity> value);
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value);
+		partial void GetRelationships(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

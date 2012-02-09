@@ -45,9 +45,12 @@ namespace Epsitec.Aider.Entities
 
 		public FormattedText GetPersonalDataSummary()
 		{
-			var lines = this.GetPersonalDataSummaryLines ();
-
-			return TextFormatter.FormatText (lines.Select (x => x.AppendLine ()));
+			return TextFormatter.FormatText (
+				this.Title, this.MrMrs, TextFormatter.Command.IfEmpty, "\n",
+				this.eCH_Person.PersonFirstNames, this.eCH_Person.PersonOfficialName, "(~", this.OriginalName, "~)", "\n",
+				this.eCH_Person.PersonDateOfBirth, "~ – ~", this.eCH_Person.PersonDateOfDeath, "\n",
+				this.Confession, "~\n",
+				this.Profession, "~\n");
 		}
 
 
@@ -99,24 +102,6 @@ namespace Epsitec.Aider.Entities
 			{
 				yield return "Email: " + defaultEmailAddress;
 			}
-		}
-
-
-		public IEnumerable<FormattedText> GetPersonalDataSummaryLines()
-		{
-			// Gets the text with the title and honorific
-			yield return TextFormatter.FormatText (this.MrMrs, "~(~", this.Title, "~)");
-
-			// Gets the text for the name sex and language
-			yield return TextFormatter.FormatText (this.GetFullName (), "(", this.eCH_Person.PersonSex.AsShortText (), ",", this.Language.AsShortText (), ")");
-
-			// Gets the text for the dates of birth and death.
-			var dateOfBirth = this.eCH_Person.PersonDateOfBirth;
-			var dateOfDeath = this.eCH_Person.PersonDateOfDeath;
-
-			yield return TextFormatter.FormatText (dateOfBirth, "~-~", dateOfDeath);
-			yield return TextFormatter.FormatText (this.Confession);
-			yield return this.Profession;
 		}
 
 
@@ -255,6 +240,13 @@ namespace Epsitec.Aider.Entities
 			}
 
 			value = this.additionalAddresses;
+		}
+
+		partial void GetRelationships(ref IList<AiderPersonRelationshipEntity> value)
+		{
+			value = new List<AiderPersonRelationshipEntity> ();
+
+			//	TODO
 		}
 
 		

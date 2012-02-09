@@ -1,21 +1,28 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Aider.Enumerations;
-
+using Epsitec.Common.Support.Entities;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core.Entities;
+
 using System.Collections.Generic;
-using System.Threading;
 
 
 namespace Epsitec.Aider.Entities
 {
 	public partial class eCH_PersonEntity
 	{
+		/// <summary>
+		/// Gets the default first name for the person, which is the 1st first name in
+		/// the list.
+		/// </summary>
+		/// <param name="person">The person.</param>
+		/// <returns>The default first name.</returns>
 		internal static string GetDefaultFirstName(eCH_PersonEntity person)
 		{
-			if (string.IsNullOrWhiteSpace (person.PersonFirstNames))
+			if ((person.IsNull ()) ||
+				(string.IsNullOrWhiteSpace (person.PersonFirstNames)))
 			{
 				return "";
 			}

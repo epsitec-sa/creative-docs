@@ -26,7 +26,6 @@ namespace Epsitec.Aider.Entities
 				TextFormatter.Command.Mark, this.Town.Country.Name, this.Town.Country.IsoCode, "CH", TextFormatter.Command.ClearToMarkIfEqual);
 		}
 
-
 		public override FormattedText GetSummary()
 		{
 			return TextFormatter.FormatText (
@@ -113,5 +112,6 @@ namespace Epsitec.Aider.Entities
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
 		}
+
 	}
 }
