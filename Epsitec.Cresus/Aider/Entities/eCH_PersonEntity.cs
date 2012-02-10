@@ -4,10 +4,11 @@
 using Epsitec.Common.Support.Entities;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
-
+using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
@@ -35,7 +36,32 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetNationality(ref AiderCountryEntity value)
 		{
-			//	TODO: find the country based on the country code / need to access CoreData here !
+			if (string.IsNullOrWhiteSpace (this.NationalityCountryCode))
+			{
+				return;
+			}
+
+			var context    = BusinessContextPool.GetCurrentContext (this);
+			var repository = context.GetRepository<AiderCountryEntity> ();
+			
+			var example = new AiderCountryEntity ()
+			{
+				IsoCode = this.NationalityCountryCode,
+			};
+
+			value = repository.GetByExample (example).FirstOrDefault ();
+		}
+
+		partial void SetNationality(AiderCountryEntity value)
+		{
+			if (value.IsNull ())
+			{
+				this.NationalityCountryCode = "";
+			}
+			else
+			{
+				this.NationalityCountryCode = value.IsoCode;
+			}
 		}
 	}
 }

@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.WebCore.Server.Tests.Vs.CoreServer
 						b[index] = true;
 					};
 
-					worker.Execute (action);
+					worker.ExecuteSync (action);
 				}
 
 				foreach (var boolean in b)
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.WebCore.Server.Tests.Vs.CoreServer
 
 							try
 							{
-								worker.Execute (action);
+								worker.ExecuteSync (action);
 							}
 							catch (OperationCanceledException)
 							{
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.WebCore.Server.Tests.Vs.CoreServer
 
 			ExceptionAssert.Throw<OperationCanceledException>
 			(
-				() => worker.Execute (() => b = true)
+				() => worker.ExecuteSync (() => b = true)
 			);
 
 			Assert.IsFalse (b);

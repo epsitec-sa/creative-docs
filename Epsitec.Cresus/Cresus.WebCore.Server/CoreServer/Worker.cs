@@ -1,11 +1,18 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support;
 using Epsitec.Common.Types.Collections.Concurrent;
 
 using System.Threading;
 
-
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {
+	/// <summary>
+	/// The <c>Worker</c> class provides a single method, <see cref="ExecuteSync"/>, which is
+	/// used to execute work on a thread, which will always be the same, independently of the
+	/// calling thread.
+	/// </summary>
 	internal sealed class Worker : System.IDisposable
 	{
 		public Worker()
@@ -14,20 +21,31 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			this.stopTokenCancellationSource = new CancellationTokenSource ();
 
 			this.workerThreadStop = new ManualResetEvent (false);
-			this.workerThread = new Thread (() => this.DoWork ());
+			this.workerThread = new Thread (this.DoWork);
 			this.workerThread.Start ();
 		}
 
 
-		public void Execute(System.Action action)
+		/// <summary>
+		/// Synchronously executes an action on the worker thread, and block
+		/// until the thread has finished executing the specified action.
+		/// </summary>
+		/// <param name="action">The action.</param>
+		public void ExecuteSync(System.Action action)
 		{
 			using (var actionWaitHandle = new ManualResetEvent (false))
 			{
+				System.Exception innerException = null;
+
 				System.Action actionWithSignal = () =>
 				{
 					try
 					{
 						action ();
+					}
+					catch (System.Exception ex)
+					{
+						innerException = ex;
 					}
 					finally
 					{
@@ -42,6 +60,10 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 				if (firedWaitHandle == this.workerThreadStop)
 				{
 					throw new System.OperationCanceledException ("The operation has been canceled.");
+				}
+				if (innerException != null)
+				{
+					throw new System.Exception ("The operation threw an exception.", innerException);
 				}
 			}
 		}

@@ -10,6 +10,10 @@ namespace Epsitec.Cresus.Core.Library
 	{
 		protected CoreApp()
 		{
+			System.Diagnostics.Debug.Assert (CoreApp.current == null);
+
+			CoreApp.current = this;
+
 			this.components = new CoreComponentHostImplementation<CoreAppComponent> ();
 			this.manualComponents = new CoreComponentHostImplementation<ICoreManualComponent> ();
 			
@@ -88,6 +92,23 @@ namespace Epsitec.Cresus.Core.Library
 			ICoreComponentHost<ICoreManualComponent> self = this as ICoreComponentHost<ICoreManualComponent>;
 
 			self.RegisterComponentAsDisposable (disposable);
+		}
+
+
+		public static T GetCurrentAppSession<T>()
+			where T : CoreApp
+		{
+			T session = CoreApp.current as T;
+
+			System.Diagnostics.Debug.Assert (session != null);
+
+			return session;
+		}
+
+		public static T FindCurrentAppSessionComponent<T>()
+			where T : class, ICoreComponent
+		{
+			return CoreApp.GetCurrentAppSession<CoreApp> ().FindComponent<T> ();
 		}
 
 
@@ -182,7 +203,7 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 		#endregion
-
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
@@ -192,6 +213,9 @@ namespace Epsitec.Cresus.Core.Library
 
 			base.Dispose (disposing);
 		}
+
+		[System.ThreadStatic]
+		protected static CoreApp				current;
 
 		private readonly CoreComponentHostImplementation<CoreAppComponent> components;
 		private readonly CoreComponentHostImplementation<ICoreManualComponent> manualComponents;

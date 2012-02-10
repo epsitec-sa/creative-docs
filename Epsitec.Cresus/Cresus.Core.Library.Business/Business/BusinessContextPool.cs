@@ -1,13 +1,15 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Data;
+using Epsitec.Cresus.Core.Factories;
 
 using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.Cresus.Core.Data;
-
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Business
 {
@@ -19,12 +21,24 @@ namespace Epsitec.Cresus.Core.Business
 			this.pool = new List<BusinessContext> ();
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
 				return this.pool.Count == 0;
 			}
+		}
+
+		public static BusinessContext GetCurrentContext(AbstractEntity entity)
+		{
+			var dataContext = DataContextPool.GetDataContext (entity);
+
+			System.Diagnostics.Debug.Assert (dataContext != null, "Entity does not belong to any data context");
+			
+			var data = Epsitec.Cresus.Core.Library.CoreApp.FindCurrentAppSessionComponent<CoreData> ();
+			var pool = data.GetComponent<BusinessContextPool> ();
+
+			return pool.pool.Where (x => x.DataContext == dataContext).FirstOrDefault ();
 		}
 
 		internal void DisposeBusinessContext(BusinessContext context)

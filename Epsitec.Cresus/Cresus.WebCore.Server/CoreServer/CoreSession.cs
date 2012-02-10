@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Bricks;
@@ -21,6 +20,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {
+	/// <summary>
+	/// The <c>CoreSession</c> class maintains the session information tied to a client
+	/// connection, including a <see cref="BusinessContext"/>.
+	/// </summary>
 	public class CoreSession : CoreApp
 	{
 		public CoreSession(string id)
