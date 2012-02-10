@@ -61,6 +61,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				Parent           = frameField,
 				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Fill,
 				Margins          = new Margins (3, 0, 0, 1),

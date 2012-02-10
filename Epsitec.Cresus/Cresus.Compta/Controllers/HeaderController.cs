@@ -65,7 +65,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent           = frame,
 					FormattedText    = description,
 					ContentAlignment = ContentAlignment.MiddleCenter,
+					TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					Dock             = DockStyle.Fill,
+					Margins          = new Margins (1, 1, 0, 0),
 				};
 
 				this.headerFrames.Add (frame);

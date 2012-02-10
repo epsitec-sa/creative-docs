@@ -101,35 +101,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PP, large: false));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Exploitation, large: false));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Budgets, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false));
 
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Libellés, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Modèles, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
 
 				section.Children.Add (this.CreateGap ());
 				this.présentationButton = this.CreateButton (Res.Commands.Présentation.New);
 				section.Children.Add (this.présentationButton);
 			}
 
-#if false
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Panneaux");
+				var section = this.CreateSection (this.container, DockStyle.Left, "Réglages");
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Search, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Panel.Filter, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Libellés, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Modèles, large: false));
 
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Options, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Panel.Info, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
 			}
-#endif
 
 			{
 				Widget topSection1, bottomSection1;
