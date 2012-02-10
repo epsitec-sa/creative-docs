@@ -256,23 +256,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateInsertionRow ();
 			this.updateArrayContentAction ();
 
-			this.controller.IgnoreChanged = true;  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
-
-			this.arrayController.SelectedRow = this.dataAccessor.FirstEditedRow;
-
-			if (this.dataAccessor.JustCreated)
+			using (this.controller.IgnoreChanges.Enter ())  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
 			{
-				this.arrayController.ColorSelection = Color.FromAlphaColor (0.4, Color.FromHexa ("b3d7ff"));  // bleu pastel
-			}
-			else
-			{
-				this.arrayController.ColorSelection = Color.FromName ("Gold");
-			}
+				this.arrayController.SelectedRow = this.dataAccessor.FirstEditedRow;
 
-			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
-			this.dataAccessor.ResetCreationLine ();
-			
-			this.controller.IgnoreChanged = false;
+				if (this.dataAccessor.JustCreated)
+				{
+					this.arrayController.ColorSelection = Color.FromAlphaColor (0.4, Color.FromHexa ("b3d7ff"));  // bleu pastel
+				}
+				else
+				{
+					this.arrayController.ColorSelection = Color.FromName ("Gold");
+				}
+
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.dataAccessor.ResetCreationLine ();
+			}
 
 			if (this.controller.OptionsController != null)
 			{
@@ -383,31 +382,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void EditionDataToWidgets(bool ignoreFocusField)
 		{
 			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
-			this.controller.IgnoreChanged = true;
-
-			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+			using (this.controller.IgnoreChanges.Enter ())
 			{
-				foreach (var mapper in this.columnMappers.Where (x => x.Show))
+				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
-					var controller = this.GetFieldController (mapper.Column, line);
-
-					if (controller != null)
+					foreach (var mapper in this.columnMappers.Where (x => x.Show))
 					{
-						controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
+						var controller = this.GetFieldController (mapper.Column, line);
 
-						//	Le widget en cours d'édition ne doit absolument pas être modifié.
-						//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
-						//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
-						//	catastrophe !
-						if (!ignoreFocusField || !controller.HasFocus)
+						if (controller != null)
 						{
-							controller.EditionDataToWidget ();
+							controller.EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
+
+							//	Le widget en cours d'édition ne doit absolument pas être modifié.
+							//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
+							//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
+							//	catastrophe !
+							if (!ignoreFocusField || !controller.HasFocus)
+							{
+								controller.EditionDataToWidget ();
+							}
 						}
 					}
 				}
 			}
-
-			this.controller.IgnoreChanged = false;
 		}
 
 #if false
@@ -436,7 +434,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected void FooterTextChanged()
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
-			if (!this.controller.IgnoreChanged)
+			if (this.controller.IgnoreChanges.IsZero)
 			{
 				this.dirty = true;
 				//?this.WidgetToEditionData ();

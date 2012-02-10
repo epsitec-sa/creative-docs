@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.périodeEntity = this.mainWindowController.Période;
 
 			this.columnMappers = this.InitialColumnMappers.ToList ();
+			this.ignoreChanges = new SafeCounter ();
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
@@ -508,7 +509,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.IgnoreChanged)
+			if (this.ignoreChanges.IsNotZero)
 			{
 				return;
 			}
@@ -538,10 +539,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ClearHilite()
 		{
-			this.IgnoreChanged = true;
-			this.arrayController.SelectedRow = -1;
-			this.arrayController.SetHilitedRows (-1, 0);
-			this.IgnoreChanged = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.arrayController.SelectedRow = -1;
+				this.arrayController.SetHilitedRows (-1, 0);
+			}
 
 			this.dataAccessor.StartCreationLine ();
 		}
@@ -700,10 +702,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public bool IgnoreChanged
+		public SafeCounter IgnoreChanges
 		{
-			get;
-			set;
+			get
+			{
+				return this.ignoreChanges;
+			}
 		}
 
 
@@ -712,6 +716,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly ComptaPériodeEntity					périodeEntity;
 		protected readonly List<ColumnMapper>					columnMappers;
+		protected readonly SafeCounter							ignoreChanges;
 
 		protected MainWindowController							mainWindowController;
 		protected Window										parentWindow;

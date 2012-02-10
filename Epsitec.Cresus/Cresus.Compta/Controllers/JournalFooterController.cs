@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateEditionWidgets()
 		{
 			//	Met à jour toutes les données en édition d'une écriture multiple.
-			if (!this.isMulti || this.controller.IgnoreChanged)
+			if (!this.isMulti || this.controller.IgnoreChanges.IsNotZero)
 			{
 				return;
 			}

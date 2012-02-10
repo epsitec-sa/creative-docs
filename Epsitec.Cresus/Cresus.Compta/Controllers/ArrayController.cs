@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.controller = controller;
 			this.columnMappers = this.controller.ColumnMappers;
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -57,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.array.SelectedRowChanged += delegate
 			{
-				if (!this.ignoreChanged && !this.controller.IgnoreChanged)
+				if (this.ignoreChanges.IsZero && this.controller.IgnoreChanges.IsZero)
 				{
 					selectedRowChanged ();
 					this.UpdateCommands ();
@@ -210,9 +212,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (adjustedSel != sel)
 				{
-					this.ignoreChanged = true;
-					this.SelectedRow = sel;
-					this.ignoreChanged = false;
+					using (this.ignoreChanges.Enter ())
+					{
+						this.SelectedRow = sel;
+					}
 				}
 			}
 
@@ -325,10 +328,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly AbstractController		controller;
 		private readonly List<ColumnMapper>		columnMappers;
+		private readonly SafeCounter			ignoreChanges;
 
 		private List<ColumnMapper>				columnMappersShowed;
 		private HeaderController				headerController;
 		private StringArray						array;
-		private bool							ignoreChanged;
 	}
 }
