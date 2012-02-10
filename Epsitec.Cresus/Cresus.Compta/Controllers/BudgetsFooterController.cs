@@ -71,7 +71,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.IsReadOnly = true;
 				}
 
-				if (mapper.Column == ColumnType.PériodePrécédente ||
+				if (mapper.Column == ColumnType.Solde           ||
+					mapper.Column == ColumnType.BudgetPrécédent ||
 					mapper.Column == ColumnType.Budget          ||
 					mapper.Column == ColumnType.BudgetFutur     )
 				{

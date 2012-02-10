@@ -32,6 +32,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool AcceptPériodeChanged
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 		public override bool HasShowSearchPanel
 		{
 			get

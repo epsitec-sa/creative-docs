@@ -101,9 +101,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.editionData != null)
 			{
-				this.ignoreChange = true;
-				this.InternalField.SetSilentFormattedText (this.editionData.Text);
-				this.ignoreChange = false;
+				using (this.ignoreChanges.Enter ())
+				{
+					this.InternalField.SetSilentFormattedText (this.editionData.Text);
+				}
 			}
 		}
 
@@ -143,7 +144,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void HandleTextChanged(object sender)
 		{
-			if (this.ignoreChange || this.editionData == null)
+			if (this.ignoreChanges.IsNotZero || this.editionData == null)
 			{
 				return;
 			}

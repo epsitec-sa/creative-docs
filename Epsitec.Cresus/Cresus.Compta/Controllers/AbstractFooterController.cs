@@ -234,8 +234,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private int GetMapperColumnRank(ColumnType columnType)
 		{
-			var mapper = this.columnMappers.Where (x => x.Column == columnType).FirstOrDefault ();
-			return this.columnMappers.IndexOf (mapper);
+			int i = 0;
+
+			foreach (var mapper in this.columnMappers)
+			{
+				if (mapper.Column == columnType)
+				{
+					return i;
+				}
+
+				if (mapper.Show)
+				{
+					i++;
+				}
+			}
+
+			return -1;
 		}
 
 

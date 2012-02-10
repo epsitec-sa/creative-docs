@@ -132,4 +132,6 @@
   <data name="Fld.ComptaBudget.Description" id="KO4">&lt;s:data id="_0" f:Name="Description" /&gt;</data>
   <data name="Fld.ComptaBudget.Période" id="KP4">&lt;s:data id="_0" f:Name="Période" /&gt;</data>
   <data name="Fld.ComptaCompte.Budgets" id="KQ4">&lt;s:data id="_0" f:Name="Budgets" /&gt;</data>
+  <data name="Cmd.Compta.PériodePrécédente" id="KR4">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Compta.PériodePrécédente" f:Description="Période précédente" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Période précédente'}}" /&gt;</data>
+  <data name="Cmd.Compta.PériodeSuivante" id="KS4">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Compta.PériodeSuivante" f:Description="Période suivante" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Période suivante'}}" /&gt;</data>
 </bundle>

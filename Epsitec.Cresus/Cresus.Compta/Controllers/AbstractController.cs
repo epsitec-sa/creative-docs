@@ -185,6 +185,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public virtual bool AcceptPériodeChanged
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+
 		public virtual bool HasShowSearchPanel
 		{
 			get
@@ -442,6 +451,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (20, 0, 0, 0),
 			};
 
+			new GlyphButton
+			{
+				Parent           = frame,
+				CommandObject    = Res.Commands.Compta.PériodeSuivante,
+				GlyphShape       = GlyphShape.ArrowRight,
+				ButtonStyle      = ButtonStyle.ToolItem,
+				PreferredWidth   = 20,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Right,
+			};
+
+			new GlyphButton
+			{
+				Parent           = frame,
+				CommandObject    = Res.Commands.Compta.PériodePrécédente,
+				GlyphShape       = GlyphShape.ArrowLeft,
+				ButtonStyle      = ButtonStyle.ToolItem,
+				PreferredWidth   = 20,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Right,
+			};
+
 			this.subtitleLabel = new StaticText
 			{
 				Parent           = frame,
@@ -449,7 +480,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth   = 200,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Right,
-				Margins          = new Margins (0, 20, 0, 0),
+				Margins          = new Margins (0, 10, 0, 0),
 			};
 		}
 

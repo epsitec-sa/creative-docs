@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.columnMapper         = columnMapper;
 			this.setFocusAction       = setFocusAction;
 			this.contentChangedAction = contentChangedAction;
+
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -135,12 +137,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly ColumnMapper							columnMapper;
 		protected readonly System.Action<int, ColumnType>		setFocusAction;
 		protected readonly System.Action						contentChangedAction;
+		protected SafeCounter									ignoreChanges;
 
 		protected EditionData									editionData;
 		protected FrameBox										box;
 		protected FrameBox										container;
 		protected Widget										editWidget;
 		protected bool											hasFocus;
-		protected bool											ignoreChange;
 	}
 }

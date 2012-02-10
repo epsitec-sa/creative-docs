@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BudgetsDataAccessor (this);
+
+			this.UpdateColumnMappers ();
 		}
 
 
@@ -105,9 +107,35 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Numéro,          0.20, ContentAlignment.MiddleLeft,  "Numéro",          "Numéro du compte");
 				yield return new ColumnMapper (ColumnType.Titre,           0.80, ContentAlignment.MiddleLeft,  "Titre du compte", "Titre du compte");
 				yield return new ColumnMapper (ColumnType.Solde,           0.20, ContentAlignment.MiddleRight, "Solde",           "Solde du compte");
-				yield return new ColumnMapper (ColumnType.BudgetPrécédent, 0.20, ContentAlignment.MiddleRight, "Période préc.",   "Budget de la période précédente");
-				yield return new ColumnMapper (ColumnType.Budget,          0.20, ContentAlignment.MiddleRight, "Budget",          "Budget de la période actuelle");
-				yield return new ColumnMapper (ColumnType.BudgetFutur,     0.20, ContentAlignment.MiddleRight, "Budget futur",    "Budget de la période future");
+				yield return new ColumnMapper (ColumnType.BudgetPrécédent, 0.20, ContentAlignment.MiddleRight, "",                "Budget de la période précédente");
+				yield return new ColumnMapper (ColumnType.Budget,          0.20, ContentAlignment.MiddleRight, "",                "Budget de la période actuelle");
+				yield return new ColumnMapper (ColumnType.BudgetFutur,     0.20, ContentAlignment.MiddleRight, "",                "Budget de la période future");
+			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			//	Met à jour la colonne "budget précédent".
+			var prev = this.comptaEntity.GetPériode (this.périodeEntity, -1);
+			
+			this.ShowHideColumn (ColumnType.BudgetPrécédent, prev != null);
+			
+			if (prev != null)
+			{
+				this.SetColumnDescription (ColumnType.BudgetPrécédent, FormattedText.Concat ("Budget ", prev.ShortTitle));
+			}
+
+			//	Met à jour la colonne "budget actuel".
+			this.SetColumnDescription (ColumnType.Budget, FormattedText.Concat ("Budget ", this.périodeEntity.ShortTitle).ApplyBold ());
+
+			//	Met à jour la colonne "budget suivant".
+			var next = this.comptaEntity.GetPériode (this.périodeEntity, 1);
+
+			this.ShowHideColumn (ColumnType.BudgetFutur, next != null);
+
+			if (next != null)
+			{
+				this.SetColumnDescription (ColumnType.BudgetFutur, FormattedText.Concat ("Budget ", next.ShortTitle));
 			}
 		}
 	}

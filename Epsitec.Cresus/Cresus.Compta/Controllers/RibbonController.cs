@@ -490,13 +490,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private IconButton CreateButton(Command command = null, DockStyle dockStyle = DockStyle.StackBegin, CommandEventHandler handler = null, bool large = true)
+		private IconButton CreateButton(Command command, bool large = true)
 		{
-			if (command != null && handler != null)
-			{
-				this.app.CommandDispatcher.Register (command, handler);
-			}
-
 			double buttonWidth = large ? RibbonController.ButtonLargeWidth : RibbonController.ButtonLargeWidth/2;
 			double iconWidth   = large ? RibbonController.IconLargeWidth   : RibbonController.IconSmallWidth;
 
@@ -505,7 +500,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				CommandObject       = command,
 				PreferredIconSize   = new Size (iconWidth, iconWidth),
 				PreferredSize       = new Size (buttonWidth, buttonWidth),
-				Dock                = dockStyle,
+				Dock                = DockStyle.StackBegin,
 				Name                = (command == null) ? null : command.Name,
 				VerticalAlignment   = VerticalAlignment.Top,
 				HorizontalAlignment = HorizontalAlignment.Center,

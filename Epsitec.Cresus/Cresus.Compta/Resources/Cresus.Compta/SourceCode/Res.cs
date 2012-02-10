@@ -16,6 +16,18 @@ namespace Epsitec.Cresus.Compta
 			{
 			}
 			
+			public static class Compta
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKR4
+				public static readonly global::Epsitec.Common.Widgets.Command PériodePrécédente = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 155));
+				//	designer:cap/OVKS4
+				public static readonly global::Epsitec.Common.Widgets.Command PériodeSuivante = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 156));
+			}
+			
 			public static class Edit
 			{
 				internal static void _Initialize()
@@ -215,6 +227,18 @@ namespace Epsitec.Cresus.Compta
 		{
 			internal static void _Initialize()
 			{
+			}
+			
+			public static class Compta
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKR4
+				public const long PériodePrécédente = 0x3F80001400009BL;
+				//	designer:cap/OVKS4
+				public const long PériodeSuivante = 0x3F80001400009CL;
 			}
 			
 			public static class Edit
@@ -789,6 +813,7 @@ namespace Epsitec.Cresus.Compta
 			Res._manager = new global::Epsitec.Common.Support.ResourceManager (typeof (Res));
 			Res._manager.DefineDefaultModuleName ("Cresus.Compta");
 			Commands._Initialize ();
+			Commands.Compta._Initialize ();
 			Commands.Edit._Initialize ();
 			Commands.File._Initialize ();
 			Commands.Global._Initialize ();
@@ -799,6 +824,7 @@ namespace Epsitec.Cresus.Compta
 			Commands.Présentation._Initialize ();
 			Commands.Select._Initialize ();
 			CommandIds._Initialize ();
+			CommandIds.Compta._Initialize ();
 			CommandIds.Edit._Initialize ();
 			CommandIds.File._Initialize ();
 			CommandIds.Global._Initialize ();

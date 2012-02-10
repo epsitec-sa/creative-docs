@@ -42,13 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
-
-			var now = Date.Today;
-			this.période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
-			if (this.période == null)
-			{
-				this.période = this.compta.Périodes.First ();
-			}
+			this.SelectCurrentPériode ();
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -197,7 +191,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controllers.Add (this.controller);
 			}
 
-			this.UpdatePanels ();
+			this.UpdatePanelCommands ();
+			this.UpdatePériodeCommands ();
 		}
 
 		private AbstractController CreateController(Window parentWindow, Command command)
@@ -317,16 +312,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return text;
 		}
 
-		private void UpdateControllers()
-		{
-			//	Met à jour tous les contrôleurs.
-			foreach (var controller in this.controllers)
-			{
-				controller.Update ();
-			}
-		}
-
-		private void UpdatePanels()
+		private void UpdatePanelCommands()
 		{
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
@@ -361,6 +347,42 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		private void UpdatePériodeCommands()
+		{
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodePrécédente);
+				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, -1) != null);
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodeSuivante);
+				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, 1) != null);
+			}
+		}
+
+
+		private void ChangePériode(int offset)
+		{
+			var autrePériode = this.compta.GetPériode (this.période, offset);
+
+			if (autrePériode != null)
+			{
+				this.période = autrePériode;
+				this.CreateController ();
+			}
+		}
+
+		private void SelectCurrentPériode()
+		{
+			var now = Date.Today;
+			this.période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
+
+			if (this.période == null)
+			{
+				this.période = this.compta.Périodes.First ();
+			}
+		}
+
 
 		#region Dialogs
 		private string FileOpenDialog(string filename)
@@ -373,6 +395,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
 			dialog.Filters.Add ("txt", "Texte tabulé", "*.txt");
 			dialog.OwnerWindow = this.mainWindow;
+
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
 			{
@@ -393,6 +416,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.Filters.Add ("txt", "Texte tabulé", "*.txt");
 			dialog.PromptForOverwriting = true;
 			dialog.OwnerWindow = this.mainWindow;
+
 			dialog.OpenDialog ();
 			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
 			{
@@ -417,9 +441,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandFileNew()
 		{
 			new NewCompta ().NewEmpty (this.compta);
+			this.SelectCurrentPériode ();
 
 			this.controller.ClearHilite();
-			this.UpdateControllers ();
+			this.CreateController ();
 			this.Dirty = false;
 		}
 
@@ -433,7 +458,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				string err = new CrésusCompta ().ImportFile (this.compta, ref this.période, filename);
 
 				this.controller.ClearHilite ();
-				this.UpdateControllers ();
+				this.CreateController ();
 
 				if (!string.IsNullOrEmpty (err))
 				{
@@ -519,28 +544,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandPanelSearch()
 		{
 			this.showSearchPanel = !this.showSearchPanel;
-			this.UpdatePanels ();
+			this.UpdatePanelCommands ();
 		}
 
 		[Command (Res.CommandIds.Panel.Filter)]
 		private void CommandPanelFilter()
 		{
 			this.showFilterPanel = !this.showFilterPanel;
-			this.UpdatePanels ();
+			this.UpdatePanelCommands ();
 		}
 
 		[Command (Res.CommandIds.Panel.Options)]
 		private void CommandPanelOptions()
 		{
 			this.showOptionsPanel = !this.showOptionsPanel;
-			this.UpdatePanels ();
+			this.UpdatePanelCommands ();
 		}
 
 		[Command (Res.CommandIds.Panel.Info)]
 		private void CommandPanelInfo()
 		{
 			this.showInfoPanel = !this.showInfoPanel;
-			this.UpdatePanels ();
+			this.UpdatePanelCommands ();
 		}
 
 
@@ -685,6 +710,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			int n = e.Command.Name.Last () - '0';  // 0..9
 			this.controller.FooterController.InsertModèle (n);
+		}
+
+		[Command (Res.CommandIds.Compta.PériodePrécédente)]
+		private void CommandComptaPériodePrécédente()
+		{
+			this.ChangePériode (-1);
+		}
+
+		[Command (Res.CommandIds.Compta.PériodeSuivante)]
+		private void CommandComptaPériodeSuivante()
+		{
+			this.ChangePériode (1);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]
