@@ -201,12 +201,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetCheckStateIconUri(bool state)
 		{
-			return state ? "Button.CheckYes" : "Button.CheckNo";
+			return UIBuilder.GetResourceIconUri (state ? "Button.CheckYes" : "Button.CheckNo");
 		}
 
 		public static string GetRadioStateIconUri(bool state)
 		{
-			return state ? "Button.RadioYes" : "Button.RadioNo";
+			return UIBuilder.GetResourceIconUri (state ? "Button.RadioYes" : "Button.RadioNo");
 		}
 
 		public static string GetResourceIconUri(string icon)

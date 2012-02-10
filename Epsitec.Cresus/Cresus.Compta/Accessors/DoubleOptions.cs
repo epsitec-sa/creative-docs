@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Cette classe décrit les options d'affichage des données doubles (bilan avec actif/passif ou PP avec charge/produit) de la comptabilité.
 	/// </summary>
-	public class DoubleOptions : AbstractOptions
+	public abstract class DoubleOptions : AbstractOptions
 	{
 		public override void Clear()
 		{
@@ -43,13 +43,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-
-		protected override void CreateEmpty()
-		{
-			this.emptyOptions = new DoubleOptions ();
-			this.emptyOptions.SetComptaEntity (this.comptaEntity);
-			this.emptyOptions.Clear ();
-		}
 
 		public override bool CompareTo(AbstractOptions other)
 		{

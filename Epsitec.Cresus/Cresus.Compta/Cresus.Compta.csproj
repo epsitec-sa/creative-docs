@@ -57,6 +57,8 @@
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
+    <Compile Include="Accessors\BilanOptions.cs" />
+    <Compile Include="Accessors\PPOptions.cs" />
     <Compile Include="Accessors\ModèlesDataAccessor.cs" />
     <Compile Include="Accessors\ModèlesEditionLine.cs" />
     <Compile Include="Accessors\LibellésDataAccessor.cs" />
