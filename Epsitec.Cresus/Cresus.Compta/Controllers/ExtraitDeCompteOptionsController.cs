@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.RadioYes" : "Button.RadioNo"),
+				IconUri       = UIBuilder.GetRadioStateIconUri (selected),
 				FormattedText = ExtraitDeCompteOptionsController.GetCatégorieDescription (catégorie),
 				Name          = catégorie.ToString (),
 			};
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.CheckYes" : "Button.CheckNo"),
+				IconUri       = UIBuilder.GetCheckStateIconUri (selected),
 				FormattedText = text,
 			};
 

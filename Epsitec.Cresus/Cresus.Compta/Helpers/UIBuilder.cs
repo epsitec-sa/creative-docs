@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static FrameBox CreatePseudoCombo(Widget parent, out StaticText field, out GlyphButton button)
 		{
-			//	Crée un widget qui ressemble à un TextFieldCombo.
+			//	Crée un widget inerte qui ressemble à un TextFieldCombo.
 			var frame = new FrameBox
 			{
 				Parent         = parent,
@@ -194,19 +194,19 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string GetIconCheckState(bool state)
+		public static string GetTextIconUri(string icon)
+		{
+			return string.Format (@"<img src=""{0}""/>", UIBuilder.GetResourceIconUri (icon));
+		}
+
+		public static string GetCheckStateIconUri(bool state)
 		{
 			return state ? "Button.CheckYes" : "Button.CheckNo";
 		}
 
-		public static string GetIconRadioState(bool state)
+		public static string GetRadioStateIconUri(bool state)
 		{
 			return state ? "Button.RadioYes" : "Button.RadioNo";
-		}
-
-		public static string GetTextIconUri(string icon)
-		{
-			return string.Format (@"<img src=""{0}""/>", UIBuilder.GetResourceIconUri (icon));
 		}
 
 		public static string GetResourceIconUri(string icon)

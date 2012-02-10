@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Converters
 	{
+		#region Montant
 		public static decimal? ParseMontant(FormattedText text)
 		{
 			return Converters.ParseMontant (text.ToSimpleText ());
@@ -43,8 +44,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return null;
 			}
 		}
+		#endregion
 
 
+		#region Date
 		public static Date? ParseDate(FormattedText text)
 		{
 			return Converters.ParseDate (text.ToSimpleText ());
@@ -73,8 +76,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return null;
 			}
 		}
+		#endregion
 
 
+		#region CatégorieDeCompte
 		public static string CatégoriesToString(CatégorieDeCompte catégorie)
 		{
 			//	Conversion de plusieurs catégories en une chaîne où elles sont séparées par des "|".
@@ -189,8 +194,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return CatégorieDeCompte.Exploitation;
 			}
 		}
+		#endregion
 
 
+		#region TypeDeCompte
 		public static string TypeToString(TypeDeCompte type)
 		{
 			//	Conversion d'un type de compte en chaîne.
@@ -254,8 +261,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return TypeDeCompte.Groupe;
 			}
 		}
+		#endregion
 
 
+		#region RaccourciModèle
 		public static string RaccourciToString(RaccourciModèle raccourci)
 		{
 			//	Conversion d'un raccourci en chaîne.
@@ -366,8 +375,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return RaccourciModèle.Ctrl9;
 			}
 		}
+		#endregion
 
 
+		#region ComparisonShowed
 		public static string GetComparisonShowedListDescription(ComparisonShowed mode)
 		{
 			int n = Converters.ComparisonsShowed.Where (x => (mode & x) != 0).Count ();
@@ -425,8 +436,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return ComparisonShowed.PériodePénultième;
 			}
 		}
+		#endregion
 
 
+		#region ComparisonDisplayMode
 		public static string GetComparisonDisplayModeDescription(ComparisonDisplayMode mode)
 		{
 			switch (mode)
@@ -450,8 +463,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 					return "?";
 			}
 		}
+		#endregion
 
-	
+
+		#region String conversions
 		public static string PreparingForSearh(FormattedText text)
 		{
 			return Converters.PreparingForSearh (text.ToSimpleText ());
@@ -483,6 +498,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
+		#endregion
 
 
 		static Converters()

@@ -248,7 +248,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetResourceIconUri (active ? "Button.CheckYes" : "Button.CheckNo"),
+				IconUri       = UIBuilder.GetCheckStateIconUri (active),
 				FormattedText = Converters.GetComparisonShowedDescription (mode),
 				Name          = mode.ToString (),
 			};

@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetResourceIconUri (selected ? "Button.RadioYes" : "Button.RadioNo"),
+				IconUri       = UIBuilder.GetRadioStateIconUri (selected),
 				FormattedText = text,
 				Name          = mode.ToString (),
 			};
