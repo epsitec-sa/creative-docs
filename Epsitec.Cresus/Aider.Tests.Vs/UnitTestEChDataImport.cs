@@ -310,7 +310,7 @@ namespace Aider.Tests.Vs
 
 				if (dice.NextDouble () > 0.5)
 				{
-					var website = "www." + this.GetRandomHostname ();
+					var website = "http://www." + this.GetRandomHostname ();
 
 					address.Web = website;
 
