@@ -115,27 +115,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
-			//	Met à jour la colonne "budget précédent".
-			var prev = this.comptaEntity.GetPériode (this.périodeEntity, -1);
-			
-			this.ShowHideColumn (ColumnType.BudgetPrécédent, prev != null);
-			
-			if (prev != null)
+			this.SetColumnBudget (ColumnType.BudgetPrécédent, -1, false);
+			this.SetColumnBudget (ColumnType.Budget,           0, true);
+			this.SetColumnBudget (ColumnType.BudgetFutur,      1, false);
+		}
+
+		private void SetColumnBudget(ColumnType columnType, int offset, bool isBold)
+		{
+			var other = this.comptaEntity.GetPériode (this.périodeEntity, offset);
+
+			this.ShowHideColumn (columnType, other != null);
+
+			if (other != null)
 			{
-				this.SetColumnDescription (ColumnType.BudgetPrécédent, FormattedText.Concat ("Budget ", prev.ShortTitle));
-			}
+				var title = other.ShortTitle;
 
-			//	Met à jour la colonne "budget actuel".
-			this.SetColumnDescription (ColumnType.Budget, FormattedText.Concat ("Budget ", this.périodeEntity.ShortTitle).ApplyBold ());
+				if (title.Length <= 4)  // simplement l'année ?
+				{
+					title = FormattedText.Concat ("Budget ", title);
+				}
 
-			//	Met à jour la colonne "budget suivant".
-			var next = this.comptaEntity.GetPériode (this.périodeEntity, 1);
+				if (isBold)
+				{
+					title = title.ApplyBold ();
+				}
 
-			this.ShowHideColumn (ColumnType.BudgetFutur, next != null);
-
-			if (next != null)
-			{
-				this.SetColumnDescription (ColumnType.BudgetFutur, FormattedText.Concat ("Budget ", next.ShortTitle));
+				this.SetColumnDescription (columnType, title);
 			}
 		}
 	}

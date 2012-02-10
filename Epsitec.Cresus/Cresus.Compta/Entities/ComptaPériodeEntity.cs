@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +17,12 @@ namespace Epsitec.Cresus.Compta.Entities
 	{
 		public FormattedText ShortTitle
 		{
+			//	Retourne un résumé de la période le plus court possible.
+			//	Par exemple:
+			//	2012					-> une année entière
+			//	03.2012					-> un mois entier
+			//	01 — 03.2012			-> quelques mois entiers
+			//	10.01.2012 — 25.04.2012	-> une période quelconque
 			get
 			{
 				FormattedText title;
@@ -26,6 +34,19 @@ namespace Epsitec.Cresus.Compta.Entities
 					this.DateFin.Month   == 12 )  // pile une année entière ?
 				{
 					title = this.DateDébut.Year.ToString ();
+				}
+				else if (this.DateDébut.Year  == this.DateFin.Year &&
+					     this.DateDébut.Month == this.DateFin.Month &&
+						 this.DateDébut.Day   == 1  &&
+						 Dates.IsLastDayOfMonth (this.DateFin))  // pile un mois entier ?
+				{
+					title = this.DateDébut.Month.ToString ("X2") + "." + this.DateDébut.Year.ToString ();
+				}
+				else if (this.DateDébut.Year  == this.DateFin.Year &&
+						 this.DateDébut.Day   == 1  &&
+						 Dates.IsLastDayOfMonth (this.DateFin))  // pile quelques mois entier ?
+				{
+					title = this.DateDébut.Month.ToString ("X2") + " — " + this.DateFin.Month.ToString ("X2") + "." + this.DateDébut.Year.ToString ();
 				}
 				else
 				{
