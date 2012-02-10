@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public DoubleDataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.soldesJournalManagerM1 = new SoldesJournalManager (this.comptaEntity);
+			this.soldesJournalManagerM2 = new SoldesJournalManager (this.comptaEntity);
 		}
 
 
@@ -44,6 +46,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
+
+			//	Pour ComparisonShowed.PériodePrécédente et ComparisonShowed.PériodePénultième, il faut
+			//	les vrais montants, et non les valeurs au budget.
+			var périodeM1 = this.comptaEntity.GetPériode (this.périodeEntity, -1);
+			if (périodeM1 == null)
+			{
+				this.soldesJournalManagerM1.Initialize (null);
+			}
+			else
+			{
+				this.soldesJournalManagerM1.Initialize (périodeM1.Journal);
+			}
+
+			var périodeM2 = this.comptaEntity.GetPériode (this.périodeEntity, -2);
+			if (périodeM2 == null)
+			{
+				this.soldesJournalManagerM2.Initialize (null);
+			}
+			else
+			{
+				this.soldesJournalManagerM2.Initialize (périodeM2.Journal);
+			}
 
 			//	Partie "gauche" (actif ou charge).
 			int lignesGauches = this.readonlyAllData.Count ();
@@ -122,16 +146,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (this.HasSolde (compte, fromProfondeur, toProfondeur))
 				{
 					data.Solde = solde;
+
+					data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
+					data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
+					data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
+					data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
+					data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
+					data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
+
 					total += solde;
 					this.SetMinMaxValue (solde);
 				}
-
-				data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
-				data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
-				data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
-				data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
-				data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
-				data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
 			}
 
 			return total;
@@ -227,6 +252,85 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		private decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
+		{
+			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
+			if (!this.options.ComparisonEnable)
+			{
+				return null;
+			}
+
+			decimal? budget;
+
+			switch (type)
+			{
+				case ComparisonShowed.PériodePrécédente:
+					budget = this.soldesJournalManagerM1.GetSolde (compte);
+					break;
+
+				case ComparisonShowed.PériodePénultième:
+					budget = this.soldesJournalManagerM2.GetSolde (compte);
+					break;
+
+				case ComparisonShowed.Budget:
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte);
+					break;
+
+				case ComparisonShowed.BudgetProrata:
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte) * this.ProrataFactor;
+					break;
+
+				case ComparisonShowed.BudgetFutur:
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte);
+					break;
+
+				case ComparisonShowed.BudgetFuturProrata:
+					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte) * this.ProrataFactor;
+					break;
+
+				default:
+					budget = null;
+					break;
+			}
+
+			this.SetMinMaxValue (budget);
+
+			return budget;
+		}
+
+		private decimal ProrataFactor
+		{
+			get
+			{
+				int day = 0;
+
+				if (this.lastEndDate.HasValue)
+				{
+					day = this.lastEndDate.Value.DayOfYear;
+
+					if (this.lastBeginDate.HasValue)
+					{
+						day -= this.lastBeginDate.Value.DayOfYear;
+					}
+				}
+				else
+				{
+					var écriture = this.périodeEntity.Journal.LastOrDefault ();
+					if (écriture == null)
+					{
+						day = Date.Today.DayOfYear;
+					}
+					else
+					{
+						day = écriture.Date.DayOfYear;
+					}
+				}
+
+				return (decimal) day / 365.0M;
+			}
+		}
+
+
 		private static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null)
@@ -282,5 +386,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 		#endregion
+
+
+		private readonly SoldesJournalManager	soldesJournalManagerM1;
+		private readonly SoldesJournalManager	soldesJournalManagerM2;
 	}
 }

@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
+			//	Défini les titres des 3 colonnes "budget".
 			this.SetColumnBudget (ColumnType.BudgetPrécédent, -1, false);
 			this.SetColumnBudget (ColumnType.Budget,           0, true);
 			this.SetColumnBudget (ColumnType.BudgetFutur,      1, false);
@@ -122,6 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SetColumnBudget(ColumnType columnType, int offset, bool isBold)
 		{
+			//	Défini le titre d'une colonne "budget".
 			var other = this.comptaEntity.GetPériode (this.périodeEntity, offset);
 
 			this.ShowHideColumn (columnType, other != null);

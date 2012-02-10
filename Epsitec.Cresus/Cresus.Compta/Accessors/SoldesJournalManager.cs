@@ -132,6 +132,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.soldesDébit.Clear ();
 			this.soldesCrédit.Clear ();
 
+			if (this.journal == null)
+			{
+				return;
+			}
+
 			//	Génère une fois pour toutes le journal à prendre en compte.
 			IEnumerable<ComptaEcritureEntity> journal;
 
