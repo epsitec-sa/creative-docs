@@ -347,9 +347,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.PushLayout (box, PushDirection.Automatic, this.gridStep);
 			this.RedimArea();
 
+			//	Il ne faut surtout pas faire un RedimArea entre ces deux opérations, car cela déplace
+			//	parfois les commentaires liés aux connexions !
 			this.CreateConnections();
-			this.RedimArea();
-
 			this.UpdateConnections();
 			this.RedimArea();
 
