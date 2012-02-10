@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			//	Crée un contrôleur permettant de saisir une date.
 			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
+
 			fieldController.CreateUI (parent);
 			fieldController.Box.PreferredWidth = 70;
 			fieldController.EditionData = new EditionData (controller, validateAction);

@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = false;
 			this.UpdateToolbar ();
-			this.UpdateInsertionRow ();
+			this.UpdateInsertionRow (forceUpdate: true);
 			this.updateArrayContentAction ();
 
 			using (this.controller.IgnoreChanges.Enter ())  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
@@ -585,9 +585,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected void UpdateInsertionRow()
+		protected void UpdateInsertionRow(bool forceUpdate = false)
 		{
-			if (this.selectedColumn == this.dataAccessor.ColumnForInsertionPoint)
+			if (forceUpdate || this.selectedColumn == this.dataAccessor.ColumnForInsertionPoint)
 			{
 				this.arrayController.InsertionPointRow = this.dataAccessor.InsertionPointRow;
 
