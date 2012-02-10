@@ -11,12 +11,8 @@ using Epsitec.Cresus.Core.Controllers.EditionControllers;
 
 namespace Epsitec.Aider.Controllers.EditionControllers
 {
-
-
 	public sealed class EditionAiderPersonViewController : EditionViewController<AiderPersonEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			if (this.Entity.IsGovernmentDefined ())
@@ -89,5 +85,4 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 				.End ();
 		}
 	}
-
 }

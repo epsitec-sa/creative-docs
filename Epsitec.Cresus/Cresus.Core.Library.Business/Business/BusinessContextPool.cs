@@ -5,6 +5,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Factories;
+using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -13,6 +14,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Business
 {
+	/// <summary>
+	/// The <c>BusinessContextPool</c> class manages the collection of <see cref="BusinessContext"/>
+	/// instances.
+	/// </summary>
 	public sealed class BusinessContextPool : CoreDataComponent
 	{
 		internal BusinessContextPool(CoreData data)
@@ -29,17 +34,28 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the <see cref="BusinessContext"/> to which the entity belongs, if there is
+		/// one.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>The business context or <c>null</c>.</returns>
 		public static BusinessContext GetCurrentContext(AbstractEntity entity)
 		{
 			var dataContext = DataContextPool.GetDataContext (entity);
 
 			System.Diagnostics.Debug.Assert (dataContext != null, "Entity does not belong to any data context");
 			
-			var data = Epsitec.Cresus.Core.Library.CoreApp.FindCurrentAppSessionComponent<CoreData> ();
-			var pool = data.GetComponent<BusinessContextPool> ();
+			//	The entity belongs to a data context. Now find the business context in the
+			//	current session, which uses the same data context :
+			
+			var data = CoreApp.FindCurrentAppSessionComponent<CoreData> ();
+			var that = data.GetComponent<BusinessContextPool> ();
 
-			return pool.pool.Where (x => x.DataContext == dataContext).FirstOrDefault ();
+			return that.pool.Where (x => x.DataContext == dataContext).FirstOrDefault ();
 		}
+
 
 		internal void DisposeBusinessContext(BusinessContext context)
 		{

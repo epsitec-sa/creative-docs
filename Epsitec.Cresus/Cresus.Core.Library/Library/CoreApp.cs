@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Library
 {
+	/// <summary>
+	/// The <c>CoreApp</c> class is the base for the application class (interactive application)
+	/// or for the session class (server-based application).
+	/// </summary>
 	public abstract class CoreApp : Epsitec.Common.Widgets.Application, ICoreComponentHost<CoreAppComponent>, ICoreComponentHost<ICoreManualComponent>
 	{
 		protected CoreApp()
@@ -95,6 +99,11 @@ namespace Epsitec.Cresus.Core.Library
 		}
 
 
+		/// <summary>
+		/// Gets the application or session instance, active in the current context.
+		/// </summary>
+		/// <typeparam name="T">The specific type of <see cref="CoreApp"/> class to retrieve.</typeparam>
+		/// <returns>The active application or session instance.</returns>
 		public static T GetCurrentAppSession<T>()
 			where T : CoreApp
 		{
@@ -105,6 +114,11 @@ namespace Epsitec.Cresus.Core.Library
 			return session;
 		}
 
+		/// <summary>
+		/// Finds the specified component in the current context (application or session).
+		/// </summary>
+		/// <typeparam name="T">The component type to retrieve.</typeparam>
+		/// <returns>The component or <c>null</c>.</returns>
 		public static T FindCurrentAppSessionComponent<T>()
 			where T : class, ICoreComponent
 		{
