@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.Settings, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Réglages, large: false));
 			}
 
 			{
@@ -221,6 +221,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return Res.Commands.Présentation.RésuméPériodique;
 				yield return Res.Commands.Présentation.RésuméTVA;
 				yield return Res.Commands.Présentation.DécompteTVA;
+				yield return Res.Commands.Présentation.Réglages;
 			}
 		}
 

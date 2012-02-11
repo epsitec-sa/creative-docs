@@ -218,6 +218,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command PlanComptable = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
 				//	designer:cap/OVKG1
 				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
+				//	designer:cap/OVK15
+				public static readonly global::Epsitec.Common.Widgets.Command Réglages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 161));
 				//	designer:cap/OVKK1
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
 				//	designer:cap/OVKL1
@@ -447,6 +449,8 @@ namespace Epsitec.Cresus.Compta
 				public const long PlanComptable = 0x3F80001400002CL;
 				//	designer:cap/OVKG1
 				public const long PP = 0x3F800014000030L;
+				//	designer:cap/OVK15
+				public const long Réglages = 0x3F8000140000A1L;
 				//	designer:cap/OVKK1
 				public const long RésuméPériodique = 0x3F800014000034L;
 				//	designer:cap/OVKL1

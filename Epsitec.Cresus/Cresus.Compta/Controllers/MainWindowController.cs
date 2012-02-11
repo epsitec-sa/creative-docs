@@ -259,6 +259,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new BudgetsController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.Réglages"))
+			{
+				controller = new RéglagesController (this.app, this.businessContext, this);
+			}
+
 			if (controller != null)
 			{
 				controller.SetVariousParameters (parentWindow, command);
@@ -314,24 +319,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePanelCommands()
 		{
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
 				cs.ActiveState = this.showSearchPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasShowSearchPanel;
 			}
 
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Filter);
 				cs.ActiveState = this.showFilterPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasShowFilterPanel;
 			}
 
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
 				cs.ActiveState = this.showOptionsPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasShowOptionsPanel;
 			}
-			
+
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Info);
 				cs.ActiveState = this.showInfoPanel ? ActiveState.Yes : ActiveState.No;
@@ -349,11 +358,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePériodeCommands()
 		{
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodePrécédente);
 				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, -1) != null);
 			}
 
+			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodeSuivante);
 				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, 1) != null);
@@ -511,6 +522,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]
 		private void ProcessShowPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ribbonController.PrésentationCommandsUpdate (e.Command);

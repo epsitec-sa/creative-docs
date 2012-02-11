@@ -37,7 +37,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.comptaEntity  = this.mainWindowController.Compta;
 			this.périodeEntity = this.mainWindowController.Période;
 
-			this.columnMappers = this.InitialColumnMappers.ToList ();
+			var mappers = this.InitialColumnMappers;
+			if (mappers != null)
+			{
+				this.columnMappers = mappers.ToList ();
+			}
+
 			this.ignoreChanges = new SafeCounter ();
 
 			this.app.CommandDispatcher.RegisterController (this);
@@ -194,6 +199,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public virtual bool HasArray
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public virtual bool HasShowSearchPanel
 		{
 			get
@@ -304,7 +317,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Search panel
 		private void CreateTopSearch(FrameBox parent)
 		{
-			if (this.dataAccessor.SearchData != null)
+			if (this.dataAccessor != null && this.dataAccessor.SearchData != null)
 			{
 				this.topSearchController = new TopSearchController (this);
 				this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
@@ -315,10 +328,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void SearchStartAction()
 		{
 			//	Appelé lorsque le critère de recherche a été modifié, et qu'il faut commencer une recherche.
-			this.dataAccessor.SearchUpdate ();
-			this.BaseUpdateArrayContent ();
-			this.SearchUpdateLocator (true);
-			this.SearchUpdateTopToolbar ();
+			if (this.dataAccessor != null)
+			{
+				this.dataAccessor.SearchUpdate ();
+				this.BaseUpdateArrayContent ();
+				this.SearchUpdateLocator (true);
+				this.SearchUpdateTopToolbar ();
+			}
 		}
 
 		private void SearchNextAction(int direction)
@@ -363,7 +379,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Filter panel
 		private void CreateTopFilter(FrameBox parent)
 		{
-			if (this.dataAccessor.FilterData != null)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
 			{
 				this.topFilterController = new TopFilterController (this);
 				this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
@@ -503,15 +519,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateArray(FrameBox parent)
 		{
 			//	Crée le tableau principal avec son en-tête.
-			this.arrayController = new ArrayController (this);
-			this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged);
+			if (this.HasArray)
+			{
+				this.arrayController = new ArrayController (this);
+				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged);
 
-			this.UpdateArray ();
+				this.UpdateArray ();
+			}
 		}
 
 		protected void UpdateArray()
 		{
-			this.arrayController.UpdateColumnsHeader (this.ArrayLineHeight);
+			if (this.arrayController != null)
+			{
+				this.arrayController.UpdateColumnsHeader (this.ArrayLineHeight);
+			}
 		}
 
 		protected virtual int ArrayLineHeight
@@ -611,7 +633,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void BaseUpdateArrayContent()
 		{
 			//	Met à jour le contenu du tableau.
-			this.arrayController.UpdateArrayContent (this.dataAccessor.Count, this.GetSearchArrayText, this.GetArrayBottomSeparator);
+			if (this.arrayController != null)
+			{
+				this.arrayController.UpdateArrayContent (this.dataAccessor.Count, this.GetSearchArrayText, this.GetArrayBottomSeparator);
+			}
 		}
 
 		private FormattedText GetSearchArrayText(int row, ColumnType columnType)

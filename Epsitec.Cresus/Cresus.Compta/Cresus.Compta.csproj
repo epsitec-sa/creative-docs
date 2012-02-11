@@ -99,6 +99,7 @@
     <Compile Include="Application.cs" />
     <Compile Include="Controllers\AbstractFieldController.cs" />
     <Compile Include="Controllers\AutoCompleteFieldController.cs" />
+    <Compile Include="Controllers\RéglagesController.cs" />
     <Compile Include="Controllers\ModèlesFooterController.cs" />
     <Compile Include="Controllers\ModèlesController.cs" />
     <Compile Include="Controllers\LibellésFooterController.cs" />
@@ -232,6 +233,7 @@
     <EmbeddedResource Include="Images\Edit.Undo.icon" />
     <EmbeddedResource Include="Images\Navigator.Next.icon" />
     <EmbeddedResource Include="Images\Navigator.Prev.icon" />
+    <EmbeddedResource Include="Images\Présentation.Réglages.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
