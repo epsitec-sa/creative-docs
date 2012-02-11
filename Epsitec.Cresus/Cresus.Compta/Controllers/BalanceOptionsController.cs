@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.buttonComptesNuls.ActiveStateChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.HideZero = !this.Options.HideZero;
 					this.OptionsChanged ();
@@ -74,9 +74,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.ignoreChange = true;
-			this.buttonComptesNuls.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.buttonComptesNuls.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
+			}
 
 			base.UpdateWidgets ();
 		}

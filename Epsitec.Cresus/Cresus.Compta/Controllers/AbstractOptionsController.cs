@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
@@ -29,6 +30,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.comptaEntity  = this.controller.ComptaEntity;
 			this.périodeEntity = this.controller.PériodeEntity;
 			this.options       = this.controller.DataAccessor.AccessorOptions;
+
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -173,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Gestion des événements.
 			this.buttonComparisonEnable.ActiveStateChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.options.ComparisonEnable = (this.buttonComparisonEnable.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
@@ -192,7 +195,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.fieldComparisonDisplayMode.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.options.ComparisonDisplayMode = this.GetComparisonDisplayMode (this.fieldComparisonDisplayMode);
 					this.OptionsChanged ();
@@ -204,25 +207,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void UpdateComparison()
 		{
-			this.ignoreChange = true;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.budgtetFrame.Visibility = this.levelController.Specialist;
 
-			this.budgtetFrame.Visibility = this.levelController.Specialist;
+				bool enable = this.options.ComparisonEnable;
 
-			bool enable = this.options.ComparisonEnable;
+				this.buttonComparisonEnable.ActiveState = this.options.ComparisonEnable ? ActiveState.Yes : ActiveState.No;
+				this.buttonComparisonEnable.Text = enable ? "Comparaison avec" : "Comparaison";
 
-			this.buttonComparisonEnable.ActiveState = this.options.ComparisonEnable ? ActiveState.Yes : ActiveState.No;
-			this.buttonComparisonEnable.Text = enable ? "Comparaison avec" : "Comparaison";
+				this.frameComparisonShowed.Visibility = enable;
+				this.fieldComparisonShowed.Visibility = enable;
+				this.buttonComparisonShowed.Visibility = enable;
+				this.fieldComparisonDisplayMode.Visibility = enable;
+				this.labelComparisonDisplayMode.Visibility = enable;
 
-			this.frameComparisonShowed.Visibility = enable;
-			this.fieldComparisonShowed.Visibility = enable;
-			this.buttonComparisonShowed.Visibility = enable;
-			this.fieldComparisonDisplayMode.Visibility = enable;
-			this.labelComparisonDisplayMode.Visibility = enable;
-
-			this.fieldComparisonShowed.Text = Converters.GetComparisonShowedListDescription (this.options.ComparisonShowed);
-			this.fieldComparisonDisplayMode.Text = Converters.GetComparisonDisplayModeDescription (this.options.ComparisonDisplayMode);
-
-			this.ignoreChange = false;
+				this.fieldComparisonShowed.Text = Converters.GetComparisonShowedListDescription (this.options.ComparisonShowed);
+				this.fieldComparisonDisplayMode.Text = Converters.GetComparisonDisplayModeDescription (this.options.ComparisonDisplayMode);
+			}
 		}
 
 		private void ShowComparisonShoedMenu(Widget parentButton, ComparisonShowed possibleMode)
@@ -296,6 +298,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly ComptaPériodeEntity					périodeEntity;
 		protected readonly AbstractOptions						options;
+		protected readonly SafeCounter							ignoreChanges;
 
 		protected System.Action									optionsChanged;
 
@@ -316,6 +319,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected LevelController								levelController;
 
 		protected bool											showPanel;
-		protected bool											ignoreChange;
 	}
 }

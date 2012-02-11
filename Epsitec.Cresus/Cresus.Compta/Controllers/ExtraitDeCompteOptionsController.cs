@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Connexion des événements.
 			this.fieldCompte.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.NuméroCompte = this.fieldCompte.FormattedText;
 					this.OptionsChanged ();
@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.graphicsButton.ActiveStateChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
@@ -149,9 +149,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateComptes ();
 			this.comboModeField.Text = this.ComboModeDescription;
 
-			this.ignoreChange = true;
-			this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+			}
 
 			base.UpdateWidgets ();
 		}
@@ -284,9 +285,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
 			UIBuilder.UpdateAutoCompleteTextField (this.fieldCompte, comptes);
 
-			this.ignoreChange = true;
-			this.fieldCompte.FormattedText = this.NuméroCompte;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.fieldCompte.FormattedText = this.NuméroCompte;
+			}
 		}
 
 		private bool CompteFilter(ComptaCompteEntity compte)

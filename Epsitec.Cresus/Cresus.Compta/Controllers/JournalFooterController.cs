@@ -54,12 +54,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			this.linesContainer = new FrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Bottom,
-				Margins = new Margins (0, 0, 0, 0),
-			};
+				var linesBox = new FrameBox
+				{
+					Parent              = parent,
+					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+					Dock                = DockStyle.Bottom,
+				};
+
+				this.linesContainer = new FrameBox
+				{
+					Parent  = linesBox,
+					Dock    = DockStyle.Fill,
+				};
+
+				this.scroller = new VScroller
+				{
+					Parent     = linesBox,
+					Dock       = DockStyle.Right,
+					Visibility = false,
+				};
+			}
 
 			//	Crée les lignes éditables.
 			this.CreateLineUI (this.linesContainer);
@@ -677,6 +692,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Separator							créditInfoSeparator;
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
+		private VScroller							scroller;
 
 		private bool								isMulti;
 	}

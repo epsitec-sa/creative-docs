@@ -33,8 +33,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.CreateUI (parent, optionsChanged);
 
 			this.CreateJournalUI (this.mainFrame);
-
-			this.UpdateWidgets ();
 		}
 
 		protected override void OptionsChanged()
@@ -63,16 +61,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateJournalUI(FrameBox parent)
 		{
-			this.frame = new FrameBox
+			var frame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
+				TabIndex        = ++this.tabIndex,
 			};
 
 			new StaticText
 			{
-				Parent          = this.frame,
+				Parent          = frame,
 				Text            = "Choix du journal à utiliser",
 				PreferredWidth  = 140,
 				PreferredHeight = 20,
@@ -81,25 +80,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.comboJournaux = new TextFieldCombo
 			{
-				Parent          = this.frame,
+				Parent          = frame,
 				PreferredWidth  = JournalOptionsController.JournauxWidth,
 				PreferredHeight = 20,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
+				TabIndex        = ++this.tabIndex,
 			};
 
 			this.summary = new StaticText
 			{
-				Parent  = this.frame,
+				Parent  = frame,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (20, 0, 0, 0),
 			};
 
-			this.UpdateCombo ();
+			this.UpdateWidgets ();
 
 			this.comboJournaux.SelectedItemChanged += delegate
 			{
-				if (!this.ignoreChange && this.comboJournaux.SelectedItemIndex != -1)
+				if (this.ignoreChanges.IsZero && this.comboJournaux.SelectedItemIndex != -1)
 				{
 					if (this.comboJournaux.SelectedItemIndex == this.comptaEntity.Journaux.Count)  // tous les journaux ?
 					{
@@ -127,16 +127,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.comboJournaux.Items.Add (JournalOptionsController.AllJournaux);
 
-			this.ignoreChange = true;
-			this.comboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.comboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
+			}
 		}
 
 		private void UpdateSummary()
 		{
-			var summary = this.périodeEntity.GetJournalSummary (this.Options.Journal);
-
-			this.summary.Text = summary;
+			this.summary.Text = this.périodeEntity.GetJournalSummary (this.Options.Journal);
 		}
 
 
@@ -152,7 +151,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private static readonly double JournauxWidth = 200;
 		public static readonly string AllJournaux = "Tous les journaux";
 
-		private FrameBox				frame;
 		private TextFieldCombo			comboJournaux;
 		private StaticText				summary;
 	}

@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.nullButton.ActiveStateChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.HideZero = (nullButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.graphicsButton.ActiveStateChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
@@ -95,10 +95,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.UpdateComparison ();
 
-			this.ignoreChange = true;
-			this.nullButton    .ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
-			this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.nullButton.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
+				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+			}
 
 			base.UpdateWidgets ();
 		}
