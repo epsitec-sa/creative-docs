@@ -606,6 +606,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		[Command (Res.CommandIds.Edit.Undo)]
+		private void CommandEditUndo()
+		{
+		}
+
+		[Command (Res.CommandIds.Edit.Redo)]
+		private void CommandEditRedo()
+		{
+		}
+
 		[Command (Res.CommandIds.Edit.Up)]
 		private void CommandEditUp()
 		{
@@ -722,6 +732,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandComptaPériodeSuivante()
 		{
 			this.ChangePériode (1);
+		}
+
+		[Command (Res.CommandIds.Navigator.Prev)]
+		private void CommandNavigatorPrev()
+		{
+		}
+
+		[Command (Res.CommandIds.Navigator.Next)]
+		private void CommandNavigatorNext()
+		{
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

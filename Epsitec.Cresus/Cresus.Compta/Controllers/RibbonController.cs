@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait));
-				section.Children.Add (this.CreateGap ());
+				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
 
-				section.Children.Add (this.CreateGap ());
+				//?section.Children.Add (this.CreateGap ());
 				this.présentationButton = this.CreateButton (Res.Commands.Présentation.New);
 				section.Children.Add (this.présentationButton);
 			}
@@ -123,6 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Global.Settings, large: false));
 			}
 
 			{
@@ -132,12 +133,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection1, out bottomSection1);
 
 				topSection1.Children.Add (this.CreateButton (Res.Commands.Select.Up, large: false));
+				topSection1.Children.Add (this.CreateButton (Res.Commands.Edit.Undo, large: false));
+				topSection1.Children.Add (this.CreateButton (Res.Commands.Edit.Redo, large: false));
 				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Down, large: false));
 				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Home, large: false));
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Accept));
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Cancel));
-				section.Children.Add (this.CreateGap ());
+				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection2, bottomSection2;
 				this.CreateSubsections (section, out topSection2, out bottomSection2);
@@ -155,12 +158,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
 			}
 
+			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Navigation");
+
+				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Prev));
+				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Next));
+			}
+
+#if false
 			//	<--|
 			{
 				var section = this.CreateSection (this.container, DockStyle.Right, "Général");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Global.Settings));
 			}
+#endif
 
 			this.UpdateRibbon ();
 

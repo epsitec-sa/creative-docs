@@ -44,6 +44,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 103));
 				//	designer:cap/OVKP1
 				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
+				//	designer:cap/OVKU4
+				public static readonly global::Epsitec.Common.Widgets.Command Redo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 158));
+				//	designer:cap/OVKT4
+				public static readonly global::Epsitec.Common.Widgets.Command Undo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 157));
 				//	designer:cap/OVK63
 				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 102));
 			}
@@ -122,6 +126,18 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Swap = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
 				//	designer:cap/OVKT1
 				public static readonly global::Epsitec.Common.Widgets.Command Up = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 61));
+			}
+			
+			public static class Navigator
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKV4
+				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 159));
+				//	designer:cap/OVK05
+				public static readonly global::Epsitec.Common.Widgets.Command Prev = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 160));
 			}
 			
 			public static class NouvellePrésentation
@@ -257,6 +273,10 @@ namespace Epsitec.Cresus.Compta
 				public const long Down = 0x3F800014000067L;
 				//	designer:cap/OVKP1
 				public const long Duplicate = 0x3F800014000039L;
+				//	designer:cap/OVKU4
+				public const long Redo = 0x3F80001400009EL;
+				//	designer:cap/OVKT4
+				public const long Undo = 0x3F80001400009DL;
 				//	designer:cap/OVK63
 				public const long Up = 0x3F800014000066L;
 			}
@@ -335,6 +355,18 @@ namespace Epsitec.Cresus.Compta
 				public const long Swap = 0x3F80001400003FL;
 				//	designer:cap/OVKT1
 				public const long Up = 0x3F80001400003DL;
+			}
+			
+			public static class Navigator
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKV4
+				public const long Next = 0x3F80001400009FL;
+				//	designer:cap/OVK05
+				public const long Prev = 0x3F8000140000A0L;
 			}
 			
 			public static class NouvellePrésentation
@@ -819,6 +851,7 @@ namespace Epsitec.Cresus.Compta
 			Commands.Global._Initialize ();
 			Commands.Modèle._Initialize ();
 			Commands.Multi._Initialize ();
+			Commands.Navigator._Initialize ();
 			Commands.NouvellePrésentation._Initialize ();
 			Commands.Panel._Initialize ();
 			Commands.Présentation._Initialize ();
@@ -830,6 +863,7 @@ namespace Epsitec.Cresus.Compta
 			CommandIds.Global._Initialize ();
 			CommandIds.Modèle._Initialize ();
 			CommandIds.Multi._Initialize ();
+			CommandIds.Navigator._Initialize ();
 			CommandIds.NouvellePrésentation._Initialize ();
 			CommandIds.Panel._Initialize ();
 			CommandIds.Présentation._Initialize ();

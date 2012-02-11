@@ -632,7 +632,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			do
 			{
 				//	Cherche la colonne suivante.
-				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé au bout ?
+				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé à une extrémité ?
 				{
 					//	Cherche la ligne suivante.
 					line += direction;
@@ -654,12 +654,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int first  = this.firstLine;
 			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
 
-			if (line < first)
+			if (line < first)  // première ligne invisible car trop haute ?
 			{
 				first = line;
 			}
 
-			if (line >= first + visibleLines)
+			if (line >= first + visibleLines)  // première ligne invisible car trop basse ?
 			{
 				first = line - visibleLines + 1;
 			}

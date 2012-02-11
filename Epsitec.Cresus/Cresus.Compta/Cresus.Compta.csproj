@@ -228,6 +228,10 @@
     <EmbeddedResource Include="Images\Présentation.Journaux.icon" />
     <EmbeddedResource Include="Images\Présentation.Libellés.icon" />
     <EmbeddedResource Include="Images\Présentation.Modèles.icon" />
+    <EmbeddedResource Include="Images\Edit.Redo.icon" />
+    <EmbeddedResource Include="Images\Edit.Undo.icon" />
+    <EmbeddedResource Include="Images\Navigator.Next.icon" />
+    <EmbeddedResource Include="Images\Navigator.Prev.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
