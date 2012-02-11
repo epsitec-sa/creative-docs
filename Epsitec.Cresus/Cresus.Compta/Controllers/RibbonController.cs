@@ -171,21 +171,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
 			}
 
+			//	<--|
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Navigation");
+				var section = this.CreateSection (this.container, DockStyle.Right, "Navigation");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Prev));
 				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Next));
 			}
-
-#if false
-			//	<--|
-			{
-				var section = this.CreateSection (this.container, DockStyle.Right, "Général");
-
-				section.Children.Add (this.CreateButton (Res.Commands.Global.Settings));
-			}
-#endif
 
 			this.UpdateRibbon ();
 

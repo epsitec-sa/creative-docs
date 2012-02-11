@@ -601,6 +601,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						this.selectedLine = line.Value;
 
+						this.UpdateToolbar ();
+
 						if (selectedLineChanged)
 						{
 							this.SelectedLineChanged ();
