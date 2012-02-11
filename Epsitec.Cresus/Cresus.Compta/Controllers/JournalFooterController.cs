@@ -63,18 +63,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock                = DockStyle.Bottom,
 				};
 
-				this.linesContainer = new FrameBox
+				this.linesContainer = new TabCatcherFrameBox
 				{
 					Parent  = linesBox,
 					Dock    = DockStyle.Fill,
 				};
+
+				this.linesContainer.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
 				this.scroller = new VScroller
 				{
 					Parent     = linesBox,
 					IsInverted = true,  // zéro en haut
 					Dock       = DockStyle.Right,
-					Visibility = false,
 				};
 
 				this.scroller.ValueChanged += delegate
@@ -667,6 +668,61 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private void HandleLinesContainerTabPressed(object sender, Message message)
+		{
+			//	Appelé lorsque la touche (Shift+)Tab est pressée.
+			int direction = message.IsShiftPressed ? -1 : 1;  // en arrière si Shift est pressé
+
+			var column = this.selectedColumn;  // colonne actuelle
+			var line   = this.selectedLine;    // ligne actuelle
+
+			do
+			{
+				//	Cherche la colonne suivante.
+				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé au bout ?
+				{
+					//	Cherche la ligne suivante.
+					line += direction;
+
+					if (line < 0)  // remonté avant le début ?
+					{
+						line = this.dataAccessor.CountEditedRow-1;  // va à la fin
+					}
+
+					if (line >= this.dataAccessor.CountEditedRow)  // descendu après la fin ?
+					{
+						line = 0;  // va au début
+					}
+				}
+			}
+			while (!this.GetWidgetVisibility (column, line) || this.GetTextFieldReadonly (column, line));
+
+			//	Effectue éventuellement un scroll vertical.
+			int first  = this.firstLine;
+			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
+
+			if (line < first)
+			{
+				first = line;
+			}
+
+			if (line >= first + visibleLines)
+			{
+				first = line - visibleLines + 1;
+			}
+
+			if (this.firstLine != first)
+			{
+				this.firstLine = first;
+
+				this.UpdateLinesVisibility ();
+				this.UpdateScroller ();
+			}
+
+			this.FooterSelect (column, line, selectedLineChanged: false);
+		}
+
+
 		#region Menu des écritures modèles
 		private void CreateButtonModèleUI(AbstractFieldController fieldController, int line)
 		{
@@ -762,7 +818,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		private FrameBox							linesContainer;
+		private TabCatcherFrameBox					linesContainer;
 		private FrameBox							infoFrameSeparator;
 		private FrameBox							infoFrameBox;
 		private Separator							débitInfoSeparator;

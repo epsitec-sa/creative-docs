@@ -161,6 +161,7 @@
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
+    <Compile Include="Widgets\TabCatcherFrameBox.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />
   </ItemGroup>

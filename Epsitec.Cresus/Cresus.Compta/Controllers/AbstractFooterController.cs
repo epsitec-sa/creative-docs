@@ -182,6 +182,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected bool GetWidgetVisibility(ColumnType columnType, int line)
+		{
+			var container = this.GetContainer (columnType, line);
+
+			if (container == null)
+			{
+				return false;
+			}
+			else
+			{
+				return container.Visibility;
+			}
+		}
+
 		protected void SetWidgetVisibility(ColumnType columnType, int line, bool visibility)
 		{
 			var container = this.GetContainer (columnType, line);
@@ -203,6 +217,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				return controller.Container;
+			}
+		}
+
+		protected bool GetTextFieldReadonly(ColumnType columnType, int line)
+		{
+			var controller = this.GetFieldController (columnType, line);
+
+			if (controller == null)
+			{
+				return false;
+			}
+			else
+			{
+				return controller.IsReadOnly;
 			}
 		}
 
@@ -231,6 +259,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		protected bool GetNextPrevColumn(ref ColumnType columnType, int direction)
+		{
+			//	Cherche la colonne suivante, en avant ou en arrière.
+			var mappers = this.columnMappers.Where (x => x.Show).ToList ();
+
+			var c = columnType;
+			int i = mappers.FindIndex (x => x.Column == c);
+			if (i != -1 && i+direction >= 0 && i+direction < mappers.Count)
+			{
+				columnType = mappers[i+direction].Column;
+				return true;
+			}
+
+			if (direction < 0)
+			{
+				columnType = mappers.Last ().Column;
+			}
+			else
+			{
+				columnType = mappers.First ().Column;
+			}
+			return false;
+		}
 
 		private int GetMapperColumnRank(ColumnType columnType)
 		{
@@ -543,13 +594,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected void FooterSelect(ColumnType columnType, int? line = null)
+		protected void FooterSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
 		{
 			var column = this.GetMapperColumnRank (columnType);
-			this.FooterSelect (column, line);
+			this.FooterSelect (column, line, selectedLineChanged);
 		}
 
-		public void FooterSelect(int column, int? line = null)
+		public void FooterSelect(int column, int? line = null, bool selectedLineChanged = true)
 		{
 			if (column != -1)
 			{
@@ -561,7 +612,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 					if (this.selectedLine != line.Value)
 					{
 						this.selectedLine = line.Value;
-						this.SelectedLineChanged ();
+
+						if (selectedLineChanged)
+						{
+							this.SelectedLineChanged ();
+						}
 					}
 				}
 
