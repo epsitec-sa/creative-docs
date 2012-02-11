@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.Titre,     new EditionData (this.controller));
+			this.datas.Add (ColumnType.Utilise,   new EditionData (this.controller));
 		}
 
 

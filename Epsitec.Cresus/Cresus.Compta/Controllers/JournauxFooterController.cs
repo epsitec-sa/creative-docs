@@ -45,13 +45,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new FrameBox
+			var footerFrame = new TabCatcherFrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 1, 0),
 			};
+
+			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
 			this.linesFrames.Add (footerFrame);
 			int line = this.linesFrames.Count - 1;

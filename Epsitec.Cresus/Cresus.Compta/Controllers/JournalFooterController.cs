@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalFooterController(AbstractController controller)
 			: base (controller)
 		{
-			this.maxLines = 5;  // une valeur impaire donne de meilleurs résultats
 		}
 
 
@@ -544,8 +543,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateFooterGeometry ();
 			}
 
-			this.UpdateLinesVisibility ();
-			this.UpdateScroller ();
+			this.UpdateAfterFirstLineChanged ();
 		}
 
 		protected override void SelectedLineChanged()
@@ -561,27 +559,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.firstLine != first)
 			{
 				this.firstLine = first;
-
-				this.UpdateLinesVisibility ();
-				this.UpdateScroller ();
+				this.UpdateAfterFirstLineChanged ();
 			}
 		}
 
 		private void ChangeScroller()
 		{
+			//	Appelé lorsque l'ascenseur a été bougé.
 			int value = (int) this.scroller.Value;
 
 			if (this.firstLine != value)
 			{
 				this.firstLine = value;
-
-				this.UpdateLinesVisibility ();
-				this.UpdateScroller ();
+				this.UpdateAfterFirstLineChanged ();
 			}
 		}
 
-		private void UpdateLinesVisibility()
+		protected override void UpdateAfterFirstLineChanged()
 		{
+			//	Met à jour les lignes visibles.
 			this.firstLine = System.Math.Min (this.firstLine, this.dataAccessor.CountEditedRow - this.maxLines);
 			this.firstLine = System.Math.Max (this.firstLine, 0);
 
@@ -589,10 +585,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.linesFrames[i].Visibility = (i >= this.firstLine && i < this.firstLine+this.maxLines);
 			}
-		}
 
-		private void UpdateScroller()
-		{
+			//	Met à jour l'ascenseur.
 			if (this.dataAccessor.CountEditedRow > this.maxLines)
 			{
 				this.scroller.Visibility = true;
@@ -665,61 +659,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				titre = compte.Titre;
 				solde = this.dataAccessor.SoldesJournalManager.GetSolde (compte);
 			}
-		}
-
-
-		private void HandleLinesContainerTabPressed(object sender, Message message)
-		{
-			//	Appelé lorsque la touche (Shift+)Tab est pressée.
-			int direction = message.IsShiftPressed ? -1 : 1;  // en arrière si Shift est pressé
-
-			var column = this.selectedColumn;  // colonne actuelle
-			var line   = this.selectedLine;    // ligne actuelle
-
-			do
-			{
-				//	Cherche la colonne suivante.
-				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé au bout ?
-				{
-					//	Cherche la ligne suivante.
-					line += direction;
-
-					if (line < 0)  // remonté avant le début ?
-					{
-						line = this.dataAccessor.CountEditedRow-1;  // va à la fin
-					}
-
-					if (line >= this.dataAccessor.CountEditedRow)  // descendu après la fin ?
-					{
-						line = 0;  // va au début
-					}
-				}
-			}
-			while (!this.GetWidgetVisibility (column, line) || this.GetTextFieldReadonly (column, line));
-
-			//	Effectue éventuellement un scroll vertical.
-			int first  = this.firstLine;
-			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
-
-			if (line < first)
-			{
-				first = line;
-			}
-
-			if (line >= first + visibleLines)
-			{
-				first = line - visibleLines + 1;
-			}
-
-			if (this.firstLine != first)
-			{
-				this.firstLine = first;
-
-				this.UpdateLinesVisibility ();
-				this.UpdateScroller ();
-			}
-
-			this.FooterSelect (column, line, selectedLineChanged: false);
 		}
 
 
@@ -828,7 +767,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private VScroller							scroller;
 
 		private bool								isMulti;
-		private int									maxLines;
-		protected int								firstLine;
 	}
 }

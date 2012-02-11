@@ -45,13 +45,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new FrameBox
+			var footerFrame = new TabCatcherFrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 1, 0),
 			};
+
+			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
 			this.linesFrames.Add (footerFrame);
 			int line = this.linesFrames.Count - 1;
@@ -92,6 +94,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
+				}
+				else if (mapper.Column == ColumnType.Monnaie)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, "CHF", "EUR", "USD");
 				}
 				else
 				{

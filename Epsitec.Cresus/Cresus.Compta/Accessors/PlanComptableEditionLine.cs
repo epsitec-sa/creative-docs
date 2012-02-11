@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
 			this.datas.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
 			this.datas.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
+			this.datas.Add (ColumnType.Monnaie      ,  new EditionData (this.controller));
 		}
 
 

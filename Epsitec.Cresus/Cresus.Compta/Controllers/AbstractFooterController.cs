@@ -39,6 +39,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.linesFrames      = new List<FrameBox> ();
 			this.fieldControllers = new List<List<AbstractFieldController>> ();
+
+			this.maxLines = 5;  // une valeur impaire donne de meilleurs résultats
 		}
 
 
@@ -257,30 +259,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return this.fieldControllers[line][column];
 			}
-		}
-
-		protected bool GetNextPrevColumn(ref ColumnType columnType, int direction)
-		{
-			//	Cherche la colonne suivante, en avant ou en arrière.
-			var mappers = this.columnMappers.Where (x => x.Show).ToList ();
-
-			var c = columnType;
-			int i = mappers.FindIndex (x => x.Column == c);
-			if (i != -1 && i+direction >= 0 && i+direction < mappers.Count)
-			{
-				columnType = mappers[i+direction].Column;
-				return true;
-			}
-
-			if (direction < 0)
-			{
-				columnType = mappers.Last ().Column;
-			}
-			else
-			{
-				columnType = mappers.First ().Column;
-			}
-			return false;
 		}
 
 		private int GetMapperColumnRank(ColumnType columnType)
@@ -643,6 +621,91 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected void HandleLinesContainerTabPressed(object sender, Message message)
+		{
+			//	Appelé lorsque la touche (Shift+)Tab est pressée.
+			int direction = message.IsShiftPressed ? -1 : 1;  // en arrière si Shift est pressé
+
+			var column = this.selectedColumn;  // colonne actuelle
+			var line   = this.selectedLine;    // ligne actuelle
+
+			do
+			{
+				//	Cherche la colonne suivante.
+				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé au bout ?
+				{
+					//	Cherche la ligne suivante.
+					line += direction;
+
+					if (line < 0)  // remonté avant le début ?
+					{
+						line = this.dataAccessor.CountEditedRow-1;  // va à la fin
+					}
+
+					if (line >= this.dataAccessor.CountEditedRow)  // descendu après la fin ?
+					{
+						line = 0;  // va au début
+					}
+				}
+			}
+			while (!this.GetWidgetVisibility (column, line) || this.GetTextFieldReadonly (column, line));
+
+			//	Effectue éventuellement un scroll vertical.
+			int first  = this.firstLine;
+			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
+
+			if (line < first)
+			{
+				first = line;
+			}
+
+			if (line >= first + visibleLines)
+			{
+				first = line - visibleLines + 1;
+			}
+
+			if (this.firstLine != first)
+			{
+				this.firstLine = first;
+
+				this.UpdateAfterFirstLineChanged ();
+			}
+
+			this.FooterSelect (column, line, selectedLineChanged: false);
+		}
+
+		private bool GetNextPrevColumn(ref ColumnType columnType, int direction)
+		{
+			//	Cherche la colonne suivante, en avant ou en arrière.
+			//	Retourne false si on est arrivé à une extrémité.
+			var mappers = this.columnMappers.Where (x => x.Show).ToList ();  // seulement les colonnes visibles
+
+			var c = columnType;
+			int i = mappers.FindIndex (x => x.Column == c);
+
+			if (i+direction >= 0 && i+direction < mappers.Count)
+			{
+				columnType = mappers[i+direction].Column;
+				return true;
+			}
+
+			if (direction < 0)  // recule ?
+			{
+				columnType = mappers.Last ().Column;  // retourne la colonne de droite
+			}
+			else  // avance ?
+			{
+				columnType = mappers.First ().Column;  // retourne la colonne de gauche
+			}
+			return false;
+		}
+
+
+		protected virtual void UpdateAfterFirstLineChanged()
+		{
+		}
+
+
 		public bool Dirty
 		{
 			get
@@ -720,6 +783,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected BottomToolbarController						bottomToolbarController;
 		protected ColumnType									selectedColumn;
 		protected int											selectedLine;
+		protected int											maxLines;
+		protected int											firstLine;
 		protected bool											dirty;
 		protected bool											hasError;
 	}
