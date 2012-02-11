@@ -306,8 +306,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = false;
 			this.UpdateToolbar ();
-			this.UpdateInsertionRow (forceUpdate: true);
 			this.updateArrayContentAction ();
+			this.UpdateInsertionRow (forceUpdate: true);
 
 			using (this.controller.IgnoreChanges.Enter ())  // il ne faut surtout pas exécuter AbstractController.ArraySelectedRowChanged !
 			{
