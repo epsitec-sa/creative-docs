@@ -584,16 +584,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected void FooterSelect(ColumnType columnType)
+		protected void FooterSelect(ColumnType columnType, int? line = null)
 		{
 			var column = this.GetMapperColumnRank (columnType);
-			this.FooterSelect (column);
+			this.FooterSelect (column, line);
 		}
 
-		public void FooterSelect(int column)
+		public void FooterSelect(int column, int? line = null)
 		{
 			if (column != -1)
 			{
+				if (line.HasValue)
+				{
+					line = System.Math.Max (line.Value, 0);
+					line = System.Math.Min (line.Value, this.fieldControllers.Count-1);
+
+					this.selectedLine = line.Value;
+				}
+
 				this.fieldControllers[this.selectedLine][column].SetFocus ();
 			}
 		}

@@ -562,7 +562,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.footerController != null)
 			{
 				this.footerController.UpdateFooterContent ();
-				this.footerController.FooterSelect (this.arrayController.SelectedColumn);
+				this.footerController.FooterSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
 				this.footerController.ShowSelection ();
 			}
 		}
