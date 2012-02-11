@@ -12,28 +12,40 @@ using Epsitec.Cresus.Compta.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Settings.Data
 {
 	/// <summary>
-	/// Données pour un réglage de type booléen.
+	/// Données pour un réglage de type texte formaté.
 	/// </summary>
-	public class BoolSettingsData : AbstractSettingsData
+	public class EnumSettingsData : AbstractSettingsData
 	{
-		public BoolSettingsData(string name, bool defaultValue)
+		public EnumSettingsData(string name, string defaultValue, params string[] enums)
 			: base (name)
 		{
 			this.Value = defaultValue;
+			this.enums = enums;
 		}
 
-		public BoolSettingsData(string name)
+		public EnumSettingsData(string name)
 			: base (name)
 		{
 		}
 
-		public bool Value
+		public string Value
 		{
 			get;
 			set;
 		}
+
+		public IEnumerable<string> Enum
+		{
+			get
+			{
+				return this.enums;
+			}
+		}
+
+
+		private readonly string[] enums;
 	}
 }

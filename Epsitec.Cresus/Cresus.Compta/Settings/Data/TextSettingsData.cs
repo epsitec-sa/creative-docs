@@ -12,25 +12,25 @@ using Epsitec.Cresus.Compta.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Settings.Data
 {
 	/// <summary>
-	/// Données pour un réglage de type entier.
+	/// Données pour un réglage de type texte formaté.
 	/// </summary>
-	public class IntSettingsData : AbstractSettingsData
+	public class TextSettingsData : AbstractSettingsData
 	{
-		public IntSettingsData(string name, int defaultValue)
+		public TextSettingsData(string name, FormattedText defaultValue)
 			: base (name)
 		{
 			this.Value = defaultValue;
 		}
 
-		public IntSettingsData(string name)
+		public TextSettingsData(string name)
 			: base (name)
 		{
 		}
 
-		public int Value
+		public FormattedText Value
 		{
 			get;
 			set;

@@ -12,7 +12,7 @@ using Epsitec.Cresus.Compta.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Settings.Data
 {
 	/// <summary>
 	/// Données génériques pour un réglage.

@@ -16,15 +16,16 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Settings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Controllers
+namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public class TextSettingsController : AbstractSettingsController
+	public class IntSettingsController : AbstractSettingsController
 	{
-		public TextSettingsController(AbstractSettingsData data)
+		public IntSettingsController(AbstractSettingsData data)
 			: base (data)
 		{
 		}
@@ -40,11 +41,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.CreateLabel (frame);
 
-			var field = new TextField
+			var field = new TextFieldUpDown
 			{
 				Parent          = frame,
-				FormattedText   = this.Data.Value,
-				PreferredWidth  = 200,
+				FormattedText   = Converters.IntToString (this.Data.Value),
+				PreferredWidth  = 60,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 0, 0, 2),
@@ -53,15 +54,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			field.TextChanged += delegate
 			{
-				this.Data.Value = field.FormattedText;
+				int? i = Converters.ParseInt (field.FormattedText);
+				if (i.HasValue)
+				{
+					this.Data.Value = i.Value;
+				}
 			};
 		}
 
-		private TextSettingsData Data
+		private IntSettingsData Data
 		{
 			get
 			{
-				return this.data as TextSettingsData;
+				return this.data as IntSettingsData;
 			}
 		}
 	}

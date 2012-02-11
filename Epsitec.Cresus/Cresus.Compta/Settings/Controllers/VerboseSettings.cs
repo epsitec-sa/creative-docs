@@ -16,7 +16,7 @@ using Epsitec.Cresus.Compta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Controllers
+namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public static class VerboseSettings
 	{
