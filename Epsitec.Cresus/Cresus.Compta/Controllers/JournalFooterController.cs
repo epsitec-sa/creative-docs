@@ -644,6 +644,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override FormattedText EditionDescription
+		{
+			get
+			{
+				int n = this.dataAccessor.CountEditedRow;
+
+				if (n <= 1)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return FormattedText.Concat (n.ToString (), " lignes");
+				}
+			}
+		}
+
+
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
 		{
 			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);

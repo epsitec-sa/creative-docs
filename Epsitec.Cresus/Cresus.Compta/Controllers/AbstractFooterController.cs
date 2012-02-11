@@ -176,11 +176,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.bottomToolbarController.SetOperationDescription (this.GetOperationDescription (modify: true), hilited: true);
 			}
+
+			this.bottomToolbarController.SetEditionDescription (this.EditionDescription);
 		}
 
 		protected virtual FormattedText GetOperationDescription(bool modify)
 		{
 			return FormattedText.Empty;
+		}
+
+		protected virtual FormattedText EditionDescription
+		{
+			get
+			{
+				return FormattedText.Empty;
+			}
 		}
 
 

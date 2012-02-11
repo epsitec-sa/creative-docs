@@ -53,7 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding         = new Margins (0, 20, 0, 0),
 			};
 
-			//	|-->
 			this.operationLabel = new StaticText
 			{
 				Parent           = this.toolbar,
@@ -61,6 +60,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth   = 300,
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
 				Dock             = DockStyle.Left,
+			};
+
+			this.editionLabel = new StaticText
+			{
+				Parent           = this.toolbar,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredHeight  = BottomToolbarController.toolbarHeight,
+				Dock             = DockStyle.Fill,
 			};
 		}
 
@@ -84,6 +91,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.operationLabel.FormattedText = text;
 		}
 
+		public void SetEditionDescription(FormattedText text)
+		{
+			this.editionLabel.FormattedText = text;
+		}
+
 
 		private static readonly double			toolbarHeight = 20;
 
@@ -91,6 +103,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private FrameBox						toolbar;
 		private StaticText						operationLabel;
+		private StaticText						editionLabel;
 		private bool							showPanel;
 	}
 }
