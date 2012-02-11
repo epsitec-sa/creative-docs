@@ -494,7 +494,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FooterValidate(int line)
 		{
-			//?int column = 0;
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				var controller = this.GetFieldController (mapper.Column, line);
@@ -508,46 +507,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.hasError = true;
 					}
 				}
-
-#if false
-				var field = this.footerFields[line][column];
-				var text = field.FormattedText;
-
-				if (line >= this.dataAccessor.EditionLine.Count)
-				{
-					ToolTip.Default.SetToolTip (this.footerBoxes[line][column], mapper.Tooltip);
-				}
-				else
-				{
-					this.dataAccessor.Validate (line, mapper.Column);
-
-					var error = this.dataAccessor.GetEditionError (line, mapper.Column);
-					bool ok = error.IsNullOrEmpty;
-
-					field.SetError (!ok);  // met un fond rouge en cas d'erreur
-
-					if (field.TextDisplayMode == TextFieldDisplayMode.ActiveHint)
-					{
-						if (mapper.Column == ColumnType.Date)
-						{
-							var hint = this.dataAccessor.EditionLine[line].GetText (mapper.Column);
-							field.HintText = AbstractFooterController.AdjustHintDate (field.FormattedText, hint);
-						}
-					}
-
-					if (ok)
-					{
-						ToolTip.Default.SetToolTip (this.footerBoxes[line][column], mapper.Tooltip);
-					}
-					else
-					{
-						ToolTip.Default.SetToolTip (this.footerBoxes[line][column], error);
-						this.hasError = true;
-					}
-				}
-
-				column++;
-#endif
 			}
 		}
 
@@ -599,11 +558,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 					line = System.Math.Max (line.Value, 0);
 					line = System.Math.Min (line.Value, this.fieldControllers.Count-1);
 
-					this.selectedLine = line.Value;
+					if (this.selectedLine != line.Value)
+					{
+						this.selectedLine = line.Value;
+						this.SelectedLineChanged ();
+					}
 				}
 
 				this.fieldControllers[this.selectedLine][column].SetFocus ();
 			}
+		}
+
+		protected virtual void SelectedLineChanged()
+		{
 		}
 
 

@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalFooterController(AbstractController controller)
 			: base (controller)
 		{
+			this.maxLines = 5;  // une valeur impaire donne de meilleurs résultats
 		}
 
 
@@ -71,8 +72,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.scroller = new VScroller
 				{
 					Parent     = linesBox,
+					IsInverted = true,  // zéro en haut
 					Dock       = DockStyle.Right,
 					Visibility = false,
+				};
+
+				this.scroller.ValueChanged += delegate
+				{
+					this.ChangeScroller ();
 				};
 			}
 
@@ -166,7 +173,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
 
-					this.CreateButtonMedèleUI (field, line);
+					this.CreateButtonModèleUI (field, line);
 				}
 				else if (mapper.Column == ColumnType.Journal)
 				{
@@ -200,10 +207,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.fieldControllers.Clear ();
 			this.linesFrames.Clear ();
 
-			//?this.selectedLine = 0;
-
 			this.CreateLineUI (this.linesContainer);
-			//?this.FooterSelect (0);
 		}
 
 		protected override FormattedText GetOperationDescription(bool modify)
@@ -300,17 +304,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
-			this.FooterSelect (multiActiveColumn);
+			this.SelectedLineChanged ();
+			this.FooterSelect (multiActiveColumn, this.selectedLine);
 		}
 
 		public override void MultiDeleteLineAction()
 		{
 			//	Supprime la ligne courante.
 			this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+			this.selectedLine = System.Math.Min (this.selectedLine, this.dataAccessor.CountEditedRow-1);
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
-			this.FooterSelect (this.selectedColumn);
+			this.SelectedLineChanged ();
+			this.FooterSelect (this.selectedColumn, this.selectedLine);
 		}
 
 		public override void MultiMoveLineAction(int direction)
@@ -321,7 +328,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = true;
 			this.UpdateFooterContent ();
-			this.FooterSelect (this.selectedColumn);
+			this.SelectedLineChanged ();
+			this.FooterSelect (this.selectedColumn, this.selectedLine);
 		}
 
 		public override void MultiLineSwapAction()
@@ -525,12 +533,81 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.linesFrames.Count != count ||
 				this.fieldControllers[0].Count != this.columnMappers.Where (x => x.Show).Count ())
 			{
-				this.ResetLineUI ();
+				this.ResetLineUI ();  // crée la première ligne
 
 				for (int i = 0; i < count-1; i++)
 				{
-					this.CreateLineUI (this.linesContainer);
+					this.CreateLineUI (this.linesContainer);  // crée les lignes suivantes
 				}
+
+				this.UpdateFooterGeometry ();
+			}
+
+			this.UpdateLinesVisibility ();
+			this.UpdateScroller ();
+		}
+
+		protected override void SelectedLineChanged()
+		{
+			//	Appelé lorsque la ligne sélectionnée a changé. On détermine ici la première ligne affichée,
+			//	afin de montrer la ligne sélectionnée au mieux.
+			int visibleLines = System.Math.Min (this.dataAccessor.CountEditedRow, this.maxLines);
+
+			int first = this.selectedLine;
+			first = System.Math.Min (first + visibleLines/2, this.dataAccessor.CountEditedRow-1);
+			first = System.Math.Max (first - (visibleLines-1), 0);
+
+			if (this.firstLine != first)
+			{
+				this.firstLine = first;
+
+				this.UpdateLinesVisibility ();
+				this.UpdateScroller ();
+			}
+		}
+
+		private void ChangeScroller()
+		{
+			int value = (int) this.scroller.Value;
+
+			if (this.firstLine != value)
+			{
+				this.firstLine = value;
+
+				this.UpdateLinesVisibility ();
+				this.UpdateScroller ();
+			}
+		}
+
+		private void UpdateLinesVisibility()
+		{
+			this.firstLine = System.Math.Min (this.firstLine, this.dataAccessor.CountEditedRow - this.maxLines);
+			this.firstLine = System.Math.Max (this.firstLine, 0);
+
+			for (int i = 0; i < this.linesFrames.Count; i++)
+			{
+				this.linesFrames[i].Visibility = (i >= this.firstLine && i < this.firstLine+this.maxLines);
+			}
+		}
+
+		private void UpdateScroller()
+		{
+			if (this.dataAccessor.CountEditedRow > this.maxLines)
+			{
+				this.scroller.Visibility = true;
+
+				decimal totalHeight = this.dataAccessor.CountEditedRow;
+				decimal areaHeight = this.maxLines;
+
+				this.scroller.MaxValue          = totalHeight-areaHeight;
+				this.scroller.VisibleRangeRatio = areaHeight/totalHeight;
+				this.scroller.Value             = this.firstLine;
+				this.scroller.SmallChange       = 1;
+				this.scroller.LargeChange       = areaHeight/2;
+			}
+			else
+			{
+				this.scroller.Visibility = false;
 			}
 		}
 
@@ -591,7 +668,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		#region Menu des écritures modèles
-		private void CreateButtonMedèleUI(AbstractFieldController fieldController, int line)
+		private void CreateButtonModèleUI(AbstractFieldController fieldController, int line)
 		{
 			if (this.comptaEntity.Modèles.Any ())
 			{
@@ -695,5 +772,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private VScroller							scroller;
 
 		private bool								isMulti;
+		private int									maxLines;
+		protected int								firstLine;
 	}
 }
