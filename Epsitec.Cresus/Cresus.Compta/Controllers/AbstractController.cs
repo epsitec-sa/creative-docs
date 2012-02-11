@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.comptaEntity  = this.mainWindowController.Compta;
 			this.périodeEntity = this.mainWindowController.Période;
+			this.settingsList  = this.mainWindowController.SettingsList;
 
 			var mappers = this.InitialColumnMappers;
 			if (mappers != null)
@@ -162,7 +163,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.footerController.FooterSelect (0);
 			}
 
+			this.CreateSpecificUI (this.frameBox);
+
 			return this.frameBox;
+		}
+
+		protected virtual void CreateSpecificUI(FrameBox parent)
+		{
 		}
 
 		public void Dispose()
@@ -771,6 +778,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly ComptaPériodeEntity					périodeEntity;
+		protected readonly SettingsList							settingsList;
 		protected readonly List<ColumnMapper>					columnMappers;
 		protected readonly SafeCounter							ignoreChanges;
 

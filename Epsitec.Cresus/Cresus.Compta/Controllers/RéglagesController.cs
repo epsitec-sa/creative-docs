@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public RéglagesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.groups = new List<string> ();
 		}
 
 
@@ -86,5 +87,134 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override void CreateSpecificUI(FrameBox parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent        = parent,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (10),
+			};
+
+			var leftFrame = new FrameBox
+			{
+				Parent         = frame,
+				PreferredWidth = 200,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, -1, 0, 0),
+			};
+
+			var rightFrame = new FrameBox
+			{
+				Parent         = frame,
+				Dock           = DockStyle.Fill,
+			};
+
+			//	Partie gauche.
+			new StaticText
+			{
+				Parent         = leftFrame,
+				Text           = "Catégories des réglages :",
+				Dock           = DockStyle.Top,
+				Margins        = new Margins (5, 0, 0, 5),
+			};
+
+			this.scrollList = new ScrollList
+			{
+				Parent         = leftFrame,
+				Dock           = DockStyle.Fill,
+			};
+
+			//	Partie droite.
+			new StaticText
+			{
+				Parent         = rightFrame,
+				Text           = "Détails des réglages :",
+				Dock           = DockStyle.Top,
+				Margins        = new Margins (10, 0, 0, 5),
+			};
+
+			this.mainFrame = new FrameBox
+			{
+				Parent        = rightFrame,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (10),
+			};
+
+			this.UpdateList ();
+
+			this.scrollList.SelectedItemChanged += delegate
+			{
+				this.UpdateMain (this.groups[this.scrollList.SelectedItemIndex]);
+			};
+		}
+
+		private void UpdateList()
+		{
+			this.groups.Clear ();
+			this.scrollList.Items.Clear ();
+
+			foreach (var settings in this.settingsList.List)
+			{
+				var group = settings.Group;
+
+				if (!this.groups.Contains (group))
+				{
+					this.groups.Add (group);
+					this.scrollList.Items.Add (" " + VerboseSettings.GetDescription (group));
+				}
+			}
+		}
+
+		private void UpdateMain(string group)
+		{
+			this.mainFrame.Children.Clear ();
+
+			foreach (var settings in this.settingsList.List)
+			{
+				if (settings.Group == group)
+				{
+					this.CreateController (settings);
+				}
+			}
+		}
+
+		private void CreateController(AbstractSettingsData data)
+		{
+			AbstractSettingsController controller = null;
+
+			if (data is BoolSettingsData)
+			{
+				controller = new BoolSettingsController (data);
+			}
+
+			if (data is IntSettingsData)
+			{
+				controller = new IntSettingsController (data);
+			}
+
+			if (data is TextSettingsData)
+			{
+				controller = new TextSettingsController (data);
+			}
+
+			if (data is EnumSettingsData)
+			{
+				controller = new EnumSettingsController (data);
+			}
+
+			if (controller != null)
+			{
+				controller.CreateUI (this.mainFrame);
+			}
+		}
+
+
+		private readonly List<string>		groups;
+
+		private ScrollList					scrollList;
+		private FrameBox					mainFrame;
 	}
 }

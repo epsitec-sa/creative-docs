@@ -47,6 +47,38 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		#region Int
+		public static int? ParseInt(FormattedText text)
+		{
+			return Converters.ParseInt (text.ToSimpleText ());
+		}
+
+		public static int? ParseInt(string text)
+		{
+			//	Parse un entier.
+			int i;
+			if (int.TryParse (text, out i))
+			{
+				return i;
+			}
+
+			return null;
+		}
+
+		public static string IntToString(int? value)
+		{
+			if (value.HasValue)
+			{
+				return value.Value.ToString ();
+			}
+			else
+			{
+				return null;
+			}
+		}
+		#endregion
+
+
 		#region Date
 		public static Date? ParseDate(FormattedText text)
 		{
