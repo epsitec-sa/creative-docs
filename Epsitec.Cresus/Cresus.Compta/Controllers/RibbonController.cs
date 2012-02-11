@@ -128,34 +128,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			{
 				Widget topSection1, bottomSection1;
-				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
+				var section = this.CreateSection (this.container, DockStyle.Left, "Repère");
 
 				this.CreateSubsections (section, out topSection1, out bottomSection1);
 
 				topSection1.Children.Add (this.CreateButton (Res.Commands.Select.Up, large: false));
-				topSection1.Children.Add (this.CreateButton (Res.Commands.Edit.Undo, large: false));
-				topSection1.Children.Add (this.CreateButton (Res.Commands.Edit.Redo, large: false));
 				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Down, large: false));
 				bottomSection1.Children.Add (this.CreateButton (Res.Commands.Select.Home, large: false));
+			}
+
+			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Accept));
 				section.Children.Add (this.CreateButton (Res.Commands.Edit.Cancel));
 				//?section.Children.Add (this.CreateGap ());
 
-				Widget topSection2, bottomSection2;
-				this.CreateSubsections (section, out topSection2, out bottomSection2);
+				Widget topSection, bottomSection;
+				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
-				topSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
-				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Insert, large: false));
-				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Up, large: false));
-				topSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Swap, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Duplicate, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Edit.Up, large: false));
 
-				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
-				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Edit.Delete, large: false));
-				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Delete, large: false));
-				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Down, large: false));
-				bottomSection2.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Undo, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Redo, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Edit.Down, large: false));
+			}
+
+			{
+				var section = this.CreateSection (this.container, DockStyle.Left, "Ecriture");
+
+				Widget topSection, bottomSection;
+				this.CreateSubsections (section, out topSection, out bottomSection);
+
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Insert, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Up, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Multi.Swap, large: false));
+
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Delete, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Down, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Multi.Auto, large: false));
 			}
 
 			{
