@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		public SettingsList()
 		{
 			this.settings = new Dictionary<string, AbstractSettingsData> ();
+			this.errors = new Dictionary<string, FormattedText> ();
+
 			this.Initialize ();
 		}
 
@@ -157,29 +159,29 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
-		public Dictionary<string, FormattedText> Validate()
+		public void Validate()
 		{
-			var dict = new Dictionary<string, FormattedText> ();
+			this.errors.Clear ();
 			this.errorCount = 0;
 
 			if (this.GetEnum ("Price.DecimalSeparator") == this.GetEnum ("Price.GroupSeparator"))
 			{
-				var error = "Mêmes séparateurs";
-				dict.Add ("Price.DecimalSeparator", error);
-				dict.Add ("Price.GroupSeparator", error);
-				this.errorCount++;
+				this.AddError ("Price.DecimalSeparator", "Price.GroupSeparator", "Mêmes séparateurs");
 			}
 
 			if (this.GetEnum ("Price.NegativeFormat") == "Negative" &&
 				this.GetEnum ("Price.NullParts")[0] == 't')
 			{
-				var error = "Choix incompatibles";
-				dict.Add ("Price.NegativeFormat", error);
-				dict.Add ("Price.NullParts", error);
-				this.errorCount++;
+				this.AddError ("Price.NegativeFormat", "Price.NullParts", "Choix incompatibles");
 			}
+		}
 
-			return dict;
+		private void AddError(string key1, string key2, FormattedText message)
+		{
+			this.errors.Add (key1, message);
+			this.errors.Add (key2, message);
+
+			this.errorCount++;
 		}
 
 		public bool HasError
@@ -198,8 +200,23 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			}
 		}
 
+		public FormattedText GetError(string key)
+		{
+			FormattedText error;
+
+			if (errors.TryGetValue (key, out error))
+			{
+				return error;
+			}
+			else
+			{
+				return FormattedText.Null;
+			}
+		}
+
 
 		private readonly Dictionary<string, AbstractSettingsData>	settings;
+		private readonly Dictionary<string, FormattedText>			errors;
 
 		private int errorCount;
 	}

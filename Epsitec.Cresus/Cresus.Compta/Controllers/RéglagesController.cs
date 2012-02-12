@@ -289,13 +289,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ActionChanged()
 		{
 			this.UpdateControllers ();
-			this.CloseSettings ();
 		}
 
 		private void UpdateControllers()
 		{
 			this.Validate ();
+			this.CloseSettings ();  // doit être fait avant la mise à jour des échantillons
 
+			//	Met à jour les échantillons.
 			foreach (var controller in this.controllers)
 			{
 				controller.Update ();
@@ -305,18 +306,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void Validate()
 		{
-			var errors = this.settingsList.Validate ();
+			this.settingsList.Validate ();
 
 			foreach (var controller in this.controllers)
 			{
-				FormattedText error;
-				if (errors.TryGetValue (controller.Name, out error))
+				FormattedText error = this.settingsList.GetError (controller.Name);
+
+				if (error.IsNullOrEmpty)
 				{
-					controller.Error = FormattedText.Concat ("&lt;  ", error.ApplyBold ());
+					controller.ClearError ();
 				}
 				else
 				{
-					controller.ClearError ();
+					controller.Error = FormattedText.Concat ("&lt;  ", error.ApplyBold ());
 				}
 			}
 
