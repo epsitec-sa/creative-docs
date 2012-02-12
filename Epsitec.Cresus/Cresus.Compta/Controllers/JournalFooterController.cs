@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
-				if (mapper.Column == ColumnType.Pièce && this.settingsList.GetBool ("Ecriture.ForcePièces"))
+				if (mapper.Column == ColumnType.Pièce && this.settingsList.GetBool (SettingsType.EcritureForcePièces))
 				{
 					field.IsReadOnly = true;
 				}
@@ -714,7 +714,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Retourne true si les écritures multiples peuvent avoir une pièce par ligne.
 			get
 			{
-				return this.settingsList.GetBool ("Ecriture.PlusieursPièces");
+				return this.settingsList.GetBool (SettingsType.EcriturePlusieursPièces);
 			}
 		}
 

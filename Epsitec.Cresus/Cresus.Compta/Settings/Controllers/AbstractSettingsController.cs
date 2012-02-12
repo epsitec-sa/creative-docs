@@ -38,11 +38,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 		}
 
-		public string Name
+		public SettingsType Type
 		{
 			get
 			{
-				return this.data.Name;
+				return this.data.Type;
 			}
 		}
 
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			new StaticText
 			{
 				Parent           = parent,
-				FormattedText    = VerboseSettings.GetDescription (this.data.Name),
+				FormattedText    = VerboseSettings.GetDescription (this.data.Type),
 				ContentAlignment = ContentAlignment.MiddleRight,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth   = AbstractSettingsController.labelWidth-10,

@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class IntSettingsData : AbstractSettingsData
 	{
-		public IntSettingsData(string name, int defaultValue)
-			: base (name)
+		public IntSettingsData(SettingsGroup group, SettingsType type, int defaultValue)
+			: base (group, type)
 		{
 			this.Value = defaultValue;
 		}
 
-		public IntSettingsData(string name)
-			: base (name)
+		public IntSettingsData(SettingsGroup group, SettingsType type)
+			: base (group, type)
 		{
 		}
 

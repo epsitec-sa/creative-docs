@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class BoolSettingsData : AbstractSettingsData
 	{
-		public BoolSettingsData(string name, bool defaultValue)
-			: base (name)
+		public BoolSettingsData(SettingsGroup group, SettingsType type, bool defaultValue)
+			: base (group, type)
 		{
 			this.Value = defaultValue;
 		}
 
-		public BoolSettingsData(string name)
-			: base (name)
+		public BoolSettingsData(SettingsGroup group, SettingsType type)
+			: base (group, type)
 		{
 		}
 

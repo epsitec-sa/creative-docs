@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	{
 		public SettingsList()
 		{
-			this.settings = new Dictionary<string, AbstractSettingsData> ();
-			this.errors = new Dictionary<string, FormattedText> ();
+			this.settings = new Dictionary<SettingsType, AbstractSettingsData> ();
+			this.errors = new Dictionary<SettingsType, FormattedText> ();
 
 			this.Initialize ();
 		}
@@ -30,32 +30,32 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		private void Initialize()
 		{
-			this.Add (new TextSettingsData ("Global.Titre",       20, "vide"));
-			this.Add (new TextSettingsData ("Global.Description", 100, ""));
+			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalTitre,       20, "vide"));
+			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalDescription, 100, ""));
 
-			this.Add (new BoolSettingsData ("Ecriture.Pièces",          true));
-			this.Add (new BoolSettingsData ("Ecriture.AutoPièces",      true));
-			this.Add (new TextSettingsData ("Ecriture.ProchainePièce",  10, "1"));
-			this.Add (new IntSettingsData  ("Ecriture.IncrémentPièce",  1));
-			this.Add (new BoolSettingsData ("Ecriture.PlusieursPièces", false));
-			this.Add (new BoolSettingsData ("Ecriture.ForcePièces",     false));
+			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
+			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
+			this.Add (new TextSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureProchainePièce,  10, "1"));
+			this.Add (new IntSettingsData  (SettingsGroup.Ecriture, SettingsType.EcritureIncrémentPièce,  1));
+			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
+			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
 
-			this.Add (new EnumSettingsData ("Price.DecimalDigits",    "2",         "0", "1", "2", "3", "4", "5"));
-			this.Add (new EnumSettingsData ("Price.DecimalSeparator", ".",         ".", ","));
-			this.Add (new EnumSettingsData ("Price.GroupSeparator",   "'",         "None", "'", "Space", ",", "."));
-			this.Add (new EnumSettingsData ("Price.NullParts",        "00",        "00", "0t", "t0", "tt"));
-			this.Add (new EnumSettingsData ("Price.NegativeFormat",   "Negative",  "Negative", "()"));
-			this.Add (new SampleSettingsData ("Price.Sample", this));
+			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits2,        SettingsEnum.DecimalDigits0, SettingsEnum.DecimalDigits1, SettingsEnum.DecimalDigits2, SettingsEnum.DecimalDigits3, SettingsEnum.DecimalDigits4, SettingsEnum.DecimalDigits5));
+			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceDecimalSeparator, SettingsEnum.SeparatorDot,          SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
+			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceGroupSeparator,   SettingsEnum.SeparatorApostrophe,   SettingsEnum.SeparatorNone, SettingsEnum.SeparatorApostrophe, SettingsEnum.SeparatorSpace, SettingsEnum.SeparatorComma, SettingsEnum.SeparatorDot));
+			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceNullParts,        SettingsEnum.NullPartsZeroZero,     SettingsEnum.NullPartsZeroZero, SettingsEnum.NullPartsZeroDash, SettingsEnum.NullPartsDashZero, SettingsEnum.NullPartsDashDash));
+			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,         SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
+			this.Add (new SampleSettingsData (SettingsGroup.Price, SettingsType.PriceSample, this));
 
-			this.Add (new EnumSettingsData ("Date.Separator", ".",    ".", "/", "-"));
-			this.Add (new EnumSettingsData ("Date.Year",      "4",    "4", "2"));
-			this.Add (new EnumSettingsData ("Date.Order",     "DMY",  "DMY", "YMD"));
-			this.Add (new SampleSettingsData ("Date.Sample", this));
+			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateSeparator, SettingsEnum.SeparatorDot,   SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
+			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateYear,      SettingsEnum.YearDigits4,    SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));
+			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateOrder,     SettingsEnum.YearDMY,        SettingsEnum.YearDMY, SettingsEnum.YearYMD));
+			this.Add (new SampleSettingsData (SettingsGroup.Date, SettingsType.DateSample, this));
 		}
 
 		private void Add(AbstractSettingsData data)
 		{
-			this.settings.Add (data.Name, data);
+			this.settings.Add (data.Type, data);
 		}
 
 
@@ -68,10 +68,10 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
-		public bool GetBool(string name)
+		public bool GetBool(SettingsType type)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				return (data as BoolSettingsData).Value;
 			}
@@ -81,20 +81,20 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			}
 		}
 
-		public void SetBool(string name, bool value)
+		public void SetBool(SettingsType type, bool value)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as BoolSettingsData).Value = value;
 			}
 		}
 
 
-		public int? GetInt(string name)
+		public int? GetInt(SettingsType type)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				return (data as IntSettingsData).Value;
 			}
@@ -104,20 +104,20 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			}
 		}
 
-		public void SetInt(string name, int value)
+		public void SetInt(SettingsType type, int value)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as IntSettingsData).Value = value;
 			}
 		}
 
 
-		public FormattedText GetText(string name)
+		public FormattedText GetText(SettingsType type)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				return (data as TextSettingsData).Value;
 			}
@@ -127,33 +127,33 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			}
 		}
 
-		public void SetText(string name, FormattedText value)
+		public void SetText(SettingsType type, FormattedText value)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as TextSettingsData).Value = value;
 			}
 		}
 
 
-		public string GetEnum(string name)
+		public SettingsEnum GetEnum(SettingsType type)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				return (data as EnumSettingsData).Value;
 			}
 			else
 			{
-				return null;
+				return SettingsEnum.Unknown;
 			}
 		}
 
-		public void SetEnum(string name, string value)
+		public void SetEnum(SettingsType type, SettingsEnum value)
 		{
 			AbstractSettingsData data;
-			if (this.settings.TryGetValue (name, out data))
+			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as EnumSettingsData).Value = value;
 			}
@@ -165,22 +165,23 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.errors.Clear ();
 			this.errorCount = 0;
 
-			if (this.GetEnum ("Price.DecimalSeparator") == this.GetEnum ("Price.GroupSeparator"))
+			if (this.GetEnum (SettingsType.PriceDecimalSeparator) == this.GetEnum (SettingsType.PriceGroupSeparator))
 			{
-				this.AddError ("Price.DecimalSeparator", "Price.GroupSeparator", "Mêmes séparateurs");
+				this.AddError (SettingsType.PriceDecimalSeparator, SettingsType.PriceGroupSeparator, "Mêmes séparateurs");
 			}
 
-			if (this.GetEnum ("Price.NegativeFormat") == "Negative" &&
-				this.GetEnum ("Price.NullParts")[0] == 't')
+			if (this.GetEnum (SettingsType.PriceNegativeFormat) == SettingsEnum.NegativeMinus &&
+				(this.GetEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashZero ||
+				 this.GetEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashDash))
 			{
-				this.AddError ("Price.NegativeFormat", "Price.NullParts", "Choix incompatibles");
+				this.AddError (SettingsType.PriceNegativeFormat, SettingsType.PriceNullParts, "Choix incompatibles");
 			}
 		}
 
-		private void AddError(string key1, string key2, FormattedText message)
+		private void AddError(SettingsType type1, SettingsType type2, FormattedText message)
 		{
-			this.errors.Add (key1, message);
-			this.errors.Add (key2, message);
+			this.errors.Add (type1, message);
+			this.errors.Add (type2, message);
 
 			this.errorCount++;
 		}
@@ -201,11 +202,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			}
 		}
 
-		public FormattedText GetError(string key)
+		public FormattedText GetError(SettingsType type)
 		{
 			FormattedText error;
 
-			if (errors.TryGetValue (key, out error))
+			if (errors.TryGetValue (type, out error))
 			{
 				return error;
 			}
@@ -216,8 +217,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
-		private readonly Dictionary<string, AbstractSettingsData>	settings;
-		private readonly Dictionary<string, FormattedText>			errors;
+		private readonly Dictionary<SettingsType, AbstractSettingsData>		settings;
+		private readonly Dictionary<SettingsType, FormattedText>			errors;
 
 		private int errorCount;
 	}

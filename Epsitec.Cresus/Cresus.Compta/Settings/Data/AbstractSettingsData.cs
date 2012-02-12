@@ -19,32 +19,22 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public abstract class AbstractSettingsData
 	{
-		public AbstractSettingsData(string name)
+		public AbstractSettingsData(SettingsGroup group, SettingsType type)
 		{
-			this.Name = name;
+			this.Group = group;
+			this.Type  = type;
 		}
 
-		public string Name
+		public SettingsGroup Group
 		{
 			get;
 			private set;
 		}
 
-		public string Group
+		public SettingsType Type
 		{
-			get
-			{
-				int i = this.Name.LastIndexOf ('.');
-
-				if (i == -1)
-				{
-					return this.Name;
-				}
-				else
-				{
-					return this.Name.Substring (0, i);
-				}
-			}
+			get;
+			private set;
 		}
 	}
 }

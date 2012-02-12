@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			this.button = new CheckButton
 			{
 				Parent          = frame,
-				FormattedText   = VerboseSettings.GetDescription (data.Name),
+				FormattedText   = VerboseSettings.GetDescription (data.Type),
 				PreferredWidth  = 480,
 				ActiveState     = this.Data.Value ? ActiveState.Yes : ActiveState.No,
 				Dock            = DockStyle.Left,

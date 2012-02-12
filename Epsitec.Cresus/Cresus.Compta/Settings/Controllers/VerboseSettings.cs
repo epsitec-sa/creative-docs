@@ -20,150 +20,176 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public static class VerboseSettings
 	{
-		public static FormattedText GetDescription(string name)
+		public static FormattedText GetDescription(SettingsGroup group)
 		{
-			switch (name)
-			{
-				case "Global":
+			switch (group)
+            {
+            	case SettingsGroup.Global:
 					return "Général";
 
-				case "Global.Titre":
+            	case SettingsGroup.Ecriture:
+					return "Journal des écritures";
+
+            	case SettingsGroup.Price:
+					return "Format des montants";
+
+            	case SettingsGroup.Date:
+					return "Format des dates";
+
+				default:
+					return TextFormatter.FormatText (group).ApplyFontColor (Color.FromName ("Red"));
+            }
+		}
+
+
+		public static FormattedText GetDescription(SettingsType type)
+		{
+			switch (type)
+			{
+				case SettingsType.GlobalTitre:
 					return "Titre de la comptabilité";
 
-				case "Global.Description":
+				case SettingsType.GlobalDescription:
 					return "Description de la comptabilité";
 
 
-				case "Ecriture":
-					return "Journal des écritures";
-
-				case "Ecriture.Pièces":
+				case SettingsType.EcriturePièces:
 					return "Ecritures avec numéros de pièce";
 
-				case "Ecriture.AutoPièces":
+				case SettingsType.EcritureAutoPièces:
 					return "Propose automatiquement un numéro de pièce";
 
-				case "Ecriture.ProchainePièce":
+				case SettingsType.EcritureProchainePièce:
 					return "Numéro de la prochaine pièce";
 
-				case "Ecriture.IncrémentPièce":
+				case SettingsType.EcritureIncrémentPièce:
 					return "Incrément automatique pour la pièce";
 
-				case "Ecriture.PlusieursPièces":
+				case SettingsType.EcriturePlusieursPièces:
 					return "Numéro de pièce individuel pour chaque ligne d'une écriture multiple";
 
-				case "Ecriture.ForcePièces":
+				case SettingsType.EcritureForcePièces:
 					return "Force un numéro de pièce non modifiable";
 
 
-				case "Price":
-					return "Format des montants";
-
-				case "Price.DecimalDigits":
+				case SettingsType.PriceDecimalDigits:
 					return "Nombre de décimales";
 
-				case "Price.DecimalSeparator":
+				case SettingsType.PriceDecimalSeparator:
 					return "Séparateur de la partie fractionnaire";
 
-				case "Price.GroupSeparator":
+				case SettingsType.PriceGroupSeparator:
 					return "Séparateur des milliers";
 
-				case "Price.NullParts":
+				case SettingsType.PriceNullParts:
 					return "Affichage des parties nulles";
 
-				case "Price.NegativeFormat":
+				case SettingsType.PriceNegativeFormat:
 					return "Nombres négatifs";
 
-				case "Price.Sample":
+				case SettingsType.PriceSample:
 					return "Exemples";
 
 
-				case "Date":
-					return "Format des dates";
-
-				case "Date.Separator":
+				case SettingsType.DateSeparator:
 					return "Séparateur";
 
-				case "Date.Year":
+				case SettingsType.DateYear:
 					return "Nombre de chiffres pour l'année";
 
-				case "Date.Order":
+				case SettingsType.DateOrder:
 					return "Ordre des 3 éléments constitutifs";
 
-				case "Date.Sample":
+				case SettingsType.DateSample:
 					return "Exemples";
-
-
-				case ".":
-					return "Point";
-
-				case ",":
-					return "Virgule";
-
-				case "'":
-					return "Apostrophe";
-
-				case "-":
-					return "Tiret";
-
-				case "/":
-					return "Barre oblique";
-
-				case "Space":
-					return "Espace";
-
-				case "None":
-					return "Aucun";
-
-
-				case "Negative":
-					return "-450";
-
-				case "()":
-					return "(450)";
-
-
-				case "00":
-					return "0.00";
-
-				case "0t":
-					return "0.—";
-
-				case "t0":
-					return "-.00";
-
-				case "tt":
-					return "-.—";
-
-				case "0":
-					return "0";
-
-
-				case "DMY":
-					return "jour mois année";
-
-				case "YMD":
-					return "année mois jour";
-
-
-				case "1":
-					return "1";
-
-				case "2":
-					return "2";
-
-				case "3":
-					return "3";
-
-				case "4":
-					return "4";
-
-				case "5":
-					return "5";
 
 
 				default:
-					return TextFormatter.FormatText (name).ApplyFontColor (Color.FromName ("Red"));
+					return TextFormatter.FormatText (type).ApplyFontColor (Color.FromName ("Red"));
+			}
+		}
+
+
+		public static FormattedText GetDescription(SettingsEnum type)
+		{
+			switch (type)
+			{
+				case SettingsEnum.DecimalDigits0:
+					return "0";
+
+				case SettingsEnum.DecimalDigits1:
+					return "1";
+
+				case SettingsEnum.DecimalDigits2:
+					return "2";
+
+				case SettingsEnum.DecimalDigits3:
+					return "3";
+
+				case SettingsEnum.DecimalDigits4:
+					return "4";
+
+				case SettingsEnum.DecimalDigits5:
+					return "5";
+
+
+				case SettingsEnum.YearDigits2:
+					return "2";
+
+				case SettingsEnum.YearDigits4:
+					return "4";
+
+
+				case SettingsEnum.YearDMY:
+					return "jour mois année";
+
+				case SettingsEnum.YearYMD:
+					return "année mois jour";
+
+
+				case SettingsEnum.SeparatorNone:
+					return "Aucun";
+
+				case SettingsEnum.SeparatorSpace:
+					return "Espace";
+
+				case SettingsEnum.SeparatorDot:
+					return "Point";
+
+				case SettingsEnum.SeparatorComma:
+					return "Virgule";
+
+				case SettingsEnum.SeparatorSlash:
+					return "Barre oblique";
+
+				case SettingsEnum.SeparatorDash:
+					return "Tiret";
+
+				case SettingsEnum.SeparatorApostrophe:
+					return "Apostrophe";
+
+
+				case SettingsEnum.NegativeMinus:
+					return "-450";
+
+				case SettingsEnum.NegativeParentheses:
+					return "(450)";
+
+
+				case SettingsEnum.NullPartsZeroZero:
+					return "0.00";
+
+				case SettingsEnum.NullPartsDashZero:
+					return "-.0";
+
+				case SettingsEnum.NullPartsZeroDash:
+					return "0.—";
+
+				case SettingsEnum.NullPartsDashDash:
+					return "-.—";
+
+				default:
+					return TextFormatter.FormatText (type).ApplyFontColor (Color.FromName ("Red"));
 			}
 		}
 	}

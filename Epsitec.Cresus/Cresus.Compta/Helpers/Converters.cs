@@ -8,6 +8,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Settings.Data;
+using Epsitec.Cresus.Compta.Settings.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -48,7 +49,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				string s = montant.Value.ToString ("C", Converters.numberFormatMontant);
 
-				if (Converters.numberFormatNullParts[0] == 't')  // commence par un tiret ?
+				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
+					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret ?
 				{
 					string pattern = "0" + Converters.numberFormatMontant.CurrencyDecimalSeparator;  // "0."
 					if (s.StartsWith (pattern))
@@ -57,7 +59,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 					}
 				}
 
-				if (Converters.numberFormatNullParts[1] == 't')  // termine par un tiret long ?
+				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsZeroDash ||
+					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // termine par un tiret long ?
 				{
 					string pattern = Converters.numberFormatMontant.CurrencyDecimalSeparator + new string ('0', Converters.numberFormatMontant.CurrencyDecimalDigits);  // ".00"
 					if (s.EndsWith (pattern))
@@ -562,85 +565,118 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		private static SettingsEnum CharToSettingsEnum(string c)
+		{
+			switch (c)
+			{
+				case "":
+					return SettingsEnum.SeparatorNone;
+
+				case " ":
+					return SettingsEnum.SeparatorSpace;
+
+				case ".":
+					return SettingsEnum.SeparatorDot;
+
+				case ",":
+					return SettingsEnum.SeparatorComma;
+
+				case "/":
+					return SettingsEnum.SeparatorSlash;
+
+				case "-":
+					return SettingsEnum.SeparatorDash;
+
+				case "'":
+					return SettingsEnum.SeparatorApostrophe;
+
+				default:
+					return SettingsEnum.Unknown;
+
+			}
+		}
+
+		private static string SettingsEnumToChar(SettingsEnum type)
+		{
+			switch (type)
+			{
+				case SettingsEnum.SeparatorNone:
+					return "";
+
+				case SettingsEnum.SeparatorSpace:
+					return " ";
+
+				case SettingsEnum.SeparatorDot:
+					return ".";
+
+				case SettingsEnum.SeparatorComma:
+					return ",";
+
+				case SettingsEnum.SeparatorSlash:
+					return "/";
+
+				case SettingsEnum.SeparatorDash:
+					return "-";
+
+				case SettingsEnum.SeparatorApostrophe:
+					return "'";
+
+				default:
+					return "?";
+			}
+		}
+
 		public static void ExportSettings(SettingsList settingsList)
 		{
 			//	Converters -> Settings
-			settingsList.SetEnum ("Price.DecimalDigits", Converters.IntToString (Converters.numberFormatMontant.CurrencyDecimalDigits));
-
-			settingsList.SetEnum ("Price.DecimalSeparator", Converters.numberFormatMontant.CurrencyDecimalSeparator);
-
-			switch (Converters.numberFormatMontant.CurrencyGroupSeparator)
-			{
-				case "":
-					settingsList.SetEnum ("Price.GroupSeparator", "None");
-					break;
-
-				case " ":
-					settingsList.SetEnum ("Price.GroupSeparator", "Space");
-					break;
-
-				default:
-					settingsList.SetEnum ("Price.GroupSeparator", Converters.numberFormatMontant.CurrencyGroupSeparator);
-					break;
-			}
-
-			settingsList.SetEnum ("Price.NullParts", Converters.numberFormatNullParts);
+			settingsList.SetEnum (SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits0 + Converters.numberFormatMontant.CurrencyDecimalDigits);
+			settingsList.SetEnum (SettingsType.PriceDecimalSeparator, Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyDecimalSeparator));
+			settingsList.SetEnum (SettingsType.PriceGroupSeparator,   Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyGroupSeparator));
+			settingsList.SetEnum (SettingsType.PriceNullParts,        Converters.numberFormatNullParts);
 
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 1)
 			{
-				settingsList.SetEnum ("Price.NegativeFormat", "Negative");
+				settingsList.SetEnum (SettingsType.PriceNegativeFormat, SettingsEnum.NegativeMinus);
 			}
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 0)
 			{
-				settingsList.SetEnum ("Price.NegativeFormat", "()");
+				settingsList.SetEnum (SettingsType.PriceNegativeFormat, SettingsEnum.NegativeParentheses);
 			}
 		}
 
 		public static void ImportSettings(SettingsList settingsList)
 		{
 			//	Settings -> Converters
-			string s;
+			SettingsEnum e;
 
-			s = settingsList.GetEnum ("Price.DecimalDigits");
-			if (s != null)
+			e = settingsList.GetEnum (SettingsType.PriceDecimalDigits);
+			if (e >= SettingsEnum.DecimalDigits0 && e <= SettingsEnum.DecimalDigits5)
 			{
-				Converters.numberFormatMontant.CurrencyDecimalDigits = Converters.ParseInt (s).GetValueOrDefault (2);
+				Converters.numberFormatMontant.CurrencyDecimalDigits = e - SettingsEnum.DecimalDigits0;
 			}
 
-			s = settingsList.GetEnum ("Price.DecimalSeparator");
-			if (s != null)
+			e = settingsList.GetEnum (SettingsType.PriceDecimalSeparator);
+			if (e != SettingsEnum.Unknown)
 			{
-				Converters.numberFormatMontant.CurrencyDecimalSeparator = s;
+				Converters.numberFormatMontant.CurrencyDecimalSeparator = Converters.SettingsEnumToChar (e);
 			}
 
-			s = settingsList.GetEnum ("Price.GroupSeparator");
-			if (s != null)
+			e = settingsList.GetEnum (SettingsType.PriceGroupSeparator);
+			if (e != SettingsEnum.Unknown)
 			{
-				if (s == "None")
-				{
-					s = "";
-				}
-				else if (s == "Space")
-				{
-					s = " ";
-				}
-
-				Converters.numberFormatMontant.CurrencyGroupSeparator = s;
+				Converters.numberFormatMontant.CurrencyGroupSeparator = Converters.SettingsEnumToChar (e);
 			}
 
-			Converters.numberFormatNullParts = settingsList.GetEnum ("Price.NullParts");
+			Converters.numberFormatNullParts = settingsList.GetEnum (SettingsType.PriceNullParts);
 
-			s = settingsList.GetEnum ("Price.NegativeFormat");
-			if (s != null)
+			e = settingsList.GetEnum (SettingsType.PriceNegativeFormat);
+			if (e == SettingsEnum.NegativeMinus)
 			{
-				if (s == "Negative")
-				{
-					Converters.numberFormatMontant.CurrencyNegativePattern = 1;  // -$
-				}
-				else
-				{
-					Converters.numberFormatMontant.CurrencyNegativePattern = 0;  // ($n)
-				}
+				Converters.numberFormatMontant.CurrencyNegativePattern = 1;  // -$
+			}
+			if (e == SettingsEnum.NegativeParentheses)
+			{
+				Converters.numberFormatMontant.CurrencyNegativePattern = 0;  // ($n)
 			}
 		}
 
@@ -659,6 +695,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
-		private static string numberFormatNullParts = "00";
+		private static SettingsEnum numberFormatNullParts = SettingsEnum.NullPartsZeroZero;
 	}
 }

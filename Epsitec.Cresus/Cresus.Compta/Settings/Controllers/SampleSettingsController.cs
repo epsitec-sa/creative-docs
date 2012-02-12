@@ -41,13 +41,13 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.CreateLabel (frame);
 
-			switch (this.data.Name)
+			switch (this.data.Type)
 			{
-				case "Price.Sample":
+				case SettingsType.PriceSample:
 					this.CreatePriceUI (frame);
 					break;
 
-				case "Date.Sample":
+				case SettingsType.DateSample:
 					this.CreateDateUI (frame);
 					break;
 			}
@@ -55,13 +55,13 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		public override void Update()
 		{
-			switch (this.data.Name)
+			switch (this.data.Type)
 			{
-				case "Price.Sample":
+				case SettingsType.PriceSample:
 					this.UpdatePrice ();
 					break;
 
-				case "Date.Sample":
+				case SettingsType.DateSample:
 					this.UpdateDate ();
 					break;
 			}

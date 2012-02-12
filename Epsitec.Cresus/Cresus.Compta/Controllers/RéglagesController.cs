@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public RéglagesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.groups = new List<string> ();
+			this.groups = new List<SettingsGroup> ();
 			this.controllers = new List<AbstractSettingsController> ();
 
 			this.OpenSettings ();
@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void OpenSettings()
 		{
-			this.settingsList.SetText ("Global.Titre",       this.comptaEntity.Nom);
-			this.settingsList.SetText ("Global.Description", this.comptaEntity.Description);
+			this.settingsList.SetText (SettingsType.GlobalTitre,       this.comptaEntity.Nom);
+			this.settingsList.SetText (SettingsType.GlobalDescription, this.comptaEntity.Description);
 
 			Converters.ExportSettings (this.settingsList);
 		}
@@ -112,8 +112,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (!this.settingsList.HasError)
 			{
-				this.comptaEntity.Nom         = this.settingsList.GetText ("Global.Titre");
-				this.comptaEntity.Description = this.settingsList.GetText ("Global.Description");
+				this.comptaEntity.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
+				this.comptaEntity.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
 
 				Converters.ImportSettings (this.settingsList);
 			}
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateMain(int sel)
 		{
-			string group = (sel >= 0 && sel < this.groups.Count) ? this.groups[sel] : null;
+			SettingsGroup group = (sel >= 0 && sel < this.groups.Count) ? this.groups[sel] : SettingsGroup.Unknown;
 
 			this.mainFrame.Children.Clear ();
 			this.controllers.Clear ();
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var controller in this.controllers)
 			{
-				controller.SetError (this.settingsList.GetError (controller.Name));
+				controller.SetError (this.settingsList.GetError (controller.Type));
 			}
 
 			int count = this.settingsList.ErrorCount;
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static int									selectedIndex = -1;
 
-		private readonly List<string>						groups;
+		private readonly List<SettingsGroup>				groups;
 		private readonly List<AbstractSettingsController>	controllers;
 
 		private ScrollList									scrollList;

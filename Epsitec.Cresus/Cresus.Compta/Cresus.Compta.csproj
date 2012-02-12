@@ -61,6 +61,8 @@
     <Compile Include="Settings\Controllers\SampleSettingsController.cs" />
     <Compile Include="Settings\Data\AbstractSettingsData.cs" />
     <Compile Include="Settings\Data\BoolSettingsData.cs" />
+    <Compile Include="Settings\Data\SettingsEnum.cs" />
+    <Compile Include="Settings\Data\SettingsGroup.cs" />
     <Compile Include="Settings\Data\SampleSettingsData.cs" />
     <Compile Include="Settings\Data\EnumSettingsData.cs" />
     <Compile Include="Settings\Data\TextSettingsData.cs" />
@@ -174,6 +176,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Compta\SourceCode\Res.cs" />
+    <Compile Include="Settings\Data\SettingsType.cs" />
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\TabCatcherFrameBox.cs" />
