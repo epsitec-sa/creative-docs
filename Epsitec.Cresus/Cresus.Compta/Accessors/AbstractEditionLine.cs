@@ -4,7 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Controllers;

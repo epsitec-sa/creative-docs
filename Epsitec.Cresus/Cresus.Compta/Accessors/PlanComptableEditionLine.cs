@@ -4,9 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
@@ -32,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
 			this.datas.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
 			this.datas.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
-			this.datas.Add (ColumnType.Monnaie      ,  new EditionData (this.controller));
+			this.datas.Add (ColumnType.Monnaie,        new EditionData (this.controller));
 		}
 
 

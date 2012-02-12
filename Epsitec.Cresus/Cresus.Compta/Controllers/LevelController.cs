@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner", "Simple");
+			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner",   "Simple");
 			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
 
 			this.buttonClear = new IconButton

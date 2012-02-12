@@ -5,10 +5,6 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Accessors;
 
