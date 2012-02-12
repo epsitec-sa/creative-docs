@@ -3,9 +3,6 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 

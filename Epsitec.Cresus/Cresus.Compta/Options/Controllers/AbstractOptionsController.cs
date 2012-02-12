@@ -6,9 +6,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
-using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Controllers;
-
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
