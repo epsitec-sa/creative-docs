@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			//	Retourne un résumé de la période le plus court possible.
 			//	Par exemple:
 			//	2012					-> une année entière
+			//	2012 — 2013				-> deux années entières
 			//	03.2012					-> un mois entier
 			//	01 — 03.2012			-> quelques mois entiers
 			//	10.01.2012 — 25.04.2012	-> une période quelconque
@@ -35,6 +36,13 @@ namespace Epsitec.Cresus.Compta.Entities
 				{
 					title = this.DateDébut.Year.ToString ();
 				}
+				else if (this.DateDébut.Day   == 1  &&
+						 this.DateDébut.Month == 1  &&
+						 this.DateFin.Day     == 31 &&
+						 this.DateFin.Month   == 12)  // pile plusieurs années entières ?
+				{
+					title = this.DateDébut.Year.ToString () + " — " + this.DateFin.Year.ToString ();
+				}
 				else if (this.DateDébut.Year  == this.DateFin.Year &&
 					     this.DateDébut.Month == this.DateFin.Month &&
 						 this.DateDébut.Day   == 1  &&
@@ -44,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 				else if (this.DateDébut.Year  == this.DateFin.Year &&
 						 this.DateDébut.Day   == 1  &&
-						 Dates.IsLastDayOfMonth (this.DateFin))  // pile quelques mois entier ?
+						 Dates.IsLastDayOfMonth (this.DateFin))  // pile quelques mois entiers ?
 				{
 					title = this.DateDébut.Month.ToString ("00") + " — " + this.DateFin.Month.ToString ("00") + "." + this.DateDébut.Year.ToString ();
 				}
