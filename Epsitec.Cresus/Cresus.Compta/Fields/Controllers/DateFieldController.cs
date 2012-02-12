@@ -10,6 +10,7 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -108,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 			this.WidgetToEditionData ();
 
-			this.InternalField.HintText = DateFieldController.AdjustHintDate (this.InternalField.FormattedText, this.editionData.Text);
+			this.InternalField.HintText = this.AdjustHintDate (this.InternalField.FormattedText, this.editionData.Text);
 
 			this.editWidget.SetError (this.editionData.HasError);
 
@@ -164,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		}
 
 
-		private static string AdjustHintDate(FormattedText entered, FormattedText hint)
+		private string AdjustHintDate(FormattedText entered, FormattedText hint)
 		{
 			//	Ajuste le texte 'hint' en fonction du texte entré, pour une date.
 			//
@@ -217,9 +218,9 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			}
 
 			//	Décompose le texte 'hint', en mots.
-			var wh = hint.ToSimpleText ().Split ('.');
+			string sep = Converters.SettingsEnumToChar (this.controller.SettingsList.GetEnum (SettingsType.DateSeparator));
+			var wh = hint.ToSimpleText ().Split (sep[0]);
 
-			//	
 			int count = System.Math.Min (we.Count, wh.Length);
 			for (int i = 0; i < count; i++)
 			{
@@ -236,13 +237,16 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				builder.Append (wh[i]);
 
-				if (i < se.Count)
+				if (i < wh.Length-1)
 				{
-					builder.Append (se[i]);
-				}
-				else
-				{
-					builder.Append (".");
+					if (i < se.Count)
+					{
+						builder.Append (se[i]);
+					}
+					else
+					{
+						builder.Append (sep);
+					}
 				}
 			}
 

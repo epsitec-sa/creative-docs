@@ -738,7 +738,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		private static string SettingsEnumToChar(SettingsEnum type)
+		public static string SettingsEnumToChar(SettingsEnum type)
 		{
 			switch (type)
 			{
