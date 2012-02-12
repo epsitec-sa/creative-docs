@@ -42,8 +42,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.settingsDatas = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
 
-			this.InitializeSettingsList ();
-
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
 			this.SelectCurrentPériode ();
@@ -144,23 +142,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void InitializeSettingsList()
-		{
-			this.settingsList.Add (new TextSettingsData ("Global.Titre", "vide"));
-
-			this.settingsList.Add (new BoolSettingsData ("Ecriture.AutoPièces",      true));
-			this.settingsList.Add (new TextSettingsData ("Ecriture.ProchainePièce",  "1"));
-			this.settingsList.Add (new IntSettingsData  ("Ecriture.IncrémentPièce",  1));
-			this.settingsList.Add (new BoolSettingsData ("Ecriture.PlusieursPièces", false));
-
-			this.settingsList.Add (new EnumSettingsData ("Nombres.Décimales", "2",   "0", "1", "2", "3", "4", "5"));
-			this.settingsList.Add (new EnumSettingsData ("Nombres.SepFrac",   ".",   ".", ","));
-			this.settingsList.Add (new EnumSettingsData ("Nombres.Milliers",  "'",   "Aucun", "'", " ", ",", "."));
-			this.settingsList.Add (new EnumSettingsData ("Nombres.Nul",       "00",  "00", "0t", "t0", "tt"));
-			this.settingsList.Add (new EnumSettingsData ("Nombres.Négatif",   "-",   "-", "()"));
-		}
-
-		
 		private void SelectDefaultPrésentation()
 		{
 			if (this.compta.PlanComptable.Any ())

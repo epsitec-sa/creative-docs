@@ -173,7 +173,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public void Dispose()
+		public virtual void Dispose()
 		{
 			if (this.footerController != null)
 			{

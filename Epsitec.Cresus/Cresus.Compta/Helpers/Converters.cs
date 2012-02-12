@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Settings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -533,6 +534,94 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		public static void ExportSettings(SettingsList settingsList)
+		{
+			//	Converters -> Settings
+			settingsList.SetEnum ("Nombres.Décimales", Converters.IntToString (Converters.numberFormatMontant.CurrencyDecimalDigits));
+
+			settingsList.SetEnum ("Nombres.SépFrac", Converters.numberFormatMontant.CurrencyDecimalSeparator);
+
+			switch (Converters.numberFormatMontant.CurrencyGroupSeparator)
+			{
+				case null:
+				case "":
+					settingsList.SetEnum ("Nombres.Milliers", "Aucun");
+					break;
+
+				case " ":
+					settingsList.SetEnum ("Nombres.Milliers", "Espace");
+					break;
+
+				default:
+					settingsList.SetEnum ("Nombres.Milliers", Converters.numberFormatMontant.CurrencyGroupSeparator);
+					break;
+			}
+
+			//settingsList.SetEnum ("Nombres.Nul", "...");  // TODO
+
+			if (Converters.numberFormatMontant.CurrencyNegativePattern == 1)
+			{
+				settingsList.SetEnum ("Nombres.Négatif", "Nég");
+			}
+			if (Converters.numberFormatMontant.CurrencyNegativePattern == 0)
+			{
+				settingsList.SetEnum ("Nombres.Négatif", "()");
+			}
+		}
+
+		public static void ImportSettings(SettingsList settingsList)
+		{
+			//	Settings -> Converters
+			string s;
+
+			s = settingsList.GetEnum ("Nombres.Décimales");
+			if (s != null)
+			{
+				Converters.numberFormatMontant.CurrencyDecimalDigits = Converters.ParseInt (s).GetValueOrDefault (2);
+			}
+
+			s = settingsList.GetEnum ("Nombres.SépFrac");
+			if (s != null)
+			{
+				Converters.numberFormatMontant.CurrencyDecimalSeparator = s;
+			}
+
+			s = settingsList.GetEnum ("Nombres.Milliers");
+			if (s != null)
+			{
+				if (s == "Aucun")
+				{
+					s = null;
+				}
+				else if (s == "Espace")
+				{
+					s = " ";
+				}
+
+				Converters.numberFormatMontant.CurrencyGroupSeparator = s;
+			}
+
+			s = settingsList.GetEnum ("Nombres.Nul");
+			if (s != null)
+			{
+				// TODO:
+			}
+
+			s = settingsList.GetEnum ("Nombres.Négatif");
+			if (s != null)
+			{
+				if (s == "Nég")
+				{
+					Converters.numberFormatMontant.CurrencyNegativePattern = 1;  // -$
+				}
+				else
+				{
+					Converters.numberFormatMontant.CurrencyNegativePattern = 0;  // ($n)
+				}
+			}
+		}
+
+	
 		static Converters()
 		{
 			Converters.numberFormatMontant = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
@@ -544,7 +633,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.numberFormatMontant.CurrencyGroupSizes       = new int[] { 3 };
 			Converters.numberFormatMontant.CurrencyPositivePattern  = 1;  // $n
 			Converters.numberFormatMontant.CurrencyNegativePattern  = 1;  // -$n
-			//Converters.numberFormatMontant.CurrencyNegativePattern  = 0;  // ($n)
 		}
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;

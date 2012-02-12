@@ -25,10 +25,13 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			switch (name)
 			{
 				case "Global":
-					return "Global";
+					return "Général";
 
 				case "Global.Titre":
 					return "Titre de la comptabilité";
+
+				case "Global.Description":
+					return "Description de la comptabilité";
 
 
 				case "Ecriture":
@@ -46,6 +49,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "Ecriture.PlusieursPièces":
 					return "Numéro de pièce individuel pour chaque ligne d'une écriture multiple";
 
+				case "Ecriture.ForcePièces":
+					return "Force un numéro de pièce non modifiable";
+
 
 				case "Nombres":
 					return "Format des nombres";
@@ -53,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "Nombres.Décimales":
 					return "Nombre de décimales";
 
-				case "Nombres.SepFrac":
+				case "Nombres.SépFrac":
 					return "Séparateur de la partie fractionnaire";
 
 				case "Nombres.Milliers":
@@ -65,6 +71,20 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "Nombres.Négatif":
 					return "Nombres négatifs";
 
+
+				case "Dates":
+					return "Format des dates";
+
+				case "Dates.Sép":
+					return "Séparateur";
+
+				case "Dates.Année":
+					return "Nombre de chiffres pour l'année";
+
+				case "Dates.Ordre":
+					return "Ordre des 3 éléments constitutifs";
+
+
 				case ".":
 					return "Point";
 
@@ -74,17 +94,25 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "'":
 					return "Apostrophe";
 
-				case " ":
+				case "-":
+					return "Tiret";
+
+				case "/":
+					return "Barre oblique";
+
+				case "Espace":
 					return "Espace";
 
 				case "Aucun":
 					return "Aucun";
 
-				case "-":
+
+				case "Nég":
 					return "-450";
 
 				case "()":
 					return "(450)";
+
 
 				case "00":
 					return "0.00";
@@ -100,6 +128,14 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 				case "0":
 					return "0";
+
+
+				case "jma":
+					return "jour mois année";
+
+				case "amj":
+					return "année mois jour";
+
 
 				case "1":
 					return "1";

@@ -14,6 +14,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Settings.Controllers;
 
@@ -31,6 +32,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.groups = new List<string> ();
+
+			this.OpenSettings ();
 		}
 
 
@@ -86,6 +89,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return false;
 			}
+		}
+
+
+		public override void Dispose()
+		{
+			this.CloseSettings ();
+			base.Dispose ();
+		}
+
+
+		private void OpenSettings()
+		{
+			this.settingsList.SetText ("Global.Titre",       this.comptaEntity.Nom);
+			this.settingsList.SetText ("Global.Description", this.comptaEntity.Description);
+
+			Converters.ExportSettings (this.settingsList);
+		}
+
+		private void CloseSettings()
+		{
+			this.comptaEntity.Nom         = this.settingsList.GetText ("Global.Titre");
+			this.comptaEntity.Description = this.settingsList.GetText ("Global.Description");
+
+			Converters.ImportSettings (this.settingsList);
 		}
 
 
@@ -149,7 +176,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.scrollList.SelectedItemChanged += delegate
 			{
-				this.UpdateMain (this.groups[this.scrollList.SelectedItemIndex]);
+				RéglagesController.selectedIndex = this.scrollList.SelectedItemIndex;
+				this.UpdateMain (this.scrollList.SelectedItemIndex);
 			};
 		}
 
@@ -168,10 +196,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.scrollList.Items.Add (" " + VerboseSettings.GetDescription (group));
 				}
 			}
+
+			this.scrollList.SelectedItemIndex = RéglagesController.selectedIndex;
+			this.UpdateMain (this.scrollList.SelectedItemIndex);
 		}
 
-		private void UpdateMain(string group)
+		private void UpdateMain(int sel)
 		{
+			string group = (sel >= 0 && sel < this.groups.Count) ? this.groups[sel] : null;
+
 			this.mainFrame.Children.Clear ();
 
 			foreach (var settings in this.settingsList.List)
@@ -213,6 +246,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		private static int					selectedIndex = -1;
 
 		private readonly List<string>		groups;
 

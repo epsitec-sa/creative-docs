@@ -22,13 +22,37 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		public SettingsList()
 		{
 			this.settings = new Dictionary<string, AbstractSettingsData> ();
+			this.Initialize ();
 		}
 
 
-		public void Add(AbstractSettingsData data)
+		private void Initialize()
+		{
+			this.Add (new TextSettingsData ("Global.Titre",       "vide"));
+			this.Add (new TextSettingsData ("Global.Description", ""));
+
+			this.Add (new BoolSettingsData ("Ecriture.AutoPièces",      true));
+			this.Add (new TextSettingsData ("Ecriture.ProchainePièce",  "1"));
+			this.Add (new IntSettingsData  ("Ecriture.IncrémentPièce",  1));
+			this.Add (new BoolSettingsData ("Ecriture.PlusieursPièces", false));
+			this.Add (new BoolSettingsData ("Ecriture.ForcePièces",     false));
+
+			this.Add (new EnumSettingsData ("Nombres.Décimales", "2",   "0", "1", "2", "3", "4", "5"));
+			this.Add (new EnumSettingsData ("Nombres.SépFrac",   ".",   ".", ","));
+			this.Add (new EnumSettingsData ("Nombres.Milliers",  "'",   "Aucun", "'", "Espace", ",", "."));
+			this.Add (new EnumSettingsData ("Nombres.Nul",       "00",  "00", "0t", "t0", "tt"));
+			this.Add (new EnumSettingsData ("Nombres.Négatif",   "-",   "Nég", "()"));
+
+			this.Add (new EnumSettingsData ("Dates.Sép",   ".",   ".", "/", "-"));
+			this.Add (new EnumSettingsData ("Dates.Année", "4",   "4", "2"));
+			this.Add (new EnumSettingsData ("Dates.Ordre", "jma", "jma", "amj"));
+		}
+
+		private void Add(AbstractSettingsData data)
 		{
 			this.settings.Add (data.Name, data);
 		}
+
 
 		public IEnumerable<AbstractSettingsData> List
 		{
@@ -104,6 +128,29 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			if (this.settings.TryGetValue (name, out data))
 			{
 				(data as TextSettingsData).Value = value;
+			}
+		}
+
+
+		public string GetEnum(string name)
+		{
+			AbstractSettingsData data;
+			if (this.settings.TryGetValue (name, out data))
+			{
+				return (data as EnumSettingsData).Value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void SetEnum(string name, string value)
+		{
+			AbstractSettingsData data;
+			if (this.settings.TryGetValue (name, out data))
+			{
+				(data as EnumSettingsData).Value = value;
 			}
 		}
 
