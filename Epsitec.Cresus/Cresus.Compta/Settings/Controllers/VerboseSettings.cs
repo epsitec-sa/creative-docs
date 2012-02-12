@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 
 				case "Price":
-					return "Format des nombres";
+					return "Format des montants";
 
 				case "Price.DecimalDigits":
 					return "Nombre de décimales";
@@ -71,6 +71,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "Price.NegativeFormat":
 					return "Nombres négatifs";
 
+				case "Price.Sample":
+					return "Exemples";
+
 
 				case "Date":
 					return "Format des dates";
@@ -83,6 +86,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 				case "Date.Order":
 					return "Ordre des 3 éléments constitutifs";
+
+				case "Date.Sample":
+					return "Exemples";
 
 
 				case ".":
@@ -130,10 +136,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "0";
 
 
-				case "dmy":
+				case "DMY":
 					return "jour mois année";
 
-				case "ymd":
+				case "YMD":
 					return "année mois jour";
 
 

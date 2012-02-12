@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public class TextSettingsController : AbstractSettingsController
 	{
-		public TextSettingsController(AbstractSettingsData data)
-			: base (data)
+		public TextSettingsController(AbstractSettingsData data, System.Action actionChanged)
+			: base (data, actionChanged)
 		{
 		}
 
@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			field.TextChanged += delegate
 			{
 				this.Data.Value = field.FormattedText;
+				this.actionChanged ();
 			};
 		}
 

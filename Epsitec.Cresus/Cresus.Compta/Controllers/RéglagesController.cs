@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.groups = new List<string> ();
+			this.controllers = new List<AbstractSettingsController> ();
 
 			this.OpenSettings ();
 		}
@@ -206,6 +207,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			string group = (sel >= 0 && sel < this.groups.Count) ? this.groups[sel] : null;
 
 			this.mainFrame.Children.Clear ();
+			this.controllers.Clear ();
 
 			foreach (var settings in this.settingsList.List)
 			{
@@ -214,6 +216,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.CreateController (settings);
 				}
 			}
+
+			this.UpdateControllers ();
 		}
 
 		private void CreateController(AbstractSettingsData data)
@@ -222,36 +226,58 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (data is BoolSettingsData)
 			{
-				controller = new BoolSettingsController (data);
+				controller = new BoolSettingsController (data, this.ActionChanged);
 			}
 
 			if (data is IntSettingsData)
 			{
-				controller = new IntSettingsController (data);
+				controller = new IntSettingsController (data, this.ActionChanged);
 			}
 
 			if (data is TextSettingsData)
 			{
-				controller = new TextSettingsController (data);
+				controller = new TextSettingsController (data, this.ActionChanged);
 			}
 
 			if (data is EnumSettingsData)
 			{
-				controller = new EnumSettingsController (data);
+				controller = new EnumSettingsController (data, this.ActionChanged);
+			}
+
+			if (data is SampleSettingsData)
+			{
+				controller = new SampleSettingsController (data, this.ActionChanged);
 			}
 
 			if (controller != null)
 			{
 				controller.CreateUI (this.mainFrame);
 			}
+
+			this.controllers.Add (controller);
+		}
+
+		private void ActionChanged()
+		{
+			this.CloseSettings ();
+			this.UpdateControllers ();
+		}
+
+		private void UpdateControllers()
+		{
+			foreach (var controller in this.controllers)
+			{
+				controller.Update ();
+			}
 		}
 
 
-		private static int					selectedIndex = -1;
+		private static int									selectedIndex = -1;
 
-		private readonly List<string>		groups;
+		private readonly List<string>						groups;
+		private readonly List<AbstractSettingsController>	controllers;
 
-		private ScrollList					scrollList;
-		private FrameBox					mainFrame;
+		private ScrollList									scrollList;
+		private FrameBox									mainFrame;
 	}
 }

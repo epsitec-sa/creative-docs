@@ -25,8 +25,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public class IntSettingsController : AbstractSettingsController
 	{
-		public IntSettingsController(AbstractSettingsData data)
-			: base (data)
+		public IntSettingsController(AbstractSettingsData data, System.Action actionChanged)
+			: base (data, actionChanged)
 		{
 		}
 
@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				if (i.HasValue)
 				{
 					this.Data.Value = i.Value;
+					this.actionChanged ();
 				}
 			};
 		}

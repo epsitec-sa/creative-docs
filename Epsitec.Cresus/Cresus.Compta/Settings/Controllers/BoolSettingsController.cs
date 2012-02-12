@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public class BoolSettingsController : AbstractSettingsController
 	{
-		public BoolSettingsController(AbstractSettingsData data)
-			: base (data)
+		public BoolSettingsController(AbstractSettingsData data, System.Action actionChanged)
+			: base (data, actionChanged)
 		{
 		}
 
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			button.ActiveStateChanged += delegate
 			{
 				this.Data.Value = (button.ActiveState == ActiveState.Yes);
+				this.actionChanged ();
 			};
 		}
 

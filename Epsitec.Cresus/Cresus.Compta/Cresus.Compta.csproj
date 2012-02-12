@@ -58,8 +58,10 @@
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
     <Compile Include="Accessors\BilanOptions.cs" />
+    <Compile Include="Settings\Controllers\SampleSettingsController.cs" />
     <Compile Include="Settings\Data\AbstractSettingsData.cs" />
     <Compile Include="Settings\Data\BoolSettingsData.cs" />
+    <Compile Include="Settings\Data\SampleSettingsData.cs" />
     <Compile Include="Settings\Data\EnumSettingsData.cs" />
     <Compile Include="Settings\Data\TextSettingsData.cs" />
     <Compile Include="Settings\Data\IntSettingsData.cs" />

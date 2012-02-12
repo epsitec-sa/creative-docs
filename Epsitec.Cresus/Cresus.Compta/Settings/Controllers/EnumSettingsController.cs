@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public class EnumSettingsController : AbstractSettingsController
 	{
-		public EnumSettingsController(AbstractSettingsData data)
-			: base (data)
+		public EnumSettingsController(AbstractSettingsData data, System.Action actionChanged)
+			: base (data, actionChanged)
 		{
 		}
 
@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			field.SelectedItemChanged += delegate
 			{
 				this.UpdateValue (field.SelectedItemIndex);
+				this.actionChanged ();
 			};
 		}
 

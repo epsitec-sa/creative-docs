@@ -571,13 +571,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			switch (Converters.numberFormatMontant.CurrencyGroupSeparator)
 			{
-				case null:
 				case "":
-					settingsList.SetEnum ("Price.GroupSeparator", "Aucun");
+					settingsList.SetEnum ("Price.GroupSeparator", "None");
 					break;
 
 				case " ":
-					settingsList.SetEnum ("Price.GroupSeparator", "Espace");
+					settingsList.SetEnum ("Price.GroupSeparator", "Space");
 					break;
 
 				default:
@@ -589,7 +588,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 1)
 			{
-				settingsList.SetEnum ("Price.NegativeFormat", "Nég");
+				settingsList.SetEnum ("Price.NegativeFormat", "Negative");
 			}
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 0)
 			{
@@ -617,11 +616,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			s = settingsList.GetEnum ("Price.GroupSeparator");
 			if (s != null)
 			{
-				if (s == "Aucun")
+				if (s == "None")
 				{
-					s = null;
+					s = "";
 				}
-				else if (s == "Espace")
+				else if (s == "Space")
 				{
 					s = " ";
 				}
@@ -634,7 +633,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			s = settingsList.GetEnum ("Price.NegativeFormat");
 			if (s != null)
 			{
-				if (s == "Nég")
+				if (s == "Negative")
 				{
 					Converters.numberFormatMontant.CurrencyNegativePattern = 1;  // -$
 				}

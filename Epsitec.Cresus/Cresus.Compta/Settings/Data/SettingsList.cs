@@ -42,10 +42,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new EnumSettingsData ("Price.GroupSeparator",   "'",         "None", "'", "Space", ",", "."));
 			this.Add (new EnumSettingsData ("Price.NullParts",        "00",        "00", "0t", "t0", "tt"));
 			this.Add (new EnumSettingsData ("Price.NegativeFormat",   "Negative",  "Negative", "()"));
+			this.Add (new SampleSettingsData ("Price.Sample", this));
 
 			this.Add (new EnumSettingsData ("Date.Separator", ".",    ".", "/", "-"));
-			this.Add (new EnumSettingsData ("Date.Year",     "4",     "4", "2"));
-			this.Add (new EnumSettingsData ("Date.Order",    "dmy",   "dmy", "ymd"));
+			this.Add (new EnumSettingsData ("Date.Year",      "4",    "4", "2"));
+			this.Add (new EnumSettingsData ("Date.Order",     "DMY",  "DMY", "YMD"));
+			this.Add (new SampleSettingsData ("Date.Sample", this));
 		}
 
 		private void Add(AbstractSettingsData data)

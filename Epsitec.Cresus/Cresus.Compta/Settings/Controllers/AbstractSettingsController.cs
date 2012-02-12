@@ -24,14 +24,20 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public abstract class AbstractSettingsController
 	{
-		public AbstractSettingsController(AbstractSettingsData data)
+		public AbstractSettingsController(AbstractSettingsData data, System.Action actionChanged)
 		{
 			this.data = data;
+			this.actionChanged = actionChanged;
 		}
 
 		public virtual void CreateUI(Widget parent)
 		{
 		}
+
+		public virtual void Update()
+		{
+		}
+
 
 		protected void CreateLabel(Widget parent)
 		{
@@ -50,6 +56,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		protected readonly static int labelWidth = 210;
 
 		protected readonly AbstractSettingsData	data;
+		protected readonly System.Action actionChanged;
 
 		protected int tabIndex;
 	}
