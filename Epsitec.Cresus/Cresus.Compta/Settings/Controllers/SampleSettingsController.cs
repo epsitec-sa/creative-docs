@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		#region Price
 		private void CreatePriceUI(Widget parent)
 		{
-			var frame = new FrameBox
+			this.frame = new FrameBox
 			{
 				Parent         = parent,
 				PreferredWidth = 100,
@@ -82,21 +82,21 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.sample1 = new StaticText
 			{
-				Parent           = frame,
+				Parent           = this.frame,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Top,
 			};
 
 			this.sample2 = new StaticText
 			{
-				Parent           = frame,
+				Parent           = this.frame,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Top,
 			};
 
 			this.sample3 = new StaticText
 			{
-				Parent           = frame,
+				Parent           = this.frame,
 				ContentAlignment = ContentAlignment.MiddleRight,
 				Dock             = DockStyle.Top,
 			};
@@ -104,9 +104,22 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		private void UpdatePrice()
 		{
-			this.sample1.Text = Converters.MontantToString (-12500.75m);
-			this.sample2.Text = Converters.MontantToString (12500.0m);
-			this.sample3.Text = Converters.MontantToString (0.61m);
+			if (this.Data.SettingsList.HasError)
+			{
+				this.frame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+
+				this.sample1.Text = null;
+				this.sample2.Text = null;
+				this.sample3.Text = null;
+			}
+			else
+			{
+				this.frame.BackColor = Color.Empty;
+
+				this.sample1.Text = Converters.MontantToString (-12500.75m);
+				this.sample2.Text = Converters.MontantToString (12500.0m);
+				this.sample3.Text = Converters.MontantToString (0.61m);
+			}
 		}
 		#endregion
 
@@ -131,8 +144,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		}
 
 
-		private StaticText sample1;
-		private StaticText sample2;
-		private StaticText sample3;
+		private FrameBox		frame;
+		private StaticText		sample1;
+		private StaticText		sample2;
+		private StaticText		sample3;
 	}
 }

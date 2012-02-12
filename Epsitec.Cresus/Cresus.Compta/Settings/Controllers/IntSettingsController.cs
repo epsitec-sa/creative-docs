@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.CreateLabel (frame);
 
-			var field = new TextFieldUpDown
+			this.field = new TextFieldUpDown
 			{
 				Parent          = frame,
 				FormattedText   = Converters.IntToString (this.Data.Value),
@@ -52,9 +52,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			field.TextChanged += delegate
+			this.CreateError (frame);
+
+			this.field.TextChanged += delegate
 			{
-				int? i = Converters.ParseInt (field.FormattedText);
+				int? i = Converters.ParseInt (this.field.FormattedText);
 				if (i.HasValue)
 				{
 					this.Data.Value = i.Value;
@@ -63,6 +65,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			};
 		}
 
+
 		private IntSettingsData Data
 		{
 			get
@@ -70,5 +73,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				return this.data as IntSettingsData;
 			}
 		}
+
+
+		private TextFieldUpDown field;
 	}
 }

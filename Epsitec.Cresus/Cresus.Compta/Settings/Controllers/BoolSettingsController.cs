@@ -31,24 +31,34 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		public override void CreateUI(Widget parent)
 		{
-			var button = new CheckButton
+			var frame = new FrameBox
 			{
 				Parent          = parent,
-				FormattedText   = VerboseSettings.GetDescription (data.Name),
 				PreferredHeight = 20,
-				ActiveState     = this.Data.Value ? ActiveState.Yes : ActiveState.No,
 				Dock            = DockStyle.Top,
-//?				Margins         = new Margins (AbstractSettingsController.labelWidth, 0, 0, 2),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			this.button = new CheckButton
+			{
+				Parent          = frame,
+				FormattedText   = VerboseSettings.GetDescription (data.Name),
+				PreferredWidth  = 300,
+				ActiveState     = this.Data.Value ? ActiveState.Yes : ActiveState.No,
+				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 0, 0, 2),
 				TabIndex        = ++this.tabIndex,
 			};
 
-			button.ActiveStateChanged += delegate
+			this.CreateError (frame);
+
+			this.button.ActiveStateChanged += delegate
 			{
-				this.Data.Value = (button.ActiveState == ActiveState.Yes);
+				this.Data.Value = (this.button.ActiveState == ActiveState.Yes);
 				this.actionChanged ();
 			};
 		}
+
 
 		private BoolSettingsData Data
 		{
@@ -57,5 +67,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				return this.data as BoolSettingsData;
 			}
 		}
+
+
+		private CheckButton button;
 	}
 }

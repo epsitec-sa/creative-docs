@@ -110,10 +110,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CloseSettings()
 		{
-			this.comptaEntity.Nom         = this.settingsList.GetText ("Global.Titre");
-			this.comptaEntity.Description = this.settingsList.GetText ("Global.Description");
+			if (!this.settingsList.HasError)
+			{
+				this.comptaEntity.Nom         = this.settingsList.GetText ("Global.Titre");
+				this.comptaEntity.Description = this.settingsList.GetText ("Global.Description");
 
-			Converters.ImportSettings (this.settingsList);
+				Converters.ImportSettings (this.settingsList);
+			}
 		}
 
 
@@ -127,9 +130,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding       = new Margins (10),
 			};
 
-			var leftFrame = new FrameBox
+
+			var topFrame = new FrameBox
 			{
 				Parent         = frame,
+				Dock           = DockStyle.Fill,
+			};
+
+			this.infoFrame = new FrameBox
+			{
+				Parent          = frame,
+				DrawFullFrame   = true,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Bottom,
+				Margins         = new Margins (0, 0, -1, 0),
+			};
+
+			this.infoField = new StaticText
+			{
+				Parent         = this.infoFrame,
+				Dock           = DockStyle.Fill,
+				Margins        = new Margins (10, 10, 0, 0),
+			};
+
+
+			var leftFrame = new FrameBox
+			{
+				Parent         = topFrame,
 				PreferredWidth = 200,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, -1, 0, 0),
@@ -137,7 +164,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var rightFrame = new FrameBox
 			{
-				Parent         = frame,
+				Parent         = topFrame,
 				Dock           = DockStyle.Fill,
 			};
 
@@ -220,6 +247,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateControllers ();
 		}
 
+
 		private void CreateController(AbstractSettingsData data)
 		{
 			AbstractSettingsController controller = null;
@@ -257,17 +285,51 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controllers.Add (controller);
 		}
 
+
 		private void ActionChanged()
 		{
-			this.CloseSettings ();
 			this.UpdateControllers ();
+			this.CloseSettings ();
 		}
 
 		private void UpdateControllers()
 		{
+			this.Validate ();
+
 			foreach (var controller in this.controllers)
 			{
 				controller.Update ();
+			}
+		}
+
+
+		private void Validate()
+		{
+			var errors = this.settingsList.Validate ();
+
+			foreach (var controller in this.controllers)
+			{
+				FormattedText error;
+				if (errors.TryGetValue (controller.Name, out error))
+				{
+					controller.Error = FormattedText.Concat ("&lt;  ", error.ApplyBold ());
+				}
+				else
+				{
+					controller.ClearError ();
+				}
+			}
+
+			int count = this.settingsList.ErrorCount;
+			if (count == 0)  // ok ?
+			{
+				this.infoFrame.BackColor = Color.Empty;
+				this.infoField.Text = null;
+			}
+			else
+			{
+				this.infoFrame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+				this.infoField.Text = string.Format ("Il y a {0} erreur{1}", count.ToString (), (count == 1)?"":"s");
 			}
 		}
 
@@ -279,5 +341,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private ScrollList									scrollList;
 		private FrameBox									mainFrame;
+		private FrameBox									infoFrame;
+		private StaticText									infoField;
 	}
 }

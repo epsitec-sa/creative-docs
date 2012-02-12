@@ -38,6 +38,58 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 		}
 
+		public string Name
+		{
+			get
+			{
+				return this.data.Name;
+			}
+		}
+
+		public bool HasError
+		{
+			get
+			{
+				return !this.error.IsNullOrEmpty;
+			}
+		}
+
+		public void ClearError()
+		{
+			this.Error = FormattedText.Null;
+		}
+
+		public FormattedText Error
+		{
+			get
+			{
+				return this.error;
+			}
+			set
+			{
+				if (this.error != value)
+				{
+					this.error = value;
+					this.UpdateError ();
+				}
+			}
+		}
+
+		private void UpdateError()
+		{
+			if (this.errorField != null)
+			{
+				if (this.HasError)
+				{
+					this.errorField.FormattedText = this.error;
+				}
+				else
+				{
+					this.errorField.FormattedText = FormattedText.Empty;
+				}
+			}
+		}
+
 
 		protected void CreateLabel(Widget parent)
 		{
@@ -48,16 +100,28 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				ContentAlignment = ContentAlignment.MiddleRight,
 				PreferredWidth   = AbstractSettingsController.labelWidth-10,
 				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
+				Margins          = new Margins (0, 10, 0, 2),
+			};
+		}
+
+		protected void CreateError(Widget parent)
+		{
+			this.errorField = new StaticText
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (5, 0, 0, 2),
 			};
 		}
 
 
 		protected readonly static int labelWidth = 210;
 
-		protected readonly AbstractSettingsData	data;
-		protected readonly System.Action actionChanged;
+		protected readonly AbstractSettingsData		data;
+		protected readonly System.Action			actionChanged;
 
-		protected int tabIndex;
+		protected FormattedText						error;
+		protected StaticText						errorField;
+		protected int								tabIndex;
 	}
 }

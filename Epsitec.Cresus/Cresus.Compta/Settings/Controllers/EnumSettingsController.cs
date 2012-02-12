@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.CreateLabel (frame);
 
-			var field = new TextFieldCombo
+			this.field = new TextFieldCombo
 			{
 				Parent          = frame,
 				IsReadOnly      = true,
@@ -53,14 +53,17 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.InitializeCombo (field);
+			this.CreateError (frame);
 
-			field.SelectedItemChanged += delegate
+			this.InitializeCombo (this.field);
+
+			this.field.SelectedItemChanged += delegate
 			{
-				this.UpdateValue (field.SelectedItemIndex);
+				this.UpdateValue (this.field.SelectedItemIndex);
 				this.actionChanged ();
 			};
 		}
+
 
 		private void InitializeCombo(TextFieldCombo combo)
 		{
@@ -87,5 +90,8 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				return this.data as EnumSettingsData;
 			}
 		}
+
+
+		private TextFieldCombo field;
 	}
 }

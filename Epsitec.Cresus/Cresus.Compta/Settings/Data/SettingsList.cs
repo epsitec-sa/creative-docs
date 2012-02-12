@@ -157,6 +157,50 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
+		public Dictionary<string, FormattedText> Validate()
+		{
+			var dict = new Dictionary<string, FormattedText> ();
+			this.errorCount = 0;
+
+			if (this.GetEnum ("Price.DecimalSeparator") == this.GetEnum ("Price.GroupSeparator"))
+			{
+				var error = "Mêmes séparateurs";
+				dict.Add ("Price.DecimalSeparator", error);
+				dict.Add ("Price.GroupSeparator", error);
+				this.errorCount++;
+			}
+
+			if (this.GetEnum ("Price.NegativeFormat") == "Negative" &&
+				this.GetEnum ("Price.NullParts")[0] == 't')
+			{
+				var error = "Choix incompatibles";
+				dict.Add ("Price.NegativeFormat", error);
+				dict.Add ("Price.NullParts", error);
+				this.errorCount++;
+			}
+
+			return dict;
+		}
+
+		public bool HasError
+		{
+			get
+			{
+				return this.errorCount != 0;
+			}
+		}
+
+		public int ErrorCount
+		{
+			get
+			{
+				return this.errorCount;
+			}
+		}
+
+
 		private readonly Dictionary<string, AbstractSettingsData>	settings;
+
+		private int errorCount;
 	}
 }

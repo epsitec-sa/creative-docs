@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 		}
 
+		public SettingsList SettingsList
+		{
+			get
+			{
+				return this.settingsList;
+			}
+		}
+
 		private readonly SettingsList settingsList;
 	}
 }
