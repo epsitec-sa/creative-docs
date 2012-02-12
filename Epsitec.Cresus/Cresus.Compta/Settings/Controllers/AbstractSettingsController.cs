@@ -54,24 +54,12 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			}
 		}
 
-		public void ClearError()
+		public void SetError(FormattedText error)
 		{
-			this.Error = FormattedText.Null;
-		}
-
-		public FormattedText Error
-		{
-			get
+			if (this.error != error)
 			{
-				return this.error;
-			}
-			set
-			{
-				if (this.error != value)
-				{
-					this.error = value;
-					this.UpdateError ();
-				}
+				this.error = error;
+				this.UpdateError ();
 			}
 		}
 
@@ -81,10 +69,12 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				if (this.HasError)
 				{
-					this.errorField.FormattedText = this.error;
+					this.errorField.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+					this.errorField.FormattedText = "  " + this.error;
 				}
 				else
 				{
+					this.errorField.BackColor = Color.Empty;
 					this.errorField.FormattedText = FormattedText.Empty;
 				}
 			}
@@ -100,7 +90,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				ContentAlignment = ContentAlignment.MiddleRight,
 				PreferredWidth   = AbstractSettingsController.labelWidth-10,
 				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 2),
+				Margins          = new Margins (0, 10, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
 			};
 		}
 
@@ -110,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 2),
+				Margins = new Margins (5, 0, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
 			};
 		}
 

@@ -310,16 +310,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var controller in this.controllers)
 			{
-				FormattedText error = this.settingsList.GetError (controller.Name);
-
-				if (error.IsNullOrEmpty)
-				{
-					controller.ClearError ();
-				}
-				else
-				{
-					controller.Error = FormattedText.Concat ("&lt;  ", error.ApplyBold ());
-				}
+				controller.SetError (this.settingsList.GetError (controller.Name));
 			}
 
 			int count = this.settingsList.ErrorCount;
