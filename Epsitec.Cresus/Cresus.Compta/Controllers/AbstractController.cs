@@ -105,6 +105,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public SettingsList SettingsList
+		{
+			get
+			{
+				return this.settingsList;
+			}
+		}
+
 		public MainWindowController MainWindowController
 		{
 			get

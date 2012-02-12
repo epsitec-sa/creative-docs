@@ -37,6 +37,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "Ecriture":
 					return "Journal des écritures";
 
+				case "Ecriture.Pièces":
+					return "Ecritures avec numéros de pièce";
+
 				case "Ecriture.AutoPièces":
 					return "Propose automatiquement un numéro de pièce";
 

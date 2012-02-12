@@ -88,6 +88,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				Parent           = parent,
 				FormattedText    = VerboseSettings.GetDescription (this.data.Name),
 				ContentAlignment = ContentAlignment.MiddleRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth   = AbstractSettingsController.labelWidth-10,
 				Dock             = DockStyle.Left,
 				Margins          = new Margins (0, 10, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
@@ -98,9 +99,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			this.errorField = new StaticText
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (5, 0, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
+				Parent        = parent,
+				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock          = DockStyle.Fill,
+				Margins       = new Margins (5, 0, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
 			};
 		}
 

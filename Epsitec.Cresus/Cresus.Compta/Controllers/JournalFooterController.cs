@@ -189,6 +189,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
+				if (mapper.Column == ColumnType.Pièce && this.settingsList.GetBool ("Ecriture.ForcePièces"))
+				{
+					field.IsReadOnly = true;
+				}
+
 				if (mapper.Column == ColumnType.Montant)
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
@@ -263,17 +268,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les données de la 2ème ligne.
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,            this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          Converters.MontantToString (0));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce,            this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "True");
+
+			if (this.PlusieursPièces)
+			{
+				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+			}
+			else
+			{
+				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+			}
 
 			this.UpdateFooterContent ();
 
@@ -298,8 +312,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (cp != -1)
 			{
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+
+				if (this.PlusieursPièces)
+				{
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+				}
+				else
+				{
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+				}
 			}
 
 			this.dirty = true;
@@ -403,8 +425,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "True");
 
 				this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.Pièce,   line, totalAutomatique);
 				this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
+
+				if (!this.PlusieursPièces)
+				{
+					this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
+				}
 
 				this.SetTextFieldReadonly (ColumnType.Montant, line, totalAutomatique);
 			}
@@ -426,8 +452,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 					if (line != cp)
 					{
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
-						this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+
+						if (!this.PlusieursPièces)
+						{
+							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+						}
 
 						var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant).ToSimpleText ();
 						decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
@@ -676,6 +706,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				titre = compte.Titre;
 				solde = this.dataAccessor.SoldesJournalManager.GetSolde (compte);
+			}
+		}
+
+		private bool PlusieursPièces
+		{
+			//	Retourne true si les écritures multiples peuvent avoir une pièce par ligne.
+			get
+			{
+				return this.settingsList.GetBool ("Ecriture.PlusieursPièces");
 			}
 		}
 

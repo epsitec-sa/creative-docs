@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				Parent          = frame,
 				FormattedText   = VerboseSettings.GetDescription (data.Name),
-				PreferredWidth  = 300,
+				PreferredWidth  = 480,
 				ActiveState     = this.Data.Value ? ActiveState.Yes : ActiveState.No,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 0, 0, 2),

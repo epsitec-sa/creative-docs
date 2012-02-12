@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new TextSettingsData ("Global.Titre",       20, "vide"));
 			this.Add (new TextSettingsData ("Global.Description", 100, ""));
 
+			this.Add (new BoolSettingsData ("Ecriture.Pièces",          true));
 			this.Add (new BoolSettingsData ("Ecriture.AutoPièces",      true));
 			this.Add (new TextSettingsData ("Ecriture.ProchainePièce",  10, "1"));
 			this.Add (new IntSettingsData  ("Ecriture.IncrémentPièce",  1));

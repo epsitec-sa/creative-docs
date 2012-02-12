@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Settings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.arrayController = this.controller.ArrayController;
 			this.businessContext = this.controller.BusinessContext;
+			this.settingsList    = this.controller.SettingsList;
 
 			this.linesFrames      = new List<FrameBox> ();
 			this.fieldControllers = new List<List<AbstractFieldController>> ();
@@ -787,6 +789,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly AbstractDataAccessor					dataAccessor;
 		protected readonly ArrayController						arrayController;
 		protected readonly BusinessContext						businessContext;
+		protected readonly SettingsList							settingsList;
 		protected readonly List<FrameBox>						linesFrames;
 		protected readonly List<List<AbstractFieldController>>	fieldControllers;
 
