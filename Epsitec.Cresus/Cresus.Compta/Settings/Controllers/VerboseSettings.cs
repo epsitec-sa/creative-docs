@@ -53,35 +53,35 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "Force un numéro de pièce non modifiable";
 
 
-				case "Nombres":
+				case "Price":
 					return "Format des nombres";
 
-				case "Nombres.Décimales":
+				case "Price.DecimalDigits":
 					return "Nombre de décimales";
 
-				case "Nombres.SépFrac":
+				case "Price.DecimalSeparator":
 					return "Séparateur de la partie fractionnaire";
 
-				case "Nombres.Milliers":
+				case "Price.GroupSeparator":
 					return "Séparateur des milliers";
 
-				case "Nombres.Nul":
+				case "Price.NullParts":
 					return "Affichage des parties nulles";
 
-				case "Nombres.Négatif":
+				case "Price.NegativeFormat":
 					return "Nombres négatifs";
 
 
-				case "Dates":
+				case "Date":
 					return "Format des dates";
 
-				case "Dates.Sép":
+				case "Date.Separator":
 					return "Séparateur";
 
-				case "Dates.Année":
+				case "Date.Year":
 					return "Nombre de chiffres pour l'année";
 
-				case "Dates.Ordre":
+				case "Date.Order":
 					return "Ordre des 3 éléments constitutifs";
 
 
@@ -100,14 +100,14 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case "/":
 					return "Barre oblique";
 
-				case "Espace":
+				case "Space":
 					return "Espace";
 
-				case "Aucun":
+				case "None":
 					return "Aucun";
 
 
-				case "Nég":
+				case "Negative":
 					return "-450";
 
 				case "()":
@@ -130,10 +130,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "0";
 
 
-				case "jma":
+				case "dmy":
 					return "jour mois année";
 
-				case "amj":
+				case "ymd":
 					return "année mois jour";
 
 

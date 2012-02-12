@@ -25,6 +25,14 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static decimal? ParseMontant(string text)
 		{
 			//	Parse un montant en francs.
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+
+			text = text.Replace ("-", "0");
+			text = text.Replace ("—", "0");
+
 			decimal d;
 			if (decimal.TryParse (text, out d))
 			{
@@ -38,7 +46,27 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (montant.HasValue)
 			{
-				return montant.Value.ToString ("C", Converters.numberFormatMontant);
+				string s = montant.Value.ToString ("C", Converters.numberFormatMontant);
+
+				if (Converters.numberFormatNullParts[0] == 't')  // commence par un tiret ?
+				{
+					string pattern = "0" + Converters.numberFormatMontant.CurrencyDecimalSeparator;  // "0."
+					if (s.StartsWith (pattern))
+					{
+						s = "-" + s.Substring (1);
+					}
+				}
+
+				if (Converters.numberFormatNullParts[1] == 't')  // termine par un tiret long ?
+				{
+					string pattern = Converters.numberFormatMontant.CurrencyDecimalSeparator + new string ('0', Converters.numberFormatMontant.CurrencyDecimalDigits);  // ".00"
+					if (s.EndsWith (pattern))
+					{
+						s = s.Substring (0, s.Length-pattern.Length+1) + "—";  // tiret long
+					}
+				}
+
+				return s;
 			}
 			else
 			{
@@ -537,35 +565,35 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static void ExportSettings(SettingsList settingsList)
 		{
 			//	Converters -> Settings
-			settingsList.SetEnum ("Nombres.Décimales", Converters.IntToString (Converters.numberFormatMontant.CurrencyDecimalDigits));
+			settingsList.SetEnum ("Price.DecimalDigits", Converters.IntToString (Converters.numberFormatMontant.CurrencyDecimalDigits));
 
-			settingsList.SetEnum ("Nombres.SépFrac", Converters.numberFormatMontant.CurrencyDecimalSeparator);
+			settingsList.SetEnum ("Price.DecimalSeparator", Converters.numberFormatMontant.CurrencyDecimalSeparator);
 
 			switch (Converters.numberFormatMontant.CurrencyGroupSeparator)
 			{
 				case null:
 				case "":
-					settingsList.SetEnum ("Nombres.Milliers", "Aucun");
+					settingsList.SetEnum ("Price.GroupSeparator", "Aucun");
 					break;
 
 				case " ":
-					settingsList.SetEnum ("Nombres.Milliers", "Espace");
+					settingsList.SetEnum ("Price.GroupSeparator", "Espace");
 					break;
 
 				default:
-					settingsList.SetEnum ("Nombres.Milliers", Converters.numberFormatMontant.CurrencyGroupSeparator);
+					settingsList.SetEnum ("Price.GroupSeparator", Converters.numberFormatMontant.CurrencyGroupSeparator);
 					break;
 			}
 
-			//settingsList.SetEnum ("Nombres.Nul", "...");  // TODO
+			settingsList.SetEnum ("Price.NullParts", Converters.numberFormatNullParts);
 
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 1)
 			{
-				settingsList.SetEnum ("Nombres.Négatif", "Nég");
+				settingsList.SetEnum ("Price.NegativeFormat", "Nég");
 			}
 			if (Converters.numberFormatMontant.CurrencyNegativePattern == 0)
 			{
-				settingsList.SetEnum ("Nombres.Négatif", "()");
+				settingsList.SetEnum ("Price.NegativeFormat", "()");
 			}
 		}
 
@@ -574,19 +602,19 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Settings -> Converters
 			string s;
 
-			s = settingsList.GetEnum ("Nombres.Décimales");
+			s = settingsList.GetEnum ("Price.DecimalDigits");
 			if (s != null)
 			{
 				Converters.numberFormatMontant.CurrencyDecimalDigits = Converters.ParseInt (s).GetValueOrDefault (2);
 			}
 
-			s = settingsList.GetEnum ("Nombres.SépFrac");
+			s = settingsList.GetEnum ("Price.DecimalSeparator");
 			if (s != null)
 			{
 				Converters.numberFormatMontant.CurrencyDecimalSeparator = s;
 			}
 
-			s = settingsList.GetEnum ("Nombres.Milliers");
+			s = settingsList.GetEnum ("Price.GroupSeparator");
 			if (s != null)
 			{
 				if (s == "Aucun")
@@ -601,13 +629,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 				Converters.numberFormatMontant.CurrencyGroupSeparator = s;
 			}
 
-			s = settingsList.GetEnum ("Nombres.Nul");
-			if (s != null)
-			{
-				// TODO:
-			}
+			Converters.numberFormatNullParts = settingsList.GetEnum ("Price.NullParts");
 
-			s = settingsList.GetEnum ("Nombres.Négatif");
+			s = settingsList.GetEnum ("Price.NegativeFormat");
 			if (s != null)
 			{
 				if (s == "Nég")
@@ -636,5 +660,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
+		private static string numberFormatNullParts = "00";
 	}
 }

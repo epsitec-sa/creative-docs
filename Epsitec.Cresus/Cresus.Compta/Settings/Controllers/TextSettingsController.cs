@@ -41,13 +41,15 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.CreateLabel (frame);
 
+			var width = this.PreferredWidth;
+
 			var field = new TextField
 			{
 				Parent          = frame,
 				FormattedText   = this.Data.Value,
-				PreferredWidth  = 200,
+				PreferredWidth  = width.GetValueOrDefault (100),
 				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
+				Dock            = width.HasValue ? DockStyle.Left : DockStyle.Fill,
 				Margins         = new Margins (0, 0, 0, 2),
 				TabIndex        = ++this.tabIndex,
 			};
@@ -56,6 +58,21 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				this.Data.Value = field.FormattedText;
 			};
+		}
+
+		private double? PreferredWidth
+		{
+			get
+			{
+				if (this.Data.MaxLength < 100)
+				{
+					return this.Data.MaxLength * 8;  // on estime la largeur à 8 pixels / caractère
+				}
+				else
+				{
+					return null;  // infini
+				}
+			}
 		}
 
 		private TextSettingsData Data

@@ -19,15 +19,22 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class TextSettingsData : AbstractSettingsData
 	{
-		public TextSettingsData(string name, FormattedText defaultValue)
+		public TextSettingsData(string name, int maxLength, FormattedText defaultValue)
 			: base (name)
 		{
+			this.MaxLength = maxLength;
 			this.Value = defaultValue;
 		}
 
 		public TextSettingsData(string name)
 			: base (name)
 		{
+		}
+
+		public int MaxLength
+		{
+			get;
+			set;
 		}
 
 		public FormattedText Value

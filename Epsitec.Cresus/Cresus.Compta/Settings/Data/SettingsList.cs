@@ -28,24 +28,24 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		private void Initialize()
 		{
-			this.Add (new TextSettingsData ("Global.Titre",       "vide"));
-			this.Add (new TextSettingsData ("Global.Description", ""));
+			this.Add (new TextSettingsData ("Global.Titre",       20, "vide"));
+			this.Add (new TextSettingsData ("Global.Description", 100, ""));
 
 			this.Add (new BoolSettingsData ("Ecriture.AutoPièces",      true));
-			this.Add (new TextSettingsData ("Ecriture.ProchainePièce",  "1"));
+			this.Add (new TextSettingsData ("Ecriture.ProchainePièce",  10, "1"));
 			this.Add (new IntSettingsData  ("Ecriture.IncrémentPièce",  1));
 			this.Add (new BoolSettingsData ("Ecriture.PlusieursPièces", false));
 			this.Add (new BoolSettingsData ("Ecriture.ForcePièces",     false));
 
-			this.Add (new EnumSettingsData ("Nombres.Décimales", "2",   "0", "1", "2", "3", "4", "5"));
-			this.Add (new EnumSettingsData ("Nombres.SépFrac",   ".",   ".", ","));
-			this.Add (new EnumSettingsData ("Nombres.Milliers",  "'",   "Aucun", "'", "Espace", ",", "."));
-			this.Add (new EnumSettingsData ("Nombres.Nul",       "00",  "00", "0t", "t0", "tt"));
-			this.Add (new EnumSettingsData ("Nombres.Négatif",   "-",   "Nég", "()"));
+			this.Add (new EnumSettingsData ("Price.DecimalDigits",    "2",         "0", "1", "2", "3", "4", "5"));
+			this.Add (new EnumSettingsData ("Price.DecimalSeparator", ".",         ".", ","));
+			this.Add (new EnumSettingsData ("Price.GroupSeparator",   "'",         "None", "'", "Space", ",", "."));
+			this.Add (new EnumSettingsData ("Price.NullParts",        "00",        "00", "0t", "t0", "tt"));
+			this.Add (new EnumSettingsData ("Price.NegativeFormat",   "Negative",  "Negative", "()"));
 
-			this.Add (new EnumSettingsData ("Dates.Sép",   ".",   ".", "/", "-"));
-			this.Add (new EnumSettingsData ("Dates.Année", "4",   "4", "2"));
-			this.Add (new EnumSettingsData ("Dates.Ordre", "jma", "jma", "amj"));
+			this.Add (new EnumSettingsData ("Date.Separator", ".",    ".", "/", "-"));
+			this.Add (new EnumSettingsData ("Date.Year",     "4",     "4", "2"));
+			this.Add (new EnumSettingsData ("Date.Order",    "dmy",   "dmy", "ymd"));
 		}
 
 		private void Add(AbstractSettingsData data)
