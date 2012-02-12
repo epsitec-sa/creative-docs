@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static Date? ParseDate(string text)
 		{
 			//	Parse une date située dans n'importe quelle période.
+			// TODO: Tenir compte des réglages !!!
 			System.DateTime d;
 			if (System.DateTime.TryParse (text, out d))
 			{
@@ -133,7 +134,30 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (date.HasValue)
 			{
-				return date.Value.ToString ();
+				string d, m, y;
+
+				d = date.Value.Day.ToString ("00");
+				m = date.Value.Month.ToString ("00");
+
+				if (Converters.dateFormatYear == SettingsEnum.YearDigits2)
+				{
+					y = (date.Value.Year % 100).ToString ("00");
+				}
+				else
+				{
+					y = date.Value.Year.ToString ("0000");
+				}
+
+				string s = Converters.SettingsEnumToChar (Converters.dateFormatSeparator);
+
+				if (Converters.dateFormatOrder == SettingsEnum.YearYMD)
+				{
+					return y+s+m+s+d;
+				}
+				else
+				{
+					return d+s+m+s+y;
+				}
 			}
 			else
 			{
@@ -642,6 +666,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				settingsList.SetEnum (SettingsType.PriceNegativeFormat, SettingsEnum.NegativeParentheses);
 			}
+
+			//	Dates.
+			settingsList.SetEnum (SettingsType.DateSeparator, Converters.dateFormatSeparator);
+			settingsList.SetEnum (SettingsType.DateYear,      Converters.dateFormatYear);
+			settingsList.SetEnum (SettingsType.DateOrder,     Converters.dateFormatOrder);
 		}
 
 		public static void ImportSettings(SettingsList settingsList)
@@ -678,6 +707,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				Converters.numberFormatMontant.CurrencyNegativePattern = 0;  // ($n)
 			}
+
+			//	Dates.
+			Converters.dateFormatSeparator = settingsList.GetEnum (SettingsType.DateSeparator);
+			Converters.dateFormatYear      = settingsList.GetEnum (SettingsType.DateYear);
+			Converters.dateFormatOrder     = settingsList.GetEnum (SettingsType.DateOrder);
 		}
 
 	
@@ -695,6 +729,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
+
 		private static SettingsEnum numberFormatNullParts = SettingsEnum.NullPartsZeroZero;
+		private static SettingsEnum dateFormatSeparator   = SettingsEnum.SeparatorDot;
+		private static SettingsEnum dateFormatYear        = SettingsEnum.YearDigits4;
+		private static SettingsEnum dateFormatOrder       = SettingsEnum.YearDMY;
 	}
 }

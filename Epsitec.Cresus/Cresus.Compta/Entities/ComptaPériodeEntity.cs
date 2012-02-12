@@ -40,13 +40,13 @@ namespace Epsitec.Cresus.Compta.Entities
 						 this.DateDébut.Day   == 1  &&
 						 Dates.IsLastDayOfMonth (this.DateFin))  // pile un mois entier ?
 				{
-					title = this.DateDébut.Month.ToString ("X2") + "." + this.DateDébut.Year.ToString ();
+					title = this.DateDébut.Month.ToString ("00") + "." + this.DateDébut.Year.ToString ();
 				}
 				else if (this.DateDébut.Year  == this.DateFin.Year &&
 						 this.DateDébut.Day   == 1  &&
 						 Dates.IsLastDayOfMonth (this.DateFin))  // pile quelques mois entier ?
 				{
-					title = this.DateDébut.Month.ToString ("X2") + " — " + this.DateFin.Month.ToString ("X2") + "." + this.DateDébut.Year.ToString ();
+					title = this.DateDébut.Month.ToString ("00") + " — " + this.DateFin.Month.ToString ("00") + "." + this.DateDébut.Year.ToString ();
 				}
 				else
 				{

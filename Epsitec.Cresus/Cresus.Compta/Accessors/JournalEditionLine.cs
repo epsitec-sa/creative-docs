@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var écriture = entity as ComptaEcritureEntity;
 
-			this.SetText (ColumnType.Date,             écriture.Date.ToString ());
+			this.SetText (ColumnType.Date,             Converters.DateToString (écriture.Date));
 			this.SetText (ColumnType.Débit,            JournalDataAccessor.GetNuméro (écriture.Débit));
 			this.SetText (ColumnType.Crédit,           JournalDataAccessor.GetNuméro (écriture.Crédit));
 			this.SetText (ColumnType.Pièce,            écriture.Pièce);

@@ -127,10 +127,47 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		#region Date
 		private void CreateDateUI(Widget parent)
 		{
+			this.frame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 100,
+				DrawFullFrame  = true,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (10),
+			};
+
+			this.sample1 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Top,
+			};
+
+			this.sample2 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Top,
+			};
 		}
 
 		private void UpdateDate()
 		{
+			if (this.Data.SettingsList.HasError)
+			{
+				this.frame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+
+				this.sample1.Text = null;
+				this.sample2.Text = null;
+			}
+			else
+			{
+				this.frame.BackColor = Color.Empty;
+
+				int year = Date.Today.Year;
+				this.sample1.Text = Converters.DateToString (new Date (year, 3, 31));
+				this.sample2.Text = Converters.DateToString (new Date (year, 12, 25));
+			}
 		}
 		#endregion
 

@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Date:
-					return écriture.Date.ToString ();
+					return Converters.DateToString (écriture.Date);
 
 				case ColumnType.Débit:
 					return JournalDataAccessor.GetNuméro (écriture.Débit);
@@ -240,7 +240,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Date,    this.périodeEntity.ProchaineDate.ToString ());
+			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.périodeEntity.ProchaineDate));
 			this.editionLine[line].SetText (ColumnType.Pièce,   this.comptaEntity.ProchainePièce);
 			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
 		}
@@ -325,7 +325,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Date date;
 			this.ParseDate (this.editionLine[0].GetText (ColumnType.Date), out date);
 			this.périodeEntity.DernièreDate = date;
-			this.editionLine[0].SetText (ColumnType.Date, date.ToString ());
+			this.editionLine[0].SetText (ColumnType.Date, Converters.DateToString (date));
 
 			this.comptaEntity.DernièrePièce = this.editionLine[0].GetText (ColumnType.Pièce);
 			this.editionLine[0].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);

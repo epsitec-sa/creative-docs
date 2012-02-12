@@ -30,27 +30,31 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		private void Initialize()
 		{
-			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalTitre,       20, "vide"));
-			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalDescription, 100, ""));
+			//	Réglages généraux :
+			this.Add (new TextSettingsData   (SettingsGroup.Global,   SettingsType.GlobalTitre,       20, "vide"));
+			this.Add (new TextSettingsData   (SettingsGroup.Global,   SettingsType.GlobalDescription, 100, ""));
+										     
+			//	Réglages pur les écritures :
+			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
+			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
+			this.Add (new TextSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureProchainePièce,  10, "1"));
+			this.Add (new IntSettingsData    (SettingsGroup.Ecriture, SettingsType.EcritureIncrémentPièce,  1));
+			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
+			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
 
-			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
-			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
-			this.Add (new TextSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureProchainePièce,  10, "1"));
-			this.Add (new IntSettingsData  (SettingsGroup.Ecriture, SettingsType.EcritureIncrémentPièce,  1));
-			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
-			this.Add (new BoolSettingsData (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
+			//	Réglages pour les montants :
+			this.Add (new EnumSettingsData   (SettingsGroup.Price,   SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits2,        SettingsEnum.DecimalDigits0, SettingsEnum.DecimalDigits1, SettingsEnum.DecimalDigits2, SettingsEnum.DecimalDigits3, SettingsEnum.DecimalDigits4, SettingsEnum.DecimalDigits5));
+			this.Add (new EnumSettingsData   (SettingsGroup.Price,   SettingsType.PriceDecimalSeparator, SettingsEnum.SeparatorDot,          SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
+			this.Add (new EnumSettingsData   (SettingsGroup.Price,   SettingsType.PriceGroupSeparator,   SettingsEnum.SeparatorApostrophe,   SettingsEnum.SeparatorNone, SettingsEnum.SeparatorApostrophe, SettingsEnum.SeparatorSpace, SettingsEnum.SeparatorComma, SettingsEnum.SeparatorDot));
+			this.Add (new EnumSettingsData   (SettingsGroup.Price,   SettingsType.PriceNullParts,        SettingsEnum.NullPartsZeroZero,     SettingsEnum.NullPartsZeroZero, SettingsEnum.NullPartsZeroDash, SettingsEnum.NullPartsDashZero, SettingsEnum.NullPartsDashDash));
+			this.Add (new EnumSettingsData   (SettingsGroup.Price,   SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,         SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
+			this.Add (new SampleSettingsData (SettingsGroup.Price,   SettingsType.PriceSample, this));
 
-			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits2,        SettingsEnum.DecimalDigits0, SettingsEnum.DecimalDigits1, SettingsEnum.DecimalDigits2, SettingsEnum.DecimalDigits3, SettingsEnum.DecimalDigits4, SettingsEnum.DecimalDigits5));
-			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceDecimalSeparator, SettingsEnum.SeparatorDot,          SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
-			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceGroupSeparator,   SettingsEnum.SeparatorApostrophe,   SettingsEnum.SeparatorNone, SettingsEnum.SeparatorApostrophe, SettingsEnum.SeparatorSpace, SettingsEnum.SeparatorComma, SettingsEnum.SeparatorDot));
-			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceNullParts,        SettingsEnum.NullPartsZeroZero,     SettingsEnum.NullPartsZeroZero, SettingsEnum.NullPartsZeroDash, SettingsEnum.NullPartsDashZero, SettingsEnum.NullPartsDashDash));
-			this.Add (new EnumSettingsData (SettingsGroup.Price, SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,         SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
-			this.Add (new SampleSettingsData (SettingsGroup.Price, SettingsType.PriceSample, this));
-
-			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateSeparator, SettingsEnum.SeparatorDot,   SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
-			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateYear,      SettingsEnum.YearDigits4,    SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));
-			this.Add (new EnumSettingsData (SettingsGroup.Date, SettingsType.DateOrder,     SettingsEnum.YearDMY,        SettingsEnum.YearDMY, SettingsEnum.YearYMD));
-			this.Add (new SampleSettingsData (SettingsGroup.Date, SettingsType.DateSample, this));
+			//	Réglages pour les dates :
+			this.Add (new EnumSettingsData   (SettingsGroup.Date,    SettingsType.DateSeparator, SettingsEnum.SeparatorDot,   SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
+			this.Add (new EnumSettingsData   (SettingsGroup.Date,    SettingsType.DateYear,      SettingsEnum.YearDigits4,    SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));
+			this.Add (new EnumSettingsData   (SettingsGroup.Date,    SettingsType.DateOrder,     SettingsEnum.YearDMY,        SettingsEnum.YearDMY, SettingsEnum.YearYMD));
+			this.Add (new SampleSettingsData (SettingsGroup.Date,    SettingsType.DateSample, this));
 		}
 
 		private void Add(AbstractSettingsData data)
@@ -162,6 +166,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public void Validate()
 		{
+			//	Vérifie la cohérence de l'ensemble des réglages.
 			this.errors.Clear ();
 			this.errorCount = 0;
 
@@ -180,10 +185,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		private void AddError(SettingsType type1, SettingsType type2, FormattedText message)
 		{
+			//	Ajoute une erreur à deux champs.
 			this.errors.Add (type1, message);
 			this.errors.Add (type2, message);
 
-			this.errorCount++;
+			this.errorCount++;  // on ne la compte que comme une seule erreur
 		}
 
 		public bool HasError
@@ -204,6 +210,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public FormattedText GetError(SettingsType type)
 		{
+			//	Retourne l'erreur éventuelle liée à un réglage.
 			FormattedText error;
 
 			if (errors.TryGetValue (type, out error))

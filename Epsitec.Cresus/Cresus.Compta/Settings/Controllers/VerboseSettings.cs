@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "Nombre de chiffres pour l'année";
 
 				case SettingsType.DateOrder:
-					return "Ordre des 3 éléments constitutifs";
+					return "Ordre des 3 composants";
 
 				case SettingsType.DateSample:
 					return "Exemples";
