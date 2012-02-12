@@ -9,12 +9,13 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Controllers;
 
+using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Options.Data
 {
 	/// <summary>
 	/// Cette classe décrit les options d'affichage du bilan de la comptabilité.

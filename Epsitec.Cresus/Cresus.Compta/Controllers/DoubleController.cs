@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
 using System.Linq;

@@ -12,11 +12,13 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Controllers
+namespace Epsitec.Cresus.Compta.Options.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur gère les options d'affichage génériques de la comptabilité.

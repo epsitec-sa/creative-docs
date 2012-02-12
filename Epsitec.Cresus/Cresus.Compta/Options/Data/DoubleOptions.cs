@@ -14,17 +14,19 @@ using Epsitec.Cresus.Compta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Options.Data
 {
 	/// <summary>
-	/// Cette classe décrit les options d'affichage du compte d'exploitation de la comptabilité.
+	/// Cette classe décrit les options d'affichage des données doubles (bilan avec actif/passif ou PP avec charge/produit) de la comptabilité.
 	/// </summary>
-	public class ExploitationOptions : AbstractOptions
+	public abstract class DoubleOptions : AbstractOptions
 	{
 		public override void Clear()
 		{
 			base.Clear ();
-			this.HideZero = false;
+
+			this.HideZero = true;
+			this.HasGraphics = false;
 		}
 
 
@@ -35,13 +37,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-
-		protected override void CreateEmpty()
+		public bool HasGraphics
 		{
-			this.emptyOptions = new ExploitationOptions ();
-			this.emptyOptions.SetComptaEntity (this.comptaEntity);
-			this.emptyOptions.Clear ();
+			get;
+			set;
 		}
+
 
 		public override bool CompareTo(AbstractOptions other)
 		{
@@ -50,9 +51,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var o = other as ExploitationOptions;
+			var o = other as DoubleOptions;
 
-			return this.HideZero == o.HideZero;
+			return this.HideZero == o.HideZero &&
+				   this.HasGraphics == o.HasGraphics;
 		}
 	}
 }

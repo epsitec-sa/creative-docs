@@ -9,6 +9,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Settings.Controllers;
+using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
 using System.Linq;

@@ -13,6 +13,8 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Options.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;

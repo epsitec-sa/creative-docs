@@ -14,23 +14,30 @@ using Epsitec.Cresus.Compta.Entities;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Options.Data
 {
 	/// <summary>
-	/// Cette classe décrit les options d'affichage de la balance de vérification de la comptabilité.
+	/// Cette classe décrit les options d'affichage du journal des écritures de la comptabilité.
 	/// </summary>
-	public class BalanceOptions : AbstractOptions
+	public class JournalOptions : AbstractOptions
 	{
-		public override void Clear()
+		public override void SetComptaEntity(ComptaEntity compta)
 		{
-			base.Clear ();
-			this.HideZero = true;
+			base.SetComptaEntity (compta);
+			this.Clear ();
 		}
 
 
-		public bool HideZero
+		public override void Clear()
 		{
-			//	Affiche en blanc les montants nuls ?
+			base.Clear ();
+
+			this.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
+		}
+
+
+		public ComptaJournalEntity Journal
+		{
 			get;
 			set;
 		}
@@ -38,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void CreateEmpty()
 		{
-			this.emptyOptions = new BalanceOptions ();
+			this.emptyOptions = new JournalOptions ();
 			this.emptyOptions.SetComptaEntity (this.comptaEntity);
 			this.emptyOptions.Clear ();
 		}
@@ -50,9 +57,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			var o = other as BalanceOptions;
+			var o = other as JournalOptions;
 
-			return this.HideZero == o.HideZero;
+			return this.Journal == o.Journal;
 		}
 	}
 }
