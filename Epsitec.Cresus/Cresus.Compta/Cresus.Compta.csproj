@@ -107,8 +107,8 @@
     <Compile Include="Search\Data\SearchTabData.cs" />
     <Compile Include="Search\Data\SearchResult.cs" />
     <Compile Include="Application.cs" />
-    <Compile Include="Controllers\AbstractFieldController.cs" />
-    <Compile Include="Controllers\AutoCompleteFieldController.cs" />
+    <Compile Include="Fields\Controllers\AbstractFieldController.cs" />
+    <Compile Include="Fields\Controllers\AutoCompleteFieldController.cs" />
     <Compile Include="Settings\Controllers\AbstractSettingsController.cs" />
     <Compile Include="Settings\Controllers\BoolSettingsController.cs" />
     <Compile Include="Settings\Controllers\EnumSettingsController.cs" />
@@ -120,8 +120,8 @@
     <Compile Include="Controllers\ModèlesController.cs" />
     <Compile Include="Controllers\LibellésFooterController.cs" />
     <Compile Include="Controllers\LibellésController.cs" />
-    <Compile Include="Controllers\TextFieldController.cs" />
-    <Compile Include="Controllers\DateFieldController.cs" />
+    <Compile Include="Fields\Controllers\TextFieldController.cs" />
+    <Compile Include="Fields\Controllers\DateFieldController.cs" />
     <Compile Include="Controllers\JournauxFooterController.cs" />
     <Compile Include="Controllers\JournauxController.cs" />
     <Compile Include="Controllers\PériodeFooterController.cs" />
@@ -159,11 +159,11 @@
     <Compile Include="Options\Controllers\AbstractOptionsController.cs" />
     <Compile Include="Controllers\ArrayController.cs" />
     <Compile Include="Options\Controllers\BalanceOptionsController.cs" />
-    <Compile Include="Controllers\BilanOptionsController.cs" />
+    <Compile Include="Options\Controllers\BilanOptionsController.cs" />
     <Compile Include="Controllers\BottomToolbarController.cs" />
     <Compile Include="Controllers\ColumnMapper.cs" />
     <Compile Include="Options\Controllers\ExploitationOptionsController.cs" />
-    <Compile Include="Controllers\ExtraitDeCompteOptionsController.cs" />
+    <Compile Include="Options\Controllers\ExtraitDeCompteOptionsController.cs" />
     <Compile Include="Controllers\HeaderController.cs" />
     <Compile Include="Options\Controllers\PPOptionsController.cs" />
     <Compile Include="Search\Controllers\SearchController.cs" />
@@ -282,7 +282,9 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Fields\Data\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

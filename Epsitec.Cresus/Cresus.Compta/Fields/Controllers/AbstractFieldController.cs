@@ -15,11 +15,12 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Controllers
+namespace Epsitec.Cresus.Compta.Fields.Controllers
 {
 	/// <summary>
 	/// Contrôleur générique permettant l'édition d'un champ.

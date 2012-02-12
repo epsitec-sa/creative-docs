@@ -16,6 +16,7 @@ using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
+using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
