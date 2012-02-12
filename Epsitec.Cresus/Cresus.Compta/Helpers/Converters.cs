@@ -224,7 +224,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				}
 			}
 
-			if (Converters.dateFormatYear == SettingsEnum.YearDigits2 && y < 1000)
+			if (y < 1000)
 			{
 				y += 2000;
 			}

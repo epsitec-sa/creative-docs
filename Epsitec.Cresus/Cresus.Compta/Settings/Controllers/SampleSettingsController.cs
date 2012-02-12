@@ -149,6 +149,13 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Top,
 			};
+
+			this.sample3 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				Dock             = DockStyle.Top,
+			};
 		}
 
 		private void UpdateDate()
@@ -159,14 +166,16 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 				this.sample1.Text = null;
 				this.sample2.Text = null;
+				this.sample3.Text = null;
 			}
 			else
 			{
 				this.frame.BackColor = Color.Empty;
 
 				int year = Date.Today.Year;
-				this.sample1.Text = Converters.DateToString (new Date (year, 3, 31));
-				this.sample2.Text = Converters.DateToString (new Date (year, 12, 25));
+				this.sample1.Text = Converters.DateToString (new Date (year, 1, 1));
+				this.sample2.Text = Converters.DateToString (new Date (year, 3, 31));
+				this.sample3.Text = Converters.DateToString (new Date (year, 12, 25));
 			}
 		}
 		#endregion
