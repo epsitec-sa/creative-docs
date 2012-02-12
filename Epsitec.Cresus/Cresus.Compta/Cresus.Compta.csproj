@@ -58,7 +58,6 @@
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
     <Compile Include="Accessors\BalanceOptions.cs" />
     <Compile Include="Accessors\BilanOptions.cs" />
-    <Compile Include="Accessors\RéglagesOptions.cs" />
     <Compile Include="Settings\Data\AbstractSettingsData.cs" />
     <Compile Include="Settings\Data\BoolSettingsData.cs" />
     <Compile Include="Settings\Data\EnumSettingsData.cs" />
