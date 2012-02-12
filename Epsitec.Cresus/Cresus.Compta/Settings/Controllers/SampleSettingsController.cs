@@ -139,14 +139,14 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			this.sample1 = new StaticText
 			{
 				Parent           = this.frame,
-				ContentAlignment = ContentAlignment.MiddleRight,
+				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Top,
 			};
 
 			this.sample2 = new StaticText
 			{
 				Parent           = this.frame,
-				ContentAlignment = ContentAlignment.MiddleRight,
+				ContentAlignment = ContentAlignment.MiddleLeft,
 				Dock             = DockStyle.Top,
 			};
 		}

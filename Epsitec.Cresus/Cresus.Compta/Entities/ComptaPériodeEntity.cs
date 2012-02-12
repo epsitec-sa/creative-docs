@@ -123,6 +123,9 @@ namespace Epsitec.Cresus.Compta.Entities
 		public bool ParseDate(FormattedText text, out Date? date)
 		{
 			//	Transforme un texte en une date valide pour la comptabilité.
+			return Converters.ParseDate (text.ToSimpleText (), this.ProchaineDate, this.DateDébut, this.DateFin, out date);
+
+#if false
 			if (text.IsNullOrEmpty)
 			{
 				date = null;
@@ -178,6 +181,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 
 			return true;
+#endif
 		}
 
 

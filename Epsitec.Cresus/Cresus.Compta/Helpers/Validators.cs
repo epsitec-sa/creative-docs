@@ -84,12 +84,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 				Date? date;
 				if (période.ParseDate (data.Text, out date) && date.HasValue)
 				{
-					data.Text = date.ToString ();
+					data.Text = Converters.DateToString (date);
 				}
 				else
 				{
-					var b = période.DateDébut.ToString ();
-					var e = période.DateFin.ToString ();
+					var b = Converters.DateToString (période.DateDébut);
+					var e = Converters.DateToString (période.DateFin);
 
 					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
 				}

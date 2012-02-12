@@ -120,14 +120,131 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static Date? ParseDate(string text)
 		{
 			//	Parse une date située dans n'importe quelle période.
-			// TODO: Tenir compte des réglages !!!
-			System.DateTime d;
-			if (System.DateTime.TryParse (text, out d))
+			Date? date;
+			Converters.ParseDate (text, Date.Today, null, null, out date);
+			return date;
+		}
+
+		public static bool ParseDate(string text, Date defaultDate, Date? minDate, Date? maxDate, out Date? date)
+		{
+			if (string.IsNullOrEmpty (text))
 			{
-				return new Date (d);
+				date = null;
+				return true;
 			}
 
-			return null;
+			text = text.Replace (".", " ");
+			text = text.Replace (",", " ");
+			text = text.Replace ("/", " ");
+			text = text.Replace ("-", " ");
+			text = text.Replace (":", " ");
+			text = text.Replace (";", " ");
+			text = text.Replace ("  ", " ");
+			text = text.Replace ("  ", " ");
+
+			var words = text.Split (' ');
+
+			int? n1 = null;
+			int? n2 = null;
+			int? n3 = null;
+
+			if (words.Length >= 1)
+			{
+				n1 = Converters.ParseInt (words[0]);
+			}
+
+			if (words.Length >= 2)
+			{
+				n2 = Converters.ParseInt (words[1]);
+			}
+
+			if (words.Length >= 3)
+			{
+				n3 = Converters.ParseInt (words[2]);
+			}
+
+			int y, m, d;
+
+			if (Converters.dateFormatOrder == SettingsEnum.YearYMD)
+			{
+				if (n1.HasValue)
+				{
+					y = n1.Value;
+				}
+				else
+				{
+					y = defaultDate.Year;
+				}
+
+				if (n2.HasValue)
+				{
+					m = n2.Value;
+				}
+				else
+				{
+					m = defaultDate.Month;
+				}
+
+				if (n3.HasValue)
+				{
+					d = n3.Value;
+				}
+				else
+				{
+					d = defaultDate.Day;
+				}
+			}
+			else
+			{
+				if (n1.HasValue)
+				{
+					d = n1.Value;
+				}
+				else
+				{
+					d = defaultDate.Day;
+				}
+
+				if (n2.HasValue)
+				{
+					m = n2.Value;
+				}
+				else
+				{
+					m = defaultDate.Month;
+				}
+
+				if (n3.HasValue)
+				{
+					y = n3.Value;
+				}
+				else
+				{
+					y = defaultDate.Year;
+				}
+			}
+
+			if (Converters.dateFormatYear == SettingsEnum.YearDigits2 && y < 1000)
+			{
+				y += 2000;
+			}
+
+			date = new Date (y, m, d);
+			bool ok = true;
+
+			if (minDate.HasValue && date < minDate.Value)
+			{
+				date = minDate.Value;
+				ok = false;
+			}
+
+			if (maxDate.HasValue && date > maxDate.Value)
+			{
+				date = maxDate.Value;
+				ok = false;
+			}
+
+			return ok;
 		}
 
 		public static string DateToString(Date? date)
