@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
 using System.Linq;

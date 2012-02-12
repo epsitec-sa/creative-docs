@@ -88,8 +88,8 @@
     <Compile Include="Accessors\ComparisonShowed.cs" />
     <Compile Include="Accessors\ColumnType.cs" />
     <Compile Include="Accessors\DoubleDataAccessor.cs" />
-    <Compile Include="Accessors\SearchText.cs" />
-    <Compile Include="Accessors\SearchMode.cs" />
+    <Compile Include="Search\Data\SearchText.cs" />
+    <Compile Include="Search\Data\SearchMode.cs" />
     <Compile Include="Accessors\ISettingsData.cs" />
     <Compile Include="Accessors\JournalOptions.cs" />
     <Compile Include="Accessors\ExploitationData.cs" />
@@ -103,9 +103,9 @@
     <Compile Include="Accessors\PlanComptableDataAccessor.cs" />
     <Compile Include="Accessors\PlanComptableEditionLine.cs" />
     <Compile Include="Accessors\PPDataAccessor.cs" />
-    <Compile Include="Accessors\SearchData.cs" />
-    <Compile Include="Accessors\SearchTabData.cs" />
-    <Compile Include="Accessors\SearchResult.cs" />
+    <Compile Include="Search\Data\SearchData.cs" />
+    <Compile Include="Search\Data\SearchTabData.cs" />
+    <Compile Include="Search\Data\SearchResult.cs" />
     <Compile Include="Application.cs" />
     <Compile Include="Controllers\AbstractFieldController.cs" />
     <Compile Include="Controllers\AutoCompleteFieldController.cs" />
@@ -129,7 +129,7 @@
     <Compile Include="Controllers\DoubleController.cs" />
     <Compile Include="Controllers\LevelController.cs" />
     <Compile Include="Controllers\PanelsToolbarController.cs" />
-    <Compile Include="Controllers\TopFilterController.cs" />
+    <Compile Include="Search\Controllers\TopFilterController.cs" />
     <Compile Include="Controllers\JournalOptionsController.cs" />
     <Compile Include="Entities\ComptaModèleEntity.cs" />
     <Compile Include="Helpers\Dates.cs" />
@@ -166,9 +166,9 @@
     <Compile Include="Controllers\ExtraitDeCompteOptionsController.cs" />
     <Compile Include="Controllers\HeaderController.cs" />
     <Compile Include="Controllers\PPOptionsController.cs" />
-    <Compile Include="Controllers\SearchController.cs" />
-    <Compile Include="Controllers\SearchTabController.cs" />
-    <Compile Include="Controllers\TopSearchController.cs" />
+    <Compile Include="Search\Controllers\SearchController.cs" />
+    <Compile Include="Search\Controllers\SearchTabController.cs" />
+    <Compile Include="Search\Controllers\TopSearchController.cs" />
     <Compile Include="Helpers\UIBuilder.cs" />
     <Compile Include="Entities\ComptaCompteEntity.cs" />
     <Compile Include="Entities\ComptaEcritureEntity.cs" />

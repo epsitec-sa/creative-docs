@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
 

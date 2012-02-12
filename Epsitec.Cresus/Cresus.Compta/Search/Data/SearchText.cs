@@ -12,7 +12,7 @@ using Epsitec.Cresus.Compta.Helpers;
 
 using System.Text.RegularExpressions;
 
-namespace Epsitec.Cresus.Compta.Accessors
+namespace Epsitec.Cresus.Compta.Search.Data
 {
 	public class SearchText
 	{
