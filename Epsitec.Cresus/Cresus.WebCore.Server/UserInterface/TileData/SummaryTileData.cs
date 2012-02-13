@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public TemplateTileData Template
+		public CollectionTileData Template
 		{
 			get;
 			set;
@@ -70,11 +70,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityKeyGetter, Func<string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter)
+		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, PanelFieldAccessor> panelFieldAccessorGetter)
 		{
 			if (this.Template == null)
 			{
-				yield return this.ToSummaryTile (entity, entityKeyGetter, iconClassGetter);
+				yield return this.ToSummaryTile (entity, entityIdGetter, iconClassGetter);
 			}
 			else
 			{
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				{
 					foreach (var target in targets)
 					{
-						yield return this.ToCollectionSummaryTile (target, entityKeyGetter, iconClassGetter, lambdaIdGetter, typeGetter);
+						yield return this.ToCollectionSummaryTile (target, entityIdGetter, iconClassGetter, lambdaIdGetter, typeGetter);
 					}
 				}
 				else
@@ -98,11 +98,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#endregion
 
 
-		public AbstractTile ToSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityKeyGetter, Func<string, string> iconClassGetter)
+		public AbstractTile ToSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<string, string> iconClassGetter)
 		{
 			return new SummaryTile ()
 			{
-				EntityId = entityKeyGetter (entity),
+				EntityId = entityIdGetter (entity),
 				IconClass = iconClassGetter (this.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
@@ -122,11 +122,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public AbstractTile ToCollectionSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityKeyGetter, Func<string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter)
+		public AbstractTile ToCollectionSummaryTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter)
 		{
 			return new CollectionSummaryTile ()
 			{
-				EntityId = entityKeyGetter (entity),
+				EntityId = entityIdGetter (entity),
 				IconClass = iconClassGetter (this.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
@@ -138,6 +138,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				HideRemoveButton = InvariantConverter.ToString (this.HideRemoveButton),
 			};
 		}
+
 
 
 	}

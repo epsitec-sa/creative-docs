@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 {
 
 
-	internal sealed class TemplateTileData : AbstractSummaryTileData
+	internal sealed class CollectionTileData : AbstractSummaryTileData
 	{
 
 

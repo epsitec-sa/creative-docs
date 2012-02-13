@@ -26,6 +26,8 @@ using System.Globalization;
 
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
+using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -40,24 +42,30 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
-		/// <summary>
-		/// Create use a builder to create a panel
-		/// </summary>
-		/// <param name="entity">Entity to use to create the panelBuilder</param>
-		/// <param name="mode">Controller mode</param>
-		/// <returns></returns>
-		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
-		{
-			return new PanelBuilder (entity, mode, controllerSubTypeId, coreSession).Run ();
-		}
-
-
 		private PanelBuilder(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
 		{
 			this.rootEntity = entity;
 			this.controllerMode = mode;
 			this.controllerSubTypeId = controllerSubTypeId;
 			this.coreSession = coreSession;
+		}
+
+
+		private DataContext DataContext
+		{
+			get
+			{
+				return this.BusinessContext.DataContext;
+			}
+		}
+
+
+		private BusinessContext BusinessContext
+		{
+			get
+			{
+				return this.coreSession.GetBusinessContext ();
+			}
 		}
 
 
@@ -69,41 +77,160 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
-			var brickWall = Mason.BuildBrickWall (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
+			var panel = new Dictionary<string, object> ();
 
-			// Open the main panel
-			var dic = new Dictionary<string, object> ();
+			panel["parentEntity"] = this.GetEntityId (this.rootEntity);
+			panel["controllerMode"] = Tools.ViewControllerModeToString (this.controllerMode);
+			panel["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (this.controllerSubTypeId);
+			panel["items"] = this.GetPanels (this.rootEntity, this.controllerMode, this.controllerSubTypeId);
 
-			dic["parentEntity"] = this.GetEntityKey (this.rootEntity);
-			dic["controllerMode"] = Tools.ViewControllerModeToString (this.controllerMode);
-			dic["controllerSubTypeId"] = Tools.ControllerSubTypeIdToString (this.controllerSubTypeId);
+			return panel;
+		}
 
-			var items = new List<Dictionary<string, object>> ();
-			dic["items"] = items;
 
-			// TODO Change this to activate the new way of generating the panels.
-			if (false && this.controllerMode == ViewControllerMode.Summary)
+		private List<Dictionary<string, object>> GetPanels(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
+		{
+			var brickWall = this.GetBrickWall (entity, controllerMode, controllerSubTypeId);
+
+			// NOTE Switch this bool if you want to use the new or the old way to generate the panels.
+			// The old way is still here only for testing purposes and will be removed soon.
+			bool useNewWay = false;
+
+			List<Dictionary<string, object>> panels;
+
+			if (useNewWay)
 			{
-				var tileData = Carpenter.BuildTileData (brickWall, this.controllerMode).ToList();
-				var tiles = tileData.SelectMany (td => td.ToTiles (this.rootEntity, e => this.GetEntityKey (e).ToString (), i => IconManager.GetCSSClassName (i, IconSize.Sixteen), l => InvariantConverter.ToString (this.coreSession.PanelFieldAccessorCache.Get (l).Id), t => t.AssemblyQualifiedName)).ToList();
-				var panels = tiles.Select (t => t.ToDictionary ()).ToList ();
-
-				items.AddRange (panels);
+				var tileData = this.GetTileData (brickWall);
+				var tiles = this.GetTiles (tileData, entity);
+				panels = tiles.Select (t => t.ToDictionary ()).ToList ();
 			}
 			else
 			{
-				foreach (var brick in brickWall.Bricks)
-				{
-					var panels = this.GetPanels (brick);
+				panels = brickWall.Bricks.SelectMany (b => this.GetPanels (b)).ToList ();
+			}
 
-					items.AddRange (panels);
+			panels[0]["isRoot"] = true;
+
+			return panels;
+		}
+
+
+		private BrickWall GetBrickWall(AbstractEntity entity, ViewControllerMode controllerMode, int? controllerSubTypeId)
+		{
+			return Mason.BuildBrickWall (entity, controllerMode, controllerSubTypeId);
+		}
+
+
+		private IEnumerable<ITileData> GetTileData(BrickWall brickWall)
+		{
+			return Carpenter.BuildTileData (brickWall);
+		}
+
+
+		private IEnumerable<AbstractTile> GetTiles(IEnumerable<ITileData> tileData, AbstractEntity entity)
+		{
+			return tileData.SelectMany
+			(
+				td => td.ToTiles
+				(
+					entity, 
+					e => this.GetEntityId (e), 
+					u => this.GetIconClass (u), 
+					l => this.GetLambdaId (l),
+					t => this.GetTypeName (t), 
+					e => this.BuildEditionTiles (e), 
+					t => this.GetEntities (t), 
+					l => this.GetPanelFieldAccessor (l)
+				)
+			);
+		}
+
+
+		private string GetEntityId(AbstractEntity entity)
+		{
+			string entityId = null;
+			
+			if (entity != null)
+			{
+				var entityKey = this.DataContext.GetNormalizedEntityKey (entity);
+
+				if (entityKey.HasValue)
+				{
+					entityId = entityKey.Value.ToString ();
 				}
 			}
 
-			items.First ()["isRoot"] = true;
-
-			return dic;
+			return entityId;
 		}
+
+
+		private string GetIconClass(string uri)
+		{
+			return IconManager.GetCSSClassName (uri, IconSize.Sixteen);
+		}
+
+
+		private string GetLambdaId(LambdaExpression lambda)
+		{
+			int lambdaId = this.coreSession.PanelFieldAccessorCache.Get (lambda).Id;
+
+			return InvariantConverter.ToString (lambdaId);
+		}
+
+
+		private string GetTypeName(Type type)
+		{
+			return type.AssemblyQualifiedName;
+		}
+
+
+		private IEnumerable<AbstractTile> BuildEditionTiles(AbstractEntity entity)
+		{
+			var brickWall = this.GetBrickWall (entity, ViewControllerMode.Edition, null);
+			var tileData = this.GetTileData (brickWall);
+
+			return this.GetTiles (tileData, entity);
+		}
+
+
+		private IEnumerable<AbstractEntity> GetEntities(Type entityType)
+		{
+			return this.BusinessContext.Data.GetAllEntities (entityType, DataExtractionMode.Sorted, this.DataContext);
+		}
+
+
+		private PanelFieldAccessor GetPanelFieldAccessor(LambdaExpression lambda)
+		{
+			return this.coreSession.PanelFieldAccessorCache.Get (lambda);
+		}
+
+
+		public static Dictionary<string, object> BuildController(AbstractEntity entity, ViewControllerMode mode, int? controllerSubTypeId, CoreSession coreSession)
+		{
+			return new PanelBuilder (entity, mode, controllerSubTypeId, coreSession).Run ();
+		}
+
+
+		private readonly AbstractEntity rootEntity;
+		
+		
+		private readonly ViewControllerMode controllerMode;
+		
+		
+		private readonly int? controllerSubTypeId;
+		
+		
+		private readonly CoreSession coreSession;
+
+
+
+
+
+
+
+
+		// NOTE All this code is the old way of generating panels and will be deleted soon. Don't
+		// rely on it.
 
 
 		/// <summary>
@@ -185,7 +312,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var parent = this.GetBasicPanelForm (item);
 			list.Add (parent);
 
-			var entityKey = this.GetEntityKey (entity);
+			var entityKey = this.GetEntityId (entity);
 			parent["entityId"] = entityKey;
 
 			parent["subViewControllerMode"] = Tools.ViewControllerModeToString (item.SubViewControllerMode);
@@ -371,13 +498,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				var data = this.BusinessContext.Data
 					.GetAllEntities (fieldType, DataExtractionMode.Sorted, this.DataContext)
 					.Select (i => new object[]
-					{
-						this.GetEntityKey (i),
-						i.GetCompactSummary ().ToString ()
-					})
+		            {
+		                this.GetEntityId (i),
+		                i.GetCompactSummary ().ToString ()
+		            })
 					.ToList ();
 
-				entityDictionnary["value"] = this.GetEntityKey (entity);
+				entityDictionnary["value"] = this.GetEntityId (entity);
 				entityDictionnary["xtype"] = "epsitec.entity";
 				entityDictionnary["store"] = data;
 
@@ -385,28 +512,28 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			}
 
 			if (fieldType == typeof (string) ||
-			    fieldType == typeof (FormattedText) ||
-			    fieldType == typeof (long) ||
-			    fieldType == typeof (long?) ||
-			    fieldType == typeof (decimal) ||
-			    fieldType == typeof (decimal?) ||
-			    fieldType == typeof (int) ||
-			    fieldType == typeof (int?) ||
-			    fieldType == typeof (bool) ||
-			    fieldType == typeof (bool?))
+		        fieldType == typeof (FormattedText) ||
+		        fieldType == typeof (long) ||
+		        fieldType == typeof (long?) ||
+		        fieldType == typeof (decimal) ||
+		        fieldType == typeof (decimal?) ||
+		        fieldType == typeof (int) ||
+		        fieldType == typeof (int?) ||
+		        fieldType == typeof (bool) ||
+		        fieldType == typeof (bool?))
 			{
 				entityDictionnary["value"] = accessor.GetStringValue (this.rootEntity);
 				return list;
 			}
 
 			if (fieldType == typeof (DateTime) ||
-			    fieldType == typeof (DateTime?))
+		        fieldType == typeof (DateTime?))
 			{
 				//	TODO: handle date & time
 			}
 
 			if (fieldType == typeof (Date) ||
-			    fieldType == typeof (Date?))
+		        fieldType == typeof (Date?))
 			{
 				entityDictionnary["xtype"]  = "datefield";
 				entityDictionnary["format"] = "d.m.Y";
@@ -434,7 +561,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 					dic["boxLabel"] = item.GetSummary ().ToSimpleText ();
 					dic["name"] = string.Format (CultureInfo.InvariantCulture, "{0}[{1}]", entityDictionnary["name"], i++); // Copy the parent's ID
-					dic["inputValue"] = this.GetEntityKey (item);
+					dic["inputValue"] = this.GetEntityId (item);
 					dic["checked"] = found.Contains (item);
 					dic["uncheckedValue"] = ""; // We want to return "nothing" when nothing is checked (but we want to return something)
 				}
@@ -445,7 +572,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var underlyingType = fieldType.GetNullableTypeUnderlyingType ();
 
 			if ((fieldType.IsEnum) ||
-			        ((underlyingType != null) && (underlyingType.IsEnum)))
+		            ((underlyingType != null) && (underlyingType.IsEnum)))
 			{
 				entityDictionnary["xtype"] = "epsitec.enum";
 				entityDictionnary["value"] = obj.ToString ();
@@ -582,47 +709,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		}
 
-		private string GetEntityKey(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return null;
-			}
-
-			var key = this.DataContext.GetNormalizedEntityKey (entity);
-
-			if (!key.HasValue)
-			{
-				return null;
-			}
-
-			return key.Value.ToString ();
-		}
 
 
-		private DataContext DataContext
-		{
-			get
-			{
-				return this.BusinessContext.DataContext;
-			}
-		}
 
 
-		private BusinessContext BusinessContext
-		{
-			get
-			{
-				return this.coreSession.GetBusinessContext ();
-			}
-		}
 
 
-		private readonly AbstractEntity rootEntity;
-		private readonly ViewControllerMode controllerMode;
-		private readonly int? controllerSubTypeId;
-		private readonly CoreSession coreSession;
-		
+
 
 	}
 

@@ -1,4 +1,5 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -31,17 +32,19 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
-		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, ViewControllerMode mode)
+		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall)
 		{
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (brick, mode);
+				yield return Carpenter.BuildTileData (brick);
 			}
 		}
 
 
-		private static ITileData BuildTileData(Brick brick, ViewControllerMode mode)
+		private static ITileData BuildTileData(Brick brick)
 		{
+			var mode = Carpenter.GetTileMode (brick);
+
 			switch (mode)
 			{
 				case ViewControllerMode.Creation:
@@ -58,6 +61,22 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 				default:
 					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static ViewControllerMode GetTileMode(Brick brick)
+		{
+			var edition = Brick.ContainsProperty (brick, BrickPropertyKey.Include)
+					   || Brick.ContainsProperty (brick, BrickPropertyKey.Input);
+
+			if (edition)
+			{
+				return ViewControllerMode.Edition;
+			}
+			else
+			{
+				return ViewControllerMode.Summary;
 			}
 		}
 
@@ -283,7 +302,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static TemplateTileData GetOptionalTemplate(Brick brick)
+		private static CollectionTileData GetOptionalTemplate(Brick brick)
 		{
 			var templateBrickProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Template);
 
@@ -300,9 +319,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static TemplateTileData GetTemplate(Brick brick, Brick templateBrick)
+		private static CollectionTileData GetTemplate(Brick brick, Brick templateBrick)
 		{
-			return new TemplateTileData ()
+			return new CollectionTileData ()
 			{
 				CollectionGetter = Carpenter.GetCollectionGetter(brick),
 				EntityType = templateBrick.GetFieldType (),
@@ -324,7 +343,187 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static EditionTileData BuildEditionTileDataItem(Brick brick)
 		{
-			throw new NotImplementedException ();
+			var editionTileData = new EditionTileData ();
+
+			editionTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
+			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
+
+			editionTileData.Items.AddRange (Carpenter.BuildEditionData (brick));
+			editionTileData.Includes.AddRange (Carpenter.BuildIncludeData (brick));
+
+			return editionTileData;
+		}
+
+
+		private static IEnumerable<AbstractEditionTilePartData> BuildEditionData(Brick brick)
+		{
+			var editionData = new List<AbstractEditionTilePartData> ();
+
+			foreach (var property in Brick.GetAllProperties (brick))
+			{
+				switch (property.Key)
+				{
+					case BrickPropertyKey.Input:
+						editionData.AddRange (Carpenter.BuildInputData (property.Brick));
+						break;
+
+					case BrickPropertyKey.Separator:
+						editionData.Add (Carpenter.BuildSeparatorData ());
+						break;
+						
+					case BrickPropertyKey.GlobalWarning:
+						editionData.Add (Carpenter.BuildGlobalWarningData ());
+						break;
+
+					default:
+						// Nothing to do here. We simply ignore the property.
+						break;
+				}
+			}
+
+			return editionData;
+		}
+
+
+		private static AbstractEditionTilePartData BuildSeparatorData()
+		{
+			return new SeparatorData ();
+		}
+
+
+		private static AbstractEditionTilePartData BuildGlobalWarningData()
+		{
+			return new GlobalWarningData ();
+		}
+
+
+		private static IEnumerable<AbstractEditionTilePartData> BuildInputData(Brick brick)
+		{
+			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
+
+			foreach (var brickProperty in brickProperties)
+			{
+				switch (brickProperty.Key)
+				{
+					case BrickPropertyKey.HorizontalGroup:
+						yield return Carpenter.BuildHorizontalGroupData (brickProperty.Brick);
+						break;
+
+					case BrickPropertyKey.Field:
+						yield return Carpenter.BuildFieldData (brickProperties, brickProperty);
+						break;
+				}
+			}
+		}
+
+
+		private static AbstractEditionTilePartData BuildHorizontalGroupData(Brick brick)
+		{
+			var horizontalGroupData = new HorizontalGroupData ()
+			{
+				Title = Carpenter.GetHorizontalGroupTitle (brick),
+			};
+
+			horizontalGroupData.Fields.AddRange (Carpenter.BuildHorizontalFieldData (brick));
+
+			return horizontalGroupData;
+		}
+
+
+		private static AbstractEditionTilePartData BuildFieldData(BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
+		{
+			Expression expression = fieldProperty.ExpressionValue;
+
+			return new FieldData ()
+			{
+				IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties),
+				Lambda = (LambdaExpression) expression,
+				Title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression),
+			};
+		}
+
+
+		private static bool IsFieldDataReadOnly(BrickPropertyCollection brickProperties)
+		{
+			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, 1).HasValue;
+		}
+
+
+		private static FormattedText? GetFieldDataTitle(BrickPropertyCollection brickProperties)
+		{
+			var titleProperty = brickProperties.PeekBefore (BrickPropertyKey.Title, -1);
+
+			if (titleProperty.HasValue)
+			{
+				return titleProperty.Value.StringValue;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
+		private static FormattedText GetFieldDataTitle(Expression expression)
+		{
+			var caption = EntityInfo.GetFieldCaption (expression);
+
+			FormattedText title = FormattedText.Empty;
+
+			if (caption != null)
+			{
+				if (caption.HasLabels)
+				{
+					title = caption.DefaultLabel;
+				}
+				else
+				{
+					title = caption.Description ?? caption.Name;
+				}
+			}
+
+			return title;
+		}
+
+
+		private static FormattedText GetHorizontalGroupTitle(Brick brick)
+		{
+			var titleProperty = Carpenter.GetOptionalBrickProperty (brick, BrickPropertyKey.Title);
+
+			if (titleProperty.HasValue)
+			{
+				return titleProperty.Value.StringValue;
+			}
+			else
+			{
+				return FormattedText.Empty;
+			}
+		}
+
+
+		private static IEnumerable<FieldData> BuildHorizontalFieldData(Brick brick)
+		{
+			foreach (var fieldProperty in Brick.GetProperties (brick, BrickPropertyKey.Field))
+			{
+				yield return new FieldData ()
+				{
+					Title = FormattedText.Empty,
+					IsReadOnly = false,
+					Lambda = (LambdaExpression) fieldProperty.ExpressionValue,
+				};
+			}
+		}
+
+
+		private static IEnumerable<IncludeData> BuildIncludeData(Brick brick)
+		{
+			foreach (var includeProperty in Brick.GetProperties (brick, BrickPropertyKey.Include))
+			{
+				yield return new IncludeData ()
+				{
+					EntityGetter = (LambdaExpression) includeProperty.ExpressionValue
+				};
+			}
 		}
 
 
