@@ -13,11 +13,12 @@ using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
+using Epsitec.Cresus.Compta.Memory.Data;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Search.Controllers
+namespace Epsitec.Cresus.Compta.Memory.Controllers
 {
 	/// <summary>
 	/// Ce contrôleur gère la barre d'outil supérieure de mémoire pour la comptabilité.
@@ -31,6 +32,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.comptaEntity    = this.controller.ComptaEntity;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
+			this.memoryList      = this.controller.MemoryList;
 
 			this.showPanel = false;
 			this.ignoreChanges = new SafeCounter ();
@@ -69,7 +71,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = Color.FromHexa ("ffe2e2"),  // rouge pastel
+				BackColor           = Color.FromHexa ("ffeecc"),  // orange pastel
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),
@@ -425,6 +427,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					comptaEntity;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
+		private readonly MemoryList						memoryList;
 		private readonly SafeCounter					ignoreChanges;
 
 		private FrameBox								mainFrame;

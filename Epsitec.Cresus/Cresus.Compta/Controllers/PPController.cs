@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new PPDataAccessor (this);
+
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.PP.Memory");
 		}
 
 

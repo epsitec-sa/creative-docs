@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new JournalDataAccessor (this);
+
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Journal.Memory");
 		}
 
 

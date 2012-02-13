@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BalanceDataAccessor (this);
+
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Balance.Memory");
 		}
 
 

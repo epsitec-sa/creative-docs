@@ -53,7 +53,9 @@
     <Compile Include="Accessors\AbstractData.cs" />
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
-    <Compile Include="Controllers\MemoryController.cs" />
+    <Compile Include="Memory\Data\MemoryList.cs" />
+    <Compile Include="Memory\Data\MemoryData.cs" />
+    <Compile Include="Memory\Controllers\MemoryController.cs" />
     <Compile Include="Options\Data\AbstractOptions.cs" />
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />

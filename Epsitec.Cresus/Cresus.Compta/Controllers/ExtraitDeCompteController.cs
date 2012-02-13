@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);
+
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.ExtraitDeCompte.Memory");
 		}
 
 

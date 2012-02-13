@@ -17,6 +17,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Memory.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -828,6 +829,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				initialize (data);
 			}
+
+			this.settingsDatas.Add (key, data);
+
+			return data;
+		}
+
+		public MemoryList GetMemoryList(string key)
+		{
+			ISettingsData result;
+			if (this.settingsDatas.TryGetValue (key, out result))
+			{
+				return result as MemoryList;
+			}
+
+			MemoryList data = new MemoryList ();
 
 			this.settingsDatas.Add (key, data);
 

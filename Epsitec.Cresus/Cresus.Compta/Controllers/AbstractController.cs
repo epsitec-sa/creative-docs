@@ -15,6 +15,8 @@ using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Search.Controllers;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Memory.Data;
+using Epsitec.Cresus.Compta.Memory.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -109,6 +111,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.settingsList;
+			}
+		}
+
+		public MemoryList MemoryList
+		{
+			get
+			{
+				return this.memoryList;
 			}
 		}
 
@@ -247,11 +257,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowMemoryPanel
+		public bool HasShowMemoryPanel
 		{
 			get
 			{
-				return true;
+				return this.memoryList != null;
 			}
 		}
 
@@ -836,6 +846,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected Command										commandDocument;
 
 		protected AbstractDataAccessor							dataAccessor;
+		protected MemoryList									memoryList;
 
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
