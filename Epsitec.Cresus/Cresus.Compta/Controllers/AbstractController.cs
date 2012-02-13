@@ -383,7 +383,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void MemoryChangedAction()
 		{
+			if (this.topSearchController != null)
+			{
+				this.topSearchController.UpdateContent ();
+			}
+
+			if (this.topFilterController != null)
+			{
+				this.topFilterController.UpdateContent ();
+			}
+
+			if (this.optionsController != null)
+			{
+				this.optionsController.UpdateContent ();
+			}
+
 			this.FilterStartAction ();
+		}
+
+		private void UpdateMemory()
+		{
+			if (this.memoryController != null)
+			{
+				this.memoryController.Update ();
+			}
 		}
 		#endregion
 
@@ -408,6 +431,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.BaseUpdateArrayContent ();
 				this.SearchUpdateLocator (true);
 				this.SearchUpdateTopToolbar ();
+				this.UpdateMemory ();
 			}
 		}
 
@@ -483,6 +507,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SearchUpdateLocator (true);
 			this.SearchUpdateTopToolbar ();
 
+			this.UpdateMemory ();
+
 			if (this.footerController != null)
 			{
 				this.footerController.FooterValidate ();
@@ -514,6 +540,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
+			this.UpdateMemory ();
 		}
 		#endregion
 

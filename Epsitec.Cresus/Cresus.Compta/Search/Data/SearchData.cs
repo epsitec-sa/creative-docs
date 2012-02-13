@@ -390,6 +390,29 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public bool CompareTo(SearchData other)
+		{
+			if (other.OrMode != this.OrMode)
+			{
+				return false;
+			}
+
+			if (other.tabsData.Count != this.tabsData.Count)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < this.tabsData.Count; i++)
+			{
+				if (!this.tabsData[i].CompareTo (other.tabsData[i]))
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
 		public void CopyTo(SearchData dst)
 		{
 			dst.OrMode = this.OrMode;

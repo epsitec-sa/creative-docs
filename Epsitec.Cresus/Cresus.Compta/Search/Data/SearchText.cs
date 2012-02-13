@@ -516,6 +516,26 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public bool CompareTo(SearchText other)
+		{
+			return SearchText.CompareFormattedText (other.fromText, this.fromText)  &&
+				   SearchText.CompareFormattedText (other.toText,   this.toText  )  &&
+				   other.mode      == this.mode      &&
+				   other.matchCase == this.matchCase &&
+				   other.wholeWord == this.wholeWord &&
+				   other.invert    == this.invert;
+		}
+
+		private static bool CompareFormattedText(FormattedText t1, FormattedText t2)
+		{
+			if (t1.Length == 0 && t2.Length == 0)
+			{
+				return true;
+			}
+
+			return t1 == t2;
+		}
+
 		public void CopyTo(SearchText dst)
 		{
 			dst.fromText  = this.fromText;

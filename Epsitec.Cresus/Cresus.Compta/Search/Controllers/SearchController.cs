@@ -91,6 +91,14 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		public void UpdateContent()
+		{
+			this.CreateMiddleUI ();
+			this.UpdateButtons ();
+			this.UpdateOrMode ();
+		}
+
+
 		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.

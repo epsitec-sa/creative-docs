@@ -102,13 +102,35 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			//	Remplissage de la frame gauche.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Remet ???", this.ClearAction, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, "Termine la recherche, le fitre et les options", this.ClearAction, this.LevelChangedAction);
 
 			this.UpdateWidgets ();
 		}
 
 		private void ClearAction()
 		{
+			this.memoryList.Selected = null;
+
+			if (this.dataAccessor != null)
+			{
+				if (this.dataAccessor.SearchData != null)
+				{
+					this.dataAccessor.SearchData.Clear ();
+				}
+
+				if (this.dataAccessor.FilterData != null)
+				{
+					this.dataAccessor.FilterData.Clear ();
+				}
+
+				if (this.dataAccessor.AccessorOptions != null)
+				{
+					this.dataAccessor.AccessorOptions.Clear ();
+				}
+			}
+
+			this.UpdateWidgets ();
+			this.MemoryChanged ();
 		}
 
 		private void LevelChangedAction()
@@ -118,14 +140,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void MemoryChanged()
 		{
-			this.UpdateWidgets ();
-
 			var memory = this.memoryList.Selected;
 			if (memory != null)
 			{
 				this.CopyMemoryToData (memory);
 				this.memoryChangedAction ();
 			}
+
+			this.UpdateWidgets ();
 		}
 
 		private void UpdateLevel()
@@ -145,6 +167,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.UpdateSummary ();
 		}
 
+		public void Update()
+		{
+			this.UpdateButtons ();
+		}
+
 
 		private void CreateComptactMemoryUI(FrameBox parent)
 		{
@@ -158,7 +185,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			new StaticText
 			{
 				Parent          = this.comptactFrame,
-				Text            = "Mémoire",
+				Text            = "Style",
 				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -171,6 +198,16 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				PreferredHeight = 20,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
+			};
+
+			this.compactUseButton = new IconButton
+			{
+				Parent            = this.comptactFrame,
+				IconUri           = UIBuilder.GetResourceIconUri ("Memory.Use"),
+				PreferredIconSize = new Size (20, 20),
+				PreferredSize     = new Size (20, 20),
+				Dock              = DockStyle.Left,
+				Margins           = new Margins (10, 0, 0, 0),
 			};
 
 			this.compactSummary = new StaticText
@@ -190,6 +227,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					this.memoryList.SelectedIndex = this.compactComboJournaux.SelectedItemIndex;
 					this.MemoryChanged ();
 				}
+			};
+
+			this.compactUseButton.Clicked += delegate
+			{
+				this.MemoryChanged ();
 			};
 		}
 
@@ -227,7 +269,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			new StaticText
 			{
 				Parent          = leftFrame,
-				Text            = "Mémoires",
+				Text            = "Styles",
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
@@ -254,31 +296,71 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			//	Panneau de droite.
 			{
-				var frame = new FrameBox
+				var toolbar = new FrameBox
 				{
 					Parent          = rightFrame,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, 10),
 				};
 
-				this.extendedAddButton = new Button
+				this.extendedAddButton = new IconButton
 				{
-					Parent          = frame,
-					Text            = "Conserver",
-					PreferredHeight = 20,
-					PreferredWidth  = 80,
+					Parent          = toolbar,
+					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Add"),
+					PreferredSize   = new Size (40, 40),
 					Dock            = DockStyle.Left,
 				};
 
-				this.extendedUpdateButton = new Button
+				this.extendedUpdateButton = new IconButton
 				{
-					Parent          = frame,
-					Text            = "Mettre à jour",
-					PreferredHeight = 20,
-					PreferredWidth  = 80,
+					Parent          = toolbar,
+					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Update"),
+					PreferredSize   = new Size (40, 40),
 					Dock            = DockStyle.Left,
-					Margins         = new Margins (10, 0, 0, 0),
+					Margins         = new Margins (2, 0, 0, 0),
+				};
+
+				this.extendedUseButton = new IconButton
+				{
+					Parent          = toolbar,
+					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Use"),
+					PreferredSize   = new Size (40, 40),
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (2, 0, 0, 0),
+				};
+
+				{
+					var upDown = new FrameBox
+					{
+						Parent          = toolbar,
+						PreferredSize   = new Size (20, 40),
+						Dock            = DockStyle.Left,
+						Margins         = new Margins (20, 0, 0, 0),
+					};
+
+					this.extendedUpButton = new IconButton
+					{
+						Parent          = upDown,
+						IconUri         = UIBuilder.GetResourceIconUri ("Memory.Up"),
+						PreferredSize   = new Size (20, 20),
+						Dock            = DockStyle.Top,
+					};
+
+					this.extendedDownButton = new IconButton
+					{
+						Parent          = upDown,
+						IconUri         = UIBuilder.GetResourceIconUri ("Memory.Down"),
+						PreferredSize   = new Size (20, 20),
+						Dock            = DockStyle.Bottom,
+					};
+				}
+
+				this.extendedRemoveButton = new IconButton
+				{
+					Parent          = toolbar,
+					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Delete"),
+					PreferredSize   = new Size (40, 40),
+					Dock            = DockStyle.Left,
 				};
 			}
 
@@ -286,70 +368,27 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				var frame = new FrameBox
 				{
 					Parent          = rightFrame,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, 1),
-				};
-
-				this.extendedUpButton = new Button
-				{
-					Parent          = frame,
-					Text            = "Monter",
-					PreferredHeight = 20,
-					PreferredWidth  = 80,
-					Dock            = DockStyle.Left,
-				};
-			}
-
-			{
-				var frame = new FrameBox
-				{
-					Parent          = rightFrame,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Top,
-				};
-
-				this.extendedDownButton = new Button
-				{
-					Parent          = frame,
-					Text            = "Descendre",
-					PreferredHeight = 20,
-					PreferredWidth  = 80,
-					Dock            = DockStyle.Left,
-				};
-			}
-
-			{
-				var frame = new FrameBox
-				{
-					Parent          = rightFrame,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Bottom,
-				};
-
-				this.extendedRemoveButton = new Button
-				{
-					Parent          = frame,
-					Text            = "Supprimer",
-					PreferredHeight = 20,
-					PreferredWidth  = 80,
-					Dock            = DockStyle.Left,
+					DrawFullFrame   = true,
+					Dock            = DockStyle.Fill,
+					Margins       = new Margins (0, 0, 5, 0),
+					Padding         = new Margins (5),
 				};
 
 				this.extendedSummary = new StaticText
 				{
 					Parent        = frame,
-					TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					TextBreakMode = TextBreakMode.None,
 					Dock          = DockStyle.Fill,
-					Margins       = new Margins (20, 0, 0, 0),
 				};
 			}
 
-			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans une nouvelle mémoire");
-			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour la mémoire d'après la recherche, le filtre et les options");
-			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte la mémoire d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend la mémoire d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime la mémoire");
+			ToolTip.Default.SetToolTip (this.compactUseButton,     "Utilise la recherche, le filtre et les options définis dans le style");
+			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise la recherche, le filtre et les options définis dans le style");
+			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans un nouveau style");
+			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le style d'après la recherche, le filtre et les options en cours");
+			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le style d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le style d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le style");
 
 			//	Connexions.
 			this.UpdateList ();
@@ -374,6 +413,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				}
 			};
 
+			this.extendedUseButton.Clicked += delegate
+			{
+				this.MemoryChanged ();
+			};
+
 			this.extendedAddButton.Clicked += delegate
 			{
 				var memory = new MemoryData ();
@@ -394,6 +438,20 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedUpdateButton.Clicked += delegate
 			{
+				var memory = this.memoryList.Selected;
+
+				if (memory != null)
+				{
+					this.CopyDataToMemory (memory);
+
+					this.UpdateCombo ();
+					this.UpdateList ();
+					this.UpdateButtons ();
+					this.UpdateSummary ();
+
+					this.extendedFieldName.SelectAll ();
+					this.extendedFieldName.Focus ();
+				}
 			};
 
 			this.extendedUpButton.Clicked += delegate
@@ -492,9 +550,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			int sel = this.extendedListJournaux.SelectedItemIndex;
 			int count = this.memoryList.List.Count;
+			bool eq = this.CompareTo (this.memoryList.Selected);
+			bool am = this.AlreadyMemorized ();
 
+			this.compactUseButton.Enable     = (sel != -1 && !eq);
+			this.extendedAddButton.Enable    = !am;
+			this.extendedUseButton.Enable    = (sel != -1 && !eq);
 			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
-			this.extendedUpdateButton.Enable = (sel != -1);
+			this.extendedUpdateButton.Enable = (sel != -1 && !am);
 			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
 			this.extendedRemoveButton.Enable = (sel != -1);
 		}
@@ -509,10 +572,47 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				summary = memory.GetSummary (this.controller.ColumnMappers);
 			}
 
-			this.compactSummary.FormattedText  = summary;
+			this.compactSummary.FormattedText  = summary.ToString ().Replace ("<br/>", ", ");
 			this.extendedSummary.FormattedText = summary;
 		}
 
+
+		private bool AlreadyMemorized()
+		{
+			foreach (var memory in this.memoryList.List)
+			{
+				if (this.CompareTo (memory))
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		private bool CompareTo(MemoryData memory)
+		{
+			if (memory != null)
+			{
+				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null)
+				{
+					if (!this.dataAccessor.SearchData.CompareTo (memory.Search))
+					{
+						return false;
+					}
+				}
+
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null)
+				{
+					if (!this.dataAccessor.FilterData.CompareTo (memory.Filter))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
 
 		private void CopyDataToMemory(MemoryData memory)
 		{
@@ -531,12 +631,12 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void CopyMemoryToData(MemoryData memory)
 		{
-			if (memory.Search != null)
+			if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null)
 			{
 				memory.Search.CopyTo (this.dataAccessor.SearchData);
 			}
 
-			if (memory.Filter != null)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null)
 			{
 				memory.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
@@ -584,11 +684,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private FrameBox								comptactFrame;
 		private TextFieldCombo							compactComboJournaux;
+		private Button									compactUseButton;
 		private StaticText								compactSummary;
 
 		private FrameBox								extendedFrame;
 		private ScrollList								extendedListJournaux;
 		private TextFieldEx								extendedFieldName;
+		private Button									extendedUseButton;
 		private Button									extendedAddButton;
 		private Button									extendedUpdateButton;
 		private Button									extendedUpButton;

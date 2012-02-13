@@ -75,6 +75,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}
 
+		public void UpdateContent()
+		{
+			this.searchController.UpdateContent ();
+		}
+
 
 		public void UpdateColumns()
 		{

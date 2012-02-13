@@ -48,6 +48,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public bool CompareTo(SearchTabData other)
+		{
+			return other.Column == this.Column &&
+				   this.searchText.CompareTo (other.searchText);
+		}
+
 		public void CopyTo(SearchTabData dst)
 		{
 			dst.Column = this.Column;

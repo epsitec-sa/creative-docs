@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			var f = (this.Filter  == null) ? FormattedText.Empty : this.Filter.GetSummary (columnMappers, true);
 			var o = (this.Options == null) ? FormattedText.Empty : this.Options.Summary;
 
-			return TextFormatter.FormatText (s, "~, ~", f, "~, ~", o);
+			return TextFormatter.FormatText (s, "~<br/>~", f, "~<br/>~", o);
 		}
 	}
 }
