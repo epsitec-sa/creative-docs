@@ -9,15 +9,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 	{
 
 
-		public string Type
-		{
-			get
-			{
-				return "summary";
-			}
-		}
-
-
 		public string EntityId
 		{
 			get;
@@ -64,7 +55,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		{
 			var panel = new Dictionary<string, object> ();
 
-			panel["xtype"] = this.Type;
+			panel["xtype"] = "summary";
 
 			if (this.IconClass != null)
 			{
