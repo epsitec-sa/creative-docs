@@ -54,6 +54,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public System.Type						DataSetEntityType
+		{
+			get
+			{
+				var component = this.data.GetComponent<DataSetGetter> ();
+				var entityId  = component.GetRootEntityId (this.dataSetName);
+
+				return EntityInfo.GetType (entityId);
+			}
+		}
 
 		/// <summary>
 		/// Selects the specified data set.
