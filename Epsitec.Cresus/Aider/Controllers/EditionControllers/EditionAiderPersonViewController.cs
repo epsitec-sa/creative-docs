@@ -29,6 +29,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private void CreateBricksForUserAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
+				.Icon (this.Entity.GetIconName ("Data"))
 				.Input ()
 					.Field (x => x.eCH_Person.PersonFirstNames)
 					.Field (x => x.eCH_Person.PersonOfficialName)
@@ -57,6 +58,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		private void CreateBricksForGovernmentAiderPerson(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
+				.Icon (this.Entity.GetIconName ("Data"))
 				.Input ()
 					.Field (x => x.eCH_Person.PersonFirstNames)
 						.ReadOnly ()

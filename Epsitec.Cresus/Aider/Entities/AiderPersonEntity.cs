@@ -254,6 +254,29 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (person.eCH_Person.PersonOfficialName, ",", person.CallName);
 		}
+		
+		internal string GetIconName(string prefix)
+		{
+			string suffix;
+
+			if (this.eCH_Person.PersonSex == PersonSex.Female)
+			{
+				suffix = ".AiderPerson.Female-";
+			}
+			else
+			{
+				suffix = ".AiderPerson.Male-";
+			}
+
+			if (this.Language == Enumerations.Language.German)
+			{
+				return prefix + suffix + "German";
+			}
+			else
+			{
+				return prefix + suffix + "French";
+			}
+		}
 
 
 		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;

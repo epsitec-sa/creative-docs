@@ -152,6 +152,28 @@
     <EmbeddedResource Include="Resources\Xsd\eVD-0004-1-0.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Images\Base.AiderEvent.icon" />
+    <EmbeddedResource Include="Images\Base.AiderGroup.Activity.icon" />
+    <EmbeddedResource Include="Images\Base.AiderGroup.Parish.icon" />
+    <EmbeddedResource Include="Images\Base.AiderGroup.People.icon" />
+    <EmbeddedResource Include="Images\Base.AiderHoushold.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPerson.Male-German.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPerson.Male-French.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPerson.Female-German.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPerson.Female-French.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPersonRelationship.icon" />
+    <EmbeddedResource Include="Images\Base.AiderPlace.icon" />
+    <EmbeddedResource Include="Images\Data.AiderEvent.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroup.Activity.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroup.Parish.icon" />
+    <EmbeddedResource Include="Images\Data.AiderGroup.People.icon" />
+    <EmbeddedResource Include="Images\Data.AiderHousehold.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPerson.Male-German.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPerson.Male-French.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPerson.Female-German.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPerson.Female-French.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPersonRelationship.icon" />
+    <EmbeddedResource Include="Images\Data.AiderPlace.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

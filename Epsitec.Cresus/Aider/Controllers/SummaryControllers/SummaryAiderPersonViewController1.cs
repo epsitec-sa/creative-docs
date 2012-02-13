@@ -22,6 +22,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
+				.Icon (this.Entity.GetIconName ("Data"))
 				.Text (x => x.GetPersonalDataSummary ());
 
 			if (this.Entity.IsGovernmentDefined ())

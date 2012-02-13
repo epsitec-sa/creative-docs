@@ -296,6 +296,43 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 
+		public static string GetResourceIconUri(string icon, Epsitec.Common.Types.Converters.Marshaler marshaler)
+		{
+			if (marshaler == null)
+			{
+				return Misc.GetResourceIconUri (icon);
+			}
+			else
+			{
+				return Misc.GetResourceIconUri (icon, marshaler.MarshaledType);
+			}
+		}
+
+		public static string GetResourceIconUri(string icon, System.Type type)
+		{
+			if (type == null)
+			{
+				return Misc.GetResourceIconUri (icon);
+			}
+
+			var typeName    = type.FullName;
+			int entitiesPos = typeName.IndexOf (".Entities.");
+
+			if (entitiesPos < 0)
+			{
+				return Misc.GetResourceIconUri (icon);
+			}
+
+			if (icon.Contains (':'))
+			{
+				return FormattedText.Escape (icon);
+			}
+			else
+			{
+				return string.Format ("manifest:{0}.Images.{1}.icon", typeName.Substring (0, entitiesPos), FormattedText.Escape (icon));
+			}
+		}
+
 		/// <summary>
 		/// Retourne le nom complet d'une image contenue dans les ressources.
 		/// </summary>

@@ -23,6 +23,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			wall.AddBrick ()
+				.Icon (this.Entity.GetIconName ("Data"))
 				.Title (x => TextFormatter.FormatText (x.CallName, x.eCH_Person.PersonOfficialName, "(~", x.OriginalName, "~)"))
 				.Text (x => TextFormatter.FormatText (TextFormatter.FormatText (x.Parish.Name).ApplyBold (), "\n", x.Household1.Address.GetPostalAddress ()))
 				.Attribute (BrickMode.DefaultToSummarySubView)
