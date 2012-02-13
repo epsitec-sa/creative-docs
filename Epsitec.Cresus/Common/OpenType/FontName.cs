@@ -2,6 +2,7 @@
 //	Responsable: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.OpenType
 {
@@ -135,47 +136,64 @@ namespace Epsitec.Common.OpenType
 			{
 				return null;
 			}
-			
-			List<string> names = new List<string> ();
 
-			string   clean = fullName.Replace ("(", "").Replace (")", "");
+			HashSet<string> names = new HashSet<string> ();
+
+			string   clean = fullName.Replace ("(", "").Replace (")", "").ToLowerInvariant ();
 			string[] split = clean.Split (' ');
+
+			//	TODO: remove the xbkl --> extra black hack
 
 			foreach (string element in split)
 			{
 				switch (element)
 				{
-					case "Regular":
+					case "regular":
+					case "normal":
+					case "roman":
 						break;
-					case "Normal":
+
+					case "bk":
+						names.Add ("book");
 						break;
-					case "Roman":
+
+					case "hv":
+						names.Add ("heavy");
+						break;
+
+					case "cn":
+						names.Add ("condensed");
+						break;
+
+					case "mdcn":
+						names.Add ("medium");
+						names.Add ("condensed");
+						break;
+
+					case "xblk":
+						names.Add ("extra");
+						names.Add ("black");
+						break;
+
+					case "xblkcn":
+						names.Add ("extra");
+						names.Add ("black");
+						names.Add ("condensed");
+						break;
+
+					case "xblkit":
+						names.Add ("extra");
+						names.Add ("black");
+						names.Add ("italic");
 						break;
 
 					default:
-						if (!names.Contains (element))
-						{
-							names.Add (element);
-						}
+						names.Add (element);
 						break;
 				}
 			}
 
-			names.Sort ();
-
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-
-			foreach (string element in names)
-			{
-				if (buffer.Length > 0)
-				{
-					buffer.Append (" ");
-				}
-
-				buffer.Append (element);
-			}
-
-			return buffer.ToString ();
+			return string.Join (" ", names.OrderBy (x => x));
 		}
 
 		#region IComparable Members

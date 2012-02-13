@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -159,8 +159,15 @@ namespace Epsitec.Common.Drawing
 					}
 
 					System.IntPtr osHandle = this.OpenTypeFont.GetFontHandleAtEmSize ();
-					
-					this.handle = AntiGrain.Font.CreateFaceHandle (data, size, offset, osHandle);
+
+					if (osHandle == System.IntPtr.Zero)
+					{
+						this.handle = System.IntPtr.Zero;
+					}
+					else
+					{
+						this.handle = AntiGrain.Font.CreateFaceHandle (data, size, offset, osHandle);
+					}
 				}
 				
 				return this.handle;
@@ -653,7 +660,7 @@ namespace Epsitec.Common.Drawing
 			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
 			AntiGrain.Font.PixelCache.Fill (this.Handle, glyphs, size, ox, oy);
 		}
-		
+
 		public double PaintPixelCache(Pixmap pixmap, string text, double size, double ox, double oy, Color color)
 		{
 			if (string.IsNullOrEmpty (text))
@@ -661,8 +668,20 @@ namespace Epsitec.Common.Drawing
 				return 0.0;
 			}
 
-			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
-			return AntiGrain.Font.PixelCache.Paint (pixmap.Handle, this.Handle, glyphs, size, ox, oy, color.R, color.G, color.B, color.A);
+			var pixmapHandle = pixmap == null ? System.IntPtr.Zero : pixmap.Handle;
+			var fontHandle = this.Handle;
+
+			if ((fontHandle == System.IntPtr.Zero) ||
+				(pixmapHandle == System.IntPtr.Zero))
+			{
+				return 0.0;
+			}
+			else
+			{
+				ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
+
+				return AntiGrain.Font.PixelCache.Paint (pixmapHandle, fontHandle, glyphs, size, ox, oy, color.R, color.G, color.B, color.A);
+			}
 		}
 
 		public void PaintPixelGlyphs(Pixmap pixmap, double scale, ushort[] glyphs, double[] x, double[] y, double[] sx, Color color, double xx, double yy, double tx, double ty)

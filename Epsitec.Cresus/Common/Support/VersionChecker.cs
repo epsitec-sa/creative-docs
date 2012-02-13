@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -173,6 +173,8 @@ namespace Epsitec.Common.Support
 		/// <returns>The formatted version string.</returns>
 		public static string Format(string format, string version)
 		{
+			version = version.Split (' ')[0];
+
 			var buffer = new System.Text.StringBuilder ();
 			int pos    = 0;
 
@@ -215,20 +217,20 @@ namespace Epsitec.Common.Support
 					}
 					
 					if (len > 0)
-                    {
+					{
 						//	We have accumulated a series of # and we will have to produce at least
 						//	as many digits in the output buffer.
 						
 						if (digits.Length < len)
-                        {
+						{
 							buffer.Append (new string ('0', len - digits.Length));
-                        }
+						}
 						
 						buffer.Append (digits);
 						
 						len      = 0;
 						inserted = true;
-                    }
+					}
 
 					//	Copy non-formatting characters to the output.
 
@@ -264,7 +266,7 @@ namespace Epsitec.Common.Support
 
 
 			System.Threading.WaitCallback callback =
-                delegate
+				delegate
 				{
 					try
 					{
@@ -319,7 +321,7 @@ namespace Epsitec.Common.Support
 					this.readerResult = result;
 
 					if ((result.Length > 0) &&
-                        (result.IndexOf ('|') > 0))
+						(result.IndexOf ('|') > 0))
 					{
 						string[] args = result.Split ('|');
 

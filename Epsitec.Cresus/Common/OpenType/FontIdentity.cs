@@ -1,4 +1,4 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -706,6 +706,8 @@ namespace Epsitec.Common.OpenType
 					{
 						if (this.record == null)
 						{
+							//	TODO: handle dynamic fonts with names such as XBlkCn which are not recognized
+
 							if (string.IsNullOrEmpty (this.systemFontFamily))
 							{
 								this.record = Platform.Neutral.GetFontSystemDescription (null, this.FullHash);
@@ -934,13 +936,20 @@ namespace Epsitec.Common.OpenType
 				{
 					this.fontSizes = new Dictionary<int, FontSizeInfo> ();
 				}
-				
+
 				if (this.fontSizes.ContainsKey (size) == false)
 				{
-					this.fontSizes[size] = new FontSizeInfo (size, Platform.Neutral.GetFontHandle (this.Record, size));
+					var fontHandle = Platform.Neutral.GetFontHandle (this.Record, size);
+
+					if (fontHandle == null)
+					{
+						System.Diagnostics.Debug.Fail ("Font cannot be resolved", string.Format ("Font: {0}, size: {1}", this.FullName, size));
+					}
+					
+					this.fontSizes[size] = new FontSizeInfo (size, fontHandle);
 				}
 			}
-			
+
 			return this.fontSizes[size];
 		}
 

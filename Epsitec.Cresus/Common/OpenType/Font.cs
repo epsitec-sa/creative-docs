@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -1585,7 +1585,7 @@ namespace Epsitec.Common.OpenType
 		public System.IntPtr GetFontHandleAtEmSize()
 		{
 			FontSizeInfo info = this.identity.GetSizeInfo (this.otHead.UnitsPerEm);
-            return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
+			return info.Handle == null ? System.IntPtr.Zero : info.Handle.Handle;
 		}
 
 

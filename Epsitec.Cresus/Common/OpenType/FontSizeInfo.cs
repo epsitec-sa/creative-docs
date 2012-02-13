@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 
@@ -14,8 +14,8 @@ namespace Epsitec.Common.OpenType
 	{
 		public FontSizeInfo(int pointSize, Platform.IFontHandle handle)
 		{
-			System.Diagnostics.Debug.Assert (pointSize > 0);
-			System.Diagnostics.Debug.Assert (handle != null);
+			System.Diagnostics.Debug.Assert (pointSize > 0, "Invalid font size");
+			System.Diagnostics.Debug.Assert (handle != null, "Missing font handle");
 			
 			this.pointSize   = pointSize;
 			this.fontHandle  = handle;
