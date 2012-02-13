@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.scrollList.SelectedItemChanged += delegate
 			{
 				RéglagesController.selectedIndex = this.scrollList.SelectedItemIndex;
-				this.UpdateMain (this.scrollList.SelectedItemIndex);
+				this.UpdateMain ();
 			};
 		}
 
@@ -210,10 +210,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.groups.Clear ();
 			this.scrollList.Items.Clear ();
 
-			foreach (var settings in this.settingsList.List)
+			foreach (var group in this.settingsList.List.Select (x => x.Group))
 			{
-				var group = settings.Group;
-
 				if (!this.groups.Contains (group))
 				{
 					this.groups.Add (group);
@@ -222,27 +220,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.scrollList.SelectedItemIndex = RéglagesController.selectedIndex;
-			this.UpdateMain (this.scrollList.SelectedItemIndex);
+			this.UpdateMain ();
 		}
 
-		private void UpdateMain(int sel)
+		private void UpdateMain()
 		{
-			SettingsGroup group = (sel >= 0 && sel < this.groups.Count) ? this.groups[sel] : SettingsGroup.Unknown;
+			var group = this.CurrentGroup;
 
 			this.mainFrame.Children.Clear ();
 			this.controllers.Clear ();
 
-			foreach (var settings in this.settingsList.List)
+			foreach (var settings in this.settingsList.List.Where (x => x.Group == group))
 			{
-				if (settings.Group == group)
-				{
-					this.CreateController (settings);
-				}
+				this.CreateController (settings);
 			}
+
+			var footer = new FrameBox
+			{
+				Parent = this.mainFrame,
+				Dock   = DockStyle.Bottom,
+			};
+
+			this.defaultButton = new Button
+			{
+				Parent         = footer,
+				Text           = "Remet les valeurs standards",
+				PreferredWidth = 200,
+				Dock           = DockStyle.Left,
+			};
+
+			ToolTip.Default.SetToolTip (this.defaultButton, "Remet les valeurs standards de la catégorie");
+
+			this.defaultButton.Clicked += delegate
+			{
+				this.settingsList.CopyFrom (this.MainWindowController.DefaultSettingsList, this.CurrentGroup);
+				this.UpdateMain ();
+			};
 
 			this.UpdateControllers ();
 		}
-
 
 		private void CreateController(AbstractSettingsData data)
 		{
@@ -297,6 +313,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				controller.Update ();
 			}
+
+			//	Met à jour le bouton "Remet les valeurs standards".
+			var group = this.CurrentGroup;
+			this.defaultButton.Enable = !this.settingsList.Compare (this.MainWindowController.DefaultSettingsList, group);
+			this.defaultButton.Visibility = (group != SettingsGroup.Unknown);
 		}
 
 
@@ -323,6 +344,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private SettingsGroup CurrentGroup
+		{
+			get
+			{
+				int sel = this.scrollList.SelectedItemIndex;
+
+				if (sel >= 0 && sel < this.groups.Count)
+				{
+					return this.groups[sel];
+				}
+				else
+				{
+					return SettingsGroup.Unknown;
+				}
+			}
+		}
+
+
 		private static int									selectedIndex = -1;
 
 		private readonly List<SettingsGroup>				groups;
@@ -330,6 +369,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private ScrollList									scrollList;
 		private FrameBox									mainFrame;
+		private Button										defaultButton;
 		private FrameBox									infoFrame;
 		private StaticText									infoField;
 	}

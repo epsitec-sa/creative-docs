@@ -16,10 +16,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public abstract class AbstractSettingsData
 	{
-		public AbstractSettingsData(SettingsGroup group, SettingsType type)
+		public AbstractSettingsData(SettingsGroup group, SettingsType type, bool skipCompareTo = false)
 		{
-			this.Group = group;
-			this.Type  = type;
+			this.Group         = group;
+			this.Type          = type;
+			this.SkipCompareTo = skipCompareTo;
 		}
 
 		public SettingsGroup Group
@@ -32,6 +33,21 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 			get;
 			private set;
+		}
+
+		public bool SkipCompareTo
+		{
+			get;
+			private set;
+		}
+
+		public virtual bool CompareTo(AbstractSettingsData other)
+		{
+			return true;
+		}
+
+		public virtual void CopyFrom(AbstractSettingsData other)
+		{
 		}
 	}
 }

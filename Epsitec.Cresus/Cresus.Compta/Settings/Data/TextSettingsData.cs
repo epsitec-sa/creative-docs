@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class TextSettingsData : AbstractSettingsData
 	{
-		public TextSettingsData(SettingsGroup group, SettingsType type, int maxLength, FormattedText defaultValue)
-			: base (group, type)
+		public TextSettingsData(SettingsGroup group, SettingsType type, int maxLength, FormattedText defaultValue, bool skipCompareTo = false)
+			: base (group, type, skipCompareTo)
 		{
 			this.MaxLength = maxLength;
 			this.Value = defaultValue;
@@ -32,6 +32,24 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 			get;
 			set;
+		}
+
+
+		public override bool CompareTo(AbstractSettingsData other)
+		{
+			var o = (other as TextSettingsData);
+
+			if (this.Value.IsNullOrEmpty && o.Value.IsNullOrEmpty)
+			{
+				return true;
+			}
+
+			return this.Value == o.Value;
+		}
+
+		public override void CopyFrom(AbstractSettingsData other)
+		{
+			this.Value = (other as TextSettingsData).Value;
 		}
 
 		public FormattedText Value

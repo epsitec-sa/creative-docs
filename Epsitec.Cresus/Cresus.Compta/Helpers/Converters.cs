@@ -707,6 +707,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		#region Settings
 		private static SettingsEnum CharToSettingsEnum(string c)
 		{
 			switch (c)
@@ -831,8 +832,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.dateFormatYear      = settingsList.GetEnum (SettingsType.DateYear);
 			Converters.dateFormatOrder     = settingsList.GetEnum (SettingsType.DateOrder);
 		}
+		#endregion
 
-	
+
 		static Converters()
 		{
 			Converters.numberFormatMontant = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;

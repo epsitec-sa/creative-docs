@@ -28,6 +28,17 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 		}
 
+
+		public override bool CompareTo(AbstractSettingsData other)
+		{
+			return this.Value == (other as EnumSettingsData).Value;
+		}
+
+		public override void CopyFrom(AbstractSettingsData other)
+		{
+			this.Value = (other as EnumSettingsData).Value;
+		}
+
 		public SettingsEnum Value
 		{
 			get;

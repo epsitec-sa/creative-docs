@@ -37,6 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controllers = new List<AbstractController> ();
 			this.settingsDatas = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
+			this.defaultSettingsList = new SettingsList ();
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
@@ -101,6 +102,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.settingsList;
+			}
+		}
+
+		public SettingsList DefaultSettingsList
+		{
+			get
+			{
+				return this.defaultSettingsList;
 			}
 		}
 
@@ -815,6 +824,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly List<AbstractController>			controllers;
 		private readonly Dictionary<string, ISettingsData>	settingsDatas;
 		private readonly SettingsList						settingsList;
+		private readonly SettingsList						defaultSettingsList;
 
 		private Window										mainWindow;
 		private BusinessContext								businessContext;

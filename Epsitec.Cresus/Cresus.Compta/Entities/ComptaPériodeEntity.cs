@@ -132,64 +132,6 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			//	Transforme un texte en une date valide pour la comptabilité.
 			return Converters.ParseDate (text.ToSimpleText (), this.ProchaineDate, this.DateDébut, this.DateFin, out date);
-
-#if false
-			if (text.IsNullOrEmpty)
-			{
-				date = null;
-				return true;
-			}
-
-			var brut = text.ToSimpleText ();
-			brut = brut.Replace (".", " ");
-			brut = brut.Replace (",", " ");
-			brut = brut.Replace ("/", " ");
-			brut = brut.Replace ("-", " ");
-			brut = brut.Replace (":", " ");
-			brut = brut.Replace (";", " ");
-			brut = brut.Replace ("  ", " ");
-			brut = brut.Replace ("  ", " ");
-
-			var words = brut.Split (' ');
-			var defaultDate = this.ProchaineDate;
-			int day, month, year;
-
-			int.TryParse (words[0], out day);
-
-			if (words.Length <= 1 || !int.TryParse (words[1], out month))
-			{
-				month = defaultDate.Month;
-			}
-
-			if (words.Length <= 2 || !int.TryParse (words[2], out year))
-			{
-				year = defaultDate.Year;
-			}
-
-			try
-			{
-				date = new Date (year, month, day);
-			}
-			catch
-			{
-				date = defaultDate;
-				return false;
-			}
-
-			if (date < this.DateDébut)
-			{
-				date = this.DateDébut;
-				return false;
-			}
-
-			if (date > this.DateFin)
-			{
-				date = this.DateFin;
-				return false;
-			}
-
-			return true;
-#endif
 		}
 
 

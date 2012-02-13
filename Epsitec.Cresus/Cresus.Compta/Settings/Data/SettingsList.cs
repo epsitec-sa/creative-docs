@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		private void Initialize()
 		{
 			//	Réglages généraux :
-			this.Add (new TextSettingsData   (SettingsGroup.Global,   SettingsType.GlobalTitre,       20, "vide"));
-			this.Add (new TextSettingsData   (SettingsGroup.Global,   SettingsType.GlobalDescription, 100, ""));
+			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalTitre,        20, "vide", skipCompareTo: true));
+			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalDescription, 100, "",     skipCompareTo: true));
 										     
 			//	Réglages pur les écritures :
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
@@ -157,6 +157,36 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as EnumSettingsData).Value = value;
+			}
+		}
+
+
+		public bool Compare(SettingsList other, SettingsGroup group)
+		{
+			foreach (var settings in this.settings.Values.Where (x => x.Group == group))
+			{
+				AbstractSettingsData otherSettings;
+				if (other.settings.TryGetValue (settings.Type, out otherSettings))
+				{
+					if (!settings.SkipCompareTo && !settings.CompareTo (otherSettings))
+					{
+						return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		public void CopyFrom(SettingsList other, SettingsGroup group)
+		{
+			foreach (var settings in this.settings.Values.Where (x => x.Group == group))
+			{
+				AbstractSettingsData otherSettings;
+				if (other.settings.TryGetValue (settings.Type, out otherSettings))
+				{
+					settings.CopyFrom (otherSettings);
+				}
 			}
 		}
 
