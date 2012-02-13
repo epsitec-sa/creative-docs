@@ -164,6 +164,8 @@ namespace Epsitec.Cresus.Core.Bricks
 				}
 				else if (Brick.ContainsProperty (brick, BrickPropertyKey.Input))
 				{
+					item.EntityMarshaler = this.controller.CreateEntityMarshaler ();
+					
 					var processor = new InputProcessor (this, data, item, brick);
 
 					processor.ProcessInputs ();
