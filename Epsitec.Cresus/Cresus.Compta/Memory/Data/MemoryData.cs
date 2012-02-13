@@ -3,6 +3,9 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core;
+
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 
@@ -39,6 +42,16 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		{
 			get;
 			set;
+		}
+
+
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
+		{
+			var s = (this.Search  == null) ? FormattedText.Empty : this.Search.GetSummary (columnMappers, false);
+			var f = (this.Filter  == null) ? FormattedText.Empty : this.Filter.GetSummary (columnMappers, true);
+			var o = (this.Options == null) ? FormattedText.Empty : this.Options.Summary;
+
+			return TextFormatter.FormatText (s, "~, ~", f, "~, ~", o);
 		}
 	}
 }

@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -330,17 +331,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					}
 				}
 
-#if false
-				//	Si on n'a pas trouvé un intervalle de dates, on prend n'importe lequel.
-				foreach (var data in this.tabsData)
-				{
-					if (data.SearchText.Mode == SearchMode.Interval)
-					{
-						return data;
-					}
-				}
-#endif
-
 				return null;
 			}
 		}
@@ -396,6 +386,53 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				{
 					this.tabsData.RemoveAt (1);
 				}
+			}
+		}
+
+
+		public void CopyTo(SearchData dst)
+		{
+			dst.OrMode = this.OrMode;
+
+			dst.tabsData.Clear ();
+			foreach (var tab in this.tabsData)
+			{
+				var n = new SearchTabData ();
+				tab.CopyTo (n);
+				dst.tabsData.Add (n);
+			}
+		}
+
+
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers, bool isFilter)
+		{
+			if (this.IsEmpty)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				var builder = new System.Text.StringBuilder ();
+				builder.Append (isFilter ? "filtrer " : "rechercher ");
+
+				bool first = true;
+				foreach (var tab in this.tabsData)
+				{
+					FormattedText s = tab.GetSummary (columnMappers);
+
+					if (!s.IsNullOrEmpty)
+					{
+						if (!first)
+						{
+							builder.Append (this.OrMode ? " ou " : " et ");
+						}
+
+						builder.Append (s);
+						first = false;
+					}
+				}
+
+				return builder.ToString ();
 			}
 		}
 

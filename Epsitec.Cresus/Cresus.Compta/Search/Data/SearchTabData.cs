@@ -4,6 +4,7 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -44,6 +45,30 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				return this.searchText == null || this.searchText.IsEmpty;
 			}
+		}
+
+
+		public void CopyTo(SearchTabData dst)
+		{
+			dst.Column = this.Column;
+			this.searchText.CopyTo (dst.searchText);
+		}
+
+
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
+		{
+			FormattedText columnName = FormattedText.Empty;
+
+			if (this.Column != ColumnType.None)
+			{
+				var mapper = columnMappers.Where (x => x.Column == this.Column).FirstOrDefault ();
+				if (mapper != null)
+				{
+					columnName = mapper.Description;
+				}
+			}
+
+			return this.searchText.GetSummary (columnName);
 		}
 
 

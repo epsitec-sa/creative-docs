@@ -376,9 +376,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.HasShowMemoryPanel)
 			{
 				this.memoryController = new MemoryController (this);
-				this.memoryController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
+				this.memoryController.CreateUI (parent, this.MemoryChangedAction);
 				this.memoryController.ShowPanel = this.ShowMemoryPanel;
 			}
+		}
+
+		private void MemoryChangedAction()
+		{
+			this.FilterStartAction ();
 		}
 		#endregion
 

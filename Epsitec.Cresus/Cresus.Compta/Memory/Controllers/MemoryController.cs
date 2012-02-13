@@ -65,8 +65,10 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		}
 
 
-		public void CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> searchNextAction)
+		public void CreateUI(FrameBox parent, System.Action memoryChangedAction)
 		{
+			this.memoryChangedAction = memoryChangedAction;
+
 			this.toolbar = new FrameBox
 			{
 				Parent              = parent,
@@ -117,7 +119,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private void MemoryChanged()
 		{
 			this.UpdateWidgets ();
-			//?base.OptionsChanged ();
+
+			var memory = this.memoryList.Selected;
+			if (memory != null)
+			{
+				this.CopyMemoryToData (memory);
+				this.memoryChangedAction ();
+			}
 		}
 
 		private void UpdateLevel()
@@ -159,7 +167,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.compactComboJournaux = new TextFieldCombo
 			{
 				Parent          = this.comptactFrame,
-				PreferredWidth  = MemoryController.JournauxWidth,
+				PreferredWidth  = MemoryController.fieldWidth,
 				PreferredHeight = 20,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
@@ -167,16 +175,17 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.compactSummary = new StaticText
 			{
-				Parent  = this.comptactFrame,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (20, 0, 0, 0),
+				Parent        = this.comptactFrame,
+				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock          = DockStyle.Fill,
+				Margins       = new Margins (20, 0, 0, 0),
 			};
 
 			this.UpdateCombo ();
 
 			this.compactComboJournaux.SelectedItemChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero)
+				if (this.ignoreChanges.IsZero && this.compactComboJournaux.SelectedItemIndex != -1)
 				{
 					this.memoryList.SelectedIndex = this.compactComboJournaux.SelectedItemIndex;
 					this.MemoryChanged ();
@@ -203,7 +212,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			var centerFrame = new FrameBox
 			{
 				Parent          = this.extendedFrame,
-				PreferredWidth  = MemoryController.JournauxWidth,
+				PreferredWidth  = MemoryController.fieldWidth,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 20, 0, 0),
 			};
@@ -219,6 +228,8 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			{
 				Parent          = leftFrame,
 				Text            = "Mémoires",
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
@@ -254,10 +265,20 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.extendedAddButton = new Button
 				{
 					Parent          = frame,
-					Text            = "Nouveau",
+					Text            = "Conserver",
 					PreferredHeight = 20,
 					PreferredWidth  = 80,
 					Dock            = DockStyle.Left,
+				};
+
+				this.extendedUpdateButton = new Button
+				{
+					Parent          = frame,
+					Text            = "Mettre à jour",
+					PreferredHeight = 20,
+					PreferredWidth  = 80,
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (10, 0, 0, 0),
 				};
 			}
 
@@ -317,13 +338,15 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 				this.extendedSummary = new StaticText
 				{
-					Parent  = frame,
-					Dock    = DockStyle.Fill,
-					Margins = new Margins (20, 0, 0, 0),
+					Parent        = frame,
+					TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					Dock          = DockStyle.Fill,
+					Margins       = new Margins (20, 0, 0, 0),
 				};
 			}
 
-			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Crée une nouvelle mémoire");
+			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans une nouvelle mémoire");
+			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour la mémoire d'après la recherche, le filtre et les options");
 			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte la mémoire d'une ligne dnas la liste");
 			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend la mémoire d'une ligne dnas la liste");
 			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime la mémoire");
@@ -334,7 +357,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedListJournaux.SelectedItemChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero)
+				if (this.ignoreChanges.IsZero && this.extendedListJournaux.SelectedItemIndex != -1)
 				{
 					this.memoryList.SelectedIndex = this.extendedListJournaux.SelectedItemIndex;
 					this.MemoryChanged ();
@@ -346,22 +369,31 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				if (this.ignoreChanges.IsZero && this.memoryList.Selected != null)
 				{
 					this.memoryList.Selected.Name = this.extendedFieldName.FormattedText;
+					this.UpdateCombo ();
+					this.UpdateList ();
 				}
 			};
 
 			this.extendedAddButton.Clicked += delegate
 			{
-				var nouveau = new MemoryData ();
-				nouveau.Name = this.NewMemoryName;
-				this.memoryList.List.Add (nouveau);
-				this.memoryList.Selected = nouveau;
+				var memory = new MemoryData ();
+				memory.Name = this.NewMemoryName;
+				this.CopyDataToMemory (memory);
+
+				this.memoryList.List.Add (memory);
+				this.memoryList.Selected = memory;
 
 				this.UpdateCombo ();
 				this.UpdateList ();
 				this.UpdateButtons ();
+				this.UpdateSummary ();
 
 				this.extendedFieldName.SelectAll ();
 				this.extendedFieldName.Focus ();
+			};
+
+			this.extendedUpdateButton.Clicked += delegate
+			{
 			};
 
 			this.extendedUpButton.Clicked += delegate
@@ -410,17 +442,17 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void UpdateCombo()
 		{
-			this.compactComboJournaux.Items.Clear ();
-
-			foreach (var memory in this.memoryList.List)
-			{
-				this.compactComboJournaux.Items.Add (memory.Name);
-			}
-
-			this.compactComboJournaux.Enable = this.memoryList.List.Any ();
-
 			using (this.ignoreChanges.Enter ())
 			{
+				this.compactComboJournaux.Items.Clear ();
+
+				foreach (var memory in this.memoryList.List)
+				{
+					this.compactComboJournaux.Items.Add (memory.Name);
+				}
+
+				this.compactComboJournaux.Enable = this.memoryList.List.Any ();
+
 				if (this.memoryList.Selected == null)
 				{
 					this.compactComboJournaux.FormattedText = FormattedText.Empty;
@@ -434,15 +466,15 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void UpdateList()
 		{
-			this.extendedListJournaux.Items.Clear ();
-
-			foreach (var memory in this.memoryList.List)
-			{
-				this.extendedListJournaux.Items.Add (memory.Name);
-			}
-
 			using (this.ignoreChanges.Enter ())
 			{
+				this.extendedListJournaux.Items.Clear ();
+
+				foreach (var memory in this.memoryList.List)
+				{
+					this.extendedListJournaux.Items.Add (memory.Name);
+				}
+
 				if (this.memoryList.Selected == null)
 				{
 					this.extendedListJournaux.SelectedItemIndex = -1;
@@ -460,11 +492,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			int sel = this.extendedListJournaux.SelectedItemIndex;
 			int count = this.memoryList.List.Count;
-			bool allJournaux = (sel == count);
 
-			this.extendedUpButton.Enable     = (!allJournaux && sel != -1 && sel > 0);
-			this.extendedDownButton.Enable   = (!allJournaux && sel != -1 && sel < count-1);
-			this.extendedRemoveButton.Enable = (!allJournaux && sel != -1 && count > 1);
+			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
+			this.extendedUpdateButton.Enable = (sel != -1);
+			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
+			this.extendedRemoveButton.Enable = (sel != -1);
 		}
 
 		private void UpdateSummary()
@@ -474,11 +506,40 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			if (memory != null)
 			{
-				//?summary = memory.Summray;
+				summary = memory.GetSummary (this.controller.ColumnMappers);
 			}
 
 			this.compactSummary.FormattedText  = summary;
 			this.extendedSummary.FormattedText = summary;
+		}
+
+
+		private void CopyDataToMemory(MemoryData memory)
+		{
+			if (this.dataAccessor != null && this.dataAccessor.SearchData != null)
+			{
+				memory.Search = new SearchData ();
+				this.dataAccessor.SearchData.CopyTo (memory.Search);
+			}
+
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
+			{
+				memory.Filter = new SearchData ();
+				this.dataAccessor.FilterData.CopyTo (memory.Filter);
+			}
+		}
+
+		private void CopyMemoryToData(MemoryData memory)
+		{
+			if (memory.Search != null)
+			{
+				memory.Search.CopyTo (this.dataAccessor.SearchData);
+			}
+
+			if (memory.Filter != null)
+			{
+				memory.Filter.CopyTo (this.dataAccessor.FilterData);
+			}
 		}
 
 
@@ -505,8 +566,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		}
 
 	
-		private static readonly double					toolbarHeight = 20;
-		private static readonly double					JournauxWidth = 200;
+		private static readonly double					fieldWidth = 200;
 
 		private readonly AbstractController				controller;
 		private readonly ComptaEntity					comptaEntity;
@@ -514,6 +574,8 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly MemoryList						memoryList;
 		private readonly SafeCounter					ignoreChanges;
+
+		private System.Action							memoryChangedAction;
 
 		private FrameBox								mainFrame;
 		private FrameBox								toolbar;
@@ -528,6 +590,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private ScrollList								extendedListJournaux;
 		private TextFieldEx								extendedFieldName;
 		private Button									extendedAddButton;
+		private Button									extendedUpdateButton;
 		private Button									extendedUpButton;
 		private Button									extendedDownButton;
 		private Button									extendedRemoveButton;

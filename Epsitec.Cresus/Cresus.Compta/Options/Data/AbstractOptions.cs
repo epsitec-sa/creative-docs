@@ -90,6 +90,15 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
+		public FormattedText Summary
+		{
+			get
+			{
+				return FormattedText.Empty;
+			}
+		}
+
+
 		protected ComptaEntity						comptaEntity;
 		protected AbstractOptions					emptyOptions;
 	}

@@ -516,6 +516,66 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public void CopyTo(SearchText dst)
+		{
+			dst.fromText  = this.fromText;
+			dst.toText    = this.toText;
+			dst.mode      = this.mode;
+			dst.matchCase = this.matchCase;
+			dst.wholeWord = this.wholeWord;
+			dst.invert    = this.invert;
+
+			dst.PreparesSearch ();
+		}
+
+
+		public FormattedText GetSummary(FormattedText columnName)
+		{
+			if (this.IsEmpty)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				if (!columnName.IsNullOrEmpty)
+				{
+					builder.Append (columnName);
+				}
+
+				if (this.invert)
+				{
+					builder.Append ("≠");
+				}
+				if (!this.invert && !columnName.IsNullOrEmpty)
+				{
+					builder.Append ("=");
+				}
+
+				if (this.mode == SearchMode.Empty)
+				{
+					builder.Append ("vide");
+				}
+				else if (this.mode == SearchMode.Interval)
+				{
+					builder.Append ("\"");
+					builder.Append (this.fromText);
+					builder.Append ("...");
+					builder.Append (this.toText);
+					builder.Append ("\"");
+				}
+				else
+				{
+					builder.Append ("\"");
+					builder.Append (this.fromText);
+					builder.Append ("\"");
+				}
+
+				return builder.ToString ();
+			}
+		}
+
 
 		private string					fromText;
 		private string					toText;

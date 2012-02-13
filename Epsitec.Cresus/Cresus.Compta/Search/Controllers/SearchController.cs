@@ -107,6 +107,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent          = parent,
 				Text            = this.isFilter ? "Filtrer" : "Rechercher",
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
@@ -669,6 +670,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.resultLabel = new StaticText
 				{
 					Parent          = footer,
+					TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					PreferredWidth  = 110,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
