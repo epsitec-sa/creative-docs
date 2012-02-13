@@ -373,9 +373,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Memory panel
 		private void CreateMemory(FrameBox parent)
 		{
-			this.memoryController = new MemoryController (this);
-			this.memoryController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
-			this.memoryController.ShowPanel = this.ShowMemoryPanel;
+			if (this.HasShowMemoryPanel)
+			{
+				this.memoryController = new MemoryController (this);
+				this.memoryController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
+				this.memoryController.ShowPanel = this.ShowMemoryPanel;
+			}
 		}
 		#endregion
 

@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Memory.Data
 {
+	/// <summary>
+	/// Liste des paramètres des recherches, du filtre et des options, c'est-à-dire de l'ensemble des paramètres
+	/// liés à une présentation.
+	/// </summary>
 	public class MemoryList : ISettingsData
 	{
 		public MemoryList()
@@ -29,6 +33,39 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
+		public int SelectedIndex
+		{
+			get
+			{
+				return this.list.IndexOf (this.selected);
+			}
+			set
+			{
+				if (value >= 0 && value < this.list.Count)
+				{
+					this.selected = this.list[value];
+				}
+				else
+				{
+					this.selected = null;
+				}
+			}
+		}
+
+		public MemoryData Selected
+		{
+			get
+			{
+				return this.selected;
+			}
+			set
+			{
+				this.selected = value;
+			}
+		}
+
+
 		private readonly List<MemoryData>	list;
+		private MemoryData					selected;
 	}
 }

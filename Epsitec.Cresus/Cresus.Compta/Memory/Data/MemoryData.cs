@@ -11,6 +11,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Memory.Data
 {
+	/// <summary>
+	/// Mémorise les paramètres des recherches, du filtre et des options, c'est-à-dire l'ensemble des paramètres
+	/// liés à une présentation.
+	/// </summary>
 	public class MemoryData
 	{
 		public FormattedText Name
