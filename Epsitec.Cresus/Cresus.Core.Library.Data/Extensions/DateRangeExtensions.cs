@@ -90,6 +90,20 @@ namespace Epsitec.Cresus.Core.Extensions
 			}
 		}
 
+		public static Date GetLastDate(this IDateRange range, Date defaultDate)
+		{
+			if (range.EndDate.HasValue)
+			{
+				return range.EndDate.Value;
+			}
+			if (range.BeginDate.HasValue)
+			{
+				return range.BeginDate.Value;
+			}
+			
+			return defaultDate;
+		}
+
 
 		#region Private DateRange Class
 

@@ -14,8 +14,19 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 		{
 			wall.AddBrick ()
 				.Input ()
+					.HorizontalGroup ("Dates de début et de fin")
+						.Field (x => x.StartDate)
+						.Field (x => x.EndDate)
+					.End ()
+					.Field (x => x.GroupDef)
 					.Field (x => x.Name)
 					.Field (x => x.Description)
+				.End ()
+				.Input ()
+					.Field (x => x.Root)
+				.End ()
+				.Input ()
+					.Field (x => x.Comment.Text)
 				.End ();
 		}
 	}

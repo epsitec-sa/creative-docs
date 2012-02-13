@@ -10,7 +10,9 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Extensions;
 
 using System;
 
@@ -277,8 +279,40 @@ namespace Epsitec.Aider.Entities
 				return prefix + suffix + "French";
 			}
 		}
+		
+		internal FormattedText GetParishDescription()
+		{
+			if (this.Parish.IsNull ())
+			{
+				return FormattedText.Empty;
+			}
+
+			var parish = this.Parish;
+
+			return TextFormatter.FormatText ("Dans la paroisse depuis", parish.StartDate, "\n\n~", parish.Comment.Text);
+
+			/*
+			var context    = BusinessContextPool.GetCurrentContext (this);
+			var repository = context.GetRepository<AiderGroupParticipantEntity> ();
+			var example    = repository.CreateExample ();
+
+			example.Group = this.Parish;
+			
+			var participant = repository.GetByExample (example).FirstOrDefault ();
+
+			if (participant.IsNull ())
+			{
+				return FormattedText.Empty;
+			}
+			var distantPast = new Date (1900, 1, 1);
+
+			var groups = repository.GetAllEntities ().OrderByDescending (x => x.EndDate ?? x.StartDate ?? distantPast).ToArray ();
+			*/
+
+		}
 
 
 		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
+
 	}
 }

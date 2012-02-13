@@ -945,22 +945,22 @@ namespace Epsitec.Aider.Entities
 		}
 		///	<summary>
 		///	The <c>Parish</c> field.
-		///	designer:fld/LVAF/LVABB
+		///	designer:fld/LVAF/LVADB
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVABB]")]
-		public global::Epsitec.Aider.Entities.AiderGroupEntity Parish
+		[global::Epsitec.Common.Support.EntityField ("[LVADB]")]
+		public global::Epsitec.Aider.Entities.AiderGroupParticipantEntity Parish
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVABB]");
+				return this.GetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVADB]");
 			}
 			set
 			{
-				global::Epsitec.Aider.Entities.AiderGroupEntity oldValue = this.Parish;
-				if (oldValue != value || !this.IsFieldDefined("[LVABB]"))
+				global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue = this.Parish;
+				if (oldValue != value || !this.IsFieldDefined("[LVADB]"))
 				{
 					this.OnParishChanging (oldValue, value);
-					this.SetField<global::Epsitec.Aider.Entities.AiderGroupEntity> ("[LVABB]", oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> ("[LVADB]", oldValue, value);
 					this.OnParishChanged (oldValue, value);
 				}
 			}
@@ -1110,8 +1110,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnConfessionChanged(global::Epsitec.Aider.Enumerations.PersonConfession oldValue, global::Epsitec.Aider.Enumerations.PersonConfession newValue);
 		partial void OnProfessionChanging(string oldValue, string newValue);
 		partial void OnProfessionChanged(string oldValue, string newValue);
-		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
-		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupEntity newValue);
+		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
+		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);

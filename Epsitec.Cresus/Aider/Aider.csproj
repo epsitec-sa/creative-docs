@@ -49,10 +49,17 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="Controllers\EditionControllers\EditionAiderFunctionDefViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
+    <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
+    <Compile Include="Entities\AiderFunctionDefEntity.cs" />
     <Compile Include="Entities\AiderGroupEntity.cs" />
+    <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
     <Compile Include="Entities\Helpers\AiderPersonAdditionalContactAddressList.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />
