@@ -65,14 +65,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (serverContext, "/database")
 		{
 
-			Get["/list"] = parameters =>
+			Get["/list"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
 				var list = new List<object> ();
 
 				DatabasesModule.databases.ForEach (o => list.Add (o.Value));
 
 				return Response.AsCoreSuccess (list);
-			};
+			});
 
 			Get["/{name}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
 			{

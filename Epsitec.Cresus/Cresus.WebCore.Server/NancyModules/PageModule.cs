@@ -15,11 +15,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public PageModule(ServerContext serverContext)
 			: base (serverContext, "/page/")
 		{
-			Get["/{name}"] = parameters =>
+			Get["/{name}"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
 				string pageName = parameters.name;
 				return View[pageName];
-			};
+			});
 		}
 
 
