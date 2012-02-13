@@ -163,6 +163,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public bool Compare(SettingsList other, SettingsGroup group)
 		{
+			//	Compare les valeurs des réglages d'un groupe avec celles d'un autre jeu de réglages.
 			foreach (var settings in this.settings.Values.Where (x => x.Group == group))
 			{
 				AbstractSettingsData otherSettings;
@@ -180,6 +181,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public void CopyFrom(SettingsList other, SettingsGroup group)
 		{
+			//	Reprend les valeurs des réglages d'un groupe d'après celles d'un autre jeu de réglages.
 			foreach (var settings in this.settings.Values.Where (x => x.Group == group))
 			{
 				AbstractSettingsData otherSettings;

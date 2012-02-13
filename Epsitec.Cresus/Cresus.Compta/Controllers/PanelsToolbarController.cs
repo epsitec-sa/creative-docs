@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
+			this.CreateButton (toolbar, Res.Commands.Panel.Memory);
 			this.CreateButton (toolbar, Res.Commands.Panel.Search);
 			this.CreateButton (toolbar, Res.Commands.Panel.Filter);
 			this.CreateButton (toolbar, Res.Commands.Panel.Options);

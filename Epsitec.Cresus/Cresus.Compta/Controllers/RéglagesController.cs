@@ -225,7 +225,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateMain()
 		{
-			var group = this.CurrentGroup;
+			//	Construit l'interface dans la partie principale de droite, en fonction du groupe sélectionné.
+			var group = this.SelectedGroup;
 
 			this.mainFrame.Children.Clear ();
 			this.controllers.Clear ();
@@ -235,6 +236,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateController (settings);
 			}
 
+			//	Pied de page.
 			var footer = new FrameBox
 			{
 				Parent = this.mainFrame,
@@ -253,8 +255,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.defaultButton.Clicked += delegate
 			{
-				this.settingsList.CopyFrom (this.MainWindowController.DefaultSettingsList, this.CurrentGroup);
-				this.UpdateMain ();
+				this.settingsList.CopyFrom (this.MainWindowController.DefaultSettingsList, this.SelectedGroup);
+				this.UpdateMain ();  // on reconstruit tout
 			};
 
 			this.UpdateControllers ();
@@ -315,7 +317,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//	Met à jour le bouton "Remet les valeurs standards".
-			var group = this.CurrentGroup;
+			var group = this.SelectedGroup;
 			this.defaultButton.Enable = !this.settingsList.Compare (this.MainWindowController.DefaultSettingsList, group);
 			this.defaultButton.Visibility = (group != SettingsGroup.Unknown);
 		}
@@ -344,8 +346,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private SettingsGroup CurrentGroup
+		private SettingsGroup SelectedGroup
 		{
+			//	Retourne le groupe sélectionné dans la liste de gauche.
 			get
 			{
 				int sel = this.scrollList.SelectedItemIndex;

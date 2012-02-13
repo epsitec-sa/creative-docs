@@ -148,6 +148,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateTitle (this.frameBox);
+			this.CreateMemory (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
@@ -246,6 +247,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public virtual bool HasShowMemoryPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public virtual bool HasShowInfoPanel
 		{
 			get
@@ -306,6 +315,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public bool ShowMemoryPanel
+		{
+			get
+			{
+				if (this.memoryController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.memoryController.ShowPanel;
+				}
+			}
+			set
+			{
+				if (this.memoryController != null)
+				{
+					this.memoryController.ShowPanel = value;
+				}
+			}
+		}
+
 		public bool ShowInfoPanel
 		{
 			get
@@ -328,7 +359,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		
+
+		#region Memory panel
+		private void CreateMemory(FrameBox parent)
+		{
+			this.memoryController = new MemoryController (this);
+			this.memoryController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
+			this.memoryController.ShowPanel = this.ShowMemoryPanel;
+		}
+		#endregion
+
+
 		#region Search panel
 		private void CreateTopSearch(FrameBox parent)
 		{
@@ -799,6 +840,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
 		protected AbstractOptionsController						optionsController;
+		protected MemoryController								memoryController;
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;
 		protected FrameBox										frameBox;

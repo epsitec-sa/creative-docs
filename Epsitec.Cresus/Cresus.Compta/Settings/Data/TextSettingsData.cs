@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			: base (group, type, skipCompareTo)
 		{
 			this.MaxLength = maxLength;
-			this.Value = defaultValue;
+			this.Value     = defaultValue;
 		}
 
 		public TextSettingsData(SettingsGroup group, SettingsType type)

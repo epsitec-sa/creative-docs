@@ -53,6 +53,7 @@
     <Compile Include="Accessors\AbstractData.cs" />
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
+    <Compile Include="Controllers\MemoryController.cs" />
     <Compile Include="Options\Data\AbstractOptions.cs" />
     <Compile Include="Accessors\BalanceData.cs" />
     <Compile Include="Accessors\BalanceDataAccessor.cs" />
@@ -251,6 +252,7 @@
     <EmbeddedResource Include="Images\Navigator.Next.icon" />
     <EmbeddedResource Include="Images\Navigator.Prev.icon" />
     <EmbeddedResource Include="Images\Présentation.Réglages.icon" />
+    <EmbeddedResource Include="Images\Panel.Memory.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
