@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Search.Data;
 
@@ -65,7 +66,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Parent          = parent,
 				PreferredHeight = TopSearchController.toolbarHeight,
 				DrawFullFrame   = true,
-				BackColor       = Color.FromHexa ("ffffcc"),  // jaune pastel
+				BackColor       = UIBuilder.SearchBackColor,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 5),
 				Visibility      = false,

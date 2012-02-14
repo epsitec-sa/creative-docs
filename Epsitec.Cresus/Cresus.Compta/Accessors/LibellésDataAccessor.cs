@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static readonly FormattedText	Permanant = TextFormatter.FormatText ("Oui").ApplyBold ();
-		public static readonly FormattedText	Volatile  = TextFormatter.FormatText ("Non");
+		public static readonly FormattedText	Permanant = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
+		public static readonly FormattedText	Volatile  = Core.TextFormatter.FormatText ("Non");
 	}
 }

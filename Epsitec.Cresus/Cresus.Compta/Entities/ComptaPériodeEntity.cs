@@ -3,9 +3,6 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Library;
-
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;

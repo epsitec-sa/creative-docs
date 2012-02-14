@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = Color.FromHexa ("d2f0ff"),  // bleu pastel
+				BackColor           = UIBuilder.OptionsBackColor,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),

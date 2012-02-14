@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
@@ -60,12 +60,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (journal == null)  // tous les journaux ?
 			{
-				var name = TextFormatter.FormatText (JournalOptionsController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
+				var name = Core.TextFormatter.FormatText (JournalOptionsController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
 				this.SetTitle (name);
 			}
 			else
 			{
-				this.SetTitle (TextFormatter.FormatText ("Journal", journal.Nom));
+				this.SetTitle (Core.TextFormatter.FormatText ("Journal", journal.Nom));
 			}
 
 			this.SetSubtitle (this.périodeEntity.ShortTitle);

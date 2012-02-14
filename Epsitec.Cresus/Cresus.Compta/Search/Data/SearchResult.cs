@@ -4,9 +4,10 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
@@ -24,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.Row    = row;
 			this.Column = column;
 
-			this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchTarget, TextFormatter.FormatText (hilitedText).ApplyFontColor (SearchResult.TextOutsideSearch));
+			this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchTarget, Core.TextFormatter.FormatText (hilitedText).ApplyFontColor (UIBuilder.TextOutsideSearchColor));
 		}
 
 		public int Row
@@ -44,12 +45,5 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			get;
 			internal set;
 		}
-
-
-		public static readonly Color TextInsideSearch  = Color.FromBrightness (0);    // noir
-		public static readonly Color TextOutsideSearch = Color.FromBrightness (0.6);  // gris
-		public static readonly Color BackInsideSearch  = Color.FromHexa ("fff000");   // jaune pétant
-		public static readonly Color BackOutsideSearch = Color.FromAlphaColor (0.1, Color.FromHexa ("fff000"));   // jaune très transparent
-		//?public static readonly Color BackOutsideSearch = Color.Empty;
 	}
 }

@@ -9,6 +9,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 
 using System.Collections.Generic;
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				if (this.HasError)
 				{
-					this.errorField.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+					this.errorField.BackColor = UIBuilder.ErrorColor;
 					this.errorField.FormattedText = "  " + this.error;
 				}
 				else

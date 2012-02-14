@@ -3,8 +3,7 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Date, this.Débit.Numéro, this.Crédit.Numéro, this.Pièce, this.Libellé, this.Montant.ToString ());
+			return Core.TextFormatter.FormatText (this.Date, this.Débit.Numéro, this.Crédit.Numéro, this.Pièce, this.Libellé, this.Montant.ToString ());
 		}
 	}
 }

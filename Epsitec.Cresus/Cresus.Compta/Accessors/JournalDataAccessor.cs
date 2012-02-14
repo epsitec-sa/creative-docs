@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Libellé;
 
 				case ColumnType.Montant:
-					var montant = TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
+					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
 
 					if (écriture.TotalAutomatique)
 					{

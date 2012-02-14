@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.infoFrame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+				this.infoFrame.BackColor = UIBuilder.ErrorColor;
 				this.infoField.Text = string.Format ("Il y a {0} erreur{1}", count.ToString (), (count == 1)?"":"s");
 			}
 		}

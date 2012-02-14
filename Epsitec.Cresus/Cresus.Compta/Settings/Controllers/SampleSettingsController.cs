@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			if (this.Data.SettingsList.HasError)
 			{
-				this.frame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+				this.frame.BackColor = UIBuilder.ErrorColor;
 
 				this.sample1.Text = null;
 				this.sample2.Text = null;
@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			if (this.Data.SettingsList.HasError)
 			{
-				this.frame.BackColor = Color.FromHexa ("ffb1b1");  // rouge pâle
+				this.frame.BackColor = UIBuilder.ErrorColor;
 
 				this.sample1.Text = null;
 				this.sample2.Text = null;

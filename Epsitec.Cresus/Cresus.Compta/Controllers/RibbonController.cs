@@ -10,6 +10,7 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
 
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -84,24 +85,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
 
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Journal));
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable));
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance));
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Journal, isActivable: true));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable, isActivable: true));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance, isActivable: true));
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait, isActivable: true));
 				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Bilan, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PP, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Exploitation, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Budgets, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Bilan, large: false, isActivable: true));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PP, large: false, isActivable: true));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Exploitation, large: false, isActivable: true));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Budgets, large: false, isActivable: true));
 
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Change, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméPériodique, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.RésuméTVA, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.DécompteTVA, large: false, isActivable: true));
 
 				//?section.Children.Add (this.CreateGap ());
 				this.présentationButton = this.CreateButton (Res.Commands.Présentation.New);
@@ -114,12 +115,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Libellés, large: false));
-				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Modèles, large: false));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Libellés, large: false, isActivable: true));
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Modèles, large: false, isActivable: true));
 
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false));
-				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Réglages, large: false));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Périodes, large: false, isActivable: true));
+				bottomSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Réglages, large: false, isActivable: true));
 			}
 
 			{
@@ -504,22 +505,40 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private IconButton CreateButton(Command command, bool large = true)
+		private IconButton CreateButton(Command command, bool large = true, bool isActivable = false)
 		{
 			double buttonWidth = large ? RibbonController.ButtonLargeWidth : RibbonController.ButtonLargeWidth/2;
 			double iconWidth   = large ? RibbonController.IconLargeWidth   : RibbonController.IconSmallWidth;
 
-			return new IconButton
+			if (isActivable)
 			{
-				CommandObject       = command,
-				PreferredIconSize   = new Size (iconWidth, iconWidth),
-				PreferredSize       = new Size (buttonWidth, buttonWidth),
-				Dock                = DockStyle.StackBegin,
-				Name                = (command == null) ? null : command.Name,
-				VerticalAlignment   = VerticalAlignment.Top,
-				HorizontalAlignment = HorizontalAlignment.Center,
-				AutoFocus           = false,
-			};
+				return new BackIconButton
+				{
+					BackColor           = UIBuilder.SelectionColor,
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.StackBegin,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+			else
+			{
+				return new IconButton
+				{
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.StackBegin,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
 		}
 
 		private Widget CreateGap()

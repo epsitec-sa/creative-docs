@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.Core.Business;
 
@@ -568,7 +568,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						return TextFormatter.FormatText (percent, "de", montant);
+						return Core.TextFormatter.FormatText (percent, "de", montant);
 					}
 				}
 				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Graphique)

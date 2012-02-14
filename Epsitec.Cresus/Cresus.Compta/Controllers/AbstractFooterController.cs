@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
@@ -314,11 +315,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.dataAccessor.JustCreated)
 				{
-					this.arrayController.ColorSelection = Color.FromAlphaColor (0.4, Color.FromHexa ("b3d7ff"));  // bleu pastel
+					this.arrayController.ColorSelection = UIBuilder.JustCreatedColor;
 				}
 				else
 				{
-					this.arrayController.ColorSelection = Color.FromName ("Gold");
+					this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				}
 
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
@@ -343,7 +344,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
 				this.dataAccessor.StartCreationLine ();
-				this.arrayController.ColorSelection = Color.FromName ("Gold");
+				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.FooterSelect (0);
 			}
@@ -417,17 +418,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.arrayController.ShowRow (firstRow, countRow);
 			}
-
-#if false
-			if (this.dataAccessor.JustCreated)
-			{
-				this.arrayController.ColorSelection = Color.FromBrightness (0.8);
-			}
-			else
-			{
-				this.arrayController.ColorSelection = Color.FromName ("Gold");
-			}
-#endif
 		}
 
 

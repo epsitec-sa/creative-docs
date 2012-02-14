@@ -4,8 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Core.Widgets;
-
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -117,9 +116,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.specialistButton.ActiveState = this.specialist ? ActiveState.Yes : ActiveState.No;
 		}
 
-		private RibbonIconButton CreateButton(FrameBox parent, string icon, string description)
+		private BackIconButton CreateButton(FrameBox parent, string icon, string description)
 		{
-			var button = new RibbonIconButton
+			var button = new BackIconButton
 			{
 				Parent            = parent,
 				IconUri           = UIBuilder.GetResourceIconUri (icon),
@@ -140,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private bool							specialist;
 		private IconButton						buttonClear;
-		private RibbonIconButton				beginnerButton;
-		private RibbonIconButton				specialistButton;
+		private BackIconButton					beginnerButton;
+		private BackIconButton					specialistButton;
 	}
 }

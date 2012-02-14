@@ -3,8 +3,7 @@
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Entities
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			yield return TextFormatter.FormatText (this.Numéro);
-			yield return TextFormatter.FormatText (this.Titre);
+			yield return Core.TextFormatter.FormatText (this.Numéro);
+			yield return Core.TextFormatter.FormatText (this.Titre);
 		}
 		
 		public override FormattedText GetCompactSummary()
@@ -32,7 +31,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override FormattedText GetSummary()
 		{
-			return TextFormatter.FormatText (this.Numéro, this.Titre);
+			return Core.TextFormatter.FormatText (this.Numéro, this.Titre);
 		}
 	}
 }

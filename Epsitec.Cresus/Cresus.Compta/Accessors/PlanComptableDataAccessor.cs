@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
@@ -566,7 +566,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public static FormattedText GetCompteDescription(ComptaCompteEntity compte)
 		{
 			//	Retourne la description "numéro titre" d'un compte.
-			return TextFormatter.FormatText (compte.Numéro, compte.Titre);
+			return Core.TextFormatter.FormatText (compte.Numéro, compte.Titre);
 		}
 
 

@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -87,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			foreach (var mapper in this.columnMappersShowed)
 			{
 				var button = this.headerFrames[column++];
-				button.BackColor = (mapper.Column == columnType) ? Color.FromHexa ("b3d7ff") : Color.Empty;
+				button.BackColor = (mapper.Column == columnType) ? UIBuilder.JustCreatedColor : Color.Empty;
 			}
 		}
 

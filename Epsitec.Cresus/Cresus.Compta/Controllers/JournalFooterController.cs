@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = this.infoFrameBox,
 				DrawFullFrame = true,
-				BackColor     = Color.FromHexa ("ffffe1"),  // jaune pâle
+				BackColor     = UIBuilder.TooltipColor,
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (0, 1, 0, 0),
 			};
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = this.infoFrameBox,
 				DrawFullFrame = true,
-				BackColor     = Color.FromHexa ("ffffe1"),  // jaune pâle
+				BackColor     = UIBuilder.TooltipColor,
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (0, 1, 0, 0),
 			};

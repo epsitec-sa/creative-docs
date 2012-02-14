@@ -8,6 +8,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
@@ -178,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 						if (!string.IsNullOrEmpty (text) && text.StartsWith (StringArray.SpecialContentSearchTarget))
 						{
 							text = text.Substring (StringArray.SpecialContentSearchTarget.Length);
-							color = SearchResult.BackOutsideSearch;  // jaune pâle
+							color = UIBuilder.BackOutsideSearchColor;  // jaune pâle
 						}
 
 						this.array.SetLineState (column, row, StringList.CellState.Normal);

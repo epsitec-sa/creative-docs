@@ -4,7 +4,7 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static readonly FormattedText	PériodeCourante = TextFormatter.FormatText ("Oui").ApplyBold ();
-		public static readonly FormattedText	AutrePériode    = TextFormatter.FormatText ("Non");
+		public static readonly FormattedText	PériodeCourante = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
+		public static readonly FormattedText	AutrePériode    = Core.TextFormatter.FormatText ("Non");
 	}
 }

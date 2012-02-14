@@ -4,7 +4,6 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.Compta.Helpers;
 
@@ -21,7 +20,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				var l = this.Libellé.ToString ().Replace ("@", "...");
 				var m = Converters.MontantToString (this.Montant);
-				return TextFormatter.FormatText (this.Code, this.GetCompteSummary (this.Débit), "/", this.GetCompteSummary (this.Crédit), this.Pièce, l, m);
+				return Core.TextFormatter.FormatText (this.Code, this.GetCompteSummary (this.Débit), "/", this.GetCompteSummary (this.Crédit), this.Pièce, l, m);
 			}
 		}
 

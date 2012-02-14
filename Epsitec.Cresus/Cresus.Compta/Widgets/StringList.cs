@@ -631,7 +631,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (i == this.searchLocatorLine)
 				{
 					graphics.AddFilledRectangle (cell);
-					graphics.RenderSolid (SearchResult.BackInsideSearch);  // jaune pétant
+					graphics.RenderSolid (UIBuilder.BackInsideSearchColor);  // jaune pétant
 				}
 
 				var text = this.cells[i].TextLayout.Text;
@@ -701,7 +701,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				rect.Deflate (0, 1);
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromName ("Gold"));
+				graphics.RenderSolid (UIBuilder.SelectionColor);
 			}
 		}
 
@@ -767,14 +767,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
 				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (StringList.colorRed);
+				graphics.RenderSolid (UIBuilder.GraphicRedColor);
 			}
 
 			if (val > 0)
 			{
 				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
 				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (StringList.colorGreen);
+				graphics.RenderSolid (UIBuilder.GraphicGreenColor);
 			}
 
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
@@ -807,7 +807,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
 			double sol = System.Math.Floor (rect.Width * (double) solde / (double) (max-min));
 
-			var color = value >= solde ? StringList.colorGreen : StringList.colorRed;
+			var color = value >= solde ? UIBuilder.GraphicGreenColor : UIBuilder.GraphicRedColor;
 
 			if (val < 0)
 			{
@@ -950,10 +950,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public static readonly double		WidthDraggingDetectMargin = 3;
 
-		private static readonly Color		colorRed   = Color.FromHexa ("ff0000");
-		private static readonly Color		colorGreen = Color.FromHexa ("00bb00");
-
-		private Color						colorSelection = Color.FromName ("Gold");
+		private Color						colorSelection = UIBuilder.SelectionColor;
 		private double						lineHeight = 14;
 		private double						relativeWidth = 0;
 		private ContentAlignment			alignment = ContentAlignment.MiddleLeft;

@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = Color.FromHexa ("ffeecc"),  // orange pastel
+				BackColor           = UIBuilder.MemoryBackColor,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),

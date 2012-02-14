@@ -6,7 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using Epsitec.Cresus.Core;
+using Epsitec.Cresus;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.SetTitle (TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
+				this.SetTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
 
 			this.SetSubtitle (this.périodeEntity.ShortTitle);

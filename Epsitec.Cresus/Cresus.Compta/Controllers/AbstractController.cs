@@ -17,6 +17,7 @@ using Epsitec.Cresus.Compta.Search.Controllers;
 using Epsitec.Cresus.Compta.Options.Controllers;
 using Epsitec.Cresus.Compta.Memory.Data;
 using Epsitec.Cresus.Compta.Memory.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -496,7 +497,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.arrayController.SelectedRow = -1;
 			this.dataAccessor.StartCreationLine ();
-			this.arrayController.ColorSelection = Color.FromName ("Gold");
+			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 			this.dataAccessor.FilterUpdate ();
@@ -679,7 +680,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.StartModificationLine (row);
 			}
 
-			this.arrayController.ColorSelection = Color.FromName ("Gold");
+			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
 			if (this.footerController != null)
@@ -752,7 +753,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					if (!text.IsNullOrEmpty && !text.ToString ().StartsWith (Compta.Widgets.StringArray.SpecialContentStart))
 					{
-						text = text.ApplyFontColor (SearchResult.TextOutsideSearch);  // gris
+						text = text.ApplyFontColor (UIBuilder.TextOutsideSearchColor);  // gris
 					}
 				}
 				else  // est-ce que le texte de recherche a été trouvé dans cette cellule ?

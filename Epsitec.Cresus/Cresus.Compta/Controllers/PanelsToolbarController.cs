@@ -5,10 +5,9 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Widgets;
-
 using Epsitec.Cresus.Compta.Accessors;
-using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -35,21 +34,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.CreateButton (toolbar, Res.Commands.Panel.Memory);
-			this.CreateButton (toolbar, Res.Commands.Panel.Search);
-			this.CreateButton (toolbar, Res.Commands.Panel.Filter);
-			this.CreateButton (toolbar, Res.Commands.Panel.Options);
-			this.CreateButton (toolbar, Res.Commands.Panel.Info);
+			this.CreateButton (toolbar, Res.Commands.Panel.Memory,  UIBuilder.MemoryBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Search,  UIBuilder.SearchBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Filter,  UIBuilder.FilterBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Options, UIBuilder.OptionsBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Info,    UIBuilder.InfoBackColor);
 		}
 
-		private IconButton CreateButton(Widget parent, Command command)
+		private IconButton CreateButton(Widget parent, Command command, Color backColor)
 		{
-			return new RibbonIconButton
+			return new BackIconButton
 			{
 				Parent            = parent,
 				CommandObject     = command,
 				PreferredIconSize = new Size (20, 20),
 				PreferredSize     = new Size (20, 20),
+				BackColor         = backColor,
 				Dock              = DockStyle.Left,
 				Name              = command.Name,
 				AutoFocus         = false,
