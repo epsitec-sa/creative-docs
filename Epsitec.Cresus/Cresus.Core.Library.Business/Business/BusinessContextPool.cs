@@ -1,6 +1,7 @@
 //	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Data;
@@ -90,11 +91,13 @@ namespace Epsitec.Cresus.Core.Business
 		internal void Add(BusinessContext context)
 		{
 			this.pool.Add (context);
+			this.OnChanged (new BusinessContextEventArgs (BusinessContextOperation.Add, context));
 		}
 
 		internal void Remove(BusinessContext context)
 		{
 			this.pool.Remove (context);
+			this.OnChanged (new BusinessContextEventArgs (BusinessContextOperation.Remove, context));
 		}
 
 		#region Factory Class
@@ -122,6 +125,13 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 		#endregion
+
+		private void OnChanged(BusinessContextEventArgs e)
+		{
+			this.Changed.Raise (this, e);
+		}
+		
+		public event EventHandler<BusinessContextEventArgs> Changed;				
 
 		private readonly List<BusinessContext> pool;
 	}
