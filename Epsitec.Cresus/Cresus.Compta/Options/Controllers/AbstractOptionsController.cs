@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.comptaEntity  = this.controller.ComptaEntity;
 			this.périodeEntity = this.controller.PériodeEntity;
-			this.options       = this.controller.DataAccessor.AccessorOptions;
+			this.options       = this.controller.DataAccessor.Options;
 
 			this.ignoreChanges = new SafeCounter ();
 		}

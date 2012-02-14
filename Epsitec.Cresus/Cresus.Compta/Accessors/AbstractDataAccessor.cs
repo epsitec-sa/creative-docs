@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public AbstractOptions AccessorOptions
+		public AbstractOptions Options
 		{
 			get
 			{

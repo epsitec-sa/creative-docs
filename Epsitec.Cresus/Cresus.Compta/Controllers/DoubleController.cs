@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as DoubleData;
 
-			var options = this.dataAccessor.AccessorOptions as DoubleOptions;
+			var options = this.dataAccessor.Options as DoubleOptions;
 
 			if (columnType == ColumnType.Titre)
 			{
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
-			var options = this.dataAccessor.AccessorOptions as DoubleOptions;
+			var options = this.dataAccessor.Options as DoubleOptions;
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 

@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var numéro = (this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.Options as ExtraitDeCompteOptions).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWindowTitle()
 		{
-			var numéro = (this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.Options as ExtraitDeCompteOptions).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
@@ -152,7 +152,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
-			var options = this.dataAccessor.AccessorOptions as ExtraitDeCompteOptions;
+			var options = this.dataAccessor.Options as ExtraitDeCompteOptions;
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 			this.ShowHideColumn (ColumnType.Journal,        this.comptaEntity.Journaux.Count > 1);

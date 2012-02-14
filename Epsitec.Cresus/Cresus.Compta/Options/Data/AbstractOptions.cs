@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 					var s = Converters.GetComparisonShowedNiceDescription (this.ComparisonShowed);
 					var d = Converters.GetComparisonDisplayModeDescription (this.ComparisonDisplayMode);
 
-					return string.Format ("comparaison avec \"{0}\" mode \"{1}\"", s, d);
+					return string.Format ("Comparaison avec \"{0}\" mode \"{1}\"", s, d);
 				}
 				else
 				{

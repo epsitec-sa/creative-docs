@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public FormattedText GetSummary(List<ColumnMapper> columnMappers, bool isFilter)
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
 			if (this.IsEmpty)
 			{
@@ -440,7 +440,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			else
 			{
 				var builder = new System.Text.StringBuilder ();
-				builder.Append (isFilter ? "filtrer " : "rechercher ");
 
 				bool first = true;
 				foreach (var tab in this.tabsData)

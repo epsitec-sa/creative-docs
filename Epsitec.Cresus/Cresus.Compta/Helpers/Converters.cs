@@ -587,6 +587,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#region ComparisonShowed
 		public static string GetComparisonShowedListDescription(ComparisonShowed mode)
 		{
+			//	Retourne une description courte de ce genre:
+			//	"Aucun"
+			//	"Budget au prorata"
+			//	"Plusieurs"
 			int n = Converters.ComparisonsShowed.Where (x => (mode & x) != 0).Count ();
 
 			if (n == 0)
@@ -605,6 +609,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetComparisonShowedNiceDescription(ComparisonShowed mode)
 		{
+			//	Retourne une description de ce genre:
+			//	"Budget"
+			//	"Budget au prorata et Budget futur"
+			//	"Période précédente, Budget au prorata et Budget futur"
 			var list = new List<string> ();
 
 			foreach (var m in Converters.ComparisonsShowed)
@@ -615,13 +623,19 @@ namespace Epsitec.Cresus.Compta.Helpers
 				}
 			}
 
-			return Converters.NiceConcat (list);
+			return Converters.SentenceConcat (list);
 		}
 
 		public static string GetComparisonShowedDescription(ComparisonShowed mode)
 		{
 			switch (mode)
 			{
+				case ComparisonShowed.PériodePénultième:
+					return "Période pénultième";
+
+				case ComparisonShowed.PériodePrécédente:
+					return "Période précédente";
+
 				case ComparisonShowed.Budget:
 					return "Budget";
 
@@ -634,12 +648,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ComparisonShowed.BudgetFuturProrata:
 					return "Budget futur au prorata";
 
-				case ComparisonShowed.PériodePrécédente:
-					return "Période précédente";
-
-				case ComparisonShowed.PériodePénultième:
-					return "Période pénultième";
-
 				default:
 					return "?";
 			}
@@ -649,12 +657,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			get
 			{
+				yield return ComparisonShowed.PériodePénultième;
+				yield return ComparisonShowed.PériodePrécédente;
 				yield return ComparisonShowed.Budget;
 				yield return ComparisonShowed.BudgetProrata;
 				yield return ComparisonShowed.BudgetFutur;
 				yield return ComparisonShowed.BudgetFuturProrata;
-				yield return ComparisonShowed.PériodePrécédente;
-				yield return ComparisonShowed.PériodePénultième;
 			}
 		}
 		#endregion
@@ -850,9 +858,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
-		public static string NiceConcat(List<string> list)
+		public static string SentenceConcat(List<string> list)
 		{
-			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une chaîne "rouge, vert et bleu".
+			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une phrase "rouge, vert et bleu".
 			var builder = new System.Text.StringBuilder ();
 
 			for (int i = 0; i < list.Count; i++)

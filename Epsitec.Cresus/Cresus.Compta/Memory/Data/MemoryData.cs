@@ -64,75 +64,69 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public FormattedText GetSummary(List<ColumnMapper> columnMappers, FormattedText prefix, FormattedText postfix)
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			//	Retourne le résumé de la mémoire.
-			var builder = new System.Text.StringBuilder ();
-			bool first = true;
+			var s = this.GetSearchSummary  (columnMappers);
+			var f = this.GetFilterSummary  (columnMappers);
+			var o = this.GetOptionsSummary (columnMappers);
 
-			if (this.Search != null)
+			var list = new List<string> ();
+
+			if (!s.IsNullOrEmpty)
 			{
-				var summary = this.Search.GetSummary (columnMappers, false);
-
-				if (!summary.IsNullOrEmpty)
-				{
-					if (!first)
-					{
-						builder.Append (postfix);
-					}
-
-					builder.Append (prefix);
-					builder.Append (summary);
-					first = false;
-				}
+				list.Add ("Rechercher " + s.ToSimpleText ());
 			}
 
-			if (this.Filter != null)
+			if (!f.IsNullOrEmpty)
 			{
-				var summary = this.Filter.GetSummary (columnMappers, true);
-
-				if (!summary.IsNullOrEmpty)
-				{
-					if (!first)
-					{
-						builder.Append (postfix);
-					}
-
-					builder.Append (prefix);
-					builder.Append (summary);
-					first = false;
-				}
+				list.Add ("Filtrer " + f.ToSimpleText ());
 			}
 
-			if (this.Options != null)
+			if (!o.IsNullOrEmpty)
 			{
-				var summary = this.Options.Summary;
-
-				if (!summary.IsNullOrEmpty)
-				{
-					if (!first)
-					{
-						builder.Append (postfix);
-					}
-
-					builder.Append (prefix);
-					builder.Append (summary);
-					first = false;
-				}
+				list.Add ("Options " + o.ToSimpleText ());
 			}
 
-			if (!first)
-			{
-				builder.Append (postfix);
-			}
-
-			builder.Append (prefix);
-			builder.Append (this.SummaryShowedPanels);
-
-			return builder.ToString ();
+			return string.Join (", ", list);
 		}
 
-		private FormattedText SummaryShowedPanels
+		public FormattedText GetSearchSummary(List<ColumnMapper> columnMappers)
+		{
+			if (this.Search == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return this.Search.GetSummary (columnMappers);
+			}
+		}
+
+		public FormattedText GetFilterSummary(List<ColumnMapper> columnMappers)
+		{
+			if (this.Filter == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return this.Filter.GetSummary (columnMappers);
+			}
+		}
+
+		public FormattedText GetOptionsSummary(List<ColumnMapper> columnMappers)
+		{
+			if (this.Options == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return this.Options.Summary;
+			}
+		}
+
+		public FormattedText PanelsSummary
 		{
 			get
 			{
@@ -157,15 +151,15 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				//	Génère le résumé.
 				if (list.Count == 0)
 				{
-					return "tous les panneaux sont cachés";
+					return "Tous les panneaux sont cachés";
 				}
 				else if (list.Count == 1)
 				{
-					return "panneau visible: " + Converters.NiceConcat (list);
+					return "Panneau visible: " + Converters.SentenceConcat (list);
 				}
 				else
 				{
-					return "panneaux visibles: " + Converters.NiceConcat (list);
+					return "Panneaux visibles: " + Converters.SentenceConcat (list);
 				}
 			}
 		}

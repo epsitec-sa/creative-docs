@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var journal = (this.dataAccessor.AccessorOptions as JournalOptions).Journal;
+			var journal = (this.dataAccessor.Options as JournalOptions).Journal;
 
 			if (journal == null)  // tous les journaux ?
 			{
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
-			var options = this.dataAccessor.AccessorOptions as JournalOptions;
+			var options = this.dataAccessor.Options as JournalOptions;
 
 			this.ShowHideColumn (ColumnType.Journal, options != null && options.Journal == null);  // tous les journaux ?
 		}

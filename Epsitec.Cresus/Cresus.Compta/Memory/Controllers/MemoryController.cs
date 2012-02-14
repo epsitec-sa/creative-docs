@@ -126,9 +126,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					this.dataAccessor.FilterData.Clear ();
 				}
 
-				if (this.dataAccessor.AccessorOptions != null)
+				if (this.dataAccessor.Options != null)
 				{
-					this.dataAccessor.AccessorOptions.Clear ();
+					this.dataAccessor.Options.Clear ();
 				}
 			}
 
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedFrame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 15*6+29,
+				PreferredHeight = 15*7+29,
 				Dock            = DockStyle.Top,
 			};
 
@@ -372,18 +372,43 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					Parent          = rightFrame,
 					DrawFullFrame   = true,
-					Dock            = DockStyle.Fill,
-					Margins         = new Margins (0, 0, 5, 0),
-					Padding         = new Margins (5, 5, 0, 0),
+					Dock            = DockStyle.Bottom,
+					Padding         = new Margins (4),
 				};
 
-				this.extendedSummary = new StaticText
+				this.extendedSearchSummary = new StaticText
 				{
-					Parent           = frame,
-					ContentAlignment = ContentAlignment.MiddleLeft,
-					TextBreakMode    = TextBreakMode.None,
-					Dock             = DockStyle.Fill,
+					Parent          = frame,
+					TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
 				};
+
+				this.extendedFilterSummary = new StaticText
+				{
+					Parent          = frame,
+					TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				this.extendedOptionsSummary = new StaticText
+				{
+					Parent          = frame,
+					TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				this.extendedPanelsSummary = new StaticText
+				{
+					Parent          = frame,
+					TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				ToolTip.Default.SetToolTip (frame, "Résumé du style");
 			}
 
 			ToolTip.Default.SetToolTip (this.compactUseButton,     "Utilise la recherche, le filtre et les options définis dans le style");
@@ -494,7 +519,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.memoryList.List.RemoveAt (sel);
 
 				sel = System.Math.Min (sel, this.memoryList.List.Count-1);
-				var memory = this.memoryList.List[sel];
+				var memory = (sel == -1) ? null : this.memoryList.List[sel];
 
 				this.memoryList.Selected = memory;
 				this.MemoryChanged ();
@@ -555,32 +580,38 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			int sel = this.extendedListJournaux.SelectedItemIndex;
 			int count = this.memoryList.List.Count;
 			bool eq = this.CompareTo (this.memoryList.Selected);
-			bool am = this.AlreadyMemorized ();
 
 			this.compactUseButton.Enable     = (sel != -1 && !eq);
-			this.extendedAddButton.Enable    = !am;
+			this.extendedAddButton.Enable    = true;
 			this.extendedUseButton.Enable    = (sel != -1 && !eq);
 			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
-			this.extendedUpdateButton.Enable = (sel != -1 && !am);
+			this.extendedUpdateButton.Enable = (sel != -1 && !eq);
 			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
 			this.extendedRemoveButton.Enable = (sel != -1);
 		}
 
 		private void UpdateSummary()
 		{
-			var compactSummary  = FormattedText.Empty;
-			var extendedSummary = FormattedText.Empty;
-
 			var memory = this.memoryList.Selected;
 
-			if (memory != null)
+			if (memory == null)
 			{
-				compactSummary  = memory.GetSummary (this.controller.ColumnMappers, "", ", ");
-				extendedSummary = memory.GetSummary (this.controller.ColumnMappers, "● ", "<br/>");
-			}
+				var compactSummary         = FormattedText.Empty;
 
-			this.compactSummary.FormattedText  = compactSummary;
-			this.extendedSummary.FormattedText = extendedSummary;
+				this.extendedSearchSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Search");
+				this.extendedFilterSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Filter");
+				this.extendedOptionsSummary.FormattedText = UIBuilder.GetTextIconUri ("Panel.Options");
+				this.extendedPanelsSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Info");
+			}
+			else
+			{
+				this.compactSummary.FormattedText = memory.GetSummary (this.controller.ColumnMappers);
+
+				this.extendedSearchSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Search" ) + "  " + memory.GetSearchSummary  (this.controller.ColumnMappers);
+				this.extendedFilterSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Filter" ) + "  " + memory.GetFilterSummary  (this.controller.ColumnMappers);
+				this.extendedOptionsSummary.FormattedText = UIBuilder.GetTextIconUri ("Panel.Options") + "  " + memory.GetOptionsSummary (this.controller.ColumnMappers);
+				this.extendedPanelsSummary .FormattedText = UIBuilder.GetTextIconUri ("Panel.Info"   ) + "  " + memory.PanelsSummary;
+			}
 		}
 
 
@@ -624,9 +655,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null && memory.Options != null)
+				if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null)
 				{
-					if (!this.dataAccessor.AccessorOptions.CompareTo (memory.Options))
+					if (!this.dataAccessor.Options.CompareTo (memory.Options))
 					{
 						return false;
 					}
@@ -648,9 +679,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				memory.Filter = this.dataAccessor.FilterData.CopyFrom ();
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null)
+			if (this.dataAccessor != null && this.dataAccessor.Options != null)
 			{
-				memory.Options = this.dataAccessor.AccessorOptions.CopyFrom ();
+				memory.Options = this.dataAccessor.Options.CopyFrom ();
 			}
 
 			memory.ShowSearch  = this.controller.MainWindowController.ShowSearchPanel;
@@ -670,9 +701,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				memory.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null && memory.Options != null)
+			if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null)
 			{
-				memory.Options.CopyTo (this.dataAccessor.AccessorOptions);
+				memory.Options.CopyTo (this.dataAccessor.Options);
 			}
 
 			this.controller.MainWindowController.ShowSearchPanel  = memory.ShowSearch;
@@ -689,7 +720,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 				while (true)
 				{
-					string name = "Nouveau" + ((i == 1) ? "" : " " + i.ToString ());
+					string name = "Style" + " " + i.ToString ();
 
 					if (this.memoryList.List.Where (x => x.Name == name).Any ())
 					{
@@ -734,6 +765,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private Button									extendedUpButton;
 		private Button									extendedDownButton;
 		private Button									extendedRemoveButton;
-		private StaticText								extendedSummary;
+		private StaticText								extendedSearchSummary;
+		private StaticText								extendedFilterSummary;
+		private StaticText								extendedOptionsSummary;
+		private StaticText								extendedPanelsSummary;
 	}
 }

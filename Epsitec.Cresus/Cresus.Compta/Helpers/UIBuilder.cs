@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			fieldController.Box.PreferredWidth = 70;
 			fieldController.EditionData = new EditionData (controller, validateAction);
 			fieldController.EditionData.Text = initialDate;
+			fieldController.EditionDataToWidget ();
 			fieldController.Validate ();
 
 			return fieldController;
@@ -192,9 +193,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string GetTextIconUri(string icon)
+		public static string GetTextIconUri(string icon, double verticalOffset = 7)
 		{
-			return string.Format (@"<img src=""{0}""/>", UIBuilder.GetResourceIconUri (icon));
+			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
 
 		public static string GetCheckStateIconUri(bool state)

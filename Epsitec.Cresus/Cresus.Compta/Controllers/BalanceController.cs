@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as BalanceData;
 
-			var options = this.dataAccessor.AccessorOptions as BalanceOptions;
+			var options = this.dataAccessor.Options as BalanceOptions;
 
 			if (columnType == ColumnType.Titre)
 			{

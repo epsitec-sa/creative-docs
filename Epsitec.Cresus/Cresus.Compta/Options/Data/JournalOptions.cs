@@ -82,11 +82,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				if (this.Journal == null)
 				{
-					return "options: tous les journaux";
+					return "Tous les journaux";
 				}
 				else
 				{
-					return string.Format ("options: journal \"{0}\"", this.Journal.Nom);
+					return string.Format ("Journal \"{0}\"", this.Journal.Nom);
 				}
 			}
 		}
