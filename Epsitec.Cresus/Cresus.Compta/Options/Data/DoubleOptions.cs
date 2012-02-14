@@ -40,6 +40,16 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
+		public override void CopyTo(AbstractOptions dst)
+		{
+			var d = dst as DoubleOptions;
+
+			d.HideZero    = this.HideZero;
+			d.HasGraphics = this.HasGraphics;
+
+			base.CopyTo (dst);
+		}
+
 		public override bool CompareTo(AbstractOptions other)
 		{
 			if (!base.CompareTo (other))

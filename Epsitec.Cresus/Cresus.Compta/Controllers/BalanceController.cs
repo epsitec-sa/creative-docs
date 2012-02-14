@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.optionsController = new BalanceOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
-			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+			this.optionsController.ShowPanel = this.mainWindowController.ShowOptionsPanel;
 
 			this.UpdateColumnMappers ();
 		}

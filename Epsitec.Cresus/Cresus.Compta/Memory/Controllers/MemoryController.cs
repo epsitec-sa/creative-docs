@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedFrame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 15*5+29,
+				PreferredHeight = 15*6+29,
 				Dock            = DockStyle.Top,
 			};
 
@@ -601,9 +601,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			if (memory != null)
 			{
-				if (this.controller.ShowSearchPanel  != memory.ShowSearch ||
-					this.controller.ShowFilterPanel  != memory.ShowFilter ||
-					this.controller.ShowOptionsPanel != memory.ShowOptions)
+				if (this.controller.MainWindowController.ShowSearchPanel  != memory.ShowSearch ||
+					this.controller.MainWindowController.ShowFilterPanel  != memory.ShowFilter ||
+					this.controller.MainWindowController.ShowOptionsPanel != memory.ShowOptions)
 				{
 					return false;
 				}
@@ -623,6 +623,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 						return false;
 					}
 				}
+
+				if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null && memory.Options != null)
+				{
+					if (!this.dataAccessor.AccessorOptions.CompareTo (memory.Options))
+					{
+						return false;
+					}
+				}
 			}
 
 			return true;
@@ -632,19 +640,22 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			if (this.dataAccessor != null && this.dataAccessor.SearchData != null)
 			{
-				memory.Search = new SearchData ();
-				this.dataAccessor.SearchData.CopyTo (memory.Search);
+				memory.Search = this.dataAccessor.SearchData.CopyFrom ();
 			}
 
 			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
 			{
-				memory.Filter = new SearchData ();
-				this.dataAccessor.FilterData.CopyTo (memory.Filter);
+				memory.Filter = this.dataAccessor.FilterData.CopyFrom ();
 			}
 
-			memory.ShowSearch  = this.controller.ShowSearchPanel;
-			memory.ShowFilter  = this.controller.ShowFilterPanel;
-			memory.ShowOptions = this.controller.ShowOptionsPanel;
+			if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null)
+			{
+				memory.Options = this.dataAccessor.AccessorOptions.CopyFrom ();
+			}
+
+			memory.ShowSearch  = this.controller.MainWindowController.ShowSearchPanel;
+			memory.ShowFilter  = this.controller.MainWindowController.ShowFilterPanel;
+			memory.ShowOptions = this.controller.MainWindowController.ShowOptionsPanel;
 		}
 
 		private void CopyMemoryToData(MemoryData memory)
@@ -659,9 +670,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				memory.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
 
-			this.controller.ShowSearchPanel  = memory.ShowSearch;
-			this.controller.ShowFilterPanel  = memory.ShowFilter;
-			this.controller.ShowOptionsPanel = memory.ShowOptions;
+			if (this.dataAccessor != null && this.dataAccessor.AccessorOptions != null && memory.Options != null)
+			{
+				memory.Options.CopyTo (this.dataAccessor.AccessorOptions);
+			}
+
+			this.controller.MainWindowController.ShowSearchPanel  = memory.ShowSearch;
+			this.controller.MainWindowController.ShowFilterPanel  = memory.ShowFilter;
+			this.controller.MainWindowController.ShowOptionsPanel = memory.ShowOptions;
 		}
 
 

@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			if (this.showPanel)
 			{
+				this.UpdateCombo ();
 				this.UpdateSummary ();
 			}
 		}
@@ -116,17 +117,17 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private void UpdateCombo()
 		{
-			this.comboJournaux.Items.Clear ();
-
-			foreach (var journal in this.comptaEntity.Journaux)
-			{
-				this.comboJournaux.Items.Add (journal.Nom);
-			}
-
-			this.comboJournaux.Items.Add (JournalOptionsController.AllJournaux);
-
 			using (this.ignoreChanges.Enter ())
 			{
+				this.comboJournaux.Items.Clear ();
+
+				foreach (var journal in this.comptaEntity.Journaux)
+				{
+					this.comboJournaux.Items.Add (journal.Nom);
+				}
+
+				this.comboJournaux.Items.Add (JournalOptionsController.AllJournaux);
+
 				this.comboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
 			}
 		}

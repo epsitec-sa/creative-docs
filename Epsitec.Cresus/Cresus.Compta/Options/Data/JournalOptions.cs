@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public ComptaJournalEntity Journal
 		{
+			//	null = tous les journaux
 			get;
 			set;
 		}
@@ -46,6 +47,23 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.emptyOptions.Clear ();
 		}
 
+
+		public override AbstractOptions CopyFrom()
+		{
+			var options = new JournalOptions ();
+			options.SetComptaEntity (this.comptaEntity);
+			this.CopyTo (options);
+			return options;
+		}
+
+		public override void CopyTo(AbstractOptions dst)
+		{
+			var d = dst as JournalOptions;
+			d.Journal = this.Journal;
+
+			base.CopyTo (dst);
+		}
+
 		public override bool CompareTo(AbstractOptions other)
 		{
 			if (!base.CompareTo (other))
@@ -56,6 +74,21 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			var o = other as JournalOptions;
 
 			return this.Journal == o.Journal;
+		}
+
+		public override FormattedText Summary
+		{
+			get
+			{
+				if (this.Journal == null)
+				{
+					return "options: tous les journaux";
+				}
+				else
+				{
+					return string.Format ("options: journal \"{0}\"", this.Journal.Nom);
+				}
+			}
 		}
 	}
 }

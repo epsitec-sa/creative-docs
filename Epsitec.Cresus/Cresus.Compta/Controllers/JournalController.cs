@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.optionsController = new JournalOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
-			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+			this.optionsController.ShowPanel = this.mainWindowController.ShowOptionsPanel;
 
 			this.UpdateColumnMappers ();
 		}
@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
+			this.UpdateMemory ();
 		}
 
 		protected override void UpdateTitle()
@@ -116,7 +117,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.footerController = new JournalFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
-			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
+			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
 
 

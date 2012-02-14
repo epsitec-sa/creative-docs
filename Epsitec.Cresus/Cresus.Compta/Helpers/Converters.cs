@@ -603,6 +603,21 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static string GetComparisonShowedNiceDescription(ComparisonShowed mode)
+		{
+			var list = new List<string> ();
+
+			foreach (var m in Converters.ComparisonsShowed)
+			{
+				if ((mode & m) != 0)
+				{
+					list.Add (Converters.GetComparisonShowedDescription (m));
+				}
+			}
+
+			return Converters.NiceConcat (list);
+		}
+
 		public static string GetComparisonShowedDescription(ComparisonShowed mode)
 		{
 			switch (mode)
@@ -833,6 +848,32 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.dateFormatOrder     = settingsList.GetEnum (SettingsType.DateOrder);
 		}
 		#endregion
+
+
+		public static string NiceConcat(List<string> list)
+		{
+			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une chaîne "rouge, vert et bleu".
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i = 0; i < list.Count; i++)
+			{
+				if (i != 0)
+				{
+					if (i < list.Count-1)
+					{
+						builder.Append (", ");
+					}
+					else
+					{
+						builder.Append (" et ");
+					}
+				}
+
+				builder.Append (list[i]);
+			}
+
+			return builder.ToString ();
+		}
 
 
 		static Converters()

@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -82,19 +83,50 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 		}
 
+
+		public virtual AbstractOptions CopyFrom()
+		{
+			return null;
+		}
+
+		public virtual void CopyTo(AbstractOptions dst)
+		{
+			dst.ComparisonEnable      = this.ComparisonEnable;
+			dst.ComparisonShowed      = this.ComparisonShowed;
+			dst.ComparisonDisplayMode = this.ComparisonDisplayMode;
+		}
+
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			return this.ComparisonEnable == other.ComparisonEnable &&
-				   this.ComparisonShowed == other.ComparisonShowed &&
+			return this.ComparisonEnable      == other.ComparisonEnable     &&
+				   this.ComparisonShowed      == other.ComparisonShowed     &&
 				   this.ComparisonDisplayMode == other.ComparisonDisplayMode;
 		}
 
 
-		public FormattedText Summary
+		public virtual FormattedText Summary
 		{
 			get
 			{
 				return FormattedText.Empty;
+			}
+		}
+
+		protected FormattedText ComparisonSummary
+		{
+			get
+			{
+				if (this.ComparisonEnable)
+				{
+					var s = Converters.GetComparisonShowedNiceDescription (this.ComparisonShowed);
+					var d = Converters.GetComparisonDisplayModeDescription (this.ComparisonDisplayMode);
+
+					return string.Format ("comparaison avec \"{0}\" mode \"{1}\"", s, d);
+				}
+				else
+				{
+					return FormattedText.Empty;
+				}
 			}
 		}
 

@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -154,39 +155,18 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				}
 
 				//	Génère le résumé.
-				var builder = new System.Text.StringBuilder ();
-
 				if (list.Count == 0)
 				{
-					builder.Append ("tous les panneaux sont cachés");
+					return "tous les panneaux sont cachés";
 				}
 				else if (list.Count == 1)
 				{
-					builder.Append ("panneau visible: ");
+					return "panneau visible: " + Converters.NiceConcat (list);
 				}
 				else
 				{
-					builder.Append ("panneaux visibles: ");
+					return "panneaux visibles: " + Converters.NiceConcat (list);
 				}
-
-				for (int i = 0; i < list.Count; i++)
-				{
-					if (i != 0)
-					{
-						if (i < list.Count-1)
-						{
-							builder.Append (", ");
-						}
-						else
-						{
-							builder.Append (" et ");
-						}
-					}
-
-					builder.Append (list[i]);
-				}
-
-				return builder.ToString ();
 			}
 		}
 	}

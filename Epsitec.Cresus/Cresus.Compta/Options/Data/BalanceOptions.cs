@@ -39,6 +39,23 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.emptyOptions.Clear ();
 		}
 
+
+		public override AbstractOptions CopyFrom()
+		{
+			var options = new BalanceOptions ();
+			options.SetComptaEntity (this.comptaEntity);
+			this.CopyTo (options);
+			return options;
+		}
+
+		public override void CopyTo(AbstractOptions dst)
+		{
+			var d = dst as BalanceOptions;
+			d.HideZero = this.HideZero;
+
+			base.CopyTo (dst);
+		}
+
 		public override bool CompareTo(AbstractOptions other)
 		{
 			if (!base.CompareTo (other))

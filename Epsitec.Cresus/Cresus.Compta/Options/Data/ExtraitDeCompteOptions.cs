@@ -83,6 +83,27 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.emptyOptions.Clear ();
 		}
 
+
+		public override AbstractOptions CopyFrom()
+		{
+			var options = new ExtraitDeCompteOptions ();
+			options.SetComptaEntity (this.comptaEntity);
+			this.CopyTo (options);
+			return options;
+		}
+
+		public override void CopyTo(AbstractOptions dst)
+		{
+			var d = dst as ExtraitDeCompteOptions;
+
+			d.CatégorieMontrée             = this.CatégorieMontrée;
+			d.MontreComptesVides           = this.MontreComptesVides;
+			d.MontreComptesCentralisateurs = this.MontreComptesCentralisateurs;
+			d.HasGraphics                  = this.HasGraphics;
+
+			base.CopyTo (dst);
+		}
+
 		public override bool CompareTo(AbstractOptions other)
 		{
 			if (!base.CompareTo (other))
@@ -92,10 +113,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as ExtraitDeCompteOptions;
 
-			return this.CatégorieMontrée == o.CatégorieMontrée &&
-				   this.MontreComptesVides == o.MontreComptesVides &&
+			return this.CatégorieMontrée             == o.CatégorieMontrée             &&
+				   this.MontreComptesVides           == o.MontreComptesVides           &&
 				   this.MontreComptesCentralisateurs == o.MontreComptesCentralisateurs &&
-				   this.HasGraphics == o.HasGraphics;
+				   this.HasGraphics                  == o.HasGraphics;
 		}
 	}
 }

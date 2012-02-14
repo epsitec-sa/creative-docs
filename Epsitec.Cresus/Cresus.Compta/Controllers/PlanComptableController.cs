@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.footerController = new PlanComptableFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
-			this.footerController.ShowInfoPanel = this.ShowInfoPanel;
+			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
 
 

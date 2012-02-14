@@ -274,103 +274,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool ShowSearchPanel
+		public void UpdatePanelsShowed(bool memory, bool search, bool filter, bool options, bool info)
 		{
-			get
+			if (this.memoryController != null)
 			{
-				return this.topSearchController != null && this.topSearchController.ShowPanel;
+				this.memoryController.ShowPanel = memory;
 			}
-			set
-			{
-				if (this.topSearchController != null)
-				{
-					this.topSearchController.ShowPanel = value;
-					this.UpdateMemory ();
-				}
-			}
-		}
 
-		public bool ShowFilterPanel
-		{
-			get
+			if (this.topSearchController != null)
 			{
-				return this.topFilterController != null && this.topFilterController.ShowPanel;
+				this.topSearchController.ShowPanel = search;
 			}
-			set
-			{
-				if (this.topFilterController != null)
-				{
-					this.topFilterController.ShowPanel = value;
-					this.UpdateMemory ();
-				}
-			}
-		}
 
-		public bool ShowOptionsPanel
-		{
-			get
+			if (this.topFilterController != null)
 			{
-				if (this.optionsController == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.optionsController.ShowPanel;
-				}
+				this.topFilterController.ShowPanel = filter;
 			}
-			set
-			{
-				if (this.optionsController != null)
-				{
-					this.optionsController.ShowPanel = value;
-					this.UpdateMemory ();
-				}
-			}
-		}
 
-		public bool ShowMemoryPanel
-		{
-			get
+			if (this.optionsController != null)
 			{
-				if (this.memoryController == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.memoryController.ShowPanel;
-				}
+				this.optionsController.ShowPanel = options;
 			}
-			set
-			{
-				if (this.memoryController != null)
-				{
-					this.memoryController.ShowPanel = value;
-				}
-			}
-		}
 
-		public bool ShowInfoPanel
-		{
-			get
+			if (this.footerController != null)
 			{
-				if (this.footerController == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.footerController.ShowInfoPanel;
-				}
+				this.footerController.ShowInfoPanel = info;
 			}
-			set
-			{
-				if (this.footerController != null)
-				{
-					this.footerController.ShowInfoPanel = value;
-				}
-			}
+
+			this.UpdateMemory ();
 		}
 
 
@@ -381,7 +312,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.memoryController = new MemoryController (this);
 				this.memoryController.CreateUI (parent, this.MemoryChangedAction);
-				this.memoryController.ShowPanel = this.ShowMemoryPanel;
+				this.memoryController.ShowPanel = this.mainWindowController.ShowMemoryPanel;
 			}
 		}
 
@@ -402,10 +333,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.optionsController.UpdateContent ();
 			}
 
+			//this.SearchStartAction ();  // pas nécessaire, car FilterStartAction fait déjà tout !
 			this.FilterStartAction ();
+			this.OptionsChanged ();
 		}
 
-		private void UpdateMemory()
+		protected void UpdateMemory()
 		{
 			if (this.memoryController != null)
 			{
@@ -422,7 +355,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.topSearchController = new TopSearchController (this);
 				this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
-				this.topSearchController.ShowPanel = this.ShowSearchPanel;
+				this.topSearchController.ShowPanel = this.mainWindowController.ShowSearchPanel;
 			}
 		}
 
@@ -485,7 +418,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.topFilterController = new TopFilterController (this);
 				this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
-				this.topFilterController.ShowPanel = this.ShowSearchPanel;
+				this.topFilterController.ShowPanel = this.mainWindowController.ShowSearchPanel;
 
 				this.dataAccessor.FilterUpdate ();
 			}

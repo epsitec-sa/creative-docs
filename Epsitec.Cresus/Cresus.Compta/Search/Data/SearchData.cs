@@ -410,6 +410,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			return true;
 		}
 
+		public SearchData CopyFrom()
+		{
+			var data = new SearchData ();
+			this.CopyTo (data);
+			return data;
+		}
+
 		public void CopyTo(SearchData dst)
 		{
 			dst.OrMode = this.OrMode;

@@ -32,5 +32,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.emptyOptions.SetComptaEntity (this.comptaEntity);
 			this.emptyOptions.Clear ();
 		}
+
+		public override AbstractOptions CopyFrom()
+		{
+			var options = new PPOptions ();
+			options.SetComptaEntity (this.comptaEntity);
+			this.CopyTo (options);
+			return options;
+		}
 	}
 }

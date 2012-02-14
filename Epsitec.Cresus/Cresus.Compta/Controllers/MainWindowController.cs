@@ -334,8 +334,81 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return text;
 		}
 
+
+		public bool ShowMemoryPanel
+		{
+			get
+			{
+				return this.showMemoryPanel;
+			}
+			set
+			{
+				this.showMemoryPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+
+		public bool ShowSearchPanel
+		{
+			get
+			{
+				return this.showSearchPanel;
+			}
+			set
+			{
+				this.showSearchPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+
+		public bool ShowFilterPanel
+		{
+			get
+			{
+				return this.showFilterPanel;
+			}
+			set
+			{
+				this.showFilterPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+
+		public bool ShowOptionsPanel
+		{
+			get
+			{
+				return this.showOptionsPanel;
+			}
+			set
+			{
+				this.showOptionsPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+
+		public bool ShowInfoPanel
+		{
+			get
+			{
+				return this.showInfoPanel;
+			}
+			set
+			{
+				this.showInfoPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+		
 		private void UpdatePanelCommands()
 		{
+			if (this.controller != null)
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Memory);
+				cs.ActiveState = this.showMemoryPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowMemoryPanel;
+			}
+
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
@@ -359,13 +432,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Memory);
-				cs.ActiveState = this.showMemoryPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasShowMemoryPanel;
-			}
-
-			if (this.controller != null)
-			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Info);
 				cs.ActiveState = this.showInfoPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasShowInfoPanel;
@@ -373,11 +439,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.ShowSearchPanel  = this.showSearchPanel;
-				this.controller.ShowFilterPanel  = this.showFilterPanel;
-				this.controller.ShowOptionsPanel = this.showOptionsPanel;
-				this.controller.ShowMemoryPanel  = this.showMemoryPanel;
-				this.controller.ShowInfoPanel    = this.showInfoPanel;
+				this.controller.UpdatePanelsShowed (this.showMemoryPanel, this.showSearchPanel, this.showFilterPanel, this.showOptionsPanel, this.showInfoPanel);
 			}
 		}
 
