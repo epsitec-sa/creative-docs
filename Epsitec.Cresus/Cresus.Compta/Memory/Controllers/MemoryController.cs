@@ -299,10 +299,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			//	Panneau de droite.
 			{
+				int w = 32+4;
+
 				var toolbar = new FrameBox
 				{
 					Parent          = rightFrame,
-					PreferredHeight = 20,
 					Dock            = DockStyle.Top,
 				};
 
@@ -310,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					Parent          = toolbar,
 					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Add"),
-					PreferredSize   = new Size (40, 40),
+					PreferredSize   = new Size (w, w),
 					Dock            = DockStyle.Left,
 				};
 
@@ -318,7 +319,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					Parent          = toolbar,
 					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Update"),
-					PreferredSize   = new Size (40, 40),
+					PreferredSize   = new Size (w, w),
 					Dock            = DockStyle.Left,
 					Margins         = new Margins (2, 0, 0, 0),
 				};
@@ -327,7 +328,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					Parent          = toolbar,
 					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Use"),
-					PreferredSize   = new Size (40, 40),
+					PreferredSize   = new Size (w, w),
 					Dock            = DockStyle.Left,
 					Margins         = new Margins (2, 0, 0, 0),
 				};
@@ -336,7 +337,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					var upDown = new FrameBox
 					{
 						Parent          = toolbar,
-						PreferredSize   = new Size (20, 40),
+						PreferredSize   = new Size (w/2, 2),
 						Dock            = DockStyle.Left,
 						Margins         = new Margins (20, 0, 0, 0),
 					};
@@ -345,7 +346,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					{
 						Parent          = upDown,
 						IconUri         = UIBuilder.GetResourceIconUri ("Memory.Up"),
-						PreferredSize   = new Size (20, 20),
+						PreferredSize   = new Size (w/2, w/2),
 						Dock            = DockStyle.Top,
 					};
 
@@ -353,7 +354,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					{
 						Parent          = upDown,
 						IconUri         = UIBuilder.GetResourceIconUri ("Memory.Down"),
-						PreferredSize   = new Size (20, 20),
+						PreferredSize   = new Size (w/2, w/2),
 						Dock            = DockStyle.Bottom,
 					};
 				}
@@ -362,7 +363,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					Parent          = toolbar,
 					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Delete"),
-					PreferredSize   = new Size (40, 40),
+					PreferredSize   = new Size (w, w),
 					Dock            = DockStyle.Left,
 				};
 			}
