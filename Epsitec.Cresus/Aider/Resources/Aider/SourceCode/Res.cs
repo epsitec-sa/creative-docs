@@ -189,12 +189,16 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlacePerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 186));
 			//	designer:cap/LVA65
 			public static readonly Epsitec.Common.Types.StructuredType AiderTown = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 166));
+			//	designer:cap/LVAFB
+			public static readonly Epsitec.Common.Types.StructuredType AiderWarningAction = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 367));
 			//	designer:cap/LVA22
 			public static readonly Epsitec.Common.Types.StructuredType eCH_Address = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 66));
 			//	designer:cap/LVA
 			public static readonly Epsitec.Common.Types.StructuredType eCH_Person = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
 			//	designer:cap/LVAG
 			public static readonly Epsitec.Common.Types.StructuredType eCH_ReportedPerson = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 16));
+			//	designer:cap/LVAEB
+			public static readonly Epsitec.Common.Types.StructuredType IAiderWarning = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 366));
 			//	designer:cap/LVA98
 			public static readonly Epsitec.Common.Types.StructuredType IComment = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 265));
 			//	designer:cap/LVAM3
@@ -1612,6 +1616,20 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid ZipCode = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 273);
 			}
 			
+			public static class AiderWarningAction
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVAHB
+				public static readonly global::Epsitec.Common.Support.Druid IconUri = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 369);
+				//	designer:cap/LVAIB
+				public static readonly global::Epsitec.Common.Support.Druid SerializedData = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 370);
+				//	designer:cap/LVAGB
+				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 368);
+			}
+			
 			public static class eCH_Address
 			{
 				internal static void _Initialize()
@@ -1728,6 +1746,18 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid SwissZipCodeId = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 33);
 				//	designer:cap/LVAO
 				public static readonly global::Epsitec.Common.Support.Druid Town = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 24);
+			}
+			
+			public static class IAiderWarning
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVAJB
+				public static readonly global::Epsitec.Common.Support.Druid Actions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 371);
+				//	designer:cap/LVAKB
+				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 372);
 			}
 			
 			public static class IComment
@@ -1937,10 +1967,12 @@ namespace Epsitec.Aider
 			Fields.AiderPlacePerson._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();
 			Fields.AiderTown._Initialize ();
+			Fields.AiderWarningAction._Initialize ();
 			Fields.eCH_Address._Initialize ();
 			Fields.eCH_Person._Initialize ();
 			Fields.eCH_ReportedPerson._Initialize ();
 			Fields.IAddress._Initialize ();
+			Fields.IAiderWarning._Initialize ();
 			Fields.IComment._Initialize ();
 			Fields.IDateRange._Initialize ();
 			Fields.IManagedItem._Initialize ();
