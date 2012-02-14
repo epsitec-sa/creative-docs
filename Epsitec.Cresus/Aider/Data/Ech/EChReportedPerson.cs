@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Ech
 {
 
 

@@ -17,7 +17,7 @@ using System.Reflection;
 using System.Xml.Linq;
 
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Ech
 {
 
 

@@ -1,13 +1,17 @@
-﻿using Epsitec.Aider.Data;
+﻿using Epsitec.Aider.Data.Ech;
+
+using Epsitec.Aider.Entities;
+
+using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Common.Types;
+
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
-
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Entities;
-
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
@@ -15,13 +19,11 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 
+using System.Collections.Generic;
+
 using System.IO;
 
 using System.Linq;
-using System.Collections.Generic;
-using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
-using Epsitec.Common.Types;
 
 
 namespace Aider.Tests.Vs

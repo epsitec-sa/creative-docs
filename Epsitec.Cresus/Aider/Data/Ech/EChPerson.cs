@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Ech
 {
 
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Xml.Linq;
 
-namespace Epsitec.Aider.Data
+namespace Epsitec.Aider.Data.Ech
 {
 	public class eCH_Importer
 	{
