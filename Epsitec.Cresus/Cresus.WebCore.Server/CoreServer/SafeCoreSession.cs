@@ -59,8 +59,9 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 		public void Dispose()
 		{
+			this.worker.ExecuteSync (() => this.coreSession.Dispose ());
+
 			this.worker.Dispose ();
-			this.coreSession.Dispose ();
 		}
 
 

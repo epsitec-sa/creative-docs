@@ -51,6 +51,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		public Response Logout()
 		{
+			// TODO I think that this way of doing things might be wrong. This call is not
+			// executed on the worker thread of the SafeCoreSession, therefor, this call might
+			// cancel other operations that are being executed by the same SafeCoreSession and there
+			// might also be requests still pending. The DeleteSession call should be executed with
+			// a call to SafeCoreSession.Execute(...). But then we can't dispose the SafeCoreSession
+			// on this thread, because the worker thread can't dispose itself. We would need to 
+			// remove the SafeCoreSession from the CoreSessionManager, and dispose it afterwards,
+			// only when it has no more job to do.
+
 			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
 
 			this.ServerContext.CoreSessionManager.DeleteSession (sessionId);
