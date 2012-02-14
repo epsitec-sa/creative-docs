@@ -36,6 +36,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA2A]", typeof (Epsitec.Aider.Entities.AiderGroupDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVA7A]", typeof (Epsitec.Aider.Entities.AiderFunctionDefEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[LVAFB]", typeof (Epsitec.Aider.Entities.AiderWarningActionEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[LVALB]", typeof (Epsitec.Aider.Entities.AiderPersonWarningEntity))]
 #region Epsitec.Aider.eCH_Person Entity
 namespace Epsitec.Aider.Entities
 {
@@ -6291,6 +6292,95 @@ namespace Epsitec.Aider.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderWarningActionEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Aider.AiderPersonWarning Entity
+namespace Epsitec.Aider.Entities
+{
+	///	<summary>
+	///	The <c>AiderPersonWarning</c> entity.
+	///	designer:cap/LVALB
+	///	</summary>
+	public partial class AiderPersonWarningEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IAiderWarning
+	{
+		#region IAiderWarning Members
+		///	<summary>
+		///	The <c>Title</c> field.
+		///	designer:fld/LVALB/LVAKB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAKB]")]
+		public global::Epsitec.Common.Types.FormattedText Title
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetTitle (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetTitle (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Actions</c> field.
+		///	designer:fld/LVALB/LVAJB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAJB]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderWarningActionEntity> Actions
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetActions (this);
+			}
+		}
+		#endregion
+		///	<summary>
+		///	The <c>Person</c> field.
+		///	designer:fld/LVALB/LVAMB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAMB]")]
+		public global::Epsitec.Aider.Entities.AiderPersonEntity Person
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAMB]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.AiderPersonEntity oldValue = this.Person;
+				if (oldValue != value || !this.IsFieldDefined("[LVAMB]"))
+				{
+					this.OnPersonChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Entities.AiderPersonEntity> ("[LVAMB]", oldValue, value);
+					this.OnPersonChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnPersonChanging(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		partial void OnPersonChanged(global::Epsitec.Aider.Entities.AiderPersonEntity oldValue, global::Epsitec.Aider.Entities.AiderPersonEntity newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Aider.Entities.AiderPersonWarningEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Aider.Entities.AiderPersonWarningEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1013, 10, 373);	// [LVALB]
+		public static readonly string EntityStructuredTypeKey = "[LVALB]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<AiderPersonWarningEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Immutable)
 			{

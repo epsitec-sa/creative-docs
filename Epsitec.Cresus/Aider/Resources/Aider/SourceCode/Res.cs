@@ -183,6 +183,8 @@ namespace Epsitec.Aider
 			public static readonly Epsitec.Common.Types.StructuredType AiderPersonData = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 277));
 			//	designer:cap/LVAV2
 			public static readonly Epsitec.Common.Types.StructuredType AiderPersonRelationship = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 95));
+			//	designer:cap/LVALB
+			public static readonly Epsitec.Common.Types.StructuredType AiderPersonWarning = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 373));
 			//	designer:cap/LVAV3
 			public static readonly Epsitec.Common.Types.StructuredType AiderPlace = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 127));
 			//	designer:cap/LVAQ5
@@ -1558,6 +1560,16 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 117);
 			}
 			
+			public static class AiderPersonWarning
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/LVAMB
+				public static readonly global::Epsitec.Common.Support.Druid Person = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 374);
+			}
+			
 			public static class AiderPlace
 			{
 				internal static void _Initialize()
@@ -1963,6 +1975,7 @@ namespace Epsitec.Aider
 			Fields.AiderPerson._Initialize ();
 			Fields.AiderPersonData._Initialize ();
 			Fields.AiderPersonRelationship._Initialize ();
+			Fields.AiderPersonWarning._Initialize ();
 			Fields.AiderPlace._Initialize ();
 			Fields.AiderPlacePerson._Initialize ();
 			Fields.AiderRelationshipType._Initialize ();
