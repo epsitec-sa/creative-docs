@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core;
@@ -18,7 +19,7 @@ namespace Epsitec.Aider.Entities.Helpers
 	/// The <c>AiderPersonAdditionalContactAddressList</c> class gives access to the additional
 	/// address fields defined in <see cref="AiderPersonEntity"/> as if they belonged to a list.
 	/// </summary>
-	class AiderPersonAdditionalContactAddressList : ObservableList<AiderAddressEntity>, ICollectionModificationCapabilities
+	public class AiderPersonAdditionalContactAddressList : ObservableList<AiderAddressEntity>, ICollectionModificationCapabilities
 	{
 		public AiderPersonAdditionalContactAddressList(AiderPersonEntity person)
 		{

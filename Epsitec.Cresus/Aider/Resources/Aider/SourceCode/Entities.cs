@@ -6157,6 +6157,16 @@ namespace Epsitec.Aider.Entities
 			set;
 		}
 		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/LVAEB/LVANB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVANB]")]
+		global::Epsitec.Common.Types.FormattedText Description
+		{
+			get;
+			set;
+		}
+		///	<summary>
 		///	The <c>Actions</c> field.
 		///	designer:fld/LVAEB/LVAJB
 		///	</summary>
@@ -6186,6 +6196,24 @@ namespace Epsitec.Aider.Entities
 		}
 		static partial void OnTitleChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		static partial void OnTitleChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		public static global::Epsitec.Common.Types.FormattedText GetDescription(global::Epsitec.Aider.Entities.IAiderWarning obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Common.Types.FormattedText> ("[LVANB]");
+		}
+		public static void SetDescription(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Common.Types.FormattedText oldValue = obj.Description;
+			if (oldValue != value || !entity.IsFieldDefined("[LVANB]"))
+			{
+				IAiderWarningInterfaceImplementation.OnDescriptionChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Common.Types.FormattedText> ("[LVANB]", oldValue, value);
+				IAiderWarningInterfaceImplementation.OnDescriptionChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnDescriptionChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		static partial void OnDescriptionChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		public static global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderWarningActionEntity> GetActions(global::Epsitec.Aider.Entities.IAiderWarning obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
@@ -6326,6 +6354,22 @@ namespace Epsitec.Aider.Entities
 			set
 			{
 				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetTitle (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/LVALB/LVANB
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVANB]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetDescription (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetDescription (this, value);
 			}
 		}
 		///	<summary>

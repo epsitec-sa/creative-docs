@@ -29,6 +29,8 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController1);
 
+			
+
 			wall.AddBrick (x => x.Relationships)
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController2);

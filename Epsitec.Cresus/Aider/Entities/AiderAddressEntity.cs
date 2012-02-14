@@ -38,12 +38,10 @@ namespace Epsitec.Aider.Entities
 				UriFormatter.ToFormattedText (this.Web));
 		}
 
-
 		public override FormattedText GetCompactSummary()
 		{
 			return TextFormatter.FormatText (this.Type);
 		}
-
 
 		public override EntityStatus GetEntityStatus()
 		{
@@ -112,6 +110,5 @@ namespace Epsitec.Aider.Entities
 				yield return TextFormatter.FormatField (() => this.Fax);
 			}
 		}
-
 	}
 }
