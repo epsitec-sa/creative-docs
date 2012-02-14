@@ -34,7 +34,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.CreateButton (toolbar, Res.Commands.Panel.Memory,   2, UIBuilder.MemoryBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Memory,   0, UIBuilder.MemoryBackColor);
+
+			new StaticText
+			{
+				Parent         = toolbar,
+				Text           = UIBuilder.GetTextIconUri ("Panel.Separator"),  // petite flèche ->
+				PreferredWidth = 12,
+				Dock           = DockStyle.Left,
+			};
+
 			this.CreateButton (toolbar, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
 			this.CreateButton (toolbar, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
 			this.CreateButton (toolbar, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);

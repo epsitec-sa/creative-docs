@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.optionsChanged ();
 		}
 
-		private void ClearAction()
+		public void ClearAction()
 		{
 			this.options.Clear ();
 			this.OptionsChanged ();

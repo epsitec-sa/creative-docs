@@ -112,6 +112,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 		}
 
+
 		protected FormattedText ComparisonSummary
 		{
 			get
@@ -130,14 +131,19 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 		}
 
+
 		protected void StartSummaryBuilder()
 		{
+			System.Diagnostics.Debug.Assert (this.summaryBuilder == null);
+
 			this.summaryBuilder = new System.Text.StringBuilder ();
 			this.firstSummary = true;
 		}
 
 		protected void AppendSummaryBuilder(FormattedText text)
 		{
+			System.Diagnostics.Debug.Assert (this.summaryBuilder != null);
+
 			if (!text.IsNullOrEmpty)
 			{
 				if (!this.firstSummary)
@@ -152,6 +158,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		protected FormattedText StopSummaryBuilder()
 		{
+			System.Diagnostics.Debug.Assert (this.summaryBuilder != null);
+
 			var result = this.summaryBuilder.ToString ();
 			this.summaryBuilder = null;
 			return result;

@@ -114,24 +114,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			this.memoryList.Selected = null;
 
-			if (this.dataAccessor != null)
-			{
-				if (this.dataAccessor.SearchData != null)
-				{
-					this.dataAccessor.SearchData.Clear ();
-				}
-
-				if (this.dataAccessor.FilterData != null)
-				{
-					this.dataAccessor.FilterData.Clear ();
-				}
-
-				if (this.dataAccessor.Options != null)
-				{
-					this.dataAccessor.Options.Clear ();
-				}
-			}
-
+			this.controller.ClearAll ();
 			this.UpdateWidgets ();
 			this.MemoryChanged ();
 		}

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -26,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.data       = data;
 			this.isFilter   = isFilter;
 
+			this.ignoreChanges = new SafeCounter ();
 			this.comptaEntity  = this.controller.ComptaEntity;
 			this.columnMappers = this.controller.ColumnMappers;
 
@@ -379,10 +381,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			int from, to;
 			this.data.GetBeginnerProfondeurs (out from, out to);
 
-			this.ignoreChange = true;
-			this.beginnerFromProfondeurField.FormattedText = this.ProfondeurToDescription (from);
-			this.beginnerToProfondeurField.FormattedText   = this.ProfondeurToDescription (to);
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.beginnerFromProfondeurField.FormattedText = this.ProfondeurToDescription (from);
+				this.beginnerToProfondeurField.FormattedText   = this.ProfondeurToDescription (to);
+			}
 
 			this.beginnerFromProfondeurField.TextChanged += delegate
 			{
@@ -424,7 +427,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateProfondeur()
 		{
-			if (!this.ignoreChange)
+			if (this.ignoreChanges.IsZero)
 			{
 				var from = this.DescriptionToProfondeur (this.beginnerFromProfondeurField.FormattedText);
 				var to   = this.DescriptionToProfondeur (this.beginnerToProfondeurField.FormattedText);
@@ -630,7 +633,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				this.orButton.ActiveStateChanged += delegate
 				{
-					if (!this.ignoreChange)
+					if (this.ignoreChanges.IsZero)
 					{
 						this.data.OrMode = this.orButton.ActiveState == ActiveState.Yes;
 						this.searchStartAction ();
@@ -702,10 +705,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateOrMode()
 		{
-			this.ignoreChange = true;
-			this.andButton.ActiveState = this.data.OrMode ? ActiveState.No  : ActiveState.Yes;
-			this.orButton.ActiveState  = this.data.OrMode ? ActiveState.Yes : ActiveState.No;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.andButton.ActiveState = this.data.OrMode ? ActiveState.No  : ActiveState.Yes;
+				this.orButton.ActiveState  = this.data.OrMode ? ActiveState.Yes : ActiveState.No;
+			}
 		}
 
 		private void CreateMiddleBeginnerSearchUI()
@@ -875,6 +879,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly SearchData						data;
 		private readonly List<SearchTabController>		tabControllers;
 		private readonly bool							isFilter;
+		private readonly SafeCounter					ignoreChanges;
 
 		private bool									bigDataInterface;
 		private System.Action							searchStartAction;
@@ -898,6 +903,5 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private RadioButton								andButton;
 		private RadioButton								orButton;
 		private LevelController							levelController;
-		private bool									ignoreChange;
 	}
 }

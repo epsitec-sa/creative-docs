@@ -262,6 +262,7 @@
     <EmbeddedResource Include="Images\Memory.Down.icon" />
     <EmbeddedResource Include="Images\Memory.Up.icon" />
     <EmbeddedResource Include="Images\Memory.Use.icon" />
+    <EmbeddedResource Include="Images\Panel.Separator.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

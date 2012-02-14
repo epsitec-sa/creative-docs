@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
@@ -25,6 +26,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.tabData    = tabData;
 			this.isFilter   = isFilter;
 
+			this.ignoreChanges = new SafeCounter ();
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.columnIndexes = new List<int> ();
@@ -159,7 +161,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.searchField1.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.tabData.SearchText.FromText = this.searchField1.Text;
 					this.searchStartAction ();
@@ -174,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.searchField2.TextChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					this.tabData.SearchText.ToText = this.searchField2.Text;
 					this.searchStartAction ();
@@ -189,7 +191,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.columnField.SelectedItemChanged += delegate
 			{
-				if (!this.ignoreChange)
+				if (this.ignoreChanges.IsZero)
 				{
 					int sel = this.columnField.SelectedItemIndex - 1;
 					if (sel < 0)
@@ -309,9 +311,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				}
 			}
 
-			this.ignoreChange = true;
-			this.columnField.SelectedItemIndex = sel;
-			this.ignoreChange = false;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.columnField.SelectedItemIndex = sel;
+			}
 		}
 
 
@@ -592,6 +595,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly SearchTabData			tabData;
 		private readonly List<int>				columnIndexes;
 		private readonly bool					isFilter;
+		private readonly SafeCounter			ignoreChanges;
 
 		private System.Action					searchStartAction;
 		private FrameBox						searchFromFrame;
@@ -611,6 +615,5 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private bool							bigDataInterface;
 		private bool							addAction;
 		private bool							addActionEnable;
-		private bool							ignoreChange;
 	}
 }

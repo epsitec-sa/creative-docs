@@ -58,6 +58,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
+		public void SearchClear()
+		{
+			this.searchController.SearchClear ();
+		}
+
 
 		public void CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> searchNextAction)
 		{
