@@ -83,6 +83,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 						NancyServer.ConvertNancyResponseToHttpResponse (nancyResponse, httpResponse);
 					}
 				}
+
+				Debug.WriteLine ("[" + DateTime.Now + "] Answered http request: " + httpRequest.Url);
 			}
 			catch (Exception e)
 			{
