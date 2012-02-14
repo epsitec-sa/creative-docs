@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
 
-			if (this.ActiveState == ActiveState.Yes && !this.BackColor.IsEmpty)
+			if (this.ActiveState == ActiveState.Yes && this.Enable && !this.BackColor.IsEmpty)
 			{
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (this.BackColor);
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			if (this.ActiveState == ActiveState.Yes && !this.BackColor.IsEmpty)
+			if (this.ActiveState == ActiveState.Yes && this.Enable && !this.BackColor.IsEmpty)
 			{
 				rect.Deflate (0.5);
 				graphics.AddRectangle (rect);

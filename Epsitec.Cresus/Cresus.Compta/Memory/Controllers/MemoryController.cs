@@ -373,15 +373,16 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					Parent          = rightFrame,
 					DrawFullFrame   = true,
 					Dock            = DockStyle.Fill,
-					Margins       = new Margins (0, 0, 5, 0),
-					Padding         = new Margins (5),
+					Margins         = new Margins (0, 0, 5, 0),
+					Padding         = new Margins (5, 5, 0, 0),
 				};
 
 				this.extendedSummary = new StaticText
 				{
-					Parent        = frame,
-					TextBreakMode = TextBreakMode.None,
-					Dock          = DockStyle.Fill,
+					Parent           = frame,
+					ContentAlignment = ContentAlignment.MiddleLeft,
+					TextBreakMode    = TextBreakMode.None,
+					Dock             = DockStyle.Fill,
 				};
 			}
 
@@ -567,16 +568,19 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void UpdateSummary()
 		{
-			var summary = FormattedText.Empty;
+			var compactSummary  = FormattedText.Empty;
+			var extendedSummary = FormattedText.Empty;
+
 			var memory = this.memoryList.Selected;
 
 			if (memory != null)
 			{
-				summary = memory.GetSummary (this.controller.ColumnMappers);
+				compactSummary  = memory.GetSummary (this.controller.ColumnMappers, "", ", ");
+				extendedSummary = memory.GetSummary (this.controller.ColumnMappers, "● ", "<br/>");
 			}
 
-			this.compactSummary.FormattedText  = summary.ToString ().Replace ("<br/>", ", ");
-			this.extendedSummary.FormattedText = summary;
+			this.compactSummary.FormattedText  = compactSummary;
+			this.extendedSummary.FormattedText = extendedSummary;
 		}
 
 

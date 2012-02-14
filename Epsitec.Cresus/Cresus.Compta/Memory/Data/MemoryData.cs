@@ -63,8 +63,9 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers, FormattedText prefix, FormattedText postfix)
 		{
+			//	Retourne le résumé de la mémoire.
 			var builder = new System.Text.StringBuilder ();
 			bool first = true;
 
@@ -76,9 +77,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				{
 					if (!first)
 					{
-						builder.Append ("<br/>");
+						builder.Append (postfix);
 					}
 
+					builder.Append (prefix);
 					builder.Append (summary);
 					first = false;
 				}
@@ -92,9 +94,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				{
 					if (!first)
 					{
-						builder.Append ("<br/>");
+						builder.Append (postfix);
 					}
 
+					builder.Append (prefix);
 					builder.Append (summary);
 					first = false;
 				}
@@ -108,9 +111,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				{
 					if (!first)
 					{
-						builder.Append ("<br/>");
+						builder.Append (postfix);
 					}
 
+					builder.Append (prefix);
 					builder.Append (summary);
 					first = false;
 				}
@@ -118,9 +122,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 			if (!first)
 			{
-				builder.Append ("<br/>");
+				builder.Append (postfix);
 			}
 
+			builder.Append (prefix);
 			builder.Append (this.SummaryShowedPanels);
 
 			return builder.ToString ();
@@ -130,7 +135,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		{
 			get
 			{
-				//	Construit la liste des textes.
+				//	Construit la liste des textes des panneaux visibles.
 				var list = new List<string> ();
 
 				if (this.ShowSearch)
@@ -153,26 +158,29 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 				if (list.Count == 0)
 				{
-					builder.Append ("Tous les panneaux sont cachés");
+					builder.Append ("tous les panneaux sont cachés");
 				}
 				else if (list.Count == 1)
 				{
-					builder.Append ("Panneau visible: ");
+					builder.Append ("panneau visible: ");
 				}
 				else
 				{
-					builder.Append ("Panneaux visibles: ");
+					builder.Append ("panneaux visibles: ");
 				}
 
 				for (int i = 0; i < list.Count; i++)
 				{
-					if (i != 0 && i < list.Count-1)
+					if (i != 0)
 					{
-						builder.Append (", ");
-					}
-					else if (i != 0 && i == list.Count-1)
-					{
-						builder.Append (" et ");
+						if (i < list.Count-1)
+						{
+							builder.Append (", ");
+						}
+						else
+						{
+							builder.Append (" et ");
+						}
 					}
 
 					builder.Append (list[i]);

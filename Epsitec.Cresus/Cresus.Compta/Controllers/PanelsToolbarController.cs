@@ -34,31 +34,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.CreateButton (toolbar, Res.Commands.Panel.Memory,  UIBuilder.MemoryBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Search,  UIBuilder.SearchBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Filter,  UIBuilder.FilterBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Options, UIBuilder.OptionsBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Info,    UIBuilder.InfoBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Memory,   2, UIBuilder.MemoryBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);
 		}
 
-		private IconButton CreateButton(Widget parent, Command command, Color backColor)
+		private IconButton CreateButton(Widget parent, Command command, double margin, Color backColor)
 		{
 			return new BackIconButton
 			{
 				Parent            = parent,
 				CommandObject     = command,
 				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (20, 20),
+				PreferredSize     = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
 				BackColor         = backColor,
 				Dock              = DockStyle.Left,
 				Name              = command.Name,
 				AutoFocus         = false,
-				Margins           = new Margins (0, 1, 0, 0),
+				Margins           = new Margins (0, margin, 0, 0),
 			};
 		}
 
 
-		private static readonly double			toolbarHeight = 20;
+		private static readonly double			toolbarHeight = 24;
 
 		private readonly AbstractController		controller;
 	}
