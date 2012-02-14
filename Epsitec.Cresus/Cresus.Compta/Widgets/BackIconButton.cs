@@ -10,6 +10,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Widgets
 {
+	/// <summary>
+	/// Ce widget effectue un dessin particulier dans l'état "sélectionné" (ActiveState == ActiveState.Yes) :
+	/// 1) Le fond du bouton est dessiné selon la couleur BackColor.
+	/// 2) L'icône est la variante "Active" (si elle existe).
+	/// </summary>
 	public class BackIconButton : IconButton
 	{
 		public BackIconButton()

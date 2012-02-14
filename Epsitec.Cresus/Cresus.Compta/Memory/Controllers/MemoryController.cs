@@ -54,11 +54,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 					if (this.showPanel)
 					{
-						//?this.searchController.SetFocus ();
-					}
-					else
-					{
-						//?this.searchController.SearchClear ();
+						if (this.levelController.Specialist)
+						{
+							this.extendedListJournaux.Focus ();
+						}
+						else
+						{
+							this.compactComboJournaux.Focus ();
+						}
 					}
 				}
 			}
@@ -594,6 +597,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			if (memory != null)
 			{
+				if (this.controller.ShowSearchPanel  != memory.ShowSearch ||
+					this.controller.ShowFilterPanel  != memory.ShowFilter ||
+					this.controller.ShowOptionsPanel != memory.ShowOptions)
+				{
+					return false;
+				}
+
 				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null)
 				{
 					if (!this.dataAccessor.SearchData.CompareTo (memory.Search))
@@ -627,6 +637,10 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				memory.Filter = new SearchData ();
 				this.dataAccessor.FilterData.CopyTo (memory.Filter);
 			}
+
+			memory.ShowSearch  = this.controller.ShowSearchPanel;
+			memory.ShowFilter  = this.controller.ShowFilterPanel;
+			memory.ShowOptions = this.controller.ShowOptionsPanel;
 		}
 
 		private void CopyMemoryToData(MemoryData memory)
@@ -640,6 +654,10 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			{
 				memory.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
+
+			this.controller.ShowSearchPanel  = memory.ShowSearch;
+			this.controller.ShowFilterPanel  = memory.ShowFilter;
+			this.controller.ShowOptionsPanel = memory.ShowOptions;
 		}
 
 

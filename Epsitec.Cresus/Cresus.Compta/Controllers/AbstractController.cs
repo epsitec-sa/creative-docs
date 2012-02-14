@@ -285,6 +285,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.topSearchController != null)
 				{
 					this.topSearchController.ShowPanel = value;
+					this.UpdateMemory ();
 				}
 			}
 		}
@@ -300,6 +301,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.topFilterController != null)
 				{
 					this.topFilterController.ShowPanel = value;
+					this.UpdateMemory ();
 				}
 			}
 		}
@@ -322,6 +324,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.optionsController != null)
 				{
 					this.optionsController.ShowPanel = value;
+					this.UpdateMemory ();
 				}
 			}
 		}
