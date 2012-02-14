@@ -130,8 +130,37 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 		}
 
+		protected void StartSummaryBuilder()
+		{
+			this.summaryBuilder = new System.Text.StringBuilder ();
+			this.firstSummary = true;
+		}
+
+		protected void AppendSummaryBuilder(FormattedText text)
+		{
+			if (!text.IsNullOrEmpty)
+			{
+				if (!this.firstSummary)
+				{
+					this.summaryBuilder.Append (", ");
+				}
+
+				this.summaryBuilder.Append (text);
+				this.firstSummary = false;
+			}
+		}
+
+		protected FormattedText StopSummaryBuilder()
+		{
+			var result = this.summaryBuilder.ToString ();
+			this.summaryBuilder = null;
+			return result;
+		}
+
 
 		protected ComptaEntity						comptaEntity;
 		protected AbstractOptions					emptyOptions;
+		protected System.Text.StringBuilder			summaryBuilder;
+		protected bool								firstSummary;
 	}
 }

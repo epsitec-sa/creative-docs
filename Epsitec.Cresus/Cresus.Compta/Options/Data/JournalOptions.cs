@@ -80,14 +80,18 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			get
 			{
+				this.StartSummaryBuilder ();
+
 				if (this.Journal == null)
 				{
-					return "Tous les journaux";
+					this.AppendSummaryBuilder ("Tous les journaux");
 				}
 				else
 				{
-					return string.Format ("Journal \"{0}\"", this.Journal.Nom);
+					this.AppendSummaryBuilder (string.Format ("Journal \"{0}\"", this.Journal.Nom));
 				}
+
+				return this.StopSummaryBuilder ();
 			}
 		}
 	}

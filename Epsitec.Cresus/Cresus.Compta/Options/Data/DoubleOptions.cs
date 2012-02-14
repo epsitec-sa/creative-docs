@@ -62,5 +62,28 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			return this.HideZero == o.HideZero &&
 				   this.HasGraphics == o.HasGraphics;
 		}
+
+
+		public override FormattedText Summary
+		{
+			get
+			{
+				this.StartSummaryBuilder ();
+
+				if (this.HideZero)
+				{
+					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
+				}
+
+				if (this.HasGraphics)
+				{
+					this.AppendSummaryBuilder ("Graphique du solde");
+				}
+
+				this.AppendSummaryBuilder (this.ComparisonSummary);
+
+				return this.StopSummaryBuilder ();
+			}
+		}
 	}
 }

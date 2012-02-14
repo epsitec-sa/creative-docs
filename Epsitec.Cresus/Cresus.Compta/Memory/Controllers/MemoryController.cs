@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedFrame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 15*7+29,
+				PreferredHeight = 15*7+29,  // 7 lignes dans la liste
 				Dock            = DockStyle.Top,
 			};
 
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				SwallowReturnOnAcceptEdition = true,
 			};
 
-			//	Panneau de droite.
+			//	Panneau de droite, toolbar (en haut).
 			{
 				int w = 32+4;
 
@@ -368,6 +368,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				};
 			}
 
+			//	Panneau de droite, résumé (en bas).
 			{
 				var frame = new FrameBox
 				{

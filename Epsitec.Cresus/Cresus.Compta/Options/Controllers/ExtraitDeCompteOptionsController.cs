@@ -29,6 +29,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
+		public override void UpdateContent()
+		{
+			if (this.showPanel)
+			{
+				this.UpdateWidgets ();
+			}
+		}
+
+
 		public override void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
 			base.CreateUI (parent, optionsChanged);
@@ -62,36 +71,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			container.Margins = new Margins (0, 1, 0, 0);
 			container.TabIndex = ++this.tabIndex;
 
-			{
-				var comboFrame = new FrameBox
-				{
-					Parent          = frame,
-					DrawFullFrame   = true,
-					BackColor       = Color.FromBrightness (0.96),
-					PreferredWidth  = 100,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (1, 0, 0, 0),
-				};
-
-				this.comboModeField = new StaticText
-				{
-					Parent           = comboFrame,
-					ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
-					PreferredHeight  = 20,
-					Dock             = DockStyle.Fill,
-				};
-
-				this.comboModeButton = new GlyphButton
-				{
-					Parent          = frame,
-					GlyphShape      = GlyphShape.Menu,
-					PreferredWidth  = UIBuilder.ComboButtonWidth,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (-1, 20, 0, 0),
-				};
-			}
+			UIBuilder.CreatePseudoCombo (frame, out this.comboModeField, out this.comboModeButton);
 
 			this.graphicsButton = new CheckButton
 			{
@@ -99,6 +79,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Text           = "Graphique du solde",
 				PreferredWidth = 120,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 0, 0, 0),
 			};
 
 			this.UpdateWidgets ();

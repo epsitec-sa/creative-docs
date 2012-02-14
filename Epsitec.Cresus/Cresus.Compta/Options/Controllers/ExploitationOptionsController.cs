@@ -26,6 +26,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
+		public override void UpdateContent()
+		{
+			if (this.showPanel)
+			{
+				this.UpdateWidgets ();
+			}
+		}
+
+
 		public override void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
 			base.CreateUI (parent, optionsChanged);

@@ -6,6 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -117,6 +118,37 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				   this.MontreComptesVides           == o.MontreComptesVides           &&
 				   this.MontreComptesCentralisateurs == o.MontreComptesCentralisateurs &&
 				   this.HasGraphics                  == o.HasGraphics;
+		}
+
+
+		public override FormattedText Summary
+		{
+			get
+			{
+				this.StartSummaryBuilder ();
+
+				if (this.CatégorieMontrée != CatégorieDeCompte.Tous)
+				{
+					this.AppendSummaryBuilder ("Montre " + Converters.CatégoriesToString (this.CatégorieMontrée));
+				}
+
+				if (this.MontreComptesVides)
+				{
+					this.AppendSummaryBuilder ("Comptes vides");
+				}
+
+				if (this.MontreComptesCentralisateurs)
+				{
+					this.AppendSummaryBuilder ("Comptes centralisateurs");
+				}
+
+				if (this.HasGraphics)
+				{
+					this.AppendSummaryBuilder ("Graphique du solde");
+				}
+
+				return this.StopSummaryBuilder ();
+			}
 		}
 	}
 }
