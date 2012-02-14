@@ -1532,6 +1532,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Relationships = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 362);
 				//	designer:cap/LVAU
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 30);
+				//	designer:cap/LVAOB
+				public static readonly global::Epsitec.Common.Support.Druid Warnings = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 376);
 			}
 			
 			public static class AiderPersonData

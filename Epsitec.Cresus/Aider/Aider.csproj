@@ -188,6 +188,7 @@
     <EmbeddedResource Include="Images\Base.AiderPerson.icon" />
     <EmbeddedResource Include="Images\Data.AiderAddress.icon" />
     <EmbeddedResource Include="Images\Data.AiderComment.icon" />
+    <EmbeddedResource Include="Images\Data.AiderWarning.icon" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

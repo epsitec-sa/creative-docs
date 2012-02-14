@@ -19,11 +19,12 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+using Epsitec.Aider.Controllers;
 
 
 namespace Epsitec.Aider.Entities
 {
-	public partial class AiderPersonEntity
+	public partial class AiderPersonEntity : IAiderWarningExampleFactoryGetter
 	{
 		public override FormattedText GetCompactSummary()
 		{
@@ -251,6 +252,16 @@ namespace Epsitec.Aider.Entities
 			//	TODO
 		}
 
+		partial void GetWarnings(ref IList<AiderPersonWarningEntity> value)
+		{
+			value = new List<AiderPersonWarningEntity> ();
+
+			var warningController = AiderWarningController.Current;
+			var warnings = warningController.GetWarnings<AiderPersonWarningEntity> (this);
+
+			value.AddRange (warnings);
+		}
+
 		
 		internal static FormattedText GetDisplayName(AiderPersonEntity person)
 		{
@@ -312,7 +323,18 @@ namespace Epsitec.Aider.Entities
 		}
 
 
-		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
+		#region IAiderWarningExampleFactoryGetter Members
 
+		AiderWarningExampleFactory IAiderWarningExampleFactoryGetter.GetWarningExampleFactory()
+		{
+			return AiderPersonEntity.warningExampleFactory;
+		}
+
+		#endregion
+
+
+		private static readonly AiderWarningExampleFactory warningExampleFactory = new AiderWarningExampleFactory<AiderPersonEntity, AiderPersonWarningEntity> ((example, source) => example.Person = source);
+
+		private Helpers.AiderPersonAdditionalContactAddressList additionalAddresses;
 	}
 }

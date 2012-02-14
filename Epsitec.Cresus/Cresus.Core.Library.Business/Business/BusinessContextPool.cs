@@ -44,17 +44,22 @@ namespace Epsitec.Cresus.Core.Business
 		/// <returns>The business context or <c>null</c>.</returns>
 		public static BusinessContext GetCurrentContext(AbstractEntity entity)
 		{
-			var dataContext = DataContextPool.GetDataContext (entity);
-
-			System.Diagnostics.Debug.Assert (dataContext != null, "Entity does not belong to any data context");
-			
-			//	The entity belongs to a data context. Now find the business context in the
-			//	current session, which uses the same data context :
-			
 			var data = CoreApp.FindCurrentAppSessionComponent<CoreData> ();
 			var that = data.GetComponent<BusinessContextPool> ();
 
-			return that.pool.Where (x => x.DataContext == dataContext).FirstOrDefault ();
+			return that.FindContext (entity);
+		}
+
+		public BusinessContext FindContext(AbstractEntity entity)
+		{
+			var dataContext = DataContextPool.GetDataContext (entity);
+
+			System.Diagnostics.Debug.Assert (dataContext != null, "Entity does not belong to any data context");
+
+			//	The entity belongs to a data context. Now find the business context in the
+			//	current session, which uses the same data context :
+
+			return this.pool.Where (x => x.DataContext == dataContext).FirstOrDefault ();
 		}
 
 
