@@ -25,21 +25,11 @@ namespace Epsitec.Data.Platform
 
 		private static IEnumerable<string> GetStreetFile()
 		{
-			string file = SwissPostStreet.ReadZippedTextFile ("Epsitec.Data.Platform.DataFiles.MatchStreetLight.zip");
-			return Epsitec.Common.IO.StringLineExtractor.GetLines (file);
-		}
-
-		private static string ReadZippedTextFile(string resourcePath)
-		{
 			var assembly = System.Reflection.Assembly.GetExecutingAssembly ();
-
-			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resourcePath))
-			{
-				var zipFile = new Epsitec.Common.IO.ZipFile ();
-				zipFile.LoadFile (stream);
-				var zipEntry = zipFile.Entries.First ();
-				return System.Text.Encoding.Default.GetString (zipEntry.Data);
-			}
+			var resource = "Epsitec.Data.Platform.DataFiles.MatchStreetLight.zip";
+			var source   = Epsitec.Common.IO.ZipFile.DecompressTextFile (assembly, resource);
+			
+			return Epsitec.Common.IO.StringLineExtractor.GetLines (source);
 		}
 	}
 }

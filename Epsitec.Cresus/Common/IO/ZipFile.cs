@@ -1,7 +1,8 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.IO
 {
@@ -257,6 +258,23 @@ namespace Epsitec.Common.IO
 		}
 
 		/// <summary>
+		/// Loads the specified ZIP from an embedded resource.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="path">The embedded resource path.</param>
+		/// <param name="loadPredicate">The load predicate (or <c>null</c> to load everything).</param>
+		/// <returns>
+		///   <c>true</c> if the ZIP file could be loaded; otherwise, <c>false</c>.
+		/// </returns>
+		public bool LoadFileFromResources(System.Reflection.Assembly assembly, string path, LoadPredicate loadPredicate = null)
+		{
+			using (System.IO.Stream stream = assembly.GetManifestResourceStream (path))
+			{
+				return this.LoadFile (stream, loadPredicate);
+			}
+		}
+
+		/// <summary>
 		/// Saves to the specified ZIP file.
 		/// </summary>
 		/// <param name="name">The file name.</param>
@@ -421,6 +439,37 @@ namespace Epsitec.Common.IO
 			this.entries.RemoveAll (delegate (Entry entry) { return entry.Name == name; });
 		}
 
+
+
+		public static string DecompressTextFile(System.IO.Stream stream, System.Text.Encoding encoding = null)
+		{
+			if (encoding == null)
+			{
+				encoding = System.Text.Encoding.Default;
+			}
+
+			var zipFile = new Epsitec.Common.IO.ZipFile ();
+
+			zipFile.LoadFile (stream);
+
+			return encoding.GetString (zipFile.Entries.First ().Data);
+		}
+
+		public static string DecompressTextFile(System.Reflection.Assembly assembly, string resourcePath, System.Text.Encoding encoding = null)
+		{
+			if (encoding == null)
+			{
+				encoding = System.Text.Encoding.Default;
+			}
+
+			var zipFile = new Epsitec.Common.IO.ZipFile ();
+			
+			zipFile.LoadFileFromResources (assembly, resourcePath);
+			
+			return encoding.GetString (zipFile.Entries.First ().Data);
+		}
+
+
 		private static byte[] ReadEntry(ICSharpCode.SharpZipLib.Zip.ZipInputStream zip, ICSharpCode.SharpZipLib.Zip.ZipEntry entry)
 		{
 			byte[] data;
@@ -504,7 +553,8 @@ namespace Epsitec.Common.IO
 			}
 		}
 
-		
+		#region Entry Structure
+
 		/// <summary>
 		/// The <c>Entry</c> structure maps a file name to its data and date/time
 		/// stamp.
@@ -535,7 +585,7 @@ namespace Epsitec.Common.IO
 			/// Gets the full name of the entry.
 			/// </summary>
 			/// <value>The full name.</value>
-			public string Name
+			public string						Name
 			{
 				get
 				{
@@ -547,16 +597,11 @@ namespace Epsitec.Common.IO
 			/// Gets or sets the data of the entry.
 			/// </summary>
 			/// <value>The data.</value>
-			public byte[] Data
+			public byte[]						Data
 			{
 				get
 				{
 					return this.data;
-				}
-				set
-				{
-					this.data = value;
-					this.size = value == null ? 0 : value.Length;
 				}
 			}
 
@@ -564,7 +609,7 @@ namespace Epsitec.Common.IO
 			/// Gets the size of the uncompressed data.
 			/// </summary>
 			/// <value>The size of the uncompressed data.</value>
-			public long Size
+			public long							Size
 			{
 				get
 				{
@@ -576,7 +621,7 @@ namespace Epsitec.Common.IO
 			/// Gets the date and time associated with the entry.
 			/// </summary>
 			/// <value>The date and time.</value>
-			public System.DateTime DateTime
+			public System.DateTime				DateTime
 			{
 				get
 				{
@@ -590,7 +635,7 @@ namespace Epsitec.Common.IO
 			/// <value>
 			/// 	<c>true</c> if this entry is a directory; otherwise, <c>false</c>.
 			/// </value>
-			public bool IsDirectory
+			public bool							IsDirectory
 			{
 				get
 				{
@@ -602,7 +647,7 @@ namespace Epsitec.Common.IO
 			/// Gets a value indicating whether this entry is empty.
 			/// </summary>
 			/// <value><c>true</c> if this entry is empty; otherwise, <c>false</c>.</value>
-			public bool IsEmpty
+			public bool							IsEmpty
 			{
 				get
 				{
@@ -616,15 +661,11 @@ namespace Epsitec.Common.IO
 			/// <value>
 			/// 	<c>true</c> if this entry contains compressed data; otherwise, <c>false</c>.
 			/// </value>
-			public bool IsCompressed
+			public bool							IsCompressed
 			{
 				get
 				{
 					return this.isCompressed;
-				}
-				set
-				{
-					this.isCompressed = value;
 				}
 			}
 
@@ -633,7 +674,7 @@ namespace Epsitec.Common.IO
 			/// higher priority (it usually maps to the ZIP entry index).
 			/// </summary>
 			/// <value>The priority.</value>
-			public int Priority
+			public int							Priority
 			{
 				get
 				{
@@ -646,16 +687,18 @@ namespace Epsitec.Common.IO
 			/// </summary>
 			public static Entry Empty = new Entry ();
 
-			private string name;
-			private byte[] data;
-			private long size;
-			private System.DateTime date;
-			private bool isCompressed;
-			private int priority;
+			private readonly string				name;
+			private readonly byte[]				data;
+			private readonly long				size;
+			private readonly System.DateTime	date;
+			private readonly bool				isCompressed;
+			private readonly int				priority;
 		}
 
-		private int level = 5;
-		private List<Entry> entries;
-		private string loadFileName;
+		#endregion
+
+		private int								level = 5;
+		private readonly List<Entry>			entries;
+		private string							loadFileName;
 	}
 }

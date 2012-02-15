@@ -59,6 +59,8 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
+    <Compile Include="Data\ParishAddressInformation.cs" />
+    <Compile Include="Data\ParishAddressRepository.cs" />
     <Compile Include="Entities\AiderFunctionDefEntity.cs" />
     <Compile Include="Entities\AiderGroupEntity.cs" />
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
@@ -134,6 +136,7 @@
     <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
+    <Compile Include="Tools\ParishLocator.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources\Xsd\eCH-0006-2-0.xsd">
@@ -189,6 +192,7 @@
     <EmbeddedResource Include="Images\Data.AiderAddress.icon" />
     <EmbeddedResource Include="Images\Data.AiderComment.icon" />
     <EmbeddedResource Include="Images\Data.AiderWarning.icon" />
+    <EmbeddedResource Include="DataFiles\ParishAddresses.zip" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
