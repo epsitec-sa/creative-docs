@@ -303,6 +303,7 @@
     <Compile Include="IO\ReaderHelper.cs" />
     <Compile Include="IO\Serialization.cs" />
     <Compile Include="IO\SettingsReader.cs" />
+    <Compile Include="IO\StringLineExtractor.cs" />
     <Compile Include="IO\TemporaryFile.cs" />
     <Compile Include="IO\Tools.cs" />
     <Compile Include="IO\UriBuilder.cs" />
