@@ -1,5 +1,7 @@
 ﻿using Epsitec.Common.Support;
 
+using Epsitec.Common.Types.Collections.Concurrent;
+
 using System;
 
 using System.Collections.Generic;
@@ -22,19 +24,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public HttpServer(Uri uri)
 		{
-			this.requestQueue = new Queue<HttpListenerContext> ();
+			this.requestQueue = new BlockingQueue<HttpListenerContext> ();
 			this.stopEvent = new ManualResetEvent (false);
-			this.readyEvent = new AutoResetEvent (false);
 			this.httpListener = new HttpListener ();
 			this.httpListener.Prefixes.Add (uri.ToString ());
 
 			this.httpListenerLock = new object ();
-			this.requestQueueLock = new object ();
 		}
 
 
 		public void Start(Action<HttpListenerContext> requestProcessor, int nbThreads)
 		{
+			this.stopTokenCancellationSource = new CancellationTokenSource ();
+			
 			this.httpListener.Start ();
 
 			this.httpListenerThread = new Thread (() => this.HandleRequests ());			
@@ -61,14 +63,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			((IDisposable) this.httpListener).Dispose ();
 
 			this.stopEvent.Dispose ();
-			this.readyEvent.Dispose ();
+			this.stopTokenCancellationSource.Dispose ();
 		}
 
 
 		public void Stop()
 		{
 			this.stopEvent.Set ();
-			
+			this.stopTokenCancellationSource.Cancel ();
+
 			this.httpListenerThread.Join ();
 
 			foreach (var workerThread in this.workerThreads)
@@ -105,14 +108,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		{
 			lock (this.httpListenerLock)
 			{
-				lock (this.requestQueueLock)
+				if (this.httpListener.IsListening)
 				{
-					if (this.httpListener.IsListening)
-					{
-						this.requestQueue.Enqueue (this.httpListener.EndGetContext (asyncResult));
+					var context = this.httpListener.EndGetContext (asyncResult);
 
-						this.readyEvent.Set ();
-					}
+					this.requestQueue.Add (context);
 				}
 			}
 		}
@@ -120,25 +120,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		private void ProcessRequests(Action<HttpListenerContext> requestProcessor)
 		{
-			while (ThreadUtils.WaitAny (this.readyEvent, this.stopEvent) != this.stopEvent)
+			bool cancelled = false;
+
+			while (!cancelled)
 			{
-				HttpListenerContext context;
+				var cancellationToken = this.stopTokenCancellationSource.Token;
 
-				lock (this.requestQueueLock)
+				try
 				{
-					if (this.requestQueue.Count > 0)
-					{
-						context = this.requestQueue.Dequeue ();
-					}
-					else
-					{
-						context = null;
-					}
-				}
+					var context = this.requestQueue.Take (cancellationToken);
 
-				if (context != null)
-				{
 					requestProcessor (context);
+				}
+				catch (OperationCanceledException e)
+				{
+					if (e.CancellationToken == cancellationToken)
+					{
+						cancelled = true;
+					}
 				}
 			}
 		}
@@ -147,7 +146,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		private readonly HttpListener httpListener;
 
 
-		private Queue<HttpListenerContext> requestQueue;
+		private readonly BlockingQueue<HttpListenerContext> requestQueue;
 
 
 		private Thread httpListenerThread;
@@ -157,26 +156,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 
 		/// <summary>
-		/// This event is raised when the Stop() method is called to notify the listener thread and
-		/// the worker thread that they should stop their execution once they have finished what
-		/// they are doing.
+		/// This event is raised when the Stop() method is called to notify the listener thread 
+		/// that it should stop its execution once it has finished what it is doing.
 		/// </summary>
 		private readonly ManualResetEvent stopEvent;
 
 
 		/// <summary>
-		/// This event is raised when a request is enqueued on the queue of requests by the
-		/// asynchronous callback of the http listener to notify the worker threads that there is
-		/// work to do.
+		/// This token cancellation source is canceled with the Stop() method is called to notify
+		/// the listener threads that they should stop their execution once they have finished what
+		/// they are doing.
 		/// </summary>
-		private readonly AutoResetEvent readyEvent;
-
-
-		/// <summary>
-		/// This lock is here to synchronize the queue of requests, to make sure that we don't
-		/// enqueue one while another is dequeued.
-		/// </summary>
-		private readonly object requestQueueLock;
+		private CancellationTokenSource stopTokenCancellationSource;
 
 
 		/// <summary>
