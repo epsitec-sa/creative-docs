@@ -59,6 +59,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
+    <Compile Include="Data\ParishAddresses.cs" />
     <Compile Include="Data\ParishAddressInformation.cs" />
     <Compile Include="Data\ParishAddressRepository.cs" />
     <Compile Include="Entities\AiderFunctionDefEntity.cs" />
