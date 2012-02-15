@@ -1,5 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -7,11 +9,18 @@ using System.Linq;
 namespace Epsitec.Data.Platform
 {
 	/// <summary>
-	/// The <c>SwissPostZipInformation</c> class describes the MAT[CH]zip data provided in
+	/// The <c>SwissPostZipInformation</c> class describes a MAT[CH]zip entry provided in
 	/// the ZIP plus 1 format.
 	/// </summary>
 	public sealed class SwissPostZipInformation
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SwissPostZipInformation"/> class
+		/// based on a source line taken from MAT[CH] zip.
+		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-zip.htm
+		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-zip/post-match-zip-factsheet.pdf
+		/// </summary>
+		/// <param name="line">The line.</param>
 		public SwissPostZipInformation(string line)
 		{
 			string[] args = line.Split ('\t');
@@ -36,34 +45,44 @@ namespace Epsitec.Data.Platform
 			{
 				shortName = shortName.Substring (0, shortName.Length - 3);
 			}
-			else if (shortName.Contains ("Goumoens"))
-			{
-				shortName = shortName.Replace ("Goumoens", "Goumoëns");
-			}
 
-			this.alternateName = shortName == this.LongName ? null : shortName;
+			this.alternateName = TextConverter.ConvertToUpperAndStripAccents (shortName);
 		}
 
+
+		/// <summary>
+		/// Check if the name matches this instance.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns><c>true</c> if the name matches this instance; otherwise, <c>false</c>.</returns>
 		public bool MatchName(string name)
 		{
-			return string.Equals (name, this.LongName, System.StringComparison.OrdinalIgnoreCase)
-				|| (this.alternateName != null && string.Equals (name, this.alternateName, System.StringComparison.OrdinalIgnoreCase));
+			var altName = TextConverter.ConvertToUpperAndStripAccents (name);
+
+			return (this.alternateName == altName)
+				|| string.Equals (name, this.LongName, System.StringComparison.OrdinalIgnoreCase);
 		}
 
-		public string							OnrpCode;
-		public string							ZipType;
-		public string							ZipCode;
-		public string							ZipComplement;
-		public string							ShortName;
-		public string							LongName;
-		public string							Canton;
-		public string							LanguageCode1;
-		public string							LanguageCode2;
-		public string							MatchSort;
-		public string							DistributionBy;
-		public string							ComunityCode;
-		public string							ValidSince;
+		public override string ToString()
+		{
+			return string.Concat (this.ZipCode, " ", this.LongName, " (", this.Canton, ")");
+		}
 
-		private readonly string alternateName;
+		
+		public readonly string					OnrpCode;
+		public readonly string					ZipType;
+		public readonly string					ZipCode;
+		public readonly string					ZipComplement;
+		public readonly string					ShortName;
+		public readonly string					LongName;
+		public readonly string					Canton;
+		public readonly string					LanguageCode1;
+		public readonly string					LanguageCode2;
+		public readonly string					MatchSort;
+		public readonly string					DistributionBy;
+		public readonly string					ComunityCode;
+		public readonly string					ValidSince;
+
+		private readonly string					alternateName;
 	}
 }

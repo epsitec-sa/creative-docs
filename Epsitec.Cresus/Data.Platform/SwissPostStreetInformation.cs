@@ -3,11 +3,23 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Data.Platform
 {
+	/// <summary>
+	/// The <c>SwissPostStreetInformation</c> class describes a MAT[CH] street Switzerland
+	/// light entry.
+	/// </summary>
 	public sealed class SwissPostStreetInformation
 	{
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SwissPostStreetInformation"/> class
+		/// based on a source line taken from MAT[CH]street Switzerland light.
+		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-street.htm
+		/// http://www.post.ch/en/post-startseite/post-adress-services-match/post-direct-marketing-datengrundlage/post-direct-marketing-match-street/post-match-street-schweiz-light-factsheet.pdf
+		/// </summary>
+		/// <param name="line">The line.</param>
 		public SwissPostStreetInformation(string line)
 		{
 			this.StreetCode            = line.Substring (0, 6);
@@ -28,23 +40,29 @@ namespace Epsitec.Data.Platform
 			this.StreetNameShort       = this.StreetName.Split (',').First ();
 		}
 
-		public string StreetCode;
-		public string BasicPostCode;
-		public string LanguageCode;
-		public string StreetNameUppercase;
-		public string ZipCode;
-		public string ZipComplement;
-		public string DividerCode;
-		public string HouseNumberFrom;
-		public string HouseNumberFromAlpha;
-		public string HouseNumberTo;
-		public string HouseNumberToAlpha;
-		public string StreetName;
-		public string StreetNameShort;
-		public string StreetNameRoot;
-		public string StreetNameType;
-		public string StreetNamePreposition;
+		public readonly string					StreetCode;
+		public readonly string					BasicPostCode;
+		public readonly string					LanguageCode;
+		public readonly string					StreetNameUppercase;
+		public readonly string					ZipCode;
+		public readonly string					ZipComplement;
+		public readonly string					DividerCode;
+		public readonly string					HouseNumberFrom;
+		public readonly string					HouseNumberFromAlpha;
+		public readonly string					HouseNumberTo;
+		public readonly string					HouseNumberToAlpha;
+		public readonly string					StreetName;
+		public readonly string					StreetNameShort;
+		public readonly string					StreetNameRoot;
+		public readonly string					StreetNameType;
+		public readonly string					StreetNamePreposition;
 
+
+		/// <summary>
+		/// Check if the name matches this instance.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns><c>true</c> if the name matches this instance; otherwise, <c>false</c>.</returns>
 		public bool MatchName(string name)
 		{
 			if (this.StreetNameShort == name)
@@ -52,14 +70,14 @@ namespace Epsitec.Data.Platform
 				return true;
 			}
 
-			name = name.ToUpperInvariant ();
+			var rootName = TextConverter.ConvertToUpperAndStripAccents (name);
 
-			if (this.StreetNameRoot == name)
+			if (this.StreetNameRoot == rootName)
 			{
 				return true;
 			}
 
-			int pos = name.LastIndexOfAny (SwissPostStreetInformation.nameSeparators);
+			int pos = rootName.LastIndexOfAny (SwissPostStreetInformation.nameSeparators);
 
 			if (pos < 0)
 			{
@@ -67,7 +85,7 @@ namespace Epsitec.Data.Platform
 			}
 			else
 			{
-				return name.Substring (pos+1) == this.StreetNameRoot;
+				return rootName.Substring (pos+1) == this.StreetNameRoot;
 			}
 		}
 
@@ -75,6 +93,8 @@ namespace Epsitec.Data.Platform
 		{
 			return string.Concat (this.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
 		}
+
+
 		private static readonly char[] nameSeparators = new char[] { ' ', '-', '.', '\'' };
 	}
 }
