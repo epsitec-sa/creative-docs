@@ -65,8 +65,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var memory = this.CreateMemoryData (list, "Premier trimestre", searchExist, filterExist, optionsExist);
-
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (new Date (year, 1, 1), new Date (year, 3, 31)));
+				this.SearchAdaptDate (memory.Filter, new Date (year, 1, 1), new Date (year, 3, 31));
 
 				memory.Options = new JournalOptions ();
 				memory.Options.SetComptaEntity (this.compta);
@@ -74,8 +73,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var memory = this.CreateMemoryData (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
-
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (new Date (year, 4, 1), new Date (year, 6, 30)));
+				this.SearchAdaptDate (memory.Filter, new Date (year, 4, 1), new Date (year, 6, 30));
 
 				memory.Options = new JournalOptions ();
 				memory.Options.SetComptaEntity (this.compta);
@@ -83,8 +81,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var memory = this.CreateMemoryData (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
-
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (new Date (year, 7, 1), new Date (year, 9, 30)));
+				this.SearchAdaptDate (memory.Filter, new Date (year, 7, 1), new Date (year, 9, 30));
 
 				memory.Options = new JournalOptions ();
 				memory.Options.SetComptaEntity (this.compta);
@@ -92,8 +89,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var memory = this.CreateMemoryData (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
-
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (new Date (year, 10, 1), new Date (year, 12, 31)));
+				this.SearchAdaptDate (memory.Filter, new Date (year, 10, 1), new Date (year, 12, 31));
 
 				memory.Options = new JournalOptions ();
 				memory.Options.SetComptaEntity (this.compta);
@@ -116,27 +112,27 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var memory = this.CreateMemoryData (list, "Actifs", searchExist, filterExist, optionsExist);
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (CatégorieDeCompte.Actif));
+				this.SearchAdaptCatégorie (memory.Filter, CatégorieDeCompte.Actif);
 			}
 
 			{
 				var memory = this.CreateMemoryData (list, "Passifs", searchExist, filterExist, optionsExist);
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (CatégorieDeCompte.Passif));
+				this.SearchAdaptCatégorie (memory.Filter, CatégorieDeCompte.Passif);
 			}
 
 			{
 				var memory = this.CreateMemoryData (list, "Charges", searchExist, filterExist, optionsExist);
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (CatégorieDeCompte.Charge));
+				this.SearchAdaptCatégorie (memory.Filter, CatégorieDeCompte.Charge);
 			}
 
 			{
 				var memory = this.CreateMemoryData (list, "Produits", searchExist, filterExist, optionsExist);
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (CatégorieDeCompte.Produit));
+				this.SearchAdaptCatégorie (memory.Filter, CatégorieDeCompte.Produit);
 			}
 
 			{
 				var memory = this.CreateMemoryData (list, "Exploitations", searchExist, filterExist, optionsExist);
-				memory.Filter.TabsData.Add (this.CreateSearchTabData (CatégorieDeCompte.Exploitation));
+				this.SearchAdaptCatégorie (memory.Filter, CatégorieDeCompte.Exploitation);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -153,6 +149,24 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 1);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 2);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 3);
 			}
 
 			this.Select<BalanceOptions> (list, nomPrésentation);
@@ -194,6 +208,45 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 1);
+
+				memory.Options = new BilanOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 2);
+
+				memory.Options = new BilanOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 3);
+
+				memory.Options = new BilanOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
 				var memory = this.CreateMemoryData (list, "Précédent graphique", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
 
@@ -223,7 +276,46 @@ namespace Epsitec.Cresus.Compta.IO
 				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
 
-				memory.Options = new BilanOptions ()
+				memory.Options = new PPOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 1);
+
+				memory.Options = new PPOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 2);
+
+				memory.Options = new PPOptions ()
+				{
+					HideZero    = true,
+					HasGraphics = false,
+				};
+				memory.Options.SetComptaEntity (this.compta);
+			}
+
+			{
+				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAddProfondeur (memory.Filter, 1, 3);
+
+				memory.Options = new PPOptions ()
 				{
 					HideZero    = true,
 					HasGraphics = false,
@@ -235,7 +327,7 @@ namespace Epsitec.Cresus.Compta.IO
 				var memory = this.CreateMemoryData (list, "Budget graphique", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
 
-				memory.Options = new BilanOptions ()
+				memory.Options = new PPOptions ()
 				{
 					HideZero              = true,
 					HasGraphics           = true,
@@ -371,27 +463,36 @@ namespace Epsitec.Cresus.Compta.IO
 			tab.Column              = ColumnType.Solde;
 		}
 
-		private SearchTabData CreateSearchTabData(Date début, Date fin)
+		private void SearchAddProfondeur(SearchData data, int minProfondeur, int maxProfondeur)
 		{
-			var tab = new SearchTabData ();
+			var tab = new SearchTabData();
+			data.TabsData.Add (tab);
+
+			tab.SearchText.FromText = Converters.IntToString (minProfondeur);
+			tab.SearchText.ToText   = Converters.IntToString (maxProfondeur);
+			tab.SearchText.Mode     = SearchMode.Interval;
+			tab.Column              = ColumnType.Profondeur;
+
+			data.OrMode = false;
+		}
+
+		private void SearchAdaptDate(SearchData data, Date début, Date fin)
+		{
+			var tab = data.TabsData[0];
 
 			tab.SearchText.FromText = Converters.DateToString (début);
 			tab.SearchText.ToText   = Converters.DateToString (fin);
 			tab.SearchText.Mode     = SearchMode.Interval;
 			tab.Column              = ColumnType.Date;
-
-			return tab;
 		}
 
-		private SearchTabData CreateSearchTabData(CatégorieDeCompte catégorie)
+		private void SearchAdaptCatégorie(SearchData data, CatégorieDeCompte catégorie)
 		{
-			var tab = new SearchTabData ();
+			var tab = data.TabsData[0];
 
 			tab.SearchText.FromText = Converters.CatégoriesToString (catégorie);
 			tab.SearchText.Mode     = SearchMode.Fragment;
 			tab.Column              = ColumnType.Catégorie;
-
-			return tab;
 		}
 
 

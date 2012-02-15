@@ -681,7 +681,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			var memory = this.memoryList.Selected;
 
-			if (memory != null && !memory.Permanent)  // garde-fou
+			if (memory != null && !memory.Readonly)  // garde-fou
 			{
 				this.CopyDataToMemory (memory);
 
