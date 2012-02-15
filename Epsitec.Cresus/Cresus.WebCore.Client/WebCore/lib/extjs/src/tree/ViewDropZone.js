@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -23,26 +23,26 @@ Ext.define('Ext.tree.ViewDropZone', {
     /**
      * @cfg {Boolean} allowParentInsert
      * Allow inserting a dragged node between an expanded parent node and its first child that will become a
-     * sibling of the parent when dropped (defaults to false)
+     * sibling of the parent when dropped.
      */
     allowParentInserts: false,
  
     /**
      * @cfg {String} allowContainerDrop
-     * True if drops on the tree container (outside of a specific tree node) are allowed (defaults to false)
+     * True if drops on the tree container (outside of a specific tree node) are allowed.
      */
     allowContainerDrops: false,
 
     /**
      * @cfg {String} appendOnly
-     * True if the tree should only allow append drops (use for trees which are sorted, defaults to false)
+     * True if the tree should only allow append drops (use for trees which are sorted).
      */
     appendOnly: false,
 
     /**
      * @cfg {String} expandDelay
      * The delay in milliseconds to wait before expanding a target tree node while dragging a droppable node
-     * over the target (defaults to 500)
+     * over the target.
      */
     expandDelay : 500,
 

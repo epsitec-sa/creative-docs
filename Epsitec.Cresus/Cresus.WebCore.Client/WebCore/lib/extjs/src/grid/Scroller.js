@@ -6,26 +6,21 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
 */
 /**
- * @class Ext.grid.Scroller
- * @extends Ext.Component
- *
  * Docked in an Ext.grid.Panel, controls virtualized scrolling and synchronization
  * across different sections.
- *
- * @private
  */
 Ext.define('Ext.grid.Scroller', {
     extend: 'Ext.Component',
     alias: 'widget.gridscroller',
     weight: 110,
-    cls: Ext.baseCSSPrefix + 'scroller',
+    baseCls: Ext.baseCSSPrefix + 'scroller',
     focusable: false,
     reservedSpace: 0,
 
@@ -38,22 +33,20 @@ Ext.define('Ext.grid.Scroller', {
     initComponent: function() {
         var me       = this,
             dock     = me.dock,
-            cls      = Ext.baseCSSPrefix + 'scroller-vertical',
-            sizeProp = 'width';
+            cls      = Ext.baseCSSPrefix + 'scroller-vertical';
 
         me.offsets = {bottom: 0};
         me.scrollProp = 'scrollTop';
         me.vertical = true;
+        me.sizeProp = 'width';
 
         if (dock === 'top' || dock === 'bottom') {
             cls = Ext.baseCSSPrefix + 'scroller-horizontal';
-            sizeProp = 'height';
+            me.sizeProp = 'height';
             me.scrollProp = 'scrollLeft';
             me.vertical = false;
             me.weight += 5;
         }
-
-        me[sizeProp] = me.scrollerSize = Ext.getScrollbarSize()[sizeProp];
 
         me.cls += (' ' + cls);
 
@@ -62,6 +55,13 @@ Ext.define('Ext.grid.Scroller', {
             scrollEl: '.' + Ext.baseCSSPrefix + 'scroller-ct'
         });
         me.callParent();
+    },
+    
+    ensureDimension: function(){
+        var me = this,
+            sizeProp = me.sizeProp;
+            
+        me[sizeProp] = me.scrollerSize = Ext.getScrollbarSize()[sizeProp];  
     },
 
     initRenderData: function () {

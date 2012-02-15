@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -31,7 +31,7 @@ Ext.define('Ext.util.Cookies', {
      * for the cookie may be optionally specified (for example: expiration,
      * access restriction, SSL).
      * @param {String} name The name of the cookie to set. 
-     * @param {Mixed} value The value to set for the cookie.
+     * @param {Object} value The value to set for the cookie.
      * @param {Object} expires (Optional) Specify an expiration date the
      * cookie is to persist until.  Note that the specified Date object will
      * be converted to Greenwich Mean Time (GMT). 
@@ -68,7 +68,7 @@ Ext.define('Ext.util.Cookies', {
      * var validStatus = Ext.util.Cookies.get("valid");
      * </code></pre>
      * @param {String} name The name of the cookie to get
-     * @return {Mixed} Returns the cookie value for the specified name;
+     * @return {Object} Returns the cookie value for the specified name;
      * null if the cookie name does not exist.
      */
     get : function(name){

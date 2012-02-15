@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -927,7 +927,7 @@ describe("Ext", function() {
            expect(Ext.isElement(Ext.getBody().dom)).toBe(true);
         });
 
-        it("should return false with Ext.core.Element", function() {
+        it("should return false with Ext.Element", function() {
            expect(Ext.isElement(Ext.getBody())).toBe(false);
         });
         
@@ -1494,7 +1494,7 @@ describe("Ext", function() {
            expect(Ext.isTextNode(Ext.getBody().dom)).toBe(false);
         });
 
-        it("should return false with Ext.core.Element", function() {
+        it("should return false with Ext.Element", function() {
            expect(Ext.isTextNode(Ext.getBody())).toBe(false);
         });
         

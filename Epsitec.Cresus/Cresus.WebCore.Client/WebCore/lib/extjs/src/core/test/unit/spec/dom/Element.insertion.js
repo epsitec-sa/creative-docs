@@ -6,14 +6,14 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
 */
-describe("Ext.core.Element.insertion", function() {
-    var proto = Ext.core.Element.prototype,
+describe("Ext.Element.insertion", function() {
+    var proto = Ext.Element.prototype,
         el, testEl,
         span, testSpanEl,
         child1, child2, child3;
@@ -33,8 +33,8 @@ describe("Ext.core.Element.insertion", function() {
             tag : 'span'
         });
         
-        el    = new Ext.core.Element(Ext.getDom(testEl));
-        span = new Ext.core.Element(Ext.getDom(testSpanEl));
+        el    = new Ext.Element(Ext.getDom(testEl));
+        span = new Ext.Element(Ext.getDom(testSpanEl));
         
         child1 = Ext.get('child1');
         child2 = Ext.get('child2');
@@ -143,7 +143,7 @@ describe("Ext.core.Element.insertion", function() {
             });
         });
         
-        describe("when Ext.core.Element", function() {
+        describe("when Ext.Element", function() {
             describe("after", function() {
                 it("should move the element next to the el", function() {
                     var nodes = Ext.getDom(el).childNodes;

@@ -6,35 +6,32 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
 */
 /**
- * @class Ext.menu.DatePicker
- * @extends Ext.menu.Menu
- * <p>A menu containing an {@link Ext.picker.Date} Component.</p>
- * <p>Notes:</p><div class="mdetail-params"><ul>
- * <li>Although not listed here, the <b>constructor</b> for this class
- * accepts all of the configuration options of <b>{@link Ext.picker.Date}</b>.</li>
- * <li>If subclassing DateMenu, any configuration options for the DatePicker must be
- * applied to the <tt><b>initialConfig</b></tt> property of the DateMenu.
- * Applying {@link Ext.picker.Date DatePicker} configuration settings to
- * <b><tt>this</tt></b> will <b>not</b> affect the DatePicker's configuration.</li>
- * </ul></div>
+ * A menu containing an Ext.picker.Date Component.
  *
- * {@img Ext.menu.DatePicker/Ext.menu.DatePicker.png Ext.menu.DatePicker component}
+ * Notes:
  *
- * __Example Usage__
+ * - Although not listed here, the **constructor** for this class accepts all of the
+ *   configuration options of **{@link Ext.picker.Date}**.
+ * - If subclassing DateMenu, any configuration options for the DatePicker must be applied
+ *   to the **initialConfig** property of the DateMenu. Applying {@link Ext.picker.Date Date Picker}
+ *   configuration settings to **this** will **not** affect the Date Picker's configuration.
  *
+ * Example:
+ *
+ *     @example
  *     var dateMenu = Ext.create('Ext.menu.DatePicker', {
  *         handler: function(dp, date){
- *             Ext.Msg.alert('Date Selected', 'You choose {0}.', Ext.Date.format(date, 'M j, Y'));
+ *             Ext.Msg.alert('Date Selected', 'You selected ' + Ext.Date.format(date, 'M j, Y'));
  *         }
  *     });
- *  
+ *
  *     Ext.create('Ext.menu.Menu', {
  *         width: 100,
  *         height: 90,
@@ -50,8 +47,6 @@ If you are unsure which license is appropriate for your use, please contact the 
  *             text: 'regular item'
  *         }]
  *     });
- *
- * @author Nicolas Ferrero
  */
  Ext.define('Ext.menu.DatePicker', {
      extend: 'Ext.menu.Menu',
@@ -64,13 +59,13 @@ If you are unsure which license is appropriate for your use, please contact the 
 
     /**
      * @cfg {Boolean} hideOnClick
-     * False to continue showing the menu after a date is selected, defaults to true.
+     * False to continue showing the menu after a date is selected.
      */
     hideOnClick : true,
 
     /**
      * @cfg {String} pickerId
-     * An id to assign to the underlying date picker. Defaults to <tt>null</tt>.
+     * An id to assign to the underlying date picker.
      */
     pickerId : null,
 
@@ -80,9 +75,8 @@ If you are unsure which license is appropriate for your use, please contact the 
      */
 
     /**
+     * @property {Ext.picker.Date} picker
      * The {@link Ext.picker.Date} instance for this DateMenu
-     * @property picker
-     * @type Ext.picker.Date
      */
 
     /**
@@ -115,9 +109,7 @@ If you are unsure which license is appropriate for your use, please contact the 
         me.picker = me.down('datepicker');
         /**
          * @event select
-         * Fires when a date is selected from the {@link #picker Ext.picker.Date}
-         * @param {Ext.picker.Date} picker The {@link #picker Ext.picker.Date}
-         * @param {Date} date The selected date
+         * @alias Ext.picker.Date#select
          */
         me.relayEvents(me.picker, ['select']);
 

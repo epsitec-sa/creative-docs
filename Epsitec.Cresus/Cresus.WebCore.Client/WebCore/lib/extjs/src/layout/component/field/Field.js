@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -113,6 +113,10 @@ Ext.define('Ext.layout.component.field.Field', {
         me.sizeBody(info);
 
         me.activeError = owner.getActiveError();
+    },
+    
+    onFocus: function(){
+        this.getErrorStrategy().onFocus(this.owner);    
     },
 
 
@@ -268,6 +272,18 @@ Ext.define('Ext.layout.component.field.Field', {
                 el.setStyle(name, value);
             }
         }
+        
+        function showTip(owner) {
+            var tip = Ext.layout.component.field.Field.tip,
+                target;
+                
+            if (tip && tip.isVisible()) {
+                target = tip.activeTarget;
+                if (target && target.el === owner.getActionEl().dom) {
+                    tip.toFront(true);
+                }
+            }
+        }
 
         var applyIf = Ext.applyIf,
             emptyFn = Ext.emptyFn,
@@ -278,7 +294,8 @@ Ext.define('Ext.layout.component.field.Field', {
                 adjustHorizInsets: emptyFn,
                 adjustVertInsets: emptyFn,
                 layoutHoriz: emptyFn,
-                layoutVert: emptyFn
+                layoutVert: emptyFn,
+                onFocus: emptyFn
             };
 
         return {
@@ -309,7 +326,8 @@ Ext.define('Ext.layout.component.field.Field', {
                     if (owner.hasActiveError()) {
                         setStyle(owner.errorEl, 'top', info.insets.top + 'px');
                     }
-                }
+                },
+                onFocus: showTip
             }, base),
 
             /**
@@ -346,7 +364,8 @@ Ext.define('Ext.layout.component.field.Field', {
                     setDisplayed(owner.errorEl, false);
                     Ext.layout.component.field.Field.initTip();
                     owner.getActionEl().dom.setAttribute('data-errorqtip', owner.getActiveError() || '');
-                }
+                },
+                onFocus: showTip
             }, base),
 
             /**

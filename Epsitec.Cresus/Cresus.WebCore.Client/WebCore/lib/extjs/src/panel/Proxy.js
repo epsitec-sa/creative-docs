@@ -6,27 +6,26 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
 */
 /**
- * @class Ext.panel.Proxy
- * @extends Object
  * A custom drag proxy implementation specific to {@link Ext.panel.Panel}s. This class
  * is primarily used internally for the Panel's drag drop implementation, and
  * should never need to be created directly.
+ * @private
  */
 Ext.define('Ext.panel.Proxy', {
-    
+
     alternateClassName: 'Ext.dd.PanelProxy',
 
     /**
      * Creates new panel proxy.
      * @param {Ext.panel.Panel} panel The {@link Ext.panel.Panel} to proxy for
-     * @param {Object} config (optional) Config object
+     * @param {Object} [config] Config object
      */
     constructor: function(panel, config){
         /**
@@ -39,10 +38,9 @@ Ext.define('Ext.panel.Proxy', {
     },
 
     /**
-     * @cfg {Boolean} insertProxy True to insert a placeholder proxy element
-     * while dragging the panel, false to drag with no proxy (defaults to true).
-     * Most Panels are not absolute positioned and therefore we need to reserve
-     * this space.
+     * @cfg {Boolean} insertProxy
+     * True to insert a placeholder proxy element while dragging the panel, false to drag with no proxy.
+     * Most Panels are not absolute positioned and therefore we need to reserve this space.
      */
     insertProxy: true,
 
@@ -55,7 +53,7 @@ Ext.define('Ext.panel.Proxy', {
 
     /**
      * Gets the proxy's element
-     * @return {Element} The proxy's element
+     * @return {Ext.Element} The proxy's element
      */
     getEl: function(){
         return this.ghost.el;
@@ -63,7 +61,7 @@ Ext.define('Ext.panel.Proxy', {
 
     /**
      * Gets the proxy's ghost Panel
-     * @return {Panel} The proxy's ghost Panel
+     * @return {Ext.panel.Panel} The proxy's ghost Panel
      */
     getGhost: function(){
         return this.ghost;
@@ -72,7 +70,7 @@ Ext.define('Ext.panel.Proxy', {
     /**
      * Gets the proxy element. This is the element that represents where the
      * Panel was before we started the drag operation.
-     * @return {Element} The proxy's element
+     * @return {Ext.Element} The proxy's element
      */
     getProxy: function(){
         return this.proxy;
@@ -100,7 +98,7 @@ Ext.define('Ext.panel.Proxy', {
     show: function(){
         if (!this.ghost) {
             var panelSize = this.panel.getSize();
-            this.panel.el.setVisibilityMode(Ext.core.Element.DISPLAY);
+            this.panel.el.setVisibilityMode(Ext.Element.DISPLAY);
             this.ghost = this.panel.ghost();
             if (this.insertProxy) {
                 // bc Panels aren't absolute positioned we need to take up the space
@@ -124,7 +122,7 @@ Ext.define('Ext.panel.Proxy', {
      * called while dragging the Panel to keep the proxy sync'd to the Panel's
      * location.
      * @param {HTMLElement} parentNode The proxy's parent DOM node
-     * @param {HTMLElement} before (optional) The sibling node before which the
+     * @param {HTMLElement} [before] The sibling node before which the
      * proxy should be inserted (defaults to the parent's last child if not
      * specified)
      */

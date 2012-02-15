@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -64,7 +64,7 @@ Ext.define('Ext.layout.component.Button', {
             // In IE7 strict mode button elements with width:auto get strange extra side margins within
             // the wrapping table cell, but they go away if the width is explicitly set. So we measure
             // the size of the text and set the width to match.
-            if (owner.text && Ext.isIE7 && Ext.isStrict && btnEl && btnEl.getWidth() > 20) {
+            if (owner.text && (Ext.isIE6 || Ext.isIE7) && Ext.isStrict && btnEl && btnEl.getWidth() > 20) {
                 btnFrameWidth = me.btnFrameWidth;
                 metrics = Ext.util.TextMetrics.measure(btnInnerEl, owner.text);
                 ownerEl.setWidth(metrics.width + btnFrameWidth + me.adjWidth);
@@ -112,7 +112,7 @@ Ext.define('Ext.layout.component.Button', {
         me.callParent(arguments);
         me.setElementSize(owner.btnEl, btnWidth, btnHeight);
         me.setElementSize(btnInnerEl, btnWidth, btnHeight);
-        if (isNum(btnHeight)) {
+        if (btnHeight >= 0) {
             btnInnerEl.setStyle('line-height', btnHeight - btnFrameHeight + 'px');
         }
 

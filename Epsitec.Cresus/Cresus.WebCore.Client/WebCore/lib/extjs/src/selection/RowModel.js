@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -15,10 +15,6 @@ If you are unsure which license is appropriate for your use, please contact the 
 /**
  * @class Ext.selection.RowModel
  * @extends Ext.selection.Model
- *
- * Implement row based navigation via keyboard.
- *
- * Must synchronize across grid sections
  */
 Ext.define('Ext.selection.RowModel', {
     extend: 'Ext.selection.Model',
@@ -35,9 +31,17 @@ Ext.define('Ext.selection.RowModel', {
     /**
      * @cfg {Boolean} enableKeyNav
      *
-     * Turns on/off keyboard navigation within the grid. Defaults to true.
+     * Turns on/off keyboard navigation within the grid.
      */
     enableKeyNav: true,
+    
+    /**
+     * @cfg {Boolean} [ignoreRightMouseSelection=true]
+     * True to ignore selections that are made when using the right mouse button if there are
+     * records that are already selected. If no records are selected, selection will continue 
+     * as normal
+     */
+    ignoreRightMouseSelection: true,
 
     constructor: function(){
         this.addEvents(
@@ -45,7 +49,7 @@ Ext.define('Ext.selection.RowModel', {
              * @event beforedeselect
              * Fired before a record is deselected. If any listener returns false, the
              * deselection is cancelled.
-             * @param {Ext.selection.RowSelectionModel} this
+             * @param {Ext.selection.RowModel} this
              * @param {Ext.data.Model} record The deselected record
              * @param {Number} index The row index deselected
              */
@@ -55,7 +59,7 @@ Ext.define('Ext.selection.RowModel', {
              * @event beforeselect
              * Fired before a record is selected. If any listener returns false, the
              * selection is cancelled.
-             * @param {Ext.selection.RowSelectionModel} this
+             * @param {Ext.selection.RowModel} this
              * @param {Ext.data.Model} record The selected record
              * @param {Number} index The row index selected
              */
@@ -64,7 +68,7 @@ Ext.define('Ext.selection.RowModel', {
             /**
              * @event deselect
              * Fired after a record is deselected
-             * @param {Ext.selection.RowSelectionModel} this
+             * @param {Ext.selection.RowModel} this
              * @param {Ext.data.Model} record The deselected record
              * @param {Number} index The row index deselected
              */
@@ -73,7 +77,7 @@ Ext.define('Ext.selection.RowModel', {
             /**
              * @event select
              * Fired after a record is selected
-             * @param {Ext.selection.RowSelectionModel} this
+             * @param {Ext.selection.RowModel} this
              * @param {Ext.data.Model} record The selected record
              * @param {Number} index The row index selected
              */
@@ -354,7 +358,25 @@ Ext.define('Ext.selection.RowModel', {
     // we can take into account ctrlKey, shiftKey, etc
     onRowMouseDown: function(view, record, item, index, e) {
         view.el.focus();
+        if (!this.allowRightMouseSelection(e)) {
+            return;
+        }
         this.selectWithEvent(record, e);
+    },
+    
+    /**
+     * Checks whether a selection should proceed based on the ignoreRightMouseSelection
+     * option.
+     * @private
+     * @param {Ext.EventObject} e The event
+     * @return {Boolean} False if the selection should not proceed
+     */
+    allowRightMouseSelection: function(e) {
+        var disallow = this.ignoreRightMouseSelection && e.button !== 0;
+        if (disallow) {
+            disallow = this.hasSelection();
+        }
+        return !disallow;
     },
 
     // Allow the GridView to update the UI by

@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -288,7 +288,7 @@ Ext.define('Ext.layout.container.boxOverflow.Menu', {
              */
             me.menuTrigger = Ext.create('Ext.button.Button', {
                 ownerCt : me.layout.owner, // To enable the Menu to ascertain a valid zIndexManager owner in the same tree
-                iconCls : Ext.baseCSSPrefix + layout.owner.getXType() + '-more-icon',
+                iconCls : me.layout.owner.menuTriggerCls,
                 ui      : layout.owner instanceof Ext.toolbar.Toolbar ? 'default-toolbar' : 'default',
                 menu    : me.menu,
                 getSplitCls: function() { return '';},
@@ -314,7 +314,7 @@ Ext.define('Ext.layout.container.boxOverflow.Menu', {
      * @private
      * Creates the beforeCt, innerCt and afterCt elements if they have not already been created
      * @param {Ext.container.Container} container The Container attached to this Layout instance
-     * @param {Ext.core.Element} target The target Element
+     * @param {Ext.Element} target The target Element
      */
     createInnerElements: function() {
         var me = this,

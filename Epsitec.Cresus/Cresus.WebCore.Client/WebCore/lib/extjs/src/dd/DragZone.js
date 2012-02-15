@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -73,7 +73,7 @@ Ext.define('Ext.dd.DragZone', {
 
     /**
      * Creates new DragZone.
-     * @param {Mixed} el The container element
+     * @param {String/HTMLElement/Ext.Element} el The container element or ID of it.
      * @param {Object} config
      */
     constructor : function(el, config){
@@ -101,7 +101,7 @@ Ext.define('Ext.dd.DragZone', {
      * for a valid target to drag based on the mouse down. Override this method
      * to provide your own lookup logic (e.g. finding a child by class name). Make sure your returned
      * object has a "ddel" attribute (with an HTML Element) for other functions to work.
-     * @param {EventObject} e The mouse down event
+     * @param {Event} e The mouse down event
      * @return {Object} The dragData
      */
     getDragData : function(e){
@@ -135,11 +135,11 @@ Ext.define('Ext.dd.DragZone', {
     /**
      * Called before a repair of an invalid drop to get the XY to animate to. By default returns
      * the XY of this.dragData.ddel
-     * @param {EventObject} e The mouse up event
-     * @return {Array} The xy location (e.g. [100, 200])
+     * @param {Event} e The mouse up event
+     * @return {Number[]} The xy location (e.g. [100, 200])
      */
     getRepairXY : function(e){
-        return Ext.core.Element.fly(this.dragData.ddel).getXY();
+        return Ext.Element.fly(this.dragData.ddel).getXY();
     },
 
     destroy : function(){

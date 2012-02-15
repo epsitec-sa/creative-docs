@@ -6,31 +6,25 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
 */
 /**
- * @class Ext.toolbar.TextItem
- * @extends Ext.toolbar.Item
- *
  * A simple class that renders text directly into a toolbar.
  *
- * ## Example usage
- *
- * {@img Ext.toolbar.TextItem/Ext.toolbar.TextItem.png TextItem component}
- *
- *      Ext.create('Ext.panel.Panel', {
- *          title: 'Panel with TextItem',
- *          width: 300,
- *          height: 200,
- *          tbar: [
- *              {xtype: 'tbtext', text: 'Sample TextItem'}
- *          ],
- *          renderTo: Ext.getBody()
- *      });
+ *     @example
+ *     Ext.create('Ext.panel.Panel', {
+ *         title: 'Panel with TextItem',
+ *         width: 300,
+ *         height: 200,
+ *         tbar: [
+ *             { xtype: 'tbtext', text: 'Sample Text Item' }
+ *         ],
+ *         renderTo: Ext.getBody()
+ *     });
  *
  * @constructor
  * Creates a new TextItem
@@ -41,16 +35,16 @@ Ext.define('Ext.toolbar.TextItem', {
     requires: ['Ext.XTemplate'],
     alias: 'widget.tbtext',
     alternateClassName: 'Ext.Toolbar.TextItem',
-    
+
     /**
      * @cfg {String} text The text to be used as innerHTML (html tags are accepted)
      */
     text: '',
-    
+
     renderTpl: '{text}',
     //
     baseCls: Ext.baseCSSPrefix + 'toolbar-text',
-    
+
     onRender : function() {
         Ext.apply(this.renderData, {
             text: this.text

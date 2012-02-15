@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -95,6 +95,7 @@ Ext.define('Ext.grid.feature.Feature', {
      *
      * The method must also return the eventName as the first index of the array
      * to be passed to fireEvent.
+     * @template
      */
     getFireEventArgs: function(eventName, view, featureTarget, e) {
         return [eventName, view, featureTarget, e];
@@ -102,6 +103,7 @@ Ext.define('Ext.grid.feature.Feature', {
     
     /**
      * Approriate place to attach events to the view, selectionmodel, headerCt, etc
+     * @template
      */
     attachEvents: function() {
         
@@ -115,6 +117,7 @@ Ext.define('Ext.grid.feature.Feature', {
      * Allows a feature to mutate the metaRowTpl.
      * The array received as a single argument can be manipulated to add things
      * on the end/begining of a particular row.
+     * @template
      */
     mutateMetaRowTpl: function(metaRowTplArray) {
         
@@ -124,6 +127,7 @@ Ext.define('Ext.grid.feature.Feature', {
      * Allows a feature to inject member methods into the metaRowTpl. This is
      * important for embedding functionality which will become part of the proper
      * row tpl.
+     * @template
      */
     getMetaRowTplFragments: function() {
         return {};
@@ -139,6 +143,7 @@ Ext.define('Ext.grid.feature.Feature', {
      * @param {Number} idx The row index for this record.
      * @param {Ext.data.Model} record The record instance
      * @param {Object} orig The original result from the prepareData call to massage.
+     * @template
      */
     getAdditionalData: function(data, idx, record, orig) {
         return {};

@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -59,7 +59,7 @@ Ext.define('Ext.tree.Column', {
                                 record.get('checked') ? 'aria-checked="true"' : ''
                             ));
                             if (record.get('checked')) {
-                                metaData.tdCls += (' ' + Ext.baseCSSPrefix + 'tree-checked');
+                                metaData.tdCls += (' ' + treePrefix + 'checked');
                             }
                         }
                         if (record.isLast()) {
@@ -87,12 +87,14 @@ Ext.define('Ext.tree.Column', {
                 record = record.parentNode;
             }
             if (href) {
-                formattedValue = format('<a href="{0}" target="{1}">{2}</a>', href, target, formattedValue);
+                buf.push('<a href="', href, '" target="', target, '">', formattedValue, '</a>');
+            } else {
+                buf.push(formattedValue);
             }
             if (cls) {
                 metaData.tdCls += ' ' + cls;
             }
-            return buf.join("") + formattedValue;
+            return buf.join('');
         };
         this.callParent(arguments);
     },

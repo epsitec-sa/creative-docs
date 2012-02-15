@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -104,7 +104,7 @@ Ext.define('Ext.fx.target.Component', {
                     o = meth.setPagePosition;
                     o.target.setPagePosition(o.x, o.y);
                 }
-                if (meth.setSize.target) {
+                if (meth.setSize.target && meth.setSize.target.el) {
                     o = meth.setSize;
                     // Dimensions not being animated MUST NOT be autosized. They must remain at current value.
                     w = (o.width === undefined) ? o.target.getWidth() : parseInt(o.width, 10);

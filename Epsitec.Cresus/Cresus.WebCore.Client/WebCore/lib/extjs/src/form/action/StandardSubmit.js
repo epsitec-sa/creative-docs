@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -17,7 +17,7 @@ If you are unsure which license is appropriate for your use, please contact the 
  * @extends Ext.form.action.Submit
  * <p>A class which handles submission of data from {@link Ext.form.Basic Form}s using a standard
  * <tt>&lt;form&gt;</tt> element submit. It does not handle the response from the submit.</p>
- * <p>If validation of the form fields fails, the Form's {@link Ext.form.Basic#afterAction} method
+ * <p>If validation of the form fields fails, the Form's afterAction method
  * will be called. Otherwise, afterAction will not be called.</p>
  * <p>Instances of this class are only created by a {@link Ext.form.Basic Form} when
  * {@link Ext.form.Basic#submit submit}ting, when the form's {@link Ext.form.Basic#standardSubmit}

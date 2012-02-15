@@ -6,8 +6,8 @@ Copyright (c) 2011 Sencha Inc
 
 Contact:  http://www.sencha.com/contact
 
-GNU General Public License Usage
-This file may be used under the terms of the GNU General Public License version 3.0 as published by the Free Software Foundation and appearing in the file LICENSE included in the packaging of this file.  Please review the following information to ensure the GNU General Public License version 3.0 requirements will be met: http://www.gnu.org/copyleft/gpl.html.
+Commercial Usage
+Licensees holding valid commercial licenses may use this file in accordance with the Commercial Software License Agreement provided with the Software or, alternatively, in accordance with the terms contained in a written agreement between you and Sencha.
 
 If you are unsure which license is appropriate for your use, please contact the sales department at http://www.sencha.com/contact.
 
@@ -47,7 +47,7 @@ Ext.define('Ext.view.DropZone', {
     fireViewEvent: function() {
         var me = this,
             result;
-            
+
         me.lock();
         result = me.view.fireEvent.apply(me.view, arguments);
         me.unlock();
@@ -162,7 +162,7 @@ Ext.define('Ext.view.DropZone', {
     // The mouse is over a View node
     onNodeOver: function(node, dragZone, e, data) {
         var me = this;
-        
+
         if (!Ext.Array.contains(data.records, me.view.getRecord(node))) {
             me.positionIndicator(node, data, e);
         }
@@ -173,7 +173,7 @@ Ext.define('Ext.view.DropZone', {
     // Remove drop position indicator
     notifyOut: function(node, dragZone, e, data) {
         var me = this;
-        
+
         me.callParent(arguments);
         delete me.overRecord;
         delete me.currentPosition;
@@ -233,6 +233,12 @@ Ext.define('Ext.view.DropZone', {
             }
         }
         return performOperation;
+    },
+    
+    destroy: function(){
+        Ext.destroy(this.indicator);
+        delete this.indicator;
+        this.callParent();
     }
 });
 
