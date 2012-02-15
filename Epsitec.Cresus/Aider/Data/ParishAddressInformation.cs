@@ -10,7 +10,7 @@ namespace Epsitec.Aider.Data
 	/// The <c>ParishAddressInformation</c> class describes a parish address, as provided
 	/// by the EERV. Every town should have at least one associated information record.
 	/// </summary>
-	internal sealed class ParishAddressInformation
+	public sealed class ParishAddressInformation
 	{
 		public ParishAddressInformation(string line)
 		{

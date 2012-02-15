@@ -6,13 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data
 {
-	internal sealed class ParishAddresses : IEnumerable<ParishAddressInformation>
+	public sealed class ParishAddresses : IEnumerable<ParishAddressInformation>
 	{
 		public ParishAddresses()
 		{
 		}
 
-		public int Count
+		public int								Count
 		{
 			get
 			{
@@ -25,6 +25,35 @@ namespace Epsitec.Aider.Data
 					return this.info == null ? 0 : 1;
 				}
 			}
+		}
+
+		public ParishAddressInformation FindDefault(string streetName, string streetPrefix)
+		{
+			foreach (var info in this)
+			{
+				if (info.StreetNumberSubset != null)
+				{
+					return info;
+				}
+			}
+
+			return null;
+		}
+
+		public ParishAddressInformation FindSpecific(string streetName, string streetPrefix, int streetNumber)
+		{
+			foreach (var info in this)
+			{
+				if (info.StreetNumberSubset != null)
+				{
+					if (info.StreetNumberSubset.Contains (streetNumber))
+					{
+						return info;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		public void Add(ParishAddressInformation info)
