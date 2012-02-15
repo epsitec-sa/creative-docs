@@ -52,8 +52,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Res.cs" />
+    <Compile Include="SwissPostStreet.cs" />
+    <Compile Include="SwissPostStreetInformation.cs" />
+    <Compile Include="SwissPostStreetRepository.cs" />
     <Compile Include="SwissPostZip.cs" />
     <Compile Include="SwissPostZipInformation.cs" />
+    <Compile Include="SwissPostZipRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
@@ -68,6 +72,7 @@
     <Content Include="Resources\Data.Platform.SwissPostMatch\Strings.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="DataFiles\MatchStreetLight.zip" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

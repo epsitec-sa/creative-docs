@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Net;
@@ -9,28 +9,16 @@ namespace Epsitec.Data.Platform
 {
 	public static class SwissPostZip
 	{
+		public static SwissPostZipRepository CreateRepository()
+		{
+			return new SwissPostZipRepository (SwissPostZip.GetZips ());
+		}
+
 		public static IEnumerable<SwissPostZipInformation> GetZips()
 		{
 			foreach (var line in SwissPostZip.GetZipPlusFile ())
 			{
-				var args = line.Split ('\t');
-
-				yield return new SwissPostZipInformation ()
-				{
-					OnrpCode       = args[0],
-					ZipType        = args[1],
-					ZipCode        = args[2],
-					ZipComplement  = args[3],
-					ShortName      = args[4],
-					LongName       = args[5],
-					Canton         = args[6],
-					LanguageCode1  = args[7],
-					LanguageCode2  = args[8],
-					MatchSort      = args[9],
-					DistributionBy = args[10],
-					ComunityCode   = args[11],
-					ValidSince     = args[12],
-				};
+				yield return new SwissPostZipInformation (line);
 			}
 		}
 
@@ -39,26 +27,7 @@ namespace Epsitec.Data.Platform
 			string uri = "https://match.post.ch/download?file=10001&tid=11&rol=0";
 			string file = SwissPostZip.DownloadZippedTextFile (uri);
 
-			int pos = 0;
-
-			while (pos < file.Length)
-			{
-				int end = file.IndexOf ('\n', pos);
-
-				if (end < 0)
-				{
-					end = file.Length;
-				}
-
-				if (pos < end)
-				{
-					string line = file.Substring (pos, end-pos-1);
-					
-					yield return line;
-				}
-
-				pos = end+1;
-			}
+			return Epsitec.Common.IO.StringLineExtractor.GetLines (file);
 		}
 
 		private static string DownloadZippedTextFile(string uri)
