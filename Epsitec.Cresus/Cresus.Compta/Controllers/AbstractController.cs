@@ -305,6 +305,73 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public bool SearchSpecialist
+		{
+			get
+			{
+				if (this.topSearchController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.topSearchController.Specialist;
+				}
+			}
+			set
+			{
+				if (this.topSearchController != null)
+				{
+					this.topSearchController.Specialist = value;
+				}
+			}
+		}
+
+		public bool FilterSpecialist
+		{
+			get
+			{
+				if (this.topFilterController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.topFilterController.Specialist;
+				}
+			}
+			set
+			{
+				if (this.topFilterController != null)
+				{
+					this.topFilterController.Specialist = value;
+				}
+			}
+		}
+
+		public bool OptionsSpecialist
+		{
+			get
+			{
+				if (this.optionsController == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.optionsController.Specialist;
+				}
+			}
+			set
+			{
+				if (this.optionsController != null)
+				{
+					this.optionsController.Specialist = value;
+				}
+			}
+		}
+
+
 		#region Memory panel
 		private void CreateMemory(FrameBox parent)
 		{

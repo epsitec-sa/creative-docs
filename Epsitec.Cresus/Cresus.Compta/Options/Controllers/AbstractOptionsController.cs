@@ -52,6 +52,22 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			}
 		}
 
+		public bool Specialist
+		{
+			get
+			{
+				return this.levelController.Specialist;
+			}
+			set
+			{
+				if (this.levelController.Specialist != value)
+				{
+					this.levelController.Specialist = value;
+					this.LevelChangedAction ();
+				}
+			}
+		}
+
 
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
@@ -106,9 +122,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.options.Specialist = this.levelController.Specialist;
 
-			if (this.budgtetFrame != null)
+			if (this.comparisonFrame != null)
 			{
-				this.budgtetFrame.Visibility = this.levelController.Specialist;
+				this.comparisonFrame.Visibility = this.levelController.Specialist;
 			}
 		}
 
@@ -126,7 +142,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#region Comparaison
 		protected FrameBox CreateComparisonUI(FrameBox parent, ComparisonShowed possibleMode)
 		{
-			this.budgtetFrame = new FrameBox
+			this.comparisonFrame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
@@ -137,7 +153,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.buttonComparisonEnable = new CheckButton
 			{
-				Parent          = this.budgtetFrame,
+				Parent          = this.comparisonFrame,
 				PreferredWidth  = 120,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -145,14 +161,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			{
-				this.frameComparisonShowed = UIBuilder.CreatePseudoCombo (this.budgtetFrame, out this.fieldComparisonShowed, out this.buttonComparisonShowed);
+				this.frameComparisonShowed = UIBuilder.CreatePseudoCombo (this.comparisonFrame, out this.fieldComparisonShowed, out this.buttonComparisonShowed);
 				this.frameComparisonShowed.PreferredWidth = 150;
 				this.frameComparisonShowed.Margins = new Margins (0, 20, 0, 0);
 			}
 
 			this.labelComparisonDisplayMode = new StaticText
 			{
-				Parent         = this.budgtetFrame,
+				Parent         = this.comparisonFrame,
 				FormattedText  = "Affichage",
 				PreferredWidth = 55,
 				Dock           = DockStyle.Left,
@@ -160,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.fieldComparisonDisplayMode = new TextFieldCombo
 			{
-				Parent          = this.budgtetFrame,
+				Parent          = this.comparisonFrame,
 				IsReadOnly      = true,
 				PreferredWidth  = 150,
 				PreferredHeight = 20,
@@ -184,12 +200,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.fieldComparisonShowed.Clicked += delegate
 			{
-				this.ShowComparisonShoedMenu (this.frameComparisonShowed, possibleMode);
+				this.ShowComparisonShowedMenu (this.frameComparisonShowed, possibleMode);
 			};
 
 			this.buttonComparisonShowed.Clicked += delegate
 			{
-				this.ShowComparisonShoedMenu (this.frameComparisonShowed, possibleMode);
+				this.ShowComparisonShowedMenu (this.frameComparisonShowed, possibleMode);
 			};
 
 			this.fieldComparisonDisplayMode.TextChanged += delegate
@@ -201,14 +217,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 
-			return this.budgtetFrame;
+			return this.comparisonFrame;
 		}
 
 		protected void UpdateComparison()
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.budgtetFrame.Visibility = this.levelController.Specialist;
+				this.comparisonFrame.Visibility = this.levelController.Specialist;
 
 				bool enable = this.options.ComparisonEnable;
 
@@ -226,7 +242,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			}
 		}
 
-		private void ShowComparisonShoedMenu(Widget parentButton, ComparisonShowed possibleMode)
+		private void ShowComparisonShowedMenu(Widget parentButton, ComparisonShowed possibleMode)
 		{
 			//	Affiche le menu permettant de choisir le mode.
 			var menu = new VMenu ();
@@ -235,7 +251,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				if ((mode & possibleMode) != 0)
 				{
-					this.AddComparisonShoedMenu (menu, mode, (this.options.ComparisonShowed & mode) != 0);
+					this.AddComparisonShowedMenu (menu, mode, (this.options.ComparisonShowed & mode) != 0);
 				}
 			}
 
@@ -245,7 +261,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
 		}
 
-		private void AddComparisonShoedMenu(VMenu menu, ComparisonShowed mode, bool active)
+		private void AddComparisonShowedMenu(VMenu menu, ComparisonShowed mode, bool active)
 		{
 			var item = new MenuItem ()
 			{
@@ -304,7 +320,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected int											tabIndex;
 		protected FrameBox										toolbar;
 		protected FrameBox										mainFrame;
-		protected FrameBox										budgtetFrame;
+		protected FrameBox										comparisonFrame;
 
 		protected TextFieldCombo								fieldProfondeur;
 

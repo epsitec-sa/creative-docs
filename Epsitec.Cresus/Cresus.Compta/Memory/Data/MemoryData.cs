@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
@@ -19,8 +20,34 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 	/// </summary>
 	public class MemoryData
 	{
+		public MemoryData()
+		{
+			this.ShowSearch  = ShowPanelMode.Nop;
+			this.ShowFilter  = ShowPanelMode.Nop;
+			this.ShowOptions = ShowPanelMode.Nop;
+
+			this.EnableSearch  = true;
+			this.EnableFilter  = true;
+			this.EnableOptions = true;
+		}
+
+
 		public FormattedText Name
 		{
+			get;
+			set;
+		}
+
+		public bool Readonly
+		{
+			//	true -> style non modifiable
+			get;
+			set;
+		}
+
+		public bool Permanent
+		{
+			//	true -> style indestructible
 			get;
 			set;
 		}
@@ -45,19 +72,38 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public bool ShowSearch
+		public bool EnableSearch
 		{
 			get;
 			set;
 		}
 
-		public bool ShowFilter
+		public bool EnableFilter
 		{
 			get;
 			set;
 		}
 
-		public bool ShowOptions
+		public bool EnableOptions
+		{
+			get;
+			set;
+		}
+
+
+		public ShowPanelMode ShowSearch
+		{
+			get;
+			set;
+		}
+
+		public ShowPanelMode ShowFilter
+		{
+			get;
+			set;
+		}
+
+		public ShowPanelMode ShowOptions
 		{
 			get;
 			set;
@@ -66,25 +112,25 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			var s = this.GetSearchSummary  (columnMappers);
-			var f = this.GetFilterSummary  (columnMappers);
-			var o = this.GetOptionsSummary (columnMappers);
+			var s = this.EnableSearch  ? this.GetSearchSummary  (columnMappers) : FormattedText.Empty;
+			var f = this.EnableFilter  ? this.GetFilterSummary  (columnMappers) : FormattedText.Empty;
+			var o = this.EnableOptions ? this.GetOptionsSummary (columnMappers) : FormattedText.Empty;
 
 			var list = new List<string> ();
 
 			if (!s.IsNullOrEmpty)
 			{
-				list.Add ("Rechercher " + s.ToSimpleText ());
+				list.Add ("Rechercher " + s);
 			}
 
 			if (!f.IsNullOrEmpty)
 			{
-				list.Add ("Filtrer " + f.ToSimpleText ());
+				list.Add ("Filtrer " + f);
 			}
 
 			if (!o.IsNullOrEmpty)
 			{
-				list.Add ("Options " + o.ToSimpleText ());
+				list.Add ("Options " + o);
 			}
 
 			return string.Join (", ", list);
@@ -126,41 +172,64 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			}
 		}
 
-		public FormattedText PanelsSummary
+
+		public FormattedText ShowPanelModeSummary
 		{
+			//	Retourne le résumé lié à l'affichage des panneaux (action spéciale).
 			get
 			{
-				//	Construit la liste des textes des panneaux visibles.
-				var list = new List<string> ();
-
-				if (this.ShowSearch)
+				if ((this.ShowSearch  == ShowPanelMode.Nop || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
+					(this.ShowFilter  == ShowPanelMode.Nop || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+					(this.ShowOptions == ShowPanelMode.Nop || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
-					list.Add ("recherche");
+					return "Aucune";
 				}
-
-				if (this.ShowFilter)
+				else if ((this.ShowSearch  == ShowPanelMode.Hide || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowFilter  == ShowPanelMode.Hide || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowOptions == ShowPanelMode.Hide || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
-					list.Add ("filtre");
+					return "Tout cacher";
 				}
-
-				if (this.ShowOptions)
+				else if ((this.ShowSearch  == ShowPanelMode.ShowBeginner || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowFilter  == ShowPanelMode.ShowBeginner || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowOptions == ShowPanelMode.ShowBeginner || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
-					list.Add ("options");
+					return "Tout montrer (simple)";
 				}
-
-				//	Génère le résumé.
-				if (list.Count == 0)
+				else if ((this.ShowSearch  == ShowPanelMode.ShowSpecialist || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowFilter  == ShowPanelMode.ShowSpecialist || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowOptions == ShowPanelMode.ShowSpecialist || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
-					return "Tous les panneaux sont cachés";
-				}
-				else if (list.Count == 1)
-				{
-					return "Panneau visible: " + Converters.SentenceConcat (list);
+					return "Tout montrer (avancé)";
 				}
 				else
 				{
-					return "Panneaux visibles: " + Converters.SentenceConcat (list);
+					var list = new List<string> ();
+
+					list.Add (this.GetShowPanelModeSummary (this.ShowSearch,  "les recherches"));
+					list.Add (this.GetShowPanelModeSummary (this.ShowFilter,  "le filtre"));
+					list.Add (this.GetShowPanelModeSummary (this.ShowOptions, "les options"));
+
+					return Converters.FirstLetterToUpper (Converters.SentenceConcat(list));
 				}
+			}
+		}
+
+		private string GetShowPanelModeSummary(ShowPanelMode mode, string name)
+		{
+			switch (mode)
+			{
+				case ShowPanelMode.Hide:
+					return string.Format ("cacher {0}", name);
+
+				case ShowPanelMode.ShowBeginner:
+					return string.Format ("montrer {0} (simple)", name);
+
+				case ShowPanelMode.ShowSpecialist:
+					return string.Format ("montrer {0} (avancé)", name);
+
+				default:
+					return null;
 			}
 		}
 	}

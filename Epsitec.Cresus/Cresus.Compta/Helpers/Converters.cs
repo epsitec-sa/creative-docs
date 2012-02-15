@@ -858,10 +858,24 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		public static string FirstLetterToUpper(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return text.Substring (0, 1).ToUpper () + text.Substring (1);
+			}
+		}
+
 		public static string SentenceConcat(List<string> list)
 		{
 			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une phrase "rouge, vert et bleu".
 			var builder = new System.Text.StringBuilder ();
+
+			list = list.Where (x => !string.IsNullOrEmpty (x)).ToList ();
 
 			for (int i = 0; i < list.Count; i++)
 			{

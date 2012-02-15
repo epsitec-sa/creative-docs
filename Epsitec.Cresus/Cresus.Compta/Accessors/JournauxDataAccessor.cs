@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournauxDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Journaux.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journaux.Search");
 
 			this.StartCreationLine ();
 		}

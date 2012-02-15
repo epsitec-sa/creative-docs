@@ -93,6 +93,28 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		public bool Specialist
+		{
+			get
+			{
+				return this.data.Specialist;
+			}
+			set
+			{
+				if (this.data.Specialist != value)
+				{
+					this.data.Specialist = value;
+					this.levelController.Specialist = value;
+					this.data.BeginnerAdjust (this.isFilter);
+
+					this.CreateMiddleUI ();
+					this.UpdateButtons ();
+					this.UpdateOrMode ();
+				}
+			}
+		}
+
+
 		public void UpdateContent()
 		{
 			this.CreateMiddleUI ();

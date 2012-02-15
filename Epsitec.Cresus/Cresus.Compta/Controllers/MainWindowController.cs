@@ -18,6 +18,7 @@ using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Memory.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -43,6 +44,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
 			this.SelectCurrentPériode ();
+
+			new DefaultMemory (this).CreateDefaultMemory ();
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -78,6 +81,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateTitle ();
 		}
 
+
+		public Window Window
+		{
+			get
+			{
+				return this.mainWindow;
+			}
+		}
 
 		public ComptaEntity Compta
 		{
@@ -876,8 +887,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
-		public SearchData GetSettingsSearchData<T>(string key, System.Action<SearchData> initialize = null)
-			where T : SearchData, new ()
+		public SearchData GetSettingsSearchData(string key, System.Action<SearchData> initialize = null)
 		{
 			ISettingsData result;
 			if (this.settingsDatas.TryGetValue (key, out result))
@@ -885,7 +895,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return result as SearchData;
 			}
 
-			SearchData data = new T ();
+			var data = new SearchData ();
 
 			if (initialize != null)
 			{

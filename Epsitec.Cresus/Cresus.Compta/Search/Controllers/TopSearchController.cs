@@ -58,6 +58,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
+		public bool Specialist
+		{
+			get
+			{
+				return this.searchController.Specialist;
+			}
+			set
+			{
+				this.searchController.Specialist = value;
+			}
+		}
+
 		public void SearchClear()
 		{
 			this.searchController.SearchClear ();

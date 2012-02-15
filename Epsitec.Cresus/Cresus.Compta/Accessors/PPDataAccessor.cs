@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<PPOptions> ("Présentation.PP.Options", this.comptaEntity);
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PP.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PP.Filter");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.PP.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.PP.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}

@@ -389,12 +389,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool CompareTo(SearchData other)
 		{
-			if (other.OrMode != this.OrMode)
+			if (other.tabsData.Count != this.tabsData.Count)
 			{
 				return false;
 			}
 
-			if (other.tabsData.Count != this.tabsData.Count)
+			//	Avec une seule ligne, il ne faut pas tenir compte du mode et/ou, qui peut
+			//	changer sans qu'il faille considérer les données comme différentes !
+			if (other.tabsData.Count > 1 && other.OrMode != this.OrMode)
 			{
 				return false;
 			}

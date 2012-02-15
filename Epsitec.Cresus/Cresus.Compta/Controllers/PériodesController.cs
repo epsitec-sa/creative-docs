@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new PériodesDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Période.Memory");
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Périodes.Memory");
 		}
 
 

@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BudgetsDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Budgets.Filter");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Filter");
 
 			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
 			this.StartCreationLine ();

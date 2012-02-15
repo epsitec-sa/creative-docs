@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.comptaEntity);
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.ExtraitDeCompte.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.ExtraitDeCompte.Filter");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}

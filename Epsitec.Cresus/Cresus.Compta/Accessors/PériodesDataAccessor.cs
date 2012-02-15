@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PériodesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Périodes.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Périodes.Search");
 
 			this.StartCreationLine ();
 		}

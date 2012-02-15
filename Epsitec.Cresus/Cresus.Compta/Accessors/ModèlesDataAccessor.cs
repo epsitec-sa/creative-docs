@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ModèlesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Modèles.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Modèles.Search");
 
 			this.StartCreationLine ();
 		}

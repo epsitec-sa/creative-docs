@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.comptaEntity);
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Filter");
 			//?this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter", this.FilterInitialize);
 
 			this.UpdateAfterOptionsChanged ();

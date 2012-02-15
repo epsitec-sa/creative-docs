@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PlanComptableDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.PlanComptable.Filter");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.PlanComptable.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.PlanComptable.Filter");
 
 			this.StartCreationLine ();
 		}
