@@ -482,6 +482,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				
 				this.CreateController ();
 				this.AdaptSettingsDatas ();
+
+				this.controller.UpdateAfterPériodeChanged ();
 			}
 		}
 
@@ -522,17 +524,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static void AdaptSearchData(ComptaPériodeEntity période, SearchData data)
 		{
+			//	Adapte une recherche pour être dans une période donnée.
 			foreach (var tab in data.TabsData)
 			{
 				if (tab.Column == ColumnType.Date)
 				{
-					Date? dateDébut = Converters.ParseDate (tab.SearchText.FromText);
+					var dateDébut = Converters.ParseDate (tab.SearchText.FromText);
 					if (dateDébut.HasValue)
 					{
 						tab.SearchText.FromText = Converters.DateToString (MainWindowController.AdaptDate (période, dateDébut.Value));
 					}
 
-					Date? dateFin = Converters.ParseDate (tab.SearchText.ToText);
+					var dateFin = Converters.ParseDate (tab.SearchText.ToText);
 					if (dateFin.HasValue)
 					{
 						tab.SearchText.ToText = Converters.DateToString (MainWindowController.AdaptDate (période, dateFin.Value));
@@ -543,6 +546,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private static Date AdaptDate(ComptaPériodeEntity période, Date date)
 		{
+			//	Adapte une date pour être dans une période donnée.
 			if (date < période.DateDébut ||
 				date > période.DateFin   )  // date hors de la période ?
 			{
@@ -556,7 +560,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else
 				{
-					// TODO: Il faudra faire mieux, dans le cas où la période ne connespond pas pile à une année !
+					// TODO: Il faudra faire mieux, dans le cas où la période ne correspond pas pile à une année !
+					date = new Date (période.DateDébut.Year, date.Month, date.Day);
 				}
 			}
 

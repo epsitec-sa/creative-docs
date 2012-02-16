@@ -405,22 +405,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.OptionsChanged ();
 		}
 
-		public void ClearAll()
+		public void UpdateAfterPériodeChanged()
 		{
-			if (this.topSearchController != null)
-			{
-				this.topSearchController.SearchClear ();
-			}
-
-			if (this.topFilterController != null)
-			{
-				this.topFilterController.SearchClear ();
-			}
-
-			if (this.optionsController != null)
-			{
-				this.optionsController.ClearAction ();
-			}
+			this.MemoryChangedAction ();
+			this.UpdateMemory ();
 		}
 
 		protected void UpdateMemory()

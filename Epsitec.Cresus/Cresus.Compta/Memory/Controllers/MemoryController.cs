@@ -155,6 +155,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		public void Update()
 		{
 			this.UpdateButtons ();
+			this.UpdateSummary ();
 		}
 
 
