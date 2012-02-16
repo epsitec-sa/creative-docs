@@ -43,9 +43,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
-			this.SelectCurrentPériode ();
 
 			new DefaultMemory (this).CreateDefaultMemory ();
+
+			this.SelectCurrentPériode ();
 
 			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
@@ -107,6 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.période = value;
+				this.AdaptSettingsDatas ();
 			}
 		}
 
@@ -477,7 +479,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (autrePériode != null)
 			{
 				this.période = autrePériode;
+				
 				this.CreateController ();
+				this.AdaptSettingsDatas ();
 			}
 		}
 
@@ -489,7 +493,74 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.période == null)
 			{
 				this.période = this.compta.Périodes.First ();
+
+				this.UpdatePériodeCommands ();
+				this.AdaptSettingsDatas ();
 			}
+		}
+
+		private void AdaptSettingsDatas()
+		{
+			foreach (var data in this.settingsDatas.Values)
+			{
+				if (data is SearchData)
+				{
+					MainWindowController.AdaptSearchData (this.période, data as SearchData);
+				}
+
+				if (data is MemoryList)
+				{
+					var memoryList = data as MemoryList;
+					foreach (var memoryData in memoryList.List)
+					{
+						MainWindowController.AdaptSearchData (this.période, memoryData.Search);
+						MainWindowController.AdaptSearchData (this.période, memoryData.Filter);
+					}
+				}
+			}
+		}
+
+		private static void AdaptSearchData(ComptaPériodeEntity période, SearchData data)
+		{
+			foreach (var tab in data.TabsData)
+			{
+				if (tab.Column == ColumnType.Date)
+				{
+					Date? dateDébut = Converters.ParseDate (tab.SearchText.FromText);
+					if (dateDébut.HasValue)
+					{
+						tab.SearchText.FromText = Converters.DateToString (MainWindowController.AdaptDate (période, dateDébut.Value));
+					}
+
+					Date? dateFin = Converters.ParseDate (tab.SearchText.ToText);
+					if (dateFin.HasValue)
+					{
+						tab.SearchText.ToText = Converters.DateToString (MainWindowController.AdaptDate (période, dateFin.Value));
+					}
+				}
+			}
+		}
+
+		private static Date AdaptDate(ComptaPériodeEntity période, Date date)
+		{
+			if (date < période.DateDébut ||
+				date > période.DateFin   )  // date hors de la période ?
+			{
+				if (période.DateDébut.Year  == période.DateFin.Year &&
+					période.DateDébut.Day   == 1  &&
+					période.DateDébut.Month == 1  &&
+					période.DateFin.Day     == 31 &&
+					période.DateFin.Month   == 12)  // pile une année entière ?
+				{
+					date = new Date (période.DateDébut.Year, date.Month, date.Day);
+				}
+				else
+				{
+					// TODO: Il faudra faire mieux, dans le cas où la période ne connespond pas pile à une année !
+				}
+			}
+
+			return date;
 		}
 
 
@@ -568,6 +639,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.controller.ClearHilite ();
 				this.CreateController ();
+				this.AdaptSettingsDatas ();
 
 				if (!string.IsNullOrEmpty (err))
 				{

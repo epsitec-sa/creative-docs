@@ -78,6 +78,11 @@ namespace Epsitec.Cresus.Compta.IO
 				this.SearchAdaptDate (memory.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 			}
 
+			{
+				var memory = this.CreateMemoryData<JournalOptions> (list, "Rechercher...", searchExist, filterExist, optionsExist);
+				memory.ShowSearch = ShowPanelMode.ShowBeginner;
+			}
+
 			this.Select<JournalOptions> (list, nomPrésentation);
 		}
 

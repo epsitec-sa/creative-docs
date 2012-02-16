@@ -901,8 +901,10 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					summary = memory.ShowPanelModeSummary;
 					if (!summary.IsNullOrEmpty)
 					{
-						builder.Append ("____________________<br/>Action spéciale: ");
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Info"));
+						builder.Append ("  ");
 						builder.Append (summary);
+						builder.Append ("<br/>");
 					}
 				}
 
