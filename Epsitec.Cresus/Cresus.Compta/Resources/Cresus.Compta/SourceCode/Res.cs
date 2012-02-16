@@ -742,6 +742,8 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVKH4
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 145);
+				//	designer:cap/OVK35
+				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 163);
 				//	designer:cap/OVKG4
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 144);
 			}

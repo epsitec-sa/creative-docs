@@ -407,6 +407,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void UpdateAfterPériodeChanged()
 		{
+			//	Un changement de période ajuste les dates contenues dans les recherches et les filtres.
+			//	Il faut donc actualiser ces éléments, après un changement de période.
 			this.MemoryChangedAction ();
 			this.UpdateMemory ();
 		}

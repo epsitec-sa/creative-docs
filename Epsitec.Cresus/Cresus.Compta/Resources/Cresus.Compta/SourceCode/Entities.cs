@@ -799,6 +799,28 @@ namespace Epsitec.Cresus.Compta.Entities
 	public partial class ComptaJournalEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
+		///	The <c>Id</c> field.
+		///	designer:fld/OVK23/OVK35
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK35]")]
+		public int Id
+		{
+			get
+			{
+				return this.GetField<int> ("[OVK35]");
+			}
+			set
+			{
+				int oldValue = this.Id;
+				if (oldValue != value || !this.IsFieldDefined("[OVK35]"))
+				{
+					this.OnIdChanging (oldValue, value);
+					this.SetField<int> ("[OVK35]", oldValue, value);
+					this.OnIdChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Nom</c> field.
 		///	designer:fld/OVK23/OVKG4
 		///	</summary>
@@ -843,6 +865,8 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		
+		partial void OnIdChanging(int oldValue, int newValue);
+		partial void OnIdChanged(int oldValue, int newValue);
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
