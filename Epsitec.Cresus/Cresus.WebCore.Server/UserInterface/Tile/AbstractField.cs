@@ -37,6 +37,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
+		public bool IsReadOnly
+		{
+			get;
+			set;
+		}
+
+
 		public override IEnumerable<Dictionary<string, object>> ToDictionary()
 		{
 			yield return this.GetFieldDictionary ();
@@ -62,6 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			
 			fieldDictionary["fieldLabel"] = this.Title;
 			fieldDictionary["name"] = this.FieldName;
+			fieldDictionary["readOnly"] = this.IsReadOnly;
 
 			return fieldDictionary;
 		}

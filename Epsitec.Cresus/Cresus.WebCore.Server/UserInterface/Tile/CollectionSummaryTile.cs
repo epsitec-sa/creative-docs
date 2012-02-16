@@ -23,14 +23,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string HideRemoveButton
+		public bool HideRemoveButton
 		{
 			get;
 			set;
 		}
 
 
-		public string HideAddButton
+		public bool HideAddButton
 		{
 			get;
 			set;

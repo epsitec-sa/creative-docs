@@ -7,10 +7,10 @@ using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
 
+using System.Collections.Generic;
+
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.Core.Business;
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
@@ -64,35 +64,36 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 			var fieldName = EntityInfo.GetFieldCaption (this.Lambda).Id.ToString ().Trim ('[', ']');
 			var lambdaFieldName = Tools.GetLambdaFieldName (fieldName);
+			var isReadOnly = this.IsReadOnly;
 
 			var title = this.Title.ToString ();
 
 			if (panelFieldAccessor.IsEntityType)
 			{
-				return this.GetEntityField (entityIdGetter, entitiesGetter, fieldTarget, fieldType, panelFieldAccessorId, fieldName, lambdaFieldName, title);
+				return this.GetEntityField (entityIdGetter, entitiesGetter, fieldTarget, fieldType, panelFieldAccessorId, fieldName, lambdaFieldName, title, isReadOnly);
 			}
 			else if (this.IsTypeSuitableForTextField (fieldType))
 			{
-				return this.GetTextField (entity, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title);
+				return this.GetTextField (entity, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title, isReadOnly);
 			}
 			else if (this.IsTypeSuitableForDateField (fieldType))
 			{
-				return this.GetDateField (entity, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title);
+				return this.GetDateField (entity, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title, isReadOnly);
 			}
 			else if (panelFieldAccessor.IsCollectionType)
 			{
-				return this.GetCollectionField (entity, entitiesGetter, entityIdGetter, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title);
+				return this.GetCollectionField (entity, entitiesGetter, entityIdGetter, panelFieldAccessor, panelFieldAccessorId, fieldName, lambdaFieldName, title, isReadOnly);
 			}
 			else if (this.IsTypeSuitableForEnumField (fieldType))
 			{
-				return this.GetEnumField (fieldTarget, fieldType, panelFieldAccessorId, fieldName, lambdaFieldName, title);
+				return this.GetEnumField (fieldTarget, fieldType, panelFieldAccessorId, fieldName, lambdaFieldName, title, isReadOnly);
 			}
 
 			throw new NotImplementedException ("Field type is not supported.");
 		}
 
 
-		private AbstractField GetEntityField(Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, object fieldTarget, Type fieldType, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title)
+		private AbstractField GetEntityField(Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, object fieldTarget, Type fieldType, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title, bool isReadOnly)
 		{
 			var entityField = new EntityField ()
 			{
@@ -100,8 +101,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				LambdaFieldName = lambdaFieldName,
 				PanelFieldAccessorId = panelFieldAccessorId,
 				Title = title,
+				IsReadOnly = isReadOnly,
 				Value = entityIdGetter ((AbstractEntity) fieldTarget),
-
 			};
 
 			var possibleValues = entitiesGetter (fieldType)
@@ -128,7 +129,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private TextField GetTextField(AbstractEntity entity, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title)
+		private TextField GetTextField(AbstractEntity entity, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title, bool isReadOnly)
 		{
 			return new TextField ()
 			{
@@ -136,6 +137,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				LambdaFieldName = lambdaFieldName,
 				PanelFieldAccessorId = panelFieldAccessorId,
 				Title = title,
+				IsReadOnly = isReadOnly,
 				Value = panelFieldAccessor.GetStringValue (entity),
 			};
 		}
@@ -148,7 +150,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private DateField GetDateField(AbstractEntity entity, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title)
+		private DateField GetDateField(AbstractEntity entity, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title, bool isReadOnly)
 		{
 			return new DateField ()
 			{
@@ -156,12 +158,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				LambdaFieldName = lambdaFieldName,
 				PanelFieldAccessorId = panelFieldAccessorId,
 				Title = title,
+				IsReadOnly = isReadOnly,
 				Value = panelFieldAccessor.GetStringValue (entity),
 			};
 		}
 
 
-		private AbstractField GetCollectionField(AbstractEntity entity, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<AbstractEntity, string> entityIdGetter, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title)
+		private AbstractField GetCollectionField(AbstractEntity entity, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<AbstractEntity, string> entityIdGetter, PanelFieldAccessor panelFieldAccessor, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title, bool isReadOnly)
 		{
 			var collectionField = new CollectionField ()
 			{
@@ -169,6 +172,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				LambdaFieldName = lambdaFieldName,
 				PanelFieldAccessorId = panelFieldAccessorId,
 				Title = title,
+				IsReadOnly = isReadOnly,
 			};
 
 			var possibleValues = entitiesGetter (panelFieldAccessor.CollectionItemType);
@@ -196,7 +200,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private AbstractField GetEnumField(object fieldTarget, Type fieldType, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title)
+		private AbstractField GetEnumField(object fieldTarget, Type fieldType, string panelFieldAccessorId, string fieldName, string lambdaFieldName, string title, bool isReadOnly)
 		{
 			return new EnumField ()
 			{
@@ -204,6 +208,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				LambdaFieldName = lambdaFieldName,
 				PanelFieldAccessorId = panelFieldAccessorId,
 				Title = title,
+				IsReadOnly = isReadOnly,
 				Value = fieldTarget.ToString (),
 				TypeName = fieldType.AssemblyQualifiedName,
 			};

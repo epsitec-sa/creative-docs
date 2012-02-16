@@ -57,9 +57,6 @@ namespace Epsitec.Cresus.Bricks
 
 		public TSelf ReadOnly()
 		{
-			// TODO ReadOnly are not implemented in WebBridge and thus do not work at all with the
-			// WebCore project.
-
 			this.AddProperty (new BrickProperty (BrickPropertyKey.ReadOnly));
 			return this as TSelf;
 		}

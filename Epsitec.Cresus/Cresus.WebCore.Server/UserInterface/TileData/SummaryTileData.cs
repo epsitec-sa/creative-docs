@@ -1,7 +1,5 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
@@ -134,8 +132,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				Title = this.TitleGetter (entity).ToString (),
 				EntityType = typeGetter (this.Template.EntityType),
 				LambdaId = lambdaIdGetter (this.Template.Lambda),
-				HideAddButton = InvariantConverter.ToString (this.HideAddButton),
-				HideRemoveButton = InvariantConverter.ToString (this.HideRemoveButton),
+				HideAddButton = this.HideAddButton,
+				HideRemoveButton = this.HideRemoveButton,
 			};
 		}
 

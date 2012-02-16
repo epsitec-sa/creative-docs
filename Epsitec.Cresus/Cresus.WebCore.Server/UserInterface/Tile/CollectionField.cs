@@ -24,10 +24,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		{
 			var fieldDictionary = base.GetFieldDictionary ();
 
+			// Here we don't set the readOnly property on the field directly but in the individual
+			// checkboxes.
+			fieldDictionary.Remove ("readOnly");
+
 			fieldDictionary["xtype"]  = "epsitec.checkboxes";
 			fieldDictionary["defaultType"] = "checkboxfield";
 			fieldDictionary["labelAlign"] = "left";
-			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary ()).ToList ();
+			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary (this.IsReadOnly)).ToList ();
 
 			return fieldDictionary;
 		}
