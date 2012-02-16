@@ -37,6 +37,10 @@
     <AssemblyOriginatorKeyFile>Properties\Epsitec.Aider.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="LumenWorks.Framework.IO, Version=3.8.0.0, Culture=neutral, PublicKeyToken=5ad3ea2f85776344, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\External\CsvReader\LumenWorks.Framework.IO.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -59,6 +63,12 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
+    <Compile Include="Data\Eerv\EervActivity.cs" />
+    <Compile Include="Data\Eerv\EervDataLoader.cs" />
+    <Compile Include="Data\Eerv\EervGroupDefinition.cs" />
+    <Compile Include="Data\Eerv\EervGroup.cs" />
+    <Compile Include="Data\Eerv\EervHousehold.cs" />
+    <Compile Include="Data\Eerv\EervPerson.cs" />
     <Compile Include="Data\Ech\EChAddressFixesRepository.cs" />
     <Compile Include="Data\ParishAddresses.cs" />
     <Compile Include="Data\ParishAddressInformation.cs" />
