@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static bool IsFieldDataReadOnly(BrickPropertyCollection brickProperties)
 		{
-			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, 1).HasValue;
+			return brickProperties.PeekAfter (BrickPropertyKey.ReadOnly, -1).HasValue;
 		}
 
 
