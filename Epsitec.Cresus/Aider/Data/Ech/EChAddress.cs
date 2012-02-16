@@ -10,7 +10,17 @@
 
 		public EChAddress(string addressLine1, string street, string houseNumber, string town, string swissZipCode, string swissZipCodeAddOn, string swissZipCodeId, string countryCode)
 		{
-			EChAddressFixesRepository.Current.Fix (ref swissZipCode, ref street);
+#if false
+			if ((string.IsNullOrEmpty (addressLine1) == false) &&
+				(addressLine1.StartsWith ("c/o") == false) &&
+				(street == town))
+			{
+				street = addressLine1;
+				addressLine1 = "";
+			}
+#endif
+
+			EChAddressFixesRepository.Current.ApplyFix (ref swissZipCode, ref street, addressLine1);
 
 			this.AddressLine1 = addressLine1;
 			this.Street = street;

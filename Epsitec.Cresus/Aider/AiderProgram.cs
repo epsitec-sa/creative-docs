@@ -17,7 +17,7 @@ namespace Epsitec.Aider
 	{
 		public static void Main(string[] args)
 		{
-#if false
+#if true
 			var streets = SwissPostStreetRepository.Current;
 
 			var repo = ParishAddressRepository.Current;
@@ -48,7 +48,8 @@ namespace Epsitec.Aider
 
 				if (name == null)
 				{
-					var rootName1 = person.Address.Street.Split (new char[] { ' ', '\'' }).LastOrDefault ();
+					var nameOnly  = person.Address.Street.Split (',')[0];
+					var rootName1 = nameOnly.Split (new char[] { ' ', '\'' }).LastOrDefault ();
 
 					var tokens = rootName1.Split ('-');
 
@@ -57,7 +58,7 @@ namespace Epsitec.Aider
 					var rootName4 = string.Join ("-", tokens.Reverse ().Take (2).Reverse ());
 					var rootName5 = string.Join ("-", tokens.Reverse ().Take (3).Reverse ());
 					var rootName6 = rootName1.Replace ("Saint", "St");
-					var rootName7 = string.Join (" ", person.Address.Street.Split (new char[] { ' ', '\'' }).Reverse ().Take (2).Reverse ());
+					var rootName7 = string.Join (" ", nameOnly.Split (new char[] { ' ', '\'' }).Reverse ().Take (2).Reverse ());
 
 					int zip = int.Parse (person.Address.SwissZipCode);
 					
@@ -77,6 +78,10 @@ namespace Epsitec.Aider
 					else
 					{
 						name = repo.FindParishName (key, streetFound.NormalizedStreetName, houseNumber);
+
+						if (name != null)
+						{
+						}
 					}
 
 					if (name == null)
@@ -91,6 +96,7 @@ namespace Epsitec.Aider
 
 			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved.OrderBy (x => x), System.Text.Encoding.Default);
 			System.IO.File.WriteAllLines ("unresolved addresses (compact).txt", unresolvedCompact.OrderBy (x => x), System.Text.Encoding.Default);
+			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);
 			
 			return;
 #endif

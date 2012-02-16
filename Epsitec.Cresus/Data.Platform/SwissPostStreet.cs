@@ -11,11 +11,11 @@ namespace Epsitec.Data.Platform
 {
 	public static class SwissPostStreet
 	{
-		public static string NormalizeStreetName(string name)
+		public static IEnumerable<string> TokenizeStreetName(string name)
 		{
 			if (string.IsNullOrEmpty (name))
 			{
-				return "";
+				return EmptyEnumerable<string>.Instance;
 			}
 
 			name = TextConverter.ConvertToUpperAndStripAccents (name);
@@ -29,36 +29,16 @@ namespace Epsitec.Data.Platform
 
 				name = prefix + " " + root;
 			}
-			
+
 			var meaningfulTokens = name.Split (SwissPostStreet.tokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
 			var normalizedTokens = meaningfulTokens.Select (x => SwissPostStreet.NormalizeToken (x));
 
-			name = string.Join (" ", normalizedTokens);
+			return normalizedTokens;
+		}
 
-			int len = name.Length;
-			bool skipSpace = true;
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder (len);
-
-			for (int i = 0; i < len; i++)
-			{
-				char c = name[i];
-
-				if ((c == ' ') || (c == '-'))
-				{
-					if (skipSpace == false)
-					{
-						skipSpace = true;
-						buffer.Append (' ');
-					}
-				}
-				else
-				{
-					buffer.Append (c);
-					skipSpace = false;
-				}
-			}
-
-			return buffer.ToString ();
+		public static string NormalizeStreetName(string name)
+		{
+			return string.Join (" ", SwissPostStreet.TokenizeStreetName (name));
 		}
 
 		public static int NormalizeHouseNumber(string number)
@@ -141,11 +121,29 @@ namespace Epsitec.Data.Platform
 			{"PL.", "PLACE"},
 			{"PROM.", "PROMENADE"},
 			{"QUART.", "QUARTIER"},
+			{"ST", "SAINT"},
+			{"STE", "SAINTE"},
+		};
+
+		public static readonly HashSet<string> heuristicTokens = new HashSet<string> ()
+		{
+			"AVENUE",
+			"BATTERIE",
+			"CHEMIN",
+			"PARC",
+			"PLACE",
+			"PROMENADE",
+			"QUAI",
+			"QUARTIER",
+			"ROUTE",
+			"RUE",
+			"SQUARE",
+			"ZONE",
 		};
 
 		private static readonly HashSet<string> normalizationNoise = new HashSet<string> ()
 		{
-			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES"
+			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES", "EN", "AU"
 		};
 	}
 }
