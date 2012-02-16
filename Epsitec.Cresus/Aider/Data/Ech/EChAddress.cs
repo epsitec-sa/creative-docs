@@ -10,6 +10,8 @@
 
 		public EChAddress(string addressLine1, string street, string houseNumber, string town, string swissZipCode, string swissZipCodeAddOn, string swissZipCodeId, string countryCode)
 		{
+			EChAddressFixesRepository.Current.Fix (ref swissZipCode, ref street);
+
 			this.AddressLine1 = addressLine1;
 			this.Street = street;
 			this.HouseNumber = houseNumber;

@@ -11,34 +11,29 @@ namespace Epsitec.Data.Platform
 {
 	public static class SwissPostStreet
 	{
-		public static SwissPostStreetRepository CreateRepository()
-		{
-			return new SwissPostStreetRepository (SwissPostStreet.GetStreets ());
-		}
-
 		public static string NormalizeStreetName(string name)
 		{
+			if (string.IsNullOrEmpty (name))
+			{
+				return "";
+			}
+
 			name = TextConverter.ConvertToUpperAndStripAccents (name);
 
 			int pos = name.IndexOf (',');
 
-			if (pos < 0)
-			{
-				var meaningfulTokens = name.Split (SwissPostStreet.tokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
-				var normalizedTokens = meaningfulTokens.Select (x => SwissPostStreet.NormalizeToken (x));
-
-				name = string.Join (" ", normalizedTokens);
-			}
-			else
+			if (pos >= 0)
 			{
 				string root   = name.Substring (0, pos);
 				string prefix = name.Substring (pos+1);
 
-				var meaningfulTokens = prefix.Split (SwissPostStreet.tokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
-				var normalizedTokens = meaningfulTokens.Select (x => SwissPostStreet.NormalizeToken (x));
-
-				name = string.Join (" ", normalizedTokens) + " " + root;
+				name = prefix + " " + root;
 			}
+			
+			var meaningfulTokens = name.Split (SwissPostStreet.tokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
+			var normalizedTokens = meaningfulTokens.Select (x => SwissPostStreet.NormalizeToken (x));
+
+			name = string.Join (" ", normalizedTokens);
 
 			int len = name.Length;
 			bool skipSpace = true;
@@ -92,7 +87,7 @@ namespace Epsitec.Data.Platform
 			return numeric;
 		}
 
-		private static IEnumerable<SwissPostStreetInformation> GetStreets()
+		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
 		{
 			foreach (var line in SwissPostStreet.GetStreetFile ())
 			{
@@ -136,7 +131,7 @@ namespace Epsitec.Data.Platform
 		}
 
 		internal static readonly char[] nameSeparators  = new char[] { ' ', '-', '.', '\'' };
-		internal static readonly char[] tokenSeparators = new char[] { ' ', '-' };
+		internal static readonly char[] tokenSeparators = new char[] { ' ', '-', '\'' };
 
 		private static readonly Dictionary<string,string> normalizationTuples = new Dictionary<string, string> ()
 		{
@@ -150,7 +145,7 @@ namespace Epsitec.Data.Platform
 
 		private static readonly HashSet<string> normalizationNoise = new HashSet<string> ()
 		{
-			"DE", "DU", "D'", "DES", "LE", "LA", "L'", "LES"
+			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES"
 		};
 	}
 }

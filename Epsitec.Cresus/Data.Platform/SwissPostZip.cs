@@ -9,11 +9,6 @@ namespace Epsitec.Data.Platform
 {
 	public static class SwissPostZip
 	{
-		public static SwissPostZipRepository CreateRepository()
-		{
-			return new SwissPostZipRepository (SwissPostZip.GetZips ());
-		}
-
 		public static IEnumerable<SwissPostZipInformation> GetZips()
 		{
 			foreach (var line in SwissPostZip.GetZipPlusFile ())

@@ -59,6 +59,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
+    <Compile Include="Data\Ech\EChAddressFixesRepository.cs" />
     <Compile Include="Data\ParishAddresses.cs" />
     <Compile Include="Data\ParishAddressInformation.cs" />
     <Compile Include="Data\ParishAddressRepository.cs" />
@@ -194,6 +195,7 @@
     <EmbeddedResource Include="Images\Data.AiderComment.icon" />
     <EmbeddedResource Include="Images\Data.AiderWarning.icon" />
     <EmbeddedResource Include="DataFiles\ParishAddresses.zip" />
+    <EmbeddedResource Include="DataFiles\eCH-StreetFixes.zip" />
     <None Include="Properties\Epsitec.Aider.snk" />
     <Content Include="Resources\Aider\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

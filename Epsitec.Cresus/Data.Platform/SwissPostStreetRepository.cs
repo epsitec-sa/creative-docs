@@ -2,16 +2,19 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections;
+using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
 
 namespace Epsitec.Data.Platform
 {
-	public class SwissPostStreetRepository
+	public sealed class SwissPostStreetRepository
 	{
-		public SwissPostStreetRepository(IEnumerable<SwissPostStreetInformation> streets)
+		private SwissPostStreetRepository()
 		{
+			IEnumerable<SwissPostStreetInformation> streets = SwissPostStreet.GetStreets ();
+
 			this.streetByZip = new Dictionary<string, List<SwissPostStreetInformation>> ();
 
 			foreach (var street in streets)
@@ -27,6 +30,10 @@ namespace Epsitec.Data.Platform
 				list.Add (street);
 			}
 		}
+
+
+		public static readonly SwissPostStreetRepository Current = new SwissPostStreetRepository ();
+
 
 		public IEnumerable<SwissPostStreetInformation> FindStreets(int zipCode)
 		{
@@ -50,7 +57,9 @@ namespace Epsitec.Data.Platform
 
 			if (this.streetByZip.TryGetValue (key, out list))
 			{
-				return list.Where (x => x.StreetNameRoot == rootName);
+				var upperRootName = TextConverter.ConvertToUpperAndStripAccents (rootName);
+
+				return list.Where (x => x.StreetNameShort == rootName || x.StreetNameRoot == upperRootName);
 			}
 			else
 			{

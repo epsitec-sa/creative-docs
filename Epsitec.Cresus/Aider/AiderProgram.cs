@@ -1,32 +1,34 @@
-﻿
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Aider.Data;
+using Epsitec.Aider.Data.Ech;
 
 using Epsitec.Cresus.Core;
-using Epsitec.Aider.Data;
 using Epsitec.Data.Platform;
-using Epsitec.Aider.Data.Ech;
+
 using System.Collections.Generic;
-
-
-
-
+using System.Linq;
 
 
 namespace Epsitec.Aider
 {
-
-
 	public static class AiderProgram
 	{
-
 		public static void Main(string[] args)
 		{
-			var repo = new ParishAddressRepository ();
+#if false
+			var streets = SwissPostStreetRepository.Current;
+
+			var repo = ParishAddressRepository.Current;
 			var name = repo.FindParishName ("1400 Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
 						
 			var inputFile = new System.IO.FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 			var persons = EChDataLoader.Load (inputFile);
 
 			var unresolved = new List<string> ();
+			var unresolvedCompact = new HashSet<string> ();
+			var fixStreets = new HashSet<string> ();
 
 			foreach (var person in persons)
 			{
@@ -34,19 +36,64 @@ namespace Epsitec.Aider
 				int houseNumber = SwissPostStreet.NormalizeHouseNumber (person.Address.HouseNumber);
 
 				var key = person.Address.SwissZipCode + " " + person.Address.Town;
-				
-				name = repo.FindParishName (key, SwissPostStreet.NormalizeStreetName (streetName), houseNumber);
+
+				string normalizedStreetName = SwissPostStreet.NormalizeStreetName (streetName);
+
+				if (normalizedStreetName.Length == 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Error: no street for {0} {1}, {2}", person.Adult1.FirstNames, person.Adult1.OfficialName, key));
+				}
+
+				name = repo.FindParishName (key, normalizedStreetName, houseNumber);
 
 				if (name == null)
 				{
-					unresolved.Add (string.Format ("{0}\t{1}\t{2}\t{3}", person.Address.SwissZipCode, person.Address.Town, person.Address.Street, person.Address.HouseNumber));
+					var rootName1 = person.Address.Street.Split (new char[] { ' ', '\'' }).LastOrDefault ();
+
+					var tokens = rootName1.Split ('-');
+
+					var rootName2 = tokens.Last ();
+					var rootName3 = tokens.First ();
+					var rootName4 = string.Join ("-", tokens.Reverse ().Take (2).Reverse ());
+					var rootName5 = string.Join ("-", tokens.Reverse ().Take (3).Reverse ());
+					var rootName6 = rootName1.Replace ("Saint", "St");
+					var rootName7 = string.Join (" ", person.Address.Street.Split (new char[] { ' ', '\'' }).Reverse ().Take (2).Reverse ());
+
+					int zip = int.Parse (person.Address.SwissZipCode);
+					
+					var streetFound = streets.FindStreets (zip, rootName1).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName2).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName3).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName4).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName5).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName6).FirstOrDefault ()
+								   ?? streets.FindStreets (zip, rootName7).FirstOrDefault ();
+
+					if (streetFound == null)
+					{
+						System.Diagnostics.Debug.WriteLine ("Unknown street: {0} {1}", person.Address.SwissZipCode, rootName1);
+						fixStreets.Add (person.Address.SwissZipCode + "\t" + person.Address.Street);
+					}
+					else
+					{
+						name = repo.FindParishName (key, streetFound.NormalizedStreetName, houseNumber);
+					}
+
+					if (name == null)
+					{
+						unresolved.Add (string.Format ("{0}\t{1}\t{2}\t{3}\t{4}", person.Address.SwissZipCode, person.Address.Town, person.Address.Street, person.Address.HouseNumber, person.Adult1.OfficialName.ToUpper () + " " + person.Adult1.FirstNames));
+						unresolvedCompact.Add (string.Format ("{0}\t{1}\t{2}", person.Address.SwissZipCode, person.Address.Town, person.Address.Street));
+					}
 				}
 			}
 
 			int count = unresolved.Count;
 
-			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved, System.Text.Encoding.Default);
-
+			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved.OrderBy (x => x), System.Text.Encoding.Default);
+			System.IO.File.WriteAllLines ("unresolved addresses (compact).txt", unresolvedCompact.OrderBy (x => x), System.Text.Encoding.Default);
+			
+			return;
+#endif
 #if false
 			new eCH_Importer ().ParseAll ();
 #endif
@@ -87,8 +134,5 @@ namespace Epsitec.Aider
 			CoreProgram.Main (args);
 #endif
 		}
-
-
 	}
-
 }

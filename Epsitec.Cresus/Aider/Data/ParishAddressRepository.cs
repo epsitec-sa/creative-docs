@@ -8,7 +8,7 @@ namespace Epsitec.Aider.Data
 {
 	public sealed class ParishAddressRepository
 	{
-		public ParishAddressRepository()
+		private ParishAddressRepository()
 		{
 			this.addresses = new Dictionary<string, ParishAddresses> ();
 
@@ -22,6 +22,9 @@ namespace Epsitec.Aider.Data
 				}
 			}
 		}
+
+		
+		public static readonly ParishAddressRepository Current = new ParishAddressRepository ();
 
 
 		public ParishAddresses FindAddresses(int zipCode, string townName)
@@ -45,7 +48,14 @@ namespace Epsitec.Aider.Data
 
 		public string FindParishName(string key, string normalizedStreetName, int streetNumber)
 		{
-			var addresses = this.FindAddresses (key);
+			var addresses = this.FindAddresses (key)
+				         ?? this.FindAddresses (string.Join (" ", key.Split (' ').Take (2).ToArray ()));
+
+			if (addresses == null)
+			{
+				System.Diagnostics.Debug.WriteLine (string.Format ("Cannot find addresses for {0}", key));
+				return null;
+			}
 			
 			var parish = addresses.FindSpecific (normalizedStreetName, streetNumber)
 					  ?? addresses.FindDefault (normalizedStreetName)

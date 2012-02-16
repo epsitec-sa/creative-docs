@@ -8,10 +8,12 @@ using System.Linq;
 
 namespace Epsitec.Data.Platform
 {
-	public class SwissPostZipRepository
+	public sealed class SwissPostZipRepository
 	{
-		public SwissPostZipRepository(IEnumerable<SwissPostZipInformation> zips)
+		private SwissPostZipRepository()
 		{
+			IEnumerable<SwissPostZipInformation> zips = SwissPostZip.GetZips ();
+
 			this.nameByZip = new Dictionary<string, List<SwissPostZipInformation>> ();
 
 			foreach (var zip in zips)
@@ -27,6 +29,10 @@ namespace Epsitec.Data.Platform
 				list.Add (zip);
 			}
 		}
+
+
+		public static readonly SwissPostZipRepository Current = new SwissPostZipRepository ();
+
 
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode)
 		{
