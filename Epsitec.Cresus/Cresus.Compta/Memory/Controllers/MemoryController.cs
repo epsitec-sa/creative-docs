@@ -800,7 +800,12 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					this.extendedSearchSummary .FormattedText = memory.GetSearchSummary  (this.controller.ColumnMappers);
 					this.extendedFilterSummary .FormattedText = memory.GetFilterSummary  (this.controller.ColumnMappers);
 					this.extendedOptionsSummary.FormattedText = memory.GetOptionsSummary (this.controller.ColumnMappers);
-					this.extendedShowPanelMode .FormattedText = memory.ShowPanelModeSummary;
+
+					this.extendedShowPanelMode.FormattedText = memory.ShowPanelModeSummary;
+					if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
+					{
+						this.extendedShowPanelMode.FormattedText = "Aucune";
+					}
 
 					if (this.extendedSearchSummary.FormattedText.IsNullOrEmpty)
 					{
@@ -823,6 +828,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 					this.extendedAttributePermanent.ActiveState = memory.Permanent ? ActiveState.Yes : ActiveState.No;
 					this.extendedAttributeReadonly .ActiveState = memory.Readonly  ? ActiveState.Yes : ActiveState.No;
+
+					var tooltipSummary = this.TooltipSummary;
+					ToolTip.Default.SetToolTip (this.comptactFrame, tooltipSummary);
 				}
 
 				this.extendedSearchSummary .Enable = (memory != null && !this.IsReadonly);
@@ -844,6 +852,68 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 				this.extendedAttributePermanent.Visibility = (memory != null);
 				this.extendedAttributeReadonly .Visibility = (memory != null);
+			}
+		}
+
+		private FormattedText TooltipSummary
+		{
+			get
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				var memory = this.memoryList.Selected;
+
+				if (memory == null)
+				{
+					builder.Append ("Aucun");
+				}
+				else
+				{
+					FormattedText summary;
+
+					summary = memory.GetSearchSummary (this.controller.ColumnMappers);
+					if (!summary.IsNullOrEmpty)
+					{
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Search"));
+						builder.Append ("  ");
+						builder.Append (summary);
+						builder.Append ("<br/>");
+					}
+
+					summary = memory.GetFilterSummary (this.controller.ColumnMappers);
+					if (!summary.IsNullOrEmpty)
+					{
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Filter"));
+						builder.Append ("  ");
+						builder.Append (summary);
+						builder.Append ("<br/>");
+					}
+
+					summary = memory.GetOptionsSummary (this.controller.ColumnMappers);
+					if (!summary.IsNullOrEmpty)
+					{
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Options"));
+						builder.Append ("  ");
+						builder.Append (summary);
+						builder.Append ("<br/>");
+					}
+
+					summary = memory.ShowPanelModeSummary;
+					if (!summary.IsNullOrEmpty)
+					{
+						builder.Append ("____________________<br/>Action spéciale: ");
+						builder.Append (summary);
+					}
+				}
+
+				var text = builder.ToString ();
+
+				if (text.EndsWith ("<br/>"))
+				{
+					text = text.Substring (0, text.Length-5);  // enlève le <br/> à la fin
+				}
+
+				return text;
 			}
 		}
 

@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 					(this.ShowFilter  == ShowPanelMode.Nop || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
 					(this.ShowOptions == ShowPanelMode.Nop || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
-					return "Aucune";
+					return FormattedText.Empty;
 				}
 				else if ((this.ShowSearch  == ShowPanelMode.Hide || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowFilter  == ShowPanelMode.Hide || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
