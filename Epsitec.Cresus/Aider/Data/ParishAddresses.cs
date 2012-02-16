@@ -27,11 +27,11 @@ namespace Epsitec.Aider.Data
 			}
 		}
 
-		public ParishAddressInformation FindDefault(string streetName, string streetPrefix)
+		public ParishAddressInformation FindDefault()
 		{
 			foreach (var info in this)
 			{
-				if (info.StreetNumberSubset != null)
+				if (string.IsNullOrEmpty (info.NormalizedStreetName))
 				{
 					return info;
 				}
@@ -40,13 +40,13 @@ namespace Epsitec.Aider.Data
 			return null;
 		}
 
-		public ParishAddressInformation FindSpecific(string streetName, string streetPrefix, int streetNumber)
+		public ParishAddressInformation FindDefault(string normalizedStreetName)
 		{
 			foreach (var info in this)
 			{
-				if (info.StreetNumberSubset != null)
+				if (info.NormalizedStreetName == normalizedStreetName)
 				{
-					if (info.StreetNumberSubset.Contains (streetNumber))
+					if (info.StreetNumberSubset == null)
 					{
 						return info;
 					}
@@ -56,9 +56,29 @@ namespace Epsitec.Aider.Data
 			return null;
 		}
 
+		public ParishAddressInformation FindSpecific(string normalizedStreetName, int streetNumber)
+		{
+			foreach (var info in this)
+			{
+				if (info.NormalizedStreetName == normalizedStreetName)
+				{
+					if (info.StreetNumberSubset != null)
+					{
+						if (info.StreetNumberSubset.Contains (streetNumber))
+						{
+							return info;
+						}
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public void Add(ParishAddressInformation info)
 		{
-			if (this.info == null)
+			if ((this.info == null) &&
+				(this.infos == null))
 			{
 				this.info = info;
 			}

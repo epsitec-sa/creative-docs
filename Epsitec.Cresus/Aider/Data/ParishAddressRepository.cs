@@ -10,36 +10,46 @@ namespace Epsitec.Aider.Data
 	{
 		public ParishAddressRepository()
 		{
-			this.addresses = new Dictionary<int, ParishAddresses> ();
+			this.addresses = new Dictionary<string, ParishAddresses> ();
 
 			foreach (var info in ParishAddressRepository.GetParishInformations ())
 			{
-				ParishAddresses addresses;
+				this.AddParishAddress (ParishAddressRepository.GetKey (info.ZipCode, info.TownNameOfficial), info);
 
-				if (this.addresses.TryGetValue (info.ZipCode, out addresses) == false)
+				if (info.TownNameOfficial != info.TownName)
 				{
-					addresses = new ParishAddresses ();
-					this.addresses[info.ZipCode] = addresses;
+					this.AddParishAddress (ParishAddressRepository.GetKey (info.ZipCode, info.TownName), info);
 				}
-
-				addresses.Add (info);
 			}
 		}
 
-		
-		public ParishAddresses FindAddresses(int zipCode)
+
+		public ParishAddresses FindAddresses(int zipCode, string townName)
+		{
+			return this.FindAddresses (ParishAddressRepository.GetKey (zipCode, townName));
+		}
+
+		public ParishAddresses FindAddresses(string key)
 		{
 			ParishAddresses addresses;
 
-			this.addresses.TryGetValue (zipCode, out addresses);
+			this.addresses.TryGetValue (key, out addresses);
 
 			return addresses;
 		}
 
-		public string FindParishName(int zipCode, string streetName, string streetPrefix, int streetNumber)
+		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int streetNumber)
 		{
-			var addresses = this.FindAddresses (zipCode);
-			var parish    = addresses.FindSpecific (streetName, streetPrefix, streetNumber) ?? addresses.FindDefault (streetName, streetPrefix);
+			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, streetNumber);
+		}
+
+		public string FindParishName(string key, string normalizedStreetName, int streetNumber)
+		{
+			var addresses = this.FindAddresses (key);
+			
+			var parish = addresses.FindSpecific (normalizedStreetName, streetNumber)
+					  ?? addresses.FindDefault (normalizedStreetName)
+					  ?? addresses.FindDefault ();
 
 			if (parish == null)
 			{
@@ -51,7 +61,24 @@ namespace Epsitec.Aider.Data
 			}
 		}
 
-		
+
+		private void AddParishAddress(string key, ParishAddressInformation info)
+		{
+			ParishAddresses addresses;
+			if (this.addresses.TryGetValue (key, out addresses) == false)
+			{
+				addresses = new ParishAddresses ();
+				this.addresses[key] = addresses;
+			}
+
+			addresses.Add (info);
+		}
+
+		private static string GetKey(int zipCode, string townName)
+		{
+			return string.Format ("{0:0000} {1}", zipCode, townName);
+		}
+
 		private static IEnumerable<ParishAddressInformation> GetParishInformations()
 		{
 			return ParishAddressRepository.GetSourceFile ().Select (x => new ParishAddressInformation (x));
@@ -67,6 +94,6 @@ namespace Epsitec.Aider.Data
 		}
 
 		
-		private readonly Dictionary<int, ParishAddresses>	addresses;
+		private readonly Dictionary<string, ParishAddresses>	addresses;
 	}
 }

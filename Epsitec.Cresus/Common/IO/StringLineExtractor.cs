@@ -25,11 +25,11 @@ namespace Epsitec.Common.IO
 					int trim;
 					if (buffer[end-1] == '\r')
 					{
-						trim = 2;
+						trim = 1;
 					}
 					else
 					{
-						trim = 1;
+						trim = 0;
 					}
 
 					string line = buffer.Substring (pos, end-pos-trim);

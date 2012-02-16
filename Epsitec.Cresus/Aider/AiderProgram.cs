@@ -1,6 +1,10 @@
 ﻿
 
 using Epsitec.Cresus.Core;
+using Epsitec.Aider.Data;
+using Epsitec.Data.Platform;
+using Epsitec.Aider.Data.Ech;
+using System.Collections.Generic;
 
 
 
@@ -16,6 +20,32 @@ namespace Epsitec.Aider
 
 		public static void Main(string[] args)
 		{
+			var repo = new ParishAddressRepository ();
+			var name = repo.FindParishName ("1400 Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
+						
+			var inputFile = new System.IO.FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
+			var persons = EChDataLoader.Load (inputFile);
+
+			var unresolved = new List<string> ();
+
+			foreach (var person in persons)
+			{
+				var streetName  = person.Address.Street;
+				int houseNumber = SwissPostStreet.NormalizeHouseNumber (person.Address.HouseNumber);
+
+				var key = person.Address.SwissZipCode + " " + person.Address.Town;
+				
+				name = repo.FindParishName (key, SwissPostStreet.NormalizeStreetName (streetName), houseNumber);
+
+				if (name == null)
+				{
+					unresolved.Add (string.Format ("{0}\t{1}\t{2}\t{3}", person.Address.SwissZipCode, person.Address.Town, person.Address.Street, person.Address.HouseNumber));
+				}
+			}
+
+			int count = unresolved.Count;
+
+			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved, System.Text.Encoding.Default);
 
 #if false
 			new eCH_Importer ().ParseAll ();

@@ -1,9 +1,10 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types.Converters;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types.Converters;
 
 namespace Epsitec.Data.Platform
 {
@@ -25,7 +26,7 @@ namespace Epsitec.Data.Platform
 			this.StreetCode            = line.Substring (0, 6);
 			this.BasicPostCode         = line.Substring (6, 4);
 			this.LanguageCode          = line.Substring (10, 1);
-			this.StreetNameUppercase   = line.Substring (11, 25).TrimEnd ();
+			//this.StreetNameUppercase   = line.Substring (11, 25).TrimEnd ();
 			this.ZipCode               = line.Substring (36, 4);
 			this.ZipComplement         = line.Substring (40, 2);
 			this.DividerCode           = line.Substring (42, 1);
@@ -38,12 +39,13 @@ namespace Epsitec.Data.Platform
 			this.StreetNameType        = line.Substring (90, 2);
 			this.StreetNamePreposition = line.Substring (92, 2);
 			this.StreetNameShort       = this.StreetName.Split (',').First ();
+			this.NormalizedStreetName  = SwissPostStreet.NormalizeStreetName (this.StreetName);
 		}
 
 		public readonly string					StreetCode;
 		public readonly string					BasicPostCode;
 		public readonly string					LanguageCode;
-		public readonly string					StreetNameUppercase;
+		//public readonly string					StreetNameUppercase;
 		public readonly string					ZipCode;
 		public readonly string					ZipComplement;
 		public readonly string					DividerCode;
@@ -56,6 +58,7 @@ namespace Epsitec.Data.Platform
 		public readonly string					StreetNameRoot;
 		public readonly string					StreetNameType;
 		public readonly string					StreetNamePreposition;
+		public readonly string					NormalizedStreetName;
 
 
 		/// <summary>
@@ -64,6 +67,16 @@ namespace Epsitec.Data.Platform
 		/// <param name="name">The name.</param>
 		/// <returns><c>true</c> if the name matches this instance; otherwise, <c>false</c>.</returns>
 		public bool MatchName(string name)
+		{
+			return this.NormalizedStreetName == SwissPostStreet.NormalizeStreetName (name);
+		}
+
+		/// <summary>
+		/// Check if the root name matches this instance.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <returns><c>true</c> if the root name matches this instance; otherwise, <c>false</c>.</returns>
+		public bool MatchRootName(string name)
 		{
 			if (this.StreetNameShort == name)
 			{
@@ -77,7 +90,7 @@ namespace Epsitec.Data.Platform
 				return true;
 			}
 
-			int pos = rootName.LastIndexOfAny (SwissPostStreetInformation.nameSeparators);
+			int pos = rootName.LastIndexOfAny (SwissPostStreet.nameSeparators);
 
 			if (pos < 0)
 			{
@@ -89,12 +102,10 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+
 		public override string ToString()
 		{
 			return string.Concat (this.ZipCode, " ", this.StreetName, " ", this.HouseNumberFrom, "-", this.HouseNumberTo);
 		}
-
-
-		private static readonly char[] nameSeparators = new char[] { ' ', '-', '.', '\'' };
 	}
 }

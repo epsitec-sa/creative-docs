@@ -3,6 +3,7 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data
 {
@@ -26,6 +27,8 @@ namespace Epsitec.Aider.Data
 			this.StreetName       = cols[4];
 			this.StreetPrefix     = cols[5];
 			this.ParishName       = cols[7];
+
+			this.NormalizedStreetName = SwissPostStreet.NormalizeStreetName (this.StreetName + ", " + this.StreetPrefix);
 
 			if (string.IsNullOrEmpty (cols[6]))
 			{
@@ -57,6 +60,8 @@ namespace Epsitec.Aider.Data
 
 		public readonly string					ParishName;
 
+		public readonly string					NormalizedStreetName;
+
 		public readonly HashSet<int>			StreetNumberSubset;
 
 
@@ -84,9 +89,9 @@ namespace Epsitec.Aider.Data
 			else
 			{
 				int start = int.Parse (args[0], System.Globalization.CultureInfo.InvariantCulture);
-				int stop  = string.IsNullOrEmpty (args[1]) ? (start % 2 + 400) : int.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
+				int stop  = string.IsNullOrEmpty (args[1]) ? ((start & 0x01) + 400) : int.Parse (args[1], System.Globalization.CultureInfo.InvariantCulture);
 
-				if ((start % 2) != (stop % 2))
+				if ((start & 0x01) != (stop & 0x01))
 				{
 					throw new System.ArgumentException ("Even/odd mismatch in range " + range, "range");
 				}
