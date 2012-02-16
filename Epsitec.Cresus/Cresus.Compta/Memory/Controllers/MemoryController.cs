@@ -1054,7 +1054,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				}
 
 				//	Compare avec les données.
-				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null)
+				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null && memory.EnableSearch)
 				{
 					if (!this.dataAccessor.SearchData.CompareTo (memory.Search))
 					{
@@ -1062,7 +1062,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null)
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null && memory.EnableFilter)
 				{
 					if (!this.dataAccessor.FilterData.CompareTo (memory.Filter))
 					{
@@ -1070,7 +1070,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null)
+				if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null && memory.EnableOptions)
 				{
 					if (!this.dataAccessor.Options.CompareTo (memory.Options))
 					{
