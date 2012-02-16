@@ -40,6 +40,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.settingsDatas = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
 			this.defaultSettingsList = new SettingsList ();
+			this.navigatorEngine = new NavigatorEngine ();
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
@@ -80,6 +81,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SelectDefaultPrésentation ();
 			this.CreateController ();
 			this.UpdateTitle ();
+			this.NavigatorFirst ();
 		}
 
 
@@ -177,6 +179,69 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		#region Navigator
+		private void NavigatorFirst()
+		{
+			this.navigatorEngine.Clear ();
+			this.navigatorEngine.Put (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+		}
+
+		private void NavigatorUpdate()
+		{
+			this.navigatorEngine.Update (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+		}
+
+		private void NavigatorPut()
+		{
+			this.navigatorEngine.Put (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			this.UpdateNavigatorCommands ();
+		}
+
+		private void NavigatorPrev()
+		{
+			this.NavigatorUpdate ();
+
+			var cmd = this.navigatorEngine.Back;
+
+			this.ribbonController.PrésentationCommandsUpdate (cmd);
+			this.selectedCommandDocument = cmd;
+			this.CreateController ();
+
+			this.navigatorEngine.Restore (this.controller.DataAccessor);
+
+			this.UpdateNavigatorCommands ();
+		}
+
+		private void NavigatorNext()
+		{
+			this.NavigatorUpdate ();
+
+			var cmd = this.navigatorEngine.Forward;
+
+			this.ribbonController.PrésentationCommandsUpdate (cmd);
+			this.selectedCommandDocument = cmd;
+			this.CreateController ();
+
+			this.navigatorEngine.Restore (this.controller.DataAccessor);
+
+			this.UpdateNavigatorCommands ();
+		}
+
+		private void UpdateNavigatorCommands()
+		{
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Prev);
+				cs.Enable = this.navigatorEngine.PrevEnable;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Next);
+				cs.Enable = this.navigatorEngine.NextEnable;
+			}
+		}
+		#endregion
+
+
 		private void OpenNewWindow(Command command)
 		{
 			//	Ouvre une nouvelle fenêtre contenant une présentation fixe donnée (command).
@@ -223,6 +288,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdatePanelCommands ();
 			this.UpdatePériodeCommands ();
+			this.UpdateNavigatorCommands ();
 		}
 
 		private AbstractController CreateController(Window parentWindow, Command command)
@@ -337,7 +403,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public string GetTitle(Command command)
 		{
-			string text = string.Concat ("Crésus MCH-2 / ", this.compta.Nom, " / ", command.Description);
+			return string.Concat ("Crésus MCH-2 / ", this.compta.Nom, " / ", this.GetShortTitle (command));
+		}
+
+		public string GetShortTitle(Command command)
+		{
+			string text = command.Description;
 
 			if (!string.IsNullOrEmpty (this.titleComplement))
 			{
@@ -700,10 +771,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]
 		private void ProcessShowPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ribbonController.PrésentationCommandsUpdate (e.Command);
+			this.NavigatorUpdate ();
 
+			this.ribbonController.PrésentationCommandsUpdate (e.Command);
 			this.selectedCommandDocument = e.Command;
 			this.CreateController ();
+
+			this.NavigatorPut ();
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
@@ -931,11 +1005,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Navigator.Prev)]
 		private void CommandNavigatorPrev()
 		{
+			this.NavigatorPrev ();
 		}
 
 		[Command (Res.CommandIds.Navigator.Next)]
 		private void CommandNavigatorNext()
 		{
+			this.NavigatorNext ();
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]
@@ -1006,6 +1082,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly Dictionary<string, ISettingsData>	settingsDatas;
 		private readonly SettingsList						settingsList;
 		private readonly SettingsList						defaultSettingsList;
+		private readonly NavigatorEngine					navigatorEngine;
 
 		private Window										mainWindow;
 		private BusinessContext								businessContext;

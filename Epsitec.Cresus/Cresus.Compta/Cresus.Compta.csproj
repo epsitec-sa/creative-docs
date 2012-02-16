@@ -54,6 +54,8 @@
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
     <Compile Include="IO\DefaultMemory.cs" />
+    <Compile Include="Memory\Data\NavigatorEngine.cs" />
+    <Compile Include="Memory\Data\NavigatorData.cs" />
     <Compile Include="Memory\Data\ShowPanelMode.cs" />
     <Compile Include="Memory\Data\MemoryList.cs" />
     <Compile Include="Memory\Data\MemoryData.cs" />
