@@ -118,9 +118,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 			while (currentBrick != null)
 			{
-				if (!Brick.ContainsProperty (brick, BrickPropertyKey.OfType))
+				if (!Brick.ContainsProperty (currentBrick, BrickPropertyKey.OfType))
 				{
-					Mason.SetupBrickDefaultValues (brick);
+					Mason.SetupBrickDefaultValues (currentBrick);
 				}
 
 				currentBrick = Brick.GetProperty (currentBrick, BrickPropertyKey.OfType).Brick;
