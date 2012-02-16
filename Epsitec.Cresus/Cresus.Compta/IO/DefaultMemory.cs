@@ -55,44 +55,27 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
-
-				memory.Options = new JournalOptions ();
-				memory.Options.SetComptaEntity (this.compta);
-			}
-
-			int year = Date.Today.Year;
-
-			{
-				var memory = this.CreateMemoryData (list, "Premier trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (memory.Filter, new Date (year, 1, 1), new Date (year, 3, 31));
-
-				memory.Options = new JournalOptions ();
-				memory.Options.SetComptaEntity (this.compta);
+				var memory = this.CreateMemoryData<JournalOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (memory.Filter, new Date (year, 4, 1), new Date (year, 6, 30));
-
-				memory.Options = new JournalOptions ();
-				memory.Options.SetComptaEntity (this.compta);
+				var memory = this.CreateMemoryData<JournalOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
+				this.SearchAdaptDate (memory.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (memory.Filter, new Date (year, 7, 1), new Date (year, 9, 30));
-
-				memory.Options = new JournalOptions ();
-				memory.Options.SetComptaEntity (this.compta);
+				var memory = this.CreateMemoryData<JournalOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
+				this.SearchAdaptDate (memory.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (memory.Filter, new Date (year, 10, 1), new Date (year, 12, 31));
+				var memory = this.CreateMemoryData<JournalOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
+				this.SearchAdaptDate (memory.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
+			}
 
-				memory.Options = new JournalOptions ();
-				memory.Options.SetComptaEntity (this.compta);
+			{
+				var memory = this.CreateMemoryData<JournalOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
+				this.SearchAdaptDate (memory.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 			}
 
 			this.Select<JournalOptions> (list, nomPrésentation);
@@ -147,26 +130,15 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BalanceOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BalanceOptions> (list, "Vue d'ensemble", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 1);
-			}
-
-			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 2);
-			}
-
-			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 3);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptProfondeur (memory.Filter, 1, 2);
 			}
 
 			this.Select<BalanceOptions> (list, nomPrésentation);
@@ -181,7 +153,7 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<ExtraitDeCompteOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			this.Select<ExtraitDeCompteOptions> (list, nomPrésentation);
@@ -196,69 +168,55 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BilanOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-
-				memory.Options = new BilanOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 1);
-
-				memory.Options = new BilanOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 2);
-
-				memory.Options = new BilanOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 3);
-
-				memory.Options = new BilanOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Précédent graphique", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
+			}
 
-				memory.Options = new BilanOptions ()
-				{
-					HideZero              = true,
-					HasGraphics           = true,
-					ComparisonEnable      = true,
-					ComparisonShowed      = ComparisonShowed.PériodePrécédente,
-					ComparisonDisplayMode = ComparisonDisplayMode.Graphique,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+			{
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Vue d'ensemble graphique", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptProfondeur (memory.Filter, 1, 2);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
+			}
+
+			{
+				var memory = this.CreateMemoryData<BilanOptions> (list, "Précédent graphique", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
 			}
 
 			this.Select<BilanOptions> (list, nomPrésentation);
@@ -273,69 +231,55 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<PPOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-
-				memory.Options = new PPOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveau 1)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<PPOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 1);
-
-				memory.Options = new PPOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 et 2)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<PPOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 2);
-
-				memory.Options = new PPOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Vue d'ensemble (niveaux 1 à 3)", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<PPOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
-				this.SearchAddProfondeur (memory.Filter, 1, 3);
-
-				memory.Options = new PPOptions ()
-				{
-					HideZero    = true,
-					HasGraphics = false,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var memory = this.CreateMemoryData (list, "Budget graphique", searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<PPOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptDate (memory.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
+			}
 
-				memory.Options = new PPOptions ()
-				{
-					HideZero              = true,
-					HasGraphics           = true,
-					ComparisonEnable      = true,
-					ComparisonShowed      = ComparisonShowed.Budget,
-					ComparisonDisplayMode = ComparisonDisplayMode.Graphique,
-				};
-				memory.Options.SetComptaEntity (this.compta);
+			{
+				var memory = this.CreateMemoryData<PPOptions> (list, "Vue d'ensemble graphique", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.SearchAdd (memory.Filter);
+				this.SearchAdaptProfondeur (memory.Filter, 1, 2);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
+			}
+
+			{
+				var memory = this.CreateMemoryData<PPOptions> (list, "Budget graphique", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (memory.Filter);
+				this.OptionsAdaptDouble (memory.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
 			}
 
 			this.Select<PPOptions> (list, nomPrésentation);
@@ -350,7 +294,7 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var memory = this.CreateMemoryData (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
+				var memory = this.CreateMemoryData<ExploitationOptions> (list, DefaultMemory.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (memory.Filter);
 			}
 
@@ -433,6 +377,18 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
+		private MemoryData CreateMemoryData<T>(MemoryList list, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
+			where T : AbstractOptions, new ()
+		{
+			var memory = this.CreateMemoryData (list, name, searchExist, filterExist, optionsExist);
+
+			memory.Options = new T ();
+			memory.Options.SetComptaEntity (this.compta);
+			memory.Options.Clear ();
+
+			return memory;
+		}
+
 		private MemoryData CreateMemoryData(MemoryList list, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
 		{
 			var memory = new MemoryData ()
@@ -453,46 +409,75 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
+		private void SearchAdd(SearchData data)
+		{
+			data.TabsData.Add (new SearchTabData ());
+		}
+
 		private void SearchAdaptForNonZero(SearchData data)
 		{
-			var tab = data.TabsData[0];
+			var tab = data.TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.MontantToString (0);
 			tab.SearchText.Mode     = SearchMode.WholeContent;
 			tab.SearchText.Invert   = true;
 			tab.Column              = ColumnType.Solde;
+
+			this.SearchAdaptOrMode (data);
 		}
 
-		private void SearchAddProfondeur(SearchData data, int minProfondeur, int maxProfondeur)
+		private void SearchAdaptProfondeur(SearchData data, int minProfondeur, int maxProfondeur)
 		{
-			var tab = new SearchTabData();
-			data.TabsData.Add (tab);
+			var tab = data.TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.IntToString (minProfondeur);
 			tab.SearchText.ToText   = Converters.IntToString (maxProfondeur);
 			tab.SearchText.Mode     = SearchMode.Interval;
 			tab.Column              = ColumnType.Profondeur;
 
-			data.OrMode = false;
+			this.SearchAdaptOrMode (data);
 		}
 
-		private void SearchAdaptDate(SearchData data, Date début, Date fin)
+		private void SearchAdaptDate(SearchData data, int startDay, int startMonth, int endDay, int endMonth)
 		{
-			var tab = data.TabsData[0];
+			var tab = data.TabsData.Last ();
 
-			tab.SearchText.FromText = Converters.DateToString (début);
-			tab.SearchText.ToText   = Converters.DateToString (fin);
+			int year = Date.Today.Year;
+
+			tab.SearchText.FromText = Converters.DateToString (new Date (year, startMonth, startDay));
+			tab.SearchText.ToText   = Converters.DateToString (new Date (year,   endMonth,   endDay));
 			tab.SearchText.Mode     = SearchMode.Interval;
 			tab.Column              = ColumnType.Date;
+
+			this.SearchAdaptOrMode (data);
 		}
 
 		private void SearchAdaptCatégorie(SearchData data, CatégorieDeCompte catégorie)
 		{
-			var tab = data.TabsData[0];
+			var tab = data.TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.CatégoriesToString (catégorie);
 			tab.SearchText.Mode     = SearchMode.Fragment;
 			tab.Column              = ColumnType.Catégorie;
+
+			this.SearchAdaptOrMode (data);
+		}
+
+		private void SearchAdaptOrMode(SearchData data)
+		{
+			data.OrMode = (data.TabsData.Count == 1);
+		}
+
+
+		private void OptionsAdaptDouble(AbstractOptions options, ComparisonShowed showed, ComparisonDisplayMode mode)
+		{
+			var o = options as DoubleOptions;
+
+			o.HideZero              = true;
+			o.HasGraphics           = (showed != ComparisonShowed.None);
+			o.ComparisonEnable      = (showed != ComparisonShowed.None);
+			o.ComparisonShowed      = showed;
+			o.ComparisonDisplayMode = mode;
 		}
 
 
