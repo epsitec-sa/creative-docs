@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private ExtraitDeCompteOptions Options
+		private new ExtraitDeCompteOptions Options
 		{
 			get
 			{

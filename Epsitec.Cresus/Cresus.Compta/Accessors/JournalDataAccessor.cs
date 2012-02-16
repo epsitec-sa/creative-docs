@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var j = (this.options as JournalOptions).Journal;
-				this.journalAll = this.périodeEntity.Journal.Where (x => x.Journal == j).ToList ();
+				int id = (this.options as JournalOptions).JournalId;
+				this.journalAll = this.périodeEntity.Journal.Where (x => x.Journal.Id == id).ToList ();
 			}
 
 			if (this.filterData == null || this.filterData.IsEmpty)
@@ -516,10 +516,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			//	Utilise le journal choisi dans les options.
 			//	Si on est en mode "tous les journaux", on laisse null, car le bon sera mis plus tard.
-			var journal = (this.options as JournalOptions).Journal;
-			if (journal != null)  // dans un journal spécifique ?
+			int id = (this.options as JournalOptions).JournalId;
+			if (id == 0)  // tous les journaux ?
 			{
-				écriture.Journal = journal;
+				écriture.Journal = null;
+			}
+			else
+			{
+				écriture.Journal = this.comptaEntity.Journaux.Where (x => x.Id == id).FirstOrDefault ();
 			}
 
 			return écriture;
@@ -776,7 +780,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return (this.options as JournalOptions).Journal == null;
+				return (this.options as JournalOptions).JournalId == 0;
 			}
 		}
 

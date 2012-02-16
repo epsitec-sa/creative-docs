@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private BalanceOptions Options
+		private new BalanceOptions Options
 		{
 			get
 			{

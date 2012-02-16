@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private DoubleOptions Options
+		private new DoubleOptions Options
 		{
 			get
 			{

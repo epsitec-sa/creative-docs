@@ -241,14 +241,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.controller.MainWindowController.SetDirty ();
 
+			ComptaJournalEntity journal;
+
 			if (this.businessContext == null)
 			{
-				return new ComptaJournalEntity ();
+				journal = new ComptaJournalEntity ();
 			}
 			else
 			{
-				return this.businessContext.CreateEntity<ComptaJournalEntity> ();
+				journal = this.businessContext.CreateEntity<ComptaJournalEntity> ();
 			}
+
+			journal.Id = this.comptaEntity.GetJournalId ();  // assigne un identificateur unique
+
+			return journal;
 		}
 
 		private void DeleteJournal(ComptaJournalEntity journal)

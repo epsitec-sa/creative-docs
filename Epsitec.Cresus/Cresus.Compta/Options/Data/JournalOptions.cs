@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Compta.Options.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
@@ -28,13 +29,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
+			this.JournalId = 1;  // premier journal
 		}
 
 
-		public ComptaJournalEntity Journal
+		public int JournalId
 		{
-			//	null = tous les journaux
+			//	0 = tous les journaux
 			get;
 			set;
 		}
@@ -59,7 +60,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as JournalOptions;
-			d.Journal = this.Journal;
+			d.JournalId = this.JournalId;
 
 			base.CopyTo (dst);
 		}
@@ -73,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as JournalOptions;
 
-			return this.Journal == o.Journal;
+			return this.JournalId == o.JournalId;
 		}
 
 		public override FormattedText Summary
@@ -82,13 +83,22 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				this.StartSummaryBuilder ();
 
-				if (this.Journal == null)
+				if (this.JournalId == 0)
 				{
-					this.AppendSummaryBuilder ("Tous les journaux");
+					this.AppendSummaryBuilder (JournalOptionsController.AllJournaux);
 				}
 				else
 				{
-					this.AppendSummaryBuilder (string.Format ("Journal \"{0}\"", this.Journal.Nom));
+					var journal = this.comptaEntity.Journaux.Where (x => x.Id == this.JournalId).FirstOrDefault ();
+
+					if (journal == null)
+					{
+						this.AppendSummaryBuilder ("Journal inconnu");
+					}
+					else
+					{
+						this.AppendSummaryBuilder (string.Format ("Journal \"{0}\"", journal.Nom));
+					}
 				}
 
 				return this.StopSummaryBuilder ();

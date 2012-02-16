@@ -10,6 +10,20 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public int GetJournalId()
+		{
+			//	Retourne un identificateur unique pour un nouveau journal.
+			int id = 1;
+
+			foreach (var journal in this.Journaux)
+			{
+				id = System.Math.Max (id, journal.Id+1);
+			}
+
+			return id;
+		}
+
+
 		public decimal? GetMontantBudget(ComptaPériodeEntity période, int offset, ComptaCompteEntity compte)
 		{
 			var budget = this.GetBudget (période, offset, compte);

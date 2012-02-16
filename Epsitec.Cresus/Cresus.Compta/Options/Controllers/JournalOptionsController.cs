@@ -102,11 +102,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				{
 					if (this.comboJournaux.SelectedItemIndex == this.comptaEntity.Journaux.Count)  // tous les journaux ?
 					{
-						this.Options.Journal = null;
+						this.Options.JournalId = 0;
 					}
 					else
 					{
-						this.Options.Journal = this.comptaEntity.Journaux[this.comboJournaux.SelectedItemIndex];
+						this.Options.JournalId = this.comptaEntity.Journaux[this.comboJournaux.SelectedItemIndex].Id;
 					}
 
 					this.OptionsChanged ();
@@ -120,21 +120,27 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.comboJournaux.Items.Clear ();
+				FormattedText sel = JournalOptionsController.AllJournaux;
 
 				foreach (var journal in this.comptaEntity.Journaux)
 				{
 					this.comboJournaux.Items.Add (journal.Nom);
+
+					if (journal.Id ==  this.Options.JournalId)
+					{
+						sel = journal.Nom;
+					}
 				}
 
 				this.comboJournaux.Items.Add (JournalOptionsController.AllJournaux);
-
-				this.comboJournaux.FormattedText = (this.Options.Journal == null) ? JournalOptionsController.AllJournaux : this.Options.Journal.Nom;
+				this.comboJournaux.FormattedText = sel;
 			}
 		}
 
 		private void UpdateSummary()
 		{
-			this.summary.Text = this.périodeEntity.GetJournalSummary (this.Options.Journal);
+			var journal = this.comptaEntity.Journaux.Where (x => x.Id == this.Options.JournalId).FirstOrDefault ();
+			this.summary.Text = this.périodeEntity.GetJournalSummary (journal);
 		}
 
 

@@ -126,6 +126,7 @@ namespace Epsitec.Cresus.Compta.IO
 			foreach (var j in journauxTriés)
 			{
 				var journal = new ComptaJournalEntity ();
+				journal.Id = this.compta.GetJournalId ();
 				journal.Nom = j.Value;
 				this.compta.Journaux.Add (journal);
 			}
