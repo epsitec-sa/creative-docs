@@ -134,6 +134,8 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK45
+				public static readonly global::Epsitec.Common.Widgets.Command Menu = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 164));
 				//	designer:cap/OVKV4
 				public static readonly global::Epsitec.Common.Widgets.Command Next = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 159));
 				//	designer:cap/OVK05
@@ -367,6 +369,8 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK45
+				public const long Menu = 0x3F8000140000A4L;
 				//	designer:cap/OVKV4
 				public const long Next = 0x3F80001400009FL;
 				//	designer:cap/OVK05

@@ -156,6 +156,8 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			this.UpdateButtons ();
 			this.UpdateSummary ();
+			this.UpdateComboSelection ();
+			this.UpdateListSelection ();
 		}
 
 
@@ -705,6 +707,15 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 				this.compactComboMemory.Enable = this.memoryList.List.Any ();
 
+			}
+
+			this.UpdateComboSelection ();
+		}
+
+		private void UpdateComboSelection()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
 				if (this.memoryList.Selected == null)
 				{
 					this.compactComboMemory.FormattedText = FormattedText.Empty;
@@ -727,6 +738,15 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					this.extendedListMemory.Items.Add (memory.Name);
 				}
 
+			}
+
+			this.UpdateListSelection ();
+		}
+
+		private void UpdateListSelection()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
 				if (this.memoryList.Selected == null)
 				{
 					this.extendedListMemory.SelectedItemIndex = -1;

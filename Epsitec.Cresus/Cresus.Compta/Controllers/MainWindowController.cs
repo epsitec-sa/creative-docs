@@ -183,17 +183,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void NavigatorFirst()
 		{
 			this.navigatorEngine.Clear ();
-			this.navigatorEngine.Put (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
 		}
 
 		private void NavigatorUpdate()
 		{
-			this.navigatorEngine.Update (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			this.navigatorEngine.Update (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
 		}
 
 		private void NavigatorPut()
 		{
-			this.navigatorEngine.Put (this.controller.DataAccessor, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
 			this.UpdateNavigatorCommands ();
 		}
 
@@ -207,7 +207,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedCommandDocument = cmd;
 			this.CreateController ();
 
-			this.navigatorEngine.Restore (this.controller.DataAccessor);
+			this.navigatorEngine.Restore (this.controller);
+			this.controller.UpdateAfterChanged ();
 
 			this.UpdateNavigatorCommands ();
 		}
@@ -222,7 +223,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedCommandDocument = cmd;
 			this.CreateController ();
 
-			this.navigatorEngine.Restore (this.controller.DataAccessor);
+			this.navigatorEngine.Restore (this.controller);
+			this.controller.UpdateAfterChanged ();
 
 			this.UpdateNavigatorCommands ();
 		}
@@ -238,6 +240,72 @@ namespace Epsitec.Cresus.Compta.Controllers
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Next);
 				cs.Enable = this.navigatorEngine.NextEnable;
 			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Menu);
+				cs.Enable = this.navigatorEngine.Count > 1;
+			}
+		}
+
+		private void NavigatorMenu()
+		{
+			var parentButton = this.ribbonController.NavigatorMenuButton;
+
+			var menu = new VMenu ();
+
+			int limit = 15;  // menu de 15 lignes au maximum
+			for (int i = this.navigatorEngine.Count-1; i >= 0 ; i--)  // du plus récent au plus ancien
+			{
+				this.NavigatorAddMenu (menu, i);
+
+				if (--limit == 0)
+				{
+					break;
+				}
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void NavigatorAddMenu(VMenu menu, int index)
+		{
+			var data = this.navigatorEngine.GetNavigatorData (index);
+
+			string icon = string.Format (@"<img src=""{0}"" voff=""-6"" dx=""20"" dy=""20""/>  ", data.Command.Icon);
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetCheckStateIconUri (index == this.navigatorEngine.Index),
+				FormattedText = icon + data.Description,
+				Name          = index.ToString (),
+			};
+
+			item.Clicked += delegate
+			{
+				int i = int.Parse (item.Name);
+				this.NavigatorIndex (i);
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void NavigatorIndex(int index)
+		{
+			this.NavigatorUpdate ();
+
+			var cmd = this.navigatorEngine.Any (index);
+
+			this.ribbonController.PrésentationCommandsUpdate (cmd);
+			this.selectedCommandDocument = cmd;
+			this.CreateController ();
+
+			this.navigatorEngine.Restore (this.controller);
+			this.controller.UpdateAfterChanged ();
+
+			this.UpdateNavigatorCommands ();
 		}
 		#endregion
 
@@ -554,7 +622,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateController ();
 				this.AdaptSettingsDatas ();
 
-				this.controller.UpdateAfterPériodeChanged ();
+				this.controller.UpdateAfterChanged ();
 			}
 		}
 
@@ -1012,6 +1080,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandNavigatorNext()
 		{
 			this.NavigatorNext ();
+		}
+
+		[Command (Res.CommandIds.Navigator.Menu)]
+		private void CommandNavigatorMenu()
+		{
+			this.NavigatorMenu ();
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

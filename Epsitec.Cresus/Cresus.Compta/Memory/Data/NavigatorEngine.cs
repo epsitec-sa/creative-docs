@@ -30,6 +30,28 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
+		public int Count
+		{
+			get
+			{
+				return this.history.Count;
+			}
+		}
+
+		public int Index
+		{
+			get
+			{
+				return this.index;
+			}
+		}
+
+		public NavigatorData GetNavigatorData(int index)
+		{
+			return this.history[index];
+		}
+
+
 		public bool PrevEnable
 		{
 			get
@@ -47,17 +69,17 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public void Update(AbstractDataAccessor accessor, Command command, FormattedText description)
+		public void Update(AbstractController controller, Command command, FormattedText description)
 		{
 			if (this.index != -1 && this.history[this.index].Command == command)
 			{
-				this.history[this.index] = this.CreateNavigatorData (accessor, command, description);
+				this.history[this.index] = this.CreateNavigatorData (controller, command, description);
 			}
 		}
 
-		public void Put(AbstractDataAccessor accessor, Command command, FormattedText description)
+		public void Put(AbstractController controller, Command command, FormattedText description)
 		{
-			var data = this.CreateNavigatorData (accessor, command, description);
+			var data = this.CreateNavigatorData (controller, command, description);
 			this.history.Insert (++this.index, data);
 
 			int overflow = this.history.Count-this.index-1;
@@ -67,30 +89,36 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			}
 		}
 
-		private NavigatorData CreateNavigatorData(AbstractDataAccessor accessor, Command command, FormattedText description)
+		private NavigatorData CreateNavigatorData(AbstractController controller, Command command, FormattedText description)
 		{
 			SearchData      search  = null;
 			SearchData      filter  = null;
 			AbstractOptions options = null;
 
-			if (accessor != null && accessor.SearchData != null)
+			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
 			{
-				search  = accessor.SearchData.CopyFrom ();
+				search = controller.DataAccessor.SearchData.CopyFrom ();
 			}
 
-			if (accessor != null && accessor.FilterData != null)
+			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
 			{
-				filter  = accessor.FilterData.CopyFrom ();
+				filter = controller.DataAccessor.FilterData.CopyFrom ();
 			}
 
-			if (accessor != null && accessor.Options != null)
+			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 			{
-				options = accessor.Options.CopyFrom ();
+				options = controller.DataAccessor.Options.CopyFrom ();
 			}
 
-			return new NavigatorData (command, description, search, filter, options);
+			return new NavigatorData (command, description, controller.MemoryList.Selected, search, filter, options);
 		}
 
+
+		public Command Any(int index)
+		{
+			this.index = index;
+			return this.history[this.index].Command;
+		}
 
 		public Command Back
 		{
@@ -108,23 +136,25 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			}
 		}
 
-		public void Restore(AbstractDataAccessor accessor)
+		public void Restore(AbstractController controller)
 		{
 			var data = this.history[this.index];
 
-			if (accessor != null && accessor.SearchData != null)
+			controller.MemoryList.Selected = data.Memory;
+
+			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
 			{
-				data.Search.CopyTo (accessor.SearchData);
+				data.Search.CopyTo (controller.DataAccessor.SearchData);
 			}
 
-			if (accessor != null && accessor.FilterData != null)
+			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
 			{
-				data.Filter.CopyTo (accessor.FilterData);
+				data.Filter.CopyTo (controller.DataAccessor.FilterData);
 			}
 
-			if (accessor != null && accessor.Options != null)
+			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 			{
-				data.Options.CopyTo (accessor.Options);
+				data.Options.CopyTo (controller.DataAccessor.Options);
 			}
 		}
 

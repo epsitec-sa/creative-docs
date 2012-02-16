@@ -174,6 +174,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Prev));
 				section.Children.Add (this.CreateButton (Res.Commands.Navigator.Next));
+
+				this.navigatorMenuButton = new GlyphButton
+				{
+					Parent          = section,
+					CommandObject   = Res.Commands.Navigator.Menu,
+					GlyphShape      = GlyphShape.Menu,
+					ButtonStyle     = ButtonStyle.ToolItem,
+					PreferredHeight = 18,
+					Anchor          = AnchorStyles.Bottom | AnchorStyles.LeftAndRight,
+					Margins         = new Margins (33, 33, 0, 0),  // pour avoir une taille de 18x18
+				};
 			}
 
 			this.UpdateRibbon ();
@@ -228,6 +239,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (command);
 				cs.ActiveState = (command == c) ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+		public GlyphButton NavigatorMenuButton
+		{
+			get
+			{
+				return this.navigatorMenuButton;
 			}
 		}
 
@@ -621,7 +640,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			Hires,		// pour grand écran
 		}
 
-
+		
 		private const double ButtonLargeWidth	= 2 * ((RibbonController.IconLargeWidth + 1) / 2 + 5);
 		private const double ButtonSmallWidth	= 2 * ((RibbonController.IconSmallWidth + 1) / 2 + 5);
 
@@ -637,5 +656,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Widget								container;
 		private RibbonViewMode						ribbonViewMode;
 		private IconButton							présentationButton;
+		private GlyphButton							navigatorMenuButton;
 	}
 }
