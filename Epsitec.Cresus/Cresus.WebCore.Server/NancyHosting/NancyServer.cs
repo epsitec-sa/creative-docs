@@ -1,12 +1,9 @@
 ﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using Nancy;
-
-using Nancy.IO;
-
 using Nancy.Extensions;
-
 using Nancy.Helpers;
+using Nancy.IO;
 
 using System;
 

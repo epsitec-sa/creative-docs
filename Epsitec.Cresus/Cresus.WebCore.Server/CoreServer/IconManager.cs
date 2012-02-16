@@ -8,8 +8,6 @@ using System.Globalization;
 
 using System.IO;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {

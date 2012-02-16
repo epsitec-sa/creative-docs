@@ -2,19 +2,18 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using Nancy;
 
 using System;
 
-using System.Diagnostics;
-
 using System.Collections.Generic;
+
+using System.Diagnostics;
 
 using System.Globalization;
 

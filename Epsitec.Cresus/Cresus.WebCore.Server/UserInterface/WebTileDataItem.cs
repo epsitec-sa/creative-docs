@@ -3,8 +3,6 @@
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
-using System.Collections.Generic;
-
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
 {

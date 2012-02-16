@@ -1,22 +1,14 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
-using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Types;
-
-using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.Core.Controllers;
-using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface;
 
-using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
 {

@@ -1,5 +1,4 @@
 ﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
-using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 

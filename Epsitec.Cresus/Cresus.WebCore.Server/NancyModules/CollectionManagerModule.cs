@@ -5,17 +5,16 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-
-using Epsitec.Cresus.DataLayer.Context;
 
 using Nancy;
 
 using System;
 
 using System.Linq;
-
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
