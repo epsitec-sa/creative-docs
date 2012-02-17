@@ -1,12 +1,21 @@
-﻿using System.Collections.Generic;
-using System.IO;
-using LumenWorks.Framework.IO.Csv;
-using System;
+﻿using Epsitec.Aider.Enumerations;
+
+using Epsitec.Common.IO;
+
 using Epsitec.Common.Support;
-using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Types;
-using System.Linq;
+
+using System;
+
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
+
+using System.Data;
+
+using System.IO;
+
+using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -20,7 +29,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public static IEnumerable<EervGroupDefinition> LoadEervGroupDefinitions(FileInfo inputFile)
 		{
 			// Skip the 4 first lines of the file as they are titles.
-			var records = EervDataLoader.GetRecords (inputFile).Skip (4);
+			var records = EervDataLoader.GetRecords (inputFile, 45).Skip (4);
 
 			Stack<string> parentIds = new Stack<string> ();
 
@@ -49,7 +58,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static int GetEervGroupDefinitionLevel(string[] record)
+		private static int GetEervGroupDefinitionLevel(ReadOnlyCollection<string> record)
 		{
 			for (int i = 0; i < GroupDefinitionIndex.Names.Count; i++)
 			{
@@ -65,7 +74,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervGroupDefinition GetEervGroupDefinition(string[] record, int groupLevel, string parentId)
+		private static EervGroupDefinition GetEervGroupDefinition(ReadOnlyCollection<string> record, int groupLevel, string parentId)
 		{
 			var id = record[GroupDefinitionIndex.Id];
 			var name = record[GroupDefinitionIndex.Names[groupLevel]];
@@ -82,7 +91,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static IEnumerable<EervGroup> LoadEervGroups(FileInfo inputFile)
 		{
-			foreach (var record in EervDataLoader.GetRecords (inputFile))
+			foreach (var record in EervDataLoader.GetRecords (inputFile, 9))
 			{
 				var group = EervDataLoader.GetEervGroup (record);
 
@@ -94,7 +103,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervGroup GetEervGroup(string[] record)
+		private static EervGroup GetEervGroup(ReadOnlyCollection<string> record)
 		{
 			var id = record[GroupIndex.Id];
 			var definitionId = record[GroupIndex.DefinitionId];
@@ -106,14 +115,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static IEnumerable<EervActivity> LoadEervActivities(FileInfo inputFile)
 		{
-			foreach (var record in EervDataLoader.GetRecords (inputFile))
+			foreach (var record in EervDataLoader.GetRecords (inputFile, 8))
 			{
 				yield return EervDataLoader.GetEervActivity (record);
 			}
 		}
 
 
-		private static EervActivity GetEervActivity(string[] record)
+		private static EervActivity GetEervActivity(ReadOnlyCollection<string> record)
 		{
 			var personId = record[ActivityIndex.PersonId];
 			var groupId = record[ActivityIndex.GroupId];
@@ -129,7 +138,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
-			foreach (var record in EervDataLoader.GetRecords (inputFile))
+			foreach (var record in EervDataLoader.GetRecords (inputFile, 53))
 			{
 				var householdId = record[HouseholdIndex.Id];
 
@@ -143,7 +152,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervHousehold GetEervHousehold(string[] record)
+		private static EervHousehold GetEervHousehold(ReadOnlyCollection<string> record)
 		{
 			var id = record[HouseholdIndex.Id];
 			var firstAddressLine = record[HouseholdIndex.FirstAddressLine];
@@ -167,14 +176,14 @@ namespace Epsitec.Aider.Data.Eerv
 						 && !string.IsNullOrEmpty(part2)
 						 && part1[part1.Length - 1] != '\'';
 
-			string result = part1;
+			string result = part1.Trim ();
 			
 			if (addSpace)
 			{
 				result += " ";
 			}
 
-			result += part2;
+			result += part2.Trim ();
 
 			return result;
 		}
@@ -182,14 +191,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static IEnumerable<EervPerson> LoadEervPersons(FileInfo inputFile)
 		{
-			foreach (var record in EervDataLoader.GetRecords (inputFile))
+			foreach (var record in EervDataLoader.GetRecords (inputFile, 53))
 			{
 				yield return EervDataLoader.GetEervPerson (record);
 			}
 		}
 
 
-		private static EervPerson GetEervPerson(string[] record)
+		private static EervPerson GetEervPerson(ReadOnlyCollection<string> record)
 		{
 			var id = record[PersonIndex.Id];
 			var firstname1 = record[PersonIndex.Firstname1];
@@ -357,14 +366,44 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<string[]> GetRecords(FileInfo inputFile)
+		private static IEnumerable<ReadOnlyCollection<string>> GetRecords(FileInfo inputFile, int columnCount)
 		{
-			using (var csvReader = new CsvReader (new StreamReader (inputFile.FullName, System.Text.UTF8Encoding.Default), false, ';'))
+			// NOTE Here we use dummy column names with integers as we don't really use them but we
+			// need to provide something to the CsvReader, otherwise it will crash as there are no
+			// names defined in the CSV files.
+
+			var csvFormat = new CsvFormat ()
 			{
-				foreach (var csvRecord in csvReader)
+				ColumnNames = Enumerable.Range (0, columnCount).Select (i => i.ToString ()).ToArray (),
+				Encoding = System.Text.UTF8Encoding.Default,
+				FieldSeparator = ";",
+				MultilineSeparator = "\n",
+			};
+
+			using (var dataTable = CsvReader.ReadCsv (inputFile.FullName, csvFormat))
+			{
+				foreach (DataRow dataRow in dataTable.Rows)
 				{
-					yield return csvRecord;
-				}				
+					var recordList = new List<string> ();
+
+					foreach(var value in dataRow.ItemArray)
+					{
+						string stringValue;
+
+						if (value == System.DBNull.Value)
+						{
+							stringValue = null;
+						}
+						else
+						{
+							stringValue = (string) value;
+						}
+
+						recordList.Add (stringValue);
+					}
+
+					yield return recordList.AsReadOnly ();
+				}
 			}
 		}
 
