@@ -32,6 +32,28 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
+		// NOTE The OfType property has not been tested properly. Do not expect it to work. See the
+		// two bug reports below for more informations.
+
+		
+		// TODO There is a bug in the way the brick tree is processed. When looking for a property
+		// of a brick, the carpenter only looks in the property list of the brick. It should also
+		// look in the property lists of its parents, from the closest to the farthest until it
+		// finds the requested property.
+		// Fixing this bug might require some changes in the Brick implementation as not all of them
+		// have a reference on their parent, and some have a reference on their parent but typed
+		// with a different type. Too bad we can't override a property with a property of a derived
+		// type in C#.
+		// However, this is a problem only if there is an OfType brick somewhere in the tree. As we
+		// don't use them in Aider, this bug is not a priority.
+
+
+		// TODO I believe that there is a second bug regarding the OfType properties. With such a
+		// property, the function used to resolve the entities targeted by the collection should be
+		// modified by appending a call to the LINQ function IEnumerable<T>.OfType<T>() in order to
+		// filter it.
+
+
 		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall)
 		{
 			foreach (var brick in brickWall.Bricks)
