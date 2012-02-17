@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			{
 				var targets = this.Template.CollectionGetter (entity).ToList ();
 
-				if (targets.Count == 0)
+				if (targets.Count > 0)
 				{
 					foreach (var target in targets)
 					{
