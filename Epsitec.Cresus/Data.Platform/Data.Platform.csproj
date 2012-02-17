@@ -52,12 +52,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Entities.cs" />
     <Compile Include="Resources\Data.Platform.SwissPostMatch\SourceCode\Res.cs" />
+    <Compile Include="SwissPostDividerCode.cs" />
     <Compile Include="SwissPostStreet.cs" />
     <Compile Include="SwissPostStreetInformation.cs" />
     <Compile Include="SwissPostStreetRepository.cs" />
     <Compile Include="SwissPostZip.cs" />
     <Compile Include="SwissPostZipInformation.cs" />
-    <Compile Include="SwissPostZipLanguageCode.cs" />
+    <Compile Include="SwissPostLanguageCode.cs" />
     <Compile Include="SwissPostZipRepository.cs" />
     <Compile Include="SwissPostZipType.cs" />
   </ItemGroup>

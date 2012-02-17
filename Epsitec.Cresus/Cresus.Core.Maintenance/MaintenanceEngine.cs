@@ -105,18 +105,18 @@ namespace Epsitec.Cresus.Core.Maintenance
 			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} countries -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
-		private static Dictionary<SwissPostZipLanguageCode, LanguageEntity> GetLanguages(CoreSession session, IEnumerable<string> languageCodes)
+		private static Dictionary<SwissPostLanguageCode, LanguageEntity> GetLanguages(CoreSession session, IEnumerable<string> languageCodes)
 		{
 			//	The language code is expressed as "1:de" for instance (key "1", ISO-631 language code "de").
 
 			var context    = session.GetBusinessContext ();
 			var repository = session.CoreData.GetRepository<LanguageEntity> (context.DataContext);
-			var languages  = new Dictionary<SwissPostZipLanguageCode, LanguageEntity> ();
+			var languages  = new Dictionary<SwissPostLanguageCode, LanguageEntity> ();
 
 			foreach (var languageCode in languageCodes)
 			{
 				var iso = languageCode.Substring (2);
-				var key = InvariantConverter.ParseInt<SwissPostZipLanguageCode> (languageCode.Substring (0, 1));
+				var key = InvariantConverter.ParseInt<SwissPostLanguageCode> (languageCode.Substring (0, 1));
 
 				languages[key] = MaintenanceEngine.GetLanguage (context, repository, iso);
 			}

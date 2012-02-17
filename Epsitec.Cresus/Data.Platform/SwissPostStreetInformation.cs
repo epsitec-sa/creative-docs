@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
@@ -23,41 +24,39 @@ namespace Epsitec.Data.Platform
 		/// <param name="line">The line.</param>
 		public SwissPostStreetInformation(string line)
 		{
-			this.StreetCode            = line.Substring (0, 6);
-			this.BasicPostCode         = line.Substring (6, 4);
-			this.LanguageCode          = line.Substring (10, 1);
-			//this.StreetNameUppercase   = line.Substring (11, 25).TrimEnd ();
-			this.ZipCode               = line.Substring (36, 4);
-			this.ZipComplement         = line.Substring (40, 2);
-			this.DividerCode           = line.Substring (42, 1);
-			this.HouseNumberFrom       = line.Substring (43, 4);
-			this.HouseNumberFromAlpha  = line.Substring (47, 2);
-			this.HouseNumberTo         = line.Substring (49, 4);
-			this.HouseNumberToAlpha    = line.Substring (53, 2);
+			this.StreetCode            = InvariantConverter.ParseInt (line.Substring (0, 6));
+			this.BasicPostCode         = InvariantConverter.ParseInt (line.Substring (6, 4));
+			this.LanguageCode          = InvariantConverter.ParseInt<SwissPostLanguageCode> (line.Substring (10, 1));
+			this.ZipCode               = InvariantConverter.ParseInt (line.Substring (36, 4));
+			this.ZipComplement         = InvariantConverter.ParseInt (line.Substring (40, 2));
+			this.DividerCode           = InvariantConverter.ParseInt<SwissPostDividerCode> (line.Substring (42, 1));
+			this.HouseNumberFrom       = InvariantConverter.ParseInt (line.Substring (43, 4));
+			this.HouseNumberFromAlpha  = line.Substring (47, 2).TrimEnd ();
+			this.HouseNumberTo         = InvariantConverter.ParseInt (line.Substring (49, 4));
+			this.HouseNumberToAlpha    = line.Substring (53, 2).TrimEnd ();
 			this.StreetName            = line.Substring (55, 25).TrimEnd ();
 			this.StreetNameRoot        = line.Substring (80, 10).TrimEnd ();
-			this.StreetNameType        = line.Substring (90, 2);
-			this.StreetNamePreposition = line.Substring (92, 2);
+			this.StreetNameType        = InvariantConverter.ParseInt (line.Substring (90, 2));
+			this.StreetNamePreposition = InvariantConverter.ParseInt (line.Substring (92, 2));
 			this.StreetNameShort       = this.StreetName.Split (',').First ();
 			this.NormalizedStreetName  = SwissPostStreet.NormalizeStreetName (this.StreetName);
 		}
 
-		public readonly string					StreetCode;
-		public readonly string					BasicPostCode;
-		public readonly string					LanguageCode;
-		//public readonly string					StreetNameUppercase;
-		public readonly string					ZipCode;
-		public readonly string					ZipComplement;
-		public readonly string					DividerCode;
-		public readonly string					HouseNumberFrom;
+		public readonly int						StreetCode;
+		public readonly int						BasicPostCode;
+		public readonly SwissPostLanguageCode	LanguageCode;
+		public readonly int						ZipCode;
+		public readonly int						ZipComplement;
+		public readonly SwissPostDividerCode	DividerCode;
+		public readonly int						HouseNumberFrom;
 		public readonly string					HouseNumberFromAlpha;
-		public readonly string					HouseNumberTo;
+		public readonly int						HouseNumberTo;
 		public readonly string					HouseNumberToAlpha;
 		public readonly string					StreetName;
 		public readonly string					StreetNameShort;
 		public readonly string					StreetNameRoot;
-		public readonly string					StreetNameType;
-		public readonly string					StreetNamePreposition;
+		public readonly int						StreetNameType;
+		public readonly int						StreetNamePreposition;
 		public readonly string					NormalizedStreetName;
 
 
@@ -163,6 +162,47 @@ namespace Epsitec.Data.Platform
 			return false;
 		}
 
+		public bool MatchHouseNumber(int houseNumber)
+		{
+			if (houseNumber == 0)
+			{
+				return true;
+			}
+
+			switch (this.DividerCode)
+			{
+				case SwissPostDividerCode.All:
+				case SwissPostDividerCode.None:
+					break;
+				
+				case SwissPostDividerCode.Even:
+					if ((houseNumber & 0x01) == 1)
+					{
+						return false;
+					}
+					break;
+				case SwissPostDividerCode.Odd:
+					if ((houseNumber & 0x01) == 0)
+					{
+						return false;
+					}
+					break;
+			}
+
+			if ((this.HouseNumberFrom == 0) ||
+				(this.HouseNumberTo == 0))
+			{
+				return true;
+			}
+
+			if ((houseNumber >= this.HouseNumberFrom) &&
+				(houseNumber <= this.HouseNumberTo))
+			{
+				return true;
+			}
+
+			return false;
+		}
 		
 		/// <summary>
 		/// Check if the name matches the root name or the short name of the street.

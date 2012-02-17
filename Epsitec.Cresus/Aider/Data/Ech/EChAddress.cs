@@ -5,6 +5,7 @@ using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Data.Ech
 {
@@ -24,7 +25,10 @@ namespace Epsitec.Aider.Data.Ech
 			this.swissZipCodeId    = swissZipCodeId;
 			this.countryCode       = countryCode;
 
-			PatchEngine.ApplyFix (this);
+			if (this.countryCode == "CH")
+			{
+				PatchEngine.ApplyFix (this);
+			}
 		}
 
 
@@ -92,6 +96,33 @@ namespace Epsitec.Aider.Data.Ech
 			}
 		}
 
+
+		private void Patch(IEnumerable<SwissPostStreetInformation> hits)
+		{
+			int house = InvariantConverter.ParseInt (this.houseNumber);
+			var info  = hits.FirstOrDefault (x => x.MatchHouseNumber (house));
+
+			if (info == null)
+			{
+				//	Cannot apply patch -- unknown street or house number
+				return;
+			}
+
+			var zip = SwissPostZipRepository.Current.FindZips (info.ZipCode, info.ZipComplement).FirstOrDefault ();
+
+			if (zip == null)
+			{
+				//	Cannot apply patch -- unknown zip
+				return;
+			}
+
+			this.street = info.StreetName;
+			this.town   = zip.LongName;
+			
+			this.swissZipCode      = zip.ZipCode.ToString ("0000");
+			this.swissZipCodeAddOn = zip.ZipComplement == 0 ? "" : zip.ZipComplement.ToString ("0");
+			this.swissZipCodeId    = zip.OnrpCode.ToString ("0");
+		}
 
 		private string							addressLine1;
 		private string							street;

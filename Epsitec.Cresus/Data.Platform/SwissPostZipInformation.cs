@@ -35,8 +35,8 @@ namespace Epsitec.Data.Platform
 			this.ShortName      = args[4];
 			this.LongName       = args[5];
 			this.Canton         = args[6];
-			this.LanguageCode1  = InvariantConverter.ParseInt<SwissPostZipLanguageCode> (args[7]);
-			this.LanguageCode2  = InvariantConverter.ParseInt<SwissPostZipLanguageCode> (args[8]);
+			this.LanguageCode1  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[7]);
+			this.LanguageCode2  = InvariantConverter.ParseInt<SwissPostLanguageCode> (args[8]);
 			this.DistributionBy = args[10];
 			this.ComunityCode   = InvariantConverter.ParseInt (args[11]);
 			this.ValidSince     = new Date (year: date / 10000, month: (date/100) % 100, day: date % 100);
@@ -78,8 +78,8 @@ namespace Epsitec.Data.Platform
 		public readonly string					ShortName;
 		public readonly string					LongName;
 		public readonly string					Canton;
-		public readonly SwissPostZipLanguageCode LanguageCode1;
-		public readonly SwissPostZipLanguageCode LanguageCode2;
+		public readonly SwissPostLanguageCode LanguageCode1;
+		public readonly SwissPostLanguageCode LanguageCode2;
 		public readonly string					DistributionBy;
 		public readonly int						ComunityCode;
 		public readonly Date					ValidSince;

@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Data.Platform
 {
-	public enum SwissPostZipLanguageCode
+	public enum SwissPostLanguageCode
 	{
 		None				= 0,
 		German				= 1,

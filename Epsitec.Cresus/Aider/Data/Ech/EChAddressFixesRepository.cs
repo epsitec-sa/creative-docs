@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
 using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
@@ -24,15 +26,15 @@ namespace Epsitec.Aider.Data.Ech
 
 		public static readonly EChAddressFixesRepository	Current = new EChAddressFixesRepository ();
 
-		public bool ApplyQuickFix(ref string zipCode, ref string streetName)
+		public bool ApplyQuickFix(ref int zipCode, ref string streetName)
 		{
-			string key = string.Concat (zipCode, " ", streetName);
+			string key = string.Format ("{0:0000} {1}", zipCode, streetName);
 
 			System.Tuple<string, string> fix;
 
 			if (this.fixes.TryGetValue (key, out fix))
 			{
-				zipCode    = fix.Item1;
+				zipCode    = InvariantConverter.ParseInt (fix.Item1);
 				streetName = fix.Item2;
 
 				return true;

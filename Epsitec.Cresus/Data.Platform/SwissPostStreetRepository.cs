@@ -15,7 +15,7 @@ namespace Epsitec.Data.Platform
 		{
 			IEnumerable<SwissPostStreetInformation> streets = SwissPostStreet.GetStreets ();
 
-			this.streetByZip = new Dictionary<string, List<SwissPostStreetInformation>> ();
+			this.streetByZip = new Dictionary<int, List<SwissPostStreetInformation>> ();
 
 			foreach (var street in streets)
 			{
@@ -38,9 +38,8 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostStreetInformation> FindStreets(int zipCode)
 		{
 			List<SwissPostStreetInformation> list;
-			string key = zipCode.ToString ("####");
-
-			if (this.streetByZip.TryGetValue (key, out list))
+			
+			if (this.streetByZip.TryGetValue (zipCode, out list))
 			{
 				return list;
 			}
@@ -53,9 +52,8 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostStreetInformation> FindStreets(int zipCode, string rootName)
 		{
 			List<SwissPostStreetInformation> list;
-			string key = zipCode.ToString ("####");
-
-			if (this.streetByZip.TryGetValue (key, out list))
+			
+			if (this.streetByZip.TryGetValue (zipCode, out list))
 			{
 				var upperRootName = TextConverter.ConvertToUpperAndStripAccents (rootName);
 
@@ -67,6 +65,6 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		private readonly Dictionary<string, List<SwissPostStreetInformation>> streetByZip;
+		private readonly Dictionary<int, List<SwissPostStreetInformation>> streetByZip;
 	}
 }

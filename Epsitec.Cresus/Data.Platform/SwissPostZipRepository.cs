@@ -57,6 +57,19 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
+		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, int zipComplement)
+		{
+			List<SwissPostZipInformation> list;
+
+			if (this.nameByZip.TryGetValue (zipCode, out list))
+			{
+				return list.Where (x => x.ZipComplement == zipComplement);
+			}
+			else
+			{
+				return EmptyList<SwissPostZipInformation>.Instance;
+			}
+		}
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string shortName)
 		{
 			List<SwissPostZipInformation> list;

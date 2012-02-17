@@ -1,4 +1,4 @@
-//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+ï»¿//	Copyright Â© 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -8,7 +8,7 @@ using System.Collections.Generic;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// La classe InvariantConverter permet de convertir des données simples entre
+	/// La classe InvariantConverter permet de convertir des donnÃ©es simples entre
 	/// elles.
 	/// </summary>
 	public static class InvariantConverter
@@ -121,11 +121,11 @@ namespace Epsitec.Common.Types
 		}
 		public static bool IsSimple(object obj)
 		{
-			//	Considère comme simple les cas suivants:
+			//	ConsidÃ¨re comme simple les cas suivants:
 			//
 			//	- obj est nul
 			//	- obj est une valeur (ValueType)
-			//	- obj est une chaîne de caractères
+			//	- obj est une chaÃ®ne de caractÃ¨res
 			
 			if ((obj == null) ||
 				(obj == System.DBNull.Value) ||
@@ -229,21 +229,84 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		/// <summary>
+		/// Parses the integer number and stops as soon as a non digit character is encountered.
+		/// Minus sign and dash are treated as equivalents and can appear any number of times
+		/// before the first digit.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>The number or <c>0</c> if the value is not a number.</returns>
 		public static int     ParseInt(string value)
 		{
-			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
+			if (string.IsNullOrEmpty (value))
+			{
+				return 0;
+			}
+
+			int  num = 0;
+			bool neg = false;
+			bool ok  = false;
+			int  len = value.Length;
+
+			for (int i = 0; i < len; i++)
+			{
+				char c = value[i];
+
+				switch (c)
+				{
+					case '0':
+					case '1':
+					case '2':
+					case '3':
+					case '4':
+					case '5':
+					case '6':
+					case '7':
+					case '8':
+					case '9':
+						num = num * 10 + c - '0';
+						ok  = true;
+						break;
+
+					case '-':		//	dash
+					case 'âˆ’':		//	minus sign (2212)
+						if (ok)
+						{
+							goto exit;
+						}
+						neg = !neg;
+						break;
+
+					case '+':
+						if (ok)
+						{
+							goto exit;
+						}
+						neg = false;
+						break;
+
+					default:
+						goto exit;
+				}
+			}
+
+		exit:
+			return neg ? -num : num;
 		}
+
 		public static T ParseInt<T>(string value)
 			where T : struct
 		{
 			return string.IsNullOrEmpty (value)
 				? default(T)
-				: (T) (System.Enum.ToObject (typeof (T), int.Parse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture)));
+				: (T) (System.Enum.ToObject (typeof (T), InvariantConverter.ParseInt (value)));
 		}
+
 		public static long ParseLong(string value)
 		{
 			return string.IsNullOrEmpty (value) ? 0 : long.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
+		
 		public static decimal ParseDecimal(string value)
 		{
 			return string.IsNullOrEmpty (value) ? 0 : decimal.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
@@ -427,7 +490,7 @@ namespace Epsitec.Common.Types
 		{
 			//	Retourne true si la valeur de 'obj' n'est pas 'null' ou une
 			//	de ses variantes, false sinon. Si le type n'est pas reconnu ou
-			//	que la syntaxe n'est pas correcte, une exception est levée.
+			//	que la syntaxe n'est pas correcte, une exception est levÃ©e.
 			
 			if ((obj == null) || (obj == System.DBNull.Value))
 			{
@@ -439,8 +502,8 @@ namespace Epsitec.Common.Types
 			
 			if (text != null)
 			{
-				//	On va devoir faire un "Parse" coûteux... On pourrait bien sûr aussi utiliser TypeConverter,
-				//	mais ça ne nous apporterait rien ici.
+				//	On va devoir faire un "Parse" coÃ»teux... On pourrait bien sÃ»r aussi utiliser TypeConverter,
+				//	mais Ã§a ne nous apporterait rien ici.
 				
 				text = text.Trim ();
 				
@@ -590,7 +653,7 @@ namespace Epsitec.Common.Types
 			
 			if (obj.GetType () == type)
 			{
-				//	Le type est déjà correct, on n'a donc rien à faire :
+				//	Le type est dÃ©jÃ  correct, on n'a donc rien Ã  faire :
 				
 				value = obj;
 				return true;
