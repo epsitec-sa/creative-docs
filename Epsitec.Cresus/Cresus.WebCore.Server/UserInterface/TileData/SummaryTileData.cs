@@ -125,18 +125,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			return new CollectionSummaryTile ()
 			{
 				EntityId = entityIdGetter (entity),
-				IconClass = iconClassGetter (this.Icon),
+				IconClass = iconClassGetter (this.Template.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
-				Text = this.TextGetter (entity).ToString (),
-				Title = this.TitleGetter (entity).ToString (),
+				Text = this.Template.TextGetter (entity).ToString (),
+				Title = this.Template.TitleGetter (entity).ToString (),
 				EntityType = typeGetter (this.Template.EntityType),
 				LambdaId = lambdaIdGetter (this.Template.Lambda),
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,
 			};
 		}
-
 
 
 	}
