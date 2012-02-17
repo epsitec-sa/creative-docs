@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		{
 			return new SummaryTile ()
 			{
-				EntityId = entityIdGetter (entity),
+				EntityId = entityIdGetter (this.EntityGetter(entity)),
 				IconClass = iconClassGetter (this.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
