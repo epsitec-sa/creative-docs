@@ -46,14 +46,17 @@ namespace Epsitec.Aider.Data
 			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, streetNumber);
 		}
 
-		public string FindParishName(string key, string normalizedStreetName, int streetNumber)
+		public string FindParishName(string zipCode, string townName, string normalizedStreetName, int streetNumber)
 		{
-			var addresses = this.FindAddresses (key)
-				         ?? this.FindAddresses (string.Join (" ", key.Split (' ').Take (2).ToArray ()));
+			return this.FindParishName (string.Concat (zipCode, " ", townName), normalizedStreetName, streetNumber);
+		}
+
+		private string FindParishName(string key, string normalizedStreetName, int streetNumber)
+		{
+			var addresses = this.FindAddresses (key);
 
 			if (addresses == null)
 			{
-				System.Diagnostics.Debug.WriteLine (string.Format ("Cannot find addresses for {0}", key));
 				return null;
 			}
 			
