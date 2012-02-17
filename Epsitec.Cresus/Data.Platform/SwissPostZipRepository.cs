@@ -28,11 +28,20 @@ namespace Epsitec.Data.Platform
 
 				list.Add (zip);
 			}
+
+			foreach (var list in this.nameByZip.Values)
+			{
+				list.Sort (SwissPostZipRepository.Sorter);
+			}
 		}
 
 
 		public static readonly SwissPostZipRepository Current = new SwissPostZipRepository ();
 
+		public IEnumerable<SwissPostZipInformation> FindAll()
+		{
+			return nameByZip.SelectMany (x => x.Value);
+		}
 
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode)
 		{
@@ -63,11 +72,60 @@ namespace Epsitec.Data.Platform
 		}
 
 
-		private readonly Dictionary<int, List<SwissPostZipInformation>> nameByZip;
-
-		public IEnumerable<SwissPostZipInformation> FindAll()
+		/// <summary>
+		/// Sorts the zip records of a same zip code. The domiciles/mixed come before PO boxes,
+		/// companies and internal zip codes.
+		/// </summary>
+		/// <param name="a">Zip record.</param>
+		/// <param name="b">Zip record.</param>
+		/// <returns>Comparison result.</returns>
+		private static int Sorter(SwissPostZipInformation a, SwissPostZipInformation b)
 		{
-			return nameByZip.SelectMany (x => x.Value);
+			if (a == b)
+			{
+				return 0;
+			}
+
+			SwissPostZipType aZipType = a.ZipType;
+			SwissPostZipType bZipType = b.ZipType;
+
+			if (aZipType == SwissPostZipType.DomicileOnly)
+			{
+				aZipType = SwissPostZipType.Mixed;
+			}
+			if (bZipType == SwissPostZipType.DomicileOnly)
+			{
+				bZipType = SwissPostZipType.Mixed;
+			}
+
+			if (aZipType < bZipType)
+			{
+				return -1;
+			}
+			if (aZipType > bZipType)
+			{
+				return 1;
+			}
+			if (a.ZipComplement < b.ZipComplement)
+			{
+				return -1;
+			}
+			if (a.ZipComplement > b.ZipComplement)
+			{
+				return 1;
+			}
+			if (a.OnrpCode < b.OnrpCode)
+			{
+				return -1;
+			}
+			if (a.OnrpCode > b.OnrpCode)
+			{
+				return 1;
+			}
+			return 0;
 		}
+
+		
+		private readonly Dictionary<int, List<SwissPostZipInformation>> nameByZip;
 	}
 }

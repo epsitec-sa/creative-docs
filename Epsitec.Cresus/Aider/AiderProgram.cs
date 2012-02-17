@@ -19,6 +19,7 @@ namespace Epsitec.Aider
 		{
 #if true
 			var streets = SwissPostStreetRepository.Current;
+			var zips    = SwissPostZipRepository.Current;
 
 			var repo = ParishAddressRepository.Current;
 			var name = repo.FindParishName ("1400 Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
