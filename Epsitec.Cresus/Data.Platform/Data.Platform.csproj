@@ -57,7 +57,9 @@
     <Compile Include="SwissPostStreetRepository.cs" />
     <Compile Include="SwissPostZip.cs" />
     <Compile Include="SwissPostZipInformation.cs" />
+    <Compile Include="SwissPostZipLanguageCode.cs" />
     <Compile Include="SwissPostZipRepository.cs" />
+    <Compile Include="SwissPostZipType.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

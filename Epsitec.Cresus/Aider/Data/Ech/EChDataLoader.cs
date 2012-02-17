@@ -342,7 +342,7 @@ namespace Epsitec.Aider.Data.Ech
 			var swissZipCodeId = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
 			var countryCode = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
 
-			return new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode);
+			return EChAddressFixesRepository.Current.ApplyFix (new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode));
 		}
 
 

@@ -14,7 +14,7 @@ namespace Epsitec.Data.Platform
 		{
 			IEnumerable<SwissPostZipInformation> zips = SwissPostZip.GetZips ();
 
-			this.nameByZip = new Dictionary<string, List<SwissPostZipInformation>> ();
+			this.nameByZip = new Dictionary<int, List<SwissPostZipInformation>> ();
 
 			foreach (var zip in zips)
 			{
@@ -37,9 +37,8 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode)
 		{
 			List<SwissPostZipInformation> list;
-			string key = zipCode.ToString ("####");
 
-			if (this.nameByZip.TryGetValue (key, out list))
+			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
 				return list;
 			}
@@ -52,9 +51,8 @@ namespace Epsitec.Data.Platform
 		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string shortName)
 		{
 			List<SwissPostZipInformation> list;
-			string key = zipCode.ToString ("####");
-
-			if (this.nameByZip.TryGetValue (key, out list))
+			
+			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
 				return list.Where (x => x.ShortName == shortName);
 			}
@@ -65,7 +63,7 @@ namespace Epsitec.Data.Platform
 		}
 
 
-		private readonly Dictionary<string, List<SwissPostZipInformation>> nameByZip;
+		private readonly Dictionary<int, List<SwissPostZipInformation>> nameByZip;
 
 		public IEnumerable<SwissPostZipInformation> FindAll()
 		{

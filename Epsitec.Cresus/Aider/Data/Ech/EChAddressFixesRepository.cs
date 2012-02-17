@@ -31,12 +31,37 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
+		internal EChAddress ApplyFix(EChAddress address)
+		{
+			if (address.CountryCode == "CH")
+			{
+				string zipCode      = address.SwissZipCode;
+				string streetName   = address.Street;
+				string addressLine1 = address.AddressLine1;
+
+				if (this.ApplyFix (ref zipCode, ref streetName, addressLine1))
+				{
+					return new EChAddress (addressLine1, streetName, address.HouseNumber, address.Town, zipCode, address.SwissZipCodeAddOn, address.SwissZipCodeId, address.CountryCode);
+				}
+			}
+			
+			return address;
+		}
+
+		/// <summary>
+		/// Applies a fix to the address so that it is compatible with the MAT[CH] database
+		/// provided by the Swiss Post.
+		/// </summary>
+		/// <param name="zipCode">The zip code.</param>
+		/// <param name="streetName">Full name of the street.</param>
+		/// <param name="addressLine1">The additional address line.</param>
+		/// <returns></returns>
 		public bool ApplyFix(ref string zipCode, ref string streetName, string addressLine1 = null)
 		{
 			bool fixApplied = false;
 			
 			fixApplied |= this.ApplyQuickFix (ref zipCode, ref streetName);
-			fixApplied |= this.ApplySwissPostFix (zipCode, ref streetName, addressLine1) == Fix.Applied;
+			fixApplied |= this.ApplySwissPostFix (zipCode, ref streetName, addressLine1) == FixStatus.Applied;
 
 			return fixApplied;
 		}
@@ -58,11 +83,11 @@ namespace Epsitec.Aider.Data.Ech
 			return false;
 		}
 
-		private Fix ApplySwissPostFix(string zipCode, ref string streetName, string addressLine1, bool logFailures = true)
+		private FixStatus ApplySwissPostFix(string zipCode, ref string streetName, string addressLine1, bool logFailures = true)
 		{
 			if (string.IsNullOrEmpty (streetName))
 			{
-				return Fix.Invalid;
+				return FixStatus.Invalid;
 			}
 
 			int zip     = int.Parse (zipCode, System.Globalization.CultureInfo.InvariantCulture);
@@ -73,7 +98,7 @@ namespace Epsitec.Aider.Data.Ech
 
 			if (n == 0)
 			{
-				return Fix.Invalid;
+				return FixStatus.Invalid;
 			}
 
 			//	The tokens are words in upper case, without any accented letters. For instance
@@ -105,14 +130,14 @@ namespace Epsitec.Aider.Data.Ech
 					{
 						var status = this.ApplySwissPostFix (zipCode, ref addressLine1, null, false);
 
-						if (status == Fix.Invalid)
+						if (status == FixStatus.Invalid)
 						{
 							if (logFailures)
 							{
 								this.failures.Add (string.Concat (zipCode, " ", streetName));
 							}
 
-							return Fix.Invalid;
+							return FixStatus.Invalid;
 						}
 						else
 						{
@@ -121,7 +146,7 @@ namespace Epsitec.Aider.Data.Ech
 
 							streetName = addressLine1;
 
-							return Fix.Applied;
+							return FixStatus.Applied;
 						}
 					}
 
@@ -132,7 +157,7 @@ namespace Epsitec.Aider.Data.Ech
 						this.failures.Add (string.Concat (zipCode, " ", streetName));
 					}
 
-					return Fix.Invalid;
+					return FixStatus.Invalid;
 
 				}
 
@@ -148,21 +173,25 @@ namespace Epsitec.Aider.Data.Ech
 
 			if (preferred == streetName)
 			{
-				return Fix.Unchanged;
+				return FixStatus.Unchanged;
 			}
 			else
 			{
 				streetName = preferred;
-				return Fix.Applied;
+				return FixStatus.Applied;
 			}
 		}
 
-		public enum Fix
+		#region FixStatus Enumeration
+
+		private enum FixStatus
 		{
 			Unchanged,
 			Invalid,
 			Applied
 		}
+
+		#endregion
 
 		private static IEnumerable<KeyValuePair<string, System.Tuple<string, string>>> GetFixes()
 		{

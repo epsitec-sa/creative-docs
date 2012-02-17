@@ -1,6 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
@@ -25,19 +26,20 @@ namespace Epsitec.Data.Platform
 		{
 			string[] args = line.Split ('\t');
 
-			this.OnrpCode       = args[0];
-			this.ZipType        = args[1];
-			this.ZipCode        = args[2];
-			this.ZipComplement  = args[3];
+			int date = InvariantConverter.ParseInt (args[12]);
+
+			this.OnrpCode       = InvariantConverter.ParseInt (args[0]);
+			this.ZipType        = InvariantConverter.ParseInt<SwissPostZipType> (args[1]);
+			this.ZipCode        = InvariantConverter.ParseInt (args[2]);
+			this.ZipComplement  = InvariantConverter.ParseInt (args[3]);
 			this.ShortName      = args[4];
 			this.LongName       = args[5];
 			this.Canton         = args[6];
-			this.LanguageCode1  = args[7];
-			this.LanguageCode2  = args[8];
-			this.MatchSort      = args[9];
+			this.LanguageCode1  = InvariantConverter.ParseInt<SwissPostZipLanguageCode> (args[7]);
+			this.LanguageCode2  = InvariantConverter.ParseInt<SwissPostZipLanguageCode> (args[8]);
 			this.DistributionBy = args[10];
-			this.ComunityCode   = args[11];
-			this.ValidSince     = args[12];
+			this.ComunityCode   = InvariantConverter.ParseInt (args[11]);
+			this.ValidSince     = new Date (year: date / 10000, month: (date/100) % 100, day: date % 100);
 
 			string shortName = this.ShortName;
 			
@@ -65,23 +67,22 @@ namespace Epsitec.Data.Platform
 
 		public override string ToString()
 		{
-			return string.Concat (this.ZipCode, " ", this.LongName, " (", this.Canton, ")");
+			return string.Format ("{0:0000} {1} ({2})", this.ZipCode, this.LongName, this.Canton);
 		}
 
 		
-		public readonly string					OnrpCode;
-		public readonly string					ZipType;
-		public readonly string					ZipCode;
-		public readonly string					ZipComplement;
+		public readonly int						OnrpCode;
+		public readonly SwissPostZipType		ZipType;
+		public readonly int						ZipCode;
+		public readonly int						ZipComplement;
 		public readonly string					ShortName;
 		public readonly string					LongName;
 		public readonly string					Canton;
-		public readonly string					LanguageCode1;
-		public readonly string					LanguageCode2;
-		public readonly string					MatchSort;
+		public readonly SwissPostZipLanguageCode LanguageCode1;
+		public readonly SwissPostZipLanguageCode LanguageCode2;
 		public readonly string					DistributionBy;
-		public readonly string					ComunityCode;
-		public readonly string					ValidSince;
+		public readonly int						ComunityCode;
+		public readonly Date					ValidSince;
 
 		private readonly string					alternateName;
 	}

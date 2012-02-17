@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -233,7 +233,14 @@ namespace Epsitec.Common.Types
 		{
 			return string.IsNullOrEmpty (value) ? 0 : int.Parse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture);
 		}
-		public static long    ParseLong(string value)
+		public static T ParseInt<T>(string value)
+			where T : struct
+		{
+			return string.IsNullOrEmpty (value)
+				? default(T)
+				: (T) (System.Enum.ToObject (typeof (T), int.Parse (value, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture)));
+		}
+		public static long ParseLong(string value)
 		{
 			return string.IsNullOrEmpty (value) ? 0 : long.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
