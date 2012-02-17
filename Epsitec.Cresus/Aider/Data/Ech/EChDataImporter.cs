@@ -104,7 +104,7 @@ namespace Epsitec.Aider.Data.Ech
 		private static eCH_ReportedPersonEntity Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson)
 		{
 			var eChReportedPersonEntity = businessContext.CreateEntity<eCH_ReportedPersonEntity> ();
-			var aiderHouseHold = businessContext.CreateEntity<AiderHouseholdEntity> ();
+			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity> ();
 
 			eCH_AddressEntity eChAddressEntity = null;
 			var eChAddress = eChReportedPerson.Address;
@@ -120,25 +120,25 @@ namespace Epsitec.Aider.Data.Ech
 
 			if (eChAdult1 != null)
 			{
-				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult1, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
 
 				eChReportedPersonEntity.Adult1 = result.Item1;
-				aiderHouseHold.Head1 = result.Item2;
+				aiderHousehold.Head1 = result.Item2;
 			}
 
 			var eChAdult2 = eChReportedPerson.Adult2;
 
 			if (eChAdult2 != null)
 			{
-				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
 
 				eChReportedPersonEntity.Adult1 = result.Item1;
-				aiderHouseHold.Head2 = result.Item2;
+				aiderHousehold.Head2 = result.Item2;
 			}
 
 			foreach (var eChChild in eChReportedPerson.Children)
 			{
-				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild, eChReportedPersonEntity, eChAddressEntity, aiderHouseHold);
+				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChChild, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
 
 				eChReportedPersonEntity.Children.Add (result.Item1);
 			}
@@ -147,7 +147,7 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
+		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
 		{
 			EntityKey entityKey;
 			AiderPersonEntity aiderPersonEntity;
@@ -168,7 +168,7 @@ namespace Epsitec.Aider.Data.Ech
 
 			if (aiderPersonEntity != null)
 			{
-				aiderPersonEntity.Household2 = houseHold;
+				aiderPersonEntity.Household2 = household;
 
 				var eChPersonEntity = aiderPersonEntity.eCH_Person;
 
@@ -179,7 +179,7 @@ namespace Epsitec.Aider.Data.Ech
 			}
 			else
 			{
-				var result = EChDataImporter.Import (businessContext, eChPerson, eChReportedPersonEntity, eChAddressEntity, houseHold);
+				var result = EChDataImporter.Import (businessContext, eChPerson, eChReportedPersonEntity, eChAddressEntity, household);
 
 				// NOTE We add the newly created entity to the dictionary of the entities that have
 				// been created but not yet saved.
@@ -191,10 +191,10 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity houseHold)
+		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
 		{
 			var aiderPersonEntity = businessContext.CreateEntity<AiderPersonEntity> ();
-			aiderPersonEntity.Household1 = houseHold;
+			aiderPersonEntity.Household1 = household;
 
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
 

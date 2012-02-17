@@ -125,19 +125,19 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static IEnumerable<EervHousehold> LoadEervHouseHolds(FileInfo inputFile)
+		public static IEnumerable<EervHousehold> LoadEervHouseholds(FileInfo inputFile)
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
 			foreach (var record in EervDataLoader.GetRecords (inputFile))
 			{
-				var houseHoldId = record[HouseholdIndex.Id];
+				var householdId = record[HouseholdIndex.Id];
 
-				if (!processedIds.Contains (houseHoldId))
+				if (!processedIds.Contains (householdId))
 				{
 					yield return EervDataLoader.GetEervHousehold (record);
 
-					processedIds.Add (houseHoldId);
+					processedIds.Add (householdId);
 				}
 			}
 		}

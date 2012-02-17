@@ -21,7 +21,7 @@ namespace Aider.Tests.Vs
 			var groupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.csv");
 			var activityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.csv");
 
-			var houseHolds = EervDataLoader.LoadEervHouseHolds (personsFile).ToDictionary (h => h.Id);
+			var households = EervDataLoader.LoadEervHouseholds (personsFile).ToDictionary (h => h.Id);
 			var persons = EervDataLoader.LoadEervPersons (personsFile).ToList ();
 			var groupDefinitions = EervDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
 			var groups = EervDataLoader.LoadEervGroups (groupFile).ToList ();

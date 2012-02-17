@@ -114,7 +114,7 @@ namespace Aider.Tests.Vs
 
 				foreach (var aiderHousehold in businessContext.GetAllEntities<AiderHouseholdEntity> ())
 				{
-					this.AddStuffToHouseHold (businessContext, towns, aiderHousehold);
+					this.AddStuffToHousehold (businessContext, towns, aiderHousehold);
 				}
 			}
 		}
@@ -175,7 +175,7 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private void AddStuffToHouseHold(BusinessContext businessContext, List<AiderTownEntity> towns, AiderHouseholdEntity aiderHousehold)
+		private void AddStuffToHousehold(BusinessContext businessContext, List<AiderTownEntity> towns, AiderHouseholdEntity aiderHousehold)
 		{
 			var address = businessContext.CreateEntity<AiderAddressEntity> ();
 
