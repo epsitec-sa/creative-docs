@@ -69,17 +69,17 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public void Update(AbstractController controller, Command command, FormattedText description)
+		public void Update(AbstractController controller, Command command)
 		{
 			if (this.index != -1 && this.history[this.index].Command == command)
 			{
-				this.history[this.index] = this.CreateNavigatorData (controller, command, description);
+				this.history[this.index] = this.CreateNavigatorData (controller, command);
 			}
 		}
 
-		public void Put(AbstractController controller, Command command, FormattedText description)
+		public void Put(AbstractController controller, Command command)
 		{
-			var data = this.CreateNavigatorData (controller, command, description);
+			var data = this.CreateNavigatorData (controller, command);
 			this.history.Insert (++this.index, data);
 
 			int overflow = this.history.Count-this.index-1;
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			}
 		}
 
-		private NavigatorData CreateNavigatorData(AbstractController controller, Command command, FormattedText description)
+		private NavigatorData CreateNavigatorData(AbstractController controller, Command command)
 		{
 			SearchData      search  = null;
 			SearchData      filter  = null;
@@ -107,10 +107,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 			{
-				options = controller.DataAccessor.Options.CopyFrom ();
+				options = controller.DataAccessor.Options.NavigatorCopyFrom ();
 			}
 
-			return new NavigatorData (command, description, controller.MemoryList.Selected, search, filter, options);
+			return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options);
 		}
 
 
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 			{
-				data.Options.CopyTo (controller.DataAccessor.Options);
+				data.Options.NavigatorCopyTo (controller.DataAccessor.Options);
 			}
 		}
 

@@ -85,6 +85,22 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
+		public override AbstractOptions NavigatorCopyFrom()
+		{
+			var options = new ExtraitDeCompteOptions ();
+			options.SetComptaEntity (this.comptaEntity);
+			this.NavigatorCopyTo (options);
+			return options;
+		}
+
+		public override void NavigatorCopyTo(AbstractOptions dst)
+		{
+			var d = dst as ExtraitDeCompteOptions;
+			d.NuméroCompte = this.NuméroCompte;
+
+			this.CopyTo (dst);
+		}
+
 		public override AbstractOptions CopyFrom()
 		{
 			var options = new ExtraitDeCompteOptions ();

@@ -619,12 +619,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetTitle(FormattedText title)
 		{
+			this.title = title;
 			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
 		}
 
 		protected void SetSubtitle(FormattedText subtitle)
 		{
+			this.subtitle = subtitle;
 			this.subtitleLabel.FormattedText = subtitle.ApplyBold ().ApplyFontSize (13.0);
+		}
+
+		public FormattedText MixTitle
+		{
+			get
+			{
+				return this.title + " / " + this.subtitle;
+			}
 		}
 		#endregion
 
@@ -904,5 +914,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected FrameBox										frameBox;
 		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;
+		protected FormattedText									title;
+		protected FormattedText									subtitle;
 	}
 }

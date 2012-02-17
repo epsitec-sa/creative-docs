@@ -182,43 +182,89 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Navigator
 		private void NavigatorFirst()
 		{
+			//	Appelé la première fois, pour mettre la première présentation dans l'historique.
 			this.navigatorEngine.Clear ();
-			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument);
+			this.UpdateNavigatorCommands ();
 		}
 
 		private void NavigatorUpdate()
 		{
-			this.navigatorEngine.Update (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			//	Appelé avant un changement de présentation, pour mettre à jour la présentation dans l'historique.
+			this.navigatorEngine.Update (this.controller, this.selectedCommandDocument);
 		}
 
 		private void NavigatorPut()
 		{
-			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument, this.GetShortTitle (this.selectedCommandDocument));
+			//	Appelé après un changement de présentation, pour ajouter la nouvelle présentation dans l'historique.
+			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument);
 			this.UpdateNavigatorCommands ();
 		}
 
 		private void NavigatorPrev()
 		{
+			//	Appelé lorsqu'on désire voir la présentation précédente.
 			this.NavigatorUpdate ();
-
-			var cmd = this.navigatorEngine.Back;
-
-			this.ribbonController.PrésentationCommandsUpdate (cmd);
-			this.selectedCommandDocument = cmd;
-			this.CreateController ();
-
-			this.navigatorEngine.Restore (this.controller);
-			this.controller.UpdateAfterChanged ();
-
-			this.UpdateNavigatorCommands ();
+			this.NavigatorRestore (this.navigatorEngine.Back);
 		}
 
 		private void NavigatorNext()
 		{
+			//	Appelé lorsqu'on désire voir la présentation suivante.
 			this.NavigatorUpdate ();
+			this.NavigatorRestore (this.navigatorEngine.Forward);
+		}
 
-			var cmd = this.navigatorEngine.Forward;
+		private void ShowNavigatorMenu(Widget parentButton)
+		{
+			//	Affiche le menu pour choisir une présentation de l'historique.
+			var menu = new VMenu ();
 
+			int limit = 15;  // menu de 15 lignes au maximum
+			for (int i = this.navigatorEngine.Count-1; i >= 0 ; i--)  // du plus récent au plus ancien
+			{
+				this.AddNavigatorMenu (menu, i);
+
+				if (--limit == 0)
+				{
+					break;
+				}
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddNavigatorMenu(VMenu menu, int index)
+		{
+			var data = this.navigatorEngine.GetNavigatorData (index);
+
+			string icon = string.Format (@"<img src=""{0}"" voff=""-6"" dx=""20"" dy=""20""/>  ", data.Command.Icon);
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetCheckStateIconUri (index == this.navigatorEngine.Index),
+				FormattedText = icon + data.Description,
+				Name          = index.ToString (),  // on ne peut pas utiliser simplement Index !
+			};
+
+			item.Clicked += delegate
+			{
+				this.NavigatorUpdate ();
+
+				int i = int.Parse (item.Name);
+				var cmd = this.navigatorEngine.Any (i);
+				this.NavigatorRestore (cmd);
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void NavigatorRestore(Command cmd)
+		{
+			//	Restaure une présentation utilisée précédemment.
 			this.ribbonController.PrésentationCommandsUpdate (cmd);
 			this.selectedCommandDocument = cmd;
 			this.CreateController ();
@@ -231,6 +277,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateNavigatorCommands()
 		{
+			//	Met à jour les 3 commandes de navigtion.
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Prev);
 				cs.Enable = this.navigatorEngine.PrevEnable;
@@ -245,67 +292,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Menu);
 				cs.Enable = this.navigatorEngine.Count > 1;
 			}
-		}
-
-		private void NavigatorMenu()
-		{
-			var parentButton = this.ribbonController.NavigatorMenuButton;
-
-			var menu = new VMenu ();
-
-			int limit = 15;  // menu de 15 lignes au maximum
-			for (int i = this.navigatorEngine.Count-1; i >= 0 ; i--)  // du plus récent au plus ancien
-			{
-				this.NavigatorAddMenu (menu, i);
-
-				if (--limit == 0)
-				{
-					break;
-				}
-			}
-
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
-
-			menu.Host = parentButton;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
-		}
-
-		private void NavigatorAddMenu(VMenu menu, int index)
-		{
-			var data = this.navigatorEngine.GetNavigatorData (index);
-
-			string icon = string.Format (@"<img src=""{0}"" voff=""-6"" dx=""20"" dy=""20""/>  ", data.Command.Icon);
-
-			var item = new MenuItem ()
-			{
-				IconUri       = UIBuilder.GetCheckStateIconUri (index == this.navigatorEngine.Index),
-				FormattedText = icon + data.Description,
-				Name          = index.ToString (),
-			};
-
-			item.Clicked += delegate
-			{
-				int i = int.Parse (item.Name);
-				this.NavigatorIndex (i);
-			};
-
-			menu.Items.Add (item);
-		}
-
-		private void NavigatorIndex(int index)
-		{
-			this.NavigatorUpdate ();
-
-			var cmd = this.navigatorEngine.Any (index);
-
-			this.ribbonController.PrésentationCommandsUpdate (cmd);
-			this.selectedCommandDocument = cmd;
-			this.CreateController ();
-
-			this.navigatorEngine.Restore (this.controller);
-			this.controller.UpdateAfterChanged ();
-
-			this.UpdateNavigatorCommands ();
 		}
 		#endregion
 
@@ -474,7 +460,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return string.Concat ("Crésus MCH-2 / ", this.compta.Nom, " / ", this.GetShortTitle (command));
 		}
 
-		public string GetShortTitle(Command command)
+		private string GetShortTitle(Command command)
 		{
 			string text = command.Description;
 
@@ -617,12 +603,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (autrePériode != null)
 			{
+				this.NavigatorUpdate ();
+
 				this.période = autrePériode;
 				
 				this.CreateController ();
 				this.AdaptSettingsDatas ();
-
 				this.controller.UpdateAfterChanged ();
+
+				this.NavigatorPut ();
 			}
 		}
 
@@ -770,6 +759,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.ClearHilite();
 			this.CreateController ();
 			this.Dirty = false;
+			this.NavigatorFirst ();
 		}
 
 		[Command (Res.CommandIds.File.Open)]
@@ -785,7 +775,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateController ();
 				this.AdaptSettingsDatas ();
 
-				if (!string.IsNullOrEmpty (err))
+				if (string.IsNullOrEmpty (err))
+				{
+					this.NavigatorFirst ();
+				}
+				else
 				{
 					this.ErrorDialog (err);
 				}
@@ -1085,7 +1079,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Navigator.Menu)]
 		private void CommandNavigatorMenu()
 		{
-			this.NavigatorMenu ();
+			this.ShowNavigatorMenu (this.ribbonController.NavigatorMenuButton);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]
