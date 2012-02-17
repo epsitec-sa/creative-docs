@@ -91,9 +91,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		private NavigatorData CreateNavigatorData(AbstractController controller, Command command)
 		{
-			SearchData      search  = null;
-			SearchData      filter  = null;
-			AbstractOptions options = null;
+			SearchData      search     = null;
+			SearchData      filter     = null;
+			AbstractOptions options    = null;
+			int?            arrayIndex = null;
 
 			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
 			{
@@ -110,7 +111,12 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				options = controller.DataAccessor.Options.NavigatorCopyFrom ();
 			}
 
-			return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options);
+			if (controller.ArrayController != null)
+			{
+				arrayIndex = controller.ArrayController.SelectedRow;
+			}
+
+			return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, arrayIndex);
 		}
 
 
@@ -155,6 +161,16 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 			{
 				data.Options.NavigatorCopyTo (controller.DataAccessor.Options);
+			}
+		}
+
+		public void RestoreArrayController(AbstractController controller)
+		{
+			var data = this.history[this.index];
+
+			if (controller.ArrayController != null && data.ArrayIndex.HasValue)
+			{
+				controller.ArrayController.SelectedRow = data.ArrayIndex.Value;
 			}
 		}
 

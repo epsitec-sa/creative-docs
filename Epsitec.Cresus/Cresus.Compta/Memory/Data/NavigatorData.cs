@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 	/// </summary>
 	public class NavigatorData
 	{
-		public NavigatorData(Command command, FormattedText description, MemoryData memory, SearchData search, SearchData filter, AbstractOptions options)
+		public NavigatorData(Command command, FormattedText description, MemoryData memory, SearchData search, SearchData filter, AbstractOptions options, int? arrayIndex)
 		{
 			this.Command     = command;
 			this.Description = description;
@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			this.Search      = search;
 			this.Filter      = filter;
 			this.Options     = options;
+			this.ArrayIndex  = arrayIndex;
 		}
 
 
@@ -62,6 +63,12 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 		public AbstractOptions Options
+		{
+			get;
+			private set;
+		}
+
+		public int? ArrayIndex
 		{
 			get;
 			private set;

@@ -271,6 +271,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.navigatorEngine.Restore (this.controller);
 			this.controller.UpdateAfterChanged ();
+			this.navigatorEngine.RestoreArrayController (this.controller);
 
 			this.UpdateNavigatorCommands ();
 		}
