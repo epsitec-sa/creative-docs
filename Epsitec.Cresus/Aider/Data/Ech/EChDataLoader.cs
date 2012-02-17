@@ -333,16 +333,16 @@ namespace Epsitec.Aider.Data.Ech
 
 		public static EChAddress GetEChAddress(XElement xAddress)
 		{
-			var addressLine1 = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.AddressLine1);
-			var street = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Street);
-			var houseNumber = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.HouseNumber);
-			var town = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Town);
-			var swissZipCode = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCode);
+			var addressLine1      = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.AddressLine1);
+			var street            = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Street);
+			var houseNumber       = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.HouseNumber);
+			var town              = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Town);
+			var swissZipCode      = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCode);
 			var swissZipCodeAddOn = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeAddOn);
-			var swissZipCodeId = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
-			var countryCode = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
+			var swissZipCodeId    = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
+			var countryCode       = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
 
-			return EChAddressFixesRepository.Current.ApplyFix (new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode));
+			return new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode);
 		}
 
 
