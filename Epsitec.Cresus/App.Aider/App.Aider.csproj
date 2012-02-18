@@ -151,6 +151,10 @@
       <Project>{BA604F89-53C1-4228-AC76-5D5E68205029}</Project>
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Data.Platform\Data.Platform.csproj">
+      <Project>{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}</Project>
+      <Name>Data.Platform</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

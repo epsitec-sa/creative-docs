@@ -17,6 +17,7 @@ namespace Epsitec.Aider
 	{
 		public static void Main(string[] args)
 		{
+//-			var test = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
 #if false
 			var streets = SwissPostStreetRepository.Current;
 			var zips    = SwissPostZipRepository.Current;
