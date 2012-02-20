@@ -344,10 +344,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+
 		public virtual AbstractEntity GetEditionEntity(int row)
 		{
 			return null;
 		}
+
+		public virtual int GetEditionIndex(AbstractEntity entity)
+		{
+			return -1;
+		}
+
 
 		public virtual FormattedText GetText(int row, ColumnType column, bool all = false)
 		{

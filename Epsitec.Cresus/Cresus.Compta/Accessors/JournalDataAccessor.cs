@@ -92,6 +92,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+
 		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.journal.Count)
@@ -103,6 +104,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return this.journal[row];
 			}
 		}
+
+		public override int GetEditionIndex(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return -1;
+			}
+			else
+			{
+				return this.journal.IndexOf (entity as ComptaEcritureEntity);
+			}
+		}
+
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{

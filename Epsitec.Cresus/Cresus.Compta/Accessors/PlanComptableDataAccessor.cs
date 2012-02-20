@@ -79,6 +79,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+
 		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.planComptable.Count)
@@ -90,6 +91,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return this.planComptable[row];
 			}
 		}
+
+		public override int GetEditionIndex(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				return -1;
+			}
+			else
+			{
+				return this.planComptable.IndexOf (entity as ComptaCompteEntity);
+			}
+		}
+
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{

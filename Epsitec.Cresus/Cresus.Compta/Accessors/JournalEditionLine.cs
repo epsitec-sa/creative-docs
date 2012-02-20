@@ -78,8 +78,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontant(EditionData data)
 		{
-			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&
-				data.Text == Converters.MontantToString (0))
+			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+				data.Text == Converters.MontantToString (0))  // montant nul ?
 			{
 				data.Error = "Le montant ne peut pas être nul";
 				return;

@@ -734,7 +734,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
-			int row = this.arrayController.SelectedRow;
+			int row    = this.arrayController.SelectedRow;
+			int column = this.arrayController.SelectedColumn;
+
+			if (this.footerController.Dirty)
+			{
+				var entity = this.dataAccessor.GetEditionEntity (row);
+
+				this.dataAccessor.UpdateEditionLine ();
+				this.UpdateArrayContent ();
+				this.footerController.Dirty = false;
+
+				int adjustedRow = this.dataAccessor.GetEditionIndex (entity);
+
+				if (row != adjustedRow)
+				{
+					row = adjustedRow;
+
+					using (this.ignoreChanges.Enter ())
+					{
+						this.arrayController.SelectedRow = -1;
+						this.arrayController.SetSelectedRow (row, column);
+					}
+				}
+			}
 
 			if (row == -1)
 			{
