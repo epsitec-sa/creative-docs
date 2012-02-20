@@ -22,6 +22,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
+		public Type EntityType
+		{
+			get;
+			set;
+		}
+
+
 		public Func<AbstractEntity, FormattedText> TitleGetter
 		{
 			get;

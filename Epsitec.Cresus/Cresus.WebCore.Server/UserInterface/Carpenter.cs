@@ -146,7 +146,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
 			
 			summaryTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
-			
+			summaryTileData.EntityType = brick.GetFieldType ();
+
 			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
 
@@ -368,6 +369,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var editionTileData = new EditionTileData ();
 
 			editionTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
+			editionTileData.EntityType = brick.GetFieldType ();
 			editionTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 
 			editionTileData.Items.AddRange (Carpenter.BuildEditionData (brick));

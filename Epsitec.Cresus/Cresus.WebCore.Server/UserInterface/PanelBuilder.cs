@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core;
+
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -14,6 +15,8 @@ using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
+using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
 using System;
 
@@ -26,8 +29,6 @@ using System.Globalization;
 
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
-using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -135,7 +136,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				(
 					entity, 
 					e => this.GetEntityId (e), 
-					u => this.GetIconClass (u), 
+					(t, u) => this.GetIconClass (t, u), 
 					l => this.GetLambdaId (l),
 					t => this.GetTypeName (t), 
 					e => this.BuildEditionTiles (e), 
@@ -164,9 +165,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private string GetIconClass(string uri)
+		private string GetIconClass(Type entityType, string uri)
 		{
-			return IconManager.GetCSSClassName (uri, IconSize.Sixteen);
+			return IconManager.GetCssClassName (entityType, uri, IconSize.Sixteen);
 		}
 
 
@@ -349,7 +350,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			string title = item.Title.ToSimpleText ();
 			panel["title"] = title;
 
-			var icon = IconManager.GetCSSClassName (item.IconUri, IconSize.Sixteen);
+			var icon = IconManager.GetCssClassName (null, item.IconUri, IconSize.Sixteen);
 			if (icon != null)
 			{
 				panel["iconCls"] = icon;

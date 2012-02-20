@@ -4,6 +4,8 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core;
 
+using System;
+
 using System.Globalization;
 
 using System.IO;
@@ -24,8 +26,8 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 		private IconManager(string rootfolder)
 		{
-			this.cssFilename = string.Concat (rootfolder, IconManager.baseCssFilename);
-			this.imagesFilename = string.Concat (rootfolder, IconManager.baseImagesFilename);
+			this.cssFileName = string.Concat (rootfolder, IconManager.baseCssFileName);
+			this.imagesFileNamePattern = string.Concat (rootfolder, IconManager.baseImagesFileNamePattern);
 		}
 
 
@@ -35,17 +37,24 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		public static string GetCSSClassName(string iconUri, IconSize size)
+		public static string GetCssClassName(Type entityType, string iconUri, IconSize size)
 		{
 			if (iconUri == null)
 			{
 				return null;
 			}
 
-			var iconRes = Misc.GetResourceIconUri (iconUri);
-			var iconName = iconRes.Substring (9);
+			var iconResource = Misc.GetResourceIconUri (iconUri, entityType);
 
-			return string.Format (CultureInfo.InvariantCulture, IconManager.cssClassName, iconName.Replace ('.', '-').ToLower (CultureInfo.InvariantCulture), size);
+			return IconManager.GetCssClassName (iconResource, size);
+		}
+
+
+		private static string GetCssClassName(string iconResource, IconSize size)
+		{
+			var iconName = iconResource.Substring (9).Replace ('.', '-').ToLower (CultureInfo.InvariantCulture);
+
+			return string.Format (CultureInfo.InvariantCulture, IconManager.cssClassNamePattern, iconName, size);
 		}
 
 
@@ -53,7 +62,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		{
 			Epsitec.Common.Document.Engine.Initialize ();
 
-			File.Delete (this.cssFilename);
+			File.Delete (this.cssFileName);
 
 			var iconUris = ImageProvider.Default.GetImageNames ("manifest", null);
 
@@ -127,11 +136,11 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		/// <returns>CSS classname</returns>
 		private void AddToCSS(string iconUri, string path, IconSize size)
 		{
-			var cssClassname = IconManager.GetCSSClassName (iconUri, size);
+			var cssClassname = IconManager.GetCssClassName (iconUri, size);
 			var imagePath = string.Concat ("../", path);
-			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClass, cssClassname, imagePath);
+			var css = string.Format (CultureInfo.InvariantCulture, IconManager.cssClassBodyPattern, cssClassname, imagePath);
 
-			File.AppendAllText (this.cssFilename, css);
+			File.AppendAllText (this.cssFileName, css);
 		}
 
 
@@ -142,7 +151,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		/// <returns></returns>
 		private string GetImageAbsoluteFilePath(string name, IconSize size)
 		{
-			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFilename, name.Replace ('.', '/'), size);
+			var path = string.Format (CultureInfo.InvariantCulture, this.imagesFileNamePattern, name.Replace ('.', '/'), size);
 			
 			IconManager.EnsureDirectoryStructureExists (path);
 			
@@ -152,7 +161,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 		private string GetImageRelativeFilePath(string name, IconSize size)
 		{
-			return string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFilename, name.Replace ('.', '/'), size);
+			return string.Format (CultureInfo.InvariantCulture, IconManager.baseImagesFileNamePattern, name.Replace ('.', '/'), size);
 		}
 
 
@@ -171,13 +180,13 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		}
 
 
-		private readonly string cssFilename;
-		private readonly string imagesFilename;
+		private readonly string cssFileName;
+		private readonly string imagesFileNamePattern;
 
-		private readonly static string baseCssFilename = "css/icons.css";
-		private readonly static string baseImagesFilename = "images/{0}{1:d}.png";
-		private readonly static string cssClassName = "{0}{1:d}";
-		private readonly static string cssClass = ".{0} {{ background-image: url({1}) !important; }} \n";
+		private readonly static string baseCssFileName = "css/icons.css";
+		private readonly static string baseImagesFileNamePattern = "images/{0}{1:d}.png";
+		private readonly static string cssClassNamePattern = "{0}{1:d}";
+		private readonly static string cssClassBodyPattern = ".{0} {{ background-image: url({1}) !important; }} \n";
 
 
 	}

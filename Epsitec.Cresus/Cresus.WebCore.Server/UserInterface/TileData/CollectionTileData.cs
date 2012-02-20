@@ -22,13 +22,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public Type EntityType
-		{
-			get;
-			set;
-		}
-
-
 		public Func<AbstractEntity, IEnumerable<AbstractEntity>> CollectionGetter
 		{
 			get;

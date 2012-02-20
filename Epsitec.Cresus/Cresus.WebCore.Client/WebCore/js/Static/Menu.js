@@ -120,7 +120,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
                 },
                 scale : 'large',
                 iconAlign : 'top',
-                iconCls : menu.CSSClass
+                iconCls : menu.CssClass
               }
             );
           
