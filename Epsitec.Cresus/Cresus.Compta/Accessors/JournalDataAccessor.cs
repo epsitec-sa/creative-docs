@@ -408,6 +408,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineQuestion()
+		{
+			if (this.countEditedRow <= 1)
+			{
+				return "Voulez-vous supprimer l'écriture sélectionnée ?";
+			}
+			else
+			{
+				return string.Format ("Voulez-vous supprimer les {0} lignes de l'écriture sélectionnée ?", this.countEditedRow.ToString ());
+			}
+		}
+
 		public override void RemoveModificationLine()
 		{
 			if (this.isModification)

@@ -233,10 +233,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.compactUpdateButton.Clicked += delegate
 			{
 				string message = string.Format ("Voulez-vous vraiment mettre à jour le style \"{0}\"<br/>d'après la recherche, le filtre et les options en cours ?", this.memoryList.Selected.Name);
-				var dialog = MessageDialog.CreateYesNo ("Crésus Comptabilité", DialogIcon.Question, message);
-				dialog.OwnerWindow = this.controller.MainWindowController.Window;
-				dialog.OpenDialog ();
-				var result = dialog.Result;
+				var result = this.controller.MainWindowController.QuestionDialog (message);
 
 				if (result == DialogResult.Yes)
 				{

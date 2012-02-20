@@ -49,6 +49,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.GlobalDescription:
 					return "Description de la comptabilité";
 
+				case SettingsType.GlobalRemoveConfirmation:
+					return "Demande une confirmation avant de supprimer une ligne";
+
 
 				case SettingsType.EcriturePièces:
 					return "Ecritures avec numéros de pièce";

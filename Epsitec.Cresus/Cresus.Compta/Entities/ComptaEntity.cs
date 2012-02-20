@@ -10,6 +10,60 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public FormattedText GetCompteRemoveError(ComptaCompteEntity compte)
+		{
+			if (compte.Type == TypeDeCompte.Groupe)
+			{
+				int count = this.PlanComptable.Where (x => x.Groupe == compte).Count ();
+
+				if (count != 0)
+				{
+					var c = string.Format ("{0} compte{1}", count.ToString (), count <= 1 ? "" : "s");
+					return string.Format ("Ce compte ne peut pas être supprimé,<br/>car il regroupe {0}.", c);
+				}
+			}
+			else
+			{
+				int périodes, écritures;
+				this.GetCompteStatistics (compte, out périodes, out écritures);
+
+				if (écritures != 0)
+				{
+					var p = string.Format ("{0} période{1}", périodes.ToString (), périodes <= 1 ? "" : "s");
+					var e = string.Format ("{0} écriture{1}", écritures.ToString (), écritures <= 1 ? "" : "s");
+					return string.Format ("Ce compte ne peut pas être supprimé, car il est<br/>utilisé par {0} dans {1}.", e, p);
+				}
+			}
+
+			return FormattedText.Null;  // ok
+		}
+
+		private void GetCompteStatistics(ComptaCompteEntity compte, out int périodes, out int écritures)
+		{
+			//	Retourne des "statistiques" sur l'utilisation d'un compte.
+			périodes = 0;
+			écritures = 0;
+
+			foreach (var période in this.Périodes)
+			{
+				bool here = false;
+				foreach (var écriture in période.Journal)
+				{
+					if (écriture.Débit == compte || écriture.Crédit == compte)
+					{
+						écritures++;
+						here = true;
+					}
+				}
+
+				if (here)
+				{
+					périodes++;
+				}
+			}
+		}
+
+
 		public int GetJournalId()
 		{
 			//	Retourne un identificateur unique pour un nouveau journal.

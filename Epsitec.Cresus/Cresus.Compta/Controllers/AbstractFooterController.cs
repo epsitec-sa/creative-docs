@@ -372,6 +372,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void DeleteAction()
 		{
+			var error = this.dataAccessor.GetRemoveModificationLineError ();
+			if (!error.IsNullOrEmpty)
+			{
+				this.controller.MainWindowController.ErrorDialog (error);
+				return;
+			}
+
+			if (this.controller.SettingsList.GetBool (SettingsType.GlobalRemoveConfirmation))
+			{
+				var result = this.controller.MainWindowController.QuestionDialog (this.dataAccessor.GetRemoveModificationLineQuestion ());
+				if (result != Common.Dialogs.DialogResult.Yes)
+				{
+					return;
+				}
+			}
+
 			this.dataAccessor.RemoveModificationLine ();
 			this.dirty = false;
 

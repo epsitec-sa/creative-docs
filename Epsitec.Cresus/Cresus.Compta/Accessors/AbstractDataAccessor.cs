@@ -495,6 +495,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 		}
 
+		public virtual FormattedText GetRemoveModificationLineError()
+		{
+			return FormattedText.Null;  // ok
+		}
+
+		public virtual FormattedText GetRemoveModificationLineQuestion()
+		{
+			return "Voulez-vous supprimer la ligne sélectionnée ?";
+		}
+
 		public virtual void RemoveModificationLine()
 		{
 		}

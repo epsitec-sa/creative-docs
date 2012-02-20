@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Compta
 	{
 		GlobalTitre,
 		GlobalDescription,
+		GlobalRemoveConfirmation,
 
 		EcriturePièces,
 		EcritureAutoPièces,

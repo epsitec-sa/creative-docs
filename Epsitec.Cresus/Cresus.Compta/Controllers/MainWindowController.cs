@@ -740,12 +740,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return dialog.FileName;
 		}
 
-		private void ErrorDialog(string message)
+		public void ErrorDialog(FormattedText message)
 		{
 			var dialog = MessageDialog.CreateOk ("Erreur", Common.Dialogs.DialogIcon.Warning, message);
 
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();
+		}
+
+		public DialogResult QuestionDialog(FormattedText message)
+		{
+			var dialog = MessageDialog.CreateYesNo ("Crésus Comptabilité NG", DialogIcon.Question, message);
+			dialog.OwnerWindow = this.controller.MainWindowController.Window;
+			dialog.OpenDialog ();
+			return dialog.Result;
 		}
 		#endregion
 

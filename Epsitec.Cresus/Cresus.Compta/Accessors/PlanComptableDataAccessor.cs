@@ -360,6 +360,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = this.planComptable.IndexOf (initialCompte);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineError()
+		{
+			var compte = this.planComptable[this.firstEditedRow];
+			return this.comptaEntity.GetCompteRemoveError (compte);
+		}
+
+		public override FormattedText GetRemoveModificationLineQuestion()
+		{
+			var compte = this.planComptable[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer le compte {0} {1} ?", compte.Numéro, compte.Titre);
+		}
+
 		public override void RemoveModificationLine()
 		{
 			if (this.isModification)

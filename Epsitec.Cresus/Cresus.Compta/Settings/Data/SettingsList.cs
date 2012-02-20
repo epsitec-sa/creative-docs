@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			//	Réglages généraux :
 			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalTitre,        20, "vide", skipCompareTo: true));
 			this.Add (new TextSettingsData (SettingsGroup.Global, SettingsType.GlobalDescription, 100, "",     skipCompareTo: true));
+			this.Add (new BoolSettingsData (SettingsGroup.Global, SettingsType.GlobalRemoveConfirmation, true));
 										     
 			//	Réglages pur les écritures :
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
