@@ -372,6 +372,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void DeleteAction()
 		{
+			this.dataAccessor.RemoveModificationLine ();
+			this.dirty = false;
+
+			int firstRow = this.dataAccessor.FirstEditedRow;
+			int countRow = this.dataAccessor.CountEditedRow;
+
+			this.updateArrayContentAction ();
+
+			this.controller.SearchStartAction ();
+
+			this.arrayController.SelectedRow = -1;  // pour forcer une mise à jour complète
+			this.arrayController.SelectedRow = firstRow;
+			this.arrayController.SetHilitedRows (firstRow, countRow);
+			this.arrayController.ShowRow (firstRow, countRow);
 		}
 
 		public virtual void MultiInsertLineAction()

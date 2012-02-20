@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void RestoreArrayController(AbstractController controller)
 		{
-			//	Termine le travail de Restore, pour sélectionner la bonne ligne dans la tableau.
+			//	Termine le travail de Restore, pour sélectionner la bonne ligne dans le tableau.
 			var data = this.history[this.index];
 
 			controller.SelectedArrayLine = data.ArrayIndex.Value;

@@ -373,8 +373,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.comptaEntity.PlanComptable.Remove (compte);
 				}
 
-				this.SearchUpdate ();
-				this.StartCreationLine ();
+				if (this.firstEditedRow >= this.planComptable.Count)
+				{
+					this.firstEditedRow = this.planComptable.Count-1;
+				}
 			}
 		}
 

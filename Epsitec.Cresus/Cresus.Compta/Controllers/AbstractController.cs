@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void SearchStartAction()
+		public void SearchStartAction()
 		{
 			//	Appelé lorsque le critère de recherche a été modifié, et qu'il faut commencer une recherche.
 			if (this.dataAccessor != null)

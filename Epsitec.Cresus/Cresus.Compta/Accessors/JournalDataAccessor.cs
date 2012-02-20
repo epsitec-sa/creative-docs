@@ -421,8 +421,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.périodeEntity.Journal.Remove (écriture);
                 }
 
-				this.SearchUpdate ();
-				this.StartCreationLine ();
+				int firstRow = this.firstEditedRow;
+
+				if (firstRow >= this.journal.Count)
+				{
+					firstRow = this.journal.Count-1;
+				}
+
+				this.ExploreMulti (firstRow, out this.firstEditedRow, out this.countEditedRow);
 			}
 		}
 

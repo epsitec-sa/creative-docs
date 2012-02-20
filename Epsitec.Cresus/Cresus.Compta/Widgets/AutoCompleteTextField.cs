@@ -178,6 +178,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else  // perte du focus ?
 			{
+				var oldText = this.FormattedText;
+				var oldHint = this.HintText;
+
 				if (this.AcceptFreeText)
 				{
 					this.HintText = null;
@@ -188,7 +191,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 
 				this.CloseComboMenu ();
-				base.OnTextChanged ();
+
+				if (oldText != this.FormattedText || oldHint != this.HintText)
+				{
+					base.OnTextChanged ();
+				}
 			}
 		}
 
