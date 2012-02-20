@@ -108,28 +108,35 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			SearchData      filter     = null;
 			AbstractOptions options    = null;
 
-			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
+			if (controller == null)
 			{
-				search = controller.DataAccessor.SearchData.CopyFrom ();
-			}
-
-			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
-			{
-				filter = controller.DataAccessor.FilterData.CopyFrom ();
-			}
-
-			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
-			{
-				options = controller.DataAccessor.Options.NavigatorCopyFrom ();
-			}
-
-			if (controller.MemoryList == null)
-			{
-				return new NavigatorData (command, controller.MixTitle, null, search, filter, options, controller.SelectedArrayLine);
+				return new NavigatorData (command, FormattedText.Empty, null, search, filter, options, null);
 			}
 			else
 			{
-				return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, controller.SelectedArrayLine);
+				if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
+				{
+					search = controller.DataAccessor.SearchData.CopyFrom ();
+				}
+
+				if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
+				{
+					filter = controller.DataAccessor.FilterData.CopyFrom ();
+				}
+
+				if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
+				{
+					options = controller.DataAccessor.Options.NavigatorCopyFrom ();
+				}
+
+				if (controller.MemoryList == null)
+				{
+					return new NavigatorData (command, controller.MixTitle, null, search, filter, options, controller.SelectedArrayLine);
+				}
+				else
+				{
+					return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, controller.SelectedArrayLine);
+				}
 			}
 		}
 
@@ -165,24 +172,27 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			//	NavigatorData -> présetation active.
 			var data = this.history[this.index];
 
-			if (controller.MemoryList != null && data.Memory != null)
+			if (controller != null)
 			{
-				controller.MemoryList.Selected = data.Memory;
-			}
+				if (controller.MemoryList != null && data.Memory != null)
+				{
+					controller.MemoryList.Selected = data.Memory;
+				}
 
-			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
-			{
-				data.Search.CopyTo (controller.DataAccessor.SearchData);
-			}
+				if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
+				{
+					data.Search.CopyTo (controller.DataAccessor.SearchData);
+				}
 
-			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
-			{
-				data.Filter.CopyTo (controller.DataAccessor.FilterData);
-			}
+				if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
+				{
+					data.Filter.CopyTo (controller.DataAccessor.FilterData);
+				}
 
-			if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
-			{
-				data.Options.NavigatorCopyTo (controller.DataAccessor.Options);
+				if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
+				{
+					data.Options.NavigatorCopyTo (controller.DataAccessor.Options);
+				}
 			}
 		}
 
@@ -191,7 +201,10 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			//	Termine le travail de Restore, pour sélectionner la bonne ligne dans le tableau.
 			var data = this.history[this.index];
 
-			controller.SelectedArrayLine = data.ArrayIndex.Value;
+			if (controller != null)
+			{
+				controller.SelectedArrayLine = data.ArrayIndex.Value;
+			}
 		}
 
 
