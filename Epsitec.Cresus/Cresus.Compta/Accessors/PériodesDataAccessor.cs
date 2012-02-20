@@ -228,6 +228,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[0].DataToEntity (période);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineError()
+		{
+			var période = this.comptaEntity.Périodes[this.firstEditedRow];
+			if (période.Journal.Count != 0)
+			{
+				return "Cette période ne peut pas être supprimée,<br/>car elle contient des écritures.";
+			}
+
+			return FormattedText.Null;  // ok
+		}
+
+		public override FormattedText GetRemoveModificationLineQuestion()
+		{
+			var période = this.comptaEntity.Périodes[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer la période \"{0}\" ?", période.ShortTitle);
+		}
+
 		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
@@ -239,8 +257,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.comptaEntity.Périodes.RemoveAt (row);
                 }
 
-				this.SearchUpdate ();
-				this.StartCreationLine ();
+				if (this.firstEditedRow >= this.comptaEntity.Périodes.Count)
+				{
+					this.firstEditedRow = this.comptaEntity.Périodes.Count-1;
+				}
 			}
 		}
 

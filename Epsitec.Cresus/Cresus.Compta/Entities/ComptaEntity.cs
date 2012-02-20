@@ -181,22 +181,24 @@ namespace Epsitec.Cresus.Compta.Entities
 		}
 
 
-		public FormattedText JournalRésumé(ComptaJournalEntity journal)
+		public FormattedText GetJournalRemoveError(ComptaJournalEntity journal)
+		{
+			int totalEcritures, totalPériodes;
+			this.GetJournalStatistics (journal, out totalEcritures, out totalPériodes);
+
+			if (totalEcritures != 0)
+			{
+				return string.Format ("Ce journal ne peut pas être supprimé, car il<br/>contient {0}.", this.GetJournalRésumé (journal));
+			}
+
+			return FormattedText.Null;  // ok
+		}
+
+		public FormattedText GetJournalRésumé(ComptaJournalEntity journal)
 		{
 			//	Retourne le résumé d'un journal.
-			int totalEcritures = 0;
-			int totalPériodes = 0;
-
-			foreach (var période in this.Périodes)
-			{
-				int total = période.Journal.Where (x => x.Journal == journal).Count ();
-
-				if (total != 0)
-				{
-					totalEcritures += total;
-					totalPériodes++;
-				}
-			}
+			int totalEcritures, totalPériodes;
+			this.GetJournalStatistics(journal, out totalEcritures, out totalPériodes);
 
 			string écrituresRésumé, périodesRésumé;
 
@@ -227,6 +229,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 
 			return écrituresRésumé + " dans " + périodesRésumé;
+		}
+
+		private void GetJournalStatistics(ComptaJournalEntity journal, out int totalEcritures, out int totalPériodes)
+		{
+			//	Retourne des "statistiques" sur l'utilisation d'un journal.
+			totalEcritures = 0;
+			totalPériodes = 0;
+
+			foreach (var période in this.Périodes)
+			{
+				int total = période.Journal.Where (x => x.Journal == journal).Count ();
+
+				if (total != 0)
+				{
+					totalEcritures += total;
+					totalPériodes++;
+				}
+			}
 		}
 
 

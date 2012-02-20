@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return journal.Description;
 
 				case ColumnType.Résumé:
-					return this.comptaEntity.JournalRésumé (journal);
+					return this.comptaEntity.GetJournalRésumé (journal);
 
 				default:
 					return FormattedText.Null;
@@ -189,6 +189,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[0].DataToEntity (journal);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineError()
+		{
+			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
+			return this.comptaEntity.GetJournalRemoveError (journal);
+		}
+
+		public override FormattedText GetRemoveModificationLineQuestion()
+		{
+			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer le journal \"{0}\" ?", journal.Nom);
+		}
+
 		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
@@ -200,8 +213,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.comptaEntity.Journaux.RemoveAt (row);
                 }
 
-				this.SearchUpdate ();
-				this.StartCreationLine ();
+				if (this.firstEditedRow >= this.comptaEntity.Journaux.Count)
+				{
+					this.firstEditedRow = this.comptaEntity.Journaux.Count-1;
+				}
 			}
 		}
 

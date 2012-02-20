@@ -207,6 +207,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[0].DataToEntity (modèle);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineQuestion()
+		{
+			var modèle = this.comptaEntity.Modèles[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer l'écriture modèle  \"{0}\" ?", modèle.Libellé);
+		}
+
 		public override void RemoveModificationLine()
 		{
 			if (this.isModification)
@@ -218,8 +225,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.comptaEntity.Modèles.RemoveAt (row);
                 }
 
-				this.SearchUpdate ();
-				this.StartCreationLine ();
+				if (this.firstEditedRow >= this.comptaEntity.Modèles.Count)
+				{
+					this.firstEditedRow = this.comptaEntity.Modèles.Count-1;
+				}
 			}
 		}
 
