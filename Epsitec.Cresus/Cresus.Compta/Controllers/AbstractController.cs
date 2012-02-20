@@ -656,6 +656,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 		#region Array
+		public virtual int SelectedArrayLine
+		{
+			get
+			{
+				if (this.arrayController == null)
+				{
+					return -1;
+				}
+				else
+				{
+					return this.arrayController.SelectedRow;
+				}
+			}
+			set
+			{
+				if (this.arrayController != null)
+				{
+					this.arrayController.SelectedRow = value;
+				}
+			}
+		}
+
 		private void CreateArray(FrameBox parent)
 		{
 			//	Crée le tableau principal avec son en-tête.
@@ -734,11 +756,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.arrayController.SelectedRow = -1;
-				this.arrayController.SetHilitedRows (-1, 0);
+				if (this.arrayController != null)
+				{
+					this.arrayController.SelectedRow = -1;
+					this.arrayController.SetHilitedRows (-1, 0);
+				}
 			}
 
-			this.dataAccessor.StartCreationLine ();
+			if (this.dataAccessor != null)
+			{
+				this.dataAccessor.StartCreationLine ();
+			}
 		}
 
 		public void Update()

@@ -36,7 +36,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetTitle ("Réglages");
+			int sel = (this.scrollList == null) ? -1 : this.scrollList.SelectedItemIndex;
+
+			if (sel < 0 || sel >= this.groups.Count)
+			{
+				this.SetTitle ("Réglages");
+			}
+			else
+			{
+				this.SetTitle ("Réglages" + " — " + VerboseSettings.GetDescription (this.groups[sel]));
+			}
 		}
 
 		public override bool AcceptPériodeChanged
@@ -200,13 +209,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.scrollList.SelectedItemChanged += delegate
 			{
-				RéglagesController.selectedIndex = this.scrollList.SelectedItemIndex;
+				this.UpdateTitle ();
 				this.UpdateMain ();
 			};
 		}
 
+
+		public override int SelectedArrayLine
+		{
+			get
+			{
+				return this.scrollList.SelectedItemIndex;
+			}
+			set
+			{
+				this.scrollList.SelectedItemIndex = value;
+			}
+		}
+
+	
 		private void UpdateList()
 		{
+			//	Met à jour la liste de gauche.
 			this.groups.Clear ();
 			this.scrollList.Items.Clear ();
 
@@ -219,7 +243,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			this.scrollList.SelectedItemIndex = RéglagesController.selectedIndex;
 			this.UpdateMain ();
 		}
 
@@ -364,8 +387,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-
-		private static int									selectedIndex = -1;
 
 		private readonly List<SettingsGroup>				groups;
 		private readonly List<AbstractSettingsController>	controllers;

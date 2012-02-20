@@ -107,7 +107,6 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			SearchData      search     = null;
 			SearchData      filter     = null;
 			AbstractOptions options    = null;
-			int?            arrayIndex = null;
 
 			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
 			{
@@ -124,18 +123,13 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				options = controller.DataAccessor.Options.NavigatorCopyFrom ();
 			}
 
-			if (controller.ArrayController != null)
-			{
-				arrayIndex = controller.ArrayController.SelectedRow;
-			}
-
 			if (controller.MemoryList == null)
 			{
-				return new NavigatorData (command, controller.MixTitle, null, search, filter, options, arrayIndex);
+				return new NavigatorData (command, controller.MixTitle, null, search, filter, options, controller.SelectedArrayLine);
 			}
 			else
 			{
-				return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, arrayIndex);
+				return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, controller.SelectedArrayLine);
 			}
 		}
 
@@ -197,10 +191,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			//	Termine le travail de Restore, pour sélectionner la bonne ligne dans la tableau.
 			var data = this.history[this.index];
 
-			if (controller.ArrayController != null && data.ArrayIndex.HasValue)
-			{
-				controller.ArrayController.SelectedRow = data.ArrayIndex.Value;
-			}
+			controller.SelectedArrayLine = data.ArrayIndex.Value;
 		}
 
 
