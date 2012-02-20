@@ -456,15 +456,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SearchUpdateLocator(bool show)
 		{
-			int row;
-			ColumnType columnType;
-			this.dataAccessor.SearchLocatorInfo (out row, out columnType);
-
-			this.arrayController.SetSearchLocator (row, columnType);
-
-			if (show)
+			if (this.arrayController != null)
 			{
-				this.arrayController.ShowRow (row, 1);
+				int row;
+				ColumnType columnType;
+				this.dataAccessor.SearchLocatorInfo (out row, out columnType);
+
+				this.arrayController.SetSearchLocator (row, columnType);
+
+				if (show)
+				{
+					this.arrayController.ShowRow (row, 1);
+				}
 			}
 		}
 
@@ -506,18 +509,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.footerController.Dirty = false;
 			}
 
-			this.arrayController.SelectedRow = -1;
-			this.dataAccessor.StartCreationLine ();
-			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+			if (this.arrayController != null && this.dataAccessor != null)
+			{
+				this.arrayController.SelectedRow = -1;
+				this.dataAccessor.StartCreationLine ();
+				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
-			this.dataAccessor.FilterUpdate ();
-			this.dataAccessor.SearchUpdate ();
-			this.BaseUpdateArrayContent ();
+				this.dataAccessor.FilterUpdate ();
+				this.dataAccessor.SearchUpdate ();
+				this.BaseUpdateArrayContent ();
 
-			this.FilterUpdateTopToolbar ();
-			this.SearchUpdateLocator (true);
-			this.SearchUpdateTopToolbar ();
+				this.FilterUpdateTopToolbar ();
+				this.SearchUpdateLocator (true);
+				this.SearchUpdateTopToolbar ();
+			}
 
 			this.UpdateMemory ();
 
@@ -548,7 +554,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected virtual void OptionsChanged()
 		{
-			this.dataAccessor.UpdateAfterOptionsChanged ();
+			if (this.dataAccessor != null)
+			{
+				this.dataAccessor.UpdateAfterOptionsChanged ();
+			}
+
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
@@ -633,7 +643,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.title + " / " + this.subtitle;
+				if (this.subtitle.IsNullOrEmpty)
+				{
+					return this.title;
+				}
+				else
+				{
+					return this.title + " / " + this.subtitle;
+				}
 			}
 		}
 		#endregion

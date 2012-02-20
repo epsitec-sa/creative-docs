@@ -15,6 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Memory.Data
 {
+	/// <summary>
+	/// Gestion de la navigation.
+	/// </summary>
 	public class NavigatorEngine
 	{
 		public NavigatorEngine()
@@ -25,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void Clear()
 		{
+			//	Efface l'historique de la navigation.
 			this.history.Clear ();
 			this.index = -1;
 		}
@@ -32,6 +36,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public int Count
 		{
+			//	Retourne le nombre d'éléments contenus dans l'historique de la navigation.
 			get
 			{
 				return this.history.Count;
@@ -40,6 +45,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public int Index
 		{
+			//	Index dans l'historique de la navigation.
 			get
 			{
 				return this.index;
@@ -48,12 +54,14 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public NavigatorData GetNavigatorData(int index)
 		{
+			//	Retourne un élément contenu dans l'historique de la navigation.
 			return this.history[index];
 		}
 
 
 		public bool PrevEnable
 		{
+			//	Indique si la commande "en arrière" est active.
 			get
 			{
 				return this.index > 0;
@@ -62,6 +70,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public bool NextEnable
 		{
+			//	Indique si la commande "en avant" est active.
 			get
 			{
 				return this.index < this.history.Count-1;
@@ -71,6 +80,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void Update(AbstractController controller, Command command)
 		{
+			//	Met à jour les données de la présentation active dans l'historique de la navigation.
 			if (this.index != -1 && this.history[this.index].Command == command)
 			{
 				this.history[this.index] = this.CreateNavigatorData (controller, command);
@@ -79,6 +89,8 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void Put(AbstractController controller, Command command)
 		{
+			//	Ajoute les données de la présentation active au somment de l'historique de la navigation.
+			//	Toutes les données "en avant" sont supprimées.
 			var data = this.CreateNavigatorData (controller, command);
 			this.history.Insert (++this.index, data);
 
@@ -91,6 +103,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		private NavigatorData CreateNavigatorData(AbstractController controller, Command command)
 		{
+			//	Présentation active -> NavigatorData.
 			SearchData      search     = null;
 			SearchData      filter     = null;
 			AbstractOptions options    = null;
@@ -116,18 +129,27 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 				arrayIndex = controller.ArrayController.SelectedRow;
 			}
 
-			return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, arrayIndex);
+			if (controller.MemoryList == null)
+			{
+				return new NavigatorData (command, controller.MixTitle, null, search, filter, options, arrayIndex);
+			}
+			else
+			{
+				return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, arrayIndex);
+			}
 		}
 
 
 		public Command Any(int index)
 		{
+			//	Retourne l'index permettant de revenir à une position quelconque dans l'historique de la navigation.
 			this.index = index;
 			return this.history[this.index].Command;
 		}
 
 		public Command Back
 		{
+			//	Retourne l'index permettant de revenir en arrière dans l'historique de la navigation.
 			get
 			{
 				return this.history[--this.index].Command;
@@ -136,6 +158,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public Command Forward
 		{
+			//	Retourne l'index permettant de revenir en avant dans l'historique de la navigation.
 			get
 			{
 				return this.history[++this.index].Command;
@@ -144,9 +167,14 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void Restore(AbstractController controller)
 		{
+			//	Restitue le NavigatorData obtenu par Any/Back/Forward.
+			//	NavigatorData -> présetation active.
 			var data = this.history[this.index];
 
-			controller.MemoryList.Selected = data.Memory;
+			if (controller.MemoryList != null && data.Memory != null)
+			{
+				controller.MemoryList.Selected = data.Memory;
+			}
 
 			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
 			{
@@ -166,6 +194,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public void RestoreArrayController(AbstractController controller)
 		{
+			//	Termine le travail de Restore, pour sélectionner la bonne ligne dans la tableau.
 			var data = this.history[this.index];
 
 			if (controller.ArrayController != null && data.ArrayIndex.HasValue)

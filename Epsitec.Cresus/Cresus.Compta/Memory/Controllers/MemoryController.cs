@@ -22,7 +22,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Memory.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la barre d'outil supérieure de mémoire pour la comptabilité.
+	/// Ce contrôleur gère la barre d'outil supérieure de mémoire (styles) pour la comptabilité.
 	/// </summary>
 	public class MemoryController
 	{

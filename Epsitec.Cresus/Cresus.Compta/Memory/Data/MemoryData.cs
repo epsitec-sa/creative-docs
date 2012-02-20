@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 {
 	/// <summary>
 	/// Mémorise les paramètres des recherches, du filtre et des options, c'est-à-dire l'ensemble des paramètres
-	/// liés à une présentation.
+	/// liés à une présentation (traduit en français par "style").
 	/// </summary>
 	public class MemoryData
 	{
