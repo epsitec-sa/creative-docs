@@ -53,6 +53,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "Demande une confirmation avant de supprimer une ligne";
 
 
+				case SettingsType.EcritureMontantZéro:
+					return "Accepte des écritures avec un montant nul";
+
 				case SettingsType.EcriturePièces:
 					return "Ecritures avec numéros de pièce";
 

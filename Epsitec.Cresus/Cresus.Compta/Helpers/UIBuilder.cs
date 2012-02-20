@@ -193,7 +193,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string GetTextIconUri(string icon, double verticalOffset = 7)
+		public static string GetTextIconUri(string icon, double verticalOffset = -6)
 		{
 			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
 		}
