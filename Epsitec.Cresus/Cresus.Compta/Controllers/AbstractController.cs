@@ -137,12 +137,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			System.Diagnostics.Debug.Assert (this.parentWindow != null);
 			System.Diagnostics.Debug.Assert (this.commandDocument != null);
 
+			this.SetCommandEnable (Res.Commands.Select.Up, false);
+			this.SetCommandEnable (Res.Commands.Select.Down, false);
+			this.SetCommandEnable (Res.Commands.Select.Home, false);
+
 			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
 			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
 			this.SetCommandEnable (Res.Commands.Edit.Up, false);
 			this.SetCommandEnable (Res.Commands.Edit.Down, false);
 			this.SetCommandEnable (Res.Commands.Edit.Duplicate, false);
 			this.SetCommandEnable (Res.Commands.Edit.Delete, false);
+
 			this.SetCommandEnable (Res.Commands.Multi.Insert, false);
 			this.SetCommandEnable (Res.Commands.Multi.Delete, false);
 			this.SetCommandEnable (Res.Commands.Multi.Up, false);
@@ -733,7 +738,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (row == -1)
 			{
-				this.dataAccessor.StartCreationLine ();
+				if (this.footerController == null || !this.footerController.Duplicate)
+				{
+					this.dataAccessor.StartCreationLine ();
+				}
 			}
 			else
 			{

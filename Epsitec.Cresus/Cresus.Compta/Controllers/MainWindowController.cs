@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateNavigatorCommands()
 		{
-			//	Met à jour les 3 commandes de navigtion.
+			//	Met à jour les 3 commandes de navigation.
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Navigator.Prev);
 				cs.Enable = this.navigatorEngine.PrevEnable;
@@ -916,19 +916,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Select.Up)]
 		private void CommandSelectUp()
 		{
-			this.controller.ArrayController.MoveSelection (-1);
+			if (this.controller != null && this.controller.ArrayController != null)
+			{
+				this.controller.ArrayController.MoveSelection (-1);
+			}
 		}
 
 		[Command (Res.CommandIds.Select.Down)]
 		private void CommandSelectDown()
 		{
-			this.controller.ArrayController.MoveSelection (1);
+			if (this.controller != null && this.controller.ArrayController != null)
+			{
+				this.controller.ArrayController.MoveSelection (1);
+			}
 		}
 
 		[Command (Res.CommandIds.Select.Home)]
 		private void CommandSelectHome()
 		{
-			this.controller.ArrayController.MoveSelection (0);
+			if (this.controller != null && this.controller.ArrayController != null)
+			{
+				this.controller.ArrayController.MoveSelection (0);
+			}
 		}
 
 

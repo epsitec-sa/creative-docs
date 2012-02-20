@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				var himself = (this.controller.DataAccessor.JustCreated) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaCompteEntity;
+				var himself = (this.controller.DataAccessor.JustCreated || this.controller.FooterController.Duplicate) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaCompteEntity;
 				if (himself != null && himself.Numéro == data.Text)
 				{
 					return;

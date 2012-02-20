@@ -368,6 +368,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void DuplicateAction()
 		{
+			this.dirty = true;
+
+			this.duplicate = true;
+			this.arrayController.SelectedRow = -1;
+			this.duplicate = false;
+
+			this.dataAccessor.DuplicateModificationLine ();
+			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+
+			this.UpdateInsertionRow (forceUpdate: true);
 		}
 
 		public virtual void DeleteAction()
@@ -737,6 +748,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public bool Duplicate
+		{
+			get
+			{
+				return this.duplicate;
+			}
+		}
+
 		public bool Dirty
 		{
 			get
@@ -819,5 +838,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected int											firstLine;
 		protected bool											dirty;
 		protected bool											hasError;
+		protected bool											duplicate;
 	}
 }

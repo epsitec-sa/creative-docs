@@ -271,6 +271,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var compte = this.CreateCompte ();
 				data.DataToEntity (compte);
+				this.comptaEntity.UpdateNiveauCompte (compte);
 
 				int row = this.GetSortedRow (compte.Numéro);
 				this.planComptable.Insert (row, compte);
@@ -306,6 +307,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					//	Crée un compte manquant.
 					var compte = this.CreateCompte ();
 					data.DataToEntity (compte);
+					this.comptaEntity.UpdateNiveauCompte (compte);
 					this.comptaEntity.PlanComptable.Insert (row, compte);
 				}
 				else
@@ -313,6 +315,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					//	Met à jour un compte existante.
 					var compte = this.comptaEntity.PlanComptable[row];
 					data.DataToEntity (compte);
+					this.comptaEntity.UpdateNiveauCompte (compte);
 				}
 
 				row++;

@@ -1,5 +1,5 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
 
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
-		private void UpdateNiveauCompte(ComptaCompteEntity compte)
+		public void UpdateNiveauCompte(ComptaCompteEntity compte)
 		{
 			//	Met à jour le niveau d'imbrication (0..n) d'un compte.
 			var c = compte;

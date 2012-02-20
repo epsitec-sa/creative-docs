@@ -509,6 +509,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 		}
 
+		public void DuplicateModificationLine()
+		{
+			this.firstEditedRow = -1;
+			this.countEditedRow = 1;
+
+			this.isModification = false;
+			this.justCreated = false;
+		}
+
 
 		public FormattedText GetEditionText(int row, ColumnType columnType)
 		{
