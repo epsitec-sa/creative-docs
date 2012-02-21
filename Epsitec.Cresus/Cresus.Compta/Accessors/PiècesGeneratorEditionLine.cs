@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables pour un générateur de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class GénérateurDePiècesEditionLine : AbstractEditionLine
+	public class PiècesGeneratorEditionLine : AbstractEditionLine
 	{
-		public GénérateurDePiècesEditionLine(AbstractController controller)
+		public PiècesGeneratorEditionLine(AbstractController controller)
 			: base (controller)
 		{
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var generator = entity as ComptaGénérateurDePiècesEntity;
+			var generator = entity as ComptaPiècesGeneratorEntity;
 
 			this.SetText (ColumnType.Nom,         generator.Nom);
 			this.SetText (ColumnType.Préfixe,     generator.Préfixe);
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var generator = entity as ComptaGénérateurDePiècesEntity;
+			var generator = entity as ComptaPiècesGeneratorEntity;
 
 			generator.Nom         = this.GetText (ColumnType.Nom);
 			generator.Préfixe     = this.GetText (ColumnType.Préfixe);

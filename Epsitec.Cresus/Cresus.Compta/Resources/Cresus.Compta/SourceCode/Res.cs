@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Compta
 				//	designer:cap/OVKI3
 				public static readonly global::Epsitec.Common.Widgets.Command Périodes = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 114));
 				//	designer:cap/OVK65
-				public static readonly global::Epsitec.Common.Widgets.Command Pièces = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 166));
+				public static readonly global::Epsitec.Common.Widgets.Command PiècesGenerator = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 166));
 				//	designer:cap/OVKC1
 				public static readonly global::Epsitec.Common.Widgets.Command PlanComptable = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
 				//	designer:cap/OVKG1
@@ -458,7 +458,7 @@ namespace Epsitec.Cresus.Compta
 				//	designer:cap/OVKI3
 				public const long Périodes = 0x3F800014000072L;
 				//	designer:cap/OVK65
-				public const long Pièces = 0x3F8000140000A6L;
+				public const long PiècesGenerator = 0x3F8000140000A6L;
 				//	designer:cap/OVKC1
 				public const long PlanComptable = 0x3F80001400002CL;
 				//	designer:cap/OVKG1
@@ -515,8 +515,6 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType ComptaCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/OVKB
 			public static readonly Epsitec.Common.Types.StructuredType ComptaEcriture = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 11));
-			//	designer:cap/OVKB5
-			public static readonly Epsitec.Common.Types.StructuredType ComptaGénérateurDePièces = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 171));
 			//	designer:cap/OVK23
 			public static readonly Epsitec.Common.Types.StructuredType ComptaJournal = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 98));
 			//	designer:cap/OVKN3
@@ -525,6 +523,8 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType ComptaModèle = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 125));
 			//	designer:cap/OVKC3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaPériode = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 108));
+			//	designer:cap/OVKB5
+			public static readonly Epsitec.Common.Types.StructuredType ComptaPiècesGenerator = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 171));
 			//	designer:cap/OVK75
 			public static readonly Epsitec.Common.Types.StructuredType ComptaUtilisateur = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 167));
 		}
@@ -658,8 +658,6 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVKJ4
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 147);
-				//	designer:cap/OVKH5
-				public static readonly global::Epsitec.Common.Support.Druid GénérateurDePièces = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 177);
 				//	designer:cap/OVKH3
 				public static readonly global::Epsitec.Common.Support.Druid Journaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 113);
 				//	designer:cap/OVKQ3
@@ -670,6 +668,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 146);
 				//	designer:cap/OVKF3
 				public static readonly global::Epsitec.Common.Support.Druid Périodes = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 111);
+				//	designer:cap/OVKH5
+				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 177);
 				//	designer:cap/OVKN
 				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
 				//	designer:cap/OVKI5
@@ -752,28 +752,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid TypeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19);
 			}
 			
-			public static class ComptaGénérateurDePièces
-			{
-				internal static void _Initialize()
-				{
-				}
-				
-				//	designer:cap/OVKL5
-				public static readonly global::Epsitec.Common.Support.Druid Digits = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 181);
-				//	designer:cap/OVKG5
-				public static readonly global::Epsitec.Common.Support.Druid Incrément = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 176);
-				//	designer:cap/OVKC5
-				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172);
-				//	designer:cap/OVKE5
-				public static readonly global::Epsitec.Common.Support.Druid Numéro = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174);
-				//	designer:cap/OVKD5
-				public static readonly global::Epsitec.Common.Support.Druid Préfixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 173);
-				//	designer:cap/OVKM5
-				public static readonly global::Epsitec.Common.Support.Druid SépMilliers = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 182);
-				//	designer:cap/OVKF5
-				public static readonly global::Epsitec.Common.Support.Druid Suffixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175);
-			}
-			
 			public static class ComptaJournal
 			{
 				internal static void _Initialize()
@@ -782,12 +760,12 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVKH4
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 145);
-				//	designer:cap/OVKK5
-				public static readonly global::Epsitec.Common.Support.Druid GénérateurDePièces = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 180);
 				//	designer:cap/OVK35
 				public static readonly global::Epsitec.Common.Support.Druid Id = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 163);
 				//	designer:cap/OVKG4
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 144);
+				//	designer:cap/OVKK5
+				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 180);
 			}
 			
 			public static class ComptaLibellé
@@ -838,10 +816,32 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid DernièreDate = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 110);
 				//	designer:cap/OVKL3
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 117);
-				//	designer:cap/OVKN5
-				public static readonly global::Epsitec.Common.Support.Druid GénérateurDePièces = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 183);
 				//	designer:cap/OVKD3
 				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 109);
+				//	designer:cap/OVKN5
+				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 183);
+			}
+			
+			public static class ComptaPiècesGenerator
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKL5
+				public static readonly global::Epsitec.Common.Support.Druid Digits = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 181);
+				//	designer:cap/OVKG5
+				public static readonly global::Epsitec.Common.Support.Druid Incrément = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 176);
+				//	designer:cap/OVKC5
+				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172);
+				//	designer:cap/OVKE5
+				public static readonly global::Epsitec.Common.Support.Druid Numéro = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174);
+				//	designer:cap/OVKD5
+				public static readonly global::Epsitec.Common.Support.Druid Préfixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 173);
+				//	designer:cap/OVKM5
+				public static readonly global::Epsitec.Common.Support.Druid SépMilliers = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 182);
+				//	designer:cap/OVKF5
+				public static readonly global::Epsitec.Common.Support.Druid Suffixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175);
 			}
 			
 			public static class ComptaUtilisateur
@@ -850,14 +850,14 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
-				//	designer:cap/OVKJ5
-				public static readonly global::Epsitec.Common.Support.Druid GénérateurDePièces = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179);
 				//	designer:cap/OVK95
 				public static readonly global::Epsitec.Common.Support.Druid MotDePasse = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 169);
 				//	designer:cap/OVK85
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168);
 				//	designer:cap/OVKA5
 				public static readonly global::Epsitec.Common.Support.Druid Opérations = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 170);
+				//	designer:cap/OVKJ5
+				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179);
 			}
 		}
 		
@@ -947,11 +947,11 @@ namespace Epsitec.Cresus.Compta
 			Fields.ComptaBudget._Initialize ();
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
-			Fields.ComptaGénérateurDePièces._Initialize ();
 			Fields.ComptaJournal._Initialize ();
 			Fields.ComptaLibellé._Initialize ();
 			Fields.ComptaModèle._Initialize ();
 			Fields.ComptaPériode._Initialize ();
+			Fields.ComptaPiècesGenerator._Initialize ();
 			Fields.ComptaUtilisateur._Initialize ();
 		}
 		

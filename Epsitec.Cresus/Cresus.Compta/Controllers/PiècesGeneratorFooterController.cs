@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class GénérateurDePiècesFooterController : AbstractFooterController
+	public class PiècesGeneratorFooterController : AbstractFooterController
 	{
-		public GénérateurDePiècesFooterController(AbstractController controller)
+		public PiècesGeneratorFooterController(AbstractController controller)
 			: base (controller)
 		{
 		}

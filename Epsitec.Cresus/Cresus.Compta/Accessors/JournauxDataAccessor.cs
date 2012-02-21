@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return journal.Description;
 
 				case ColumnType.Pièce:
-					return JournauxDataAccessor.GetGénérateurDePièces (journal);
+					return JournauxDataAccessor.GetPiècesGenerator (journal);
 
 				case ColumnType.Résumé:
 					return this.comptaEntity.GetJournalRésumé (journal);
@@ -304,19 +304,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static FormattedText GetGénérateurDePièces(ComptaJournalEntity journal)
+		public static FormattedText GetPiècesGenerator(ComptaJournalEntity journal)
 		{
-			if (journal.GénérateurDePièces == null)
+			if (journal.PiècesGenerator == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return journal.GénérateurDePièces.Nom;
+				return journal.PiècesGenerator.Nom;
 			}
 		}
 
-		public static ComptaGénérateurDePiècesEntity GetGénérateurDePièces(ComptaEntity compta, FormattedText pièce)
+		public static ComptaPiècesGeneratorEntity GetPiècesGenerator(ComptaEntity compta, FormattedText pièce)
 		{
 			if (pièce.IsNullOrEmpty)
 			{
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return compta.GénérateurDePièces.Where (x => x.Nom == pièce).FirstOrDefault ();
+				return compta.PiècesGenerator.Where (x => x.Nom == pièce).FirstOrDefault ();
 			}
 		}
 	}

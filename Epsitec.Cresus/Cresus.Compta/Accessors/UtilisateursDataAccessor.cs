@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return utilisateur.MotDePasse;
 
 				case ColumnType.Pièce:
-					return UtilisateursDataAccessor.GetGénérateurDePièces (utilisateur);
+					return UtilisateursDataAccessor.GetPiècesGenerator (utilisateur);
 
 				default:
 					return FormattedText.Null;
@@ -293,19 +293,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static FormattedText GetGénérateurDePièces(ComptaUtilisateurEntity utilisateur)
+		public static FormattedText GetPiècesGenerator(ComptaUtilisateurEntity utilisateur)
 		{
-			if (utilisateur.GénérateurDePièces == null)
+			if (utilisateur.PiècesGenerator == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return utilisateur.GénérateurDePièces.Nom;
+				return utilisateur.PiècesGenerator.Nom;
 			}
 		}
 
-		public static ComptaGénérateurDePiècesEntity GetGénérateurDePièces(ComptaEntity compta, FormattedText pièce)
+		public static ComptaPiècesGeneratorEntity GetPiècesGenerator(ComptaEntity compta, FormattedText pièce)
 		{
 			if (pièce.IsNullOrEmpty)
 			{
@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return compta.GénérateurDePièces.Where (x => x.Nom == pièce).FirstOrDefault ();
+				return compta.PiècesGenerator.Where (x => x.Nom == pièce).FirstOrDefault ();
 			}
 		}
 	}

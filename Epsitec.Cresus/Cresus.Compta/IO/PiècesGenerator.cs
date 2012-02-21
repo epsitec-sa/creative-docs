@@ -65,29 +65,29 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private ComptaGénérateurDePiècesEntity GetGenerator(ComptaUtilisateurEntity utilisateur, ComptaPériodeEntity période, ComptaJournalEntity journal)
+		private ComptaPiècesGeneratorEntity GetGenerator(ComptaUtilisateurEntity utilisateur, ComptaPériodeEntity période, ComptaJournalEntity journal)
 		{
 			//	Retourne le générateur de numéros de pièces à utiliser.
 			//	TODO: Priorités à revoir éventuellement ?
-			if (journal != null && journal.GénérateurDePièces != null)
+			if (journal != null && journal.PiècesGenerator != null)
 			{
-				return journal.GénérateurDePièces;
+				return journal.PiècesGenerator;
 			}
 
-			if (période != null && période.GénérateurDePièces != null)
+			if (période != null && période.PiècesGenerator != null)
 			{
-				return période.GénérateurDePièces;
+				return période.PiècesGenerator;
 			}
 
-			if (utilisateur != null && utilisateur.GénérateurDePièces != null)
+			if (utilisateur != null && utilisateur.PiècesGenerator != null)
 			{
-				return utilisateur.GénérateurDePièces;
+				return utilisateur.PiècesGenerator;
 			}
 
-			return this.mainWindowController.Compta.GénérateurDePièces.FirstOrDefault ();
+			return this.mainWindowController.Compta.PiècesGenerator.FirstOrDefault ();
 		}
 
-		private FormattedText GetProchainePièce(ComptaGénérateurDePiècesEntity generator)
+		private FormattedText GetProchainePièce(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne le prochain numéro de pièce à utiliser.
 			if (generator == null)
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private int GetPièceProchainNuméro(ComptaGénérateurDePiècesEntity generator)
+		private int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne le prochain numéro de pièce à utiliser.
 			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 
-		private void ClearFreezer(ComptaGénérateurDePiècesEntity generator)
+		private void ClearFreezer(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Vide le congélateur de tous les numéros d'un générateur donné.
 			int i = 0;
@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private int GetMaxRankInsideFreezer(ComptaGénérateurDePiècesEntity generator)
+		private int GetMaxRankInsideFreezer(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne le rang le plus grand contenu dans le congélateur.
 			int max = -1;
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return max;
 		}
 
-		private FormattedText SearchInsideFreezer(ComptaGénérateurDePiècesEntity generator, int rank)
+		private FormattedText SearchInsideFreezer(ComptaPiècesGeneratorEntity generator, int rank)
 		{
 			//	Cherche un numéro de pièce contenu dans le congélateur.
 			foreach (var data in this.freezer)
@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return FormattedText.Null;
 		}
 
-		private void AddInsideFreezer(ComptaGénérateurDePiècesEntity generator, int rank, FormattedText pièce)
+		private void AddInsideFreezer(ComptaPiècesGeneratorEntity generator, int rank, FormattedText pièce)
 		{
 			//	Ajoute un numéro de pièce dans le congélateur.
 			var data = new FreezerData (generator, rank, pièce);
@@ -188,14 +188,14 @@ namespace Epsitec.Cresus.Compta.IO
 		private class FreezerData
 		{
 			//	Donnée du congélateur.
-			public FreezerData(ComptaGénérateurDePiècesEntity generator, int rank, FormattedText pièce)
+			public FreezerData(ComptaPiècesGeneratorEntity generator, int rank, FormattedText pièce)
 			{
 				this.Generator = generator;
 				this.Rank      = rank;
 				this.Pièce     = pièce;
 			}
 
-			public ComptaGénérateurDePiècesEntity Generator
+			public ComptaPiècesGeneratorEntity Generator
 			{
 				get;
 				private set;

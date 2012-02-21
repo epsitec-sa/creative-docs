@@ -19,14 +19,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère les générateurs de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class GénérateurDePiècesController : AbstractController
+	public class PiècesGeneratorController : AbstractController
 	{
-		public GénérateurDePiècesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public PiècesGeneratorController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.dataAccessor = new GénérateurDePiècesDataAccessor (this);
+			this.dataAccessor = new PiècesGeneratorDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Pièces.Memory");
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.PiècesGenerator.Memory");
 		}
 
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new GénérateurDePiècesFooterController (this);
+			this.footerController = new PiècesGeneratorFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}

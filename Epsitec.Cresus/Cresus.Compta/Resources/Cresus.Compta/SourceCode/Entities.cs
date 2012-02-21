@@ -13,7 +13,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKT3]", typeof (Epsitec.Cresus.Compta.Entities.ComptaModèleEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKK4]", typeof (Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK75]", typeof (Epsitec.Cresus.Compta.Entities.ComptaUtilisateurEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB5]", typeof (Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB5]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -128,15 +128,15 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>GénérateurDePièces</c> field.
+		///	The <c>PiècesGenerator</c> field.
 		///	designer:fld/OVK/OVKH5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKH5]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> GénérateurDePièces
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> PiècesGenerator
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKH5]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKH5]");
 			}
 		}
 		///	<summary>
@@ -867,24 +867,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>GénérateurDePièces</c> field.
+		///	The <c>PiècesGenerator</c> field.
 		///	designer:fld/OVK23/OVKK5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKK5]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity GénérateurDePièces
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity PiècesGenerator
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKK5]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKK5]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue = this.GénérateurDePièces;
+				global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue = this.PiècesGenerator;
 				if (oldValue != value || !this.IsFieldDefined("[OVKK5]"))
 				{
-					this.OnGénérateurDePiècesChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKK5]", oldValue, value);
-					this.OnGénérateurDePiècesChanged (oldValue, value);
+					this.OnPiècesGeneratorChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKK5]", oldValue, value);
+					this.OnPiècesGeneratorChanged (oldValue, value);
 				}
 			}
 		}
@@ -895,8 +895,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
-		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
+		partial void OnPiècesGeneratorChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
+		partial void OnPiècesGeneratorChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1032,24 +1032,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>GénérateurDePièces</c> field.
+		///	The <c>PiècesGenerator</c> field.
 		///	designer:fld/OVKC3/OVKN5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKN5]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity GénérateurDePièces
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity PiècesGenerator
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKN5]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKN5]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue = this.GénérateurDePièces;
+				global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue = this.PiècesGenerator;
 				if (oldValue != value || !this.IsFieldDefined("[OVKN5]"))
 				{
-					this.OnGénérateurDePiècesChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKN5]", oldValue, value);
-					this.OnGénérateurDePiècesChanged (oldValue, value);
+					this.OnPiècesGeneratorChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKN5]", oldValue, value);
+					this.OnPiècesGeneratorChanged (oldValue, value);
 				}
 			}
 		}
@@ -1062,8 +1062,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDernièreDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDernièreDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
-		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
+		partial void OnPiècesGeneratorChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
+		partial void OnPiècesGeneratorChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1558,24 +1558,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>GénérateurDePièces</c> field.
+		///	The <c>PiècesGenerator</c> field.
 		///	designer:fld/OVK75/OVKJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKJ5]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity GénérateurDePièces
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity PiècesGenerator
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKJ5]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKJ5]");
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue = this.GénérateurDePièces;
+				global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue = this.PiècesGenerator;
 				if (oldValue != value || !this.IsFieldDefined("[OVKJ5]"))
 				{
-					this.OnGénérateurDePiècesChanging (oldValue, value);
-					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity> ("[OVKJ5]", oldValue, value);
-					this.OnGénérateurDePiècesChanged (oldValue, value);
+					this.OnPiècesGeneratorChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKJ5]", oldValue, value);
+					this.OnPiècesGeneratorChanged (oldValue, value);
 				}
 			}
 		}
@@ -1586,8 +1586,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnMotDePasseChanged(string oldValue, string newValue);
 		partial void OnOpérationsChanging(long oldValue, long newValue);
 		partial void OnOpérationsChanged(long oldValue, long newValue);
-		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
-		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity newValue);
+		partial void OnPiècesGeneratorChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
+		partial void OnPiècesGeneratorChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1613,14 +1613,14 @@ namespace Epsitec.Cresus.Compta.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Compta.ComptaGénérateurDePièces Entity
+#region Epsitec.Cresus.Compta.ComptaPiècesGenerator Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
 	///	<summary>
-	///	The <c>ComptaGénérateurDePièces</c> entity.
+	///	The <c>ComptaPiècesGenerator</c> entity.
 	///	designer:cap/OVKB5
 	///	</summary>
-	public partial class ComptaGénérateurDePiècesEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class ComptaPiècesGeneratorEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>Nom</c> field.
@@ -1795,17 +1795,17 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptaGénérateurDePiècesEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 171);	// [OVKB5]
 		public static readonly string EntityStructuredTypeKey = "[OVKB5]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaGénérateurDePiècesEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaPiècesGeneratorEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

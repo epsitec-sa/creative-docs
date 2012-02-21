@@ -53,13 +53,13 @@
     <Compile Include="Accessors\AbstractData.cs" />
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
-    <Compile Include="Accessors\GénérateurDePiècesDataAccessor.cs" />
-    <Compile Include="Accessors\GénérateurDePiècesEditionLine.cs" />
+    <Compile Include="Accessors\PiècesGeneratorDataAccessor.cs" />
+    <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
-    <Compile Include="Controllers\GénérateurDePiècesFooterController.cs" />
+    <Compile Include="Controllers\PiècesGeneratorFooterController.cs" />
     <Compile Include="Controllers\UtilisateursFooterController.cs" />
-    <Compile Include="Controllers\GénérateurDePiècesController.cs" />
+    <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
@@ -277,7 +277,7 @@
     <EmbeddedResource Include="Images\Memory.Up.icon" />
     <EmbeddedResource Include="Images\Memory.Use.icon" />
     <EmbeddedResource Include="Images\Panel.Separator.icon" />
-    <EmbeddedResource Include="Images\Présentation.Pièces.icon" />
+    <EmbeddedResource Include="Images\Présentation.PiècesGenerator.icon" />
     <EmbeddedResource Include="Images\Présentation.Utilisateurs.icon" />
   </ItemGroup>
   <ItemGroup>

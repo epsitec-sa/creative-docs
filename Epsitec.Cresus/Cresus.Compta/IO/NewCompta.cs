@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Journaux.Clear ();
 
 			this.CreatePériodes (compta);
-			compta.GénérateurDePièces.Add (this.CreateGénérateurDePiècesEntity ());
+			compta.PiècesGenerator.Add (this.CreatePiècesGeneratorEntity ());
 			compta.Journaux.Add (this.CreateJournal (compta));
 			compta.Utilisateurs.Add (this.CreateUtilisateur ());
 		}
@@ -88,10 +88,10 @@ namespace Epsitec.Cresus.Compta.IO
 			return utilisateur;
 		}
 
-		private ComptaGénérateurDePiècesEntity CreateGénérateurDePiècesEntity()
+		private ComptaPiècesGeneratorEntity CreatePiècesGeneratorEntity()
 		{
 			//	Crée le générateur de numéros de pièces principal.
-			var pièce = new ComptaGénérateurDePiècesEntity ();
+			var pièce = new ComptaPiècesGeneratorEntity ();
 
 			pièce.Nom       = "Principal";
 			pièce.Numéro    = 1;

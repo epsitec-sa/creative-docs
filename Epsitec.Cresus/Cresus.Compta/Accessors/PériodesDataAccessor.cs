@@ -375,19 +375,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static FormattedText GetGénérateurDePièces(ComptaPériodeEntity période)
+		public static FormattedText GetPiècesGenerator(ComptaPériodeEntity période)
 		{
-			if (période.GénérateurDePièces == null)
+			if (période.PiècesGenerator == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return période.GénérateurDePièces.Nom;
+				return période.PiècesGenerator.Nom;
 			}
 		}
 
-		public static ComptaGénérateurDePiècesEntity GetGénérateurDePièces(ComptaEntity compta, FormattedText pièce)
+		public static ComptaPiècesGeneratorEntity GetPiècesGenerator(ComptaEntity compta, FormattedText pièce)
 		{
 			if (pièce.IsNullOrEmpty)
 			{
@@ -395,7 +395,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return compta.GénérateurDePièces.Where (x => x.Nom == pièce).FirstOrDefault ();
+				return compta.PiècesGenerator.Where (x => x.Nom == pièce).FirstOrDefault ();
 			}
 		}
 
