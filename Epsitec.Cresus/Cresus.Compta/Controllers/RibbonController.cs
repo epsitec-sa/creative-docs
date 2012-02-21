@@ -85,6 +85,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
 
+				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Login, isActivable: true));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Journal, isActivable: true));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance, isActivable: true));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait, isActivable: true));
@@ -215,6 +216,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
+				yield return Res.Commands.Présentation.Login;
 				yield return Res.Commands.Présentation.Modèles;
 				yield return Res.Commands.Présentation.Libellés;
 				yield return Res.Commands.Présentation.Périodes;

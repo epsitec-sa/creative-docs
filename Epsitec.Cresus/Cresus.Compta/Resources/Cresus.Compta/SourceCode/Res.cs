@@ -212,6 +212,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Journaux = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 118));
 				//	designer:cap/OVKR3
 				public static readonly global::Epsitec.Common.Widgets.Command Libellés = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
+				//	designer:cap/OVKQ5
+				public static readonly global::Epsitec.Common.Widgets.Command Login = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 186));
 				//	designer:cap/OVKS3
 				public static readonly global::Epsitec.Common.Widgets.Command Modèles = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 124));
 				//	designer:cap/OVK12
@@ -451,6 +453,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Journaux = 0x3F800014000076L;
 				//	designer:cap/OVKR3
 				public const long Libellés = 0x3F80001400007BL;
+				//	designer:cap/OVKQ5
+				public const long Login = 0x3F8000140000BAL;
 				//	designer:cap/OVKS3
 				public const long Modèles = 0x3F80001400007CL;
 				//	designer:cap/OVK12
@@ -850,14 +854,18 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVKA5
+				public static readonly global::Epsitec.Common.Support.Druid DroitsDaccès = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 170);
 				//	designer:cap/OVK95
 				public static readonly global::Epsitec.Common.Support.Druid MotDePasse = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 169);
-				//	designer:cap/OVK85
-				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168);
-				//	designer:cap/OVKA5
-				public static readonly global::Epsitec.Common.Support.Druid Opérations = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 170);
+				//	designer:cap/OVKP5
+				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 185);
 				//	designer:cap/OVKJ5
 				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179);
+				//	designer:cap/OVKO5
+				public static readonly global::Epsitec.Common.Support.Druid Prénom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 184);
+				//	designer:cap/OVK85
+				public static readonly global::Epsitec.Common.Support.Druid Utilisateur = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168);
 			}
 		}
 		

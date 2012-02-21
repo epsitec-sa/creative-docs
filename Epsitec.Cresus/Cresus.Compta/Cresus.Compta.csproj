@@ -57,6 +57,7 @@
     <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
+    <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\PiècesGeneratorFooterController.cs" />
     <Compile Include="Controllers\UtilisateursFooterController.cs" />
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
@@ -281,6 +282,7 @@
     <EmbeddedResource Include="Images\Panel.Separator.icon" />
     <EmbeddedResource Include="Images\Présentation.PiècesGenerator.icon" />
     <EmbeddedResource Include="Images\Présentation.Utilisateurs.icon" />
+    <EmbeddedResource Include="Images\Présentation.Login.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

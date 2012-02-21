@@ -1492,11 +1492,11 @@ namespace Epsitec.Cresus.Compta.Entities
 	public partial class ComptaUtilisateurEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Nom</c> field.
+		///	The <c>Utilisateur</c> field.
 		///	designer:fld/OVK75/OVK85
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK85]")]
-		public global::Epsitec.Common.Types.FormattedText Nom
+		public global::Epsitec.Common.Types.FormattedText Utilisateur
 		{
 			get
 			{
@@ -1504,11 +1504,55 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Utilisateur;
 				if (oldValue != value || !this.IsFieldDefined("[OVK85]"))
 				{
-					this.OnNomChanging (oldValue, value);
+					this.OnUtilisateurChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK85]", oldValue, value);
+					this.OnUtilisateurChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Prénom</c> field.
+		///	designer:fld/OVK75/OVKO5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKO5]")]
+		public global::Epsitec.Common.Types.FormattedText Prénom
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO5]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Prénom;
+				if (oldValue != value || !this.IsFieldDefined("[OVKO5]"))
+				{
+					this.OnPrénomChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO5]", oldValue, value);
+					this.OnPrénomChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Nom</c> field.
+		///	designer:fld/OVK75/OVKP5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKP5]")]
+		public global::Epsitec.Common.Types.FormattedText Nom
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKP5]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
+				if (oldValue != value || !this.IsFieldDefined("[OVKP5]"))
+				{
+					this.OnNomChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKP5]", oldValue, value);
 					this.OnNomChanged (oldValue, value);
 				}
 			}
@@ -1536,24 +1580,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Opérations</c> field.
+		///	The <c>DroitsDaccès</c> field.
 		///	designer:fld/OVK75/OVKA5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKA5]")]
-		public long Opérations
+		public int DroitsDaccès
 		{
 			get
 			{
-				return this.GetField<long> ("[OVKA5]");
+				return this.GetField<int> ("[OVKA5]");
 			}
 			set
 			{
-				long oldValue = this.Opérations;
+				int oldValue = this.DroitsDaccès;
 				if (oldValue != value || !this.IsFieldDefined("[OVKA5]"))
 				{
-					this.OnOpérationsChanging (oldValue, value);
-					this.SetField<long> ("[OVKA5]", oldValue, value);
-					this.OnOpérationsChanged (oldValue, value);
+					this.OnDroitsDaccèsChanging (oldValue, value);
+					this.SetField<int> ("[OVKA5]", oldValue, value);
+					this.OnDroitsDaccèsChanged (oldValue, value);
 				}
 			}
 		}
@@ -1580,12 +1624,16 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		
+		partial void OnUtilisateurChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnUtilisateurChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPrénomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPrénomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnMotDePasseChanging(string oldValue, string newValue);
 		partial void OnMotDePasseChanged(string oldValue, string newValue);
-		partial void OnOpérationsChanging(long oldValue, long newValue);
-		partial void OnOpérationsChanged(long oldValue, long newValue);
+		partial void OnDroitsDaccèsChanging(int oldValue, int newValue);
+		partial void OnDroitsDaccèsChanged(int oldValue, int newValue);
 		partial void OnPiècesGeneratorChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		partial void OnPiècesGeneratorChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		
