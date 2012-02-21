@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
@@ -102,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return utilisateur.Nom;
 
 				case ColumnType.MotDePasse:
-					return utilisateur.MotDePasse;
+					return Strings.ConvertToHidePassword (utilisateur.MotDePasse);
 
 				case ColumnType.Pièce:
 					return UtilisateursDataAccessor.GetPiècesGenerator (utilisateur);

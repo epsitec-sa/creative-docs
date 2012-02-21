@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public FormattedText GetRemoveError(ComptaPiècesGeneratorEntity generator)
 		{
+			//	Retourne le message d'erreur éventuel, si on souhaite supprimer ce générateur.
 			int utilisateurCount, périodeCount, journalCount;
 			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
 
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public FormattedText GetSummary(ComptaPiècesGeneratorEntity generator)
 		{
+			//	Retourne un résumé de l'utilisation du générateur.
 			int utilisateurCount, périodeCount, journalCount;
 			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
 

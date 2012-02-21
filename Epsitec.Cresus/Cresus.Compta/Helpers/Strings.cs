@@ -1,4 +1,4 @@
-//	Copyright � 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -37,6 +37,18 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 
 			return text;
+		}
+
+		public static string ConvertToHidePassword(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return new string ('●', text.Length);
+			}
 		}
 	}
 }

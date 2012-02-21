@@ -74,6 +74,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
+				if (mapper.Column == ColumnType.MotDePasse)
+				{
+					var f = field.EditWidget as AbstractTextField;
+					f.IsPassword = true;
+					f.PasswordReplacementCharacter = '●';
+				}
+
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);
