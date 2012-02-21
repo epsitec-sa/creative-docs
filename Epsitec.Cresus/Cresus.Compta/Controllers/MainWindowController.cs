@@ -41,6 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.settingsList = new SettingsList ();
 			this.defaultSettingsList = new SettingsList ();
 			this.navigatorEngine = new NavigatorEngine ();
+			this.piècesGenerator = new PiècesGenerator (this);
 
 			this.compta = new ComptaEntity ();  // crée une compta vide !!!
 			new NewCompta ().NewEmpty (this.compta);
@@ -122,6 +123,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public PiècesGenerator PiècesGenerator
+		{
+			get
+			{
+				return this.piècesGenerator;
+			}
+		}
+
 		public SettingsList SettingsList
 		{
 			get
@@ -185,15 +194,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.ribbonController.PrésentationCommandsUpdate (this.selectedCommandDocument);
 		}
-
-
-		#region Générateur de numéros de pièces
-		public FormattedText GetProchainePièce(ComptaJournalEntity journal)
-		{
-			// TODO: Congeler les pièces en trop !!!
-			return this.compta.GetProchainePièce (this.currentUser, this.période, journal);
-		}
-		#endregion
 
 
 		#region Navigator
@@ -1203,6 +1203,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly SettingsList						settingsList;
 		private readonly SettingsList						defaultSettingsList;
 		private readonly NavigatorEngine					navigatorEngine;
+		private readonly PiècesGenerator					piècesGenerator;
 
 		private Window										mainWindow;
 		private BusinessContext								businessContext;

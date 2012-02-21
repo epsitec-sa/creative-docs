@@ -62,12 +62,6 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureAutoPièces:
 					return "Propose automatiquement un numéro de pièce";
 
-				case SettingsType.EcritureProchainePièce:
-					return "Numéro de la prochaine pièce";
-
-				case SettingsType.EcritureIncrémentPièce:
-					return "Incrément automatique pour la pièce";
-
 				case SettingsType.EcriturePlusieursPièces:
 					return "Numéro de pièce individuel pour chaque ligne d'une écriture multiple";
 

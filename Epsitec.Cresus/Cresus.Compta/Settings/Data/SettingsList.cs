@@ -36,8 +36,6 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureMontantZéro,     true));
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
-			this.Add (new TextSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureProchainePièce,  10, "1"));
-			this.Add (new IntSettingsData    (SettingsGroup.Ecriture, SettingsType.EcritureIncrémentPièce,  1));
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
 			this.Add (new BoolSettingsData   (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
 

@@ -17,8 +17,6 @@ namespace Epsitec.Cresus.Compta
 		EcritureMontantZéro,
 		EcriturePièces,
 		EcritureAutoPièces,
-		EcritureProchainePièce,
-		EcritureIncrémentPièce,
 		EcriturePlusieursPièces,
 		EcritureForcePièces,
 

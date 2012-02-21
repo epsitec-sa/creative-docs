@@ -279,8 +279,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var nomJournal = this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal);
 				var journal = this.comptaEntity.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
-				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.controller.MainWindowController.GetProchainePièce (journal));
-				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.controller.MainWindowController.GetProchainePièce (journal));
+				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal));
+				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal));
 			}
 			else
 			{
@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
 					var journal = this.comptaEntity.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.GetProchainePièce (journal));
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal));
 				}
 				else
 				{

@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void PrepareEditionLine(int line)
 		{
 			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.périodeEntity.ProchaineDate));
-			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.GetProchainePièce (this.GetDefaultJournal));
+			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
 		}
 
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.périodeEntity.DernièreDate = date;
 			this.editionLine[0].SetText (ColumnType.Date, Converters.DateToString (date));
 
-			this.editionLine[0].SetText (ColumnType.Pièce, this.mainWindowController.GetProchainePièce (this.GetDefaultJournal));
+			this.editionLine[0].SetText (ColumnType.Pièce, this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 
 			this.firstEditedRow = firstRow;
 		}

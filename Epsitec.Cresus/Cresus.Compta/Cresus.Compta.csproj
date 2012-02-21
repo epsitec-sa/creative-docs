@@ -62,6 +62,7 @@
     <Compile Include="Controllers\PiècesController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Helpers\Strings.cs" />
+    <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultMemory.cs" />
     <Compile Include="Memory\Data\NavigatorEngine.cs" />
     <Compile Include="Memory\Data\NavigatorData.cs" />
