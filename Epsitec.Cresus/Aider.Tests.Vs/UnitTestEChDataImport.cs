@@ -179,7 +179,7 @@ namespace Aider.Tests.Vs
 		{
 			var address = businessContext.CreateEntity<AiderAddressEntity> ();
 
-			aiderHousehold.Address = this.GenerateAddress (address, towns);
+			aiderHousehold.Address = this.GenerateAddress (address, towns, true);
 		}
 
 
@@ -187,22 +187,22 @@ namespace Aider.Tests.Vs
 		{
 			if (dice.NextDouble () > 0.5)
 			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress1, towns);
+				this.GenerateAddress (aiderPerson.AdditionalAddress1, towns, false);
 			}
 
 			if (dice.NextDouble () > 0.5)
 			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress2, towns);
+				this.GenerateAddress (aiderPerson.AdditionalAddress2, towns, false);
 			}
 
 			if (dice.NextDouble () > 0.5)
 			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress3, towns);
+				this.GenerateAddress (aiderPerson.AdditionalAddress3, towns, false);
 			}
 
 			if (dice.NextDouble () > 0.5)
 			{
-				this.GenerateAddress (aiderPerson.AdditionalAddress4, towns);
+				this.GenerateAddress (aiderPerson.AdditionalAddress4, towns, false);
 			}
 
 			if (dice.NextDouble () > 0.1)
@@ -261,7 +261,7 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private AiderAddressEntity GenerateAddress(AiderAddressEntity address, List<AiderTownEntity> towns)
+		private AiderAddressEntity GenerateAddress(AiderAddressEntity address, List<AiderTownEntity> towns, bool forceMailAddress)
 		{
 			bool isEmpty = true;
 
@@ -272,7 +272,7 @@ namespace Aider.Tests.Vs
 					address.Type = this.GetRandomEnum<AddressType> ();
 				}
 
-				if (dice.NextDouble () > 0.5)
+				if (forceMailAddress || dice.NextDouble () > 0.5)
 				{
 					var streetPrefix = this.GetRandomElement ("Rue du", "Chemin du", "Place du", "Avenue du");
 					var street = this.GetRandomElement ("pécheur barbu", "marin chauve", "bateau ivre", "gallion espagnol", "petit navire");
@@ -291,9 +291,23 @@ namespace Aider.Tests.Vs
 					isEmpty = false;
 				}
 
-				if (!string.IsNullOrEmpty (address.Phone1) && dice.NextDouble () > 0.5)
+				if (dice.NextDouble () > 0.5)
 				{
 					address.Phone2 = this.GetRandomPhone ();
+
+					isEmpty = false;
+				}
+
+				if (dice.NextDouble () > 0.5)
+				{
+					address.Mobile = this.GetRandomPhone ();
+
+					isEmpty = false;
+				}
+
+				if (dice.NextDouble () > 0.5)
+				{
+					address.Fax = this.GetRandomPhone ();
 
 					isEmpty = false;
 				}
