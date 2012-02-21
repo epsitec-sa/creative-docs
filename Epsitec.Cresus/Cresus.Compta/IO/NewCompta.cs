@@ -89,8 +89,9 @@ namespace Epsitec.Cresus.Compta.IO
 			//	Crée l'utilisteur administrateur.
 			var utilisateur = new ComptaUtilisateurEntity ();
 
-			utilisateur.Nom        = "Admin";
-			utilisateur.MotDePasse = "epsitec";
+			utilisateur.Utilisateur = "Admin";
+			utilisateur.MotDePasse  = "epsitec";
+			utilisateur.Admin       = true;
 
 			return utilisateur;
 		}

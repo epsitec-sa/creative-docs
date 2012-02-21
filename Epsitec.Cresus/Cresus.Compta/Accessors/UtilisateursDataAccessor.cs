@@ -92,6 +92,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			switch (column)
 			{
+				case ColumnType.Utilisateur:
+					return utilisateur.Utilisateur;
+
+				case ColumnType.Prénom:
+					return utilisateur.Prénom;
+
 				case ColumnType.Nom:
 					return utilisateur.Nom;
 
@@ -204,10 +210,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override FormattedText GetRemoveModificationLineError()
+		{
+			var utilisateur = this.comptaEntity.Utilisateurs[this.firstEditedRow];
+			if (utilisateur.Admin)
+			{
+				return "Il n'est pas possible de supprimer l'administrateur.";
+			}
+			else
+			{
+				return FormattedText.Null;  // ok
+			}
+		}
+
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
 			var utilisateur = this.comptaEntity.Utilisateurs[this.firstEditedRow];
-			return string.Format ("Voulez-vous supprimer l'utilisateur \"{0}\" ?", utilisateur.Nom);
+			return string.Format ("Voulez-vous supprimer l'utilisateur \"{0}\" ?", utilisateur.Utilisateur);
 		}
 
 		public override void RemoveModificationLine()

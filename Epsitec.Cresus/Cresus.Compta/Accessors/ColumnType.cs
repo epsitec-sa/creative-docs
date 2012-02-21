@@ -46,6 +46,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Permanant,
 		Code,
 		Raccourci,
+		Utilisateur,
+		Prénom,
 		Nom,
 		MotDePasse,
 		Opérations,

@@ -782,7 +782,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public DialogResult QuestionDialog(FormattedText message)
 		{
-			var dialog = MessageDialog.CreateYesNo ("Crésus Comptabilité NG", DialogIcon.Question, message);
+			var dialog = MessageDialog.CreateYesNo ("Question", DialogIcon.Question, message);
 			dialog.OwnerWindow = this.controller.MainWindowController.Window;
 			dialog.OpenDialog ();
 			return dialog.Result;
