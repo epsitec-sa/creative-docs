@@ -108,7 +108,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.DateDébut, 0.20, ContentAlignment.MiddleLeft,   "Date début",  "Date de début de la période");
 				yield return new ColumnMapper (ColumnType.DateFin,   0.20, ContentAlignment.MiddleLeft,   "Date fin",    "Date de fin de la période");
 				yield return new ColumnMapper (ColumnType.Titre,     0.80, ContentAlignment.MiddleLeft,   "Commentaire", "Commentaire affiché entre parenthèses après la période");
-				yield return new ColumnMapper (ColumnType.Résumé,    0.60, ContentAlignment.MiddleLeft,   "Résumé");
+				yield return new ColumnMapper (ColumnType.Pièce,     0.40, ContentAlignment.MiddleLeft,   "Générateur de pièces", "Générateur pour les numéros de pièces (facultatif)");
+				yield return new ColumnMapper (ColumnType.Résumé,    0.70, ContentAlignment.MiddleLeft,   "Résumé");
 				yield return new ColumnMapper (ColumnType.Utilise,   0.20, ContentAlignment.MiddleCenter, "En cours",    "Détermine la période comptable en cours");
 			}
 		}

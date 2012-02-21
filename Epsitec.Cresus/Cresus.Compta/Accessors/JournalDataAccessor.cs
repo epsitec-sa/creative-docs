@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void PrepareEditionLine(int line)
 		{
 			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.périodeEntity.ProchaineDate));
-			this.editionLine[line].SetText (ColumnType.Pièce,   this.comptaEntity.ProchainePièce);
+			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
 		}
 
@@ -341,8 +341,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.périodeEntity.DernièreDate = date;
 			this.editionLine[0].SetText (ColumnType.Date, Converters.DateToString (date));
 
-			this.comptaEntity.DernièrePièce = this.editionLine[0].GetText (ColumnType.Pièce);
-			this.editionLine[0].SetText (ColumnType.Pièce, this.comptaEntity.ProchainePièce);
+			this.editionLine[0].SetText (ColumnType.Pièce, this.mainWindowController.GetProchainePièce (this.GetDefaultJournal));
 
 			this.firstEditedRow = firstRow;
 		}
@@ -549,15 +548,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			//	Utilise le journal choisi dans les options.
 			//	Si on est en mode "tous les journaux", on laisse null, car le bon sera mis plus tard.
-			int id = (this.options as JournalOptions).JournalId;
-			if (id == 0)  // tous les journaux ?
-			{
-				écriture.Journal = null;
-			}
-			else
-			{
-				écriture.Journal = this.comptaEntity.Journaux.Where (x => x.Id == id).FirstOrDefault ();
-			}
+			écriture.Journal = this.GetDefaultJournal;
 
 			return écriture;
 		}
@@ -573,6 +564,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				this.businessContext.DeleteEntity (écriture);
+			}
+		}
+
+		private ComptaJournalEntity GetDefaultJournal
+		{
+			get
+			{
+				int id = (this.options as JournalOptions).JournalId;
+
+				if (id == 0)  // tous les journaux ?
+				{
+					return null;
+				}
+				else
+				{
+					return this.comptaEntity.Journaux.Where (x => x.Id == id).FirstOrDefault ();
+				}
 			}
 		}
 

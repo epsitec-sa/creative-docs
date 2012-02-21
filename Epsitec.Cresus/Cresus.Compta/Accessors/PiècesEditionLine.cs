@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
 			this.datas.Add (ColumnType.Préfixe,     new EditionData (this.controller));
 			this.datas.Add (ColumnType.Numéro,      new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Postfixe,    new EditionData (this.controller));
+			this.datas.Add (ColumnType.Suffixe,    new EditionData (this.controller));
 			this.datas.Add (ColumnType.SépMilliers, new EditionData (this.controller));
 			this.datas.Add (ColumnType.Digits,      new EditionData (this.controller, this.ValidateDigits));
 			this.datas.Add (ColumnType.Incrément,   new EditionData (this.controller, this.ValidateIncrément));
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Nom,         pièce.Nom);
 			this.SetText (ColumnType.Préfixe,     pièce.Préfixe);
 			this.SetText (ColumnType.Numéro,      Converters.IntToString (pièce.Numéro));
-			this.SetText (ColumnType.Postfixe,    pièce.Postfixe);
+			this.SetText (ColumnType.Suffixe,     pièce.Suffixe);
 			this.SetText (ColumnType.SépMilliers, pièce.SépMilliers);
 			this.SetText (ColumnType.Digits,      (pièce.Digits == 0) ? FormattedText.Empty : Converters.IntToString (pièce.Digits));
 			this.SetText (ColumnType.Incrément,   Converters.IntToString (pièce.Incrément));
@@ -124,7 +124,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			pièce.Nom         = this.GetText (ColumnType.Nom);
 			pièce.Préfixe     = this.GetText (ColumnType.Préfixe);
 			pièce.Numéro      = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
-			pièce.Postfixe    = this.GetText (ColumnType.Postfixe);
+			pièce.Suffixe     = this.GetText (ColumnType.Suffixe);
 			pièce.SépMilliers = this.GetText (ColumnType.SépMilliers);
 			pièce.Digits      = Converters.ParseInt (this.GetText (ColumnType.Digits)).GetValueOrDefault (0);
 			pièce.Incrément   = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);

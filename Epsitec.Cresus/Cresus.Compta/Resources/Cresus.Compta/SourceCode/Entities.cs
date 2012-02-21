@@ -104,28 +104,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DernièrePièce</c> field.
-		///	designer:fld/OVK/OVK2
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK2]")]
-		public global::Epsitec.Common.Types.FormattedText DernièrePièce
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK2]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.DernièrePièce;
-				if (oldValue != value || !this.IsFieldDefined("[OVK2]"))
-				{
-					this.OnDernièrePièceChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK2]", oldValue, value);
-					this.OnDernièrePièceChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Libellés</c> field.
 		///	designer:fld/OVK/OVKQ3
 		///	</summary>
@@ -178,8 +156,6 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDernièrePièceChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDernièrePièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -891,11 +867,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Pièce</c> field.
+		///	The <c>GénérateurDePièces</c> field.
 		///	designer:fld/OVK23/OVKK5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKK5]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity Pièce
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity GénérateurDePièces
 		{
 			get
 			{
@@ -903,12 +879,12 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue = this.Pièce;
+				global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue = this.GénérateurDePièces;
 				if (oldValue != value || !this.IsFieldDefined("[OVKK5]"))
 				{
-					this.OnPièceChanging (oldValue, value);
+					this.OnGénérateurDePiècesChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity> ("[OVKK5]", oldValue, value);
-					this.OnPièceChanged (oldValue, value);
+					this.OnGénérateurDePiècesChanged (oldValue, value);
 				}
 			}
 		}
@@ -919,8 +895,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPièceChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
-		partial void OnPièceChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
+		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
+		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1055,6 +1031,28 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>GénérateurDePièces</c> field.
+		///	designer:fld/OVKC3/OVKN5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKN5]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity GénérateurDePièces
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity> ("[OVKN5]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue = this.GénérateurDePièces;
+				if (oldValue != value || !this.IsFieldDefined("[OVKN5]"))
+				{
+					this.OnGénérateurDePiècesChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity> ("[OVKN5]", oldValue, value);
+					this.OnGénérateurDePiècesChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnDateDébutChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnDateDébutChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
@@ -1064,6 +1062,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDernièreDateChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnDernièreDateChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
+		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1558,11 +1558,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Pièce</c> field.
+		///	The <c>GénérateurDePièces</c> field.
 		///	designer:fld/OVK75/OVKJ5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKJ5]")]
-		public global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity Pièce
+		public global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity GénérateurDePièces
 		{
 			get
 			{
@@ -1570,12 +1570,12 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue = this.Pièce;
+				global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue = this.GénérateurDePièces;
 				if (oldValue != value || !this.IsFieldDefined("[OVKJ5]"))
 				{
-					this.OnPièceChanging (oldValue, value);
+					this.OnGénérateurDePiècesChanging (oldValue, value);
 					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity> ("[OVKJ5]", oldValue, value);
-					this.OnPièceChanged (oldValue, value);
+					this.OnGénérateurDePiècesChanged (oldValue, value);
 				}
 			}
 		}
@@ -1586,8 +1586,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnMotDePasseChanged(string oldValue, string newValue);
 		partial void OnOpérationsChanging(long oldValue, long newValue);
 		partial void OnOpérationsChanged(long oldValue, long newValue);
-		partial void OnPièceChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
-		partial void OnPièceChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
+		partial void OnGénérateurDePiècesChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
+		partial void OnGénérateurDePiècesChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPièceEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1689,11 +1689,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Postfixe</c> field.
+		///	The <c>Suffixe</c> field.
 		///	designer:fld/OVKB5/OVKF5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKF5]")]
-		public global::Epsitec.Common.Types.FormattedText Postfixe
+		public global::Epsitec.Common.Types.FormattedText Suffixe
 		{
 			get
 			{
@@ -1701,12 +1701,12 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Postfixe;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Suffixe;
 				if (oldValue != value || !this.IsFieldDefined("[OVKF5]"))
 				{
-					this.OnPostfixeChanging (oldValue, value);
+					this.OnSuffixeChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKF5]", oldValue, value);
-					this.OnPostfixeChanged (oldValue, value);
+					this.OnSuffixeChanged (oldValue, value);
 				}
 			}
 		}
@@ -1783,8 +1783,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnPréfixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNuméroChanging(int oldValue, int newValue);
 		partial void OnNuméroChanged(int oldValue, int newValue);
-		partial void OnPostfixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPostfixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnSuffixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnSuffixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnSépMilliersChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnSépMilliersChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDigitsChanging(int oldValue, int newValue);

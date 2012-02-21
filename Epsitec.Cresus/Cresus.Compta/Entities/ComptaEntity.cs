@@ -3,6 +3,8 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -250,6 +252,76 @@ namespace Epsitec.Cresus.Compta.Entities
 		}
 
 
+		#region Générateurs de numéros de pièces
+		public FormattedText GetProchainePièce(ComptaUtilisateurEntity utilisateur, ComptaPériodeEntity période, ComptaJournalEntity journal)
+		{
+			//	Retourne le générateur de numéros de pièces à utiliser.
+			var pièce = this.GetPièceEntity (utilisateur, période, journal);
+
+			if (pièce == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return this.GetProchainePièce (pièce);
+			}
+		}
+
+		private ComptaPièceEntity GetPièceEntity(ComptaUtilisateurEntity utilisateur, ComptaPériodeEntity période, ComptaJournalEntity journal)
+		{
+			//	Retourne le générateur de numéros de pièces à utiliser.
+			//	TODO: Priorités à revoir éventuellement ?
+			if (journal != null && journal.GénérateurDePièces != null)
+			{
+				return journal.GénérateurDePièces;
+			}
+
+			if (période != null && période.GénérateurDePièces != null)
+			{
+				return période.GénérateurDePièces;
+			}
+
+			if (utilisateur != null && utilisateur.GénérateurDePièces != null)
+			{
+				return utilisateur.GénérateurDePièces;
+			}
+
+			return this.Pièces.FirstOrDefault ();
+		}
+
+		private FormattedText GetProchainePièce(ComptaPièceEntity pièce)
+		{
+			//	Retourne le prochain numéro de pièce à utiliser.
+			int n = this.GetPièceProchainNuméro (pièce);
+			string s = n.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+			if (pièce.Digits != 0 && pièce.Digits > s.Length)
+			{
+				s = new string ('0', pièce.Digits - s.Length) + s;
+			}
+
+			if (!pièce.SépMilliers.IsNullOrEmpty)
+			{
+				s = Strings.AddSépMilliers (s, pièce.SépMilliers.ToSimpleText ());
+			}
+
+			s = pièce.Préfixe + s + pièce.Suffixe;
+
+			return s;
+		}
+
+		private int GetPièceProchainNuméro(ComptaPièceEntity pièce)
+		{
+			//	Retourne le prochain numéro de pièce à utiliser.
+			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
+			int n = pièce.Numéro;
+			pièce.Numéro += pièce.Incrément;
+			return n;
+		}
+
+
+#if false
 		public FormattedText ProchainePièce
 		{
 			//	A partir de "AB102", retourne "AB103" (par exemple).
@@ -286,6 +358,8 @@ namespace Epsitec.Cresus.Compta.Entities
 				return pièce;
 			}
 		}
+#endif
+		#endregion
 
 
 		#region Niveaux d'imbrications

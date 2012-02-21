@@ -20,7 +20,6 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			compta.Nom           = "vide";
 			compta.Description   = null;
-			compta.DernièrePièce = null;
 
 			compta.PlanComptable.Clear ();
 			compta.Périodes.Clear ();
@@ -29,9 +28,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public void NewEmpty(ComptaEntity compta)
 		{
-			compta.Nom           = "vide";
-			compta.Description   = null;
-			compta.DernièrePièce = "0";
+			compta.Nom         = "vide";
+			compta.Description = null;
 
 			compta.PlanComptable.Clear ();
 			compta.Périodes.Clear ();

@@ -114,6 +114,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public ComptaUtilisateurEntity CurrentUser
+		{
+			get
+			{
+				return this.currentUser;
+			}
+		}
+
 		public SettingsList SettingsList
 		{
 			get
@@ -177,6 +185,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.ribbonController.PrésentationCommandsUpdate (this.selectedCommandDocument);
 		}
+
+
+		#region Générateur de numéros de pièces
+		public FormattedText GetProchainePièce(ComptaJournalEntity journal)
+		{
+			// TODO: Congeler les pièces en trop !!!
+			return this.compta.GetProchainePièce (this.currentUser, this.période, journal);
+		}
+		#endregion
 
 
 		#region Navigator
@@ -1202,5 +1219,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool										showOptionsPanel;
 		private bool										showMemoryPanel;
 		private bool										showInfoPanel;
+		private ComptaUtilisateurEntity						currentUser;
 	}
 }

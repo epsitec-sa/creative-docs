@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.Titre,     new EditionData (this.controller));
+			this.datas.Add (ColumnType.Pièce,     new EditionData (this.controller, this.ValidatePièce));
 			this.datas.Add (ColumnType.Utilise,   new EditionData (this.controller));
 		}
 
@@ -32,6 +33,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateDate(EditionData data)
 		{
 			Validators.ValidateDate (data, emptyAccepted: false);
+		}
+
+		private void ValidatePièce(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var pièce = PériodesDataAccessor.GetPièce (this.comptaEntity, data.Text);
+				if (pièce == null)
+				{
+					data.Error = "Ce générateur de numéros de pièces n'existe pas";
+				}
+			}
 		}
 		#endregion
 
@@ -46,6 +61,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.DateDébut, période.DateDébut.ToString ());
 			this.SetText (ColumnType.DateFin,   période.DateFin.ToString ());
 			this.SetText (ColumnType.Titre,     période.Description);
+			this.SetText (ColumnType.Pièce, PériodesDataAccessor.GetPièce (période));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -72,6 +88,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			période.Description = this.GetText (ColumnType.Titre);
+			période.GénérateurDePièces = PériodesDataAccessor.GetPièce (this.comptaEntity, this.GetText (ColumnType.Pièce));
 		}
 	}
 }

@@ -295,13 +295,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static FormattedText GetPièce(ComptaUtilisateurEntity utilisateur)
 		{
-			if (utilisateur.Pièce == null)
+			if (utilisateur.GénérateurDePièces == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return utilisateur.Pièce.Nom;
+				return utilisateur.GénérateurDePièces.Nom;
 			}
 		}
 

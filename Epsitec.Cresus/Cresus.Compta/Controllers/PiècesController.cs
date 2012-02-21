@@ -108,9 +108,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Nom,         1.00, ContentAlignment.MiddleLeft,  "Nom",                 "Nom du générateur de numéros de pièces");
 				yield return new ColumnMapper (ColumnType.Préfixe,     1.00, ContentAlignment.MiddleLeft,  "Préfixe",             "Préfixe (vient avant le numéro)");
 				yield return new ColumnMapper (ColumnType.Numéro,      1.00, ContentAlignment.MiddleRight, "Numéro",              "Prochain numéro généré");
-				yield return new ColumnMapper (ColumnType.Postfixe,    1.00, ContentAlignment.MiddleLeft,  "Postfixe",            "Postfixe (vient après le numéro)");
+				yield return new ColumnMapper (ColumnType.Suffixe,    1.00, ContentAlignment.MiddleLeft,  "Postfixe",            "Postfixe (vient après le numéro)");
 				yield return new ColumnMapper (ColumnType.Incrément,   1.00, ContentAlignment.MiddleRight, "Incrément",           "Valeur de l'incrément");
-				yield return new ColumnMapper (ColumnType.SépMilliers, 1.00, ContentAlignment.MiddleLeft,  "Séparateur milliers", "Séparateur pour les milliers");
+				yield return new ColumnMapper (ColumnType.SépMilliers, 1.00, ContentAlignment.MiddleLeft,  "Séparateur milliers", "Séparateur pour les milliers (facultatif)");
 				yield return new ColumnMapper (ColumnType.Digits,      1.00, ContentAlignment.MiddleRight, "Nb de chiffres",      "Nombre fixe de chiffres (facultatif)");
 			}
 		}

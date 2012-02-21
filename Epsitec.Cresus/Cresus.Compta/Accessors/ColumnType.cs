@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		MotDePasse,
 		Opérations,
 		Préfixe,
-		Postfixe,
+		Suffixe,
 		Digits,
 		SépMilliers,
 		Incrément,

@@ -306,13 +306,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static FormattedText GetPièce(ComptaJournalEntity journal)
 		{
-			if (journal.Pièce == null)
+			if (journal.GénérateurDePièces == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return journal.Pièce.Nom;
+				return journal.GénérateurDePièces.Nom;
 			}
 		}
 

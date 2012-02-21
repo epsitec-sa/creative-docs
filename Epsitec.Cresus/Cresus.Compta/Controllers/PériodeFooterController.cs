@@ -61,7 +61,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Utilise)
+				if (mapper.Column == ColumnType.Pièce)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.Pièces.Select (x => x.Nom).ToArray ());
+				}
+				else if (mapper.Column == ColumnType.Utilise)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);

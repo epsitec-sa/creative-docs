@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Numéro:
 					return Converters.IntToString (pièce.Numéro);
 
-				case ColumnType.Postfixe:
-					return pièce.Postfixe;
+				case ColumnType.Suffixe:
+					return pièce.Suffixe;
 
 				case ColumnType.SépMilliers:
 					return pièce.SépMilliers;

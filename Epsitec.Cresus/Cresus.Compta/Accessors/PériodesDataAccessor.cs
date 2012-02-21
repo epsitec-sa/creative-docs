@@ -375,6 +375,31 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public static FormattedText GetPièce(ComptaPériodeEntity période)
+		{
+			if (période.GénérateurDePièces == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return période.GénérateurDePièces.Nom;
+			}
+		}
+
+		public static ComptaPièceEntity GetPièce(ComptaEntity compta, FormattedText pièce)
+		{
+			if (pièce.IsNullOrEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return compta.Pièces.Where (x => x.Nom == pièce).FirstOrDefault ();
+			}
+		}
+
+	
 		public static readonly FormattedText	PériodeCourante = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
 		public static readonly FormattedText	AutrePériode    = Core.TextFormatter.FormatText ("Non");
 	}
