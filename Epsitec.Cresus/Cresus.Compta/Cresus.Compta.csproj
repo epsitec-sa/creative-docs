@@ -61,6 +61,8 @@
     <Compile Include="Controllers\UtilisateursFooterController.cs" />
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
+    <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
+    <Compile Include="UserAccess.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultMemory.cs" />

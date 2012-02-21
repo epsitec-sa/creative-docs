@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Prénom,
 		Nom,
 		MotDePasse,
-		Opérations,
+		DroitsDaccès,
 		Préfixe,
 		Suffixe,
 		Digits,

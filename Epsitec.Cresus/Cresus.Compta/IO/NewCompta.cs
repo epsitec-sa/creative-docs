@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			utilisateur.Utilisateur = "Admin";
 			utilisateur.MotDePasse  = "epsitec";
-			utilisateur.Admin       = true;
+			utilisateur.UserAccess  = UserAccess.Full;
 
 			return utilisateur;
 		}

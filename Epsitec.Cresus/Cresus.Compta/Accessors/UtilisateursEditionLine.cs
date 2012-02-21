@@ -25,7 +25,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.Prénom,      new EditionData (this.controller));
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller));
 			this.datas.Add (ColumnType.MotDePasse,  new EditionData (this.controller, this.ValidateMotDePasse));
-			this.datas.Add (ColumnType.Opérations,  new EditionData (this.controller));
 			this.datas.Add (ColumnType.Pièce,       new EditionData (this.controller, this.ValidatePièce));
 		}
 
@@ -82,23 +81,39 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
-			this.SetText (ColumnType.Utilisateur, utilisateur.Utilisateur);
-			this.SetText (ColumnType.Prénom,      utilisateur.Prénom);
-			this.SetText (ColumnType.Nom,         utilisateur.Nom);
-			this.SetText (ColumnType.MotDePasse,  utilisateur.MotDePasse);
-			this.SetText (ColumnType.Pièce,       UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
+			this.SetText (ColumnType.Utilisateur,  utilisateur.Utilisateur);
+			this.SetText (ColumnType.Prénom,       utilisateur.Prénom);
+			this.SetText (ColumnType.Nom,          utilisateur.Nom);
+			this.SetText (ColumnType.MotDePasse,   utilisateur.MotDePasse);
+			this.SetText (ColumnType.Pièce,        UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
+			this.SetText (ColumnType.DroitsDaccès, Converters.IntToString (utilisateur.DroitsDaccès));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
-			utilisateur.Utilisateur = this.GetText (ColumnType.Utilisateur);
-			utilisateur.Prénom      = this.GetText (ColumnType.Prénom);
-			utilisateur.Nom         = this.GetText (ColumnType.Nom);
-			utilisateur.MotDePasse  = this.GetText (ColumnType.MotDePasse).ToSimpleText ();
-
+			utilisateur.Utilisateur     = this.GetText (ColumnType.Utilisateur);
+			utilisateur.Prénom          = this.GetText (ColumnType.Prénom);
+			utilisateur.Nom             = this.GetText (ColumnType.Nom);
+			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToSimpleText ();
 			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
+			utilisateur.DroitsDaccès    = Converters.ParseInt (this.GetText (ColumnType.DroitsDaccès)).GetValueOrDefault ();
+		}
+
+
+		public UserAccess UserAccess
+		{
+			get
+			{
+				var s = this.GetText (ColumnType.DroitsDaccès);
+				return (UserAccess) Converters.ParseInt (s).GetValueOrDefault ();
+			}
+			set
+			{
+				var s = Converters.IntToString ((int) value);
+				this.SetText (ColumnType.DroitsDaccès, s);
+			}
 		}
 	}
 }
