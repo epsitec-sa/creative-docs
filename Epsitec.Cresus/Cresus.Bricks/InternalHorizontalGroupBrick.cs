@@ -37,6 +37,12 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
+		public TSelf ReadOnly()
+		{
+			this.AddProperty (new BrickProperty (BrickPropertyKey.ReadOnly));
+			return this as TSelf;
+		}
+
 		public TParent End()
 		{
 			return this.parent;

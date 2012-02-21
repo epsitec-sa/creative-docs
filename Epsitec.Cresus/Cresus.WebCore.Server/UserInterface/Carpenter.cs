@@ -527,13 +527,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static IEnumerable<FieldData> BuildHorizontalFieldData(Brick brick)
 		{
-			foreach (var fieldProperty in Brick.GetProperties (brick, BrickPropertyKey.Field))
+			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
+
+			foreach (var brickProperty in brickProperties)
 			{
 				yield return new FieldData ()
 				{
 					Title = FormattedText.Empty,
-					IsReadOnly = false,
-					Lambda = (LambdaExpression) fieldProperty.ExpressionValue,
+					IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties),
+					Lambda = (LambdaExpression) brickProperty.ExpressionValue,
 				};
 			}
 		}
