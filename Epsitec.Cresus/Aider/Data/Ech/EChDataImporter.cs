@@ -1,7 +1,9 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
@@ -53,6 +55,7 @@ namespace Epsitec.Aider.Data.Ech
 						EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson);
 					}
 
+					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
 					businessContext.SaveChanges ();
 
 					// NOTE Now that the changes are saved, the newly created entities have an
@@ -103,8 +106,8 @@ namespace Epsitec.Aider.Data.Ech
 
 		private static eCH_ReportedPersonEntity Import(BusinessContext businessContext, Dictionary<string, EntityKey> eChPersonIdToEntityKey, Dictionary<string, AiderPersonEntity> eChPersonIdToEntity, EChReportedPerson eChReportedPerson)
 		{
-			var eChReportedPersonEntity = businessContext.CreateEntity<eCH_ReportedPersonEntity> ();
-			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity> ();
+			var eChReportedPersonEntity = EChDataImporter.CreateAndRegisterEntity<eCH_ReportedPersonEntity> (businessContext);
+			var aiderHousehold = EChDataImporter.CreateAndRegisterEntity<AiderHouseholdEntity> (businessContext);
 
 			eCH_AddressEntity eChAddressEntity = null;
 			var eChAddress = eChReportedPerson.Address;
@@ -193,7 +196,7 @@ namespace Epsitec.Aider.Data.Ech
 
 		private static Tuple<eCH_PersonEntity, AiderPersonEntity> Import(BusinessContext businessContext, EChPerson eChPerson, eCH_ReportedPersonEntity eChReportedPersonEntity, eCH_AddressEntity eChAddressEntity, AiderHouseholdEntity household)
 		{
-			var aiderPersonEntity = businessContext.CreateEntity<AiderPersonEntity> ();
+			var aiderPersonEntity = EChDataImporter.CreateAndRegisterEntity<AiderPersonEntity> (businessContext);
 			aiderPersonEntity.Household1 = household;
 
 			var eChPersonEntity = aiderPersonEntity.eCH_Person;
@@ -224,7 +227,7 @@ namespace Epsitec.Aider.Data.Ech
 
 		private static eCH_AddressEntity Import(BusinessContext businessContext, EChAddress eChAddress)
 		{
-			var eChAddressEntity = businessContext.CreateEntity<eCH_AddressEntity> ();
+			var eChAddressEntity = EChDataImporter.CreateAndRegisterEntity<eCH_AddressEntity> (businessContext);
 
 			eChAddressEntity.AddressLine1 = eChAddress.AddressLine1;
 			eChAddressEntity.Street = eChAddress.Street;
@@ -236,6 +239,16 @@ namespace Epsitec.Aider.Data.Ech
 			eChAddressEntity.Country = eChAddress.CountryCode;
 
 			return eChAddressEntity;
+		}
+
+
+		private static T CreateAndRegisterEntity<T>(BusinessContext businessContext) where T : AbstractEntity, new ()
+		{
+			var entity = businessContext.CreateEntity<T> ();
+
+			businessContext.Register (entity);
+
+			return entity;
 		}
 
 
