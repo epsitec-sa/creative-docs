@@ -313,6 +313,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				multiId = this.périodeEntity.ProchainMultiId;
 			}
 
+			ComptaJournalEntity journalUtilisé = null;
+
 			foreach (var data in this.editionLine)
 			{
 				this.comptaEntity.AddLibellé (this.périodeEntity, data.GetText (ColumnType.Libellé));
@@ -334,7 +336,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					firstRow = row;
 				}
+
+				journalUtilisé = écriture.Journal;
 			}
+
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé);
 
 			Date date;
 			this.ParseDate (this.editionLine[0].GetText (ColumnType.Date), out date);
@@ -357,6 +363,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			int multiId = this.périodeEntity.Journal[row].MultiId;
 
+			ComptaJournalEntity journalUtilisé = null;
+
 			foreach (var data in this.editionLine)
 			{
 				this.comptaEntity.AddLibellé (this.périodeEntity, data.GetText (ColumnType.Libellé));
@@ -368,12 +376,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.DataToEntity (écriture);
 					écriture.MultiId = multiId;
 					this.périodeEntity.Journal.Insert (row, écriture);
+
+					journalUtilisé = écriture.Journal;
 				}
 				else
 				{
 					//	Met à jour une écriture existante.
 					var écriture = this.périodeEntity.Journal[row];
 					data.DataToEntity (écriture);
+
+					journalUtilisé = écriture.Journal;
 				}
 
 				row++;
@@ -419,6 +431,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	On revient dans l'espace spécifique.
 			this.UpdateAfterOptionsChanged ();
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
+
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé);
 		}
 
 

@@ -15,8 +15,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Strings
 	{
-		public static string AddSépMilliers(string text, string sép)
+		public static string AddThousandSeparators(string text, string separator)
 		{
+			//	Si separator contient "'" :
+			//	"123"       -> "123"
+			//	"1234"      -> "1'234"
+			//	"123456789" -> "123'456'789"
 			if (!string.IsNullOrEmpty (text) && text.Length > 3)
 			{
 				var list = new List<string> ();
@@ -29,7 +33,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				}
 
 				list.Reverse ();
-				return string.Join (sép, list);
+				return string.Join (separator, list);
 			}
 
 			return text;
