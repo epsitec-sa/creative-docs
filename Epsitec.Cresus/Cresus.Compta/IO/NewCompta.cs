@@ -18,12 +18,17 @@ namespace Epsitec.Cresus.Compta.IO
 	{
 		public void NewNull(ComptaEntity compta)
 		{
-			compta.Nom           = "vide";
-			compta.Description   = null;
+			compta.Nom         = "vide";
+			compta.Description = null;
 
 			compta.PlanComptable.Clear ();
 			compta.Périodes.Clear ();
 			compta.Journaux.Clear ();
+			compta.PiècesGenerator.Clear ();
+			compta.Utilisateurs.Clear ();
+
+			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
+			compta.Utilisateurs.Add (this.CreateUtilisateur ());
 		}
 
 		public void NewEmpty(ComptaEntity compta)
@@ -34,9 +39,11 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.PlanComptable.Clear ();
 			compta.Périodes.Clear ();
 			compta.Journaux.Clear ();
+			compta.PiècesGenerator.Clear ();
+			compta.Utilisateurs.Clear ();
 
 			this.CreatePériodes (compta);
-			compta.PiècesGenerator.Add (this.CreatePiècesGeneratorEntity ());
+			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
 			compta.Journaux.Add (this.CreateJournal (compta));
 			compta.Utilisateurs.Add (this.CreateUtilisateur ());
 		}
@@ -88,9 +95,9 @@ namespace Epsitec.Cresus.Compta.IO
 			return utilisateur;
 		}
 
-		private ComptaPiècesGeneratorEntity CreatePiècesGeneratorEntity()
+		private ComptaPiècesGeneratorEntity CreatePiècesGenerator()
 		{
-			//	Crée le générateur de numéros de pièces principal.
+			//	Crée le générateur de numéros de pièces de base.
 			var pièce = new ComptaPiècesGeneratorEntity ();
 
 			pièce.Nom       = "Base";

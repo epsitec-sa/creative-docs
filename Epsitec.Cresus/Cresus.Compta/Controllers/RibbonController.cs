@@ -86,7 +86,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
 
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Journal, isActivable: true));
-				section.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable, isActivable: true));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Balance, isActivable: true));
 				section.Children.Add (this.CreateButton (Res.Commands.Présentation.Extrait, isActivable: true));
 				//?section.Children.Add (this.CreateGap ());
@@ -115,6 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
+				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.PlanComptable, large: false, isActivable: true));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Libellés, large: false, isActivable: true));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Modèles, large: false, isActivable: true));
 				topSection.Children.Add (this.CreateButton (Res.Commands.Présentation.Journaux, large: false, isActivable: true));
