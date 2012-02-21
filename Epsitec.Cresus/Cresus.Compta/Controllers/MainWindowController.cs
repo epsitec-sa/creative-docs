@@ -434,7 +434,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (command.Name.EndsWith ("Présentation.Pièces"))
 			{
-				controller = new PiècesController (this.app, this.businessContext, this);
+				controller = new GénérateurDePiècesController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Utilisateurs"))

@@ -53,13 +53,13 @@
     <Compile Include="Accessors\AbstractData.cs" />
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
-    <Compile Include="Accessors\PiècesDataAccessor.cs" />
-    <Compile Include="Accessors\PiècesEditionLine.cs" />
+    <Compile Include="Accessors\GénérateurDePiècesDataAccessor.cs" />
+    <Compile Include="Accessors\GénérateurDePiècesEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
-    <Compile Include="Controllers\PiècesFooterController.cs" />
+    <Compile Include="Controllers\GénérateurDePiècesFooterController.cs" />
     <Compile Include="Controllers\UtilisateursFooterController.cs" />
-    <Compile Include="Controllers\PiècesController.cs" />
+    <Compile Include="Controllers\GénérateurDePiècesController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />

@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Données éditables pour un générateur de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class PiècesEditionLine : AbstractEditionLine
+	public class GénérateurDePiècesEditionLine : AbstractEditionLine
 	{
-		public PiècesEditionLine(AbstractController controller)
+		public GénérateurDePiècesEditionLine(AbstractController controller)
 			: base (controller)
 		{
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
@@ -106,28 +106,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var pièce = entity as ComptaPièceEntity;
+			var generator = entity as ComptaGénérateurDePiècesEntity;
 
-			this.SetText (ColumnType.Nom,         pièce.Nom);
-			this.SetText (ColumnType.Préfixe,     pièce.Préfixe);
-			this.SetText (ColumnType.Numéro,      Converters.IntToString (pièce.Numéro));
-			this.SetText (ColumnType.Suffixe,     pièce.Suffixe);
-			this.SetText (ColumnType.SépMilliers, pièce.SépMilliers);
-			this.SetText (ColumnType.Digits,      (pièce.Digits == 0) ? FormattedText.Empty : Converters.IntToString (pièce.Digits));
-			this.SetText (ColumnType.Incrément,   Converters.IntToString (pièce.Incrément));
+			this.SetText (ColumnType.Nom,         generator.Nom);
+			this.SetText (ColumnType.Préfixe,     generator.Préfixe);
+			this.SetText (ColumnType.Numéro,      Converters.IntToString (generator.Numéro));
+			this.SetText (ColumnType.Suffixe,     generator.Suffixe);
+			this.SetText (ColumnType.SépMilliers, generator.SépMilliers);
+			this.SetText (ColumnType.Digits,      (generator.Digits == 0) ? FormattedText.Empty : Converters.IntToString (generator.Digits));
+			this.SetText (ColumnType.Incrément,   Converters.IntToString (generator.Incrément));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var pièce = entity as ComptaPièceEntity;
+			var generator = entity as ComptaGénérateurDePiècesEntity;
 
-			pièce.Nom         = this.GetText (ColumnType.Nom);
-			pièce.Préfixe     = this.GetText (ColumnType.Préfixe);
-			pièce.Numéro      = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
-			pièce.Suffixe     = this.GetText (ColumnType.Suffixe);
-			pièce.SépMilliers = this.GetText (ColumnType.SépMilliers);
-			pièce.Digits      = Converters.ParseInt (this.GetText (ColumnType.Digits)).GetValueOrDefault (0);
-			pièce.Incrément   = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);
+			generator.Nom         = this.GetText (ColumnType.Nom);
+			generator.Préfixe     = this.GetText (ColumnType.Préfixe);
+			generator.Numéro      = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
+			generator.Suffixe     = this.GetText (ColumnType.Suffixe);
+			generator.SépMilliers = this.GetText (ColumnType.SépMilliers);
+			generator.Digits      = Converters.ParseInt (this.GetText (ColumnType.Digits)).GetValueOrDefault (0);
+			generator.Incrément   = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);
 		}
 	}
 }

@@ -17,9 +17,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 	/// <summary>
 	/// Gère l'accès aux générateurs de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class PiècesDataAccessor : AbstractDataAccessor
+	public class GénérateurDePiècesDataAccessor : AbstractDataAccessor
 	{
-		public PiècesDataAccessor(AbstractController controller)
+		public GénérateurDePiècesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Pièces.Search");
@@ -50,20 +50,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Pièces.Count;
+				return this.comptaEntity.GénérateurDePièces.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Pièces.Count)
+			if (row < 0 || row >= this.comptaEntity.GénérateurDePièces.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Pièces[row];
+				return this.comptaEntity.GénérateurDePièces[row];
 			}
 		}
 
@@ -75,14 +75,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Pièces.IndexOf (entity as ComptaPièceEntity);
+				return this.comptaEntity.GénérateurDePièces.IndexOf (entity as ComptaGénérateurDePiècesEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var pièces = comptaEntity.Pièces;
+			var pièces = comptaEntity.GénérateurDePièces;
 
 			if (row < 0 || row >= pièces.Count)
 			{
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionLine(int index)
 		{
-			var newData = new PiècesEditionLine (this.controller);
+			var newData = new GénérateurDePiècesEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationLine()
 		{
 			this.editionLine.Clear ();
-			this.editionLine.Add (new PiècesEditionLine (this.controller));
+			this.editionLine.Add (new GénérateurDePiècesEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -162,10 +162,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Pièces.Count)
+			if (row >= 0 && row < this.comptaEntity.GénérateurDePièces.Count)
 			{
-				var data = new PiècesEditionLine (this.controller);
-				var pièce = this.comptaEntity.Pièces[row];
+				var data = new GénérateurDePiècesEditionLine (this.controller);
+				var pièce = this.comptaEntity.GénérateurDePièces[row];
 				data.EntityToData (pièce);
 
 				this.editionLine.Add (data);
@@ -200,14 +200,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var pièce = this.CreatePièce ();
+				var pièce = this.CreateGénérateurDePièces ();
 				data.DataToEntity (pièce);
 
-				this.comptaEntity.Pièces.Add (pièce);
+				this.comptaEntity.GénérateurDePièces.Add (pièce);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.Pièces.Count-1;
+					firstRow = this.comptaEntity.GénérateurDePièces.Count-1;
 				}
 			}
 
@@ -218,14 +218,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var pièce = this.comptaEntity.Pièces[row];
+			var pièce = this.comptaEntity.GénérateurDePièces[row];
 			this.editionLine[0].DataToEntity (pièce);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var pièce = this.comptaEntity.Utilisateurs[this.firstEditedRow];
+			var pièce = this.comptaEntity.GénérateurDePièces[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer le générateur de numéros de pièces \"{0}\" ?", pièce.Nom);
 		}
 
@@ -235,14 +235,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var pièce = this.comptaEntity.Pièces[row];
-					this.DeletePièce (pièce);
-					this.comptaEntity.Pièces.RemoveAt (row);
+					var pièce = this.comptaEntity.GénérateurDePièces[row];
+					this.DeleteGénérateurDePièces (pièce);
+					this.comptaEntity.GénérateurDePièces.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Pièces.Count)
+				if (this.firstEditedRow >= this.comptaEntity.GénérateurDePièces.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Pièces.Count-1;
+					this.firstEditedRow = this.comptaEntity.GénérateurDePièces.Count-1;
 				}
 			}
 		}
@@ -252,11 +252,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Pièces[this.firstEditedRow];
-				var t2 = this.comptaEntity.Pièces[this.firstEditedRow+direction];
+				var t1 = this.comptaEntity.GénérateurDePièces[this.firstEditedRow];
+				var t2 = this.comptaEntity.GénérateurDePièces[this.firstEditedRow+direction];
 
-				this.comptaEntity.Pièces[this.firstEditedRow] = t2;
-				this.comptaEntity.Pièces[this.firstEditedRow+direction] = t1;
+				this.comptaEntity.GénérateurDePièces[this.firstEditedRow] = t2;
+				this.comptaEntity.GénérateurDePièces[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -279,28 +279,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptaPièceEntity CreatePièce()
+		private ComptaGénérateurDePiècesEntity CreateGénérateurDePièces()
 		{
 			this.controller.MainWindowController.SetDirty ();
 
-			ComptaPièceEntity pièce;
+			ComptaGénérateurDePiècesEntity generator;
 
 			if (this.businessContext == null)
 			{
-				pièce = new ComptaPièceEntity ();
+				generator = new ComptaGénérateurDePiècesEntity ();
 			}
 			else
 			{
-				pièce = this.businessContext.CreateEntity<ComptaPièceEntity> ();
+				generator = this.businessContext.CreateEntity<ComptaGénérateurDePiècesEntity> ();
 			}
 
-			pièce.Numéro = 1;
-			pièce.Incrément = 1;
+			generator.Numéro    = 1;
+			generator.Incrément = 1;
 
-			return pièce;
+			return generator;
 		}
 
-		private void DeletePièce(ComptaPièceEntity pièce)
+		private void DeleteGénérateurDePièces(ComptaGénérateurDePiècesEntity generator)
 		{
 			this.controller.MainWindowController.SetDirty ();
 
@@ -310,7 +310,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.businessContext.DeleteEntity (pièce);
+				this.businessContext.DeleteEntity (generator);
 			}
 		}
 	}

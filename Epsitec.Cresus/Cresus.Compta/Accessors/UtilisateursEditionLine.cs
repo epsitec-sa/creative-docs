@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var pièce = UtilisateursDataAccessor.GetPièce (this.comptaEntity, data.Text);
+				var pièce = UtilisateursDataAccessor.GetGénérateurDePièces (this.comptaEntity, data.Text);
 				if (pièce == null)
 				{
 					data.Error = "Ce générateur de numéros de pièces n'existe pas";
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText (ColumnType.Nom,        utilisateur.Nom);
 			this.SetText (ColumnType.MotDePasse, utilisateur.MotDePasse);
-			this.SetText (ColumnType.Pièce,      UtilisateursDataAccessor.GetPièce (utilisateur));
+			this.SetText (ColumnType.Pièce,      UtilisateursDataAccessor.GetGénérateurDePièces (utilisateur));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			utilisateur.Nom        = this.GetText (ColumnType.Nom);
 			utilisateur.MotDePasse = this.GetText (ColumnType.MotDePasse).ToSimpleText ();
 
-			utilisateur.GénérateurDePièces = UtilisateursDataAccessor.GetPièce (this.comptaEntity, this.GetText (ColumnType.Pièce));
+			utilisateur.GénérateurDePièces = UtilisateursDataAccessor.GetGénérateurDePièces (this.comptaEntity, this.GetText (ColumnType.Pièce));
 		}
 	}
 }
