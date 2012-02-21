@@ -114,6 +114,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Incrément:
 					return Converters.IntToString (pièce.Incrément);
 
+				case ColumnType.Résumé:
+					return this.mainWindowController.PiècesGenerator.GetSummary (pièce);
+
 				default:
 					return FormattedText.Null;
 			}
@@ -222,6 +225,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[0].DataToEntity (pièce);
 		}
 
+
+		public override FormattedText GetRemoveModificationLineError()
+		{
+			var pièce = this.comptaEntity.PiècesGenerator[this.firstEditedRow];
+			return this.mainWindowController.PiècesGenerator.GetRemoveError (pièce);
+		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{

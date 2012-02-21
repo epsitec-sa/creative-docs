@@ -26,6 +26,63 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
+		public FormattedText GetRemoveError(ComptaPiècesGeneratorEntity generator)
+		{
+			int utilisateurCount, périodeCount, journalCount;
+			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+
+			if (total == 0)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return string.Format ("Ce générateur ne peut pas être supprimé,<br/>car il est utilisé {0} fois.", total.ToString ());
+			}
+		}
+
+		public FormattedText GetSummary(ComptaPiècesGeneratorEntity generator)
+		{
+			int utilisateurCount, périodeCount, journalCount;
+			int total = this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+
+			if (total == 0)
+			{
+				return "Inutilisé";
+			}
+			else
+			{
+				var list = new List<string> ();
+
+				if (utilisateurCount != 0)
+				{
+					list.Add (string.Format ("{0} utilisateur{1}", utilisateurCount.ToString (), utilisateurCount <= 1 ? "":"s"));
+				}
+
+				if (périodeCount != 0)
+				{
+					list.Add (string.Format ("{0} période{1}", périodeCount.ToString (), périodeCount <= 1 ? "":"s"));
+				}
+
+				if (journalCount != 0)
+				{
+					list.Add (string.Format ("{0} journa{1}", journalCount.ToString (), journalCount <= 1 ? "l":"ux"));
+				}
+
+				return "Utilisation: " + Converters.SentenceConcat (list);
+			}
+		}
+
+		private int GetStatistics(ComptaPiècesGeneratorEntity generator, out int utilisateurCount, out int périodeCount, out int journalCount)
+		{
+			utilisateurCount = this.mainWindowController.Compta.Utilisateurs.Where (x => x.PiècesGenerator == generator).Count ();
+			périodeCount     = this.mainWindowController.Compta.Périodes    .Where (x => x.PiècesGenerator == generator).Count ();
+			journalCount     = this.mainWindowController.Compta.Journaux    .Where (x => x.PiècesGenerator == generator).Count ();
+
+			return utilisateurCount + périodeCount + journalCount;
+		}
+
+
 		public void Burn(ComptaJournalEntity journal)
 		{
 			//	Brûle les numéros utilisés, ce qui revient à vider le congélateur.

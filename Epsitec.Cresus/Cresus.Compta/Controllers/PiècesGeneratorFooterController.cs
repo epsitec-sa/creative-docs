@@ -68,6 +68,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
 
+				if (mapper.Column == ColumnType.Résumé)
+				{
+					field.IsReadOnly = true;
+				}
+
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);

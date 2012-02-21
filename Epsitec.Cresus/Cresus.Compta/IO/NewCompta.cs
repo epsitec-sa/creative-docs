@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.IO
 			//	Crée le générateur de numéros de pièces principal.
 			var pièce = new ComptaPiècesGeneratorEntity ();
 
-			pièce.Nom       = "Principal";
+			pièce.Nom       = "Base";
 			pièce.Numéro    = 1;
 			pièce.Incrément = 1;
 
