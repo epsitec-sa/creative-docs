@@ -207,6 +207,14 @@ namespace Epsitec.Common.Types
 
 		private FormattedText ApplyElement(string elementBegin, string elementEnd)
 		{
+			// NOTE It is pointless to add formatting tags around an empty text, so the text is
+			// empty, simply return the text without modifications.
+
+			if (this.IsNullOrEmpty)
+			{
+				return this;
+			}
+			
 			return FormattedText.Concat (elementBegin, this.text, elementEnd);
 		}
 
