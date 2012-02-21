@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Search.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -14,14 +15,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Gère l'accès aux journaux de la comptabilité.
+	/// Gère l'accès aux générateurs de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class JournauxDataAccessor : AbstractDataAccessor
+	public class PiècesDataAccessor : AbstractDataAccessor
 	{
-		public JournauxDataAccessor(AbstractController controller)
+		public PiècesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journaux.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Pièces.Search");
 
 			this.StartCreationLine ();
 		}
@@ -49,20 +50,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Journaux.Count;
+				return this.comptaEntity.Pièces.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Journaux.Count)
+			if (row < 0 || row >= this.comptaEntity.Pièces.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Journaux[row];
+				return this.comptaEntity.Pièces[row];
 			}
 		}
 
@@ -74,35 +75,44 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Journaux.IndexOf (entity as ComptaJournalEntity);
+				return this.comptaEntity.Pièces.IndexOf (entity as ComptaPièceEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var journaux = comptaEntity.Journaux;
+			var pièces = comptaEntity.Pièces;
 
-			if (row < 0 || row >= journaux.Count)
+			if (row < 0 || row >= pièces.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var journal = journaux[row];
+			var pièce = pièces[row];
 
 			switch (column)
 			{
-				case ColumnType.Titre:
-					return journal.Nom;
+				case ColumnType.Nom:
+					return pièce.Nom;
 
-				case ColumnType.Libellé:
-					return journal.Description;
+				case ColumnType.Préfixe:
+					return pièce.Préfixe;
 
-				case ColumnType.Pièce:
-					return JournauxDataAccessor.GetPièce (journal);
+				case ColumnType.Numéro:
+					return Converters.IntToString (pièce.Numéro);
 
-				case ColumnType.Résumé:
-					return this.comptaEntity.GetJournalRésumé (journal);
+				case ColumnType.Postfixe:
+					return pièce.Postfixe;
+
+				case ColumnType.SépMilliers:
+					return pièce.SépMilliers;
+
+				case ColumnType.Digits:
+					return (pièce.Digits == 0) ? FormattedText.Empty : Converters.IntToString (pièce.Digits);
+
+				case ColumnType.Incrément:
+					return Converters.IntToString (pièce.Incrément);
 
 				default:
 					return FormattedText.Null;
@@ -112,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionLine(int index)
 		{
-			var newData = new JournauxEditionLine (this.controller);
+			var newData = new PiècesEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -129,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationLine()
 		{
 			this.editionLine.Clear ();
-			this.editionLine.Add (new JournauxEditionLine (this.controller));
+			this.editionLine.Add (new PiècesEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -139,6 +149,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
+		protected override void PrepareEditionLine(int line)
+		{
+			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
+			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
+		}
+
 		public override void StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
@@ -146,11 +162,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Journaux.Count)
+			if (row >= 0 && row < this.comptaEntity.Pièces.Count)
 			{
-				var data = new JournauxEditionLine (this.controller);
-				var journal = this.comptaEntity.Journaux[row];
-				data.EntityToData (journal);
+				var data = new PiècesEditionLine (this.controller);
+				var pièce = this.comptaEntity.Pièces[row];
+				data.EntityToData (pièce);
 
 				this.editionLine.Add (data);
 				this.countEditedRow++;
@@ -184,14 +200,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var journal = this.CreateJournal ();
-				data.DataToEntity (journal);
+				var pièce = this.CreatePièce ();
+				data.DataToEntity (pièce);
 
-				this.comptaEntity.Journaux.Add (journal);
+				this.comptaEntity.Pièces.Add (pièce);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.Journaux.Count-1;
+					firstRow = this.comptaEntity.Pièces.Count-1;
 				}
 			}
 
@@ -202,21 +218,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var journal = this.comptaEntity.Journaux[row];
-			this.editionLine[0].DataToEntity (journal);
+			var pièce = this.comptaEntity.Pièces[row];
+			this.editionLine[0].DataToEntity (pièce);
 		}
 
-
-		public override FormattedText GetRemoveModificationLineError()
-		{
-			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
-			return this.comptaEntity.GetJournalRemoveError (journal);
-		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
-			return string.Format ("Voulez-vous supprimer le journal \"{0}\" ?", journal.Nom);
+			var pièce = this.comptaEntity.Utilisateurs[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer le générateur de numéros de pièces \"{0}\" ?", pièce.Nom);
 		}
 
 		public override void RemoveModificationLine()
@@ -225,14 +235,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var journal = this.comptaEntity.Journaux[row];
-					this.DeleteJournal (journal);
-					this.comptaEntity.Journaux.RemoveAt (row);
+					var pièce = this.comptaEntity.Pièces[row];
+					this.DeletePièce (pièce);
+					this.comptaEntity.Pièces.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Journaux.Count)
+				if (this.firstEditedRow >= this.comptaEntity.Pièces.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Journaux.Count-1;
+					this.firstEditedRow = this.comptaEntity.Pièces.Count-1;
 				}
 			}
 		}
@@ -242,11 +252,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Journaux[this.firstEditedRow];
-				var t2 = this.comptaEntity.Journaux[this.firstEditedRow+direction];
+				var t1 = this.comptaEntity.Pièces[this.firstEditedRow];
+				var t2 = this.comptaEntity.Pièces[this.firstEditedRow+direction];
 
-				this.comptaEntity.Journaux[this.firstEditedRow] = t2;
-				this.comptaEntity.Journaux[this.firstEditedRow+direction] = t1;
+				this.comptaEntity.Pièces[this.firstEditedRow] = t2;
+				this.comptaEntity.Pièces[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -269,27 +279,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptaJournalEntity CreateJournal()
+		private ComptaPièceEntity CreatePièce()
 		{
 			this.controller.MainWindowController.SetDirty ();
 
-			ComptaJournalEntity journal;
+			ComptaPièceEntity pièce;
 
 			if (this.businessContext == null)
 			{
-				journal = new ComptaJournalEntity ();
+				pièce = new ComptaPièceEntity ();
 			}
 			else
 			{
-				journal = this.businessContext.CreateEntity<ComptaJournalEntity> ();
+				pièce = this.businessContext.CreateEntity<ComptaPièceEntity> ();
 			}
 
-			journal.Id = this.comptaEntity.GetJournalId ();  // assigne un identificateur unique
+			pièce.Numéro = 1;
+			pièce.Incrément = 1;
 
-			return journal;
+			return pièce;
 		}
 
-		private void DeleteJournal(ComptaJournalEntity journal)
+		private void DeletePièce(ComptaPièceEntity pièce)
 		{
 			this.controller.MainWindowController.SetDirty ();
 
@@ -299,32 +310,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.businessContext.DeleteEntity (journal);
-			}
-		}
-
-
-		public static FormattedText GetPièce(ComptaJournalEntity journal)
-		{
-			if (journal.Pièce == null)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return journal.Pièce.Nom;
-			}
-		}
-
-		public static ComptaPièceEntity GetPièce(ComptaEntity compta, FormattedText pièce)
-		{
-			if (pièce.IsNullOrEmpty)
-			{
-				return null;
-			}
-			else
-			{
-				return compta.Pièces.Where (x => x.Nom == pièce).FirstOrDefault ();
+				this.businessContext.DeleteEntity (pièce);
 			}
 		}
 	}

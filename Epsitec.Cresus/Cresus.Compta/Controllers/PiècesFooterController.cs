@@ -9,7 +9,6 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
-using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
@@ -20,9 +19,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class JournauxFooterController : AbstractFooterController
+	public class PiècesFooterController : AbstractFooterController
 	{
-		public JournauxFooterController(AbstractController controller)
+		public PiècesFooterController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -59,24 +58,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				AbstractFieldController field;
+				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+				field.CreateUI (footerFrame);
 
-				if (mapper.Column == ColumnType.Pièce)
+				if (mapper.Column == ColumnType.Numéro   ||
+					mapper.Column == ColumnType.Digits   ||
+					mapper.Column == ColumnType.Incrément)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.Pièces.Select (x => x.Nom).ToArray ());
-				}
-				else
-				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
-				}
-
-				if (mapper.Column == ColumnType.Résumé)
-				{
-					field.IsReadOnly = true;
+					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
 
 				field.Box.TabIndex = ++tabIndex;
@@ -87,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un journal :" : "Création d'un journal :";
+			return modify ? "Modification d'un générateur de numéros de pièces :" : "Création d'un générateur de numéros de pièces :";
 		}
 	}
 }

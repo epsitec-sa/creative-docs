@@ -415,6 +415,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new BudgetsController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.Pièces"))
+			{
+				controller = new PiècesController (this.app, this.businessContext, this);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Utilisateurs"))
+			{
+				controller = new UtilisateursController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Réglages"))
 			{
 				controller = new RéglagesController (this.app, this.businessContext, this);
@@ -844,6 +854,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Pièces)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Utilisateurs)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]
 		private void ProcessShowPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{

@@ -38,7 +38,9 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Journaux.Clear ();
 
 			this.CreatePériodes (compta);
+			compta.Pièces.Add (this.CreatePièce ());
 			compta.Journaux.Add (this.CreateJournal (compta));
+			compta.Utilisateurs.Add (this.CreateUtilisateur ());
 		}
 
 		public void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
@@ -70,11 +72,36 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			//	Crée un journal principal.
 			var journal = new ComptaJournalEntity ();
-			journal.Id = compta.GetJournalId ();
+
+			journal.Id  = compta.GetJournalId ();
 			journal.Nom = "Principal";
 
 			return journal;
 		}
+
+		private ComptaUtilisateurEntity CreateUtilisateur()
+		{
+			//	Crée l'utilisteur administrateur.
+			var utilisateur = new ComptaUtilisateurEntity ();
+
+			utilisateur.Nom        = "Admin";
+			utilisateur.MotDePasse = "epsitec";
+
+			return utilisateur;
+		}
+
+		private ComptaPièceEntity CreatePièce()
+		{
+			//	Crée le générateur de numéros de pièces principal.
+			var pièce = new ComptaPièceEntity ();
+
+			pièce.Nom       = "Principal";
+			pièce.Numéro    = 1;
+			pièce.Incrément = 1;
+
+			return pièce;
+		}
+
 
 		public void NewModel(ComptaEntity compta)
 		{

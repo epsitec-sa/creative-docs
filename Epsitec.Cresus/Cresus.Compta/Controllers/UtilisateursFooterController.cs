@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class JournauxFooterController : AbstractFooterController
+	public class UtilisateursFooterController : AbstractFooterController
 	{
-		public JournauxFooterController(AbstractController controller)
+		public UtilisateursFooterController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -74,11 +74,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
-				if (mapper.Column == ColumnType.Résumé)
-				{
-					field.IsReadOnly = true;
-				}
-
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);
@@ -87,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un journal :" : "Création d'un journal :";
+			return modify ? "Modification d'un utilisateur :" : "Création d'un utilisateur :";
 		}
 	}
 }

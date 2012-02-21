@@ -53,6 +53,14 @@
     <Compile Include="Accessors\AbstractData.cs" />
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
+    <Compile Include="Accessors\PiècesDataAccessor.cs" />
+    <Compile Include="Accessors\PiècesEditionLine.cs" />
+    <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
+    <Compile Include="Accessors\UtilisateursEditionLine.cs" />
+    <Compile Include="Controllers\PiècesFooterController.cs" />
+    <Compile Include="Controllers\UtilisateursFooterController.cs" />
+    <Compile Include="Controllers\PiècesController.cs" />
+    <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="IO\DefaultMemory.cs" />
     <Compile Include="Memory\Data\NavigatorEngine.cs" />
     <Compile Include="Memory\Data\NavigatorData.cs" />
@@ -267,6 +275,8 @@
     <EmbeddedResource Include="Images\Memory.Up.icon" />
     <EmbeddedResource Include="Images\Memory.Use.icon" />
     <EmbeddedResource Include="Images\Panel.Separator.icon" />
+    <EmbeddedResource Include="Images\Présentation.Pièces.icon" />
+    <EmbeddedResource Include="Images\Présentation.Utilisateurs.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.datas.Add (ColumnType.Titre,   new EditionData (this.controller, this.ValidateTitle));
 			this.datas.Add (ColumnType.Libellé, new EditionData (this.controller));
+			this.datas.Add (ColumnType.Pièce,   new EditionData (this.controller, this.ValidatePièce));
 		}
 
 
@@ -30,6 +31,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateTitle(EditionData data)
 		{
 			Validators.ValidateText (data, "Il manque le titre du journal");
+		}
+
+		private void ValidatePièce(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var pièce = UtilisateursDataAccessor.GetPièce (this.comptaEntity, data.Text);
+				if (pièce == null)
+				{
+					data.Error = "Ce générateur de numéros de pièces n'existe pas";
+				}
+			}
 		}
 		#endregion
 
@@ -40,6 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText (ColumnType.Titre,   journal.Nom);
 			this.SetText (ColumnType.Libellé, journal.Description);
+			this.SetText (ColumnType.Pièce, JournauxDataAccessor.GetPièce (journal));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -48,6 +64,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			journal.Nom         = this.GetText (ColumnType.Titre);
 			journal.Description = this.GetText (ColumnType.Libellé);
+			journal.Pièce = JournauxDataAccessor.GetPièce (this.comptaEntity, this.GetText (ColumnType.Pièce));
 		}
 	}
 }

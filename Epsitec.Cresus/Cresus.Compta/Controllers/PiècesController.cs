@@ -17,22 +17,22 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère les journaux de la comptabilité.
+	/// Ce contrôleur gère les générateurs de numéros de pièces de la comptabilité.
 	/// </summary>
-	public class JournauxController : AbstractController
+	public class PiècesController : AbstractController
 	{
-		public JournauxController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public PiècesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.dataAccessor = new JournauxDataAccessor (this);
+			this.dataAccessor = new PiècesDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Journaux.Memory");
+			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Pièces.Memory");
 		}
 
 
 		protected override void UpdateTitle()
 		{
-			this.SetTitle ("Journaux d'écritures");
+			this.SetTitle ("Générateurs de numéros de pièces");
 		}
 
 
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateFooter(FrameBox parent)
 		{
-			this.footerController = new JournauxFooterController (this);
+			this.footerController = new PiècesFooterController (this);
 			this.footerController.CreateUI (parent, this.UpdateArrayContent);
 			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
@@ -105,10 +105,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Titre,   0.50, ContentAlignment.MiddleLeft, "Nom",                  "Nom court du journal");
-				yield return new ColumnMapper (ColumnType.Libellé, 1.00, ContentAlignment.MiddleLeft, "Description",          "Description détaillée du journal");
-				yield return new ColumnMapper (ColumnType.Pièce,   0.50, ContentAlignment.MiddleLeft, "Générateur de pièces", "Générateur pour les numéros de pièces (facultatif)");
-				yield return new ColumnMapper (ColumnType.Résumé,  0.50, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Nom,         1.00, ContentAlignment.MiddleLeft,  "Nom",                 "Nom du générateur de numéros de pièces");
+				yield return new ColumnMapper (ColumnType.Préfixe,     1.00, ContentAlignment.MiddleLeft,  "Préfixe",             "Préfixe (vient avant le numéro)");
+				yield return new ColumnMapper (ColumnType.Numéro,      1.00, ContentAlignment.MiddleRight, "Numéro",              "Prochain numéro généré");
+				yield return new ColumnMapper (ColumnType.Postfixe,    1.00, ContentAlignment.MiddleLeft,  "Postfixe",            "Postfixe (vient après le numéro)");
+				yield return new ColumnMapper (ColumnType.Incrément,   1.00, ContentAlignment.MiddleRight, "Incrément",           "Valeur de l'incrément");
+				yield return new ColumnMapper (ColumnType.SépMilliers, 1.00, ContentAlignment.MiddleLeft,  "Séparateur milliers", "Séparateur pour les milliers");
+				yield return new ColumnMapper (ColumnType.Digits,      1.00, ContentAlignment.MiddleRight, "Nb de chiffres",      "Nombre fixe de chiffres (facultatif)");
 			}
 		}
 	}
