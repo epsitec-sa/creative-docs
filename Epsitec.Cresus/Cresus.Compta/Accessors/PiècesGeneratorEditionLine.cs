@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
 			this.datas.Add (ColumnType.Préfixe,     new EditionData (this.controller));
 			this.datas.Add (ColumnType.Numéro,      new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Suffixe,    new EditionData (this.controller));
+			this.datas.Add (ColumnType.Suffixe,     new EditionData (this.controller));
 			this.datas.Add (ColumnType.SépMilliers, new EditionData (this.controller));
 			this.datas.Add (ColumnType.Digits,      new EditionData (this.controller, this.ValidateDigits));
 			this.datas.Add (ColumnType.Incrément,   new EditionData (this.controller, this.ValidateIncrément));
@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateNom(EditionData data)
 		{
-			Validators.ValidateText (data, "Il manque le nom de l'utilisateur");
+			Validators.ValidateText (data, "Il manque le nom du générateur de numéros de pièces");
 		}
 
 		private void ValidateNuméro(EditionData data)

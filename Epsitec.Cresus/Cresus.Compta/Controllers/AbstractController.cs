@@ -739,22 +739,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.footerController.Dirty)
 			{
-				var entity = this.dataAccessor.GetEditionEntity (row);
-
-				this.dataAccessor.UpdateEditionLine ();
-				this.UpdateArrayContent ();
-				this.footerController.Dirty = false;
-
-				int adjustedRow = this.dataAccessor.GetEditionIndex (entity);
-
-				if (row != adjustedRow)
+				if (this.footerController.HasError)
 				{
-					row = adjustedRow;
+					this.footerController.Dirty = false;
+				}
+				else
+				{
+					var entity = this.dataAccessor.GetEditionEntity (row);
 
-					using (this.ignoreChanges.Enter ())
+					this.dataAccessor.UpdateEditionLine ();
+					this.UpdateArrayContent ();
+					this.footerController.Dirty = false;
+
+					int adjustedRow = this.dataAccessor.GetEditionIndex (entity);
+
+					if (row != adjustedRow)
 					{
-						this.arrayController.SelectedRow = -1;
-						this.arrayController.SetSelectedRow (row, column);
+						row = adjustedRow;
+
+						using (this.ignoreChanges.Enter ())
+						{
+							this.arrayController.SelectedRow = -1;
+							this.arrayController.SetSelectedRow (row, column);
+						}
 					}
 				}
 			}
