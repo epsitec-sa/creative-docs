@@ -43,13 +43,13 @@ namespace Epsitec.Cresus.Compta.IO
 			if (pièce.IsNullOrEmpty)  // pas trouvé ?
 			{
 				//	Si on a mis les pièces de rangs 0, 1 et 2 dans le congélateur et qu'on demande la pièce de rang 7,
-				//	on va demander et mettre dans le congélateur les pièces 3 à 7.
+				//	on va générer et mettre dans le congélateur les pièces 3 à 7.
 				int max = this.GetMaxRankInsideFreezer (generator);
 
-				for (int i = 0; i < rank-max; i++)
+				for (int i = max+1; i <= rank; i++)
 				{
-					pièce = this.GetProchainePièce (generator);
-					this.AddInsideFreezer (generator, rank, pièce);
+					pièce = this.GetProchainePièce (generator);  // génère un nouveau numéro de pièce
+					this.AddInsideFreezer (generator, i, pièce);
 				}
 
 				//	On effectue à nouveau la recherche dans le congélateur, qui doit forcément aboutir.
