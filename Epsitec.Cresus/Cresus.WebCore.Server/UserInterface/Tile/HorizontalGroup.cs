@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			item["title"] = this.Title;
 
 			var fieldItems = this.Fields.SelectMany (f => f.ToDictionary ()).ToList ();
-			var fieldWidth = 1.0 / fieldItems.Count (input => input["xtype"] != "hiddenfield");
+			var fieldWidth = 1.0 / fieldItems.Count (input => ((string) input["xtype"]) != "hiddenfield");
 				
 			foreach (var fieldItem in fieldItems)
 			{
