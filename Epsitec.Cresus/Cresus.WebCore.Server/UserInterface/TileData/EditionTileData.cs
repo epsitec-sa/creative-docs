@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 			foreach (var include in this.Includes)
 			{
-				AbstractEntity includedEntity = null;
+				var includedEntity = include.EntityGetter (entity);
 
 				foreach (var tile in editionTileBuilder (includedEntity))
 				{

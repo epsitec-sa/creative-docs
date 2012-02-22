@@ -29,18 +29,18 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				.Attribute (BrickMode.DefaultToSummarySubView)
 				.Attribute (BrickMode.SpecialController1);
 
-			if (this.Entity.Warnings.Any () || true)
-			{
-				wall.AddBrick (x => x.Warnings)
-					.Title ("Attention")
-					.Icon ("manifest:Epsitec.Aider.Images.Data.AiderWarning.icon")
-					.Template ()
-					.End ();
-			}
+			//if (this.Entity.Warnings.Any () || true)
+			//{
+			//    wall.AddBrick (x => x.Warnings)
+			//        .Title ("Attention")
+			//        .Icon ("manifest:Epsitec.Aider.Images.Data.AiderWarning.icon")
+			//        .Template ()
+			//        .End ();
+			//}
 
-			wall.AddBrick (x => x.Relationships)
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.SpecialController2);
+			//wall.AddBrick (x => x.Relationships)
+			//    .Attribute (BrickMode.DefaultToSummarySubView)
+			//    .Attribute (BrickMode.SpecialController2);
 
 			wall.AddBrick (x => x.Comment)
 				.Attribute (BrickMode.AutoCreateNullEntity);

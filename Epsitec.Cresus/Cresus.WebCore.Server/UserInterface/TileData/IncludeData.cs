@@ -1,4 +1,8 @@
-﻿using System.Linq.Expressions;
+﻿using Epsitec.Common.Support.EntityEngine;
+
+using System;
+
+using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
@@ -9,13 +13,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-
-		public LambdaExpression EntityGetter
+		public Func<AbstractEntity, AbstractEntity> EntityGetter
 		{
 			get;
 			set;
 		}
-
 
 
 	}

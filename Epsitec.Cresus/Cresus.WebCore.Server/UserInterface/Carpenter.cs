@@ -186,8 +186,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 			if (property.HasValue)
 			{
-				textGetter = Carpenter.GetBrickValueFromString (property.Value)
-						  ?? Carpenter.GetBrickValueFromExpression (brick, property.Value);
+				textGetter = Carpenter.GetBrickValueGetterFromString (property.Value)
+						  ?? Carpenter.GetBrickValueGetterFromExpression<FormattedText> (brick, property.Value);
 			}
 
 			return textGetter;
@@ -198,8 +198,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			var property = Carpenter.GetMandatoryBrickProperty (brick, key);
 
-			var textGetter = Carpenter.GetBrickValueFromString (property)
-						  ?? Carpenter.GetBrickValueFromExpression (brick, property);
+			var textGetter = Carpenter.GetBrickValueGetterFromString (property)
+						  ?? Carpenter.GetBrickValueGetterFromExpression<FormattedText> (brick, property);
 
 			if (textGetter == null)
 			{
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetBrickValueFromString(BrickProperty property)
+		private static Func<AbstractEntity, FormattedText> GetBrickValueGetterFromString(BrickProperty property)
 		{
 			Func<AbstractEntity, FormattedText> textGetter = null;
 
@@ -225,17 +225,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static Func<AbstractEntity, FormattedText> GetBrickValueFromExpression(Brick brick, BrickProperty property)
+		private static Func<AbstractEntity, T> GetBrickValueGetterFromExpression<T>(Brick brick, BrickProperty property)
 		{
 			var expressionValue = property.ExpressionValue as LambdaExpression;
 
-			Func<AbstractEntity, FormattedText> textGetter = null;
+			Func<AbstractEntity, T> textGetter = null;
 
 			if (expressionValue != null)
 			{
 				var expression = expressionValue.Compile ();
 
-				Func<AbstractEntity, FormattedText> rawTextGetter = x => (FormattedText) expression.DynamicInvoke (x);
+				Func<AbstractEntity, T> rawTextGetter = x => (T) expression.DynamicInvoke (x);
 
 				var resolver = brick.GetResolver (null);
 
@@ -547,7 +547,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			{
 				yield return new IncludeData ()
 				{
-					EntityGetter = (LambdaExpression) includeProperty.ExpressionValue
+					EntityGetter = Carpenter.GetBrickValueGetterFromExpression<AbstractEntity> (brick, includeProperty)
 				};
 			}
 		}
