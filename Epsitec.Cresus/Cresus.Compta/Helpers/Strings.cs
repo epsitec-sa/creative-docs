@@ -40,6 +40,39 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static string PreparingForSearh(FormattedText text)
+		{
+			return Strings.PreparingForSearh (text.ToSimpleText ());
+		}
+
+		public static string PreparingForSearh(string text)
+		{
+			if (!string.IsNullOrEmpty (text))
+			{
+				return Strings.RemoveDiacritics (text).ToLower ();
+			}
+
+			return text;
+		}
+
+		private static string RemoveDiacritics(string text)
+		{
+			string norm = text.Normalize (System.Text.NormalizationForm.FormD);
+			var builder = new System.Text.StringBuilder ();
+
+			for (int i = 0; i < norm.Length; i++)
+			{
+				var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory (norm[i]);
+				if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
+				{
+					builder.Append (norm[i]);
+				}
+			}
+
+			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
+		}
+
+	
 		public static string ComputeMd5Hash(string text)
 		{
 			if (string.IsNullOrEmpty (text))

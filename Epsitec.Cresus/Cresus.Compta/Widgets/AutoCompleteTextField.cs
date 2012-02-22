@@ -135,14 +135,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 				var list1 = new List<int> ();
 				var list2 = new List<int> ();
 
-				typed = Converters.PreparingForSearh (typed);
+				typed = Strings.PreparingForSearh (typed);
 
 				bool two = (this.primaryTexts.Count == this.secondaryTexts.Count);
 
 				for (int i=0; i<this.primaryTexts.Count; i++)
 				{
-					string primary   =       Converters.PreparingForSearh (this.primaryTexts[i]);
-					string secondary = two ? Converters.PreparingForSearh (this.secondaryTexts[i]) : "";
+					string primary   =       Strings.PreparingForSearh (this.primaryTexts[i]);
+					string secondary = two ? Strings.PreparingForSearh (this.secondaryTexts[i]) : "";
 
 					if (typed == primary || typed == secondary)
 					{
@@ -427,7 +427,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	une casse différente.
 			if (!string.IsNullOrEmpty (hint) && !string.IsNullOrEmpty (typed))
 			{
-				int i = Converters.PreparingForSearh (hint).IndexOf (Converters.PreparingForSearh (typed));
+				int i = Strings.PreparingForSearh (hint).IndexOf (Strings.PreparingForSearh (typed));
 				if (i != -1)
 				{
 					hint = hint.Substring (0, i) + typed + hint.Substring (i+typed.Length);

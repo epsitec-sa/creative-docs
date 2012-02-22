@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static CatégorieDeCompte StringToCatégorie(string text)
 		{
 			//	Conversion d'une chaîne en catégorie.
-			switch (Converters.PreparingForSearh (text))
+			switch (Strings.PreparingForSearh (text))
 			{
 				case "actif":
 				case "actifs":
@@ -429,7 +429,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static TypeDeCompte StringToType(string text)
 		{
 			//	Conversion d'une chaîne en type de compte.
-			switch (Converters.PreparingForSearh (text))
+			switch (Strings.PreparingForSearh (text))
 			{
 				case "titre":
 					return TypeDeCompte.Titre;
@@ -514,7 +514,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static RaccourciModèle StringToRaccourci(string text)
 		{
 			//	Conversion d'une chaîne en raccourci.
-			switch (Converters.PreparingForSearh (text))
+			switch (Strings.PreparingForSearh (text))
 			{
 				case "ctrl+0":
 					return RaccourciModèle.Ctrl0;
@@ -691,41 +691,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				default:
 					return "?";
 			}
-		}
-		#endregion
-
-
-		#region String conversions
-		public static string PreparingForSearh(FormattedText text)
-		{
-			return Converters.PreparingForSearh (text.ToSimpleText ());
-		}
-
-		public static string PreparingForSearh(string text)
-		{
-			if (!string.IsNullOrEmpty (text))
-			{
-				return Converters.RemoveDiacritics (text).ToLower ();
-			}
-
-			return text;
-		}
-
-		private static string RemoveDiacritics(string text)
-		{
-			string norm = text.Normalize (System.Text.NormalizationForm.FormD);
-			var builder = new System.Text.StringBuilder ();
-
-			for (int i = 0; i < norm.Length; i++)
-			{
-				var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory (norm[i]);
-				if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
-				{
-					builder.Append (norm[i]);
-				}
-			}
-
-			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
 		#endregion
 

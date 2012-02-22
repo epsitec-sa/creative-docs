@@ -47,8 +47,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			libellé.Libellé = this.GetText (ColumnType.Libellé);
 
-			var s1 = Converters.PreparingForSearh (this.GetText (ColumnType.Permanant));
-			var s2 = Converters.PreparingForSearh (LibellésDataAccessor.Permanant);
+			var s1 = Strings.PreparingForSearh (this.GetText (ColumnType.Permanant));
+			var s2 = Strings.PreparingForSearh (LibellésDataAccessor.Permanant);
 			libellé.Permanant = (s1 == s2);
 		}
 	}

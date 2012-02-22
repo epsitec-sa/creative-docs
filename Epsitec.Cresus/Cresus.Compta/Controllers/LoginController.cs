@@ -361,8 +361,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				var entered = Converters.PreparingForSearh (this.userField.FormattedText);
-				return this.comptaEntity.Utilisateurs.Where (x => Converters.PreparingForSearh (x.Utilisateur) == entered).FirstOrDefault ();
+				var entered = Strings.PreparingForSearh (this.userField.FormattedText);
+				return this.comptaEntity.Utilisateurs.Where (x => Strings.PreparingForSearh (x.Utilisateur) == entered).FirstOrDefault ();
 			}
 		}
 

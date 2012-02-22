@@ -508,7 +508,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				if (!this.matchCase)
 				{
-					text = Converters.PreparingForSearh (text);
+					text = Strings.PreparingForSearh (text);
 				}
 			}
 

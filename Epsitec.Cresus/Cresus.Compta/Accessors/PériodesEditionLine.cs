@@ -68,8 +68,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var période = entity as ComptaPériodeEntity;
 
-			var s1 = Converters.PreparingForSearh (this.GetText (ColumnType.Utilise));
-			var s2 = Converters.PreparingForSearh (PériodesDataAccessor.PériodeCourante);
+			var s1 = Strings.PreparingForSearh (this.GetText (ColumnType.Utilise));
+			var s2 = Strings.PreparingForSearh (PériodesDataAccessor.PériodeCourante);
 			if (s1 == s2)
 			{
 				this.controller.MainWindowController.Période = période;
