@@ -49,18 +49,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			// We filter the form to exclude the fields used to store the lambda keys.
 			var memberNames = formData.GetDynamicMemberNames ().Where (x => !Tools.IsLambdaFieldName (x));
 
-			foreach (var memberName in memberNames)
+			using (businessContext.Bind (entity))
 			{
-				try
+				foreach (var memberName in memberNames)
 				{
-					var value = formData[memberName];
-					var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
+					try
+					{
+						var value = formData[memberName];
+						var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
 
-					EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
-				}
-				catch (Exception e)
-				{
-					errors.Add (memberName, e.ToString ());
+						EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
+					}
+					catch (Exception e)
+					{
+						errors.Add (memberName, e.ToString ());
+					}
 				}
 			}
 

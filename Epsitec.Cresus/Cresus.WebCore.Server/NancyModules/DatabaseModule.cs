@@ -179,7 +179,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityKey = EntityKey.Parse (paramEntityKey);
 			AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-			var ok = context.DeleteEntity (entity);
+			bool ok = false;
+
+			using (context.Bind(entity))
+			{
+				ok = context.DeleteEntity (entity);	
+			}
 
 			context.SaveChanges ();
 
@@ -191,8 +196,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var context = coreSession.GetBusinessContext ();
 
-			// TODO Being able to create an entity 
-			// (problems with the AbstractPerson)
+			// TODO Being able to create an entity (problems with the AbstractPerson)
 
 			return Response.AsCoreError ();
 		}
