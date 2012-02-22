@@ -623,7 +623,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				}
 			}
 
-			return Converters.SentenceConcat (list);
+			return Strings.SentenceConcat (list);
 		}
 
 		public static string GetComparisonShowedDescription(ComparisonShowed mode)
@@ -821,46 +821,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.dateFormatOrder     = settingsList.GetEnum (SettingsType.DateOrder);
 		}
 		#endregion
-
-
-		public static string FirstLetterToUpper(string text)
-		{
-			if (string.IsNullOrEmpty (text))
-			{
-				return text;
-			}
-			else
-			{
-				return text.Substring (0, 1).ToUpper () + text.Substring (1);
-			}
-		}
-
-		public static string SentenceConcat(List<string> list)
-		{
-			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une phrase "rouge, vert et bleu".
-			var builder = new System.Text.StringBuilder ();
-
-			list = list.Where (x => !string.IsNullOrEmpty (x)).ToList ();
-
-			for (int i = 0; i < list.Count; i++)
-			{
-				if (i != 0)
-				{
-					if (i < list.Count-1)
-					{
-						builder.Append (", ");
-					}
-					else
-					{
-						builder.Append (" et ");
-					}
-				}
-
-				builder.Append (list[i]);
-			}
-
-			return builder.ToString ();
-		}
 
 
 		static Converters()

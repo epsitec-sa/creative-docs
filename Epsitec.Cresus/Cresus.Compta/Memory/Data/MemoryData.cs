@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 					list.Add (this.GetShowPanelModeSummary (this.ShowFilter,  "le filtre"));
 					list.Add (this.GetShowPanelModeSummary (this.ShowOptions, "les options"));
 
-					return Converters.FirstLetterToUpper (Converters.SentenceConcat(list));
+					return Strings.FirstLetterToUpper (Strings.SentenceConcat (list));
 				}
 			}
 		}

@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.IO
 					list.Add (string.Format ("{0} journa{1}", journalCount.ToString (), journalCount <= 1 ? "l":"ux"));
 				}
 
-				return "Utilisé par " + Converters.SentenceConcat (list);
+				return "Utilisé par " + Strings.SentenceConcat (list);
 			}
 		}
 
