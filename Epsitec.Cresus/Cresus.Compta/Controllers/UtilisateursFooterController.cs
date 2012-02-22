@@ -234,6 +234,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				bool admin = (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).IsAdmin;
+				bool all = true;
+				bool zero = true;
 
 				foreach (var button in this.checkButtons)
 				{
@@ -242,10 +244,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					button.ActiveState = state || admin ? ActiveState.Yes : ActiveState.No;
 					button.Enable = !admin;
+
+					if (button.ActiveState == ActiveState.Yes)
+					{
+						zero = false;
+					}
+					else
+					{
+						all = false;
+					}
 				}
 
-				this.zeroPrésentationButton.Enable = !admin;
-				this.allPrésentationButton.Enable = !admin;
+				this.zeroPrésentationButton.Enable = !admin && !zero;
+				this.allPrésentationButton.Enable = !admin && !all;
 			}
 		}
 
