@@ -216,7 +216,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					(this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
+					this.EditionLine.SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
 					this.FooterTextChanged ();
 				}
 			};
@@ -233,14 +233,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				bool admin = (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).IsAdmin;
-				bool all = true;
-				bool zero = true;
+				bool admin = this.EditionLine.IsAdmin;
+				bool zero  = true;
+				bool all   = true;
 
 				foreach (var button in this.checkButtons)
 				{
 					var cmd = Converters.StringToPrésentationCommand(button.Name);
-					var state = (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).HasPrésentation(cmd);
+					var state = this.EditionLine.HasPrésentation (cmd);
 
 					button.ActiveState = state || admin ? ActiveState.Yes : ActiveState.No;
 					button.Enable = !admin;
@@ -256,7 +256,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				this.zeroPrésentationButton.Enable = !admin && !zero;
-				this.allPrésentationButton.Enable = !admin && !all;
+				this.allPrésentationButton .Enable = !admin && !all;
+			}
+		}
+
+		private UtilisateursEditionLine EditionLine
+		{
+			get
+			{
+				return this.dataAccessor.EditionLine[0] as UtilisateursEditionLine;
 			}
 		}
 

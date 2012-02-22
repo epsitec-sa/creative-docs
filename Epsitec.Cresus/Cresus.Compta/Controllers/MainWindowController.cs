@@ -390,6 +390,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			AbstractController controller = null;
 
+			//	Les comparaisons ci-dessous doivent accepter les commandes Res.Commands.Présentation.Xyz
+			//	et Res.Commands.NouvellePrésentation.Xyz !
+
 			if (command.Name.EndsWith ("Présentation.Open"))
 			{
 				controller = new OpenController (this.app, this.businessContext, this);
