@@ -121,6 +121,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return this.currentUser;
 			}
+			set
+			{
+				this.currentUser = value;
+			}
 		}
 
 		public PiècesGenerator PiècesGenerator

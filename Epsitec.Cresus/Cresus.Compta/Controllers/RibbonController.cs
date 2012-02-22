@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//	|-->
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Fichier");
+				var section = this.CreateSection (this.container, DockStyle.Left, "Comptabilité");
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
