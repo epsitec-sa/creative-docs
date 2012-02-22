@@ -645,14 +645,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void UpdateUser()
 		{
+			string tooltip;
+
 			if (this.mainWindowController.CurrentUser == null)
 			{
-				this.userLabel.FormattedText = Core.TextFormatter.FormatText ("Déconecté").ApplyItalic ().ApplyFontSize (13.0);
+				this.userLabel.FormattedText = Core.TextFormatter.FormatText ("Déconnecté").ApplyItalic ().ApplyFontSize (13.0);
+				tooltip = "Aucun utilisateur n'est actuellement connecté.<br/>{0} permet de se connecter.";
 			}
 			else
 			{
 				this.userLabel.FormattedText = this.mainWindowController.CurrentUser.Utilisateur.ApplyBold ().ApplyFontSize (13.0);
+				tooltip = "Nom de l'utilisateur actuellement connecté.<br/>Si nécessaire, {0} permet de changer d'utilisateur.";
 			}
+
+			var icon = UIBuilder.GetTextIconUri ("Présentation.Login", iconSize: 20);
+			ToolTip.Default.SetToolTip (this.userLabel, string.Format(tooltip, icon));
 		}
 
 		protected virtual void UpdateTitle()

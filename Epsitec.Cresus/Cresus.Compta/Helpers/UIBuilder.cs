@@ -252,9 +252,16 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string GetTextIconUri(string icon, double verticalOffset = -6)
+		public static string GetTextIconUri(string icon, double verticalOffset = -6, double? iconSize = null)
 		{
-			return string.Format (@"<img src=""{0}"" voff=""{1}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString(System.Globalization.CultureInfo.InvariantCulture));
+			if (iconSize.HasValue)
+			{
+				return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{2}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
+			else
+			{
+				return string.Format (@"<img src=""{0}"" voff=""{1}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			}
 		}
 
 		public static string GetCheckStateIconUri(bool state)
