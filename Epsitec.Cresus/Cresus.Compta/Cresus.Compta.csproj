@@ -66,6 +66,7 @@
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
+    <Compile Include="Fields\Controllers\PasswordFieldController.cs" />
     <Compile Include="UserAccess.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />

@@ -87,17 +87,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.PiècesGenerator.Select (x => x.Nom).ToArray ());
 				}
+				else if (mapper.Column == ColumnType.MotDePasse)
+				{
+					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+				}
 				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
-				}
-
-				if (mapper.Column == ColumnType.MotDePasse)
-				{
-					var f = field.EditWidget as AbstractTextField;
-					f.IsPassword = true;
-					f.PasswordReplacementCharacter = '●';
 				}
 
 				field.Box.TabIndex = ++tabIndex;

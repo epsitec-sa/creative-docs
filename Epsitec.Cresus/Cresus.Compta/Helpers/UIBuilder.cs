@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			var button = new Button
 			{
 				Parent           = parent,
-				ButtonStyle      = Common.Widgets.ButtonStyle.ToolItem,
+				ButtonStyle      = ButtonStyle.Icon,
 				FormattedText    = "  " + icon + "  " + description,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,

@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Utilisateur, 1.00, ContentAlignment.MiddleLeft, "Utilisateur",          "Nom de l'utilisateur utilisé pour l'identification");
 				yield return new ColumnMapper (ColumnType.Prénom,      1.00, ContentAlignment.MiddleLeft, "Prénom",               "Prénom (facultatif)");
 				yield return new ColumnMapper (ColumnType.Nom,         1.00, ContentAlignment.MiddleLeft, "Nom",                  "Nom (facultatif)");
-				yield return new ColumnMapper (ColumnType.MotDePasse,  1.00, ContentAlignment.MiddleLeft, "Mot de passe",         "Mot de passe de l'utilisateur");
+				yield return new ColumnMapper (ColumnType.MotDePasse,  0.60, ContentAlignment.MiddleLeft, "Mot de passe",         "Mot de passe de l'utilisateur");
 				yield return new ColumnMapper (ColumnType.Pièce,       0.80, ContentAlignment.MiddleLeft, "Générateur de pièces", "Générateur pour les numéros de pièces (facultatif)");
 			}
 		}

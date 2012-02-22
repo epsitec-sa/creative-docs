@@ -5,6 +5,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -90,7 +91,7 @@ namespace Epsitec.Cresus.Compta.IO
 			var utilisateur = new ComptaUtilisateurEntity ();
 
 			utilisateur.Utilisateur = "Admin";
-			utilisateur.MotDePasse  = "epsitec";
+			utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
 			utilisateur.UserAccess  = UserAccess.Full;
 
 			return utilisateur;

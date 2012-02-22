@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			utilisateur.Utilisateur     = this.GetText (ColumnType.Utilisateur);
 			utilisateur.Prénom          = this.GetText (ColumnType.Prénom);
 			utilisateur.Nom             = this.GetText (ColumnType.Nom);
-			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToSimpleText ();
+			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToString ();
 			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
 			utilisateur.DroitsDaccès    = Converters.ParseInt (this.GetText (ColumnType.DroitsDaccès)).GetValueOrDefault ();
 		}

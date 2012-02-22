@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return utilisateur.Nom;
 
 				case ColumnType.MotDePasse:
-					return Strings.ConvertToHidePassword (utilisateur.MotDePasse);
+					return Strings.GetStandardPassword (utilisateur.MotDePasse);
 
 				case ColumnType.Pièce:
 					return UtilisateursDataAccessor.GetPiècesGenerator (utilisateur);

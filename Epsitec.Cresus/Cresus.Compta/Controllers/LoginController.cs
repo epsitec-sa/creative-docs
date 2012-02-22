@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				FormattedText    = Core.TextFormatter.FormatText("Identification").ApplyFontSize (80).ApplyBold ().ApplyFontColor (Color.FromName ("White")),
 				ContentAlignment = ContentAlignment.TopLeft,
 				PreferredHeight  = 120,
-				Margins          = new Margins (200+10, 0, 0, 0),
+				Margins          = new Margins (LoginController.leftMargin+10, 0, 0, 0),
 				Dock             = DockStyle.Top,
 			};
 
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent           = line,
 					Text             = "Utilisateur actuel",
 					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth   = 200,
+					PreferredWidth   = LoginController.leftMargin,
 					Dock             = DockStyle.Left,
 					Margins          = new Margins (0, 10, 0, 0),
 				};
@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent           = line,
 					Text             = "Nouvel utilisateur",
 					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth   = 200,
+					PreferredWidth   = LoginController.leftMargin,
 					Dock             = DockStyle.Left,
 					Margins          = new Margins (0, 10, 0, 0),
 				};
@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent           = line,
 					Text             = "Mot de passe",
 					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth   = 200,
+					PreferredWidth   = LoginController.leftMargin,
 					Dock             = DockStyle.Left,
 					Margins          = new Margins (0, 10, 0, 0),
 				};
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Text           = "S'identifier",
 					PreferredWidth = 200,
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (200+10, 0, 0, 0),
+					Margins        = new Margins (LoginController.leftMargin+10, 0, 0, 0),
 					TabIndex       = 1,
 				};
 			}
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Text           = "Se déconnecter",
 					PreferredWidth = 200,
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (200+10, 0, 0, 0),
+					Margins        = new Margins (LoginController.leftMargin+10, 0, 0, 0),
 					TabIndex       = 1,
 				};
 			}
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent          = line,
 					Dock            = DockStyle.Fill,
-					Margins         = new Margins (200+10, 0, 0, 0),
+					Margins         = new Margins (LoginController.leftMargin+10, 0, 0, 0),
 					TabIndex        = 1,
 				};
 			}
@@ -317,7 +317,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var entered = Converters.PreparingForSearh (this.userField.FormattedText);
 			var utilisateur = this.comptaEntity.Utilisateurs.Where (x => Converters.PreparingForSearh (x.Utilisateur) == entered).FirstOrDefault ();
 
-			if (utilisateur != null && utilisateur.MotDePasse == this.passwordField.Text)
+			var md5 = Strings.ComputeMd5Hash (this.passwordField.Text);
+
+			if (utilisateur != null && utilisateur.MotDePasse == md5)
 			{
 				this.userField.FormattedText = utilisateur.Utilisateur;
 				this.mainWindowController.CurrentUser = utilisateur;
@@ -374,6 +376,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		private static readonly double leftMargin = 150;
 
 		private FrameBox			mainFrame;
 		private TextField			currentField;

@@ -39,6 +39,32 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return text;
 		}
 
+
+		public static string ComputeMd5Hash(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+			else
+			{
+				byte[] array = System.Text.Encoding.ASCII.GetBytes (text);
+				return Epsitec.Common.IO.Checksum.ComputeMd5Hash (array);
+			}
+		}
+
+		public static string GetStandardPassword(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return text;
+			}
+			else
+			{
+				return new string ('●', 8);
+			}
+		}
+
 		public static string ConvertToHidePassword(string text)
 		{
 			if (string.IsNullOrEmpty (text))
