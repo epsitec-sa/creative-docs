@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public CollectionManagerModule(ServerContext serverContext)
 			: base (serverContext, "/collection")
 		{
-			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.Delete (cs));
-			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.Create (cs));
+			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.DeleteEntity (cs));
+			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.CreateEntity (cs));
 		}
 
 
-		private Response Delete(CoreSession coreSession)
+		private Response DeleteEntity(CoreSession coreSession)
 		{
 			var context = coreSession.GetBusinessContext ();
 
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response Create(CoreSession coreSession)
+		private Response CreateEntity(CoreSession coreSession)
 		{
 			var context = coreSession.GetBusinessContext ();
 

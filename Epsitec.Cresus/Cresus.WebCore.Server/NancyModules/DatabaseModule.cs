@@ -118,8 +118,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Get["/list"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabaseList (cs));
 			Get["/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabase (cs, p));
-			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.Delete (cs));
-			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.Create (cs));
+			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.DeleteEntity (cs));
+			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.CreateEntity (cs));
 		}
 
 
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response Delete(CoreSession coreSession)
+		private Response DeleteEntity(CoreSession coreSession)
 		{
 			var context = coreSession.GetBusinessContext ();
 
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private Response Create(CoreSession coreSession)
+		private Response CreateEntity(CoreSession coreSession)
 		{
 			var context = coreSession.GetBusinessContext ();
 
