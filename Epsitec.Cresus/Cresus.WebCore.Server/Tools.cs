@@ -59,6 +59,12 @@ namespace Epsitec.Cresus.WebCore.Server
 		{
 			return string.Concat ("lambda_", entityKey);
 		}
+
+
+		public static bool IsLambdaFieldName(string text)
+		{
+			return text.StartsWith ("lambda_");
+		}
 		
 
 	}

@@ -2,20 +2,19 @@
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.UserInterface;
 
 using Nancy;
 
 using System;
 
 using System.Collections.Generic;
-
-using System.Diagnostics;
-
-using System.Globalization;
 
 using System.Linq;
 
@@ -36,86 +35,130 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			Post["/{id}"] = parameters => this.ExecuteWithCoreSession (coreSession =>
 			{
-				var context = coreSession.GetBusinessContext ();
-
-				string paramEntityKey = (string) parameters.id;
-
-				var formData = PostArrayHandler.GetFormWithArrays (Request.Form);
-
-				var entityKey = EntityKey.Parse (paramEntityKey);
-				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
+				var businessContext = coreSession.GetBusinessContext ();
 
 				var errors = new Dictionary<string, object> ();
-				var memberNames = (IEnumerable<string>) formData.GetDynamicMemberNames ();
-				var memberKeys  = memberNames.Where (x => !x.Contains ('_')).ToArray (); // We don't want the "lambda_" keys
 
-				foreach (var memberKey in memberKeys)
+				AbstractEntity entity = EntityModule.ResolveEntity (businessContext, parameters.id);
+				DynamicDictionary formData = PostArrayHandler.GetFormWithArrays (Request.Form);
+
+				// We filter the form to exclude the fields used to store the lambda keys.
+				var memberNames = formData.GetDynamicMemberNames ().Where (x => !Tools.IsLambdaFieldName (x));
+
+				foreach (var memberName in memberNames)
 				{
 					try
 					{
-						var value = formData[memberKey];
-						var lambda = formData[Tools.GetLambdaFieldName (memberKey)];
+						var value = formData[memberName];
+						var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
 
-						if (lambda.HasValue)
-						{
-							var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) lambda.Value));
-
-							if (accessor.IsCollectionType)
-							{
-								List<AbstractEntity> entities = new List<AbstractEntity> ();
-								var collection = ((List<string>) value.Value).Where (x => !string.IsNullOrWhiteSpace (x));
-
-								foreach (string item in collection)
-								{
-									EntityKey? tmpKey = EntityKey.Parse (item);
-									AbstractEntity tmpEntity = context.DataContext.ResolveEntity (tmpKey);
-									entities.Add (tmpEntity);
-								}
-
-								accessor.SetCollection (entity, entities);
-							}
-							else if (accessor.IsReadOnly)
-							{
-								errors.Add (memberKey, "The field cannot be written to.");
-							}
-							else if (accessor.IsEntityType)
-							{
-								EntityKey      valueEntityKey = EntityKey.Parse (value);
-								AbstractEntity valueEntity    = context.DataContext.ResolveEntity (valueEntityKey);
-
-								accessor.SetEntityValue (entity, valueEntity);
-							}
-							else if (value.HasValue)
-							{
-								accessor.SetStringValue (entity, value.Value);
-							}
-							else
-							{
-								accessor.SetStringValue (entity, null);
-							}
-						}
-						else
-						{
-							Debug.WriteLine (string.Format (CultureInfo.InvariantCulture, "Error: /entity/{0} cannot resolve member {1}", paramEntityKey, memberKey));
-						}
+						EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
 					}
 					catch (Exception e)
 					{
-						errors.Add (memberKey, e.ToString ());
+						errors.Add (memberName, e.ToString ());
 					}
 				}
 
 				if (errors.Any ())
 				{
-					context.Discard ();
+					// TODO This is probably a bad idea to discard the changes like this, as the
+					// business context is never reset. Either This should be changed, or the
+					// business context should be reset or something.
+
+					businessContext.Discard ();
 					return Response.AsCoreError (errors);
 				}
 				else
 				{
-					context.SaveChanges ();
+					businessContext.SaveChanges ();
 					return Response.AsCoreSuccess ();
 				}
 			});
+		}
+
+
+		private static AbstractEntity ResolveEntity(BusinessContext businessContext, string entityId)
+		{
+			var entityKey = EntityKey.Parse (entityId);
+
+			return businessContext.DataContext.ResolveEntity (entityKey);
+		}
+
+
+		private static PanelFieldAccessor GetPanelFieldAccessor(CoreSession coreSession, DynamicDictionary formData, string memberName)
+		{
+			var lambdaFieldName = Tools.GetLambdaFieldName (memberName);
+			var lambdaFieldValue = formData[lambdaFieldName];
+			var accessorId = InvariantConverter.ToInt ((string) lambdaFieldValue.Value);
+
+			return coreSession.PanelFieldAccessorCache.Get (accessorId);
+		}
+
+
+		private static void SetValue(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, DynamicDictionaryValue value)
+		{
+			if (panelFieldAccessor.IsCollectionType)
+			{
+				var castedValue = (IEnumerable<string>) value.Value;
+
+				EntityModule.SetValueForCollection (businessContext, panelFieldAccessor, entity, castedValue);
+			}
+			else if (panelFieldAccessor.IsReadOnly)
+			{
+				// NOTE We don't check for this before because collections fields are readonly. By
+				// that I mean that the pointer to the collection is readonly, but the collection
+				// itself is not, of course.
+
+				throw new Exception ("This field cannot be written to.");
+			}
+			else if (panelFieldAccessor.IsEntityType)
+			{
+				var castedValue = (string) value;
+
+				EntityModule.SetValueForEntity (businessContext, panelFieldAccessor, entity, castedValue);
+			}
+			else if (value.HasValue)
+			{
+				var castedValue = (string) value;
+
+				EntityModule.SetValueForString (panelFieldAccessor, entity, castedValue);
+			}
+			else
+			{
+				EntityModule.SetNullValue (panelFieldAccessor, entity);
+			}
+		}
+
+
+		private static void SetValueForCollection(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
+		{
+			var targetEntities = targetEntityIds
+				.Where (id => !string.IsNullOrWhiteSpace (id))
+				.Select (id => EntityModule.ResolveEntity (businessContext, id))
+				.ToList ();
+
+			panelFieldAccessor.SetCollection (entity, targetEntities);
+		}
+
+
+		private static void SetValueForEntity(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
+		{
+			var targetEntity = EntityModule.ResolveEntity (businessContext, targetEntityId);
+
+			panelFieldAccessor.SetEntityValue (entity, targetEntity);
+		}
+
+
+		private static void SetValueForString(PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		{
+			panelFieldAccessor.SetStringValue (entity, fieldValue);
+		}
+
+
+		private static void SetNullValue(PanelFieldAccessor panelFieldAccessor, AbstractEntity entity)
+		{
+			panelFieldAccessor.SetStringValue (entity, null);
 		}
 
 
