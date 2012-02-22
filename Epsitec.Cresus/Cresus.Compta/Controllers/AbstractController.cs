@@ -763,7 +763,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.ignoreChanges.IsNotZero)
+			if (this.ignoreChanges.IsNotZero || this.footerController == null)
 			{
 				return;
 			}

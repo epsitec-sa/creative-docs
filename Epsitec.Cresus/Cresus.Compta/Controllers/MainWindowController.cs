@@ -127,6 +127,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.PrésentationCommandsUpdate (this.selectedCommandDocument);
 
+				this.navigatorEngine.Clear ();
+				this.UpdateNavigatorCommands ();
+
 				if (this.controller != null)
 				{
 					this.controller.UpdateUser ();
@@ -194,13 +197,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SelectDefaultPrésentation()
 		{
-			if (this.compta.PlanComptable.Any ())
+			if (this.currentUser == null)  // déconnecté ?
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.Login;
+			}
+			else if (this.compta.PlanComptable.Any ())
 			{
 				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
 			}
 			else  // plan comptable vide ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.PlanComptable;
+				this.selectedCommandDocument = Res.Commands.Présentation.Open;
 			}
 
 			this.PrésentationCommandsUpdate (this.selectedCommandDocument);
