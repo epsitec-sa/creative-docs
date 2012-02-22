@@ -21,22 +21,25 @@ namespace Epsitec.Cresus.Compta.Helpers
 	{
 		public static Button CreateButton(Widget parent, Command command, FormattedText description)
 		{
-			var frame = new FrameBox
+			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", command.Icon);
+
+			var button = new Button
 			{
-				Parent = parent,
-				Dock   = DockStyle.Top,
+				Parent           = parent,
+				ButtonStyle      = Common.Widgets.ButtonStyle.ToolItem,
+				FormattedText    = "  " + icon + "  " + description,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredHeight  = 42,
+				Dock             = DockStyle.Top,
+				Margins          = new Margins (0, 0, 0, 5),
 			};
 
-			var button = UIBuilder.CreateButton (frame, command, 42, 32);
-			button.Dock = DockStyle.Left;
-
-			new StaticText
+			//	On ne peut pas simplement initialiser CommandObject, car cela remplace le texte
+			//	du bouton par celui de la commande !
+			button.Clicked += delegate
 			{
-				Parent        = frame,
-				FormattedText = description,
-				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Dock          = DockStyle.Fill,
-				Margins       = new Margins (5, 0, 0, 0),
+				button.ExecuteCommand (command);
 			};
 
 			return button;

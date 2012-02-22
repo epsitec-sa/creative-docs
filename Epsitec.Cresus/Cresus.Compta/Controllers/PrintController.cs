@@ -91,7 +91,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
-				BackColor     = Color.FromHexa ("e9fcff"),  // bleu clair
+//				BackColor     = Color.FromHexa ("e9fcff"),  // bleu clair
+				BackColor     = Color.FromBrightness (0.95),
 				Dock          = DockStyle.Fill,
 				Padding       = new Margins (10),
 			};
@@ -107,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var column2 = new FrameBox
 			{
 				Parent         = frame,
-				PreferredWidth = 400,
+				PreferredWidth = 300,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
 			};
@@ -121,15 +122,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Margins = new Margins (0, 0, 0, 4),
 				};
 
-				var box = new FrameBox
+				var list = new ScrollList
 				{
 					Parent        = column1,
-					DrawFullFrame = true,
 					Dock          = DockStyle.Fill,
 					Padding       = new Margins (10),
 				};
 
-				this.printButton = UIBuilder.CreateButton (box, Res.Commands.File.Print, "Imprimer");
+				//	Pour l'exemple !
+				list.Items.Add (" Journal des écritures");
+				list.Items.Add (" Plan comptable");
+				list.Items.Add (" Balance de vérification");
+				list.Items.Add (" Extrait de compte");
+				list.Items.Add (" Bilan");
+				list.Items.Add (" Pertes et Profits");
+				list.Items.Add (" Compte d'exploitation");
+				list.Items.Add (" Budgets");
+				list.Items.Add (" Résumé TVA");
+				list.Items.Add (" Décompte TVA");
+
+				this.printButton = UIBuilder.CreateButton (column1, Res.Commands.File.Print, "Imprimer");
+				this.printButton.Dock = DockStyle.Bottom;
+				this.printButton.Margins = new Margins (0, 0, 10, 0);
 			}
 
 			{

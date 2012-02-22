@@ -203,6 +203,7 @@
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
+    <Compile Include="Widgets\MixButton.cs" />
     <Compile Include="Widgets\TabCatcherFrameBox.cs" />
     <Compile Include="Widgets\StringArray.cs" />
     <Compile Include="Widgets\StringList.cs" />

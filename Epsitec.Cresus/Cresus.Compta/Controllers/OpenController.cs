@@ -91,7 +91,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
-				BackColor     = Color.FromHexa ("fffde8"),  // jaune clair
+//				BackColor     = Color.FromHexa ("fffde8"),  // jaune clair
+				BackColor     = Color.FromBrightness (0.95),
 				Dock          = DockStyle.Fill,
 				Padding       = new Margins (10),
 			};

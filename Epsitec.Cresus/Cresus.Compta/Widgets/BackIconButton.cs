@@ -2,7 +2,6 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Drawing;
-
 using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
