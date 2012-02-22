@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	{
 
 
-		public static object GetFormWithArrays(dynamic form)
+		public static DynamicDictionary GetFormWithArrays(dynamic form)
 		{
 			var newDictionnary = new DynamicDictionary ();
 
