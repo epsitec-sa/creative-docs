@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.DécompteTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
 				//?section.Children.Add (this.CreateGap ();
-				this.présentationButton = UIBuilder.CreateButton (section, Res.Commands.Présentation.New, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
+				this.présentationMenuButton = UIBuilder.CreateButton (section, Res.Commands.Présentation.New, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 			}
 
 			{
@@ -216,6 +216,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public IconButton PrésentationMenuButton
+		{
+			get
+			{
+				return this.présentationMenuButton;
+			}
+		}
+
 
 		#region Ribbon mode menu
 		private void ShowRibbonModeMenu(Widget parentButton)
@@ -260,45 +268,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		#region New window menu
-		public void ShowNewWindowMenu()
-		{
-			this.ShowNewWindowMenu (this.présentationButton);
-		}
-
-		private void ShowNewWindowMenu(Widget parentButton)
-		{
-			//	Affiche le menu permettant de choisir le mode pour le ruban.
-			var menu = new VMenu ();
-
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Balance);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Extrait);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Bilan);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.PP);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Exploitation);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.Change);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.RésuméTVA);
-			this.AddNewWindowToMenu (menu, Res.CommandIds.NouvellePrésentation.DécompteTVA);
-
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
-
-			menu.Host = this.container;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
-		}
-
-		private void AddNewWindowToMenu(VMenu menu, Druid commandId)
-		{
-			var item = new MenuItem ()
-			{
-				CommandId = commandId,
-			};
-
-			menu.Items.Add (item);
-		}
-		#endregion
-
-	
 		private void UpdateRibbon()
 		{
 			//	Met à jour le faux ruban en fonction du RibbonViewMode en cours.
@@ -585,7 +554,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Widget								container;
 		private RibbonViewMode						ribbonViewMode;
-		private IconButton							présentationButton;
+		private IconButton							présentationMenuButton;
 		private GlyphButton							navigatorMenuButton;
 	}
 }

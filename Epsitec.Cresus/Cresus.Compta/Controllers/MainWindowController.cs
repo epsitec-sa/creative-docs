@@ -988,7 +988,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ribbonController.ShowNewWindowMenu ();
+			this.ShowNewWindowMenu ();
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Balance)]
@@ -1237,6 +1237,53 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Global.Settings)]
 		private void CommandGlobalSettings()
 		{
+		}
+		#endregion
+
+
+		#region New window menu
+		public void ShowNewWindowMenu()
+		{
+			this.ShowNewWindowMenu (this.ribbonController.PrésentationMenuButton);
+		}
+
+		private void ShowNewWindowMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir le mode pour le ruban.
+			var menu = new VMenu ();
+
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Balance,          Res.CommandIds.NouvellePrésentation.Balance);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Extrait,          Res.CommandIds.NouvellePrésentation.Extrait);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Bilan,            Res.CommandIds.NouvellePrésentation.Bilan);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.PP,               Res.CommandIds.NouvellePrésentation.PP);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Exploitation,     Res.CommandIds.NouvellePrésentation.Exploitation);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Change,           Res.CommandIds.NouvellePrésentation.Change);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméPériodique, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméTVA,        Res.CommandIds.NouvellePrésentation.RésuméTVA);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.DécompteTVA,      Res.CommandIds.NouvellePrésentation.DécompteTVA);
+
+			if (menu.Items.Count == 0)
+			{
+				return;
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddNewWindowToMenu(VMenu menu, Command cmd, Druid commandId)
+		{
+			if (this.HasPrésentationCommand (cmd))
+			{
+				var item = new MenuItem ()
+				{
+					CommandId = commandId,
+				};
+
+				menu.Items.Add (item);
+			}
 		}
 		#endregion
 
