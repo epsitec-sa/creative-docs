@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LoginModule(ServerContext serverContext)
 			: base (serverContext, "/log")
 		{
-			Post["/in"] = parameters => this.Login ();
-			Get["/out"] = parameters => this.Logout ();
+			Post["/in"] = p => this.Login ();
+			Get["/out"] = p => this.Logout ();
 		}
 
 

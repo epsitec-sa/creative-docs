@@ -31,72 +31,76 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public CollectionManagerModule(ServerContext serverContext)
 			: base (serverContext, "/collection")
 		{
-			Post["/delete"] = parameters => this.ExecuteWithCoreSession (coreSession =>
+			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.Delete (cs));
+			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.Create (cs));
+		}
+
+
+		private Response Delete(CoreSession coreSession)
+		{
+			var context = coreSession.GetBusinessContext ();
+
+			string parentEntityId = Request.Form.parentEntity;
+			var parentKey = EntityKey.Parse (parentEntityId);
+			AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
+
+			string deleteEntity = Request.Form.deleteEntity;
+			var deleteKey = EntityKey.Parse (deleteEntity);
+
+			var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
+
+			if (!accessor.IsCollectionType)
 			{
-				var context = coreSession.GetBusinessContext ();
+				return Response.AsCoreError ();
+			}
 
-				string parentEntityId = Request.Form.parentEntity;
-				var parentKey = EntityKey.Parse (parentEntityId);
-				AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
+			var collection = accessor.GetCollection (parentEntity);
 
-				string deleteEntity = Request.Form.deleteEntity;
-				var deleteKey = EntityKey.Parse (deleteEntity);
+			var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
-				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
-
-				if (!accessor.IsCollectionType)
-				{
-					return Response.AsCoreError ();
-				}
-
-				var collection = accessor.GetCollection (parentEntity);
-
-				var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
-
-				if (toDelete.IsEmpty ())
-				{
-					return Response.AsCoreError ();
-				}
-
-				var d = toDelete.First ();
-				collection.Remove (d);
-				context.DeleteEntity (d);
-				context.SaveChanges ();
-
-				return Response.AsCoreSuccess ();
-			});
-
-
-			Post["/create"] = parameters => this.ExecuteWithCoreSession (coreSession =>
+			if (toDelete.IsEmpty ())
 			{
-				var context = coreSession.GetBusinessContext ();
+				return Response.AsCoreError ();
+			}
 
-				string parentEntityId = Request.Form.parentEntity;
-				var parentKey = EntityKey.Parse (parentEntityId);
-				AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
+			var d = toDelete.First ();
+			collection.Remove (d);
+			context.DeleteEntity (d);
+			context.SaveChanges ();
 
-				string typeName = Request.Form.entityType;
-				var type = Type.GetType (typeName);
-				var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
-				var m = method.MakeGenericMethod (type);
-				var o = m.Invoke (context, new object[0]);
-				var newEntity = o as AbstractEntity;
+			return Response.AsCoreSuccess ();
+		}
 
-				var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
 
-				if (!accessor.IsCollectionType)
-				{
-					return Response.AsCoreError ();
-				}
+		private Response Create(CoreSession coreSession)
+		{
+			var context = coreSession.GetBusinessContext ();
 
-				var collection = accessor.GetCollection (parentEntity);
-				collection.Add (newEntity);
+			string parentEntityId = Request.Form.parentEntity;
+			var parentKey = EntityKey.Parse (parentEntityId);
+			AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
 
-				context.SaveChanges (EntitySaveMode.IncludeEmpty);
+			string typeName = Request.Form.entityType;
+			var type = Type.GetType (typeName);
+			var method = typeof (BusinessContext).GetMethod ("CreateEntity", new Type[0]);
+			var m = method.MakeGenericMethod (type);
+			var o = m.Invoke (context, new object[0]);
+			var newEntity = o as AbstractEntity;
 
-				var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
-				return Response.AsCoreSuccess (key);
-			});
+			var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
+
+			if (!accessor.IsCollectionType)
+			{
+				return Response.AsCoreError ();
+			}
+
+			var collection = accessor.GetCollection (parentEntity);
+			collection.Add (newEntity);
+
+			context.SaveChanges (EntitySaveMode.IncludeEmpty);
+
+			var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
+			return Response.AsCoreSuccess (key);
 		}
 
 

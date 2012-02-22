@@ -8,6 +8,8 @@ using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Epsitec.Cresus.WebCore.Server.UserInterface;
 
+using Nancy;
+
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -24,20 +26,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public LayoutModule(ServerContext serverContext)
 			: base (serverContext, "/layout")
 		{
-			Get["/{mode}/{controllerSubTypeId}/{id}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
-			{
-				var context = coreSession.GetBusinessContext ();
+			Get["/{mode}/{controllerSubTypeId}/{id}"] = p => this.ExecuteWithCoreSession (cs => this.GetLayout (cs, p));
+		}
 
-				var entityKey = EntityKey.Parse (parameters.id);
-				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-				ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
-				int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);
+		private Response GetLayout(CoreSession coreSession, dynamic parameters)
+		{
+			var context = coreSession.GetBusinessContext ();
 
-				var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, coreSession);
+			var entityKey = EntityKey.Parse (parameters.id);
+			AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-				return Response.AsCoreSuccess (s);
-			});
+			ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
+			int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);
+
+			var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, coreSession);
+
+			return Response.AsCoreSuccess (s);
 		}
 		
 

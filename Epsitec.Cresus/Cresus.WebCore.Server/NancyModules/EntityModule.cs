@@ -33,48 +33,51 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EntityModule(ServerContext serverContext)
 			: base (serverContext, "/entity")
 		{
-			Post["/{id}"] = parameters => this.ExecuteWithCoreSession (coreSession =>
+			Post["/{id}"] = p => this.ExecuteWithCoreSession (cs => this.Update (cs, p));
+		}
+
+
+		private Response Update(CoreSession coreSession, dynamic parameters)
+		{
+			var businessContext = coreSession.GetBusinessContext ();
+
+			var errors = new Dictionary<string, object> ();
+
+			AbstractEntity entity = EntityModule.ResolveEntity (businessContext, parameters.id);
+			DynamicDictionary formData = PostArrayHandler.GetFormWithArrays (Request.Form);
+
+			// We filter the form to exclude the fields used to store the lambda keys.
+			var memberNames = formData.GetDynamicMemberNames ().Where (x => !Tools.IsLambdaFieldName (x));
+
+			foreach (var memberName in memberNames)
 			{
-				var businessContext = coreSession.GetBusinessContext ();
-
-				var errors = new Dictionary<string, object> ();
-
-				AbstractEntity entity = EntityModule.ResolveEntity (businessContext, parameters.id);
-				DynamicDictionary formData = PostArrayHandler.GetFormWithArrays (Request.Form);
-
-				// We filter the form to exclude the fields used to store the lambda keys.
-				var memberNames = formData.GetDynamicMemberNames ().Where (x => !Tools.IsLambdaFieldName (x));
-
-				foreach (var memberName in memberNames)
+				try
 				{
-					try
-					{
-						var value = formData[memberName];
-						var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
+					var value = formData[memberName];
+					var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
 
-						EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
-					}
-					catch (Exception e)
-					{
-						errors.Add (memberName, e.ToString ());
-					}
+					EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
 				}
-
-				if (errors.Any ())
+				catch (Exception e)
 				{
-					// TODO This is probably a bad idea to discard the changes like this, as the
-					// business context is never reset. Either This should be changed, or the
-					// business context should be reset or something.
+					errors.Add (memberName, e.ToString ());
+				}
+			}
 
-					businessContext.Discard ();
-					return Response.AsCoreError (errors);
-				}
-				else
-				{
-					businessContext.SaveChanges ();
-					return Response.AsCoreSuccess ();
-				}
-			});
+			if (errors.Any ())
+			{
+				// TODO This is probably a bad idea to discard the changes like this, as the
+				// business context is never reset. Either This should be changed, or the
+				// business context should be reset or something.
+
+				businessContext.Discard ();
+				return Response.AsCoreError (errors);
+			}
+			else
+			{
+				businessContext.SaveChanges ();
+				return Response.AsCoreSuccess ();
+			}
 		}
 
 

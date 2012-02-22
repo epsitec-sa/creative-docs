@@ -1,5 +1,7 @@
 ﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
 
+using Nancy;
+
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
 {
@@ -15,11 +17,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public PageModule(ServerContext serverContext)
 			: base (serverContext, "/page/")
 		{
-			Get["/{name}"] = parameters => this.ExecuteWithCoreSession (coreSession =>
-			{
-				string pageName = parameters.name;
-				return View[pageName];
-			});
+			Get["/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetPageView (p));
+		}
+
+
+		private Response GetPageView(dynamic parameters)
+		{
+			string pageName = parameters.name;
+
+			return View[pageName];
 		}
 
 

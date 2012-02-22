@@ -116,78 +116,85 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public DatabasesModule(ServerContext serverContext)
 			: base (serverContext, "/database")
 		{
+			Get["/list"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabaseList (cs));
+			Get["/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetDatabase (cs, p));
+			Post["/delete"] = p => this.ExecuteWithCoreSession (cs => this.Delete (cs));
+			Post["/create"] = p => this.ExecuteWithCoreSession (cs => this.Create (cs));
+		}
 
-			Get["/list"] = parameters => this.ExecuteWithCoreSession (coreSession =>
-			{
-				var list = DatabasesModule.databases.Values.Select (d => d.ToDictionary ()).ToList ();
 
-				return Response.AsCoreSuccess (list);
-			});
+		private Response GetDatabaseList(CoreSession coreSession)
+		{
+			var list = DatabasesModule.databases.Values.Select (d => d.ToDictionary ()).ToList ();
 
-			Get["/{name}"] = parameters => this.ExecuteWithCoreSession(coreSession => 
-			{
-				var context = coreSession.GetBusinessContext ();
-				var dataContext = context.DataContext;
+			return Response.AsCoreSuccess (list);
+		}
 
-				string databaseName = parameters.name;
 
-				// Get all entites from the current Type
-				var type = DatabasesModule.databases[databaseName].GetDatabaseType ();
-				var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
-				var m = method.MakeGenericMethod (type);
-				var o = m.Invoke (context, new object[0]);
-				var enumerable = o as IEnumerable<AbstractEntity>;
+		private Response GetDatabase(CoreSession coreSession, dynamic parameters)
+		{
+			var context = coreSession.GetBusinessContext ();
+			var dataContext = context.DataContext;
 
-				var start = (int) Request.Query.start;
-				var limit = (int) Request.Query.limit;
+			string databaseName = parameters.name;
 
-				var list = from c in enumerable
-						   let summary = c.GetCompactSummary ().ToSimpleText ()
-						   // orderby summary // TODO Awefully slow !
-						   select new
-						   {
-							   name = summary,
-							   uniqueId = dataContext.GetNormalizedEntityKey (c).Value.ToString ()
-						   };
+			// Get all entites from the current Type
+			var type = DatabasesModule.databases[databaseName].GetDatabaseType ();
+			var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
+			var m = method.MakeGenericMethod (type);
+			var o = m.Invoke (context, new object[0]);
+			var enumerable = o as IEnumerable<AbstractEntity>;
 
-				// Only take a subset of all the entities
-				var subset = list.Skip (start).Take (limit).ToList ();
+			var start = (int) Request.Query.start;
+			var limit = (int) Request.Query.limit;
 
-				var dic = new Dictionary<string, object> ();
-				dic["total"] = enumerable.Count (); // For ExtJS
-				dic["entities"] = subset;
+			var list = from c in enumerable
+					   let summary = c.GetCompactSummary ().ToSimpleText ()
+					   // orderby summary // TODO Awefully slow !
+					   select new
+					   {
+						   name = summary,
+						   uniqueId = dataContext.GetNormalizedEntityKey (c).Value.ToString ()
+					   };
 
-				var res = Response.AsJson (dic);
+			// Only take a subset of all the entities
+			var subset = list.Skip (start).Take (limit).ToList ();
 
-				return res;
-			});
+			var dic = new Dictionary<string, object> ();
+			dic["total"] = enumerable.Count (); // For ExtJS
+			dic["entities"] = subset;
 
-			Post["/delete"] = parameters => this.ExecuteWithCoreSession(coreSession => 
-			{
-				var context = coreSession.GetBusinessContext ();
+			var res = Response.AsJson (dic);
 
-				string paramEntityKey = (string) Request.Form.entityId;
+			return res;
+		}
 
-				var entityKey = EntityKey.Parse (paramEntityKey);
-				AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-				var ok = context.DeleteEntity (entity);
+		private Response Delete(CoreSession coreSession)
+		{
+			var context = coreSession.GetBusinessContext ();
 
-				context.SaveChanges ();
+			string paramEntityKey = (string) Request.Form.entityId;
 
-				return Response.AsCoreBoolean (ok);
-			});
+			var entityKey = EntityKey.Parse (paramEntityKey);
+			AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
 
-			Post["/create"] = parameters => this.ExecuteWithCoreSession(coreSession => 
-			{
-				var context = coreSession.GetBusinessContext ();
+			var ok = context.DeleteEntity (entity);
 
-				// TODO Being able to create an entity 
-				// (problems with the AbstractPerson)
+			context.SaveChanges ();
 
-				return Response.AsCoreError ();
-			});
+			return Response.AsCoreBoolean (ok);
+		}
 
+
+		private Response Create(CoreSession coreSession)
+		{
+			var context = coreSession.GetBusinessContext ();
+
+			// TODO Being able to create an entity 
+			// (problems with the AbstractPerson)
+
+			return Response.AsCoreError ();
 		}
 
 
