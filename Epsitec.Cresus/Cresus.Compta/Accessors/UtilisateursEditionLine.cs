@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Compta.Controllers;
@@ -81,12 +82,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
-			this.SetText (ColumnType.Utilisateur,  utilisateur.Utilisateur);
-			this.SetText (ColumnType.Prénom,       utilisateur.Prénom);
-			this.SetText (ColumnType.Nom,          utilisateur.Nom);
-			this.SetText (ColumnType.MotDePasse,   utilisateur.MotDePasse);
-			this.SetText (ColumnType.Pièce,        UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
-			this.SetText (ColumnType.DroitsDaccès, Converters.IntToString (utilisateur.DroitsDaccès));
+			this.SetText (ColumnType.Utilisateur,   utilisateur.Utilisateur);
+			this.SetText (ColumnType.Prénom,        utilisateur.Prénom);
+			this.SetText (ColumnType.Nom,           utilisateur.Nom);
+			this.SetText (ColumnType.MotDePasse,    utilisateur.MotDePasse);
+			this.SetText (ColumnType.Pièce,         UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
+			this.SetText (ColumnType.Admin,         utilisateur.Admin ? "admin" : "");
+			this.SetText (ColumnType.Présentations, utilisateur.Présentations);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -98,22 +100,30 @@ namespace Epsitec.Cresus.Compta.Accessors
 			utilisateur.Nom             = this.GetText (ColumnType.Nom);
 			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToString ();
 			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
-			utilisateur.DroitsDaccès    = Converters.ParseInt (this.GetText (ColumnType.DroitsDaccès)).GetValueOrDefault ();
+			utilisateur.Présentations   = this.GetText (ColumnType.Présentations).ToString ();
 		}
 
 
-		public UserAccess UserAccess
+		public bool IsAdmin
 		{
 			get
 			{
-				var s = this.GetText (ColumnType.DroitsDaccès);
-				return (UserAccess) Converters.ParseInt (s).GetValueOrDefault ();
+				string s = this.GetText (ColumnType.Admin).ToString ();
+				return s == "admin";
 			}
-			set
-			{
-				var s = Converters.IntToString ((int) value);
-				this.SetText (ColumnType.DroitsDaccès, s);
-			}
+		}
+
+		public void SetPrésenttion(Command cmd, bool state)
+		{
+			string s = this.GetText (ColumnType.Présentations).ToString ();
+			Converters.SetPrésentationCommand (ref s, cmd, state);
+			this.SetText (ColumnType.Présentations, s);
+		}
+
+		public bool HasPrésentation(Command cmd)
+		{
+			string s = this.GetText (ColumnType.Présentations).ToString ();
+			return Converters.ContainsPrésentationCommand (s, cmd);
 		}
 	}
 }

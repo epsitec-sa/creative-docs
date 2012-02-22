@@ -695,6 +695,199 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		#region Présentations
+		public static FormattedText GetPrésentationCommandDescription(Command cmd)
+		{
+			var s = Converters.PrésentationCommandToString (cmd);
+			switch (s)
+			{
+				case "Open":
+					return "Ouverture";
+
+				case "Save":
+					return "Enregistrement";
+
+				case "Print":
+					return "Impression";
+
+				case "Login":
+					return "Indentification";
+
+				case "Modèles":
+					return "Ecritures modèles";
+
+				case "Libellés":
+					return "Libellés usuels";
+
+				case "Périodes":
+					return "Périodes comptables";
+
+				case "Journaux":
+					return "Journaux";
+
+				case "Journal":
+					return "Journal des écritures";
+
+				case "PlanComptable":
+					return "Plan comptable";
+
+				case "Balance":
+					return "Balance de vérification";
+
+				case "Extrait":
+					return "Extrait de compte";
+
+				case "Bilan":
+					return "Bilan";
+
+				case "PP":
+					return "Pertes et Profits";
+
+				case "Exploitation":
+					return "Compte d'exploitation";
+
+				case "Budgets":
+					return "Budgets";
+
+				case "Change":
+					return "Taux de change";
+
+				case "RésuméPériodique":
+					return "Résumé périodique";
+
+				case "RésuméTVA":
+					return "Résumé TVA";
+
+				case "DécompteTVA":
+					return "Décompte TVA";
+
+				case "PiècesGenerator":
+					return "Générateur de pièces";
+
+				case "Utilisateurs":
+					return "Utilisateurs";
+
+				case "Réglages":
+					return "Réglages";
+
+				default:
+					return s;
+			}
+		}
+
+		public static void SetPrésentationCommand(ref string list, Command cmd, bool state)
+		{
+			//	Ajoute ou enlève une présentation dans une liste.
+			var s = Converters.PrésentationCommandToString (cmd);
+
+			if (string.IsNullOrEmpty (list))
+			{
+				if (state)
+				{
+					list = s;
+				}
+			}
+			else
+			{
+				var words = list.Split (',').ToList ();
+				int i = words.IndexOf (s);
+
+				if (i == -1)
+				{
+					if (state)
+					{
+						list += "," + s;
+					}
+				}
+				else
+				{
+					if (!state)
+					{
+						words.RemoveAt (i);
+						list = string.Join (",", words);
+					}
+				}
+			}
+		}
+
+		public static bool ContainsPrésentationCommand(string list, Command cmd)
+		{
+			//	Indique si une liste contient une présentation.
+			if (string.IsNullOrEmpty (list))
+			{
+				return false;
+			}
+			else
+			{
+				var words = list.Split (',');
+				return words.Contains (Converters.PrésentationCommandToString (cmd));
+			}
+		}
+
+		public static Command StringToPrésentationCommand(string text)
+		{
+			//	Nom de commande court "xxx" -> Command
+			foreach (var cmd in Converters.PrésentationCommands)
+			{
+				if (Converters.PrésentationCommandToString (cmd) == text)
+				{
+					return cmd;
+				}
+			}
+
+			return null;
+		}
+
+		public static string PrésentationCommandToString(Command cmd)
+		{
+			//	Command -> nom de commande court "xxx"
+			string s = "Présentation.";
+			int i = cmd.Name.IndexOf (s);
+
+			if (i == -1)
+			{
+				return null;
+			}
+			else
+			{
+				return cmd.Name.Substring (i+s.Length);  // "xxx"
+			}
+		}
+
+		public static IEnumerable<Command> PrésentationCommands
+		{
+			get
+			{
+				yield return Res.Commands.Présentation.Open;
+				yield return Res.Commands.Présentation.Save;
+				yield return Res.Commands.Présentation.Login;
+				yield return Res.Commands.Présentation.Print;
+
+				yield return Res.Commands.Présentation.Journal;
+				yield return Res.Commands.Présentation.Balance;
+				yield return Res.Commands.Présentation.Extrait;
+				yield return Res.Commands.Présentation.Bilan;
+				yield return Res.Commands.Présentation.PP;
+				yield return Res.Commands.Présentation.Exploitation;
+				yield return Res.Commands.Présentation.Budgets;
+				yield return Res.Commands.Présentation.Change;
+				yield return Res.Commands.Présentation.RésuméPériodique;
+				yield return Res.Commands.Présentation.RésuméTVA;
+				yield return Res.Commands.Présentation.DécompteTVA;
+
+				yield return Res.Commands.Présentation.PlanComptable;
+				yield return Res.Commands.Présentation.Libellés;
+				yield return Res.Commands.Présentation.Modèles;
+				yield return Res.Commands.Présentation.Journaux;
+				yield return Res.Commands.Présentation.Périodes;
+				yield return Res.Commands.Présentation.PiècesGenerator;
+				yield return Res.Commands.Présentation.Utilisateurs;
+				yield return Res.Commands.Présentation.Réglages;
+			}
+		}
+		#endregion
+
+
 		#region Settings
 		private static SettingsEnum CharToSettingsEnum(string c)
 		{

@@ -1580,24 +1580,46 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>DroitsDaccès</c> field.
-		///	designer:fld/OVK75/OVKA5
+		///	The <c>Admin</c> field.
+		///	designer:fld/OVK75/OVKU5
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKA5]")]
-		public int DroitsDaccès
+		[global::Epsitec.Common.Support.EntityField ("[OVKU5]")]
+		public bool Admin
 		{
 			get
 			{
-				return this.GetField<int> ("[OVKA5]");
+				return this.GetField<bool> ("[OVKU5]");
 			}
 			set
 			{
-				int oldValue = this.DroitsDaccès;
-				if (oldValue != value || !this.IsFieldDefined("[OVKA5]"))
+				bool oldValue = this.Admin;
+				if (oldValue != value || !this.IsFieldDefined("[OVKU5]"))
 				{
-					this.OnDroitsDaccèsChanging (oldValue, value);
-					this.SetField<int> ("[OVKA5]", oldValue, value);
-					this.OnDroitsDaccèsChanged (oldValue, value);
+					this.OnAdminChanging (oldValue, value);
+					this.SetField<bool> ("[OVKU5]", oldValue, value);
+					this.OnAdminChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Présentations</c> field.
+		///	designer:fld/OVK75/OVKV5
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKV5]")]
+		public string Présentations
+		{
+			get
+			{
+				return this.GetField<string> ("[OVKV5]");
+			}
+			set
+			{
+				string oldValue = this.Présentations;
+				if (oldValue != value || !this.IsFieldDefined("[OVKV5]"))
+				{
+					this.OnPrésentationsChanging (oldValue, value);
+					this.SetField<string> ("[OVKV5]", oldValue, value);
+					this.OnPrésentationsChanged (oldValue, value);
 				}
 			}
 		}
@@ -1632,8 +1654,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnMotDePasseChanging(string oldValue, string newValue);
 		partial void OnMotDePasseChanged(string oldValue, string newValue);
-		partial void OnDroitsDaccèsChanging(int oldValue, int newValue);
-		partial void OnDroitsDaccèsChanged(int oldValue, int newValue);
+		partial void OnAdminChanging(bool oldValue, bool newValue);
+		partial void OnAdminChanged(bool oldValue, bool newValue);
+		partial void OnPrésentationsChanging(string oldValue, string newValue);
+		partial void OnPrésentationsChanged(string oldValue, string newValue);
 		partial void OnPiècesGeneratorChanging(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		partial void OnPiècesGeneratorChanged(global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity newValue);
 		

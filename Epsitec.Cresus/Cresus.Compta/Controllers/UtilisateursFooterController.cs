@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public UtilisateursFooterController(AbstractController controller)
 			: base (controller)
 		{
+			this.checkButtons = new List<CheckButton> ();
 			this.ignoreChanges = new SafeCounter ();
 		}
 
@@ -106,159 +107,119 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateButtonsUI(Widget parent)
 		{
-			var userAccess = this.UserAccess;
-
-			var column1 = new FrameBox
-			{
-				Parent         = parent,
-				PreferredWidth = 120,
-				Dock           = DockStyle.Left,
-			};
-
-			var column2 = new FrameBox
-			{
-				Parent         = parent,
-				PreferredWidth = 150*2,
-				Dock           = DockStyle.Left,
-			};
-
-			this.adminButton = new CheckButton
-			{
-				Parent = column1,
-				Text   = "Administrateur",
-				Dock   = DockStyle.Top,
-			};
+			this.checkButtons.Clear ();
 
 			var group = new GroupBox
 			{
-				Parent  = column2,
-				Text    = "Présentations accessibles",
-				Dock    = DockStyle.Fill,
+				Parent  = parent,
+				Text    = "Présentations accessibles par l'utilisateur",
+				Dock    = DockStyle.Left,
 				Padding = new Margins (10, 10, 5, 5),
 			};
 
-			var group1 = new FrameBox
+			var columns = new List<FrameBox> ();
+
+			for (int i = 0; i < 4; i++)
 			{
-				Parent         = group,
-				PreferredWidth = 150,
-				Dock           = DockStyle.Left,
-			};
+				var column = new FrameBox
+				{
+					Parent         = group,
+					PreferredWidth = 170,
+					Dock           = DockStyle.Left,
+				};
 
-			var group2 = new FrameBox
+				columns.Add (column);
+			}
+
+			int rank = 0;
+			foreach (var cmd in Converters.PrésentationCommands)
 			{
-				Parent         = group,
-				PreferredWidth = 150,
-				Dock           = DockStyle.Left,
-			};
-
-			{
-				this.planComptableButton = new CheckButton
+				if (cmd == Res.Commands.Présentation.Login)  // cette présentation est toujours accessible !
 				{
-					Parent = group1,
-					Text   = "Plan comptable",
-					Dock   = DockStyle.Top,
-				};
+					continue;
+				}
 
-				this.libellésButton = new CheckButton
+				int column = rank++/6;  // 6 boutons par colonne
+				if (column >= columns.Count)
 				{
-					Parent = group1,
-					Text   = "Libellés usuels",
-					Dock   = DockStyle.Top,
-				};
+					break;
+				}
 
-				this.modèlesButton = new CheckButton
-				{
-					Parent = group1,
-					Text   = "Ecritures modèles",
-					Dock   = DockStyle.Top,
-				};
-
-				this.journauxButton = new CheckButton
-				{
-					Parent = group1,
-					Text   = "Journaux",
-					Dock   = DockStyle.Top,
-				};
+				this.CreatePrésentationButton (columns[column], cmd);
 			}
 
 			{
-				this.périodesButton = new CheckButton
+				var right = new FrameBox
 				{
-					Parent = group2,
-					Text   = "Périodes comptables",
-					Dock   = DockStyle.Top,
+					Parent         = group,
+					PreferredWidth = 60,
+					Dock           = DockStyle.Left,
 				};
 
-				this.piècesGeneratorButton = new CheckButton
+				this.zeroPrésentationButton = new Button
 				{
-					Parent = group2,
-					Text   = "Générateurs de pièces",
-					Dock   = DockStyle.Top,
+					Parent          = right,
+					Text            = "Aucune",
+					PreferredWidth  = 60,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, 2),
 				};
 
-				this.utilisateursButton = new CheckButton
+				this.allPrésentationButton = new Button
 				{
-					Parent = group2,
-					Text   = "Utilisateurs",
-					Dock   = DockStyle.Top,
+					Parent          = right,
+					Text            = "Toutes",
+					PreferredWidth  = 60,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+					Margins         = new Margins (0, 0, 0, 2),
 				};
 
-				this.réglagesButton = new CheckButton
-				{
-					Parent = group2,
-					Text   = "Réglages",
-					Dock   = DockStyle.Top,
-				};
+				ToolTip.Default.SetToolTip (this.zeroPrésentationButton, "Interdit l'accès à toutes les présentations");
+				ToolTip.Default.SetToolTip (this.allPrésentationButton,  "Autorise l'accès à toutes les présentations");
 			}
 
-			this.réglagesButton.ActiveStateChanged += delegate
+			this.zeroPrésentationButton.Clicked += delegate
 			{
-				this.SetUserAccess (this.réglagesButton, UserAccess.Réglages);
+				foreach (var button in this.checkButtons)
+				{
+					button.ActiveState = ActiveState.No;
+				}
 			};
 
-			this.utilisateursButton.ActiveStateChanged += delegate
+			this.allPrésentationButton.Clicked += delegate
 			{
-				this.SetUserAccess (this.utilisateursButton, UserAccess.Utilisateurs);
-			};
-
-			this.piècesGeneratorButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.piècesGeneratorButton, UserAccess.PiècesGenerator);
-			};
-
-			this.libellésButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.libellésButton, UserAccess.Libellés);
-			};
-
-			this.modèlesButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.modèlesButton, UserAccess.Modèles);
-			};
-
-			this.journauxButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.journauxButton, UserAccess.Journaux);
-			};
-
-			this.périodesButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.périodesButton, UserAccess.Périodes);
-			};
-
-			this.planComptableButton.ActiveStateChanged += delegate
-			{
-				this.SetUserAccess (this.planComptableButton, UserAccess.PlanComptable);
+				foreach (var button in this.checkButtons)
+				{
+					button.ActiveState = ActiveState.Yes;
+				}
 			};
 		}
 
-		private void SetUserAccess(CheckButton button, UserAccess mode)
+		private void CreatePrésentationButton(Widget parent, Command cmd)
 		{
-			if (this.ignoreChanges.IsZero)
+			var icon = UIBuilder.GetTextIconUri ("Présentation." + Converters.PrésentationCommandToString (cmd), iconSize: 20);
+
+			var button = new CheckButton
 			{
-				this.SetUserAccess (mode, button.ActiveState == ActiveState.Yes);
-				this.FooterTextChanged ();
-			}
+				Parent          = parent,
+				FormattedText   = icon + " " + Converters.GetPrésentationCommandDescription (cmd),
+				Name            = Converters.PrésentationCommandToString (cmd),
+				PreferredHeight = 24,
+				Dock            = DockStyle.Top,
+			};
+
+			this.checkButtons.Add (button);
+
+			button.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					(this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
+					this.FooterTextChanged ();
+				}
+			};
 		}
 
 
@@ -272,59 +233,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.GetUserAccess (this.adminButton,           UserAccess.Admin          );
-				this.GetUserAccess (this.réglagesButton,        UserAccess.Réglages       );
-				this.GetUserAccess (this.utilisateursButton,    UserAccess.Utilisateurs   );
-				this.GetUserAccess (this.piècesGeneratorButton, UserAccess.PiècesGenerator);
-				this.GetUserAccess (this.libellésButton,        UserAccess.Libellés       );
-				this.GetUserAccess (this.modèlesButton,         UserAccess.Modèles        );
-				this.GetUserAccess (this.journauxButton,        UserAccess.Journaux       );
-				this.GetUserAccess (this.périodesButton,        UserAccess.Périodes       );
-				this.GetUserAccess (this.planComptableButton,   UserAccess.PlanComptable  );
-			}
-		}
+				bool admin = (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).IsAdmin;
 
-		private void GetUserAccess(CheckButton button, UserAccess mode)
-		{
-			if (mode == UserAccess.Admin)
-			{
-				button.Enable = false;  // on ne peut jamais changer ce mode !
-			}
-			else
-			{
-				button.Enable = !this.GetUserAccess (UserAccess.Admin);
-			}
+				foreach (var button in this.checkButtons)
+				{
+					var cmd = Converters.StringToPrésentationCommand(button.Name);
+					var state = (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).HasPrésentation(cmd);
 
-			button.ActiveState =  this.GetUserAccess (mode) ? ActiveState.Yes : ActiveState.No;
-		}
+					button.ActiveState = state || admin ? ActiveState.Yes : ActiveState.No;
+					button.Enable = !admin;
+				}
 
-
-		private bool GetUserAccess(UserAccess mode)
-		{
-			return (this.UserAccess & mode) != 0;
-		}
-
-		private void SetUserAccess(UserAccess mode, bool state)
-		{
-			if (state)
-			{
-				this.UserAccess |= mode;
-			}
-			else
-			{
-				this.UserAccess &= ~mode;
-			}
-		}
-
-		private UserAccess UserAccess
-		{
-			get
-			{
-				return (this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).UserAccess;
-			}
-			set
-			{
-				(this.dataAccessor.EditionLine[0] as UtilisateursEditionLine).UserAccess = value;
+				this.zeroPrésentationButton.Enable = !admin;
+				this.allPrésentationButton.Enable = !admin;
 			}
 		}
 
@@ -335,19 +256,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private readonly List<CheckButton>	checkButtons;
 		private readonly SafeCounter		ignoreChanges;
 
 		private FrameBox					linesFrame;
 		private FrameBox					buttonsFrame;
-
-		private CheckButton					adminButton;
-		private CheckButton					réglagesButton;
-		private CheckButton					utilisateursButton;
-		private CheckButton					piècesGeneratorButton;
-		private CheckButton					libellésButton;
-		private CheckButton					modèlesButton;
-		private CheckButton					journauxButton;
-		private CheckButton					périodesButton;
-		private CheckButton					planComptableButton;
+		private Button						zeroPrésentationButton;
+		private Button						allPrésentationButton;
 	}
 }

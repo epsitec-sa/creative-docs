@@ -866,8 +866,8 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
-				//	designer:cap/OVKA5
-				public static readonly global::Epsitec.Common.Support.Druid DroitsDaccès = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 170);
+				//	designer:cap/OVKU5
+				public static readonly global::Epsitec.Common.Support.Druid Admin = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 190);
 				//	designer:cap/OVK95
 				public static readonly global::Epsitec.Common.Support.Druid MotDePasse = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 169);
 				//	designer:cap/OVKP5
@@ -876,6 +876,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179);
 				//	designer:cap/OVKO5
 				public static readonly global::Epsitec.Common.Support.Druid Prénom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 184);
+				//	designer:cap/OVKV5
+				public static readonly global::Epsitec.Common.Support.Druid Présentations = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 191);
 				//	designer:cap/OVK85
 				public static readonly global::Epsitec.Common.Support.Druid Utilisateur = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 168);
 			}

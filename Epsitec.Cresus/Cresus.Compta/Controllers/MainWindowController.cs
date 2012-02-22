@@ -610,92 +610,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private IEnumerable<Command> PrésentationCommands
-		{
-			get
-			{
-				yield return Res.Commands.Présentation.Open;
-				yield return Res.Commands.Présentation.Save;
-				yield return Res.Commands.Présentation.Print;
-				yield return Res.Commands.Présentation.Login;
-				yield return Res.Commands.Présentation.Modèles;
-				yield return Res.Commands.Présentation.Libellés;
-				yield return Res.Commands.Présentation.Périodes;
-				yield return Res.Commands.Présentation.Journaux;
-				yield return Res.Commands.Présentation.Journal;
-				yield return Res.Commands.Présentation.PlanComptable;
-				yield return Res.Commands.Présentation.Balance;
-				yield return Res.Commands.Présentation.Extrait;
-				yield return Res.Commands.Présentation.Bilan;
-				yield return Res.Commands.Présentation.PP;
-				yield return Res.Commands.Présentation.Exploitation;
-				yield return Res.Commands.Présentation.Budgets;
-				yield return Res.Commands.Présentation.Change;
-				yield return Res.Commands.Présentation.RésuméPériodique;
-				yield return Res.Commands.Présentation.RésuméTVA;
-				yield return Res.Commands.Présentation.DécompteTVA;
-				yield return Res.Commands.Présentation.PiècesGenerator;
-				yield return Res.Commands.Présentation.Utilisateurs;
-				yield return Res.Commands.Présentation.Réglages;
-			}
-		}
-
 		private void PrésentationCommandsUpdate(Command c)
 		{
-			foreach (var command in this.PrésentationCommands)
+			foreach (var command in Converters.PrésentationCommands)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (command);
 				cs.ActiveState = (command == c) ? ActiveState.Yes : ActiveState.No;
 
-				if (this.currentUser == null)
+				if (command == Res.Commands.Présentation.Login)
 				{
-					if (command == Res.Commands.Présentation.Open ||
-						command == Res.Commands.Présentation.Login)
-					{
-						cs.Enable = true;
-					}
-					else
-					{
-						cs.Enable = false;
-					}
+					cs.Enable = true;  // cette commande doit toujours être disponible !
 				}
 				else
 				{
-					if (command == Res.Commands.Présentation.Réglages && !this.HasUserAccess (UserAccess.Réglages))
+					if (this.currentUser == null)  // déconnecté ?
 					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.Utilisateurs && !this.HasUserAccess (UserAccess.Utilisateurs))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.PiècesGenerator && !this.HasUserAccess (UserAccess.PiècesGenerator))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.Libellés && !this.HasUserAccess (UserAccess.Libellés))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.Modèles && !this.HasUserAccess (UserAccess.Modèles))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.Journaux && !this.HasUserAccess (UserAccess.Journaux))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.Périodes && !this.HasUserAccess (UserAccess.Périodes))
-					{
-						cs.Enable = false;
-					}
-					else if (command == Res.Commands.Présentation.PlanComptable && !this.HasUserAccess (UserAccess.PlanComptable))
-					{
-						cs.Enable = false;
+						if (command == Res.Commands.Présentation.Open)
+						{
+							cs.Enable = true;
+						}
+						else
+						{
+							cs.Enable = false;
+						}
 					}
 					else
 					{
-						cs.Enable = true;
+						cs.Enable = this.HasPrésentationCommand (command);
 					}
 				}
 			}
@@ -706,18 +647,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private bool HasUserAccess(UserAccess mode)
+		private bool HasPrésentationCommand(Command cmd)
 		{
-			if (this.currentUser != null)
+			if (this.currentUser == null)  // déconnecté ?
 			{
-				var d = (UserAccess) this.currentUser.DroitsDaccès;
-				if ((d & mode) != 0)
+				return false;
+			}
+			else
+			{
+				if (this.currentUser.Admin)
 				{
-					return true;
+					return true;  // l'administrateur a toujours accès à tout
+				}
+				else
+				{
+					return Converters.ContainsPrésentationCommand (this.currentUser.Présentations, cmd);
 				}
 			}
-
-			return false;
 		}
 
 

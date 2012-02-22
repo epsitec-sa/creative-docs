@@ -90,9 +90,9 @@ namespace Epsitec.Cresus.Compta.IO
 			//	Crée l'utilisteur administrateur.
 			var utilisateur = new ComptaUtilisateurEntity ();
 
-			utilisateur.Utilisateur = "Admin";
-			utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
-			utilisateur.UserAccess  = UserAccess.Full;
+			utilisateur.Utilisateur   = "Admin";
+			utilisateur.MotDePasse    = Strings.ComputeMd5Hash ("epsitec");
+			utilisateur.Admin         = true;
 
 			return utilisateur;
 		}

@@ -67,7 +67,6 @@
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Fields\Controllers\PasswordFieldController.cs" />
-    <Compile Include="UserAccess.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultMemory.cs" />
@@ -267,7 +266,7 @@
     <EmbeddedResource Include="Images\Select.Down.icon" />
     <EmbeddedResource Include="Images\Select.Up.icon" />
     <EmbeddedResource Include="Images\Select.Home.icon" />
-    <EmbeddedResource Include="Images\Présentation.Période.icon" />
+    <EmbeddedResource Include="Images\Présentation.Périodes.icon" />
     <EmbeddedResource Include="Images\Présentation.Journaux.icon" />
     <EmbeddedResource Include="Images\Présentation.Libellés.icon" />
     <EmbeddedResource Include="Images\Présentation.Modèles.icon" />

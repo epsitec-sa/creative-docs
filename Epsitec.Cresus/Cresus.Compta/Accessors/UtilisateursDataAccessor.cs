@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override FormattedText GetRemoveModificationLineError()
 		{
 			var utilisateur = this.comptaEntity.Utilisateurs[this.firstEditedRow];
-			if ((utilisateur.UserAccess & UserAccess.Admin) != 0)
+			if (utilisateur.Admin)
 			{
 				return "Il n'est pas possible de supprimer l'administrateur.";
 			}
