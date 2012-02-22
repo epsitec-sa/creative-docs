@@ -161,6 +161,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock           = DockStyle.Left,
 					TabIndex       = 1,
 				};
+
+				this.userInfo = new StaticText
+				{
+					Parent         = line,
+					Dock           = DockStyle.Fill,
+					Margins          = new Margins (10, 0, 0, 0),
+				};
 			}
 
 			//	Ligne 3.
@@ -290,6 +297,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWidgets()
 		{
+			var utilisateur = this.EnteredUser;
+
+			if (utilisateur == null)
+			{
+				this.userInfo.FormattedText = null;
+			}
+			else
+			{
+				this.userInfo.FormattedText = Core.TextFormatter.FormatText (utilisateur.Prénom, utilisateur.Nom);
+			}
+
 			if (this.mainWindowController.CurrentUser == null)
 			{
 				this.currentField.FormattedText = Core.TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
@@ -314,9 +332,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void Login()
 		{
-			var entered = Converters.PreparingForSearh (this.userField.FormattedText);
-			var utilisateur = this.comptaEntity.Utilisateurs.Where (x => Converters.PreparingForSearh (x.Utilisateur) == entered).FirstOrDefault ();
-
+			var utilisateur = this.EnteredUser;
 			var md5 = Strings.ComputeMd5Hash (this.passwordField.Text);
 
 			if (utilisateur != null && utilisateur.MotDePasse == md5)
@@ -340,6 +356,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetError (Result.LogoutOK);
 			this.UpdateWidgets ();
 		}
+
+		private ComptaUtilisateurEntity EnteredUser
+		{
+			get
+			{
+				var entered = Converters.PreparingForSearh (this.userField.FormattedText);
+				return this.comptaEntity.Utilisateurs.Where (x => Converters.PreparingForSearh (x.Utilisateur) == entered).FirstOrDefault ();
+			}
+		}
+
 
 		private enum Result
 		{
@@ -382,6 +408,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox			mainFrame;
 		private TextField			currentField;
 		private TextField			userField;
+		private StaticText			userInfo;
 		private TextField			passwordField;
 		private Button				loginButton;
 		private Button				logoutButton;
