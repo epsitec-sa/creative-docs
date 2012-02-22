@@ -69,9 +69,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				collection.Remove (d);
 				context.DeleteEntity (d);
-			}
 
-			context.SaveChanges ();
+				context.ApplyRulesToRegisteredEntities (RuleType.Update);
+				context.SaveChanges ();
+			}
 
 			return Response.AsCoreSuccess ();
 		}
@@ -103,9 +104,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var collection = accessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
+				
+				context.ApplyRulesToRegisteredEntities (RuleType.Update);
+				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 			}
-
-			context.SaveChanges (EntitySaveMode.IncludeEmpty);
 
 			var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
 			return Response.AsCoreSuccess (key);

@@ -181,12 +181,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			bool ok = false;
 
-			using (context.Bind(entity))
+			using (context.Bind (entity))
 			{
-				ok = context.DeleteEntity (entity);	
-			}
+				ok = context.DeleteEntity (entity);
 
-			context.SaveChanges ();
+				context.ApplyRulesToRegisteredEntities (RuleType.Update);
+				context.SaveChanges ();
+			}
 
 			return Response.AsCoreBoolean (ok);
 		}

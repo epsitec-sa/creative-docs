@@ -65,21 +65,23 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 						errors.Add (memberName, e.ToString ());
 					}
 				}
-			}
 
-			if (errors.Any ())
-			{
-				// TODO This is probably a bad idea to discard the changes like this, as the
-				// business context is never reset. Either This should be changed, or the
-				// business context should be reset or something.
+				businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
 
-				businessContext.Discard ();
-				return Response.AsCoreError (errors);
-			}
-			else
-			{
-				businessContext.SaveChanges ();
-				return Response.AsCoreSuccess ();
+				if (errors.Any ())
+				{
+					// TODO This is probably a bad idea to discard the changes like this, as the
+					// business context is never reset. Either This should be changed, or the
+					// business context should be reset or something.
+
+					businessContext.Discard ();
+					return Response.AsCoreError (errors);
+				}
+				else
+				{
+					businessContext.SaveChanges ();
+					return Response.AsCoreSuccess ();
+				}
 			}
 		}
 

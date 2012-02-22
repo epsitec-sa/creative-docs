@@ -98,16 +98,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 			Action action = () =>
 			{
-				try
+				foreach (var entity in entities)
 				{
-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
-				}
-				finally
-				{
-					foreach (var entity in entities)
-					{
-						businessContext.Unregister (entity);
-					}
+					businessContext.Unregister (entity);
 				}
 			};
 
