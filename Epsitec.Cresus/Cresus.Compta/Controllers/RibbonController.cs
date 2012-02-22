@@ -208,45 +208,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private IEnumerable<Command> PrésentationCommands
-		{
-			get
-			{
-				yield return Res.Commands.Présentation.Open;
-				yield return Res.Commands.Présentation.Save;
-				yield return Res.Commands.Présentation.Print;
-				yield return Res.Commands.Présentation.Login;
-				yield return Res.Commands.Présentation.Modèles;
-				yield return Res.Commands.Présentation.Libellés;
-				yield return Res.Commands.Présentation.Périodes;
-				yield return Res.Commands.Présentation.Journaux;
-				yield return Res.Commands.Présentation.Journal;
-				yield return Res.Commands.Présentation.PlanComptable;
-				yield return Res.Commands.Présentation.Balance;
-				yield return Res.Commands.Présentation.Extrait;
-				yield return Res.Commands.Présentation.Bilan;
-				yield return Res.Commands.Présentation.PP;
-				yield return Res.Commands.Présentation.Exploitation;
-				yield return Res.Commands.Présentation.Budgets;
-				yield return Res.Commands.Présentation.Change;
-				yield return Res.Commands.Présentation.RésuméPériodique;
-				yield return Res.Commands.Présentation.RésuméTVA;
-				yield return Res.Commands.Présentation.DécompteTVA;
-				yield return Res.Commands.Présentation.PiècesGenerator;
-				yield return Res.Commands.Présentation.Utilisateurs;
-				yield return Res.Commands.Présentation.Réglages;
-			}
-		}
-
-		public void PrésentationCommandsUpdate(Command c)
-		{
-			foreach (var command in this.PrésentationCommands)
-			{
-				CommandState cs = this.app.CommandContext.GetCommandState (command);
-				cs.ActiveState = (command == c) ? ActiveState.Yes : ActiveState.No;
-			}
-		}
-
 		public GlyphButton NavigatorMenuButton
 		{
 			get

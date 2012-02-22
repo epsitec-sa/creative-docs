@@ -225,7 +225,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.piècesGeneratorButton.ActiveStateChanged += delegate
 			{
-				this.SetUserAccess (this.piècesGeneratorButton, UserAccess.PiécesGenerator);
+				this.SetUserAccess (this.piècesGeneratorButton, UserAccess.PiècesGenerator);
 			};
 
 			this.libellésButton.ActiveStateChanged += delegate
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.GetUserAccess (this.adminButton,           UserAccess.Admin          );
 				this.GetUserAccess (this.réglagesButton,        UserAccess.Réglages       );
 				this.GetUserAccess (this.utilisateursButton,    UserAccess.Utilisateurs   );
-				this.GetUserAccess (this.piècesGeneratorButton, UserAccess.PiécesGenerator);
+				this.GetUserAccess (this.piècesGeneratorButton, UserAccess.PiècesGenerator);
 				this.GetUserAccess (this.libellésButton,        UserAccess.Libellés       );
 				this.GetUserAccess (this.modèlesButton,         UserAccess.Modèles        );
 				this.GetUserAccess (this.journauxButton,        UserAccess.Journaux       );

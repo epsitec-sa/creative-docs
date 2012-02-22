@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Compta
 		//	Présentations accessibles:
 		Réglages        = 0x00000010,
 		Utilisateurs    = 0x00000020,
-		PiécesGenerator = 0x00000040,
+		PiècesGenerator = 0x00000040,
 		Libellés        = 0x00000080,
 		Modèles         = 0x00000100,
 		Journaux        = 0x00000200,

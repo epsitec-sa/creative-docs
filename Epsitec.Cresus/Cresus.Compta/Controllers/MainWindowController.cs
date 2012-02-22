@@ -124,6 +124,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.currentUser = value;
+				this.PrésentationCommandsUpdate (this.selectedCommandDocument);
 			}
 		}
 
@@ -196,7 +197,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.selectedCommandDocument = Res.Commands.Présentation.PlanComptable;
 			}
 
-			this.ribbonController.PrésentationCommandsUpdate (this.selectedCommandDocument);
+			this.PrésentationCommandsUpdate (this.selectedCommandDocument);
 		}
 
 
@@ -286,7 +287,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void NavigatorRestore(Command cmd)
 		{
 			//	Restaure une présentation utilisée précédemment.
-			this.ribbonController.PrésentationCommandsUpdate (cmd);
+			this.PrésentationCommandsUpdate (cmd);
 			this.selectedCommandDocument = cmd;
 			this.CreateController ();
 
@@ -594,7 +595,114 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdatePanelCommands ();
 			}
 		}
-		
+
+
+		private IEnumerable<Command> PrésentationCommands
+		{
+			get
+			{
+				yield return Res.Commands.Présentation.Open;
+				yield return Res.Commands.Présentation.Save;
+				yield return Res.Commands.Présentation.Print;
+				yield return Res.Commands.Présentation.Login;
+				yield return Res.Commands.Présentation.Modèles;
+				yield return Res.Commands.Présentation.Libellés;
+				yield return Res.Commands.Présentation.Périodes;
+				yield return Res.Commands.Présentation.Journaux;
+				yield return Res.Commands.Présentation.Journal;
+				yield return Res.Commands.Présentation.PlanComptable;
+				yield return Res.Commands.Présentation.Balance;
+				yield return Res.Commands.Présentation.Extrait;
+				yield return Res.Commands.Présentation.Bilan;
+				yield return Res.Commands.Présentation.PP;
+				yield return Res.Commands.Présentation.Exploitation;
+				yield return Res.Commands.Présentation.Budgets;
+				yield return Res.Commands.Présentation.Change;
+				yield return Res.Commands.Présentation.RésuméPériodique;
+				yield return Res.Commands.Présentation.RésuméTVA;
+				yield return Res.Commands.Présentation.DécompteTVA;
+				yield return Res.Commands.Présentation.PiècesGenerator;
+				yield return Res.Commands.Présentation.Utilisateurs;
+				yield return Res.Commands.Présentation.Réglages;
+			}
+		}
+
+		private void PrésentationCommandsUpdate(Command c)
+		{
+			foreach (var command in this.PrésentationCommands)
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (command);
+				cs.ActiveState = (command == c) ? ActiveState.Yes : ActiveState.No;
+
+				if (this.currentUser == null)
+				{
+					if (command == Res.Commands.Présentation.Open ||
+						command == Res.Commands.Présentation.Login)
+					{
+						cs.Enable = true;
+					}
+					else
+					{
+						cs.Enable = false;
+					}
+				}
+				else
+				{
+					if (command == Res.Commands.Présentation.Réglages && !this.HasUserAccess (UserAccess.Réglages))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.Utilisateurs && !this.HasUserAccess (UserAccess.Utilisateurs))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.PiècesGenerator && !this.HasUserAccess (UserAccess.PiècesGenerator))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.Libellés && !this.HasUserAccess (UserAccess.Libellés))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.Modèles && !this.HasUserAccess (UserAccess.Modèles))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.Journaux && !this.HasUserAccess (UserAccess.Journaux))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.Périodes && !this.HasUserAccess (UserAccess.Périodes))
+					{
+						cs.Enable = false;
+					}
+					else if (command == Res.Commands.Présentation.PlanComptable && !this.HasUserAccess (UserAccess.PlanComptable))
+					{
+						cs.Enable = false;
+					}
+					else
+					{
+						cs.Enable = true;
+					}
+				}
+			}
+		}
+
+		private bool HasUserAccess(UserAccess mode)
+		{
+			if (this.currentUser != null)
+			{
+				var d = (UserAccess) this.currentUser.DroitsDaccès;
+				if ((d & mode) != 0)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+
 		private void UpdatePanelCommands()
 		{
 			if (this.controller != null)
@@ -906,7 +1014,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.NavigatorUpdate ();
 
-			this.ribbonController.PrésentationCommandsUpdate (e.Command);
+			this.PrésentationCommandsUpdate (e.Command);
 			this.selectedCommandDocument = e.Command;
 			this.CreateController ();
 

@@ -270,6 +270,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
+				this.mainWindowController.CurrentUser = null;
 				this.SetError (true);
 			}
 		}
