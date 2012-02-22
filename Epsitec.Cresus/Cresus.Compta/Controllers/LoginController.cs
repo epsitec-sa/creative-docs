@@ -106,6 +106,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock             = DockStyle.Top,
 			};
 
+			//	Ligne 1.
 			{
 				var line = new FrameBox
 				{
@@ -127,13 +128,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.currentField = new TextField
 				{
 					Parent         = line,
-					FormattedText  = (this.mainWindowController.CurrentUser == null) ? Core.TextFormatter.FormatText ("Aucun").ApplyItalic () : this.mainWindowController.CurrentUser.Utilisateur,
 					PreferredWidth = 200,
 					IsReadOnly     = true,
 					Dock           = DockStyle.Left,
 				};
 			}
 
+			//	Ligne 2.
 			{
 				var line = new FrameBox
 				{
@@ -162,6 +163,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
+			//	Ligne 3.
 			{
 				var line = new FrameBox
 				{
@@ -192,6 +194,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
+			//	Ligne 4.
 			{
 				var line = new FrameBox
 				{
@@ -212,6 +215,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
+			//	Ligne 5.
 			{
 				var line = new FrameBox
 				{
@@ -232,6 +236,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
+			//	Ligne 6.
 			{
 				var line = new FrameBox
 				{
@@ -251,6 +256,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 			}
 
+			//	Connexions.
 			this.userField.TextChanged += delegate
 			{
 				this.UpdateWidgets ();
@@ -277,6 +283,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWidgets()
 		{
+			if (this.mainWindowController.CurrentUser == null)
+			{
+				this.currentField.FormattedText = Core.TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
+			}
+			else
+			{
+				this.currentField.FormattedText = this.mainWindowController.CurrentUser.Utilisateur;
+			}
+
 			bool empty = string.IsNullOrEmpty (this.userField.Text) || string.IsNullOrEmpty (this.passwordField.Text);
 			this.loginButton.Enable = !empty;
 

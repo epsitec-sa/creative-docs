@@ -586,13 +586,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var toolbar = new PanelsToolbarController (this);
 			toolbar.CreateUI (frame);
 
+			this.userLabel = new StaticText
+			{
+				Parent           = frame,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredWidth   = 100,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (20, 0, 0, 0),
+			};
+
 			this.titleLabel = new StaticText
 			{
 				Parent           = frame,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleLeft,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Fill,
-				Margins          = new Margins (20, 0, 0, 0),
+				Margins          = new Margins (10, 0, 0, 0),
 			};
 
 			new GlyphButton
@@ -620,12 +632,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.subtitleLabel = new StaticText
 			{
 				Parent           = frame,
-				ContentAlignment = Common.Drawing.ContentAlignment.MiddleRight,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth   = 200,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Right,
 				Margins          = new Margins (0, 10, 0, 0),
 			};
+
+			this.UpdateUser ();
+		}
+
+		public void UpdateUser()
+		{
+			if (this.mainWindowController.CurrentUser == null)
+			{
+				this.userLabel.FormattedText = Core.TextFormatter.FormatText ("Déconecté").ApplyItalic ().ApplyFontSize (13.0);
+			}
+			else
+			{
+				this.userLabel.FormattedText = this.mainWindowController.CurrentUser.Utilisateur.ApplyBold ().ApplyFontSize (13.0);
+			}
 		}
 
 		protected virtual void UpdateTitle()
@@ -995,6 +1022,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;
 		protected FrameBox										frameBox;
+		protected StaticText									userLabel;
 		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;
 		protected FormattedText									title;

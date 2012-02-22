@@ -124,7 +124,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.currentUser = value;
+
 				this.PrésentationCommandsUpdate (this.selectedCommandDocument);
+
+				if (this.controller != null)
+				{
+					this.controller.UpdateUser ();
+				}
 			}
 		}
 
@@ -685,6 +691,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 						cs.Enable = true;
 					}
 				}
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.New);
+				cs.Enable = (this.currentUser != null);
 			}
 		}
 
