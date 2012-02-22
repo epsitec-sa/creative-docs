@@ -95,7 +95,7 @@ namespace Epsitec.Common.Support
 		/// <see cref="System.InvalidOperationException"/> if not disposed.
 		/// </summary>
 		/// <remarks>
-		/// All the given objects will be disposed, even if one of then throws an exception when its
+		/// All the given objects will be disposed, even if one of them throws an exception when its
 		/// dispose method is called. If a single object throws an exception, it is catch and
 		/// thrown after all other objects have been disposed. If more than one object throws an
 		/// exception when disposed, they are catch and throw after all other objects have been
@@ -108,10 +108,6 @@ namespace Epsitec.Common.Support
 		{
 			disposables.ThrowIfNull ("disposables");
 			disposables.ThrowIf (ds => ds.Any (d => d == null), "disposables cannot contain null items");
-
-			System.Action initializer = () =>
-			{
-			};
 
 			System.Action finalizer = () =>
 			{
