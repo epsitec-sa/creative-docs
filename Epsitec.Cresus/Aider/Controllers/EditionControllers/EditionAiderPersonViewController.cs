@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Controllers.EditionControllers
 					.Field (x => x.eCH_Person.PersonFirstNames)
 						.ReadOnly ()
 					.Field (x => x.eCH_Person.PersonOfficialName)
-						//.ReadOnly ()
+						.ReadOnly ()
 					.Field (x => x.OriginalName)
 					.HorizontalGroup ("Dates de naissance et de décès")
 						.Field (x => x.eCH_Person.PersonDateOfBirth).ReadOnly ()
