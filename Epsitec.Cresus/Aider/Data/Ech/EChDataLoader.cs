@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Support;
 
+using Epsitec.Common.Types;
+
 using System;
 
 using System.Collections.Generic;
@@ -126,7 +128,7 @@ namespace Epsitec.Aider.Data.Ech
 			string id = null;
 			string officialName = null;
 			string firstNames = null;
-			DateTime dateOfBirth = new DateTime ();
+			Date dateOfBirth = new Date ();
 			PersonSex sex = PersonSex.Unknown;
 
 			var xPerson = xEChPerson.Element (EChXmlTags.EVd0002.Person);
@@ -195,7 +197,7 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		private static DateTime GetEchPersonDateOfBirth(XElement xPerson)
+		private static Date GetEchPersonDateOfBirth(XElement xPerson)
 		{
 			var xDateOfBirth = xPerson.Element (EChXmlTags.EVd0004.DateOfBirth);
 
@@ -212,7 +214,7 @@ namespace Epsitec.Aider.Data.Ech
 				throw new FormatException ("Partial dates are not supported.");
 			}
 			
-			return (DateTime) xDateOfBirthChild;
+			return new Date ((DateTime) xDateOfBirthChild);
 		}
 
 

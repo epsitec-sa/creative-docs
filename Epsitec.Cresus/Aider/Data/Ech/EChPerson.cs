@@ -2,6 +2,8 @@
 
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Common.Types;
+
 using System;
 
 using System.Collections.Generic;
@@ -22,7 +24,7 @@ namespace Epsitec.Aider.Data.Ech
 		// maritalStatus.dateOfSeparation and maritalStatus.cancelationReason.
 
 
-		public EChPerson(string id, string officialname, string firstNames, DateTime dateOfBirth, PersonSex sex, PersonNationalityStatus nationalityStatus, string nationalCountryCode, IEnumerable<EChPlace> originPlaces, PersonMaritalStatus maritalStatus)
+		public EChPerson(string id, string officialname, string firstNames, Date dateOfBirth, PersonSex sex, PersonNationalityStatus nationalityStatus, string nationalCountryCode, IEnumerable<EChPlace> originPlaces, PersonMaritalStatus maritalStatus)
 		{
 			this.Id = id;
 			this.OfficialName = officialname;
@@ -39,7 +41,7 @@ namespace Epsitec.Aider.Data.Ech
 		public readonly string Id;
 		public readonly string OfficialName;
 		public readonly string FirstNames;
-		public readonly DateTime DateOfBirth;
+		public readonly Date DateOfBirth;
 		public readonly PersonSex Sex;
 		public readonly PersonNationalityStatus NationalityStatus;
 		public readonly string NationalCountryCode;

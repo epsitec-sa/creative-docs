@@ -204,7 +204,7 @@ namespace Epsitec.Aider.Data.Ech
 			eChPersonEntity.PersonId = eChPerson.Id;
 			eChPersonEntity.PersonOfficialName = eChPerson.OfficialName;
 			eChPersonEntity.PersonFirstNames = eChPerson.FirstNames;
-			eChPersonEntity.PersonDateOfBirth = new Date (eChPerson.DateOfBirth.Year, eChPerson.DateOfBirth.Month, eChPerson.DateOfBirth.Day);
+			eChPersonEntity.PersonDateOfBirth = eChPerson.DateOfBirth;
 			eChPersonEntity.PersonSex = eChPerson.Sex;
 			eChPersonEntity.NationalityStatus = eChPerson.NationalityStatus;
 			eChPersonEntity.NationalityCountryCode = eChPerson.NationalCountryCode;
