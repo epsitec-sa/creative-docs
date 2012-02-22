@@ -372,6 +372,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			AbstractController controller = null;
 
+			if (command.Name.EndsWith ("Présentation.Open"))
+			{
+				controller = new OpenController (this.app, this.businessContext, this);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Save"))
+			{
+				controller = new SaveController (this.app, this.businessContext, this);
+			}
+
+			if (command.Name.EndsWith ("Présentation.Print"))
+			{
+				controller = new PrintController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Login"))
 			{
 				controller = new LoginController (this.app, this.businessContext, this);
@@ -860,6 +875,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Open)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Save)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Print)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Login)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Périodes)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Modèles)]

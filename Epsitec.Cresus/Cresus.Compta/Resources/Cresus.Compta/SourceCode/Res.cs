@@ -218,6 +218,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Modèles = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 124));
 				//	designer:cap/OVK12
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 65));
+				//	designer:cap/OVKR5
+				public static readonly global::Epsitec.Common.Widgets.Command Open = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 187));
 				//	designer:cap/OVKI3
 				public static readonly global::Epsitec.Common.Widgets.Command Périodes = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 114));
 				//	designer:cap/OVK65
@@ -226,12 +228,16 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command PlanComptable = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 44));
 				//	designer:cap/OVKG1
 				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
+				//	designer:cap/OVKT5
+				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 189));
 				//	designer:cap/OVK15
 				public static readonly global::Epsitec.Common.Widgets.Command Réglages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 161));
 				//	designer:cap/OVKK1
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
 				//	designer:cap/OVKL1
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
+				//	designer:cap/OVKS5
+				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
 				//	designer:cap/OVK55
 				public static readonly global::Epsitec.Common.Widgets.Command Utilisateurs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 165));
 			}
@@ -459,6 +465,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Modèles = 0x3F80001400007CL;
 				//	designer:cap/OVK12
 				public const long New = 0x3F800014000041L;
+				//	designer:cap/OVKR5
+				public const long Open = 0x3F8000140000BBL;
 				//	designer:cap/OVKI3
 				public const long Périodes = 0x3F800014000072L;
 				//	designer:cap/OVK65
@@ -467,12 +475,16 @@ namespace Epsitec.Cresus.Compta
 				public const long PlanComptable = 0x3F80001400002CL;
 				//	designer:cap/OVKG1
 				public const long PP = 0x3F800014000030L;
+				//	designer:cap/OVKT5
+				public const long Print = 0x3F8000140000BDL;
 				//	designer:cap/OVK15
 				public const long Réglages = 0x3F8000140000A1L;
 				//	designer:cap/OVKK1
 				public const long RésuméPériodique = 0x3F800014000034L;
 				//	designer:cap/OVKL1
 				public const long RésuméTVA = 0x3F800014000035L;
+				//	designer:cap/OVKS5
+				public const long Save = 0x3F8000140000BCL;
 				//	designer:cap/OVK55
 				public const long Utilisateurs = 0x3F8000140000A5L;
 			}

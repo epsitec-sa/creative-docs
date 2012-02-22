@@ -19,6 +19,65 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
+		public static Button CreateButton(Widget parent, Command command, FormattedText description)
+		{
+			var frame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Top,
+			};
+
+			var button = UIBuilder.CreateButton (frame, command, 42, 32);
+			button.Dock = DockStyle.Left;
+
+			new StaticText
+			{
+				Parent        = frame,
+				FormattedText = description,
+				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock          = DockStyle.Fill,
+				Margins       = new Margins (5, 0, 0, 0),
+			};
+
+			return button;
+		}
+
+		public static IconButton CreateButton(Widget parent, Command command, double buttonWidth, double iconWidth, bool isActivable = false)
+		{
+			if (isActivable)
+			{
+				return new BackIconButton
+				{
+					Parent              = parent,
+					BackColor           = UIBuilder.SelectionColor,
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.StackBegin,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+			else
+			{
+				return new IconButton
+				{
+					Parent              = parent,
+					CommandObject       = command,
+					PreferredIconSize   = new Size (iconWidth, iconWidth),
+					PreferredSize       = new Size (buttonWidth, buttonWidth),
+					Dock                = DockStyle.StackBegin,
+					Name                = (command == null) ? null : command.Name,
+					VerticalAlignment   = VerticalAlignment.Top,
+					HorizontalAlignment = HorizontalAlignment.Center,
+					AutoFocus           = false,
+				};
+			}
+		}
+
+
 		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir une date.

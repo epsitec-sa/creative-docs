@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent         = leftFrame,
-				Text           = "Catégories des réglages :",
+				Text           = "Catégories des réglages",
 				Dock           = DockStyle.Top,
 				Margins        = new Margins (5, 0, 0, 5),
 			};
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent         = rightFrame,
-				Text           = "Détails des réglages :",
+				Text           = "Détails des réglages",
 				Dock           = DockStyle.Top,
 				Margins        = new Margins (10, 0, 0, 5),
 			};
