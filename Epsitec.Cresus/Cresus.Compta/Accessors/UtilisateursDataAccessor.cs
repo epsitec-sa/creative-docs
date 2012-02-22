@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return UtilisateursDataAccessor.GetPiècesGenerator (utilisateur);
 
 				case ColumnType.Résumé:
-					return utilisateur.GetSummary ();
+					return utilisateur.GetAccessSummary ();
 
 				default:
 					return FormattedText.Null;

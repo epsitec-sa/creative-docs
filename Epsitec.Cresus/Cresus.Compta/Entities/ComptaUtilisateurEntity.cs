@@ -13,8 +13,9 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaUtilisateurEntity
 	{
-		public FormattedText GetSummary()
+		public FormattedText GetAccessSummary()
 		{
+			//	Retourne un résumé sur les droits d'accès de l'utilisateur.
 			if (this.Admin)
 			{
 				return "Administrateur, toutes les présentations";
@@ -28,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			else if (n == 1)
 			{
-				return "1 présenttion";
+				return "1 présentation";
 			}
 			else
 			{
@@ -39,6 +40,7 @@ namespace Epsitec.Cresus.Compta.Entities
 
 		public void SetPrésenttion(Command cmd, bool state)
 		{
+			//	Ajoute ou enlève une présentation à l'utilisateur.
 			string p = this.Présentations;
 			Converters.SetPrésentationCommand (ref p, cmd, state);
 			this.Présentations = p;
@@ -46,6 +48,7 @@ namespace Epsitec.Cresus.Compta.Entities
 
 		public bool HasPrésentation(Command cmd)
 		{
+			//	Indique si l'utilisateur contient une présentation.
 			return Converters.ContainsPrésentationCommand (this.Présentations, cmd);
 		}
 	}
