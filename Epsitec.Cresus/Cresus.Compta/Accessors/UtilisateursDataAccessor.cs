@@ -108,6 +108,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Pièce:
 					return UtilisateursDataAccessor.GetPiècesGenerator (utilisateur);
 
+				case ColumnType.Résumé:
+					return utilisateur.GetSummary ();
+
 				default:
 					return FormattedText.Null;
 			}

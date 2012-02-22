@@ -824,6 +824,20 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static int PrésentationCommandCount(string list)
+		{
+			//	Retourne le nombre de présentations contenues dans une liste.
+			if (string.IsNullOrEmpty (list))
+			{
+				return 0;
+			}
+			else
+			{
+				var words = list.Split (',');
+				return words.Length;
+			}
+		}
+
 		public static Command StringToPrésentationCommand(string text)
 		{
 			//	Nom de commande court "xxx" -> Command

@@ -99,6 +99,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
+				if (mapper.Column == ColumnType.Résumé)
+				{
+					field.IsReadOnly = true;
+				}
+
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);
@@ -206,7 +211,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent          = parent,
 				FormattedText   = icon + " " + Converters.GetPrésentationCommandDescription (cmd),
 				Name            = Converters.PrésentationCommandToString (cmd),
-				PreferredHeight = 24,
+				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
 

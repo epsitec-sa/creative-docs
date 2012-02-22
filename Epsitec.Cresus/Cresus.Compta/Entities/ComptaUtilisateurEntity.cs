@@ -13,6 +13,30 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaUtilisateurEntity
 	{
+		public FormattedText GetSummary()
+		{
+			if (this.Admin)
+			{
+				return "Administrateur, toutes les présentations";
+			}
+
+			int n = Converters.PrésentationCommandCount (this.Présentations);
+
+			if (n == 0)
+			{
+				return "Aucune présentation";
+			}
+			else if (n == 1)
+			{
+				return "1 présenttion";
+			}
+			else
+			{
+				return string.Format ("{0} présentations", n.ToString ());
+			}
+		}
+
+
 		public void SetPrésenttion(Command cmd, bool state)
 		{
 			string p = this.Présentations;
