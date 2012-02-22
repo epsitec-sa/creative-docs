@@ -1127,18 +1127,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null)
 			{
-				this.controller.FooterController.AcceptAction ();
+				this.controller.AcceptAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Cancel)]
 		private void CommandEditCancel()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null)
 			{
-				this.controller.FooterController.CancelAction ();
+				this.controller.CancelAction ();
 			}
 		}
 

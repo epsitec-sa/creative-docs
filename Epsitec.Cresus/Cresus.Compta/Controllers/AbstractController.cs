@@ -377,6 +377,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public virtual void AcceptAction()
+		{
+			if (this.footerController != null)
+			{
+				this.footerController.AcceptAction ();
+			}
+		}
+
+		public virtual void CancelAction()
+		{
+			if (this.footerController != null)
+			{
+				this.footerController.CancelAction ();
+			}
+		}
+
+
 		#region Memory panel
 		private void CreateMemory(FrameBox parent)
 		{

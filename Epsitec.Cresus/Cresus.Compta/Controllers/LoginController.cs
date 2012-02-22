@@ -281,6 +281,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.userField.Focus ();
 		}
 
+
+		public override void AcceptAction()
+		{
+			this.Login ();
+		}
+
+
 		private void UpdateWidgets()
 		{
 			if (this.mainWindowController.CurrentUser == null)
@@ -293,7 +300,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			bool empty = string.IsNullOrEmpty (this.userField.Text) || string.IsNullOrEmpty (this.passwordField.Text);
+
+			if (this.mainWindowController.CurrentUser != null && this.userField.Text == this.mainWindowController.CurrentUser.Utilisateur)
+			{
+				empty = true;
+			}
+
 			this.loginButton.Enable = !empty;
+			this.SetCommandEnable (Res.Commands.Edit.Accept, !empty);
 
 			this.logoutButton.Enable = this.mainWindowController.CurrentUser != null;
 		}
