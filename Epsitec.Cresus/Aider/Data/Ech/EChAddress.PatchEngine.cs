@@ -21,8 +21,6 @@ namespace Epsitec.Aider.Data.Ech
 			/// <param name="address">The address.</param>
 			public static void ApplyFix(EChAddress address)
 			{
-				bool fixApplied = false;
-				
 				var zipCode = InvariantConverter.ParseInt (address.swissZipCode);
 				var street  = address.street;
 
