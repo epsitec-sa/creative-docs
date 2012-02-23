@@ -68,7 +68,6 @@
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Fields\Controllers\CheckButtonController.cs" />
     <Compile Include="Fields\Controllers\PasswordFieldController.cs" />
-    <Compile Include="Helpers\StaticTextExtensions.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultMemory.cs" />
