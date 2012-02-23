@@ -168,8 +168,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
-			this.CreateArray (this.frameBox);
-			this.CreateFooter (this.frameBox);
+
+			if (this.HasRightFooter)
+			{
+				var band = new FrameBox
+				{
+					Parent = this.frameBox,
+					Dock   = DockStyle.Fill,
+				};
+
+				var left = new FrameBox
+				{
+					Parent = band,
+					Dock   = DockStyle.Fill,
+				};
+
+				var right = new FrameBox
+				{
+					Parent  = band,
+					Dock    = DockStyle.Right,
+					Margins = new Margins (10, 0, 0, 0),
+				};
+
+				this.CreateArray (left);
+				this.CreateFooter (right);
+			}
+			else
+			{
+				this.CreateArray (this.frameBox);
+				this.CreateFooter (this.frameBox);
+			}
 
 			this.UpdateArrayContent ();
 
@@ -236,6 +264,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return true;
+			}
+		}
+
+		public virtual bool HasRightFooter
+		{
+			get
+			{
+				return false;
 			}
 		}
 

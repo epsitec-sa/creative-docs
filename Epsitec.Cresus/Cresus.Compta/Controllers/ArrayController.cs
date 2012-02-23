@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.headerController.UpdateColumns ();
 
-			this.columnMappersShowed = this.columnMappers.Where (x => x.Show).ToList ();
+			this.columnMappersShowed = this.columnMappers.Where (x => x.Show && x.RelativeWidth != 0).ToList ();
 			this.array.Columns = this.columnMappersShowed.Count ();
 			int column = 0;
 

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.headerFrames.Clear ();
 			this.headerFrame.Children.Clear ();
 
-			this.columnMappersShowed = this.columnMappers.Where (x => x.Show).ToList ();
+			this.columnMappersShowed = this.columnMappers.Where (x => x.Show && x.RelativeWidth != 0).ToList ();
 
 			foreach (var description in this.columnMappersShowed.Select (x => x.Description))
 			{

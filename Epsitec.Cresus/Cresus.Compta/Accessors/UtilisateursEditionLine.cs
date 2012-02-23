@@ -66,6 +66,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateDate(EditionData data)
 		{
 			Validators.ValidateDate (this.périodeEntity, data, emptyAccepted: true);
+
+			if (!data.HasError && this.IsAdmin && data.HasText)
+			{
+				data.Error = "L'administrateur ne peut pas avoir de date de validité";
+			}
 		}
 
 		private void ValidateMotDePasse(EditionData data)

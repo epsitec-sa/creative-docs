@@ -57,6 +57,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public virtual bool HasManualGeometry
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 
 		public virtual void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
@@ -64,8 +72,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.updateArrayContentAction = updateArrayContentAction;
 
-			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
-			this.bottomToolbarController.CreateUI (parent);
+			if (this.bottomToolbarController == null)
+			{
+				this.bottomToolbarController = new BottomToolbarController (this.businessContext);
+				this.bottomToolbarController.CreateUI (parent);
+			}
 
 			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
@@ -594,15 +605,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateFooterGeometry()
 		{
-			this.UpdateArrayColumns ();
-
-			int columnCount = this.columnMappers.Where (x => x.Show).Count ();
-
-			for (int line = 0; line < this.fieldControllers.Count; line++)
+			if (!this.HasManualGeometry)
 			{
-				for (int column = 0; column < columnCount; column++)
+				this.UpdateArrayColumns ();
+
+				int columnCount = this.columnMappers.Where (x => x.Show).Count ();
+
+				for (int line = 0; line < this.fieldControllers.Count; line++)
 				{
-					this.fieldControllers[line][column].Box.PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
+					for (int column = 0; column < columnCount; column++)
+					{
+						this.fieldControllers[line][column].Box.PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
+					}
 				}
 			}
 		}

@@ -31,24 +31,55 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasManualGeometry
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
 			this.fieldControllers.Clear ();
 
+			var mainFrame = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+			};
+
+			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
+			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
+			toolbar.Dock    = DockStyle.Top;
+			toolbar.Margins = new Margins (0);
+			toolbar.Padding = new Margins (0);
+
+			var band = new FrameBox
+			{
+				Parent        = mainFrame,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (10),
+			};
+
 			this.buttonsFrame = new FrameBox
 			{
-				Parent              = parent,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				PreferredHeight     = 80,
-				Dock                = DockStyle.Bottom,
-				Margins             = new Margins (0, 0, 10, 0),
+				Parent              = band,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth      = 200,
+				Dock                = DockStyle.Right,
+				Margins             = new Margins (0, 0, 0, 0),
 			};
 
 			this.linesFrame = new FrameBox
 			{
-				Parent              = parent,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock                = DockStyle.Bottom,
+				Parent              = band,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredWidth      = 200,
+				Dock                = DockStyle.Right,
+				Margins             = new Margins (0, 10, 0, 0),
 			};
 
 			this.CreateLineUI (this.linesFrame);
@@ -79,6 +110,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
+				if (mapper.Column == ColumnType.Résumé)
+				{
+					continue;
+				}
+
+				bool compact = mapper.Description.IsNullOrEmpty;
+
+				if (!compact)
+				{
+					new StaticText
+					{
+						Parent        = footerFrame,
+						FormattedText = mapper.Description + " :",
+						Dock          = DockStyle.Top,
+						Margins       = new Margins (0, 0, 0, 1),
+					};
+				}
+
 				AbstractFieldController field;
 
 				if (mapper.Column == ColumnType.Pièce)
@@ -99,12 +148,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (footerFrame);
 				}
 
-				if (mapper.Column == ColumnType.Résumé)
-				{
-					field.IsReadOnly = true;
-				}
-
 				field.Box.TabIndex = ++tabIndex;
+				field.Box.Dock = DockStyle.Top;
+				field.Box.Margins = new Margins (0, 0, compact ? -6:0, 5);
 
 				this.fieldControllers[line].Add (field);
 			}
@@ -118,19 +164,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent  = parent,
 				Text    = "Présentations accessibles par l'utilisateur",
-				Dock    = DockStyle.Left,
-				Padding = new Margins (10, 10, 5, 5),
+				Dock    = DockStyle.Fill,
+				Padding = new Margins (10, 0, 5, 5),
 			};
 
 			var columns = new List<FrameBox> ();
 
-			for (int i = 0; i < 4; i++)
+			for (int i = 0; i < 2; i++)
 			{
 				var column = new FrameBox
 				{
 					Parent         = group,
-					PreferredWidth = 170,
+					PreferredWidth = 120,
 					Dock           = DockStyle.Left,
+					Margins        = new Margins (0, 5, 0, 0),
 				};
 
 				columns.Add (column);
@@ -144,7 +191,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					continue;
 				}
 
-				int column = rank++/6;  // 6 boutons par colonne
+				int column = rank++/16;  // 16 boutons par colonne
 				if (column >= columns.Count)
 				{
 					break;
@@ -154,31 +201,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			{
-				var right = new FrameBox
+				var footer = new FrameBox
 				{
-					Parent         = group,
-					PreferredWidth = 60,
-					Dock           = DockStyle.Left,
+					Parent          = parent,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Bottom,
+					Margins         = new Margins (0, 0, 10, 0),
 				};
 
 				this.zeroPrésentationButton = new Button
 				{
-					Parent          = right,
+					Parent          = footer,
 					Text            = "Aucune",
-					PreferredWidth  = 60,
+					PreferredWidth  = 80,
 					PreferredHeight = 20,
-					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, 2),
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (0, 10, 0, 0),
 				};
 
 				this.allPrésentationButton = new Button
 				{
-					Parent          = right,
+					Parent          = footer,
 					Text            = "Toutes",
-					PreferredWidth  = 60,
+					PreferredWidth  = 80,
 					PreferredHeight = 20,
-					Dock            = DockStyle.Top,
-					Margins         = new Margins (0, 0, 0, 2),
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (0, 10, 0, 0),
 				};
 
 				ToolTip.Default.SetToolTip (this.zeroPrésentationButton, "Interdit l'accès à toutes les présentations");
@@ -210,6 +258,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = parent,
 				FormattedText   = icon + " " + Converters.GetPrésentationCommandDescription (cmd),
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Name            = Converters.PrésentationCommandToString (cmd),
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,

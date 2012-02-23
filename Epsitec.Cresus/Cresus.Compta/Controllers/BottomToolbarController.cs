@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void CreateUI(FrameBox parent)
+		public FrameBox CreateUI(FrameBox parent)
 		{
 			this.toolbar = new FrameBox
 			{
@@ -66,6 +66,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
 				Dock             = DockStyle.Fill,
 			};
+
+			return this.toolbar;
 		}
 
 

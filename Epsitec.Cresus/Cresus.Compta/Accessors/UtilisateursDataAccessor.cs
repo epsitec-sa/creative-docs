@@ -149,6 +149,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 		}
 
+		protected override void PrepareEditionLine(int line)
+		{
+			string s = null;
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Open, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Save, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Print, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Journal, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Balance, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Extrait, true);
+
+			this.editionLine[line].SetText (ColumnType.Présentations, s);
+		}
+
 		public override void StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();
