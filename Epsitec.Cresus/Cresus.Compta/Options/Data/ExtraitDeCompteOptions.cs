@@ -23,11 +23,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.SetComptaEntity (compta);
 
 			//	Utilise le premier compte normal par défaut.
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
-
-			if (compte != null)
+			if (this.comptaEntity != null)
 			{
-				this.NuméroCompte = compte.Numéro;
+				var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
+
+				if (compte != null)
+				{
+					this.NuméroCompte = compte.Numéro;
+				}
 			}
 
 			this.Clear ();

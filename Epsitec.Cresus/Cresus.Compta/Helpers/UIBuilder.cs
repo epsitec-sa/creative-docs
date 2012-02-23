@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", command.Icon);
 
-			var button = new Button
+			return new IconButton
 			{
 				Parent           = parent,
-				ButtonStyle      = ButtonStyle.Icon,
+				CommandObject    = command,
 				FormattedText    = "  " + icon + "  " + description,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
@@ -34,15 +34,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				Dock             = DockStyle.Top,
 				Margins          = new Margins (0, 0, 0, 5),
 			};
-
-			//	On ne peut pas simplement initialiser CommandObject, car cela remplace le texte
-			//	du bouton par celui de la commande !
-			button.Clicked += delegate
-			{
-				button.ExecuteCommand (command);
-			};
-
-			return button;
 		}
 
 		public static IconButton CreateButton(Widget parent, Command command, double buttonWidth, double iconWidth, bool isActivable = false)

@@ -43,14 +43,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.navigatorEngine = new NavigatorEngine ();
 			this.piècesGenerator = new PiècesGenerator (this);
 
-			this.compta = new ComptaEntity ();  // crée une compta vide !!!
-			new NewCompta ().NewEmpty (this.compta);
-
-			new DefaultMemory (this).CreateDefaultMemory ();
-
-			this.SelectCurrentPériode ();
-
-			this.dirty = true;  // pour forcer la màj
 			this.Dirty = false;
 
 			this.showSearchPanel  = false;
@@ -61,11 +53,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.app.CommandDispatcher.RegisterController (this);
 
-#if true
+#if false
 			//	Hack pour éviter de devoir tout refaire à chaque exécution !
-			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
+			if (this.compta != null)
+			{
+				this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
+				new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
+				new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
+			}
 #endif
 		}
 
@@ -87,9 +82,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.SelectDefaultPrésentation ();
-			this.CreateController ();
-			this.UpdateTitle ();
-			this.NavigatorFirst ();
 		}
 
 
@@ -132,7 +124,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.currentUser = value;
 
-				this.PrésentationCommandsUpdate (this.selectedCommandDocument);
+				this.UpdatePrésentationCommands ();
 
 				this.navigatorEngine.Clear ();
 				this.UpdateNavigatorCommands ();
@@ -194,30 +186,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.dirty != value)
 				{
 					this.dirty = value;
-
-					CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Save);
-					cs.Enable = this.dirty;
+					this.UpdateFileCommands ();
 				}
 			}
-		}
-
-
-		private void SelectDefaultPrésentation()
-		{
-			if (this.currentUser == null)  // déconnecté ?
-			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Login;
-			}
-			else if (this.compta.PlanComptable.Any ())
-			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
-			}
-			else  // plan comptable vide ?
-			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Open;
-			}
-
-			this.PrésentationCommandsUpdate (this.selectedCommandDocument);
 		}
 
 
@@ -307,8 +278,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void NavigatorRestore(Command cmd)
 		{
 			//	Restaure une présentation utilisée précédemment.
-			this.PrésentationCommandsUpdate (cmd);
 			this.selectedCommandDocument = cmd;
+			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
 			this.navigatorEngine.Restore (this.controller);
@@ -342,6 +313,55 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 		#endregion
+
+
+		private void InitializeAfterNewCompta()
+		{
+			this.dirty = false;
+
+			this.settingsDatas.Clear ();
+			new DefaultMemory (this).CreateDefaultMemory ();
+
+			this.SelectCurrentPériode ();
+			this.SelectDefaultPrésentation ();
+			this.controller.ClearHilite ();
+		}
+
+		private void InitializeAfterCloseCompta()
+		{
+			this.compta = null;
+			this.dirty = false;
+			this.currentUser = null;  // logout
+
+			this.SelectDefaultPrésentation ();
+		}
+
+		private void SelectDefaultPrésentation()
+		{
+			if (this.compta == null)
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.Open;
+			}
+			else if (this.currentUser == null)  // déconnecté ?
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.Login;
+			}
+			else if (this.compta.PlanComptable.Any ())
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
+			}
+			else  // plan comptable vide ?
+			{
+				this.selectedCommandDocument = Res.Commands.Présentation.Open;
+			}
+
+			this.CreateController ();
+			this.UpdateTitle ();
+			this.NavigatorFirst ();
+
+			this.UpdatePrésentationCommands ();
+			this.UpdateFileCommands ();
+		}
 
 
 		private void OpenNewWindow(Command command)
@@ -538,7 +558,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public string GetTitle(Command command)
 		{
-			return string.Concat ("Crésus MCH-2 / ", this.compta.Nom, " / ", this.GetShortTitle (command));
+			if (this.compta  == null)
+			{
+				return "Crésus Comptabilité NG";
+			}
+			else
+			{
+				return string.Concat ("Crésus Comptabilité NG / ", this.compta.Nom, " / ", this.GetShortTitle (command));
+			}
 		}
 
 		private string GetShortTitle(Command command)
@@ -620,40 +647,54 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void PrésentationCommandsUpdate(Command c)
+		private void UpdatePrésentationCommands()
 		{
 			foreach (var command in Converters.PrésentationCommands)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (command);
-				cs.ActiveState = (command == c) ? ActiveState.Yes : ActiveState.No;
+				cs.ActiveState = (command == this.selectedCommandDocument) ? ActiveState.Yes : ActiveState.No;
 
-				if (command == Res.Commands.Présentation.Login)
+				if (this.compta == null)
 				{
-					cs.Enable = true;  // cette commande doit toujours être disponible !
-				}
-				else
-				{
-					if (this.currentUser == null)  // déconnecté ?
+					if (command == Res.Commands.Présentation.Open)
 					{
-						if (command == Res.Commands.Présentation.Open)
-						{
-							cs.Enable = true;
-						}
-						else
-						{
-							cs.Enable = false;
-						}
+						cs.Enable = true;
 					}
 					else
 					{
-						cs.Enable = this.HasPrésentationCommand (command);
+						cs.Enable = false;
+					}
+				}
+				else
+				{
+					if (command == Res.Commands.Présentation.Login)
+					{
+						cs.Enable = true;  // cette commande doit toujours être disponible !
+					}
+					else
+					{
+						if (this.currentUser == null)  // déconnecté ?
+						{
+							if (command == Res.Commands.Présentation.Open)
+							{
+								cs.Enable = true;
+							}
+							else
+							{
+								cs.Enable = false;
+							}
+						}
+						else
+						{
+							cs.Enable = this.HasPrésentationCommand (command);
+						}
 					}
 				}
 			}
 
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.New);
-				cs.Enable = (this.currentUser != null);
+				cs.Enable = (this.compta != null && this.currentUser != null);
 			}
 		}
 
@@ -676,6 +717,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		private void UpdateFileCommands()
+		{
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Import);
+				cs.Enable = this.compta != null;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Save);
+				cs.Enable = this.compta != null && this.dirty;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.SaveAs);
+				cs.Enable = this.compta != null;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Close);
+				cs.Enable = this.compta != null;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.File.Print);
+				cs.Enable = this.compta != null;
+			}
+		}
 
 		private void UpdatePanelCommands()
 		{
@@ -756,15 +825,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SelectCurrentPériode()
 		{
-			var now = Date.Today;
-			this.période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
-
-			if (this.période == null)
+			if (this.compta != null)
 			{
-				this.période = this.compta.Périodes.First ();
+				var now = Date.Today;
+				this.période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
 
-				this.UpdatePériodeCommands ();
-				this.AdaptSettingsDatas ();
+				if (this.période == null)
+				{
+					this.période = this.compta.Périodes.First ();
+
+					this.UpdatePériodeCommands ();
+					this.AdaptSettingsDatas ();
+				}
 			}
 		}
 
@@ -845,11 +917,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.FileName = filename;
 			dialog.Title = "Ouverture d'une comptabilité";
 			dialog.Filters.Add ("crp", "Plan comptable", "*.crp");
+			dialog.OwnerWindow = this.mainWindow;
+
+			dialog.OpenDialog ();
+			if (dialog.Result != DialogResult.Accept)
+			{
+				return null;
+			}
+
+			return dialog.FileName;
+		}
+
+		private string FileImportDialog(string filename)
+		{
+			var dialog = new FileOpenDialog ();
+
+			//dialog.InitialDirectory = this.globalSettings.InitialDirectory;
+			dialog.FileName = filename;
+			dialog.Title = "Importation de données comptables";
 			dialog.Filters.Add ("txt", "Texte tabulé", "*.txt");
 			dialog.OwnerWindow = this.mainWindow;
 
 			dialog.OpenDialog ();
-			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			if (dialog.Result != DialogResult.Accept)
 			{
 				return null;
 			}
@@ -870,7 +960,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			dialog.OwnerWindow = this.mainWindow;
 
 			dialog.OpenDialog ();
-			if (dialog.Result != Common.Dialogs.DialogResult.Accept)
+			if (dialog.Result != DialogResult.Accept)
 			{
 				return null;
 			}
@@ -880,7 +970,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ErrorDialog(FormattedText message)
 		{
-			var dialog = MessageDialog.CreateOk ("Erreur", Common.Dialogs.DialogIcon.Warning, message);
+			var dialog = MessageDialog.CreateOk ("Erreur", DialogIcon.Warning, message);
 
 			dialog.OwnerWindow = this.mainWindow;
 			dialog.OpenDialog ();
@@ -900,13 +990,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.File.New)]
 		private void CommandFileNew()
 		{
+			this.compta = new ComptaEntity ();  // crée une compta vide
 			new NewCompta ().NewEmpty (this.compta);
-			this.SelectCurrentPériode ();
 
-			this.controller.ClearHilite();
-			this.CreateController ();
-			this.Dirty = false;
-			this.NavigatorFirst ();
+			this.InitializeAfterNewCompta ();
 		}
 
 		[Command (Res.CommandIds.File.Open)]
@@ -916,22 +1003,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (!string.IsNullOrEmpty (filename))
 			{
-				string err = new CrésusCompta ().ImportFile (this.compta, ref this.période, filename);
-
-				this.controller.ClearHilite ();
-				this.CreateController ();
-				this.AdaptSettingsDatas ();
+				var newCompta = new ComptaEntity ();  // crée une compta vide
+				string err = new CrésusCompta ().ImportFile (newCompta, ref this.période, filename);
 
 				if (string.IsNullOrEmpty (err))
 				{
-					this.NavigatorFirst ();
+					this.compta = newCompta;
+					this.InitializeAfterNewCompta ();
 				}
 				else
 				{
 					this.ErrorDialog (err);
 				}
+			}
+		}
 
-				this.Dirty = false;
+		[Command (Res.CommandIds.File.Import)]
+		private void CommandFileImport()
+		{
+			var filename = this.FileImportDialog (null);
+
+			if (!string.IsNullOrEmpty (filename))
+			{
+				string err = new CrésusCompta ().ImportFile (this.compta, ref this.période, filename);
+
+				if (string.IsNullOrEmpty (err))
+				{
+				}
+				else
+				{
+					this.ErrorDialog (err);
+				}
 			}
 		}
 
@@ -944,6 +1046,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.Dirty = false;
 			}
+
+			this.UpdateFileCommands ();
 		}
 
 		[Command (Res.CommandIds.File.SaveAs)]
@@ -954,6 +1058,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (!string.IsNullOrEmpty (filename))
 			{
 			}
+
+			this.UpdateFileCommands ();
+		}
+
+		[Command (Res.CommandIds.File.Close)]
+		private void CommandFileClose()
+		{
+			this.InitializeAfterCloseCompta ();
 		}
 
 		[Command (Res.CommandIds.File.Print)]
@@ -988,8 +1100,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.NavigatorUpdate ();
 
-			this.PrésentationCommandsUpdate (e.Command);
 			this.selectedCommandDocument = e.Command;
+			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
 			this.NavigatorPut ();

@@ -130,8 +130,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Padding       = new Margins (10),
 				};
 
-				this.newButton = UIBuilder.CreateButton (box, Res.Commands.File.New, "Nouvelle comptabilité vide");
-				this.openButton = UIBuilder.CreateButton (box, Res.Commands.File.Open, "Ouvrir une comptabilité existante");
+				this.newButton    = UIBuilder.CreateButton (box, Res.Commands.File.New,    "Nouvelle comptabilité vide");
+				this.openButton   = UIBuilder.CreateButton (box, Res.Commands.File.Open,   "Ouvrir une comptabilité existante");
+				this.importButton = UIBuilder.CreateButton (box, Res.Commands.File.Import, "Importer des données comptables");
+				this.closeButton  = UIBuilder.CreateButton (box, Res.Commands.File.Close,  "Fermer la comptabilité en cours");
 			}
 
 			{
@@ -158,5 +160,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Button				newButton;
 		private Button				openButton;
+		private Button				importButton;
+		private Button				closeButton;
 	}
 }

@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.saveButton = UIBuilder.CreateButton (box, Res.Commands.File.Save, "Enregistrer");
 				this.saveAsButton = UIBuilder.CreateButton (box, Res.Commands.File.SaveAs, "Enregistrer sous");
+				this.closeButton = UIBuilder.CreateButton (box, Res.Commands.File.Close, "Fermer la comptabilité en cours");
 			}
 
 			{
@@ -157,5 +158,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Button				saveButton;
 		private Button				saveAsButton;
+		private Button				closeButton;
 	}
 }

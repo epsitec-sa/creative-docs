@@ -58,6 +58,10 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK06
+				public static readonly global::Epsitec.Common.Widgets.Command Close = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 192));
+				//	designer:cap/OVK16
+				public static readonly global::Epsitec.Common.Widgets.Command Import = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 193));
 				//	designer:cap/OVKT2
 				public static readonly global::Epsitec.Common.Widgets.Command New = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 93));
 				//	designer:cap/OVK22
@@ -305,6 +309,10 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK06
+				public const long Close = 0x3F8000140000C0L;
+				//	designer:cap/OVK16
+				public const long Import = 0x3F8000140000C1L;
 				//	designer:cap/OVKT2
 				public const long New = 0x3F80001400005DL;
 				//	designer:cap/OVK22
