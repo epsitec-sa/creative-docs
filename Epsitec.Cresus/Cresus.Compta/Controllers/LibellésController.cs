@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				yield return new ColumnMapper (ColumnType.Libellé,   1.60, ContentAlignment.MiddleLeft,   "Libellé",   "Texte du libellé usuel qui est conservé");
-				yield return new ColumnMapper (ColumnType.Permanant, 0.20, ContentAlignment.MiddleCenter, "Permamant", "Détermine si le libellé est permamant");
+				yield return new ColumnMapper (ColumnType.Permanent, 0.20, ContentAlignment.MiddleCenter, "Permanent", "Détermine si le libellé est permamant");
 			}
 		}
 	}

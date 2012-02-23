@@ -215,11 +215,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int rank = 0;
 			foreach (var cmd in list)
 			{
-				if (cmd == Res.Commands.Présentation.Login)
-				{
-					continue;
-				}
-
 				int column = rank++/numberPerColumn;
 				if (column >= columns.Count)
 				{

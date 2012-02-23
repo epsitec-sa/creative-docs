@@ -147,17 +147,17 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				int index = 0;
 
-				var firstPermanant = this.Libellés.Where (x => x.Permanant).LastOrDefault ();
-				if (firstPermanant != null)
+				var firstPermanent = this.Libellés.Where (x => x.Permanent).LastOrDefault ();
+				if (firstPermanent != null)
 				{
 					//	On insère un libellé volatile après le dernier libellé volatile.
-					index = this.Libellés.IndexOf (firstPermanant) + 1;
+					index = this.Libellés.IndexOf (firstPermanent) + 1;
 				}
 
 				var nouveau = new ComptaLibelléEntity ()
 				{
 					Libellé   = libellé,
-					Permanant = false,
+					Permanent = false,
 				};
 
 				this.Libellés.Insert (index, nouveau);
@@ -173,11 +173,11 @@ namespace Epsitec.Cresus.Compta.Entities
 
 		private void PurgeVolatileLibellés(int limit)
 		{
-			int count = this.Libellés.Where (x => !x.Permanant).Count ();
+			int count = this.Libellés.Where (x => !x.Permanent).Count ();
 
 			while (count > limit)
 			{
-				var last = this.Libellés.Where (x => !x.Permanant).LastOrDefault ();
+				var last = this.Libellés.Where (x => !x.Permanent).LastOrDefault ();
 				this.Libellés.Remove (last);
 			}
 		}

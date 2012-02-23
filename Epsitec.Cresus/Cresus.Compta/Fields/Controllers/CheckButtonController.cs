@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 				TabIndex        = 1,
+				Margins         = new Margins (10, 0, 0, 0),
 			};
 
 			this.InternalButton.ActiveStateChanged += new EventHandler (this.HandleActiveStateChanged);

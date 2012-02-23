@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			switch (column)
 			{
-				case ColumnType.Permanant:
-					return libellé.Permanant ? LibellésDataAccessor.Permanant : LibellésDataAccessor.Volatile;
+				case ColumnType.Permanent:
+					return libellé.Permanent ? LibellésDataAccessor.Permanent : LibellésDataAccessor.Volatile;
 
 				case ColumnType.Libellé:
 					return libellé.Libellé;
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Permanant, LibellésDataAccessor.Permanant);
+			this.editionLine[line].SetText (ColumnType.Permanent, "1");
 		}
 
 		public override void StartModificationLine(int row)
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public static readonly FormattedText	Permanant = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
-		public static readonly FormattedText	Volatile  = Core.TextFormatter.FormatText ("Non");
+		private static readonly FormattedText	Permanent = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
+		private static readonly FormattedText	Volatile  = Core.TextFormatter.FormatText ("Non");
 	}
 }

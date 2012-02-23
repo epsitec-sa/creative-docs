@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		DateDébut,
 		DateFin,
 		Résumé,
-		Permanant,
+		Permanent,
 		Code,
 		Raccourci,
 		Utilisateur,

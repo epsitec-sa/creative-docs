@@ -21,7 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public LibellésEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Libellé, new EditionData (this.controller, this.ValidateTitle));
+			this.datas.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateTitle));
+			this.datas.Add (ColumnType.Permanent, new EditionData (this.controller));
 		}
 
 
@@ -38,18 +39,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var libellé = entity as ComptaLibelléEntity;
 
 			this.SetText (ColumnType.Libellé,   libellé.Libellé);
-			this.SetText (ColumnType.Permanant, libellé.Permanant ? LibellésDataAccessor.Permanant : LibellésDataAccessor.Volatile);
+			this.SetText (ColumnType.Permanent, libellé.Permanent ? "1":"0");
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var libellé = entity as ComptaLibelléEntity;
 
-			libellé.Libellé = this.GetText (ColumnType.Libellé);
-
-			var s1 = Strings.PreparingForSearh (this.GetText (ColumnType.Permanant));
-			var s2 = Strings.PreparingForSearh (LibellésDataAccessor.Permanant);
-			libellé.Permanant = (s1 == s2);
+			libellé.Libellé   = this.GetText (ColumnType.Libellé);
+			libellé.Permanent = this.GetText (ColumnType.Permanent) == "1";
 		}
 	}
 }

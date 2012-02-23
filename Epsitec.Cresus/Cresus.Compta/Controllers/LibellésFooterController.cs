@@ -61,12 +61,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Permanant)
+				if (mapper.Column == ColumnType.Permanent)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, LibellésDataAccessor.Permanant, LibellésDataAccessor.Volatile);
 				}
 				else
 				{
