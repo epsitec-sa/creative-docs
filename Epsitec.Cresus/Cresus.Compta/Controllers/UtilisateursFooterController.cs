@@ -151,6 +151,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.PiècesGenerator.Select (x => x.Nom).ToArray ());
 				}
+				else if (mapper.Column == ColumnType.DateDébut ||
+						 mapper.Column == ColumnType.DateFin   )
+				{
+					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+				}
 				else if (mapper.Column == ColumnType.MotDePasse)
 				{
 					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
