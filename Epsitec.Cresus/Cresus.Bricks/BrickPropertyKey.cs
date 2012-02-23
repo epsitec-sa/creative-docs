@@ -35,7 +35,6 @@ namespace Epsitec.Cresus.Bricks
 		SpecialController,
 		GlobalWarning,
 
-		CollectionAnnotation,
 		Include,
 	}
 }

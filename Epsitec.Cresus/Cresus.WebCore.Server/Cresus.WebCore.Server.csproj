@@ -93,7 +93,6 @@
     <Compile Include="UserInterface\TileData\CollectionTileData.cs" />
     <Compile Include="UserInterface\Tile\EditionTile.cs" />
     <Compile Include="UserInterface\Tile\TextField.cs" />
-    <Compile Include="UserInterface\WebBridge.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />
     <Compile Include="CoreServer\IconManager.cs" />
@@ -119,7 +118,6 @@
     <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
     <Compile Include="CoreServer\ServerContext.cs" />
     <Compile Include="UserInterface\PanelFieldAccessorCache.cs" />
-    <Compile Include="UserInterface\WebTileDataItem.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

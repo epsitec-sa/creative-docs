@@ -40,7 +40,6 @@ namespace Epsitec.Cresus.Bricks
 			var brick = new SimpleBrick<T, TField> ();
 
 			brick.DefineResolver (expression);
-			brick.AddProperty (new BrickProperty (BrickPropertyKey.CollectionAnnotation, typeof (TField).FullName));
 
 			this.Add (brick);
 			this.NotifyBrickAdded (typeof (TField), brick);
