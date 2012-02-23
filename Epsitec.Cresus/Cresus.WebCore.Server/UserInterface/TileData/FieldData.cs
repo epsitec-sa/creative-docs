@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			};
 
 			var possibleValues = entitiesGetter (fieldType)
-				.Select (e => Tuple.Create (entityIdGetter (e), e.GetSummary ().ToString ()));
+				.Select (e => Tuple.Create (entityIdGetter (e), e.GetCompactSummary ().ToString ()));
 
 			entityField.PossibleValues.AddRange (possibleValues);
 
