@@ -126,15 +126,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 				EntityModule.SetValueForEntity (businessContext, panelFieldAccessor, entity, castedValue);
 			}
-			else if (value.HasValue)
+			else
 			{
 				var castedValue = (string) value;
 
 				EntityModule.SetValueForString (panelFieldAccessor, entity, castedValue);
-			}
-			else
-			{
-				EntityModule.SetNullValue (panelFieldAccessor, entity);
 			}
 		}
 
@@ -152,7 +148,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static void SetValueForEntity(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
 		{
-			var targetEntity = EntityModule.ResolveEntity (businessContext, targetEntityId);
+			var targetEntity = string.IsNullOrEmpty (targetEntityId)
+				? null
+				: EntityModule.ResolveEntity (businessContext, targetEntityId);
 
 			panelFieldAccessor.SetEntityValue (entity, targetEntity);
 		}
@@ -160,13 +158,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static void SetValueForString(PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
 		{
+			// NOTE Here we interpret empty strings as if they where null strings. The problem is
+			// that we can't make the difference as a text field does not provide any way to tell if
+			// its input is the null string or the empty one. So here I made the choice to always
+			// interpret empty strings as null strings.
+			// I do the conversion here explicitely because the underlying Marshaler embedded in
+			// the PanelFieldAccessor does not make this conversion automatically and that's
+			// probably a good thing.
+
+			var value = string.IsNullOrEmpty (fieldValue)
+			    ? null
+			    : fieldValue;
+
 			panelFieldAccessor.SetStringValue (entity, fieldValue);
-		}
-
-
-		private static void SetNullValue(PanelFieldAccessor panelFieldAccessor, AbstractEntity entity)
-		{
-			panelFieldAccessor.SetStringValue (entity, null);
 		}
 
 
