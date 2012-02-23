@@ -22,12 +22,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public UtilisateursEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Utilisateur, new EditionData (this.controller, this.ValidateUtilisateur));
-			this.datas.Add (ColumnType.NomComplet,  new EditionData (this.controller, this.ValidateNomComplet));
-			this.datas.Add (ColumnType.DateDébut,   new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.DateFin,     new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.MotDePasse,  new EditionData (this.controller, this.ValidateMotDePasse));
-			this.datas.Add (ColumnType.Pièce,       new EditionData (this.controller, this.ValidatePièce));
+			this.datas.Add (ColumnType.Utilisateur,     new EditionData (this.controller, this.ValidateUtilisateur));
+			this.datas.Add (ColumnType.NomComplet,      new EditionData (this.controller, this.ValidateNomComplet));
+			this.datas.Add (ColumnType.DateDébut,       new EditionData (this.controller, this.ValidateDate));
+			this.datas.Add (ColumnType.DateFin,         new EditionData (this.controller, this.ValidateDate));
+			this.datas.Add (ColumnType.MotDePasse,      new EditionData (this.controller, this.ValidateMotDePasse));
+			this.datas.Add (ColumnType.Pièce,           new EditionData (this.controller, this.ValidatePièce));
+			this.datas.Add (ColumnType.IdentitéWindows, new EditionData (this.controller));
+			this.datas.Add (ColumnType.Désactivé,       new EditionData (this.controller));
 		}
 
 
@@ -98,14 +100,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
-			this.SetText (ColumnType.Utilisateur,   utilisateur.Utilisateur);
-			this.SetText (ColumnType.NomComplet,    utilisateur.NomComplet);
-			this.SetText (ColumnType.DateDébut,     Converters.DateToString (utilisateur.DateDébut));
-			this.SetText (ColumnType.DateFin,       Converters.DateToString (utilisateur.DateFin));
-			this.SetText (ColumnType.MotDePasse,    utilisateur.MotDePasse);
-			this.SetText (ColumnType.Pièce,         UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
-			this.SetText (ColumnType.Admin,         utilisateur.Admin ? "admin" : "");
-			this.SetText (ColumnType.Présentations, utilisateur.Présentations);
+			this.SetText (ColumnType.Utilisateur,     utilisateur.Utilisateur);
+			this.SetText (ColumnType.NomComplet,      utilisateur.NomComplet);
+			this.SetText (ColumnType.DateDébut,       Converters.DateToString (utilisateur.DateDébut));
+			this.SetText (ColumnType.DateFin,         Converters.DateToString (utilisateur.DateFin));
+			this.SetText (ColumnType.MotDePasse,      utilisateur.MotDePasse);
+			this.SetText (ColumnType.Pièce,           UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
+			this.SetText (ColumnType.Admin,           utilisateur.Admin ? "admin" : "");
+			this.SetText (ColumnType.Présentations,   utilisateur.Présentations);
+			this.SetText (ColumnType.IdentitéWindows, utilisateur.IdentitéWindows ? "1":"0");
+			this.SetText (ColumnType.Désactivé,       utilisateur.Désactivé ? "1":"0");
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -119,6 +123,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToString ();
 			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
 			utilisateur.Présentations   = this.GetText (ColumnType.Présentations).ToString ();
+			utilisateur.IdentitéWindows = this.GetText (ColumnType.IdentitéWindows) == "1";
+			utilisateur.Désactivé       = this.GetText (ColumnType.Désactivé) == "1";
 		}
 
 

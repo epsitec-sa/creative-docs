@@ -57,5 +57,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Digits,
 		SépMilliers,
 		Incrément,
+		IdentitéWindows,
+		Désactivé,
 	}
 }

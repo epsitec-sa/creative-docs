@@ -90,6 +90,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateLineUI(Widget parent)
 		{
+			//	Comme on est en mode HasRightFooter, la "ligne" est en fait une colonne dans laquelle
+			//	on empile les choses de haut en bas.
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
 			var footerFrame = new TabCatcherFrameBox
@@ -115,7 +117,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 					continue;
 				}
 
-				bool compact = mapper.Description.IsNullOrEmpty;
+				if (mapper.Column == ColumnType.IdentitéWindows)  // insère un gap ?
+				{
+					new FrameBox
+					{
+						Parent          = footerFrame,
+						PreferredHeight = 10,
+						Dock            = DockStyle.Top,
+					};
+				}
+
+				bool compact = mapper.Description.IsNullOrEmpty            ||
+							   mapper.Column == ColumnType.IdentitéWindows ||
+							   mapper.Column == ColumnType.Désactivé       ;
 
 				if (!compact)
 				{
@@ -140,6 +154,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.MotDePasse)
 				{
 					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+				}
+				else if (mapper.Column == ColumnType.IdentitéWindows ||
+						 mapper.Column == ColumnType.Désactivé       )
+				{
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
 				}
 				else
@@ -168,13 +188,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding = new Margins (10, 0, 5, 5),
 			};
 
+			var top = new FrameBox
+			{
+				Parent = group,
+				Dock   = DockStyle.Fill,
+			};
+
 			var columns = new List<FrameBox> ();
 
 			for (int i = 0; i < 2; i++)
 			{
 				var column = new FrameBox
 				{
-					Parent         = group,
+					Parent         = top,
 					PreferredWidth = 120,
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (0, 5, 0, 0),
@@ -203,10 +229,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var footer = new FrameBox
 				{
-					Parent          = parent,
+					Parent          = group,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Bottom,
-					Margins         = new Margins (0, 0, 10, 0),
 				};
 
 				this.zeroPrésentationButton = new Button
@@ -253,16 +278,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreatePrésentationButton(Widget parent, Command cmd)
 		{
 			var icon = UIBuilder.GetTextIconUri ("Présentation." + Converters.PrésentationCommandToString (cmd), iconSize: 20);
+			var desc = Converters.GetPrésentationCommandDescription (cmd);
 
 			var button = new CheckButton
 			{
 				Parent          = parent,
-				FormattedText   = icon + " " + Converters.GetPrésentationCommandDescription (cmd),
+				FormattedText   = icon + " " + desc,
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Name            = Converters.PrésentationCommandToString (cmd),
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
+
+			ToolTip.Default.SetToolTip (button, desc);
 
 			this.checkButtons.Add (button);
 
