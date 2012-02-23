@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			    ? null
 			    : fieldValue;
 
-			panelFieldAccessor.SetStringValue (entity, fieldValue);
+			panelFieldAccessor.SetStringValue (entity, value);
 		}
 
 
