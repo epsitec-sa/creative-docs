@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public UtilisateursFooterController(AbstractController controller)
 			: base (controller)
 		{
-			this.checkButtons = new List<CheckButton> ();
+			this.checkPrésentationsButtons = new List<CheckButton> ();
 			this.ignoreChanges = new SafeCounter ();
 		}
 
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateLineUI (this.linesFrame);
-			this.CreateButtonsUI (this.buttonsFrame);
+			this.CreatePrésentationsButtonsUI (this.buttonsFrame);
 
 			base.CreateUI (parent, updateArrayContentAction);
 		}
@@ -176,16 +176,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void CreateButtonsUI(Widget parent)
+		private void CreatePrésentationsButtonsUI(Widget parent)
 		{
-			this.checkButtons.Clear ();
+			this.checkPrésentationsButtons.Clear ();
+
+			var list = Converters.PrésentationCommands.Where (x => x != Res.Commands.Présentation.Login);  //  Login est toujours accessible !
+			int numberPerColumn = 16;  // 16 boutons par colonne
+			int columnCount = (list.Count ()+numberPerColumn-1) / numberPerColumn;
 
 			var group = new GroupBox
 			{
-				Parent          = parent,
-				Text            = "Présentations",
-				Dock            = DockStyle.Fill,
-				Padding         = new Margins (10, 0, 5, 5),
+				Parent  = parent,
+				Text    = "Présentations",
+				Dock    = DockStyle.Fill,
+				Padding = new Margins (10, 0, 5, 5),
 			};
 
 			var top = new FrameBox
@@ -196,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var columns = new List<FrameBox> ();
 
-			for (int i = 0; i < 2; i++)
+			for (int i = 0; i < columnCount; i++)
 			{
 				var column = new FrameBox
 				{
@@ -209,14 +213,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			int rank = 0;
-			foreach (var cmd in Converters.PrésentationCommands)
+			foreach (var cmd in list)
 			{
-				if (cmd == Res.Commands.Présentation.Login)  // cette présentation est toujours accessible !
+				if (cmd == Res.Commands.Présentation.Login)
 				{
 					continue;
 				}
 
-				int column = rank++/16;  // 16 boutons par colonne
+				int column = rank++/numberPerColumn;
 				if (column >= columns.Count)
 				{
 					break;
@@ -259,7 +263,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.zeroPrésentationButton.Clicked += delegate
 			{
-				foreach (var button in this.checkButtons)
+				foreach (var button in this.checkPrésentationsButtons)
 				{
 					button.ActiveState = ActiveState.No;
 				}
@@ -267,7 +271,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.allPrésentationButton.Clicked += delegate
 			{
-				foreach (var button in this.checkButtons)
+				foreach (var button in this.checkPrésentationsButtons)
 				{
 					button.ActiveState = ActiveState.Yes;
 				}
@@ -282,7 +286,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var button = new CheckButton
 			{
 				Parent          = parent,
-				FormattedText   = icon,
+				FormattedText   = icon,  // juste l'icône, sans texte
 				PreferredWidth  = 50,
 				Name            = Converters.PrésentationCommandToString (cmd),
 				PreferredHeight = 20,
@@ -291,7 +295,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			ToolTip.Default.SetToolTip (button, desc);
 
-			this.checkButtons.Add (button);
+			this.checkPrésentationsButtons.Add (button);
 
 			button.ActiveStateChanged += delegate
 			{
@@ -307,10 +311,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateEditionWidgets()
 		{
 			base.UpdateEditionWidgets ();
-			this.UpdateButtons ();
+			this.UpdatePrésentationsButtons ();
 		}
 
-		private void UpdateButtons()
+		private void UpdatePrésentationsButtons()
 		{
 			using (this.ignoreChanges.Enter ())
 			{
@@ -318,7 +322,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				bool zero  = true;
 				bool all   = true;
 
-				foreach (var button in this.checkButtons)
+				foreach (var button in this.checkPrésentationsButtons)
 				{
 					var cmd = Converters.StringToPrésentationCommand(button.Name);
 					var state = this.EditionLine.HasPrésentation (cmd);
@@ -356,7 +360,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private readonly List<CheckButton>	checkButtons;
+		private readonly List<CheckButton>	checkPrésentationsButtons;
 		private readonly SafeCounter		ignoreChanges;
 
 		private FrameBox					linesFrame;
