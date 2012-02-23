@@ -91,7 +91,8 @@ namespace Epsitec.Cresus.Compta.IO
 			var utilisateur = new ComptaUtilisateurEntity ();
 
 			utilisateur.Utilisateur = "Admin";
-			utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
+			utilisateur.NomComplet  = "Administrateur";
+			//?utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
 			utilisateur.Admin       = true;
 
 			return utilisateur;

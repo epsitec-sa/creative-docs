@@ -1514,11 +1514,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Prénom</c> field.
+		///	The <c>NomComplet</c> field.
 		///	designer:fld/OVK75/OVKO5
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKO5]")]
-		public global::Epsitec.Common.Types.FormattedText Prénom
+		public global::Epsitec.Common.Types.FormattedText NomComplet
 		{
 			get
 			{
@@ -1526,34 +1526,100 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Prénom;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.NomComplet;
 				if (oldValue != value || !this.IsFieldDefined("[OVKO5]"))
 				{
-					this.OnPrénomChanging (oldValue, value);
+					this.OnNomCompletChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKO5]", oldValue, value);
-					this.OnPrénomChanged (oldValue, value);
+					this.OnNomCompletChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>Nom</c> field.
-		///	designer:fld/OVK75/OVKP5
+		///	The <c>IdentitéWindows</c> field.
+		///	designer:fld/OVK75/OVK26
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKP5]")]
-		public global::Epsitec.Common.Types.FormattedText Nom
+		[global::Epsitec.Common.Support.EntityField ("[OVK26]")]
+		public bool IdentitéWindows
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKP5]");
+				return this.GetField<bool> ("[OVK26]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
-				if (oldValue != value || !this.IsFieldDefined("[OVKP5]"))
+				bool oldValue = this.IdentitéWindows;
+				if (oldValue != value || !this.IsFieldDefined("[OVK26]"))
 				{
-					this.OnNomChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKP5]", oldValue, value);
-					this.OnNomChanged (oldValue, value);
+					this.OnIdentitéWindowsChanging (oldValue, value);
+					this.SetField<bool> ("[OVK26]", oldValue, value);
+					this.OnIdentitéWindowsChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Désactivé</c> field.
+		///	designer:fld/OVK75/OVK36
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK36]")]
+		public bool Désactivé
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVK36]");
+			}
+			set
+			{
+				bool oldValue = this.Désactivé;
+				if (oldValue != value || !this.IsFieldDefined("[OVK36]"))
+				{
+					this.OnDésactivéChanging (oldValue, value);
+					this.SetField<bool> ("[OVK36]", oldValue, value);
+					this.OnDésactivéChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DateDébut</c> field.
+		///	designer:fld/OVK75/OVK46
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK46]")]
+		public global::Epsitec.Common.Types.Date? DateDébut
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVK46]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.DateDébut;
+				if (oldValue != value || !this.IsFieldDefined("[OVK46]"))
+				{
+					this.OnDateDébutChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVK46]", oldValue, value);
+					this.OnDateDébutChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DateFin</c> field.
+		///	designer:fld/OVK75/OVK56
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK56]")]
+		public global::Epsitec.Common.Types.Date? DateFin
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVK56]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.Date? oldValue = this.DateFin;
+				if (oldValue != value || !this.IsFieldDefined("[OVK56]"))
+				{
+					this.OnDateFinChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVK56]", oldValue, value);
+					this.OnDateFinChanged (oldValue, value);
 				}
 			}
 		}
@@ -1648,10 +1714,16 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		partial void OnUtilisateurChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnUtilisateurChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPrénomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPrénomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNomCompletChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNomCompletChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnIdentitéWindowsChanging(bool oldValue, bool newValue);
+		partial void OnIdentitéWindowsChanged(bool oldValue, bool newValue);
+		partial void OnDésactivéChanging(bool oldValue, bool newValue);
+		partial void OnDésactivéChanged(bool oldValue, bool newValue);
+		partial void OnDateDébutChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDateDébutChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDateFinChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDateFinChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnMotDePasseChanging(string oldValue, string newValue);
 		partial void OnMotDePasseChanged(string oldValue, string newValue);
 		partial void OnAdminChanging(bool oldValue, bool newValue);

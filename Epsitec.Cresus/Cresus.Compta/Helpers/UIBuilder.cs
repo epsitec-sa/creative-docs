@@ -32,7 +32,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = 42,
 				Dock             = DockStyle.Top,
-				Margins          = new Margins (0, 0, 0, 5),
 			};
 		}
 

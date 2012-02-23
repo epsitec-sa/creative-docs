@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var écriture in this.périodeEntity.Journal)
 			{
-				if (!SearchData.DateInRange (écriture.Date, this.lastBeginDate, this.lastEndDate))
+				if (!Dates.DateInRange (écriture.Date, this.lastBeginDate, this.lastEndDate))
 				{
 					continue;
 				}

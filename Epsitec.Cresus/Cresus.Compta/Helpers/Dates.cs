@@ -15,6 +15,25 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Dates
 	{
+		public static bool DateInRange(Date? date, Date? beginDate, Date? endDate)
+		{
+			if (date.HasValue)
+			{
+				if (beginDate.HasValue && date.Value < beginDate.Value)
+				{
+					return false;
+				}
+
+				if (endDate.HasValue && date.Value > endDate.Value)
+				{
+					return false;
+				}
+			}
+
+			return true;
+		}
+
+
 		public static bool IsLastDayOfMonth(Date date)
 		{
 			var next = new Date (date.Ticks + Time.TicksPerDay);

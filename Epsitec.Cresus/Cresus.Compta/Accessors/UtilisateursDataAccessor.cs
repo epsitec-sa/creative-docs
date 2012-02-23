@@ -96,11 +96,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Utilisateur:
 					return utilisateur.Utilisateur;
 
-				case ColumnType.Prénom:
-					return utilisateur.Prénom;
+				case ColumnType.NomComplet:
+					return utilisateur.NomComplet;
 
-				case ColumnType.Nom:
-					return utilisateur.Nom;
+				case ColumnType.DateDébut:
+					return Converters.DateToString (utilisateur.DateDébut);
+
+				case ColumnType.DateFin:
+					return Converters.DateToString (utilisateur.DateFin);
 
 				case ColumnType.MotDePasse:
 					return Strings.GetStandardPassword (utilisateur.MotDePasse);

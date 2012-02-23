@@ -317,23 +317,40 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void InitializeAfterNewCompta()
 		{
+			//	Initialisation pour pouvoir travailler dans une nouvelle comptabilité, soit vide
+			//	(commande New) soit existante (commande Open).
 			this.dirty = false;
+
+			this.AutoLogin ();
 
 			this.settingsDatas.Clear ();
 			new DefaultMemory (this).CreateDefaultMemory ();
 
 			this.SelectCurrentPériode ();
 			this.SelectDefaultPrésentation ();
+			this.controller.UpdateUser ();
 			this.controller.ClearHilite ();
 		}
 
 		private void InitializeAfterCloseCompta()
 		{
+			//	Initialisation après avoir fermé la comptabilité.
 			this.compta = null;
 			this.dirty = false;
 			this.currentUser = null;  // logout
 
 			this.SelectDefaultPrésentation ();
+		}
+
+		private void AutoLogin()
+		{
+			//	S'il existe un utilisateur sans mot de passe, on le prend.
+			var utilisateur = this.compta.Utilisateurs.Where (x => string.IsNullOrEmpty (x.MotDePasse)).FirstOrDefault ();
+
+			if (utilisateur != null)
+			{
+				this.currentUser = utilisateur;
+			}
 		}
 
 		private void SelectDefaultPrésentation()
@@ -352,7 +369,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else  // plan comptable vide ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Open;
+				this.selectedCommandDocument = Res.Commands.Présentation.PlanComptable;
 			}
 
 			this.CreateController ();

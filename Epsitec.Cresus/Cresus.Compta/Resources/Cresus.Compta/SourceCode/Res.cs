@@ -876,14 +876,20 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVKU5
 				public static readonly global::Epsitec.Common.Support.Druid Admin = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 190);
+				//	designer:cap/OVK46
+				public static readonly global::Epsitec.Common.Support.Druid DateDébut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 196);
+				//	designer:cap/OVK56
+				public static readonly global::Epsitec.Common.Support.Druid DateFin = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 197);
+				//	designer:cap/OVK36
+				public static readonly global::Epsitec.Common.Support.Druid Désactivé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 195);
+				//	designer:cap/OVK26
+				public static readonly global::Epsitec.Common.Support.Druid IdentitéWindows = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 194);
 				//	designer:cap/OVK95
 				public static readonly global::Epsitec.Common.Support.Druid MotDePasse = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 169);
-				//	designer:cap/OVKP5
-				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 185);
+				//	designer:cap/OVKO5
+				public static readonly global::Epsitec.Common.Support.Druid NomComplet = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 184);
 				//	designer:cap/OVKJ5
 				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 179);
-				//	designer:cap/OVKO5
-				public static readonly global::Epsitec.Common.Support.Druid Prénom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 184);
 				//	designer:cap/OVKV5
 				public static readonly global::Epsitec.Common.Support.Druid Présentations = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 191);
 				//	designer:cap/OVK85

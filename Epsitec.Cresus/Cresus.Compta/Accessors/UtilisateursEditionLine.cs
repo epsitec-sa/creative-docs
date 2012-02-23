@@ -23,8 +23,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.datas.Add (ColumnType.Utilisateur, new EditionData (this.controller, this.ValidateUtilisateur));
-			this.datas.Add (ColumnType.Prénom,      new EditionData (this.controller));
-			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller));
+			this.datas.Add (ColumnType.NomComplet,  new EditionData (this.controller, this.ValidateNomComplet));
+			this.datas.Add (ColumnType.DateDébut,   new EditionData (this.controller, this.ValidateDate));
+			this.datas.Add (ColumnType.DateFin,     new EditionData (this.controller, this.ValidateDate));
 			this.datas.Add (ColumnType.MotDePasse,  new EditionData (this.controller, this.ValidateMotDePasse));
 			this.datas.Add (ColumnType.Pièce,       new EditionData (this.controller, this.ValidatePièce));
 		}
@@ -57,9 +58,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		private void ValidateNomComplet(EditionData data)
+		{
+			Validators.ValidateText (data, "Il manque le nom complet");
+		}
+
+		private void ValidateDate(EditionData data)
+		{
+			Validators.ValidateDate (this.périodeEntity, data, emptyAccepted: true);
+		}
+
 		private void ValidateMotDePasse(EditionData data)
 		{
-			Validators.ValidateText (data, "Il manque le mot de passe");
+			data.ClearError ();  // toujours ok (pour l'instant)
 		}
 
 		private void ValidatePièce(EditionData data)
@@ -83,8 +94,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
 			this.SetText (ColumnType.Utilisateur,   utilisateur.Utilisateur);
-			this.SetText (ColumnType.Prénom,        utilisateur.Prénom);
-			this.SetText (ColumnType.Nom,           utilisateur.Nom);
+			this.SetText (ColumnType.NomComplet,    utilisateur.NomComplet);
+			this.SetText (ColumnType.DateDébut,     Converters.DateToString (utilisateur.DateDébut));
+			this.SetText (ColumnType.DateFin,       Converters.DateToString (utilisateur.DateFin));
 			this.SetText (ColumnType.MotDePasse,    utilisateur.MotDePasse);
 			this.SetText (ColumnType.Pièce,         UtilisateursDataAccessor.GetPiècesGenerator (utilisateur));
 			this.SetText (ColumnType.Admin,         utilisateur.Admin ? "admin" : "");
@@ -96,8 +108,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var utilisateur = entity as ComptaUtilisateurEntity;
 
 			utilisateur.Utilisateur     = this.GetText (ColumnType.Utilisateur);
-			utilisateur.Prénom          = this.GetText (ColumnType.Prénom);
-			utilisateur.Nom             = this.GetText (ColumnType.Nom);
+			utilisateur.NomComplet      = this.GetText (ColumnType.NomComplet);
+			utilisateur.DateDébut       = Converters.ParseDate (this.GetText (ColumnType.DateDébut));
+			utilisateur.DateFin         = Converters.ParseDate (this.GetText (ColumnType.DateFin));
 			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToString ();
 			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
 			utilisateur.Présentations   = this.GetText (ColumnType.Présentations).ToString ();

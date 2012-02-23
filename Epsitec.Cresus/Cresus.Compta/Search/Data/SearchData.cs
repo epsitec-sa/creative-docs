@@ -465,25 +465,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public static bool DateInRange(Date? date, Date? beginDate, Date? endDate)
-		{
-			if (date.HasValue)
-			{
-				if (beginDate.HasValue && date.Value < beginDate.Value)
-				{
-					return false;
-				}
-
-				if (endDate.HasValue && date.Value > endDate.Value)
-				{
-					return false;
-				}
-			}
-
-			return true;
-		}
-
-
 		private readonly List<SearchTabData>		tabsData;
 	}
 }

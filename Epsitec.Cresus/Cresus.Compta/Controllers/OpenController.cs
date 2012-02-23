@@ -127,7 +127,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent        = column1,
 					DrawFullFrame = true,
 					Dock          = DockStyle.Fill,
-					Padding       = new Margins (10),
 				};
 
 				this.newButton    = UIBuilder.CreateButton (box, Res.Commands.File.New,    "Nouvelle comptabilité vide");

@@ -106,9 +106,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				yield return new ColumnMapper (ColumnType.Utilisateur, 1.00, ContentAlignment.MiddleLeft, "Utilisateur",          "Nom de l'utilisateur utilisé pour l'identification");
-				yield return new ColumnMapper (ColumnType.Prénom,      1.00, ContentAlignment.MiddleLeft, "Prénom",               "Prénom (facultatif)");
-				yield return new ColumnMapper (ColumnType.Nom,         1.00, ContentAlignment.MiddleLeft, "Nom",                  "Nom (facultatif)");
-				yield return new ColumnMapper (ColumnType.MotDePasse,  0.60, ContentAlignment.MiddleLeft, "Mot de passe",         "Mot de passe de l'utilisateur");
+				yield return new ColumnMapper (ColumnType.NomComplet,  1.00, ContentAlignment.MiddleLeft, "Nom complet",          "Nom complet (facultatif)");
+				yield return new ColumnMapper (ColumnType.DateDébut,   0.50, ContentAlignment.MiddleLeft, "Date début",           "Date de début de validité (facultatif)");
+				yield return new ColumnMapper (ColumnType.DateFin,     0.50, ContentAlignment.MiddleLeft, "Date Fin",             "Date de fin de validité (facultatif)");
+				yield return new ColumnMapper (ColumnType.MotDePasse,  0.60, ContentAlignment.MiddleLeft, "Mot de passe",         "Mot de passe de l'utilisateur (facultatif)");
 				yield return new ColumnMapper (ColumnType.Pièce,       0.80, ContentAlignment.MiddleLeft, "Générateur de pièces", "Générateur pour les numéros de pièces (facultatif)");
 				yield return new ColumnMapper (ColumnType.Résumé,      1.00, ContentAlignment.MiddleLeft, "Résumé");
 			}

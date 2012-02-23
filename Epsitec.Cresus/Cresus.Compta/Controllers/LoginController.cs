@@ -132,6 +132,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					IsReadOnly     = true,
 					Dock           = DockStyle.Left,
 				};
+
+				this.currentInfo = new StaticText
+				{
+					Parent         = line,
+					Dock           = DockStyle.Fill,
+					Margins        = new Margins (10, 0, 0, 0),
+				};
 			}
 
 			//	Ligne 2.
@@ -140,7 +147,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent   = this.mainFrame,
 					Dock     = DockStyle.Top,
-					Margins  = new Margins (0, 0, 0, 2),
+					Margins  = new Margins (0, 0, 0, -1),
 					TabIndex = 1,
 				};
 
@@ -166,7 +173,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					Parent         = line,
 					Dock           = DockStyle.Fill,
-					Margins          = new Margins (10, 0, 0, 0),
+					Margins        = new Margins (10, 0, 0, 0),
 				};
 			}
 
@@ -297,6 +304,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWidgets()
 		{
+			if (this.mainWindowController.CurrentUser == null)
+			{
+				this.currentField.FormattedText = Core.TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
+				this.currentInfo.FormattedText = null;
+			}
+			else
+			{
+				this.currentField.FormattedText = this.mainWindowController.CurrentUser.Utilisateur;
+				this.currentInfo.FormattedText = this.mainWindowController.CurrentUser.NomComplet;
+			}
+
 			var utilisateur = this.EnteredUser;
 
 			if (utilisateur == null)
@@ -305,19 +323,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.userInfo.FormattedText = Core.TextFormatter.FormatText (utilisateur.Prénom, utilisateur.Nom);
+				this.userInfo.FormattedText = utilisateur.NomComplet;
 			}
 
-			if (this.mainWindowController.CurrentUser == null)
-			{
-				this.currentField.FormattedText = Core.TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
-			}
-			else
-			{
-				this.currentField.FormattedText = this.mainWindowController.CurrentUser.Utilisateur;
-			}
-
-			bool empty = string.IsNullOrEmpty (this.userField.Text) || string.IsNullOrEmpty (this.passwordField.Text);
+			bool empty = string.IsNullOrEmpty (this.userField.Text);
 
 			if (this.mainWindowController.CurrentUser != null && this.userField.Text == this.mainWindowController.CurrentUser.Utilisateur)
 			{
@@ -335,7 +344,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var utilisateur = this.EnteredUser;
 			var md5 = Strings.ComputeMd5Hash (this.passwordField.Text);
 
-			if (utilisateur != null && utilisateur.MotDePasse == md5)
+			FormattedText error = FormattedText.Null;
+
+			if (utilisateur == null || (!string.IsNullOrEmpty (utilisateur.MotDePasse) && utilisateur.MotDePasse != md5))
+			{
+				error = "Le nom d'utilisateur ou le mot de passe sont faux";
+			}
+			else if (utilisateur.Désactivé)
+			{
+				error = "Cet utilisateur est désactivé";
+			}
+			else if (!Dates.DateInRange (Date.Today, utilisateur.DateDébut, utilisateur.DateFin))
+			{
+				error = "Cet utilisateur n'est plus valide aujourd'hui";
+			}
+
+			if (error.IsNullOrEmpty)  // ok
 			{
 				this.userField.FormattedText = utilisateur.Utilisateur;
 				this.mainWindowController.CurrentUser = utilisateur;
@@ -344,7 +368,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				this.mainWindowController.CurrentUser = null;
-				this.SetError (Result.LoginError);
+				this.SetError (Result.LoginError, error);
 			}
 
 			this.UpdateWidgets ();
@@ -374,11 +398,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			LogoutOK,
 		}
 
-		private void SetError(Result result)
+		private void SetError(Result result, FormattedText? error = null)
 		{
-			if (result == Result.LoginError)
+			if (result == Result.LoginError && error.HasValue)
 			{
-				this.messageText.FormattedText = Core.TextFormatter.FormatText ("Le nom d'utilisateur ou le mot de passe sont faux").ApplyBold ().ApplyFontSize (20);
+				this.messageText.FormattedText = error.Value.ApplyBold ().ApplyFontSize (20);
 				this.mainFrame.BackColor = Color.FromHexa ("ffd6d6");  // rouge clair
 
 				this.passwordField.Text = null;
@@ -407,6 +431,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private FrameBox			mainFrame;
 		private TextField			currentField;
+		private StaticText			currentInfo;
 		private TextField			userField;
 		private StaticText			userInfo;
 		private TextField			passwordField;
