@@ -19,6 +19,26 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
+		public static FrameBox CreateMiniToolbar(Widget parent, double height=0)
+		{
+			var toolbar = new FrameBox
+			{
+				Parent        = parent,
+				DrawFullFrame = true,
+				BackColor     = Color.FromHexa ("f4f9ff"),
+				Padding       = new Margins (2),
+				Dock          = DockStyle.Top,
+			};
+
+			if (height != 0)
+			{
+				toolbar.PreferredHeight = height;
+			}
+
+			return toolbar;
+		}
+
+	
 		public static Button CreateButton(Widget parent, Command command, FormattedText description)
 		{
 			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", command.Icon);

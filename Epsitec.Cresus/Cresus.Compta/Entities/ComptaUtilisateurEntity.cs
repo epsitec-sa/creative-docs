@@ -3,6 +3,9 @@
 
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.Compta.Helpers;
 
@@ -13,6 +16,33 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaUtilisateurEntity
 	{
+		public FormattedText ShortDescription
+		{
+			get
+			{
+				//	Retourne la description à afficher dans une liste.
+				FormattedText text;
+
+				if (this.NomComplet == this.Utilisateur)
+				{
+					if (this.Utilisateur.IsNullOrEmpty)
+					{
+						text = "Nouvel utilisateur";
+					}
+					else
+					{
+						text = this.Utilisateur;
+					}
+				}
+				else
+				{
+					text = Core.TextFormatter.FormatText (this.NomComplet, "(", this.Utilisateur, ")");
+				}
+
+				return text;
+			}
+		}
+
 		public FormattedText GetAccessSummary()
 		{
 			//	Retourne un résumé sur les droits d'accès de l'utilisateur.
@@ -50,6 +80,18 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			//	Indique si l'utilisateur contient une présentation.
 			return Converters.ContainsPrésentationCommand (this.Présentations, cmd);
+		}
+
+
+		public override EntityStatus GetEntityStatus()
+		{
+			using (var a = new EntityStatusAccumulator ())
+			{
+				a.Accumulate (this.Utilisateur.GetEntityStatus ());
+				a.Accumulate (this.NomComplet.GetEntityStatus ());
+
+				return a.EntityStatus;
+			}
 		}
 	}
 }

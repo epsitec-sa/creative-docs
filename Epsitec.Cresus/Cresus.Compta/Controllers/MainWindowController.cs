@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void SelectDefaultPrésentation()
 		{
-			if (this.compta == null)
+			if (this.compta == null)  // compta fermée ?
 			{
 				this.selectedCommandDocument = Res.Commands.Présentation.Open;
 			}
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.selectedCommandDocument = Res.Commands.Présentation.Login;
 			}
-			else if (this.compta.PlanComptable.Any ())
+			else if (this.compta.PlanComptable.Any ())  // plan comptable existe ?
 			{
 				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
 			}

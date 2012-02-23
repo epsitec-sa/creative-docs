@@ -29,7 +29,8 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Utilisateurs.Clear ();
 
 			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
-			compta.Utilisateurs.Add (this.CreateUtilisateur ());
+			compta.Utilisateurs.Add (this.CreateAdminUser ());
+			//?compta.Utilisateurs.Add (this.CreateFirstUser ());
 		}
 
 		public void NewEmpty(ComptaEntity compta)
@@ -46,7 +47,8 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreatePériodes (compta);
 			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
 			compta.Journaux.Add (this.CreateJournal (compta));
-			compta.Utilisateurs.Add (this.CreateUtilisateur ());
+			compta.Utilisateurs.Add (this.CreateAdminUser ());
+			//?compta.Utilisateurs.Add (this.CreateFirstUser ());
 		}
 
 		public void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
@@ -85,15 +87,38 @@ namespace Epsitec.Cresus.Compta.IO
 			return journal;
 		}
 
-		private ComptaUtilisateurEntity CreateUtilisateur()
+		private ComptaUtilisateurEntity CreateAdminUser()
 		{
-			//	Crée l'utilisteur administrateur.
+			//	Crée l'utilisteur administrateur. Il est préférable qu'il n'ait pas de mot de passe,
+			//	pour permettre un login automatique à l'ouverture.
 			var utilisateur = new ComptaUtilisateurEntity ();
 
 			utilisateur.Utilisateur = "Admin";
 			utilisateur.NomComplet  = "Administrateur";
 			//?utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
 			utilisateur.Admin       = true;
+
+			return utilisateur;
+		}
+
+		private ComptaUtilisateurEntity CreateFirstUser()
+		{
+			//	Crée un premier utilisateur neutre, sans mot de passe.
+			var utilisateur = new ComptaUtilisateurEntity ();
+
+			utilisateur.Utilisateur = "Moi";
+			utilisateur.NomComplet  = "Moi-même";
+
+			string list = null;
+			foreach (var cmd in Converters.PrésentationCommands)
+			{
+				if (cmd != Res.Commands.Présentation.Utilisateurs &&
+					cmd != Res.Commands.Présentation.Réglages)
+				{
+					Converters.SetPrésentationCommand (ref list, cmd, true);
+				}
+			}
+			utilisateur.Présentations = list;
 
 			return utilisateur;
 		}
