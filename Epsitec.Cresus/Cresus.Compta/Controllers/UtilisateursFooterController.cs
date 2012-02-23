@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = band,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth      = 200,
+				PreferredWidth      = 100,
 				Dock                = DockStyle.Right,
 				Margins             = new Margins (0, 0, 0, 0),
 			};
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = band,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				PreferredWidth      = 200,
+				PreferredWidth      = 180,
 				Dock                = DockStyle.Right,
 				Margins             = new Margins (0, 10, 0, 0),
 			};
@@ -182,10 +182,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var group = new GroupBox
 			{
-				Parent  = parent,
-				Text    = "Présentations accessibles par l'utilisateur",
-				Dock    = DockStyle.Fill,
-				Padding = new Margins (10, 0, 5, 5),
+				Parent          = parent,
+				Text            = "Présentations",
+				Dock            = DockStyle.Fill,
+				Padding         = new Margins (10, 0, 5, 5),
 			};
 
 			var top = new FrameBox
@@ -201,9 +201,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var column = new FrameBox
 				{
 					Parent         = top,
-					PreferredWidth = 120,
+					PreferredWidth = 50,
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (0, 5, 0, 0),
 				};
 
 				columns.Add (column);
@@ -229,29 +228,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var footer = new FrameBox
 				{
-					Parent          = group,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Bottom,
+					Parent              = group,
+					ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
+					PreferredHeight     = 20,
+					Dock                = DockStyle.Bottom,
+					Margins             = new Margins (-5, 10-5, 0, 0),
 				};
 
 				this.zeroPrésentationButton = new Button
 				{
 					Parent          = footer,
 					Text            = "Aucune",
-					PreferredWidth  = 80,
 					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (0, 10, 0, 0),
+					Dock            = DockStyle.Fill,
+					Margins         = new Margins (0, 1, 0, 0),
 				};
 
 				this.allPrésentationButton = new Button
 				{
 					Parent          = footer,
 					Text            = "Toutes",
-					PreferredWidth  = 80,
 					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (0, 10, 0, 0),
+					Dock            = DockStyle.Fill,
+					Margins         = new Margins (1, 0, 0, 0),
 				};
 
 				ToolTip.Default.SetToolTip (this.zeroPrésentationButton, "Interdit l'accès à toutes les présentations");
@@ -283,8 +282,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var button = new CheckButton
 			{
 				Parent          = parent,
-				FormattedText   = icon + " " + desc,
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				FormattedText   = icon,
+				PreferredWidth  = 50,
 				Name            = Converters.PrésentationCommandToString (cmd),
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
