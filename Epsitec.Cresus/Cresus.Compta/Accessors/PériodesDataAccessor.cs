@@ -400,7 +400,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 	
-		public static readonly FormattedText	PériodeCourante = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
-		public static readonly FormattedText	AutrePériode    = Core.TextFormatter.FormatText ("Non");
+		private static readonly FormattedText	PériodeCourante = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
+		private static readonly FormattedText	AutrePériode    = Core.TextFormatter.FormatText ("Non");
 	}
 }

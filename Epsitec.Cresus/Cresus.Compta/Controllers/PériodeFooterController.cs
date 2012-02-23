@@ -70,10 +70,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Utilise)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field = new RadioButtonController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
 					field.CreateUI (footerFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, PériodesDataAccessor.PériodeCourante, PériodesDataAccessor.AutrePériode);
 				}
 				else
 				{

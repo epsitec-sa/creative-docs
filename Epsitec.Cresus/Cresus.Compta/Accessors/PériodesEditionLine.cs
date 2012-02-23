@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			bool sel = (this.controller.MainWindowController.Période == entity);
 
-			this.SetText (ColumnType.Utilise,   sel ? PériodesDataAccessor.PériodeCourante : PériodesDataAccessor.AutrePériode);
+			this.SetText (ColumnType.Utilise,   sel ? "1":"0");
 			this.SetText (ColumnType.DateDébut, période.DateDébut.ToString ());
 			this.SetText (ColumnType.DateFin,   période.DateFin.ToString ());
 			this.SetText (ColumnType.Titre,     période.Description);
@@ -68,9 +68,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var période = entity as ComptaPériodeEntity;
 
-			var s1 = Strings.PreparingForSearh (this.GetText (ColumnType.Utilise));
-			var s2 = Strings.PreparingForSearh (PériodesDataAccessor.PériodeCourante);
-			if (s1 == s2)
+			if (this.GetText (ColumnType.Utilise) == "1")
 			{
 				this.controller.MainWindowController.Période = période;
 			}
