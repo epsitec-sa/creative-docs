@@ -801,7 +801,7 @@ namespace Epsitec.Cresus.Compta
 				//	designer:cap/OVKO3
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 120);
 				//	designer:cap/OVKP3
-				public static readonly global::Epsitec.Common.Support.Druid Permanant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 121);
+				public static readonly global::Epsitec.Common.Support.Druid Permanent = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 121);
 			}
 			
 			public static class ComptaModèle

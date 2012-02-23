@@ -1121,11 +1121,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Permanant</c> field.
+		///	The <c>Permanent</c> field.
 		///	designer:fld/OVKN3/OVKP3
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKP3]")]
-		public bool Permanant
+		public bool Permanent
 		{
 			get
 			{
@@ -1133,20 +1133,20 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				bool oldValue = this.Permanant;
+				bool oldValue = this.Permanent;
 				if (oldValue != value || !this.IsFieldDefined("[OVKP3]"))
 				{
-					this.OnPermanantChanging (oldValue, value);
+					this.OnPermanentChanging (oldValue, value);
 					this.SetField<bool> ("[OVKP3]", oldValue, value);
-					this.OnPermanantChanged (oldValue, value);
+					this.OnPermanentChanged (oldValue, value);
 				}
 			}
 		}
 		
 		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPermanantChanging(bool oldValue, bool newValue);
-		partial void OnPermanantChanged(bool oldValue, bool newValue);
+		partial void OnPermanentChanging(bool oldValue, bool newValue);
+		partial void OnPermanentChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
