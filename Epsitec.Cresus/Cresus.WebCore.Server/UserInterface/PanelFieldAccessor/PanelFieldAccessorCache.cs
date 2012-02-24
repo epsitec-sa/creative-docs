@@ -20,33 +20,33 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public PanelFieldAccessor Get(LambdaExpression lambda)
 		{
-			PanelFieldAccessor accessor;
+			PanelFieldAccessor panelFieldAccessor;
 
 			var key = PanelFieldAccessorCache.GetKey (lambda);
 
-			var exists = this.keyToPanelFieldAccessor.TryGetValue (key, out accessor);
+			var exists = this.keyToPanelFieldAccessor.TryGetValue (key, out panelFieldAccessor);
 
 			if (!exists)
 			{
 				int id = this.keyToPanelFieldAccessor.Count;
 
-				accessor = new PanelFieldAccessor (lambda, id);
+				panelFieldAccessor = new PanelFieldAccessor (lambda, id);
 
-				this.keyToPanelFieldAccessor[key] = accessor;
-				this.idToPanelFieldAccessor[id] = accessor;
+				this.keyToPanelFieldAccessor[key] = panelFieldAccessor;
+				this.idToPanelFieldAccessor[id] = panelFieldAccessor;
 			}
 
-			return accessor;
+			return panelFieldAccessor;
 		}
 
 
 		public PanelFieldAccessor Get(int id)
 		{
-			PanelFieldAccessor accessor;
+			PanelFieldAccessor panelFieldAccessor;
 
-			this.idToPanelFieldAccessor.TryGetValue (id, out accessor);
+			this.idToPanelFieldAccessor.TryGetValue (id, out panelFieldAccessor);
 
-			return accessor;
+			return panelFieldAccessor;
 		}
 
 
