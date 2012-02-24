@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Data.Platform
 {
+	/// <summary>
+	/// The <c>SwissPostZipRepository</c> class gives access to the ZIP information, as
+	/// provided by the Swiss Post (see MAT[CH]zip).
+	/// </summary>
 	public sealed class SwissPostZipRepository
 	{
 		private SwissPostZipRepository()
@@ -38,6 +42,7 @@ namespace Epsitec.Data.Platform
 
 		public static readonly SwissPostZipRepository Current = new SwissPostZipRepository ();
 
+		
 		public IEnumerable<SwissPostZipInformation> FindAll()
 		{
 			return nameByZip.SelectMany (x => x.Value);

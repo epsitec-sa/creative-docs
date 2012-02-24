@@ -33,7 +33,7 @@ namespace Epsitec.Aider
 
 			foreach (var person in persons)
 			{
-				var zip = Epsitec.Common.Types.InvariantConverter.ParseInt (person.Address.SwissZipCode);
+				var zip = person.Address.SwissZipCode;
 				var all = SwissPostZipRepository.Current.FindZips (zip, person.Address.Town);
 				var odd = all.Where (x => x.Canton != "VD").ToArray ();
 				var streetName  = person.Address.Street;

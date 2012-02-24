@@ -1380,66 +1380,66 @@ namespace Epsitec.Aider.Entities
 		}
 		///	<summary>
 		///	The <c>SwissZipCode</c> field.
-		///	designer:fld/LVA22/LVA72
+		///	designer:fld/LVA22/LVAPB
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA72]")]
-		public string SwissZipCode
+		[global::Epsitec.Common.Support.EntityField ("[LVAPB]")]
+		public int SwissZipCode
 		{
 			get
 			{
-				return this.GetField<string> ("[LVA72]");
+				return this.GetField<int> ("[LVAPB]");
 			}
 			set
 			{
-				string oldValue = this.SwissZipCode;
-				if (oldValue != value || !this.IsFieldDefined("[LVA72]"))
+				int oldValue = this.SwissZipCode;
+				if (oldValue != value || !this.IsFieldDefined("[LVAPB]"))
 				{
 					this.OnSwissZipCodeChanging (oldValue, value);
-					this.SetField<string> ("[LVA72]", oldValue, value);
+					this.SetField<int> ("[LVAPB]", oldValue, value);
 					this.OnSwissZipCodeChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
 		///	The <c>SwissZipCodeAddOn</c> field.
-		///	designer:fld/LVA22/LVA82
+		///	designer:fld/LVA22/LVAQB
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA82]")]
-		public string SwissZipCodeAddOn
+		[global::Epsitec.Common.Support.EntityField ("[LVAQB]")]
+		public int SwissZipCodeAddOn
 		{
 			get
 			{
-				return this.GetField<string> ("[LVA82]");
+				return this.GetField<int> ("[LVAQB]");
 			}
 			set
 			{
-				string oldValue = this.SwissZipCodeAddOn;
-				if (oldValue != value || !this.IsFieldDefined("[LVA82]"))
+				int oldValue = this.SwissZipCodeAddOn;
+				if (oldValue != value || !this.IsFieldDefined("[LVAQB]"))
 				{
 					this.OnSwissZipCodeAddOnChanging (oldValue, value);
-					this.SetField<string> ("[LVA82]", oldValue, value);
+					this.SetField<int> ("[LVAQB]", oldValue, value);
 					this.OnSwissZipCodeAddOnChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
 		///	The <c>SwissZipCodeId</c> field.
-		///	designer:fld/LVA22/LVA92
+		///	designer:fld/LVA22/LVARB
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVA92]")]
-		public string SwissZipCodeId
+		[global::Epsitec.Common.Support.EntityField ("[LVARB]")]
+		public int SwissZipCodeId
 		{
 			get
 			{
-				return this.GetField<string> ("[LVA92]");
+				return this.GetField<int> ("[LVARB]");
 			}
 			set
 			{
-				string oldValue = this.SwissZipCodeId;
-				if (oldValue != value || !this.IsFieldDefined("[LVA92]"))
+				int oldValue = this.SwissZipCodeId;
+				if (oldValue != value || !this.IsFieldDefined("[LVARB]"))
 				{
 					this.OnSwissZipCodeIdChanging (oldValue, value);
-					this.SetField<string> ("[LVA92]", oldValue, value);
+					this.SetField<int> ("[LVARB]", oldValue, value);
 					this.OnSwissZipCodeIdChanged (oldValue, value);
 				}
 			}
@@ -1475,12 +1475,12 @@ namespace Epsitec.Aider.Entities
 		partial void OnHouseNumberChanged(string oldValue, string newValue);
 		partial void OnTownChanging(string oldValue, string newValue);
 		partial void OnTownChanged(string oldValue, string newValue);
-		partial void OnSwissZipCodeChanging(string oldValue, string newValue);
-		partial void OnSwissZipCodeChanged(string oldValue, string newValue);
-		partial void OnSwissZipCodeAddOnChanging(string oldValue, string newValue);
-		partial void OnSwissZipCodeAddOnChanged(string oldValue, string newValue);
-		partial void OnSwissZipCodeIdChanging(string oldValue, string newValue);
-		partial void OnSwissZipCodeIdChanged(string oldValue, string newValue);
+		partial void OnSwissZipCodeChanging(int oldValue, int newValue);
+		partial void OnSwissZipCodeChanged(int oldValue, int newValue);
+		partial void OnSwissZipCodeAddOnChanging(int oldValue, int newValue);
+		partial void OnSwissZipCodeAddOnChanged(int oldValue, int newValue);
+		partial void OnSwissZipCodeIdChanging(int oldValue, int newValue);
+		partial void OnSwissZipCodeIdChanged(int oldValue, int newValue);
 		partial void OnCountryChanging(string oldValue, string newValue);
 		partial void OnCountryChanged(string oldValue, string newValue);
 		

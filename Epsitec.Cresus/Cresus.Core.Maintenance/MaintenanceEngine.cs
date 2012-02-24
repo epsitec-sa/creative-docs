@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			int count = 0;
 
-			foreach (var zipInfo in SwissPostZip.GetZips ())
+			foreach (var zipInfo in SwissPostZipRepository.Current.FindAll ())
 			{
 				ItemCode onrpCode = ItemCode.Create ("ONRP:" + zipInfo.OnrpCode);
 				var location = MaintenanceEngine.GetLocation (context, repository, onrpCode);

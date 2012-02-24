@@ -10,11 +10,17 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data.Ech
 {
+	using DictionaryOfFixes = Dictionary<string, System.Tuple<string, string>>;
+
+	/// <summary>
+	/// The <c>EChAddressFixesRepository</c> class is used to apply fixes to known invalid
+	/// eCH addresses.
+	/// </summary>
 	public sealed class EChAddressFixesRepository
 	{
 		private EChAddressFixesRepository()
 		{
-			this.fixes = new Dictionary<string, System.Tuple<string, string>> ();
+			this.fixes = new DictionaryOfFixes ();
 			this.failures = new HashSet<string> ();
 
 			foreach (var item in EChAddressFixesRepository.GetFixes ())
@@ -26,7 +32,13 @@ namespace Epsitec.Aider.Data.Ech
 
 		public static readonly EChAddressFixesRepository	Current = new EChAddressFixesRepository ();
 
-		public bool ApplyQuickFix(ref int zipCode, ref string streetName)
+
+		public IEnumerable<string> GetFailures()
+		{
+			return this.failures;
+		}
+
+		internal bool ApplyQuickFix(ref int zipCode, ref string streetName)
 		{
 			string key = string.Format ("{0:0000} {1}", zipCode, streetName);
 
@@ -43,17 +55,12 @@ namespace Epsitec.Aider.Data.Ech
 			return false;
 		}
 
-		public IEnumerable<string> GetFailures()
-		{
-			return this.failures;
-		}
-
-		public void RegisterFailure(string message)
+		internal void RegisterFailure(string message)
 		{
 			this.failures.Add (message);
 		}
 
-	
+		
 		private static IEnumerable<KeyValuePair<string, System.Tuple<string, string>>> GetFixes()
 		{
 			foreach (var line in EChAddressFixesRepository.GetSourceFile ())
@@ -80,7 +87,7 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		private readonly Dictionary<string, System.Tuple<string, string>>	fixes;
-		private readonly HashSet<string>	failures;
+		private readonly DictionaryOfFixes		fixes;
+		private readonly HashSet<string>		failures;
 	}
 }

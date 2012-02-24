@@ -232,11 +232,11 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Parses the integer number and stops as soon as a non digit character is encountered.
 		/// Minus sign and dash are treated as equivalents and can appear any number of times
-		/// before the first digit.
+		/// before the first digit. This method never throws an exception.
 		/// </summary>
-		/// <param name="value">The value.</param>
+		/// <param name="value">The string containing a numeric value.</param>
 		/// <returns>The number or <c>0</c> if the value is not a number.</returns>
-		public static int     ParseInt(string value)
+		public static int ParseInt(string value)
 		{
 			if (string.IsNullOrEmpty (value))
 			{
@@ -294,6 +294,13 @@ namespace Epsitec.Common.Types
 			return neg ? -num : num;
 		}
 
+		/// <summary>
+		/// Parses the integer number (just like the non-generic version of this method), and
+		/// casts the result to the specified type <typeparamref name="T"/>.
+		/// </summary>
+		/// <typeparam name="T">The enumeration type.</typeparam>
+		/// <param name="value">The string containing a numeric value.</param>
+		/// <returns></returns>
 		public static T ParseInt<T>(string value)
 			where T : struct
 		{
@@ -304,11 +311,13 @@ namespace Epsitec.Common.Types
 
 		public static long ParseLong(string value)
 		{
+			//	TODO: change to use same logic as ParseInt
 			return string.IsNullOrEmpty (value) ? 0 : long.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
 		
 		public static decimal ParseDecimal(string value)
 		{
+			//	TODO: change to use same logic as ParseInt
 			return string.IsNullOrEmpty (value) ? 0 : decimal.Parse (value, System.Globalization.CultureInfo.InvariantCulture);
 		}
 

@@ -6,11 +6,25 @@ using Epsitec.Common.Types.Collections;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Data.Platform
 {
+	/// <summary>
+	/// The <c>SwissPostStreet</c> class helps normalizing street names and house numbers.
+	/// It provides also low level access to the official streets database (MAT[CH]street).
+	/// </summary>
 	public static class SwissPostStreet
 	{
+		/// <summary>
+		/// Tokenizes the name of the street by exploding it into uppercase tokens, without
+		/// any accents, ordering the name in the normal reading order (i.e. "Lac, au Grand-"
+		/// becomes "au Grand-Lac" before being tokenized to "GRAND"/"LAC") and removing
+		/// noise (such as "le", "la") and using full street designations ("AVENUE" instead
+		/// of "AV.").
+		/// </summary>
+		/// <param name="name">The full street name.</param>
+		/// <returns>The tokenized street name.</returns>
 		public static IEnumerable<string> TokenizeStreetName(string name)
 		{
 			if (string.IsNullOrEmpty (name))
@@ -30,43 +44,35 @@ namespace Epsitec.Data.Platform
 				name = prefix + " " + root;
 			}
 
-			var meaningfulTokens = name.Split (SwissPostStreet.tokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
+			var meaningfulTokens = name.Split (SwissPostStreet.TokenSeparators, System.StringSplitOptions.RemoveEmptyEntries).Where (x => SwissPostStreet.IsMeaningful (x));
 			var normalizedTokens = meaningfulTokens.Select (x => SwissPostStreet.NormalizeToken (x));
 
 			return normalizedTokens;
 		}
 
+		/// <summary>
+		/// Normalizes the name of the street by tokenizing it (<see cref="TokenizeStreetName"/>)
+		/// and then joining the tokens together.
+		/// </summary>
+		/// <param name="name">The full street name.</param>
+		/// <returns>The normalized street name.</returns>
 		public static string NormalizeStreetName(string name)
 		{
 			return string.Join (" ", SwissPostStreet.TokenizeStreetName (name));
 		}
 
+		/// <summary>
+		/// Normalizes the house number by parsing digits as long as there are any; an empty
+		/// house number will be treated as zero. This method always succeeds.
+		/// </summary>
+		/// <param name="number">The house number.</param>
+		/// <returns>The normalized house number.</returns>
 		public static int NormalizeHouseNumber(string number)
 		{
-			if (string.IsNullOrEmpty (number))
-			{
-				return 0;
-			}
-			int numeric = 0;
-			int len = number.Length;
-
-			for (int i = 0; i < len; i++)
-			{
-				char c = number[i];
-
-				if (char.IsDigit (c))
-				{
-					numeric = numeric*10 + c - '0';
-				}
-				else
-				{
-					break;
-				}
-			}
-
-			return numeric;
+			return InvariantConverter.ParseInt (number);
 		}
 
+		
 		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
 		{
 			foreach (var line in SwissPostStreet.GetStreetFile ())
@@ -92,7 +98,7 @@ namespace Epsitec.Data.Platform
 			}
 			else
 			{
-				return SwissPostStreet.normalizationNoise.Contains (token) == false;
+				return SwissPostStreet.NormalizationNoise.Contains (token) == false;
 			}
 		}
 
@@ -100,7 +106,7 @@ namespace Epsitec.Data.Platform
 		{
 			string output;
 
-			if (SwissPostStreet.normalizationTuples.TryGetValue (token, out output))
+			if (SwissPostStreet.NormalizationTuples.TryGetValue (token, out output))
 			{
 				return output;
 			}
@@ -110,14 +116,18 @@ namespace Epsitec.Data.Platform
 			}
 		}
 
-		internal static readonly char[] nameSeparators  = new char[] { ' ', '-', '.', '\'' };
-		internal static readonly char[] tokenSeparators = new char[] { ' ', '-', '\'' };
+		#region Internal Constants
 
-		private static readonly Dictionary<string,string> normalizationTuples = new Dictionary<string, string> ()
+		internal static readonly char[] NameSeparators  = new char[] { ' ', '-', '.', '\'' };
+		internal static readonly char[] TokenSeparators = new char[] { ' ', '-', '\'' };
+
+		internal static readonly Dictionary<string,string> NormalizationTuples = new Dictionary<string, string> ()
 		{
 			{"CH.", "CHEMIN"},
 			{"AV.", "AVENUE"},
 			{"RTE", "ROUTE"},
+			{"R.", "RUE"},
+			{"RLLE", "RUELLE"},
 			{"PL.", "PLACE"},
 			{"PROM.", "PROMENADE"},
 			{"QUART.", "QUARTIER"},
@@ -125,7 +135,7 @@ namespace Epsitec.Data.Platform
 			{"STE", "SAINTE"},
 		};
 
-		public static readonly HashSet<string> heuristicTokens = new HashSet<string> ()
+		internal static readonly HashSet<string> HeuristicTokens = new HashSet<string> ()
 		{
 			"AVENUE",
 			"BATTERIE",
@@ -141,9 +151,11 @@ namespace Epsitec.Data.Platform
 			"ZONE",
 		};
 
-		private static readonly HashSet<string> normalizationNoise = new HashSet<string> ()
+		internal static readonly HashSet<string> NormalizationNoise = new HashSet<string> ()
 		{
 			"DE", "DU", "D", "DES", "LE", "LA", "L", "LES", "EN", "AU"
 		};
+
+		#endregion
 	}
 }

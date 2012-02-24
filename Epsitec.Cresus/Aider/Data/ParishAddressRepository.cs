@@ -20,11 +20,16 @@ namespace Epsitec.Aider.Data
 
 			foreach (var info in ParishAddressRepository.GetParishInformations ())
 			{
-				this.AddParishAddress (ParishAddressRepository.GetKey (info.ZipCode, info.TownNameOfficial), info);
+				var key  = ParishAddressRepository.GetKey (info.ZipCode, info.TownNameOfficial);
+				var addr = this.AddParishAddress (key, info);
 
 				if (info.TownNameOfficial != info.TownName)
 				{
-					this.AddParishAddress (ParishAddressRepository.GetKey (info.ZipCode, info.TownName), info);
+					//	If there is more than one possible spelling for the town name, add the
+					//	variant into the dictionary, too, but do not insert the info twice !
+
+					key = ParishAddressRepository.GetKey (info.ZipCode, info.TownName);
+					this.addresses[key] = addr;
 				}
 			}
 		}
@@ -36,12 +41,18 @@ namespace Epsitec.Aider.Data
 		public static readonly ParishAddressRepository Current = new ParishAddressRepository ();
 
 
+		/// <summary>
+		/// Finds the parish addresses for a given zip code and town name.
+		/// </summary>
+		/// <param name="zipCode">The zip code.</param>
+		/// <param name="townName">The town name.</param>
+		/// <returns>The parish addresses or <c>null</c> if no information is available.</returns>
 		public ParishAddresses FindAddresses(int zipCode, string townName)
 		{
 			return this.FindAddresses (ParishAddressRepository.GetKey (zipCode, townName));
 		}
 
-		public ParishAddresses FindAddresses(string key)
+		private ParishAddresses FindAddresses(string key)
 		{
 			ParishAddresses addresses;
 
@@ -84,7 +95,7 @@ namespace Epsitec.Aider.Data
 		}
 
 
-		private void AddParishAddress(string key, ParishAddressInformation info)
+		private ParishAddresses AddParishAddress(string key, ParishAddressInformation info)
 		{
 			ParishAddresses addresses;
 			if (this.addresses.TryGetValue (key, out addresses) == false)
@@ -94,6 +105,7 @@ namespace Epsitec.Aider.Data
 			}
 
 			addresses.Add (info);
+			return addresses;
 		}
 
 		private static string GetKey(int zipCode, string townName)

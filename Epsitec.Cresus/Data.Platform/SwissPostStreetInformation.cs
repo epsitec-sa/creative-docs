@@ -70,26 +70,39 @@ namespace Epsitec.Data.Platform
 			return this.NormalizedStreetName == SwissPostStreet.NormalizeStreetName (name);
 		}
 
+		/// <summary>
+		/// Matches the name with heuristics, trying to correct common misspellings, such as
+		/// "-aux" which should be written "-eaux", or "-is" which should be written "-it",
+		/// etc.
+		/// </summary>
+		/// <param name="tokens">The array of street name tokens.</param>
+		/// <returns><c>true</c> if the name could be matched; otherwise, <c>false</c>.</returns>
 		public bool MatchNameWithHeuristics(string[] tokens)
 		{
-			//var tokens = SwissPostStreet.TokenizeStreetName (name);
+			var name1 = string.Join (" ", tokens);
 
-			var name = string.Join (" ", tokens);
-
-			if ((this.NormalizedStreetName == name) ||
-				(this.MatchRootName (name)))
+			if ((this.NormalizedStreetName == name1) ||
+				(this.MatchRootName (name1)))
 			{
 				return true;
 			}
 
-			name = string.Join (" ", tokens.Where (x => SwissPostStreet.heuristicTokens.Contains (x) == false).Where (x => !char.IsDigit (x[0])));
+			var name2 = string.Join (" ", tokens.Where (x => !char.IsDigit (x[0]) && !SwissPostStreet.HeuristicTokens.Contains (x)));
 
-			if ((this.NormalizedStreetName == name) ||
-				(this.MatchRootName (name)))
+			if (name1 != name2)
 			{
-				return true;
+				if ((this.NormalizedStreetName == name2) ||
+					(this.MatchRootName (name2)))
+				{
+					return true;
+				}
 			}
+			
+			return this.MatchNameWithMisspellingHeuristics (name2);
+		}
 
+		private bool MatchNameWithMisspellingHeuristics(string name)
+		{
 			int len = name.Length;
 
 			if (len > 3)
@@ -154,14 +167,17 @@ namespace Epsitec.Data.Platform
 						return true;
 					}
 				}
-
 			}
-
-			
 			
 			return false;
 		}
 
+		/// <summary>
+		/// Matches the house number if it is in the range covered by this street information
+		/// record.
+		/// </summary>
+		/// <param name="houseNumber">The house number.</param>
+		/// <returns><c>true</c> if the house number matches; otherwise, <c>false</c>.</returns>
 		public bool MatchHouseNumber(int houseNumber)
 		{
 			if (houseNumber == 0)
@@ -243,7 +259,7 @@ namespace Epsitec.Data.Platform
 
 			while (true)
 			{
-				pos = rootName.IndexOfAny (SwissPostStreet.nameSeparators, pos)+1;
+				pos = rootName.IndexOfAny (SwissPostStreet.NameSeparators, pos)+1;
 
 				if (pos == 0)
 				{

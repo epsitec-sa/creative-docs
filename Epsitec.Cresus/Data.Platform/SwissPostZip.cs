@@ -7,7 +7,11 @@ using System.Linq;
 
 namespace Epsitec.Data.Platform
 {
-	public static class SwissPostZip
+	/// <summary>
+	/// The <c>SwissPostZip</c> class is used internally to retrieve the ZIP codes from the
+	/// Internet.
+	/// </summary>
+	internal static class SwissPostZip
 	{
 		public static IEnumerable<SwissPostZipInformation> GetZips()
 		{

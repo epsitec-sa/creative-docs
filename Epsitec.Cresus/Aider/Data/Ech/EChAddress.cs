@@ -9,20 +9,22 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Aider.Data.Ech
 {
+	/// <summary>
+	/// The <c>EChAddress</c> class represents an eCH address element. The street and
+	/// zip code information will be changed so as to match ... the names from the
+	/// MAT[CH]street database.
+	/// </summary>
 	internal sealed partial class EChAddress
 	{
-		// NOTE: Here we discard the fields addressLine1 and dwellingNumber.
-
-
 		public EChAddress(string addressLine1, string street, string houseNumber, string town, string swissZipCode, string swissZipCodeAddOn, string swissZipCodeId, string countryCode)
 		{
 			this.addressLine1      = addressLine1;
 			this.street            = street;
 			this.houseNumber       = houseNumber;
 			this.town              = town;
-			this.swissZipCode      = swissZipCode;
-			this.swissZipCodeAddOn = swissZipCodeAddOn;
-			this.swissZipCodeId    = swissZipCodeId;
+			this.swissZipCode      = InvariantConverter.ParseInt (swissZipCode);
+			this.swissZipCodeAddOn = InvariantConverter.ParseInt (swissZipCodeAddOn);
+			this.swissZipCodeId    = InvariantConverter.ParseInt (swissZipCodeId);
 			this.countryCode       = countryCode;
 
 			if (this.countryCode == "CH")
@@ -64,7 +66,7 @@ namespace Epsitec.Aider.Data.Ech
 			}
 		}
 
-		public string							SwissZipCode
+		public int								SwissZipCode
 		{
 			get
 			{
@@ -72,7 +74,7 @@ namespace Epsitec.Aider.Data.Ech
 			}
 		}
 
-		public string							SwissZipCodeAddOn
+		public int								SwissZipCodeAddOn
 		{
 			get
 			{
@@ -80,7 +82,7 @@ namespace Epsitec.Aider.Data.Ech
 			}
 		}
 
-		public string							SwissZipCodeId
+		public int								SwissZipCodeId
 		{
 			get
 			{
@@ -119,18 +121,19 @@ namespace Epsitec.Aider.Data.Ech
 			this.street = info.StreetName;
 			this.town   = zip.LongName;
 			
-			this.swissZipCode      = zip.ZipCode.ToString ("0000");
-			this.swissZipCodeAddOn = zip.ZipComplement == 0 ? "" : zip.ZipComplement.ToString ("0");
-			this.swissZipCodeId    = zip.OnrpCode.ToString ("0");
+			this.swissZipCode      = zip.ZipCode;
+			this.swissZipCodeAddOn = zip.ZipComplement;
+			this.swissZipCodeId    = zip.OnrpCode;
 		}
 
-		private string							addressLine1;
+		
+		private readonly string					addressLine1;
 		private string							street;
-		private string							houseNumber;
+		private readonly string					houseNumber;
 		private string							town;
-		private string							swissZipCode;
-		private string							swissZipCodeAddOn;
-		private string							swissZipCodeId;
-		private string							countryCode;
+		private int								swissZipCode;
+		private int								swissZipCodeAddOn;
+		private int								swissZipCodeId;
+		private readonly string					countryCode;
 	}
 }

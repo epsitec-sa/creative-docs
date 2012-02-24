@@ -12,6 +12,10 @@ namespace Epsitec.Aider.Data.Ech
 {
 	internal sealed partial class EChAddress
 	{
+		/// <summary>
+		/// The <c>PatchEngine</c> class is used to apply fixes to an address, while it is being
+		/// initialized, so that it complies with the Swiss Post MAT[CH]street database.
+		/// </summary>
 		private static class PatchEngine
 		{
 			/// <summary>
@@ -21,7 +25,7 @@ namespace Epsitec.Aider.Data.Ech
 			/// <param name="address">The address.</param>
 			public static void ApplyFix(EChAddress address)
 			{
-				var zipCode = InvariantConverter.ParseInt (address.swissZipCode);
+				var zipCode = address.swissZipCode;
 				var street  = address.street;
 
 				if (EChAddressFixesRepository.Current.ApplyQuickFix (ref zipCode, ref street))
