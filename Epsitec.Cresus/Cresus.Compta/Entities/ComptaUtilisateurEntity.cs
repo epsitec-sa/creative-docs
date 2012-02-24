@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			//	Retourne un résumé sur les droits d'accès de l'utilisateur.
 			if (this.Admin)
 			{
-				return "Administrateur, toutes les présentations";
+				return "Toutes les présentations";
 			}
 
 			int n = Converters.PrésentationCommandCount (this.Présentations);

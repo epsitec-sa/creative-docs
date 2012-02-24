@@ -30,29 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.fieldControllers.Clear ();
-
-			var mainFrame = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Fill,
-			};
-
-			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
-			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
-			toolbar.PreferredWidth = 200;
-			toolbar.Dock           = DockStyle.Top;
-			toolbar.Margins        = new Margins (0);
-			toolbar.Padding        = new Margins (0);
-
-			var band = new FrameBox
-			{
-				Parent        = mainFrame,
-				DrawFullFrame = true,
-				Dock          = DockStyle.Fill,
-				Padding       = new Margins (10),
-			};
-
+			var band = this.CreateRightFooterTopUI (parent);
 			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);

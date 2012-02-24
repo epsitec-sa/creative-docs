@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				BackColor     = Color.FromHexa ("f4f9ff"),
 				Padding       = new Margins (2),
 				Dock          = DockStyle.Top,
+				Margins       = new Margins (0, 0, 0, -1),
 			};
 
 			if (height != 0)
@@ -41,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 	
 		public static Button CreateButton(Widget parent, Command command, FormattedText description)
 		{
+			//	Crée un gros bouton contenant à gauche l'icône de la commande, suivi d'un texte libre indépendant de la commande.
 			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", command.Icon);
 
 			return new IconButton
@@ -57,6 +59,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static IconButton CreateButton(Widget parent, Command command, double buttonWidth, double iconWidth, bool isActivable = false)
 		{
+			//	Crée un bouton icône standard lié à une commande.
 			if (isActivable)
 			{
 				return new BackIconButton

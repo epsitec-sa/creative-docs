@@ -702,13 +702,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.mainWindowController.CurrentUser == null)
 			{
+				this.userLabel.Visibility = true;
 				this.userLabel.FormattedText = Core.TextFormatter.FormatText ("Déconnecté").ApplyItalic ().ApplyFontSize (13.0);
 				tooltip = "Aucun utilisateur n'est actuellement connecté.<br/>{0} permet de se connecter.";
 			}
 			else
 			{
-				this.userLabel.FormattedText = this.mainWindowController.CurrentUser.Utilisateur.ApplyBold ().ApplyFontSize (13.0);
-				tooltip = "Nom de l'utilisateur actuellement connecté.<br/>Si nécessaire, {0} permet de changer d'utilisateur.";
+				if (this.comptaEntity.Utilisateurs.Count == 1 &&
+					string.IsNullOrEmpty (this.comptaEntity.Utilisateurs[0].MotDePasse))  // un seul utilisateur sans mot de passe ?
+				{
+					//	S'il n'y a qu'un seul utilisateur (forcément administrateur) sans mot de passe,
+					//	n'affiche pas l'identité de l'utilisateur.
+					this.userLabel.Visibility = false;
+					tooltip = "";
+				}
+				else
+				{
+					this.userLabel.Visibility = true;
+					this.userLabel.FormattedText = this.mainWindowController.CurrentUser.Utilisateur.ApplyBold ().ApplyFontSize (13.0);
+					tooltip = "Nom de l'utilisateur actuellement connecté.<br/>Si nécessaire, {0} permet de changer d'utilisateur.";
+				}
 			}
 
 			var icon = UIBuilder.GetTextIconUri ("Présentation.Login", iconSize: 20);

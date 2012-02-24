@@ -30,9 +30,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.fieldControllers.Clear ();
-
-			this.CreateLineUI (parent);
+			var band = this.CreateRightFooterTopUI (parent);
+			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);
 		}
@@ -43,10 +42,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var footerFrame = new TabCatcherFrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Bottom,
-				Margins         = new Margins (0, 0, 1, 0),
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 1, 0),
 			};
 
 			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
@@ -57,8 +55,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			footerFrame.TabIndex = line+1;
 
-			foreach (var mapper in this.columnMappers.Where (x => x.Show))
+			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
+				if (mapper.Column == ColumnType.DateDébut)  // insère un gap ?
+				{
+					new FrameBox
+					{
+						Parent          = footerFrame,
+						PreferredHeight = 10,
+						Dock            = DockStyle.Top,
+					};
+				}
+
 				AbstractFieldController field;
 
 				if (mapper.Column == ColumnType.Pièce)
@@ -92,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'une période comptable :" : "Création d'une période comptable :";
+			return modify ? "Modification d'une période :" : "Création d'une période :";
 		}
 	}
 }

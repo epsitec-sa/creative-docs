@@ -654,6 +654,64 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected FrameBox CreateRightFooterTopUI(Widget parent)
+		{
+			this.fieldControllers.Clear ();
+
+			var mainFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			//	Met la "toolbar", qui affiche le mode "Création/Modification d'un ...". 
+			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
+			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
+			toolbar.PreferredWidth = 200;
+			toolbar.Dock           = DockStyle.Top;
+			toolbar.Margins        = new Margins (0);
+			toolbar.Padding        = new Margins (0);
+
+			//	Met la petite toolbar avec les boutons "+/-", qui doublent les commandes Edit.Cancel/Edit.Delete.
+			var mini = UIBuilder.CreateMiniToolbar (mainFrame, 20);
+
+			var add = new GlyphButton
+			{
+				Parent         = mini,
+				CommandObject  = Res.Commands.Edit.Cancel,
+				GlyphShape     = GlyphShape.Plus,
+				PreferredWidth = 30,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 1, 0, 0),
+			};
+
+			var sub = new GlyphButton
+			{
+				Parent         = mini,
+				CommandObject  = Res.Commands.Edit.Delete,
+				GlyphShape     = GlyphShape.Minus,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 1, 0, 0),
+			};
+
+			// TODO: Pourquoi ces tooltips ne sont-ils jamais visibles ?
+			ToolTip.Default.SetToolTip (add, "Débute la création d'un nouvel élément, qu'il faudra compléter");
+			ToolTip.Default.SetToolTip (sub, "Supprime l'élément sélectionné");
+
+			//	Met le panneau éditable.
+			var band = new FrameBox
+			{
+				Parent        = mainFrame,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (10),
+			};
+
+			return band;
+		}
+
+
 		public bool Duplicate
 		{
 			get

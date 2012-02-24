@@ -8,6 +8,7 @@ using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
@@ -95,13 +96,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Utilise:
-					return (période == this.mainWindowController.Période) ? PériodesDataAccessor.PériodeCourante : PériodesDataAccessor.AutrePériode;
+					string icon = (période == this.mainWindowController.Période) ? "Button.RadioYes" : "Button.RadioNo";
+					return string.Format (@"<img src=""{0}"" voff=""-5""/>", UIBuilder.GetResourceIconUri (icon));
 
 				case ColumnType.DateDébut:
-					return période.DateDébut.ToString ();
-
-				case ColumnType.DateFin:
-					return période.DateFin.ToString ();
+					return période.DateDébut.ToString () + " — " + période.DateFin.ToString ();
 
 				case ColumnType.Titre:
 					return période.Description;
@@ -398,9 +397,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return compta.PiècesGenerator.Where (x => x.Nom == pièce).FirstOrDefault ();
 			}
 		}
-
-	
-		private static readonly FormattedText	PériodeCourante = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
-		private static readonly FormattedText	AutrePériode    = Core.TextFormatter.FormatText ("Non");
 	}
 }
