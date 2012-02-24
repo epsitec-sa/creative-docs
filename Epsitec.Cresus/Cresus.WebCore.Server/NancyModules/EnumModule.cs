@@ -32,6 +32,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEnum()
 		{
 			string typeName = Request.Form.name;
+			
 			var type = Type.GetType (typeName);
 			var fetcherType = typeof (Fetcher<>).MakeGenericType (type);
 			var fetcherInst = (Fetcher) Activator.CreateInstance (fetcherType);
@@ -62,10 +63,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())
 				{
+					// NOTE Here we need the double cast because the compiler won't let us cast from
+					// T to int directly, so we cast T to object because this is allowed and then we
+					// cast object to anything.
+
+					var id = (int) (object) enumKeyValues.Key;
+
 					foreach (var value in enumKeyValues.Values)
 					{
-						string id = enumKeyValues.Key.ToString ();
-						string name = value.ToString ();
+						var name = value.ToString ();
 
 						yield return new { id = id, name = name };
 					}

@@ -9,12 +9,14 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 
 using Nancy;
 
 using System;
 
 using System.Linq;
+using Epsitec.Cresus.WebCore.Server.UserInterface;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -47,14 +49,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
 
-			var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
+			var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get ((string) Request.Form.lambdaId) as EntityListPanelFieldAccessor;
 
-			if (!accessor.IsCollectionType)
+			if (panelFieldAccessor == null)
 			{
 				return Response.AsCoreError ();
 			}
 
-			var collection = accessor.GetCollection (parentEntity);
+			var collection = panelFieldAccessor.GetCollection (parentEntity);
 
 			var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
@@ -93,16 +95,16 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var o = m.Invoke (context, new object[0]);
 			var newEntity = o as AbstractEntity;
 			
-			var accessor = coreSession.PanelFieldAccessorCache.Get (InvariantConverter.ToInt ((string) Request.Form.lambdaId));
+			var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get ((string) Request.Form.lambdaId) as EntityListPanelFieldAccessor;
 
-			if (!accessor.IsCollectionType)
+			if (panelFieldAccessor == null)
 			{
 				return Response.AsCoreError ();
 			}
 
 			using (context.Bind (parentEntity, newEntity))
 			{
-				var collection = accessor.GetCollection (parentEntity);
+				var collection = panelFieldAccessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
 				
 				context.ApplyRulesToRegisteredEntities (RuleType.Update);

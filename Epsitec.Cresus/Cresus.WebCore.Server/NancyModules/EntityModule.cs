@@ -9,6 +9,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Epsitec.Cresus.WebCore.Server.UserInterface;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 
 using Nancy;
 
@@ -94,48 +95,44 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static PanelFieldAccessor GetPanelFieldAccessor(CoreSession coreSession, DynamicDictionary formData, string memberName)
+		private static AbstractPanelFieldAccessor GetPanelFieldAccessor(CoreSession coreSession, DynamicDictionary formData, string memberName)
 		{
 			var lambdaFieldName = Tools.GetLambdaFieldName (memberName);
 			var lambdaFieldValue = formData[lambdaFieldName];
-			var accessorId = InvariantConverter.ToInt ((string) lambdaFieldValue.Value);
+			var accessorId = (string) lambdaFieldValue.Value;
 
 			return coreSession.PanelFieldAccessorCache.Get (accessorId);
 		}
 
 
-		private static void SetValue(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, DynamicDictionaryValue value)
+		private static void SetValue(BusinessContext businessContext, AbstractPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, DynamicDictionaryValue value)
 		{
-			if (panelFieldAccessor.IsCollectionType)
+			var entityListPanelFieldAccessor = panelFieldAccessor as EntityListPanelFieldAccessor;
+			var entityPanelFieldAccessor = panelFieldAccessor as EntityPanelFieldAccessor;
+			var stringPanelFieldAccessor = panelFieldAccessor as StringPanelFieldAccessor;
+
+			if (entityListPanelFieldAccessor != null)
 			{
 				var castedValue = (IEnumerable<string>) value.Value;
 
-				EntityModule.SetValueForCollection (businessContext, panelFieldAccessor, entity, castedValue);
+				EntityModule.SetValueForCollection (businessContext, entityListPanelFieldAccessor, entity, castedValue);
 			}
-			else if (panelFieldAccessor.IsReadOnly)
-			{
-				// NOTE We don't check for this before because collections fields are readonly. By
-				// that I mean that the pointer to the collection is readonly, but the collection
-				// itself is not, of course.
-
-				throw new Exception ("This field cannot be written to.");
-			}
-			else if (panelFieldAccessor.IsEntityType)
+			else if (entityPanelFieldAccessor != null)
 			{
 				var castedValue = (string) value;
 
-				EntityModule.SetValueForEntity (businessContext, panelFieldAccessor, entity, castedValue);
+				EntityModule.SetValueForEntity (businessContext, entityPanelFieldAccessor, entity, castedValue);
 			}
-			else
+			else if (stringPanelFieldAccessor != null)
 			{
 				var castedValue = (string) value;
 
-				EntityModule.SetValueForString (panelFieldAccessor, entity, castedValue);
+				EntityModule.SetValueForString (stringPanelFieldAccessor, entity, castedValue);
 			}
 		}
 
 
-		private static void SetValueForCollection(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
+		private static void SetValueForCollection(BusinessContext businessContext, EntityListPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
 		{
 			var targetEntities = targetEntityIds
 				.Where (id => !string.IsNullOrWhiteSpace (id))
@@ -146,7 +143,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValueForEntity(BusinessContext businessContext, PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
+		private static void SetValueForEntity(BusinessContext businessContext, EntityPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
 		{
 			var targetEntity = string.IsNullOrEmpty (targetEntityId)
 				? null
@@ -156,7 +153,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValueForString(PanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		private static void SetValueForString(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
 		{
 			// NOTE Here we interpret empty strings as if they where null strings. The problem is
 			// that we can't make the difference as a text field does not provide any way to tell if
@@ -170,7 +167,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			    ? null
 			    : fieldValue;
 
-			panelFieldAccessor.SetStringValue (entity, value);
+			panelFieldAccessor.SetString (entity, value);
 		}
 
 

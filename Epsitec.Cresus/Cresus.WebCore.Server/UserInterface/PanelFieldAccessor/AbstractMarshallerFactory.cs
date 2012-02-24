@@ -5,7 +5,7 @@ using Epsitec.Common.Types.Converters;
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 {
 
 

@@ -1,9 +1,11 @@
-﻿using System.Collections.Generic;
+﻿using Epsitec.Common.Types;
+
+using System.Collections.Generic;
 
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 {
 
 
@@ -13,26 +15,26 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public PanelFieldAccessorCache()
 		{
-			this.keyToPanelFieldAccessor = new Dictionary<string, PanelFieldAccessor> ();
-			this.idToPanelFieldAccessor = new Dictionary<int, PanelFieldAccessor> ();
+			this.lambdaToPanelFieldAccessor = new Dictionary<string, AbstractPanelFieldAccessor> ();
+			this.idToPanelFieldAccessor = new Dictionary<string, AbstractPanelFieldAccessor> ();
 		}
 
 
-		public PanelFieldAccessor Get(LambdaExpression lambda)
+		public AbstractPanelFieldAccessor Get(LambdaExpression lambda)
 		{
-			PanelFieldAccessor panelFieldAccessor;
+			AbstractPanelFieldAccessor panelFieldAccessor;
 
-			var key = PanelFieldAccessorCache.GetKey (lambda);
+			var lambdaKey = PanelFieldAccessorCache.GetLambdaKey (lambda);
 
-			var exists = this.keyToPanelFieldAccessor.TryGetValue (key, out panelFieldAccessor);
+			var exists = this.lambdaToPanelFieldAccessor.TryGetValue (lambdaKey, out panelFieldAccessor);
 
 			if (!exists)
 			{
-				int id = this.keyToPanelFieldAccessor.Count;
+				var id = InvariantConverter.ToString (this.lambdaToPanelFieldAccessor.Count);
 
-				panelFieldAccessor = new PanelFieldAccessor (lambda, id);
+				panelFieldAccessor = AbstractPanelFieldAccessor.Create (lambda, id);
 
-				this.keyToPanelFieldAccessor[key] = panelFieldAccessor;
+				this.lambdaToPanelFieldAccessor[lambdaKey] = panelFieldAccessor;
 				this.idToPanelFieldAccessor[id] = panelFieldAccessor;
 			}
 
@@ -40,9 +42,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		public PanelFieldAccessor Get(int id)
+		public AbstractPanelFieldAccessor Get(string id)
 		{
-			PanelFieldAccessor panelFieldAccessor;
+			AbstractPanelFieldAccessor panelFieldAccessor;
 
 			this.idToPanelFieldAccessor.TryGetValue (id, out panelFieldAccessor);
 
@@ -50,7 +52,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static string GetKey(LambdaExpression lambda)
+		private static string GetLambdaKey(LambdaExpression lambda)
 		{
 			var part1 = lambda.ToString ();
 			var part2 = lambda.ReturnType.FullName;
@@ -60,10 +62,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private readonly Dictionary<string, PanelFieldAccessor> keyToPanelFieldAccessor;
+		private readonly Dictionary<string, AbstractPanelFieldAccessor> lambdaToPanelFieldAccessor;
 
 
-		private readonly Dictionary<int, PanelFieldAccessor> idToPanelFieldAccessor;
+		private readonly Dictionary<string, AbstractPanelFieldAccessor> idToPanelFieldAccessor;
 
 
 	}

@@ -64,6 +64,12 @@
     <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\AbstractMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\EntityListPanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\EntityPanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\NonNullableMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\NullableMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\StringPanelFieldAccessor.cs" />
     <Compile Include="UserInterface\TileData\AbstractEditionTilePartData.cs" />
     <Compile Include="UserInterface\TileData\AbstractSummaryTileData.cs" />
     <Compile Include="UserInterface\TileData\HorizontalGroupData.cs" />
@@ -113,11 +119,11 @@
     <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
     <Compile Include="NancyHosting\PostArrayHandler.cs" />
     <Compile Include="UserInterface\PanelBuilder.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\AbstractPanelFieldAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
     <Compile Include="CoreServer\ServerContext.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessorCache.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\PanelFieldAccessorCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

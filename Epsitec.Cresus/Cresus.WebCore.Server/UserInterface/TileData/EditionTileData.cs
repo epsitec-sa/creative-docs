@@ -3,6 +3,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
@@ -66,7 +67,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#region ITileData Members
 
 
-		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, PanelFieldAccessor> panelFieldAccessorGetter)
+		public IEnumerable<AbstractTile> ToTiles(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter, Func<AbstractEntity, IEnumerable<AbstractTile>> editionTileBuilder, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
 		{
 			if (this.Items.Count > 0)
 			{
@@ -88,7 +89,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		#endregion
 
 
-		private AbstractTile ToTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, PanelFieldAccessor> panelFieldAccessorGetter)
+		private AbstractTile ToTile(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, string, string> iconClassGetter, Func<LambdaExpression, string> lambdaIdGetter, Func<Type, string> typeGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
 		{
 			var editionTile = new EditionTile ()
 			{
@@ -103,7 +104,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private IEnumerable<AbstractEditionTilePart> GetEditionTileParts(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, PanelFieldAccessor> panelFieldAccessorGetter)
+		private IEnumerable<AbstractEditionTilePart> GetEditionTileParts(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
 		{
 			return this.Items.Select (i => i.ToAbstractEditionTilePart (entity, entityIdGetter, entitiesGetter, panelFieldAccessorGetter));
 		}
