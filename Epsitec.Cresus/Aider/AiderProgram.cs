@@ -33,14 +33,27 @@ namespace Epsitec.Aider
 
 			foreach (var person in persons)
 			{
+				var zip = Epsitec.Common.Types.InvariantConverter.ParseInt (person.Address.SwissZipCode);
+				var all = SwissPostZipRepository.Current.FindZips (zip, person.Address.Town);
+				var odd = all.Where (x => x.Canton != "VD").ToArray ();
 				var streetName  = person.Address.Street;
 				int houseNumber = SwissPostStreet.NormalizeHouseNumber (person.Address.HouseNumber);
+
+				if ((all.Any () == false) ||
+					(odd.Length > 0))
+				{
+					System.Diagnostics.Debug.WriteLine ("Error: not in VD, {0} {1}, {2} {3}, {4}", person.Adult1.FirstNames, person.Adult1.OfficialName, person.Address.SwissZipCode, person.Address.Town, person.Address.Street);
+				}
 
 				string normalizedStreetName = SwissPostStreet.NormalizeStreetName (streetName);
 
 				if (normalizedStreetName.Length == 0)
 				{
 					System.Diagnostics.Debug.WriteLine (string.Format ("Error: no street for {0} {1}, {2} {3}", person.Adult1.FirstNames, person.Adult1.OfficialName, person.Address.SwissZipCode, person.Address.Town));
+				}
+				if (houseNumber == 0)
+				{
+					System.Diagnostics.Debug.WriteLine (string.Format ("Error: no street number for {0} {1}, {2} {3}, {4}", person.Adult1.FirstNames, person.Adult1.OfficialName, person.Address.SwissZipCode, person.Address.Town, person.Address.Street));
 				}
 
 				name = repo.FindParishName (person.Address.SwissZipCode, person.Address.Town, normalizedStreetName, houseNumber);

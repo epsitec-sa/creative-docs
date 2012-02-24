@@ -6,6 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Aider.Data
 {
+	/// <summary>
+	/// The <c>ParishAddressRepository</c> class implements the repository used to resolve an
+	/// address to a parish name. The address should be compatible with the MAT[CH] street
+	/// data base and the street should have been normalized beforehand (see method <see
+	/// cref="SwissPostStreet.NormalizeStreetName"/>).
+	/// </summary>
 	public sealed class ParishAddressRepository
 	{
 		private ParishAddressRepository()
@@ -23,7 +29,10 @@ namespace Epsitec.Aider.Data
 			}
 		}
 
-		
+
+		/// <summary>
+		/// The <see cref="ParishAddressRepository"/> singleton.
+		/// </summary>
 		public static readonly ParishAddressRepository Current = new ParishAddressRepository ();
 
 

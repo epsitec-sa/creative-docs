@@ -70,13 +70,14 @@ namespace Epsitec.Data.Platform
 				return EmptyList<SwissPostZipInformation>.Instance;
 			}
 		}
-		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string shortName)
+
+		public IEnumerable<SwissPostZipInformation> FindZips(int zipCode, string longName)
 		{
 			List<SwissPostZipInformation> list;
 			
 			if (this.nameByZip.TryGetValue (zipCode, out list))
 			{
-				return list.Where (x => x.ShortName == shortName);
+				return list.Where (x => x.LongName == longName);
 			}
 			else
 			{
