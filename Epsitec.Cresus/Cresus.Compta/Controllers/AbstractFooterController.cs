@@ -654,8 +654,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected FrameBox CreateRightFooterTopUI(Widget parent)
+		protected FrameBox CreateRightFooterUI(Widget parent)
 		{
+			//	Crée le panneau de droite, lorsque le footer est en mode HasRightFooter.
 			this.fieldControllers.Clear ();
 
 			var mainFrame = new FrameBox

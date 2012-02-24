@@ -346,7 +346,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			FormattedText error = FormattedText.Null;
 
-			if (utilisateur == null || (!string.IsNullOrEmpty (utilisateur.MotDePasse) && utilisateur.MotDePasse != md5))
+			if (utilisateur == null ||
+				(string.IsNullOrEmpty (utilisateur.MotDePasse) && !string.IsNullOrEmpty (md5)) ||
+				(!string.IsNullOrEmpty (utilisateur.MotDePasse) && utilisateur.MotDePasse != md5))
 			{
 				error = "Le nom d'utilisateur ou le mot de passe sont faux";
 			}

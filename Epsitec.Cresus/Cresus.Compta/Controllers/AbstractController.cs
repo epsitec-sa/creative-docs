@@ -714,7 +714,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					//	S'il n'y a qu'un seul utilisateur (forcément administrateur) sans mot de passe,
 					//	n'affiche pas l'identité de l'utilisateur.
 					this.userLabel.Visibility = false;
-					tooltip = "";
+					tooltip = null;
 				}
 				else
 				{
@@ -724,8 +724,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			var icon = UIBuilder.GetTextIconUri ("Présentation.Login", iconSize: 20);
-			ToolTip.Default.SetToolTip (this.userLabel, string.Format(tooltip, icon));
+			if (tooltip != null)
+			{
+				var icon = UIBuilder.GetTextIconUri ("Présentation.Login", iconSize: 20);
+				ToolTip.Default.SetToolTip (this.userLabel, string.Format (tooltip, icon));
+			}
 		}
 
 		protected virtual void UpdateTitle()
