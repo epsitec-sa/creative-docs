@@ -45,6 +45,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasRightFooter
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override bool HasShowSearchPanel
 		{
 			get
@@ -105,10 +113,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Titre,   0.50, ContentAlignment.MiddleLeft, "Nom",                  "Nom court du journal");
-				yield return new ColumnMapper (ColumnType.Libellé, 1.00, ContentAlignment.MiddleLeft, "Description",          "Description détaillée du journal");
+				yield return new ColumnMapper (ColumnType.Titre,   1.00, ContentAlignment.MiddleLeft, "Nom",                  "Nom court du journal");
+				yield return new ColumnMapper (ColumnType.Libellé, 0.00, ContentAlignment.MiddleLeft, "Description",          "Description détaillée du journal");
 				yield return new ColumnMapper (ColumnType.Pièce,   0.50, ContentAlignment.MiddleLeft, "Générateur de pièces", "Générateur pour les numéros de pièces (facultatif)");
-				yield return new ColumnMapper (ColumnType.Résumé,  0.50, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Résumé,  1.00, ContentAlignment.MiddleLeft, "Résumé", edition: false);
 			}
 		}
 	}
