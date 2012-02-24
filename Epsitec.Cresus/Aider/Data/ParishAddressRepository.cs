@@ -52,25 +52,21 @@ namespace Epsitec.Aider.Data
 			return this.FindAddresses (ParishAddressRepository.GetKey (zipCode, townName));
 		}
 
-		private ParishAddresses FindAddresses(string key)
-		{
-			ParishAddresses addresses;
-
-			this.addresses.TryGetValue (key, out addresses);
-
-			return addresses;
-		}
-
+		/// <summary>
+		/// Finds the name of the parish, based on the zip code, the town name and a normalized
+		/// street address.
+		/// </summary>
+		/// <param name="zipCode">The zip code.</param>
+		/// <param name="townName">The name of the town.</param>
+		/// <param name="normalizedStreetName">The normalized street name.</param>
+		/// <param name="streetNumber">The street number.</param>
+		/// <returns>The name of the parish or <c>null</c>.</returns>
 		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int streetNumber)
 		{
 			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, streetNumber);
 		}
 
-		public string FindParishName(string zipCode, string townName, string normalizedStreetName, int streetNumber)
-		{
-			return this.FindParishName (string.Concat (zipCode, " ", townName), normalizedStreetName, streetNumber);
-		}
-
+		
 		private string FindParishName(string key, string normalizedStreetName, int streetNumber)
 		{
 			var addresses = this.FindAddresses (key);
@@ -95,6 +91,15 @@ namespace Epsitec.Aider.Data
 		}
 
 
+		private ParishAddresses FindAddresses(string key)
+		{
+			ParishAddresses addresses;
+
+			this.addresses.TryGetValue (key, out addresses);
+
+			return addresses;
+		}
+
 		private ParishAddresses AddParishAddress(string key, ParishAddressInformation info)
 		{
 			ParishAddresses addresses;
@@ -108,6 +113,7 @@ namespace Epsitec.Aider.Data
 			return addresses;
 		}
 
+		
 		private static string GetKey(int zipCode, string townName)
 		{
 			return string.Format ("{0:0000} {1}", zipCode, townName);
