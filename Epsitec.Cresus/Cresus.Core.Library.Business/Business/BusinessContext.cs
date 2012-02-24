@@ -175,6 +175,11 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+		public void NotifyUIChanges()
+		{
+			this.OnRefreshUIRequested ();
+		}
+
 
 		/// <summary>
 		/// Gets the cached entity.
@@ -781,7 +786,26 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Reloads the entities if they have changed in the database.
+		/// </summary>
+		/// <returns><c>true</c> if some entities changed; otherwise, <c>false</c>.</returns>
+		public bool ReloadEntities()
+		{
+			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+
+			try
+			{
+				return this.dataContext.Reload ();
+			}
+
+			finally
+			{
+				this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			}
+		}
+
 		public System.IDisposable SuspendUpdates()
 		{
 			var helper = new DelayedUpdate (this);
@@ -937,10 +961,7 @@ namespace Epsitec.Cresus.Core.Business
 		{
 			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
 
-			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-			this.dataContext.Reload ();
-			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
-
+			ReloadEntities ();
 			this.NotifyExternalChanges ();
 		}
 

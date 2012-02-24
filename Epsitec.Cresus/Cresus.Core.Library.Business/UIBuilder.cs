@@ -453,7 +453,17 @@ namespace Epsitec.Cresus.Core
 			lockMonitor.LockStateChanged +=
 				delegate
 				{
-					lockButton.Visibility = lockMonitor.LockState == DataLayer.Infrastructure.LockState.Locked;
+					bool isLocked = lockMonitor.LockState == DataLayer.Infrastructure.LockState.Locked;
+					
+					lockButton.Visibility = isLocked;
+					
+					if (isLocked == false)
+					{
+						if (this.businessContext.ReloadEntities ())
+						{
+							this.businessContext.NotifyUIChanges ();
+						}
+					}
 				};
 		}
 
