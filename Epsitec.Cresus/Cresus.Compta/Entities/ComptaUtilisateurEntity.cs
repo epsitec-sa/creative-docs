@@ -43,6 +43,22 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 
+		public FormattedText GetPasswordIcon()
+		{
+			string icon;
+
+			if (string.IsNullOrEmpty(this.MotDePasse))
+			{
+				icon = "User.Unlocked";
+			}
+			else
+			{
+				icon = "User.Locked";
+			}
+
+			return string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>", UIBuilder.GetResourceIconUri (icon));
+		}
+
 		public FormattedText GetAccessSummary()
 		{
 			//	Retourne un résumé sur les droits d'accès de l'utilisateur.

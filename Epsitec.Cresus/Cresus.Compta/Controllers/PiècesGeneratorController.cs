@@ -120,8 +120,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Incrément,   0.00, ContentAlignment.MiddleLeft, "Incrément",               "Valeur de l'incrément");
 				yield return new ColumnMapper (ColumnType.SépMilliers, 0.00, ContentAlignment.MiddleLeft, "Séparateur des milliers", "Séparateur pour les milliers (facultatif)");
 				yield return new ColumnMapper (ColumnType.Digits,      0.00, ContentAlignment.MiddleLeft, "Nb de chiffres",          "Nombre fixe de chiffres (facultatif)");
-				yield return new ColumnMapper (ColumnType.Exemple,     1.50, ContentAlignment.MiddleLeft, "Exemples");
-				yield return new ColumnMapper (ColumnType.Résumé,      1.50, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Exemple,     1.50, ContentAlignment.MiddleLeft, "Exemples", edition: false);
+				yield return new ColumnMapper (ColumnType.Résumé,      1.50, ContentAlignment.MiddleLeft, "Résumé",   edition: false);
 			}
 		}
 	}

@@ -60,5 +60,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		IdentitéWindows,
 		Désactivé,
 		Exemple,
+		Icône,
 	}
 }

@@ -19,17 +19,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool show = true, bool hideForSearch = false)
-			: this (column, relativeWidth, alignment, description, FormattedText.Null, show, hideForSearch)
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, bool show = true, bool hideForSearch = false, bool edition = true)
+			: this (column, relativeWidth, alignment, description, FormattedText.Null, show, hideForSearch, edition)
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false)
-			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip, show, hideForSearch)
+		public ColumnMapper(ColumnType column, double relativeWidth, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true)
+			: this (column, relativeWidth, ContentAlignment.MiddleLeft, description, tooltip, show, hideForSearch, edition)
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false)
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true)
 		{
 			this.Column        = column;
 			this.RelativeWidth = relativeWidth;
@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.Tooltip       = tooltip;
 			this.Show          = show;
 			this.HideForSearch = hideForSearch;
+			this.Edition       = edition;
 		}
 
 		public ColumnType Column
@@ -80,6 +81,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get;
 			set;
+		}
+
+		public bool Edition
+		{
+			get;
+			private set;
 		}
 	}
 }

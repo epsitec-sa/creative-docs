@@ -71,91 +71,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
-
-			this.parent.Window.FocusedWidgetChanging += new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
-			this.parent.Window.FocusedWidgetChanged += new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
 		}
 
 		public void Dispose()
 		{
-			this.parent.Window.FocusedWidgetChanging -= new Common.Support.EventHandler<FocusChangingEventArgs> (this.HandleFocusedWidgetChanging);
-			this.parent.Window.FocusedWidgetChanged -= new Common.Support.EventHandler<DependencyPropertyChangedEventArgs> (this.HandleFocusedWidgetChanged);
-		}
-
-		private void HandleFocusedWidgetChanging(object sender, FocusChangingEventArgs e)
-		{
-#if false
-			//	Le focus va changer de widget. Il faut modifier le contenu du widget initial, en
-			//	fonction de la validation. Par exemple, si on a tapé "20" dans une date, ce texte
-			//	sera remplacé par "20.03.2012".
-			if (e.OldFocus != null)
-			{
-				ColumnType columnType;
-				int line;
-				if (this.GetWidgetColumnLine (e.OldFocus.Name, out columnType, out line))
-				{
-					if (line < this.dataAccessor.EditionLine.Count && this.columnMappers.Where (x => x.Show && x.Column == columnType).Any ())
-					{
-						var field = e.OldFocus as AbstractTextField;
-						System.Diagnostics.Debug.Assert (field != null);
-
-						if (field is AutoCompleteTextField)
-						{
-							return;
-						}
-
-						var currentText = this.dataAccessor.GetEditionText (line, columnType);
-
-						if (field.FormattedText != currentText)
-						{
-							this.controller.IgnoreChanged = true;
-							field.FormattedText = currentText;
-							field.HintText = null;
-							this.controller.IgnoreChanged = false;
-						}
-					}
-				}
-			}
-#endif
-		}
-
-		private void HandleFocusedWidgetChanged(object sender, DependencyPropertyChangedEventArgs e)
-		{
-#if false
-			//	Le focus a changé de widget. Il faut mettre en évidence la colonne correspondant au
-			//	nouveau widget, dans l'en-tête du tableau principal.
-			var window = sender as Window;
-
-			if (window != null)
-			{
-				var focused = window.FocusedWidget;
-
-				if (focused != null)
-				{
-					ColumnType columnType;
-					int line;
-					if (this.GetWidgetColumnLine (focused.Name, out columnType, out line))
-					{
-						this.arrayController.HiliteHeaderColumn (columnType);
-						this.selectedColumn = columnType;
-
-						if (this.selectedLine != line)
-						{
-							this.selectedLine = line;
-
-							if (this.selectedLine != -1)
-							{
-								this.UpdateAfterSelectedLineChanged ();
-							}
-						}
-
-						return;
-					}
-				}
-
-				this.arrayController.HiliteHeaderColumn (ColumnType.None);
-			}
-#endif
 		}
 
 		protected virtual void UpdateAfterSelectedLineChanged()
@@ -278,7 +197,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			int i = 0;
 
-			foreach (var mapper in this.columnMappers)
+			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 			{
 				if (mapper.Column == columnType)
 				{
@@ -472,7 +391,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
-					foreach (var mapper in this.columnMappers.Where (x => x.Show))
+					foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 					{
 						var controller = this.GetFieldController (mapper.Column, line);
 
@@ -493,25 +412,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 		}
-
-#if false
-		protected void WidgetToEditionData()
-		{
-			//	Effectue le transfert widgets éditables -> this.dataAccessor.EditionData.
-			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
-			{
-				foreach (var mapper in this.columnMappers.Where (x => x.Show))
-				{
-					var controller = this.GetFieldController (mapper.Column, line);
-
-					if (controller != null)
-					{
-						controller.ControllerToEditionData ();
-					}
-				}
-			}
-		}
-#endif
 
 		protected virtual void UpdateEditionWidgets()
 		{
@@ -566,7 +466,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FooterValidate(int line)
 		{
-			foreach (var mapper in this.columnMappers.Where (x => x.Show))
+			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 			{
 				var controller = this.GetFieldController (mapper.Column, line);
 
@@ -601,7 +501,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.UpdateArrayColumns ();
 
-				int columnCount = this.columnMappers.Where (x => x.Show).Count ();
+				int columnCount = this.columnMappers.Where (x => x.Show && x.Edition).Count ();
 
 				for (int line = 0; line < this.fieldControllers.Count; line++)
 				{
@@ -726,7 +626,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Cherche la colonne suivante, en avant ou en arrière.
 			//	Retourne false si on est arrivé à une extrémité.
-			var mappers = this.columnMappers.Where (x => x.Show).ToList ();  // seulement les colonnes visibles
+			var mappers = this.columnMappers.Where (x => x.Show && x.Edition).ToList ();  // seulement les colonnes visibles
 
 			var c = columnType;
 			int i = mappers.FindIndex (x => x.Column == c);

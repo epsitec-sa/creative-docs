@@ -77,14 +77,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			footerFrame.TabIndex = line+1;
 
-			foreach (var mapper in this.columnMappers.Where (x => x.Show))
+			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				if (mapper.Column == ColumnType.Exemple ||
-					mapper.Column == ColumnType.Résumé  )
-				{
-					continue;
-				}
-
 				AbstractFieldController field;
 
 				if (mapper.Column == ColumnType.SépMilliers)

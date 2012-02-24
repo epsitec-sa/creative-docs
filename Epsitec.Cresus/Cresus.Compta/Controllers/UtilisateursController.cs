@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return 20;
+				return 40;
 			}
 		}
 
@@ -114,15 +114,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Utilisateur,     1.00, ContentAlignment.MiddleLeft, "Identité de l'utilisateur",           "Nom de l'utilisateur utilisé pour l'identification");
-				yield return new ColumnMapper (ColumnType.NomComplet,      1.00, ContentAlignment.MiddleLeft, "Nom complet",                         "Nom complet de l'utilisateur (prénom et nom usuels)");
-				yield return new ColumnMapper (ColumnType.DateDébut,       0.00, ContentAlignment.MiddleLeft, "Dates de début et de fin de validié", "Date de début de validité (facultatif)");
-				yield return new ColumnMapper (ColumnType.DateFin,         0.00, ContentAlignment.MiddleLeft, "",                                    "Date de fin de validité (facultatif)");
-				yield return new ColumnMapper (ColumnType.IdentitéWindows, 0.00, ContentAlignment.MiddleLeft, "Utilise l'identité Windows",          "Une coche indique que l'identification est automatique, si elle<br/>correspond à l'identité de l'utilisateur de la session Windows");
-				yield return new ColumnMapper (ColumnType.Désactivé,       0.00, ContentAlignment.MiddleLeft, "Utilisateur désactivé",               "Une coche indique que cet utilisateur ne peut plus s'identifier");
-				yield return new ColumnMapper (ColumnType.MotDePasse,      0.00, ContentAlignment.MiddleLeft, "Mot de passe",                        "Mot de passe de l'utilisateur (facultatif)");
-				yield return new ColumnMapper (ColumnType.Pièce,           0.00, ContentAlignment.MiddleLeft, "Générateur de pièces",                "Générateur pour les numéros de pièces (facultatif)");
-				yield return new ColumnMapper (ColumnType.Résumé,          1.00, ContentAlignment.MiddleLeft, "Résumé");
+				yield return new ColumnMapper (ColumnType.Icône,           0.30, ContentAlignment.MiddleCenter, "MdP", edition: false);
+				yield return new ColumnMapper (ColumnType.Utilisateur,     1.00, ContentAlignment.MiddleLeft,   "Identité de l'utilisateur",           "Nom de l'utilisateur utilisé pour l'identification");
+				yield return new ColumnMapper (ColumnType.NomComplet,      1.00, ContentAlignment.MiddleLeft,   "Nom complet",                         "Nom complet de l'utilisateur (prénom et nom usuels)");
+				yield return new ColumnMapper (ColumnType.DateDébut,       0.00, ContentAlignment.MiddleLeft,   "Dates de début et de fin de validié", "Date de début de validité (facultatif)");
+				yield return new ColumnMapper (ColumnType.DateFin,         0.00, ContentAlignment.MiddleLeft,   "",                                    "Date de fin de validité (facultatif)");
+				yield return new ColumnMapper (ColumnType.IdentitéWindows, 0.00, ContentAlignment.MiddleLeft,   "Utilise l'identité Windows",          "Une coche indique que l'identification est automatique, si elle<br/>correspond à l'identité de l'utilisateur de la session Windows");
+				yield return new ColumnMapper (ColumnType.Désactivé,       0.00, ContentAlignment.MiddleLeft,   "Utilisateur désactivé",               "Une coche indique que cet utilisateur ne peut plus s'identifier");
+				yield return new ColumnMapper (ColumnType.MotDePasse,      0.00, ContentAlignment.MiddleLeft,   "Mot de passe",                        "Mot de passe de l'utilisateur (facultatif)");
+				yield return new ColumnMapper (ColumnType.Pièce,           0.00, ContentAlignment.MiddleLeft,   "Générateur de pièces",                "Générateur pour les numéros de pièces (facultatif)");
+				yield return new ColumnMapper (ColumnType.Résumé,          1.00, ContentAlignment.MiddleLeft,   "Résumé", edition: false);
 			}
 		}
 

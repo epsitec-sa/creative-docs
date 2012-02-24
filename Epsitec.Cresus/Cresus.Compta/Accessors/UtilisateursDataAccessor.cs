@@ -114,6 +114,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Résumé:
 					return utilisateur.GetAccessSummary ();
 
+				case ColumnType.Icône:
+					return utilisateur.GetPasswordIcon ();
+
 				default:
 					return FormattedText.Null;
 			}
