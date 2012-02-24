@@ -940,6 +940,8 @@ namespace Epsitec.Cresus.Core.Business
 			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
 			this.dataContext.Reload ();
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+
+			this.NotifyExternalChanges ();
 		}
 
 		

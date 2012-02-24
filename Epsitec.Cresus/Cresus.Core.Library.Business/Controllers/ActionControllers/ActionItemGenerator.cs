@@ -194,7 +194,12 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void CreateLayout(TileDataItem item, ActionItem actionItem)
 		{
-			this.layouts.Add (ActionItemLayout.Create (item, actionItem));
+			var layout = ActionItemLayout.Create (item, actionItem);
+
+			if (layout != null)
+			{
+				this.layouts.Add (layout);
+			}
 		}
 
 		private TileDataItem FindTileDataItem(string name)

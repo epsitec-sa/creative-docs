@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			var bucket = new TileActionsBucket ();
 
 			//	Sort all items by title tile and then by rank (i.e. by row, priority and label).
-			
+
 			foreach (var item in items)
 			{
 				var tileActions = bucket.GetTileActions (item.TitleTile);
