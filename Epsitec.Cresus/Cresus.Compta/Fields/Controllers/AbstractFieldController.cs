@@ -127,6 +127,15 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		}
 
 
+		protected bool HasRighrFooter
+		{
+			get
+			{
+				return this.controller.HasRightFooter;
+			}
+		}
+
+
 		protected readonly AbstractController					controller;
 		protected readonly int									line;
 		protected readonly ColumnMapper							columnMapper;

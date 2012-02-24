@@ -31,15 +31,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasManualGeometry
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
 			this.fieldControllers.Clear ();

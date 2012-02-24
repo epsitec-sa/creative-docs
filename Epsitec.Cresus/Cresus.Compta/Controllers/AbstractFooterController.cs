@@ -57,14 +57,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasManualGeometry
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 
 		public virtual void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
@@ -605,7 +597,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateFooterGeometry()
 		{
-			if (!this.HasManualGeometry)
+			if (!this.controller.HasRightFooter)
 			{
 				this.UpdateArrayColumns ();
 
