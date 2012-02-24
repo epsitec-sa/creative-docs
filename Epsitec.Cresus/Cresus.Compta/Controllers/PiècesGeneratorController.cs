@@ -45,6 +45,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasRightFooter
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override bool HasShowSearchPanel
 		{
 			get
@@ -105,14 +113,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Nom,         1.20, ContentAlignment.MiddleLeft,   "Nom",                 "Nom du générateur de numéros de pièces");
-				yield return new ColumnMapper (ColumnType.Préfixe,     0.60, ContentAlignment.MiddleLeft,   "Préfixe",             "Préfixe (vient avant le numéro)");
-				yield return new ColumnMapper (ColumnType.Numéro,      1.00, ContentAlignment.MiddleRight,  "Prochain numéro",     "Prochain numéro généré");
-				yield return new ColumnMapper (ColumnType.Suffixe,     0.60, ContentAlignment.MiddleLeft,   "Suffixe",             "Suffixe (vient après le numéro)");
-				yield return new ColumnMapper (ColumnType.Incrément,   0.60, ContentAlignment.MiddleRight,  "Incrément",           "Valeur de l'incrément");
-				yield return new ColumnMapper (ColumnType.SépMilliers, 1.00, ContentAlignment.MiddleCenter, "Séparateur milliers", "Séparateur pour les milliers (facultatif)");
-				yield return new ColumnMapper (ColumnType.Digits,      0.70, ContentAlignment.MiddleRight,  "Nb de chiffres",      "Nombre fixe de chiffres (facultatif)");
-				yield return new ColumnMapper (ColumnType.Résumé,      2.00, ContentAlignment.MiddleLeft,   "Résumé");
+				yield return new ColumnMapper (ColumnType.Nom,         1.00, ContentAlignment.MiddleLeft, "Nom",                     "Nom du générateur de numéros de pièces");
+				yield return new ColumnMapper (ColumnType.Préfixe,     0.00, ContentAlignment.MiddleLeft, "Préfixe",                 "Préfixe (vient avant le numéro)");
+				yield return new ColumnMapper (ColumnType.Numéro,      0.00, ContentAlignment.MiddleLeft, "Prochain numéro",         "Prochain numéro généré");
+				yield return new ColumnMapper (ColumnType.Suffixe,     0.00, ContentAlignment.MiddleLeft, "Suffixe",                 "Suffixe (vient après le numéro)");
+				yield return new ColumnMapper (ColumnType.Incrément,   0.00, ContentAlignment.MiddleLeft, "Incrément",               "Valeur de l'incrément");
+				yield return new ColumnMapper (ColumnType.SépMilliers, 0.00, ContentAlignment.MiddleLeft, "Séparateur des milliers", "Séparateur pour les milliers (facultatif)");
+				yield return new ColumnMapper (ColumnType.Digits,      0.00, ContentAlignment.MiddleLeft, "Nb de chiffres",          "Nombre fixe de chiffres (facultatif)");
+				yield return new ColumnMapper (ColumnType.Exemple,     1.50, ContentAlignment.MiddleLeft, "Exemples");
+				yield return new ColumnMapper (ColumnType.Résumé,      1.50, ContentAlignment.MiddleLeft, "Résumé");
 			}
 		}
 	}

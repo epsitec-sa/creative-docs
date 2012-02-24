@@ -43,26 +43,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.toolbar = new FrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = BottomToolbarController.toolbarHeight,
-				Dock            = DockStyle.Bottom,
-				Margins         = new Margins (0, 0, 1, 0),
-				Padding         = new Margins (0, 20, 0, 0),
+				Parent              = parent,
+				PreferredHeight     = BottomToolbarController.toolbarHeight,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock                = DockStyle.Bottom,
+				Margins             = new Margins (0, 0, 1, 0),
+				Padding             = new Margins (0, 20, 0, 0),
 			};
 
 			this.operationLabel = new StaticText
 			{
 				Parent           = this.toolbar,
 				ContentAlignment = ContentAlignment.MiddleLeft,
-				PreferredWidth   = 300,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
-				Dock             = DockStyle.Left,
+				Dock             = DockStyle.Fill,
 			};
 
 			this.editionLabel = new StaticText
 			{
 				Parent           = this.toolbar,
 				ContentAlignment = ContentAlignment.MiddleRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
 				Dock             = DockStyle.Fill,
 			};
@@ -87,12 +89,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 #endif
 
-			this.operationLabel.FormattedText = text;
+			if (text.IsNullOrEmpty)
+			{
+				this.operationLabel.Visibility = false;
+			}
+			else
+			{
+				this.operationLabel.Visibility = true;
+				this.operationLabel.FormattedText = text;
+			}
 		}
 
 		public void SetEditionDescription(FormattedText text)
 		{
-			this.editionLabel.FormattedText = text;
+			if (text.IsNullOrEmpty)
+			{
+				this.editionLabel.Visibility = false;
+			}
+			else
+			{
+				this.editionLabel.Visibility = true;
+				this.editionLabel.FormattedText = text;
+			}
 		}
 
 

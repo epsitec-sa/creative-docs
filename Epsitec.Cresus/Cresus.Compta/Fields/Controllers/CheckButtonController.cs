@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 1, 0, 0),
+				Dock            = this.HasRighrFooter ? DockStyle.Top : DockStyle.Left,
+				Margins         = this.HasRighrFooter ? new Margins (0, 0, 0, 0) : new Margins (0, 1, 0, 0),
 			};
 
 			this.container = new FrameBox

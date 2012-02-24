@@ -42,6 +42,21 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
+		public FormattedText GetSample(ComptaPiècesGeneratorEntity generator)
+		{
+			var list = new List<string> ();
+
+			int n = generator.Numéro;
+			for (int i = 0; i < 10; i++)
+			{
+				list.Add (this.GetFormattedPièce (generator, n).ToString ());
+				n += generator.Incrément;
+			}
+			list.Add ("...");
+
+			return string.Join (" ", list);
+		}
+
 		public FormattedText GetSummary(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne un résumé de l'utilisation du générateur.
@@ -156,22 +171,27 @@ namespace Epsitec.Cresus.Compta.IO
 			else
 			{
 				int n = this.GetPièceProchainNuméro (generator);
-				string s = n.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-				if (generator.Digits != 0 && generator.Digits > s.Length)
-				{
-					s = new string ('0', generator.Digits - s.Length) + s;  // complète avec des zéros
-				}
-
-				if (!generator.SépMilliers.IsNullOrEmpty)
-				{
-					s = Strings.AddThousandSeparators (s, generator.SépMilliers.ToSimpleText ());
-				}
-
-				s = generator.Préfixe + s + generator.Suffixe;
-
-				return s;
+				return this.GetFormattedPièce (generator, n);
 			}
+		}
+
+		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int n)
+		{
+			string s = n.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+			if (generator.Digits != 0 && generator.Digits > s.Length)
+			{
+				s = new string ('0', generator.Digits - s.Length) + s;  // complète avec des zéros
+			}
+
+			if (!generator.SépMilliers.IsNullOrEmpty)
+			{
+				s = Strings.AddThousandSeparators (s, generator.SépMilliers.ToSimpleText ());
+			}
+
+			s = generator.Préfixe + s + generator.Suffixe;
+
+			return s;
 		}
 
 		private int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)

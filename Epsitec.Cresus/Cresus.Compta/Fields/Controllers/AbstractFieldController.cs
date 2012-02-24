@@ -127,6 +127,47 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		}
 
 
+		protected void CreateLabelUI(Widget parent)
+		{
+			if (this.HasRighrFooter && !this.columnMapper.Description.IsNullOrEmpty)
+			{
+				new StaticText
+				{
+					Parent        = parent,
+					FormattedText = this.columnMapper.Description + " :",
+					Dock          = DockStyle.Top,
+					Margins       = new Margins (0, 0, 0, 2),
+				};
+			}
+		}
+
+		protected Margins BoxMargins
+		{
+			get
+			{
+				double left   = 0;
+				double right  = 0;
+				double top    = 0;
+				double bottom = 0;
+
+				if (this.HasRighrFooter)
+				{
+					if (this.columnMapper.Description.IsNullOrEmpty)
+					{
+						top = -6;
+					}
+
+					bottom = 5;
+				}
+				else
+				{
+					right = 1;
+				}
+
+				return new Margins (left, right, top, bottom);
+			}
+		}
+
 		protected bool HasRighrFooter
 		{
 			get

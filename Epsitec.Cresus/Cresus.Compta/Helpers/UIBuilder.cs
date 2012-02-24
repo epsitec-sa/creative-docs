@@ -207,6 +207,26 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static void UpdateAutoCompleteTextField(AbstractTextField field, char separator, params FormattedText[] texts)
+		{
+			var auto = field as AutoCompleteTextField;
+			System.Diagnostics.Debug.Assert (auto != null);
+
+			auto.PrimaryTexts.Clear ();
+			auto.SecondaryTexts.Clear ();
+
+			foreach (var text in texts)
+			{
+				var words = text.ToString ().Split (separator);
+
+				if (words.Length == 2)
+				{
+					auto.PrimaryTexts.Add (words[0]);
+					auto.SecondaryTexts.Add (words[1]);
+				}
+			}
+		}
+
 		public static void UpdateAutoCompleteTextField(AbstractTextField field, params FormattedText[] texts)
 		{
 			var auto = field as AutoCompleteTextField;

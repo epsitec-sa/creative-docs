@@ -87,10 +87,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var footerFrame = new TabCatcherFrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 0, 1, 0),
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 1, 0),
 			};
 
 			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
@@ -108,28 +107,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					continue;
 				}
 
-				if (mapper.Column == ColumnType.IdentitéWindows)  // insère un gap ?
+				if (mapper.Column == ColumnType.IdentitéWindows ||
+					mapper.Column == ColumnType.MotDePasse      )  // insère un gap ?
 				{
 					new FrameBox
 					{
 						Parent          = footerFrame,
 						PreferredHeight = 10,
 						Dock            = DockStyle.Top,
-					};
-				}
-
-				bool compact = mapper.Description.IsNullOrEmpty            ||
-							   mapper.Column == ColumnType.IdentitéWindows ||
-							   mapper.Column == ColumnType.Désactivé       ;
-
-				if (!compact)
-				{
-					new StaticText
-					{
-						Parent        = footerFrame,
-						FormattedText = mapper.Description + " :",
-						Dock          = DockStyle.Top,
-						Margins       = new Margins (0, 0, 0, 1),
 					};
 				}
 
@@ -166,8 +151,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				field.Box.TabIndex = ++tabIndex;
-				field.Box.Dock = DockStyle.Top;
-				field.Box.Margins = new Margins (0, 0, compact ? -6:0, 5);
 
 				this.fieldControllers[line].Add (field);
 			}

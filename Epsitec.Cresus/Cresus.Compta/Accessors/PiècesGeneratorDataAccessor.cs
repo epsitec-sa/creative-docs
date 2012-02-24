@@ -114,6 +114,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Incrément:
 					return Converters.IntToString (pièce.Incrément);
 
+				case ColumnType.Exemple:
+					return this.mainWindowController.PiècesGenerator.GetSample (pièce);
+
 				case ColumnType.Résumé:
 					return this.mainWindowController.PiècesGenerator.GetSummary (pièce);
 

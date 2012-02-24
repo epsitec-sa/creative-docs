@@ -9,6 +9,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
@@ -31,7 +32,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Clear ();
 
-			this.CreateLineUI (parent);
+			var mainFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
+			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
+			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
+			toolbar.PreferredWidth = 200;
+			toolbar.Dock           = DockStyle.Top;
+			toolbar.Margins        = new Margins (0);
+			toolbar.Padding        = new Margins (0);
+
+			var band = new FrameBox
+			{
+				Parent        = mainFrame,
+				DrawFullFrame = true,
+				Dock          = DockStyle.Fill,
+				Padding       = new Margins (10),
+			};
+
+			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);
 		}
@@ -42,10 +64,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var footerFrame = new TabCatcherFrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Bottom,
-				Margins         = new Margins (0, 0, 1, 0),
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 1, 0),
 			};
 
 			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
@@ -58,19 +79,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-				field.CreateUI (footerFrame);
-
-				if (mapper.Column == ColumnType.Numéro   ||
-					mapper.Column == ColumnType.Digits   ||
-					mapper.Column == ColumnType.Incrément)
+				if (mapper.Column == ColumnType.Exemple ||
+					mapper.Column == ColumnType.Résumé  )
 				{
-					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
+					continue;
 				}
 
-				if (mapper.Column == ColumnType.Résumé)
+				AbstractFieldController field;
+
+				if (mapper.Column == ColumnType.SépMilliers)
 				{
-					field.IsReadOnly = true;
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '|', "|Aucun", "'|Apostrophe", ".|Point", ",|Virgule", "/|Barre oblique", "-|Tiret");
+				}
+				else
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
+					field.CreateUI (footerFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;
@@ -81,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un générateur de numéros de pièces :" : "Création d'un générateur de numéros de pièces :";
+			return modify ? "Modification d'un générateur :" : "Création d'un générateur :";
 		}
 	}
 }

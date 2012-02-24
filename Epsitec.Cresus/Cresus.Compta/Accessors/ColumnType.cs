@@ -59,5 +59,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Incrément,
 		IdentitéWindows,
 		Désactivé,
+		Exemple,
 	}
 }
