@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un générateur :" : "Création d'un générateur :";
+			return modify ? "Modification d'un générateur de n° :" : "Création d'un générateur de n° :";
 		}
 	}
 }

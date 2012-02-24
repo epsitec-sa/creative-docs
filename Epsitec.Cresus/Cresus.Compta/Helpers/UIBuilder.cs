@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
-				BackColor     = Color.FromHexa ("f4f9ff"),
+				BackColor     = UIBuilder.MiniToolbarColor,
 				Padding       = new Margins (2),
 				Dock          = DockStyle.Top,
 				Margins       = new Margins (0, 0, 0, -1),
@@ -327,13 +327,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color SearchBackColor		= Color.FromHexa ("ffffcc");  // jaune pastel
 		public static readonly Color FilterBackColor		= Color.FromHexa ("ffeecc");  // orange pastel
 		public static readonly Color OptionsBackColor		= Color.FromHexa ("d2f0ff");  // bleu pastel
-		public static readonly Color InfoBackColor			= Color.FromHexa ("cedff0");  // gris-bleu
 
 		public static readonly Color SelectionColor			= Color.FromHexa ("ffd700");  // orange "gold"
 		public static readonly Color JustCreatedColor		= Color.FromHexa ("b3d7ff");  // bleu pastel
 															
 		public static readonly Color TooltipColor			= Color.FromHexa ("ffffe1");  // jaune pâle
 		public static readonly Color ErrorColor				= Color.FromHexa ("ffb1b1");  // rouge pâle
+		public static readonly Color MiniToolbarColor		= Color.FromHexa ("f4f9ff");  // bleu très léger
 
 		public static readonly Color TextInsideSearchColor  = Color.FromBrightness (0);    // noir
 		public static readonly Color TextOutsideSearchColor = Color.FromBrightness (0.6);  // gris
