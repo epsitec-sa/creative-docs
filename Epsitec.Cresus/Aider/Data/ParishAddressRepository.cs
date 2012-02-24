@@ -59,15 +59,15 @@ namespace Epsitec.Aider.Data
 		/// <param name="zipCode">The zip code.</param>
 		/// <param name="townName">The name of the town.</param>
 		/// <param name="normalizedStreetName">The normalized street name.</param>
-		/// <param name="streetNumber">The street number.</param>
+		/// <param name="houseNumber">The house number.</param>
 		/// <returns>The name of the parish or <c>null</c>.</returns>
-		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int streetNumber)
+		public string FindParishName(int zipCode, string townName, string normalizedStreetName, int houseNumber)
 		{
-			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, streetNumber);
+			return this.FindParishName (ParishAddressRepository.GetKey (zipCode, townName), normalizedStreetName, houseNumber);
 		}
 
 		
-		private string FindParishName(string key, string normalizedStreetName, int streetNumber)
+		private string FindParishName(string key, string normalizedStreetName, int houseNumber)
 		{
 			var addresses = this.FindAddresses (key);
 
@@ -76,7 +76,7 @@ namespace Epsitec.Aider.Data
 				return null;
 			}
 			
-			var parish = addresses.FindSpecific (normalizedStreetName, streetNumber)
+			var parish = addresses.FindSpecific (normalizedStreetName, houseNumber)
 					  ?? addresses.FindDefault (normalizedStreetName)
 					  ?? addresses.FindDefault ();
 

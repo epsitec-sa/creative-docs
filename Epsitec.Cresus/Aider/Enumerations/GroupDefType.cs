@@ -9,13 +9,11 @@ using System.Linq;
 namespace Epsitec.Aider.Enumerations
 {
 	[DesignerVisible]
-	public enum GroupType
+	public enum GroupDefType
 	{
 		None = 0,
 
-		Root,
-		Node,
-		NodeAndLeaf,
-		Leaf,
+		Region = 1,
+		Parish = 2,
 	}
 }

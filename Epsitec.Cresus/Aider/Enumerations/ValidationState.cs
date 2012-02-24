@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -15,5 +15,7 @@ namespace Epsitec.Aider.Enumerations
 		Pending = 2,
 		Invalid = 3,
 		Deleted = 4,
+
+		ManualOverride = 0x0010,
 	}
 }

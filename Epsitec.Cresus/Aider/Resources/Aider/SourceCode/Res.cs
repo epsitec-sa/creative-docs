@@ -93,6 +93,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType FunctionType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 134));
 				//	designer:cap/LVATA
 				public static readonly Epsitec.Common.Types.EnumType GroupCategory = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 349));
+				//	designer:cap/LVATB
+				public static readonly Epsitec.Common.Types.EnumType GroupDefType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 381));
 				//	designer:cap/LVA26
 				public static readonly Epsitec.Common.Types.EnumType GroupLevel = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 194));
 				//	designer:cap/LVAG3
@@ -457,6 +459,38 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 351));
+						}
+					}
+				}
+				
+				public static class GroupDefType
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVAUB
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 382));
+						}
+					}
+					//	designer:cap/LVA0C
+					public static global::Epsitec.Common.Types.Caption Parish
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 384));
+						}
+					}
+					//	designer:cap/LVAVB
+					public static global::Epsitec.Common.Types.Caption Region
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 383));
 						}
 					}
 				}
@@ -1131,6 +1165,14 @@ namespace Epsitec.Aider
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 204));
 						}
 					}
+					//	designer:cap/LVASB
+					public static global::Epsitec.Common.Types.Caption ManualOverride
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 380));
+						}
+					}
 					//	designer:cap/LVAB6
 					public static global::Epsitec.Common.Types.Caption Pending
 					{
@@ -1336,6 +1378,8 @@ namespace Epsitec.Aider
 				
 				//	designer:cap/LVA2B
 				public static readonly global::Epsitec.Common.Support.Druid Category = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 354);
+				//	designer:cap/LVA1C
+				public static readonly global::Epsitec.Common.Support.Druid DefType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 385);
 				//	designer:cap/LVA9A
 				public static readonly global::Epsitec.Common.Support.Druid Functions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 329);
 				//	designer:cap/LVAAA
@@ -1940,6 +1984,7 @@ namespace Epsitec.Aider
 			Values.Enum.EventType._Initialize ();
 			Values.Enum.FunctionType._Initialize ();
 			Values.Enum.GroupCategory._Initialize ();
+			Values.Enum.GroupDefType._Initialize ();
 			Values.Enum.GroupLevel._Initialize ();
 			Values.Enum.GroupParticipantRole._Initialize ();
 			Values.Enum.GroupRelationshipType._Initialize ();

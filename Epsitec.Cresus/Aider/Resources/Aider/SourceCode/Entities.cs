@@ -5890,6 +5890,28 @@ namespace Epsitec.Aider.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>DefType</c> field.
+		///	designer:fld/LVA2A/LVA1C
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA1C]")]
+		public global::Epsitec.Aider.Enumerations.GroupDefType DefType
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Aider.Enumerations.GroupDefType> ("[LVA1C]");
+			}
+			set
+			{
+				global::Epsitec.Aider.Enumerations.GroupDefType oldValue = this.DefType;
+				if (oldValue != value || !this.IsFieldDefined("[LVA1C]"))
+				{
+					this.OnDefTypeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Aider.Enumerations.GroupDefType> ("[LVA1C]", oldValue, value);
+					this.OnDefTypeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Category</c> field.
 		///	designer:fld/LVA2A/LVA2B
 		///	</summary>
@@ -5986,6 +6008,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnLevelChanged(global::Epsitec.Aider.Enumerations.GroupLevel oldValue, global::Epsitec.Aider.Enumerations.GroupLevel newValue);
 		partial void OnTypeChanging(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
 		partial void OnTypeChanged(global::Epsitec.Aider.Enumerations.GroupType oldValue, global::Epsitec.Aider.Enumerations.GroupType newValue);
+		partial void OnDefTypeChanging(global::Epsitec.Aider.Enumerations.GroupDefType oldValue, global::Epsitec.Aider.Enumerations.GroupDefType newValue);
+		partial void OnDefTypeChanged(global::Epsitec.Aider.Enumerations.GroupDefType oldValue, global::Epsitec.Aider.Enumerations.GroupDefType newValue);
 		partial void OnCategoryChanging(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		partial void OnCategoryChanged(global::Epsitec.Aider.Enumerations.GroupCategory oldValue, global::Epsitec.Aider.Enumerations.GroupCategory newValue);
 		partial void OnMinOccursChanging(int oldValue, int newValue);

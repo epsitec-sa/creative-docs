@@ -108,6 +108,7 @@
     <Compile Include="Enumerations\DatePrecision.cs" />
     <Compile Include="Enumerations\FunctionType.cs" />
     <Compile Include="Enumerations\GroupCategory.cs" />
+    <Compile Include="Enumerations\GroupDefType.cs" />
     <Compile Include="Enumerations\HouseholdMrMrs.cs" />
     <Compile Include="Enumerations\PersonDeclarationStatus.cs" />
     <Compile Include="Enumerations\PersonMaritalStatus.cs" />
