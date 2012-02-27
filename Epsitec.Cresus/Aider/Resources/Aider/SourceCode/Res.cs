@@ -83,8 +83,6 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType ContactRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 241));
 				//	designer:cap/LVAV1
 				public static readonly Epsitec.Common.Types.EnumType DataSource = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 63));
-				//	designer:cap/LVA31
-				public static readonly Epsitec.Common.Types.EnumType DatePrecision = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 35));
 				//	designer:cap/LVAE3
 				public static readonly Epsitec.Common.Types.EnumType EventParticipantRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 110));
 				//	designer:cap/LVAT3
@@ -317,46 +315,6 @@ namespace Epsitec.Aider
 						get
 						{
 							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 64));
-						}
-					}
-				}
-				
-				public static class DatePrecision
-				{
-					internal static void _Initialize()
-					{
-					}
-					
-					//	designer:cap/LVA41
-					public static global::Epsitec.Common.Types.Caption None
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 36));
-						}
-					}
-					//	designer:cap/LVA71
-					public static global::Epsitec.Common.Types.Caption Year
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 39));
-						}
-					}
-					//	designer:cap/LVA61
-					public static global::Epsitec.Common.Types.Caption YearMonth
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 38));
-						}
-					}
-					//	designer:cap/LVA51
-					public static global::Epsitec.Common.Types.Caption YearMonthDay
-					{
-						get
-						{
-							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 37));
 						}
 					}
 				}
@@ -2025,7 +1983,6 @@ namespace Epsitec.Aider
 			Values.Enum.AddressType._Initialize ();
 			Values.Enum.ContactRole._Initialize ();
 			Values.Enum.DataSource._Initialize ();
-			Values.Enum.DatePrecision._Initialize ();
 			Values.Enum.EventParticipantRole._Initialize ();
 			Values.Enum.EventType._Initialize ();
 			Values.Enum.FunctionType._Initialize ();

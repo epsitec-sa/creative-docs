@@ -109,7 +109,6 @@
     <Compile Include="Data\Ech\eCH_Importer.cs" />
     <Compile Include="Data\Ech\EChXmlTags.cs" />
     <Compile Include="Enumerations\DataSource.cs" />
-    <Compile Include="Enumerations\DatePrecision.cs" />
     <Compile Include="Enumerations\FunctionType.cs" />
     <Compile Include="Enumerations\GroupCategory.cs" />
     <Compile Include="Enumerations\GroupDefType.cs" />

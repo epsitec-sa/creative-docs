@@ -31,11 +31,6 @@
   <data name="Fld.IAddress.PostOfficeBoxText" id="A01">&lt;s:data id="_0" f:Name="PostOfficeBoxText" f:Labels="{Collection {Text 'Case postale (texte)'}}" /&gt;</data>
   <data name="Fld.IAddress.SwissZipCodeId" id="A11">&lt;s:data id="_0" f:Name="SwissZipCodeId" f:Labels="{Collection {Text 'NPA en Suisse / code'}}" /&gt;</data>
   <data name="Fld.IAddress.ForeignZipCode" id="A21">&lt;s:data id="_0" f:Name="ForeignZipCode" f:Labels="{Collection {Text 'Numéro postal (étranger)'}}" /&gt;</data>
-  <data name="Val.Enum.DatePrecision.None" id="A41">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
-  <data name="Val.Enum.DatePrecision.YearMonthDay" id="A51">&lt;s:data id="_0" f:Name="YearMonthDay" f:Labels="{Collection {Text 'jour/mois/année'}}" /&gt;</data>
-  <data name="Val.Enum.DatePrecision.YearMonth" id="A61">&lt;s:data id="_0" f:Name="YearMonth" f:Labels="{Collection {Text 'mois/année'}}" /&gt;</data>
-  <data name="Val.Enum.DatePrecision.Year" id="A71">&lt;s:data id="_0" f:Name="Year" f:Labels="{Collection {Text 'année'}}" /&gt;</data>
-  <data name="Typ.Enum.DatePrecision" id="A31">&lt;s:type id="_1" s:name="*aT" /&gt;&lt;s:type id="_2" s:name="*eT" /&gt;&lt;s:data id="_0" f:Name="Enum.DatePrecision" f:_1.SystemType="E:Epsitec.Aider.Enumerations.DatePrecision, Aider" f:_2.EnumValues="{Collection {Text '0 [LVA41]'}, {Text '1 [LVA51]'}, {Text '2 [LVA61]'}, {Text '3 [LVA71]'}}" /&gt;</data>
   <data name="Val.Enum.PesonMaritalStatus.None" id="A91">&lt;s:data id="_0" f:Name="None" f:Labels="{Collection {Text '—'}}" /&gt;</data>
   <data name="Val.Enum.PesonMaritalStatus.Single" id="AA1">&lt;s:data id="_0" f:Name="Single" f:Labels="{Collection {Text 'Célibataire'}}" /&gt;</data>
   <data name="Val.Enum.PesonMaritalStatus.Married" id="AB1">&lt;s:data id="_0" f:Name="Married" f:Labels="{Collection {Text 'Marié'}}" /&gt;</data>
