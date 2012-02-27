@@ -41,11 +41,6 @@ namespace Epsitec.Cresus.Core.Business
 		/// <param name="entity">The entity.</param>
 		public void ApplyRule(RuleType ruleType, AbstractEntity entity)
 		{
-			if (ruleType == RuleType.Setup)
-			{
-				EntityNullReferenceVirtualizer.PatchNullReferences (entity);
-			}
-
 			GenericBusinessRule rule   = this.ResolveRule (ruleType);
 			System.Action       action = () => rule.Apply (ruleType, entity);
 
