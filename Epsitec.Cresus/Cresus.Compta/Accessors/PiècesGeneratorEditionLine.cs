@@ -31,7 +31,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateNom(EditionData data)
 		{
-			Validators.ValidateText (data, "Il manque le nom du générateur de numéros de pièces");
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var generator = this.comptaEntity.PiècesGenerator.Where (x => x.Nom == data.Text).FirstOrDefault ();
+				if (generator == null)
+				{
+					return;
+				}
+
+				var himself = (this.controller.DataAccessor.JustCreated || this.controller.EditorController.Duplicate) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaPiècesGeneratorEntity;
+				if (himself != null && himself.Nom == data.Text)
+				{
+					return;
+				}
+
+				data.Error = "Ce nom de générateur existe déjà";
+			}
+			else
+			{
+				data.Error = "Il manque le nom du générateur de numéros de pièces";
+			}
 		}
 
 		private void ValidateFormat(EditionData data)

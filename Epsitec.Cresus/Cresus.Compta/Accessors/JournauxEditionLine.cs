@@ -30,7 +30,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateTitle(EditionData data)
 		{
-			Validators.ValidateText (data, "Il manque le titre du journal");
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var journal = this.comptaEntity.Journaux.Where (x => x.Nom == data.Text).FirstOrDefault ();
+				if (journal == null)
+				{
+					return;
+				}
+
+				var himself = (this.controller.DataAccessor.JustCreated || this.controller.EditorController.Duplicate) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaJournalEntity;
+				if (himself != null && himself.Nom == data.Text)
+				{
+					return;
+				}
+
+				data.Error = "Ce nom de journal existe déjà";
+			}
+			else
+			{
+				data.Error = "Il manque le nom du journal";
+			}
 		}
 
 		private void ValidatePièce(EditionData data)
