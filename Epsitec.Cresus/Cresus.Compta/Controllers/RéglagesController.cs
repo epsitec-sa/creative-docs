@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//	Pied de page.
-			var editor = new FrameBox
+			var footer = new FrameBox
 			{
 				Parent = this.mainFrame,
 				Dock   = DockStyle.Bottom,
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.defaultButton = new Button
 			{
-				Parent         = editor,
+				Parent         = footer,
 				Text           = "Remet les valeurs standards",
 				PreferredWidth = 200,
 				Dock           = DockStyle.Left,

@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			{
-				var editor = new FrameBox
+				var footer = new FrameBox
 				{
 					Parent              = group,
 					ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.zeroPrésentationButton = new Button
 				{
-					Parent          = editor,
+					Parent          = footer,
 					Text            = "Aucune",
 					PreferredHeight = 20,
 					Dock            = DockStyle.Fill,
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.allPrésentationButton = new Button
 				{
-					Parent          = editor,
+					Parent          = footer,
 					Text            = "Toutes",
 					PreferredHeight = 20,
 					Dock            = DockStyle.Fill,

@@ -201,19 +201,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateArrayContent ();
 
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.UpdateEditorGeometry ();
-				this.editionController.UpdateEditorContent ();
+				this.editorController.UpdateEditorGeometry ();
+				this.editorController.UpdateEditorContent ();
 			}
 
 			this.SearchStartAction ();
 			this.FilterUpdateTopToolbar ();
 			this.UpdateTitle ();
 			
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.EditorSelect (0);
+				this.editorController.EditorSelect (0);
 			}
 
 			this.CreateSpecificUI (this.frameBox);
@@ -227,17 +227,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void Dispose()
 		{
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.Dispose ();
+				this.editorController.Dispose ();
 			}
 		}
 
-		public AbstractEditorController EditionController
+		public AbstractEditorController EditorController
 		{
 			get
 			{
-				return this.editionController;
+				return this.editorController;
 			}
 		}
 
@@ -337,9 +337,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.optionsController.ShowPanel = options;
 			}
 
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.ShowInfoPanel = info;
+				this.editorController.ShowInfoPanel = info;
 			}
 
 			this.UpdateViewSettings ();
@@ -415,17 +415,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void AcceptAction()
 		{
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.AcceptAction ();
+				this.editorController.AcceptAction ();
 			}
 		}
 
 		public virtual void CancelAction()
 		{
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.CancelAction ();
+				this.editorController.CancelAction ();
 			}
 		}
 
@@ -562,9 +562,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FilterStartAction()
 		{
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.Dirty = false;
+				this.editorController.Dirty = false;
 			}
 
 			if (this.arrayController != null && this.dataAccessor != null)
@@ -585,9 +585,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateViewSettings ();
 
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.EditorValidate ();
+				this.editorController.EditorValidate ();
 			}
 		}
 
@@ -823,16 +823,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArrayColumnsWidthChanged()
 		{
 			//	Appelé lorsque la largeur d'une colonne a changé.
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.UpdateEditorGeometry ();
+				this.editorController.UpdateEditorGeometry ();
 			}
 		}
 
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.ignoreChanges.IsNotZero || this.editionController == null)
+			if (this.ignoreChanges.IsNotZero || this.editorController == null)
 			{
 				return;
 			}
@@ -840,11 +840,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int row    = this.arrayController.SelectedRow;
 			int column = this.arrayController.SelectedColumn;
 
-			if (this.editionController.Dirty)
+			if (this.editorController.Dirty)
 			{
-				if (this.editionController.HasError)
+				if (this.editorController.HasError)
 				{
-					this.editionController.Dirty = false;
+					this.editorController.Dirty = false;
 				}
 				else
 				{
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.dataAccessor.UpdateEditionLine ();
 					this.UpdateArrayContent ();
-					this.editionController.Dirty = false;
+					this.editorController.Dirty = false;
 
 					int adjustedRow = this.dataAccessor.GetEditionIndex (entity);
 
@@ -871,7 +871,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (row == -1)
 			{
-				if (this.editionController == null || !this.editionController.Duplicate)
+				if (this.editorController == null || !this.editorController.Duplicate)
 				{
 					this.dataAccessor.StartCreationLine ();
 				}
@@ -884,11 +884,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.UpdateEditorContent ();
-				this.editionController.EditorSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
-				this.editionController.ShowSelection ();
+				this.editorController.UpdateEditorContent ();
+				this.editorController.EditorSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
+				this.editorController.ShowSelection ();
 			}
 		}
 
@@ -916,9 +916,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.BaseUpdateArrayContent ();
 
-			if (this.editionController != null)
+			if (this.editorController != null)
 			{
-				this.editionController.UpdateEditorContent ();
+				this.editorController.UpdateEditorContent ();
 			}
 
 			this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
@@ -1096,7 +1096,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;
-		protected AbstractEditorController						editionController;
+		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;
 		protected StaticText									titleLabel;

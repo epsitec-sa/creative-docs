@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateEditor(FrameBox parent)
 		{
-			this.editionController = new BudgetsEditorController (this);
-			this.editionController.CreateUI (parent, this.UpdateArrayContent);
+			this.editorController = new BudgetsEditorController (this);
+			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 		}
 
 

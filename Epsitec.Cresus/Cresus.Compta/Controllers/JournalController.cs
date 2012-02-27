@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ClearHilite ();
 			this.UpdateColumnMappers ();
 			this.UpdateArray ();
-			this.editionController.UpdateEditorContent ();
+			this.editorController.UpdateEditorContent ();
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
@@ -116,9 +116,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateEditor(FrameBox parent)
 		{
-			this.editionController = new JournalEditorController (this);
-			this.editionController.CreateUI (parent, this.UpdateArrayContent);
-			this.editionController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
+			this.editorController = new JournalEditorController (this);
+			this.editorController.CreateUI (parent, this.UpdateArrayContent);
+			this.editorController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
 
 
