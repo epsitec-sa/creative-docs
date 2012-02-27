@@ -33,7 +33,11 @@ namespace Epsitec.Aider.Tools
 			var repository  = context.GetRepository<AiderGroupEntity> ();
 			var example     = repository.CreateExample ();
 
-			example.GroupDef.DefType = Enumerations.GroupDefType.Parish;
+			example.GroupDef = new AiderGroupDefEntity ()
+			{
+				DefType = Enumerations.GroupDefType.Parish
+			};
+
 			example.Name = parishName;
 
 			var groups = repository.GetByExample (example).Where (x => x.EndDate == null).ToArray ();

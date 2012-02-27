@@ -50,12 +50,12 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
 
-			wall.AddBrick ()
+			wall.AddBrick (x => x.Parish)
 				.Icon ("Data.AiderGroup.Parish")
-				.Title (this.Entity.Parish.GetCompactSummary ())
-				.Text (this.Entity.GetParishDescription ())
-				.Attribute (BrickMode.DefaultToSummarySubView)
-				.Attribute (BrickMode.SpecialController3);
+				.Title (x => x.GetCompactSummary ())
+				.Text (this.Entity.GetParishDescription ());
+	//			.Attribute (BrickMode.DefaultToSummarySubView);
+//				.Attribute (BrickMode.SpecialController3);
 
 #if false
 			wall.AddBrick (x => x.AdditionalAddress1)

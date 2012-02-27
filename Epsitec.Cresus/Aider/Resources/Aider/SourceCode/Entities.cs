@@ -6214,6 +6214,16 @@ namespace Epsitec.Aider.Entities
 		{
 			get;
 		}
+		///	<summary>
+		///	The <c>WarningType</c> field.
+		///	designer:fld/LVAEB/LVA7C
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA7C]")]
+		global::Epsitec.Aider.Enumerations.WarningType WarningType
+		{
+			get;
+			set;
+		}
 	}
 	public static partial class IAiderWarningInterfaceImplementation
 	{
@@ -6258,6 +6268,24 @@ namespace Epsitec.Aider.Entities
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
 			return entity.GetFieldCollection<global::Epsitec.Aider.Entities.AiderWarningActionEntity> ("[LVAJB]");
 		}
+		public static global::Epsitec.Aider.Enumerations.WarningType GetWarningType(global::Epsitec.Aider.Entities.IAiderWarning obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Aider.Enumerations.WarningType> ("[LVA7C]");
+		}
+		public static void SetWarningType(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Aider.Enumerations.WarningType oldValue = obj.WarningType;
+			if (oldValue != value || !entity.IsFieldDefined("[LVA7C]"))
+			{
+				IAiderWarningInterfaceImplementation.OnWarningTypeChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Aider.Enumerations.WarningType> ("[LVA7C]", oldValue, value);
+				IAiderWarningInterfaceImplementation.OnWarningTypeChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnWarningTypeChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
+		static partial void OnWarningTypeChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Aider.Enumerations.WarningType oldValue, global::Epsitec.Aider.Enumerations.WarningType newValue);
 	}
 }
 #endregion
@@ -6421,6 +6449,22 @@ namespace Epsitec.Aider.Entities
 			get
 			{
 				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetActions (this);
+			}
+		}
+		///	<summary>
+		///	The <c>WarningType</c> field.
+		///	designer:fld/LVALB/LVA7C
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA7C]")]
+		public global::Epsitec.Aider.Enumerations.WarningType WarningType
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetWarningType (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetWarningType (this, value);
 			}
 		}
 		#endregion

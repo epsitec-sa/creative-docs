@@ -131,6 +131,8 @@ namespace Epsitec.Aider
 				public static readonly Epsitec.Common.Types.EnumType UserRole = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 198));
 				//	designer:cap/LVA86
 				public static readonly Epsitec.Common.Types.EnumType ValidationState = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 200));
+				//	designer:cap/LVA2C
+				public static readonly Epsitec.Common.Types.EnumType WarningType = (global::Epsitec.Common.Types.EnumType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 386));
 			}
 			
 			public static class String
@@ -1198,6 +1200,46 @@ namespace Epsitec.Aider
 						}
 					}
 				}
+				
+				public static class WarningType
+				{
+					internal static void _Initialize()
+					{
+					}
+					
+					//	designer:cap/LVA4C
+					public static global::Epsitec.Common.Types.Caption Generic
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 388));
+						}
+					}
+					//	designer:cap/LVA5C
+					public static global::Epsitec.Common.Types.Caption Mismatch
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 389));
+						}
+					}
+					//	designer:cap/LVA3C
+					public static global::Epsitec.Common.Types.Caption None
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 387));
+						}
+					}
+					//	designer:cap/LVA6C
+					public static global::Epsitec.Common.Types.Caption ParishMismatch
+					{
+						get
+						{
+							return global::Epsitec.Aider.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 390));
+						}
+					}
+				}
 			}
 			
 		}
@@ -1818,6 +1860,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 375);
 				//	designer:cap/LVAKB
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 372);
+				//	designer:cap/LVA7C
+				public static readonly global::Epsitec.Common.Support.Druid WarningType = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 391);
 			}
 			
 			public static class IComment
@@ -2003,6 +2047,7 @@ namespace Epsitec.Aider
 			Values.Enum.RemovalReason._Initialize ();
 			Values.Enum.UserRole._Initialize ();
 			Values.Enum.ValidationState._Initialize ();
+			Values.Enum.WarningType._Initialize ();
 			Fields.AiderAddress._Initialize ();
 			Fields.AiderComment._Initialize ();
 			Fields.AiderContact._Initialize ();

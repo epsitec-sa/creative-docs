@@ -55,6 +55,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
+    <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Data\ParishAddressInformation.cs" />
     <Compile Include="Data\ParishAddressRepository.cs" />
     <Compile Include="Entities\AiderFunctionDefEntity.cs" />
+    <Compile Include="Entities\AiderGroupDefEntity.cs" />
     <Compile Include="Entities\AiderGroupEntity.cs" />
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningEntity.cs" />
@@ -136,12 +138,14 @@
     <Compile Include="Enumerations\PersonConfession.cs" />
     <Compile Include="Enumerations\PlacePersonRole.cs" />
     <Compile Include="Enumerations\TextGenerator.cs" />
+    <Compile Include="Enumerations\WarningType.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Enumerations\RemovalReason.cs" />
     <Compile Include="Resources\Aider\SourceCode\Entities.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Resources\Aider\SourceCode\Res.cs" />
+    <Compile Include="Rules\AiderHouseholdBusinessRules.cs" />
     <Compile Include="Rules\AiderPersonBusinessRules.cs" />
     <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />

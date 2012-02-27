@@ -15,13 +15,9 @@ using System.Linq;
 
 namespace Epsitec.Aider.Controllers.SummaryControllers
 {
-
-
 	[ControllerSubType (2)]
 	public sealed class SummaryAiderPersonViewController2 : SummaryViewController<AiderPersonEntity>
 	{
-
-
 		protected override void CreateBricks(BrickWall<AiderPersonEntity> wall)
 		{
 			if (this.Entity.Housemates.Any ())
@@ -48,10 +44,6 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 					.Attribute (BrickMode.DefaultToSummarySubView);
 			}
 		}
-
-
 	}
-
-
 }
 
