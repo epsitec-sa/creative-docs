@@ -96,20 +96,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Nom:
 					return pièce.Nom;
 
-				case ColumnType.Préfixe:
-					return pièce.Préfixe;
+				case ColumnType.Format:
+					return pièce.Format;
 
 				case ColumnType.Numéro:
 					return Converters.IntToString (pièce.Numéro);
-
-				case ColumnType.Suffixe:
-					return pièce.Suffixe;
-
-				case ColumnType.SépMilliers:
-					return pièce.SépMilliers;
-
-				case ColumnType.Digits:
-					return (pièce.Digits == 0) ? FormattedText.Empty : Converters.IntToString (pièce.Digits);
 
 				case ColumnType.Incrément:
 					return Converters.IntToString (pièce.Incrément);
@@ -157,6 +148,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
+			this.editionLine[line].SetText (ColumnType.Format,    "#");
 			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
 		}

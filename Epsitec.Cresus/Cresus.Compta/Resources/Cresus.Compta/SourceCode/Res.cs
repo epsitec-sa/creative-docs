@@ -852,20 +852,14 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
-				//	designer:cap/OVKL5
-				public static readonly global::Epsitec.Common.Support.Druid Digits = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 181);
+				//	designer:cap/OVK66
+				public static readonly global::Epsitec.Common.Support.Druid Format = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 198);
 				//	designer:cap/OVKG5
 				public static readonly global::Epsitec.Common.Support.Druid Incrément = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 176);
 				//	designer:cap/OVKC5
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172);
 				//	designer:cap/OVKE5
 				public static readonly global::Epsitec.Common.Support.Druid Numéro = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174);
-				//	designer:cap/OVKD5
-				public static readonly global::Epsitec.Common.Support.Druid Préfixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 173);
-				//	designer:cap/OVKM5
-				public static readonly global::Epsitec.Common.Support.Druid SépMilliers = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 182);
-				//	designer:cap/OVKF5
-				public static readonly global::Epsitec.Common.Support.Druid Suffixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 175);
 			}
 			
 			public static class ComptaUtilisateur

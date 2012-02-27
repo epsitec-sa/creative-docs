@@ -59,14 +59,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.SépMilliers)
-				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '|', "|Aucun", "'|Apostrophe", ".|Point", ",|Virgule", "/|Barre oblique", "-|Tiret");
-				}
-				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);

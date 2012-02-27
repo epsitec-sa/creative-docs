@@ -129,6 +129,7 @@ namespace Epsitec.Cresus.Compta.IO
 			var pièce = new ComptaPiècesGeneratorEntity ();
 
 			pièce.Nom       = "Base";
+			pièce.Format    = "#";
 			pièce.Numéro    = 1;
 			pièce.Incrément = 1;
 

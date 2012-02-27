@@ -46,11 +46,11 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = new List<string> ();
 
-			int n = generator.Numéro;
+			int numéro = generator.Numéro;
 			for (int i = 0; i < 10; i++)
 			{
-				list.Add (this.GetFormattedPièce (generator, n).ToString ());
-				n += generator.Incrément;
+				list.Add (this.GetFormattedPièce (generator, numéro).ToString ());
+				numéro += generator.Incrément;
 			}
 			list.Add ("...");
 
@@ -127,8 +127,9 @@ namespace Epsitec.Cresus.Compta.IO
 
 				for (int i = max+1; i <= rank; i++)
 				{
-					pièce = this.GetProchainePièce (generator);  // génère un nouveau numéro de pièce
-					this.AddInsideFreezer (generator, i, pièce);
+					int numéro = this.GetPièceProchainNuméro (generator);
+					pièce = this.GetFormattedPièce (generator, numéro);  // génère un nouveau numéro de pièce
+					this.AddInsideFreezer (generator, numéro, i, pièce);
 				}
 
 				//	On effectue à nouveau la recherche dans le congélateur, qui doit forcément aboutir.
@@ -161,37 +162,57 @@ namespace Epsitec.Cresus.Compta.IO
 			return this.mainWindowController.Compta.PiècesGenerator.FirstOrDefault ();
 		}
 
-		private FormattedText GetProchainePièce(ComptaPiècesGeneratorEntity generator)
+		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int numéro)
 		{
-			//	Retourne le prochain numéro de pièce à utiliser.
+			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
 			if (generator == null)
 			{
 				return FormattedText.Null;
 			}
 			else
 			{
-				int n = this.GetPièceProchainNuméro (generator);
-				return this.GetFormattedPièce (generator, n);
+				string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+				if (string.IsNullOrEmpty (generator.Format))
+				{
+					return numString;
+				}
+				else
+				{
+					//	Construit la chaîne du numéro avec le bon nombre de digits.
+					int digits = generator.Format.Where (x => x == '#').Count ();
+					if (digits != 0)
+					{
+						if (digits > numString.Length)  // numéro trop court ?
+						{
+							numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
+						}
+
+						if (digits < numString.Length)  // numéro trop long ?
+						{
+							numString = numString.Substring (numString.Length-digits);  // tronque
+						}
+					}
+
+					//	Construit le numéro final d'après le format.
+					var builder = new System.Text.StringBuilder ();
+
+					int i = 0;
+					foreach (var c in generator.Format)
+					{
+						if (c == '#')  // un digit ?
+						{
+							builder.Append (numString[i++]);
+						}
+						else  // un caractère fixe ?
+						{
+							builder.Append (c);
+						}
+					}
+
+					return builder.ToString ();
+				}
 			}
-		}
-
-		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int n)
-		{
-			string s = n.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-			if (generator.Digits != 0 && generator.Digits > s.Length)
-			{
-				s = new string ('0', generator.Digits - s.Length) + s;  // complète avec des zéros
-			}
-
-			if (!generator.SépMilliers.IsNullOrEmpty)
-			{
-				s = Strings.AddThousandSeparators (s, generator.SépMilliers.ToSimpleText ());
-			}
-
-			s = generator.Préfixe + s + generator.Suffixe;
-
-			return s;
 		}
 
 		private int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
@@ -256,10 +277,10 @@ namespace Epsitec.Cresus.Compta.IO
 			return FormattedText.Null;
 		}
 
-		private void AddInsideFreezer(ComptaPiècesGeneratorEntity generator, int rank, FormattedText pièce)
+		private void AddInsideFreezer(ComptaPiècesGeneratorEntity generator, int numéro, int rank, FormattedText pièce)
 		{
 			//	Ajoute un numéro de pièce dans le congélateur.
-			var data = new FreezerData (generator, rank, pièce);
+			var data = new FreezerData (generator, numéro, rank, pièce);
 			this.freezer.Add (data);
 		}
 
@@ -267,14 +288,21 @@ namespace Epsitec.Cresus.Compta.IO
 		private class FreezerData
 		{
 			//	Donnée du congélateur.
-			public FreezerData(ComptaPiècesGeneratorEntity generator, int rank, FormattedText pièce)
+			public FreezerData(ComptaPiècesGeneratorEntity generator, int numéro, int rank, FormattedText pièce)
 			{
 				this.Generator = generator;
+				this.Numéro    = numéro;
 				this.Rank      = rank;
 				this.Pièce     = pièce;
 			}
 
 			public ComptaPiècesGeneratorEntity Generator
+			{
+				get;
+				private set;
+			}
+
+			public int Numéro
 			{
 				get;
 				private set;

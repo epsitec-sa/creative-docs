@@ -22,11 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
-			this.datas.Add (ColumnType.Préfixe,     new EditionData (this.controller));
+			this.datas.Add (ColumnType.Format,      new EditionData (this.controller, this.ValidateFormat));
 			this.datas.Add (ColumnType.Numéro,      new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Suffixe,     new EditionData (this.controller));
-			this.datas.Add (ColumnType.SépMilliers, new EditionData (this.controller));
-			this.datas.Add (ColumnType.Digits,      new EditionData (this.controller, this.ValidateDigits));
 			this.datas.Add (ColumnType.Incrément,   new EditionData (this.controller, this.ValidateIncrément));
 		}
 
@@ -35,6 +32,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateNom(EditionData data)
 		{
 			Validators.ValidateText (data, "Il manque le nom du générateur de numéros de pièces");
+		}
+
+		private void ValidateFormat(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				if (!data.Text.ToSimpleText ().Contains ('#'))
+				{
+					data.Error = "Le format doit contenir au moins un '#', pour indiquer la position du numéro<br/>Exemples: \"#\", \"A##/d\", \"##-###.P\"";
+				}
+			}
+			else
+			{
+				data.Error = "Il manque le format";
+			}
 		}
 
 		private void ValidateNuméro(EditionData data)
@@ -57,25 +71,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				data.Error = "Il manque le numéro";
-			}
-		}
-
-		private void ValidateDigits(EditionData data)
-		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				int n;
-				if (int.TryParse (data.Text.ToSimpleText (), out n))
-				{
-					if (n >= 1 && n <= 9)
-					{
-						return;
-					}
-				}
-
-				data.Error = "Vous devez donner un nombre de chiffres compris entre 1 et 9";
 			}
 		}
 
@@ -108,26 +103,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var generator = entity as ComptaPiècesGeneratorEntity;
 
-			this.SetText (ColumnType.Nom,         generator.Nom);
-			this.SetText (ColumnType.Préfixe,     generator.Préfixe);
-			this.SetText (ColumnType.Numéro,      Converters.IntToString (generator.Numéro));
-			this.SetText (ColumnType.Suffixe,     generator.Suffixe);
-			this.SetText (ColumnType.SépMilliers, generator.SépMilliers);
-			this.SetText (ColumnType.Digits,      (generator.Digits == 0) ? FormattedText.Empty : Converters.IntToString (generator.Digits));
-			this.SetText (ColumnType.Incrément,   Converters.IntToString (generator.Incrément));
+			this.SetText (ColumnType.Nom,       generator.Nom);
+			this.SetText (ColumnType.Format,    generator.Format);
+			this.SetText (ColumnType.Numéro,    Converters.IntToString (generator.Numéro));
+			this.SetText (ColumnType.Incrément, Converters.IntToString (generator.Incrément));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var generator = entity as ComptaPiècesGeneratorEntity;
 
-			generator.Nom         = this.GetText (ColumnType.Nom);
-			generator.Préfixe     = this.GetText (ColumnType.Préfixe);
-			generator.Numéro      = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
-			generator.Suffixe     = this.GetText (ColumnType.Suffixe);
-			generator.SépMilliers = this.GetText (ColumnType.SépMilliers);
-			generator.Digits      = Converters.ParseInt (this.GetText (ColumnType.Digits)).GetValueOrDefault (0);
-			generator.Incrément   = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);
+			generator.Nom       = this.GetText (ColumnType.Nom);
+			generator.Format    = this.GetText (ColumnType.Format).ToSimpleText ();
+			generator.Numéro    = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
+			generator.Incrément = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);
 		}
 	}
 }

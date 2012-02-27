@@ -1789,24 +1789,24 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Préfixe</c> field.
-		///	designer:fld/OVKB5/OVKD5
+		///	The <c>Format</c> field.
+		///	designer:fld/OVKB5/OVK66
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKD5]")]
-		public global::Epsitec.Common.Types.FormattedText Préfixe
+		[global::Epsitec.Common.Support.EntityField ("[OVK66]")]
+		public string Format
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKD5]");
+				return this.GetField<string> ("[OVK66]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Préfixe;
-				if (oldValue != value || !this.IsFieldDefined("[OVKD5]"))
+				string oldValue = this.Format;
+				if (oldValue != value || !this.IsFieldDefined("[OVK66]"))
 				{
-					this.OnPréfixeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKD5]", oldValue, value);
-					this.OnPréfixeChanged (oldValue, value);
+					this.OnFormatChanging (oldValue, value);
+					this.SetField<string> ("[OVK66]", oldValue, value);
+					this.OnFormatChanged (oldValue, value);
 				}
 			}
 		}
@@ -1829,72 +1829,6 @@ namespace Epsitec.Cresus.Compta.Entities
 					this.OnNuméroChanging (oldValue, value);
 					this.SetField<int> ("[OVKE5]", oldValue, value);
 					this.OnNuméroChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Suffixe</c> field.
-		///	designer:fld/OVKB5/OVKF5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKF5]")]
-		public global::Epsitec.Common.Types.FormattedText Suffixe
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKF5]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Suffixe;
-				if (oldValue != value || !this.IsFieldDefined("[OVKF5]"))
-				{
-					this.OnSuffixeChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKF5]", oldValue, value);
-					this.OnSuffixeChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>SépMilliers</c> field.
-		///	designer:fld/OVKB5/OVKM5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKM5]")]
-		public global::Epsitec.Common.Types.FormattedText SépMilliers
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKM5]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.SépMilliers;
-				if (oldValue != value || !this.IsFieldDefined("[OVKM5]"))
-				{
-					this.OnSépMilliersChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKM5]", oldValue, value);
-					this.OnSépMilliersChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>Digits</c> field.
-		///	designer:fld/OVKB5/OVKL5
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKL5]")]
-		public int Digits
-		{
-			get
-			{
-				return this.GetField<int> ("[OVKL5]");
-			}
-			set
-			{
-				int oldValue = this.Digits;
-				if (oldValue != value || !this.IsFieldDefined("[OVKL5]"))
-				{
-					this.OnDigitsChanging (oldValue, value);
-					this.SetField<int> ("[OVKL5]", oldValue, value);
-					this.OnDigitsChanged (oldValue, value);
 				}
 			}
 		}
@@ -1923,16 +1857,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPréfixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnPréfixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFormatChanging(string oldValue, string newValue);
+		partial void OnFormatChanged(string oldValue, string newValue);
 		partial void OnNuméroChanging(int oldValue, int newValue);
 		partial void OnNuméroChanged(int oldValue, int newValue);
-		partial void OnSuffixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSuffixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSépMilliersChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnSépMilliersChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDigitsChanging(int oldValue, int newValue);
-		partial void OnDigitsChanged(int oldValue, int newValue);
 		partial void OnIncrémentChanging(int oldValue, int newValue);
 		partial void OnIncrémentChanged(int oldValue, int newValue);
 		
