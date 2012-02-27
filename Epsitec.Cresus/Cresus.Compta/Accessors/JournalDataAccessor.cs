@@ -314,6 +314,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			ComptaJournalEntity journalUtilisé = null;
+			var numérosPièces = new List<FormattedText> ();
 
 			foreach (var data in this.editionLine)
 			{
@@ -338,9 +339,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				journalUtilisé = écriture.Journal;
+
+				if (!écriture.Pièce.IsNullOrEmpty && !numérosPièces.Contains (écriture.Pièce))
+				{
+					numérosPièces.Add (écriture.Pièce);
+				}
 			}
 
-			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé);
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, numérosPièces);
 
 			Date date;
 			this.ParseDate (this.editionLine[0].GetText (ColumnType.Date), out date);
@@ -364,28 +370,34 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int multiId = this.périodeEntity.Journal[row].MultiId;
 
 			ComptaJournalEntity journalUtilisé = null;
+			var numérosPièces = new List<FormattedText> ();
 
 			foreach (var data in this.editionLine)
 			{
 				this.comptaEntity.AddLibellé (this.périodeEntity, data.GetText (ColumnType.Libellé));
 
+				ComptaEcritureEntity écriture;
+
 				if (row >= globalFirstEditerRow+this.initialCountEditedRow)
 				{
 					//	Crée une écriture manquante.
-					var écriture = this.CreateEcriture ();
+					écriture = this.CreateEcriture ();
 					data.DataToEntity (écriture);
 					écriture.MultiId = multiId;
 					this.périodeEntity.Journal.Insert (row, écriture);
-
-					journalUtilisé = écriture.Journal;
 				}
 				else
 				{
 					//	Met à jour une écriture existante.
-					var écriture = this.périodeEntity.Journal[row];
+					écriture = this.périodeEntity.Journal[row];
 					data.DataToEntity (écriture);
+				}
 
-					journalUtilisé = écriture.Journal;
+				journalUtilisé = écriture.Journal;
+
+				if (!écriture.Pièce.IsNullOrEmpty && !numérosPièces.Contains (écriture.Pièce))
+				{
+					numérosPièces.Add (écriture.Pièce);
 				}
 
 				row++;
@@ -432,7 +444,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateAfterOptionsChanged ();
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 
-			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé);
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, numérosPièces);
 		}
 
 

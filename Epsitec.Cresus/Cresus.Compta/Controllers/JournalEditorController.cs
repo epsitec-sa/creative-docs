@@ -318,7 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
 					var journal = this.comptaEntity.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.selectedLine));
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
 				}
 				else
 				{

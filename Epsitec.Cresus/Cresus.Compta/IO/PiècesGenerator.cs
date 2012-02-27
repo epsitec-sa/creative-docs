@@ -100,11 +100,15 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		public void Burn(ComptaJournalEntity journal)
+		public void Burn(ComptaJournalEntity journal, List<FormattedText> numéros)
 		{
 			//	Brûle les numéros utilisés, ce qui revient à vider le congélateur.
 			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.Période, journal);
-			this.ClearFreezer (generator);
+
+			if (generator != null)
+			{
+				this.ClearFreezer (generator, numéros);
+			}
 		}
 
 		public FormattedText GetProchainePièce(ComptaJournalEntity journal, int rank = 0)
@@ -127,7 +131,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				for (int i = max+1; i <= rank; i++)
 				{
-					int numéro = this.GetPièceProchainNuméro (generator);
+					int numéro = PiècesGenerator.GetPièceProchainNuméro (generator);
 					pièce = this.GetFormattedPièce (generator, numéro);  // génère un nouveau numéro de pièce
 					this.AddInsideFreezer (generator, numéro, i, pièce);
 				}
@@ -165,57 +169,56 @@ namespace Epsitec.Cresus.Compta.IO
 		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int numéro)
 		{
 			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
-			if (generator == null)
+			if (generator == null || string.IsNullOrEmpty (generator.Format))
 			{
-				return FormattedText.Null;
+				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{
-				string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-				if (string.IsNullOrEmpty (generator.Format))
-				{
-					return numString;
-				}
-				else
-				{
-					//	Construit la chaîne du numéro avec le bon nombre de digits.
-					int digits = generator.Format.Where (x => x == '#').Count ();
-					if (digits != 0)
-					{
-						if (digits > numString.Length)  // numéro trop court ?
-						{
-							numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
-						}
-
-						if (digits < numString.Length)  // numéro trop long ?
-						{
-							numString = numString.Substring (numString.Length-digits);  // tronque
-						}
-					}
-
-					//	Construit le numéro final d'après le format.
-					var builder = new System.Text.StringBuilder ();
-
-					int i = 0;
-					foreach (var c in generator.Format)
-					{
-						if (c == '#')  // un digit ?
-						{
-							builder.Append (numString[i++]);
-						}
-						else  // un caractère fixe ?
-						{
-							builder.Append (c);
-						}
-					}
-
-					return builder.ToString ();
-				}
+				return PiècesGenerator.FormatPièce (generator.Format, numéro);
 			}
 		}
 
-		private int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
+		private static FormattedText FormatPièce(string format, int numéro)
+		{
+			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
+			string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+			//	Construit la chaîne du numéro avec le bon nombre de digits.
+			int digits = format.Where (x => x == '#').Count ();
+			if (digits != 0)
+			{
+				if (digits > numString.Length)  // numéro trop court ?
+				{
+					numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
+				}
+
+				if (digits < numString.Length)  // numéro trop long ?
+				{
+					numString = numString.Substring (numString.Length-digits);  // tronque
+				}
+			}
+
+			//	Construit le numéro final d'après le format.
+			var builder = new System.Text.StringBuilder ();
+
+			int i = 0;
+			foreach (var c in format)
+			{
+				if (c == '#')  // un digit ?
+				{
+					builder.Append (numString[i++]);
+				}
+				else  // un caractère fixe ?
+				{
+					builder.Append (c);
+				}
+			}
+
+			return builder.ToString ();
+		}
+
+		private static int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne le prochain numéro de pièce à utiliser.
 			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
@@ -226,22 +229,67 @@ namespace Epsitec.Cresus.Compta.IO
 
 
 
-		private void ClearFreezer(ComptaPiècesGeneratorEntity generator)
+		private void ClearFreezer(ComptaPiècesGeneratorEntity generator, List<FormattedText> numéros)
 		{
-			//	Vide le congélateur de tous les numéros d'un générateur donné.
-			int i = 0;
+			//	Vide le congélateur de tous les numéros utilisés d'un générateur donné.
+			//	Contenu initial:
+			//		Numéro	Rank
+			//		15		0
+			//		16		1
+			//		17		2
+			//		18		3 <-- last=3
+			//		19		4
+			//		20		5
+			//	Numéros utilisés:
+			//		16 et 18
+			//	Contenu final:
+			//		Numéro	Rank
+			//		19		0
+			//		20		1
+			//	Dans cet exemple, les numéros 15 et 17 n'ont pas été utilisés, mais ils doivent tout
+			//	de même être brûlés, afin de garantir une numérotation sans trous.
 
-			while (i < this.freezer.Count)
+			//	Cherche le rang du dernier numéro utilisé.
+			int i = this.freezer.Count-1;
+			int last = -1;
+			while (i >= 0)
 			{
 				var data = this.freezer[i];
 
 				if (data.Generator == generator)
+				{
+					if (numéros.Contains (data.Pièce))
+					{
+						last = data.Rank;
+						break;
+					}
+				}
+
+				i--;
+			}
+
+			//	Supprime tous les numéros <= last.
+			i = 0;
+			while (i < this.freezer.Count)
+			{
+				var data = this.freezer[i];
+
+				if (data.Generator == generator && data.Rank <= last)
 				{
 					this.freezer.RemoveAt (i);
 				}
 				else
 				{
 					i++;
+				}
+			}
+
+			//	Renumérote les rangs des numéros restants de 0 à n.
+			foreach (var data in this.freezer)
+			{
+				if (data.Generator == generator)
+				{
+					data.Rank -= last+1;
 				}
 			}
 		}
@@ -311,7 +359,7 @@ namespace Epsitec.Cresus.Compta.IO
 			public int Rank
 			{
 				get;
-				private set;
+				set;
 			}
 
 			public FormattedText Pièce
