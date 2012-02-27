@@ -169,4 +169,5 @@
   <data name="Fld.ComptaUtilisateur.DateDébut" id="K46">&lt;s:data id="_0" f:Name="DateDébut" /&gt;</data>
   <data name="Fld.ComptaUtilisateur.DateFin" id="K56">&lt;s:data id="_0" f:Name="DateFin" /&gt;</data>
   <data name="Fld.ComptaPiècesGenerator.Format" id="K66">&lt;s:data id="_0" f:Name="Format" /&gt;</data>
+  <data name="Cmd.Edit.Create" id="K76">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Edit.Create" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Edit.Create.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Crée une nouvelle entrée'}}" /&gt;</data>
 </bundle>

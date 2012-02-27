@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Libellés.Search");
 
-			this.StartCreationLine ();
+			this.StartDefaultLine ();
 		}
 
 
@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
 
+			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
 		}
@@ -158,6 +159,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.initialCountEditedRow = this.countEditedRow;
+			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
 		}

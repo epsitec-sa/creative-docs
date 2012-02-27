@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.bottomToolbarController.CreateUI (parent);
 			}
 
-			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
+			this.UpdateToolbar ();
 		}
 
 		public void Dispose()
@@ -84,13 +84,42 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateToolbar()
 		{
-			this.controller.SetCommandEnable (Res.Commands.Edit.Accept,     this.dirty && !this.hasError);
+			if (this.controller.HasCreateCommand)
+			{
+				this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsCreation || this.dataAccessor.IsModification);
+
+				if (this.dataAccessor.IsCreation || this.dataAccessor.IsModification)
+				{
+					this.rightEditorFrame.Enable = true;
+					this.rightEditorFrame.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+				}
+				else
+				{
+					this.rightEditorFrame.Enable = false;
+					this.rightEditorFrame.BackColor = Color.Empty;
+				}
+			}
+			else
+			{
+				this.controller.SetCommandEnable (Res.Commands.Edit.Create, false);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
+
+				this.controller.FooterEditorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+			}
+
 			this.controller.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 			this.controller.SetCommandEnable (Res.Commands.Edit.Down,      !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 			this.controller.SetCommandEnable (Res.Commands.Edit.Duplicate, !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 			this.controller.SetCommandEnable (Res.Commands.Edit.Delete,    !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
 
-			if (this.arrayController.SelectedRow == -1 || this.dataAccessor.JustCreated)
+			if (!this.dataAccessor.IsCreation && !this.dataAccessor.IsModification && !this.dataAccessor.JustCreated)
+			{
+				this.bottomToolbarController.SetOperationDescription (null, hilited: false);
+			}
+			else if (this.arrayController.SelectedRow == -1 || this.dataAccessor.JustCreated)
 			{
 				this.bottomToolbarController.SetOperationDescription (this.GetOperationDescription (modify: false), hilited: false);
 			}
@@ -214,6 +243,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public virtual void CreateAction()
+		{
+			if (this.controller.GetCommandEnable (Res.Commands.Edit.Create))
+			{
+				this.dirty = false;
+				this.arrayController.SelectedRow = -1;
+				this.dataAccessor.StartCreationLine ();
+				this.UpdateToolbar ();
+				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.EditorSelect (0);
+			}
+		}
+
 		public virtual void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
@@ -265,7 +308,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
-				this.dataAccessor.StartCreationLine ();
+				this.dataAccessor.StartDefaultLine ();
+				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 				this.EditorSelect (0);
@@ -674,34 +718,54 @@ namespace Epsitec.Cresus.Compta.Controllers
 			toolbar.Padding        = new Margins (0);
 
 			//	Met la petite toolbar avec les boutons "+/-", qui doublent les commandes Edit.Cancel/Edit.Delete.
-			var mini = UIBuilder.CreateMiniToolbar (mainFrame, 20);
+			double iconSize = 24;
+			var mini = UIBuilder.CreateMiniToolbar (mainFrame, iconSize);
 
-			var add = new GlyphButton
+			if (this.controller.HasCreateCommand)
 			{
-				Parent         = mini,
-				CommandObject  = Res.Commands.Edit.Cancel,
-				GlyphShape     = GlyphShape.Plus,
-				PreferredWidth = 30,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 1, 0, 0),
+				var add = new IconButton
+				{
+					Parent        = mini,
+					CommandObject = Res.Commands.Edit.Create,
+					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Create"),
+					PreferredSize = new Size (iconSize, iconSize),
+					Dock          = DockStyle.Left,
+					Margins       = new Margins (0, 1, 0, 0),
+				};
+			}
+
+			var accept = new IconButton
+			{
+				Parent        = mini,
+				CommandObject = Res.Commands.Edit.Accept,
+				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Accept"),
+				PreferredSize = new Size (iconSize, iconSize),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (0, 1, 0, 0),
 			};
 
-			var sub = new GlyphButton
+			var cancel = new IconButton
 			{
-				Parent         = mini,
-				CommandObject  = Res.Commands.Edit.Delete,
-				GlyphShape     = GlyphShape.Minus,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 1, 0, 0),
+				Parent        = mini,
+				CommandObject = Res.Commands.Edit.Cancel,
+				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Cancel"),
+				PreferredSize = new Size (iconSize, iconSize),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (0, 1, 0, 0),
 			};
 
-			// TODO: Pourquoi ces tooltips ne sont-ils jamais visibles ?
-			ToolTip.Default.SetToolTip (add, "Débute la création d'un nouvel élément, qu'il faudra compléter");
-			ToolTip.Default.SetToolTip (sub, "Supprime l'élément sélectionné");
+			var sub = new IconButton
+			{
+				Parent        = mini,
+				CommandObject = Res.Commands.Edit.Delete,
+				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Delete"),
+				PreferredSize = new Size (iconSize, iconSize),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (0, 1, 0, 0),
+			};
 
 			//	Met le panneau éditable.
-			var band = new FrameBox
+			this.rightEditorFrame = new FrameBox
 			{
 				Parent        = mainFrame,
 				DrawFullFrame = true,
@@ -709,7 +773,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding       = new Margins (10),
 			};
 
-			return band;
+			return this.rightEditorFrame;
 		}
 
 
@@ -804,5 +868,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected bool											dirty;
 		protected bool											hasError;
 		protected bool											duplicate;
+		protected FrameBox										rightEditorFrame;
 	}
 }

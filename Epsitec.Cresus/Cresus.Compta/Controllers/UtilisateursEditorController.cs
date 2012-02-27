@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			button.ActiveStateChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero)
+				if (this.ignoreChanges.IsZero && this.EditionLine != null)
 				{
 					this.EditionLine.SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
 					this.EditorTextChanged ();
@@ -268,14 +268,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				bool admin = this.EditionLine.IsAdmin;
+				bool admin = (this.EditionLine == null) ? true : this.EditionLine.IsAdmin;
 				bool zero  = true;
 				bool all   = true;
 
 				foreach (var button in this.checkPrésentationsButtons)
 				{
 					var cmd = Converters.StringToPrésentationCommand(button.Name);
-					var state = this.EditionLine.HasPrésentation (cmd);
+					var state = (this.EditionLine == null) ? false : this.EditionLine.HasPrésentation (cmd);
 
 					button.ActiveState = state || admin ? ActiveState.Yes : ActiveState.No;
 					button.Enable = !admin;
@@ -299,7 +299,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.dataAccessor.EditionLine[0] as UtilisateursEditionLine;
+				if (this.dataAccessor.EditionLine.Any ())
+				{
+					return this.dataAccessor.EditionLine[0] as UtilisateursEditionLine;
+				}
+				else
+				{
+					return null;
+				}
 			}
 		}
 

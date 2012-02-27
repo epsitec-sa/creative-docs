@@ -141,6 +141,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Select.Down, false);
 			this.SetCommandEnable (Res.Commands.Select.Home, false);
 
+			this.SetCommandEnable (Res.Commands.Edit.Create, false);
 			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
 			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
 			this.SetCommandEnable (Res.Commands.Edit.Up, false);
@@ -195,8 +196,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
+				this.footerEditorFrameBox = new FrameBox
+				{
+					Parent = this.frameBox,
+					Dock   = DockStyle.Bottom,
+				};
+
 				this.CreateArray (this.frameBox);
-				this.CreateEditor (this.frameBox);
+				this.CreateEditor (this.footerEditorFrameBox);
 			}
 
 			this.UpdateArrayContent ();
@@ -230,6 +237,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.editorController != null)
 			{
 				this.editorController.Dispose ();
+			}
+		}
+
+		public FrameBox FooterEditorFrameBox
+		{
+			get
+			{
+				return this.footerEditorFrameBox;
 			}
 		}
 
@@ -269,6 +284,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual bool HasRightEditor
 		{
+			get
+			{
+				return false;
+			}
+		}
+
+		public virtual bool HasCreateCommand
+		{
+			//	Avec false, la commande Edit.Cancel passe automatiquement en mode 'création'.
+			//	C'est typiquement le cas avec le journal des écritures.
+			//	Habituellement, ce mode va de pair avec HasRightEditor !
 			get
 			{
 				return false;
@@ -412,6 +438,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		public virtual void CreateAction()
+		{
+			if (this.editorController != null)
+			{
+				this.editorController.CreateAction ();
+			}
+		}
 
 		public virtual void AcceptAction()
 		{
@@ -570,7 +604,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.arrayController != null && this.dataAccessor != null)
 			{
 				this.arrayController.SelectedRow = -1;
-				this.dataAccessor.StartCreationLine ();
+				this.dataAccessor.StartDefaultLine ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
@@ -906,7 +940,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.dataAccessor != null)
 			{
-				this.dataAccessor.StartCreationLine ();
+				this.dataAccessor.StartDefaultLine ();
 			}
 		}
 
@@ -1098,6 +1132,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected ArrayController								arrayController;
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
+		protected FrameBox										footerEditorFrameBox;
 		protected StaticText									userLabel;
 		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;

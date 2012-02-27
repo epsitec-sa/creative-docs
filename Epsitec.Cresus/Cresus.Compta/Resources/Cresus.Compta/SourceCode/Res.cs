@@ -38,6 +38,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Accept = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 55));
 				//	designer:cap/OVKO1
 				public static readonly global::Epsitec.Common.Widgets.Command Cancel = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 56));
+				//	designer:cap/OVK76
+				public static readonly global::Epsitec.Common.Widgets.Command Create = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 199));
 				//	designer:cap/OVKQ1
 				public static readonly global::Epsitec.Common.Widgets.Command Delete = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 58));
 				//	designer:cap/OVK73
@@ -289,6 +291,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Accept = 0x3F800014000037L;
 				//	designer:cap/OVKO1
 				public const long Cancel = 0x3F800014000038L;
+				//	designer:cap/OVK76
+				public const long Create = 0x3F8000140000C7L;
 				//	designer:cap/OVKQ1
 				public const long Delete = 0x3F80001400003AL;
 				//	designer:cap/OVK73

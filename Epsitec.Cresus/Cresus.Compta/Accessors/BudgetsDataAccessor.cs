@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Filter");
 
 			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
-			this.StartCreationLine ();
+			this.StartDefaultLine ();
 		}
 
 
@@ -160,6 +160,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
 
+			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
 		}
@@ -182,6 +183,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.initialCountEditedRow = this.countEditedRow;
+			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
 		}

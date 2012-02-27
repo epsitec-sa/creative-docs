@@ -1209,6 +1209,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		[Command (Res.CommandIds.Edit.Create)]
+		private void CommandEditCreate()
+		{
+			if (this.controller != null)
+			{
+				this.controller.CreateAction ();
+			}
+		}
+
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{

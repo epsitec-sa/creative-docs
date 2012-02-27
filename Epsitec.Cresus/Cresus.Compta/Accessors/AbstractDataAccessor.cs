@@ -462,6 +462,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public bool IsCreation
+		{
+			get
+			{
+				return this.isCreation;
+			}
+		}
+
 		public bool IsModification
 		{
 			get
@@ -475,6 +483,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.justCreated;
+			}
+		}
+
+		public void StartDefaultLine()
+		{
+			if (this.controller.HasCreateCommand)
+			{
+				this.isCreation = false;
+				this.isModification = false;
+			}
+			else
+			{
+				this.StartCreationLine ();
 			}
 		}
 
@@ -521,6 +542,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
 
+			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
 		}
@@ -704,6 +726,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
 		protected int									initialCountEditedRow;
+		protected bool									isCreation;
 		protected bool									isModification;
 		protected bool									justCreated;
 		protected int									searchLocator;

@@ -295,6 +295,7 @@
     <EmbeddedResource Include="Images\File.Import.icon" />
     <EmbeddedResource Include="Images\User.Locked.icon" />
     <EmbeddedResource Include="Images\User.Unlocked.icon" />
+    <EmbeddedResource Include="Images\Edit.Create.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

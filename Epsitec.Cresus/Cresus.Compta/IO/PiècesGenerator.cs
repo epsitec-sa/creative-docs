@@ -100,10 +100,6 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				return true;
 			}
-			else if (utilisateurCount > 1)
-			{
-				return false;
-			}
 
 			return this.mainWindowController.Compta.Utilisateurs.Count <= 1;
 		}
@@ -285,6 +281,7 @@ namespace Epsitec.Cresus.Compta.IO
 		private static void SetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator, int numéro)
 		{
 			//	Modifie le prochain numéro de pièce à utiliser.
+			//	TODO: Il faudra vérifier que cette procédure fonctionne en multi-utilisateur !
 			generator.Numéro = numéro;
 		}
 

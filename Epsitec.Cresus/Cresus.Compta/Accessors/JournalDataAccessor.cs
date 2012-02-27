@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
 
 			this.UpdateAfterOptionsChanged ();
-			this.StartCreationLine ();
+			this.StartDefaultLine ();
 		}
 
 
@@ -233,6 +233,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = -1;
 			this.countEditedRow = 1;
 
+			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
 		}
@@ -282,6 +283,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.initialCountEditedRow = this.countEditedRow;
+			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
 		}
@@ -314,7 +316,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			ComptaJournalEntity journalUtilisé = null;
-			var numérosPièces = new List<FormattedText> ();
+			var pièces = new List<FormattedText> ();
 
 			foreach (var data in this.editionLine)
 			{
@@ -340,13 +342,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				journalUtilisé = écriture.Journal;
 
-				if (!écriture.Pièce.IsNullOrEmpty && !numérosPièces.Contains (écriture.Pièce))
+				if (!écriture.Pièce.IsNullOrEmpty && !pièces.Contains (écriture.Pièce))
 				{
-					numérosPièces.Add (écriture.Pièce);
+					pièces.Add (écriture.Pièce);
 				}
 			}
 
-			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, numérosPièces);
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, pièces);
 
 			Date date;
 			this.ParseDate (this.editionLine[0].GetText (ColumnType.Date), out date);
@@ -370,7 +372,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int multiId = this.périodeEntity.Journal[row].MultiId;
 
 			ComptaJournalEntity journalUtilisé = null;
-			var numérosPièces = new List<FormattedText> ();
+			var pièces = new List<FormattedText> ();
 
 			foreach (var data in this.editionLine)
 			{
@@ -395,9 +397,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				journalUtilisé = écriture.Journal;
 
-				if (!écriture.Pièce.IsNullOrEmpty && !numérosPièces.Contains (écriture.Pièce))
+				if (!écriture.Pièce.IsNullOrEmpty && !pièces.Contains (écriture.Pièce))
 				{
-					numérosPièces.Add (écriture.Pièce);
+					pièces.Add (écriture.Pièce);
 				}
 
 				row++;
@@ -444,7 +446,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateAfterOptionsChanged ();
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 
-			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, numérosPièces);
+			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, pièces);
 		}
 
 
