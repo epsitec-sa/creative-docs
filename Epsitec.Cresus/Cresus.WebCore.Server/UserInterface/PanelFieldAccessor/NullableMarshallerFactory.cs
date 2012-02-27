@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 		public NullableMarshallerFactory(LambdaExpression lambda, Delegate getter, Delegate setter)
 			: base (lambda)
 		{
-			this.getterPattern = e => (TField) getter.DynamicInvoke (e);
+			this.getterPattern = e => (TField?) getter.DynamicInvoke (e);
 			this.setterPattern = (e, f) => setter.DynamicInvoke (e, f);
 		}
 
