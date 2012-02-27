@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -12,7 +12,7 @@ namespace Epsitec.Cresus.Core.Controllers
 {
 	/// <summary>
 	/// The <c>NewEntityReference</c> class defines which entity should be edited and
-	/// which entity should be used as the reference entity.
+	/// which entity should be used as the reference entity (kind of specialized tuple).
 	/// </summary>
 	public class NewEntityReference
 	{
@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.referenceEntity = referenceEntity;
 			this.editionEntity   = referenceEntity;
+			
 			this.creationControllerMode = ViewControllerMode.Creation;
 		}
 
@@ -36,6 +37,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.referenceEntity = referenceEntity;
 			this.editionEntity   = editionEntity;
+			
 			this.creationControllerMode = ViewControllerMode.Creation;
 		}
 
@@ -45,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// freshly created (edition) entity.
 		/// </summary>
 		/// <value>The creation controller mode.</value>
-		public ViewControllerMode CreationControllerMode
+		public ViewControllerMode				CreationControllerMode
 		{
 			get
 			{
@@ -84,8 +86,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private readonly AbstractEntity referenceEntity;
-		private readonly AbstractEntity editionEntity;
-		private readonly ViewControllerMode creationControllerMode;
+		private readonly AbstractEntity			referenceEntity;
+		private readonly AbstractEntity			editionEntity;
+		private readonly ViewControllerMode		creationControllerMode;
 	}
 }

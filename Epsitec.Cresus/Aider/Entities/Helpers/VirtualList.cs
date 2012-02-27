@@ -123,10 +123,9 @@ namespace Epsitec.Aider.Entities.Helpers
 			}
 			else
 			{
-				fieldSetter (entity, entity.GetEntityContext ().CreateEmptyEntity<T> ());
+				fieldSetter (entity, EntityNullReferenceVirtualizer.CreateNullEntity<T> ());
 			}
 		}
-
 
 
 		protected readonly THostEntity			entity;

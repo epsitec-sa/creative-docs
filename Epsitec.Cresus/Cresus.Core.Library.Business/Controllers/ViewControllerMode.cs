@@ -29,7 +29,16 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// </summary>
 		Creation = 3,
 
+		/// <summary>
+		/// Same as <see cref="Creation"/> if the entity is not sufficiently defined; otherwise
+		/// same as <see cref="Summary"/>.
+		/// </summary>
 		CreationOrSummary = 4,
+
+		/// <summary>
+		/// Same as <see cref="Creation"/> if the entity is not sufficiently defined; otherwise
+		/// same as <see cref="Edition"/>.
+		/// </summary>
 		CreationOrEdition = 5,
 	}
 }

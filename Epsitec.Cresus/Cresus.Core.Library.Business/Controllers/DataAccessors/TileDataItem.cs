@@ -537,7 +537,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			else
 			{
 				var entity    = marshaler.GetValue<AbstractEntity> ();
-				var mode      = entity.IsEntityPartiallyCreated || orchestrator.Data.IsDummyEntity (entity) ? ViewControllerMode.Creation : this.DefaultMode;
+				var mode      = this.GetSubViewControllerMode (orchestrator, entity);
 				var converter = this.EntityMarshalerConverter;
 
 				if (converter != null)
@@ -664,6 +664,28 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			}
 		}
 
+
+		private ViewControllerMode GetSubViewControllerMode(Orchestrators.DataViewOrchestrator orchestrator, AbstractEntity entity)
+		{
+			if (entity.IsEntityPartiallyCreated)
+			{
+				//	The entity describes itself as only partially created; this means we have to
+				//	show it using the creation view controller:
+
+				return ViewControllerMode.Creation;
+			}
+			
+			if (orchestrator.Data.IsDummyEntity (entity))
+			{
+				//	The entity is not a real entity. Dummy entities are used when an entity should
+				//	be created, but the user did not yet get an opportunity to provide additional
+				//	information. This will use the creation view controller too:
+
+				return ViewControllerMode.Creation;
+			}
+			
+			return this.DefaultMode;
+		}
 
 		private readonly HashSet<AccessorBinding>	bindings;
 

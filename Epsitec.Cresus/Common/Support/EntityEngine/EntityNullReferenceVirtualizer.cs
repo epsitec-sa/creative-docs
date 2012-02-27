@@ -25,8 +25,6 @@ namespace Epsitec.Common.Support.EntityEngine
 	/// </summary>
 	public static class EntityNullReferenceVirtualizer
 	{
-		
-		
 		/// <summary>
 		/// Patches the null references in the specified entity.
 		/// </summary>
@@ -43,27 +41,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			EntityContext realEntityContext = entity.GetEntityContext ();
 
 			EntityNullReferenceVirtualizer.PatchNullReferences (entity, realEntityContext, false);
-		}
-
-
-		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext, bool newEntity)
-			where T : AbstractEntity
-		{
-			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
-			{
-				return;
-			}
-
-			var originalValues = entity.GetOriginalValues ();
-			var modifiedValues = entity.GetModifiedValues ();
-
-			var newOriginalValues = new Store (originalValues, modifiedValues, entity, realEntityContext, newEntity);
-			var newModifiedValues = newEntity
-				? new StoreForwarder (modifiedValues, newOriginalValues)
-				: modifiedValues;
-
-			entity.SetOriginalValues (newOriginalValues);
-			entity.SetModifiedValues (newModifiedValues);
 		}
 
 
@@ -90,7 +67,6 @@ namespace Epsitec.Common.Support.EntityEngine
 				return false;
 			}
 		}
-
 
 		/// <summary>
 		/// Determines whether the specified entity is null or is an empty virtualized entity.
@@ -128,7 +104,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			return context is EmptyEntityContext;
 		}
 
-
 		/// <summary>
 		/// Determines whether the specified entity was patched using <see cref="PatchNullReferences"/>
 		/// and still is unchanged.
@@ -161,7 +136,6 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
-
 		/// <summary>
 		/// Unwraps the entity. If it maps to a null entity, then return <c>null</c>.
 		/// </summary>
@@ -181,6 +155,23 @@ namespace Epsitec.Common.Support.EntityEngine
 			}
 		}
 
+		/// <summary>
+		/// Creates a null, read-only entity, which will be identified as being equal to <c>null</c>.
+		/// It will not be possible to automatically promote this null entity to a real entity.
+		/// </summary>
+		/// <typeparam name="T">the type of the entity</typeparam>
+		/// <returns>The null entity.</returns>
+		public static T CreateNullEntity<T>()
+			where T : AbstractEntity, new ()
+		{
+			var context = EntityNullReferenceVirtualizer.GetEmptyEntityContext ();
+			var entity  = context.CreateEmptyEntity<T> ();
+
+			entity.Freeze ();
+
+			return entity;
+		}
+
 
 		/// <summary>
 		/// Wraps the entity. If it is <c>null</c>, then create a virtualized empty entity.
@@ -193,7 +184,6 @@ namespace Epsitec.Common.Support.EntityEngine
 		{
 			return entity ?? EntityNullReferenceVirtualizer.CreateEmptyEntity<T> (realEntityContext, false);
 		}
-
 
 		/// <summary>
 		/// Creates an empty entity which will be considered equal to a null reference
@@ -217,7 +207,26 @@ namespace Epsitec.Common.Support.EntityEngine
 			return entity;
 		}
 
+		private static void PatchNullReferences<T>(T entity, EntityContext realEntityContext, bool newEntity)
+			where T : AbstractEntity
+		{
+			if (EntityNullReferenceVirtualizer.IsPatchedEntity (entity))
+			{
+				return;
+			}
 
+			var originalValues = entity.GetOriginalValues ();
+			var modifiedValues = entity.GetModifiedValues ();
+
+			var newOriginalValues = new Store (originalValues, modifiedValues, entity, realEntityContext, newEntity);
+			var newModifiedValues = newEntity
+				? new StoreForwarder (modifiedValues, newOriginalValues)
+				: modifiedValues;
+
+			entity.SetOriginalValues (newOriginalValues);
+			entity.SetModifiedValues (newModifiedValues);
+		}
+		
 		/// <summary>
 		/// Creates an empty entity attached to a dedicated context.
 		/// </summary>
@@ -229,7 +238,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return context.CreateEmptyEntity (druid);
 		}
-
 
 		/// <summary>
 		/// Gets the context used to create empty entities.
@@ -248,7 +256,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#region EmptyEntityContext class
 
-
 		/// <summary>
 		/// The <c>EmptyEntityContext</c> class will be used when creating empty entities.
 		/// This allows the virtualizer to identify an empty entity very easily by just
@@ -256,22 +263,15 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private class EmptyEntityContext : EntityContext
 		{
-
-
 			public EmptyEntityContext()
 				: base (SafeResourceResolver.Instance, EntityLoopHandlingMode.Throw, "EmptyEntities")
 			{
 			}
-
-
 		}
-
 
 		#endregion
 
-
 		#region Store Class
-
 
 		/// <summary>
 		/// The <c>Store</c> class implements the <c>GetValue</c> and <c>SetValue</c> accessors used
@@ -281,23 +281,22 @@ namespace Epsitec.Common.Support.EntityEngine
 		/// </summary>
 		private sealed class Store : IValueStore
 		{
-
-
 			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, EntityContext realEntityContext, bool isReadOnly)
 			{
-				this.realReadStore = realReadStore;
-				this.realWriteStore = realWriteStore;
+				this.realReadStore     = realReadStore;
+				this.realWriteStore    = realWriteStore;
 				this.realEntityContext = realEntityContext;
+				
 				this.values = new Dictionary<string, object> ();
 				this.entity = entity;
+				
 				this.isReadOnly = isReadOnly;
 			}
-
 
 			public Store(IValueStore realReadStore, IValueStore realWriteStore, AbstractEntity entity, Store parentStore, string fieldIdInParentStore)
 				: this (realReadStore, realWriteStore, entity, parentStore.realEntityContext, true)
 			{
-				this.parentStore = parentStore;
+				this.parentStore          = parentStore;
 				this.fieldIdInParentStore = fieldIdInParentStore;
 			}
 			
@@ -312,7 +311,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 
 			#region IValueStore Members
-
 
 			public object GetValue(string id)
 			{
@@ -369,7 +367,6 @@ namespace Epsitec.Common.Support.EntityEngine
 					this.ReplaceValue (id, value, mode);
 				}
 			}
-			
 
 			#endregion
 
@@ -506,17 +503,15 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		#endregion
 
+		#region StoreForwarder Class
 
 		private class StoreForwarder : IValueStore
 		{
-
-
 			public StoreForwarder(IValueStore store1, Store store2)
 			{
 				this.store1 = store1;
 				this.store2 = store2;
 			}
-
 
 			#region IValueStore Members
 
@@ -536,15 +531,13 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			#endregion
 
-
 			private readonly IValueStore store1;
 			private readonly Store store2;
 		}
-		
+
+		#endregion
 
 		[System.ThreadStatic]
 		private static EntityContext emptyEntityContext;
 	}
-
-
 }

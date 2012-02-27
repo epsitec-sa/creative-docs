@@ -223,8 +223,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = TileDataType.CollectionItem;
 
-			if (this.businessContext.Data.IsDummyEntity (source))
+			if (this.businessContext.IsDummyEntity (source))
 			{
+				//	The contents of the tile is not meaningful (treat it as if it were empty).
+
 				this.BindEmptyEntityTileData (data, source, x => true);
 			}
 			else
@@ -283,7 +285,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			if ((data.DefaultMode == ViewControllerMode.CreationOrSummary) ||
 				(data.DefaultMode == ViewControllerMode.CreationOrEdition))
 			{
-				item = this.BusinessContext.CreateDummyEntity<T> ((x, y) => collectionAccessor.ReplaceItem (x, y));
+				//	The user wants to use the creation UI here, to add a new item to a collection.
+				//	To do so, we need to temporarily add a dummy entity into the collection, and
+				//	then make sure that the dummy entity will be replaced with the real one when
+				//	the creation process is validated.
+
+				item = this.CreateDummyItem (collectionAccessor);
 			}
 			else
 			{
@@ -327,7 +334,12 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
 			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
 		}
-		
+
+		private T CreateDummyItem(ICollectionAccessor collectionAccessor)
+		{
+			return this.BusinessContext.CreateDummyEntity<T> ((x, y) => collectionAccessor.ReplaceItem (x, y));
+		}
+
 		private T GenericCreateItem()
 		{
 			var item = this.createItem ();

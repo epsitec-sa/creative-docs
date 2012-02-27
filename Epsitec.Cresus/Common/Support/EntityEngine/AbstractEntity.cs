@@ -1646,39 +1646,36 @@ namespace Epsitec.Common.Support.EntityEngine
 				&& this.writeLockFunction != null
 				&& this.ReadOnlyChecksEnabled;
 		}
+		
+		static AbstractEntity()
+		{
+			AbstractEntity.defaultContext = new EntityContext ();
+		}
 
-		private readonly SafeCounter silentUpdates;
-		private readonly SafeCounter defineOriginalValues;
-		private readonly SafeCounter disableEvents;
-		private readonly SafeCounter disableReadOnlyChecks;
+		private static long						nextSerialId = 1;
 
-		private readonly long entitySerialId;
-		private readonly object eventLock;
+		private static readonly EntityContext	defaultContext;
+
+
+		private readonly SafeCounter			silentUpdates;
+		private readonly SafeCounter			defineOriginalValues;
+		private readonly SafeCounter			disableEvents;
+		private readonly SafeCounter			disableReadOnlyChecks;
+
+		private readonly long					entitySerialId;
+		private readonly object					eventLock;
 
 		private System.Func<System.IDisposable> readLockFunction;
 		private System.Func<System.IDisposable> writeLockFunction;
 
-		private EntityContext context;
-		private long dataGeneration;
+		private EntityContext					context;
+		private long							dataGeneration;
 		
-		private bool calculationsDisabled;
-		private IValueStore originalValues;
-		private IValueStore modifiedValues;
+		private bool							calculationsDisabled;
+		private IValueStore						originalValues;
+		private IValueStore						modifiedValues;
 		private Dictionary<string, System.Delegate> eventHandlers;
 		
-		private IEntityProxy proxy;
-
-		static AbstractEntity()
-		{
-			AbstractEntity.defaultContext = new EntityContext ();
-			AbstractEntity.lockTimeOut = System.TimeSpan.FromSeconds (15);
-		}
-
-		private static long nextSerialId = 1;
-
-		private static readonly EntityContext defaultContext;
-
-		private static readonly System.TimeSpan lockTimeOut;
-		
+		private IEntityProxy					proxy;
 	}
 }

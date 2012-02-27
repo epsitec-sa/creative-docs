@@ -530,6 +530,8 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
+			this.ClearDummyEntities ();
+
 			this.ApplyRulesToRegisteredEntities (RuleType.Validate);
 
 			if (this.ContainsChanges ())
@@ -787,25 +789,48 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		public T CreateDummyEntity<T>(System.Action<AbstractEntity, AbstractEntity> replaceCallback)
+		/// <summary>
+		/// Creates a dummy entity, which can be identified as such (see <see cref="IsDummyEntity"/>).
+		/// When the user later calls <see cref="ReplaceDummyEntity"/>, the replacement callback
+		/// will be invoked.
+		/// </summary>
+		/// <typeparam name="T">type of the dummy entity</typeparam>
+		/// <param name="replacementCallback">The callback called to replace the dummy entity with a real entity.</param>
+		/// <returns>The dummy entity.</returns>
+		public T CreateDummyEntity<T>(System.Action<AbstractEntity, AbstractEntity> replacementCallback)
 			where T : AbstractEntity, new ()
 		{
 			var item = this.data.CreateDummyEntity<T> ();
-			
+
+			//	The dummy entity has not yet been virtualized; do this here, so that the user
+			//	won't be surprised to get back null references for undefined fields :
+
 			EntityNullReferenceVirtualizer.PatchNullReferences (item);
 
-			if (this.dummyEntityReplacementCallbacks == null)
-			{
-				this.dummyEntityReplacementCallbacks = new Dictionary<long, System.Action<AbstractEntity, AbstractEntity>> ();
-			}
-
-			long key = item.GetEntitySerialId ();
-			
-			this.dummyEntityReplacementCallbacks[key] = replaceCallback;
+			this.RememberDummyEntity (item, replacementCallback);
 
 			return item;
 		}
 
+		/// <summary>
+		/// Determines whether the specified entity is a dummy entity.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
+		/// <returns>
+		///   <c>true</c> if the specified entity is a dummy entity; otherwise, <c>false</c>.
+		/// </returns>
+		public bool IsDummyEntity(AbstractEntity entity)
+		{
+			return this.data.IsDummyEntity (entity);
+		}
+
+		/// <summary>
+		/// Replaces the dummy entity with the real entity (or remove it if the real entity is
+		/// <c>null</c>).
+		/// </summary>
+		/// <param name="dummyEntity">The dummy entity.</param>
+		/// <param name="realEntity">The real entity.</param>
+		/// <returns><c>true</c> if the dummy entity was replaced; otherwise, <c>false</c>.</returns>
 		public bool ReplaceDummyEntity(AbstractEntity dummyEntity, AbstractEntity realEntity)
 		{
 			if (this.dummyEntityReplacementCallbacks == null)
@@ -813,25 +838,42 @@ namespace Epsitec.Cresus.Core.Business
 				return false;
 			}
 
-			System.Action<AbstractEntity, AbstractEntity> replaceCallback;
+			DummyReplacement dummyReplacement;
 
 			long key = dummyEntity.GetEntitySerialId ();
 
-			if (this.dummyEntityReplacementCallbacks.TryGetValue (key, out replaceCallback))
+			if (this.dummyEntityReplacementCallbacks.TryGetValue (key, out dummyReplacement))
 			{
 				this.dummyEntityReplacementCallbacks.Remove (key);
-				replaceCallback (dummyEntity, realEntity);
+				dummyReplacement.Callback (dummyEntity, realEntity);
 				return true;
 			}
 
 			return false;
 		}
 
+		/// <summary>
+		/// Clears any pending dummy entities.
+		/// </summary>
+		public void ClearDummyEntities()
+		{
+			if (this.dummyEntityReplacementCallbacks != null)
+			{
+				var dummyReplacements = this.dummyEntityReplacementCallbacks.Values.ToArray ();
+				
+				this.dummyEntityReplacementCallbacks.Clear ();
+				
+				foreach (var dummyReplacement in dummyReplacements)
+				{
+					dummyReplacement.Callback (dummyReplacement.DummyEntity, null);
+				}
+			}
+		}
 
-		private Dictionary<long, System.Action<AbstractEntity, AbstractEntity>> dummyEntityReplacementCallbacks;
+		
 
 
-        /// <summary>
+		/// <summary>
 		/// Reloads the entities if they have changed in the database.
 		/// </summary>
 		/// <returns><c>true</c> if some entities changed; otherwise, <c>false</c>.</returns>
@@ -1071,6 +1113,47 @@ namespace Epsitec.Cresus.Core.Business
 			this.OnRefreshUIRequested ();
 		}
 
+
+		private struct DummyReplacement
+		{
+			public DummyReplacement(AbstractEntity dummyEntity, System.Action<AbstractEntity, AbstractEntity> callback)
+			{
+				this.dummyEntity = dummyEntity;
+				this.callback    = callback;
+			}
+
+			public System.Action<AbstractEntity, AbstractEntity> Callback
+			{
+				get
+				{
+					return this.callback;
+				}
+			}
+
+			public AbstractEntity DummyEntity
+			{
+				get
+				{
+					return this.dummyEntity;
+				}
+			}
+
+			private readonly System.Action<AbstractEntity, AbstractEntity> callback;
+			private readonly AbstractEntity		dummyEntity;
+		}
+
+		private void RememberDummyEntity(AbstractEntity entity, System.Action<AbstractEntity, AbstractEntity> replacementCallback)
+		{
+			if (this.dummyEntityReplacementCallbacks == null)
+			{
+				this.dummyEntityReplacementCallbacks = new Dictionary<long, DummyReplacement> ();
+			}
+
+			long key = entity.GetEntitySerialId ();
+
+			this.dummyEntityReplacementCallbacks[key] = new DummyReplacement (entity, replacementCallback);
+		}
+		
 		private void HandleFirstEntityChange()
 		{
 			this.AcquireLock ();
@@ -1139,5 +1222,7 @@ namespace Epsitec.Cresus.Core.Business
 		private AbstractEntity					activeEntity;
 		private AbstractEntity					lockEntity;
 		private NavigationPathElement			activeNavigationPathElement;
+		
+		private Dictionary<long, DummyReplacement> dummyEntityReplacementCallbacks;
 	}
 }
