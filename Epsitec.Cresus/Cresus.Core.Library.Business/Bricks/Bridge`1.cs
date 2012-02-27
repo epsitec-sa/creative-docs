@@ -226,6 +226,10 @@ namespace Epsitec.Cresus.Core.Bricks
 				case BrickMode.AutoCreateNullEntity:
 					this.autoCreateNullEntity = true;
 					break;
+
+				case BrickMode.DefaultToCreationSubView:
+					item.DefaultMode = ViewControllerMode.Creation;
+					break;
 				
 				case BrickMode.DefaultToSummarySubView:
 					item.DefaultMode = ViewControllerMode.Summary;

@@ -38,18 +38,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.Households)
+				.Attribute (BrickMode.DefaultToCreationSubView)
 				.Template ()
-					.Title ("Coordonées du ménage")
+					.Title ("Coordonnées du ménage")
 					.Text (x => x.GetAddressSummary ())
 				.End ();
-
-			if (this.Entity.Household2.IsNotNull ())
-			{
-				wall.AddBrick (x => x.Household2)
-					.Title ("Coordonées du ménage (2)")
-					.Text (x => x.GetAddressSummary ())
-					.Attribute (BrickMode.DefaultToSummarySubView);
-			}
 
 			wall.AddBrick (x => x.Parish)
 				.Icon ("Data.AiderGroup.Parish")

@@ -271,6 +271,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				index = this.createGetIndex ();  // index selon l'action
 			}
 
+			if (data.DefaultMode == ViewControllerMode.Creation)
+			{
+			}
+
 			T item = this.GenericCreateItem ();
 
 			if (index < 0)

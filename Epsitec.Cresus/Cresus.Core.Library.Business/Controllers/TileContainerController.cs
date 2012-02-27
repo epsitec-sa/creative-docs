@@ -436,16 +436,10 @@ namespace Epsitec.Cresus.Core.Controllers
 				(item.AddNewItem != null))
 			{
 				string itemName = item.Name;
-#if true
+				
 				item.AddNewItem ();
 				this.GenerateTiles ();
 				this.OpenSubViewForCreatedTile (item, itemName);
-#else
-				this.QueueTasklets ("CreateNewTile",
-					new TaskletJob (() => item.AddNewItem (), TaskletRunMode.Async),
-					new TaskletJob (() => this.GenerateTiles (), TaskletRunMode.After),
-					new TaskletJob (() => this.OpenSubViewForCreatedTile (item, itemName), TaskletRunMode.After));
-#endif
 			}
 			else
 			{
