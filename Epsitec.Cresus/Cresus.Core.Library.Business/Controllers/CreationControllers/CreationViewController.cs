@@ -59,6 +59,12 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#endregion
 
+		protected void RegisterSimpleCreator(System.Func<T> simpleCreator)
+		{
+			this.simpleCreator = simpleCreator;
+		}
+
+
 
 		/// <summary>
 		/// Creates the real entity based on the current (template or example) entity.
@@ -116,12 +122,28 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 		private T CreateEntityUsingEntityCreator<TDerived>(InitializerAction initializer)
 			where TDerived : T, new ()
 		{
-			if (this.entityCreator == null)
+			if (this.simpleCreator != null)
 			{
-				throw new System.InvalidOperationException ("Cannot create entity in CreationViewController without an entity creator");
+				T dummyEntity = this.Entity;
+				T finalEntity = this.simpleCreator ();
+
+				this.BusinessContext.ReplaceDummyEntity (dummyEntity, finalEntity);
+				this.ReopenSubView ();
+
+				return finalEntity;
 			}
 
-			return this.entityCreator (context => context.CreateEntity<TDerived> (), initializer) as T;
+			if (this.entityCreator != null)
+			{
+				T dummyEntity = this.Entity;
+				T finalEntity = this.entityCreator (context => context.CreateEntity<TDerived> (), initializer) as T;
+
+				this.BusinessContext.ReplaceDummyEntity (dummyEntity, finalEntity);
+
+				return finalEntity;
+			}
+
+			throw new System.InvalidOperationException ("Cannot create entity in CreationViewController without an entity creator");
 		}
 
 		protected override void Dispose(bool disposing)
@@ -140,5 +162,6 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		private System.Action					disposeAction;
 		private EntityCreatorFunction			entityCreator;
+		private System.Func<T>					simpleCreator;
 	}
 }

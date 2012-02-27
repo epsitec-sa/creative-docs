@@ -223,16 +223,23 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			data.EntityMarshaler = marshaler;
 			data.DataType		 = TileDataType.CollectionItem;
 
-			var context = this.dataContextPool.FindDataContext (source);
-
-			if ((context != null) &&
-				(context.IsRegisteredAsEmptyEntity (source)))
+			if (this.businessContext.Data.IsDummyEntity (source))
 			{
-				this.BindEmptyEntityTileData (data, source);
+				this.BindEmptyEntityTileData (data, source, x => true);
 			}
 			else
 			{
-				this.BindRealEntityTileData (data, source, collectionAccessor);
+				var context = this.dataContextPool.FindDataContext (source);
+
+				if ((context != null) &&
+					(context.IsRegisteredAsEmptyEntity (source)))
+				{
+					this.BindEmptyEntityTileData (data, source, x => x.IsNullOrEmpty);
+				}
+				else
+				{
+					this.BindRealEntityTileData (data, source, collectionAccessor);
+				}
 			}
 
 			if (collectionAccessor != null)
@@ -271,11 +278,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				index = this.createGetIndex ();  // index selon l'action
 			}
 
-			if (data.DefaultMode == ViewControllerMode.Creation)
-			{
-			}
+			T item;
 
-			T item = this.GenericCreateItem ();
+			if ((data.DefaultMode == ViewControllerMode.CreationOrSummary) ||
+				(data.DefaultMode == ViewControllerMode.CreationOrEdition))
+			{
+				item = this.BusinessContext.CreateDummyEntity<T> ((x, y) => collectionAccessor.ReplaceItem (x, y));
+			}
+			else
+			{
+				item = this.GenericCreateItem ();
+			}
 
 			if (index < 0)
 			{
@@ -297,13 +310,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		private void BindEmptyEntityTileData(TileDataItem data, T source)
+		private void BindEmptyEntityTileData(TileDataItem data, T source, System.Predicate<FormattedText> isEmptyPredicate)
 		{
 			data.ClearAccessors ();
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
-			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
+			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, isEmptyPredicate);
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
-			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, x => x.IsNullOrEmpty);
+			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultDefinitionInProgressText, isEmptyPredicate);
 		}
 
 		private void BindRealEntityTileData(TileDataItem data, T source, ICollectionAccessor collectionAccessor)

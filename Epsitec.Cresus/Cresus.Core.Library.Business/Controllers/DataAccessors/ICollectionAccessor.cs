@@ -30,6 +30,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		int AddItem(AbstractEntity item);
 
 		/// <summary>
+		/// Replaces the item with another one. If the replacement item is <c>null</c>, then
+		/// this is equivalent to <see cref="RemoveItem"/>.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		/// <param name="replacementItem">The replacement item.</param>
+		/// <returns><c>true</c> if the item could be found and replaced; otherwise, <c>false</c>.</returns>
+		bool ReplaceItem(AbstractEntity item, AbstractEntity replacementItem);
+
+		/// <summary>
 		/// Removes the first occurrence of the item.
 		/// </summary>
 		/// <param name="item">The item.</param>

@@ -28,5 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Use the creation view controller (special case, read only based on dummy bootstrap entity).
 		/// </summary>
 		Creation = 3,
+
+		CreationOrSummary = 4,
+		CreationOrEdition = 5,
 	}
 }

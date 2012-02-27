@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Core.Resolvers
 	{
 		public static EntityViewController Resolve(ViewControllerMode mode, int? controllerSubTypeId, ResolutionMode resolutionMode)
 		{
+			mode = EntityViewControllerResolver.FilterMode (mode);
+
 			var name   = EntityViewControllerFactory.Default.ControllerName;
 			var entity = EntityViewControllerFactory.Default.Entity;
 			
@@ -56,6 +58,21 @@ namespace Epsitec.Cresus.Core.Resolvers
 			return controllerInstance as EntityViewController;
 		}
 
+
+		private static ViewControllerMode FilterMode(ViewControllerMode mode)
+		{
+			switch (mode)
+			{
+				case ViewControllerMode.CreationOrSummary:
+					return ViewControllerMode.Summary;
+
+				case ViewControllerMode.CreationOrEdition:
+					return ViewControllerMode.Edition;
+
+				default:
+					return mode;
+			}
+		}
 		
 		private static string GetViewControllerPrefix(ViewControllerMode mode)
 		{

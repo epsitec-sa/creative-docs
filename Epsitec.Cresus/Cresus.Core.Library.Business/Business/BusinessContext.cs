@@ -787,7 +787,51 @@ namespace Epsitec.Cresus.Core.Business
 		}
 
 
-		/// <summary>
+		public T CreateDummyEntity<T>(System.Action<AbstractEntity, AbstractEntity> replaceCallback)
+			where T : AbstractEntity, new ()
+		{
+			var item = this.data.CreateDummyEntity<T> ();
+			
+			EntityNullReferenceVirtualizer.PatchNullReferences (item);
+
+			if (this.dummyEntityReplacementCallbacks == null)
+			{
+				this.dummyEntityReplacementCallbacks = new Dictionary<long, System.Action<AbstractEntity, AbstractEntity>> ();
+			}
+
+			long key = item.GetEntitySerialId ();
+			
+			this.dummyEntityReplacementCallbacks[key] = replaceCallback;
+
+			return item;
+		}
+
+		public bool ReplaceDummyEntity(AbstractEntity dummyEntity, AbstractEntity realEntity)
+		{
+			if (this.dummyEntityReplacementCallbacks == null)
+			{
+				return false;
+			}
+
+			System.Action<AbstractEntity, AbstractEntity> replaceCallback;
+
+			long key = dummyEntity.GetEntitySerialId ();
+
+			if (this.dummyEntityReplacementCallbacks.TryGetValue (key, out replaceCallback))
+			{
+				this.dummyEntityReplacementCallbacks.Remove (key);
+				replaceCallback (dummyEntity, realEntity);
+				return true;
+			}
+
+			return false;
+		}
+
+
+		private Dictionary<long, System.Action<AbstractEntity, AbstractEntity>> dummyEntityReplacementCallbacks;
+
+
+        /// <summary>
 		/// Reloads the entities if they have changed in the database.
 		/// </summary>
 		/// <returns><c>true</c> if some entities changed; otherwise, <c>false</c>.</returns>

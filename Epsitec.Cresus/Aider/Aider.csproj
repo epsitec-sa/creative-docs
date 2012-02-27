@@ -54,6 +54,7 @@
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupParticipantViewController.cs" />
     <Compile Include="Controllers\EditionControllers\EditionAiderGroupViewController.cs" />
+    <Compile Include="Controllers\CreationControllers\CreationAiderHouseholdViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderFunctionDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupDefViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderGroupParticipantViewController.cs" />
@@ -270,9 +271,7 @@
       <Name>Data.Platform</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Controllers\CreationControllers\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

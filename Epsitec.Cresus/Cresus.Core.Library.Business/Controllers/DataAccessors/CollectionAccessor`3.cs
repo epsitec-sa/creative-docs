@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -116,6 +116,30 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			int index = collection.Count;
 			collection.Add (item as T3);
 			return index;
+		}
+
+		public override bool ReplaceItem(AbstractEntity item, AbstractEntity replacementItem)
+		{
+			var collection = this.GetWritableCollection ();
+			int index = collection.IndexOf (item as T2);
+			
+			if (index < 0)
+			{
+				return false;
+			}
+			else
+			{
+				if (replacementItem == null)
+				{
+					collection.RemoveAt (index);
+				}
+				else
+				{
+					collection[index] = replacementItem as T2;
+				}
+
+				return true;
+			}
 		}
 
 		public override bool RemoveItem(AbstractEntity item)

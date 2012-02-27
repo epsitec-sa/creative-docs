@@ -38,7 +38,7 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 			}
 
 			wall.AddBrick (x => x.Households)
-				.Attribute (BrickMode.DefaultToCreationSubView)
+				.Attribute (BrickMode.DefaultToCreationOrEditionSubView)
 				.Template ()
 					.Title ("Coordonnées du ménage")
 					.Text (x => x.GetAddressSummary ())
