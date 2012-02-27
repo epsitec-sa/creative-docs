@@ -200,6 +200,63 @@ namespace Epsitec.Aider.Entities
 			return this.Housemates.Concat (this.Children).Concat (this.Parents);
 		}
 
+		partial void GetIsHouseholdHead(ref bool value)
+		{
+			foreach (var household in this.Households)
+			{
+				if ((household.Head1 == this) ||
+					(household.Head2 == this))
+				{
+					value = true;
+					return;
+				}
+			}
+
+			value = false;
+		}
+
+		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue)
+		{
+			if (newValue == false)
+			{
+				//	This person is no longer the head of the household.
+
+				foreach (var household in this.Households)
+				{
+					if (household.Head1 == this)
+					{
+						household.Head1 = household.Head2;
+						household.Head2 = household.GetEntityContext ().CreateEmptyEntity<AiderPersonEntity> ();
+					}
+					else if (household.Head2 == this)
+					{
+						household.Head2 = household.GetEntityContext ().CreateEmptyEntity<AiderPersonEntity> ();
+					}
+				}
+			}
+			else
+			{
+				//	Make this person the head of the household. If there is already one or
+				//	two heads defined, replace the oldest one. This only considers the first
+				//	household if there are two of them.
+
+				if ((this.Household1.IsNull ()) &&
+					(this.Household2.IsNull ()))
+				{
+					//	No op
+				}
+				else if (this.Household1.IsNotNull ())
+				{
+					this.Household1.Head2 = this.Household1.Head1;
+					this.Household1.Head1 = this;
+				}
+				else
+				{
+					this.Household2.Head2 = this.Household2.Head1;
+					this.Household2.Head1 = this;
+				}
+			}
+		}
 
 		partial void GetHousemates(ref IList<AiderPersonEntity> value)
 		{
@@ -218,14 +275,12 @@ namespace Epsitec.Aider.Entities
 			value = housemates.Where (p => p != this).ToList ();
 		}
 
-
 		partial void GetChildren(ref IList<AiderPersonEntity> value)
 		{
 			value = new List<AiderPersonEntity> ();
 
 			// TODO
 		}
-
 
 		partial void GetParents(ref IList<AiderPersonEntity> value)
 		{
@@ -243,7 +298,6 @@ namespace Epsitec.Aider.Entities
 
 			value = this.householdList;
 		}
-
 
 		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
 		{

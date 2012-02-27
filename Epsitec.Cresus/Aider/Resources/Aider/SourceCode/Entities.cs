@@ -1107,6 +1107,30 @@ namespace Epsitec.Aider.Entities
 				return value;
 			}
 		}
+		///	<summary>
+		///	The <c>IsHouseholdHead</c> field.
+		///	designer:fld/LVAF/LVA9C
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVA9C]")]
+		public bool IsHouseholdHead
+		{
+			get
+			{
+				bool value = default (bool);
+				this.GetIsHouseholdHead (ref value);
+				return value;
+			}
+			set
+			{
+				bool oldValue = this.IsHouseholdHead;
+				if (oldValue != value || !this.IsFieldDefined("[LVA9C]"))
+				{
+					this.OnIsHouseholdHeadChanging (oldValue, value);
+					this.SetIsHouseholdHead (value);
+					this.OnIsHouseholdHeadChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OneCH_PersonChanging(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
 		partial void OneCH_PersonChanged(global::Epsitec.Aider.Entities.eCH_PersonEntity oldValue, global::Epsitec.Aider.Entities.eCH_PersonEntity newValue);
@@ -1142,6 +1166,8 @@ namespace Epsitec.Aider.Entities
 		partial void OnProfessionChanged(string oldValue, string newValue);
 		partial void OnParishChanging(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
 		partial void OnParishChanged(global::Epsitec.Aider.Entities.AiderGroupParticipantEntity oldValue, global::Epsitec.Aider.Entities.AiderGroupParticipantEntity newValue);
+		partial void OnIsHouseholdHeadChanging(bool oldValue, bool newValue);
+		partial void OnIsHouseholdHeadChanged(bool oldValue, bool newValue);
 		
 		partial void GetEvents(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderEventParticipantEntity> value);
 		partial void GetGroups(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderGroupParticipantEntity> value);
@@ -1153,6 +1179,8 @@ namespace Epsitec.Aider.Entities
 		partial void GetAdditionalAddresses(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderAddressEntity> value);
 		partial void GetRelationships(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonRelationshipEntity> value);
 		partial void GetWarnings(ref global::System.Collections.Generic.IList<global::Epsitec.Aider.Entities.AiderPersonWarningEntity> value);
+		partial void GetIsHouseholdHead(ref bool value);
+		partial void SetIsHouseholdHead(bool value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
