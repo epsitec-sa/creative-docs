@@ -79,6 +79,19 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 					index++;
 				}
 			}
+			
+			if ((index == 0) &&
+				(collection is ICollectionModificationCapabilities))
+			{
+				//	Use the name of the template, instead of using a name suffixed with ".0".
+				//	This ensures that the GroupedItemController will indeed be attached to the
+				//	template itself, not to a copy of the empty item.
+				
+				var name = this.template.NamePrefix;
+				var data = tileDataGetter (name, -1);
+
+				data.GroupController = new GroupedItemController (collection as ICollectionModificationCapabilities);
+			}
 		}
 
 		public override void InsertItem(int index, AbstractEntity item)

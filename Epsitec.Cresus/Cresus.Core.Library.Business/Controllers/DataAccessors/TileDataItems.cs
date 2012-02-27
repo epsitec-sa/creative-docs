@@ -151,9 +151,18 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			TileDataItem template;
 
-			System.Diagnostics.Debug.Assert (name.Contains ('.'));
+			if (index == -1)
+			{
+				//	Never mind if the name does contain or not a suffix with the item index
+				//	in it.
+			}
+			else
+			{
+				System.Diagnostics.Debug.Assert (name.Contains ('.'));
+			}
 
-			if (TileDataItems.FindTemplate (collection, name, out template))
+			if ((TileDataItems.FindTemplate (collection, name, out template)) &&
+				(index >= 0))
 			{
 				return TileDataItems.CreateSummayData (template, name, index);
 			}

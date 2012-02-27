@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Common.Types.Collections;
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 {
@@ -29,12 +30,20 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			this.collectionAccessor = collectionAccessor;
 			this.item   = item;
-			this.filter = filter ?? GroupedItemController.defaultFilter;
+			this.filter = filter;
 			
 			var items = this.Items;
-			
-			System.Diagnostics.Debug.Assert (items.Contains (item));
-			System.Diagnostics.Debug.Assert (filter (item));
+
+			if (item != null)
+			{
+				System.Diagnostics.Debug.Assert (items.Contains (item));
+				System.Diagnostics.Debug.Assert (filter == null || filter (item));
+			}
+		}
+
+		public GroupedItemController(ICollectionModificationCapabilities capabilities)
+		{
+			this.collectionModificationCaps = capabilities;
 		}
 
 
@@ -42,7 +51,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public bool CanInsert(int index)
 		{
-			if (this.collectionAccessor.IsReadOnly)
+			if (this.collectionModificationCaps != null)
+			{
+				return this.collectionModificationCaps.CanInsert (index);
+			}
+
+			if ((this.collectionAccessor == null) ||
+				(this.collectionAccessor.IsReadOnly))
 			{
 				return false;
 			}
@@ -66,7 +81,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		public bool CanRemove(int index)
 		{
-			if (this.collectionAccessor.IsReadOnly)
+			if (this.collectionModificationCaps != null)
+			{
+				return this.collectionModificationCaps.CanRemove (index);
+			}
+
+			if ((this.collectionAccessor == null) ||
+				(this.collectionAccessor.IsReadOnly))
 			{
 				return false;
 			}
@@ -92,7 +113,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.collectionAccessor.IsReadOnly)
+				if (this.collectionModificationCaps != null)
+				{
+					return this.collectionModificationCaps.CanBeReordered;
+				}
+
+				if ((this.collectionAccessor == null) ||
+					(this.collectionAccessor.IsReadOnly))
 				{
 					return false;
 				}
@@ -136,7 +163,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <param name="newIndex">The new index.</param>
 		public void SetItemIndex(int newIndex)
 		{
-			if (this.collectionAccessor.IsReadOnly)
+			if ((this.collectionAccessor == null) ||
+				(this.collectionAccessor.IsReadOnly))
 			{
 				this.MoveItemInReadOnlyCollectionAccessor (newIndex);
 			}
@@ -175,7 +203,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.collectionAccessor.GetItemCollection ();
+				if (this.collectionAccessor == null)
+				{
+					return EmptyEnumerable<AbstractEntity>.Instance;
+				}
+				else
+				{
+					return this.collectionAccessor.GetItemCollection ();
+				}
 			}
 		}
 
@@ -183,7 +218,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				return this.Items.Where (x => this.filter (x));
+				if (filter == null)
+				{
+					return this.Items;
+				}
+				else
+				{
+					return this.Items.Where (x => this.filter (x));
+				}
 			}
 		}
 
@@ -219,6 +261,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		
 		private void UpdateCollection(int newIndex, List<AbstractEntity> compatibleItems)
 		{
+			if (this.collectionAccessor == null)
+			{
+				return;
+			}
+
 			var items = this.Items;
 
 			int itemCount    = compatibleItems.Count;
@@ -272,9 +319,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 
-		private static readonly System.Predicate<AbstractEntity> defaultFilter = x => true;
-
 		private readonly ICollectionAccessor				collectionAccessor;
+		private readonly ICollectionModificationCapabilities collectionModificationCaps;
 		private readonly AbstractEntity						item;
 		private readonly System.Predicate<AbstractEntity>	filter;
 	}

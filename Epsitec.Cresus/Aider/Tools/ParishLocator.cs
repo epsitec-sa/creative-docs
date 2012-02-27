@@ -30,6 +30,11 @@ namespace Epsitec.Aider.Tools
 
 			var parishName  = ParishAddressRepository.Current.FindParishName (zipCode, townName, streetName, houseNumber);
 
+			if (parishName == null)
+			{
+				return null;
+			}
+
 			var repository  = context.GetRepository<AiderGroupEntity> ();
 			var example     = repository.CreateExample ();
 
