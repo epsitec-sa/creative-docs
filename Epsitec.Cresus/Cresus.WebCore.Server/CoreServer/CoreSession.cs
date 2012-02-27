@@ -7,7 +7,6 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface;
 using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 
 
