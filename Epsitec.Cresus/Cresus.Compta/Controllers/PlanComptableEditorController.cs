@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class PlanComptableFooterController : AbstractFooterController
+	public class PlanComptableEditorController : AbstractEditorController
 	{
-		public PlanComptableFooterController(AbstractController controller)
+		public PlanComptableEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new TabCatcherFrameBox
+			var editorFrame = new TabCatcherFrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
@@ -49,13 +49,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 1, 0),
 			};
 
-			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
+			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
@@ -63,45 +63,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Catégorie)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, Converters.CatégorieDescriptions.ToArray ());
 				}
 				else if (mapper.Column == ColumnType.Type)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, Converters.TypeDescriptions.ToArray ());
 				}
 				else if (mapper.Column == ColumnType.Groupe)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Groupe);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.CompteOuvBoucl)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.Monnaie)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, "CHF", "EUR", "USD");
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;

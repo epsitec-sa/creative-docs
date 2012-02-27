@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class UtilisateursFooterController : AbstractFooterController
+	public class UtilisateursEditorController : AbstractEditorController
 	{
-		public UtilisateursFooterController(AbstractController controller)
+		public UtilisateursEditorController(AbstractController controller)
 			: base (controller)
 		{
 			this.checkPrésentationsButtons = new List<CheckButton> ();
@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			var band = this.CreateRightFooterUI (parent);
+			var band = this.CreateRightEditorUI (parent);
 
 			this.buttonsFrame = new FrameBox
 			{
@@ -61,24 +61,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateLineUI(Widget parent)
 		{
-			//	Comme on est en mode HasRightFooter, la "ligne" est en fait une colonne dans laquelle
+			//	Comme on est en mode HasRightEditor, la "ligne" est en fait une colonne dans laquelle
 			//	on empile les choses de haut en bas.
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new TabCatcherFrameBox
+			var editorFrame = new TabCatcherFrameBox
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (0, 0, 1, 0),
 			};
 
-			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
+			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					new FrameBox
 					{
-						Parent          = footerFrame,
+						Parent          = editorFrame,
 						PreferredHeight = 10,
 						Dock            = DockStyle.Top,
 					};
@@ -97,32 +97,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Pièce)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.PiècesGenerator.Select (x => x.Nom).ToArray ());
 				}
 				else if (mapper.Column == ColumnType.DateDébut ||
 						 mapper.Column == ColumnType.DateFin   )
 				{
-					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.MotDePasse)
 				{
-					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.IdentitéWindows ||
 						 mapper.Column == ColumnType.Désactivé       )
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;
@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			{
-				var footer = new FrameBox
+				var editor = new FrameBox
 				{
 					Parent              = group,
 					ContainerLayoutMode = Common.Widgets.ContainerLayoutMode.HorizontalFlow,
@@ -191,7 +191,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.zeroPrésentationButton = new Button
 				{
-					Parent          = footer,
+					Parent          = editor,
 					Text            = "Aucune",
 					PreferredHeight = 20,
 					Dock            = DockStyle.Fill,
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.allPrésentationButton = new Button
 				{
-					Parent          = footer,
+					Parent          = editor,
 					Text            = "Toutes",
 					PreferredHeight = 20,
 					Dock            = DockStyle.Fill,
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.ignoreChanges.IsZero)
 				{
 					this.EditionLine.SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
-					this.FooterTextChanged ();
+					this.EditorTextChanged ();
 				}
 			};
 		}

@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
 
-			if (this.HasRightFooter)
+			if (this.HasRightEditor)
 			{
 				var band = new FrameBox
 				{
@@ -191,29 +191,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 				};
 
 				this.CreateArray (left);
-				this.CreateFooter (right);
+				this.CreateEditor (right);
 			}
 			else
 			{
 				this.CreateArray (this.frameBox);
-				this.CreateFooter (this.frameBox);
+				this.CreateEditor (this.frameBox);
 			}
 
 			this.UpdateArrayContent ();
 
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.UpdateFooterGeometry ();
-				this.footerController.UpdateFooterContent ();
+				this.editionController.UpdateEditorGeometry ();
+				this.editionController.UpdateEditorContent ();
 			}
 
 			this.SearchStartAction ();
 			this.FilterUpdateTopToolbar ();
 			this.UpdateTitle ();
 			
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.FooterSelect (0);
+				this.editionController.EditorSelect (0);
 			}
 
 			this.CreateSpecificUI (this.frameBox);
@@ -227,17 +227,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void Dispose()
 		{
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.Dispose ();
+				this.editionController.Dispose ();
 			}
 		}
 
-		public AbstractFooterController FooterController
+		public AbstractEditorController EditionController
 		{
 			get
 			{
-				return this.footerController;
+				return this.editionController;
 			}
 		}
 
@@ -267,7 +267,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasRightFooter
+		public virtual bool HasRightEditor
 		{
 			get
 			{
@@ -337,9 +337,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.optionsController.ShowPanel = options;
 			}
 
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.ShowInfoPanel = info;
+				this.editionController.ShowInfoPanel = info;
 			}
 
 			this.UpdateViewSettings ();
@@ -415,17 +415,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void AcceptAction()
 		{
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.AcceptAction ();
+				this.editionController.AcceptAction ();
 			}
 		}
 
 		public virtual void CancelAction()
 		{
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.CancelAction ();
+				this.editionController.CancelAction ();
 			}
 		}
 
@@ -562,9 +562,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void FilterStartAction()
 		{
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.Dirty = false;
+				this.editionController.Dirty = false;
 			}
 
 			if (this.arrayController != null && this.dataAccessor != null)
@@ -585,9 +585,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateViewSettings ();
 
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.FooterValidate ();
+				this.editionController.EditorValidate ();
 			}
 		}
 
@@ -823,16 +823,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ArrayColumnsWidthChanged()
 		{
 			//	Appelé lorsque la largeur d'une colonne a changé.
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.UpdateFooterGeometry ();
+				this.editionController.UpdateEditorGeometry ();
 			}
 		}
 
 		private void ArraySelectedRowChanged()
 		{
 			//	Appelé lorsque la ligne sélectionnée a changé.
-			if (this.ignoreChanges.IsNotZero || this.footerController == null)
+			if (this.ignoreChanges.IsNotZero || this.editionController == null)
 			{
 				return;
 			}
@@ -840,11 +840,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int row    = this.arrayController.SelectedRow;
 			int column = this.arrayController.SelectedColumn;
 
-			if (this.footerController.Dirty)
+			if (this.editionController.Dirty)
 			{
-				if (this.footerController.HasError)
+				if (this.editionController.HasError)
 				{
-					this.footerController.Dirty = false;
+					this.editionController.Dirty = false;
 				}
 				else
 				{
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.dataAccessor.UpdateEditionLine ();
 					this.UpdateArrayContent ();
-					this.footerController.Dirty = false;
+					this.editionController.Dirty = false;
 
 					int adjustedRow = this.dataAccessor.GetEditionIndex (entity);
 
@@ -871,7 +871,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (row == -1)
 			{
-				if (this.footerController == null || !this.footerController.Duplicate)
+				if (this.editionController == null || !this.editionController.Duplicate)
 				{
 					this.dataAccessor.StartCreationLine ();
 				}
@@ -884,11 +884,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.UpdateFooterContent ();
-				this.footerController.FooterSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
-				this.footerController.ShowSelection ();
+				this.editionController.UpdateEditorContent ();
+				this.editionController.EditorSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
+				this.editionController.ShowSelection ();
 			}
 		}
 
@@ -916,9 +916,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.UpdateAfterOptionsChanged ();
 			this.BaseUpdateArrayContent ();
 
-			if (this.footerController != null)
+			if (this.editionController != null)
 			{
-				this.footerController.UpdateFooterContent ();
+				this.editionController.UpdateEditorContent ();
 			}
 
 			this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
@@ -992,7 +992,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		protected virtual void CreateFooter(FrameBox parent)
+		protected virtual void CreateEditor(FrameBox parent)
 		{
 		}
 
@@ -1096,7 +1096,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;
-		protected AbstractFooterController						footerController;
+		protected AbstractEditorController						editionController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;
 		protected StaticText									titleLabel;

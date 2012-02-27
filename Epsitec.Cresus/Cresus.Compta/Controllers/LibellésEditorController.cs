@@ -9,6 +9,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
@@ -19,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class BudgetsFooterController : AbstractFooterController
+	public class LibellésEditorController : AbstractEditorController
 	{
-		public BudgetsFooterController(AbstractController controller)
+		public LibellésEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -40,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new TabCatcherFrameBox
+			var editorFrame = new TabCatcherFrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
@@ -48,32 +49,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 1, 0),
 			};
 
-			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
+			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-				field.CreateUI (footerFrame);
+				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Numéro ||
-					mapper.Column == ColumnType.Titre  ||
-					mapper.Column == ColumnType.Solde)
+				if (mapper.Column == ColumnType.Permanent)
 				{
-					field.IsReadOnly = true;
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
-
-				if (mapper.Column == ColumnType.Solde           ||
-					mapper.Column == ColumnType.BudgetPrécédent ||
-					mapper.Column == ColumnType.Budget          ||
-					mapper.Column == ColumnType.BudgetFutur     )
+				else
 				{
-					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;
@@ -84,18 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification du budget d'un compte :" : "";
-		}
-
-
-		public override void UpdateFooterContent()
-		{
-			foreach (var field in this.fieldControllers[0])
-			{
-				field.EditWidget.Visibility = this.dataAccessor.IsModification;
-			}
-
-			base.UpdateFooterContent ();
+			return modify ? "Modification d'un libellé usuel :" : "Création d'un libellé usuel :";
 		}
 	}
 }

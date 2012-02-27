@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class PiècesGeneratorFooterController : AbstractFooterController
+	public class PiècesGeneratorEditorController : AbstractEditorController
 	{
-		public PiècesGeneratorFooterController(AbstractController controller)
+		public PiècesGeneratorEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			var band = this.CreateRightFooterUI (parent);
+			var band = this.CreateRightEditorUI (parent);
 			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);
@@ -40,20 +40,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new TabCatcherFrameBox
+			var editorFrame = new TabCatcherFrameBox
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
 				Margins = new Margins (0, 0, 1, 0),
 			};
 
-			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
+			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
@@ -61,15 +61,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.SépMilliers)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '|', "|Aucun", "'|Apostrophe", ".|Point", ",|Virgule", "/|Barre oblique", "-|Tiret");
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;

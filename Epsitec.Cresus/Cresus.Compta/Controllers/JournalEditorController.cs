@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class JournalFooterController : AbstractFooterController
+	public class JournalEditorController : AbstractEditorController
 	{
-		public JournalFooterController(AbstractController controller)
+		public JournalEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new FrameBox
+			var editorFrame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
@@ -137,11 +137,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 1, 0),
 			};
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
 			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 
@@ -151,20 +151,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Date)
 				{
-					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.Libellé)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 					(field.EditWidget as AutoCompleteTextField).AcceptFreeText = true;
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
@@ -173,16 +173,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Journal)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 
 					var journaux = this.comptaEntity.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				if (mapper.Column == ColumnType.Pièce && this.settingsList.GetBool (SettingsType.EcritureForcePièces))
@@ -288,10 +288,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			}
 
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 
 			this.selectedLine = 1;  // dans la 2ème ligne
-			this.FooterSelect (multiActiveColumn);
+			this.EditorSelect (multiActiveColumn);
 		}
 
 
@@ -327,9 +327,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dirty = true;
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 			this.SelectedLineChanged ();
-			this.FooterSelect (multiActiveColumn, this.selectedLine);
+			this.EditorSelect (multiActiveColumn, this.selectedLine);
 		}
 
 		public override void MultiDeleteLineAction()
@@ -339,9 +339,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedLine = System.Math.Min (this.selectedLine, this.dataAccessor.CountEditedRow-1);
 
 			this.dirty = true;
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 			this.SelectedLineChanged ();
-			this.FooterSelect (this.selectedColumn, this.selectedLine);
+			this.EditorSelect (this.selectedColumn, this.selectedLine);
 		}
 
 		public override void MultiMoveLineAction(int direction)
@@ -351,9 +351,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedLine += direction;
 
 			this.dirty = true;
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 			this.SelectedLineChanged ();
-			this.FooterSelect (this.selectedColumn, this.selectedLine);
+			this.EditorSelect (this.selectedColumn, this.selectedLine);
 		}
 
 		public override void MultiLineSwapAction()
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Crédit, débit);
 
 			this.dirty = true;
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 		}
 
 		public override void MultiLineAutoAction()
@@ -378,7 +378,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dirty = true;
-			this.UpdateFooterContent ();
+			this.UpdateEditorContent ();
 		}
 
 		private void SwapLine(int line1, int line2)
@@ -525,11 +525,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
-			this.UpdateFooterInfo ();
+			this.UpdateEditorInfo ();
 		}
 
 
-		public override void UpdateFooterContent()
+		public override void UpdateEditorContent()
 		{
 			this.UpdateArrayColumns ();
 
@@ -537,13 +537,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedLine = System.Math.Min (this.selectedLine, count-1);
 			this.isMulti = (count > 1);
 
-			base.UpdateFooterContent ();
+			base.UpdateEditorContent ();
 		}
 
 
-		public override void UpdateFooterGeometry()
+		public override void UpdateEditorGeometry()
 		{
-			base.UpdateFooterGeometry ();
+			base.UpdateEditorGeometry ();
 
 			double w1 = this.arrayController.GetColumnsAbsoluteWidth (0);
 			double w2 = this.arrayController.GetColumnsAbsoluteWidth (1);
@@ -572,7 +572,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.CreateLineUI (this.linesContainer);  // crée les lignes suivantes
 				}
 
-				this.UpdateFooterGeometry ();
+				this.UpdateEditorGeometry ();
 			}
 
 			this.UpdateAfterFirstLineChanged ();
@@ -639,19 +639,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void UpdateFooterInfo()
+		protected override void UpdateEditorInfo()
 		{
 			this.infoFrameSeparator.Visibility = this.ShowInfoPanel;
 			this.infoFrameBox.Visibility       = this.ShowInfoPanel;
 
 			if (this.ShowInfoPanel)
 			{
-				this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
-				this.UpdateFooterInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
+				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
+				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
 			}
 		}
 
-		private void UpdateFooterInfo(FormattedText numéro, bool isDébit)
+		private void UpdateEditorInfo(FormattedText numéro, bool isDébit)
 		{
 			FormattedText title;
 			decimal? solde;
@@ -805,8 +805,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (modèle.Montant));
 			}
 
-			this.UpdateFooterContent ();
-			this.FooterSelect (ColumnType.Libellé);
+			this.UpdateEditorContent ();
+			this.EditorSelect (ColumnType.Libellé);
 
 			var fc = this.GetFieldController (ColumnType.Libellé, line);
 			var field = fc.EditWidget as AbstractTextField;

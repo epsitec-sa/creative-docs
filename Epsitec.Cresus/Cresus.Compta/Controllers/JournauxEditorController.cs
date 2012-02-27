@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class LibellésFooterController : AbstractFooterController
+	public class JournauxEditorController : AbstractEditorController
 	{
-		public LibellésFooterController(AbstractController controller)
+		public JournauxEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -30,9 +30,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.fieldControllers.Clear ();
-
-			this.CreateLineUI (parent);
+			var band = this.CreateRightEditorUI (parent);
+			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);
 		}
@@ -41,35 +40,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var footerFrame = new TabCatcherFrameBox
+			var editorFrame = new TabCatcherFrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Bottom,
-				Margins         = new Margins (0, 0, 1, 0),
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 0, 1, 0),
 			};
 
-			footerFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
+			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
 
-			this.linesFrames.Add (footerFrame);
+			this.linesFrames.Add (editorFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
-			footerFrame.TabIndex = line+1;
+			editorFrame.TabIndex = line+1;
 
-			foreach (var mapper in this.columnMappers.Where (x => x.Show))
+			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Permanent)
+				if (mapper.Column == ColumnType.Pièce)
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.PiècesGenerator.Select (x => x.Nom).ToArray ());
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.FooterTextChanged);
-					field.CreateUI (footerFrame);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 
 				field.Box.TabIndex = ++tabIndex;
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un libellé usuel :" : "Création d'un libellé usuel :";
+			return modify ? "Modification d'un journal :" : "Création d'un journal :";
 		}
 	}
 }

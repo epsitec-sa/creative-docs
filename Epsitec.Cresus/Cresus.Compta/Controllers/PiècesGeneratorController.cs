@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasRightFooter
+		public override bool HasRightEditor
 		{
 			get
 			{
@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateFooter(FrameBox parent)
+		protected override void CreateEditor(FrameBox parent)
 		{
-			this.footerController = new PiècesGeneratorFooterController (this);
-			this.footerController.CreateUI (parent, this.UpdateArrayContent);
-			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
+			this.editionController = new PiècesGeneratorEditorController (this);
+			this.editionController.CreateUI (parent, this.UpdateArrayContent);
+			this.editionController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
 
 

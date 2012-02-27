@@ -92,10 +92,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateFooter(FrameBox parent)
+		protected override void CreateEditor(FrameBox parent)
 		{
-			this.footerController = new BudgetsFooterController (this);
-			this.footerController.CreateUI (parent, this.UpdateArrayContent);
+			this.editionController = new BudgetsEditorController (this);
+			this.editionController.CreateUI (parent, this.UpdateArrayContent);
 		}
 
 

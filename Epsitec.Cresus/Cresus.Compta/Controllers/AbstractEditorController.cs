@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page générique pour l'édition de la comptabilité.
 	/// </summary>
-	public abstract class AbstractFooterController
+	public abstract class AbstractEditorController
 	{
-		public AbstractFooterController(AbstractController controller)
+		public AbstractEditorController(AbstractController controller)
 		{
 			this.controller = controller;
 
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.bottomToolbarController.ShowPanel = value;
-				this.UpdateFooterInfo ();
+				this.UpdateEditorInfo ();
 			}
 		}
 
@@ -253,10 +253,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controller.OptionsController.UpdateContent ();
 			}
 
-			this.UpdateFooterContent ();
-			this.FooterSelect (this.arrayController.SelectedColumn);
+			this.UpdateEditorContent ();
+			this.EditorSelect (this.arrayController.SelectedColumn);
 			this.ShowSelection ();
-			this.FooterSelect (0);
+			this.EditorSelect (0);
 		}
 
 		public void CancelAction()
@@ -268,7 +268,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.StartCreationLine ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
-				this.FooterSelect (0);
+				this.EditorSelect (0);
 			}
 		}
 
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		protected void FooterTextChanged()
+		protected void EditorTextChanged()
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
 			if (this.controller.IgnoreChanges.IsZero)
@@ -428,9 +428,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateEditionWidgets ();
 				this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
 
-				this.FooterValidate ();
+				this.EditorValidate ();
 				this.UpdateToolbar ();
-				this.UpdateFooterInfo ();
+				this.UpdateEditorInfo ();
 				this.UpdateInsertionRow ();
 			}
 		}
@@ -451,20 +451,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void FooterValidate()
+		public void EditorValidate()
 		{
 			this.hasError = false;
 
 			for (int line = 0; line < this.linesFrames.Count; line++)
 			{
-				this.FooterValidate (line);
+				this.EditorValidate (line);
 			}
 
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
 		}
 
-		private void FooterValidate(int line)
+		private void EditorValidate(int line)
 		{
 			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 			{
@@ -483,21 +483,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public virtual void UpdateFooterContent()
+		public virtual void UpdateEditorContent()
 		{
 			this.UpdateEditionWidgets ();
 			this.EditionDataToWidgets (ignoreFocusField: false);
-			this.FooterValidate ();
-			this.UpdateFooterInfo ();
+			this.EditorValidate ();
+			this.UpdateEditorInfo ();
 		}
 
-		protected virtual void UpdateFooterInfo()
+		protected virtual void UpdateEditorInfo()
 		{
 		}
 
-		public virtual void UpdateFooterGeometry()
+		public virtual void UpdateEditorGeometry()
 		{
-			if (!this.controller.HasRightFooter)
+			if (!this.controller.HasRightEditor)
 			{
 				this.UpdateArrayColumns ();
 
@@ -518,13 +518,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected void FooterSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
+		protected void EditorSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
 		{
 			var column = this.GetMapperColumnRank (columnType);
-			this.FooterSelect (column, line, selectedLineChanged);
+			this.EditorSelect (column, line, selectedLineChanged);
 		}
 
-		public void FooterSelect(int column, int? line = null, bool selectedLineChanged = true)
+		public void EditorSelect(int column, int? line = null, bool selectedLineChanged = true)
 		{
 			if (column != -1)
 			{
@@ -619,7 +619,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateAfterFirstLineChanged ();
 			}
 
-			this.FooterSelect (column, line, selectedLineChanged: false);
+			this.EditorSelect (column, line, selectedLineChanged: false);
 		}
 
 		private bool GetNextPrevColumn(ref ColumnType columnType, int direction)
@@ -654,9 +654,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected FrameBox CreateRightFooterUI(Widget parent)
+		protected FrameBox CreateRightEditorUI(Widget parent)
 		{
-			//	Crée le panneau de droite, lorsque le footer est en mode HasRightFooter.
+			//	Crée le panneau de droite, lorsque l'éditeur est en mode HasRightEditor.
 			this.fieldControllers.Clear ();
 
 			var mainFrame = new FrameBox

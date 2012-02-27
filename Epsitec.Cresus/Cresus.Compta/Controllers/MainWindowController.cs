@@ -1240,90 +1240,90 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Up)]
 		private void CommandEditUp()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MoveAction (-1);
+				this.controller.EditionController.MoveAction (-1);
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Down)]
 		private void CommandEditDown()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MoveAction (1);
+				this.controller.EditionController.MoveAction (1);
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Duplicate)]
 		private void CommandEditDuplicate()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.DuplicateAction ();
+				this.controller.EditionController.DuplicateAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Delete)]
 		private void CommandEditDelete()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.DeleteAction ();
+				this.controller.EditionController.DeleteAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Insert)]
 		private void CommandMultiInsert()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiInsertLineAction ();
+				this.controller.EditionController.MultiInsertLineAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Delete)]
 		private void CommandMultiDelete()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiDeleteLineAction ();
+				this.controller.EditionController.MultiDeleteLineAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Up)]
 		private void CommandMultiUp()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiMoveLineAction (-1);
+				this.controller.EditionController.MultiMoveLineAction (-1);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Down)]
 		private void CommandMultiDown()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiMoveLineAction (1);
+				this.controller.EditionController.MultiMoveLineAction (1);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Swap)]
 		private void CommandMultiSwap()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiLineSwapAction ();
+				this.controller.EditionController.MultiLineSwapAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Auto)]
 		private void CommandMultiAuto()
 		{
-			if (this.controller != null && this.controller.FooterController != null)
+			if (this.controller != null && this.controller.EditionController != null)
 			{
-				this.controller.FooterController.MultiLineAutoAction ();
+				this.controller.EditionController.MultiLineAutoAction ();
 			}
 		}
 
@@ -1340,7 +1340,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandModèleInsert(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			int n = e.Command.Name.Last () - '0';  // 0..9
-			this.controller.FooterController.InsertModèle (n);
+			this.controller.EditionController.InsertModèle (n);
 		}
 
 		[Command (Res.CommandIds.Compta.PériodePrécédente)]

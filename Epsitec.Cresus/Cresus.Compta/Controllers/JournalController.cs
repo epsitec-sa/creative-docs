@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ClearHilite ();
 			this.UpdateColumnMappers ();
 			this.UpdateArray ();
-			this.footerController.UpdateFooterContent ();
+			this.editionController.UpdateEditorContent ();
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
@@ -114,11 +114,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateFooter(FrameBox parent)
+		protected override void CreateEditor(FrameBox parent)
 		{
-			this.footerController = new JournalFooterController (this);
-			this.footerController.CreateUI (parent, this.UpdateArrayContent);
-			this.footerController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
+			this.editionController = new JournalEditorController (this);
+			this.editionController.CreateUI (parent, this.UpdateArrayContent);
+			this.editionController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
 
 
