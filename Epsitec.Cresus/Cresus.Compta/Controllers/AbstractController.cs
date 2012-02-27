@@ -15,8 +15,8 @@ using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Search.Controllers;
 using Epsitec.Cresus.Compta.Options.Controllers;
-using Epsitec.Cresus.Compta.Memory.Data;
-using Epsitec.Cresus.Compta.Memory.Controllers;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
+using Epsitec.Cresus.Compta.ViewSettings.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -115,11 +115,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public MemoryList MemoryList
+		public ViewSettingsList ViewSettingsList
 		{
 			get
 			{
-				return this.memoryList;
+				return this.viewSettingsList;
 			}
 		}
 
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateTitle (this.frameBox);
-			this.CreateMemory (this.frameBox);
+			this.CreateViewSettings (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
@@ -299,11 +299,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool HasShowMemoryPanel
+		public bool HasShowViewSettingsPanel
 		{
 			get
 			{
-				return this.memoryList != null;
+				return this.viewSettingsList != null;
 			}
 		}
 
@@ -315,11 +315,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void UpdatePanelsShowed(bool memory, bool search, bool filter, bool options, bool info)
+		public void UpdatePanelsShowed(bool viewSettings, bool search, bool filter, bool options, bool info)
 		{
-			if (this.memoryController != null)
+			if (this.viewSettingsController != null)
 			{
-				this.memoryController.ShowPanel = memory;
+				this.viewSettingsController.ShowPanel = viewSettings;
 			}
 
 			if (this.topSearchController != null)
@@ -342,7 +342,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.footerController.ShowInfoPanel = info;
 			}
 
-			this.UpdateMemory ();
+			this.UpdateViewSettings ();
 		}
 
 
@@ -430,18 +430,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		#region Memory panel
-		private void CreateMemory(FrameBox parent)
+		#region ViewSettings panel
+		private void CreateViewSettings(FrameBox parent)
 		{
-			if (this.HasShowMemoryPanel)
+			if (this.HasShowViewSettingsPanel)
 			{
-				this.memoryController = new MemoryController (this);
-				this.memoryController.CreateUI (parent, this.MemoryChangedAction);
-				this.memoryController.ShowPanel = this.mainWindowController.ShowMemoryPanel;
+				this.viewSettingsController = new ViewSettingsController (this);
+				this.viewSettingsController.CreateUI (parent, this.ViewSettingsChangedAction);
+				this.viewSettingsController.ShowPanel = this.mainWindowController.ShowViewSettingsPanel;
 			}
 		}
 
-		private void MemoryChangedAction()
+		private void ViewSettingsChangedAction()
 		{
 			if (this.topSearchController != null)
 			{
@@ -467,15 +467,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Un changement de période ajuste les dates contenues dans les recherches et les filtres.
 			//	Il faut donc actualiser ces éléments, après un changement de période.
-			this.MemoryChangedAction ();
-			this.UpdateMemory ();
+			this.ViewSettingsChangedAction ();
+			this.UpdateViewSettings ();
 		}
 
-		protected void UpdateMemory()
+		protected void UpdateViewSettings()
 		{
-			if (this.memoryController != null)
+			if (this.viewSettingsController != null)
 			{
-				this.memoryController.Update ();
+				this.viewSettingsController.Update ();
 			}
 		}
 		#endregion
@@ -501,7 +501,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.BaseUpdateArrayContent ();
 				this.SearchUpdateLocator (true);
 				this.SearchUpdateTopToolbar ();
-				this.UpdateMemory ();
+				this.UpdateViewSettings ();
 			}
 		}
 
@@ -583,7 +583,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SearchUpdateTopToolbar ();
 			}
 
-			this.UpdateMemory ();
+			this.UpdateViewSettings ();
 
 			if (this.footerController != null)
 			{
@@ -620,7 +620,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
-			this.UpdateMemory ();
+			this.UpdateViewSettings ();
 		}
 		#endregion
 
@@ -1089,12 +1089,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected Command										commandDocument;
 
 		protected AbstractDataAccessor							dataAccessor;
-		protected MemoryList									memoryList;
+		protected ViewSettingsList								viewSettingsList;
 
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
 		protected AbstractOptionsController						optionsController;
-		protected MemoryController								memoryController;
+		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;
 		protected AbstractFooterController						footerController;
 		protected FrameBox										frameBox;

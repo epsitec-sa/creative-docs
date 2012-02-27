@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.CreateButton (toolbar, Res.Commands.Panel.Memory,   0, UIBuilder.MemoryBackColor);
+			this.CreateButton (toolbar, Res.Commands.Panel.ViewSettings, 0, UIBuilder.ViewSettingsBackColor);
 
 			new StaticText
 			{

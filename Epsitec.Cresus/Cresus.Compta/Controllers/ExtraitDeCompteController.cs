@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.ExtraitDeCompte.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ExtraitDeCompte.ViewSettings");
 		}
 
 

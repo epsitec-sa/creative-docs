@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new JournalDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Journal.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journal.ViewSettings");
 		}
 
 
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
-			this.UpdateMemory ();
+			this.UpdateViewSettings ();
 		}
 
 		protected override void UpdateTitle()

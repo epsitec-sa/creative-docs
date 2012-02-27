@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new BilanDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Bilan.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Bilan.ViewSettings");
 		}
 
 

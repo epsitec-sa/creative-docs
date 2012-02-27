@@ -10,21 +10,21 @@ using Epsitec.Cresus.Compta.Options.Data;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Data
+namespace Epsitec.Cresus.Compta.ViewSettings.Data
 {
 	/// <summary>
 	/// Liste des paramètres des recherches, du filtre et des options, c'est-à-dire de l'ensemble des paramètres
-	/// liés à une présentation (traduit en français par "style").
+	/// liés à une présentation (traduit en français par "réglage de présentation").
 	/// </summary>
-	public class MemoryList : ISettingsData
+	public class ViewSettingsList : ISettingsData
 	{
-		public MemoryList()
+		public ViewSettingsList()
 		{
-			this.list = new List<MemoryData> ();
+			this.list = new List<ViewSettingsData> ();
 		}
 
 
-		public List<MemoryData> List
+		public List<ViewSettingsData> List
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 			}
 		}
 
-		public MemoryData Selected
+		public ViewSettingsData Selected
 		{
 			get
 			{
@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		private readonly List<MemoryData>	list;
-		private MemoryData					selected;
+		private readonly List<ViewSettingsData>	list;
+		private ViewSettingsData					selected;
 	}
 }

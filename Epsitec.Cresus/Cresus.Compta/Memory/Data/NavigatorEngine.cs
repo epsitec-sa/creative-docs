@@ -13,7 +13,7 @@ using Epsitec.Cresus.Compta.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Data
+namespace Epsitec.Cresus.Compta.ViewSettings.Data
 {
 	/// <summary>
 	/// Gestion de la navigation.
@@ -129,13 +129,13 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 					options = controller.DataAccessor.Options.NavigatorCopyFrom ();
 				}
 
-				if (controller.MemoryList == null)
+				if (controller.ViewSettingsList == null)
 				{
 					return new NavigatorData (command, controller.MixTitle, null, search, filter, options, controller.SelectedArrayLine);
 				}
 				else
 				{
-					return new NavigatorData (command, controller.MixTitle, controller.MemoryList.Selected, search, filter, options, controller.SelectedArrayLine);
+					return new NavigatorData (command, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, controller.SelectedArrayLine);
 				}
 			}
 		}
@@ -174,9 +174,9 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 			if (controller != null)
 			{
-				if (controller.MemoryList != null && data.Memory != null)
+				if (controller.ViewSettingsList != null && data.ViewSettings != null)
 				{
-					controller.MemoryList.Selected = data.Memory;
+					controller.ViewSettingsList.Selected = data.ViewSettings;
 				}
 
 				if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)

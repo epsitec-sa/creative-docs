@@ -12,15 +12,15 @@ using Epsitec.Cresus.Compta.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Data
+namespace Epsitec.Cresus.Compta.ViewSettings.Data
 {
 	/// <summary>
 	/// Mémorise les paramètres des recherches, du filtre et des options, c'est-à-dire l'ensemble des paramètres
-	/// liés à une présentation (traduit en français par "style").
+	/// liés à une présentation (traduit en français par "réglage de présentation").
 	/// </summary>
-	public class MemoryData
+	public class ViewSettingsData
 	{
-		public MemoryData()
+		public ViewSettingsData()
 		{
 			this.ShowSearch  = ShowPanelMode.Nop;
 			this.ShowFilter  = ShowPanelMode.Nop;
@@ -40,14 +40,14 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 
 		public bool Readonly
 		{
-			//	true -> style non modifiable
+			//	true -> réglage de présentation non modifiable
 			get;
 			set;
 		}
 
 		public bool Permanent
 		{
-			//	true -> style indestructible
+			//	true -> réglage de présentation indestructible
 			get;
 			set;
 		}

@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Data
+namespace Epsitec.Cresus.Compta.ViewSettings.Data
 {
 	public enum ShowPanelMode
 	{

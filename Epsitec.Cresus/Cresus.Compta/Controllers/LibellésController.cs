@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new LibellésDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Libellés.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Libellés.ViewSettings");
 		}
 
 

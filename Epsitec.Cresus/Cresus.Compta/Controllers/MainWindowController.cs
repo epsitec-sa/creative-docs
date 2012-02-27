@@ -17,7 +17,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Memory.Data;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.showSearchPanel  = false;
 			this.showFilterPanel  = false;
 			this.showOptionsPanel = false;
-			this.showMemoryPanel  = false;
+			this.showViewSettingsPanel  = false;
 			this.showInfoPanel    = true;
 
 			this.app.CommandDispatcher.RegisterController (this);
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.AutoLogin ();
 
 			this.settingsDatas.Clear ();
-			new DefaultMemory (this).CreateDefaultMemory ();
+			new DefaultViewSettings (this).CreateDefaultViewSettings ();
 
 			this.SelectCurrentPériode ();
 			this.SelectDefaultPrésentation ();
@@ -598,15 +598,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public bool ShowMemoryPanel
+		public bool ShowViewSettingsPanel
 		{
 			get
 			{
-				return this.showMemoryPanel;
+				return this.showViewSettingsPanel;
 			}
 			set
 			{
-				this.showMemoryPanel = value;
+				this.showViewSettingsPanel = value;
 				this.UpdatePanelCommands ();
 			}
 		}
@@ -767,9 +767,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null)
 			{
-				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Memory);
-				cs.ActiveState = this.showMemoryPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasShowMemoryPanel;
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.ViewSettings);
+				cs.ActiveState = this.showViewSettingsPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowViewSettingsPanel;
 			}
 
 			if (this.controller != null)
@@ -802,7 +802,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.showMemoryPanel, this.showSearchPanel, this.showFilterPanel, this.showOptionsPanel, this.showInfoPanel);
+				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showOptionsPanel, this.showInfoPanel);
 			}
 		}
 
@@ -866,13 +866,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					MainWindowController.AdaptSearchData (this.période, data as SearchData);
 				}
 
-				if (data is MemoryList)
+				if (data is ViewSettingsList)
 				{
-					var memoryList = data as MemoryList;
-					foreach (var memoryData in memoryList.List)
+					var viewSettingsList = data as ViewSettingsList;
+					foreach (var viewSettingsData in viewSettingsList.List)
 					{
-						MainWindowController.AdaptSearchData (this.période, memoryData.Search);
-						MainWindowController.AdaptSearchData (this.période, memoryData.Filter);
+						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Search);
+						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
 					}
 				}
 			}
@@ -1166,10 +1166,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		[Command (Res.CommandIds.Panel.Memory)]
-		private void CommandPanelMemory()
+		[Command (Res.CommandIds.Panel.ViewSettings)]
+		private void CommandPanelViewSettings()
 		{
-			this.showMemoryPanel = !this.showMemoryPanel;
+			this.showViewSettingsPanel = !this.showViewSettingsPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1466,15 +1466,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
-		public MemoryList GetMemoryList(string key)
+		public ViewSettingsList GetViewSettingsList(string key)
 		{
 			ISettingsData result;
 			if (this.settingsDatas.TryGetValue (key, out result))
 			{
-				return result as MemoryList;
+				return result as ViewSettingsList;
 			}
 
-			MemoryList data = new MemoryList ();
+			ViewSettingsList data = new ViewSettingsList ();
 
 			this.settingsDatas.Add (key, data);
 
@@ -1504,7 +1504,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool										showSearchPanel;
 		private bool										showFilterPanel;
 		private bool										showOptionsPanel;
-		private bool										showMemoryPanel;
+		private bool										showViewSettingsPanel;
 		private bool										showInfoPanel;
 		private ComptaUtilisateurEntity						currentUser;
 	}

@@ -12,22 +12,22 @@ using Epsitec.Cresus.Compta.Helpers;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Data
+namespace Epsitec.Cresus.Compta.ViewSettings.Data
 {
 	/// <summary>
 	/// Mémorise les paramètres d'un contrôleur, pour permettre de le recréer dans le même état.
 	/// </summary>
 	public class NavigatorData
 	{
-		public NavigatorData(Command command, FormattedText description, MemoryData memory, SearchData search, SearchData filter, AbstractOptions options, int? arrayIndex)
+		public NavigatorData(Command command, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, int? arrayIndex)
 		{
-			this.Command     = command;
-			this.Description = description;
-			this.Memory      = memory;
-			this.Search      = search;
-			this.Filter      = filter;
-			this.Options     = options;
-			this.ArrayIndex  = arrayIndex;
+			this.Command      = command;
+			this.Description  = description;
+			this.ViewSettings = viewSettings;
+			this.Search       = search;
+			this.Filter       = filter;
+			this.Options      = options;
+			this.ArrayIndex   = arrayIndex;
 		}
 
 
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Memory.Data
 		}
 
 
-		public MemoryData Memory
+		public ViewSettingsData ViewSettings
 		{
 			get;
 			private set;

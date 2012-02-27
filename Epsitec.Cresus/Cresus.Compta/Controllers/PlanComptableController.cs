@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new PlanComptableDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.PlanComptable.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.PlanComptable.ViewSettings");
 		}
 
 

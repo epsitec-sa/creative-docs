@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new BudgetsDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Budgets.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Budgets.ViewSettings");
 
 			this.UpdateColumnMappers ();
 		}

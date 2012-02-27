@@ -14,26 +14,26 @@ using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
-using Epsitec.Cresus.Compta.Memory.Data;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Memory.Controllers
+namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la barre d'outil supérieure de mémoire (styles) pour la comptabilité.
+	/// Ce contrôleur gère la barre d'outil supérieure des réglages de présentation pour la comptabilité.
 	/// </summary>
-	public class MemoryController
+	public class ViewSettingsController
 	{
-		public MemoryController(AbstractController controller)
+		public ViewSettingsController(AbstractController controller)
 		{
 			this.controller = controller;
 
 			this.comptaEntity    = this.controller.ComptaEntity;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
-			this.memoryList      = this.controller.MemoryList;
+			this.viewSettingsList      = this.controller.ViewSettingsList;
 
 			this.showPanel = false;
 			this.ignoreChanges = new SafeCounter ();
@@ -57,11 +57,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 					{
 						if (this.levelController.Specialist)
 						{
-							this.extendedListMemory.Focus ();
+							this.extendedListViewSettings.Focus ();
 						}
 						else
 						{
-							this.compactComboMemory.Focus ();
+							this.compactComboViewSettings.Focus ();
 						}
 					}
 				}
@@ -69,15 +69,15 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		}
 
 
-		public void CreateUI(FrameBox parent, System.Action memoryChangedAction)
+		public void CreateUI(FrameBox parent, System.Action viewSettingsChangedAction)
 		{
-			this.memoryChangedAction = memoryChangedAction;
+			this.viewSettingsChangedAction = viewSettingsChangedAction;
 
 			this.toolbar = new FrameBox
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = UIBuilder.MemoryBackColor,
+				BackColor           = UIBuilder.ViewSettingsBackColor,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),
@@ -101,12 +101,12 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				Padding        = new Margins (5),
 			};
 
-			this.CreateComptactMemoryUI (this.mainFrame);
-			this.CreateExtendedMemoryUI (this.mainFrame);
+			this.CreateComptactViewSettingsUI (this.mainFrame);
+			this.CreateExtendedViewSettingsUI (this.mainFrame);
 
 			//	Remplissage de la frame gauche.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Utilise le premier style", this.ClearAction, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.LevelChangedAction);
 
 			this.UpdateCombo ();
 			this.UpdateList ();
@@ -115,9 +115,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private void ClearAction()
 		{
-			this.memoryList.SelectedIndex = 0;
+			this.viewSettingsList.SelectedIndex = 0;
 			this.UpdateAfterSelectionChanged ();
-			this.MemoryChanged ();
+			this.ViewSettingsChanged ();
 		}
 
 		private void LevelChangedAction()
@@ -125,13 +125,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.UpdateLevel ();
 		}
 
-		private void MemoryChanged()
+		private void ViewSettingsChanged()
 		{
-			var memory = this.memoryList.Selected;
-			if (memory != null)
+			var viewSettings = this.viewSettingsList.Selected;
+			if (viewSettings != null)
 			{
-				this.CopyMemoryToData (memory);
-				this.memoryChangedAction ();
+				this.CopyViewSettingsToData (viewSettings);
+				this.viewSettingsChangedAction ();
 			}
 
 			this.UpdateWidgets ();
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		}
 
 
-		private void CreateComptactMemoryUI(FrameBox parent)
+		private void CreateComptactViewSettingsUI(FrameBox parent)
 		{
 			this.comptactFrame = new FrameBox
 			{
@@ -173,16 +173,16 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			new StaticText
 			{
 				Parent          = this.comptactFrame,
-				Text            = "Style",
+				Text            = "Réglage",
 				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
 			};
 
-			this.compactComboMemory = new TextFieldCombo
+			this.compactComboViewSettings = new TextFieldCombo
 			{
 				Parent          = this.comptactFrame,
-				PreferredWidth  = MemoryController.fieldWidth,
+				PreferredWidth  = ViewSettingsController.fieldWidth,
 				PreferredHeight = 20,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.compactUpdateButton = new IconButton
 			{
 				Parent            = this.comptactFrame,
-				IconUri           = UIBuilder.GetResourceIconUri ("Memory.Update"),
+				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
 				PreferredIconSize = new Size (20, 20),
 				PreferredSize     = new Size (20, 20),
 				Dock              = DockStyle.Left,
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.compactUseButton = new IconButton
 			{
 				Parent            = this.comptactFrame,
-				IconUri           = UIBuilder.GetResourceIconUri ("Memory.Use"),
+				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
 				PreferredIconSize = new Size (20, 20),
 				PreferredSize     = new Size (20, 20),
 				Dock              = DockStyle.Left,
@@ -215,34 +215,34 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				Margins       = new Margins (20, 0, 0, 0),
 			};
 
-			this.compactComboMemory.SelectedItemChanged += delegate
+			this.compactComboViewSettings.SelectedItemChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero && this.compactComboMemory.SelectedItemIndex != -1)
+				if (this.ignoreChanges.IsZero && this.compactComboViewSettings.SelectedItemIndex != -1)
 				{
-					this.memoryList.SelectedIndex = this.compactComboMemory.SelectedItemIndex;
+					this.viewSettingsList.SelectedIndex = this.compactComboViewSettings.SelectedItemIndex;
 					this.UpdateAfterSelectionChanged ();
-					this.MemoryChanged ();
+					this.ViewSettingsChanged ();
 				}
 			};
 
 			this.compactUseButton.Clicked += delegate
 			{
-				this.MemoryChanged ();
+				this.ViewSettingsChanged ();
 			};
 
 			this.compactUpdateButton.Clicked += delegate
 			{
-				string message = string.Format ("Voulez-vous vraiment mettre à jour le style \"{0}\"<br/>d'après la recherche, le filtre et les options en cours ?", this.memoryList.Selected.Name);
+				string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après la recherche, le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
 				var result = this.controller.MainWindowController.QuestionDialog (message);
 
 				if (result == DialogResult.Yes)
 				{
-					this.UpdateMemoryAction ();
+					this.UpdateViewSettingsAction ();
 				}
 			};
 		}
 
-		private void CreateExtendedMemoryUI(FrameBox parent)
+		private void CreateExtendedViewSettingsUI(FrameBox parent)
 		{
 			this.extendedFrame = new FrameBox
 			{
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			var centerFrame = new FrameBox
 			{
 				Parent          = this.extendedFrame,
-				PreferredWidth  = MemoryController.fieldWidth,
+				PreferredWidth  = ViewSettingsController.fieldWidth,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 20, 0, 0),
 			};
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			new StaticText
 			{
 				Parent          = leftFrame,
-				Text            = "Styles",
+				Text            = "Réglages",
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredWidth  = UIBuilder.LeftLabelWidth,
 				PreferredHeight = 20,
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			};
 
 			//	Panneau du milieu.
-			this.extendedListMemory = new ScrollList
+			this.extendedListViewSettings = new ScrollList
 			{
 				Parent  = centerFrame,
 				Dock    = DockStyle.Fill,
@@ -301,31 +301,31 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				SwallowReturnOnAcceptEdition = true,
 			};
 
-			this.CreateExtendedMemoryToolbarUI (rightFrame);
-			this.CreateExtendedMemorySummaryUI (rightFrame);
+			this.CreateExtendedViewSettingsToolbarUI (rightFrame);
+			this.CreateExtendedViewSettingsSummaryUI (rightFrame);
 
-			this.extendedListMemory.SelectedItemChanged += delegate
+			this.extendedListViewSettings.SelectedItemChanged += delegate
 			{
-				if (this.ignoreChanges.IsZero && this.extendedListMemory.SelectedItemIndex != -1)
+				if (this.ignoreChanges.IsZero && this.extendedListViewSettings.SelectedItemIndex != -1)
 				{
-					this.memoryList.SelectedIndex = this.extendedListMemory.SelectedItemIndex;
+					this.viewSettingsList.SelectedIndex = this.extendedListViewSettings.SelectedItemIndex;
 					this.UpdateAfterSelectionChanged ();
-					this.MemoryChanged ();
+					this.ViewSettingsChanged ();
 				}
 			};
 
 			this.extendedFieldName.EditionAccepted += delegate
 			{
-				if (this.ignoreChanges.IsZero && this.memoryList.Selected != null)
+				if (this.ignoreChanges.IsZero && this.viewSettingsList.Selected != null)
 				{
-					this.memoryList.Selected.Name = this.extendedFieldName.FormattedText;
+					this.viewSettingsList.Selected.Name = this.extendedFieldName.FormattedText;
 					this.UpdateCombo ();
 					this.UpdateList ();
 				}
 			};
 		}
 
-		private void CreateExtendedMemoryToolbarUI(FrameBox parent)
+		private void CreateExtendedViewSettingsToolbarUI(FrameBox parent)
 		{
 			//	Panneau de droite, toolbar (en haut).
 			int w = 32+4;
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedAddButton = new IconButton
 			{
 				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("Memory.Add"),
+				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Add"),
 				PreferredSize   = new Size (w, w),
 				Dock            = DockStyle.Left,
 			};
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedUpdateButton = new IconButton
 			{
 				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("Memory.Update"),
+				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
 				PreferredSize   = new Size (w, w),
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (2, 0, 0, 0),
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedUseButton = new IconButton
 			{
 				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("Memory.Use"),
+				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
 				PreferredSize   = new Size (w, w),
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (2, 0, 0, 0),
@@ -374,7 +374,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.extendedUpButton = new IconButton
 				{
 					Parent          = upDown,
-					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Up"),
+					IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Up"),
 					PreferredSize   = new Size (w/2, w/2),
 					Dock            = DockStyle.Top,
 				};
@@ -382,7 +382,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.extendedDownButton = new IconButton
 				{
 					Parent          = upDown,
-					IconUri         = UIBuilder.GetResourceIconUri ("Memory.Down"),
+					IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Down"),
 					PreferredSize   = new Size (w/2, w/2),
 					Dock            = DockStyle.Bottom,
 				};
@@ -391,36 +391,36 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			this.extendedRemoveButton = new IconButton
 			{
 				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("Memory.Delete"),
+				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Delete"),
 				PreferredSize   = new Size (w, w),
 				Dock            = DockStyle.Left,
 			};
 
-			this.CreateExtendedMemoryAttributeUI (toolbar);
+			this.CreateExtendedViewSettingsAttributeUI (toolbar);
 
-			ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise la recherche, le filtre et les options définis dans le style");
-			ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le style d'après la recherche, le filtre et les options en cours");
+			ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise la recherche, le filtre et les options définis dans le réglage de présentation");
+			ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après la recherche, le filtre et les options en cours");
 
-			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise la recherche, le filtre et les options définis dans le style");
-			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans un nouveau style");
-			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le style d'après la recherche, le filtre et les options en cours");
-			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le style d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le style d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le style");
+			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise la recherche, le filtre et les options définis dans le réglage de présentation");
+			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans un nouveau réglage de présentation");
+			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le réglage de présentation d'après la recherche, le filtre et les options en cours");
+			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le réglage de présentation d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le réglage de présentation d'une ligne dnas la liste");
+			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le réglage de présentation");
 
 			this.extendedUseButton.Clicked += delegate
 			{
-				this.MemoryChanged ();
+				this.ViewSettingsChanged ();
 			};
 
 			this.extendedAddButton.Clicked += delegate
 			{
-				var memory = new MemoryData ();
-				memory.Name = this.NewMemoryName;
-				this.CopyDataToMemory (memory);
+				var viewSettings = new ViewSettingsData ();
+				viewSettings.Name = this.NewViewSettingsName;
+				this.CopyDataToViewSettings (viewSettings);
 
-				this.memoryList.List.Add (memory);
-				this.memoryList.Selected = memory;
+				this.viewSettingsList.List.Add (viewSettings);
+				this.viewSettingsList.Selected = viewSettings;
 
 				this.UpdateCombo ();
 				this.UpdateList ();
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedUpdateButton.Clicked += delegate
 			{
-				this.UpdateMemoryAction ();
+				this.UpdateViewSettingsAction ();
 
 				this.extendedFieldName.SelectAll ();
 				this.extendedFieldName.Focus ();
@@ -441,13 +441,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedUpButton.Clicked += delegate
 			{
-				int sel = this.extendedListMemory.SelectedItemIndex;
+				int sel = this.extendedListViewSettings.SelectedItemIndex;
 
-				var m1 = this.memoryList.List[sel-1];
-				var m2 = this.memoryList.List[sel];
+				var m1 = this.viewSettingsList.List[sel-1];
+				var m2 = this.viewSettingsList.List[sel];
 
-				this.memoryList.List[sel-1] = m2;
-				this.memoryList.List[sel]   = m1;
+				this.viewSettingsList.List[sel-1] = m2;
+				this.viewSettingsList.List[sel]   = m1;
 
 				this.UpdateCombo ();
 				this.UpdateList ();
@@ -456,13 +456,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedDownButton.Clicked += delegate
 			{
-				int sel = this.extendedListMemory.SelectedItemIndex;
+				int sel = this.extendedListViewSettings.SelectedItemIndex;
 
-				var m1 = this.memoryList.List[sel+1];
-				var m2 = this.memoryList.List[sel];
+				var m1 = this.viewSettingsList.List[sel+1];
+				var m2 = this.viewSettingsList.List[sel];
 
-				this.memoryList.List[sel+1] = m2;
-				this.memoryList.List[sel]   = m1;
+				this.viewSettingsList.List[sel+1] = m2;
+				this.viewSettingsList.List[sel]   = m1;
 
 				this.UpdateCombo ();
 				this.UpdateList ();
@@ -471,23 +471,23 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 			this.extendedRemoveButton.Clicked += delegate
 			{
-				int sel = this.extendedListMemory.SelectedItemIndex;
-				this.memoryList.List.RemoveAt (sel);
+				int sel = this.extendedListViewSettings.SelectedItemIndex;
+				this.viewSettingsList.List.RemoveAt (sel);
 
 				this.UpdateCombo ();
 				this.UpdateList ();
 
-				sel = System.Math.Min (sel, this.memoryList.List.Count-1);
-				var memory = (sel == -1) ? null : this.memoryList.List[sel];
+				sel = System.Math.Min (sel, this.viewSettingsList.List.Count-1);
+				var viewSettings = (sel == -1) ? null : this.viewSettingsList.List[sel];
 
-				this.memoryList.Selected = memory;
+				this.viewSettingsList.Selected = viewSettings;
 
 				this.UpdateAfterSelectionChanged ();
-				this.MemoryChanged ();
+				this.ViewSettingsChanged ();
 			};
 		}
 
-		private void CreateExtendedMemoryAttributeUI(FrameBox parent)
+		private void CreateExtendedViewSettingsAttributeUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -511,8 +511,8 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				Dock           = DockStyle.Bottom,
 			};
 
-			ToolTip.Default.SetToolTip (this.extendedAttributeReadonly,  "Une coche indique que ce style peut être utilisé en l'état, mais plus modifié");
-			ToolTip.Default.SetToolTip (this.extendedAttributePermanent, "Une coche indique que ce style est indestructible");
+			ToolTip.Default.SetToolTip (this.extendedAttributeReadonly,  "Une coche indique que ce réglage de présentation peut être utilisé en l'état, mais plus modifié");
+			ToolTip.Default.SetToolTip (this.extendedAttributePermanent, "Une coche indique que ce réglage de présentation est indestructible");
 
 			this.extendedAttributeReadonly.ActiveStateChanged += delegate
 			{
@@ -535,7 +535,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			};
 		}
 
-		private void CreateExtendedMemorySummaryUI(FrameBox parent)
+		private void CreateExtendedViewSettingsSummaryUI(FrameBox parent)
 		{
 			//	Panneau de droite, résumé (en bas).
 			var frame = new FrameBox
@@ -639,28 +639,28 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			//	Connexions des événements.
 			this.extendedSearchSummary.ActiveStateChanged += delegate
 			{
-				var memory = this.memoryList.Selected;
-				if (memory != null && this.ignoreChanges.IsZero)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null && this.ignoreChanges.IsZero)
 				{
-					memory.EnableSearch = this.extendedSearchSummary.ActiveState == ActiveState.Yes;
+					viewSettings.EnableSearch = this.extendedSearchSummary.ActiveState == ActiveState.Yes;
 				}
 			};
 
 			this.extendedFilterSummary.ActiveStateChanged += delegate
 			{
-				var memory = this.memoryList.Selected;
-				if (memory != null && this.ignoreChanges.IsZero)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null && this.ignoreChanges.IsZero)
 				{
-					memory.EnableFilter = this.extendedFilterSummary.ActiveState == ActiveState.Yes;
+					viewSettings.EnableFilter = this.extendedFilterSummary.ActiveState == ActiveState.Yes;
 				}
 			};
 
 			this.extendedOptionsSummary.ActiveStateChanged += delegate
 			{
-				var memory = this.memoryList.Selected;
-				if (memory != null && this.ignoreChanges.IsZero)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null && this.ignoreChanges.IsZero)
 				{
-					memory.EnableOptions = this.extendedOptionsSummary.ActiveState == ActiveState.Yes;
+					viewSettings.EnableOptions = this.extendedOptionsSummary.ActiveState == ActiveState.Yes;
 				}
 			};
 
@@ -674,16 +674,16 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.ShowMenuPanelMode (this.extendedShowPanelModeFrame);
 			};
 
-			ToolTip.Default.SetToolTip (frame, "Résumé du style");
+			ToolTip.Default.SetToolTip (frame, "Résumé du réglage de présentation");
 		}
 
-		private void UpdateMemoryAction()
+		private void UpdateViewSettingsAction()
 		{
-			var memory = this.memoryList.Selected;
+			var viewSettings = this.viewSettingsList.Selected;
 
-			if (memory != null && !memory.Readonly)  // garde-fou
+			if (viewSettings != null && !viewSettings.Readonly)  // garde-fou
 			{
-				this.CopyDataToMemory (memory);
+				this.CopyDataToViewSettings (viewSettings);
 
 				this.UpdateButtons ();
 				this.UpdateSummary ();
@@ -695,14 +695,14 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.compactComboMemory.Items.Clear ();
+				this.compactComboViewSettings.Items.Clear ();
 
-				foreach (var memory in this.memoryList.List)
+				foreach (var viewSettings in this.viewSettingsList.List)
 				{
-					this.compactComboMemory.Items.Add (memory.Name);
+					this.compactComboViewSettings.Items.Add (viewSettings.Name);
 				}
 
-				this.compactComboMemory.Enable = this.memoryList.List.Any ();
+				this.compactComboViewSettings.Enable = this.viewSettingsList.List.Any ();
 
 			}
 
@@ -713,13 +713,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.memoryList.Selected == null)
+				if (this.viewSettingsList.Selected == null)
 				{
-					this.compactComboMemory.FormattedText = FormattedText.Empty;
+					this.compactComboViewSettings.FormattedText = FormattedText.Empty;
 				}
 				else
 				{
-					this.compactComboMemory.FormattedText = this.memoryList.Selected.Name;
+					this.compactComboViewSettings.FormattedText = this.viewSettingsList.Selected.Name;
 				}
 			}
 		}
@@ -728,11 +728,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.extendedListMemory.Items.Clear ();
+				this.extendedListViewSettings.Items.Clear ();
 
-				foreach (var memory in this.memoryList.List)
+				foreach (var viewSettings in this.viewSettingsList.List)
 				{
-					this.extendedListMemory.Items.Add (memory.Name);
+					this.extendedListViewSettings.Items.Add (viewSettings.Name);
 				}
 
 			}
@@ -744,20 +744,20 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				if (this.memoryList.Selected == null)
+				if (this.viewSettingsList.Selected == null)
 				{
-					this.extendedListMemory.SelectedItemIndex = -1;
+					this.extendedListViewSettings.SelectedItemIndex = -1;
 					this.extendedFieldName.FormattedText = FormattedText.Empty;
 				}
 				else
 				{
-					this.extendedListMemory.SelectedItemIndex = this.memoryList.SelectedIndex;
-					this.extendedListMemory.ShowSelected (ScrollShowMode.Extremity);
+					this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+					this.extendedListViewSettings.ShowSelected (ScrollShowMode.Extremity);
 
-					this.extendedFieldName.FormattedText = this.memoryList.Selected.Name;
+					this.extendedFieldName.FormattedText = this.viewSettingsList.Selected.Name;
 				}
 
-				this.compactComboMemory.SelectedItemIndex = this.extendedListMemory.SelectedItemIndex;
+				this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
 			}
 		}
 
@@ -765,16 +765,16 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.compactComboMemory.SelectedItemIndex = this.memoryList.SelectedIndex;
-				this.extendedListMemory.SelectedItemIndex = this.memoryList.SelectedIndex;
+				this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+				this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
 			}
 		}
 
 		private void UpdateButtons()
 		{
-			int sel = this.extendedListMemory.SelectedItemIndex;
-			int count = this.memoryList.List.Count;
-			bool eq = this.CompareTo (this.memoryList.Selected);
+			int sel = this.extendedListViewSettings.SelectedItemIndex;
+			int count = this.viewSettingsList.List.Count;
+			bool eq = this.CompareTo (this.viewSettingsList.Selected);
 
 			this.levelController.ClearEnable = sel != 0 || !eq;
 
@@ -796,9 +796,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				var memory = this.memoryList.Selected;
+				var viewSettings = this.viewSettingsList.Selected;
 
-				if (memory == null)
+				if (viewSettings == null)
 				{
 					var compactSummary = FormattedText.Empty;
 
@@ -813,13 +813,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				}
 				else
 				{
-					this.compactSummary.FormattedText = memory.GetSummary (this.controller.ColumnMappers);
+					this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
 
-					this.extendedSearchSummary .FormattedText = memory.GetSearchSummary  (this.controller.ColumnMappers);
-					this.extendedFilterSummary .FormattedText = memory.GetFilterSummary  (this.controller.ColumnMappers);
-					this.extendedOptionsSummary.FormattedText = memory.GetOptionsSummary (this.controller.ColumnMappers);
+					this.extendedSearchSummary .FormattedText = viewSettings.GetSearchSummary  (this.controller.ColumnMappers);
+					this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
+					this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
 
-					this.extendedShowPanelMode.FormattedText = memory.ShowPanelModeSummary;
+					this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
 					if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
 					{
 						this.extendedShowPanelMode.FormattedText = "Aucune";
@@ -840,22 +840,22 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 						this.extendedOptionsSummary.FormattedText = "Vide";
 					}
 
-					this.extendedSearchSummary.ActiveState  = memory.EnableSearch  ? ActiveState.Yes : ActiveState.No;
-					this.extendedFilterSummary.ActiveState  = memory.EnableFilter  ? ActiveState.Yes : ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = memory.EnableOptions ? ActiveState.Yes : ActiveState.No;
+					this.extendedSearchSummary.ActiveState  = viewSettings.EnableSearch  ? ActiveState.Yes : ActiveState.No;
+					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
+					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
 
-					this.extendedAttributePermanent.ActiveState = memory.Permanent ? ActiveState.Yes : ActiveState.No;
-					this.extendedAttributeReadonly .ActiveState = memory.Readonly  ? ActiveState.Yes : ActiveState.No;
+					this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
+					this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
 
 					var tooltipSummary = this.TooltipSummary;
 					ToolTip.Default.SetToolTip (this.comptactFrame, tooltipSummary);
 				}
 
-				this.extendedSearchSummary .Enable = (memory != null && !this.IsReadonly);
-				this.extendedFilterSummary .Enable = (memory != null && !this.IsReadonly);
-				this.extendedOptionsSummary.Enable = (memory != null && !this.IsReadonly);
+				this.extendedSearchSummary .Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
 
-				this.extendedShowPanelModeFrame.Enable = (memory != null && !this.IsReadonly);
+				this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
 
 				this.extendedSearchIconSummary .Visibility = this.controller.HasShowSearchPanel;
 				this.extendedFilterIconSummary .Visibility = this.controller.HasShowFilterPanel;
@@ -865,11 +865,11 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				this.extendedFilterSummary .Visibility = this.controller.HasShowFilterPanel;
 				this.extendedOptionsSummary.Visibility = this.controller.HasShowOptionsPanel;
 
-				this.extendedShowPanelModeLabel.Visibility = (memory != null);
-				this.extendedShowPanelModeFrame.Visibility = (memory != null);
+				this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
+				this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
 
-				this.extendedAttributePermanent.Visibility = (memory != null);
-				this.extendedAttributeReadonly .Visibility = (memory != null);
+				this.extendedAttributePermanent.Visibility = (viewSettings != null);
+				this.extendedAttributeReadonly .Visibility = (viewSettings != null);
 			}
 		}
 
@@ -879,9 +879,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			{
 				var builder = new System.Text.StringBuilder ();
 
-				var memory = this.memoryList.Selected;
+				var viewSettings = this.viewSettingsList.Selected;
 
-				if (memory == null)
+				if (viewSettings == null)
 				{
 					builder.Append ("Aucun");
 				}
@@ -889,7 +889,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 				{
 					FormattedText summary;
 
-					summary = memory.GetSearchSummary (this.controller.ColumnMappers);
+					summary = viewSettings.GetSearchSummary (this.controller.ColumnMappers);
 					if (!summary.IsNullOrEmpty)
 					{
 						builder.Append (UIBuilder.GetTextIconUri ("Panel.Search"));
@@ -898,7 +898,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 						builder.Append ("<br/>");
 					}
 
-					summary = memory.GetFilterSummary (this.controller.ColumnMappers);
+					summary = viewSettings.GetFilterSummary (this.controller.ColumnMappers);
 					if (!summary.IsNullOrEmpty)
 					{
 						builder.Append (UIBuilder.GetTextIconUri ("Panel.Filter"));
@@ -907,7 +907,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 						builder.Append ("<br/>");
 					}
 
-					summary = memory.GetOptionsSummary (this.controller.ColumnMappers);
+					summary = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
 					if (!summary.IsNullOrEmpty)
 					{
 						builder.Append (UIBuilder.GetTextIconUri ("Panel.Options"));
@@ -916,7 +916,7 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 						builder.Append ("<br/>");
 					}
 
-					summary = memory.ShowPanelModeSummary;
+					summary = viewSettings.ShowPanelModeSummary;
 					if (!summary.IsNullOrEmpty)
 					{
 						builder.Append (UIBuilder.GetTextIconUri ("Panel.Info"));
@@ -948,38 +948,38 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			}
 
 			var menu = new VMenu ();
-			var memory = this.memoryList.Selected;
+			var viewSettings = this.viewSettingsList.Selected;
 
 			this.AddMenuPanelMode (menu, "Aucune", () => this.IsNop, x => this.SetNop (), true);
 
-			if (memory.ShowSearch != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowSearch != ShowPanelMode.DoesNotExist)
 			{
 				menu.Items.Add (new MenuSeparator ());
 
-				this.AddMenuPanelMode (menu, "Laisser le panneau des recherches dans son état",  () => memory.ShowSearch == ShowPanelMode.Nop,            x => memory.ShowSearch = ShowPanelMode.Nop);
-				this.AddMenuPanelMode (menu, "Cacher le panneau des recherches",                 () => memory.ShowSearch == ShowPanelMode.Hide,           x => memory.ShowSearch = ShowPanelMode.Hide);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des recherches en mode simple", () => memory.ShowSearch == ShowPanelMode.ShowBeginner,   x => memory.ShowSearch = ShowPanelMode.ShowBeginner);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des recherches en mode avancé", () => memory.ShowSearch == ShowPanelMode.ShowSpecialist, x => memory.ShowSearch = ShowPanelMode.ShowSpecialist);
+				this.AddMenuPanelMode (menu, "Laisser le panneau des recherches dans son état",  () => viewSettings.ShowSearch == ShowPanelMode.Nop,            x => viewSettings.ShowSearch = ShowPanelMode.Nop);
+				this.AddMenuPanelMode (menu, "Cacher le panneau des recherches",                 () => viewSettings.ShowSearch == ShowPanelMode.Hide,           x => viewSettings.ShowSearch = ShowPanelMode.Hide);
+				this.AddMenuPanelMode (menu, "Montrer le panneau des recherches en mode simple", () => viewSettings.ShowSearch == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowSearch = ShowPanelMode.ShowBeginner);
+				this.AddMenuPanelMode (menu, "Montrer le panneau des recherches en mode avancé", () => viewSettings.ShowSearch == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowSearch = ShowPanelMode.ShowSpecialist);
 			}
 
-			if (memory.ShowFilter != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
 			{
 				menu.Items.Add (new MenuSeparator ());
 
-				this.AddMenuPanelMode (menu, "Laisser le panneau du filtre dans son état",  () => memory.ShowFilter == ShowPanelMode.Nop,            x => memory.ShowFilter = ShowPanelMode.Nop);
-				this.AddMenuPanelMode (menu, "Cacher le panneau du filtre",                 () => memory.ShowFilter == ShowPanelMode.Hide,           x => memory.ShowFilter = ShowPanelMode.Hide);
-				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode simple", () => memory.ShowFilter == ShowPanelMode.ShowBeginner,   x => memory.ShowFilter = ShowPanelMode.ShowBeginner);
-				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode avancé", () => memory.ShowFilter == ShowPanelMode.ShowSpecialist, x => memory.ShowFilter = ShowPanelMode.ShowSpecialist);
+				this.AddMenuPanelMode (menu, "Laisser le panneau du filtre dans son état",  () => viewSettings.ShowFilter == ShowPanelMode.Nop,            x => viewSettings.ShowFilter = ShowPanelMode.Nop);
+				this.AddMenuPanelMode (menu, "Cacher le panneau du filtre",                 () => viewSettings.ShowFilter == ShowPanelMode.Hide,           x => viewSettings.ShowFilter = ShowPanelMode.Hide);
+				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode simple", () => viewSettings.ShowFilter == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowFilter = ShowPanelMode.ShowBeginner);
+				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode avancé", () => viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowFilter = ShowPanelMode.ShowSpecialist);
 			}
 
-			if (memory.ShowOptions != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
 			{
 				menu.Items.Add (new MenuSeparator ());
 
-				this.AddMenuPanelMode (menu, "Laisser le panneau des options dans son état",  () => memory.ShowOptions == ShowPanelMode.Nop,            x => memory.ShowOptions = ShowPanelMode.Nop);
-				this.AddMenuPanelMode (menu, "Cacher le panneau des options",                 () => memory.ShowOptions == ShowPanelMode.Hide,           x => memory.ShowOptions = ShowPanelMode.Hide);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode simple", () => memory.ShowOptions == ShowPanelMode.ShowBeginner,   x => memory.ShowOptions = ShowPanelMode.ShowBeginner);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode avancé", () => memory.ShowOptions == ShowPanelMode.ShowSpecialist, x => memory.ShowOptions = ShowPanelMode.ShowSpecialist);
+				this.AddMenuPanelMode (menu, "Laisser le panneau des options dans son état",  () => viewSettings.ShowOptions == ShowPanelMode.Nop,            x => viewSettings.ShowOptions = ShowPanelMode.Nop);
+				this.AddMenuPanelMode (menu, "Cacher le panneau des options",                 () => viewSettings.ShowOptions == ShowPanelMode.Hide,           x => viewSettings.ShowOptions = ShowPanelMode.Hide);
+				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode simple", () => viewSettings.ShowOptions == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowOptions = ShowPanelMode.ShowBeginner);
+				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode avancé", () => viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowOptions = ShowPanelMode.ShowSpecialist);
 			}
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
@@ -992,21 +992,21 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			get
 			{
-				var memory = this.memoryList.Selected;
+				var viewSettings = this.viewSettingsList.Selected;
 
-				return memory.ShowSearch  == ShowPanelMode.Nop && 
-					   memory.ShowFilter  == ShowPanelMode.Nop && 
-					   memory.ShowOptions == ShowPanelMode.Nop;
+				return viewSettings.ShowSearch  == ShowPanelMode.Nop && 
+					   viewSettings.ShowFilter  == ShowPanelMode.Nop && 
+					   viewSettings.ShowOptions == ShowPanelMode.Nop;
 			}
 		}
 
 		private void SetNop()
 		{
-			var memory = this.memoryList.Selected;
+			var viewSettings = this.viewSettingsList.Selected;
 
-			memory.ShowSearch  = ShowPanelMode.Nop;
-			memory.ShowFilter  = ShowPanelMode.Nop;
-			memory.ShowOptions = ShowPanelMode.Nop;
+			viewSettings.ShowSearch  = ShowPanelMode.Nop;
+			viewSettings.ShowFilter  = ShowPanelMode.Nop;
+			viewSettings.ShowOptions = ShowPanelMode.Nop;
 		}
 
 		private void AddMenuPanelMode(VMenu menu, FormattedText text, System.Func<bool> getter, System.Action<bool> setter, bool check = false)
@@ -1030,9 +1030,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 		private bool AlreadyMemorized()
 		{
-			foreach (var memory in this.memoryList.List)
+			foreach (var viewSettings in this.viewSettingsList.List)
 			{
-				if (this.CompareTo (memory))
+				if (this.CompareTo (viewSettings))
 				{
 					return true;
 				}
@@ -1041,55 +1041,55 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			return false;
 		}
 
-		private bool CompareTo(MemoryData memory)
+		private bool CompareTo(ViewSettingsData viewSettings)
 		{
-			if (memory != null)
+			if (viewSettings != null)
 			{
 				//	Compare avec la visibilité des panneaux, si cela a un sens.
-				if (memory.ShowSearch != ShowPanelMode.Nop && memory.ShowSearch != ShowPanelMode.DoesNotExist)
+				if (viewSettings.ShowSearch != ShowPanelMode.Nop && viewSettings.ShowSearch != ShowPanelMode.DoesNotExist)
 				{
-					if (this.controller.MainWindowController.ShowSearchPanel != (memory.ShowSearch != ShowPanelMode.Hide))
+					if (this.controller.MainWindowController.ShowSearchPanel != (viewSettings.ShowSearch != ShowPanelMode.Hide))
 					{
 						return false;
 					}
 				}
 
-				if (memory.ShowFilter != ShowPanelMode.Nop && memory.ShowFilter != ShowPanelMode.DoesNotExist)
+				if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
 				{
-					if (this.controller.MainWindowController.ShowFilterPanel != (memory.ShowFilter != ShowPanelMode.Hide))
+					if (this.controller.MainWindowController.ShowFilterPanel != (viewSettings.ShowFilter != ShowPanelMode.Hide))
 					{
 						return false;
 					}
 				}
 
-				if (memory.ShowOptions != ShowPanelMode.Nop && memory.ShowOptions != ShowPanelMode.DoesNotExist)
+				if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
 				{
-					if (this.controller.MainWindowController.ShowOptionsPanel != (memory.ShowOptions != ShowPanelMode.Hide))
+					if (this.controller.MainWindowController.ShowOptionsPanel != (viewSettings.ShowOptions != ShowPanelMode.Hide))
 					{
 						return false;
 					}
 				}
 
 				//	Compare avec les données.
-				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null && memory.EnableSearch)
+				if (this.dataAccessor != null && this.dataAccessor.SearchData != null && viewSettings.Search != null && viewSettings.EnableSearch)
 				{
-					if (!this.dataAccessor.SearchData.CompareTo (memory.Search))
+					if (!this.dataAccessor.SearchData.CompareTo (viewSettings.Search))
 					{
 						return false;
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null && memory.EnableFilter)
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
 				{
-					if (!this.dataAccessor.FilterData.CompareTo (memory.Filter))
+					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.Filter))
 					{
 						return false;
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null && memory.EnableOptions)
+				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
 				{
-					if (!this.dataAccessor.Options.CompareTo (memory.Options))
+					if (!this.dataAccessor.Options.CompareTo (viewSettings.Options))
 					{
 						return false;
 					}
@@ -1099,76 +1099,76 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 			return true;
 		}
 
-		private void CopyDataToMemory(MemoryData memory)
+		private void CopyDataToViewSettings(ViewSettingsData viewSettings)
 		{
-			//	Met les paramètres des panneaux dans une mémoire (panneaux -> memory).
+			//	Met les paramètres des panneaux dans un réglage de présentation (panneaux -> viewSettings).
 			if (this.dataAccessor != null && this.dataAccessor.SearchData != null)
 			{
-				memory.Search = this.dataAccessor.SearchData.CopyFrom ();
+				viewSettings.Search = this.dataAccessor.SearchData.CopyFrom ();
 			}
 
 			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
 			{
-				memory.Filter = this.dataAccessor.FilterData.CopyFrom ();
+				viewSettings.Filter = this.dataAccessor.FilterData.CopyFrom ();
 			}
 
 			if (this.dataAccessor != null && this.dataAccessor.Options != null)
 			{
-				memory.Options = this.dataAccessor.Options.CopyFrom ();
+				viewSettings.Options = this.dataAccessor.Options.CopyFrom ();
 			}
 
 			//	Met un mode spécial si le panneau n'existe pas.
 			if (!this.controller.HasShowSearchPanel)
 			{
-				memory.ShowSearch = ShowPanelMode.DoesNotExist;
+				viewSettings.ShowSearch = ShowPanelMode.DoesNotExist;
 			}
 
 			if (!this.controller.HasShowFilterPanel)
 			{
-				memory.ShowFilter = ShowPanelMode.DoesNotExist;
+				viewSettings.ShowFilter = ShowPanelMode.DoesNotExist;
 			}
 			
 			if (!this.controller.HasShowOptionsPanel)
 			{
-				memory.ShowOptions = ShowPanelMode.DoesNotExist;
+				viewSettings.ShowOptions = ShowPanelMode.DoesNotExist;
 			}
 		}
 
-		private void CopyMemoryToData(MemoryData memory)
+		private void CopyViewSettingsToData(ViewSettingsData viewSettings)
 		{
-			//	Utilise une mémoire (memory -> panneaux).
-			if (this.dataAccessor != null && this.dataAccessor.SearchData != null && memory.Search != null && memory.EnableSearch)
+			//	Utilise un réglage de présentation (viewSettings -> panneaux).
+			if (this.dataAccessor != null && this.dataAccessor.SearchData != null && viewSettings.Search != null && viewSettings.EnableSearch)
 			{
-				memory.Search.CopyTo (this.dataAccessor.SearchData);
+				viewSettings.Search.CopyTo (this.dataAccessor.SearchData);
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && memory.Filter != null && memory.EnableFilter)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
 			{
-				memory.Filter.CopyTo (this.dataAccessor.FilterData);
+				viewSettings.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.Options != null && memory.Options != null && memory.EnableOptions)
+			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
 			{
-				memory.Options.CopyTo (this.dataAccessor.Options);
+				viewSettings.Options.CopyTo (this.dataAccessor.Options);
 			}
 
 			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
-			if (memory.ShowSearch != ShowPanelMode.Nop && memory.ShowSearch != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowSearch != ShowPanelMode.Nop && viewSettings.ShowSearch != ShowPanelMode.DoesNotExist)
 			{
-				this.controller.MainWindowController.ShowSearchPanel = (memory.ShowSearch != ShowPanelMode.Hide);
-				this.controller.SearchSpecialist = (memory.ShowSearch == ShowPanelMode.ShowSpecialist);
+				this.controller.MainWindowController.ShowSearchPanel = (viewSettings.ShowSearch != ShowPanelMode.Hide);
+				this.controller.SearchSpecialist = (viewSettings.ShowSearch == ShowPanelMode.ShowSpecialist);
 			}
 
-			if (memory.ShowFilter != ShowPanelMode.Nop && memory.ShowFilter != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
 			{
-				this.controller.MainWindowController.ShowFilterPanel = (memory.ShowFilter != ShowPanelMode.Hide);
-				this.controller.FilterSpecialist = (memory.ShowFilter == ShowPanelMode.ShowSpecialist);
+				this.controller.MainWindowController.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
+				this.controller.FilterSpecialist = (viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist);
 			}
 
-			if (memory.ShowOptions != ShowPanelMode.Nop && memory.ShowOptions != ShowPanelMode.DoesNotExist)
+			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
 			{
-				this.controller.MainWindowController.ShowOptionsPanel = (memory.ShowOptions != ShowPanelMode.Hide);
-				this.controller.OptionsSpecialist = (memory.ShowOptions == ShowPanelMode.ShowSpecialist);
+				this.controller.MainWindowController.ShowOptionsPanel = (viewSettings.ShowOptions != ShowPanelMode.Hide);
+				this.controller.OptionsSpecialist = (viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist);
 			}
 		}
 
@@ -1177,22 +1177,22 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			get
 			{
-				var memory = this.memoryList.Selected;
-				if (memory == null)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings == null)
 				{
 					return false;
 				}
 				else
 				{
-					return memory.Readonly;
+					return viewSettings.Readonly;
 				}
 			}
 			set
 			{
-				var memory = this.memoryList.Selected;
-				if (memory != null)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null)
 				{
-					memory.Readonly = value;
+					viewSettings.Readonly = value;
 				}
 			}
 		}
@@ -1201,27 +1201,27 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		{
 			get
 			{
-				var memory = this.memoryList.Selected;
-				if (memory == null)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings == null)
 				{
 					return false;
 				}
 				else
 				{
-					return memory.Permanent;
+					return viewSettings.Permanent;
 				}
 			}
 			set
 			{
-				var memory = this.memoryList.Selected;
-				if (memory != null)
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null)
 				{
-					memory.Permanent = value;
+					viewSettings.Permanent = value;
 				}
 			}
 		}
 
-		private string NewMemoryName
+		private string NewViewSettingsName
 		{
 			get
 			{
@@ -1229,9 +1229,9 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 
 				while (true)
 				{
-					string name = "Style" + " " + i.ToString ();
+					string name = "Réglages" + " " + i.ToString ();
 
-					if (this.memoryList.List.Where (x => x.Name == name).Any ())
+					if (this.viewSettingsList.List.Where (x => x.Name == name).Any ())
 					{
 						i++;
 					}
@@ -1250,10 +1250,10 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private readonly ComptaEntity					comptaEntity;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
-		private readonly MemoryList						memoryList;
+		private readonly ViewSettingsList				viewSettingsList;
 		private readonly SafeCounter					ignoreChanges;
 
-		private System.Action							memoryChangedAction;
+		private System.Action							viewSettingsChangedAction;
 
 		private FrameBox								mainFrame;
 		private FrameBox								toolbar;
@@ -1261,13 +1261,13 @@ namespace Epsitec.Cresus.Compta.Memory.Controllers
 		private bool									showPanel;
 
 		private FrameBox								comptactFrame;
-		private TextFieldCombo							compactComboMemory;
+		private TextFieldCombo							compactComboViewSettings;
 		private Button									compactUseButton;
 		private Button									compactUpdateButton;
 		private StaticText								compactSummary;
 
 		private FrameBox								extendedFrame;
-		private ScrollList								extendedListMemory;
+		private ScrollList								extendedListViewSettings;
 		private TextFieldEx								extendedFieldName;
 		private Button									extendedUseButton;
 		private Button									extendedAddButton;

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new JournauxDataAccessor (this);
 
-			this.memoryList = this.mainWindowController.GetMemoryList ("Présentation.Journaux.Memory");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journaux.ViewSettings");
 		}
 
 
