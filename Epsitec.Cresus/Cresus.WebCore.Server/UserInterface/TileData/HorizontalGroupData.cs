@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public IList<FieldData> Fields
+		public IList<AbstractFieldData> Fields
 		{
 			get
 			{
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		private readonly IList<FieldData> fields = new List<FieldData> ();
+		private readonly IList<AbstractFieldData> fields = new List<AbstractFieldData> ();
 	}
 
 

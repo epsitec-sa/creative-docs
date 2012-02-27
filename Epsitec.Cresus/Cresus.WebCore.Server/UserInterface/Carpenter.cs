@@ -456,14 +456,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static AbstractEditionTilePartData BuildFieldData(BrickPropertyCollection brickProperties, BrickProperty fieldProperty)
 		{
-			Expression expression = fieldProperty.ExpressionValue;
+			var expression = fieldProperty.ExpressionValue;
 
-			return new FieldData ()
-			{
-				IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties),
-				Lambda = (LambdaExpression) expression,
-				Title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression),
-			};
+			var title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression);
+			var	lambda = (LambdaExpression) expression;
+			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
+			
+			return Carpenter.BuildFieldData (title, lambda, isReadOnly);
 		}
 
 
@@ -525,18 +524,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static IEnumerable<FieldData> BuildHorizontalFieldData(Brick brick)
+		private static IEnumerable<AbstractFieldData> BuildHorizontalFieldData(Brick brick)
 		{
 			var brickProperties = Brick.GetProperties (brick, BrickPropertyKey.Field);
 
 			foreach (var brickProperty in brickProperties)
 			{
-				yield return new FieldData ()
-				{
-					Title = FormattedText.Empty,
-					IsReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties),
-					Lambda = (LambdaExpression) brickProperty.ExpressionValue,
-				};
+				var title = FormattedText.Empty;
+				var lambda = (LambdaExpression) brickProperty.ExpressionValue;
+				var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
+
+				yield return Carpenter.BuildFieldData (title, lambda, isReadOnly);
 			}
 		}
 
@@ -551,6 +549,92 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				};
 			}
 		}
+
+
+		private static AbstractFieldData BuildFieldData(FormattedText title, LambdaExpression lambda, bool isReadOnly)
+		{
+			var fieldData = Carpenter.GetFieldData (lambda);
+
+			fieldData.Title = title;
+			fieldData.IsReadOnly = isReadOnly;
+			fieldData.Lambda = lambda;
+
+			return fieldData;
+		}
+
+		
+		private static AbstractFieldData GetFieldData(LambdaExpression lambda)
+		{
+			var type = lambda.ReturnType;
+
+			if (Carpenter.IsTypeSuitableForCollectionField (type))
+			{
+				return new CollectionFieldData ();
+			}
+			else if (Carpenter.IsTypeSuitableForEntityField (type))
+			{
+				return new EntityFieldData ();
+			}
+			else if (Carpenter.IsTypeSuitableForEnumField (type))
+			{
+				return new EnumFieldData ();
+			}
+			else if (Carpenter.IsTypeSuitableForDateField (type))
+			{
+				return new DateFieldData ();
+			}
+			else if (Carpenter.IsTypeSuitableForTextField (type))
+			{
+				return new TextFieldData ();
+			}
+			else
+			{
+				throw new NotSupportedException ("Type of field is not supported.");
+			}
+		}
+
+
+		private static bool IsTypeSuitableForCollectionField(Type type)
+		{
+			return type.IsGenericIListOfEntities ();
+		}
+
+
+		private static bool IsTypeSuitableForEntityField(Type type)
+		{
+			return type.IsEntity ();
+		}
+
+
+		private static bool IsTypeSuitableForDateField(Type type)
+		{
+			return type == typeof (Date)
+		        || type == typeof (Date?);
+		}
+
+
+		private static bool IsTypeSuitableForEnumField(Type type)
+		{
+			var underlyingType = type.GetNullableTypeUnderlyingType ();
+
+			return type.IsEnum || (underlyingType != null && underlyingType.IsEnum);
+		}
+
+
+		private static bool IsTypeSuitableForTextField(Type type)
+		{
+			return type == typeof (string)
+		        || type == typeof (FormattedText)
+		        || type == typeof (long)
+		        || type == typeof (long?)
+		        || type == typeof (decimal)
+		        || type == typeof (decimal?)
+		        || type == typeof (int)
+		        || type == typeof (int?)
+		        || type == typeof (bool)
+		        || type == typeof (bool?);
+		}
+
 
 
 	}

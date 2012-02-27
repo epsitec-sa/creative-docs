@@ -72,8 +72,13 @@
     <Compile Include="UserInterface\PanelFieldAccessor\StringPanelFieldAccessor.cs" />
     <Compile Include="UserInterface\TileData\AbstractEditionTilePartData.cs" />
     <Compile Include="UserInterface\TileData\AbstractSummaryTileData.cs" />
+    <Compile Include="UserInterface\TileData\CollectionFieldData.cs" />
+    <Compile Include="UserInterface\TileData\DateFieldData.cs" />
+    <Compile Include="UserInterface\TileData\EntityFieldData.cs" />
+    <Compile Include="UserInterface\TileData\EnumFieldData.cs" />
     <Compile Include="UserInterface\TileData\HorizontalGroupData.cs" />
     <Compile Include="UserInterface\TileData\IncludeData.cs" />
+    <Compile Include="UserInterface\TileData\TextFieldData.cs" />
     <Compile Include="UserInterface\Tile\AbstractEditionTilePart.cs" />
     <Compile Include="UserInterface\Tile\AbstractTile.cs" />
     <Compile Include="UserInterface\Carpenter.cs" />
@@ -83,7 +88,7 @@
     <Compile Include="UserInterface\TileData\EditionTileData.cs" />
     <Compile Include="UserInterface\Tile\DateField.cs" />
     <Compile Include="UserInterface\Tile\EmptySummaryTile.cs" />
-    <Compile Include="UserInterface\TileData\FieldData.cs" />
+    <Compile Include="UserInterface\TileData\AbstractFieldData.cs" />
     <Compile Include="UserInterface\TileData\GlobalWarningData.cs" />
     <Compile Include="UserInterface\TileData\ITileData.cs" />
     <Compile Include="UserInterface\Mason.cs" />
