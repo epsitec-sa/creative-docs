@@ -864,6 +864,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 172);
 				//	designer:cap/OVKE5
 				public static readonly global::Epsitec.Common.Support.Druid Numéro = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 174);
+				//	designer:cap/OVK86
+				public static readonly global::Epsitec.Common.Support.Druid Préfixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 200);
+				//	designer:cap/OVK96
+				public static readonly global::Epsitec.Common.Support.Druid Suffixe = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 201);
 			}
 			
 			public static class ComptaUtilisateur

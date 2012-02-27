@@ -21,10 +21,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PiècesGeneratorEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Nom,         new EditionData (this.controller, this.ValidateNom));
-			this.datas.Add (ColumnType.Format,      new EditionData (this.controller, this.ValidateFormat));
-			this.datas.Add (ColumnType.Numéro,      new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Incrément,   new EditionData (this.controller, this.ValidateIncrément));
+			this.datas.Add (ColumnType.Nom,       new EditionData (this.controller, this.ValidateNom));
+			this.datas.Add (ColumnType.Préfixe,   new EditionData (this.controller));
+			this.datas.Add (ColumnType.Suffixe,   new EditionData (this.controller));
+			this.datas.Add (ColumnType.Format,    new EditionData (this.controller, this.ValidateFormat));
+			this.datas.Add (ColumnType.Numéro,    new EditionData (this.controller, this.ValidateNuméro));
+			this.datas.Add (ColumnType.Incrément, new EditionData (this.controller, this.ValidateIncrément));
 		}
 
 
@@ -61,9 +63,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				if (!data.Text.ToSimpleText ().Contains ('#'))
+				var n = Converters.ParseInt (data.Text);
+				if (n.HasValue)
 				{
-					data.Error = "Le format doit contenir au moins un '#', pour indiquer la position du numéro<br/>Exemples: \"#\", \"A##/d\", \"##-###.P\"";
+					if (n.Value < 0 || n.Value > 9)
+					{
+						data.Error = "Vous devez donner un nombre minimum de chiffres compris entre 1 et 9";
+					}
+				}
+				else
+				{
+					if (!data.Text.ToSimpleText ().Contains ('#'))
+					{
+						data.Error = "Le format doit contenir au moins un '#', pour indiquer la position du numéro<br/>Exemples: \"#\", \"A##/d\", \"##-###.P\"";
+					}
 				}
 			}
 			else
@@ -125,6 +138,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var generator = entity as ComptaPiècesGeneratorEntity;
 
 			this.SetText (ColumnType.Nom,       generator.Nom);
+			this.SetText (ColumnType.Préfixe,   generator.Préfixe);
+			this.SetText (ColumnType.Suffixe,   generator.Suffixe);
 			this.SetText (ColumnType.Format,    generator.Format);
 			this.SetText (ColumnType.Numéro,    Converters.IntToString (generator.Numéro));
 			this.SetText (ColumnType.Incrément, Converters.IntToString (generator.Incrément));
@@ -135,6 +150,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var generator = entity as ComptaPiècesGeneratorEntity;
 
 			generator.Nom       = this.GetText (ColumnType.Nom);
+			generator.Préfixe   = this.GetText (ColumnType.Préfixe);
+			generator.Suffixe   = this.GetText (ColumnType.Suffixe);
 			generator.Format    = this.GetText (ColumnType.Format).ToSimpleText ();
 			generator.Numéro    = Converters.ParseInt (this.GetText (ColumnType.Numéro)).GetValueOrDefault (1);
 			generator.Incrément = Converters.ParseInt (this.GetText (ColumnType.Incrément)).GetValueOrDefault (1);

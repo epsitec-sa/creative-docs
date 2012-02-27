@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Admin,
 		Présentations,
 		Nom,
+		Préfixe,
+		Suffixe,
 		Format,
 		Incrément,
 		IdentitéWindows,

@@ -96,6 +96,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Nom:
 					return pièce.Nom;
 
+				case ColumnType.Préfixe:
+					return pièce.Préfixe;
+
+				case ColumnType.Suffixe:
+					return pièce.Suffixe;
+
 				case ColumnType.Format:
 					return pièce.Format;
 
@@ -149,7 +155,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Format,    "#");
+			this.editionLine[line].SetText (ColumnType.Format,    Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
 		}

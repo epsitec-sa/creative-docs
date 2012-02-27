@@ -1789,23 +1789,67 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Préfixe</c> field.
+		///	designer:fld/OVKB5/OVK86
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK86]")]
+		public global::Epsitec.Common.Types.FormattedText Préfixe
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK86]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Préfixe;
+				if (oldValue != value || !this.IsFieldDefined("[OVK86]"))
+				{
+					this.OnPréfixeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK86]", oldValue, value);
+					this.OnPréfixeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Suffixe</c> field.
+		///	designer:fld/OVKB5/OVK96
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK96]")]
+		public global::Epsitec.Common.Types.FormattedText Suffixe
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK96]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Suffixe;
+				if (oldValue != value || !this.IsFieldDefined("[OVK96]"))
+				{
+					this.OnSuffixeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK96]", oldValue, value);
+					this.OnSuffixeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Format</c> field.
 		///	designer:fld/OVKB5/OVK66
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK66]")]
-		public string Format
+		public global::Epsitec.Common.Types.FormattedText Format
 		{
 			get
 			{
-				return this.GetField<string> ("[OVK66]");
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK66]");
 			}
 			set
 			{
-				string oldValue = this.Format;
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Format;
 				if (oldValue != value || !this.IsFieldDefined("[OVK66]"))
 				{
 					this.OnFormatChanging (oldValue, value);
-					this.SetField<string> ("[OVK66]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK66]", oldValue, value);
 					this.OnFormatChanged (oldValue, value);
 				}
 			}
@@ -1857,8 +1901,12 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnFormatChanging(string oldValue, string newValue);
-		partial void OnFormatChanged(string oldValue, string newValue);
+		partial void OnPréfixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnPréfixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnSuffixeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnSuffixeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFormatChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnFormatChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNuméroChanging(int oldValue, int newValue);
 		partial void OnNuméroChanged(int oldValue, int newValue);
 		partial void OnIncrémentChanging(int oldValue, int newValue);

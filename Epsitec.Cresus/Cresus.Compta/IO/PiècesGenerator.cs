@@ -183,60 +183,121 @@ namespace Epsitec.Cresus.Compta.IO
 		private FormattedText GetFormattedPièce(ComptaPiècesGeneratorEntity generator, int numéro)
 		{
 			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
-			if (generator == null || string.IsNullOrEmpty (generator.Format))
+			if (generator == null)
 			{
 				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
 			else
 			{
-				return PiècesGenerator.FormatPièce (generator.Format, numéro);
+				return PiècesGenerator.FormatPièce (generator.Préfixe, generator.Suffixe, generator.Format, numéro);
 			}
 		}
 
-		private static FormattedText FormatPièce(string format, int numéro)
+		private static FormattedText FormatPièce(FormattedText préfixe, FormattedText suffixe, FormattedText format, int numéro)
 		{
-			//	Retourne un numéro de pièce formaté, avec préfixe, suffixe, etc.
-			string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-			//	Construit la chaîne du numéro avec le bon nombre de digits.
-			int digits = format.Where (x => x == '#').Count ();
-			if (digits != 0)
-			{
-				if (digits > numString.Length)  // numéro trop court ?
-				{
-					numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
-				}
-
-				if (digits < numString.Length)  // numéro trop long ?
-				{
-					numString = numString.Substring (numString.Length-digits);  // tronque
-				}
-			}
-
-			//	Construit le numéro final d'après le format.
-			var builder = new System.Text.StringBuilder ();
-
-			int i = 0;
-			foreach (var c in format)
-			{
-				if (c == '#')  // un digit ?
-				{
-					builder.Append (numString[i++]);
-				}
-				else  // un caractère fixe ?
-				{
-					builder.Append (c);
-				}
-			}
-
-			return builder.ToString ();
+			var pièce = PiècesGenerator.FormatPièce (format, numéro);
+			return FormattedText.Concat (préfixe, pièce, suffixe);
 		}
 
-		private static int? ParsePièce(string format, FormattedText pièce)
+		private static FormattedText FormatPièce(FormattedText format, int numéro)
 		{
-			string p = pièce.ToSimpleText ();
+			//	Retourne un numéro de pièce formaté.
+			if (format.IsNullOrEmpty)
+			{
+				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else
+			{
+				string numString = numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-			if (format.Length != p.Length)
+				var minimumdigits = Converters.ParseInt (format);
+				if (minimumdigits.HasValue)
+				{
+					if (minimumdigits.Value > numString.Length)  // numéro trop court ?
+					{
+						numString = new string ('0', minimumdigits.Value - numString.Length) + numString;  // complète avec des zéros
+					}
+
+					return numString;
+				}
+
+				string f = format.ToString ();
+
+				//	Construit la chaîne du numéro avec le bon nombre de digits.
+				int digits = f.Where (x => x == '#').Count ();
+				if (digits != 0)
+				{
+					if (digits > numString.Length)  // numéro trop court ?
+					{
+						numString = new string ('0', digits - numString.Length) + numString;  // complète avec des zéros
+					}
+
+					if (digits < numString.Length)  // numéro trop long ?
+					{
+						numString = numString.Substring (numString.Length-digits);  // tronque
+					}
+				}
+
+				//	Construit le numéro final d'après le format.
+				var builder = new System.Text.StringBuilder ();
+
+				int i = 0;
+				foreach (var c in f)
+				{
+					if (c == '#')  // un digit ?
+					{
+						builder.Append (numString[i++]);
+					}
+					else  // un caractère fixe ?
+					{
+						builder.Append (c);
+					}
+				}
+
+				return builder.ToString ();
+			}
+		}
+
+		private static int? ParsePièce(FormattedText prefixe, FormattedText suffixe, FormattedText format, FormattedText pièce)
+		{
+			string p = prefixe.ToString ();
+			string s = suffixe.ToString ();
+			string t = pièce.ToString ();
+
+			if (t.StartsWith (p))
+			{
+				t = t.Substring (p.Length);
+			}
+
+			if (t.EndsWith (s))
+			{
+				t = t.Substring (0, t.Length-s.Length);
+			}
+
+			if (format.IsNullOrEmpty)
+			{
+				return Converters.ParseInt (t);
+			}
+			else
+			{
+				var digits = Converters.ParseInt (format);
+				if (digits.HasValue)
+				{
+					return Converters.ParseInt (t);
+				}
+				else
+				{
+					return PiècesGenerator.ParsePièce (format, t);
+				}
+			}
+		}
+
+		private static int? ParsePièce(FormattedText format, FormattedText pièce)
+		{
+			string f = format.ToString ();
+			string p = pièce.ToString ();
+
+			if (f.Length != p.Length)
 			{
 				return null;
 			}
@@ -245,7 +306,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			for (int i = 0; i < p.Length; i++)
 			{
-				if (format[i] == '#')
+				if (f[i] == '#')
 				{
 					var c = p[i];
 					if (c < '0' || c > '9')
@@ -258,7 +319,7 @@ namespace Epsitec.Cresus.Compta.IO
 				}
 				else
 				{
-					if (format[i] != p[i])
+					if (f[i] != p[i])
 					{
 						return null;
 					}
@@ -310,7 +371,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 					for (int i = outsiders.Count-1; i >= 0; i--)
 					{
-						int? numéro = PiècesGenerator.ParsePièce (generator.Format, outsiders[i]);
+						int? numéro = PiècesGenerator.ParsePièce (generator.Préfixe, generator.Suffixe, generator.Format, outsiders[i]);
 						if (numéro.HasValue)
 						{
 							PiècesGenerator.SetPièceProchainNuméro (generator, numéro.Value+generator.Incrément);
