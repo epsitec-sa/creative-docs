@@ -182,12 +182,12 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Filter = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 101));
 				//	designer:cap/OVK13
 				public static readonly global::Epsitec.Common.Widgets.Command Info = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 97));
-				//	designer:cap/OVK25
-				public static readonly global::Epsitec.Common.Widgets.Command Memory = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 162));
 				//	designer:cap/OVK03
 				public static readonly global::Epsitec.Common.Widgets.Command Options = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 96));
 				//	designer:cap/OVKV2
 				public static readonly global::Epsitec.Common.Widgets.Command Search = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 95));
+				//	designer:cap/OVK25
+				public static readonly global::Epsitec.Common.Widgets.Command ViewSettings = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 162));
 			}
 			
 			public static class Présentation
@@ -433,12 +433,12 @@ namespace Epsitec.Cresus.Compta
 				public const long Filter = 0x3F800014000065L;
 				//	designer:cap/OVK13
 				public const long Info = 0x3F800014000061L;
-				//	designer:cap/OVK25
-				public const long Memory = 0x3F8000140000A2L;
 				//	designer:cap/OVK03
 				public const long Options = 0x3F800014000060L;
 				//	designer:cap/OVKV2
 				public const long Search = 0x3F80001400005FL;
+				//	designer:cap/OVK25
+				public const long ViewSettings = 0x3F8000140000A2L;
 			}
 			
 			public static class Présentation
