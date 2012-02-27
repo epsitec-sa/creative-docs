@@ -77,6 +77,7 @@
     <Compile Include="Entities\AiderGroupParticipantEntity.cs" />
     <Compile Include="Entities\AiderPersonWarningEntity.cs" />
     <Compile Include="Entities\Helpers\AiderPersonAdditionalContactAddressList.cs" />
+    <Compile Include="Entities\Helpers\AiderPersonHouseholdList.cs" />
     <Compile Include="Entities\Helpers\AiderWarningImplementation.cs" />
     <Compile Include="Enumerations\AddressType.cs" />
     <Compile Include="AiderProgram.cs" />

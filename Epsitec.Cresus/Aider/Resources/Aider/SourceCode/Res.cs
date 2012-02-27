@@ -1600,6 +1600,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Household1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 149);
 				//	designer:cap/LVAG9
 				public static readonly global::Epsitec.Common.Support.Druid Household2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 304);
+				//	designer:cap/LVA8C
+				public static readonly global::Epsitec.Common.Support.Druid Households = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 392);
 				//	designer:cap/LVGN02
 				public static readonly global::Epsitec.Common.Support.Druid Housemates = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 23);
 				//	designer:cap/LVAO7

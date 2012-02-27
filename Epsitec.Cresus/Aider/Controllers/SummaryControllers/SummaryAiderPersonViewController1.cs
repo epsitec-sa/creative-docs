@@ -37,10 +37,11 @@ namespace Epsitec.Aider.Controllers.SummaryControllers
 				}
 			}
 
-			wall.AddBrick (x => x.Household1)
-				.Title ("Coordonées du ménage")
-				.Text (x => x.GetAddressSummary ())
-				.Attribute (BrickMode.DefaultToSummarySubView);
+			wall.AddBrick (x => x.Households)
+				.Template ()
+					.Title ("Coordonées du ménage")
+					.Text (x => x.GetAddressSummary ())
+				.End ();
 
 			if (this.Entity.Household2.IsNotNull ())
 			{
