@@ -90,6 +90,24 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
+		private bool IsPerso(ComptaPiècesGeneratorEntity generator)
+		{
+			//	On considère qu'un générateur est personnel s'il n'a qu'un seul utilisateur.
+			int utilisateurCount, périodeCount, journalCount;
+			this.GetStatistics (generator, out utilisateurCount, out périodeCount, out journalCount);
+
+			if (utilisateurCount == 1)
+			{
+				return true;
+			}
+			else if (utilisateurCount > 1)
+			{
+				return false;
+			}
+
+			return this.mainWindowController.Compta.Utilisateurs.Count <= 1;
+		}
+
 		private int GetStatistics(ComptaPiècesGeneratorEntity generator, out int utilisateurCount, out int périodeCount, out int journalCount)
 		{
 			utilisateurCount = this.mainWindowController.Compta.Utilisateurs.Where (x => x.PiècesGenerator == generator).Count ();
@@ -100,14 +118,14 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		public void Burn(ComptaJournalEntity journal, List<FormattedText> numéros)
+		public void Burn(ComptaJournalEntity journal, List<FormattedText> pièces)
 		{
 			//	Brûle les numéros utilisés, ce qui revient à vider le congélateur.
 			var generator = this.GetGenerator (this.mainWindowController.CurrentUser, this.mainWindowController.Période, journal);
 
 			if (generator != null)
 			{
-				this.ClearFreezer (generator, numéros);
+				this.Adjust (generator, pièces);
 			}
 		}
 
@@ -218,6 +236,43 @@ namespace Epsitec.Cresus.Compta.IO
 			return builder.ToString ();
 		}
 
+		private static int? ParsePièce(string format, FormattedText pièce)
+		{
+			string p = pièce.ToSimpleText ();
+
+			if (format.Length != p.Length)
+			{
+				return null;
+			}
+
+			int n = 0;
+
+			for (int i = 0; i < p.Length; i++)
+			{
+				if (format[i] == '#')
+				{
+					var c = p[i];
+					if (c < '0' || c > '9')
+					{
+						return null;
+					}
+
+					n *= 10;
+					n += c-'0';
+				}
+				else
+				{
+					if (format[i] != p[i])
+					{
+						return null;
+					}
+				}
+			}
+
+			return n;
+		}
+
+
 		private static int GetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator)
 		{
 			//	Retourne le prochain numéro de pièce à utiliser.
@@ -227,11 +282,55 @@ namespace Epsitec.Cresus.Compta.IO
 			return n;
 		}
 
-
-
-		private void ClearFreezer(ComptaPiècesGeneratorEntity generator, List<FormattedText> numéros)
+		private static void SetPièceProchainNuméro(ComptaPiècesGeneratorEntity generator, int numéro)
 		{
-			//	Vide le congélateur de tous les numéros utilisés d'un générateur donné.
+			//	Modifie le prochain numéro de pièce à utiliser.
+			generator.Numéro = numéro;
+		}
+
+
+		private void Adjust(ComptaPiècesGeneratorEntity generator, List<FormattedText> pièces)
+		{
+			//	Si un générateur n'est utilisé que par un seul utilisateur, la modification par l'utilisateur
+			//	de la pièce proposée modifie le prochain numéro généré.
+			if (this.IsPerso (generator))
+			{
+				//	Cherche tous les numéros qui ont été entrés manuellement et qui ne correspondent pas
+				//	à un numéro automatique.
+				var outsiders = new List<FormattedText> ();
+
+				foreach (var pièce in pièces)
+				{
+					if (!this.freezer.Where (x => x.Generator == generator && x.Pièce == pièce).Any ())
+					{
+						outsiders.Add (pièce);
+					}
+				}
+
+				if (outsiders.Any ())
+				{
+					outsiders.Sort ();
+
+					for (int i = outsiders.Count-1; i >= 0; i--)
+					{
+						int? numéro = PiècesGenerator.ParsePièce (generator.Format, outsiders[i]);
+						if (numéro.HasValue)
+						{
+							PiècesGenerator.SetPièceProchainNuméro (generator, numéro.Value+generator.Incrément);
+							this.ClearFreezer (generator);
+							return;
+						}
+					}
+				}
+			}
+
+			this.ClearFreezer (generator, pièces);
+		}
+
+
+		private void ClearFreezer(ComptaPiècesGeneratorEntity generator, List<FormattedText> pièces)
+		{
+			//	Vide le congélateur de tous les numéros utilisés avec un générateur donné.
 			//	Contenu initial:
 			//		Numéro	Rank
 			//		15		0
@@ -258,7 +357,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (data.Generator == generator)
 				{
-					if (numéros.Contains (data.Pièce))
+					if (pièces.Contains (data.Pièce))
 					{
 						last = data.Rank;
 						break;
@@ -290,6 +389,25 @@ namespace Epsitec.Cresus.Compta.IO
 				if (data.Generator == generator)
 				{
 					data.Rank -= last+1;
+				}
+			}
+		}
+
+		private void ClearFreezer(ComptaPiècesGeneratorEntity generator)
+		{
+			//	Vide le congélateur de tous les numéros d'un générateur donné.
+			int i = 0;
+			while (i < this.freezer.Count)
+			{
+				var data = this.freezer[i];
+
+				if (data.Generator == generator)
+				{
+					this.freezer.RemoveAt (i);
+				}
+				else
+				{
+					i++;
 				}
 			}
 		}
