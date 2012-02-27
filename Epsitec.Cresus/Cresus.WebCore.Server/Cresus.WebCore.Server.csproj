@@ -117,7 +117,7 @@
     <Compile Include="NancyModules\LoginModule.cs" />
     <Compile Include="NancyHosting\NancyServer.cs" />
     <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
-    <Compile Include="NancyHosting\PostArrayHandler.cs" />
+    <Compile Include="FormCollectionEmbedder.cs" />
     <Compile Include="UserInterface\PanelBuilder.cs" />
     <Compile Include="UserInterface\PanelFieldAccessor\AbstractPanelFieldAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -16,20 +16,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string FieldName
-		{
-			get;
-			set;
-		}
-
-
-		public string LambdaFieldName
-		{
-			get;
-			set;
-		}
-
-
 		public string PanelFieldAccessorId
 		{
 			get;
@@ -44,31 +30,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public override IEnumerable<Dictionary<string, object>> ToDictionary()
+		public override Dictionary<string, object> ToDictionary()
 		{
-			yield return this.GetFieldDictionary ();
-			yield return this.GetLambdaDictionary ();
-		}
-
-
-		private Dictionary<string, object> GetLambdaDictionary()
-		{
-			var lambdaDictionary = new Dictionary<string, object> ();
-
-			lambdaDictionary["xtype"] = "hiddenfield";
-			lambdaDictionary["name"] = this.LambdaFieldName;
-			lambdaDictionary["value"] = this.PanelFieldAccessorId;
-
-			return lambdaDictionary;
-		}
-
-
-		protected virtual Dictionary<string, object> GetFieldDictionary()
-		{
-			var fieldDictionary = new Dictionary<string, object> ();
+			var fieldDictionary = base.ToDictionary ();
 			
 			fieldDictionary["fieldLabel"] = this.Title;
-			fieldDictionary["name"] = this.FieldName;
+			fieldDictionary["name"] = this.PanelFieldAccessorId;
 			fieldDictionary["readOnly"] = this.IsReadOnly;
 
 			return fieldDictionary;

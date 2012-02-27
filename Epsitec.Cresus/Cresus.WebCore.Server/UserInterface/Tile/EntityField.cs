@@ -29,9 +29,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		protected override Dictionary<string, object> GetFieldDictionary()
+		public override Dictionary<string, object> ToDictionary()
 		{
-			var fieldDictionary = base.GetFieldDictionary ();
+			var fieldDictionary = base.ToDictionary ();
 
 			fieldDictionary["value"] = this.Value;
 			fieldDictionary["xtype"] = "epsitec.entity";

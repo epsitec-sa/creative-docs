@@ -16,14 +16,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string Name
+		public string InputValue
 		{
 			get;
 			set;
 		}
 
 
-		public string InputValue
+		public int Index
 		{
 			get;
 			set;
@@ -37,17 +37,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public Dictionary<string, object> ToDictionary(bool isReadOnly)
+		public Dictionary<string, object> ToDictionary(string panelFieldAccessorId, bool isReadOnly)
 		{
 			var item = new Dictionary<string, object> ();
 
 			item["boxLabel"] = this.Label;
-			item["name"] = this.Name;
+			item["name"] = FormCollectionEmbedder.GetFieldName (panelFieldAccessorId, this.Index);
 			item["inputValue"] = this.InputValue;
 			item["checked"] = this.Checked;
 			item["readOnly"] = isReadOnly;
 
-			// We want to return "nothing" when nothing is checked (but we want to return something)
+			// We want to return "nothing" when nothing is checked, but we want to return something.
 			item["uncheckedValue"] = "";
 
 			return item;

@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			}
 
 			panel["title"] = this.Title;
-			panel["items"] = this.Items.SelectMany (i => i.ToDictionary ()).ToList ();
+			panel["items"] = this.Items.SelectMany (i => i.ToDictionaries ()).ToList ();
 
 			return panel;
 		}

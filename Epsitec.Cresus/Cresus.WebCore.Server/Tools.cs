@@ -61,18 +61,6 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
-		public static string GetLambdaFieldName(string entityKey)
-		{
-			return string.Concat ("lambda_", entityKey);
-		}
-
-
-		public static bool IsLambdaFieldName(string text)
-		{
-			return text.StartsWith ("lambda_");
-		}
-
-
 		public static IDisposable Bind(this BusinessContext businessContext, params AbstractEntity[] entities)
 		{
 			var entitiesToDispose = new List<AbstractEntity> ();

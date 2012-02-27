@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public override IEnumerable<Dictionary<string, object>> ToDictionary()
+		public override IEnumerable<Dictionary<string, object>> ToDictionaries()
 		{
 			var item = new Dictionary<string, object> ();
 
@@ -35,8 +35,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			item["layout"] = "column";
 			item["title"] = this.Title;
 
-			var fieldItems = this.Fields.SelectMany (f => f.ToDictionary ()).ToList ();
-			var fieldWidth = 1.0 / fieldItems.Count (input => ((string) input["xtype"]) != "hiddenfield");
+			var fieldItems = this.Fields.Select (f => f.ToDictionary ()).ToList ();
+			var fieldWidth = 1.0 / fieldItems.Count;
 				
 			foreach (var fieldItem in fieldItems)
 			{

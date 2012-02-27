@@ -9,15 +9,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 	{
 
 
-		public override IEnumerable<Dictionary<string, object>> ToDictionary()
+		public override Dictionary<string, object> ToDictionary()
 		{
-			var item = new Dictionary<string, object> ();
+			var item = base.ToDictionary ();
 
 			item["xtype"] = "displayfield";
 			item["value"] = "<i><b>ATTENTION:</b> Les modifications effectuées ici seront répercutées dans tous les enregistrements.</i>";
 			item["cls"] = "global-warning";
 
-			yield return item;
+			return item;
 		}
 
 

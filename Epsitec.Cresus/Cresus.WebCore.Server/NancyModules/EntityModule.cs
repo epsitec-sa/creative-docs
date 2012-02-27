@@ -1,14 +1,11 @@
 ﻿using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Common.Types;
-
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface;
 using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 
 using Nancy;
@@ -45,25 +42,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var errors = new Dictionary<string, object> ();
 
 			AbstractEntity entity = EntityModule.ResolveEntity (businessContext, parameters.id);
-			DynamicDictionary formData = PostArrayHandler.GetFormWithArrays (Request.Form);
 
-			// We filter the form to exclude the fields used to store the lambda keys.
-			var memberNames = formData.GetDynamicMemberNames ().Where (x => !Tools.IsLambdaFieldName (x));
+			// NOTE Here we need to process the form to transform the arrays which are in separated
+			// fields to put them back in the same field.
+
+			DynamicDictionary formData = FormCollectionEmbedder.DecodeFormWithCollections (Request.Form);
 
 			using (businessContext.Bind (entity))
 			{
-				foreach (var memberName in memberNames)
+				foreach (var panelFieldAccessorId in formData.GetDynamicMemberNames ())
 				{
 					try
 					{
-						var value = formData[memberName];
-						var panelFieldAccessor = EntityModule.GetPanelFieldAccessor (coreSession, formData, memberName);
+						var value = formData[panelFieldAccessorId];
+						var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get (panelFieldAccessorId);
 
 						EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
 					}
 					catch (Exception e)
 					{
-						errors.Add (memberName, e.ToString ());
+						errors.Add (panelFieldAccessorId, e.ToString ());
 					}
 				}
 
@@ -92,16 +90,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityKey = EntityKey.Parse (entityId);
 
 			return businessContext.DataContext.ResolveEntity (entityKey);
-		}
-
-
-		private static AbstractPanelFieldAccessor GetPanelFieldAccessor(CoreSession coreSession, DynamicDictionary formData, string memberName)
-		{
-			var lambdaFieldName = Tools.GetLambdaFieldName (memberName);
-			var lambdaFieldValue = formData[lambdaFieldName];
-			var accessorId = (string) lambdaFieldValue.Value;
-
-			return coreSession.PanelFieldAccessorCache.Get (accessorId);
 		}
 
 
