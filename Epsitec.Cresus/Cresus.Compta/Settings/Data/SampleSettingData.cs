@@ -14,15 +14,15 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données pour un exemple de réglage.
 	/// </summary>
-	public class SampleSettingsData : AbstractSettingsData
+	public class SampleSettingData : AbstractSettingData
 	{
-		public SampleSettingsData(SettingsGroup group, SettingsType type, SettingsList settingsList)
+		public SampleSettingData(SettingsGroup group, SettingsType type, SettingsList settingsList)
 			: base (group, type)
 		{
 			this.settingsList = settingsList;
 		}
 
-		public SampleSettingsData(SettingsGroup group, SettingsType type)
+		public SampleSettingData(SettingsGroup group, SettingsType type)
 			: base (group, type)
 		{
 		}

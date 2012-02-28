@@ -14,16 +14,16 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données pour un réglage de type texte formaté.
 	/// </summary>
-	public class TextSettingsData : AbstractSettingsData
+	public class TextSettingData : AbstractSettingData
 	{
-		public TextSettingsData(SettingsGroup group, SettingsType type, int maxLength, FormattedText defaultValue, bool skipCompareTo = false)
+		public TextSettingData(SettingsGroup group, SettingsType type, int maxLength, FormattedText defaultValue, bool skipCompareTo = false)
 			: base (group, type, skipCompareTo)
 		{
 			this.MaxLength = maxLength;
 			this.Value     = defaultValue;
 		}
 
-		public TextSettingsData(SettingsGroup group, SettingsType type)
+		public TextSettingData(SettingsGroup group, SettingsType type)
 			: base (group, type)
 		{
 		}
@@ -35,9 +35,9 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
-		public override bool CompareTo(AbstractSettingsData other)
+		public override bool CompareTo(AbstractSettingData other)
 		{
-			var o = (other as TextSettingsData);
+			var o = (other as TextSettingData);
 
 			if (this.Value.IsNullOrEmpty && o.Value.IsNullOrEmpty)
 			{
@@ -47,9 +47,9 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			return this.Value == o.Value;
 		}
 
-		public override void CopyFrom(AbstractSettingsData other)
+		public override void CopyFrom(AbstractSettingData other)
 		{
-			this.Value = (other as TextSettingsData).Value;
+			this.Value = (other as TextSettingData).Value;
 		}
 
 		public FormattedText Value

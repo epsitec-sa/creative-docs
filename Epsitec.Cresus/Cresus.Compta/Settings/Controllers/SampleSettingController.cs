@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public class SampleSettingsController : AbstractSettingsController
+	public class SampleSettingController : AbstractSettingController
 	{
-		public SampleSettingsController(AbstractSettingsData data, System.Action actionChanged)
+		public SampleSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
 		}
@@ -175,11 +175,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		#endregion
 
 
-		private SampleSettingsData Data
+		private SampleSettingData Data
 		{
 			get
 			{
-				return this.data as SampleSettingsData;
+				return this.data as SampleSettingData;
 			}
 		}
 

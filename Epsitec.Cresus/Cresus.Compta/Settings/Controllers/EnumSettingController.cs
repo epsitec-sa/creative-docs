@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public class EnumSettingsController : AbstractSettingsController
+	public class EnumSettingController : AbstractSettingController
 	{
-		public EnumSettingsController(AbstractSettingsData data, System.Action actionChanged)
+		public EnumSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
 		}
@@ -78,11 +78,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			}
 		}
 
-		private EnumSettingsData Data
+		private EnumSettingData Data
 		{
 			get
 			{
-				return this.data as EnumSettingsData;
+				return this.data as EnumSettingData;
 			}
 		}
 

@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public abstract class AbstractSettingsController
+	public abstract class AbstractSettingController
 	{
-		public AbstractSettingsController(AbstractSettingsData data, System.Action actionChanged)
+		public AbstractSettingController(AbstractSettingData data, System.Action actionChanged)
 		{
 			this.data = data;
 			this.actionChanged = actionChanged;
@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				FormattedText    = VerboseSettings.GetDescription (this.data.Type),
 				ContentAlignment = ContentAlignment.MiddleRight,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth   = AbstractSettingsController.labelWidth-10,
+				PreferredWidth   = AbstractSettingController.labelWidth-10,
 				Dock             = DockStyle.Left,
 				Margins          = new Margins (0, 10, 0, 3),  // bottom = 3 permet d'aligner les lignes de base !
 			};
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		protected readonly static int labelWidth = 210;
 
-		protected readonly AbstractSettingsData		data;
+		protected readonly AbstractSettingData		data;
 		protected readonly System.Action			actionChanged;
 
 		protected FormattedText						error;

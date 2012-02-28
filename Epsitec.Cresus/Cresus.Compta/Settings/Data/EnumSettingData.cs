@@ -14,29 +14,29 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données pour un réglage de type texte formaté.
 	/// </summary>
-	public class EnumSettingsData : AbstractSettingsData
+	public class EnumSettingData : AbstractSettingData
 	{
-		public EnumSettingsData(SettingsGroup group, SettingsType type, SettingsEnum defaultValue, params SettingsEnum[] enums)
+		public EnumSettingData(SettingsGroup group, SettingsType type, SettingsEnum defaultValue, params SettingsEnum[] enums)
 			: base (group, type)
 		{
 			this.Value = defaultValue;
 			this.enums = enums;
 		}
 
-		public EnumSettingsData(SettingsGroup group, SettingsType type)
+		public EnumSettingData(SettingsGroup group, SettingsType type)
 			: base (group, type)
 		{
 		}
 
 
-		public override bool CompareTo(AbstractSettingsData other)
+		public override bool CompareTo(AbstractSettingData other)
 		{
-			return this.Value == (other as EnumSettingsData).Value;
+			return this.Value == (other as EnumSettingData).Value;
 		}
 
-		public override void CopyFrom(AbstractSettingsData other)
+		public override void CopyFrom(AbstractSettingData other)
 		{
-			this.Value = (other as EnumSettingsData).Value;
+			this.Value = (other as EnumSettingData).Value;
 		}
 
 		public SettingsEnum Value

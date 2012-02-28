@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.groups = new List<SettingsGroup> ();
-			this.controllers = new List<AbstractSettingsController> ();
+			this.controllers = new List<AbstractSettingController> ();
 
 			this.OpenSettings ();
 		}
@@ -285,33 +285,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateControllers ();
 		}
 
-		private void CreateController(AbstractSettingsData data)
+		private void CreateController(AbstractSettingData data)
 		{
-			AbstractSettingsController controller = null;
+			AbstractSettingController controller = null;
 
-			if (data is BoolSettingsData)
+			if (data is BoolSettingData)
 			{
-				controller = new BoolSettingsController (data, this.ActionChanged);
+				controller = new BoolSettingController (data, this.ActionChanged);
 			}
 
-			if (data is IntSettingsData)
+			if (data is IntSettingData)
 			{
 				controller = new IntSettingsController (data, this.ActionChanged);
 			}
 
-			if (data is TextSettingsData)
+			if (data is TextSettingData)
 			{
-				controller = new TextSettingsController (data, this.ActionChanged);
+				controller = new TextSettingController (data, this.ActionChanged);
 			}
 
-			if (data is EnumSettingsData)
+			if (data is EnumSettingData)
 			{
-				controller = new EnumSettingsController (data, this.ActionChanged);
+				controller = new EnumSettingController (data, this.ActionChanged);
 			}
 
-			if (data is SampleSettingsData)
+			if (data is SampleSettingData)
 			{
-				controller = new SampleSettingsController (data, this.ActionChanged);
+				controller = new SampleSettingController (data, this.ActionChanged);
 			}
 
 			if (controller != null)
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private readonly List<SettingsGroup>				groups;
-		private readonly List<AbstractSettingsController>	controllers;
+		private readonly List<AbstractSettingController>	controllers;
 
 		private ScrollList									scrollList;
 		private FrameBox									mainFrame;

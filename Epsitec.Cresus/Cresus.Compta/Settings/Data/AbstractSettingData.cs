@@ -14,9 +14,9 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données génériques pour un réglage.
 	/// </summary>
-	public abstract class AbstractSettingsData
+	public abstract class AbstractSettingData
 	{
-		public AbstractSettingsData(SettingsGroup group, SettingsType type, bool skipCompareTo = false)
+		public AbstractSettingData(SettingsGroup group, SettingsType type, bool skipCompareTo = false)
 		{
 			this.Group         = group;
 			this.Type          = type;
@@ -41,12 +41,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			private set;
 		}
 
-		public virtual bool CompareTo(AbstractSettingsData other)
+		public virtual bool CompareTo(AbstractSettingData other)
 		{
 			return true;
 		}
 
-		public virtual void CopyFrom(AbstractSettingsData other)
+		public virtual void CopyFrom(AbstractSettingData other)
 		{
 		}
 	}

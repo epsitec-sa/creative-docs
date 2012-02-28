@@ -14,28 +14,28 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données pour un réglage de type entier.
 	/// </summary>
-	public class IntSettingsData : AbstractSettingsData
+	public class IntSettingData : AbstractSettingData
 	{
-		public IntSettingsData(SettingsGroup group, SettingsType type, int defaultValue)
+		public IntSettingData(SettingsGroup group, SettingsType type, int defaultValue)
 			: base (group, type)
 		{
 			this.Value = defaultValue;
 		}
 
-		public IntSettingsData(SettingsGroup group, SettingsType type)
+		public IntSettingData(SettingsGroup group, SettingsType type)
 			: base (group, type)
 		{
 		}
 
 
-		public override bool CompareTo(AbstractSettingsData other)
+		public override bool CompareTo(AbstractSettingData other)
 		{
-			return this.Value == (other as IntSettingsData).Value;
+			return this.Value == (other as IntSettingData).Value;
 		}
 
-		public override void CopyFrom(AbstractSettingsData other)
+		public override void CopyFrom(AbstractSettingData other)
 		{
-			this.Value = (other as IntSettingsData).Value;
+			this.Value = (other as IntSettingData).Value;
 		}
 
 		public int Value

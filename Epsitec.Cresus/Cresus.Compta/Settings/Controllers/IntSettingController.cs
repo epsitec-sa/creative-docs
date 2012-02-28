@@ -17,9 +17,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public class IntSettingsController : AbstractSettingsController
+	public class IntSettingsController : AbstractSettingController
 	{
-		public IntSettingsController(AbstractSettingsData data, System.Action actionChanged)
+		public IntSettingsController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
 		}
@@ -60,11 +60,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		}
 
 
-		private IntSettingsData Data
+		private IntSettingData Data
 		{
 			get
 			{
-				return this.data as IntSettingsData;
+				return this.data as IntSettingData;
 			}
 		}
 

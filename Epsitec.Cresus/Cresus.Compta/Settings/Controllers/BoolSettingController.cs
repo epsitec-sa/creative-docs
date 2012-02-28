@@ -9,7 +9,6 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
-using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 
 using System.Collections.Generic;
@@ -17,9 +16,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
-	public class TextSettingsController : AbstractSettingsController
+	public class BoolSettingController : AbstractSettingController
 	{
-		public TextSettingsController(AbstractSettingsData data, System.Action actionChanged)
+		public BoolSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
 		}
@@ -28,19 +27,18 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			var frame = new FrameBox
 			{
-				Parent   = parent,
-				Dock     = DockStyle.Top,
-				TabIndex = ++this.tabIndex,
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+				TabIndex        = ++this.tabIndex,
 			};
 
-			this.CreateLabel (frame);
-
-			this.field = new TextField
+			this.button = new CheckButton
 			{
 				Parent          = frame,
-				FormattedText   = this.Data.Value,
-				PreferredWidth  = this.PreferredWidth,
-				PreferredHeight = 20,
+				FormattedText   = VerboseSettings.GetDescription (data.Type),
+				PreferredWidth  = 480,
+				ActiveState     = this.Data.Value ? ActiveState.Yes : ActiveState.No,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 0, 0, 2),
 				TabIndex        = ++this.tabIndex,
@@ -48,30 +46,23 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.CreateError (frame);
 
-			this.field.TextChanged += delegate
+			this.button.ActiveStateChanged += delegate
 			{
-				this.Data.Value = this.field.FormattedText;
+				this.Data.Value = (this.button.ActiveState == ActiveState.Yes);
 				this.actionChanged ();
 			};
 		}
 
-		private double PreferredWidth
-		{
-			get
-			{
-				return System.Math.Min (this.Data.MaxLength * 8, 250);  // on estime la largeur à 8 pixels / caractère
-			}
-		}
 
-		private TextSettingsData Data
+		private BoolSettingData Data
 		{
 			get
 			{
-				return this.data as TextSettingsData;
+				return this.data as BoolSettingData;
 			}
 		}
 
 
-		private TextField field;
+		private CheckButton button;
 	}
 }

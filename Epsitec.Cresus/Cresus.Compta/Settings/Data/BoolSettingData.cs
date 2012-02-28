@@ -14,28 +14,28 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// <summary>
 	/// Données pour un réglage de type booléen.
 	/// </summary>
-	public class BoolSettingsData : AbstractSettingsData
+	public class BoolSettingData : AbstractSettingData
 	{
-		public BoolSettingsData(SettingsGroup group, SettingsType type, bool defaultValue)
+		public BoolSettingData(SettingsGroup group, SettingsType type, bool defaultValue)
 			: base (group, type)
 		{
 			this.Value = defaultValue;
 		}
 
-		public BoolSettingsData(SettingsGroup group, SettingsType type)
+		public BoolSettingData(SettingsGroup group, SettingsType type)
 			: base (group, type)
 		{
 		}
 
 
-		public override bool CompareTo(AbstractSettingsData other)
+		public override bool CompareTo(AbstractSettingData other)
 		{
-			return this.Value == (other as BoolSettingsData).Value;
+			return this.Value == (other as BoolSettingData).Value;
 		}
 
-		public override void CopyFrom(AbstractSettingsData other)
+		public override void CopyFrom(AbstractSettingData other)
 		{
-			this.Value = (other as BoolSettingsData).Value;
+			this.Value = (other as BoolSettingData).Value;
 		}
 
 		public bool Value
