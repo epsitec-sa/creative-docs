@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				Parent          = parent,
 				DrawFullFrame   = true,
 				PreferredHeight = 20,
-				Dock            = this.HasRighrEditor ? DockStyle.Top : DockStyle.Left,
+				Dock            = this.HasRightEditor ? DockStyle.Top : DockStyle.Left,
 				Margins         = this.BoxMargins,
 			};
 

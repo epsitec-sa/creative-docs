@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static readonly Color CreationBackColor		= Color.Empty;
+		public static readonly Color CreationBackColor		= Color.FromHexa ("e5f4ff");  // bleu pastel
 		public static readonly Color ModificationBackColor	= Color.FromHexa ("fff8d5");  // orange pastel
 
 		public static readonly Color ViewSettingsBackColor	= Color.FromHexa ("ccffcc");  // vert pastel
@@ -333,8 +333,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static readonly Color SelectionColor			= Color.FromHexa ("ffd700");  // orange "gold"
 		public static readonly Color JustCreatedColor		= Color.FromHexa ("b3d7ff");  // bleu pastel
-															
-		public static readonly Color TooltipColor			= Color.FromHexa ("ffffe1");  // jaune pâle
+
+		public static readonly Color InfoColor				= Color.FromAlphaColor (0.5, Color.FromHexa ("eeeeee"));   // gris transparent
 		public static readonly Color ErrorColor				= Color.FromHexa ("ffb1b1");  // rouge pâle
 		public static readonly Color MiniToolbarColor		= Color.FromHexa ("f4f9ff");  // bleu très léger
 

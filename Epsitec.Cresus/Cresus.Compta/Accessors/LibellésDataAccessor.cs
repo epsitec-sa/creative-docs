@@ -24,8 +24,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Libellés.Search");
-
-			this.StartDefaultLine ();
 		}
 
 
@@ -119,7 +117,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionLine.Count;
+			base.InsertEditionLine (index);
 		}
 
 		public override void StartCreationLine()
@@ -134,6 +132,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		protected override void PrepareEditionLine(int line)
@@ -162,6 +162,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		public override void UpdateEditionLine()

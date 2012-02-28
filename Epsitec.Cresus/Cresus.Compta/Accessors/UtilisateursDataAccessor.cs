@@ -23,8 +23,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Utilisateurs.Search");
-
-			this.StartDefaultLine ();
 		}
 
 
@@ -136,7 +134,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionLine.Count;
+			base.InsertEditionLine (index);
 		}
 
 		public override void StartCreationLine()
@@ -151,14 +149,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		protected override void PrepareEditionLine(int line)
 		{
 			string s = null;
-			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Open, true);
-			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Save, true);
-			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Print, true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Open,    true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Save,    true);
+			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Print,   true);
 			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Journal, true);
 			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Balance, true);
 			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Extrait, true);
@@ -187,6 +187,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		public override void UpdateEditionLine()

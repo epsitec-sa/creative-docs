@@ -53,6 +53,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public void Clear()
+		{
+			foreach (var data in this.datas.Values)
+			{
+				data.Text = null;
+			}
+		}
+
+
 		protected void SetMontant(ColumnType columnType, decimal? value)
 		{
 			this.SetText (columnType, Converters.MontantToString (value));

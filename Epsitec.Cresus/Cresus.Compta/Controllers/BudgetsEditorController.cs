@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.fieldControllers.Clear ();
+			var footer = this.CreateEditorUI (parent);
 
-			this.CreateLineUI (parent);
+			this.CreateLineUI (footer);
 
-			base.CreateUI (parent, updateArrayContentAction);
+			base.CreateUI (footer, updateArrayContentAction);
 		}
 
 		private void CreateLineUI(Widget parent)

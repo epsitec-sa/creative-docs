@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
 
 			this.UpdateAfterOptionsChanged ();
-			this.StartDefaultLine ();
 		}
 
 
@@ -221,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.editionLine.Insert (index, newData);
 			}
 
-			this.countEditedRow = this.editionLine.Count;
+			base.InsertEditionLine (index);
 		}
 
 		public override void StartCreationLine()
@@ -236,6 +235,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = true;
 			this.isModification = false;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		public override void ResetCreationLine()
@@ -286,6 +287,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		public override void UpdateEditionLine()

@@ -77,6 +77,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		public FrameBox EditorFrameBox
+		{
+			get
+			{
+				return this.editorFrameBox;
+			}
+			set
+			{
+				this.editorFrameBox = value;
+			}
+		}
+
+
 		protected virtual void UpdateAfterSelectedLineChanged()
 		{
 		}
@@ -92,13 +105,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.dataAccessor.IsCreation || this.dataAccessor.IsModification)
 				{
-					this.rightEditorFrame.Enable = true;
-					this.rightEditorFrame.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+					this.editorFrameBox.Enable = true;
+					this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
 				}
 				else
 				{
-					this.rightEditorFrame.Enable = false;
-					this.rightEditorFrame.BackColor = Color.Empty;
+					this.editorFrameBox.Enable = false;
+					this.editorFrameBox.BackColor = Color.Empty;
 				}
 			}
 			else
@@ -107,7 +120,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
 				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
-				this.controller.FooterEditorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+				this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
 			}
 
 			this.controller.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
@@ -242,6 +255,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return -1;
 		}
 
+#if false
+		private ColumnType GetMapperColumnType(int column)
+		{
+			var list = this.columnMappers.Where (x => x.Show && x.Edition).ToList ();
+
+			if (column >= 0 && column < list.Count)
+			{
+				return list[column].Column;
+			}
+			else
+			{
+				return ColumnType.Nom;
+			}
+		}
+#endif
+
 
 		public virtual void CreateAction()
 		{
@@ -253,7 +282,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
-				this.EditorSelect (0);
+				this.UpdateEditorContent ();
+				this.EditorSelect (0, 0);
 			}
 		}
 
@@ -312,6 +342,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.UpdateEditorContent ();
 				this.EditorSelect (0);
 			}
 		}
@@ -543,7 +574,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (!this.controller.HasRightEditor)
 			{
-				this.UpdateArrayColumns ();
+				//?this.UpdateArrayColumns ();  // provoque un Stack overflow !!!
 
 				int columnCount = this.columnMappers.Where (x => x.Show && x.Edition).Count ();
 
@@ -590,7 +621,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 
-				this.fieldControllers[this.selectedLine][column].SetFocus ();
+				if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count)
+				{
+					//	Normalement, le SetFocus va provoquer l'appel de HandleSetFocus. Mais, si le focus est
+					//	déjà présent dans le widget, l'appel n'a pas lieu (c'est sans doute une optimisation de
+					//	Widgets). D'où le code ci-dessous qui met d'abord le focus à un parent bidon.
+
+					this.editorFrameBox.ClearFocus ();
+					this.editorFrameBox.Focus ();  // met le focus à un parent bidon
+					this.fieldControllers[this.selectedLine][column].SetFocus ();
+				}
 			}
 		}
 
@@ -698,11 +738,35 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected FrameBox CreateRightEditorUI(Widget parent)
+		protected FrameBox CreateEditorUI(Widget parent)
 		{
-			//	Crée le panneau de droite, lorsque l'éditeur est en mode HasRightEditor.
 			this.fieldControllers.Clear ();
 
+			if (this.controller.HasRightEditor)
+			{
+				return this.CreateRightEditorUI (parent);
+			}
+			else
+			{
+				return this.CreateFooterEditorUI (parent);
+			}
+		}
+
+		private FrameBox CreateFooterEditorUI(Widget parent)
+		{
+			//	Crée le panneau inférieur, lorsque l'éditeur n'est pas en mode HasRightEditor.
+			this.editorFrameBox = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Bottom,
+			};
+
+			return this.editorFrameBox;
+		}
+
+		private FrameBox CreateRightEditorUI(Widget parent)
+		{
+			//	Crée le panneau de droite, lorsque l'éditeur est en mode HasRightEditor.
 			var mainFrame = new FrameBox
 			{
 				Parent = parent,
@@ -717,6 +781,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			toolbar.Margins        = new Margins (0);
 			toolbar.Padding        = new Margins (0);
 
+#if false
 			//	Met la petite toolbar avec les boutons "+/-", qui doublent les commandes Edit.Cancel/Edit.Delete.
 			double iconSize = 24;
 			var mini = UIBuilder.CreateMiniToolbar (mainFrame, iconSize);
@@ -763,9 +828,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (0, 1, 0, 0),
 			};
+#endif
 
 			//	Met le panneau éditable.
-			this.rightEditorFrame = new FrameBox
+			this.editorFrameBox = new FrameBox
 			{
 				Parent        = mainFrame,
 				DrawFullFrame = true,
@@ -773,7 +839,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding       = new Margins (10),
 			};
 
-			return this.rightEditorFrame;
+			return this.editorFrameBox;
+		}
+
+
+		public void UpdateFieldsEditionData()
+		{
+			//	Cette méthode est appelé par le DataAccessor, chaque fois qu'une ligne en édition (EditionData)
+			//	a été créée, pour mettre à jour les AbstractFieldController.
+			for (int line = 0; line < this.fieldControllers.Count; line++)
+			{
+				int column = 0;
+				foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+				{
+					this.fieldControllers[line][column++].EditionData = this.dataAccessor.GetEditionData (line, mapper.Column);
+				}
+			}
 		}
 
 
@@ -810,43 +891,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-#if false
-		protected string GetWidgetName(ColumnType columnType, int line)
-		{
-			return string.Concat ("WidgwetComptatiliéDaniel.", line.ToString (System.Globalization.CultureInfo.InvariantCulture), ".", columnType.ToString ());
-		}
-
-		protected bool GetWidgetColumnLine(string name, out ColumnType columnType, out int line)
-		{
-			columnType = ColumnType.None;
-			line = -1;
-
-			if (string.IsNullOrEmpty (name) || !name.StartsWith ("WidgwetComptatiliéDaniel."))
-			{
-				return false;
-			}
-
-			var part = name.Split ('.');
-			if (part.Length != 3)
-			{
-				return false;
-			}
-
-			if (!int.TryParse (part[1], out line))
-			{
-				return false;
-			}
-
-			if (!System.Enum.TryParse<ColumnType> (part[2], out columnType))
-			{
-				return false;
-			}
-
-			return true;
-		}
-#endif
-
-
 		protected readonly AbstractController					controller;
 		protected readonly ComptaEntity							comptaEntity;
 		protected readonly ComptaPériodeEntity					périodeEntity;
@@ -868,6 +912,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected bool											dirty;
 		protected bool											hasError;
 		protected bool											duplicate;
-		protected FrameBox										rightEditorFrame;
+		protected FrameBox										editorFrameBox;
 	}
 }

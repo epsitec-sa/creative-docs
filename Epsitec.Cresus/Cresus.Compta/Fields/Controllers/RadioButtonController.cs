@@ -33,8 +33,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
-				Dock            = this.HasRighrEditor ? DockStyle.Top : DockStyle.Left,
-				Margins         = this.HasRighrEditor ? new Margins (0, 0, 0, 0) : new Margins (0, 1, 0, 0),
+				Dock            = this.HasRightEditor ? DockStyle.Top : DockStyle.Left,
+				Margins         = this.HasRightEditor ? new Margins (0, 0, 0, 0) : new Margins (0, 1, 0, 0),
 			};
 
 			this.container = new FrameBox
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
 				TabIndex        = 1,
-				Margins         = new Margins (this.HasRighrEditor ? 0:10, 0, 0, 0),
+				Margins         = new Margins (this.HasRightEditor ? 0:10, 0, 0, 0),
 			};
 
 			this.InternalButton.ActiveStateChanged += new EventHandler (this.HandleActiveStateChanged);

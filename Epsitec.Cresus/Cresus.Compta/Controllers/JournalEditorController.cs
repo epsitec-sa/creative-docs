@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			this.fieldControllers.Clear ();
+			var footer = this.CreateEditorUI (parent);
 
 			//	Crée les boîtes.
 			this.infoFrameBox = new FrameBox
 			{
-				Parent          = parent,
+				Parent          = footer,
 				PreferredHeight = 39,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.infoFrameSeparator = new FrameBox
 			{
-				Parent          = parent,
+				Parent          = footer,
 				PreferredHeight = 5,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var linesBox = new FrameBox
 				{
-					Parent              = parent,
+					Parent              = footer,
 					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 					Dock                = DockStyle.Bottom,
 				};
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = this.infoFrameBox,
 				DrawFullFrame = true,
-				BackColor     = UIBuilder.TooltipColor,
+				BackColor     = UIBuilder.InfoColor,
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (0, 1, 0, 0),
 			};
@@ -114,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent        = this.infoFrameBox,
 				DrawFullFrame = true,
-				BackColor     = UIBuilder.TooltipColor,
+				BackColor     = UIBuilder.InfoColor,
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (0, 1, 0, 0),
 			};
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
 
-			base.CreateUI (parent, updateArrayContentAction);
+			base.CreateUI (footer, updateArrayContentAction);
 		}
 
 		private void CreateLineUI(Widget parent)

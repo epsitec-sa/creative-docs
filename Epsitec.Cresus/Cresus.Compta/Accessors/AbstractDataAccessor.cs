@@ -412,6 +412,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void InsertEditionLine(int index)
 		{
+			this.countEditedRow = this.editionLine.Count;
+			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
 		public void RemoveAtEditionLine(int index)
@@ -492,6 +494,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.isCreation = false;
 				this.isModification = false;
+
+				this.firstEditedRow = -1;
+				this.countEditedRow = 1;
+
+				foreach (var e in this.editionLine)
+				{
+					e.Clear ();
+				}
 			}
 			else
 			{

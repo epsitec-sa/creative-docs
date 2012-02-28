@@ -53,14 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasCreateCommand
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public override bool HasShowSearchPanel
 		{
 			get

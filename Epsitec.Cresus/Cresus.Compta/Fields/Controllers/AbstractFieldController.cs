@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		protected void CreateLabelUI(Widget parent)
 		{
-			if (this.HasRighrEditor && !this.columnMapper.Description.IsNullOrEmpty)
+			if (this.HasRightEditor && !this.columnMapper.Description.IsNullOrEmpty)
 			{
 				new StaticText
 				{
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				double top    = 0;
 				double bottom = 0;
 
-				if (this.HasRighrEditor)
+				if (this.HasRightEditor)
 				{
 					if (this.columnMapper.Description.IsNullOrEmpty)
 					{
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			}
 		}
 
-		protected bool HasRighrEditor
+		protected bool HasRightEditor
 		{
 			get
 			{

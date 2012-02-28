@@ -196,14 +196,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.footerEditorFrameBox = new FrameBox
-				{
-					Parent = this.frameBox,
-					Dock   = DockStyle.Bottom,
-				};
-
 				this.CreateArray (this.frameBox);
-				this.CreateEditor (this.footerEditorFrameBox);
+				this.CreateEditor (this.frameBox);
 			}
 
 			this.UpdateArrayContent ();
@@ -240,14 +234,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public FrameBox FooterEditorFrameBox
-		{
-			get
-			{
-				return this.footerEditorFrameBox;
-			}
-		}
-
 		public AbstractEditorController EditorController
 		{
 			get
@@ -274,14 +260,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public virtual bool HasArray
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public virtual bool HasRightEditor
 		{
 			get
@@ -293,11 +271,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public virtual bool HasCreateCommand
 		{
 			//	Avec false, la commande Edit.Cancel passe automatiquement en mode 'création'.
-			//	C'est typiquement le cas avec le journal des écritures.
-			//	Habituellement, ce mode va de pair avec HasRightEditor !
 			get
 			{
-				return false;
+				return true;
+			}
+		}
+
+		public virtual bool HasArray
+		{
+			get
+			{
+				return true;
 			}
 		}
 
@@ -905,7 +889,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (row == -1)
 			{
-				if (this.editorController == null || !this.editorController.Duplicate)
+				if (this.editorController != null && !this.editorController.Duplicate && !this.HasCreateCommand)
 				{
 					this.dataAccessor.StartCreationLine ();
 				}
@@ -938,10 +922,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			if (this.dataAccessor != null)
-			{
-				this.dataAccessor.StartDefaultLine ();
-			}
+			this.dataAccessor.StartDefaultLine ();
 		}
 
 		public void Update()
@@ -1132,7 +1113,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected ArrayController								arrayController;
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
-		protected FrameBox										footerEditorFrameBox;
 		protected StaticText									userLabel;
 		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;

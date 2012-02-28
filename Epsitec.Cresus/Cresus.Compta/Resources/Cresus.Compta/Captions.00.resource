@@ -169,7 +169,7 @@
   <data name="Fld.ComptaUtilisateur.DateDébut" id="K46">&lt;s:data id="_0" f:Name="DateDébut" /&gt;</data>
   <data name="Fld.ComptaUtilisateur.DateFin" id="K56">&lt;s:data id="_0" f:Name="DateFin" /&gt;</data>
   <data name="Fld.ComptaPiècesGenerator.Format" id="K66">&lt;s:data id="_0" f:Name="Format" /&gt;</data>
-  <data name="Cmd.Edit.Create" id="K76">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Edit.Create" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Edit.Create.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Crée une nouvelle entrée'}}" /&gt;</data>
+  <data name="Cmd.Edit.Create" id="K76">&lt;objects xmlns:s="*1" xmlns:f="*1"&gt;&lt;s:storage s:root="_1" s:n_ext="0" s:n_typ="3" s:n_obj="2"&gt;&lt;s:type id="_1" s:name="*C" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_3" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:object id="_1" s:type="_1" /&gt;&lt;s:object id="_2" s:type="_3" /&gt;&lt;s:data id="_1" f:Name="Edit.Create" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Edit.Create.icon" f:_2.Statefull="False" f:_2.DefaultParameter="{Null}" f:_3.Shortcuts="{Collection {ObjRef _2}}" f:Labels="{Collection {Text 'Crée une nouvelle ligne'}}" /&gt;&lt;s:data id="_2" f:KeyCode="Insert" /&gt;&lt;/s:storage&gt;&lt;/objects&gt;</data>
   <data name="Fld.ComptaPiècesGenerator.Préfixe" id="K86">&lt;s:data id="_0" f:Name="Préfixe" /&gt;</data>
   <data name="Fld.ComptaPiècesGenerator.Suffixe" id="K96">&lt;s:data id="_0" f:Name="Suffixe" /&gt;</data>
 </bundle>

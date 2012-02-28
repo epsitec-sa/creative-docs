@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			var band = this.CreateRightEditorUI (parent);
+			var band = this.CreateEditorUI (parent);
 			this.CreateLineUI (band);
 
 			base.CreateUI (parent, updateArrayContentAction);

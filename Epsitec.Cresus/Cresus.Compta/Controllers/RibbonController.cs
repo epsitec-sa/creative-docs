@@ -74,9 +74,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Open, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
+
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Save, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
-				UIBuilder.CreateButton (section, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Print, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 			}
 
@@ -84,13 +85,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var section = this.CreateSection (this.container, DockStyle.Left, "Présentation");
 
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Journal, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
-				UIBuilder.CreateButton (section, Res.Commands.Présentation.Balance, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Extrait, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
+				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Balance, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Bilan, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PP, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Exploitation, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
@@ -136,6 +137,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
 
+				UIBuilder.CreateButton (section, Res.Commands.Edit.Create, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Accept, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Cancel, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				//?section.Children.Add (this.CreateGap ();
