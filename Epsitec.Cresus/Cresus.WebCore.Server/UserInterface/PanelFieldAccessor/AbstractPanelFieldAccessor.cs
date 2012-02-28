@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 		{
 			this.id = id;
 			this.type = lambda.ReturnType;
+			this.fieldType = FieldTypeSelector.GetFieldType (this.type);
 
 			this.getter = lambda.Compile ();
 
@@ -45,6 +46,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 			get
 			{
 				return this.type;
+			}
+		}
+
+
+		public FieldType FieldType
+		{
+			get
+			{
+				return this.fieldType;
 			}
 		}
 
@@ -90,6 +100,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 
 
 		private readonly Type type;
+
+
+		private readonly FieldType fieldType;
 
 
 		private readonly Delegate getter;

@@ -95,32 +95,60 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static void SetValue(BusinessContext businessContext, AbstractPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, DynamicDictionaryValue value)
 		{
-			var entityListPanelFieldAccessor = panelFieldAccessor as EntityListPanelFieldAccessor;
-			var entityPanelFieldAccessor = panelFieldAccessor as EntityPanelFieldAccessor;
-			var stringPanelFieldAccessor = panelFieldAccessor as StringPanelFieldAccessor;
-
-			if (entityListPanelFieldAccessor != null)
+			switch (panelFieldAccessor.FieldType)
 			{
-				var castedValue = (IEnumerable<string>) value.Value;
+				case FieldType.EntityCollection:
+					{
+						var castedValue = (IEnumerable<string>) value.Value;
+						var castedPanelFieldAccessor = (EntityListPanelFieldAccessor) panelFieldAccessor;
+			
+						EntityModule.SetValueForEntityCollectionField (businessContext, castedPanelFieldAccessor, entity, castedValue);
+						
+						break;
+					}
+				case FieldType.EntityReference:
+					{
+						var castedValue = (string) value;
+						var castedPanelFieldAccessor = (EntityPanelFieldAccessor) panelFieldAccessor;
+			
+						EntityModule.SetValueForEntityReferenceField (businessContext, castedPanelFieldAccessor, entity, castedValue);
+						
+						break;
+					}
+				case FieldType.Enumeration:
+					{
+						var castedValue = (string) value;
+						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
 
-				EntityModule.SetValueForCollection (businessContext, entityListPanelFieldAccessor, entity, castedValue);
-			}
-			else if (entityPanelFieldAccessor != null)
-			{
-				var castedValue = (string) value;
+						EntityModule.SetValueForEnumerationField (castedPanelFieldAccessor, entity, castedValue);
 
-				EntityModule.SetValueForEntity (businessContext, entityPanelFieldAccessor, entity, castedValue);
-			}
-			else if (stringPanelFieldAccessor != null)
-			{
-				var castedValue = (string) value;
+						break;
+					}
+				case FieldType.Date:
+					{
+						var castedValue = (string) value;
+						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
 
-				EntityModule.SetValueForString (stringPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForDateField (castedPanelFieldAccessor, entity, castedValue);
+
+						break;
+					}
+				case FieldType.Text:
+					{
+						var castedValue = (string) value;
+						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
+
+						EntityModule.SetValueForTextField (castedPanelFieldAccessor, entity, castedValue);
+
+						break;
+					}
+				default:
+					throw new NotImplementedException ();
 			}
 		}
 
 
-		private static void SetValueForCollection(BusinessContext businessContext, EntityListPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
+		private static void SetValueForEntityCollectionField(BusinessContext businessContext, EntityListPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
 		{
 			var targetEntities = targetEntityIds
 				.Where (id => !string.IsNullOrWhiteSpace (id))
@@ -131,7 +159,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValueForEntity(BusinessContext businessContext, EntityPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
+		private static void SetValueForEntityReferenceField(BusinessContext businessContext, EntityPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
 		{
 			var targetEntity = string.IsNullOrEmpty (targetEntityId)
 				? null
@@ -141,7 +169,19 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValueForString(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		private static void SetValueForEnumerationField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		{
+			EntityModule.SetValueForTextField (panelFieldAccessor, entity, fieldValue);
+		}
+
+
+		private static void SetValueForDateField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		{
+			EntityModule.SetValueForTextField (panelFieldAccessor, entity, fieldValue);
+		}
+
+
+		private static void SetValueForTextField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
 		{
 			// NOTE Here we interpret empty strings as if they where null strings. The problem is
 			// that we can't make the difference as a text field does not provide any way to tell if

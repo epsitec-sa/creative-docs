@@ -16,6 +16,7 @@ using System.Collections.Generic;
 
 using System.Linq;
 using System.Linq.Expressions;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -35,7 +36,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		// NOTE The OfType property has not been tested properly. Do not expect it to work. See the
 		// two bug reports below for more informations.
 
-		
+
 		// TODO There is a bug in the way the brick tree is processed. When looking for a property
 		// of a brick, the carpenter only looks in the property list of the brick. It should also
 		// look in the property lists of its parents, from the closest to the farthest until it
@@ -144,7 +145,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData)
 		{
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
-			
+
 			summaryTileData.Icon = Carpenter.GetMandatoryValue (brick, BrickPropertyKey.Icon);
 			summaryTileData.EntityType = brick.GetFieldType ();
 
@@ -262,7 +263,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			else
 			{
 				return null;
-			}			
+			}
 		}
 
 
@@ -346,10 +347,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			return new CollectionTileData ()
 			{
-				CollectionGetter = Carpenter.GetCollectionGetter(brick),
+				CollectionGetter = Carpenter.GetCollectionGetter (brick),
 				EntityType = templateBrick.GetFieldType (),
 				Icon = Carpenter.GetMandatoryValue (templateBrick, BrickPropertyKey.Icon),
-				Lambda = brick.GetLambda(),
+				Lambda = brick.GetLambda (),
 				TitleGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Title),
 				TextGetter = Carpenter.GetMandatoryGetter (templateBrick, BrickPropertyKey.Text),
 			};
@@ -394,7 +395,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					case BrickPropertyKey.Separator:
 						editionData.Add (Carpenter.BuildSeparatorData ());
 						break;
-						
+
 					case BrickPropertyKey.GlobalWarning:
 						editionData.Add (Carpenter.BuildGlobalWarningData ());
 						break;
@@ -461,7 +462,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			var title = Carpenter.GetFieldDataTitle (brickProperties) ?? Carpenter.GetFieldDataTitle (expression);
 			var	lambda = (LambdaExpression) expression;
 			var isReadOnly = Carpenter.IsFieldDataReadOnly (brickProperties);
-			
+
 			return Carpenter.BuildFieldData (title, lambda, isReadOnly);
 		}
 
@@ -562,79 +563,32 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			return fieldData;
 		}
 
-		
+
 		private static AbstractFieldData GetFieldData(LambdaExpression lambda)
 		{
 			var type = lambda.ReturnType;
 
-			if (Carpenter.IsTypeSuitableForCollectionField (type))
+			switch (FieldTypeSelector.GetFieldType (type))
 			{
-				return new CollectionFieldData ();
-			}
-			else if (Carpenter.IsTypeSuitableForEntityField (type))
-			{
-				return new EntityFieldData ();
-			}
-			else if (Carpenter.IsTypeSuitableForEnumField (type))
-			{
-				return new EnumFieldData ();
-			}
-			else if (Carpenter.IsTypeSuitableForDateField (type))
-			{
-				return new DateFieldData ();
-			}
-			else if (Carpenter.IsTypeSuitableForTextField (type))
-			{
-				return new TextFieldData ();
-			}
-			else
-			{
-				throw new NotSupportedException ("Type of field is not supported.");
+				case FieldType.EntityCollection:
+					return new CollectionFieldData ();
+
+				case FieldType.EntityReference:
+					return new EntityFieldData ();
+
+				case FieldType.Enumeration:
+					return new EnumFieldData ();
+
+				case FieldType.Date:
+					return new DateFieldData ();
+
+				case FieldType.Text:
+					return new TextFieldData ();
+
+				default:
+					throw new NotImplementedException ();
 			}
 		}
-
-
-		private static bool IsTypeSuitableForCollectionField(Type type)
-		{
-			return type.IsGenericIListOfEntities ();
-		}
-
-
-		private static bool IsTypeSuitableForEntityField(Type type)
-		{
-			return type.IsEntity ();
-		}
-
-
-		private static bool IsTypeSuitableForDateField(Type type)
-		{
-			return type == typeof (Date)
-		        || type == typeof (Date?);
-		}
-
-
-		private static bool IsTypeSuitableForEnumField(Type type)
-		{
-			var underlyingType = type.GetNullableTypeUnderlyingType ();
-
-			return type.IsEnum || (underlyingType != null && underlyingType.IsEnum);
-		}
-
-
-		private static bool IsTypeSuitableForTextField(Type type)
-		{
-			return type == typeof (string)
-		        || type == typeof (FormattedText)
-		        || type == typeof (long)
-		        || type == typeof (long?)
-		        || type == typeof (decimal)
-		        || type == typeof (decimal?)
-		        || type == typeof (int)
-		        || type == typeof (int?)
-		        || type == typeof (bool)
-		        || type == typeof (bool?);
-		}
-
 
 
 	}

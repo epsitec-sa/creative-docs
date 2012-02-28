@@ -64,6 +64,8 @@
     <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\FieldType.cs" />
+    <Compile Include="UserInterface\PanelFieldAccessor\FieldTypeSelector.cs" />
     <Compile Include="UserInterface\PanelFieldAccessor\AbstractMarshallerFactory.cs" />
     <Compile Include="UserInterface\PanelFieldAccessor\EntityListPanelFieldAccessor.cs" />
     <Compile Include="UserInterface\PanelFieldAccessor\EntityPanelFieldAccessor.cs" />
