@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.controller     = controller;
 			this.validateAction = validateAction;
 
-			this.comptaEntity  = this.controller.ComptaEntity;
-			this.périodeEntity = this.controller.PériodeEntity;
+			this.compta  = this.controller.ComptaEntity;
+			this.période = this.controller.PériodeEntity;
 		}
 
 
@@ -86,8 +86,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private readonly AbstractController					controller;
 		private readonly System.Action<EditionData>			validateAction;
-		private readonly ComptaEntity						comptaEntity;
-		private readonly ComptaPériodeEntity				périodeEntity;
+		private readonly ComptaEntity						compta;
+		private readonly ComptaPériodeEntity				période;
 
 		private FormattedText								text;
 		private FormattedText								error;

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		protected override void CreateEmpty()
 		{
 			this.emptyOptions = new ExtraitDeCompteOptions ();
-			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+			this.emptyOptions.SetComptaEntity (this.compta);
 			this.emptyOptions.Clear ();
 		}
 
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override AbstractOptions CopyFrom()
 		{
 			var options = new ExtraitDeCompteOptions ();
-			options.SetComptaEntity (this.comptaEntity);
+			options.SetComptaEntity (this.compta);
 			this.CopyTo (options);
 			return options;
 		}

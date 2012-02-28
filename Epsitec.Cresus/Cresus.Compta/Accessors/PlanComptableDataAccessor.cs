@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void UpdateAfterOptionsChanged()
 		{
-			this.planComptableAll = this.comptaEntity.PlanComptable;
+			this.planComptableAll = this.compta.PlanComptable;
 
 			if (this.IsAllComptes)
 			{
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.justCreated = true;
 			}
 
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
+			this.soldesJournalManager.Initialize (this.période.Journal);
 			this.SearchUpdate ();
 			this.controller.MainWindowController.SetDirty ();
 		}
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var compte = this.CreateCompte ();
 				data.DataToEntity (compte);
-				this.comptaEntity.UpdateNiveauCompte (compte);
+				this.compta.UpdateNiveauCompte (compte);
 
 				int row = this.GetSortedRow (compte.Numéro);
 				this.planComptable.Insert (row, compte);
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (!this.IsAllComptes)
 				{
 					int globalRow = this.GetSortedRow (compte.Numéro, global: true);
-					this.comptaEntity.PlanComptable.Insert (globalRow, compte);
+					this.compta.PlanComptable.Insert (globalRow, compte);
 				}
 
 				if (firstRow == -1)
@@ -315,7 +315,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var initialCompte = this.planComptable[row];
 
 			//	On passe dans l'espace global.
-			row = this.comptaEntity.PlanComptable.IndexOf (initialCompte);
+			row = this.compta.PlanComptable.IndexOf (initialCompte);
 			int globalFirstEditerRow = row;
 
 			foreach (var data in this.editionLine)
@@ -325,15 +325,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 					//	Crée un compte manquant.
 					var compte = this.CreateCompte ();
 					data.DataToEntity (compte);
-					this.comptaEntity.UpdateNiveauCompte (compte);
-					this.comptaEntity.PlanComptable.Insert (row, compte);
+					this.compta.UpdateNiveauCompte (compte);
+					this.compta.PlanComptable.Insert (row, compte);
 				}
 				else
 				{
 					//	Met à jour un compte existante.
-					var compte = this.comptaEntity.PlanComptable[row];
+					var compte = this.compta.PlanComptable[row];
 					data.DataToEntity (compte);
-					this.comptaEntity.UpdateNiveauCompte (compte);
+					this.compta.UpdateNiveauCompte (compte);
 				}
 
 				row++;
@@ -343,9 +343,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int countToDelete  = this.initialCountEditedRow - this.editionLine.Count;
 			while (countToDelete > 0)
 			{
-				var compte = this.comptaEntity.PlanComptable[row];
+				var compte = this.compta.PlanComptable[row];
 				this.DeleteCompte (compte);
-				this.comptaEntity.PlanComptable.RemoveAt (row);
+				this.compta.PlanComptable.RemoveAt (row);
 
 				countToDelete--;
 			}
@@ -360,9 +360,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
-					var compte = this.comptaEntity.PlanComptable[globalFirstEditerRow];
+					var compte = this.compta.PlanComptable[globalFirstEditerRow];
 					temp.Add (compte);
-					this.comptaEntity.PlanComptable.RemoveAt (globalFirstEditerRow);
+					this.compta.PlanComptable.RemoveAt (globalFirstEditerRow);
 				}
 
 				int newRow = this.GetSortedRow (temp[0].Numéro, global: true);
@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
 					var compte = temp[i];
-					this.comptaEntity.PlanComptable.Insert (newRow+i, compte);
+					this.compta.PlanComptable.Insert (newRow+i, compte);
 				}
 
 				globalFirstEditerRow = newRow;
@@ -385,7 +385,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override FormattedText GetRemoveModificationLineError()
 		{
 			var compte = this.planComptable[this.firstEditedRow];
-			return this.comptaEntity.GetCompteRemoveError (compte);
+			return this.compta.GetCompteRemoveError (compte);
 		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()
@@ -400,11 +400,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
 				{
-					var compte = this.comptaEntity.PlanComptable[row];
+					var compte = this.compta.PlanComptable[row];
 					this.DeleteCompte (compte);
 					this.planComptable.RemoveAt (row);
 
-					this.comptaEntity.PlanComptable.Remove (compte);
+					this.compta.PlanComptable.Remove (compte);
 				}
 
 				if (this.firstEditedRow >= this.planComptable.Count)
@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (global)
 			{
-				return this.comptaEntity.PlanComptable;
+				return this.compta.PlanComptable;
 			}
 			else
 			{

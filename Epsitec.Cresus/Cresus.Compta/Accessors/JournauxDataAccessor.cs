@@ -47,20 +47,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Journaux.Count;
+				return this.compta.Journaux.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Journaux.Count)
+			if (row < 0 || row >= this.compta.Journaux.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Journaux[row];
+				return this.compta.Journaux[row];
 			}
 		}
 
@@ -72,14 +72,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Journaux.IndexOf (entity as ComptaJournalEntity);
+				return this.compta.Journaux.IndexOf (entity as ComptaJournalEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var journaux = comptaEntity.Journaux;
+			var journaux = compta.Journaux;
 
 			if (row < 0 || row >= journaux.Count)
 			{
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return JournauxDataAccessor.GetPiècesGenerator (journal);
 
 				case ColumnType.Résumé:
-					return this.comptaEntity.GetJournalRésumé (journal);
+					return this.compta.GetJournalRésumé (journal);
 
 				default:
 					return FormattedText.Null;
@@ -147,10 +147,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Journaux.Count)
+			if (row >= 0 && row < this.compta.Journaux.Count)
 			{
 				var data = new JournauxEditionLine (this.controller);
-				var journal = this.comptaEntity.Journaux[row];
+				var journal = this.compta.Journaux[row];
 				data.EntityToData (journal);
 
 				this.editionLine.Add (data);
@@ -191,11 +191,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var journal = this.CreateJournal ();
 				data.DataToEntity (journal);
 
-				this.comptaEntity.Journaux.Add (journal);
+				this.compta.Journaux.Add (journal);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.Journaux.Count-1;
+					firstRow = this.compta.Journaux.Count-1;
 				}
 			}
 
@@ -206,20 +206,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var journal = this.comptaEntity.Journaux[row];
+			var journal = this.compta.Journaux[row];
 			this.editionLine[0].DataToEntity (journal);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
-			return this.comptaEntity.GetJournalRemoveError (journal);
+			var journal = this.compta.Journaux[this.firstEditedRow];
+			return this.compta.GetJournalRemoveError (journal);
 		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var journal = this.comptaEntity.Journaux[this.firstEditedRow];
+			var journal = this.compta.Journaux[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer le journal \"{0}\" ?", journal.Nom);
 		}
 
@@ -229,14 +229,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var journal = this.comptaEntity.Journaux[row];
+					var journal = this.compta.Journaux[row];
 					this.DeleteJournal (journal);
-					this.comptaEntity.Journaux.RemoveAt (row);
+					this.compta.Journaux.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Journaux.Count)
+				if (this.firstEditedRow >= this.compta.Journaux.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Journaux.Count-1;
+					this.firstEditedRow = this.compta.Journaux.Count-1;
 				}
 			}
 		}
@@ -246,11 +246,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Journaux[this.firstEditedRow];
-				var t2 = this.comptaEntity.Journaux[this.firstEditedRow+direction];
+				var t1 = this.compta.Journaux[this.firstEditedRow];
+				var t2 = this.compta.Journaux[this.firstEditedRow+direction];
 
-				this.comptaEntity.Journaux[this.firstEditedRow] = t2;
-				this.comptaEntity.Journaux[this.firstEditedRow+direction] = t1;
+				this.compta.Journaux[this.firstEditedRow] = t2;
+				this.compta.Journaux[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				journal = this.businessContext.CreateEntity<ComptaJournalEntity> ();
 			}
 
-			journal.Id = this.comptaEntity.GetJournalId ();  // assigne un identificateur unique
+			journal.Id = this.compta.GetJournalId ();  // assigne un identificateur unique
 
 			return journal;
 		}

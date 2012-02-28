@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 	{
 		public virtual void SetComptaEntity(ComptaEntity compta)
 		{
-			this.comptaEntity = compta;
+			this.compta = compta;
 		}
 
 
@@ -45,6 +45,6 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 		}
 
 
-		protected ComptaEntity						comptaEntity;
+		protected ComptaEntity						compta;
 	}
 }

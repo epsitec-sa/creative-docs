@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 		{
 			this.controller = controller;
 
-			this.comptaEntity  = this.controller.ComptaEntity;
-			this.périodeEntity = this.controller.PériodeEntity;
-			this.permanents    = this.controller.DataAccessor.Permanents;
+			this.compta     = this.controller.ComptaEntity;
+			this.période    = this.controller.PériodeEntity;
+			this.permanents = this.controller.DataAccessor.Permanents;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -69,8 +69,8 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 
 
 		protected readonly AbstractController					controller;
-		protected readonly ComptaEntity							comptaEntity;
-		protected readonly ComptaPériodeEntity					périodeEntity;
+		protected readonly ComptaEntity							compta;
+		protected readonly ComptaPériodeEntity					période;
 		protected readonly AbstractPermanents					permanents;
 		protected readonly SafeCounter							ignoreChanges;
 

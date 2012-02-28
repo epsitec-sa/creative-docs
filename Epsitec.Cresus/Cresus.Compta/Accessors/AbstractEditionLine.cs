@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.controller = controller;
 
-			this.comptaEntity  = this.controller.ComptaEntity;
-			this.périodeEntity = this.controller.PériodeEntity;
+			this.compta  = this.controller.ComptaEntity;
+			this.période = this.controller.PériodeEntity;
 
 			this.datas = new Dictionary<ColumnType, EditionData> ();
 		}
@@ -124,8 +124,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		protected readonly AbstractController						controller;
-		protected readonly ComptaEntity								comptaEntity;
-		protected readonly ComptaPériodeEntity						périodeEntity;
+		protected readonly ComptaEntity								compta;
+		protected readonly ComptaPériodeEntity						période;
 		protected readonly Dictionary<ColumnType, EditionData>		datas;
 	}
 }

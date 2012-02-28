@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-			var comptes = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
+			var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 					(field.EditWidget as AutoCompleteTextField).AcceptFreeText = true;
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ());
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.GetLibellésDescriptions (this.période).ToArray ());
 
 					this.CreateButtonModèleUI (field, line);
 				}
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
-					var journaux = this.comptaEntity.Journaux.Select (x => x.Nom);
+					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
 				else
@@ -242,7 +242,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateLibellés()
 		{
 			//	Met à jour les libellés usuels dans les widgets combo pour les libellés.
-			var libellés = this.comptaEntity.GetLibellésDescriptions (this.périodeEntity).ToArray ();
+			var libellés = this.compta.GetLibellésDescriptions (this.période).ToArray ();
 
 			for (int line = 0; line < this.fieldControllers.Count; line++)
 			{
@@ -277,7 +277,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.PlusieursPièces)
 			{
 				var nomJournal = this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal);
-				var journal = this.comptaEntity.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
+				var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
 				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, 1));
 				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, 2));
@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.PlusieursPièces)
 				{
 					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
-					var journal = this.comptaEntity.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
+					var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
 
 					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
 				}
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			RaccourciModèle rm = RaccourciModèle.Ctrl0 + n;
 			string srm = Converters.RaccourciToString (rm);
-			var modèle = this.comptaEntity.Modèles.Where (x => x.Raccourci == srm).FirstOrDefault ();
+			var modèle = this.compta.Modèles.Where (x => x.Raccourci == srm).FirstOrDefault ();
 
 			if (modèle != null)
 			{
@@ -697,7 +697,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
 		{
 			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
-			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
 			{
@@ -724,7 +724,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Menu des écritures modèles
 		private void CreateButtonModèleUI(AbstractFieldController fieldController, int line)
 		{
-			if (this.comptaEntity.Modèles.Any ())
+			if (this.compta.Modèles.Any ())
 			{
 				var button = new Button
 				{
@@ -753,7 +753,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var menu = new VMenu ();
 
 			int index = 0;
-			foreach (var modèle in this.comptaEntity.Modèles)
+			foreach (var modèle in this.compta.Modèles)
 			{
 				var item = new MenuItem ()
 				{
@@ -763,7 +763,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				item.Clicked += delegate
 				{
-					this.InsertModèle (this.comptaEntity.Modèles[item.Index], line);
+					this.InsertModèle (this.compta.Modèles[item.Index], line);
 				};
 
 				menu.Items.Add (item);

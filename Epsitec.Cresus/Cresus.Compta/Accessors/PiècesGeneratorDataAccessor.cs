@@ -48,20 +48,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.PiècesGenerator.Count;
+				return this.compta.PiècesGenerator.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.PiècesGenerator.Count)
+			if (row < 0 || row >= this.compta.PiècesGenerator.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.PiècesGenerator[row];
+				return this.compta.PiècesGenerator[row];
 			}
 		}
 
@@ -73,14 +73,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.PiècesGenerator.IndexOf (entity as ComptaPiècesGeneratorEntity);
+				return this.compta.PiècesGenerator.IndexOf (entity as ComptaPiècesGeneratorEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var pièces = comptaEntity.PiècesGenerator;
+			var pièces = compta.PiècesGenerator;
 
 			if (row < 0 || row >= pièces.Count)
 			{
@@ -167,10 +167,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.PiècesGenerator.Count)
+			if (row >= 0 && row < this.compta.PiècesGenerator.Count)
 			{
 				var data = new PiècesGeneratorEditionLine (this.controller);
-				var pièce = this.comptaEntity.PiècesGenerator[row];
+				var pièce = this.compta.PiècesGenerator[row];
 				data.EntityToData (pièce);
 
 				this.editionLine.Add (data);
@@ -211,11 +211,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var pièce = this.CreatePiècesGenerator ();
 				data.DataToEntity (pièce);
 
-				this.comptaEntity.PiècesGenerator.Add (pièce);
+				this.compta.PiècesGenerator.Add (pièce);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.PiècesGenerator.Count-1;
+					firstRow = this.compta.PiècesGenerator.Count-1;
 				}
 			}
 
@@ -226,20 +226,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var pièce = this.comptaEntity.PiècesGenerator[row];
+			var pièce = this.compta.PiècesGenerator[row];
 			this.editionLine[0].DataToEntity (pièce);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			var pièce = this.comptaEntity.PiècesGenerator[this.firstEditedRow];
+			var pièce = this.compta.PiècesGenerator[this.firstEditedRow];
 			return this.mainWindowController.PiècesGenerator.GetRemoveError (pièce);
 		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var pièce = this.comptaEntity.PiècesGenerator[this.firstEditedRow];
+			var pièce = this.compta.PiècesGenerator[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer le générateur de numéros de pièces \"{0}\" ?", pièce.Nom);
 		}
 
@@ -249,14 +249,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var pièce = this.comptaEntity.PiècesGenerator[row];
+					var pièce = this.compta.PiècesGenerator[row];
 					this.DeletePiècesGenerator (pièce);
-					this.comptaEntity.PiècesGenerator.RemoveAt (row);
+					this.compta.PiècesGenerator.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.PiècesGenerator.Count)
+				if (this.firstEditedRow >= this.compta.PiècesGenerator.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.PiècesGenerator.Count-1;
+					this.firstEditedRow = this.compta.PiècesGenerator.Count-1;
 				}
 			}
 		}
@@ -266,11 +266,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.PiècesGenerator[this.firstEditedRow];
-				var t2 = this.comptaEntity.PiècesGenerator[this.firstEditedRow+direction];
+				var t1 = this.compta.PiècesGenerator[this.firstEditedRow];
+				var t2 = this.compta.PiècesGenerator[this.firstEditedRow+direction];
 
-				this.comptaEntity.PiècesGenerator[this.firstEditedRow] = t2;
-				this.comptaEntity.PiècesGenerator[this.firstEditedRow+direction] = t1;
+				this.compta.PiècesGenerator[this.firstEditedRow] = t2;
+				this.compta.PiècesGenerator[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 

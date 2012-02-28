@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 
 		private void UpdateComptes()
 		{
-			var comptes = this.comptaEntity.PlanComptable.Where (x => this.CompteFilter (x));
+			var comptes = this.compta.PlanComptable.Where (x => this.CompteFilter (x));
 			UIBuilder.UpdateAutoCompleteTextField (this.compteField, comptes);
 
 			using (this.ignoreChanges.Enter ())

@@ -107,8 +107,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void OpenSettings()
 		{
-			this.settingsList.SetText (SettingsType.GlobalTitre,       this.comptaEntity.Nom);
-			this.settingsList.SetText (SettingsType.GlobalDescription, this.comptaEntity.Description);
+			this.settingsList.SetText (SettingsType.GlobalTitre,       this.compta.Nom);
+			this.settingsList.SetText (SettingsType.GlobalDescription, this.compta.Description);
 
 			Converters.ExportSettings (this.settingsList);
 		}
@@ -117,8 +117,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (!this.settingsList.HasError)
 			{
-				this.comptaEntity.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
-				this.comptaEntity.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
+				this.compta.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
+				this.compta.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
 
 				Converters.ImportSettings (this.settingsList);
 			}

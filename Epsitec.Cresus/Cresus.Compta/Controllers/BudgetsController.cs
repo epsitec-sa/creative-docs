@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Budget");
-			this.SetSubtitle (this.périodeEntity.ShortTitle);
+			this.SetSubtitle (this.période.ShortTitle);
 		}
 
 
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void SetColumnBudget(ColumnType columnType, int offset, bool isBold)
 		{
 			//	Défini le titre d'une colonne "budget".
-			var other = this.comptaEntity.GetPériode (this.périodeEntity, offset);
+			var other = this.compta.GetPériode (this.période, offset);
 
 			this.ShowHideColumn (columnType, other != null);
 

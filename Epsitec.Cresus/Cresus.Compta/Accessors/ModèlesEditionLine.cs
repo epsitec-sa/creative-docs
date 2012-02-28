@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;  // plusieurs écritures modèles peuvent avoir "aucun" raccourci !
 				}
 
-				var compte = this.comptaEntity.Modèles.Where (x => x.Code == data.Text).FirstOrDefault ();
+				var compte = this.compta.Modèles.Where (x => x.Code == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					return;
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;  // plusieurs écritures modèles peuvent avoir "aucun" raccourci !
 				}
 
-				var compte = this.comptaEntity.Modèles.Where (x => x.Raccourci == data.Text).FirstOrDefault ();
+				var compte = this.compta.Modèles.Where (x => x.Raccourci == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					return;
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (data.HasText)
 			{
 				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 
 				if (compte == null)
 				{
@@ -144,8 +144,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var modèle = entity as ComptaModèleEntity;
 
-			modèle.Débit  = ModèlesDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Débit));
-			modèle.Crédit = ModèlesDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Crédit));
+			modèle.Débit  = ModèlesDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+			modèle.Crédit = ModèlesDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
 
 			modèle.Code      = this.GetText (ColumnType.Code).ToSimpleText ();
 			modèle.Raccourci = this.GetText (ColumnType.Raccourci).ToSimpleText ();

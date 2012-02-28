@@ -48,20 +48,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Modèles.Count;
+				return this.compta.Modèles.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Modèles.Count)
+			if (row < 0 || row >= this.compta.Modèles.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Modèles[row];
+				return this.compta.Modèles[row];
 			}
 		}
 
@@ -73,14 +73,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Modèles.IndexOf (entity as ComptaModèleEntity);
+				return this.compta.Modèles.IndexOf (entity as ComptaModèleEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var modèles = comptaEntity.Modèles;
+			var modèles = compta.Modèles;
 
 			if (row < 0 || row >= modèles.Count)
 			{
@@ -162,10 +162,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Modèles.Count)
+			if (row >= 0 && row < this.compta.Modèles.Count)
 			{
 				var data = new ModèlesEditionLine (this.controller);
-				var modèle = this.comptaEntity.Modèles[row];
+				var modèle = this.compta.Modèles[row];
 				data.EntityToData (modèle);
 
 				this.editionLine.Add (data);
@@ -206,11 +206,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var modèle = this.CreateModèle ();
 				data.DataToEntity (modèle);
 
-				this.comptaEntity.Modèles.Add (modèle);
+				this.compta.Modèles.Add (modèle);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.comptaEntity.Modèles.Count-1;
+					firstRow = this.compta.Modèles.Count-1;
 				}
 			}
 
@@ -221,14 +221,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var modèle = this.comptaEntity.Modèles[row];
+			var modèle = this.compta.Modèles[row];
 			this.editionLine[0].DataToEntity (modèle);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var modèle = this.comptaEntity.Modèles[this.firstEditedRow];
+			var modèle = this.compta.Modèles[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer l'écriture modèle  \"{0}\" ?", modèle.Libellé);
 		}
 
@@ -238,14 +238,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var modèle = this.comptaEntity.Modèles[row];
+					var modèle = this.compta.Modèles[row];
 					this.DeleteModèle (modèle);
-					this.comptaEntity.Modèles.RemoveAt (row);
+					this.compta.Modèles.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Modèles.Count)
+				if (this.firstEditedRow >= this.compta.Modèles.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Modèles.Count-1;
+					this.firstEditedRow = this.compta.Modèles.Count-1;
 				}
 			}
 		}
@@ -255,11 +255,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Modèles[this.firstEditedRow];
-				var t2 = this.comptaEntity.Modèles[this.firstEditedRow+direction];
+				var t1 = this.compta.Modèles[this.firstEditedRow];
+				var t2 = this.compta.Modèles[this.firstEditedRow+direction];
 
-				this.comptaEntity.Modèles[this.firstEditedRow] = t2;
-				this.comptaEntity.Modèles[this.firstEditedRow+direction] = t1;
+				this.compta.Modèles[this.firstEditedRow] = t2;
+				this.compta.Modèles[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 

@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SetTitle (Core.TextFormatter.FormatText ("Journal", journal.Nom));
 			}
 
-			this.SetSubtitle (this.périodeEntity.ShortTitle);
+			this.SetSubtitle (this.période.ShortTitle);
 		}
 
 

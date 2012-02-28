@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.isFilter   = isFilter;
 
 			this.ignoreChanges = new SafeCounter ();
-			this.comptaEntity  = this.controller.ComptaEntity;
+			this.compta        = this.controller.ComptaEntity;
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.tabControllers = new List<SearchTabController> ();
@@ -896,7 +896,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 
 		private readonly AbstractController				controller;
-		private readonly ComptaEntity					comptaEntity;
+		private readonly ComptaEntity					compta;
 		private readonly List<ColumnMapper>				columnMappers;
 		private readonly SearchData						data;
 		private readonly List<SearchTabController>		tabControllers;

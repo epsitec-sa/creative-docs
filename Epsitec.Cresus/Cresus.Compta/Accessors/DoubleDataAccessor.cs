@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public DoubleDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.soldesJournalManagerM1 = new SoldesJournalManager (this.comptaEntity);
-			this.soldesJournalManagerM2 = new SoldesJournalManager (this.comptaEntity);
+			this.soldesJournalManagerM1 = new SoldesJournalManager (this.compta);
+			this.soldesJournalManagerM2 = new SoldesJournalManager (this.compta);
 		}
 
 
@@ -42,11 +42,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.MinMaxClear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
+			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			//	Pour ComparisonShowed.PériodePrécédente et ComparisonShowed.PériodePénultième, il faut
 			//	les vrais montants, et non les valeurs au budget.
-			var périodeM1 = this.comptaEntity.GetPériode (this.périodeEntity, -1);
+			var périodeM1 = this.compta.GetPériode (this.période, -1);
 			if (périodeM1 == null)
 			{
 				this.soldesJournalManagerM1.Initialize (null);
@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.soldesJournalManagerM1.Initialize (périodeM1.Journal);
 			}
 
-			var périodeM2 = this.comptaEntity.GetPériode (this.périodeEntity, -2);
+			var périodeM2 = this.compta.GetPériode (this.période, -2);
 			if (périodeM2 == null)
 			{
 				this.soldesJournalManagerM2.Initialize (null);
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			decimal total = 0;
 
-			foreach (var compte in this.comptaEntity.PlanComptable.Where (x => x.Catégorie == catégorie))
+			foreach (var compte in this.compta.PlanComptable.Where (x => x.Catégorie == catégorie))
 			{
 				var solde = this.soldesJournalManager.GetSolde (compte).GetValueOrDefault ();
 
@@ -270,19 +270,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 					break;
 
 				case ComparisonShowed.Budget:
-					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte);
+					budget = this.compta.GetMontantBudget (this.période, 0, compte);
 					break;
 
 				case ComparisonShowed.BudgetProrata:
-					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte) * this.ProrataFactor;
+					budget = this.compta.GetMontantBudget (this.période, 0, compte) * this.ProrataFactor;
 					break;
 
 				case ComparisonShowed.BudgetFutur:
-					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte);
+					budget = this.compta.GetMontantBudget (this.période, 1, compte);
 					break;
 
 				case ComparisonShowed.BudgetFuturProrata:
-					budget = this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte) * this.ProrataFactor;
+					budget = this.compta.GetMontantBudget (this.période, 1, compte) * this.ProrataFactor;
 					break;
 
 				default:
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					var écriture = this.périodeEntity.Journal.LastOrDefault ();
+					var écriture = this.période.Journal.LastOrDefault ();
 					if (écriture == null)
 					{
 						day = Date.Today.DayOfYear;

@@ -38,9 +38,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.businessContext      = businessContext;
 			this.mainWindowController = mainWindowController;
 
-			this.comptaEntity  = this.mainWindowController.Compta;
-			this.périodeEntity = this.mainWindowController.Période;
-			this.settingsList  = this.mainWindowController.SettingsList;
+			this.compta       = this.mainWindowController.Compta;
+			this.période      = this.mainWindowController.Période;
+			this.settingsList = this.mainWindowController.SettingsList;
 
 			var mappers = this.InitialColumnMappers;
 			if (mappers != null)
@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.comptaEntity;
+				return this.compta;
 			}
 		}
 
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.périodeEntity;
+				return this.période;
 			}
 		}
 
@@ -753,8 +753,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				if (this.comptaEntity.Utilisateurs.Count == 1 &&
-					string.IsNullOrEmpty (this.comptaEntity.Utilisateurs[0].MotDePasse))  // un seul utilisateur sans mot de passe ?
+				if (this.compta.Utilisateurs.Count == 1 &&
+					string.IsNullOrEmpty (this.compta.Utilisateurs[0].MotDePasse))  // un seul utilisateur sans mot de passe ?
 				{
 					//	S'il n'y a qu'un seul utilisateur (forcément administrateur) sans mot de passe,
 					//	n'affiche pas l'identité de l'utilisateur.
@@ -1120,8 +1120,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected readonly Application							app;
 		protected readonly BusinessContext						businessContext;
-		protected readonly ComptaEntity							comptaEntity;
-		protected readonly ComptaPériodeEntity					périodeEntity;
+		protected readonly ComptaEntity							compta;
+		protected readonly ComptaPériodeEntity					période;
 		protected readonly SettingsList							settingsList;
 		protected readonly List<ColumnMapper>					columnMappers;
 		protected readonly SafeCounter							ignoreChanges;

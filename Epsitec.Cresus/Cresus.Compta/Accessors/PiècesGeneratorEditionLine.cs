@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var generator = this.comptaEntity.PiècesGenerator.Where (x => x.Nom == data.Text).FirstOrDefault ();
+				var generator = this.compta.PiècesGenerator.Where (x => x.Nom == data.Text).FirstOrDefault ();
 				if (generator == null)
 				{
 					return;

@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Filter");
 
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal);
+			this.soldesJournalManager.Initialize (this.période.Journal);
 		}
 
 
@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void UpdateAfterOptionsChanged()
 		{
-			this.planComptableAll = this.comptaEntity.PlanComptable;
+			this.planComptableAll = this.compta.PlanComptable;
 
 			if (this.filterData == null || this.filterData.IsEmpty)
 			{
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Date? dateDébut, dateFin;
 			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, dateDébut, dateFin);
+			this.soldesJournalManager.Initialize (this.période.Journal, dateDébut, dateFin);
 		}
 
 
@@ -125,13 +125,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (this.soldesJournalManager.GetSolde (compte));
 
 				case ColumnType.BudgetPrécédent:
-					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, -1, compte));
+					return Converters.MontantToString (this.compta.GetMontantBudget (this.période, -1, compte));
 
 				case ColumnType.Budget:
-					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, 0, compte));
+					return Converters.MontantToString (this.compta.GetMontantBudget (this.période, 0, compte));
 
 				case ColumnType.BudgetFutur:
-					return Converters.MontantToString (this.comptaEntity.GetMontantBudget (this.périodeEntity, 1, compte));
+					return Converters.MontantToString (this.compta.GetMontantBudget (this.période, 1, compte));
 
 				default:
 					return FormattedText.Null;

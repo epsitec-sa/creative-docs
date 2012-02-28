@@ -26,9 +26,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.controller = controller;
 
-			this.comptaEntity  = this.controller.ComptaEntity;
-			this.périodeEntity = this.controller.PériodeEntity;
-			this.options       = this.controller.DataAccessor.Options;
+			this.compta  = this.controller.ComptaEntity;
+			this.période = this.controller.PériodeEntity;
+			this.options = this.controller.DataAccessor.Options;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -310,8 +310,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 
 		protected readonly AbstractController					controller;
-		protected readonly ComptaEntity							comptaEntity;
-		protected readonly ComptaPériodeEntity					périodeEntity;
+		protected readonly ComptaEntity							compta;
+		protected readonly ComptaPériodeEntity					période;
 		protected readonly AbstractOptions						options;
 		protected readonly SafeCounter							ignoreChanges;
 

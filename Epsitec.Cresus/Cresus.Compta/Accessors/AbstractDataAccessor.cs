@@ -31,12 +31,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.controller = controller;
 
 			this.businessContext      = this.controller.BusinessContext;
-			this.comptaEntity         = this.controller.ComptaEntity;
-			this.périodeEntity        = this.controller.PériodeEntity;
+			this.compta               = this.controller.ComptaEntity;
+			this.période              = this.controller.PériodeEntity;
 			this.columnMappers        = this.controller.ColumnMappers;
 			this.mainWindowController = this.controller.MainWindowController;
 
-			this.soldesJournalManager = new SoldesJournalManager (this.comptaEntity);
+			this.soldesJournalManager = new SoldesJournalManager (this.compta);
 
 			this.readonlyAllData = new List<AbstractData> ();
 			this.readonlyData    = new List<AbstractData> ();
@@ -729,8 +729,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected readonly AbstractController			controller;
 		protected readonly BusinessContext				businessContext;
-		protected readonly ComptaEntity					comptaEntity;
-		protected readonly ComptaPériodeEntity			périodeEntity;
+		protected readonly ComptaEntity					compta;
+		protected readonly ComptaPériodeEntity			période;
 		protected readonly List<ColumnMapper>			columnMappers;
 		protected readonly MainWindowController			mainWindowController;
 		protected readonly SoldesJournalManager			soldesJournalManager;

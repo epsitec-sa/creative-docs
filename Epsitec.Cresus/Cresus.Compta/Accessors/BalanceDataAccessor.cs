@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BalanceDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.comptaEntity);
+			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.compta);
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Filter");
 			//?this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter", this.FilterInitialize);
@@ -63,9 +63,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeC = 0;
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.soldesJournalManager.Initialize (this.périodeEntity.Journal, this.lastBeginDate, this.lastEndDate);
+			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
-			foreach (var compte in this.comptaEntity.PlanComptable)
+			foreach (var compte in this.compta.PlanComptable)
 			{
 				if (compte.Catégorie == CatégorieDeCompte.Inconnu)
 				{

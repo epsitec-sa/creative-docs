@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var utilisateur = this.comptaEntity.Utilisateurs.Where (x => x.Utilisateur == data.Text).FirstOrDefault ();
+				var utilisateur = this.compta.Utilisateurs.Where (x => x.Utilisateur == data.Text).FirstOrDefault ();
 				if (utilisateur == null)
 				{
 					return;
@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateDate(EditionData data)
 		{
-			Validators.ValidateDate (this.périodeEntity, data, emptyAccepted: true);
+			Validators.ValidateDate (this.période, data, emptyAccepted: true);
 
 			if (!data.HasError && this.IsAdmin && data.HasText)
 			{
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var pièce = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, data.Text);
+				var pièce = UtilisateursDataAccessor.GetPiècesGenerator (this.compta, data.Text);
 				if (pièce == null)
 				{
 					data.Error = "Ce générateur de numéros de pièces n'existe pas";
@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			utilisateur.DateDébut       = Converters.ParseDate (this.GetText (ColumnType.DateDébut));
 			utilisateur.DateFin         = Converters.ParseDate (this.GetText (ColumnType.DateFin));
 			utilisateur.MotDePasse      = this.GetText (ColumnType.MotDePasse).ToString ();
-			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
+			utilisateur.PiècesGenerator = UtilisateursDataAccessor.GetPiècesGenerator (this.compta, this.GetText (ColumnType.Pièce));
 			utilisateur.Présentations   = this.GetText (ColumnType.Présentations).ToString ();
 			utilisateur.IdentitéWindows = this.GetText (ColumnType.IdentitéWindows) == "1";
 			utilisateur.Désactivé       = this.GetText (ColumnType.Désactivé) == "1";

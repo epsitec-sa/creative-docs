@@ -49,20 +49,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Libellés.Count;
+				return this.compta.Libellés.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Libellés.Count)
+			if (row < 0 || row >= this.compta.Libellés.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Libellés[row];
+				return this.compta.Libellés[row];
 			}
 		}
 
@@ -74,14 +74,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Libellés.IndexOf (entity as ComptaLibelléEntity);
+				return this.compta.Libellés.IndexOf (entity as ComptaLibelléEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var libellés = comptaEntity.Libellés;
+			var libellés = compta.Libellés;
 
 			if (row < 0 || row >= libellés.Count)
 			{
@@ -148,10 +148,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Libellés.Count)
+			if (row >= 0 && row < this.compta.Libellés.Count)
 			{
 				var data = new LibellésEditionLine (this.controller);
-				var libellé = this.comptaEntity.Libellés[row];
+				var libellé = this.compta.Libellés[row];
 				data.EntityToData (libellé);
 
 				this.editionLine.Add (data);
@@ -192,7 +192,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var libellé = this.CreateLibellé ();
 				data.DataToEntity (libellé);
 
-				this.comptaEntity.Libellés.Insert (0, libellé);
+				this.compta.Libellés.Insert (0, libellé);
 
 				if (firstRow == -1)
 				{
@@ -207,14 +207,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var libellé = this.comptaEntity.Libellés[row];
+			var libellé = this.compta.Libellés[row];
 			this.editionLine[0].DataToEntity (libellé);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var libellé = this.comptaEntity.Libellés[this.firstEditedRow];
+			var libellé = this.compta.Libellés[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer le libellé \"{0}\" ?", libellé.Libellé);
 		}
 
@@ -224,14 +224,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var libellé = this.comptaEntity.Libellés[row];
+					var libellé = this.compta.Libellés[row];
 					this.DeleteLibellé (libellé);
-					this.comptaEntity.Libellés.RemoveAt (row);
+					this.compta.Libellés.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Libellés.Count)
+				if (this.firstEditedRow >= this.compta.Libellés.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Libellés.Count-1;
+					this.firstEditedRow = this.compta.Libellés.Count-1;
 				}
 			}
 		}
@@ -241,11 +241,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.comptaEntity.Libellés[this.firstEditedRow];
-				var t2 = this.comptaEntity.Libellés[this.firstEditedRow+direction];
+				var t1 = this.compta.Libellés[this.firstEditedRow];
+				var t2 = this.compta.Libellés[this.firstEditedRow+direction];
 
-				this.comptaEntity.Libellés[this.firstEditedRow] = t2;
-				this.comptaEntity.Libellés[this.firstEditedRow+direction] = t1;
+				this.compta.Libellés[this.firstEditedRow] = t2;
+				this.compta.Libellés[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 

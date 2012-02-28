@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			this.controller = controller;
 
-			this.comptaEntity    = this.controller.ComptaEntity;
+			this.compta          = this.controller.ComptaEntity;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
 		}
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private static readonly double			toolbarHeight = 20;
 
 		private readonly AbstractController		controller;
-		private readonly ComptaEntity			comptaEntity;
+		private readonly ComptaEntity			compta;
 		private readonly BusinessContext		businessContext;
 		private readonly AbstractDataAccessor	dataAccessor;
 

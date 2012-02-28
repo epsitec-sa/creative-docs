@@ -50,20 +50,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.comptaEntity.Périodes.Count;
+				return this.compta.Périodes.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.comptaEntity.Périodes.Count)
+			if (row < 0 || row >= this.compta.Périodes.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.comptaEntity.Périodes[row];
+				return this.compta.Périodes[row];
 			}
 		}
 
@@ -75,14 +75,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.comptaEntity.Périodes.IndexOf (entity as ComptaPériodeEntity);
+				return this.compta.Périodes.IndexOf (entity as ComptaPériodeEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var périodes = comptaEntity.Périodes;
+			var périodes = compta.Périodes;
 
 			if (row < 0 || row >= périodes.Count)
 			{
@@ -181,10 +181,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.comptaEntity.Périodes.Count)
+			if (row >= 0 && row < this.compta.Périodes.Count)
 			{
 				var data = new PériodesEditionLine (this.controller);
-				var période = this.comptaEntity.Périodes[row];
+				var période = this.compta.Périodes[row];
 				data.EntityToData (période);
 
 				this.editionLine.Add (data);
@@ -226,7 +226,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.DataToEntity (période);
 
 				int row = this.GetSortedRow (période.DateDébut);
-				this.comptaEntity.Périodes.Insert (row, période);
+				this.compta.Périodes.Insert (row, période);
 
 				if (firstRow == -1)
 				{
@@ -241,14 +241,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var période = this.comptaEntity.Périodes[row];
+			var période = this.compta.Périodes[row];
 			this.editionLine[0].DataToEntity (période);
 		}
 
 
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			var période = this.comptaEntity.Périodes[this.firstEditedRow];
+			var période = this.compta.Périodes[this.firstEditedRow];
 			if (période.Journal.Count != 0)
 			{
 				return "Cette période ne peut pas être supprimée,<br/>car elle contient des écritures.";
@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var période = this.comptaEntity.Périodes[this.firstEditedRow];
+			var période = this.compta.Périodes[this.firstEditedRow];
 			return string.Format ("Voulez-vous supprimer la période \"{0}\" ?", période.ShortTitle);
 		}
 
@@ -269,14 +269,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var période = this.comptaEntity.Périodes[row];
+					var période = this.compta.Périodes[row];
 					this.DeletePériode (période);
-					this.comptaEntity.Périodes.RemoveAt (row);
+					this.compta.Périodes.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.comptaEntity.Périodes.Count)
+				if (this.firstEditedRow >= this.compta.Périodes.Count)
 				{
-					this.firstEditedRow = this.comptaEntity.Périodes.Count-1;
+					this.firstEditedRow = this.compta.Périodes.Count-1;
 				}
 			}
 		}
@@ -313,14 +313,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private bool HasCorrectOrder(int row)
 		{
-			var périodes = this.comptaEntity.Périodes;
+			var périodes = this.compta.Périodes;
 			var période = périodes[row];
 			return this.HasCorrectOrder (row, période.DateDébut);
 		}
 
 		private bool HasCorrectOrder(int row, Date date)
 		{
-			var périodes = this.comptaEntity.Périodes;
+			var périodes = this.compta.Périodes;
 
 			if (row > 0 && this.Compare (row-1, date) > 0)
 			{
@@ -337,14 +337,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private int Compare(int row, Date date)
 		{
-			var périodes = this.comptaEntity.Périodes;
+			var périodes = this.compta.Périodes;
 			var période = périodes[row];
 			return période.DateDébut.CompareTo (date);
 		}
 
 		private int GetSortedRow(Date date)
 		{
-			var périodes = this.comptaEntity.Périodes;
+			var périodes = this.compta.Périodes;
 
 			for (int row = périodes.Count-1; row >= 0; row--)
             {

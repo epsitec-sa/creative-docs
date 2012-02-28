@@ -30,10 +30,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			this.controller = controller;
 
-			this.comptaEntity    = this.controller.ComptaEntity;
-			this.dataAccessor    = this.controller.DataAccessor;
-			this.businessContext = this.controller.BusinessContext;
-			this.viewSettingsList      = this.controller.ViewSettingsList;
+			this.compta           = this.controller.ComptaEntity;
+			this.dataAccessor     = this.controller.DataAccessor;
+			this.businessContext  = this.controller.BusinessContext;
+			this.viewSettingsList = this.controller.ViewSettingsList;
 
 			this.showPanel = false;
 			this.ignoreChanges = new SafeCounter ();
@@ -1247,7 +1247,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private static readonly double					fieldWidth = 200;
 
 		private readonly AbstractController				controller;
-		private readonly ComptaEntity					comptaEntity;
+		private readonly ComptaEntity					compta;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly ViewSettingsList				viewSettingsList;

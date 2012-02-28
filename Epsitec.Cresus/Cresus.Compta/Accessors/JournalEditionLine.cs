@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateDate(EditionData data)
 		{
-			Validators.ValidateDate (this.périodeEntity, data, emptyAccepted: false);
+			Validators.ValidateDate (this.période, data, emptyAccepted: false);
 		}
 
 		private void ValidateCompte(EditionData data)
@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 
 				if (compte == null)
 				{
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (data.HasText)
 			{
 				var t = data.Text;
-				if (!this.comptaEntity.Journaux.Where (x => x.Nom == t).Any ())
+				if (!this.compta.Journaux.Where (x => x.Nom == t).Any ())
 				{
 					data.Error = "Ce journal n'existe pas";
 				}
@@ -127,27 +127,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var écriture = entity as ComptaEcritureEntity;
 
 			Date? date;
-			if (this.périodeEntity.ParseDate (this.GetText (ColumnType.Date), out date))
+			if (this.période.ParseDate (this.GetText (ColumnType.Date), out date))
 			{
 				écriture.Date = date.Value;
 			}
 
-			écriture.Débit  = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Débit));
-			écriture.Crédit = JournalDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Crédit));
+			écriture.Débit  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+			écriture.Crédit = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
 
 			écriture.Pièce            = this.GetText (ColumnType.Pièce);
 			écriture.Libellé          = this.GetText (ColumnType.Libellé);
 			écriture.Montant          = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
 
-			var journal = JournalDataAccessor.GetJournal (this.comptaEntity, this.GetText (ColumnType.Journal));
+			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
 			if (journal == null)  // dans un journal spécifique ?
 			{
 				//	Normalement, le journal a déjà été initialisé. Mais si ce n'est pas le cas, on met le premier,
 				//	car il est impératif qu'une écriture ait un journal !
 				if (écriture.Journal == null)
 				{
-					écriture.Journal = this.comptaEntity.Journaux.FirstOrDefault ();
+					écriture.Journal = this.compta.Journaux.FirstOrDefault ();
 				}
 			}
 			else  // mode "tous les journaux" ?

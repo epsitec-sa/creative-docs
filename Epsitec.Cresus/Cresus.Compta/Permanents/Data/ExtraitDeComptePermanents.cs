@@ -31,9 +31,9 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 			base.Clear ();
 
 			//	Utilise le premier compte normal par défaut.
-			if (this.comptaEntity != null)
+			if (this.compta != null)
 			{
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
 
 				if (compte != null)
 				{
@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 		public override AbstractPermanents CopyFrom()
 		{
 			var options = new ExtraitDeComptePermanents ();
-			options.SetComptaEntity (this.comptaEntity);
+			options.SetComptaEntity (this.compta);
 			this.CopyTo (options);
 			return options;
 		}

@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Balance de vérification");
-			this.SetSubtitle (this.périodeEntity.ShortTitle);
+			this.SetSubtitle (this.période.ShortTitle);
 		}
 
 

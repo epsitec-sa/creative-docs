@@ -29,14 +29,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		protected override void CreateEmpty()
 		{
 			this.emptyOptions = new PPOptions ();
-			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+			this.emptyOptions.SetComptaEntity (this.compta);
 			this.emptyOptions.Clear ();
 		}
 
 		public override AbstractOptions CopyFrom()
 		{
 			var options = new PPOptions ();
-			options.SetComptaEntity (this.comptaEntity);
+			options.SetComptaEntity (this.compta);
 			this.CopyTo (options);
 			return options;
 		}

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		protected override void CreateEmpty()
 		{
 			this.emptyOptions = new JournalOptions ();
-			this.emptyOptions.SetComptaEntity (this.comptaEntity);
+			this.emptyOptions.SetComptaEntity (this.compta);
 			this.emptyOptions.Clear ();
 		}
 
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override AbstractOptions CopyFrom()
 		{
 			var options = new JournalOptions ();
-			options.SetComptaEntity (this.comptaEntity);
+			options.SetComptaEntity (this.compta);
 			this.CopyTo (options);
 			return options;
 		}
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				}
 				else
 				{
-					var journal = this.comptaEntity.Journaux.Where (x => x.Id == this.JournalId).FirstOrDefault ();
+					var journal = this.compta.Journaux.Where (x => x.Id == this.JournalId).FirstOrDefault ();
 
 					if (journal == null)
 					{

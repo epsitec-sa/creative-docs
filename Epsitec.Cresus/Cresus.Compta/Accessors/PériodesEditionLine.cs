@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var pièce = PériodesDataAccessor.GetPiècesGenerator (this.comptaEntity, data.Text);
+				var pièce = PériodesDataAccessor.GetPiècesGenerator (this.compta, data.Text);
 				if (pièce == null)
 				{
 					data.Error = "Ce générateur de numéros de pièces n'existe pas";
@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			période.Description = this.GetText (ColumnType.Titre);
-			période.PiècesGenerator = PériodesDataAccessor.GetPiècesGenerator (this.comptaEntity, this.GetText (ColumnType.Pièce));
+			période.PiècesGenerator = PériodesDataAccessor.GetPiècesGenerator (this.compta, this.GetText (ColumnType.Pièce));
 		}
 	}
 }

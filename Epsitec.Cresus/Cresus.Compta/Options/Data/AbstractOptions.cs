@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	{
 		public virtual void SetComptaEntity(ComptaEntity compta)
 		{
-			this.comptaEntity = compta;
+			this.compta = compta;
 		}
 
 
@@ -166,7 +166,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
-		protected ComptaEntity						comptaEntity;
+		protected ComptaEntity						compta;
 		protected AbstractOptions					emptyOptions;
 		protected System.Text.StringBuilder			summaryBuilder;
 		protected bool								firstSummary;

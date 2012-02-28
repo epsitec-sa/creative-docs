@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					return;
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (data.HasText)
 			{
 				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 				if (compte == null)
 				{
 					data.Error = "Ce compte n'existe pas";
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (data.HasText)
 			{
 				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
 				if (compte == null)
 				{
 					data.Error = "Ce compte n'existe pas";
@@ -222,7 +222,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				compte.Type = type;
 			}
 
-			compte.Groupe = PlanComptableDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.Groupe));
+			compte.Groupe = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
 
 #if false
 			VatCode tva;
@@ -232,7 +232,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 #endif
 
-			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.comptaEntity, this.GetText (ColumnType.CompteOuvBoucl));
+			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOuvBoucl));
 
 			int index;
 			if (int.TryParse (this.GetText (ColumnType.IndexOuvBoucl).ToSimpleText (), out index) && index >= 1 && index <= 9)
