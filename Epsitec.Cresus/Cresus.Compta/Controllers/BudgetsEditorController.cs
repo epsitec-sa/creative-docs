@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
 			var footer = this.CreateEditorUI (parent);
-
 			this.CreateLineUI (footer);
 
 			base.CreateUI (footer, updateArrayContentAction);
