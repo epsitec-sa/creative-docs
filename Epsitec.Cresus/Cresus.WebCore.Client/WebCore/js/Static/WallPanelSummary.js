@@ -10,7 +10,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     
     /* Properties */
     entityId : null,
-    lambdaId : null,
+    propertyAccessorId : null,
     entityType : null,
     isRoot : false,
     subViewControllerMode : 'edition',
@@ -124,7 +124,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
           {
             parentEntity : this.ownerCt.parentEntity,
             deleteEntity : this.entityId,
-            lambdaId : this.lambdaId
+            propertyAccessorId : this.propertyAccessorId
           },
           success : function (response, options)
           {
@@ -150,7 +150,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
           {
             parentEntity : this.ownerCt.parentEntity,
             entityType : this.entityType,
-            lambdaId : this.lambdaId
+            propertyAccessorId : this.propertyAccessorId
           },
           success : function (response, options)
           {

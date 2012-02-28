@@ -16,9 +16,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		protected override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPropertyAccessor propertyAccessor)
+		public override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
 		{
-			var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
+			var textPropertyAccessor = (TextPropertyAccessor) this.PropertyAccessor;
 
 			return new DateField ()
 			{

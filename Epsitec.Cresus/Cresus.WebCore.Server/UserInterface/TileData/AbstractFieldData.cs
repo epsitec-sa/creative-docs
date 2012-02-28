@@ -9,8 +9,6 @@ using System;
 
 using System.Collections.Generic;
 
-using System.Linq.Expressions;
-
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 {
@@ -30,7 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public LambdaExpression Lambda
+		public AbstractPropertyAccessor PropertyAccessor
 		{
 			get;
 			set;
@@ -44,21 +42,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPropertyAccessor> propertyAccessorGetter)
+		public override sealed AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
 		{
-			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, propertyAccessorGetter);	
+			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter);
 		}
 
 
-		public AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPropertyAccessor> propertyAccessorGetter)
-		{
-			var propertyAccessor = propertyAccessorGetter (this.Lambda);
-
-			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, propertyAccessor);
-		}
-
-
-		protected abstract AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPropertyAccessor propertyAccessor);
+		public abstract AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter);
 
 
 	}

@@ -1,10 +1,4 @@
-using Epsitec.Common.Support.EntityEngine;
-
-using System;
-
-using System.Collections.Generic;
-
-using System.Linq.Expressions;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
@@ -15,14 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		public LambdaExpression Lambda
-		{
-			get;
-			set;
-		}
-
-
-		public Func<AbstractEntity, IEnumerable<AbstractEntity>> CollectionGetter
+		public AbstractPropertyAccessor PropertyAccessor
 		{
 			get;
 			set;

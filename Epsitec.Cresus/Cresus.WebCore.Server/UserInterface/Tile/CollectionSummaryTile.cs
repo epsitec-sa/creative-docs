@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 	{
 
 
-		public string LambdaId
+		public string PropertyAccessorId
 		{
 			get;
 			set;
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 
 			panel["hideRemoveButton"] = this.HideRemoveButton;
 			panel["hideAddButton"] = this.HideAddButton;
-			panel["lambdaId"] = this.LambdaId;
+			panel["propertyAccessorId"] = this.PropertyAccessorId;
 			panel["entityType"] = this.EntityType;
 
 			return panel;

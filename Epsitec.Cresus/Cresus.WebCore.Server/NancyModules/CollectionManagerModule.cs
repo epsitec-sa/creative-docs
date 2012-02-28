@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
 
-			string propertyAccessorId = Request.Form.lambdaId;
+			string propertyAccessorId = Request.Form.propertyAccessorId;
 			var propartyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propartyAccessor == null)
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var o = m.Invoke (context, new object[0]);
 			var newEntity = o as AbstractEntity;
 
-			string propertyAccessorId = Request.Form.lambdaId;
+			string propertyAccessorId = Request.Form.propertyAccessorId;
 			var propertyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
 			if (propertyAccessor == null)

@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 	{
 
 
-		public string LambdaId
+		public string PropertyAccessorId
 		{
 			get;
 			set;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			var panel = new Dictionary<string, object> ();
 
 			panel["xtype"] = "emptysummary";
-			panel["lambdaId"] = this.LambdaId;
+			panel["propertyAccessorId"] = this.PropertyAccessorId;
 			panel["entityType"] = this.EntityType;
 
 			return panel;

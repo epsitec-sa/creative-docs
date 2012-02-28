@@ -40,6 +40,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
+		/// <remarks>
+		/// The collection returned by this method is not the original one but a copy. Therefore,
+		/// you should not modify it and expect the modifications to be propagated to the real
+		/// collection.
+		/// </remarks>
+		public IList<AbstractEntity> GetEntityCollection(AbstractEntity entity)
+		{
+			return this.GetCollection (entity).Cast<AbstractEntity> ().ToList ();
+		}
+
+
 		public void SetCollection(AbstractEntity entity, IEnumerable<AbstractEntity> items)
 		{
 			var collection = this.GetCollection (entity);

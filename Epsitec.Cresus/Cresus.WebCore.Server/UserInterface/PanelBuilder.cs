@@ -9,7 +9,6 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
@@ -18,7 +17,6 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
-using System.Linq.Expressions;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -101,7 +99,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<ITileData> GetTileData(BrickWall brickWall)
 		{
-			return Carpenter.BuildTileData (brickWall);
+			return Carpenter.BuildTileData (brickWall, this.coreSession.PropertyAccessorCache);
 		}
 
 
@@ -114,11 +112,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					entity,
 					e => this.GetEntityId (e),
 					(t, u) => this.GetIconClass (t, u),
-					l => this.GetLambdaId (l),
 					t => this.GetTypeName (t),
 					e => this.BuildEditionTiles (e),
-					t => this.GetEntities (t),
-					l => this.GetPropertyAccessor (l)
+					t => this.GetEntities (t)
 				)
 			);
 		}
@@ -148,12 +144,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private string GetLambdaId(LambdaExpression lambda)
-		{
-			return this.coreSession.PropertyAccessorCache.Get (lambda).Id;
-		}
-
-
 		private string GetTypeName(Type type)
 		{
 			return type.AssemblyQualifiedName;
@@ -172,12 +162,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		private IEnumerable<AbstractEntity> GetEntities(Type entityType)
 		{
 			return this.BusinessContext.Data.GetAllEntities (entityType, DataExtractionMode.Sorted, this.DataContext);
-		}
-
-
-		private AbstractPropertyAccessor GetPropertyAccessor(LambdaExpression lambda)
-		{
-			return this.coreSession.PropertyAccessorCache.Get (lambda);
 		}
 
 
