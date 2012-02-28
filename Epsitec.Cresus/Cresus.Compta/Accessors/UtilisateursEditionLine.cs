@@ -22,14 +22,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public UtilisateursEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Utilisateur,     new EditionData (this.controller, this.ValidateUtilisateur));
-			this.datas.Add (ColumnType.NomComplet,      new EditionData (this.controller, this.ValidateNomComplet));
-			this.datas.Add (ColumnType.DateDébut,       new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.DateFin,         new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.MotDePasse,      new EditionData (this.controller, this.ValidateMotDePasse));
-			this.datas.Add (ColumnType.Pièce,           new EditionData (this.controller, this.ValidatePièce));
-			this.datas.Add (ColumnType.IdentitéWindows, new EditionData (this.controller));
-			this.datas.Add (ColumnType.Désactivé,       new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Utilisateur,     new EditionData (this.controller, this.ValidateUtilisateur));
+			this.dataDict.Add (ColumnType.NomComplet,      new EditionData (this.controller, this.ValidateNomComplet));
+			this.dataDict.Add (ColumnType.DateDébut,       new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.DateFin,         new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.MotDePasse,      new EditionData (this.controller, this.ValidateMotDePasse));
+			this.dataDict.Add (ColumnType.Pièce,           new EditionData (this.controller, this.ValidatePièce));
+			this.dataDict.Add (ColumnType.IdentitéWindows, new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Désactivé,       new EditionData (this.controller));
 		}
 
 

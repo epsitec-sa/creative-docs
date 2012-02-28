@@ -21,11 +21,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PériodesEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
-			this.datas.Add (ColumnType.Titre,     new EditionData (this.controller));
-			this.datas.Add (ColumnType.Pièce,     new EditionData (this.controller, this.ValidatePièce));
-			this.datas.Add (ColumnType.Utilise,   new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.Titre,     new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Pièce,     new EditionData (this.controller, this.ValidatePièce));
+			this.dataDict.Add (ColumnType.Utilise,   new EditionData (this.controller));
 		}
 
 

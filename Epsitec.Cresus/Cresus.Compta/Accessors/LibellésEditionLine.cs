@@ -21,8 +21,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public LibellésEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateTitle));
-			this.datas.Add (ColumnType.Permanent, new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateTitle));
+			this.dataDict.Add (ColumnType.Permanent, new EditionData (this.controller));
 		}
 
 

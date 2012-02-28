@@ -27,15 +27,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.compta  = this.controller.ComptaEntity;
 			this.période = this.controller.PériodeEntity;
 
-			this.datas = new Dictionary<ColumnType, EditionData> ();
+			this.dataDict = new Dictionary<ColumnType, EditionData> ();
 		}
 
 
 		public EditionData GetData(ColumnType columnType)
 		{
-			if (this.datas.ContainsKey (columnType))
+			if (this.dataDict.ContainsKey (columnType))
 			{
-				return this.datas[columnType];
+				return this.dataDict[columnType];
 			}
 			else
 			{
@@ -46,16 +46,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public void Validate(ColumnType columnType)
 		{
 			//	Valide le contenu d'une colonne, en l'adaptant éventuellement.
-			if (this.datas.ContainsKey (columnType))
+			if (this.dataDict.ContainsKey (columnType))
 			{
-				this.datas[columnType].Validate ();
+				this.dataDict[columnType].Validate ();
 			}
 		}
 
 
 		public void Clear()
 		{
-			foreach (var data in this.datas.Values)
+			foreach (var data in this.dataDict.Values)
 			{
 				data.Text = null;
 			}
@@ -75,19 +75,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void SetText(ColumnType columnType, FormattedText text)
 		{
-			if (!this.datas.ContainsKey (columnType))
+			if (!this.dataDict.ContainsKey (columnType))
 			{
-				this.datas.Add (columnType, new EditionData (this.controller));
+				this.dataDict.Add (columnType, new EditionData (this.controller));
 			}
 
-			this.datas[columnType].Text = text;
+			this.dataDict[columnType].Text = text;
 		}
 
 		public FormattedText GetText(ColumnType columnType)
 		{
-			if (this.datas.ContainsKey (columnType))
+			if (this.dataDict.ContainsKey (columnType))
 			{
-				return this.datas[columnType].Text;
+				return this.dataDict[columnType].Text;
 			}
 			else
 			{
@@ -103,9 +103,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public FormattedText GetError(ColumnType columnType)
 		{
-			if (this.datas.ContainsKey (columnType))
+			if (this.dataDict.ContainsKey (columnType))
 			{
-				return this.datas[columnType].Error;
+				return this.dataDict[columnType].Error;
 			}
 			else
 			{
@@ -126,6 +126,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly AbstractController						controller;
 		protected readonly ComptaEntity								compta;
 		protected readonly ComptaPériodeEntity						période;
-		protected readonly Dictionary<ColumnType, EditionData>		datas;
+		protected readonly Dictionary<ColumnType, EditionData>		dataDict;
 	}
 }

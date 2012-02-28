@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BudgetsEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.BudgetPrécédent, new EditionData (this.controller, this.ValidateMontant));
-			this.datas.Add (ColumnType.Budget,          new EditionData (this.controller, this.ValidateMontant));
-			this.datas.Add (ColumnType.BudgetFutur,     new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.BudgetPrécédent, new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Budget,          new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.BudgetFutur,     new EditionData (this.controller, this.ValidateMontant));
 		}
 
 

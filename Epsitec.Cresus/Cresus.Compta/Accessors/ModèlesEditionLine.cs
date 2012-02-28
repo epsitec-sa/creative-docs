@@ -21,13 +21,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ModèlesEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Code,      new EditionData (this.controller, this.ValidateCode));
-			this.datas.Add (ColumnType.Raccourci, new EditionData (this.controller, this.ValidateRaccourci));
-			this.datas.Add (ColumnType.Débit,     new EditionData (this.controller, this.ValidateCompte));
-			this.datas.Add (ColumnType.Crédit,    new EditionData (this.controller, this.ValidateCompte));
-			this.datas.Add (ColumnType.Pièce,     new EditionData (this.controller));
-			this.datas.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateLibellé));
-			this.datas.Add (ColumnType.Montant,   new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Code,      new EditionData (this.controller, this.ValidateCode));
+			this.dataDict.Add (ColumnType.Raccourci, new EditionData (this.controller, this.ValidateRaccourci));
+			this.dataDict.Add (ColumnType.Débit,     new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Crédit,    new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Pièce,     new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateLibellé));
+			this.dataDict.Add (ColumnType.Montant,   new EditionData (this.controller, this.ValidateMontant));
 		}
 
 

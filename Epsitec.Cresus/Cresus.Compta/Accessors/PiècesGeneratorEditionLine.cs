@@ -21,12 +21,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PiècesGeneratorEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Nom,       new EditionData (this.controller, this.ValidateNom));
-			this.datas.Add (ColumnType.Préfixe,   new EditionData (this.controller));
-			this.datas.Add (ColumnType.Suffixe,   new EditionData (this.controller));
-			this.datas.Add (ColumnType.Format,    new EditionData (this.controller, this.ValidateFormat));
-			this.datas.Add (ColumnType.Numéro,    new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Incrément, new EditionData (this.controller, this.ValidateIncrément));
+			this.dataDict.Add (ColumnType.Nom,       new EditionData (this.controller, this.ValidateNom));
+			this.dataDict.Add (ColumnType.Préfixe,   new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Suffixe,   new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Format,    new EditionData (this.controller, this.ValidateFormat));
+			this.dataDict.Add (ColumnType.Numéro,    new EditionData (this.controller, this.ValidateNuméro));
+			this.dataDict.Add (ColumnType.Incrément, new EditionData (this.controller, this.ValidateIncrément));
 		}
 
 

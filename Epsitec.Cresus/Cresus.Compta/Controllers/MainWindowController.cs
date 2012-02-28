@@ -38,7 +38,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.businessContext = null;
 			this.controllers = new List<AbstractController> ();
-			this.settingsDatas = new Dictionary<string, ISettingsData> ();
+			this.settingsData = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
 			this.defaultSettingsList = new SettingsList ();
 			this.navigatorEngine = new NavigatorEngine ();
@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.période = value;
-				this.AdaptSettingsDatas ();
+				this.AdaptSettingsData ();
 			}
 		}
 
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.AutoLogin ();
 
-			this.settingsDatas.Clear ();
+			this.settingsData.Clear ();
 			new DefaultViewSettings (this).CreateDefaultViewSettings ();
 
 			this.SelectCurrentPériode ();
@@ -834,7 +834,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.période = autrePériode;
 				
 				this.CreateController ();
-				this.AdaptSettingsDatas ();
+				this.AdaptSettingsData ();
 				this.controller.UpdateAfterChanged ();
 
 				this.NavigatorPut ();
@@ -853,14 +853,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.période = this.compta.Périodes.First ();
 
 					this.UpdatePériodeCommands ();
-					this.AdaptSettingsDatas ();
+					this.AdaptSettingsData ();
 				}
 			}
 		}
 
-		private void AdaptSettingsDatas()
+		private void AdaptSettingsData()
 		{
-			foreach (var data in this.settingsDatas.Values)
+			foreach (var data in this.settingsData.Values)
 			{
 				if (data is SearchData)
 				{
@@ -1442,7 +1442,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			where T : AbstractPermanents, new ()
 		{
 			ISettingsData result;
-			if (this.settingsDatas.TryGetValue (key, out result))
+			if (this.settingsData.TryGetValue (key, out result))
 			{
 				return result as AbstractPermanents;
 			}
@@ -1451,7 +1451,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			data.SetComptaEntity (compta);
 			data.Clear ();
 
-			this.settingsDatas.Add (key, data);
+			this.settingsData.Add (key, data);
 
 			return data;
 		}
@@ -1460,7 +1460,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			where T : AbstractOptions, new ()
 		{
 			ISettingsData result;
-			if (this.settingsDatas.TryGetValue (key, out result))
+			if (this.settingsData.TryGetValue (key, out result))
 			{
 				return result as AbstractOptions;
 			}
@@ -1469,7 +1469,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			data.SetComptaEntity (compta);
 			data.Clear ();
 
-			this.settingsDatas.Add (key, data);
+			this.settingsData.Add (key, data);
 
 			return data;
 		}
@@ -1477,7 +1477,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public SearchData GetSettingsSearchData(string key, System.Action<SearchData> initialize = null)
 		{
 			ISettingsData result;
-			if (this.settingsDatas.TryGetValue (key, out result))
+			if (this.settingsData.TryGetValue (key, out result))
 			{
 				return result as SearchData;
 			}
@@ -1489,7 +1489,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				initialize (data);
 			}
 
-			this.settingsDatas.Add (key, data);
+			this.settingsData.Add (key, data);
 
 			return data;
 		}
@@ -1497,14 +1497,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public ViewSettingsList GetViewSettingsList(string key)
 		{
 			ISettingsData result;
-			if (this.settingsDatas.TryGetValue (key, out result))
+			if (this.settingsData.TryGetValue (key, out result))
 			{
 				return result as ViewSettingsList;
 			}
 
 			ViewSettingsList data = new ViewSettingsList ();
 
-			this.settingsDatas.Add (key, data);
+			this.settingsData.Add (key, data);
 
 			return data;
 		}
@@ -1513,7 +1513,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly Application						app;
 		private readonly List<AbstractController>			controllers;
-		private readonly Dictionary<string, ISettingsData>	settingsDatas;
+		private readonly Dictionary<string, ISettingsData>	settingsData;
 		private readonly SettingsList						settingsList;
 		private readonly SettingsList						defaultSettingsList;
 		private readonly NavigatorEngine					navigatorEngine;

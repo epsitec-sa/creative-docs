@@ -21,15 +21,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PlanComptableEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.datas.Add (ColumnType.Numéro,         new EditionData (this.controller, this.ValidateNuméro));
-			this.datas.Add (ColumnType.Titre,          new EditionData (this.controller, this.ValidateTitre));
-			this.datas.Add (ColumnType.Catégorie,      new EditionData (this.controller, this.ValidateCatégorie));
-			this.datas.Add (ColumnType.Type,           new EditionData (this.controller, this.ValidateType));
-			this.datas.Add (ColumnType.Groupe,         new EditionData (this.controller, this.ValidateGroupe));
-			this.datas.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
-			this.datas.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
-			this.datas.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
-			this.datas.Add (ColumnType.Monnaie,        new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Numéro,         new EditionData (this.controller, this.ValidateNuméro));
+			this.dataDict.Add (ColumnType.Titre,          new EditionData (this.controller, this.ValidateTitre));
+			this.dataDict.Add (ColumnType.Catégorie,      new EditionData (this.controller, this.ValidateCatégorie));
+			this.dataDict.Add (ColumnType.Type,           new EditionData (this.controller, this.ValidateType));
+			this.dataDict.Add (ColumnType.Groupe,         new EditionData (this.controller, this.ValidateGroupe));
+			this.dataDict.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
+			this.dataDict.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
+			this.dataDict.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
+			this.dataDict.Add (ColumnType.Monnaie,        new EditionData (this.controller));
 		}
 
 
