@@ -99,7 +99,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller.HasCreateCommand)
 			{
-				this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty && this.dataAccessor.IsEditionCreationEnable);
 				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
 				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsCreation || this.dataAccessor.IsModification);
 
@@ -740,6 +740,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected FrameBox CreateEditorUI(Widget parent)
 		{
+			//	Crée le panneau d'édition.
 			this.fieldControllers.Clear ();
 
 			if (this.controller.HasRightEditor)
