@@ -63,8 +63,8 @@ namespace Epsitec.Aider.Entities.Helpers
 
 			base.SetField (this.entity, (x, y) => x.AdditionalAddress1 = y, () => list[0], n > 0);
 			base.SetField (this.entity, (x, y) => x.AdditionalAddress2 = y, () => list[1], n > 1);
-			base.SetField (this.entity, (x, y) => x.AdditionalAddress3 = y, () => list[0], n > 2);
-			base.SetField (this.entity, (x, y) => x.AdditionalAddress4 = y, () => list[1], n > 3);
+			base.SetField (this.entity, (x, y) => x.AdditionalAddress3 = y, () => list[2], n > 2);
+			base.SetField (this.entity, (x, y) => x.AdditionalAddress4 = y, () => list[3], n > 3);
 		}
 	}
 }
