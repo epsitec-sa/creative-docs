@@ -74,10 +74,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Open, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
 
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Save, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
+				UIBuilder.CreateButton (section, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Print, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 			}
 
@@ -95,8 +95,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Bilan, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PP, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Exploitation, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Budgets, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
+				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Budgets, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Change, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.RésuméPériodique, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.RésuméTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
