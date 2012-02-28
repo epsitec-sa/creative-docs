@@ -15,6 +15,7 @@ using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Search.Controllers;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.ViewSettings.Data;
 using Epsitec.Cresus.Compta.ViewSettings.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
@@ -169,6 +170,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
+			this.CreatePermanents (this.frameBox);
 
 			if (this.HasRightEditor)
 			{
@@ -476,6 +478,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.optionsController.UpdateContent ();
 			}
 
+			if (this.permanentsController != null)
+			{
+				this.permanentsController.UpdateContent ();
+			}
+
 			//this.SearchStartAction ();  // pas nécessaire, car FilterStartAction fait déjà tout !
 			this.FilterStartAction ();
 			this.OptionsChanged ();
@@ -629,6 +636,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		protected virtual void OptionsChanged()
+		{
+			if (this.dataAccessor != null)
+			{
+				this.dataAccessor.UpdateAfterOptionsChanged ();
+			}
+
+			this.UpdateArrayContent ();
+			this.UpdateTitle ();
+			this.FilterUpdateTopToolbar ();
+			this.UpdateViewSettings ();
+		}
+		#endregion
+
+
+		#region Permanents
+		protected virtual void CreatePermanents(FrameBox parent)
+		{
+		}
+
+		protected virtual void PermanentsChanged()
 		{
 			if (this.dataAccessor != null)
 			{
@@ -1108,6 +1135,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
+		protected AbstractPermanentsController					permanentsController;
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;

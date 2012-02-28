@@ -72,6 +72,10 @@
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultViewSettings.cs" />
+    <Compile Include="Permanents\Controllers\AbstractPermanentsController.cs" />
+    <Compile Include="Permanents\Controllers\ExtraitDeComptePermanentsController.cs" />
+    <Compile Include="Permanents\Data\AbstractPermanents.cs" />
+    <Compile Include="Permanents\Data\ExtraitDeComptePermanents.cs" />
     <Compile Include="ViewSettings\Data\NavigatorEngine.cs" />
     <Compile Include="ViewSettings\Data\NavigatorData.cs" />
     <Compile Include="ViewSettings\Data\ShowPanelMode.cs" />

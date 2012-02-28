@@ -22,17 +22,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.SetComptaEntity (compta);
 
-			//	Utilise le premier compte normal par défaut.
-			if (this.comptaEntity != null)
-			{
-				var compte = this.comptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal).FirstOrDefault ();
-
-				if (compte != null)
-				{
-					this.NuméroCompte = compte.Numéro;
-				}
-			}
-
 			this.Clear ();
 		}
 
@@ -41,37 +30,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.CatégorieMontrée             = CatégorieDeCompte.Tous;
-			this.MontreComptesVides           = true;
-			this.MontreComptesCentralisateurs = false;
 			this.HasGraphics                  = true;
 		}
 
-
-		public FormattedText NuméroCompte
-		{
-			//	Numéro du compte dont on affiche l'extrait.
-			get;
-			set;
-		}
-
-		public CatégorieDeCompte CatégorieMontrée
-		{
-			get;
-			set;
-		}
-
-		public bool MontreComptesVides
-		{
-			get;
-			set;
-		}
-
-		public bool MontreComptesCentralisateurs
-		{
-			get;
-			set;
-		}
 
 		public bool HasGraphics
 		{
@@ -88,22 +49,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
-		public override AbstractOptions NavigatorCopyFrom()
-		{
-			var options = new ExtraitDeCompteOptions ();
-			options.SetComptaEntity (this.comptaEntity);
-			this.NavigatorCopyTo (options);
-			return options;
-		}
-
-		public override void NavigatorCopyTo(AbstractOptions dst)
-		{
-			var d = dst as ExtraitDeCompteOptions;
-			d.NuméroCompte = this.NuméroCompte;
-
-			this.CopyTo (dst);
-		}
-
 		public override AbstractOptions CopyFrom()
 		{
 			var options = new ExtraitDeCompteOptions ();
@@ -116,10 +61,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			var d = dst as ExtraitDeCompteOptions;
 
-			d.CatégorieMontrée             = this.CatégorieMontrée;
-			d.MontreComptesVides           = this.MontreComptesVides;
-			d.MontreComptesCentralisateurs = this.MontreComptesCentralisateurs;
-			d.HasGraphics                  = this.HasGraphics;
+			d.HasGraphics = this.HasGraphics;
 
 			base.CopyTo (dst);
 		}
@@ -133,10 +75,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as ExtraitDeCompteOptions;
 
-			return this.CatégorieMontrée             == o.CatégorieMontrée             &&
-				   this.MontreComptesVides           == o.MontreComptesVides           &&
-				   this.MontreComptesCentralisateurs == o.MontreComptesCentralisateurs &&
-				   this.HasGraphics                  == o.HasGraphics;
+			return this.HasGraphics == o.HasGraphics;
 		}
 
 
@@ -145,21 +84,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			get
 			{
 				this.StartSummaryBuilder ();
-
-				if (this.CatégorieMontrée != CatégorieDeCompte.Tous)
-				{
-					this.AppendSummaryBuilder ("Montre " + Converters.CatégoriesToString (this.CatégorieMontrée));
-				}
-
-				if (this.MontreComptesVides)
-				{
-					this.AppendSummaryBuilder ("Comptes vides");
-				}
-
-				if (this.MontreComptesCentralisateurs)
-				{
-					this.AppendSummaryBuilder ("Comptes centralisateurs");
-				}
 
 				if (this.HasGraphics)
 				{

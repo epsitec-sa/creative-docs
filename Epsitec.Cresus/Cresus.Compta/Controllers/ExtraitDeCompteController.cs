@@ -13,6 +13,8 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
@@ -67,6 +69,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override void CreatePermanents(FrameBox parent)
+		{
+			this.permanentsController = new ExtraitDeComptePermanentsController (this);
+			this.permanentsController.CreateUI (parent, this.OptionsChanged);
+
+			this.UpdateColumnMappers ();
+		}
+
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new ExtraitDeCompteOptionsController (this);
@@ -87,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			var numéro = (this.dataAccessor.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.Permanents as ExtraitDeComptePermanents).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)
@@ -104,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWindowTitle()
 		{
-			var numéro = (this.dataAccessor.Options as ExtraitDeCompteOptions).NuméroCompte;
+			var numéro = (this.dataAccessor.Permanents as ExtraitDeComptePermanents).NuméroCompte;
 			var compte = this.comptaEntity.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)

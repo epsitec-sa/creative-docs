@@ -17,6 +17,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.ViewSettings.Data;
 using Epsitec.Cresus.Compta.Helpers;
 
@@ -1437,6 +1438,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		#region Settings data
+		public AbstractPermanents GetSettingsPermanents<T>(string key, ComptaEntity compta)
+			where T : AbstractPermanents, new ()
+		{
+			ISettingsData result;
+			if (this.settingsDatas.TryGetValue (key, out result))
+			{
+				return result as AbstractPermanents;
+			}
+
+			AbstractPermanents data = new T ();
+			data.SetComptaEntity (compta);
+			data.Clear ();
+
+			this.settingsDatas.Add (key, data);
+
+			return data;
+		}
+
 		public AbstractOptions GetSettingsOptions<T>(string key, ComptaEntity compta)
 			where T : AbstractOptions, new ()
 		{

@@ -84,16 +84,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
-		public virtual AbstractOptions NavigatorCopyFrom()
-		{
-			return this.CopyFrom ();
-		}
-
-		public virtual void NavigatorCopyTo(AbstractOptions dst)
-		{
-			this.CopyTo (dst);
-		}
-
 		public virtual AbstractOptions CopyFrom()
 		{
 			return null;

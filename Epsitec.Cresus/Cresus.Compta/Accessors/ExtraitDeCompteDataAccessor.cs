@@ -8,6 +8,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ExtraitDeCompteDataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.permanents = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.comptaEntity);
 			this.options    = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.comptaEntity);
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
@@ -48,7 +50,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 			this.MinMaxClear ();
 
-			FormattedText filter = this.Options.NuméroCompte;
+			FormattedText filter = this.Permanents.NuméroCompte;
 			if (filter.IsNullOrEmpty)
 			{
 				return;
@@ -207,6 +209,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				return compte.Numéro;
+			}
+		}
+
+		private new ExtraitDeComptePermanents Permanents
+		{
+			get
+			{
+				return this.permanents as ExtraitDeComptePermanents;
 			}
 		}
 
