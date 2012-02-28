@@ -6,15 +6,15 @@ using System;
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal sealed class StringPanelFieldAccessor : AbstractPanelFieldAccessor
+	internal sealed class TextPropertyAccessor : AbstractPropertyAccessor
 	{
 
 
-		public StringPanelFieldAccessor(LambdaExpression lambda, string id)
+		public TextPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
 			this.marshalerFactory = this.GetMarshallerFactory (lambda);

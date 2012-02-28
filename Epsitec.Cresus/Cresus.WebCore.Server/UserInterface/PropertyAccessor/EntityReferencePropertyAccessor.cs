@@ -3,15 +3,15 @@ using Epsitec.Common.Support.EntityEngine;
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal sealed class EntityPanelFieldAccessor : AbstractPanelFieldAccessor
+	internal sealed class EntityReferencePropertyAccessor : AbstractPropertyAccessor
 	{
 
 
-		public EntityPanelFieldAccessor(LambdaExpression lambda, string id)
+		public EntityReferencePropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
 		}

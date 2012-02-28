@@ -7,15 +7,15 @@ using System;
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal abstract class AbstractPanelFieldAccessor
+	internal abstract class AbstractPropertyAccessor
 	{
 
 
-		public AbstractPanelFieldAccessor(LambdaExpression lambda, string id)
+		public AbstractPropertyAccessor(LambdaExpression lambda, string id)
 		{
 			this.id = id;
 			this.type = lambda.ReturnType;
@@ -77,21 +77,21 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 		}
 
 
-		public static AbstractPanelFieldAccessor Create(LambdaExpression lambda, string id)
+		public static AbstractPropertyAccessor Create(LambdaExpression lambda, string id)
 		{
 			var type = lambda.ReturnType;
 
 			if (type.IsEntity ())
 			{
-				return new EntityPanelFieldAccessor (lambda, id);
+				return new EntityReferencePropertyAccessor (lambda, id);
 			}
 			else if (type.IsGenericIListOfEntities ())
 			{
-				return new EntityListPanelFieldAccessor (lambda, id);
+				return new EntityCollectionPropertyAccessor (lambda, id);
 			}
 			else
 			{
-				return new StringPanelFieldAccessor (lambda, id);
+				return new TextPropertyAccessor (lambda, id);
 			}
 		}
 

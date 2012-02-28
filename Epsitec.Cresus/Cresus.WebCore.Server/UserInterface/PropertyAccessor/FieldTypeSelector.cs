@@ -5,7 +5,7 @@ using Epsitec.Common.Types;
 using System;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
@@ -15,15 +15,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 
 		public static FieldType GetFieldType(Type type)
 		{
-			if (FieldTypeSelector.IsTypeSuitableForCollectionField (type))
+			if (FieldTypeSelector.IsTypeSuitableForEntityCollectionField (type))
 			{
 				return FieldType.EntityCollection;
 			}
-			else if (FieldTypeSelector.IsTypeSuitableForEntityField (type))
+			else if (FieldTypeSelector.IsTypeSuitableForEntityReferenceField (type))
 			{
 				return FieldType.EntityReference;
 			}
-			else if (FieldTypeSelector.IsTypeSuitableForEnumField (type))
+			else if (FieldTypeSelector.IsTypeSuitableForEnumerationField (type))
 			{
 				return FieldType.Enumeration;
 			}
@@ -42,13 +42,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 		}
 
 
-		private static bool IsTypeSuitableForCollectionField(Type type)
+		private static bool IsTypeSuitableForEntityCollectionField(Type type)
 		{
 			return type.IsGenericIListOfEntities ();
 		}
 
 
-		private static bool IsTypeSuitableForEntityField(Type type)
+		private static bool IsTypeSuitableForEntityReferenceField(Type type)
 		{
 			return type.IsEntity ();
 		}
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
 		}
 
 
-		private static bool IsTypeSuitableForEnumField(Type type)
+		private static bool IsTypeSuitableForEnumerationField(Type type)
 		{
 			var underlyingType = type.GetNullableTypeUnderlyingType ();
 

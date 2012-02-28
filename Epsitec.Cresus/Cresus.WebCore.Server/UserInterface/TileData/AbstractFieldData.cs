@@ -2,7 +2,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
@@ -44,21 +44,21 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
+		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPropertyAccessor> propertyAccessorGetter)
 		{
-			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, panelFieldAccessorGetter);	
+			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, propertyAccessorGetter);	
 		}
 
 
-		public AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
+		public AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPropertyAccessor> propertyAccessorGetter)
 		{
-			var panelFieldAccessor = panelFieldAccessorGetter (this.Lambda);
+			var propertyAccessor = propertyAccessorGetter (this.Lambda);
 
-			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, panelFieldAccessor);
+			return this.ToAbstractField (entity, entityIdGetter, entitiesGetter, propertyAccessor);
 		}
 
 
-		protected abstract AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPanelFieldAccessor panelFieldAccessor);
+		protected abstract AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPropertyAccessor propertyAccessor);
 
 
 	}

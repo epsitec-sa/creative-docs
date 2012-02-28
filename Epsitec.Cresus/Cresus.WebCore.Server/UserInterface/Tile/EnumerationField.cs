@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 {
 
 
-	internal sealed class EnumField : AbstractField
+	internal sealed class EnumerationField : AbstractField
 	{
 
 

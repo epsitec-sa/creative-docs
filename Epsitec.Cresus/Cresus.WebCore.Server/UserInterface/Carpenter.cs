@@ -16,7 +16,7 @@ using System.Collections.Generic;
 
 using System.Linq;
 using System.Linq.Expressions;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface
@@ -571,13 +571,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			switch (FieldTypeSelector.GetFieldType (type))
 			{
 				case FieldType.EntityCollection:
-					return new CollectionFieldData ();
+					return new EntityCollectionFieldData ();
 
 				case FieldType.EntityReference:
-					return new EntityFieldData ();
+					return new EntityReferenceFieldData ();
 
 				case FieldType.Enumeration:
-					return new EnumFieldData ();
+					return new EnumerationFieldData ();
 
 				case FieldType.Date:
 					return new DateFieldData ();

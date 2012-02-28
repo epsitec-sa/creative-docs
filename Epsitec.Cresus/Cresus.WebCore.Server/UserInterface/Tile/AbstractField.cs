@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public string PanelFieldAccessorId
+		public string PropertyAccessorId
 		{
 			get;
 			set;
@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			var fieldDictionary = base.ToDictionary ();
 			
 			fieldDictionary["fieldLabel"] = this.Title;
-			fieldDictionary["name"] = this.PanelFieldAccessorId;
+			fieldDictionary["name"] = this.PropertyAccessorId;
 			fieldDictionary["readOnly"] = this.IsReadOnly;
 
 			return fieldDictionary;

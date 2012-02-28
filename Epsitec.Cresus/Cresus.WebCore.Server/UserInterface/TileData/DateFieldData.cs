@@ -1,6 +1,6 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
@@ -16,16 +16,16 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		protected override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPanelFieldAccessor panelFieldAccessor)
+		protected override AbstractField ToAbstractField(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, AbstractPropertyAccessor propertyAccessor)
 		{
-			var stringPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
+			var textPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 
 			return new DateField ()
 			{
-				PanelFieldAccessorId = stringPanelFieldAccessor.Id,
+				PropertyAccessorId = textPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = stringPanelFieldAccessor.GetString (entity),
+				Value = textPropertyAccessor.GetString (entity),
 			};
 		}
 

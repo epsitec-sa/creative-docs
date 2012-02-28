@@ -7,7 +7,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 		{
 			this.id = id;
 			this.coreData = this.GetComponent<CoreData> ();
-			this.panelFieldAccessorCache = new PanelFieldAccessorCache ();
+			this.propertyAccessorCache = new PropertyAccessorCache ();
 
 			Services.SetApplication (this);
 		}
@@ -60,11 +60,11 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			}
 		}
 
-		internal PanelFieldAccessorCache		PanelFieldAccessorCache
+		internal PropertyAccessorCache		PropertyAccessorCache
 		{
 			get
 			{
-				return this.panelFieldAccessorCache;
+				return this.propertyAccessorCache;
 			}
 		}
 
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 		private readonly string					id;
 		private readonly CoreData				coreData;
-		private readonly PanelFieldAccessorCache panelFieldAccessorCache;
+		private readonly PropertyAccessorCache propertyAccessorCache;
 		private BusinessContext					businessContext;
 	}
 }

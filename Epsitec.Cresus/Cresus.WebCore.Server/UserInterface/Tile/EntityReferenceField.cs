@@ -9,7 +9,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 {
 
 
-	internal sealed class EntityField : AbstractField
+	internal sealed class EntityReferenceField : AbstractField
 	{
 
 

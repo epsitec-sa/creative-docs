@@ -6,7 +6,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 using Nancy;
 
@@ -50,18 +50,18 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			using (businessContext.Bind (entity))
 			{
-				foreach (var panelFieldAccessorId in formData.GetDynamicMemberNames ())
+				foreach (var propertyAccessorId in formData.GetDynamicMemberNames ())
 				{
 					try
 					{
-						var value = formData[panelFieldAccessorId];
-						var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get (panelFieldAccessorId);
+						var value = formData[propertyAccessorId];
+						var propertyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId);
 
-						EntityModule.SetValue (businessContext, panelFieldAccessor, entity, value);
+						EntityModule.SetValue (businessContext, propertyAccessor, entity, value);
 					}
 					catch (Exception e)
 					{
-						errors.Add (panelFieldAccessorId, e.ToString ());
+						errors.Add (propertyAccessorId, e.ToString ());
 					}
 				}
 
@@ -93,52 +93,52 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValue(BusinessContext businessContext, AbstractPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, DynamicDictionaryValue value)
+		private static void SetValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, AbstractEntity entity, DynamicDictionaryValue value)
 		{
-			switch (panelFieldAccessor.FieldType)
+			switch (propertyAccessor.FieldType)
 			{
 				case FieldType.EntityCollection:
 					{
 						var castedValue = (IEnumerable<string>) value.Value;
-						var castedPanelFieldAccessor = (EntityListPanelFieldAccessor) panelFieldAccessor;
+						var castedPropertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
 			
-						EntityModule.SetValueForEntityCollectionField (businessContext, castedPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForEntityCollectionField (businessContext, castedPropertyAccessor, entity, castedValue);
 						
 						break;
 					}
 				case FieldType.EntityReference:
 					{
 						var castedValue = (string) value;
-						var castedPanelFieldAccessor = (EntityPanelFieldAccessor) panelFieldAccessor;
+						var castedPropertyAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
 			
-						EntityModule.SetValueForEntityReferenceField (businessContext, castedPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForEntityReferenceField (businessContext, castedPropertyAccessor, entity, castedValue);
 						
 						break;
 					}
 				case FieldType.Enumeration:
 					{
 						var castedValue = (string) value;
-						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
+						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 
-						EntityModule.SetValueForEnumerationField (castedPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForEnumerationField (castedPropertyAccessor, entity, castedValue);
 
 						break;
 					}
 				case FieldType.Date:
 					{
 						var castedValue = (string) value;
-						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
+						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 
-						EntityModule.SetValueForDateField (castedPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForDateField (castedPropertyAccessor, entity, castedValue);
 
 						break;
 					}
 				case FieldType.Text:
 					{
 						var castedValue = (string) value;
-						var castedPanelFieldAccessor = (StringPanelFieldAccessor) panelFieldAccessor;
+						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 
-						EntityModule.SetValueForTextField (castedPanelFieldAccessor, entity, castedValue);
+						EntityModule.SetValueForTextField (castedPropertyAccessor, entity, castedValue);
 
 						break;
 					}
@@ -148,54 +148,54 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		private static void SetValueForEntityCollectionField(BusinessContext businessContext, EntityListPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
+		private static void SetValueForEntityCollectionField(BusinessContext businessContext, EntityCollectionPropertyAccessor propertyAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
 		{
 			var targetEntities = targetEntityIds
 				.Where (id => !string.IsNullOrWhiteSpace (id))
 				.Select (id => EntityModule.ResolveEntity (businessContext, id))
 				.ToList ();
 
-			panelFieldAccessor.SetCollection (entity, targetEntities);
+			propertyAccessor.SetCollection (entity, targetEntities);
 		}
 
 
-		private static void SetValueForEntityReferenceField(BusinessContext businessContext, EntityPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string targetEntityId)
+		private static void SetValueForEntityReferenceField(BusinessContext businessContext, EntityReferencePropertyAccessor propertyAccessor, AbstractEntity entity, string targetEntityId)
 		{
 			var targetEntity = string.IsNullOrEmpty (targetEntityId)
 				? null
 				: EntityModule.ResolveEntity (businessContext, targetEntityId);
 
-			panelFieldAccessor.SetEntityValue (entity, targetEntity);
+			propertyAccessor.SetEntityValue (entity, targetEntity);
 		}
 
 
-		private static void SetValueForEnumerationField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		private static void SetValueForEnumerationField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
-			EntityModule.SetValueForTextField (panelFieldAccessor, entity, fieldValue);
+			EntityModule.SetValueForTextField (propertyAccessor, entity, fieldValue);
 		}
 
 
-		private static void SetValueForDateField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		private static void SetValueForDateField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
-			EntityModule.SetValueForTextField (panelFieldAccessor, entity, fieldValue);
+			EntityModule.SetValueForTextField (propertyAccessor, entity, fieldValue);
 		}
 
 
-		private static void SetValueForTextField(StringPanelFieldAccessor panelFieldAccessor, AbstractEntity entity, string fieldValue)
+		private static void SetValueForTextField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
 			// NOTE Here we interpret empty strings as if they where null strings. The problem is
 			// that we can't make the difference as a text field does not provide any way to tell if
 			// its input is the null string or the empty one. So here I made the choice to always
 			// interpret empty strings as null strings.
 			// I do the conversion here explicitely because the underlying Marshaler embedded in
-			// the PanelFieldAccessor does not make this conversion automatically and that's
+			// the TextPropertyAccessor does not make this conversion automatically and that's
 			// probably a good thing.
 
 			var value = string.IsNullOrEmpty (fieldValue)
 			    ? null
 			    : fieldValue;
 
-			panelFieldAccessor.SetString (entity, value);
+			propertyAccessor.SetString (entity, value);
 		}
 
 

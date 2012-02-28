@@ -3,7 +3,7 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
@@ -38,14 +38,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
-		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPanelFieldAccessor> panelFieldAccessorGetter)
+		public override AbstractEditionTilePart ToAbstractEditionTilePart(AbstractEntity entity, Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter, Func<LambdaExpression, AbstractPropertyAccessor> propertyAccessorGetter)
 		{
 			var group = new HorizontalGroup ()
 			{
 				Title = this.Title.ToString (),
 			};
 
-			group.Fields.AddRange (this.Fields.Select (f => f.ToAbstractField (entity, entityIdGetter, entitiesGetter, panelFieldAccessorGetter)));
+			group.Fields.AddRange (this.Fields.Select (f => f.ToAbstractField (entity, entityIdGetter, entitiesGetter, propertyAccessorGetter)));
 
 			return group;
 		}

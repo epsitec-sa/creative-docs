@@ -64,20 +64,20 @@
     <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\FieldType.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\FieldTypeSelector.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\AbstractMarshallerFactory.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\EntityListPanelFieldAccessor.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\EntityPanelFieldAccessor.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\NonNullableMarshallerFactory.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\NullableMarshallerFactory.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\StringPanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\FieldType.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\FieldTypeSelector.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\AbstractMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\EntityCollectionPropertyAccessor.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\EntityReferencePropertyAccessor.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\NonNullableMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\NullableMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\TextPropertyAccessor.cs" />
     <Compile Include="UserInterface\TileData\AbstractEditionTilePartData.cs" />
     <Compile Include="UserInterface\TileData\AbstractSummaryTileData.cs" />
-    <Compile Include="UserInterface\TileData\CollectionFieldData.cs" />
+    <Compile Include="UserInterface\TileData\EntityCollectionFieldData.cs" />
     <Compile Include="UserInterface\TileData\DateFieldData.cs" />
-    <Compile Include="UserInterface\TileData\EntityFieldData.cs" />
-    <Compile Include="UserInterface\TileData\EnumFieldData.cs" />
+    <Compile Include="UserInterface\TileData\EntityReferenceFieldData.cs" />
+    <Compile Include="UserInterface\TileData\EnumerationFieldData.cs" />
     <Compile Include="UserInterface\TileData\HorizontalGroupData.cs" />
     <Compile Include="UserInterface\TileData\IncludeData.cs" />
     <Compile Include="UserInterface\TileData\TextFieldData.cs" />
@@ -85,7 +85,7 @@
     <Compile Include="UserInterface\Tile\AbstractTile.cs" />
     <Compile Include="UserInterface\Carpenter.cs" />
     <Compile Include="UserInterface\Tile\CheckBoxField.cs" />
-    <Compile Include="UserInterface\Tile\CollectionField.cs" />
+    <Compile Include="UserInterface\Tile\EntityCollectionField.cs" />
     <Compile Include="UserInterface\Tile\CollectionSummaryTile.cs" />
     <Compile Include="UserInterface\TileData\EditionTileData.cs" />
     <Compile Include="UserInterface\Tile\DateField.cs" />
@@ -96,8 +96,8 @@
     <Compile Include="UserInterface\Mason.cs" />
     <Compile Include="UserInterface\TileData\SeparatorData.cs" />
     <Compile Include="UserInterface\Tile\AbstractField.cs" />
-    <Compile Include="UserInterface\Tile\EntityField.cs" />
-    <Compile Include="UserInterface\Tile\EnumField.cs" />
+    <Compile Include="UserInterface\Tile\EntityReferenceField.cs" />
+    <Compile Include="UserInterface\Tile\EnumerationField.cs" />
     <Compile Include="UserInterface\Tile\GlobalWarning.cs" />
     <Compile Include="UserInterface\Tile\HorizontalGroup.cs" />
     <Compile Include="UserInterface\Tile\Separator.cs" />
@@ -126,11 +126,11 @@
     <Compile Include="NancyHosting\FileSystemRootPathProvider.cs" />
     <Compile Include="FormCollectionEmbedder.cs" />
     <Compile Include="UserInterface\PanelBuilder.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\AbstractPanelFieldAccessor.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\AbstractPropertyAccessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NancyHosting\CoreResponseExtensions.cs" />
     <Compile Include="CoreServer\ServerContext.cs" />
-    <Compile Include="UserInterface\PanelFieldAccessor\PanelFieldAccessorCache.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\PropertyAccessorCache.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">

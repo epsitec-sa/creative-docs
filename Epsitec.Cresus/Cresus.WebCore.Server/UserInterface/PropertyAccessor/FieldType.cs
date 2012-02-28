@@ -1,4 +1,4 @@
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 

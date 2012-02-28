@@ -10,15 +10,15 @@ using System.Linq;
 using System.Linq.Expressions;
 
 
-namespace Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor
+namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal sealed class EntityListPanelFieldAccessor : AbstractPanelFieldAccessor
+	internal sealed class EntityCollectionPropertyAccessor : AbstractPropertyAccessor
 	{
 
 
-		public EntityListPanelFieldAccessor(LambdaExpression lambda, string id)
+		public EntityCollectionPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
 			this.collectionType = lambda.ReturnType.GetGenericArguments ().Single ();

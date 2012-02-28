@@ -7,7 +7,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 
 using Nancy;
 
@@ -46,14 +46,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
 
-			var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get ((string) Request.Form.lambdaId) as EntityListPanelFieldAccessor;
+			string propertyAccessorId = Request.Form.lambdaId;
+			var propartyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
 
-			if (panelFieldAccessor == null)
+			if (propartyAccessor == null)
 			{
 				return Response.AsCoreError ();
 			}
 
-			var collection = panelFieldAccessor.GetCollection (parentEntity);
+			var collection = propartyAccessor.GetCollection (parentEntity);
 
 			var toDelete = collection.Cast<AbstractEntity> ().Where (c => context.DataContext.GetNormalizedEntityKey (c).Equals (deleteKey));
 
@@ -91,19 +92,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var m = method.MakeGenericMethod (type);
 			var o = m.Invoke (context, new object[0]);
 			var newEntity = o as AbstractEntity;
-			
-			var panelFieldAccessor = coreSession.PanelFieldAccessorCache.Get ((string) Request.Form.lambdaId) as EntityListPanelFieldAccessor;
 
-			if (panelFieldAccessor == null)
+			string propertyAccessorId = Request.Form.lambdaId;
+			var propertyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId) as EntityCollectionPropertyAccessor;
+
+			if (propertyAccessor == null)
 			{
 				return Response.AsCoreError ();
 			}
 
 			using (context.Bind (parentEntity, newEntity))
 			{
-				var collection = panelFieldAccessor.GetCollection (parentEntity);
+				var collection = propertyAccessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
-				
+
 				context.ApplyRulesToRegisteredEntities (RuleType.Update);
 				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 			}

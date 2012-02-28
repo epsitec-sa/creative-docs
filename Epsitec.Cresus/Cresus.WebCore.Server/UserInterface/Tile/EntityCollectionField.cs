@@ -7,7 +7,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 {
 
 
-	internal sealed class CollectionField : AbstractField
+	internal sealed class EntityCollectionField : AbstractField
 	{
 
 
@@ -28,13 +28,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			// individual check boxes.
 			fieldDictionary.Remove ("readOnly");
 
-			// Here we don't set the PanelFieldAccessorId on the container directly but in the
+			// Here we don't set the PropertyAccessorId on the container directly but in the
 			// individual check boxes.
 
 			fieldDictionary["xtype"] = "epsitec.checkboxes";
 			fieldDictionary["defaultType"] = "checkboxfield";
 			fieldDictionary["labelAlign"] = "left";
-			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary (this.PanelFieldAccessorId, this.IsReadOnly)).ToList ();
+			fieldDictionary["items"] = this.CheckBoxFields.Select (c => c.ToDictionary (this.PropertyAccessorId, this.IsReadOnly)).ToList ();
 
 			return fieldDictionary;
 		}

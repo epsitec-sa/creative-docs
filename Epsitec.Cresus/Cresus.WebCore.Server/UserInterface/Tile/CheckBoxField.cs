@@ -37,12 +37,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public Dictionary<string, object> ToDictionary(string panelFieldAccessorId, bool isReadOnly)
+		public Dictionary<string, object> ToDictionary(string propertyAccessorId, bool isReadOnly)
 		{
 			var item = new Dictionary<string, object> ();
 
 			item["boxLabel"] = this.Label;
-			item["name"] = FormCollectionEmbedder.GetFieldName (panelFieldAccessorId, this.Index);
+			item["name"] = FormCollectionEmbedder.GetFieldName (propertyAccessorId, this.Index);
 			item["inputValue"] = this.InputValue;
 			item["checked"] = this.Checked;
 			item["readOnly"] = isReadOnly;

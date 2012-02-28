@@ -9,7 +9,7 @@ using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
-using Epsitec.Cresus.WebCore.Server.UserInterface.PanelFieldAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					t => this.GetTypeName (t),
 					e => this.BuildEditionTiles (e),
 					t => this.GetEntities (t),
-					l => this.GetPanelFieldAccessor (l)
+					l => this.GetPropertyAccessor (l)
 				)
 			);
 		}
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private string GetLambdaId(LambdaExpression lambda)
 		{
-			return this.coreSession.PanelFieldAccessorCache.Get (lambda).Id;
+			return this.coreSession.PropertyAccessorCache.Get (lambda).Id;
 		}
 
 
@@ -175,9 +175,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private AbstractPanelFieldAccessor GetPanelFieldAccessor(LambdaExpression lambda)
+		private AbstractPropertyAccessor GetPropertyAccessor(LambdaExpression lambda)
 		{
-			return this.coreSession.PanelFieldAccessorCache.Get (lambda);
+			return this.coreSession.PropertyAccessorCache.Get (lambda);
 		}
 
 
