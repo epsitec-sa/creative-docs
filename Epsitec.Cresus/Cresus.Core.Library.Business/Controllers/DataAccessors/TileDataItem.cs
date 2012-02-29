@@ -251,8 +251,8 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
-		
-		public System.Action<EditionTile, UIBuilder> CreateUI
+
+		public System.Action<Tile, UIBuilder>	CreateUI
 		{
 			//	Constructeur de l'interface utilisateur pour une tuile d'édition.
 			get;
