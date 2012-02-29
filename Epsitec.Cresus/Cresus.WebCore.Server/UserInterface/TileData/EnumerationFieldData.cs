@@ -1,5 +1,6 @@
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.WebCore.Server.NancyModules;
 using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
@@ -25,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				PropertyAccessorId = textPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity),
+				Value = textPropertyAccessor.GetString (entity) ?? EntityModule.StringForNullValue,
 				TypeName = textPropertyAccessor.Type.AssemblyQualifiedName,
 			};
 		}

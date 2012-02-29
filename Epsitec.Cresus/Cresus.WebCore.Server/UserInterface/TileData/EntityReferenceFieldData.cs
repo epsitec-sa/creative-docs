@@ -1,14 +1,13 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.WebCore.Server.NancyModules;
 using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
 
 using System.Collections.Generic;
-
-using System.Linq;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
@@ -30,15 +29,31 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				PropertyAccessorId = entityReferencePropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = entityIdGetter (target),
+				Value = entityIdGetter (target) ?? "null",
 			};
 
-			var possibleValues = entitiesGetter (entityReferencePropertyAccessor.Type)
-				.Select (e => Tuple.Create (entityIdGetter (e), e.GetCompactSummary ().ToString ()));
+			var possibleValues = this.GetPossibleValues (entityIdGetter, entitiesGetter);
 
 			entityField.PossibleValues.AddRange (possibleValues);
 
 			return entityField;
+		}
+
+
+		private IEnumerable<Tuple<string, string>> GetPossibleValues(Func<AbstractEntity, string> entityIdGetter, Func<Type, IEnumerable<AbstractEntity>> entitiesGetter)
+		{
+			if (this.PropertyAccessor.Property.IsNullable)
+			{
+				yield return Tuple.Create (EntityModule.StringForNullValue, "");
+			}
+
+			foreach (var entity in entitiesGetter (this.PropertyAccessor.Type))
+			{
+				var entityId = entityIdGetter (entity);
+				var entitySummary = entity.GetCompactSummary ().ToString ();
+
+				yield return Tuple.Create (entityId, entitySummary);
+			}
 		}
 
 

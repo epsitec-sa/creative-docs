@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private static void SetValueForEntityCollectionField(BusinessContext businessContext, EntityCollectionPropertyAccessor propertyAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
 		{
 			var targetEntities = targetEntityIds
-				.Where (id => !string.IsNullOrWhiteSpace (id))
+				.Where (id => !string.IsNullOrEmpty (id))
 				.Select (id => EntityModule.ResolveEntity (businessContext, id))
 				.ToList ();
 
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static void SetValueForEntityReferenceField(BusinessContext businessContext, EntityReferencePropertyAccessor propertyAccessor, AbstractEntity entity, string targetEntityId)
 		{
-			var targetEntity = string.IsNullOrEmpty (targetEntityId)
+			var targetEntity = EntityModule.IsStringNullOrEmpty (targetEntityId)
 				? null
 				: EntityModule.ResolveEntity (businessContext, targetEntityId);
 
@@ -171,32 +171,46 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static void SetValueForEnumerationField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
-			EntityModule.SetValueForTextField (propertyAccessor, entity, fieldValue);
+			var value = EntityModule.IsStringNullOrEmpty (fieldValue)
+				? null
+				: fieldValue;
+
+			propertyAccessor.SetString (entity, value);
 		}
 
 
 		private static void SetValueForDateField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
-			EntityModule.SetValueForTextField (propertyAccessor, entity, fieldValue);
+			propertyAccessor.SetString (entity, fieldValue);
 		}
 
 
 		private static void SetValueForTextField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
 		{
-			// NOTE Here we interpret empty strings as if they where null strings. The problem is
-			// that we can't make the difference as a text field does not provide any way to tell if
-			// its input is the null string or the empty one. So here I made the choice to always
-			// interpret empty strings as null strings.
-			// I do the conversion here explicitely because the underlying Marshaler embedded in
-			// the TextPropertyAccessor does not make this conversion automatically and that's
-			// probably a good thing.
+			// NOTE Here we convert empty strings to null strings if the property allows for null
+			// values and we convert null strings to empty strings if the property doesn't allow for
+			// null values.
 
-			var value = string.IsNullOrEmpty (fieldValue)
+			// TODO Here there is a bug. If the field is not a nullable type (that is, a type
+			// derived from System.Nullable, the assignation to null won't work. That's because how
+			// stuff are done in the marshaler.
+
+			var value = string.IsNullOrEmpty (fieldValue) && propertyAccessor.Property.IsNullable
 			    ? null
-			    : fieldValue;
+			    : fieldValue ?? "";
 
 			propertyAccessor.SetString (entity, value);
 		}
+
+
+		private static bool IsStringNullOrEmpty(string text)
+		{
+			return string.IsNullOrEmpty (text)
+				|| text == EntityModule.StringForNullValue;
+		}
+
+
+		public static readonly string StringForNullValue = "null";
 
 
 	}

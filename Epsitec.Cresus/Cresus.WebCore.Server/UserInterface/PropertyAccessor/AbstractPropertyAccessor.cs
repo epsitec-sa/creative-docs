@@ -1,3 +1,4 @@
+using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -20,6 +21,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 			this.id = id;
 			this.type = lambda.ReturnType;
 			this.fieldType = FieldTypeSelector.GetFieldType (this.type);
+			this.property = EntityInfo.GetStructuredTypeField (lambda);
 
 			this.getter = lambda.Compile ();
 
@@ -46,6 +48,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 			get
 			{
 				return this.type;
+			}
+		}
+
+
+		public StructuredTypeField Property
+		{
+			get
+			{
+				return this.property;
 			}
 		}
 
@@ -100,6 +111,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 
 
 		private readonly Type type;
+
+
+		private readonly StructuredTypeField property;
 
 
 		private readonly FieldType fieldType;

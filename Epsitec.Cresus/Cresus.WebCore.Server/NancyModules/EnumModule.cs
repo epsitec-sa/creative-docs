@@ -1,4 +1,6 @@
-﻿using Epsitec.Cresus.Core.Library;
+﻿using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Core.Library;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 
@@ -9,6 +11,8 @@ using System;
 using System.Collections.Generic;
 
 using System.Linq;
+
+using System.Reflection;
 
 
 namespace Epsitec.Cresus.WebCore.Server.NancyModules
@@ -32,53 +36,53 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetEnum()
 		{
 			string typeName = Request.Form.name;
-			
-			var type = Type.GetType (typeName);
-			var fetcherType = typeof (Fetcher<>).MakeGenericType (type);
-			var fetcherInst = (Fetcher) Activator.CreateInstance (fetcherType);
-			var list = fetcherInst.GetValues ().ToList ();
+
+			var list = EnumModule.GetValues (typeName).ToList ();
 
 			return Response.AsJson (list);
 		}
 
 
-		// NOTE Here we need this weird class & reflexion stuff because we need the generic type
-		// parameter in order to invoke the FromEnum<T> method, and we don't have that from scratch.
-		// Too bad, especially because the FromEnum<T> converts back the type parameter to a
-		// System.Type instance. I should come back here to correct this when I'll have more time.
-
-
-		private abstract class Fetcher
+		private static IEnumerable<object> GetValues(string typeName)
 		{
-			public abstract IEnumerable<object> GetValues();
+			var type = Type.GetType (typeName);
+
+			var isNullable = type.IsNullable ();
+
+			var enumType = isNullable
+				? type.GetNullableTypeUnderlyingType ()
+				: type;
+
+			var method = typeof (EnumModule).GetMethod ("GetValuesImplementation", BindingFlags.NonPublic | BindingFlags.Static);
+			var genericMethod = method.MakeGenericMethod (enumType);
+
+			return (IEnumerable<object>) genericMethod.Invoke (null, new object[] { isNullable });
 		}
 
 
-		private sealed class Fetcher<T> : Fetcher
-			where T : struct
+		private static IEnumerable<object> GetValuesImplementation<T>(bool isNullable) where T : struct
 		{
-
-
-			public override IEnumerable<object> GetValues()
+			if (isNullable)
 			{
-				foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())
-				{
-					// NOTE Here we need the double cast because the compiler won't let us cast from
-					// T to int directly, so we cast T to object because this is allowed and then we
-					// cast object to anything.
-
-					var id = (int) (object) enumKeyValues.Key;
-
-					foreach (var value in enumKeyValues.Values)
-					{
-						var name = value.ToString ();
-
-						yield return new { id = id, name = name };
-					}
-				}
+				yield return new { id = EntityModule.StringForNullValue, name = "" };
 			}
 
+			foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())
+			{
+				// NOTE Here we need the double cast because the compiler won't let us cast from
+				// T to int directly, so we cast T to object because this is allowed and then we
+				// cast object to anything.
 
+				var id = (int) (object) enumKeyValues.Key;
+				var values = enumKeyValues.Values;
+
+				if (values.Any ())
+				{
+					var name = values[0].ToString ();
+
+					yield return new { id = id, name = name };
+				}
+			}
 		}
 
 
