@@ -37,6 +37,7 @@
     <AssemblyOriginatorKeyFile>..\Solution Items\Epsitec.Cresus.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
@@ -53,6 +54,7 @@
     <Compile Include="Bricks\BridgeSpy.cs" />
     <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
     <Compile Include="Bricks\Bridge.InputProcessor.cs" />
+    <Compile Include="Bricks\DynamicFactories\ButtonFactory.cs" />
     <Compile Include="Bricks\UIAction.cs" />
     <Compile Include="Bricks\UIGroupAction.cs" />
     <Compile Include="Bricks\UIMultiAction.cs" />

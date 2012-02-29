@@ -25,7 +25,15 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 				Dock    = DockStyle.Fill,
 				Margins = this.ContainerPadding + new Margins (0, 0, 0, 3),
 			};
+
+			//double tint = ((counter++) % 10) / 9.0;
+
+			//this.BackColor = Color.FromRgb (tint, 0, 0);
+			//this.container.BackColor = Color.FromRgb (0, 1.0 - tint, 0);
 		}
+
+
+		//private static int counter = 0;
 
 
 		/// <summary>

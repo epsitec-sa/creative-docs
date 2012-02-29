@@ -134,6 +134,15 @@ namespace Epsitec.Cresus.Core
 			this.ContentListAdd (widget);
 		}
 
+		public void Add(Widget container, Widget widget)
+		{
+			widget.Parent = container;
+			widget.TabIndex = ++this.tabIndex;
+			widget.Dock = DockStyle.Stacked;
+
+			this.ContentListAdd (widget);
+		}
+
 
 		public ConfirmationButton CreateCreationButtonWithInitializer<T>(CreationViewController<T> controller, string title, string description, System.Action<BusinessContext, T> initializer = null)
 			where T : AbstractEntity, new ()

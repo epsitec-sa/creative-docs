@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Bricks
 			this.isDefaultProperty = false;
 		}
 
-		public BrickProperty(BrickPropertyKey key, dynamic value)
+		public BrickProperty(BrickPropertyKey key, ExpandoObject value)
 		{
 			this.key = key;
 			this.value = value;
@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Bricks
 			}
 		}
 
-		public dynamic							ExpandoValue
+		public ExpandoObject					ExpandoValue
 		{
 			get
 			{

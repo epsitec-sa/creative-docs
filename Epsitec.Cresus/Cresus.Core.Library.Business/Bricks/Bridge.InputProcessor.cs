@@ -15,6 +15,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 
 namespace Epsitec.Cresus.Core.Bricks
@@ -55,12 +56,20 @@ namespace Epsitec.Cresus.Core.Bricks
 
 			private void CreateActionsForInput(Brick brick, BrickPropertyCollection inputProperties)
 			{
-				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup);
+				var fieldProperties = Brick.GetProperties (brick, BrickPropertyKey.Field, BrickPropertyKey.HorizontalGroup, BrickPropertyKey.Button, BrickPropertyKey.SearchPanel);
 
 				foreach (var property in fieldProperties)
 				{
 					switch (property.Key)
 					{
+						case BrickPropertyKey.Button:
+							this.CreateActionForButton (property.ExpandoValue);
+							break;
+
+						case BrickPropertyKey.SearchPanel:
+							this.CreateActionForSearchPanel (property.ExpandoValue);
+							break;
+
 						case BrickPropertyKey.Field:
 							this.CreateActionForInputField (property.ExpressionValue, fieldProperties);
 							break;
@@ -83,6 +92,18 @@ namespace Epsitec.Cresus.Core.Bricks
 						this.CreateActionForGlobalWarning ();
 					}
 				}
+			}
+
+			private void CreateActionForButton(ExpandoObject settings)
+			{
+				var factory = new DynamicFactories.ButtonFactory (this.business, settings);
+				this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)));
+			}
+
+			private void CreateActionForSearchPanel(ExpandoObject settings)
+			{
+				var factory = new DynamicFactories.SearchPanelFactory (this.business, settings);
+				this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)));
 			}
 
 			private void CreateActionsForHorizontalGroup(BrickProperty property)
@@ -142,10 +163,11 @@ namespace Epsitec.Cresus.Core.Bricks
 					//	The field is an entity : use an AutoCompleteTextField for it.
 
 					var factory = DynamicFactories.EntityAutoCompleteTextFieldDynamicFactory.Create<T> (this.business, lambda, this.controller.EntityGetter, title, collection, specialController, readOnly);
-					this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
-					{
-						FieldInfo = fieldMode
-					});
+					this.actions.Add (
+						new UIAction ((tile, builder) => factory.CreateUI (tile, builder))
+						{
+							FieldInfo = fieldMode
+						});
 
 					return;
 				}
