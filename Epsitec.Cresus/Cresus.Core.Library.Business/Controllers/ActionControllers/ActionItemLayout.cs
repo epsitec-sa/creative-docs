@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		public TitleTile						TitleTile
+		public StaticTitleTile					TitleTile
 		{
 			get
 			{
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		/// </summary>
 		/// <param name="tile">The title tile.</param>
 		/// <param name="sortedLayouts">The sorted layouts.</param>
-		private static void UpdateLayoutsInTile(TitleTile tile, SortedActionItemLayouts sortedLayouts)
+		private static void UpdateLayoutsInTile(StaticTitleTile tile, SortedActionItemLayouts sortedLayouts)
 		{
 			int rowCount = sortedLayouts.RowCount;
 			var topRight = ActionItemLayout.GetTitleTileTopRightPointRelativeToRoot (tile);
@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		private static void AdaptWidths(TitleTile tile, IEnumerable<ActionItemLayout> layouts)
+		private static void AdaptWidths(StaticTitleTile tile, IEnumerable<ActionItemLayout> layouts)
 		{
 			//	Si nécessaire, réduit "intelligement" la largeurs des boutons, pour tout caser dans l'espace disponible.
 			foreach (var item in layouts)
@@ -256,12 +256,12 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
-		private static Point GetTitleTileTopRightPointRelativeToRoot(TitleTile tile)
+		private static Point GetTitleTileTopRightPointRelativeToRoot(StaticTitleTile tile)
 		{
 			return tile.MapClientToRoot (tile.Client.Bounds.TopRight - new Point (14, 3), x => x.IsFence);
 		}
 
-		private static double GetTitleTileUsableWidth(TitleTile tile)
+		private static double GetTitleTileUsableWidth(StaticTitleTile tile)
 		{
 			return tile.Client.Size.Width - 4 - Library.UI.Constants.RightMargin;
 		}
@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				}
 			}
 
-			public SortedActionItemLayouts GetTileActions(TitleTile tile)
+			public SortedActionItemLayouts GetTileActions(StaticTitleTile tile)
 			{
 				var tileId = tile.GetVisualSerialId ();
 				SortedActionItemLayouts actions;
@@ -419,7 +419,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 				this.list = new SortedSet<ActionItemLayout> ();
 			}
 
-			public TitleTile					TitleTile
+			public StaticTitleTile				TitleTile
 			{
 				get
 				{
@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		
 		private readonly ActionItem				item;
 		private ControllerTile					container;
-		private TitleTile						titleTile;
+		private StaticTitleTile					titleTile;
 		private ActionTarget					actionTarget;
 		private int								row;
 		private int								priority;

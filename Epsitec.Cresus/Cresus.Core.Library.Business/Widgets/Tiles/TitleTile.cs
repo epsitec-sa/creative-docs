@@ -27,24 +27,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		public bool								CanExpandSubTile
-		{
-			get;
-			set;
-		}
-
-		public bool								EnableAddItems
-		{
-			get;
-			set;
-		}
-
-		public bool								EnableRemoveItems
-		{
-			get;
-			set;
-		}
-
 		public bool								ContainsFrozenTiles
 		{
 			get
@@ -53,7 +35,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public TileCollection					Items
+		public override TileCollection			Items
 		{
 			get
 			{
@@ -126,7 +108,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public double GetFullHeight()
+		public override double GetFullHeight()
 		{
 			double height = TitleTile.TitleHeight;
 
@@ -398,16 +380,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			this.Invalidate ();
 		}
-
-		private void OnAddClicked(MessageEventArgs e)
-		{
-			this.AddClicked.Raise (this, e);
-		}
-
-		private void OnRemoveClicked(MessageEventArgs e)
-		{
-			this.RemoveClicked.Raise (this, e);
-		}
 		
 		static TitleTile()
 		{
@@ -417,10 +389,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 			Common.Widgets.Visual.PreferredHeightProperty.OverrideMetadata (typeof (TitleTile), metadataDy);
 		}
-
-
-		public event EventHandler<MessageEventArgs>		AddClicked;
-		public event EventHandler<MessageEventArgs>		RemoveClicked;
 
 
 		private static readonly double			ButtonSize	= 16;

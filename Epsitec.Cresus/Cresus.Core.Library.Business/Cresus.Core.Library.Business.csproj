@@ -55,6 +55,8 @@
     <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
     <Compile Include="Bricks\Bridge.InputProcessor.cs" />
     <Compile Include="Bricks\DynamicFactories\ButtonFactory.cs" />
+    <Compile Include="Bricks\DynamicFactories\SearchPanelFactory.cs" />
+    <Compile Include="Bricks\DynamicFactories\StaticFactory.cs" />
     <Compile Include="Bricks\UIAction.cs" />
     <Compile Include="Bricks\UIGroupAction.cs" />
     <Compile Include="Bricks\UIMultiAction.cs" />

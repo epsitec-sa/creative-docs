@@ -58,6 +58,12 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
+		public override double GetFullHeight()
+		{
+			throw new System.NotImplementedException ();
+			return 100;
+		}
+
 		protected override void UpdateTileArrow()
 		{
 			this.tileArrow.SetOutlineColors (TileColors.BorderColors);

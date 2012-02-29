@@ -34,6 +34,35 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+
+		public bool CanExpandSubTile
+		{
+			get;
+			set;
+		}
+
+		public bool EnableAddItems
+		{
+			get;
+			set;
+		}
+
+		public bool EnableRemoveItems
+		{
+			get;
+			set;
+		}
+
+		public virtual Epsitec.Cresus.Core.Widgets.Tiles.TitleTile.TileCollection Items
+		{
+			get
+			{
+				return null;
+			}
+		}
+
+		public abstract double GetFullHeight();
+
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
 		/// Si on donne un seul caractère, il est affiché tel quel.
@@ -75,6 +104,16 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+
+		protected void OnAddClicked(MessageEventArgs e)
+		{
+			this.AddClicked.Raise (this, e);
+		}
+
+		protected void OnRemoveClicked(MessageEventArgs e)
+		{
+			this.RemoveClicked.Raise (this, e);
+		}
 
 		private void CreateUI()
 		{
@@ -271,6 +310,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ()) == false;
 		}
 
+		public event EventHandler<MessageEventArgs>		AddClicked;
+		public event EventHandler<MessageEventArgs>		RemoveClicked;
 
 		protected static readonly double IconSize         = 32;
 		protected static readonly double IconMargins      = 2;

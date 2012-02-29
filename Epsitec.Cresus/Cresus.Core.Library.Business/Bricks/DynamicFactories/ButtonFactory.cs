@@ -12,20 +12,6 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 {
-	public abstract class StaticFactory
-	{
-		protected StaticFactory(BusinessContext businessContext, ExpandoObject settings)
-		{
-			this.businessContext = businessContext;
-			this.settings        = settings;
-		}
-		
-		public abstract void CreateUI(FrameBox container, UIBuilder builder);
-
-		protected readonly BusinessContext businessContext;
-		protected readonly dynamic settings;
-	}
-
 	public sealed class ButtonFactory : StaticFactory
 	{
 		public ButtonFactory(BusinessContext businessContext, ExpandoObject settings)
@@ -51,18 +37,6 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 			};
 
 			builder.Add (container, button);
-		}
-	}
-	
-	public sealed class SearchPanelFactory : StaticFactory
-	{
-		public SearchPanelFactory(BusinessContext businessContext, ExpandoObject settings)
-			: base (businessContext, settings)
-		{
-		}
-
-		public override void CreateUI(FrameBox container, UIBuilder builder)
-		{
 		}
 	}
 }

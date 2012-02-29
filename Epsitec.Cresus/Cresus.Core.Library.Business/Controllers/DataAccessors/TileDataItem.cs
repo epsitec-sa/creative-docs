@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// will be inserted into the title tile collection of items.
 		/// </summary>
 		/// <value>The title tile.</value>
-		public TitleTile						TitleTile
+		public StaticTitleTile					TitleTile
 		{
 			get
 			{
@@ -679,16 +679,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			return this.DefaultMode;
 		}
 
-		private readonly HashSet<AccessorBinding>	bindings;
+		private readonly HashSet<AccessorBinding> bindings;
 
-		private TitleTile							titleTile;
+		private StaticTitleTile					titleTile;
 
-		private FormattedText						displayedTitle;
-		private FormattedText						displayedText;
-		private FormattedText						displayedCompactTitle;
-		private FormattedText						displayedCompactText;
+		private FormattedText					displayedTitle;
+		private FormattedText					displayedText;
+		private FormattedText					displayedCompactTitle;
+		private FormattedText					displayedCompactText;
 		
-		private bool								hideAddButton;
-		private bool								hideRemoveButton;
+		private bool							hideAddButton;
+		private bool							hideRemoveButton;
 	}
 }

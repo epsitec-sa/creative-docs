@@ -387,7 +387,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.Tile.Clicked += (sender, e) => this.HandleTileClicked (item);
 		}
 
-		private void CreateTitleTileClickHandler(TileDataItem item, TitleTile tile)
+		private void CreateTitleTileClickHandler(TileDataItem item, StaticTitleTile tile)
 		{
 			if (item.DataType == TileDataType.EditableItem)
 			{
@@ -557,7 +557,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void RefreshTitleTiles()
 		{
 			var visualIds = new HashSet<long> ();
-			var tileCache = new Dictionary<string, TitleTile> ();
+			var tileCache = new Dictionary<string, StaticTitleTile> ();
 
 			foreach (var item in this.liveItems)
 			{
@@ -602,7 +602,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			tileCache.Values.ForEach (tile => TileContainerController.ResetTitleTileParentAndSetItemIndexes (tile));
 		}
 
-		private static void ResetTitleTileParentAndSetItemIndexes(TitleTile tile)
+		private static void ResetTitleTileParentAndSetItemIndexes(StaticTitleTile tile)
 		{
 			tile.Parent = null;
 
@@ -629,9 +629,9 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void ResetAutoGroupTitleTile(TileDataItem item, Dictionary<string, TitleTile> tileCache)
+		private void ResetAutoGroupTitleTile(TileDataItem item, Dictionary<string, StaticTitleTile> tileCache)
 		{
-			TitleTile other;
+			StaticTitleTile other;
 			string prefix = TileDataItem.GetNamePrefix (item.Name);
 
 			if (tileCache.TryGetValue (prefix, out other))
@@ -705,7 +705,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private IEnumerable<TitleTile> GetTitleTiles()
+		private IEnumerable<StaticTitleTile> GetTitleTiles()
 		{
 			//	Les tuiles d'un groupe ont un même TitleTile comme parent. Le HashSet sur le VisualSerialId
 			//	évite de prendre plusieurs fois le même.
@@ -746,7 +746,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private static double GetTotalHeight(IEnumerable<TitleTile> collection)
+		private static double GetTotalHeight(IEnumerable<StaticTitleTile> collection)
 		{
 			double height = 0;
 
@@ -781,7 +781,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// parent's children are in the right order.
 		/// </summary>
 		/// <param name="titleTiles">The title tiles.</param>
-		private void ResetTitleTilesOrder(IEnumerable<TitleTile> titleTiles)
+		private void ResetTitleTilesOrder(IEnumerable<StaticTitleTile> titleTiles)
 		{
 			if (titleTiles.Any (x => x.Parent == null))
 			{
