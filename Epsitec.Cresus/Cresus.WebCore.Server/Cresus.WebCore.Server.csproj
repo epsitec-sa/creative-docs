@@ -107,6 +107,7 @@
     <Compile Include="UserInterface\TileData\SummaryTileData.cs" />
     <Compile Include="UserInterface\TileData\CollectionTileData.cs" />
     <Compile Include="UserInterface\Tile\EditionTile.cs" />
+    <Compile Include="UserInterface\Tile\TextAreaField.cs" />
     <Compile Include="UserInterface\Tile\TextField.cs" />
     <Compile Include="NancyModules\AbstractCoreSessionModule.cs" />
     <Compile Include="NancyHosting\HttpServer.cs" />
