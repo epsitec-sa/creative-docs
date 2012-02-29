@@ -78,6 +78,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override int GetIndexOf(AbstractEntity entity)
+		{
+			return this.planComptable.IndexOf (entity as ComptaCompteEntity);
+		}
+
+
 		public override AbstractEntity GetEditionEntity(int row)
 		{
 			if (row < 0 || row >= this.planComptable.Count)

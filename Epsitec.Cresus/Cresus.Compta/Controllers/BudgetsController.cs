@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,58 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.editorController = new BudgetsEditorController (this);
 			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 		}
+
+
+		#region Context menu
+		protected override VMenu ContextMenu
+		{
+			//	Retourne le menu contextuel à utiliser.
+			get
+			{
+				var menu = new VMenu ();
+
+				this.PutContextMenuExtrait (menu);
+				this.PutContextMenuPlanComptable (menu);
+
+				return menu;
+			}
+		}
+
+		private void PutContextMenuExtrait(VMenu menu)
+		{
+			var compte = this.dataAccessor.GetEditionEntity (this.arrayController.SelectedRow) as ComptaCompteEntity;
+
+			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", compte.Numéro));
+
+			item.Clicked += delegate
+			{
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+
+				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+				permanent.NuméroCompte = compte.Numéro;
+
+				présentation.UpdateAfterChanged ();
+			};
+		}
+
+		private void PutContextMenuPlanComptable(VMenu menu)
+		{
+			var compte = this.dataAccessor.GetEditionEntity (this.arrayController.SelectedRow) as ComptaCompteEntity;
+
+			var item = this.PutContextMenuItem (menu, "Présentation.PlanComptable", string.Format ("Définition du compte {0}", compte.Numéro));
+
+			item.Clicked += delegate
+			{
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.PlanComptable);
+
+				int row = (présentation.DataAccessor as PlanComptableDataAccessor).GetIndexOf (compte);
+				if (row != -1)
+				{
+					présentation.SelectedArrayLine = row;
+				}
+			};
+		}
+		#endregion
 
 
 		protected override IEnumerable<ColumnMapper> InitialColumnMappers

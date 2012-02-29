@@ -13,6 +13,8 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -120,6 +122,55 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 			this.editorController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
+
+
+		#region Context menu
+		protected override VMenu ContextMenu
+		{
+			//	Retourne le menu contextuel à utiliser.
+			get
+			{
+				var menu = new VMenu ();
+
+				//?this.PutContextMenuCommand (menu, Res.Commands.Edit.Duplicate);
+				//?this.PutContextMenuCommand (menu, Res.Commands.Edit.Delete);
+				//?this.PutContextMenuCommand (menu, Res.Commands.Multi.Swap);
+				//?this.PutContextMenuSeparator (menu);
+				this.PutContextMenuExtrait (menu);
+
+				return menu;
+			}
+		}
+
+		private void PutContextMenuExtrait(VMenu menu)
+		{
+			var écriture = this.dataAccessor.GetEditionEntity (this.arrayController.SelectedRow) as ComptaEcritureEntity;
+
+			if (écriture != null)
+			{
+				this.PutContextMenuExtrait (menu, écriture.Débit);
+				this.PutContextMenuExtrait (menu, écriture.Crédit);
+			}
+		}
+
+		private void PutContextMenuExtrait(VMenu menu, ComptaCompteEntity compte)
+		{
+			if (compte != null)
+			{
+				var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", compte.Numéro));
+
+				item.Clicked += delegate
+				{
+					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+
+					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+					permanent.NuméroCompte = compte.Numéro;
+
+					présentation.UpdateAfterChanged ();
+				};
+			}
+		}
+		#endregion
 
 
 		protected override IEnumerable<ColumnMapper> InitialColumnMappers

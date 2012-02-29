@@ -153,67 +153,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var menu = new VMenu ();
 
-				menu.Items.Add (this.ContextMenuCP);
-				menu.Items.Add (this.ContextMenuJournal);
+				this.PutContextMenuCP (menu);
+				this.PutContextMenuJournal (menu);
 
 				return menu;
 			}
 		}
 
-		private MenuItem ContextMenuCP
+		private void PutContextMenuCP(VMenu menu)
 		{
-			get
+			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
+
+			var enable = (data != null && data.CP != null);
+			var text = enable ? string.Format ("Montre la contrepartie {0}", data.CP.Numéro) : "Montre la contrepartie";
+			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", text, enable);
+
+			item.Clicked += delegate
 			{
-				var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
 
-				var item = new MenuItem ()
-				{
-					IconUri       = UIBuilder.GetResourceIconUri ("Présentation.Extrait"),
-					FormattedText = "Montre la contrepartie",
-					Enable        = (data != null && data.CP != null),
-				};
+				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+				permanent.NuméroCompte = data.CP.Numéro;
 
-				item.Clicked += delegate
-				{
-					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
-
-					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-					permanent.NuméroCompte = data.CP.Numéro;
-
-					présentation.UpdateAfterChanged ();
-				};
-
-				return item;
-			}
+				présentation.UpdateAfterChanged ();
+			};
 		}
 
-		private MenuItem ContextMenuJournal
+		private void PutContextMenuJournal(VMenu menu)
 		{
-			get
+			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
+			var écriture = data.Entity as ComptaEcritureEntity;
+
+			var item = this.PutContextMenuItem (menu, "Présentation.Journal", "Montre dans le journal", écriture != null);
+
+			item.Clicked += delegate
 			{
-				var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
-				var écriture = data.Entity as ComptaEcritureEntity;
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Journal);
 
-				var item = new MenuItem ()
+				int row = (présentation.DataAccessor as JournalDataAccessor).GetIndexOf (écriture);
+				if (row != -1)
 				{
-					IconUri       = UIBuilder.GetResourceIconUri ("Présentation.Journal"),
-					FormattedText = "Montre dans le journal",
-					Enable        = (écriture != null),
-				};
-
-				item.Clicked += delegate
-				{
-					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Journal);
-
-					int row = (présentation.DataAccessor as JournalDataAccessor).GetIndexOf (écriture);
-					if (row != -1)
-					{
-						présentation.SelectedArrayLine = row;
-					}
-				};
-
-				return item;
-			}
+					présentation.SelectedArrayLine = row;
+				}
+			};
 		}
 		#endregion
 

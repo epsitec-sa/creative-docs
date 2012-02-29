@@ -12,6 +12,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -102,6 +103,59 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return data.Typo (text);
 		}
+
+
+		#region Context menu
+		protected override VMenu ContextMenu
+		{
+			//	Retourne le menu contextuel à utiliser.
+			get
+			{
+				var menu = new VMenu ();
+
+				this.PutContextMenuExtrait (menu);
+				this.PutContextMenuBudget (menu);
+
+				return menu;
+			}
+		}
+
+		private void PutContextMenuExtrait(VMenu menu)
+		{
+			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as DoubleData;
+
+			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", data.Numéro));
+
+			item.Clicked += delegate
+			{
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+
+				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+				permanent.NuméroCompte = data.Numéro;
+
+				présentation.UpdateAfterChanged ();
+			};
+		}
+
+		private void PutContextMenuBudget(VMenu menu)
+		{
+			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as DoubleData;
+
+			var item = this.PutContextMenuItem (menu, "Présentation.Budgets", string.Format ("Budgets du compte {0}", data.Numéro));
+
+			item.Clicked += delegate
+			{
+				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Budgets);
+
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Numéro).FirstOrDefault ();
+				int row = (présentation.DataAccessor as BudgetsDataAccessor).GetIndexOf (compte);
+				if (row != -1)
+				{
+					présentation.SelectedArrayLine = row;
+				}
+			};
+		}
+		#endregion
 
 
 		protected override IEnumerable<ColumnMapper> InitialColumnMappers

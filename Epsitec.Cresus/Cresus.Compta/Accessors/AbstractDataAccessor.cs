@@ -354,6 +354,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public virtual int GetIndexOf(AbstractEntity entity)
+		{
+			return -1;
+		}
+
+
 		public virtual AbstractEntity GetEditionEntity(int row)
 		{
 			return null;

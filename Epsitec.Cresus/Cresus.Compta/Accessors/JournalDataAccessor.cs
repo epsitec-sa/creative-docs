@@ -92,9 +92,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public int GetIndexOf(ComptaEcritureEntity écriture)
+		public override int GetIndexOf(AbstractEntity entity)
 		{
-			return this.journal.IndexOf (écriture);
+			return this.journal.IndexOf (entity as ComptaEcritureEntity);
 		}
 
 

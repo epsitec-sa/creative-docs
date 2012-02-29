@@ -964,6 +964,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		protected void PutContextMenuCommand(VMenu menu, Command cmd)
+		{
+			var item = new MenuItem
+			{
+				CommandObject = cmd,
+				IconSize      = new Size (32, 32),
+			};
+
+			menu.Items.Add (item);
+		}
+
+		protected MenuItem PutContextMenuItem(VMenu menu, string icon, FormattedText text, bool enable = true)
+		{
+			var item = new MenuItem
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (icon),
+				FormattedText = text,
+				Enable        = enable,
+			};
+
+			menu.Items.Add (item);
+
+			return item;
+		}
+
+		protected void PutContextMenuSeparator(VMenu menu)
+		{
+			menu.Items.Add (new MenuSeparator ());
+		}
+
 
 		public void ClearHilite()
 		{
