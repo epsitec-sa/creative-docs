@@ -941,16 +941,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void ArrayRightClick()
+		private void ArrayRightClick(Point pos)
 		{
 			//	Appelé lorsque un clic-droite dans la liste a été fait.
 			var menu = this.ContextMenu;
 
 			if (menu != null && menu.Items.Count != 0)
 			{
-				var pos = Message.CurrentState.LastPosition;
-				pos = this.frameBox.MapClientToScreen (pos);
-
 				menu.Host = this.frameBox;
 				menu.ShowAsContextMenu (this.frameBox, pos);
 			}

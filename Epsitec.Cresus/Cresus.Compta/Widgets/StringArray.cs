@@ -43,15 +43,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		public bool IsRightClick
-		{
-			get
-			{
-				return this.isRightClick;
-			}
-		}
-
-
 		public int Columns
 		{
 			//	Choix du nombre de colonnes.
@@ -1065,11 +1056,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		private void HandleFinalCellSelectionChanged(object sender)
+		private void HandleFinalCellSelectionChanged(object sender, MessageEventArgs e)
 		{
 			StringList array = sender as StringList;
-
-			this.isRightClick = array.IsRightClick;
 
 			if (this.allowMultipleSelection)
 			{
@@ -1090,7 +1079,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.columns[i].UpdateSelectedCell();
 				}
 
-				this.OnSelectedRowChanged();
+				this.OnSelectedRowChanged ();
 			}
 			else
 			{
@@ -1118,6 +1107,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.SetSelectedRow (-1, -1);
 				}
 			}
+
+			this.OnSelectionClicked (e);
 		}
 
 		private void HandleDoubleClicked(object sender, MessageEventArgs e)
@@ -1225,6 +1216,28 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		protected virtual void OnSelectionClicked(MessageEventArgs e)
+		{
+			var handler = this.GetUserEventHandler<MessageEventArgs> ("SelectionClicked");
+			if (handler != null)
+			{
+				handler (this, e);
+			}
+		}
+
+		public event EventHandler<MessageEventArgs> SelectionClicked
+		{
+			add
+			{
+				this.AddUserEventHandler ("SelectionClicked", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("SelectionClicked", value);
+			}
+		}
+
+
 		protected virtual void OnFirstVisibleRowChanged()
 		{
 			//	Génère un événement pour dire que la ligne sélectionnée a changé.
@@ -1296,7 +1309,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int							insertionPointRow = -1;
 		private int							searchLocatorRow = -1;
 		private int							searchLocatorColumn = -1;
-		private bool						isRightClick;
 
 		private int							widthDraggingRank = -1;
 		private double[]					widthDraggingAbsolutes;

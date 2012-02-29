@@ -357,15 +357,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		public bool IsRightClick
-		{
-			get
-			{
-				return this.isRightClick;
-			}
-		}
-
-
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (this.IsEnabled == false)
@@ -387,8 +378,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 				
 				if (message.MessageType == MessageType.MouseDown)
 				{
-					this.isRightClick = message.IsRightButton;
-
 					int cell = this.Detect(pos, true);
 
 					if (this.allowMultipleSelection)
@@ -437,7 +426,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 						}
 
 						this.UpdateSelectedCell();
-						this.OnFinalCellSelectionChanged();
+						this.OnFinalCellSelectionChanged (new MessageEventArgs (message, this.MapClientToScreen (pos)));
 					}
 					else
 					{
@@ -483,7 +472,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					if (!this.allowMultipleSelection)
 					{
 						this.SelectedCell = cell;
-						this.OnFinalCellSelectionChanged();
+						this.OnFinalCellSelectionChanged (new MessageEventArgs (message, this.MapClientToScreen (pos)));
 					}
 
 					this.isDragging = false;
@@ -922,17 +911,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		protected virtual void OnFinalCellSelectionChanged()
+		protected virtual void OnFinalCellSelectionChanged(MessageEventArgs e)
 		{
 			//	Génère un événement pour dire qu'une cellule a été sélectionnée.
-			var handler = this.GetUserEventHandler("FinalCellSelectionChanged");
+			var handler = this.GetUserEventHandler<MessageEventArgs>("FinalCellSelectionChanged");
 			if (handler != null)
 			{
-				handler(this);
+				handler(this, e);
 			}
 		}
 
-		public event EventHandler FinalCellSelectionChanged
+		public event EventHandler<MessageEventArgs> FinalCellSelectionChanged
 		{
 			add
 			{
@@ -976,6 +965,5 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int							hilitedCountLine;
 		private int							insertionPointLine;
 		private int							searchLocatorLine;
-		private bool						isRightClick;
 	}
 }

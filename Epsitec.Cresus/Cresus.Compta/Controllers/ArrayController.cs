@@ -29,8 +29,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged, System.Action rightClick)
+		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged, System.Action<Point> rightClick)
 		{
+			this.rightClick = rightClick;
+
 			//	Crée l'en-tête en dessus du tableau.
 			this.headerController = new HeaderController (this.controller);
 			this.headerController.CreateUI (parent);
@@ -61,13 +63,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					selectedRowChanged ();
 					this.UpdateCommands ();
-
-					if (this.array.IsRightClick)
-					{
-						rightClick ();
-					}
 				}
 			};
+
+			this.array.SelectionClicked += new EventHandler<MessageEventArgs> (this.HandleArraySelectionClicked);
 
 			this.array.FirstVisibleRowChanged += delegate
 			{
@@ -75,6 +74,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			return this.array;
+		}
+
+		private void HandleArraySelectionClicked(object sender, MessageEventArgs e)
+		{
+			if (e.Message.IsRightButton)
+			{
+				this.rightClick (e.Point);
+			}
 		}
 
 
@@ -333,6 +340,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly List<ColumnMapper>		columnMappers;
 		private readonly SafeCounter			ignoreChanges;
 
+		private System.Action<Point>			rightClick;
 		private List<ColumnMapper>				columnMappersShowed;
 		private HeaderController				headerController;
 		private StringArray						array;
