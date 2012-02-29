@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 	{
 
 
-		public IList<CheckBoxField> CheckBoxFields
+		public IList<EntityCollectionCheckBoxField> CheckBoxFields
 		{
 			get
 			{
@@ -40,7 +40,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		private readonly IList<CheckBoxField> checkBoxFields = new List<CheckBoxField> ();
+		private readonly IList<EntityCollectionCheckBoxField> checkBoxFields = new List<EntityCollectionCheckBoxField> ();
 
 
 	}

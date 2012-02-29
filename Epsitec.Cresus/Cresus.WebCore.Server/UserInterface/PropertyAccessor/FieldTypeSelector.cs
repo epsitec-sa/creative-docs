@@ -31,6 +31,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 			{
 				return FieldType.Date;
 			}
+			else if (FieldTypeSelector.IsTypeSuitableForCheckBoxField (type))
+			{
+				return FieldType.CheckBox;
+			}
 			else if (FieldTypeSelector.IsTypeSuitableForTextField (type))
 			{
 				return FieldType.Text;
@@ -61,6 +65,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
+		private static bool IsTypeSuitableForCheckBoxField(Type type)
+		{
+			return type == typeof (bool)
+		        || type == typeof (bool?);
+		}
+
+
 		private static bool IsTypeSuitableForEnumerationField(Type type)
 		{
 			var underlyingType = type.GetNullableTypeUnderlyingType ();
@@ -78,9 +89,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		        || type == typeof (decimal)
 		        || type == typeof (decimal?)
 		        || type == typeof (int)
-		        || type == typeof (int?)
-		        || type == typeof (bool)
-		        || type == typeof (bool?);
+		        || type == typeof (int?);
 		}
 
 

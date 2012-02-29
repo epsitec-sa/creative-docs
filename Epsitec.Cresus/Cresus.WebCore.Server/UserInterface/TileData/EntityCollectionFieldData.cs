@@ -34,9 +34,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			var possibleValues = entitiesGetter (entityCollectionPropertyAccessor.CollectionType);
 			var checkedValues = entityCollectionPropertyAccessor.GetEntityCollection (entity);
 
-			var checkBoxFields = possibleValues.Select ((v, i) => new CheckBoxField ()
+			var checkBoxFields = possibleValues.Select ((v, i) => new EntityCollectionCheckBoxField ()
 			{
-				Checked = checkedValues.Contains (v),
+				Value = checkedValues.Contains (v),
 				InputValue = entityIdGetter (v),
 				Label = v.GetSummary ().ToString (),
 				Index = i

@@ -5,7 +5,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 {
 
 
-	internal sealed class CheckBoxField
+	internal sealed class EntityCollectionCheckBoxField
 	{
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
-		public bool Checked
+		public bool Value
 		{
 			get;
 			set;
@@ -44,10 +44,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			item["boxLabel"] = this.Label;
 			item["name"] = FormCollectionEmbedder.GetFieldName (propertyAccessorId, this.Index);
 			item["inputValue"] = this.InputValue;
-			item["checked"] = this.Checked;
+			item["checked"] = this.Value;
 			item["readOnly"] = isReadOnly;
-
-			// We want to return "nothing" when nothing is checked, but we want to return something.
 			item["uncheckedValue"] = "";
 
 			return item;

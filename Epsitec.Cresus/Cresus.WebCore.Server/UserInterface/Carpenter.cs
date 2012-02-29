@@ -548,6 +548,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			switch (fieldType)
 			{
+				case FieldType.CheckBox:
+					return new CheckboxFieldData ();
+
+				case FieldType.Date:
+					return new DateFieldData ();
+
 				case FieldType.EntityCollection:
 					return new EntityCollectionFieldData ();
 
@@ -556,9 +562,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 				case FieldType.Enumeration:
 					return new EnumerationFieldData ();
-
-				case FieldType.Date:
-					return new DateFieldData ();
 
 				case FieldType.Text:
 					return new TextFieldData ();

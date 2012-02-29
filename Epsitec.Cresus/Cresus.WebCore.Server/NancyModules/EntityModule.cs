@@ -97,6 +97,24 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			switch (propertyAccessor.FieldType)
 			{
+				case FieldType.CheckBox:
+					{
+						var castedValue = (string) value;
+						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
+
+						EntityModule.SetValueForBooleanField (castedPropertyAccessor, entity, castedValue);
+
+						break;
+					}
+				case FieldType.Date:
+					{
+						var castedValue = (string) value;
+						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
+
+						EntityModule.SetValueForDateField (castedPropertyAccessor, entity, castedValue);
+
+						break;
+					}
 				case FieldType.EntityCollection:
 					{
 						var castedValue = (IEnumerable<string>) value.Value;
@@ -121,15 +139,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
 
 						EntityModule.SetValueForEnumerationField (castedPropertyAccessor, entity, castedValue);
-
-						break;
-					}
-				case FieldType.Date:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
-
-						EntityModule.SetValueForDateField (castedPropertyAccessor, entity, castedValue);
 
 						break;
 					}
@@ -176,6 +185,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				: fieldValue;
 
 			propertyAccessor.SetString (entity, value);
+		}
+
+
+		private static void SetValueForBooleanField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
+		{
+			propertyAccessor.SetString (entity, fieldValue);
 		}
 
 
