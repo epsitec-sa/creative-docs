@@ -1,6 +1,7 @@
 //	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 [assembly: DependencyClass (typeof (StringType))]
@@ -303,6 +304,24 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+		public static bool IsMultilineText(INamedType type)
+		{
+			var stringType = type as StringType;
+
+			var isMultiline = false;
+
+			if (stringType != null)
+			{
+				// NOTE The multi lined text types are the following ones :
+				// [10AH] => Default.TextMultiline
+				// [1016] => Default.StringMultiline
+
+				isMultiline = stringType.CaptionId == Druid.Parse ("[10AH]")
+						   || stringType.CaptionId == Druid.Parse ("[1016]");
+			}
+
+			return isMultiline;
+		}
 		
 		public static StringType					Default
 		{

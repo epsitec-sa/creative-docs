@@ -71,8 +71,7 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 				if ((fieldType == typeof (string)) ||
 					(fieldType == typeof (FormattedText)))
 				{
-					if ((typeField.TypeId == Druid.Parse ("[10AH]")) ||		//	Default.TextMultiline
-						(typeField.TypeId == Druid.Parse ("[1016]")))		//	Default.StringMultiline
+					if (StringType.IsMultilineText (typeField.Type))
 					{
 						height = 60;
 					}
