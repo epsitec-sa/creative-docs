@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 namespace Epsitec.Cresus.Bricks
 {
@@ -83,6 +84,13 @@ namespace Epsitec.Cresus.Bricks
 			this.isDefaultProperty = false;
 		}
 
+		public BrickProperty(BrickPropertyKey key, dynamic value)
+		{
+			this.key = key;
+			this.value = value;
+			this.isDefaultProperty = false;
+		}
+
 		private BrickProperty(BrickProperty property, bool isDefaultProperty)
 		{
 			this.key = property.key;
@@ -151,6 +159,14 @@ namespace Epsitec.Cresus.Bricks
 			get
 			{
 				return this.value as System.Collections.IEnumerable;
+			}
+		}
+
+		public dynamic							ExpandoValue
+		{
+			get
+			{
+				return this.value as ExpandoObject;
 			}
 		}
 

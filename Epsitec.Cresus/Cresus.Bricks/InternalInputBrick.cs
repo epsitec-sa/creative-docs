@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Dynamic;
 
 namespace Epsitec.Cresus.Bricks
 {
@@ -77,11 +78,25 @@ namespace Epsitec.Cresus.Bricks
 
 		public TSelf Button(FormattedText title, FormattedText description, System.Action action)
 		{
+			dynamic expando = new ExpandoObject ();
+
+			expando.ButtonTitle       = title;
+			expando.ButtonDescription = description;
+			expando.ButtonAction      = action;
+
+			this.AddProperty (new BrickProperty (BrickPropertyKey.Button, expando));
 			return this as TSelf;
 		}
 
 		public TSelf SearchPanel(FormattedText searchTitle, FormattedText actionTitle, System.Action action)
 		{
+			dynamic expando = new ExpandoObject ();
+
+			expando.SearchTitle       = searchTitle;
+			expando.ButtonTitle       = actionTitle;
+			expando.ButtonAction      = action;
+			
+			this.AddProperty (new BrickProperty (BrickPropertyKey.SearchPanel, expando));
 			return this as TSelf;
 		}
 
