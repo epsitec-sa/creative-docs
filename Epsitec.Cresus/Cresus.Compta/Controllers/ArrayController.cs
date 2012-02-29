@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged)
+		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged, System.Action rightClick)
 		{
 			//	Crée l'en-tête en dessus du tableau.
 			this.headerController = new HeaderController (this.controller);
@@ -61,6 +61,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					selectedRowChanged ();
 					this.UpdateCommands ();
+
+					if (this.array.IsRightClick)
+					{
+						rightClick ();
+					}
 				}
 			};
 

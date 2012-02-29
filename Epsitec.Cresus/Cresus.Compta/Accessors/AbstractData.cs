@@ -18,10 +18,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 	{
 		public AbstractEntity Entity
 		{
-			get
-			{
-				return this.entity;
-			}
+			get;
+			set;
 		}
  
 
@@ -67,8 +65,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			return value;
 		}
-
-
-		protected AbstractEntity entity;
 	}
 }

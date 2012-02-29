@@ -357,6 +357,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public bool IsRightClick
+		{
+			get
+			{
+				return this.isRightClick;
+			}
+		}
+
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (this.IsEnabled == false)
@@ -378,6 +387,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 				
 				if (message.MessageType == MessageType.MouseDown)
 				{
+					this.isRightClick = message.IsRightButton;
+
 					int cell = this.Detect(pos, true);
 
 					if (this.allowMultipleSelection)
@@ -965,5 +976,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int							hilitedCountLine;
 		private int							insertionPointLine;
 		private int							searchLocatorLine;
+		private bool						isRightClick;
 	}
 }

@@ -43,6 +43,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public bool IsRightClick
+		{
+			get
+			{
+				return this.isRightClick;
+			}
+		}
+
+
 		public int Columns
 		{
 			//	Choix du nombre de colonnes.
@@ -1060,6 +1069,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			StringList array = sender as StringList;
 
+			this.isRightClick = array.IsRightClick;
+
 			if (this.allowMultipleSelection)
 			{
 				List<int> sels = array.SelectedCells;
@@ -1285,6 +1296,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int							insertionPointRow = -1;
 		private int							searchLocatorRow = -1;
 		private int							searchLocatorColumn = -1;
+		private bool						isRightClick;
 
 		private int							widthDraggingRank = -1;
 		private double[]					widthDraggingAbsolutes;

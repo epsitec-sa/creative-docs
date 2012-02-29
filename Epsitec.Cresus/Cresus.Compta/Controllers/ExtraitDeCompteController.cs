@@ -16,6 +16,7 @@ using Epsitec.Cresus.Compta.Options.Controllers;
 using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -144,11 +145,84 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		#region Context menu
+		protected override VMenu ContextMenu
+		{
+			//	Retourne le menu contextuel à utiliser.
+			get
+			{
+				var menu = new VMenu ();
+
+				menu.Items.Add (this.ContextMenuCP);
+				menu.Items.Add (this.ContextMenuJournal);
+
+				return menu;
+			}
+		}
+
+		private MenuItem ContextMenuCP
+		{
+			get
+			{
+				var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
+
+				var item = new MenuItem ()
+				{
+					IconUri       = UIBuilder.GetResourceIconUri ("Présentation.Extrait"),
+					FormattedText = "Montre la contrepartie",
+					Enable        = (data != null && data.CP != null),
+				};
+
+				item.Clicked += delegate
+				{
+					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+
+					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+					permanent.NuméroCompte = data.CP.Numéro;
+
+					présentation.UpdateAfterChanged ();
+				};
+
+				return item;
+			}
+		}
+
+		private MenuItem ContextMenuJournal
+		{
+			get
+			{
+				var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
+				var écriture = data.Entity as ComptaEcritureEntity;
+
+				var item = new MenuItem ()
+				{
+					IconUri       = UIBuilder.GetResourceIconUri ("Présentation.Journal"),
+					FormattedText = "Montre dans le journal",
+					Enable        = (écriture != null),
+				};
+
+				item.Clicked += delegate
+				{
+					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Journal);
+
+					int row = (présentation.DataAccessor as JournalDataAccessor).GetIndexOf (écriture);
+					if (row != -1)
+					{
+						présentation.SelectedArrayLine = row;
+					}
+				};
+
+				return item;
+			}
+		}
+		#endregion
+
+
 		protected override IEnumerable<ColumnMapper> InitialColumnMappers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft, "Date");
+				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft,  "Date");
 				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P");
 				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce");
 				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé");
@@ -156,7 +230,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit");
 				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde");
 				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
-				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft, "Journal");
+				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft,  "Journal");
 			}
 		}
 

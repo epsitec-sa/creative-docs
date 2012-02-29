@@ -79,6 +79,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var data = new ExtraitDeCompteData ();
 
+					data.Entity  = écriture;
 					data.Date    = écriture.Date;
 					data.Pièce   = écriture.Pièce;
 					data.Libellé = écriture.Libellé;
@@ -105,6 +106,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var data = new ExtraitDeCompteData ();
 
+					data.Entity  = écriture;
 					data.Date    = écriture.Date;
 					data.Pièce   = écriture.Pièce;
 					data.Libellé = écriture.Libellé;
@@ -204,7 +206,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (compte == null)
 			{
-				return FormattedText.Empty;
+				return JournalDataAccessor.multi;
 			}
 			else
 			{

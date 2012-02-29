@@ -54,14 +54,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.app.CommandDispatcher.RegisterController (this);
 
-#if false
+#if true
 			//	Hack pour éviter de devoir tout refaire à chaque exécution !
-			if (this.compta != null)
-			{
-				this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
-				new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
-				new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
-			}
+			this.compta = new ComptaEntity ();  // crée une compta vide
+			new NewCompta ().NewEmpty (this.compta);
+
+			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
 #endif
 		}
 
@@ -190,6 +190,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.UpdateFileCommands ();
 				}
 			}
+		}
+
+
+		public AbstractController ShowPrésentation(Command cmd)
+		{
+			//	Utilise une autre présentation.
+			this.NavigatorUpdate ();
+
+			this.selectedCommandDocument = cmd;
+			this.UpdatePrésentationCommands ();
+			this.CreateController ();
+
+			this.NavigatorPut ();
+
+			return this.controller;
 		}
 
 
@@ -1116,13 +1131,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]
 		private void ProcessShowPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.NavigatorUpdate ();
-
-			this.selectedCommandDocument = e.Command;
-			this.UpdatePrésentationCommands ();
-			this.CreateController ();
-
-			this.NavigatorPut ();
+			this.ShowPrésentation (e.Command);
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]

@@ -827,6 +827,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.arrayController != null)
 				{
 					this.arrayController.SelectedRow = value;
+
+					int first, count;
+					this.arrayController.GetHilitedRows (out first, out count);
+					this.arrayController.ShowRow (first, count);
 				}
 			}
 		}
@@ -837,7 +841,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.HasArray)
 			{
 				this.arrayController = new ArrayController (this);
-				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged);
+				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged, this.ArrayRightClick);
 
 				this.UpdateArray ();
 			}
@@ -934,6 +938,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.editorController.UpdateEditorContent ();
 				this.editorController.EditorSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
 				this.editorController.ShowSelection ();
+			}
+		}
+
+		private void ArrayRightClick()
+		{
+			//	Appelé lorsque un clic-droite dans la liste a été fait.
+			var menu = this.ContextMenu;
+
+			if (menu != null && menu.Items.Count != 0)
+			{
+				var pos = Message.CurrentState.LastPosition;
+				pos = this.frameBox.MapClientToScreen (pos);
+
+				menu.Host = this.frameBox;
+				menu.ShowAsContextMenu (this.frameBox, pos);
+			}
+		}
+
+		protected virtual VMenu ContextMenu
+		{
+			get
+			{
+				return null;
 			}
 		}
 
