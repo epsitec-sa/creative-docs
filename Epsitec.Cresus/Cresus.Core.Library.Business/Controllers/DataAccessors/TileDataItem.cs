@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.CompactTitle             = template.CompactTitle;
 				this.DefaultMode              = template.DefaultMode;
 				this.EntityMarshalerConverter = template.EntityMarshalerConverter;
-				this.CreateEditionUI          = template.CreateEditionUI;
+				this.CreateUI          = template.CreateUI;
 			}
 		}
 
@@ -252,7 +252,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		}
 
 		
-		public System.Action<EditionTile, UIBuilder> CreateEditionUI
+		public System.Action<EditionTile, UIBuilder> CreateUI
 		{
 			//	Constructeur de l'interface utilisateur pour une tuile d'édition.
 			get;

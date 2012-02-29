@@ -49,22 +49,17 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				data.Rank = TileDataItem.CreateRank (rank+1, 0);
 			}
-			
-			System.Diagnostics.Debug.Assert (data.DataType == TileDataType.Undefined);
 
-			if (data.CreateEditionUI != null)
+			TileDataItems.ClassifyTileDataItem (data);
+			
+			System.Diagnostics.Debug.Assert (data.DataType != TileDataType.Undefined);
+
+			if (data.DataType == TileDataType.EmptyItem)
 			{
-				data.DataType = TileDataType.EditableItem;
-				this.simpleItems.Add (data);
-			}
-			else if (data.EntityMarshaler == null)
-			{
-				data.DataType = TileDataType.EmptyItem;
 				this.emptyItems.Add (data);
 			}
 			else
 			{
-				data.DataType = TileDataType.SimpleItem;
 				this.simpleItems.Add (data);
 			}
 		}
@@ -231,6 +226,29 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				Name = summaryName,
 				Rank = summaryRank,
 			};
+		}
+
+		/// <summary>
+		/// Classifies the tile data item and selects the most appropriate <see cref="TileDataType"/>.
+		/// </summary>
+		/// <param name="data">The tile data item.</param>
+		private static void ClassifyTileDataItem(TileDataItem data)
+		{
+			if (data.DataType == TileDataType.Undefined)
+			{
+				if (data.CreateUI != null)
+				{
+					data.DataType = TileDataType.EditableItem;
+				}
+				else if (data.EntityMarshaler == null)
+				{
+					data.DataType = TileDataType.EmptyItem;
+				}
+				else
+				{
+					data.DataType = TileDataType.SimpleItem;
+				}
+			}
 		}
 
 

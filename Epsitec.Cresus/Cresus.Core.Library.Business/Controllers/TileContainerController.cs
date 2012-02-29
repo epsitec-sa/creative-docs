@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void CreateEditionTile(TileDataItem item, UIBuilder builder)
 		{
 			var tile = TileContainerController.CreateEditionTile (item);
-			item.CreateEditionUI (tile, builder);
+			item.CreateUI (tile, builder);
 			item.Tile = tile;
 		}
 

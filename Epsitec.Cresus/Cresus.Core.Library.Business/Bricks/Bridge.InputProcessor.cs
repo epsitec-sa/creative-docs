@@ -274,12 +274,12 @@ namespace Epsitec.Cresus.Core.Bricks
 					if (this.actions.Count == 1)
 					{
 						var singleAction = this.actions[0];
-						this.item.CreateEditionUI = singleAction.Execute;
+						this.item.CreateUI = singleAction.Execute;
 					}
 					else
 					{
 						var multiActions = new UIMultiAction (this.actions);
-						this.item.CreateEditionUI = multiActions.Execute;
+						this.item.CreateUI = multiActions.Execute;
 					}
 				}
 
