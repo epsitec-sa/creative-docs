@@ -74,6 +74,7 @@
     <Compile Include="UserInterface\PropertyAccessor\TextPropertyAccessor.cs" />
     <Compile Include="UserInterface\TileData\AbstractEditionTilePartData.cs" />
     <Compile Include="UserInterface\TileData\AbstractSummaryTileData.cs" />
+    <Compile Include="UserInterface\TileData\CheckboxFieldData.cs" />
     <Compile Include="UserInterface\TileData\EntityCollectionFieldData.cs" />
     <Compile Include="UserInterface\TileData\DateFieldData.cs" />
     <Compile Include="UserInterface\TileData\EntityReferenceFieldData.cs" />
@@ -84,6 +85,7 @@
     <Compile Include="UserInterface\Tile\AbstractEditionTilePart.cs" />
     <Compile Include="UserInterface\Tile\AbstractTile.cs" />
     <Compile Include="UserInterface\Carpenter.cs" />
+    <Compile Include="UserInterface\Tile\EntityCollectionCheckBoxField.cs" />
     <Compile Include="UserInterface\Tile\CheckBoxField.cs" />
     <Compile Include="UserInterface\Tile\EntityCollectionField.cs" />
     <Compile Include="UserInterface\Tile\CollectionSummaryTile.cs" />
