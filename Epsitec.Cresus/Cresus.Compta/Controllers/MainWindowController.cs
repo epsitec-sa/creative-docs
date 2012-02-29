@@ -270,7 +270,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			string icon = string.Format (@"<img src=""{0}"" voff=""-6"" dx=""20"" dy=""20""/>  ", data.Command.Icon);
+			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", data.Command.Icon);
 
 			var item = new MenuItem ()
 			{
