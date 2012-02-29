@@ -300,6 +300,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static string GetMarkStateIconUri(bool state)
+		{
+			return UIBuilder.GetResourceIconUri (state ? "MarkYes" : "MarkNo");
+		}
+
 		public static string GetCheckStateIconUri(bool state)
 		{
 			return UIBuilder.GetResourceIconUri (state ? "Button.CheckYes" : "Button.CheckNo");

@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Affiche le menu pour choisir une présentation de l'historique.
 			var menu = new VMenu ();
 
-			int limit = 15;  // menu de 15 lignes au maximum
+			int limit = 14;  // menu de 14 lignes au maximum
 			for (int i = this.navigatorEngine.Count-1; i >= 0 ; i--)  // du plus récent au plus ancien
 			{
 				this.AddNavigatorMenu (menu, i);
@@ -270,11 +270,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", data.Command.Icon);
+			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>   ", data.Command.Icon);
 
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetCheckStateIconUri (index == this.navigatorEngine.Index),
+				IconUri       = UIBuilder.GetMarkStateIconUri (index == this.navigatorEngine.Index),
 				FormattedText = icon + data.Description,
 				Name          = index.ToString (),  // on ne peut pas utiliser simplement Index !
 			};

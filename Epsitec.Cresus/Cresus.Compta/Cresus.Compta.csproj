@@ -300,6 +300,8 @@
     <EmbeddedResource Include="Images\User.Locked.icon" />
     <EmbeddedResource Include="Images\User.Unlocked.icon" />
     <EmbeddedResource Include="Images\Edit.Create.icon" />
+    <EmbeddedResource Include="Images\MarkNo.icon" />
+    <EmbeddedResource Include="Images\MarkYes.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
