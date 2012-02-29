@@ -50,6 +50,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+
+		#region Colonnes du budget
+		public decimal? PériodePrécédente
+		{
+			get;
+			set;
+		}
+
+		public decimal? PériodePénultième
+		{
+			get;
+			set;
+		}
+
 		public decimal? Budget
 		{
 			get;
@@ -73,17 +87,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get;
 			set;
 		}
-
-		public decimal? PériodePrécédente
-		{
-			get;
-			set;
-		}
-
-		public decimal? PériodePénultième
-		{
-			get;
-			set;
-		}
+		#endregion
 	}
 }

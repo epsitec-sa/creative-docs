@@ -16,7 +16,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Cette classe calcule le montant d'un compte à considérer pour la colonne "budget".
+	/// Cette classe calcule le montant d'un compte à mettre dans une colonne "budget".
 	/// </summary>
 	public class BudgetsManager
 	{
@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
 		{
-			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
+			//	Retourne le montant d'un compte à mettre dans une colonne "budget".
 			if (!this.options.ComparisonEnable)
 			{
 				return null;
