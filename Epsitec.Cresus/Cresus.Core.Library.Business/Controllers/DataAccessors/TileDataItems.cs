@@ -238,6 +238,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			{
 				data.DataType = TileDataType.EmptyItem;
 			}
+			else if ((data.CreateUI == null) && (data.DataType == TileDataType.EditableItem))
+			{
+				data.DataType = TileDataType.EditableSimpleItem;
+			}
 			else if (data.DataType == TileDataType.Undefined)
 			{
 				if (data.CreateUI != null)

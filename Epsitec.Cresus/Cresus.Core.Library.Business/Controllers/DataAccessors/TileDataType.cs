@@ -24,6 +24,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		EditableItem,
 
 		/// <summary>
+		/// Editable item: represents read-only fields which are classified as editable; this
+		/// is used to identify tiles which should behave like summary tiles, but are in fact
+		/// in a collection of edition tiles.
+		/// </summary>
+		EditableSimpleItem,
+
+		/// <summary>
 		/// Empty item: used as a template to create collection items.
 		/// </summary>
 		EmptyItem,

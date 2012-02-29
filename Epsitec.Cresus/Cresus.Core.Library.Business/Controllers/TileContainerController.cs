@@ -538,7 +538,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.TitleTile = new TitleTile ()  // item.TitleTile aura item.Tile dans sa collection Items !
 			{
 				ActionViewController = this.actionViewController,
-				IsReadOnly           = (item.DataType != TileDataType.EditableItem),  // fond bleuté si tuile d'édition
+				IsReadOnly           = (item.DataType != TileDataType.EditableItem) && (item.DataType != TileDataType.EditableSimpleItem),  // fond bleuté si tuile d'édition
+				CanExpandSubTile     = item.DataType == TileDataType.EditableSimpleItem,
 				Frameless            = item.Frameless,
 				Dock                 = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
 			};
@@ -582,6 +583,7 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 
 					case TileDataType.EditableItem:
+					case TileDataType.EditableSimpleItem:
 						item.TitleTile.EnableAddItems    = false;
 						item.TitleTile.EnableRemoveItems = false;
 						break;
