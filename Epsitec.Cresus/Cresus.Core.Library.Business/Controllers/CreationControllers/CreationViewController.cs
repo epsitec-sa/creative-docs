@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 	using InitializerAction		= System.Action<BusinessContext, AbstractEntity>;
 	using EntityCreatorFunction	= System.Func<System.Func<BusinessContext, AbstractEntity>, System.Action<BusinessContext, AbstractEntity>, AbstractEntity>;
 
-	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationController
+	public abstract class CreationViewController<T> : EntityViewController<T>, ICreationViewController
 		where T : AbstractEntity, new ()
 	{
 		protected CreationViewController()
@@ -47,12 +47,12 @@ namespace Epsitec.Cresus.Core.Controllers.CreationControllers
 
 		#region ICreationController Members
 
-		void ICreationController.RegisterDisposeAction(System.Action disposeAction)
+		void ICreationViewController.RegisterDisposeAction(System.Action disposeAction)
 		{
 			this.disposeAction = disposeAction;
 		}
 
-		void ICreationController.RegisterEntityCreator(EntityCreatorFunction entityCreator)
+		void ICreationViewController.RegisterEntityCreator(EntityCreatorFunction entityCreator)
 		{
 			this.entityCreator = entityCreator;
 		}

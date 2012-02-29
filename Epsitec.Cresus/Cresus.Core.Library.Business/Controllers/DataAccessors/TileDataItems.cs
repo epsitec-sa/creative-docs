@@ -234,15 +234,15 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		/// <param name="data">The tile data item.</param>
 		private static void ClassifyTileDataItem(TileDataItem data)
 		{
-			if (data.DataType == TileDataType.Undefined)
+			if (data.EntityMarshaler == null)
+			{
+				data.DataType = TileDataType.EmptyItem;
+			}
+			else if (data.DataType == TileDataType.Undefined)
 			{
 				if (data.CreateUI != null)
 				{
 					data.DataType = TileDataType.EditableItem;
-				}
-				else if (data.EntityMarshaler == null)
-				{
-					data.DataType = TileDataType.EmptyItem;
 				}
 				else
 				{

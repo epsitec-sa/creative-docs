@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Core.Bricks
 				this.root            = root;
 				this.actions         = new List<UIAction> ();
 				this.inputProperties = Brick.GetProperties (this.root, BrickPropertyKey.Input);
+				this.defaultDataType = Bridge.Classify (this.controller);
 			}
 
 			public void ProcessInputs()
@@ -269,7 +270,10 @@ namespace Epsitec.Cresus.Core.Bricks
 					if (this.item == null)
 					{
 						this.item = new TileDataItem ();
+						this.item.DataType = this.defaultDataType;
 					}
+
+					System.Diagnostics.Debug.Assert (this.item.DataType == this.defaultDataType);
 
 					if (this.actions.Count == 1)
 					{
@@ -374,6 +378,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			private readonly Brick				root;
 			private readonly List<UIAction>		actions;
 			private readonly BrickPropertyCollection inputProperties;
+			private readonly TileDataType		defaultDataType;
 			
 			private TileDataItem				item;
 		}

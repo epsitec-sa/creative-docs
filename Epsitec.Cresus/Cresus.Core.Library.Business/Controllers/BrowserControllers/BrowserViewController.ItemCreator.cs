@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var controller = EntityViewControllerFactory.Create ("ItemCreation", dummyEntity, ViewControllerMode.Creation, this.orchestrator, null,
 																	 resolutionMode: Resolvers.ResolutionMode.NullOnError);
 				
-				var creator = controller as ICreationController;
+				var creator = controller as ICreationViewController;
 
 				if (creator == null)
 				{

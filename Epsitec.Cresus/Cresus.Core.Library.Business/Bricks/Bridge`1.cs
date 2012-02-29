@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			var item = new TileDataItem ();
 			var root = brick;
 
+			item.DataType = Bridge.Classify (this.controller);
 
 		again:
 			if (Brick.ContainsProperty (brick, BrickPropertyKey.OfType))

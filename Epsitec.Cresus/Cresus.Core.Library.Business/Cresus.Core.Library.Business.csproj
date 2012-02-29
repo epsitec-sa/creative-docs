@@ -168,6 +168,7 @@
     <Compile Include="Controllers\ComplexControllers\FooterTextController.cs" />
     <Compile Include="Controllers\ComplexControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\DataAccessors\ICollectionModificationCapabilities.cs" />
+    <Compile Include="Controllers\EditionControllers\IEditionViewController.cs" />
     <Compile Include="Controllers\SpecialControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
@@ -190,7 +191,7 @@
     <Compile Include="Controllers\CoreController.cs" />
     <Compile Include="Controllers\CoreViewController.cs" />
     <Compile Include="Controllers\CreationControllers\CreationViewController.cs" />
-    <Compile Include="Controllers\CreationControllers\ICreationController.cs" />
+    <Compile Include="Controllers\CreationControllers\ICreationViewController.cs" />
     <Compile Include="Bricks\BrickMode.cs" />
     <Compile Include="Bricks\Bridge.cs" />
     <Compile Include="Bricks\BridgeContext.cs" />
@@ -208,6 +209,7 @@
     <Compile Include="Bricks\DynamicFactories\DynamicFactory.cs" />
     <Compile Include="Bricks\DynamicFactories\ItemPickerDynamicFactory.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialPageTypesController.cs" />
+    <Compile Include="Controllers\SummaryControllers\ISummaryViewController.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryDummyListEntityViewController.cs" />
     <Compile Include="Bricks\DynamicFactories\TextFieldDynamicFactory.cs" />
     <Compile Include="Controllers\DataAccessors\GroupedItemController.cs" />

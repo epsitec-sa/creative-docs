@@ -54,7 +54,26 @@ namespace Epsitec.Cresus.Core.Bricks
 		{
 			return this.controller;
 		}
-		
+
+		public static TileDataType Classify(EntityViewController controller)
+		{
+			if (controller is Epsitec.Cresus.Core.Controllers.EditionControllers.IEditionViewController)
+			{
+				return TileDataType.EditableItem;
+			}
+			else if (controller is Epsitec.Cresus.Core.Controllers.CreationControllers.ICreationViewController)
+			{
+				return TileDataType.EditableItem;
+			}
+			else if (controller is Epsitec.Cresus.Core.Controllers.SummaryControllers.ISummaryViewController)
+			{
+				return TileDataType.SimpleItem;
+			}
+			else
+			{
+				return TileDataType.Undefined;
+			}
+		}
 
 		public abstract void CreateTileDataItems(TileDataItems data);
 
