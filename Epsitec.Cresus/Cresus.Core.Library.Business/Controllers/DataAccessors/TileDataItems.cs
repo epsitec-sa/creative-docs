@@ -236,10 +236,16 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			if (data.EntityMarshaler == null)
 			{
+				//	A data item which has no associated entity is in fact always an
+				//	empty item:
+
 				data.DataType = TileDataType.EmptyItem;
 			}
 			else if ((data.CreateUI == null) && (data.DataType == TileDataType.EditableItem))
 			{
+				//	When an editable item does not have an associated UI creator callback,
+				//	this means that it should behave just like a simple item in disguise:
+				
 				data.DataType = TileDataType.EditableSimpleItem;
 			}
 			else if (data.DataType == TileDataType.Undefined)

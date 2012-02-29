@@ -129,10 +129,10 @@ namespace Epsitec.Cresus.Core.Bricks
 				var entityType = typeof (T);
 				var fieldMode  = this.GetFieldEditionSettings (lambda);
 
-				int    width  = InputProcessor<T>.GetInputWidth (fieldProperties);
-				int    height = InputProcessor<T>.GetInputHeight (fieldProperties);
+				int    width    = InputProcessor<T>.GetInputWidth (fieldProperties);
+				int    height   = InputProcessor<T>.GetInputHeight (fieldProperties);
 				bool   readOnly = InputProcessor<T>.GetReadOnly (fieldProperties);
-				string title  = InputProcessor<T>.GetInputTitle (fieldProperties);
+				string title    = InputProcessor<T>.GetInputTitle (fieldProperties);
 
 				System.Collections.IEnumerable collection = InputProcessor<T>.GetInputCollection (fieldProperties);
 				int? specialController = InputProcessor<T>.GetSpecialController (fieldProperties);
@@ -150,20 +150,20 @@ namespace Epsitec.Cresus.Core.Bricks
 					return;
 				}
 
-				if (fieldType == typeof (string) ||
-					fieldType == typeof (FormattedText) ||
-					fieldType == typeof (System.DateTime) ||
-					fieldType == typeof (System.DateTime?) ||
-					fieldType == typeof (Date) ||
-					fieldType == typeof (Date?) ||
-					fieldType == typeof (long) ||
-					fieldType == typeof (long?) ||
-					fieldType == typeof (decimal) ||
-					fieldType == typeof (decimal?) ||
-					fieldType == typeof (int) ||
-					fieldType == typeof (int?) ||
-					fieldType == typeof (bool) ||
-					fieldType == typeof (bool?))
+				if ((fieldType == typeof (string)) ||
+					(fieldType == typeof (FormattedText)) ||
+					(fieldType == typeof (System.DateTime)) ||
+					(fieldType == typeof (System.DateTime?)) ||
+					(fieldType == typeof (Date)) ||
+					(fieldType == typeof (Date?)) ||
+					(fieldType == typeof (long)) ||
+					(fieldType == typeof (long?)) ||
+					(fieldType == typeof (decimal)) ||
+					(fieldType == typeof (decimal?)) ||
+					(fieldType == typeof (int)) ||
+					(fieldType == typeof (int?)) ||
+					(fieldType == typeof (bool)) ||
+					(fieldType == typeof (bool?)))
 				{
 					width = InputProcessor<T>.GetDefaultFieldWidth (fieldType, width);
 

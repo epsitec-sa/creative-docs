@@ -15,6 +15,16 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 {
 	public sealed class CreationAiderHouseholdViewController : CreationViewController<AiderHouseholdEntity>
 	{
+		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
+		{
+			wall.AddBrick ()
+				.Input ()
+					.Button ("Nouveau ménage", "Crée un nouveau ménage, propre à cette personne", this.HandleButtonCreateClicked)
+					.SearchPanel ("Lier à un ménage existant", "lier", this.HandleButtonAssociateClicked)
+				.End ();
+		}
+
+#if false
 		protected override void CreateUI()
 		{
 			using (var builder = new UIBuilder (this))
@@ -30,6 +40,15 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		private AiderHouseholdEntity CreateHousehold()
 		{
 			return this.BusinessContext.CreateEntity<AiderHouseholdEntity> ();
+		}
+#endif
+
+		private void HandleButtonCreateClicked()
+		{
+		}
+
+		private void HandleButtonAssociateClicked()
+		{
 		}
 	}
 }

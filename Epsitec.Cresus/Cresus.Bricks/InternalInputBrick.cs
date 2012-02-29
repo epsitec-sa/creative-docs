@@ -1,5 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -70,6 +72,16 @@ namespace Epsitec.Cresus.Bricks
 		public TSelf PickFromCollection(System.Collections.IEnumerable value)
 		{
 			this.AddProperty (new BrickProperty (BrickPropertyKey.FromCollection, value));
+			return this as TSelf;
+		}
+
+		public TSelf Button(FormattedText title, FormattedText description, System.Action action)
+		{
+			return this as TSelf;
+		}
+
+		public TSelf SearchPanel(FormattedText searchTitle, FormattedText actionTitle, System.Action action)
+		{
 			return this as TSelf;
 		}
 
