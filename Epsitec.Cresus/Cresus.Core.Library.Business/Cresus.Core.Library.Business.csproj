@@ -52,6 +52,10 @@
     <Compile Include="Bricks\BrickModeExtensions.cs" />
     <Compile Include="Bricks\BridgeSpy.cs" />
     <Compile Include="Bricks\BridgeSpyEventArgs.cs" />
+    <Compile Include="Bricks\Bridge.InputProcessor.cs" />
+    <Compile Include="Bricks\UIAction.cs" />
+    <Compile Include="Bricks\UIGroupAction.cs" />
+    <Compile Include="Bricks\UIMultiAction.cs" />
     <Compile Include="Business\ArticleGroupType.cs" />
     <Compile Include="Business\BusinessContextEventArgs.cs" />
     <Compile Include="Business\BusinessContextOperation.cs" />

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		private void CreateTileDataItems()
 		{
 			System.Diagnostics.Debug.Assert (this.bridges.Count > 0);
-			System.Diagnostics.Debug.Assert (this.bridges[0].Controller == this.controller);
+			System.Diagnostics.Debug.Assert (this.bridges[0].GetGenericViewController () == this.controller);
 			System.Diagnostics.Debug.Assert (this.IsCreatingTileDataItems == false);
 
 			if (this.bridges.Any (x => x.ContainsBricks))

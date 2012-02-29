@@ -1,19 +1,26 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Bricks;
 
+using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Bricks.Helpers;
 using Epsitec.Cresus.Core.Controllers;
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using System.Collections.Generic;
+using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-using System;
+
 
 namespace Epsitec.Cresus.Core.Bricks
 {
@@ -21,7 +28,7 @@ namespace Epsitec.Cresus.Core.Bricks
 	/// The <c>Bridge</c> class is used to transform <see cref="Brick"/> definitions into
 	/// <see cref="Tile"/> instances.
 	/// </summary>
-	public abstract class Bridge
+	public abstract partial class Bridge
 	{
 		protected Bridge(BridgeContext bridgeContext, EntityViewController controller)
 		{
@@ -30,19 +37,23 @@ namespace Epsitec.Cresus.Core.Bricks
 		}
 
 		
-		public EntityViewController Controller
-		{
-			get
-			{
-				return this.controller;
-			}
-		}
+		//public EntityViewController Controller
+		//{
+		//    get
+		//    {
+		//        return this.controller;
+		//    }
+		//}
 
 		public abstract bool ContainsBricks
 		{
 			get;
 		}
 
+		public EntityViewController GetGenericViewController()
+		{
+			return this.controller;
+		}
 		
 
 		public abstract void CreateTileDataItems(TileDataItems data);
@@ -200,8 +211,7 @@ namespace Epsitec.Cresus.Core.Bricks
 			}
 		}
 
-
 		protected readonly BridgeContext		bridgeContext;
-		private readonly EntityViewController	controller;
+		protected readonly EntityViewController	controller;
 	}
 }
