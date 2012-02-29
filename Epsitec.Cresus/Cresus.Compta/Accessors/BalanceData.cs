@@ -61,11 +61,43 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+
 		public decimal? Budget
 		{
 			get;
 			set;
 		}
+
+		public decimal? BudgetProrata
+		{
+			get;
+			set;
+		}
+
+		public decimal? BudgetFutur
+		{
+			get;
+			set;
+		}
+
+		public decimal? BudgetFuturProrata
+		{
+			get;
+			set;
+		}
+
+		public decimal? PériodePrécédente
+		{
+			get;
+			set;
+		}
+
+		public decimal? PériodePénultième
+		{
+			get;
+			set;
+		}
+
 
 		public int Niveau
 		{

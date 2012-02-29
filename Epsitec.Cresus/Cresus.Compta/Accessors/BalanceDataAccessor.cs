@@ -65,6 +65,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
+			this.budgetsManager = new BudgetsManager (this.compta, this.période, this.options, this.lastBeginDate, this.lastEndDate);
+
 			foreach (var compte in this.compta.PlanComptable)
 			{
 				if (compte.Catégorie == CatégorieDeCompte.Inconnu)
@@ -85,6 +87,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.Niveau    = compte.Niveau;
 				data.Débit     = soldeDébit;
 				data.Crédit    = soldeCrédit;
+
+				data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
+				data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
+				data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
+				data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
+				data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
+				data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
 
 				if (différence < 0)
 				{
@@ -194,7 +203,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.SoldeCrédit);
 
 				case ColumnType.Budget:
-					return Converters.MontantToString (data.Budget);
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.Budget);
+
+				case ColumnType.BudgetProrata:
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetProrata);
+
+				case ColumnType.BudgetFutur:
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetFutur);
+
+				case ColumnType.BudgetFuturProrata:
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetFuturProrata);
+
+				case ColumnType.PériodePrécédente:
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.PériodePrécédente);
+
+				case ColumnType.PériodePénultième:
+					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.PériodePénultième);
 
 				case ColumnType.Solde:
 					if (data.Catégorie == CatégorieDeCompte.Passif ||
@@ -216,6 +240,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		private decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
+		{
+			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
+			var budget = this.budgetsManager.GetBudget (compte, type);
+			this.SetMinMaxValue (budget);
+			return budget;
+		}
+
+		public FormattedText GetBudgetText(decimal? soldeDébit, decimal? soldeCrédit, decimal? budget)
+		{
+			decimal? solde = null;
+
+			if (soldeDébit.HasValue)
+			{
+				solde = soldeDébit.Value;
+			}
+
+			if (soldeCrédit.HasValue)
+			{
+				solde = soldeCrédit.Value;
+			}
+
+			return this.budgetsManager.GetBudgetText (solde, budget, this.minValue, this.maxValue);
+		}
+
+
 		private new BalanceOptions Options
 		{
 			get
@@ -223,5 +273,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return this.options as BalanceOptions;
 			}
 		}
+
+
+		private BudgetsManager					budgetsManager;
 	}
 }

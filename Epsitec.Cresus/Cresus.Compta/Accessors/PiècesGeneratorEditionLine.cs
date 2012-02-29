@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (!data.Text.ToSimpleText ().Contains ('#'))
 					{
-						data.Error = "Le format doit contenir au moins un '#', pour indiquer la position du numéro<br/>Exemples: \"#\", \"A##/d\", \"##-###.P\"";
+						data.Error = "Le format doit contenir au moins un '#', pour indiquer la position du numéro<br/>Exemples: \"#####\", \"A#'###/d\", \"####-#.P\"";
 					}
 				}
 			}

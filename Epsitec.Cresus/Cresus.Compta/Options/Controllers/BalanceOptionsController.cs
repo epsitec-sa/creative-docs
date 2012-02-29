@@ -40,6 +40,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			base.CreateUI (parent, optionsChanged);
 
 			this.CreateCheckUI (this.mainFrame);
+			this.CreateComparisonUI (this.mainFrame, ComparisonShowed.All);
+
+			this.UpdateWidgets ();
 		}
 
 		protected void CreateCheckUI(FrameBox parent)
@@ -61,8 +64,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.UpdateWidgets ();
-
 			this.buttonComptesNuls.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -81,6 +82,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
+			this.UpdateComparison ();
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.buttonComptesNuls.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;

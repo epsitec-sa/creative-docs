@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Incrément, 0.00, ContentAlignment.MiddleLeft, "Incrément",       "Valeur de l'incrément");
 				yield return new ColumnMapper (ColumnType.Préfixe,   0.00, ContentAlignment.MiddleLeft, "Préfixe",         "Préfixe facultatif");
 				yield return new ColumnMapper (ColumnType.Suffixe,   0.00, ContentAlignment.MiddleLeft, "Suffixe",         "Suffixe facultatif");
-				yield return new ColumnMapper (ColumnType.Format,    0.00, ContentAlignment.MiddleLeft, "Format",          "Nombre minimun de chiffres ou format du numéro, avec '#' pour indiquer la position du numéro<br/>Exemples: \"3\", \"#\", \"A##/d\", \"##-###.P\"");
+				yield return new ColumnMapper (ColumnType.Format,    0.00, ContentAlignment.MiddleLeft, "Format",          "Nombre minimun de chiffres ou format du numéro, avec '#' pour indiquer la position du numéro<br/>Exemples: \"3\", \"#####\", \"A#'###/d\", \"####-#.P\"");
 				yield return new ColumnMapper (ColumnType.Exemple,   1.50, ContentAlignment.MiddleLeft, "Exemples", edition: false);
 				yield return new ColumnMapper (ColumnType.Résumé,    1.50, ContentAlignment.MiddleLeft, "Résumé",   edition: false);
 			}

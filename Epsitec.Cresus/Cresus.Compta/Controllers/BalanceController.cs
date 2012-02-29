@@ -83,6 +83,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override void OptionsChanged()
+		{
+			this.UpdateColumnMappers ();
+			this.UpdateArray ();
+
+			base.OptionsChanged ();
+		}
+
+
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
@@ -179,19 +188,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Numéro,      0.15, ContentAlignment.MiddleLeft,  "Numéro");
-				yield return new ColumnMapper (ColumnType.Titre,       0.60, ContentAlignment.MiddleLeft,  "Titre du compte");
-				yield return new ColumnMapper (ColumnType.Catégorie,   0.20, ContentAlignment.MiddleLeft,  "Catégorie", show: false);
-				yield return new ColumnMapper (ColumnType.Type,        0.20, ContentAlignment.MiddleLeft,  "Type",      show: false);
-				yield return new ColumnMapper (ColumnType.Débit,       0.20, ContentAlignment.MiddleRight, "Débit");
-				yield return new ColumnMapper (ColumnType.Crédit,      0.20, ContentAlignment.MiddleRight, "Crédit");
-				yield return new ColumnMapper (ColumnType.SoldeDébit,  0.20, ContentAlignment.MiddleRight, "Solde D");
-				yield return new ColumnMapper (ColumnType.SoldeCrédit, 0.20, ContentAlignment.MiddleRight, "Solde C");
-				yield return new ColumnMapper (ColumnType.Budget,      0.20, ContentAlignment.MiddleRight, "Budget");
+				yield return new ColumnMapper (ColumnType.Numéro,             0.15, ContentAlignment.MiddleLeft,  "Numéro");
+				yield return new ColumnMapper (ColumnType.Titre,              0.60, ContentAlignment.MiddleLeft,  "Titre du compte");
+				yield return new ColumnMapper (ColumnType.Catégorie,          0.20, ContentAlignment.MiddleLeft,  "Catégorie", show: false);
+				yield return new ColumnMapper (ColumnType.Type,               0.20, ContentAlignment.MiddleLeft,  "Type",      show: false);
+				yield return new ColumnMapper (ColumnType.Débit,              0.20, ContentAlignment.MiddleRight, "Débit");
+				yield return new ColumnMapper (ColumnType.Crédit,             0.20, ContentAlignment.MiddleRight, "Crédit");
+				yield return new ColumnMapper (ColumnType.SoldeDébit,         0.20, ContentAlignment.MiddleRight, "Solde D");
+				yield return new ColumnMapper (ColumnType.SoldeCrédit,        0.20, ContentAlignment.MiddleRight, "Solde C");
 
-				yield return new ColumnMapper (ColumnType.Date,        0.20, ContentAlignment.MiddleLeft,  "Date",       show: false);
-				yield return new ColumnMapper (ColumnType.Solde,       0.20, ContentAlignment.MiddleLeft,  "Solde",      show: false);
-				yield return new ColumnMapper (ColumnType.Profondeur,  0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
+				yield return new ColumnMapper (ColumnType.PériodePénultième,  0.20, ContentAlignment.MiddleRight, "Période pénul.");
+				yield return new ColumnMapper (ColumnType.PériodePrécédente,  0.20, ContentAlignment.MiddleRight, "Période préc.");
+				yield return new ColumnMapper (ColumnType.Budget,             0.20, ContentAlignment.MiddleRight, "Budget");
+				yield return new ColumnMapper (ColumnType.BudgetProrata,      0.20, ContentAlignment.MiddleRight, "Budget prorata");
+				yield return new ColumnMapper (ColumnType.BudgetFutur,        0.20, ContentAlignment.MiddleRight, "Budget futur");
+				yield return new ColumnMapper (ColumnType.BudgetFuturProrata, 0.20, ContentAlignment.MiddleRight, "Budget fut. pro.");
+
+				yield return new ColumnMapper (ColumnType.Date,               0.20, ContentAlignment.MiddleLeft,  "Date",       show: false);
+				yield return new ColumnMapper (ColumnType.Solde,              0.20, ContentAlignment.MiddleLeft,  "Solde",      show: false);
+				yield return new ColumnMapper (ColumnType.Profondeur,         0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
+			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			var options = this.dataAccessor.Options as BalanceOptions;
+
+			if (options.ComparisonEnable && this.optionsController != null)
+			{
+				this.ShowHideColumn (ColumnType.PériodePrécédente,  (options.ComparisonShowed & ComparisonShowed.PériodePrécédente ) != 0);
+				this.ShowHideColumn (ColumnType.PériodePénultième,  (options.ComparisonShowed & ComparisonShowed.PériodePénultième ) != 0);
+				this.ShowHideColumn (ColumnType.Budget,             (options.ComparisonShowed & ComparisonShowed.Budget            ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetProrata,      (options.ComparisonShowed & ComparisonShowed.BudgetProrata     ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetFutur,        (options.ComparisonShowed & ComparisonShowed.BudgetFutur       ) != 0);
+				this.ShowHideColumn (ColumnType.BudgetFuturProrata, (options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0);
+			}
+			else
+			{
+				this.ShowHideColumn (ColumnType.PériodePrécédente,  false);
+				this.ShowHideColumn (ColumnType.PériodePénultième,  false);
+				this.ShowHideColumn (ColumnType.Budget,             false);
+				this.ShowHideColumn (ColumnType.BudgetProrata,      false);
+				this.ShowHideColumn (ColumnType.BudgetFutur,        false);
+				this.ShowHideColumn (ColumnType.BudgetFuturProrata, false);
 			}
 		}
 	}

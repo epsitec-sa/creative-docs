@@ -612,63 +612,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected FormattedText GetBudgetText(decimal? solde, decimal? budget)
-		{
-			//	Retourne le texte permettant d'afficher le budget, de différentes manières.
-			if (!this.options.ComparisonEnable)
-			{
-				return FormattedText.Empty;
-			}
-
-			if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Montant)
-			{
-				return Converters.MontantToString (budget);
-			}
-			else
-			{
-				if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Pourcent)
-				{
-					return AbstractDataAccessor.GetPercent (solde, budget);
-				}
-				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.PourcentMontant)
-				{
-					var percent = AbstractDataAccessor.GetPercent (solde, budget);
-					var montant = Converters.MontantToString (budget);
-
-					if (percent.IsNullOrEmpty || string.IsNullOrEmpty (montant))
-					{
-						return FormattedText.Empty;
-					}
-					else
-					{
-						return Core.TextFormatter.FormatText (percent, "de", montant);
-					}
-				}
-				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Graphique)
-				{
-					return this.GetMinMaxText (budget, solde);
-				}
-				else
-				{
-					return Converters.MontantToString (budget-solde);
-				}
-			}
-		}
-
-		protected static FormattedText GetPercent(decimal? m1, decimal? m2)
-		{
-			if (m1.HasValue && m2.HasValue && m2.Value != 0)
-			{
-				int n = (int) (m1.Value/m2.Value*100);
-				return n.ToString () + "%";
-			}
-			else
-			{
-				return FormattedText.Empty;
-			}
-		}
-
-
 		#region Min/max tiny engine
 		protected void MinMaxClear()
 		{
@@ -703,30 +646,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Converters.MontantToString (this.maxValue),
 						"/",
 						Converters.MontantToString (value)
-					);
-			}
-		}
-
-		protected FormattedText GetMinMaxText(decimal? value1, decimal? value2)
-		{
-			if (this.minValue == decimal.MaxValue ||
-				this.maxValue == decimal.MinValue)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return FormattedText.Concat
-					(
-						StringArray.SpecialContentGraphicValue,
-						"/",
-						Converters.MontantToString (this.minValue),
-						"/",
-						Converters.MontantToString (this.maxValue),
-						"/",
-						Converters.MontantToString (value1),
-						"/",
-						Converters.MontantToString (value2)
 					);
 			}
 		}

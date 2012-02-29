@@ -20,7 +20,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void Clear()
 		{
 			base.Clear ();
+
 			this.HideZero = true;
+			this.ComparisonShowed = ComparisonShowed.Budget;
 		}
 
 
@@ -79,6 +81,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				{
 					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
 				}
+
+				this.AppendSummaryBuilder (this.ComparisonSummary);
 
 				return this.StopSummaryBuilder ();
 			}
