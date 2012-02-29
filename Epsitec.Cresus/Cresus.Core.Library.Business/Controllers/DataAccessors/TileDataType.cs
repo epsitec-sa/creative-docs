@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Cresus.Core.Controllers.DataAccessors
@@ -14,19 +14,14 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		Undefined,
 
 		/// <summary>
-		/// Simple item: represents plain vanilla fields of an entity.
+		/// Simple item: represents plain vanilla (read-only) fields of an entity.
 		/// </summary>
 		SimpleItem,
 
 		/// <summary>
-		/// Editable item: represents plain light blue editable fields of an entity.
+		/// Editable item: represents editable fields of an entity.
 		/// </summary>
 		EditableItem,
-
-		/// <summary>
-		/// Customized item: represents plain vanilla customized of an entity.
-		/// </summary>
-		CustomizedItem,
 
 		/// <summary>
 		/// Empty item: used as a template to create collection items.

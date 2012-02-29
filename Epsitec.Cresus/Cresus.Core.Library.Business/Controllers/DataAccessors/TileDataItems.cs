@@ -57,11 +57,6 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				data.DataType = TileDataType.EditableItem;
 				this.simpleItems.Add (data);
 			}
-			else if (data.CreateCustomizedUI != null)
-			{
-				data.DataType = TileDataType.CustomizedItem;
-				this.simpleItems.Add (data);
-			}
 			else if (data.EntityMarshaler == null)
 			{
 				data.DataType = TileDataType.EmptyItem;

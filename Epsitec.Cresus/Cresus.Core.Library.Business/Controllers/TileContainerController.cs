@@ -367,10 +367,6 @@ namespace Epsitec.Cresus.Core.Controllers
 						{
 							this.CreateEditionTile (item, builder);
 						}
-						else if (item.DataType == TileDataType.CustomizedItem)
-						{
-							this.CreateCustomizedTile (item, builder);
-						}
 						else
 						{
 							this.CreateSummaryTile (item);
@@ -393,8 +389,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateTitleTileClickHandler(TileDataItem item, TitleTile tile)
 		{
-			if (item.DataType == TileDataType.EditableItem  ||
-				item.DataType == TileDataType.CustomizedItem)
+			if (item.DataType == TileDataType.EditableItem)
 			{
 				return;
 			}
@@ -426,8 +421,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void HandleTileClicked(TileDataItem item)
 		{
-			if (item.DataType == TileDataType.EditableItem  ||
-				item.DataType == TileDataType.CustomizedItem)
+			if (item.DataType == TileDataType.EditableItem)
 			{
 				return;
 			}
@@ -527,13 +521,6 @@ namespace Epsitec.Cresus.Core.Controllers
 			item.Tile = tile;
 		}
 
-		private void CreateCustomizedTile(TileDataItem item, UIBuilder builder)
-		{
-			var tile = TileContainerController.CreateEditionTile (item);
-			item.CreateCustomizedUI (tile, builder);
-			item.Tile = tile;
-		}
-
 		private static EditionTile CreateEditionTile(TileDataItem item)
 		{
 			return new EditionTile
@@ -590,20 +577,19 @@ namespace Epsitec.Cresus.Core.Controllers
 				{
 					case TileDataType.CollectionItem:
 					case TileDataType.EmptyItem:
-						item.TitleTile.EnableAddItems   = !item.HideAddButton;
+						item.TitleTile.EnableAddItems    = !item.HideAddButton;
 						item.TitleTile.EnableRemoveItems = !item.HideRemoveButton;
 						break;
 
 					case TileDataType.EditableItem:
-					case TileDataType.CustomizedItem:
-						item.TitleTile.EnableAddItems   = false;
+						item.TitleTile.EnableAddItems    = false;
 						item.TitleTile.EnableRemoveItems = false;
 						break;
 
 					default:
-						item.TitleTile.EnableAddItems   = false;
+						item.TitleTile.EnableAddItems    = false;
 						item.TitleTile.EnableRemoveItems = false;
-						isItemPartOfCollection = false;
+						isItemPartOfCollection           = false;
 						break;
 				}
 				
