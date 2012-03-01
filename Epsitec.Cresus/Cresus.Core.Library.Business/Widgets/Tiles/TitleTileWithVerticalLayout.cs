@@ -1,5 +1,5 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 		/// <summary>
-		/// Gets the panel below the icon and the text.
+		/// Gets the panel located below the icon and the text.
 		/// </summary>
 		/// <value>The panel.</value>
 		public Widget							Panel

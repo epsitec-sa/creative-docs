@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
-		public bool ContainsFrozenTiles
+		public bool								ContainsFrozenTiles
 		{
 			get
 			{
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public TileCollection Items
+		public TileCollection					Items
 		{
 			get
 			{
@@ -52,7 +52,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override ITileController Controller
+		public override ITileController			Controller
 		{
 			get
 			{
@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public override TileArrowMode ArrowMode
+		public override TileArrowMode			ArrowMode
 		{
 			get
 			{
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		protected override bool IsDragAndDropEnabled
+		protected override bool					IsDragAndDropEnabled
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		protected bool ContainsAnySelectedChildren
+		protected bool							ContainsAnySelectedChildren
 		{
 			get
 			{
@@ -99,25 +99,23 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public bool CanExpandSubTile
+		public bool								CanExpandSubTile
 		{
 			get;
 			set;
 		}
 
-		public bool EnableAddItems
+		public bool								EnableAddItems
 		{
 			get;
 			set;
 		}
 
-		public bool EnableRemoveItems
+		public bool								EnableRemoveItems
 		{
 			get;
 			set;
 		}
-
-		public abstract double GetFullHeight();
 
 		/// <summary>
 		/// Icône visible en haut à gauche de la tuile.
@@ -160,6 +158,9 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
+		
+		public abstract double GetFullHeight();
+
 
 		protected void OnAddClicked(MessageEventArgs e)
 		{
@@ -171,6 +172,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.RemoveClicked.Raise (this, e);
 		}
 
+		
 		private void CreateUI()
 		{
 			this.PreferredWidth = StaticTitleTile.IconSize + 2*StaticTitleTile.IconMargins;
@@ -219,6 +221,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			leftActionPanel.Released += new EventHandler<MessageEventArgs> (this.HandleLeftActionPanel_Released);
 		}
 
+		
 		private void HandleLeftActionPanel_Entered(object sender, MessageEventArgs e)
 		{
 			this.ActionPanelEntered ();

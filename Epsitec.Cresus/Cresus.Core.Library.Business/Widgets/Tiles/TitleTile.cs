@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,22 +25,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 		}
 
-
-		public void SetTileVisibility(string name, bool visibility)
-		{
-			//	Montre ou cache une tuile d'après son nom.
-			//	Si la tuile TitleTile contient une tuile GenericTile utilisant un contrôleur du nom
-			//	cherché, elle est montrée/cachée.
-
-			foreach (var item in this.Items.Select (x => x.Controller).OfType<TileDataItem> ())
-			{
-				if (item.Name == name)
-				{
-					this.Visibility = visibility;
-					break;
-				}
-			}
-		}
 
 		public override double GetFullHeight()
 		{

@@ -21,9 +21,9 @@ namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
 
 		public override void CreateUI(FrameBox container, UIBuilder builder)
 		{
-			FormattedText buttonTitle = this.settings.ButtonTitle;
+			FormattedText buttonTitle       = this.settings.ButtonTitle;
 			FormattedText buttonDescription = this.settings.ButtonDescription;
-			System.Action buttonAction = this.settings.ButtonAction;
+			System.Action buttonAction      = this.settings.ButtonAction;
 
 			var button = new ConfirmationButton
 			{
