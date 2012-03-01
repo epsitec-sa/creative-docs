@@ -131,6 +131,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.PreparesSearch ();
 		}
 
+		public bool IsValid
+		{
+			get
+			{
+				return !this.IsEmpty;
+			}
+		}
+
 		public bool IsEmpty
 		{
 			get
@@ -551,11 +559,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public FormattedText GetSummary(FormattedText columnName)
 		{
-			if (this.IsEmpty)
-			{
-				return FormattedText.Empty;
-			}
-			else
+			if (this.IsValid)
 			{
 				var builder = new System.Text.StringBuilder ();
 
@@ -593,6 +597,10 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 
 				return builder.ToString ();
+			}
+			else
+			{
+				return FormattedText.Empty;
 			}
 		}
 

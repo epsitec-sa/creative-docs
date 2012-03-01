@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Met à jour les recherches, en fonction d'une nouvelle chaîne cherchée.
 			this.searchResults.Clear ();
 
-			if (this.searchData != null && !this.searchData.IsEmpty)
+			if (this.searchData != null && this.searchData.IsValid)
 			{
 				int count = this.Count;
 				for (int row = 0; row < count; row++)
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					foreach (var node in this.searchData.NodesData)
 					{
-						if (node.IsEmpty)
+						if (!node.IsValid)
 						{
 							continue;
 						}
@@ -125,6 +125,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 							foreach (var tab in node.TabsData)
 							{
 								if (tab.Column != ColumnType.None && tab.Column != column)
+								{
+									continue;
+								}
+
+								if (!tab.IsValid)
 								{
 									continue;
 								}
@@ -169,7 +174,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchData == null || this.searchData.IsEmpty)
+				if (this.searchData == null || !this.searchData.IsValid)
 				{
 					return null;
 				}
@@ -184,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchData == null || this.searchData.IsEmpty)
+				if (this.searchData == null || !this.searchData.IsValid)
 				{
 					return null;
 				}
@@ -243,7 +248,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Met à jour le filtre.
 			this.readonlyData.Clear ();
 
-			if (this.filterData == null || this.filterData.IsEmpty)
+			if (this.filterData == null || !this.filterData.IsValid)
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
@@ -271,7 +276,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			foreach (var node in this.filterData.NodesData)
 			{
-				if (node.IsEmpty)
+				if (!node.IsValid)
 				{
 					continue;
 				}
@@ -287,7 +292,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 							continue;
 						}
 
-						if (tab.IsEmpty)
+						if (!tab.IsValid)
 						{
 							continue;
 						}

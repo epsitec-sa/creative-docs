@@ -236,8 +236,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 
 			ToolTip.Default.SetToolTip (this.columnField, this.isFilter ? "Colonne à filtrer" : "Colonne où chercher ?");
-			ToolTip.Default.SetToolTip (this.modeField, this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
-			ToolTip.Default.SetToolTip (this.modeButton, this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.modeField,   this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.modeButton,  this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
 
 			if (this.bigDataInterface)
 			{

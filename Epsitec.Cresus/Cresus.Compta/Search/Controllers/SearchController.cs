@@ -815,7 +815,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
-			this.levelController.ClearEnable = !this.data.IsEmpty || this.data.NodesData.Count > 1;
+			this.levelController.ClearEnable = !this.data.IsEmpty;
 		}
 
 

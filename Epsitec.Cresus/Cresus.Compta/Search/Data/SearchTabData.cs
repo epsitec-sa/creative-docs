@@ -39,6 +39,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.Column = ColumnType.None;
 		}
 
+		public bool IsValid
+		{
+			get
+			{
+				return !this.IsEmpty;
+			}
+		}
+
 		public bool IsEmpty
 		{
 			get

@@ -75,10 +75,36 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			set;
 		}
 
+		public bool IsValid
+		{
+			get
+			{
+				if (this.IsEmpty)
+				{
+					return false;
+				}
+
+				foreach (var node in this.nodesData)
+				{
+					if (!node.IsValid)
+					{
+						return false;
+					}
+				}
+
+				return true;
+			}
+		}
+
 		public bool IsEmpty
 		{
 			get
 			{
+				if (this.nodesData.Count > 1)
+				{
+					return false;
+				}
+				
 				foreach (var node in this.nodesData)
 				{
 					if (!node.IsEmpty)
@@ -215,11 +241,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			if (this.IsEmpty)
-			{
-				return FormattedText.Empty;
-			}
-			else
+			if (this.IsValid)
 			{
 				var builder = new System.Text.StringBuilder ();
 
@@ -253,6 +275,10 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 
 				return builder.ToString ();
+			}
+			else
+			{
+				return FormattedText.Empty;
 			}
 		}
 
