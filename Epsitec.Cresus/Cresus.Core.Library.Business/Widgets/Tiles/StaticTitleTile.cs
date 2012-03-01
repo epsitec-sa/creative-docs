@@ -19,11 +19,13 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// just an icon and a title text. See <see cref="TitleTile"/> for a specialized
 	/// version which manages sub-tiles.
 	/// </summary>
-	public abstract class StaticTitleTile : ControllerTile
+	public abstract class StaticTitleTile : ControllerTile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
 	{
 		protected StaticTitleTile()
 			: base (Direction.Right)
 		{
+			this.items = new TileCollection (this);
+			
 			this.CreateUI ();
 		}
 
@@ -34,6 +36,68 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			set;
 		}
 
+		public bool ContainsFrozenTiles
+		{
+			get
+			{
+				return this.Items.Any (item => item.IsFrozen);
+			}
+		}
+
+		public TileCollection Items
+		{
+			get
+			{
+				return this.items;
+			}
+		}
+
+		public override ITileController Controller
+		{
+			get
+			{
+				if ((this.EnableAddItems || this.EnableRemoveItems) && this.ContainsFrozenTiles)
+				{
+					return this.Items.Select (item => item.Controller).FirstOrDefault ();
+				}
+				else
+				{
+					return null;
+				}
+			}
+			set
+			{
+				throw new System.InvalidOperationException ();
+			}
+		}
+
+		public override TileArrowMode ArrowMode
+		{
+			get
+			{
+				return this.GetArrowMode ();
+			}
+			set
+			{
+				throw new System.InvalidOperationException ("TitleTile.ArrowMode is read-only");
+			}
+		}
+
+		protected override bool IsDragAndDropEnabled
+		{
+			get
+			{
+				return this.ContainsFrozenTiles;
+			}
+		}
+
+		protected bool ContainsAnySelectedChildren
+		{
+			get
+			{
+				return this.items.Any (x => x.IsSelected);
+			}
+		}
 
 		public bool CanExpandSubTile
 		{
@@ -51,14 +115,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		{
 			get;
 			set;
-		}
-
-		public virtual Epsitec.Cresus.Core.Widgets.Tiles.TitleTile.TileCollection Items
-		{
-			get
-			{
-				return null;
-			}
 		}
 
 		public abstract double GetFullHeight();
@@ -310,6 +366,98 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			this.staticTextTitle.Visibility    = string.IsNullOrEmpty (this.title.ToSimpleText ()) == false;
 		}
 
+		private TileArrowMode GetArrowMode()
+		{
+			if (this.IsReadOnly)
+			{
+				if (this.ContainsAnySelectedChildren)
+				{
+					return Tiles.TileArrowMode.Selected;
+				}
+			}
+			else if (this.CanExpandSubTile)
+			{
+				if (this.ContainsAnySelectedChildren)
+				{
+					return Tiles.TileArrowMode.Selected;
+				}
+			}
+
+			return Tiles.TileArrowMode.Normal;
+		}
+
+
+		#region IWidgetCollectionHost<GroupingTile> Members
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
+		{
+			widget.Dock   = this.Dock;
+			widget.Parent = this.mainPanel;
+
+			this.AttachEventHandlers (widget);
+		}
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyRemoval(GenericTile widget)
+		{
+			widget.Parent  = null;
+			//-			widget.Hilited = false;
+
+			this.DetachEventHandlers (widget);
+		}
+
+		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyPostRemoval(GenericTile widget)
+		{
+		}
+
+		Common.Widgets.Collections.WidgetCollection<GenericTile> Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.GetWidgetCollection()
+		{
+			return this.Items;
+		}
+
+		#endregion
+
+		#region TileCollection Class
+
+
+		public class TileCollection : Epsitec.Common.Widgets.Collections.WidgetCollection<GenericTile>
+		{
+			public TileCollection(StaticTitleTile host)
+				: base (host)
+			{
+			}
+		}
+
+		#endregion
+
+		private void AttachEventHandlers(GenericTile widget)
+		{
+			widget.Entered    += this.HandleChildWidgetEnteredOrExited;
+			widget.Exited     += this.HandleChildWidgetEnteredOrExited;
+			widget.Selected   += this.HandleChildWidgetSelectedOrDeselected;
+			widget.Deselected += this.HandleChildWidgetSelectedOrDeselected;
+		}
+
+		private void DetachEventHandlers(GenericTile widget)
+		{
+			widget.Entered    -= this.HandleChildWidgetEnteredOrExited;
+			widget.Exited     -= this.HandleChildWidgetEnteredOrExited;
+			widget.Selected   -= this.HandleChildWidgetSelectedOrDeselected;
+			widget.Deselected -= this.HandleChildWidgetSelectedOrDeselected;
+		}
+
+		private void HandleChildWidgetEnteredOrExited(object sender, MessageEventArgs e)
+		{
+			this.Invalidate ();
+		}
+
+		private void HandleChildWidgetSelectedOrDeselected(object sender)
+		{
+			this.Invalidate ();
+		}
+		
+
+		
+		
 		public event EventHandler<MessageEventArgs>		AddClicked;
 		public event EventHandler<MessageEventArgs>		RemoveClicked;
 
@@ -317,6 +465,8 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		protected static readonly double IconMargins      = 2;
 		protected static readonly double TitleHeight      = 20;
 		protected static readonly double MinimumTileWidth = StaticTitleTile.IconSize + StaticTitleTile.IconMargins*2;
+
+		protected readonly TileCollection		items;
 
 		private string							iconUri;
 		private FormattedText					title;

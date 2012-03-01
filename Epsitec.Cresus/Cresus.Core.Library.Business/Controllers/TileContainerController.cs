@@ -535,18 +535,42 @@ namespace Epsitec.Cresus.Core.Controllers
 			System.Diagnostics.Debug.Assert (item.TitleTile == null);
 			System.Diagnostics.Debug.Assert (item.Tile != null);
 
-			item.TitleTile = new TitleTile ()  // item.TitleTile aura item.Tile dans sa collection Items !
-			{
-				ActionViewController = this.actionViewController,
-				IsReadOnly           = (item.DataType != TileDataType.EditableItem) && (item.DataType != TileDataType.EditableSimpleItem),  // fond bleuté si tuile d'édition
-				CanExpandSubTile     = item.DataType == TileDataType.EditableSimpleItem,
-				Frameless            = item.Frameless,
-				Dock                 = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
-			};
+			//	Create the title tile (the global container with the icon and the title). This
+			//	automatically inserts the edition or summary tile of the item to the title tile.
+
+			item.TitleTile = item.FullWidthPanel ? this.CreateTitleTileWithVerticalLayout (item) : this.CreatePlainTitleTile (item);
 
 			System.Diagnostics.Debug.Assert (item.TitleTile.Items.Contains (item.Tile));
 
 			this.CreateTitleTileClickHandler (item, item.TitleTile);
+		}
+
+		private StaticTitleTile CreatePlainTitleTile(TileDataItem item)
+		{
+			bool isSummaryTile = (item.DataType != TileDataType.EditableItem) && (item.DataType != TileDataType.EditableSimpleItem);
+
+			return new TitleTile ()
+			{
+				ActionViewController = this.actionViewController,
+				IsReadOnly           = isSummaryTile,
+				CanExpandSubTile     = item.DataType == TileDataType.EditableSimpleItem,
+				Frameless            = item.Frameless,
+				Dock                 = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
+			};
+		}
+
+		private StaticTitleTile CreateTitleTileWithVerticalLayout(TileDataItem item)
+		{
+			bool isSummaryTile = (item.DataType != TileDataType.EditableItem) && (item.DataType != TileDataType.EditableSimpleItem);
+
+			return new TitleTileWithVerticalLayout ()
+			{
+				ActionViewController = this.actionViewController,
+				IsReadOnly           = isSummaryTile,
+				CanExpandSubTile     = item.DataType == TileDataType.EditableSimpleItem,
+				Frameless            = item.Frameless,
+				Dock                 = item.FullHeightStretch ? DockStyle.StackFill : DockStyle.Stacked,
+			};
 		}
 
 		private void RemoveTitleTile(TileDataItem item)

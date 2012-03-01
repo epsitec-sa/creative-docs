@@ -19,77 +19,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 	/// Cette tuile regroupe plusieurs tuiles simples (AbstractTile) dans son conteneur (Container).
 	/// Elle affiche une icône en haut à gauche (TitleIconUri) et un titre (Title).
 	/// </summary>
-	public sealed class TitleTile : StaticTitleTile, Epsitec.Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>
+	public sealed class TitleTile : StaticTitleTile
 	{
 		public TitleTile()
 		{
-			this.items = new TileCollection (this);
 		}
-
-
-		public bool								ContainsFrozenTiles
-		{
-			get
-			{
-				return this.Items.Any (item => item.IsFrozen);
-			}
-		}
-
-		public override TileCollection			Items
-		{
-			get
-			{
-				return this.items;
-			}
-		}
-
-		public override ITileController			Controller
-		{
-			get
-			{
-				if ((this.EnableAddItems || this.EnableRemoveItems) && this.ContainsFrozenTiles)
-				{
-					return this.Items.Select (item => item.Controller).FirstOrDefault ();
-				}
-				else
-				{
-					return null;
-				}
-			}
-			set
-			{
-				throw new System.InvalidOperationException ();
-			}
-		}
-		
-		public override TileArrowMode			ArrowMode
-		{
-			get
-			{
-				return this.GetArrowMode ();
-			}
-			set
-			{
-				throw new System.InvalidOperationException ("TitleTile.ArrowMode is read-only");
-			}
-		}
-
-		protected override bool					IsDragAndDropEnabled
-		{
-			get
-			{
-				return this.ContainsFrozenTiles;
-			}
-		}
-
-		private bool							ContainsAnySelectedChildren
-		{
-			get
-			{
-				return this.items.Any (x => x.IsSelected);
-			}
-		}
-
 
 
 		public void SetTileVisibility(string name, bool visibility)
@@ -233,26 +167,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		private TileArrowMode GetArrowMode()
-		{
-			if (this.IsReadOnly)
-			{
-				if (this.ContainsAnySelectedChildren)
-				{
-					return Tiles.TileArrowMode.Selected;
-				}
-			}
-			else if (this.CanExpandSubTile)
-			{
-				if (this.ContainsAnySelectedChildren)
-				{
-					return Tiles.TileArrowMode.Selected;
-				}
-			}
-
-			return Tiles.TileArrowMode.Normal;
-		}
-
 		private bool GetMouseHilite()
 		{
 			return Comparer.EqualValues (this.GetSurfaceColors (), TileColors.SurfaceHilitedColors)
@@ -312,75 +226,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 		}
 
 
-		#region IWidgetCollectionHost<GroupingTile> Members
-
-		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyInsertion(GenericTile widget)
-		{
-			widget.Dock   = this.Dock;
-			widget.Parent = this.mainPanel;
-
-			this.AttachEventHandlers (widget);
-		}
-
-		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyRemoval(GenericTile widget)
-		{
-			widget.Parent  = null;
-//-			widget.Hilited = false;
-
-			this.DetachEventHandlers (widget);
-		}
-
-		void Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.NotifyPostRemoval(GenericTile widget)
-		{
-		}
-
-		Common.Widgets.Collections.WidgetCollection<GenericTile> Common.Widgets.Collections.IWidgetCollectionHost<GenericTile>.GetWidgetCollection()
-		{
-			return this.Items;
-		}
-
-		#endregion
-
-		#region TileCollection Class
-
-		
-		public class TileCollection : Epsitec.Common.Widgets.Collections.WidgetCollection<GenericTile>
-		{
-			public TileCollection(TitleTile host)
-				: base (host)
-			{
-			}
-		}
-
-		#endregion
-
-
-		private void AttachEventHandlers(GenericTile widget)
-		{
-			widget.Entered    += this.HandleChildWidgetEnteredOrExited;
-			widget.Exited     += this.HandleChildWidgetEnteredOrExited;
-			widget.Selected   += this.HandleChildWidgetSelectedOrDeselected;
-			widget.Deselected += this.HandleChildWidgetSelectedOrDeselected;
-		}
-
-		private void DetachEventHandlers(GenericTile widget)
-		{
-			widget.Entered    -= this.HandleChildWidgetEnteredOrExited;
-			widget.Exited     -= this.HandleChildWidgetEnteredOrExited;
-			widget.Selected   -= this.HandleChildWidgetSelectedOrDeselected;
-			widget.Deselected -= this.HandleChildWidgetSelectedOrDeselected;
-		}
-
-		private void HandleChildWidgetEnteredOrExited(object sender, MessageEventArgs e)
-		{
-			this.Invalidate ();
-		}
-
-		private void HandleChildWidgetSelectedOrDeselected(object sender)
-		{
-			this.Invalidate ();
-		}
-		
 		static TitleTile()
 		{
 			DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
@@ -392,8 +237,6 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 
 		private static readonly double			ButtonSize	= 16;
-
-		private readonly TileCollection			items;
 
 		private GlyphButton						buttonAdd;
 		private GlyphButton						buttonRemove;

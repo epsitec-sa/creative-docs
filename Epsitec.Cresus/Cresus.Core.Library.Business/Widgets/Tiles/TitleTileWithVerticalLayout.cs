@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
@@ -60,8 +60,14 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 		public override double GetFullHeight()
 		{
-			throw new System.NotImplementedException ();
-			return 100;
+			double height = System.Math.Max (StaticTitleTile.TitleHeight, StaticTitleTile.IconMargins + StaticTitleTile.IconSize);
+
+			foreach (var item in this.Items)
+			{
+				height += item.PreferredHeight;
+			}
+
+			return height;
 		}
 
 		protected override void UpdateTileArrow()

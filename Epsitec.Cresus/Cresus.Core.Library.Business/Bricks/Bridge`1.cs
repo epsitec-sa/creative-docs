@@ -247,6 +247,10 @@ namespace Epsitec.Cresus.Core.Bricks
 					item.FullHeightStretch = true;
 					break;
 
+				case BrickMode.FullWidthPanel:
+					item.FullWidthPanel = true;
+					break;
+
 				case BrickMode.HideRemoveButton:
 					item.HideRemoveButton = true;
 					break;

@@ -6,6 +6,7 @@ using Epsitec.Aider.Entities;
 using Epsitec.Cresus.Bricks;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
 
 using System.Collections.Generic;
@@ -18,6 +19,7 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 		protected override void CreateBricks(BrickWall<AiderHouseholdEntity> wall)
 		{
 			wall.AddBrick ()
+				.Attribute (BrickMode.FullWidthPanel)
 				.Input ()
 					.Button ("Nouveau ménage", "Crée un nouveau ménage, propre à cette personne", this.HandleButtonCreateClicked)
 					.SearchPanel ("Lier à un ménage existant", "lier", this.HandleButtonAssociateClicked)

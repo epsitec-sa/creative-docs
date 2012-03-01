@@ -44,12 +44,13 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				this.Frameless                = template.Frameless;
 				this.InitialVisibility        = template.InitialVisibility;
 				this.FullHeightStretch        = template.FullHeightStretch;
+				this.FullWidthPanel           = template.FullWidthPanel;
 				this.DataType                 = template.DataType;
 				this.Title                    = template.Title;
 				this.CompactTitle             = template.CompactTitle;
 				this.DefaultMode              = template.DefaultMode;
 				this.EntityMarshalerConverter = template.EntityMarshalerConverter;
-				this.CreateUI          = template.CreateUI;
+				this.CreateUI                 = template.CreateUI;
 			}
 		}
 
@@ -148,6 +149,11 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 			set;
 		}
 
+		public bool								FullWidthPanel
+		{
+			get;
+			set;
+		}
 		public TileDataType						DataType
 		{
 			get;

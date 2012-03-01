@@ -53,5 +53,6 @@ namespace Epsitec.Cresus.Core.Bricks
 		SpecialController19,
 
 		FullHeightStretch,
+		FullWidthPanel,
 	}
 }
