@@ -416,12 +416,12 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdd(SearchData data)
 		{
-			data.TabsData.Add (new SearchTabData ());
+			data.NodesData[0].TabsData.Add (new SearchTabData ());
 		}
 
 		private void SearchAdaptForNonZero(SearchData data)
 		{
-			var tab = data.TabsData.Last ();
+			var tab = data.NodesData[0].TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.MontantToString (0);
 			tab.SearchText.Mode     = SearchMode.WholeContent;
@@ -433,7 +433,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdaptProfondeur(SearchData data, int minProfondeur, int maxProfondeur)
 		{
-			var tab = data.TabsData.Last ();
+			var tab = data.NodesData[0].TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.IntToString (minProfondeur);
 			tab.SearchText.ToText   = Converters.IntToString (maxProfondeur);
@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdaptDate(SearchData data, int startDay, int startMonth, int endDay, int endMonth)
 		{
-			var tab = data.TabsData.Last ();
+			var tab = data.NodesData[0].TabsData.Last ();
 
 			int year = Date.Today.Year;
 
@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdaptCatégorie(SearchData data, CatégorieDeCompte catégorie)
 		{
-			var tab = data.TabsData.Last ();
+			var tab = data.NodesData[0].TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.CatégoriesToString (catégorie);
 			tab.SearchText.Mode     = SearchMode.Fragment;
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdaptOrMode(SearchData data)
 		{
-			data.OrMode = (data.TabsData.Count == 1);
+			data.OrMode = (data.NodesData[0].TabsData.Count == 1);
 		}
 
 

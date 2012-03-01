@@ -16,26 +16,26 @@ namespace Epsitec.Cresus.Compta.Search.Data
 	{
 		public SearchData()
 		{
-			this.tabsData = new List<SearchTabData> ();
+			this.nodesData = new List<SearchNodeData> ();
 			this.Clear ();
 		}
 
 
-		public void Clear()
+		private void Clear()
 		{
 			//	Vide les données et prépare une unique ligne.
-			this.tabsData.Clear ();
+			this.nodesData.Clear ();
 			this.Adjust ();
 
 			this.OrMode = true;
 		}
 
-		public void Adjust()
+		private void Adjust()
 		{
 			//	Adapte les données pour avoir une ligne au minimum.
-			if (!this.tabsData.Any ())
+			if (!this.nodesData.Any ())
 			{
-				this.tabsData.Add (new SearchTabData ());
+				this.nodesData.Add (new SearchNodeData ());
 			}
 		}
 
@@ -49,12 +49,21 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public List<SearchTabData> TabsData
+		public SearchTabData FirstTabData
+		{
+			//	Retourne la première ligne de données.
+			get
+			{
+				return this.nodesData[0].TabsData[0];
+			}
+		}
+
+		public List<SearchNodeData> NodesData
 		{
 			//	Retourne toutes les lignes de données.
 			get
 			{
-				return this.tabsData;
+				return this.nodesData;
 			}
 		}
 
@@ -70,9 +79,9 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				foreach (var tab in this.tabsData)
+				foreach (var node in this.nodesData)
 				{
-					if (!tab.IsEmpty)
+					if (!node.IsEmpty)
 					{
 						return false;
 					}
@@ -88,11 +97,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Texte unique de recherche en mode débutant.
 			get
 			{
-				return this.tabsData[0].SearchText.FromText;
+				return this.nodesData[0].TabsData[0].SearchText.FromText;
 			}
 			set
 			{
-				this.tabsData[0].SearchText.FromText = value;
+				this.nodesData[0].TabsData[0].SearchText.FromText = value;
 				this.BeginnerAdjust (false);
 			}
 		}
@@ -103,115 +112,23 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Catégories à filtrer en mode débutant.
 			get
 			{
-				var data = this.BeginnerCatégoriesData;
-
-				if (data == null)
-				{
-					return CatégorieDeCompte.Tous;
-				}
-				else
-				{
-					return Converters.StringToCatégories (data.SearchText.FromText);
-				}
+				return this.nodesData[0].BeginnerCatégories;
 			}
 			set
 			{
-				var data = this.BeginnerCatégoriesData;
-
-				if (value == CatégorieDeCompte.Tous || value == CatégorieDeCompte.Inconnu)
-				{
-					if (data != null)
-					{
-						this.tabsData.Remove (data);
-						this.Adjust ();
-					}
-				}
-				else
-				{
-					if (data == null)
-					{
-						//	Si on n'a trouvé aucune ligne, on en crée une.
-						data = new SearchTabData ();
-						this.tabsData.Add (data);
-					}
-
-					data.Column              = ColumnType.Catégorie;
-					data.SearchText.Mode     = SearchMode.Jokers;
-					data.SearchText.FromText = Converters.CatégoriesToString (value);
-
-					this.BeginnerAdjust (true);
-				}
-			}
-		}
-
-		private SearchTabData BeginnerCatégoriesData
-		{
-			get
-			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Catégorie).FirstOrDefault ();
+				this.nodesData[0].BeginnerCatégories = value;
 			}
 		}
 
 
 		public void GetBeginnerProfondeurs(out int from, out int to)
 		{
-			from = 1;
-			to   = int.MaxValue;  // de 1 à tous
-
-			var data = this.BeginnerProfondeurData;
-
-			if (data != null)
-			{
-				int p;
-
-				if (int.TryParse (data.SearchText.FromText, out p))
-				{
-					from = p;
-				}
-				
-				if (int.TryParse (data.SearchText.ToText, out p))
-				{
-					to = p;
-				}
-			}
+			this.nodesData[0].GetBeginnerProfondeurs(out from, out to);
 		}
 
 		public void SetBeginnerProfondeurs(int from, int to)
 		{
-			var data = this.BeginnerProfondeurData;
-
-			if (from == 1 && to == int.MaxValue)  // tous ?
-			{
-				if (data != null)
-				{
-					this.tabsData.Remove (data);
-					this.Adjust ();
-				}
-			}
-			else
-			{
-				if (data == null)
-				{
-					//	Si on n'a trouvé aucune ligne, on en crée une.
-					data = new SearchTabData ();
-					this.tabsData.Add (data);
-				}
-
-				data.Column              = ColumnType.Profondeur;
-				data.SearchText.Mode     = SearchMode.Interval;
-				data.SearchText.FromText = (from == int.MaxValue) ? null : from.ToString ();
-				data.SearchText.ToText   = (to   == int.MaxValue) ? null : to  .ToString ();
-
-				this.BeginnerAdjust (true);
-			}
-		}
-
-		private SearchTabData BeginnerProfondeurData
-		{
-			get
-			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Profondeur).FirstOrDefault ();
-			}
+			this.nodesData[0].SetBeginnerProfondeurs (from, to);
 		}
 
 
@@ -219,51 +136,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				var data = this.BeginnerSoldesNulsData;
-
-				if (data != null && data.SearchText.Invert && data.SearchText.FromText == Converters.MontantToString (0))
-				{
-					return false;
-				}
-
-				return true;
+				return this.nodesData[0].BeginnerSoldesNuls;
 			}
 			set
 			{
-				var data = this.BeginnerSoldesNulsData;
-
-				if (value)  // affiche les comptes dont le solde est nul ?
-				{
-					if (data != null)
-					{
-						this.tabsData.Remove (data);
-						this.Adjust ();
-					}
-				}
-				else
-				{
-					if (data == null)
-					{
-						//	Si on n'a trouvé aucune ligne, on en crée une.
-						data = new SearchTabData ();
-						this.tabsData.Add (data);
-					}
-
-					data.Column              = ColumnType.Solde;
-					data.SearchText.Mode     = SearchMode.WholeContent;
-					data.SearchText.Invert   = true;
-					data.SearchText.FromText = Converters.MontantToString (0);
-
-					this.BeginnerAdjust (true);
-				}
-			}
-		}
-
-		private SearchTabData BeginnerSoldesNulsData
-		{
-			get
-			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Solde).FirstOrDefault ();
+				this.nodesData[0].BeginnerSoldesNuls = value;
 			}
 		}
 
@@ -271,65 +148,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public void GetBeginnerDates(out Date? beginDate, out Date? endDate)
 		{
 			//	Retourne les dates à filtrer en mode débutant.
-			var data = this.BeginnerDatesData;
-
-			if (data == null)
-			{
-				beginDate = null;
-				endDate   = null;
-			}
-			else
-			{
-				data.SearchText.GetIntervalDates (out beginDate, out endDate);
-			}
+			this.nodesData[0].GetBeginnerDates(out beginDate, out endDate);
 		}
 
 		public void SetBeginnerDates(Date? beginDate, Date? endDate)
 		{
 			//	Modifie les dates à filtrer en mode débutant.
-			var data = this.BeginnerDatesData;
-
-			if (beginDate == null && endDate == null)
-			{
-				if (data != null)
-				{
-					this.tabsData.Remove (data);
-					this.Adjust ();
-				}
-			}
-			else
-			{
-				if (data == null)
-				{
-					//	Si on n'a trouvé aucune ligne, on en crée une.
-					data = new SearchTabData ();
-					this.tabsData.Add (data);
-				}
-
-				data.Column              = ColumnType.Date;
-				data.SearchText.Mode     = SearchMode.Interval;
-				data.SearchText.FromText = Converters.DateToString (beginDate);
-				data.SearchText.ToText   = Converters.DateToString (endDate);
-
-				this.BeginnerAdjust (true);
-			}
-		}
-
-		private SearchTabData BeginnerDatesData
-		{
-			get
-			{
-				foreach (var data in this.tabsData)
-				{
-					Date? beginDate, endDate;
-					if (data.SearchText.GetIntervalDates (out beginDate, out endDate))
-					{
-						return data;
-					}
-				}
-
-				return null;
-			}
+			this.nodesData[0].SetBeginnerDates (beginDate, endDate);
 		}
 
 
@@ -338,72 +163,27 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Ajuste les données après une modification en mode débutant.
 			//	Il faut supprimer les données surnuméraires, afin d'obtenir un résultat
 			//	conforme à ce qui est visible.
-			if (isFilter)  // filtre ?
-			{
-				//	1) Cherche les données effectives.
-				var dataCatégories = this.BeginnerCatégoriesData;
-				var dataProfondeur = this.BeginnerProfondeurData;
-				var dataSoldesNuls = this.BeginnerSoldesNulsData;
-				var dataDates      = this.BeginnerDatesData;
-
-				//	2) Supprime toutes les données-
-				this.tabsData.Clear ();
-
-				//	3) Puis remet les données effectives, dans le bon ordre.
-				if (dataCatégories != null)
-				{
-					this.tabsData.Add (dataCatégories);
-				}
-
-				if (dataProfondeur != null)
-				{
-					this.tabsData.Add (dataProfondeur);
-				}
-
-				if (dataSoldesNuls != null)
-				{
-					this.tabsData.Add (dataSoldesNuls);
-				}
-
-				if (dataDates != null)
-				{
-					this.tabsData.Add (dataDates);
-				}
-
-				//	4) Met au moins une ligne s'il n'y a plus rien.
-				this.Adjust ();
-
-				//	Si plusieurs lignes sont utilisées, il faut mettre le mode "and".
-				this.OrMode = false;
-			}
-			else  // recherche ?
-			{
-				//	Ne conserve que la première ligne.
-				while (this.tabsData.Count > 1)
-				{
-					this.tabsData.RemoveAt (1);
-				}
-			}
+			this.nodesData[0].BeginnerAdjust (isFilter);
 		}
 
 
 		public bool CompareTo(SearchData other)
 		{
-			if (other.tabsData.Count != this.tabsData.Count)
+			if (other.nodesData.Count != this.nodesData.Count)
 			{
 				return false;
 			}
 
 			//	Avec une seule ligne, il ne faut pas tenir compte du mode et/ou, qui peut
 			//	changer sans qu'il faille considérer les données comme différentes !
-			if (other.tabsData.Count > 1 && other.OrMode != this.OrMode)
+			if (other.nodesData.Count > 1 && other.OrMode != this.OrMode)
 			{
 				return false;
 			}
 
-			for (int i = 0; i < this.tabsData.Count; i++)
+			for (int i = 0; i < this.nodesData.Count; i++)
 			{
-				if (!this.tabsData[i].CompareTo (other.tabsData[i]))
+				if (!this.nodesData[i].CompareTo (other.nodesData[i]))
 				{
 					return false;
 				}
@@ -423,12 +203,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			dst.OrMode = this.OrMode;
 
-			dst.tabsData.Clear ();
-			foreach (var tab in this.tabsData)
+			dst.nodesData.Clear ();
+			foreach (var node in this.nodesData)
 			{
-				var n = new SearchTabData ();
-				tab.CopyTo (n);
-				dst.tabsData.Add (n);
+				var n = new SearchNodeData ();
+				node.CopyTo (n);
+				dst.nodesData.Add (n);
 			}
 		}
 
@@ -444,9 +224,10 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				var builder = new System.Text.StringBuilder ();
 
 				bool first = true;
-				foreach (var tab in this.tabsData)
+				bool many = this.nodesData.Count > 1;
+				foreach (var node in this.nodesData)
 				{
-					FormattedText s = tab.GetSummary (columnMappers);
+					FormattedText s = node.GetSummary (columnMappers);
 
 					if (!s.IsNullOrEmpty)
 					{
@@ -455,7 +236,18 @@ namespace Epsitec.Cresus.Compta.Search.Data
 							builder.Append (this.OrMode ? " ou " : " et ");
 						}
 
+						if (many)
+						{
+							builder.Append ("(");
+						}
+
 						builder.Append (s);
+
+						if (many)
+						{
+							builder.Append (")");
+						}
+
 						first = false;
 					}
 				}
@@ -465,6 +257,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		private readonly List<SearchTabData>		tabsData;
+		private readonly List<SearchNodeData>		nodesData;
 	}
 }

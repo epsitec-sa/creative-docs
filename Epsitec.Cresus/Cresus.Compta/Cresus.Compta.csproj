@@ -77,6 +77,8 @@
     <Compile Include="Permanents\Controllers\ExtraitDeComptePermanentsController.cs" />
     <Compile Include="Permanents\Data\AbstractPermanents.cs" />
     <Compile Include="Permanents\Data\ExtraitDeComptePermanents.cs" />
+    <Compile Include="Search\Controllers\SearchNodeController.cs" />
+    <Compile Include="Search\Data\SearchNodeData.cs" />
     <Compile Include="ViewSettings\Data\NavigatorEngine.cs" />
     <Compile Include="ViewSettings\Data\NavigatorData.cs" />
     <Compile Include="ViewSettings\Data\ShowPanelMode.cs" />
@@ -303,6 +305,11 @@
     <EmbeddedResource Include="Images\Edit.Create.icon" />
     <EmbeddedResource Include="Images\MarkNo.icon" />
     <EmbeddedResource Include="Images\MarkYes.icon" />
+    <EmbeddedResource Include="Images\Level.Clear.icon" />
+    <EmbeddedResource Include="Images\Search.AddAnd.icon" />
+    <EmbeddedResource Include="Images\Search.AddOr.icon" />
+    <EmbeddedResource Include="Images\Search.SubAnd.icon" />
+    <EmbeddedResource Include="Images\Search.SubOr.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

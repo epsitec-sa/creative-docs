@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.buttonClear = new IconButton
 			{
 				Parent        = frame,
-				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Cancel"),
+				IconUri       = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				PreferredSize = new Size (20, 20),
 				Dock          = DockStyle.Left,
 				Margins       = new Margins (8, 0, 0, 0),

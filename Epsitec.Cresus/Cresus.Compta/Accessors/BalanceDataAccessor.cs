@@ -32,10 +32,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void FilterInitialize(SearchData data)
 		{
-			data.TabsData[0].Column              = ColumnType.Solde;
-			data.TabsData[0].SearchText.Mode     = SearchMode.WholeContent;
-			data.TabsData[0].SearchText.Invert   = true;
-			data.TabsData[0].SearchText.FromText = Converters.MontantToString (0);
+			data.FirstTabData.Column              = ColumnType.Solde;
+			data.FirstTabData.SearchText.Mode     = SearchMode.WholeContent;
+			data.FirstTabData.SearchText.Invert   = true;
+			data.FirstTabData.SearchText.FromText = Converters.MontantToString (0);
 		}
 
 

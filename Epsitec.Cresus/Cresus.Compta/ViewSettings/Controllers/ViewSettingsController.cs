@@ -172,11 +172,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			new StaticText
 			{
-				Parent          = this.comptactFrame,
-				Text            = "Réglage",
-				PreferredWidth  = UIBuilder.LeftLabelWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
+				Parent           = this.comptactFrame,
+				Text             = "Réglage",
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (0, 10, 0, 0),
 			};
 
 			this.compactComboViewSettings = new TextFieldCombo
@@ -253,9 +255,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			var leftFrame = new FrameBox
 			{
-				Parent          = this.extendedFrame,
-				PreferredWidth  = UIBuilder.LeftLabelWidth,
-				Dock            = DockStyle.Left,
+				Parent = this.extendedFrame,
+				Dock   = DockStyle.Left,
 			};
 
 			var centerFrame = new FrameBox
@@ -275,12 +276,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			//	Panneau de gauche.
 			new StaticText
 			{
-				Parent          = leftFrame,
-				Text            = "Réglages",
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth  = UIBuilder.LeftLabelWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
+				Parent           = leftFrame,
+				Text             = "Réglages",
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Top,
+				Margins          = new Margins (0, 10, 0, 0),
 			};
 
 			//	Panneau du milieu.

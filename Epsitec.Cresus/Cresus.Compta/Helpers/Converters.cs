@@ -590,7 +590,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Retourne une description courte de ce genre:
 			//	"Aucun"
 			//	"Budget au prorata"
-			//	"Plusieurs"
+			//	"Plusieurs..."
 			int n = Converters.ComparisonsShowed.Where (x => (mode & x) != 0).Count ();
 
 			if (n == 0)
@@ -603,7 +603,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 			else
 			{
-				return "Plusieurs";
+				return "Plusieurs...";
 			}
 		}
 

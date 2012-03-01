@@ -54,10 +54,12 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 
 			new StaticText
 			{
-				Parent         = frame,
-				FormattedText  = "Compte",
-				PreferredWidth = UIBuilder.LeftLabelWidth,
-				Dock           = DockStyle.Left,
+				Parent           = frame,
+				FormattedText    = "Compte",
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (0, 10, 0, 0),
 			};
 
 			AbstractTextField field;

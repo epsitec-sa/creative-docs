@@ -259,7 +259,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			int count = 0;
 
-			if (!string.IsNullOrEmpty (target))
+			if (!string.IsNullOrEmpty (target) && !string.IsNullOrEmpty (this.preparedFromText))
 			{
 				string prepared = this.PreparesSearch (target);
 

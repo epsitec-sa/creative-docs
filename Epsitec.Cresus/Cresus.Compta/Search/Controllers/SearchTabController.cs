@@ -47,6 +47,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 
 			{
+				var labelFrame = new FrameBox
+				{
+					Parent          = frameBox,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Padding         = new Margins (5, 0, 0, 0),
+				};
+
+				this.CreateLabelUI (labelFrame);
+			}
+
+			{
 				this.searchFromFrame = new FrameBox
 				{
 					Parent          = frameBox,
@@ -220,12 +232,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.addRemoveButton.Clicked += delegate
 			{
-				addRemoveAction (this.Index);
+				addRemoveAction (this.index);
 			};
 
 			ToolTip.Default.SetToolTip (this.columnField, this.isFilter ? "Colonne à filtrer" : "Colonne où chercher ?");
-			ToolTip.Default.SetToolTip (this.modeField,   this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
-			ToolTip.Default.SetToolTip (this.modeButton,  this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.modeField, this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
+			ToolTip.Default.SetToolTip (this.modeButton, this.isFilter ? "Comment filtrer"   : "Comment chercher ?");
 
 			if (this.bigDataInterface)
 			{
@@ -241,6 +253,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			return frameBox;
 		}
 
+		private void CreateLabelUI(FrameBox parent)
+		{
+			this.titleLabel = new StaticText
+			{
+				Parent           = parent,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Top,
+				Margins          = new Margins (0, 10, 0, 0),
+			};
+		}
+
+	
 		public void SetFocus()
 		{
 			if (this.searchFieldEx1.Visibility)
@@ -259,21 +286,31 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.InitializeColumnsCombo ();
 		}
 
-		public void SetAddAction(bool add, bool enable)
+		public int ParentIndex
 		{
-			if (this.addAction != add || this.addActionEnable != enable)
+			get
 			{
+				return this.parentIndex;
+			}
+			set
+			{
+				this.parentIndex = value;
+				this.UpdateButtons ();
+			}
+		}
+
+		public void SetAddAction(int index, bool enable)
+		{
+			bool add = (index == 0);
+
+			if (this.index != index || this.addAction != add || this.addActionEnable != enable)
+			{
+				this.index           = index;
 				this.addAction       = add;
 				this.addActionEnable = enable;
 
 				this.UpdateButtons ();
 			}
-		}
-
-		public int Index
-		{
-			get;
-			set;
 		}
 
 
@@ -363,16 +400,32 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
-			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Multi.Insert" : "Multi.Delete");
+			if (this.addAction)
+			{
+				if (this.ParentIndex == 0)
+				{
+					this.titleLabel.Text = this.isFilter ? "Filtrer" : "Rechercher";
+				}
+				else
+				{
+					this.titleLabel.Text = this.isFilter ? "Et filtrer" : "Et rechercher";
+				}
+			}
+			else
+			{
+				this.titleLabel.Text = "ou";
+			}
+
+			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddOr" : "Search.SubOr");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
 
 			if (this.addAction)
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre" : "Ajoute un nouveau critère de recherche");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre \"ou\"" : "Ajoute un nouveau critère de recherche \"ou\"");
 			}
 			else
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre" : "Supprime le critère de recherche");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre \"ou\"" : "Supprime le critère de recherche \"ou\"");
 			}
 		}
 
@@ -590,30 +643,33 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private readonly AbstractController		controller;
-		private readonly List<ColumnMapper>		columnMappers;
-		private readonly SearchTabData			tabData;
-		private readonly List<int>				columnIndexes;
-		private readonly bool					isFilter;
-		private readonly SafeCounter			ignoreChanges;
+		private readonly AbstractController				controller;
+		private readonly List<ColumnMapper>				columnMappers;
+		private readonly SearchTabData					tabData;
+		private readonly List<int>						columnIndexes;
+		private readonly bool							isFilter;
+		private readonly SafeCounter					ignoreChanges;
 
-		private System.Action					searchStartAction;
-		private FrameBox						searchFromFrame;
-		private StaticText						searchFromLabel;
-		private TextField						searchField1;
-		private TextFieldEx						searchFieldEx1;
-		private FrameBox						searchToFrame;
-		private StaticText						searchToLabel;
-		private TextField						searchField2;
-		private TextFieldEx						searchFieldEx2;
-		private TextFieldCombo					columnField;
-		private FrameBox						modeFrame;
-		private StaticText						modeField;
-		private GlyphButton						modeButton;
-		private IconButton						addRemoveButton;
+		private System.Action							searchStartAction;
+		private int										parentIndex;
+		private int										index;
+		private StaticText								titleLabel;
+		private FrameBox								searchFromFrame;
+		private StaticText								searchFromLabel;
+		private TextField								searchField1;
+		private TextFieldEx								searchFieldEx1;
+		private FrameBox								searchToFrame;
+		private StaticText								searchToLabel;
+		private TextField								searchField2;
+		private TextFieldEx								searchFieldEx2;
+		private TextFieldCombo							columnField;
+		private FrameBox								modeFrame;
+		private StaticText								modeField;
+		private GlyphButton								modeButton;
+		private IconButton								addRemoveButton;
 
-		private bool							bigDataInterface;
-		private bool							addAction;
-		private bool							addActionEnable;
+		private bool									bigDataInterface;
+		private bool									addAction;
+		private bool									addActionEnable;
 	}
 }

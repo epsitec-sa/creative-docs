@@ -62,9 +62,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int count = this.journalAll.Count;
 				for (int row = 0; row < count; row++)
 				{
-					int founds = this.FilterLine (row);
-
-					if (founds != 0 && (this.filterData.OrMode || founds == this.filterData.TabsData.Count))
+					if (this.FilterLine (row))
 					{
 						this.journal.Add (this.journalAll[row]);
 					}

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.compta        = this.controller.ComptaEntity;
 			this.columnMappers = this.controller.ColumnMappers;
 
-			this.tabControllers = new List<SearchTabController> ();
+			this.nodeControllers = new List<SearchNodeController> ();
 		}
 
 
@@ -47,21 +47,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			var labelFrame = new FrameBox
-			{
-				Parent          = frame,
-				PreferredWidth  = UIBuilder.LeftLabelWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Padding         = new Margins (5, 0, 5, 5),
-			};
-
 			this.middleFrame = new FrameBox
 			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-				Padding         = new Margins (0, 5, 5, 5),
+				Parent              = frame,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				PreferredHeight     = 20,
+				Dock                = DockStyle.Fill,
+				Padding             = new Margins (0, 0, 0, 0),
 			};
 
 			var levelFrame = new FrameBox
@@ -71,7 +63,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Right,
-				Padding         = new Margins (5),
+				Padding         = new Margins (5, 5, 5, 5),
 			};
 
 			var rightFrame = new FrameBox
@@ -82,7 +74,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Padding         = new Margins (5, 0, 5, 5),
 			};
 
-			this.CreateLabelUI (labelFrame);
 			this.CreateRightUI  (rightFrame);
 			this.CreateMiddleUI ();
 			this.CreateLevelUI (levelFrame);
@@ -109,7 +100,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 					this.CreateMiddleUI ();
 					this.UpdateButtons ();
-					this.UpdateOrMode ();
 				}
 			}
 		}
@@ -119,37 +109,23 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
-			this.UpdateOrMode ();
 		}
 
 
 		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-			foreach (var controller in this.tabControllers)
+			foreach (var controller in this.nodeControllers)
 			{
 				controller.UpdateColumns ();
 			}
 		}
 
 
-		private void CreateLabelUI(FrameBox parent)
-		{
-			new StaticText
-			{
-				Parent          = parent,
-				Text            = this.isFilter ? "Filtrer" : "Rechercher",
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth  = UIBuilder.LeftLabelWidth,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
-		}
-
 		private void CreateMiddleUI()
 		{
 			this.middleFrame.Children.Clear ();
-			this.tabControllers.Clear ();
+			this.nodeControllers.Clear ();
 
 			if (this.data.Specialist)
 			{
@@ -163,7 +139,34 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void CreateMiddleBeginnerUI()
 		{
-			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			this.beginnerFrame = new FrameBox
+			{
+				Parent              = this.middleFrame,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock                = DockStyle.Fill,
+				Padding             = new Margins (5),
+			};
+
+			{
+				var frame = new FrameBox
+				{
+					Parent          = this.beginnerFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+				};
+
+				new StaticText
+				{
+					Parent           = frame,
+					Text             = this.isFilter ? "Filtrer" : "Rechercher",
+					TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+					ContentAlignment = ContentAlignment.MiddleRight,
+					PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+					PreferredHeight  = 20,
+					Dock             = DockStyle.Top,
+					Margins          = new Margins (0, 10, 0, 0),
+				};
+			}
 
 			if (this.isFilter)
 			{
@@ -191,8 +194,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.CreateMiddleBeginnerSearchUI ();
 			}
-
-			this.modeFrame.Visibility = false;
 		}
 
 
@@ -200,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent          = this.middleFrame,
+				Parent          = this.beginnerFrame,
 				Text            = "Catégories",
 				PreferredHeight = 65,  // pour aider le layout !
 				Dock            = DockStyle.Left,
@@ -325,7 +326,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 
 			this.data.BeginnerCatégories = catégorie;
-			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
 
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent          = this.middleFrame,
+				Parent          = this.beginnerFrame,
 				Text            = "Profondeur",
 				PreferredWidth  = 20+50,  // pour aider le layout !
 				PreferredHeight = 65,  // pour aider le layout !
@@ -457,7 +457,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				this.InitializeProfondeurs ();
 
-				this.UpdateOrMode ();
 				this.searchStartAction ();
 			}
 		}
@@ -493,7 +492,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent          = this.middleFrame,
+				Parent          = this.beginnerFrame,
 				Text            = "Soldes",
 				PreferredHeight = 65,  // pour aider le layout !
 				Dock            = DockStyle.Left,
@@ -513,7 +512,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.data.BeginnerSoldesNuls = (button.ActiveState == ActiveState.Yes);
 
-				this.UpdateOrMode ();
 				this.searchStartAction ();
 			};
 		}
@@ -523,7 +521,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = new GroupBox
 			{
-				Parent          = this.middleFrame,
+				Parent          = this.beginnerFrame,
 				Text            = "Période",
 				PreferredWidth  = 100,  // pour aider le layout !
 				PreferredHeight = 65,  // pour aider le layout !
@@ -586,85 +584,40 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);
 			data.SetBeginnerDates (beginDate, endDate);
 
-			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
 
 
 		private void CreateMiddleSpecialistUI()
 		{
-			this.middleFrame.ContainerLayoutMode = ContainerLayoutMode.VerticalFlow;
-
 			this.beginnerSearchField         = null;
 			this.beginnerBeginDateController = null;
 			this.beginnerEndDateController   = null;
 
-			int count = this.data.TabsData.Count;
+			int count = this.data.NodesData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchTabController (this.controller, this.data.TabsData[i], this.isFilter);
+				var controller = new SearchNodeController (this.controller, this.data.NodesData[i], this.isFilter);
 
-				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction);
-				controller.Index = i;
-				controller.SetAddAction (i == 0, count < 10);
+				var frame = controller.CreateUI (this.middleFrame, this.searchStartAction, this.AddRemoveAction);
+				controller.SetAddAction (i, count < 10);
 
 				frame.TabIndex = i+1;
-				frame.Margins = new Margins (0, 0, 0, (count > 1 && i < count-1) ? 1 : 0);
+				frame.Margins = new Margins (0, 0, 0, (count > 1 && i < count-1) ? -1 : 0);
 
-				this.tabControllers.Add (controller);
+				this.nodeControllers.Add (controller);
 			}
-
-			this.modeFrame.Visibility = (this.data.TabsData.Count > 1);
 		}
 
 
 		private void CreateRightUI(FrameBox parent)
 		{
-			this.modeFrame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-			};
-
 			var footer = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 			};
-
-			{
-				this.andButton = new RadioButton
-				{
-					Parent          = this.modeFrame,
-					Text            = "Tous",
-					PreferredWidth  = 60,
-					ActiveState     = this.data.OrMode ? ActiveState.No : ActiveState.Yes,
-					Dock            = DockStyle.Left,
-				};
-
-				this.orButton = new RadioButton
-				{
-					Parent          = this.modeFrame,
-					Text            = "Au moins un",
-					PreferredWidth  = 90,
-					ActiveState     = this.data.OrMode ? ActiveState.Yes : ActiveState.No,
-					Dock            = DockStyle.Left,
-				};
-
-				this.orButton.ActiveStateChanged += delegate
-				{
-					if (this.ignoreChanges.IsZero)
-					{
-						this.data.OrMode = this.orButton.ActiveState == ActiveState.Yes;
-						this.searchStartAction ();
-					}
-				};
-
-				ToolTip.Default.SetToolTip (this.andButton, this.isFilter ? "Filtre les données qui répondent à tous les critères"   : "Cherche les données qui répondent à tous les critères");
-				ToolTip.Default.SetToolTip (this.orButton,  this.isFilter ? "Filtre les données qui répondent à au moins un critère" : "Cherche les données qui répondent à au moins un critère");
-			}
 
 			{
 				this.buttonPrev = new GlyphButton
@@ -725,20 +678,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
-		private void UpdateOrMode()
-		{
-			using (this.ignoreChanges.Enter ())
-			{
-				this.andButton.ActiveState = this.data.OrMode ? ActiveState.No  : ActiveState.Yes;
-				this.orButton.ActiveState  = this.data.OrMode ? ActiveState.Yes : ActiveState.No;
-			}
-		}
-
 		private void CreateMiddleBeginnerSearchUI()
 		{
 			this.beginnerSearchField = new TextField
 			{
-				Parent          = this.middleFrame,
+				Parent          = this.beginnerFrame,
 				Text            = this.data.BeginnerSearch,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Fill,
@@ -774,7 +718,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
-			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
 
@@ -783,9 +726,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			if (this.data.Specialist)
 			{
-				if (this.tabControllers.Count != 0)
+				if (this.nodeControllers.Count != 0)
 				{
-					this.tabControllers[0].SetFocus ();
+					this.nodeControllers[0].SetFocus ();
 				}
 			}
 			else
@@ -800,12 +743,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		public void SearchClear()
 		{
-			while (this.data.TabsData.Count > 1)
+			while (this.data.NodesData.Count > 1)
 			{
-				this.data.TabsData.RemoveAt (1);
+				this.data.NodesData.RemoveAt (1);
 			}
 
-			this.data.TabsData[0].Clear ();
+			this.nodeControllers[0].SearchClear ();
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
@@ -858,11 +801,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			if (index == 0)
 			{
-				this.data.TabsData.Add (new SearchTabData ());
+				this.data.NodesData.Add (new SearchNodeData ());
 			}
 			else
 			{
-				this.data.TabsData.RemoveAt (index);
+				this.data.NodesData.RemoveAt (index);
 			}
 
 			this.CreateMiddleUI ();
@@ -872,7 +815,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
-			this.levelController.ClearEnable = !this.data.IsEmpty || this.data.TabsData.Count > 1;
+			this.levelController.ClearEnable = !this.data.IsEmpty || this.data.NodesData.Count > 1;
 		}
 
 
@@ -899,7 +842,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					compta;
 		private readonly List<ColumnMapper>				columnMappers;
 		private readonly SearchData						data;
-		private readonly List<SearchTabController>		tabControllers;
+		private readonly List<SearchNodeController>		nodeControllers;
 		private readonly bool							isFilter;
 		private readonly SafeCounter					ignoreChanges;
 
@@ -911,7 +854,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
 		private StaticText								resultLabel;
-		private FrameBox								modeFrame;
+		private FrameBox								beginnerFrame;
 		private TextField								beginnerSearchField;
 		private CheckButton								beginnerCatégorieActif;
 		private CheckButton								beginnerCatégoriePassif;
@@ -922,8 +865,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private TextFieldCombo							beginnerToProfondeurField;
 		private DateFieldController						beginnerBeginDateController;
 		private DateFieldController						beginnerEndDateController;
-		private RadioButton								andButton;
-		private RadioButton								orButton;
 		private LevelController							levelController;
 	}
 }

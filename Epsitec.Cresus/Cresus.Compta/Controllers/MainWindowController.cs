@@ -46,11 +46,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.Dirty = false;
 
-			this.showSearchPanel  = false;
-			this.showFilterPanel  = false;
-			this.showOptionsPanel = false;
-			this.showViewSettingsPanel  = false;
-			this.showInfoPanel    = true;
+			this.showSearchPanel       = false;
+			this.showFilterPanel       = false;
+			this.showOptionsPanel      = false;
+			this.showViewSettingsPanel = false;
+			this.showInfoPanel         = true;
 
 			this.app.CommandDispatcher.RegisterController (this);
 		}
@@ -900,20 +900,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private static void AdaptSearchData(ComptaPériodeEntity période, SearchData data)
 		{
 			//	Adapte une recherche pour être dans une période donnée.
-			foreach (var tab in data.TabsData)
+			foreach (var node in data.NodesData)
 			{
-				if (tab.Column == ColumnType.Date)
+				foreach (var tab in node.TabsData)
 				{
-					var dateDébut = Converters.ParseDate (tab.SearchText.FromText);
-					if (dateDébut.HasValue)
+					if (tab.Column == ColumnType.Date)
 					{
-						tab.SearchText.FromText = Converters.DateToString (MainWindowController.AdaptDate (période, dateDébut.Value));
-					}
+						var dateDébut = Converters.ParseDate (tab.SearchText.FromText);
+						if (dateDébut.HasValue)
+						{
+							tab.SearchText.FromText = Converters.DateToString (MainWindowController.AdaptDate (période, dateDébut.Value));
+						}
 
-					var dateFin = Converters.ParseDate (tab.SearchText.ToText);
-					if (dateFin.HasValue)
-					{
-						tab.SearchText.ToText = Converters.DateToString (MainWindowController.AdaptDate (période, dateFin.Value));
+						var dateFin = Converters.ParseDate (tab.SearchText.ToText);
+						if (dateFin.HasValue)
+						{
+							tab.SearchText.ToText = Converters.DateToString (MainWindowController.AdaptDate (période, dateFin.Value));
+						}
 					}
 				}
 			}
