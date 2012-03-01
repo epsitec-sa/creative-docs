@@ -101,7 +101,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public void SearchUpdate()
 		{
 			//	Met à jour les recherches, en fonction d'une nouvelle chaîne cherchée.
-#if true
 			this.searchResults.Clear ();
 
 			if (this.searchData != null && !this.searchData.IsEmpty)
@@ -109,166 +108,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int count = this.Count;
 				for (int row = 0; row < count; row++)
 				{
-					var list = new List<SearchResult> ();
+					var results = new List<SearchResult> ();
 
-					bool allNode = true;
-					bool oneNode = false;
-
-					foreach (var node in this.searchData.NodesData)
+					if (this.searchData.Process (results, row, (x, y) => this.GetText (x, y), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
 					{
-						if (node.IsEmpty)
-						{
-							continue;
-						}
-
-						bool allTab = true;
-						bool oneTab = false;
-
-						foreach (var tab in node.TabsData)
-						{
-							bool tabFound = false;
-
-							if (tab.Column == ColumnType.None)  // cherche dans toutes les colonnes ?
-							{
-								foreach (var column in this.columnMappers.Where (x => x.Show).Select (x => x.Column))
-								{
-									var text = this.GetText (row, column);
-									int n = tab.SearchText.Search (ref text);
-
-									if (n != 0)  // trouvé ?
-									{
-										list.Add (new SearchResult (row, column, text));
-										tabFound = true;
-									}
-								}
-							}
-							else  // cherche dans une colonne précise ?
-							{
-								var text = this.GetText (row, tab.Column);
-								int n = tab.SearchText.Search (ref text);
-
-								if (n != 0)  // trouvé ?
-								{
-									list.Add (new SearchResult (row, tab.Column, text));
-									tabFound = true;
-								}
-							}
-
-							if (tabFound)  // trouvé ?
-							{
-								oneTab = true;
-							}
-							else  // pas trouvé ?
-							{
-								allTab = false;
-							}
-						}
-
-						if (node.OrMode)  // mode "ou" ?
-						{
-							if (oneTab)
-							{
-								oneNode = true;
-							}
-							else
-							{
-								allNode = false;
-							}
-						}
-						else  // mode "et" ?
-						{
-							if (allTab)
-							{
-								oneNode = true;
-							}
-							else
-							{
-								allNode = false;
-							}
-						}
-					}
-
-					bool found = false;
-
-					if (this.searchData.OrMode)  // mode "ou" ?
-					{
-						if (oneNode)
-						{
-							found = true;
-						}
-					}
-					else  // mode "et" ?
-					{
-						if (allNode)
-						{
-							found = true;
-						}
-					}
-
-					if (found)
-					{
-						list.ForEach (x => this.searchResults.Add (x));
+						results.ForEach (x => this.searchResults.Add (x));
 					}
 				}
 			}
 
 			this.searchLocator = 0;
-#else
-			this.searchResults.Clear ();
-
-			if (this.searchData != null && !this.searchData.IsEmpty)
-			{
-				int count = this.Count;
-				for (int row = 0; row < count; row++)
-				{
-					var list = new List<SearchResult> ();
-					bool found = true;
-
-					foreach (var node in this.searchData.NodesData)
-					{
-						if (node.IsEmpty)
-						{
-							continue;
-						}
-
-						int tabFounds = 0;
-
-						foreach (var column in this.columnMappers.Where (x => x.Show).Select (x => x.Column))
-						{
-							foreach (var tab in node.TabsData)
-							{
-								if (tab.Column != ColumnType.None && tab.Column != column)
-								{
-									continue;
-								}
-
-								var text = this.GetText (row, column);
-								int n = tab.SearchText.Search (ref text);
-
-								if (n != 0)  // trouvé ?
-								{
-									list.Add (new SearchResult (row, column, text));
-									tabFounds++;
-								}
-							}
-						}
-
-						if (tabFounds == 0)
-						{
-							found = false;
-							break;
-						}
-					}
-
-					if (found)
-					{
-						list.ForEach (x => this.searchResults.Add (x));
-					}
-				}
-			}
-
-			this.searchLocator = 0;
-#endif
 		}
 
 		public bool SearchAny
@@ -383,46 +232,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected bool FilterLine(int row)
 		{
-			foreach (var node in this.filterData.NodesData)
-			{
-				if (!node.IsValid)
-				{
-					continue;
-				}
-
-				int tabFounds = 0;
-
-				foreach (var column in this.columnMappers.Select (x => x.Column))
-				{
-					foreach (var tab in node.TabsData)
-					{
-						if (tab.Column != ColumnType.None && tab.Column != column)
-						{
-							continue;
-						}
-
-						if (!tab.IsValid)
-						{
-							continue;
-						}
-
-						var text = this.GetText (row, column, true);
-						int n = tab.SearchText.Search (ref text);
-
-						if (n != 0)  // trouvé ?
-						{
-							tabFounds++;
-						}
-					}
-				}
-
-				if (tabFounds == 0)
-				{
-					return false;
-				}
-			}
-
-			return true;
+			return this.filterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column));
 		}
 
 

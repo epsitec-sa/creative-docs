@@ -286,6 +286,116 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public bool Process(List<SearchResult> results, int row, System.Func<int, ColumnType, FormattedText> getText, IEnumerable<ColumnType> columnTypes)
+		{
+			//	Effectue une recherche/filtre sur une ligne de données.
+			//	Retourne true si qq chose a été trouvé.
+			bool allNode = true;
+			bool oneNode = false;
+
+			foreach (var node in this.nodesData)
+			{
+				if (node.IsEmpty)
+				{
+					continue;
+				}
+
+				bool allTab = true;
+				bool oneTab = false;
+
+				foreach (var tab in node.TabsData)
+				{
+					bool tabFound = false;
+
+					if (tab.Column == ColumnType.None)  // cherche dans toutes les colonnes ?
+					{
+						foreach (var column in columnTypes)
+						{
+							FormattedText text = getText (row, column);
+							int n = tab.SearchText.Search (ref text);
+
+							if (n != 0)  // trouvé ?
+							{
+								if (results != null)
+								{
+									results.Add (new SearchResult (row, column, text));
+								}
+
+								tabFound = true;
+							}
+						}
+					}
+					else  // cherche dans une colonne précise ?
+					{
+						FormattedText text = getText (row, tab.Column);
+						int n = tab.SearchText.Search (ref text);
+
+						if (n != 0)  // trouvé ?
+						{
+							if (results != null)
+							{
+								results.Add (new SearchResult (row, tab.Column, text));
+							}
+
+							tabFound = true;
+						}
+					}
+
+					if (tabFound)  // trouvé ?
+					{
+						oneTab = true;
+					}
+					else  // pas trouvé ?
+					{
+						allTab = false;
+					}
+				}
+
+				if (node.OrMode)  // mode "ou" ?
+				{
+					if (oneTab)
+					{
+						oneNode = true;
+					}
+					else
+					{
+						allNode = false;
+					}
+				}
+				else  // mode "et" ?
+				{
+					if (allTab)
+					{
+						oneNode = true;
+					}
+					else
+					{
+						allNode = false;
+					}
+				}
+			}
+
+			bool found = false;
+
+			if (this.OrMode)  // mode "ou" ?
+			{
+				if (oneNode)
+				{
+					found = true;
+				}
+			}
+			else  // mode "et" ?
+			{
+				if (allNode)
+				{
+					found = true;
+				}
+			}
+
+			return found;
+		}
+
+
 		private readonly List<SearchNodeData>		nodesData;
 	}
 }
