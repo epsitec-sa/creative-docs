@@ -288,7 +288,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool Process(List<SearchResult> results, int row, System.Func<int, ColumnType, FormattedText> getText, IEnumerable<ColumnType> columnTypes)
 		{
-			//	Effectue une recherche/filtre sur une ligne de données.
+			//	Effectue une recherche/filtre sur une ligne de données. Gère les modes or/and subtils liés aux node/tab.
+			//	La liste 'results' peut être nulle, ce qui est pratique pour le filtre.
 			//	Retourne true si qq chose a été trouvé.
 			bool allNode = true;
 			bool oneNode = false;

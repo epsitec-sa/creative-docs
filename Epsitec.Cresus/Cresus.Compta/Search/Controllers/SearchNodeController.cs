@@ -21,18 +21,43 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 {
 	public class SearchNodeController
 	{
-		public SearchNodeController(AbstractController controller, SearchNodeData nodeData, bool isFilter)
+		public SearchNodeController(AbstractController controller, SearchController parentController, SearchNodeData nodeData, bool isFilter)
 		{
-			this.controller = controller;
-			this.nodeData   = nodeData;
-			this.isFilter   = isFilter;
+			this.controller       = controller;
+			this.parentController = parentController;
+			this.nodeData         = nodeData;
+			this.isFilter         = isFilter;
 
 			this.ignoreChanges = new SafeCounter ();
 			this.compta        = this.controller.ComptaEntity;
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.tabControllers = new List<SearchTabController> ();
-			this.orMode = false;
+		}
+
+
+		public SearchController ParentController
+		{
+			get
+			{
+				return this.parentController;
+			}
+		}
+
+		public SearchNodeData NodeData
+		{
+			get
+			{
+				return this.nodeData;
+			}
+		}
+
+		public int Index
+		{
+			get
+			{
+				return this.index;
+			}
 		}
 
 
@@ -102,11 +127,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.addActionEnable = enable;
 
 				this.UpdateButtons ();
-
-				foreach (var controller in this.tabControllers)
-				{
-					controller.ParentIndex = this.index;
-				}
 			}
 		}
 
@@ -121,10 +141,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			int count = this.nodeData.TabsData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchTabController (this.controller, this.nodeData.TabsData[i], this.isFilter);
+				var controller = new SearchTabController (this.controller, this, this.nodeData.TabsData[i], this.isFilter);
 
 				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction, this.swapNodeAction, this.SwapTabAction);
-				controller.ParentIndex = this.index;
 				controller.SetAddAction (i, count < 10);
 
 				frame.TabIndex = i+1;
@@ -153,34 +172,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		public bool OrMode
-		{
-			get
-			{
-				return this.orMode;
-			}
-			set
-			{
-				this.orMode = value;
-
-				foreach (var controller in this.tabControllers)
-				{
-					controller.ParentOrMode = this.orMode;
-				}
-				
-				this.UpdateButtons ();
-			}
-		}
-
-		private void UpdateOrMode()
-		{
-			foreach (var controller in this.tabControllers)
-			{
-				controller.OrMode = this.nodeData.OrMode;
-			}
-		}
-
-		private void UpdateButtons()
+		public void UpdateButtons()
 		{
 			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddNode" : "Search.SubNode");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
@@ -192,6 +184,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			else
 			{
 				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre" : "Supprime le critère de recherche");
+			}
+
+			foreach (var controller in this.tabControllers)
+			{
+				controller.UpdateButtons ();
 			}
 		}
 
@@ -237,7 +234,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private void SwapTabAction()
 		{
 			this.nodeData.OrMode = !this.nodeData.OrMode;
-			this.UpdateOrMode ();
+			this.UpdateButtons ();
 			this.searchStartAction ();
 		}
 
@@ -263,13 +260,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly AbstractController				controller;
 		private readonly ComptaEntity					compta;
 		private readonly List<ColumnMapper>				columnMappers;
+		private readonly SearchController				parentController;
 		private readonly SearchNodeData					nodeData;
 		private readonly List<SearchTabController>		tabControllers;
 		private readonly bool							isFilter;
 		private readonly SafeCounter					ignoreChanges;
 
 		private int										index;
-		private bool									orMode;
 
 		private bool									bigDataInterface;
 		private System.Action							searchStartAction;

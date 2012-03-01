@@ -35,6 +35,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		public SearchData Data
+		{
+			get
+			{
+				return this.data;
+			}
+		}
+
+
 		public FrameBox CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> searchNextAction)
 		{
 			this.searchStartAction = searchStartAction;
@@ -597,7 +606,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			int count = this.data.NodesData.Count;
 			for (int i = 0; i < count; i++)
 			{
-				var controller = new SearchNodeController (this.controller, this.data.NodesData[i], this.isFilter);
+				var controller = new SearchNodeController (this.controller, this, this.data.NodesData[i], this.isFilter);
 
 				var frame = controller.CreateUI (this.middleFrame, this.searchStartAction, this.AddRemoveAction, this.SwapNodeAction);
 				controller.SetAddAction (i, count < 10);
@@ -722,15 +731,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void UpdateOrMode()
-		{
-			foreach (var controller in this.nodeControllers)
-			{
-				controller.OrMode = this.data.OrMode;
-			}
-		}
-
-
 		public void SetFocus()
 		{
 			if (this.data.Specialist)
@@ -757,7 +757,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.data.NodesData.RemoveAt (1);
 			}
 
-			this.nodeControllers[0].SearchClear ();
+			if (this.nodeControllers.Count != 0)
+			{
+				this.nodeControllers[0].SearchClear ();
+			}
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
@@ -825,13 +828,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private void SwapNodeAction()
 		{
 			this.data.OrMode = !this.data.OrMode;
-			this.UpdateOrMode ();
+			this.UpdateButtons ();
 			this.searchStartAction ();
 		}
 
 		private void UpdateButtons()
 		{
 			this.levelController.ClearEnable = !this.data.IsEmpty;
+
+			foreach (var controller in this.nodeControllers)
+			{
+				controller.UpdateButtons ();
+			}
 		}
 
 

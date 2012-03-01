@@ -20,17 +20,17 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 {
 	public class SearchTabController
 	{
-		public SearchTabController(AbstractController controller, SearchTabData tabData, bool isFilter)
+		public SearchTabController(AbstractController controller, SearchNodeController parentController, SearchTabData tabData, bool isFilter)
 		{
-			this.controller = controller;
-			this.tabData    = tabData;
-			this.isFilter   = isFilter;
+			this.controller       = controller;
+			this.parentController = parentController;
+			this.tabData          = tabData;
+			this.isFilter         = isFilter;
 
 			this.ignoreChanges = new SafeCounter ();
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.columnIndexes = new List<int> ();
-			this.orMode = true;
 		}
 
 
@@ -287,45 +287,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.InitializeColumnsCombo ();
 		}
 
-		public bool ParentOrMode
-		{
-			get
-			{
-				return this.parentOrMode;
-			}
-			set
-			{
-				this.parentOrMode = value;
-				this.UpdateButtons ();
-			}
-		}
-
-		public bool OrMode
-		{
-			get
-			{
-				return this.orMode;
-			}
-			set
-			{
-				this.orMode = value;
-				this.UpdateButtons ();
-			}
-		}
-
-		public int ParentIndex
-		{
-			get
-			{
-				return this.parentIndex;
-			}
-			set
-			{
-				this.parentIndex = value;
-				this.UpdateButtons ();
-			}
-		}
-
 		public void SetAddAction(int index, bool enable)
 		{
 			bool add = (index == 0);
@@ -425,13 +386,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
-		private void UpdateButtons()
+		public void UpdateButtons()
 		{
 			this.titleFrame.Children.Clear ();
 
 			if (this.addAction)
 			{
-				if (this.ParentIndex == 0)
+				if (this.parentController.Index == 0)
 				{
 					this.CreateOrAndText (this.isFilter ? "Filtrer" : "Rechercher");
 				}
@@ -441,12 +402,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					text.PreferredWidth = this.isFilter ? 28 : 53;  // TODO: faire mieux !
 					text.Dock = DockStyle.Right;
 
-					this.CreateOrAndButton (this.parentOrMode ? "Ou" : "Et", node: true);
+					this.CreateOrAndButton (this.parentController.ParentController.Data.OrMode ? "Ou" : "Et", node: true);
 				}
 			}
 			else
 			{
-				this.CreateOrAndButton (this.orMode ? "ou" : "et", node: false);
+				this.CreateOrAndButton (this.parentController.NodeData.OrMode ? "ou" : "et", node: false);
 			}
 
 			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddTab" : "Search.SubTab");
@@ -464,7 +425,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private Button CreateOrAndButton(FormattedText text, bool node)
 		{
-			//	Crée un bouton discret, qui ne se dévoile que lorsque la souris le survole.
+			//	Crée un bouton discret affichant juste le texte "ou"/"et", qui ne se dévoile que lorsque la souris le survole.
 			var button = new Button
 			{
 				Parent          = this.titleFrame,
@@ -485,6 +446,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				{
 					this.swapTabAction ();
 				}
+
+				this.UpdateButtons ();
 			};
 
 			ToolTip.Default.SetToolTip (button, "Permute les modes \"et\"/\"ou\"");
@@ -721,6 +684,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private readonly AbstractController				controller;
 		private readonly List<ColumnMapper>				columnMappers;
+		private readonly SearchNodeController			parentController;
 		private readonly SearchTabData					tabData;
 		private readonly List<int>						columnIndexes;
 		private readonly bool							isFilter;
@@ -729,9 +693,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private System.Action							searchStartAction;
 		private System.Action							swapNodeAction;
 		private System.Action							swapTabAction;
-		private bool									parentOrMode;
-		private bool									orMode;
-		private int										parentIndex;
 		private int										index;
 		private FrameBox								titleFrame;
 		private FrameBox								searchFromFrame;
