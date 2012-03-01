@@ -31,7 +31,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Adds the collection of items to the list.
 		/// </summary>
 		/// <param name="collection">Items to add</param>
-		public void AddRange(IEnumerable<T> collection)
+		public virtual void AddRange(IEnumerable<T> collection)
 		{
 			object[] items = Collection.ToObjectArray (collection);
 			
@@ -66,7 +66,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Sorts the collection using the specified comparer.
 		/// </summary>
 		/// <param name="comparer">The comparer to use.</param>
-		public void Sort(IComparer<T> comparer)
+		public virtual void Sort(IComparer<T> comparer)
 		{
 			ObservableList<T> that = this.NotifyBeforeChange ();
 
@@ -83,7 +83,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Sorts the collection using the specified comparison.
 		/// </summary>
 		/// <param name="comparison">The comparison to use.</param>
-		public void Sort(System.Comparison<T> comparison)
+		public virtual void Sort(System.Comparison<T> comparison)
 		{
 			ObservableList<T> that = this.NotifyBeforeChange ();
 
@@ -100,7 +100,7 @@ namespace Epsitec.Common.Types.Collections
 		/// Replaces the list with the contents of the specified collection.
 		/// </summary>
 		/// <param name="collection">The collection.</param>
-		public void ReplaceWithRange(IEnumerable<T> collection)
+		public virtual void ReplaceWithRange(IEnumerable<T> collection)
 		{
 			ObservableList<T> that = this.NotifyBeforeChange ();
 

@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types.Collections;
 
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
@@ -11,6 +12,7 @@ using System.Linq;
 namespace Epsitec.Aider.Entities.Helpers
 {
 	public abstract class VirtualList<THostEntity, T> : ObservableList<T>, ICollectionModificationCapabilities
+		where T : AbstractEntity, new ()
 	{
 		protected VirtualList(THostEntity entity)
 		{
@@ -82,17 +84,41 @@ namespace Epsitec.Aider.Entities.Helpers
 			base.RemoveAt (index);
 		}
 
+		public override void AddRange(IEnumerable<T> collection)
+		{
+			this.Apply (x => x.AddRange (collection));
+			base.AddRange (collection);
+		}
+
+		public override void Sort(IComparer<T> comparer)
+		{
+			base.Sort (comparer);
+			this.ReplaceItems (this.list);
+		}
+
+		public override void Sort(System.Comparison<T> comparison)
+		{
+			base.Sort (comparison);
+			this.ReplaceItems (this.list);
+		}
+
+		public override void ReplaceWithRange(IEnumerable<T> collection)
+		{
+			base.ReplaceWithRange (collection);
+			this.ReplaceItems (this.list);
+		}
+
 		public override T this[int index]
 		{
-			get
-			{
-				return base[index];
-			}
-			set
-			{
-				this.Apply (list => list[index] = value);
-				base[index] = value;
-			}
+		    get
+		    {
+		        return base[index];
+		    }
+		    set
+		    {
+		        this.Apply (list => list[index] = value);
+		        base[index] = value;
+		    }
 		}
 
 		public override void Clear()
@@ -101,7 +127,6 @@ namespace Epsitec.Aider.Entities.Helpers
 			base.Clear ();
 		}
 
-		
 		protected void Apply(System.Action<IList<T>> action)
 		{
 			var list = this.GetItems ().ToList ();
@@ -113,9 +138,8 @@ namespace Epsitec.Aider.Entities.Helpers
 
 		protected abstract void ReplaceItems(IList<T> list);
 
-		protected void SetField<TEntity, T>(TEntity entity, System.Action<TEntity, T> fieldSetter, System.Func<T> valueProvider, bool condition)
+		protected void SetField<TEntity>(TEntity entity, System.Action<TEntity, T> fieldSetter, System.Func<T> valueProvider, bool condition)
 			where TEntity : AbstractEntity
-			where T : AbstractEntity, new ()
 		{
 			if (condition)
 			{
