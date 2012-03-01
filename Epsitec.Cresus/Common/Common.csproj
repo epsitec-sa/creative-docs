@@ -1096,6 +1096,7 @@
     <Compile Include="Widgets\Balloon.cs" />
     <Compile Include="Widgets\Behaviors\AcceptRejectBehavior.cs" />
     <Compile Include="Widgets\Behaviors\AutoScrollBehavior.cs" />
+    <Compile Include="Widgets\Behaviors\SearchBehavior.cs" />
     <Compile Include="Widgets\Behaviors\CopyPasteBehavior.cs" />
     <Compile Include="Widgets\Behaviors\DragBehavior.cs" />
     <Compile Include="Widgets\Behaviors\IDragBehaviorHost.cs" />
@@ -1276,6 +1277,7 @@
     <Compile Include="Widgets\ScrollList.cs" />
     <Compile Include="Widgets\ScrollListMultiSelect.cs" />
     <Compile Include="Widgets\ScrollListStyle.cs" />
+    <Compile Include="Widgets\SearchBox.cs" />
     <Compile Include="Widgets\Separator.cs" />
     <Compile Include="Widgets\Shortcut.cs" />
     <Compile Include="Widgets\ShortcutEditor.cs" />

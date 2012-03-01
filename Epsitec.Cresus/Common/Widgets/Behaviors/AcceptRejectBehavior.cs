@@ -1,5 +1,7 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -62,17 +64,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return this.isAcceptEnabled;
 			}
 		}
-		
+
 		public string							InitialText
 		{
-			get
-			{
-				return this.initialText;
-			}
-			set
-			{
-				this.initialText = value;
-			}
+			get;
+			set;
 		}
 		
 		
@@ -156,18 +152,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private void OnAcceptClicked()
 		{
-			if (this.AcceptClicked != null)
-			{
-				this.AcceptClicked (this);
-			}
+			this.AcceptClicked.Raise (this);
 		}
 		
 		private void OnRejectClicked()
 		{
-			if (this.RejectClicked != null)
-			{
-				this.RejectClicked (this);
-			}
+			this.RejectClicked.Raise (this);
 		}
 		
 		
@@ -175,13 +165,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public event Support.EventHandler		RejectClicked;
 
 
-		private Widget							host;
+		private readonly Widget					host;
 
 		private GlyphButton						buttonAccept;
 		private GlyphButton						buttonReject;
 
 		private bool							isVisible;
 		private bool							isAcceptEnabled = true;
-		private string							initialText;
 	}
 }
