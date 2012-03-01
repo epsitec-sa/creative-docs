@@ -32,13 +32,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.tabControllers = new List<SearchTabController> ();
+			this.orMode = false;
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> addRemoveAction)
+		public FrameBox CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> addRemoveAction, System.Action swapNodeAction)
 		{
 			this.searchStartAction = searchStartAction;
 			this.addRemoveAction   = addRemoveAction;
+			this.swapNodeAction    = swapNodeAction;
 
 			var frame = new FrameBox
 			{
@@ -121,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				var controller = new SearchTabController (this.controller, this.nodeData.TabsData[i], this.isFilter);
 
-				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction);
+				var frame = controller.CreateUI (this.middleFrame, this.bigDataInterface, this.searchStartAction, this.AddRemoveAction, this.swapNodeAction, this.SwapTabAction);
 				controller.ParentIndex = this.index;
 				controller.SetAddAction (i, count < 10);
 
@@ -151,18 +153,45 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		public bool OrMode
+		{
+			get
+			{
+				return this.orMode;
+			}
+			set
+			{
+				this.orMode = value;
+
+				foreach (var controller in this.tabControllers)
+				{
+					controller.ParentOrMode = this.orMode;
+				}
+				
+				this.UpdateButtons ();
+			}
+		}
+
+		private void UpdateOrMode()
+		{
+			foreach (var controller in this.tabControllers)
+			{
+				controller.OrMode = this.nodeData.OrMode;
+			}
+		}
+
 		private void UpdateButtons()
 		{
-			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddAnd" : "Search.SubAnd");
+			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddNode" : "Search.SubNode");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
 
 			if (this.addAction)
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre \"et\"" : "Ajoute un nouveau critère de recherche \"et\"");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre" : "Ajoute un nouveau critère de recherche");
 			}
 			else
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre \"et\"" : "Supprime le critère de recherche \"et\"");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre" : "Supprime le critère de recherche");
 			}
 		}
 
@@ -205,6 +234,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.searchStartAction ();
 		}
 
+		private void SwapTabAction()
+		{
+			this.nodeData.OrMode = !this.nodeData.OrMode;
+			this.UpdateOrMode ();
+			this.searchStartAction ();
+		}
+
 
 		private bool BigDataInterface
 		{
@@ -233,10 +269,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly SafeCounter					ignoreChanges;
 
 		private int										index;
+		private bool									orMode;
 
 		private bool									bigDataInterface;
 		private System.Action							searchStartAction;
 		private System.Action<int>						addRemoveAction;
+		private System.Action							swapNodeAction;
 
 		private FrameBox								middleFrame;
 		private IconButton								addRemoveButton;

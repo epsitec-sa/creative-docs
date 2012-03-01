@@ -306,10 +306,12 @@
     <EmbeddedResource Include="Images\MarkNo.icon" />
     <EmbeddedResource Include="Images\MarkYes.icon" />
     <EmbeddedResource Include="Images\Level.Clear.icon" />
-    <EmbeddedResource Include="Images\Search.AddAnd.icon" />
-    <EmbeddedResource Include="Images\Search.AddOr.icon" />
-    <EmbeddedResource Include="Images\Search.SubAnd.icon" />
-    <EmbeddedResource Include="Images\Search.SubOr.icon" />
+    <EmbeddedResource Include="Images\Search.AddNode.icon" />
+    <EmbeddedResource Include="Images\Search.AddTab.icon" />
+    <EmbeddedResource Include="Images\Search.SubNode.icon" />
+    <EmbeddedResource Include="Images\Search.SubTab.icon" />
+    <EmbeddedResource Include="Images\Search.SwapTab.icon" />
+    <EmbeddedResource Include="Images\Search.SwapNode.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

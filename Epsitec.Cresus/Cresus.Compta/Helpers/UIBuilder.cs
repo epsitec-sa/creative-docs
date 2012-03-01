@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color GraphicGreenColor		= Color.FromHexa ("00bb00");  // vert
 		public static readonly Color GraphicRedColor		= Color.FromHexa ("ff0000");  // rouge
 
-		public static readonly double LeftLabelWidth		= 80;
+		public static readonly double LeftLabelWidth		= 83;
 		public static readonly double ComboButtonWidth		= 14;
 
 		public static readonly FormattedText leftIndentText  = "●  ";

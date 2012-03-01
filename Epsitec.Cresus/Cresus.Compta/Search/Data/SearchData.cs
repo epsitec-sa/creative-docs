@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.nodesData.Clear ();
 			this.Adjust ();
 
-			this.OrMode = true;
+			this.OrMode = false;
 		}
 
 		private void Adjust()
@@ -77,6 +77,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool IsValid
 		{
+			//	Indique si les données sont certifiées valides, c'est-à-dire aptes à être exploitées.
 			get
 			{
 				if (this.IsEmpty)
@@ -98,6 +99,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool IsEmpty
 		{
+			//	Indique si les données sont totalement vides.
+			//	Si les données sont partiellement remplies, on peut avoir IsValid et IsEmpty = false !
 			get
 			{
 				if (this.nodesData.Count > 1)

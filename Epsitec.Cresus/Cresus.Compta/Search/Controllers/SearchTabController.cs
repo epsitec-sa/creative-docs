@@ -30,13 +30,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.columnMappers = this.controller.ColumnMappers;
 
 			this.columnIndexes = new List<int> ();
+			this.orMode = true;
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, bool bigDataInterface, System.Action searchStartAction, System.Action<int> addRemoveAction)
+		public FrameBox CreateUI(FrameBox parent, bool bigDataInterface, System.Action searchStartAction, System.Action<int> addRemoveAction, System.Action swapNodeAction, System.Action swapTabAction)
 		{
-			this.bigDataInterface = bigDataInterface;
+			this.bigDataInterface  = bigDataInterface;
 			this.searchStartAction = searchStartAction;
+			this.swapNodeAction    = swapNodeAction;
+			this.swapTabAction     = swapTabAction;
 
 			var frameBox = new FrameBox
 			{
@@ -255,11 +258,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void CreateLabelUI(FrameBox parent)
 		{
-			this.titleLabel = new StaticText
+			this.titleFrame = new FrameBox
 			{
 				Parent           = parent,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				ContentAlignment = ContentAlignment.MiddleRight,
 				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Top,
@@ -284,6 +285,32 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
 			this.InitializeColumnsCombo ();
+		}
+
+		public bool ParentOrMode
+		{
+			get
+			{
+				return this.parentOrMode;
+			}
+			set
+			{
+				this.parentOrMode = value;
+				this.UpdateButtons ();
+			}
+		}
+
+		public bool OrMode
+		{
+			get
+			{
+				return this.orMode;
+			}
+			set
+			{
+				this.orMode = value;
+				this.UpdateButtons ();
+			}
 		}
 
 		public int ParentIndex
@@ -400,33 +427,82 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
+			this.titleFrame.Children.Clear ();
+
 			if (this.addAction)
 			{
 				if (this.ParentIndex == 0)
 				{
-					this.titleLabel.Text = this.isFilter ? "Filtrer" : "Rechercher";
+					this.CreateOrAndText (this.isFilter ? "Filtrer" : "Rechercher");
 				}
 				else
 				{
-					this.titleLabel.Text = this.isFilter ? "Et filtrer" : "Et rechercher";
+					var text = this.CreateOrAndText (this.isFilter ? "filtrer" : "rechercher");
+					text.PreferredWidth = this.isFilter ? 28 : 53;  // TODO: faire mieux !
+					text.Dock = DockStyle.Right;
+
+					this.CreateOrAndButton (this.parentOrMode ? "Ou" : "Et", node: true);
 				}
 			}
 			else
 			{
-				this.titleLabel.Text = "ou";
+				this.CreateOrAndButton (this.orMode ? "ou" : "et", node: false);
 			}
 
-			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddOr" : "Search.SubOr");
+			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddTab" : "Search.SubTab");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
 
 			if (this.addAction)
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre \"ou\"" : "Ajoute un nouveau critère de recherche \"ou\"");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Ajoute un nouveau critère de filtre" : "Ajoute un nouveau critère de recherche");
 			}
 			else
 			{
-				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre \"ou\"" : "Supprime le critère de recherche \"ou\"");
+				ToolTip.Default.SetToolTip (this.addRemoveButton, this.isFilter ? "Supprime le critère de filtre" : "Supprime le critère de recherche");
 			}
+		}
+
+		private Button CreateOrAndButton(FormattedText text, bool node)
+		{
+			//	Crée un bouton discret, qui ne se dévoile que lorsque la souris le survole.
+			var button = new Button
+			{
+				Parent          = this.titleFrame,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				FormattedText   = text,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Right,
+			};
+
+			button.Clicked += delegate
+			{
+				if (node)
+				{
+					this.swapNodeAction ();
+				}
+				else
+				{
+					this.swapTabAction ();
+				}
+			};
+
+			ToolTip.Default.SetToolTip (button, "Permute les modes \"et\"/\"ou\"");
+
+			return button;
+		}
+
+		private StaticText CreateOrAndText(FormattedText text)
+		{
+			return new StaticText
+			{
+				Parent           = this.titleFrame,
+				FormattedText    = text,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Fill,
+			};
 		}
 
 
@@ -651,9 +727,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly SafeCounter					ignoreChanges;
 
 		private System.Action							searchStartAction;
+		private System.Action							swapNodeAction;
+		private System.Action							swapTabAction;
+		private bool									parentOrMode;
+		private bool									orMode;
 		private int										parentIndex;
 		private int										index;
-		private StaticText								titleLabel;
+		private FrameBox								titleFrame;
 		private FrameBox								searchFromFrame;
 		private StaticText								searchFromLabel;
 		private TextField								searchField1;

@@ -101,9 +101,122 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public void SearchUpdate()
 		{
 			//	Met à jour les recherches, en fonction d'une nouvelle chaîne cherchée.
+#if true
 			this.searchResults.Clear ();
 
-			if (this.searchData != null && this.searchData.IsValid)
+			if (this.searchData != null && !this.searchData.IsEmpty)
+			{
+				int count = this.Count;
+				for (int row = 0; row < count; row++)
+				{
+					var list = new List<SearchResult> ();
+
+					bool allNode = true;
+					bool oneNode = false;
+
+					foreach (var node in this.searchData.NodesData)
+					{
+						if (node.IsEmpty)
+						{
+							continue;
+						}
+
+						bool allTab = true;
+						bool oneTab = false;
+
+						foreach (var tab in node.TabsData)
+						{
+							bool tabFound = false;
+
+							if (tab.Column == ColumnType.None)  // cherche dans toutes les colonnes ?
+							{
+								foreach (var column in this.columnMappers.Where (x => x.Show).Select (x => x.Column))
+								{
+									var text = this.GetText (row, column);
+									int n = tab.SearchText.Search (ref text);
+
+									if (n != 0)  // trouvé ?
+									{
+										list.Add (new SearchResult (row, column, text));
+										tabFound = true;
+									}
+								}
+							}
+							else  // cherche dans une colonne précise ?
+							{
+								var text = this.GetText (row, tab.Column);
+								int n = tab.SearchText.Search (ref text);
+
+								if (n != 0)  // trouvé ?
+								{
+									list.Add (new SearchResult (row, tab.Column, text));
+									tabFound = true;
+								}
+							}
+
+							if (tabFound)  // trouvé ?
+							{
+								oneTab = true;
+							}
+							else  // pas trouvé ?
+							{
+								allTab = false;
+							}
+						}
+
+						if (node.OrMode)  // mode "ou" ?
+						{
+							if (oneTab)
+							{
+								oneNode = true;
+							}
+							else
+							{
+								allNode = false;
+							}
+						}
+						else  // mode "et" ?
+						{
+							if (allTab)
+							{
+								oneNode = true;
+							}
+							else
+							{
+								allNode = false;
+							}
+						}
+					}
+
+					bool found = false;
+
+					if (this.searchData.OrMode)  // mode "ou" ?
+					{
+						if (oneNode)
+						{
+							found = true;
+						}
+					}
+					else  // mode "et" ?
+					{
+						if (allNode)
+						{
+							found = true;
+						}
+					}
+
+					if (found)
+					{
+						list.ForEach (x => this.searchResults.Add (x));
+					}
+				}
+			}
+
+			this.searchLocator = 0;
+#else
+			this.searchResults.Clear ();
+
+			if (this.searchData != null && !this.searchData.IsEmpty)
 			{
 				int count = this.Count;
 				for (int row = 0; row < count; row++)
@@ -113,7 +226,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					foreach (var node in this.searchData.NodesData)
 					{
-						if (!node.IsValid)
+						if (node.IsEmpty)
 						{
 							continue;
 						}
@@ -125,11 +238,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 							foreach (var tab in node.TabsData)
 							{
 								if (tab.Column != ColumnType.None && tab.Column != column)
-								{
-									continue;
-								}
-
-								if (!tab.IsValid)
 								{
 									continue;
 								}
@@ -160,6 +268,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.searchLocator = 0;
+#endif
 		}
 
 		public bool SearchAny
@@ -174,7 +283,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchData == null || !this.searchData.IsValid)
+				if (this.searchData == null || this.searchData.IsEmpty)
 				{
 					return null;
 				}
@@ -189,7 +298,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				if (this.searchData == null || !this.searchData.IsValid)
+				if (this.searchData == null || this.searchData.IsEmpty)
 				{
 					return null;
 				}

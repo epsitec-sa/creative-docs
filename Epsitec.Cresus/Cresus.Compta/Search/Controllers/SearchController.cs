@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				var controller = new SearchNodeController (this.controller, this.data.NodesData[i], this.isFilter);
 
-				var frame = controller.CreateUI (this.middleFrame, this.searchStartAction, this.AddRemoveAction);
+				var frame = controller.CreateUI (this.middleFrame, this.searchStartAction, this.AddRemoveAction, this.SwapNodeAction);
 				controller.SetAddAction (i, count < 10);
 
 				frame.TabIndex = i+1;
@@ -722,6 +722,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		private void UpdateOrMode()
+		{
+			foreach (var controller in this.nodeControllers)
+			{
+				controller.OrMode = this.data.OrMode;
+			}
+		}
+
+
 		public void SetFocus()
 		{
 			if (this.data.Specialist)
@@ -810,6 +819,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
+			this.searchStartAction ();
+		}
+
+		private void SwapNodeAction()
+		{
+			this.data.OrMode = !this.data.OrMode;
+			this.UpdateOrMode ();
 			this.searchStartAction ();
 		}
 
