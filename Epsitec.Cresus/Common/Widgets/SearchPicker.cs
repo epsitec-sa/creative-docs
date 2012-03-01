@@ -39,8 +39,21 @@ namespace Epsitec.Common.Widgets
 				TabIndex = 2,
 			};
 
-			this.spacer.PaintForeground += this.HandleSpacerPaintForeground;
-			this.searchBox.TextChanged  += this.HandleSearchBoxTextChanged;
+			this.messageContainerStateEmpty = new FrameBox ()
+			{
+				Parent = this.searchResults,
+				Dock = DockStyle.Fill,
+			};
+
+			this.messageContainerStateError = new FrameBox ()
+			{
+				Parent = this.searchResults,
+				Dock = DockStyle.Fill,
+			};
+
+			this.spacer.PaintForeground  += this.HandleSpacerPaintForeground;
+			this.searchBox.TextChanged   += this.HandleSearchBoxTextChanged;
+			this.searchBox.SearchClicked += this.HandleSearchBoxSearchClicked;
 		}
 
 
@@ -60,16 +73,52 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public FrameBox MessageContainerStateEmpty
+		{
+			get
+			{
+				return this.messageContainerStateEmpty;
+			}
+		}
+
+		public FrameBox MessageContainerStateError
+		{
+			get
+			{
+				return this.messageContainerStateError;
+			}
+		}
 
 
 		protected void OnSearchPickerStateChanged()
 		{
 			switch (this.State)
 			{
+				case SearchPickerState.Undefined:
+					break;
+
 				case SearchPickerState.Empty:
+					this.searchResults.DisableListDisplay      = true;
+					this.messageContainerStateEmpty.Visibility = true;
+					this.messageContainerStateError.Visibility = false;
+					break;
+
 				case SearchPickerState.Ready:
+					this.searchResults.DisableListDisplay      = false;
+					this.messageContainerStateEmpty.Visibility = false;
+					this.messageContainerStateError.Visibility = false;
+					break;
+
 				case SearchPickerState.Error:
+					this.searchResults.DisableListDisplay      = true;
+					this.messageContainerStateEmpty.Visibility = false;
+					this.messageContainerStateError.Visibility = true;
+					break;
+
 				case SearchPickerState.Busy:
+					this.searchResults.DisableListDisplay      = true;
+					this.messageContainerStateEmpty.Visibility = false;
+					this.messageContainerStateError.Visibility = false;
 					break;
 
 				default:
@@ -77,6 +126,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected void OnSearchClicked()
+		{
+			this.SearchClicked.Raise (this);
+		}
+
+		protected void OnSearchTextChanged()
+		{
+			this.SearchTextChanged.Raise (this);
+		}
 
 
 		private void HandleSpacerPaintForeground(object sender, PaintEventArgs e)
@@ -109,14 +167,27 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void HandleSearchBoxSearchClicked(object sender)
+		{
+			this.OnSearchClicked ();
+		}
+
 		private void HandleSearchBoxTextChanged(object sender)
 		{
+			this.OnSearchTextChanged ();
 		}
+
+
+		public event EventHandler				SearchClicked;
+		public event EventHandler				SearchTextChanged;
 
 
 		private readonly SearchBox				searchBox;
 		private readonly StaticText				spacer;
 		private readonly ScrollList				searchResults;
+
+		private readonly FrameBox				messageContainerStateEmpty;
+		private readonly FrameBox				messageContainerStateError;
 
 		private SearchPickerState				state;
 	}

@@ -73,10 +73,18 @@ namespace Epsitec.Common.Widgets
 				this.searchBehavior.SetSearchEnabled (this.IsValid);
 			}
 		}
-		private void HandleSearchClicked(object sender)
+
+		protected void OnSearchClicked()
 		{
+			this.SearchClicked.Raise (this);
 		}
 
+		private void HandleSearchClicked(object sender)
+		{
+			this.OnSearchClicked ();
+		}
+
+		public event EventHandler				SearchClicked;
 
 		private readonly SearchBehavior			searchBehavior;
 	}

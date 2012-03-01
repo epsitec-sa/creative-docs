@@ -5,6 +5,8 @@ namespace Epsitec.Common.Widgets
 {
 	public enum SearchPickerState
 	{
+		Undefined,
+
 		Empty,
 		Ready,
 		Busy,

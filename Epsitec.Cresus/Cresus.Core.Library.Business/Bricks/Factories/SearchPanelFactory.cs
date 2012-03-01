@@ -30,6 +30,22 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			{
 				Margins = new Margins (4, 4, 4, 0)
 			};
+
+			var messageEmpty = new StaticText ()
+			{
+				Parent = search.MessageContainerStateEmpty,
+				Dock = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				FormattedText = new FormattedText ("<i>Aucun résultat</i>"),
+			};
+
+			var messageError = new StaticText ()
+			{
+				Parent = search.MessageContainerStateError,
+				Dock = DockStyle.Fill,
+				ContentAlignment = ContentAlignment.MiddleCenter,
+				FormattedText = new FormattedText ("<i>Trop de résultats</i>"),
+			};
 			
 			var button = new Button ()
 			{
@@ -40,6 +56,11 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			{
 				buttonAction ();
 			};
+
+			search.SearchTextChanged += _ => search.State = SearchPickerState.Busy;
+			search.SearchClicked     += _ => search.State = SearchPickerState.Error;
+			
+			search.State = SearchPickerState.Empty;
 
 			builder.Add (container, search);
 			builder.Add (container, button);
