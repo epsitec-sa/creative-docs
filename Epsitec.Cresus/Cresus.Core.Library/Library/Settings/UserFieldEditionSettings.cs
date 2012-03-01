@@ -88,6 +88,14 @@ namespace Epsitec.Cresus.Core.Library.Settings
 		}
 
 
+		public override int GetHashCode()
+		{
+			//	Use a partial hash code here, since this will usually not be used, it
+			//	is fully sufficient:
+
+			return this.fieldId.GetHashCode ();
+		}
+
 		public override bool Equals(object obj)
 		{
 			return this.Equals (obj as UserFieldEditionSettings);

@@ -1641,6 +1641,8 @@ namespace Epsitec.Common.Widgets
 				var oldWindow = Window.focusedWindow;
 				var newWindow = this;
 
+				Window.focusedWindow = this;
+
 				this.OnGlobalFocusedWindowChanged (new DependencyPropertyChangedEventArgs ("FocusedWindow", oldWindow, newWindow));
 			}
 		}

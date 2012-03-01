@@ -5,6 +5,5 @@ namespace Epsitec.Common.Support.Data
 {
 	public interface IComponent : IDisposed
 	{
-		event Support.EventHandler	Disposed;
 	}
 }
