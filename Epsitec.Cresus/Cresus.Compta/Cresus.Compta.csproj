@@ -310,8 +310,6 @@
     <EmbeddedResource Include="Images\Search.AddTab.icon" />
     <EmbeddedResource Include="Images\Search.SubNode.icon" />
     <EmbeddedResource Include="Images\Search.SubTab.icon" />
-    <EmbeddedResource Include="Images\Search.SwapTab.icon" />
-    <EmbeddedResource Include="Images\Search.SwapNode.icon" />
     <EmbeddedResource Include="Images\Search.ActivateTab.icon" />
   </ItemGroup>
   <ItemGroup>
