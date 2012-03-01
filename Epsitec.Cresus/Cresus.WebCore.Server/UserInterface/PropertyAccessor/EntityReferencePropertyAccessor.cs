@@ -1,6 +1,9 @@
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using System.Linq.Expressions;
+
+using System;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
@@ -17,15 +20,28 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
+		public AbstractEntity GetEntity(AbstractEntity entity)
+		{
+			return (AbstractEntity) this.Getter.DynamicInvoke (entity);
+		}
+
+
 		public void SetEntityValue(AbstractEntity entity, AbstractEntity value)
 		{
 			this.Setter.DynamicInvoke (entity, value);
 		}
 
 
-		public AbstractEntity GetEntity(AbstractEntity entity)
+		public override void SetValue(AbstractEntity entity, object value)
 		{
-			return (AbstractEntity) this.Getter.DynamicInvoke (entity);
+			this.SetEntityValue (entity, (AbstractEntity) value);
+		}
+
+
+		public override bool CheckValue(AbstractEntity entity, object value)
+		{
+			return this.Type.IsAssignableFrom (value.GetType ())
+				&& (value != null || this.Property.IsNullable);
 		}
 
 

@@ -38,50 +38,155 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response Update(CoreSession coreSession, dynamic parameters)
 		{
 			var businessContext = coreSession.GetBusinessContext ();
+			var propertyAccessorCache = coreSession.PropertyAccessorCache;
 
-			var errors = new Dictionary<string, object> ();
+			DynamicDictionary form = Request.Form;
+			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, propertyAccessorCache, form)
+				.ToList ();
 
-			AbstractEntity entity = EntityModule.ResolveEntity (businessContext, parameters.id);
+			var entity = EntityModule.ResolveEntity (businessContext, (string) parameters.id);
 
-			// NOTE Here we need to process the form to transform the arrays which are in separated
-			// fields to put them back in the same field.
+			var invalidItems = propertyAccessorsWithValues
+				.Where (i => !i.Item1.CheckValue (entity, i.Item2))
+				.ToList ();
 
-			DynamicDictionary formData = FormCollectionEmbedder.DecodeFormWithCollections (Request.Form);
-
-			using (businessContext.Bind (entity))
+			if (invalidItems.Any ())
 			{
-				foreach (var propertyAccessorId in formData.GetDynamicMemberNames ())
+				var errors = invalidItems.ToDictionary (i => i.Item1.Id, i => "Invalid value");
+
+				return Response.AsCoreError (errors);
+			}
+			else
+			{
+				using (businessContext.Bind (entity))
 				{
-					try
+					foreach (var propertyAccessorWithValue in propertyAccessorsWithValues)
 					{
-						var value = formData[propertyAccessorId];
-						var propertyAccessor = coreSession.PropertyAccessorCache.Get (propertyAccessorId);
+						var propertyAccessor = propertyAccessorWithValue.Item1;
+						var value = propertyAccessorWithValue.Item2;
 
-						EntityModule.SetValue (businessContext, propertyAccessor, entity, value);
+						propertyAccessor.SetValue (entity, value);
 					}
-					catch (Exception e)
-					{
-						errors.Add (propertyAccessorId, e.ToString ());
-					}
-				}
 
-				businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
+					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
 
-				if (errors.Any ())
-				{
-					// TODO This is probably a bad idea to discard the changes like this, as the
-					// business context is never reset. Either This should be changed, or the
-					// business context should be reset or something.
-
-					businessContext.Discard ();
-					return Response.AsCoreError (errors);
-				}
-				else
-				{
 					businessContext.SaveChanges ();
 					return Response.AsCoreSuccess ();
 				}
 			}
+		}
+
+
+		private static IEnumerable<Tuple<AbstractPropertyAccessor, object>> GetPropertyAccessorsWithValues(BusinessContext businessContext, PropertyAccessorCache propertyAccessorCache, DynamicDictionary form)
+		{
+			// NOTE Here we need to process the form to transform the arrays which are in separated
+			// fields to put them back in the same field.
+
+			var processedForm = FormCollectionEmbedder.DecodeFormWithCollections (form);
+
+			foreach (var propertyAccessorId in processedForm.GetDynamicMemberNames ())
+			{
+				var propertyAccessor = propertyAccessorCache.Get (propertyAccessorId);
+				DynamicDictionaryValue value = processedForm[propertyAccessorId];
+
+				var convertedValue = EntityModule.ConvertValue (businessContext, propertyAccessor, value);
+
+				yield return Tuple.Create (propertyAccessor, convertedValue);
+			}
+		}
+
+
+		private static object ConvertValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
+		{
+			switch (propertyAccessor.FieldType)
+			{
+				case FieldType.CheckBox:
+				case FieldType.Date:
+					return EntityModule.ConvertForBooleanAndDate (value);
+
+				case FieldType.EntityCollection:
+					return EntityModule.ConvertForEntityCollection (businessContext, value);
+
+				case FieldType.EntityReference:
+					return EntityModule.ConvertForEntityReference (businessContext, value);
+
+				case FieldType.Enumeration:
+					return EntityModule.ConvertForEnumeration (value);
+
+				case FieldType.Text:
+					return EntityModule.ConvertForText (propertyAccessor, value);
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static object ConvertForBooleanAndDate(DynamicDictionaryValue value)
+		{
+			return (string) value;
+		}
+
+
+		private static object ConvertForEntityCollection(BusinessContext businessContext, DynamicDictionaryValue value)
+		{
+			var sequence = (IEnumerable<string>) value.Value;
+
+			return sequence
+				.Where (id => !string.IsNullOrEmpty (id))
+				.Select (id => EntityModule.ResolveEntity (businessContext, id))
+				.ToList ();
+		}
+
+		private static object ConvertForEntityReference(BusinessContext businessContext, DynamicDictionaryValue value)
+		{
+			var entityId = (string) value;
+
+			AbstractEntity entity = null;
+
+			if (!EntityModule.IsStringNullOrEmpty (entityId))
+			{
+				entity = EntityModule.ResolveEntity (businessContext, entityId);
+			}
+
+			return entity;
+		}
+
+
+		private static object ConvertForEnumeration(DynamicDictionaryValue value)
+		{
+			var enumerationValue = (string) value;
+
+			if (EntityModule.IsStringNullOrEmpty (enumerationValue))
+			{
+				enumerationValue = null;
+			}
+
+			return enumerationValue;
+		}
+
+
+		private static object ConvertForText(AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
+		{
+			// NOTE Here we convert empty strings to null strings if the property allows for null
+			// values and we convert null strings to empty strings if the property doesn't allow for
+			// null values.
+
+			var textValue = (string) value;
+
+			if (string.IsNullOrEmpty (textValue))
+			{
+				if (propertyAccessor.Property.IsNullable)
+				{
+					textValue = null;
+				}
+				else
+				{
+					textValue = "";
+				}
+			}
+
+			return textValue;
 		}
 
 
@@ -90,131 +195,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var entityKey = EntityKey.Parse (entityId);
 
 			return businessContext.DataContext.ResolveEntity (entityKey);
-		}
-
-
-		private static void SetValue(BusinessContext businessContext, AbstractPropertyAccessor propertyAccessor, AbstractEntity entity, DynamicDictionaryValue value)
-		{
-			switch (propertyAccessor.FieldType)
-			{
-				case FieldType.CheckBox:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
-
-						EntityModule.SetValueForBooleanField (castedPropertyAccessor, entity, castedValue);
-
-						break;
-					}
-				case FieldType.Date:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
-
-						EntityModule.SetValueForDateField (castedPropertyAccessor, entity, castedValue);
-
-						break;
-					}
-				case FieldType.EntityCollection:
-					{
-						var castedValue = (IEnumerable<string>) value.Value;
-						var castedPropertyAccessor = (EntityCollectionPropertyAccessor) propertyAccessor;
-			
-						EntityModule.SetValueForEntityCollectionField (businessContext, castedPropertyAccessor, entity, castedValue);
-						
-						break;
-					}
-				case FieldType.EntityReference:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (EntityReferencePropertyAccessor) propertyAccessor;
-			
-						EntityModule.SetValueForEntityReferenceField (businessContext, castedPropertyAccessor, entity, castedValue);
-						
-						break;
-					}
-				case FieldType.Enumeration:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
-
-						EntityModule.SetValueForEnumerationField (castedPropertyAccessor, entity, castedValue);
-
-						break;
-					}
-				case FieldType.Text:
-					{
-						var castedValue = (string) value;
-						var castedPropertyAccessor = (TextPropertyAccessor) propertyAccessor;
-
-						EntityModule.SetValueForTextField (castedPropertyAccessor, entity, castedValue);
-
-						break;
-					}
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static void SetValueForEntityCollectionField(BusinessContext businessContext, EntityCollectionPropertyAccessor propertyAccessor, AbstractEntity entity, IEnumerable<string> targetEntityIds)
-		{
-			var targetEntities = targetEntityIds
-				.Where (id => !string.IsNullOrEmpty (id))
-				.Select (id => EntityModule.ResolveEntity (businessContext, id))
-				.ToList ();
-
-			propertyAccessor.SetCollection (entity, targetEntities);
-		}
-
-
-		private static void SetValueForEntityReferenceField(BusinessContext businessContext, EntityReferencePropertyAccessor propertyAccessor, AbstractEntity entity, string targetEntityId)
-		{
-			var targetEntity = EntityModule.IsStringNullOrEmpty (targetEntityId)
-				? null
-				: EntityModule.ResolveEntity (businessContext, targetEntityId);
-
-			propertyAccessor.SetEntityValue (entity, targetEntity);
-		}
-
-
-		private static void SetValueForEnumerationField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
-		{
-			var value = EntityModule.IsStringNullOrEmpty (fieldValue)
-				? null
-				: fieldValue;
-
-			propertyAccessor.SetString (entity, value);
-		}
-
-
-		private static void SetValueForBooleanField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
-		{
-			propertyAccessor.SetString (entity, fieldValue);
-		}
-
-
-		private static void SetValueForDateField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
-		{
-			propertyAccessor.SetString (entity, fieldValue);
-		}
-
-
-		private static void SetValueForTextField(TextPropertyAccessor propertyAccessor, AbstractEntity entity, string fieldValue)
-		{
-			// NOTE Here we convert empty strings to null strings if the property allows for null
-			// values and we convert null strings to empty strings if the property doesn't allow for
-			// null values.
-
-			// TODO Here there is a bug. If the field is not a nullable type (that is, a type
-			// derived from System.Nullable, the assignation to null won't work. That's because how
-			// stuff are done in the marshaler.
-
-			var value = string.IsNullOrEmpty (fieldValue) && propertyAccessor.Property.IsNullable
-			    ? null
-			    : fieldValue ?? "";
-
-			propertyAccessor.SetString (entity, value);
 		}
 
 

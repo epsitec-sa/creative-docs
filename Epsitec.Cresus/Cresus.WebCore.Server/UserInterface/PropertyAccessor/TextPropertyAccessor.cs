@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using System;
 
 using System.Linq.Expressions;
+using Epsitec.Common.Types;
 
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
@@ -52,6 +53,29 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		public void SetString(AbstractEntity entity, string value)
 		{
 			this.marshalerFactory.CreateMarshaler (entity).SetStringValue (value);
+		}
+
+
+		public override void SetValue(AbstractEntity entity, object value)
+		{
+			this.SetString (entity, (string) value);
+		}
+
+
+		public override bool CheckValue(AbstractEntity entity, object value)
+		{
+			// TODO This only checks that the value is convertible from the given text to something
+			// meaningful in the system type underlying the property. If the high level type of the
+			// property has additional constraints (such as a range for numeric values, or size
+			// constraints on text values), they are not taken in account here. This is a bug that
+			// should be fixed.
+			
+			var marshaler = this.marshalerFactory.CreateMarshaler (entity);
+
+			var text = value as string;
+			
+			return text != null
+				&& marshaler.CanConvert (text);
 		}
 
 

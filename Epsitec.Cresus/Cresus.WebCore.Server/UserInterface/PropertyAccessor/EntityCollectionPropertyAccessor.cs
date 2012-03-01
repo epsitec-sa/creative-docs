@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
-
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
@@ -60,6 +59,22 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 				collection.Clear ();
 				collection.AddRange (items);
 			}
+		}
+
+
+		public override void SetValue(AbstractEntity entity, object value)
+		{
+			this.SetCollection (entity, (IEnumerable<AbstractEntity>) value);
+		}
+
+
+		public override bool CheckValue(AbstractEntity entity, object value)
+		{
+			var list = value as IEnumerable<AbstractEntity>;
+
+			return list != null
+				&& list.All (e => e != null)
+				&& list.All (e => this.collectionType.IsAssignableFrom (e.GetType ()));
 		}
 
 

@@ -88,6 +88,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
+		public abstract void SetValue(AbstractEntity entity, object value);
+
+
+		public abstract bool CheckValue(AbstractEntity entity, object value);
+
+
 		public static AbstractPropertyAccessor Create(LambdaExpression lambda, string id)
 		{
 			var type = lambda.ReturnType;
