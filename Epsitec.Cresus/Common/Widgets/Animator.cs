@@ -1,5 +1,10 @@
-//	Copyright © 2004-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -8,66 +13,54 @@ namespace Epsitec.Common.Widgets
 	/// en offrant le support nécessaire pour faire évoluer une valeur de A à B
 	/// progressivement.
 	/// </summary>
-	public class Animator : System.IDisposable
+	public sealed class Animator : System.IDisposable
 	{
-		public Animator(double timeSpan)
+		public Animator(double timeSpan, AnimatorMode mode = AnimatorMode.OneShot)
 		{
 			System.Diagnostics.Debug.Assert (timeSpan > 0);
 			
 			this.timeSpan = timeSpan;
+			this.mode     = mode;
+			this.values   = new List<AnimatorValue> ();
 		}
-		
-		
-		
-		public void SetCallback(System.Delegate callbackChanged, System.Delegate callbackFinished)
+
+
+		public void SetCallback<T>(System.Action<T> callbackChanged, System.Action<Animator> callbackFinished = null)
 		{
-			this.callbackChanged  = callbackChanged;
+			this.callbackChanged  = () => callbackChanged (this.GetValue<T> (0));
+			this.callbackFinished = callbackFinished;
+		}
+
+		public void SetCallback<T1, T2>(System.Action<T1, T2> callbackChanged, System.Action<Animator> callbackFinished = null)
+		{
+			this.callbackChanged  = () => callbackChanged (this.GetValue<T1> (0), this.GetValue<T2> (1));
 			this.callbackFinished = callbackFinished;
 		}
 		
-		public void SetValue(object begin, object end)
+		
+		
+		public void SetValue<T>(T begin, T end)
+			where T : struct
 		{
 			this.SetValue (0, begin, end);
 		}
 		
-		public void SetValue(int i, object begin, object end)
+		public void SetValue<T>(int i, T begin, T end)
+			where T : struct
 		{
 			int oldCount = this.Count;
 			
 			if (i >= oldCount)
 			{
-				Value[] oldValues = this.values;
-				
-				this.values  = new Value[i+1];
-				
-				for (int j = 0; j < oldCount; j++)
-				{
-					this.values[j] = oldValues[j];
-				}
+				this.values.AddRange (Enumerable.Repeat<AnimatorValue> (null, i-oldCount+1));
 			}
-			
-			Value v = new Value ();
-			
-			v.BeginValue = begin;
-			v.EndValue   = end;
-			
-			if (v.IsValid == false)
-			{
-				throw new System.ArgumentException ("Invalid begin/end");
-			}
-			
-			this.values[i] = v;
+
+			this.values[i] = new AnimatorValue<T> (begin, end);
 		}
 		
-		
-		public object GetValue()
+		public T GetValue<T>(int i)
 		{
-			return this.GetValue (0, this.ratio);
-		}
-		
-		public object GetValue(int i)
-		{
-			return this.GetValue (i, this.ratio);
+			return (T) this.GetValue (i, this.ratio);
 		}
 		
 		
@@ -75,262 +68,155 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.timer == null)
 			{
-				this.timer = new Timer ();
-				this.timer.Delay = 0.010;
+				this.timer            = new Timer ();
+				this.timer.Delay      = 0.010;
 				this.timer.AutoRepeat = 0.010;
-				this.timer.TimeElapsed += HandleTimerTimeElapsed;
+
+				this.timer.TimeElapsed += this.HandleTimerTimeElapsed;
+
+				this.tickBegin  = System.DateTime.Now.Ticks;
+				this.tickEnd    = this.tickBegin + this.TickSpan;
+				this.finished   = false;
 			}
-			
-			this.tickBegin  = System.DateTime.Now.Ticks;
-			this.tickEnd    = this.tickBegin + (long)(this.timeSpan * 10000000);
 			
 			this.timer.Start ();
 		}
 		
-		public void Stop()
+		public void Pause()
 		{
 			if (this.timer != null)
 			{
 				this.timer.Stop ();
 			}
 		}
+
+		public void Stop()
+		{
+			if (this.finished)
+			{
+				return;
+			}
+
+			if (this.timer != null)
+			{
+				this.timer.TimeElapsed -= this.HandleTimerTimeElapsed;
+				this.timer.Dispose ();
+				this.timer = null;
+			}
+			
+			this.finished = true;
+
+			this.Finished.Raise (this);
+
+			if (this.callbackFinished != null)
+			{
+				this.callbackFinished (this);
+			}
+		}
 		
 		
 		public int								Count
 		{
-			get { return this.values == null ? 0 : this.values.Length; }
+			get
+			{
+				return this.values.Count;
+			}
 		}
 		
 		public double							Ratio
 		{
-			get { return this.ratio; }
+			get
+			{
+				return this.ratio;
+			}
 		}
 		
 		public double							TimeSpan
 		{
-			get { return this.timeSpan; }
+			get
+			{
+				return this.timeSpan;
+			}
 		}
-		
-		
+
+
+		private long							TickSpan
+		{
+			get
+			{
+				return (long) (this.timeSpan * 10000000);
+			}
+		}
+
 		public event Support.EventHandler		Changed;
 		public event Support.EventHandler		Finished;
 		
 		
-		protected virtual void HandleTimerTimeElapsed(object sender)
+		private void HandleTimerTimeElapsed(object sender)
 		{
 			long now = System.DateTime.Now.Ticks;
+			bool stop = false;
 			
-			if (now > this.tickEnd)
+			while (now > this.tickEnd)
 			{
-				this.timer.Stop ();
-				now = this.tickEnd;
+				switch (this.mode)
+				{
+					case AnimatorMode.AutoRestart:
+						this.tickBegin += this.TickSpan;
+						this.tickEnd   += this.TickSpan;
+						break;
+					
+					default:
+						this.timer.Stop ();
+						now  = this.tickEnd;
+						stop = true;
+						break;
+				}
 			}
 			
 			this.ratio = (double)(now - this.tickBegin) / (double)(this.tickEnd - this.tickBegin);
-			
-			if (this.Changed != null)
-			{
-				this.Changed (this);
-			}
+
+			this.Changed.Raise (this);
 			
 			if (this.callbackChanged != null)
 			{
-				object[] args = new object[this.Count];
-				
-				for (int i = 0; i < args.Length; i++)
-				{
-					args[i] = this.GetValue (i);
-				}
-				
-				this.callbackChanged.DynamicInvoke (args);
+				this.callbackChanged ();
 			}
 			
-			if (now == this.tickEnd)
+			if (stop)
 			{
-				if (this.Finished != null)
-				{
-					this.Finished (this);
-				}
-				if (this.callbackFinished != null)
-				{
-					this.callbackFinished.DynamicInvoke (new object[] { this });
-				}
+				this.Stop ();
 			}
 		}
-		
-		protected virtual object GetValue(int i, double ratio)
+
+		private object GetValue(int i, double ratio)
 		{
 			return this.values[i].Interpolate (ratio);
 		}
-		
-		
+
+		#region IDisposable Members
+
 		public void Dispose()
 		{
-			this.Dispose (true);
-			System.GC.SuppressFinalize (this);
+			this.Stop ();
+
+			this.values.Clear ();
+			this.callbackChanged  = null;
+			this.callbackFinished = null;
 		}
-		
-		protected virtual void Dispose(bool disposing)
-		{
-			if (disposing)
-			{
-				if (this.timer != null)
-				{
-					this.timer.TimeElapsed -= HandleTimerTimeElapsed;
-					this.timer.Dispose ();
-					this.timer = null;
-				}
-			}
-		}
-		
-		
-		
-		public class Value
-		{
-			public Value()
-			{
-			}
-			
-			
-			public object						BeginValue
-			{
-				get { return this.v1; }
-				set
-				{
-					if (this.Validate (value))
-					{
-						this.v1 = value;
-					}
-				}
-			}
-			
-			public object						EndValue
-			{
-				get { return this.v2; }
-				set
-				{
-					if (this.Validate (value))
-					{
-						this.v2 = value;
-					}
-				}
-			}
-			
-			public bool							IsValid
-			{
-				get { return (this.v1 != null) && (this.v2 != null) && (this.v1.GetType () == this.v2.GetType ()); }
-			}
-			
-			
-			public object Interpolate(double ratio)
-			{
-				return this.Compute (this.v1, this.v2, ratio);
-			}
-			
-			
-			protected virtual bool Validate(object value)
-			{
-				if (value == null)
-				{
-					return false;
-				}
-				
-				if ((value is int) ||
-					(value is double))
-				{
-					return true;
-				}
-				
-				if ((value is Drawing.Point) ||
-					(value is Drawing.Size) ||
-					(value is Drawing.Rectangle))
-				{
-					return true;
-				}
-				
-				if (value is Drawing.Color)
-				{
-					return true;
-				}
-				
-				return false;
-			}
-			
-			protected virtual object Compute(object a, object b, double ratio)
-			{
-				System.Diagnostics.Debug.Assert (a != null);
-				System.Diagnostics.Debug.Assert (b != null);
-				System.Diagnostics.Debug.Assert (a.GetType () == b.GetType ());
-				System.Diagnostics.Debug.Assert (ratio >= 0.0);
-				System.Diagnostics.Debug.Assert (ratio <= 1.0);
-				
-				double compl = 1.0 - ratio;
-				
-				if (a is int)
-				{
-					int va = (int) a;
-					int vb = (int) b;
-					int vc = (int) (compl*va + ratio*vb);
-					return vc;
-				}
-				
-				if (a is double)
-				{
-					double va = (double) a;
-					double vb = (double) b;
-					double vc = (double) (compl*va + ratio*vb);
-					return vc;
-				}
-				
-				if (a is Drawing.Point)
-				{
-					Drawing.Point va = (Drawing.Point) a;
-					Drawing.Point vb = (Drawing.Point) b;
-					
-					return new Drawing.Point (compl*va.X + ratio*vb.X, compl*va.Y + ratio*vb.Y);
-				}
-				
-				if (a is Drawing.Size)
-				{
-					Drawing.Size va = (Drawing.Size) a;
-					Drawing.Size vb = (Drawing.Size) b;
-					
-					return new Drawing.Size (compl*va.Width + ratio*vb.Width, compl*va.Height + ratio*vb.Height);
-				}
-				
-				if (a is Drawing.Rectangle)
-				{
-					Drawing.Rectangle va = (Drawing.Rectangle) a;
-					Drawing.Rectangle vb = (Drawing.Rectangle) b;
-					
-					return new Drawing.Rectangle (compl*va.X + ratio*vb.X, compl*va.Y + ratio*vb.Y, compl*va.Width + ratio*vb.Width, compl*va.Height + ratio*vb.Height);
-				}
-				
-				if (a is Drawing.Color)
-				{
-					Drawing.Color va = (Drawing.Color) a;
-					Drawing.Color vb = (Drawing.Color) b;
-					
-					return new Drawing.Color (compl*va.A + ratio*vb.A, compl*va.R + ratio*vb.R, compl*va.G + ratio*vb.G, compl*va.B + ratio*vb.B);
-				}
-				
-				throw new System.Exception ("Illegal type: " + a.GetType ().Name);
-			}
-			
-			
-			protected object					v1;
-			protected object					v2;
-		}
-		
-		
-		
-		protected Timer							timer;
-		protected Value[]						values;
-		protected double						ratio;
-		protected double						timeSpan;
-		protected long							tickBegin;
-		protected long							tickEnd;
-		protected System.Delegate				callbackChanged;
-		protected System.Delegate				callbackFinished;
+
+		#endregion
+
+
+		private readonly List<AnimatorValue>	values;
+		private readonly double					timeSpan;
+		private readonly AnimatorMode			mode;
+		private Timer							timer;
+		private double							ratio;
+		private long							tickBegin;
+		private long							tickEnd;
+		private System.Action					callbackChanged;
+		private System.Action<Animator>			callbackFinished;
+		private bool							finished;
 	}
 }

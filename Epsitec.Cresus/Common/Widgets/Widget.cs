@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Widgets
 	/// La classe Widget implémente la classe de base dont dérivent tous les
 	/// widgets de l'interface graphique ("controls" dans l'appellation Windows).
 	/// </summary>
-	public class Widget : Visual, Collections.IShortcutCollectionHost, Support.IIsDisposed
+	public class Widget : Visual, Collections.IShortcutCollectionHost, Support.IIsDisposed, Support.IDisposed
 	{
 		public Widget()
 		{

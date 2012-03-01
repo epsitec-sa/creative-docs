@@ -51,9 +51,20 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Fill,
 			};
 
+			this.progressIndicator = new ProgressIndicator ()
+			{
+				Parent = this.searchResults,
+				VerticalAlignment = Widgets.VerticalAlignment.Center,
+				HorizontalAlignment = Widgets.HorizontalAlignment.Stretch,
+				Dock = DockStyle.Fill,
+				ProgressStyle = ProgressIndicatorStyle.UnknownDuration,
+			};
+
 			this.spacer.PaintForeground  += this.HandleSpacerPaintForeground;
 			this.searchBox.TextChanged   += this.HandleSearchBoxTextChanged;
 			this.searchBox.SearchClicked += this.HandleSearchBoxSearchClicked;
+			
+			ProgressIndicator.Animate (this.progressIndicator);
 		}
 
 
@@ -89,6 +100,14 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public FormattedText SearchText
+		{
+			get
+			{
+				return this.searchBox.FormattedText;
+			}
+		}
+
 
 		protected void OnSearchPickerStateChanged()
 		{
@@ -101,24 +120,28 @@ namespace Epsitec.Common.Widgets
 					this.searchResults.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = true;
 					this.messageContainerStateError.Visibility = false;
+					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Ready:
 					this.searchResults.DisableListDisplay      = false;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = false;
+					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Error:
 					this.searchResults.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = true;
+					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Busy:
 					this.searchResults.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = false;
+					this.progressIndicator.Visibility = true;
 					break;
 
 				default:
@@ -188,6 +211,7 @@ namespace Epsitec.Common.Widgets
 
 		private readonly FrameBox				messageContainerStateEmpty;
 		private readonly FrameBox				messageContainerStateError;
+		private readonly ProgressIndicator		progressIndicator;
 
 		private SearchPickerState				state;
 	}

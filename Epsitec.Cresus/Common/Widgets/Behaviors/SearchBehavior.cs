@@ -89,7 +89,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
-		
 		public void UpdateButtonGeometry()
 		{
 			AbstractTextField text = this.host as AbstractTextField;
@@ -102,7 +101,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.buttonSearch.SetManualBounds (bounds);
 			}
 		}
-
 
 		public void CreateButtons()
 		{
@@ -126,7 +124,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.OnSearchClicked ();
 		}
 
-
 		private void OnSearchClicked()
 		{
 			this.SearchClicked.Raise (this);
@@ -137,9 +134,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 
 		private readonly Widget					host;
-
 		private GlyphButton						buttonSearch;
-
 		private bool							isVisible;
 		private bool							isSearchEnabled;
 	}

@@ -1,6 +1,7 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
+using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
@@ -68,6 +69,40 @@ namespace Epsitec.Common.Widgets
 			adorner.PaintProgressIndicator(graphics, this.Client.Bounds, this.progressStyle, this.progressValue);
 		}
 
+
+		public static void Animate(ProgressIndicator indicator)
+		{
+			ProgressIndicator.animatedIndicators.Add (indicator);
+
+			indicator.Disposed += _ =>
+				{
+					ProgressIndicator.animatedIndicators.Remove (indicator);
+					
+					if (ProgressIndicator.animatedIndicators.Count == 0)
+					{
+						ProgressIndicator.animator.Stop ();
+					}
+				};
+
+			if (ProgressIndicator.animatedIndicators.Count == 1)
+			{
+				ProgressIndicator.animator.Start ();
+			}
+		}
+
+		private static void AnimateIndicators(double spin)
+		{
+			ProgressIndicator.animatedIndicators.ForEach (x => x.UpdateProgress ());
+		}
+
+		static ProgressIndicator()
+		{
+			ProgressIndicator.animator.SetCallback<double> (ProgressIndicator.AnimateIndicators);
+			ProgressIndicator.animator.SetValue (0.0, 1.0);
+		}
+
+		private static List<ProgressIndicator>	animatedIndicators = new List<ProgressIndicator> ();
+		private static Animator					animator = new Animator (1.0, AnimatorMode.AutoRestart);
 
 		private const double					AnimationDuration = 2.0;
 

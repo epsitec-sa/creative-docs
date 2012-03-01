@@ -21,12 +21,23 @@ namespace Epsitec.Common.Widgets
 
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.Always;
+			
+			this.SwallowReturnOnAcceptEdition = true;
 		}
 
 		public SearchBox(Widget embedder)
 			: this ()
 		{
 			this.SetEmbedder (embedder);
+		}
+
+
+		protected override bool					CanStartEdition
+		{
+			get
+			{
+				return true;
+			}
 		}
 
 
@@ -77,6 +88,12 @@ namespace Epsitec.Common.Widgets
 		protected void OnSearchClicked()
 		{
 			this.SearchClicked.Raise (this);
+		}
+
+		protected override void OnEditionAccepted()
+		{
+			base.OnEditionAccepted ();
+			this.OnSearchClicked ();
 		}
 
 		private void HandleSearchClicked(object sender)

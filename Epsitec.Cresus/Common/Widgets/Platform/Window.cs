@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -51,10 +51,6 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 		
-		
-		private delegate void BoundsOffsetCallback(Drawing.Rectangle bounds, Drawing.Point offset);
-		private delegate void AnimatorCallback(Animator animator);
-		private delegate void DoubleCallback(double value);
 		
 		private Window()
 		{
@@ -307,7 +303,7 @@ namespace Epsitec.Common.Widgets.Platform
 					this.Alpha = 0.0;
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeInTime);
-					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetCallback<double> (this.AnimateAlpha, this.AnimateCleanup);
 					animator.SetValue (0.0, startAlpha);
 					animator.Start ();
 					this.ShowWindow ();
@@ -319,7 +315,7 @@ namespace Epsitec.Common.Widgets.Platform
 //					this.Alpha = 1.0;
 					
 					animator = new Animator (SystemInformation.MenuAnimationFadeOutTime);
-					animator.SetCallback (new DoubleCallback (this.AnimateAlpha), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetCallback<double> (this.AnimateAlpha, this.AnimateCleanup);
 					animator.SetValue (startAlpha, 0.0);
 					animator.Start ();
 					return;
@@ -338,7 +334,7 @@ namespace Epsitec.Common.Widgets.Platform
 					this.UpdateLayeredWindow ();
 					
 					animator = new Animator (SystemInformation.MenuAnimationRollTime);
-					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetCallback<Drawing.Rectangle, Drawing.Point> (this.AnimateWindowBounds, this.AnimateCleanup);
 					animator.SetValue (0, b1, b2);
 					animator.SetValue (1, o1, o2);
 					animator.Start ();
@@ -418,7 +414,7 @@ namespace Epsitec.Common.Widgets.Platform
 					this.UpdateLayeredWindow ();
 					
 					animator = new Animator (SystemInformation.MenuAnimationRollTime);
-					animator.SetCallback (new BoundsOffsetCallback (this.AnimateWindowBounds), new AnimatorCallback (this.AnimateCleanup));
+					animator.SetCallback<Drawing.Rectangle, Drawing.Point> (this.AnimateWindowBounds, this.AnimateCleanup);
 					animator.SetValue (0, b1, b2);
 					animator.SetValue (1, o1, o2);
 					animator.Start ();

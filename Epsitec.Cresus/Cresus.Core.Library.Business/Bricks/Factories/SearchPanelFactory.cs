@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				buttonAction ();
 			};
 
-			search.SearchTextChanged += _ => search.State = SearchPickerState.Busy;
+			search.SearchTextChanged += _ => search.State = search.SearchText.IsNullOrWhiteSpace ? SearchPickerState.Empty : SearchPickerState.Busy;
 			search.SearchClicked     += _ => search.State = SearchPickerState.Error;
 			
 			search.State = SearchPickerState.Empty;

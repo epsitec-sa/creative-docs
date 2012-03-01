@@ -1089,6 +1089,9 @@
     <Compile Include="Widgets\AnchorStyles.cs" />
     <Compile Include="Widgets\Animation.cs" />
     <Compile Include="Widgets\Animator.cs" />
+    <Compile Include="Widgets\AnimatorMode.cs" />
+    <Compile Include="Widgets\AnimatorValue.cs" />
+    <Compile Include="Widgets\AnimatorValue`1.cs" />
     <Compile Include="Widgets\Application.cs" />
     <Compile Include="Widgets\ApplicationCommands.cs" />
     <Compile Include="Widgets\ApplicationStartStatus.cs" />
