@@ -10,6 +10,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 
@@ -152,6 +153,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (5, 0, 0, 0),
 			};
 
+			this.activateButton = new BackIconButton
+			{
+				Parent          = frameBox,
+				IconUri         = UIBuilder.GetResourceIconUri ("Search.ActivateTab"),
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Right,
+				Margins         = new Margins (5, 0, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.activateButton, "Active ou désactive cette ligne");
+
 			{
 				this.modeFrame = UIBuilder.CreatePseudoCombo (frameBox, out this.modeField, out this.modeButton);
 				this.modeField.Text = this.ModeDescription;
@@ -231,6 +244,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.modeButton.Clicked += delegate
 			{
 				this.ShowModeMenu (this.modeFrame);
+			};
+
+			this.activateButton.Clicked += delegate
+			{
+				this.tabData.Active = !this.tabData.Active;
+				this.UpdateButtons ();
+				this.searchStartAction ();
 			};
 
 			this.addRemoveButton.Clicked += delegate
@@ -409,6 +429,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.CreateOrAndButton (this.parentController.NodeData.OrMode ? "ou" : "et", node: false);
 			}
+
+			this.activateButton.ActiveState = this.tabData.Active ? ActiveState.Yes : ActiveState.No;
 
 			this.addRemoveButton.IconUri = UIBuilder.GetResourceIconUri (this.addAction ? "Search.AddTab" : "Search.SubTab");
 			this.addRemoveButton.Enable = !this.addAction || this.addActionEnable;
@@ -707,6 +729,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private FrameBox								modeFrame;
 		private StaticText								modeField;
 		private GlyphButton								modeButton;
+		private BackIconButton							activateButton;
 		private IconButton								addRemoveButton;
 
 		private bool									bigDataInterface;

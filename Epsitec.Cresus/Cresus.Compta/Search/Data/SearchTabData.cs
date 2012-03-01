@@ -17,6 +17,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public SearchTabData()
 		{
 			this.searchText = new SearchText ();
+			this.Active = true;
 		}
 
 		public SearchText SearchText
@@ -28,6 +29,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 		public ColumnType Column
+		{
+			get;
+			set;
+		}
+
+		public bool Active
 		{
 			get;
 			set;

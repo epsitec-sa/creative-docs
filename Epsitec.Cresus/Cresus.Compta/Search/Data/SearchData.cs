@@ -294,9 +294,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			bool allNode = true;
 			bool oneNode = false;
 
-			foreach (var node in this.nodesData)
+			foreach (var node in this.nodesData.Where (x => !x.IsEmpty))
 			{
-				if (node.IsEmpty)
+				var tabs = node.TabsData.Where (x => !x.IsEmpty && x.Active);
+
+				if (!tabs.Any ())
 				{
 					continue;
 				}
@@ -304,7 +306,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				bool allTab = true;
 				bool oneTab = false;
 
-				foreach (var tab in node.TabsData)
+				foreach (var tab in tabs)
 				{
 					bool tabFound = false;
 
