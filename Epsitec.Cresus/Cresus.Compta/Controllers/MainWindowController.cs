@@ -53,16 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.showInfoPanel    = true;
 
 			this.app.CommandDispatcher.RegisterController (this);
-
-#if true
-			//	Hack pour éviter de devoir tout refaire à chaque exécution !
-			this.compta = new ComptaEntity ();  // crée une compta vide
-			new NewCompta ().NewEmpty (this.compta);
-
-			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
-#endif
 		}
 
 
@@ -83,6 +73,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.SelectDefaultPrésentation ();
+
+#if true
+			//	Hack pour éviter de devoir tout refaire à chaque exécution !
+			this.compta = new ComptaEntity ();  // crée une compta vide
+			new NewCompta ().NewEmpty (this.compta);
+
+			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
+
+			this.InitializeAfterNewCompta ();
+			this.ChangePériode (-1);  // en 2011
+#endif
 		}
 
 
