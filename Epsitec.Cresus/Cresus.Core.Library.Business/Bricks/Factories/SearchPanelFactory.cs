@@ -21,7 +21,6 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 
 		public override void CreateUI(FrameBox container, UIBuilder builder)
 		{
-#if false
 			FormattedText searchTitle  = this.settings.SearchTitle;
 			FormattedText buttonTitle  = this.settings.ButtonTitle;
 			System.Action buttonAction = this.settings.ButtonAction;
@@ -42,7 +41,6 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 
 			builder.Add (container, search);
 			builder.Add (container, button);
-#endif
 		}
 	}
 }
