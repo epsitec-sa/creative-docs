@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.WebCore.Server
 	{
 
 
-		public static DynamicDictionary DecodeFormWithCollections(dynamic form)
+		public static DynamicDictionary DecodeFormWithCollections(DynamicDictionary form)
 		{
 			var newDictionnary = new DynamicDictionary ();
 
