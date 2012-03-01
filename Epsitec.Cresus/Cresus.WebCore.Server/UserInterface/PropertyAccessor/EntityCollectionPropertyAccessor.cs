@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
-		public void SetCollection(AbstractEntity entity, IEnumerable<AbstractEntity> items)
+		public void SetEntityCollection(AbstractEntity entity, IEnumerable<AbstractEntity> items)
 		{
 			var collection = this.GetCollection (entity);
 
@@ -62,19 +63,23 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
+		public bool CheckEntityCollection(AbstractEntity entity, IEnumerable<AbstractEntity> entities)
+		{
+			return entities.All (e => e != null)
+				&& entities.All (e => this.collectionType.IsAssignableFrom (e.GetType ()));
+		}
+
+
 		public override void SetValue(AbstractEntity entity, object value)
 		{
-			this.SetCollection (entity, (IEnumerable<AbstractEntity>) value);
+			this.SetEntityCollection (entity, (IEnumerable<AbstractEntity>) value);
 		}
 
 
 		public override bool CheckValue(AbstractEntity entity, object value)
 		{
-			var list = value as IEnumerable<AbstractEntity>;
-
-			return list != null
-				&& list.All (e => e != null)
-				&& list.All (e => this.collectionType.IsAssignableFrom (e.GetType ()));
+			return (value == null || value is IEnumerable<AbstractEntity>)
+				&& this.CheckEntityCollection (entity, (IEnumerable<AbstractEntity>) value);
 		}
 
 

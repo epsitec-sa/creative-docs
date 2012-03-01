@@ -124,7 +124,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static object ConvertForBooleanAndDate(DynamicDictionaryValue value)
 		{
-			return (string) value;
+			var castedValue = (string) value;
+
+			if (string.IsNullOrEmpty (castedValue))
+			{
+				castedValue = null;
+			}
+
+			return castedValue;
 		}
 
 
