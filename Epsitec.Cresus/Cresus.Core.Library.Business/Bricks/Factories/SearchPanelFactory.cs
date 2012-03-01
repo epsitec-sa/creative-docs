@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Business;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core.Bricks.Factories
 {
@@ -25,8 +26,9 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 			FormattedText buttonTitle  = this.settings.ButtonTitle;
 			System.Action buttonAction = this.settings.ButtonAction;
 
-			var search = new SearchBox ()
+			var search = new SearchPicker ()
 			{
+				Margins = new Margins (4, 4, 4, 0)
 			};
 			
 			var button = new Button ()
