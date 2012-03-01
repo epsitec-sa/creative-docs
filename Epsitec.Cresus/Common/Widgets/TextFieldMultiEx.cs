@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
@@ -231,42 +231,7 @@ namespace Epsitec.Common.Widgets
 			base.UpdateButtonGeometry ();
 		}
 
-		protected override void UpdateButtonVisibility()
-		{
-			base.UpdateButtonVisibility ();
-
-			bool show = false;
-
-			switch (this.ButtonShowCondition)
-			{
-				case ButtonShowCondition.Always:
-					show = true;
-					break;
-
-				case ButtonShowCondition.Never:
-					break;
-
-				case ButtonShowCondition.WhenFocused:
-					show = this.IsFocused;
-					break;
-
-				case ButtonShowCondition.WhenKeyboardFocused:
-					show = this.KeyboardFocus;
-					break;
-
-				case ButtonShowCondition.WhenModified:
-					show = this.HasEditedText;
-					break;
-
-				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
-			}
-
-			this.SetButtonVisibility (show);
-		}
-
-
-		private void SetButtonVisibility(bool show)
+		protected override void SetButtonVisibility(bool show)
 		{
 			if (this.acceptRejectBehavior == null)
 			{

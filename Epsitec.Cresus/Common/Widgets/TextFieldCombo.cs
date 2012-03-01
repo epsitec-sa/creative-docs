@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -221,33 +221,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override void UpdateButtonVisibility()
+		protected override bool ComputeButtonVisibility()
 		{
-			base.UpdateButtonVisibility ();
-			this.SetButtonVisibility (this.ComputeButtonVisibility ());
-		}
-		
-		
-		protected bool ComputeButtonVisibility()
-		{
-			bool show = false;
-			
-			switch (this.ButtonShowCondition)
+			if (base.ComputeButtonVisibility ())
 			{
-				case ButtonShowCondition.Always:				show = true;									break;
-				case ButtonShowCondition.Never:					show = false;									break;
-				case ButtonShowCondition.WhenFocused:			show = this.IsFocused     || this.IsComboOpen;	break;
-				case ButtonShowCondition.WhenKeyboardFocused:	show = this.KeyboardFocus || this.IsComboOpen;	break;
-				case ButtonShowCondition.WhenModified:			show = this.HasEditedText;						break;
-				
-				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+				return true;
 			}
-			
-			return show;
+			else
+			{
+				return this.IsComboOpen;
+			}
 		}
 		
-		protected void SetButtonVisibility(bool visibility)
+		protected override void SetButtonVisibility(bool visibility)
 		{
 			if (this.button != null)
 			{

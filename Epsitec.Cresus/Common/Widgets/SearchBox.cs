@@ -30,6 +30,49 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		protected override void UpdateButtonGeometry()
+		{
+			if (this.searchBehavior != null)
+			{
+				this.margins.Right = this.searchBehavior.DefaultWidth;
+				this.searchBehavior.UpdateButtonGeometry ();
+			}
+
+			base.UpdateButtonGeometry ();
+		}
+
+		protected override void SetButtonVisibility(bool show)
+		{
+			if (this.searchBehavior == null)
+			{
+				return;
+			}
+
+			if (this.searchBehavior.IsVisible != show)
+			{
+				this.searchBehavior.SetVisible (show);
+
+				Window window = this.Window;
+
+				if (window != null)
+				{
+					window.ForceLayout ();
+				}
+
+				this.UpdateButtonGeometry ();
+				this.UpdateButtonEnable ();
+				this.UpdateTextLayout ();
+				this.UpdateMouseCursor (this.MapRootToClient (Message.CurrentState.LastPosition));
+			}
+		}
+
+		protected void UpdateButtonEnable()
+		{
+			if (this.searchBehavior != null)
+			{
+				this.searchBehavior.SetSearchEnabled (this.IsValid);
+			}
+		}
 		private void HandleSearchClicked(object sender)
 		{
 		}

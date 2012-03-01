@@ -14,6 +14,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public SearchBehavior(Widget host)
 		{
 			this.host = host;
+
+			this.isSearchEnabled = true;
+			this.isVisible       = true;
 		}
 		
 		
@@ -138,6 +141,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private GlyphButton						buttonSearch;
 
 		private bool							isVisible;
-		private bool							isSearchEnabled = true;
+		private bool							isSearchEnabled;
 	}
 }

@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -2138,6 +2138,7 @@ namespace Epsitec.Common.Widgets
 				Text = TextConverter.ConvertToTaggedText (text)
 			};
 		}
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
@@ -2162,6 +2163,7 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void UpdateButtonVisibility()
 		{
+			this.SetButtonVisibility (this.ComputeButtonVisibility ());
 		}
 
 		protected virtual bool UpdateMouseCursor(Drawing.Point pos)
@@ -2186,6 +2188,35 @@ namespace Epsitec.Common.Widgets
 
 			return false;
 		}
+
+		protected virtual void SetButtonVisibility(bool show)
+		{
+		}
+
+		protected virtual bool ComputeButtonVisibility()
+		{
+			switch (this.ButtonShowCondition)
+			{
+				case ButtonShowCondition.Always:
+					return true;
+				
+				case ButtonShowCondition.Never:
+					return false;
+				
+				case ButtonShowCondition.WhenFocused:
+					return this.IsFocused;
+				
+				case ButtonShowCondition.WhenKeyboardFocused:
+					return this.KeyboardFocus;
+				
+				case ButtonShowCondition.WhenModified:
+					return this.HasEditedText;
+
+				default:
+					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+			}
+		}
+
 
 		#region IReadOnly Members
 		

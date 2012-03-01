@@ -148,38 +148,10 @@ namespace Epsitec.Common.Widgets
 			
 			base.UpdateButtonGeometry ();
 		}
-
-		protected override void UpdateButtonVisibility()
+		
+		
+		protected override void SetButtonVisibility(bool show)
 		{
-			base.UpdateButtonVisibility ();
-
-			bool show = false;
-			
-			switch (this.ButtonShowCondition)
-			{
-				case ButtonShowCondition.Always:
-					show = true;
-					break;
-				
-				case ButtonShowCondition.Never:
-					break;
-				
-				case ButtonShowCondition.WhenFocused:
-					show = this.IsFocused;
-					break;
-				
-				case ButtonShowCondition.WhenKeyboardFocused:
-					show = this.KeyboardFocus;
-					break;
-				
-				case ButtonShowCondition.WhenModified:
-					show = this.HasEditedText;
-					break;
-				
-				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
-			}
-
 			if (show)
 			{
 				this.RemoveExtraButton ();
@@ -193,12 +165,6 @@ namespace Epsitec.Common.Widgets
 				this.RemoveExtraButton ();
 			}
 			
-			this.SetButtonVisibility (show);
-		}
-		
-		
-		protected void SetButtonVisibility(bool show)
-		{
 			if (this.acceptRejectBehavior == null)
 			{
 				return;
