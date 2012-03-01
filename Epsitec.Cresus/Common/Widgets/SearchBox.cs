@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Behaviors;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.SearchBox))]
+[assembly: DependencyClass (typeof (SearchBox))]
 
 namespace Epsitec.Common.Widgets
 {

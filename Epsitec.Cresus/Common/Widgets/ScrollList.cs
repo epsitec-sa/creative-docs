@@ -1,8 +1,13 @@
-//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Behaviors;
+
+[assembly: DependencyClass (typeof (ScrollList))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -39,7 +44,7 @@ namespace Epsitec.Common.Widgets
 			this.scroller.ValueChanged += this.HandleScrollerValueChanged;
 			this.scroller.Hide ();
 			
-			this.UpdateMargins ();
+			this.UpdateContentPadding ();
 		}
 
 		public ScrollList(Widget embedder)
@@ -184,6 +189,23 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public bool								DisableListDisplay
+		{
+			get
+			{
+				return this.disableListDisplay;
+			}
+			set
+			{
+				if (this.disableListDisplay != value)
+				{
+					this.disableListDisplay = value;
+					this.UpdateScroller ();
+					this.Invalidate ();
+				}
+			}
+		}
+
 		
 		public void ShowSelected(ScrollShowMode mode)
 		{
@@ -296,8 +318,8 @@ namespace Epsitec.Common.Widgets
 
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
 			dx += adorner.GeometryScrollerRightMargin;
-			dx += this.margins.Left;
-			dx += this.margins.Right;
+			dx += this.contentPadding.Left;
+			dx += this.contentPadding.Right;
 			dx += 2;  // ch'tite marge pour respirer
 			dx = System.Math.Ceiling(dx);
 			dy = System.Math.Ceiling(dy);
@@ -428,7 +450,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			double y = this.Client.Size.Height - pos.Y - 1 - ScrollList.TextOffsetY;
-			double x = pos.X - this.margins.Left;
+			double x = pos.X - this.contentPadding.Left;
 			double h = this.visibleRows * this.rowHeight;
 
 			if (this.AutomaticScrollEnable)
@@ -519,29 +541,28 @@ namespace Epsitec.Common.Widgets
 
 		private void UpdateScroller()
 		{
-			//	Met à jour l'ascenseur en fonction de la liste.
-			
-			int total = this.items.Count;
-			if ( total <= this.visibleRows )
+			int total = this.disableListDisplay ? 0 : this.items.Count;
+
+			if (total <= this.visibleRows)
 			{
 				if (this.scroller.Visibility)
 				{
-					this.scroller.Hide();
-					this.UpdateMargins();
+					this.scroller.Hide ();
+					this.UpdateContentPadding ();
 				}
 			}
 			else
 			{
 				this.scroller.MaxValue          = (decimal) (total-this.visibleRows);
-				this.scroller.VisibleRangeRatio = (decimal) ((double)this.visibleRows/total);
+				this.scroller.VisibleRangeRatio = (decimal) ((double) this.visibleRows/total);
 				this.scroller.Value             = (decimal) (this.firstRow);
 				this.scroller.SmallChange       = 1;
 				this.scroller.LargeChange       = (decimal) (this.visibleRows/2.0);
 
 				if (!this.scroller.Visibility)
 				{
-					this.scroller.Show();
-					this.UpdateMargins();
+					this.scroller.Show ();
+					this.UpdateContentPadding ();
 				}
 			}
 		}
@@ -564,7 +585,7 @@ namespace Epsitec.Common.Widgets
 				this.UpdateScroller ();
 
 				Rectangle rect  = this.Client.Bounds;
-				Point     pos   = new Point (this.margins.Left, rect.Height-ScrollList.TextOffsetY);
+				Point     pos   = new Point (this.contentPadding.Left, rect.Height-ScrollList.TextOffsetY);
 				double    width = this.GetTextWidth ();
 				
 				int max = System.Math.Min (this.visibleRows, this.items.Count);
@@ -602,20 +623,21 @@ namespace Epsitec.Common.Widgets
 		protected override void OnAdornerChanged()
 		{
 			this.UpdateGeometry ();
-			this.UpdateMargins ();
 			base.OnAdornerChanged ();
 		}
 
 		private void UpdateGeometry()
 		{
-			//	Met à jour la géométrie de l'ascenseur de la liste.
+			System.Diagnostics.Debug.Assert (this.scroller != null);
 
 			if (this.rowHeight == 0)
 			{
 				return;
 			}
 
-			this.visibleRows = (int) ((this.ActualHeight-ScrollList.TextOffsetY*2)/this.rowHeight);
+			var availableHeight = this.Client.Size.Height - 2*ScrollList.TextOffsetY;
+
+			this.visibleRows = (int) System.Math.Ceiling (availableHeight/this.rowHeight);
 			
 			if (this.visibleRows < 1)
 			{
@@ -627,38 +649,40 @@ namespace Epsitec.Common.Widgets
 
 			this.SetDirty ();
 
-			if (this.scroller != null)
-			{
-				this.UpdateMargins ();
-				IAdorner adorner = Widgets.Adorners.Factory.Active;
-				Rectangle rect = new Rectangle ();
-				rect.Right  = this.Client.Size.Width-adorner.GeometryScrollerRightMargin;
-				rect.Left   = rect.Right-this.scroller.PreferredWidth;
-				rect.Bottom = adorner.GeometryScrollerBottomMargin+ScrollList.TextOffsetY-this.margins.Bottom;
-				rect.Top    = this.Client.Size.Height-adorner.GeometryScrollerTopMargin-ScrollList.TextOffsetY+this.margins.Top;
-				this.scroller.SetManualBounds (rect);
-			}
+			this.UpdateContentPadding ();
+			this.UpdateScrollerGeometry (availableHeight);
 		}
 
-		private void UpdateMargins()
+		private void UpdateContentPadding()
 		{
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			
-			this.margins = new Margins(adorner.GeometryScrollListXMargin, adorner.GeometryScrollListXMargin,
-				/**/                           adorner.GeometryScrollListYMargin, adorner.GeometryScrollListYMargin);
-			
-			if ( this.scroller != null   &&
-				 this.scroller.Visibility )
-			{
-				this.margins.Right = this.Client.Size.Width - this.scroller.ActualLocation.X;
-			}
+			var adorner = Widgets.Adorners.Factory.Active;
+
+			var rightMargin = this.scroller.Visibility ? this.scroller.PreferredWidth : 0;
+
+			this.contentPadding = new Margins (adorner.GeometryScrollListXMargin,
+				/**/                           adorner.GeometryScrollListXMargin + rightMargin,
+				/**/                           adorner.GeometryScrollListYMargin,
+				/**/                           adorner.GeometryScrollListYMargin);
 		}
 
+		private void UpdateScrollerGeometry(double availableHeight)
+		{
+			var adorner = Widgets.Adorners.Factory.Active;
+
+			var rect = new Rectangle (
+				x: this.Client.Size.Width - adorner.GeometryScrollerRightMargin - this.scroller.PreferredWidth,
+				y: adorner.GeometryScrollerBottomMargin + ScrollList.TextOffsetY - this.contentPadding.Bottom,
+				width: this.scroller.PreferredWidth,
+				height: availableHeight - adorner.GeometryScrollerTopMargin - adorner.GeometryScrollerBottomMargin + this.contentPadding.Height);
+
+			this.scroller.SetManualBounds (rect);
+		}
+		
 		private double GetTextWidth()
 		{
 			//	Calcule la largeur utile pour le texte.
 			
-			return this.Client.Size.Width - this.margins.Width;
+			return this.Client.Size.Width - this.contentPadding.Width;
 		}
 
 
@@ -736,24 +760,39 @@ namespace Epsitec.Common.Widgets
 		{
 			this.UpdateTextLayouts ();
 
-			IAdorner adorner = Widgets.Adorners.Factory.Active;
+			var adorner = Widgets.Adorners.Factory.Active;
+			var state   = this.GetPaintState ();
 
-			Rectangle rect  = this.Client.Bounds;
-			WidgetPaintState  state = this.GetPaintState ();
+			this.PaintFrame (graphics, adorner, this.Client.Bounds, state);
+			this.PaintContents (graphics, adorner, state);
+		}
+
+
+		private void PaintFrame(Graphics graphics, IAdorner adorner, Rectangle bounds, WidgetPaintState state)
+		{
+			var margins = new Margins (0, 0, ScrollList.TextOffsetY-this.contentPadding.Top, ScrollList.TextOffsetY-this.contentPadding.Bottom);
 
 			if (this.scrollListStyle == ScrollListStyle.Menu)
 			{
-				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
+				Rectangle frame = Rectangle.Deflate (bounds, margins);
 				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Simple, TextFieldDisplayMode.Default, false, false);
 			}
 			else if (this.scrollListStyle != Widgets.ScrollListStyle.FrameLess)
 			{
-				Rectangle frame = Rectangle.Deflate (rect, new Margins (0, 0, ScrollList.TextOffsetY-this.margins.Top, ScrollList.TextOffsetY-this.margins.Bottom));
+				Rectangle frame = Rectangle.Deflate (bounds, margins);
 				adorner.PaintTextFieldBackground (graphics, frame, state, TextFieldStyle.Multiline, TextFieldDisplayMode.Default, false, false);
+			}
+		}
+
+		private void PaintContents(Graphics graphics, IAdorner adorner, WidgetPaintState state)
+		{
+			if (this.disableListDisplay)
+			{
+				return;
 			}
 
 			int max = System.Math.Min (this.visibleRows, this.items.Count);
-			
+
 			for (int i = 0; i < max; i++)
 			{
 				if (this.textLayouts[i] == null)
@@ -764,12 +803,12 @@ namespace Epsitec.Common.Widgets
 				Rectangle frame = this.textFrames[i];
 
 				if ((this.IsItemSelected (this.firstRow + i)) &&
-					((state & WidgetPaintState.Enabled) != 0))
+						((state & WidgetPaintState.Enabled) != 0))
 				{
 					TextLayout.SelectedArea[] areas = new TextLayout.SelectedArea[1]
-					{
-						new TextLayout.SelectedArea (frame)
-					};
+						{
+							new TextLayout.SelectedArea (frame)
+						};
 
 					adorner.PaintTextSelectionBackground (graphics, areas, state, PaintTextStyle.TextField, TextFieldDisplayMode.Default);
 
@@ -799,16 +838,14 @@ namespace Epsitec.Common.Widgets
 					{
 						frame.Bottom -= 1;
 					}
-					
+
 					frame.Deflate (0.5);
-					
+
 					graphics.AddRectangle (frame);
 					graphics.RenderSolid (adorner.ColorBorder);
 				}
 			}
 		}
-
-		
 		#region IStringCollectionHost Members
 		public void NotifyStringCollectionChanged()
 		{
@@ -982,9 +1019,11 @@ namespace Epsitec.Common.Widgets
 		private const double					TextOffsetX = 3;
 		private const double					TextOffsetY = 2;
 
-		readonly Behaviors.SelectItemBehavior	selectItemBehavior;
-		readonly Behaviors.AutoScrollBehavior	autoScrollBehavior;
+		private readonly SelectItemBehavior	selectItemBehavior;
+		private readonly AutoScrollBehavior	autoScrollBehavior;
 
+		private readonly VScroller				scroller;
+		
 		private ScrollListStyle					scrollListStyle;
 		private bool							isDirty;
 		private bool							drawFrame;
@@ -994,11 +1033,11 @@ namespace Epsitec.Common.Widgets
 		private Rectangle[]						textFrames;
 
 		private bool							allRowsHaveSameWidth;
+		private bool							disableListDisplay;
 
-		private Margins							margins;
+		private Margins							contentPadding;
 
 		private double							rowHeight;
-		readonly VScroller						scroller;
 		private int								visibleRows;
 		private int								firstRow;
 		private int								selectedRow;

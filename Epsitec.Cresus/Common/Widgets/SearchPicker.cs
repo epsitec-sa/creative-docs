@@ -3,9 +3,12 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Behaviors;
+
+[assembly: DependencyClass (typeof (SearchPicker))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -37,7 +40,43 @@ namespace Epsitec.Common.Widgets
 			};
 
 			this.spacer.PaintForeground += this.HandleSpacerPaintForeground;
+			this.searchBox.TextChanged  += this.HandleSearchBoxTextChanged;
 		}
+
+
+		public SearchPickerState State
+		{
+			get
+			{
+				return this.state;
+			}
+			set
+			{
+				if (this.state != value)
+				{
+					this.state = value;
+					this.OnSearchPickerStateChanged ();
+				}
+			}
+		}
+
+
+
+		protected void OnSearchPickerStateChanged()
+		{
+			switch (this.State)
+			{
+				case SearchPickerState.Empty:
+				case SearchPickerState.Ready:
+				case SearchPickerState.Error:
+				case SearchPickerState.Busy:
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", this.State.GetQualifiedName ()));
+			}
+		}
+
 
 
 		private void HandleSpacerPaintForeground(object sender, PaintEventArgs e)
@@ -70,9 +109,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		private void HandleSearchBoxTextChanged(object sender)
+		{
+		}
+
 
 		private readonly SearchBox				searchBox;
 		private readonly StaticText				spacer;
 		private readonly ScrollList				searchResults;
+
+		private SearchPickerState				state;
 	}
 }

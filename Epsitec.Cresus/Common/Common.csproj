@@ -1279,6 +1279,7 @@
     <Compile Include="Widgets\ScrollListStyle.cs" />
     <Compile Include="Widgets\SearchBox.cs" />
     <Compile Include="Widgets\SearchPicker.cs" />
+    <Compile Include="Widgets\SearchPickerState.cs" />
     <Compile Include="Widgets\Separator.cs" />
     <Compile Include="Widgets\Shortcut.cs" />
     <Compile Include="Widgets\ShortcutEditor.cs" />
