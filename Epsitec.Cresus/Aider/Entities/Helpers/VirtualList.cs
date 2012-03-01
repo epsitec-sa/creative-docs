@@ -17,7 +17,7 @@ namespace Epsitec.Aider.Entities.Helpers
 		protected VirtualList(THostEntity entity)
 		{
 			this.entity = entity;
-			this.AddRange (this.GetItems ());
+			this.list.AddRange (this.GetItems ());
 		}
 
 		

@@ -337,6 +337,10 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 
 		private T CreateDummyItem(ICollectionAccessor collectionAccessor)
 		{
+			//	Create the dummy entity and register the replacement logic: when the dummy entity
+			//	gets replaced by the final entity (BusinessContext.ReplaceDummyEntity), we also do
+			//	the replacement directly in the collection of items.
+
 			return this.BusinessContext.CreateDummyEntity<T> ((x, y) => collectionAccessor.ReplaceItem (x, y));
 		}
 

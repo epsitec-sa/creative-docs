@@ -8,6 +8,7 @@ using Epsitec.Cresus.Bricks;
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers.CreationControllers;
+using Epsitec.Cresus.Core.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,27 +27,22 @@ namespace Epsitec.Aider.Controllers.CreationControllers
 				.End ();
 		}
 
-#if false
-		protected override void CreateUI()
-		{
-			using (var builder = new UIBuilder (this))
-			{
-				builder.CreatePanelTitleTile ("Data.AiderHousehold", "Ménage à créer...");
-				builder.CreateCreationButton<AiderHouseholdEntity, AiderHouseholdEntity> (this, "Nouveau ménage", "Crée un nouveau ménage, propre à cette personne");
-				builder.EndPanelTitleTile ();
-			}
-
-			this.RegisterSimpleCreator (this.CreateHousehold);
-		}
-
-		private AiderHouseholdEntity CreateHousehold()
-		{
-			return this.BusinessContext.CreateEntity<AiderHouseholdEntity> ();
-		}
-#endif
 
 		private void HandleButtonCreateClicked()
 		{
+			var businessContext = this.BusinessContext;
+			var activePerson    = businessContext.GetMasterEntity<AiderPersonEntity> ();
+			var dummyHousehold  = this.Entity;
+			var finalHousehold  = businessContext.CreateEntity<AiderHouseholdEntity> ();
+
+			System.Diagnostics.Debug.Assert (activePerson.IsNotNull ());
+			System.Diagnostics.Debug.Assert (activePerson.Households.Contains (dummyHousehold));
+
+			businessContext.ReplaceDummyEntity (dummyHousehold, finalHousehold);
+
+			System.Diagnostics.Debug.Assert (activePerson.Households.Contains (finalHousehold));
+			
+			this.ReopenSubView ();
 		}
 
 		private void HandleButtonAssociateClicked()
