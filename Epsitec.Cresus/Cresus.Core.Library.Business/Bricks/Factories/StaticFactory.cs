@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Dynamic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.Factories
 {
 	public abstract class StaticFactory
 	{

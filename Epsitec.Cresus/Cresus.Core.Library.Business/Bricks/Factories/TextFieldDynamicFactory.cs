@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -16,7 +16,7 @@ using Epsitec.Cresus.Core.Widgets.Tiles;
 using System.Linq.Expressions;
 using System.Collections.Generic;
 
-namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.Factories
 {
 	/// <summary>
 	/// The <c>TextFieldDynamicFactory</c> creates a <see cref="DynamicFactory"/> for

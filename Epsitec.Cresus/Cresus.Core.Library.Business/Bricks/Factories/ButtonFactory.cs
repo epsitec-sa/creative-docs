@@ -10,7 +10,7 @@ using System.Dynamic;
 using System.Linq;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Cresus.Core.Bricks.DynamicFactories
+namespace Epsitec.Cresus.Core.Bricks.Factories
 {
 	public sealed class ButtonFactory : StaticFactory
 	{
