@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SearchAdaptOrMode(SearchData data)
 		{
-			data.OrMode = (data.NodesData[0].TabsData.Count == 1);
+			data.NodesData[0].OrMode = (data.NodesData[0].TabsData.Count == 1);
 		}
 
 
