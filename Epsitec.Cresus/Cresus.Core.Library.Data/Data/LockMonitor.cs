@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,13 +25,13 @@ namespace Epsitec.Cresus.Core.Data
 	/// The <c>LockMonitor</c> class is used to monitor (in the background) the state of
 	/// a set of locks.
 	/// </summary>
-	public sealed class LockMonitor : DependencyObject
+	public sealed class LockMonitor : DependencyObject, IDisposed, IIsDisposed
 	{
 		public LockMonitor(CoreData data, IEnumerable<string> lockNames)
 		{
-			this.lockNames = lockNames.ToArray ();
+			this.lockNames          = lockNames.ToArray ();
 			this.dataInfrastructure = data.DataInfrastructure;
-			this.dataLocker = data.DataLocker;
+			this.dataLocker         = data.DataLocker;
 
 			if (this.lockNames.Length > 0)
 			{
@@ -72,17 +72,46 @@ namespace Epsitec.Cresus.Core.Data
 
 		protected override void Dispose(bool disposing)
 		{
+			bool notify = false;
+
 			if (disposing)
 			{
 				if (this.isDisposed == false)
 				{
 					this.isDisposed = true;
 					this.dataLocker.UnregisterLockMonitor (this);
+					notify = true;
 				}
+			}
+
+			base.Dispose (disposing);
+
+			if (notify)
+			{
+				this.OnDisposed ();
 			}
 		}
 
 
+		#region IIsDisposed Members
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+		#endregion
+
+		#region IDisposed Members
+
+		public event EventHandler  Disposed;
+
+		#endregion
+
+		
 		/// <summary>
 		/// Updates the state of the lock based on a collection of lock owners.
 		/// </summary>
@@ -105,7 +134,6 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
-		
 		private void SetLockState(LockState lockState)
 		{
 			if (this.lockState != lockState)
@@ -115,14 +143,14 @@ namespace Epsitec.Cresus.Core.Data
 			}
 		}
 
+		private void OnDisposed()
+		{
+			this.Disposed.Raise (this);
+		}
+
 		private void OnLockStateChanged()
 		{
-			var handler = this.LockStateChanged;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.LockStateChanged.Raise (this);
 		}
 
 

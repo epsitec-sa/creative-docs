@@ -29,16 +29,20 @@ namespace Epsitec.Cresus.Core.Business
 		
 		private BusinessContext(BusinessContextPool pool)
 		{
-			this.pool = pool;
+			this.pool     = pool;
 			this.UniqueId = System.Threading.Interlocked.Increment (ref BusinessContext.nextUniqueId);
+			
 			this.pool.Add (this);
-			this.entityRecords = new List<EntityRecord> ();
-			this.masterEntities = new List<AbstractEntity> ();
-			this.delayedUpdates = new Stack<DelayedUpdate> ();
+			
+			this.entityRecords      = new List<EntityRecord> ();
+			this.masterEntities     = new List<AbstractEntity> ();
+			this.delayedUpdates     = new Stack<DelayedUpdate> ();
 			this.dataChangedCounter = new SafeCounter ();
+			this.lockMonitors       = new List<LockMonitor> ();
 
-			this.data = this.pool.Host;
+			this.data        = this.pool.Host;
 			this.dataContext = this.pool.CreateDataContext (this);
+			
 			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
 			
 			this.locker = this.Data.DataLocker;
@@ -297,7 +301,13 @@ namespace Epsitec.Cresus.Core.Business
 
 		public LockMonitor CreateLockMonitor()
 		{
-			return this.Data.DataLocker.CreateLockMonitor (this.GetLockNames ());
+			var lockMonitor = this.Data.DataLocker.CreateLockMonitor (this.GetLockNames ());
+			
+			lockMonitor.Disposed += m => this.lockMonitors.Remove (m as LockMonitor);
+
+			this.lockMonitors.Add (lockMonitor);
+
+			return lockMonitor;
 		}
 		
 		public System.IDisposable AutoLock<T>(T entity)
@@ -942,6 +952,10 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void Dispose()
 		{
+			this.lockMonitors.ToArray ().ForEach (m => m.Dispose ());
+
+			System.Diagnostics.Debug.Assert (this.lockMonitors.Count == 0);
+
 			this.pool.DisposeBusinessContext (this);
 
 			System.Diagnostics.Debug.Assert (this.isDisposed);
@@ -1212,6 +1226,7 @@ namespace Epsitec.Cresus.Core.Business
 		private readonly CoreData				data;
 		private readonly Stack<DelayedUpdate>	delayedUpdates;
 		private readonly SafeCounter			dataChangedCounter;
+		private readonly List<LockMonitor>		lockMonitors;
 		private bool							dataContextDirty;
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
