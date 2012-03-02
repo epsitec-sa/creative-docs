@@ -84,6 +84,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		{
 			return type == typeof (string)
 		        || type == typeof (FormattedText)
+		        || type == typeof (FormattedText?)
 		        || type == typeof (long)
 		        || type == typeof (long?)
 		        || type == typeof (decimal)
