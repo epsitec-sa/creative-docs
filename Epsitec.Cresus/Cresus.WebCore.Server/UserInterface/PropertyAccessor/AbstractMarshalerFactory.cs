@@ -9,11 +9,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal abstract class AbstractMarshallerFactory
+	internal abstract class AbstractMarshalerFactory
 	{
 
 
-		protected AbstractMarshallerFactory(LambdaExpression lambda)
+		protected AbstractMarshalerFactory(LambdaExpression lambda)
 		{
 			this.lambda = lambda;
 		}

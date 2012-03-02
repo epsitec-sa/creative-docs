@@ -12,12 +12,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 {
 
 
-	internal sealed class NullableMarshallerFactory<TField> : AbstractMarshallerFactory
+	internal sealed class NullableMarshalerFactory<TField> : AbstractMarshalerFactory
 		where TField : struct
 	{
 
 
-		public NullableMarshallerFactory(LambdaExpression lambda, Delegate getter, Delegate setter)
+		public NullableMarshalerFactory(LambdaExpression lambda, Delegate getter, Delegate setter)
 			: base (lambda)
 		{
 			this.getterPattern = e => (TField?) getter.DynamicInvoke (e);

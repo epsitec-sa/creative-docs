@@ -66,11 +66,11 @@
     <Compile Include="Tools.cs" />
     <Compile Include="UserInterface\PropertyAccessor\FieldType.cs" />
     <Compile Include="UserInterface\PropertyAccessor\FieldTypeSelector.cs" />
-    <Compile Include="UserInterface\PropertyAccessor\AbstractMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\AbstractMarshalerFactory.cs" />
     <Compile Include="UserInterface\PropertyAccessor\EntityCollectionPropertyAccessor.cs" />
     <Compile Include="UserInterface\PropertyAccessor\EntityReferencePropertyAccessor.cs" />
-    <Compile Include="UserInterface\PropertyAccessor\NonNullableMarshallerFactory.cs" />
-    <Compile Include="UserInterface\PropertyAccessor\NullableMarshallerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\NonNullableMarshalerFactory.cs" />
+    <Compile Include="UserInterface\PropertyAccessor\NullableMarshalerFactory.cs" />
     <Compile Include="UserInterface\PropertyAccessor\TextPropertyAccessor.cs" />
     <Compile Include="UserInterface\TileData\AbstractEditionTilePartData.cs" />
     <Compile Include="UserInterface\TileData\AbstractSummaryTileData.cs" />

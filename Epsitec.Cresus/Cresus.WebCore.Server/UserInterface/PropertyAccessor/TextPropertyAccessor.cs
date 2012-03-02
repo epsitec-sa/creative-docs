@@ -28,12 +28,12 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		public TextPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
-			this.marshalerFactory = this.GetMarshallerFactory (lambda);
+			this.marshalerFactory = this.GetMarshalerFactory (lambda);
 			this.valueChecker = this.GetValueChecker ();
 		}
 
 
-		private AbstractMarshallerFactory GetMarshallerFactory(LambdaExpression lambda)
+		private AbstractMarshalerFactory GetMarshalerFactory(LambdaExpression lambda)
 		{
 			Type fieldType = lambda.ReturnType;
 			Type factoryType;
@@ -41,17 +41,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 			if (fieldType.IsNullable ())
 			{
 				fieldType = fieldType.GetNullableTypeUnderlyingType ();
-				factoryType = typeof (NullableMarshallerFactory<>);
+				factoryType = typeof (NullableMarshalerFactory<>);
 			}
 			else
 			{
-				factoryType = typeof (NonNullableMarshallerFactory<>);
+				factoryType = typeof (NonNullableMarshalerFactory<>);
 			}
 
 			var factoryGenericType = factoryType.MakeGenericType (fieldType);
 			var factory = Activator.CreateInstance (factoryGenericType, lambda, this.Getter, this.Setter);
 
-			return (AbstractMarshallerFactory) factory;
+			return (AbstractMarshalerFactory) factory;
 		}
 
 
@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		}
 
 
-		private readonly AbstractMarshallerFactory marshalerFactory;
+		private readonly AbstractMarshalerFactory marshalerFactory;
 
 
 		private readonly Func<string, bool> valueChecker;
