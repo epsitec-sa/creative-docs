@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+ï»¿using System.Collections.Generic;
 using System.Xml;
 using System.Xml.Serialization;
 using Epsitec.Common.Widgets;
@@ -9,7 +9,7 @@ using Epsitec.Common.Types;
 namespace Epsitec.Common.Designer.EntitiesEditor
 {
 	/// <summary>
-	/// Cette classe contient toutes les informations relatives à une ligne, c'est-à-dire à un champ.
+	/// Cette classe contient toutes les informations relatives Ã  une ligne, c'est-Ã -dire Ã  un champ.
 	/// </summary>
 	public class Field
 	{
@@ -18,7 +18,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			// Cas A:
 			// o--------->
 			//
-			// Cas A personnalisé:
+			// Cas A personnalisÃ©:
 			//    x---x
 			//    |   |
 			// o--|   |-->
@@ -29,7 +29,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//       |
 			// o-----|
 			// 
-			// Cas Bt personnalisé:
+			// Cas Bt personnalisÃ©:
 			//       ^
 			//       |
 			//    x--|
@@ -41,7 +41,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//       |
 			//       V
 			// 
-			// Cas Bb personnalisé:
+			// Cas Bb personnalisÃ©:
 			// o--|
 			//    |
 			//    x--|
@@ -58,11 +58,11 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			//      x
 			//   <--|
 			// 
-			// Les cas A et B ont un routage automatique ou personnalisé.
-			// 'x' = poignée pour personnaliser le routage.
+			// Les cas A et B ont un routage automatique ou personnalisÃ©.
+			// 'x' = poignÃ©e pour personnaliser le routage.
 
-			Close,		// connection fermée
-			Himself,	// connection sur soi-même
+			Close,		// connection fermÃ©e
+			Himself,	// connection sur soi-mÃªme
 			A,			// connection de type A
 			Bt,			// connection de type B vers le haut
 			Bb,			// connection de type B vers le bas
@@ -96,6 +96,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.isNullable = false;
 			this.isVirtual = false;
 			this.isPrivateRelation = false;
+			this.isAscending = false;
+			this.isDescending = false;
 			this.cultureMapSource = CultureMapSource.Invalid;
 			this.rank = -1;
 			this.index = -1;
@@ -123,7 +125,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void Initialize(AbstractObject obj, StructuredData dataField)
 		{
-			//	Met à jour selon le StructuredData du champ.
+			//	Met Ã  jour selon le StructuredData du champ.
 			System.Diagnostics.Debug.Assert(obj is ObjectBox);
 			System.Diagnostics.Debug.Assert(!dataField.IsEmpty);
 
@@ -139,9 +141,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			StructuredTypeClass definingType;
 			bool? isInterfaceDefinition = Support.ResourceAccessors.StructuredTypeResourceAccessor.ToBoolean(dataField.GetValue(Support.Res.Fields.Field.IsInterfaceDefinition));
 
-			//	Cherche les expressions définies localement et par héritage, le nom
-			//	de l'entité qui définit le champ, le nom du champ et le nom du parent
-			//	qui définit pour la première fois le champ :
+			//	Cherche les expressions dÃ©finies localement et par hÃ©ritage, le nom
+			//	de l'entitÃ© qui dÃ©finit le champ, le nom du champ et le nom du parent
+			//	qui dÃ©finit pour la premiÃ¨re fois le champ :
 			string localExpression = Field.GetLocalExpression(dataField, this.IsPatch, source);
 			string inheritedExpression = Field.GetInheritedExpression(app, dataField, fieldCaptionId, definingTypeId, this.IsPatch, source);
 			string typeName = Field.GetFieldTypeName (app, typeId, relation);
@@ -158,6 +160,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			this.IsNullable = (options & FieldOptions.Nullable) != 0;
 			this.IsVirtual = (options & FieldOptions.Virtual) != 0;
 			this.IsPrivateRelation = (options & FieldOptions.PrivateRelation) != 0;
+			this.IsAscending = (options & FieldOptions.IndexAscending) != 0;
+			this.IsDescending = (options & FieldOptions.IndexDescending) != 0;
 			this.IsUnchangedInterfaceField = isInterfaceDefinition.HasValue && isInterfaceDefinition.Value;
 			this.cultureMapSource = source;
 			this.FieldName = fieldName;
@@ -175,9 +179,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsReadOnly
 		{
-			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
+			//	Indique s'il s'agit d'un champ non modifiable, c'est-Ã -dire:
 			//	- Un titre
-			//	- Un champ hérité
+			//	- Un champ hÃ©ritÃ©
 			//	- Un champ d'une interface
 			get
 			{
@@ -187,9 +191,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsStrictlyReadOnly
 		{
-			//	Indique s'il s'agit d'un champ non modifiable, c'est-à-dire:
+			//	Indique s'il s'agit d'un champ non modifiable, c'est-Ã -dire:
 			//	- Un titre
-			//	- Un champ hérité
+			//	- Un champ hÃ©ritÃ©
 			//	- Un champ d'une interface
 			//	- Un champ d'un module de patch
 			get
@@ -200,7 +204,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsTitle
 		{
-			//	Indique si le champ est un titre d'héritage ou d'interface.
+			//	Indique si le champ est un titre d'hÃ©ritage ou d'interface.
 			get
 			{
 				return this.isTitle;
@@ -217,7 +221,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsSubtitle
 		{
-			//	Indique si le champ est un sous-titre d'héritage ou d'interface.
+			//	Indique si le champ est un sous-titre d'hÃ©ritage ou d'interface.
 			get
 			{
 				return this.isSubtitle;
@@ -234,7 +238,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsInherited
 		{
-			//	Indique s'il s'agit d'un champ hérité.
+			//	Indique s'il s'agit d'un champ hÃ©ritÃ©.
 			get
 			{
 				if (this.IsTitle || this.IsSubtitle)
@@ -255,7 +259,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public bool IsInterfaceOrInterfaceTitle
 		{
 			//	Indique s'il s'agit d'un champ d'une interface ou d'un
-			//	titre appartenant à une interface.
+			//	titre appartenant Ã  une interface.
 			get
 			{
 				if (this.IsTitle || this.IsSubtitle)
@@ -269,17 +273,17 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			}
 			set
 			{
-				//	Si c'est un titre, on doit pouvoir spécifier s'il appartient
-				//	à une interface. Cf. ObjectBox.UpdateFieldsContent.
+				//	Si c'est un titre, on doit pouvoir spÃ©cifier s'il appartient
+				//	Ã  une interface. Cf. ObjectBox.UpdateFieldsContent.
 				this.isInterfaceTitle = value;
 			}
 		}
 
 		public bool IsInterfaceLocal
 		{
-			//	Indique s'il s'agit d'un champ d'une interface importée
-			//	directement dans cette entité (un champ provenant d'une
-			//	interface qui serait héritée d'un parent retourne false).
+			//	Indique s'il s'agit d'un champ d'une interface importÃ©e
+			//	directement dans cette entitÃ© (un champ provenant d'une
+			//	interface qui serait hÃ©ritÃ©e d'un parent retourne false).
 			get
 			{
 				return this.definingEntityClass == StructuredTypeClass.Interface && this.membership == FieldMembership.Local;
@@ -289,7 +293,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public bool IsUnchangedInterfaceField
 		{
 			//	Indique si le champ provient d'une interface et qu'il n'a
-			//	pas été modifié localement.
+			//	pas Ã©tÃ© modifiÃ© localement.
 			get
 			{
 				return this.isUnchangedInterfaceField;
@@ -302,9 +306,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsEditExpressionEnabled
 		{
-			//	Retourne true s'il est possible d'éditer l'expression de ce champ.
-			//	A savoir : si une expression est définie localement ou dans un des
-			//	parents, si c'est un champ appartenant à une interface importée
+			//	Retourne true s'il est possible d'Ã©diter l'expression de ce champ.
+			//	A savoir : si une expression est dÃ©finie localement ou dans un des
+			//	parents, si c'est un champ appartenant Ã  une interface importÃ©e
 			//	localement ou si c'est un champ local.
 			get
 			{
@@ -351,7 +355,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Druid DefiningEntityId
 		{
-			//	Druid définissant l'interface.
+			//	Druid dÃ©finissant l'interface.
 			get
 			{
 				return this.definingEntityId;
@@ -360,7 +364,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Druid DefiningRootEntityId
 		{
-			//	Druid du parent définissant l'interface.
+			//	Druid du parent dÃ©finissant l'interface.
 			get
 			{
 				return this.definingRootEntityId;
@@ -382,7 +386,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsGroupTop
 		{
-			//	Case supérieure d'un groupe ?
+			//	Case supÃ©rieure d'un groupe ?
 			get
 			{
 				return this.isGroupTop;
@@ -395,7 +399,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsGroupBottom
 		{
-			//	Case inférieure d'un groupe ?
+			//	Case infÃ©rieure d'un groupe ?
 			get
 			{
 				return this.isGroupBottom;
@@ -460,7 +464,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public TextLayout TextLayoutField
 		{
-			//	Retourne le TextLayout utilisé pour le nom du champ.
+			//	Retourne le TextLayout utilisÃ© pour le nom du champ.
 			get
 			{
 				return this.textLayoutField;
@@ -469,7 +473,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public TextLayout TextLayoutType
 		{
-			//	Retourne le TextLayout utilisé pour le type du champ.
+			//	Retourne le TextLayout utilisÃ© pour le type du champ.
 			get
 			{
 				return this.textLayoutType;
@@ -478,7 +482,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public FieldRelation Relation
 		{
-			//	Type de la relation éventuelle du champ.
+			//	Type de la relation Ã©ventuelle du champ.
 			get
 			{
 				return this.relation;
@@ -491,7 +495,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public FieldMembership Membership
 		{
-			//	Type de l'héritage du champ.
+			//	Type de l'hÃ©ritage du champ.
 			get
 			{
 				return this.membership;
@@ -513,7 +517,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Druid Destination
 		{
-			//	Destination de la relation éventuelle du champ.
+			//	Destination de la relation Ã©ventuelle du champ.
 			get
 			{
 				return this.destination;
@@ -556,7 +560,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsPrivateRelation
 		{
-			//	Indique si la relation du champ est privée.
+			//	Indique si la relation du champ est privÃ©e.
 			get
 			{
 				return this.isPrivateRelation;
@@ -567,6 +571,38 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				{
 					this.isPrivateRelation = value;
 					this.UpdateTypeName();
+				}
+			}
+		}
+
+		public bool IsAscending
+		{
+			get
+			{
+				return this.isAscending;
+			}
+			set
+			{
+				if (this.isAscending != value)
+				{
+					this.isAscending = value;
+					this.UpdateTypeName ();
+				}
+			}
+		}
+
+		public bool IsDescending
+		{
+			get
+			{
+				return this.isDescending;
+			}
+			set
+			{
+				if (this.isDescending != value)
+				{
+					this.isDescending = value;
+					this.UpdateTypeName ();
 				}
 			}
 		}
@@ -600,7 +636,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public int Index
 		{
 			//	Index de la ligne dans le tableau, en tenant compte des titres.
-			//	Donc, toutes les lignes sont numérotées 0..n.
+			//	Donc, toutes les lignes sont numÃ©rotÃ©es 0..n.
 			get
 			{
 				return this.index;
@@ -622,7 +658,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public ObjectBox DstBox
 		{
-			//	Objet destination de la connection (si la relation est explorée).
+			//	Objet destination de la connection (si la relation est explorÃ©e).
 			get
 			{
 				return this.dstBox;
@@ -648,7 +684,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsExplored
 		{
-			//	Indique si une relation est explorée, c'est-à-dire si l'entité destination est visible.
+			//	Indique si une relation est explorÃ©e, c'est-Ã -dire si l'entitÃ© destination est visible.
 			get
 			{
 				return this.isExplored;
@@ -661,7 +697,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsSourceExpanded
 		{
-			//	Indique si la boîte source d'une relation est étendue.
+			//	Indique si la boÃ®te source d'une relation est Ã©tendue.
 			get
 			{
 				return this.isSourceExpanded;
@@ -674,9 +710,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool IsAttachToRight
 		{
-			//	Indique si la boîte source est attachée à droite ou à gauche.
+			//	Indique si la boÃ®te source est attachÃ©e Ã  droite ou Ã  gauche.
 			//	Direction dans laquelle part la connection.
-			//	En fait, il s'agit du bouton ConnectionOpenLeft/Right utilisé pour ouvrir
+			//	En fait, il s'agit du bouton ConnectionOpenLeft/Right utilisÃ© pour ouvrir
 			//	la connection, et non de la direction effective dans laquelle part la
 			//	connection !
 			get
@@ -692,7 +728,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public bool HasComment
 		{
-			//	Est-ce qu'un commentaire est attaché ?
+			//	Est-ce qu'un commentaire est attachÃ© ?
 			get
 			{
 				return this.hasComment;
@@ -718,7 +754,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public Rectangle CommentBounds
 		{
-			//	Boîte du commentaire.
+			//	BoÃ®te du commentaire.
 			get
 			{
 				return this.commentBounds;
@@ -745,8 +781,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		public double CommentAttach
 		{
 			//	Distance d'attache du commentaire.
-			//	Une distance positive commence depuis le début de la connection.
-			//	Une distance négative commence depuis la fin de la connection.
+			//	Une distance positive commence depuis le dÃ©but de la connection.
+			//	Une distance nÃ©gative commence depuis la fin de la connection.
 			get
 			{
 				return this.commentAttach;
@@ -796,7 +832,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteRelativeAX1
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermÃ©diaire de la connection (cas A).
 			get
 			{
 				return this.routeRelativeAX1;
@@ -818,7 +854,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteRelativeAX2
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermÃ©diaire de la connection (cas A).
 			get
 			{
 				return this.routeRelativeAX2;
@@ -840,7 +876,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteAbsoluteAY
 		{
-			//	Position intermédiaire de la connection (cas A).
+			//	Position intermÃ©diaire de la connection (cas A).
 			get
 			{
 				return this.routeAbsoluteAY;
@@ -864,13 +900,13 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public void RouteAbsoluteAYClear()
 		{
-			//	Réinitialise un cas A simple, sans exécuter UpdateRoute().
+			//	RÃ©initialise un cas A simple, sans exÃ©cuter UpdateRoute().
 			this.routeAbsoluteAY = 0;
 		}
 
 		public double RouteRelativeBX
 		{
-			//	Position intermédiaire de la connection (cas B).
+			//	Position intermÃ©diaire de la connection (cas B).
 			get
 			{
 				return this.routeRelativeBX;
@@ -892,7 +928,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteRelativeBY
 		{
-			//	Position intermédiaire de la connection (cas B).
+			//	Position intermÃ©diaire de la connection (cas B).
 			get
 			{
 				return this.routeRelativeBY;
@@ -914,8 +950,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteRelativeCX
 		{
-			//	Position intermédiaire de la connection (cas C).
-			//	0.5 correspond au milieu (valeur par défaut).
+			//	Position intermÃ©diaire de la connection (cas C).
+			//	0.5 correspond au milieu (valeur par dÃ©faut).
 			get
 			{
 				return this.routeRelativeCX;
@@ -937,8 +973,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		public double RouteAbsoluteDX
 		{
-			//	Position intermédiaire de la connection (cas D).
-			//	0.0 correspond à la boucle la plus serrée (valeur par défaut).
+			//	Position intermÃ©diaire de la connection (cas D).
+			//	0.0 correspond Ã  la boucle la plus serrÃ©e (valeur par dÃ©faut).
 			get
 			{
 				return this.routeAbsoluteDX;
@@ -960,7 +996,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private void UpdateTypeName()
 		{
-			//	Met à jour le nom du type.
+			//	Met Ã  jour le nom du type.
 			string text = this.fieldTypeName;
 
 			if (this.isNullable)
@@ -973,6 +1009,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				text = "<i>" + text + "</i>";
 			}
 
+			if (this.isAscending && this.isDescending)
+			{
+				text = Misc.Image ("EntityIndexBoth") + text;
+			}
+			else if (this.isAscending)
+			{
+				text = Misc.Image ("EntityIndexAscending") + text;
+			}
+			else if (this.isDescending)
+			{
+				text = Misc.Image ("EntityIndexDescending") + text;
+			}
+
 			this.textLayoutType.Text = text;
 		}
 
@@ -980,7 +1029,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		#region Serialization
 		public void WriteXml(XmlWriter writer)
 		{
-			//	Sérialise toutes les informations du champ.
+			//	SÃ©rialise toutes les informations du champ.
 			writer.WriteStartElement(Xml.Field);
 			
 			writer.WriteElementString(Xml.DruidCaptionId, this.captionId.ToString());
@@ -1163,8 +1212,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static string GetDefiningEntityName(DesignerApplication app, Module objModule, Druid typeId, out StructuredTypeClass typeClass)
 		{
-			//	Retourne le nom de l'entité spécifiée par typeId, ainsi que typeClass qui
-			//	permet de savoir s'il s'agit d'une entité ou d'une interface.
+			//	Retourne le nom de l'entitÃ© spÃ©cifiÃ©e par typeId, ainsi que typeClass qui
+			//	permet de savoir s'il s'agit d'une entitÃ© ou d'une interface.
 			string name = null;
 
 			if (typeId.IsValid)
@@ -1181,8 +1230,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 					if (module != objModule)
 					{
-						//	Si l'entité est définie dans un autre module, on ajoute le nom
-						//	du module au nom de l'entité :
+						//	Si l'entitÃ© est dÃ©finie dans un autre module, on ajoute le nom
+						//	du module au nom de l'entitÃ© :
 						name = string.Concat (module.ModuleId.Name, ".", entity.Name);
 					}
 					else
@@ -1204,7 +1253,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static string GetFieldName(DesignerApplication app, Druid fieldId)
 		{
-			//	Retourne le nom du champ spécifié par fieldId.
+			//	Retourne le nom du champ spÃ©cifiÃ© par fieldId.
 			Module module = app.SearchModule (fieldId);
 			if (module == null)
 			{
@@ -1219,7 +1268,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static string GetFieldTypeName(DesignerApplication app, Druid typeId, FieldRelation rel)
 		{
-			//	Retourne le nom du type ou de l'entité spécifiée par typeId.
+			//	Retourne le nom du type ou de l'entitÃ© spÃ©cifiÃ©e par typeId.
 			if (!typeId.IsValid)
 			{
 				return "";
@@ -1235,15 +1284,15 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				CultureMap type = module.AccessTypes.Accessor.Collection[typeId];
 				if (type == null)
 				{
-					//	Ce n'est pas un type simple, c'est donc (forcément) une
-					//	entité.
+					//	Ce n'est pas un type simple, c'est donc (forcÃ©ment) une
+					//	entitÃ©.
 					type = module.AccessEntities.Accessor.Collection[typeId];
 				}
 				else
 				{
-					//	Le type est un type simple, pas une entité. Cela ne peut donc
-					//	pas être une relation !
-					//	TODO: vérifier les implications; l'assertion est fausse, car dans les
+					//	Le type est un type simple, pas une entitÃ©. Cela ne peut donc
+					//	pas Ãªtre une relation !
+					//	TODO: vÃ©rifier les implications; l'assertion est fausse, car dans les
 					//	ressources de Common.Support, il y a effectivement des collections de
 					//	types simples !
 					//-				System.Diagnostics.Debug.Assert (rel == FieldRelation.None);
@@ -1254,19 +1303,19 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static string GetLocalExpression(StructuredData dataField, bool isPatch, CultureMapSource itemSource)
 		{
-			//	Cherche l'expression définie localement par le champ.
+			//	Cherche l'expression dÃ©finie localement par le champ.
 			FieldMembership membership = (FieldMembership) dataField.GetValue (Support.Res.Fields.Field.Membership);
 			FieldSource source = (FieldSource) dataField.GetValue (Support.Res.Fields.Field.Source);
 			if (membership == FieldMembership.Inherited)
 			{
-				//	L'expression n'est pas définie (ou redéfinie) localement; elle provient
-				//	d'un héritage direct et doit par conséquent être ignorée.
+				//	L'expression n'est pas dÃ©finie (ou redÃ©finie) localement; elle provient
+				//	d'un hÃ©ritage direct et doit par consÃ©quent Ãªtre ignorÃ©e.
 				return null;
 			}
 			else if (source == FieldSource.Value)
 			{
-				//	Il n'y a pas d'expression définie; le champ contient une valeur et il
-				//	faut retourner une chaîne vide pour représenter cela.
+				//	Il n'y a pas d'expression dÃ©finie; le champ contient une valeur et il
+				//	faut retourner une chaÃ®ne vide pour reprÃ©senter cela.
 				return "";
 			}
 			else
@@ -1290,7 +1339,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static string GetInheritedExpression(DesignerApplication app, StructuredData dataField, Druid fieldId, Druid definingEntityId, bool isPatch, CultureMapSource itemSource)
 		{
-			//	Cherche l'expression héritée par le champ depuis un parent (ou grand-parent
+			//	Cherche l'expression hÃ©ritÃ©e par le champ depuis un parent (ou grand-parent
 			//	ou une interface).
 			if (isPatch && itemSource == CultureMapSource.DynamicMerge)
 			{
@@ -1356,7 +1405,7 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 		private static StructuredData FindField(IList<StructuredData> fields, Druid fieldId)
 		{
-			//	Retourne le StructuredData dont le CaptionId est égal à fieldId.
+			//	Retourne le StructuredData dont le CaptionId est Ã©gal Ã  fieldId.
 			foreach (StructuredData data in fields)
 			{
 				Druid fieldDataId = (Druid) data.GetValue (Support.Res.Fields.Field.CaptionId);
@@ -1397,6 +1446,8 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 		private bool isNullable;
 		private bool isVirtual;
 		private bool isPrivateRelation;
+		private bool isAscending;
+		private bool isDescending;
 		private CultureMapSource cultureMapSource;
 		private int rank;
 		private int index;
