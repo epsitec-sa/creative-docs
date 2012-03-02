@@ -18,9 +18,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 	{
 
 
-		// TODO Add Separator, GlobalWarning ?
-
-
 		public Func<AbstractEntity, AbstractEntity> EntityGetter
 		{
 			get;
