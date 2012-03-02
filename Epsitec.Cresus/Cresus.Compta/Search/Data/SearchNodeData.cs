@@ -44,6 +44,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public int DeepCount
+		{
+			get
+			{
+				return this.tabsData.Count;
+			}
+		}
+
 		public List<SearchTabData> TabsData
 		{
 			//	Retourne toutes les lignes de données.
@@ -434,8 +442,10 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
+		public FormattedText GetSummary(List<ColumnMapper> columnMappers, out int count)
 		{
+			count = 0;
+
 			if (this.IsEmpty)
 			{
 				return FormattedText.Empty;
@@ -445,7 +455,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				var builder = new System.Text.StringBuilder ();
 
 				bool first = true;
-				foreach (var tab in this.tabsData)
+				foreach (var tab in this.tabsData.Where (x => x.Active))
 				{
 					FormattedText s = tab.GetSummary (columnMappers);
 
@@ -458,6 +468,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 						builder.Append (s);
 						first = false;
+						count++;
 					}
 				}
 

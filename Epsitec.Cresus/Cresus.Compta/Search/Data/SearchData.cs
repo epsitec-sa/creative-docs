@@ -44,6 +44,22 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public int DeepCount
+		{
+			get
+			{
+				int count = 0;
+
+				foreach (var node in this.NodesData)
+				{
+					count += node.DeepCount;
+				}
+
+				return count;
+			}
+		}
+
+
 		public bool Specialist
 		{
 			//	false -> mode débutant
@@ -235,9 +251,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 				bool first = true;
 				bool many = this.nodesData.Count > 1;
+
 				foreach (var node in this.nodesData)
 				{
-					FormattedText s = node.GetSummary (columnMappers);
+					int count;
+					FormattedText s = node.GetSummary (columnMappers, out count);
 
 					if (!s.IsNullOrEmpty)
 					{
@@ -246,14 +264,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 							builder.Append (this.OrMode ? " ou " : " et ");
 						}
 
-						if (many)
+						if (many && count > 1)
 						{
 							builder.Append ("(");
 						}
 
 						builder.Append (s);
 
-						if (many)
+						if (many && count > 1)
 						{
 							builder.Append (")");
 						}

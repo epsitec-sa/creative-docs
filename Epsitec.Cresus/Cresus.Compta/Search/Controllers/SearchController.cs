@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 
 			this.data.BeginnerCatégories = catégorie;
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 
@@ -470,7 +470,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				this.InitializeProfondeurs ();
 
-				this.searchStartAction ();
+				this.SearchStartAction ();
 			}
 		}
 
@@ -525,7 +525,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.data.BeginnerSoldesNuls = (button.ActiveState == ActiveState.Yes);
 
-				this.searchStartAction ();
+				this.SearchStartAction ();
 			};
 		}
 
@@ -597,7 +597,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);
 			data.SetBeginnerDates (beginDate, endDate);
 
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 
@@ -612,7 +612,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				var controller = new SearchNodeController (this.controller, this, this.data.NodesData[i], this.isFilter);
 
-				var frame = controller.CreateUI (this.middleFrame, this.searchStartAction, this.AddRemoveAction, this.SwapNodeAction);
+				var frame = controller.CreateUI (this.middleFrame, this.SearchStartAction, this.AddRemoveAction, this.SwapNodeAction);
 				controller.SetAddAction (i, count < 10);
 
 				frame.TabIndex = i+1;
@@ -631,6 +631,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				PreferredHeight = 20,
 				Dock            = DockStyle.Bottom,
 			};
+
+			this.summaryLabel = new StaticText
+			{
+				Parent           = parent,
+				ContentAlignment = ContentAlignment.TopLeft,
+				Dock             = DockStyle.Fill,
+			};
+
+			ToolTip.Default.SetToolTip (this.summaryLabel, "Résumé");
 
 			{
 				this.buttonPrev = new GlyphButton
@@ -704,7 +713,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.beginnerSearchField.TextChanged += delegate
 			{
 				this.data.BeginnerSearch = this.beginnerSearchField.Text;
-				this.searchStartAction ();
+				this.SearchStartAction ();
 			};
 
 			ToolTip.Default.SetToolTip (this.beginnerSearchField, "Texte cherché n'importe où");
@@ -731,7 +740,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 
@@ -768,7 +777,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 		public void SetSearchCount(int dataCount, int? count, int? locator)
@@ -826,14 +835,14 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 		private void SwapNodeAction()
 		{
 			this.data.OrMode = !this.data.OrMode;
 			this.UpdateButtons ();
-			this.searchStartAction ();
+			this.SearchStartAction ();
 		}
 
 		private void UpdateButtons()
@@ -843,6 +852,27 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			foreach (var controller in this.nodeControllers)
 			{
 				controller.UpdateButtons ();
+			}
+		}
+
+
+		private void SearchStartAction()
+		{
+			this.UpdateSummary ();
+			this.searchStartAction ();
+		}
+
+		private void UpdateSummary()
+		{
+			//	Met à jour le résumé du critère, qui n'est visible que si la place le permet.
+			if (this.data.DeepCount <= 1)
+			{
+				this.summaryLabel.Visibility = false;
+			}
+			else
+			{
+				this.summaryLabel.Visibility = true;
+				this.summaryLabel.FormattedText = this.data.GetSummary (this.columnMappers);
 			}
 		}
 
@@ -881,6 +911,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private FrameBox								middleFrame;
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
+		private StaticText								summaryLabel;
 		private StaticText								resultLabel;
 		private FrameBox								beginnerFrame;
 		private TextField								beginnerSearchField;
