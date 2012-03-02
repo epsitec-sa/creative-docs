@@ -34,6 +34,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);
 
 			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ExtraitDeCompte.ViewSettings");
+
+			this.UpdateColumnMappers ();
 		}
 
 
@@ -65,7 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -142,6 +144,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			return data.Typo (text);
+		}
+
+
+		protected override void CreateEditor(FrameBox parent)
+		{
+			this.editorController = new ExtraitDeCompteEditorController (this);
+			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 		}
 
 

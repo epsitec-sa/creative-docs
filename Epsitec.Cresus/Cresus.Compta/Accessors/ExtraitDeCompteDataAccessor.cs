@@ -204,6 +204,65 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override void StartCreationLine()
+		{
+			this.editionLine.Clear ();
+
+			this.firstEditedRow = -1;
+			this.countEditedRow = 1;
+
+			this.isCreation = true;
+			this.isModification = false;
+			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
+		}
+
+		public override void StartModificationLine(int row)
+		{
+			this.editionLine.Clear ();
+
+			this.firstEditedRow = row;
+			this.countEditedRow = 0;
+
+			if (row >= 0 && row < this.readonlyData.Count)
+			{
+				var extrait = new ExtraitDeCompteEditionLine (this.controller);
+				var data = this.readonlyData[row];
+				extrait.EntityToData (data);
+
+				this.editionLine.Add (extrait);
+				this.countEditedRow++;
+			}
+
+			this.initialCountEditedRow = this.countEditedRow;
+			this.isCreation = false;
+			this.isModification = true;
+			this.justCreated = false;
+
+			this.controller.EditorController.UpdateFieldsEditionData ();
+		}
+
+		public override void UpdateEditionLine()
+		{
+			if (this.isModification)
+			{
+				this.UpdateModificationData ();
+				this.justCreated = false;
+			}
+
+			this.SearchUpdate ();
+		}
+
+		private void UpdateModificationData()
+		{
+			int row = this.firstEditedRow;
+
+			var data = this.readonlyData[row];
+			this.editionLine[0].DataToEntity (data);
+		}
+
+
 		private static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
 			if (compte == null)

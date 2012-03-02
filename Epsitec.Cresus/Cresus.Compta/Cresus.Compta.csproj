@@ -59,6 +59,7 @@
     <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
+    <Compile Include="Controllers\ExtraitDeCompteEditorController.cs" />
     <Compile Include="Controllers\SaveController.cs" />
     <Compile Include="Controllers\PrintController.cs" />
     <Compile Include="Controllers\OpenController.cs" />
