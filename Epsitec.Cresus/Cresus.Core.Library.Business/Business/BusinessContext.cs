@@ -332,58 +332,6 @@ namespace Epsitec.Cresus.Core.Business
 			throw new System.InvalidOperationException ("Could not acquire lock");
 		}
 
-		#region Unlocker Class
-
-		private sealed class Unlocker : System.IDisposable
-		{
-			public Unlocker(BusinessContext context)
-			{
-				this.context = context;
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				if (this.context != null)
-				{
-					this.context.ReleaseLock ();
-					this.context.lockEntity = null;
-				}
-			}
-
-			#endregion
-
-			private readonly BusinessContext	context;
-		}
-
-		#endregion
-
-		#region NoOpUnlocker Class
-
-		private sealed class NoOpUnlocker : System.IDisposable
-		{
-			public NoOpUnlocker(BusinessContext context)
-			{
-				this.context = context;
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				if (this.context != null)
-				{
-					System.Diagnostics.Debug.Assert (this.context.IsLocked);
-				}
-			}
-
-			#endregion
-
-			private readonly BusinessContext	context;
-		}
-
-		#endregion
 
 		public Logic CreateLogic(AbstractEntity entity)
 		{
@@ -541,8 +489,7 @@ namespace Epsitec.Cresus.Core.Business
 		public void SaveChanges(EntitySaveMode entitySaveMode = EntitySaveMode.None)
 		{
 			this.ClearDummyEntities ();
-
-			this.ApplyRulesToRegisteredEntities (RuleType.Validate);
+			this.ApplyRulesBeforeSaveChanges ();
 
 			if (this.ContainsChanges ())
 			{
@@ -571,6 +518,19 @@ namespace Epsitec.Cresus.Core.Business
 
 				this.OnContainsChangesChanged ();
 			}
+		}
+
+		private void ApplyRulesBeforeSaveChanges()
+		{
+			if (this.asyncUpdatePending)
+			{
+				this.ApplyRulesToRegisteredEntities (RuleType.Update);
+				this.asyncUpdatePending = false;
+			}
+
+			this.ApplyRulesToRegisteredEntities (RuleType.Validate);
+
+			System.Diagnostics.Debug.Assert (this.asyncUpdatePending == false);
 		}
 
 		/// <summary>
@@ -640,11 +600,6 @@ namespace Epsitec.Cresus.Core.Business
 		}
 		
 
-
-		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
-		{
-			this.activeNavigationPathElement = navigationPathElement;
-		}
 
 		public void SetActiveEntity(AbstractEntity entity)
 		{
@@ -880,9 +835,6 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
-		
-
-
 		/// <summary>
 		/// Reloads the entities if they have changed in the database.
 		/// </summary>
@@ -909,6 +861,47 @@ namespace Epsitec.Cresus.Core.Business
 			return helper;
 		}
 
+		
+		internal void DisposeFromPool()
+		{
+			if (this.isDisposed == false)
+			{
+				this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+
+				this.pool.DisposeDataContext (this, this.dataContext);
+				this.pool.Remove (this);
+
+				if (this.lockTransaction != null)
+				{
+					this.ReleaseLock ();
+				}
+				
+				this.isDisposed = true;
+			}
+		}
+
+
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			if (this.asyncUpdatePending)
+			{
+				Dispatcher.RemoveFromQueue (this.SyncUpdateMainWindowController);
+			}
+
+			this.lockMonitors.ToArray ().ForEach (m => m.Dispose ());
+
+			System.Diagnostics.Debug.Assert (this.lockMonitors.Count == 0);
+
+			this.pool.DisposeBusinessContext (this);
+
+			System.Diagnostics.Debug.Assert (this.isDisposed);
+
+			System.GC.SuppressFinalize (this);
+		}
+
+		#endregion
 
 		#region DelayedUpdate Class
 
@@ -947,42 +940,58 @@ namespace Epsitec.Cresus.Core.Business
 
 		#endregion
 
+		#region Unlocker Class
 
-		#region IDisposable Members
-
-		public void Dispose()
+		private sealed class Unlocker : System.IDisposable
 		{
-			this.lockMonitors.ToArray ().ForEach (m => m.Dispose ());
+			public Unlocker(BusinessContext context)
+			{
+				this.context = context;
+			}
 
-			System.Diagnostics.Debug.Assert (this.lockMonitors.Count == 0);
+			#region IDisposable Members
 
-			this.pool.DisposeBusinessContext (this);
+			public void Dispose()
+			{
+				if (this.context != null)
+				{
+					this.context.ReleaseLock ();
+					this.context.lockEntity = null;
+				}
+			}
 
-			System.Diagnostics.Debug.Assert (this.isDisposed);
+			#endregion
 
-			System.GC.SuppressFinalize (this);
+			private readonly BusinessContext	context;
 		}
 
 		#endregion
 
-		internal void DisposeFromPool()
+		#region NoOpUnlocker Class
+
+		private sealed class NoOpUnlocker : System.IDisposable
 		{
-			if (this.isDisposed == false)
+			public NoOpUnlocker(BusinessContext context)
 			{
-				this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-
-				this.pool.DisposeDataContext (this, this.dataContext);
-				this.pool.Remove (this);
-
-				if (this.lockTransaction != null)
-				{
-					this.ReleaseLock ();
-				}
-				
-				this.isDisposed = true;
+				this.context = context;
 			}
+
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				if (this.context != null)
+				{
+					System.Diagnostics.Debug.Assert (this.context.IsLocked);
+				}
+			}
+
+			#endregion
+
+			private readonly BusinessContext	context;
 		}
 
+		#endregion
 
 		#region EntityRecord Class
 
@@ -1057,76 +1066,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		#endregion
 
-		private void OnLockAcquired()
-		{
-			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
-
-			ReloadEntities ();
-			this.NotifyExternalChanges ();
-		}
-
-		
-		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
-		{
-			this.dataChangedCounter.IfZero
-				(
-					delegate
-					{
-						if (this.dataContextDirty == false)
-						{
-							this.dataContextDirty = true;
-							this.HandleFirstEntityChange ();
-						}
-
-						if (Logic.Current == null)
-						{
-							if (this.delayedUpdates.Count > 0)
-							{
-								this.delayedUpdates.Peek ().Enqueue (this.entityRecords);
-							}
-							else
-							{
-								this.asyncUpdatePending = true;
-							}
-						}
-
-						this.OnContainsChangesChanged ();
-
-						this.AsyncUpdateMainWindowController ();
-					}
-				);
-		}
-
-		private bool asyncUpdatePending;
-
-		private void AsyncUpdateMainWindowController()
-		{
-			Dispatcher.Queue (this.SyncUpdateMainWindowController);
-		}
-
-		private void SyncUpdateMainWindowController()
-		{
-			if (this.asyncUpdatePending)
-			{
-				this.dataChangedCounter.IfZero
-					(
-						delegate
-						{
-							this.asyncUpdatePending = false;
-							this.ApplyRulesToRegisteredEntities (RuleType.Update);
-						}
-					);
-			}
-
-			if (this.isDisposed)
-			{
-				System.Diagnostics.Debug.WriteLine ("Calling BusinessContext.SyncUpdateMainWindowController on disposed context");
-				return;
-			}
-
-			this.OnRefreshUIRequested ();
-		}
-
+		#region DummyReplacement Structure
 
 		private struct DummyReplacement
 		{
@@ -1156,6 +1096,42 @@ namespace Epsitec.Cresus.Core.Business
 			private readonly AbstractEntity		dummyEntity;
 		}
 
+		#endregion
+
+		
+		private void SetNavigationPathElement(NavigationPathElement navigationPathElement)
+		{
+			this.activeNavigationPathElement = navigationPathElement;
+		}
+		
+		private void AsyncUpdateMainWindowController()
+		{
+			Dispatcher.Queue (this.SyncUpdateMainWindowController);
+		}
+
+		private void SyncUpdateMainWindowController()
+		{
+			if (this.asyncUpdatePending)
+			{
+				this.dataChangedCounter.IfZero
+					(
+						delegate
+						{
+							this.asyncUpdatePending = false;
+							this.ApplyRulesToRegisteredEntities (RuleType.Update);
+						}
+					);
+			}
+
+			if (this.isDisposed)
+			{
+				throw new System.ObjectDisposedException ("Calling BusinessContext.SyncUpdateMainWindowController on disposed context #" + this.UniqueId.ToString ());
+			}
+
+			this.OnRefreshUIRequested ();
+		}
+
+
 		private void RememberDummyEntity(AbstractEntity entity, System.Action<AbstractEntity, AbstractEntity> replacementCallback)
 		{
 			if (this.dummyEntityReplacementCallbacks == null)
@@ -1168,6 +1144,47 @@ namespace Epsitec.Cresus.Core.Business
 			this.dummyEntityReplacementCallbacks[key] = new DummyReplacement (entity, replacementCallback);
 		}
 		
+		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
+		{
+			this.dataChangedCounter.IfZero (this.HandleDataContextEntityChanged, e.EventType);
+		}
+
+		private void HandleDataContextEntityChanged(EntityChangedEventType change)
+		{
+			bool notify = false;
+
+			if (this.dataContextDirty == false)
+			{
+				this.dataContextDirty = true;
+				this.HandleFirstEntityChange ();
+			}
+
+			if ((Logic.Current == null) &&
+				(change == EntityChangedEventType.Updated))
+			{
+				if (this.delayedUpdates.Count > 0)
+				{
+					this.delayedUpdates.Peek ().Enqueue (this.entityRecords);
+				}
+				else
+				{
+					notify = this.asyncUpdatePending == false;
+				}
+			}
+
+			this.OnContainsChangesChanged ();
+
+			if (notify)
+			{
+				//	If we need to execute business rules as a consequence of the change, we do
+				//	not do it immediately, but we postpone their execution to a later point in
+				//	time (we would otherwise end up executing the same rule again and again).
+
+				this.asyncUpdatePending = true;
+				this.AsyncUpdateMainWindowController ();
+			}
+		}
+
 		private void HandleFirstEntityChange()
 		{
 			this.AcquireLock ();
@@ -1190,6 +1207,14 @@ namespace Epsitec.Cresus.Core.Business
 			}
 		}
 
+
+		private void OnLockAcquired()
+		{
+			System.Diagnostics.Debug.WriteLine ("*** LOCK ACQUIRED ***");
+
+			this.ReloadEntities ();
+			this.NotifyExternalChanges ();
+		}
 
 		private void OnSavingChanges(CancelEventArgs e)
 		{
@@ -1231,6 +1256,8 @@ namespace Epsitec.Cresus.Core.Business
 		private bool							dataContextDiscarded;
 		private bool							isDisposed;
 		private bool							hasExternalChanges;
+		private bool							asyncUpdatePending;
+
 		private Data.LockTransaction			lockTransaction;
 
 		private GlobalLock						globalLock;

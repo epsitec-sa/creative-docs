@@ -91,6 +91,23 @@ namespace Epsitec.Common.Support
 			return false;
 		}
 
+		public bool IfZero<T>(System.Action<T> action, T arg1)
+		{
+			if (this.IsZero)
+			{
+				using (var wrapper = this.Enter ())
+				{
+					if (wrapper.Value == 1)
+					{
+						action (arg1);
+						return true;
+					}
+				}
+			}
+
+			return false;
+		}
+
 
 		private int								value;
 	}
