@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
+			this.UpdateSummary ();
 		}
 
 
@@ -866,7 +867,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private void UpdateSummary()
 		{
 			//	Met à jour le résumé du critère, qui n'est visible que si la place le permet.
-			if (this.data.DeepCount <= 1)
+			int count = this.data.DeepCount;
+
+			if (count <= 1)
 			{
 				this.summaryLabel.Visibility = false;
 			}
@@ -874,6 +877,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.summaryLabel.Visibility = true;
 				this.summaryLabel.FormattedText = this.data.GetSummary (this.columnMappers);
+
+				if (count == 2)  // résumé sur une seule ligne ?
+				{
+					this.summaryLabel.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine;
+				}
+				else
+				{
+					this.summaryLabel.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
+				}
 			}
 		}
 
