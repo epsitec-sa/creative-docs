@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void ExecuteDeleteCommand()
 		{
-			this.browser.RemoveActiveEntity ();
+			this.browser.DeleteActiveEntity ();
 		}
 
 		private void UpdateNewItemIconButton()

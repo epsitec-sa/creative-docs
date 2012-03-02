@@ -67,8 +67,54 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 			}
 		}
-		
-		
+
+		public int SelectedIndex
+		{
+			get
+			{
+				return this.scrollList.SelectedItemIndex;
+			}
+		}
+
+
+		public AbstractEntity GetActiveEntity()
+		{
+			return this.browserDataContext.ResolveEntity (this.ActiveEntityKey);
+		}
+
+
+		public void Select(AbstractEntity entity)
+		{
+			//	The specified entity does most probably not belong to our data context,
+			//	therefore we would not find it in the collection. Look for it based on
+			//	its key :
+
+			var entityKey = this.data.FindEntityKey (entity);
+			int index     = this.collection.IndexOf (entityKey);
+
+			this.scrollList.SelectedItemIndex = index;
+		}
+
+		public void SelectItem(int index)
+		{
+			if (index >= this.collection.Count)
+			{
+				index = this.collection.Count-1;
+			}
+
+			if (index < 0)
+			{
+				this.ActiveEntityKey = null;
+				this.scrollList.SelectedItemIndex = -1;
+			}
+			else
+			{
+				this.ActiveEntityKey = this.collection.GetEntityKey (index);
+				this.scrollList.SelectedItemIndex = index;
+			}
+		}
+
+
 		public void Remove(AbstractEntity entity)
 		{
 			int index = this.collection.IndexOf (entity);
@@ -83,7 +129,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.scrollList.Items.RemoveAt (index);
 			this.suspendUpdates--;
 		}
-
 
 		public void Delete(AbstractEntity entity)
 		{

@@ -88,20 +88,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// <param name="entity">The entity.</param>
 		public void Select(AbstractEntity entity)
 		{
-			if ((this.collection == null) ||
-				(this.scrollList == null))
+			if (this.scrollListController != null)
 			{
-				return;
+				this.scrollListController.Select (entity);
 			}
-
-			//	The specified entity does most probably not belong to our data context,
-			//	therefore we would not find it in the collection. Look for it based on
-			//	its key :
-
-			var entityKey = this.data.FindEntityKey (entity);
-			int index     = this.collection.IndexOf (entityKey);
-
-			this.scrollList.SelectedItemIndex = index;
 		}
 
 		/// <summary>
@@ -120,16 +110,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// Removes the active entity from the list. This will either archive the entity
 		/// or delete it from the database, if it does not implement <see cref="ILifetime"/>.
 		/// </summary>
-		public void RemoveActiveEntity()
+		public void DeleteActiveEntity()
 		{
-			int active = this.scrollList.SelectedItemIndex;
-			var entity = this.collection.GetEntity (active);
+			var entity = this.scrollListController.GetActiveEntity ();
+			var active = this.scrollListController.SelectedIndex;
 
 			if (entity != null)
 			{
 				this.Orchestrator.ClearActiveEntity ();
 				this.scrollListController.Delete (entity);
-				this.SelectItem (active);
+				this.scrollListController.SelectItem (active);
 			}
 		}
 		
@@ -190,10 +180,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.Orchestrator.ClearActiveEntity ();
 
 			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.dataSetName);
-			this.collection = this.scrollListController.Collection;
 			
-			this.scrollListController.CurrentChanged     += this.HandleScrollListControllerCurrentChanged;
-			this.scrollListController.CurrentChanging    += this.HandleScrollListControllerCurrentChanging;
+			this.scrollListController.CurrentChanged  += this.HandleScrollListControllerCurrentChanged;
+			this.scrollListController.CurrentChanging += this.HandleScrollListControllerCurrentChanging;
 			
 			this.SelectActiveEntity ();
 		}
@@ -202,14 +191,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.scrollListController != null)
 			{
-				this.scrollListController.CurrentChanged     -= this.HandleScrollListControllerCurrentChanged;
-				this.scrollListController.CurrentChanging    -= this.HandleScrollListControllerCurrentChanging;
+				this.scrollListController.CurrentChanged  -= this.HandleScrollListControllerCurrentChanged;
+				this.scrollListController.CurrentChanging -= this.HandleScrollListControllerCurrentChanging;
 				
 				this.scrollListController.Dispose ();
 				
 				this.scrollListController = null;
-				
-				this.collection = null;
 			}
 		}
 
@@ -260,27 +247,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void SelectItem(int index)
-		{
-			if (index >= this.collection.Count)
-			{
-				index = this.collection.Count-1;
-			}
-
-			if (index < 0)
-			{
-				this.SetActiveEntityKey (null);
-				this.scrollList.SelectedItemIndex = -1;
-			}
-			else
-			{
-				this.SetActiveEntityKey (this.collection.GetEntityKey (index));
-				this.scrollList.SelectedItemIndex = index;
-			}
-
-			this.SelectActiveEntity ();
-		}
-
 		private void SetActiveEntityKey(EntityKey? entityKey)
 		{
 			this.scrollListController.ActiveEntityKey = entityKey;
@@ -308,9 +274,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void Update()
 		{
-			if (this.collection != null)
-			{
-			}
 		}
 
 		#endregion
@@ -328,7 +291,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private readonly CoreData				data;
 		private BrowserScrollListController		scrollListController;
-		private BrowserList						collection;
 		private string							dataSetName;
 
 		private ScrollList						scrollList;
