@@ -84,7 +84,7 @@ namespace Aider.Tests.Vs
 				app.SetupApplication ();
 
 				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
-				var eChReportedPersons = EChDataLoader.Load (inputFile).Take (50).ToList ();
+				var eChReportedPersons = EChDataLoader.Load (inputFile, 50).ToList ();
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
 
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();

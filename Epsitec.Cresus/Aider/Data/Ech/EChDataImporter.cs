@@ -55,8 +55,9 @@ namespace Epsitec.Aider.Data.Ech
 						EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson);
 					}
 
-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
+//-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
 					businessContext.SaveChanges ();
+					businessContextCleaner (businessContext);
 
 					// NOTE Now that the changes are saved, the newly created entities have an
 					// entity key which we can store in the dictionary.
@@ -73,7 +74,6 @@ namespace Epsitec.Aider.Data.Ech
 					if (businessContext != null)
 					{
 						businessContext.Dispose ();
-						businessContextCleaner (businessContext);
 					}
 				}
 

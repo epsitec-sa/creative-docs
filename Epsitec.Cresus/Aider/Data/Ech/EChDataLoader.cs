@@ -27,23 +27,24 @@ namespace Epsitec.Aider.Data.Ech
 	{
 
 
-		public static IList<EChReportedPerson> Load(FileInfo inputFile)
+		public static IList<EChReportedPerson> Load(FileInfo inputFile, int maxCount = int.MaxValue)
 		{
 			var xDocument = EChDataLoader.GetDocument (inputFile);
 
 			EChDataLoader.CheckDocument (xDocument);
 
 			// NOTE Here we don't use delayed execution but we return the result as a list. That's
-			// because we have that huge xml document in memory which is like 400MB. So by calling
+			// because we have that huge XML document in memory which is like 400MB. So by calling
 			// ToList(), we retrieve the data which takes around 100MB and we can forget about the
-			// xml document, which will allow the garbage collector to reclaim that memory.
+			// XML document, which will allow the garbage collector to reclaim that memory.
 
 			// NOTE A possible optimization here would be to use the XmlReader class directly to
-			// parse the xml data and transmform in in ECh* objects. That would probably use less
-			// memory as this would enable us to stream the xml file instead of reading it as a
+			// parse the XML data and transform it into ECh* objects. That would probably use less
+			// memory as this would enable us to stream the XML file instead of reading it as a
 			// whole. But right now I don't have time to do this.
 
-			return EChDataLoader.GetData (xDocument).ToList ();
+			return EChDataLoader.GetData (xDocument)
+				.Take (maxCount).ToList ();
 		}
 
 
