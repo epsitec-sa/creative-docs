@@ -100,7 +100,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				case FieldType.CheckBox:
 				case FieldType.Date:
-					return EntityModule.ConvertForBooleanAndDate (value);
+				case FieldType.Text:
+					return EntityModule.ConvertForBooleanDateAndText (value);
 
 				case FieldType.EntityCollection:
 					return EntityModule.ConvertForEntityCollection (businessContext, value);
@@ -111,16 +112,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				case FieldType.Enumeration:
 					return EntityModule.ConvertForEnumeration (value);
 
-				case FieldType.Text:
-					return EntityModule.ConvertForText (propertyAccessor, value);
-
 				default:
 					throw new NotImplementedException ();
 			}
 		}
 
 
-		private static object ConvertForBooleanAndDate(DynamicDictionaryValue value)
+		private static object ConvertForBooleanDateAndText(DynamicDictionaryValue value)
 		{
 			var castedValue = (string) value;
 
@@ -168,30 +166,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			return enumerationValue;
-		}
-
-
-		private static object ConvertForText(AbstractPropertyAccessor propertyAccessor, DynamicDictionaryValue value)
-		{
-			// NOTE Here we convert empty strings to null strings if the property allows for null
-			// values and we convert null strings to empty strings if the property doesn't allow for
-			// null values.
-
-			var textValue = (string) value;
-
-			if (string.IsNullOrEmpty (textValue))
-			{
-				if (propertyAccessor.Property.IsNullable)
-				{
-					textValue = null;
-				}
-				else
-				{
-					textValue = "";
-				}
-			}
-
-			return textValue;
 		}
 
 

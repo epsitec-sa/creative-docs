@@ -28,8 +28,17 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 		public TextPropertyAccessor(LambdaExpression lambda, string id)
 			: base (lambda, id)
 		{
+			this.isTextProperty = this.IsTextProperty ();
 			this.marshalerFactory = this.GetMarshalerFactory (lambda);
 			this.valueChecker = this.GetValueChecker ();
+		}
+
+
+		private bool IsTextProperty()
+		{
+			return this.Type == typeof (string)
+				|| this.Type == typeof (FormattedText)
+				|| this.Type == typeof (FormattedText?);
 		}
 
 
@@ -117,23 +126,36 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 
 		public void SetString(AbstractEntity entity, string value)
 		{
-			// NOTE There is a bug here. The Marshaler resets the value instead of putting null for
-			// nullable strings.
+			var processedValue = this.ProcessStringValue (value);
 
-			this.marshalerFactory.CreateMarshaler (entity).SetStringValue (value);
+			this.marshalerFactory.CreateMarshaler (entity).SetStringValue (processedValue);
 		}
 
 
 		public bool CheckString(AbstractEntity entity, string value)
 		{
-			if (value == null)
+			var processedValue = this.ProcessStringValue (value);
+
+			if (processedValue == null)
 			{
 				return this.Property.IsNullable;
 			}
 			else
 			{
-				return this.valueChecker (value);
+				return this.valueChecker (processedValue);
 			}
+		}
+
+
+		private string ProcessStringValue(string value)
+		{
+			// NOTE Because of how the marshaler for text values works, we must replace null strings
+			// with empty strings if the property is a text property. NonNullableMarshalers consider
+			// null values as invalid and resets the entity property if it is given a null value.
+			
+			return this.isTextProperty
+				? value ?? ""
+				: value;
 		}
 
 
@@ -148,6 +170,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor
 			return (value == null || value is string)
 				&& this.CheckString (entity, (string) value);
 		}
+
+
+		private readonly bool isTextProperty;
 
 
 		private readonly AbstractMarshalerFactory marshalerFactory;
