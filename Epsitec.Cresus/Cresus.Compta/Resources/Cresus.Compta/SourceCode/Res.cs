@@ -158,6 +158,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Balance = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 84));
 				//	designer:cap/OVKL2
 				public static readonly global::Epsitec.Common.Widgets.Command Bilan = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 85));
+				//	designer:cap/OVKB6
+				public static readonly global::Epsitec.Common.Widgets.Command Budgets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 203));
 				//	designer:cap/OVKM2
 				public static readonly global::Epsitec.Common.Widgets.Command Change = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 86));
 				//	designer:cap/OVKN2
@@ -166,6 +168,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Exploitation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 88));
 				//	designer:cap/OVKP2
 				public static readonly global::Epsitec.Common.Widgets.Command Extrait = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 89));
+				//	designer:cap/OVKA6
+				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 202));
+				//	designer:cap/OVKC6
+				public static readonly global::Epsitec.Common.Widgets.Command PlanComptable = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 204));
 				//	designer:cap/OVKQ2
 				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 90));
 				//	designer:cap/OVKR2
@@ -411,6 +417,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Balance = 0x3F800014000054L;
 				//	designer:cap/OVKL2
 				public const long Bilan = 0x3F800014000055L;
+				//	designer:cap/OVKB6
+				public const long Budgets = 0x3F8000140000CBL;
 				//	designer:cap/OVKM2
 				public const long Change = 0x3F800014000056L;
 				//	designer:cap/OVKN2
@@ -419,6 +427,10 @@ namespace Epsitec.Cresus.Compta
 				public const long Exploitation = 0x3F800014000058L;
 				//	designer:cap/OVKP2
 				public const long Extrait = 0x3F800014000059L;
+				//	designer:cap/OVKA6
+				public const long Journal = 0x3F8000140000CAL;
+				//	designer:cap/OVKC6
+				public const long PlanComptable = 0x3F8000140000CCL;
 				//	designer:cap/OVKQ2
 				public const long PP = 0x3F80001400005AL;
 				//	designer:cap/OVKR2

@@ -1146,6 +1146,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowNewWindowMenu ();
 		}
 
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Journal)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.PlanComptable)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Budgets)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Balance)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Extrait)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Bilan)]
@@ -1416,15 +1419,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Affiche le menu permettant de choisir le mode pour le ruban.
 			var menu = new VMenu ();
 
-			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Balance,          Res.CommandIds.NouvellePrésentation.Balance);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Journal,          Res.CommandIds.NouvellePrésentation.Journal);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Extrait,          Res.CommandIds.NouvellePrésentation.Extrait);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Balance,          Res.CommandIds.NouvellePrésentation.Balance);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Bilan,            Res.CommandIds.NouvellePrésentation.Bilan);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.PP,               Res.CommandIds.NouvellePrésentation.PP);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Exploitation,     Res.CommandIds.NouvellePrésentation.Exploitation);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Budgets,          Res.CommandIds.NouvellePrésentation.Budgets);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Change,           Res.CommandIds.NouvellePrésentation.Change);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméPériodique, Res.CommandIds.NouvellePrésentation.RésuméPériodique);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméTVA,        Res.CommandIds.NouvellePrésentation.RésuméTVA);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.DécompteTVA,      Res.CommandIds.NouvellePrésentation.DécompteTVA);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.PlanComptable,    Res.CommandIds.NouvellePrésentation.PlanComptable);
 
 			if (menu.Items.Count == 0)
 			{
