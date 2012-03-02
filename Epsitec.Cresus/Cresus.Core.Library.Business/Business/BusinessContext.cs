@@ -885,7 +885,7 @@ namespace Epsitec.Cresus.Core.Business
 
 		public void Dispose()
 		{
-			if (this.asyncUpdatePending)
+			if (this.asyncUpdateQueued)
 			{
 				Dispatcher.RemoveFromQueue (this.SyncUpdateMainWindowController);
 			}
@@ -1106,6 +1106,7 @@ namespace Epsitec.Cresus.Core.Business
 		
 		private void AsyncUpdateMainWindowController()
 		{
+			this.asyncUpdateQueued = true;
 			Dispatcher.Queue (this.SyncUpdateMainWindowController);
 		}
 
@@ -1122,6 +1123,8 @@ namespace Epsitec.Cresus.Core.Business
 						}
 					);
 			}
+
+			this.asyncUpdateQueued = false;
 
 			if (this.isDisposed)
 			{
@@ -1257,6 +1260,7 @@ namespace Epsitec.Cresus.Core.Business
 		private bool							isDisposed;
 		private bool							hasExternalChanges;
 		private bool							asyncUpdatePending;
+		private bool							asyncUpdateQueued;
 
 		private Data.LockTransaction			lockTransaction;
 

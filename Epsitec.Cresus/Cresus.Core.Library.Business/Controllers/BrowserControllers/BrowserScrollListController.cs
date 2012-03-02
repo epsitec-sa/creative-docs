@@ -34,7 +34,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.SetContentsBasedOnDataSet ();
 		}
 
-		public DataContext DataContext
+		
+		public DataContext						DataContext
 		{
 			get
 			{
@@ -42,7 +43,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public BrowserList Collection
+		public BrowserList						Collection
 		{
 			get
 			{
@@ -50,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public EntityKey? ActiveEntityKey
+		public EntityKey?						SelectedEntityKey
 		{
 			get
 			{
@@ -68,34 +69,48 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public int SelectedIndex
+		public int								SelectedIndex
 		{
 			get
 			{
 				return this.scrollList.SelectedItemIndex;
 			}
+			set
+			{
+				this.SelectItem (value);
+			}
 		}
 
 
-		public AbstractEntity GetActiveEntity()
+		public AbstractEntity					SelectedEntity
 		{
-			return this.browserDataContext.ResolveEntity (this.ActiveEntityKey);
+			get
+			{
+				return this.browserDataContext.ResolveEntity (this.SelectedEntityKey);
+			}
+			set
+			{
+				this.Select (value);
+			}
 		}
 
 
-		public void Select(AbstractEntity entity)
+		private void Select(AbstractEntity entity)
 		{
 			//	The specified entity does most probably not belong to our data context,
 			//	therefore we would not find it in the collection. Look for it based on
 			//	its key :
 
 			var entityKey = this.data.FindEntityKey (entity);
-			int index     = this.collection.IndexOf (entityKey);
 
-			this.scrollList.SelectedItemIndex = index;
+			this.SelectedEntityKey = entityKey;
+
+			//int index     = this.collection.IndexOf (entityKey);
+
+			//this.scrollList.SelectedItemIndex = index;
 		}
 
-		public void SelectItem(int index)
+		private void SelectItem(int index)
 		{
 			if (index >= this.collection.Count)
 			{
@@ -104,12 +119,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			if (index < 0)
 			{
-				this.ActiveEntityKey = null;
+				this.SelectedEntityKey = null;
 				this.scrollList.SelectedItemIndex = -1;
 			}
 			else
 			{
-				this.ActiveEntityKey = this.collection.GetEntityKey (index);
+				this.SelectedEntityKey = this.collection.GetEntityKey (index);
 				this.scrollList.SelectedItemIndex = index;
 			}
 		}
@@ -295,7 +310,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			int active    = this.scrollList.SelectedItemIndex;
 			var entityKey = this.collection.GetEntityKey (active);
 
-			this.ActiveEntityKey = entityKey;
+			this.SelectedEntityKey = entityKey;
 			this.SelectedItemChange.Raise (this);
 		}
 
