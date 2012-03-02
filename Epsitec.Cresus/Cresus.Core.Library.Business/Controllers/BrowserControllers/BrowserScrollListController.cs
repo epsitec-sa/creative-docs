@@ -19,18 +19,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserScrollListController : System.IDisposable
 	{
-		public BrowserScrollListController(CoreData data, ScrollList scrollList, string dataSetName)
+		public BrowserScrollListController(CoreData data, ScrollList scrollList, System.Type dataSetType)
 		{
-			this.data = data;
-			this.scrollList = scrollList;
-			this.dataSetName = dataSetName;
+			this.data        = data;
+			this.scrollList  = scrollList;
+			this.dataSetType = dataSetType;
+			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			this.collection  = new BrowserList (this.dataContext);
 
-			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetName));
-			this.collection         = new BrowserList (this.browserDataContext);
+			this.scrollList.Items.ValueConverter = this.collection.ConvertBrowserListItemToString;
 
-			this.scrollList.Items.ValueConverter   = this.collection.ConvertBrowserListItemToString;
 			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
-			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			this.dataContext.EntityChanged      += this.HandleDataContextEntityChanged;
+
 			this.SetContentsBasedOnDataSet ();
 		}
 
@@ -39,7 +40,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				return this.browserDataContext;
+				return this.dataContext;
 			}
 		}
 
@@ -68,6 +69,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 			}
 		}
+		
+		public AbstractEntity					SelectedEntity
+		{
+			get
+			{
+				return this.dataContext.ResolveEntity (this.SelectedEntityKey);
+			}
+			set
+			{
+				this.SelectedEntityKey = this.data.FindEntityKey (value);
+			}
+		}
 
 		public int								SelectedIndex
 		{
@@ -77,55 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			set
 			{
-				this.SelectItem (value);
-			}
-		}
-
-
-		public AbstractEntity					SelectedEntity
-		{
-			get
-			{
-				return this.browserDataContext.ResolveEntity (this.SelectedEntityKey);
-			}
-			set
-			{
-				this.Select (value);
-			}
-		}
-
-
-		private void Select(AbstractEntity entity)
-		{
-			//	The specified entity does most probably not belong to our data context,
-			//	therefore we would not find it in the collection. Look for it based on
-			//	its key :
-
-			var entityKey = this.data.FindEntityKey (entity);
-
-			this.SelectedEntityKey = entityKey;
-
-			//int index     = this.collection.IndexOf (entityKey);
-
-			//this.scrollList.SelectedItemIndex = index;
-		}
-
-		private void SelectItem(int index)
-		{
-			if (index >= this.collection.Count)
-			{
-				index = this.collection.Count-1;
-			}
-
-			if (index < 0)
-			{
-				this.SelectedEntityKey = null;
-				this.scrollList.SelectedItemIndex = -1;
-			}
-			else
-			{
-				this.SelectedEntityKey = this.collection.GetEntityKey (index);
-				this.scrollList.SelectedItemIndex = index;
+				this.SetSelectedIndex (value);
 			}
 		}
 
@@ -165,10 +130,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				this.browserDataContext.DeleteEntity (entity);
+				this.dataContext.DeleteEntity (entity);
 			}
 
-			this.browserDataContext.SaveChanges ();
+			this.dataContext.SaveChanges ();
 		}
 
 		public void InsertIntoCollection(AbstractEntity entity)
@@ -187,11 +152,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void Dispose()
 		{
 			this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
-			this.browserDataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
 			this.scrollList.Items.ValueConverter   = null;
 
 			this.collection.Dispose ();
-			this.data.DisposeDataContext (this.browserDataContext);
+			this.data.DisposeDataContext (this.dataContext);
 		}
 
 		#endregion
@@ -205,12 +170,31 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		#endregion
 
 
+		private void SetSelectedIndex(int index)
+		{
+			if (index >= this.collection.Count)
+			{
+				index = this.collection.Count-1;
+			}
+
+			if (index < 0)
+			{
+				this.SelectedEntityKey = null;
+				this.scrollList.SelectedItemIndex = -1;
+			}
+			else
+			{
+				this.SelectedEntityKey = this.collection.GetEntityKey (index);
+				this.scrollList.SelectedItemIndex = index;
+			}
+		}
+
 		private void SetContentsBasedOnDataSet()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
-			var getter = component.ResolveDataSet (this.dataSetName);
+			var getter    = component.ResolveDataSet (this.dataSetType);
 
-			this.SetContents (getter, component.GetRootEntityId (this.dataSetName));
+			this.SetContents (getter, EntityInfo.GetTypeId (this.dataSetType));
 		}
 
 		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
@@ -261,7 +245,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				return this.collectionGetter (this.browserDataContext).ToArray ();
+				return this.collectionGetter (this.dataContext).ToArray ();
 			}
 		}
 
@@ -330,8 +314,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly CoreData				data;
 		private readonly ScrollList				scrollList;
 		private readonly BrowserList			collection;
-		private readonly string					dataSetName;
-		private readonly DataContext			browserDataContext;
+		private readonly System.Type			dataSetType;
+		private readonly DataContext			dataContext;
 
 		private EntityDataExtractor             extractor;
 		private EntityDataCollection			extractedCollection;

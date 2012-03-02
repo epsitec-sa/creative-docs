@@ -58,10 +58,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				var component = this.data.GetComponent<DataSetGetter> ();
-				var entityId  = component.GetRootEntityId (this.dataSetName);
-
-				return EntityInfo.GetType (entityId);
+				return DataSetGetter.GetRootEntityType (this.dataSetName);
 			}
 		}
 
@@ -179,7 +176,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.dataSetName);
+			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.DataSetEntityType);
 			
 			this.scrollListController.CurrentChanged  += this.HandleScrollListControllerCurrentChanged;
 			this.scrollListController.CurrentChanging += this.HandleScrollListControllerCurrentChanging;

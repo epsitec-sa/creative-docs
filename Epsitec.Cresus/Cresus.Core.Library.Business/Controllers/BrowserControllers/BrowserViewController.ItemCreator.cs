@@ -173,8 +173,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			private Druid GetRootEntityId()
 			{
 				var data    = this.orchestrator.Data;
-				var component = data.GetComponent<DataSetGetter> ();
-				Druid druid = component.GetRootEntityId (this.dataSetName);
+				Druid druid = DataSetGetter.GetRootEntityId (this.dataSetName);
 
 				if (druid.IsEmpty)
 				{

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -26,19 +26,26 @@ namespace Epsitec.Cresus.Core.Data
 		{
 		}
 
+		
 		public DataSetCollectionGetter ResolveDataSet(string dataSetName)
 		{
-			var entityId   = this.GetRootEntityId (dataSetName);
-			var entityType = EntityInfo.GetType (entityId);
+			return this.ResolveDataSet (DataSetGetter.GetRootEntityType (dataSetName));
+		}
 
+		public DataSetCollectionGetter ResolveDataSet(System.Type entityType)
+		{
 			return Resolver.ResolveGetter (entityType, this.Host);
 		}
 		
-		public Druid GetRootEntityId(string dataSetName)
+		public static Druid GetRootEntityId(string dataSetName)
 		{
 			return DataSetGetter.FindEntityId (dataSetName);
 		}
-		
+
+		public static System.Type GetRootEntityType(string dataSetName)
+		{
+			return EntityInfo.GetType (DataSetGetter.GetRootEntityId (dataSetName));
+		}
 		
 		private static Druid FindEntityId(string dataSetName)
 		{
