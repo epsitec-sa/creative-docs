@@ -54,6 +54,7 @@
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
     <Compile Include="Accessors\BudgetsManager.cs" />
+    <Compile Include="Accessors\ExtraitDeCompteEditionLine.cs" />
     <Compile Include="Accessors\PiècesGeneratorDataAccessor.cs" />
     <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />

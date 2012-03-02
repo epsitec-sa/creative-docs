@@ -50,8 +50,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 			this.MinMaxClear ();
 
-			FormattedText filter = this.Permanents.NuméroCompte;
-			if (filter.IsNullOrEmpty)
+			FormattedText numéroCompte = this.Permanents.NuméroCompte;
+			if (numéroCompte.IsNullOrEmpty)
 			{
 				return;
 			}
@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == filter).FirstOrDefault ();
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
 
 			decimal solde       = 0;
 			decimal totalDébit  = 0;
@@ -72,13 +72,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				bool débit  = (ExtraitDeCompteDataAccessor.Match (écriture.Débit, filter));
-				bool crédit = (ExtraitDeCompteDataAccessor.Match (écriture.Crédit, filter));
+				bool débit  = (ExtraitDeCompteDataAccessor.Match (écriture.Débit,  numéroCompte));
+				bool crédit = (ExtraitDeCompteDataAccessor.Match (écriture.Crédit, numéroCompte));
 
 				if (débit)
 				{
 					var data = new ExtraitDeCompteData ();
 
+					data.IsDébit = true;
 					data.Entity  = écriture;
 					data.Date    = écriture.Date;
 					data.Pièce   = écriture.Pièce;
@@ -106,6 +107,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var data = new ExtraitDeCompteData ();
 
+					data.IsDébit = false;
 					data.Entity  = écriture;
 					data.Date    = écriture.Date;
 					data.Pièce   = écriture.Pièce;

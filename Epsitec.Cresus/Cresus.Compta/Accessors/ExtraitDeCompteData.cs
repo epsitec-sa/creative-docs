@@ -20,6 +20,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public bool IsDébit
+		{
+			get;
+			set;
+		}
+
 		public Date? Date
 		{
 			get;

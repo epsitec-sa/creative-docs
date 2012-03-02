@@ -118,7 +118,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 		}
 
+		public virtual void EntityToData(AbstractData data)
+		{
+		}
+
 		public virtual void DataToEntity(AbstractEntity entity)
+		{
+		}
+
+		public virtual void DataToEntity(AbstractData data)
 		{
 		}
 
