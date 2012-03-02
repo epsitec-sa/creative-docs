@@ -191,25 +191,37 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.dataSetName);
 			this.collection = this.scrollListController.Collection;
-			this.scrollListController.SelectedItemChange += this.HandleScrollListControllerSelectedItemChange;
-			this.NotifySelectedItemChange ();
+			
+			this.scrollListController.CurrentChanged     += this.HandleScrollListControllerCurrentChanged;
+			this.scrollListController.CurrentChanging    += this.HandleScrollListControllerCurrentChanging;
+			
+			this.SelectActiveEntity ();
 		}
 
 		private void DisposeBrowserDataContext()
 		{
 			if (this.scrollListController != null)
 			{
-				this.scrollListController.SelectedItemChange -= this.HandleScrollListControllerSelectedItemChange;
+				this.scrollListController.CurrentChanged     -= this.HandleScrollListControllerCurrentChanged;
+				this.scrollListController.CurrentChanging    -= this.HandleScrollListControllerCurrentChanging;
+				
 				this.scrollListController.Dispose ();
+				
+				this.scrollListController = null;
+				
 				this.collection = null;
 			}
 		}
 
-		private void HandleScrollListControllerSelectedItemChange(object sender)
+		private void HandleScrollListControllerCurrentChanged(object sender)
 		{
-			this.NotifySelectedItemChange ();
+			this.OnCurrentChanged ();
 		}
-		
+
+		private void HandleScrollListControllerCurrentChanging(object sender, CurrentChangingEventArgs e)
+		{
+			this.OnCurrentChanging (e);
+		}
 		
 
 		private bool SelectActiveEntity()
@@ -248,16 +260,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void NotifySelectedItemChange()
-		{
-			int active    = this.scrollList.SelectedItemIndex;
-			var entityKey = this.collection == null ? null : this.collection.GetEntityKey (active);
-
-			//-			System.Diagnostics.Debug.WriteLine (string.Format ("SelectedItemChanged : old key = {0} / new key = {1}", this.scrollListController.ActiveEntityKey, entityKey));
-
-			this.SetActiveEntityKey (entityKey);
-		}
-
 		private void SelectItem(int index)
 		{
 			if (index >= this.collection.Count)
@@ -281,47 +283,24 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetActiveEntityKey(EntityKey? entityKey)
 		{
-			if (this.scrollListController.ActiveEntityKey != entityKey)
-			{
-				this.scrollListController.ActiveEntityKey = entityKey;
-				
-				this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
-				this.OnCurrentChanged ();
-			}
+			this.scrollListController.ActiveEntityKey = entityKey;
 		}
 
 		private void OnCurrentChanged()
 		{
-			var handler = this.CurrentChanged;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
-
+			this.CurrentChanged.Raise (this);
 			this.SelectActiveEntity ();
 		}
 
 		private void OnCurrentChanging(CurrentChangingEventArgs e)
 		{
-			var handler = this.CurrentChanging;
-
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.CurrentChanging.Raise (this, e);
 		}
 
 		private void OnDataSetSelected()
 		{
 			this.Orchestrator.MainViewController.CommandContext.UpdateCommandStates (this);
-
-			var handler = this.DataSetSelected;
-
-			if (handler != null)
-			{
-				handler (this);
-			}
+			this.DataSetSelected.Raise (this);
 		}
 
 

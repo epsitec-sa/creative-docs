@@ -13,6 +13,7 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -60,6 +61,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				if (this.activeEntityKey != value)
 				{
 					this.activeEntityKey = value;
+
+					this.OnCurrentChanging (new CurrentChangingEventArgs (isCancelable: false));
+					this.OnCurrentChanged ();
 				}
 			}
 		}
@@ -131,6 +135,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		#endregion
+
+		#region INotifyCurrentChanged Members
+
+		public event EventHandler  CurrentChanged;
+
+		public event EventHandler<CurrentChangingEventArgs>  CurrentChanging;
+
+		#endregion
+
 
 		private void SetContentsBasedOnDataSet()
 		{
@@ -234,7 +247,21 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void OnSelectedItemChange()
 		{
+			int active    = this.scrollList.SelectedItemIndex;
+			var entityKey = this.collection.GetEntityKey (active);
+
+			this.ActiveEntityKey = entityKey;
 			this.SelectedItemChange.Raise (this);
+		}
+
+		private void OnCurrentChanged()
+		{
+			this.CurrentChanged.Raise (this);
+		}
+
+		private void OnCurrentChanging(CurrentChangingEventArgs e)
+		{
+			this.CurrentChanging.Raise (this, e);
 		}
 
 
