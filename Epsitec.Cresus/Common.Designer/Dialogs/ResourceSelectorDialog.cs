@@ -880,7 +880,10 @@ namespace Epsitec.Common.Designer.Dialogs
 
 		private void HandleFilterControllerChanged(object sender)
 		{
-			this.UpdateArray ();
+			if (!this.closed)
+			{
+				this.UpdateArray ();
+			}
 		}
 
 		private void HandleListResourcesSelected(object sender)
