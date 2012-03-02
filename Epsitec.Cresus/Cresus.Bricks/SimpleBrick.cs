@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Bricks
 			var brick = new SimpleBrick<TOutput, TOutput> (this);
 
 			brick.InheritResolver (this);
+			brick.DefineBrickWall (this.BrickWall);
 
 			return brick;
 		}
