@@ -9,6 +9,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Linq;
+
 
 namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 {
@@ -71,8 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 			}
 			else
 			{
-				var entityCollectionPropertyAccessor = (EntityCollectionPropertyAccessor) this.Template.PropertyAccessor;
-				var targets = entityCollectionPropertyAccessor.GetEntityCollection (entity);
+				var targets = this.Template.EntitiesGetter (entity).ToList ();
 
 				if (targets.Count > 0)
 				{

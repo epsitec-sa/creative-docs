@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		{
 			if (e.Property.Key == BrickPropertyKey.OfType)
 			{
-				var brick = e.Brick;
+				var brick = e.Property.Brick;
 				var type = e.Property.Brick.GetFieldType ();
 				
 				Mason.CreateDefaultProperties (brick, type);
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private static void CreateDefaultProperties(Brick brick, Type type)
 		{
-			var typeInfo = EntityInfo.GetStructuredType (type) as StructuredType;
+			var typeInfo = EntityInfo.GetStructuredType (type);
 
 			if (typeInfo == null || typeInfo.Caption == null)
 			{
