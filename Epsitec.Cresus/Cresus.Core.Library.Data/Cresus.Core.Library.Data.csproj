@@ -68,6 +68,7 @@
     <Compile Include="Data\Extraction\EntityDataMetadataRecorder.cs" />
     <Compile Include="Data\Extraction\EntityDataMetadataRecorder`1.cs" />
     <Compile Include="Data\Extraction\EntityDataRow.cs" />
+    <Compile Include="Data\Extraction\EntityDataRowComparer.cs" />
     <Compile Include="Data\Extraction\EntityDataType.cs" />
     <Compile Include="Data\Infrastructure.cs" />
     <Compile Include="DataExtractionMode.cs" />

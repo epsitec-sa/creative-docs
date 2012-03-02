@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
+	/// <summary>
+	/// The <c>EntityDataCollection</c> class stores a sorted collection of <see cref="EntityDataRow"/>
+	/// and is managed by <see cref="EntityDataExtractor"/>.
+	/// </summary>
 	public sealed class EntityDataCollection
 	{
 		internal EntityDataCollection(IComparer<EntityDataRow> comparer, IEnumerable<EntityDataRow> rows)
@@ -93,6 +97,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+		
 		private int FindByBisection(EntityDataRow row)
 		{
 			System.Diagnostics.Debug.Assert (this.isSortNeeded == false);
@@ -170,6 +175,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			return -1;
 		}
 
+		
 		private readonly IComparer<EntityDataRow>	comparer;
 		private readonly List<EntityDataRow>		rows;
 		private bool								isSortNeeded;

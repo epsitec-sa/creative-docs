@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
@@ -10,9 +10,13 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
-	public class EntityDataColumn
+	/// <summary>
+	/// The <c>EntityDataColumn</c> class defines a column (i.e. a field transformed to simple
+	/// data) of an entity.
+	/// </summary>
+	public sealed class EntityDataColumn
 	{
-		public EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter)
+		internal EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter)
 		{
 			this.lambda = lambda;
 			this.converter = converter;
@@ -45,15 +49,16 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
-		public int								Index
+		
+		public int								TextualIndex
 		{
 			get
 			{
-				return this.index;
+				return this.textualIndex;
 			}
-			set
+			internal set
 			{
-				this.index = value;
+				this.textualIndex = value;
 			}
 		}
 		
@@ -63,17 +68,18 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			{
 				return this.numericIndex;
 			}
-			set
+			internal set
 			{
 				this.numericIndex = value;
 			}
 		}
 
 
-		private readonly LambdaExpression		lambda;
+		private readonly LambdaExpression			lambda;
 		private readonly EntityDataColumnConverter	converter;
-		private readonly FormattedText			name;
-		private int								index;
+		private readonly FormattedText				name;
+		
+		private int								textualIndex;
 		private int								numericIndex;
 	}
 }

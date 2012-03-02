@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -10,12 +10,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
+	/// <summary>
+	/// The <c>EntityDataRow</c> class stores the fields used for extraction in 
+	/// either textual only or textual and numeric form.
+	/// </summary>
 	public sealed class EntityDataRow
 	{
 		public EntityDataRow(EntityDataMetadata metadata, AbstractEntity entity)
 		{
 			this.entity     = entity;
-			this.textFields = new string[metadata.ColumnCount];
+			this.textFields = new string[metadata.TotalColumnCount];
 			this.numFields  = new long[metadata.NumericColumnCount];
 
 			if (entity != null)
@@ -25,7 +29,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 
-		public AbstractEntity Entity
+		public AbstractEntity					Entity
 		{
 			get
 			{
@@ -57,20 +61,5 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		private readonly AbstractEntity			entity;
 		private readonly string[]				textFields;
 		private readonly long[]					numFields;
-	}
-
-	public class EntityDataRowComparer : IComparer<EntityDataRow>
-	{
-
-		#region IComparer<EntityDataRow> Members
-
-		public int Compare(EntityDataRow x, EntityDataRow y)
-		{
-			return string.CompareOrdinal (x.GetTextField (0), y.GetTextField (0));
-		}
-
-		#endregion
-
-		public static readonly EntityDataRowComparer Instance = new EntityDataRowComparer ();
 	}
 }

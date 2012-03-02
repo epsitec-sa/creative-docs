@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -11,6 +11,10 @@ using System.Linq.Expressions;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
+	/// <summary>
+	/// The <c>EntityDataMetadata</c> class is a collection of <see cref="EntityDataColum"/>
+	/// instances.
+	/// </summary>
 	public sealed class EntityDataMetadata
 	{
 		internal EntityDataMetadata(IEnumerable<EntityDataColumn> columns)
@@ -27,12 +31,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 
 				if (column.IsNumeric)
 				{
-					column.Index        = index;
+					column.TextualIndex = index;
 					column.NumericIndex = numericIndex++;
 				}
 				else
 				{
-					column.Index        = index;
+					column.TextualIndex = index;
 					column.NumericIndex = -1;
 				}
 			}
@@ -41,7 +45,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		}
 
 		
-		public int							ColumnCount
+		public int							TotalColumnCount
 		{
 			get
 			{
@@ -57,6 +61,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the index of the numeric field, based on a column index. Some columns
+		/// do not show up in the numeric column collection, as they cannot be mapped
+		/// to numbers.
+		/// </summary>
+		/// <param name="fieldIndex">Index of the field.</param>
+		/// <returns>The index in the numeric column collection, or <c>-1</c>.</returns>
 		public int GetNumericFieldIndex(int fieldIndex)
 		{
 			return this.columns[fieldIndex].NumericIndex;
@@ -67,7 +79,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		{
 			foreach (var column in columns)
 			{
-				texts[column.Index] = column.Converter.GetText (entity);
+				texts[column.TextualIndex] = column.Converter.GetText (entity);
 
 				var numIndex = column.NumericIndex;
 
@@ -78,6 +90,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+		
 		private readonly EntityDataColumn[] columns;
 		private readonly int				numericColumnCount;
 	}

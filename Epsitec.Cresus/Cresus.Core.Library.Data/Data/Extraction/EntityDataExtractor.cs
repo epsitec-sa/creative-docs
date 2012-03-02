@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -9,6 +9,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Data.Extraction
 {
+	/// <summary>
+	/// The <c>EntityDataExtractor</c> class is used to extract data from entities in
+	/// order to populate collections of sorted <see cref="EntityDataRow"/> in
+	/// <see cref="EntityDataCollection"/> instances.
+	/// </summary>
 	public sealed class EntityDataExtractor
 	{
 		public EntityDataExtractor(EntityDataMetadata metadata)
@@ -36,7 +41,13 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
-		
+
+		/// <summary>
+		/// Creates a sorted collection based on a given comparer. The collection
+		/// must be created before any data is added into the extractor.
+		/// </summary>
+		/// <param name="comparer">The comparer.</param>
+		/// <returns>The sorted collection.</returns>
 		public EntityDataCollection CreateCollection(IComparer<EntityDataRow> comparer)
 		{
 			var collection = new EntityDataCollection (comparer, this.rows);
@@ -54,17 +65,37 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+		/// <summary>
+		/// Inserts the specified entity into the sorted collections.
+		/// </summary>
+		/// <param name="entity">The entity.</param>
 		public void Insert(AbstractEntity entity)
 		{
 			this.Insert (new EntityDataRow (this.metadata, entity));
 		}
 
+		/// <summary>
+		/// Fills the sorted collections with the specified entities. The previous
+		/// content will be cleared first.
+		/// </summary>
+		/// <param name="entities">The entities.</param>
 		public void Fill(IEnumerable<AbstractEntity> entities)
 		{
 			this.Fill (entities.Select (x => new EntityDataRow (this.metadata, x)));
 		}
 
-		public void Fill(IEnumerable<EntityDataRow> rows)
+		
+		private void Insert(EntityDataRow row)
+		{
+			this.collections.ForEach (x => x.Insert (row));
+		}
+
+		private void Remove(EntityDataRow row)
+		{
+			this.collections.ForEach (x => x.Remove (row));
+		}
+
+		private void Fill(IEnumerable<EntityDataRow> rows)
 		{
 			this.rows.Clear ();
 			this.rows.AddRange (rows);
@@ -72,18 +103,8 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			this.collections.ForEach (x => x.Fill (this.rows));
 		}
 
-		
-		public void Insert(EntityDataRow row)
-		{
-			this.collections.ForEach (x => x.Insert (row));
-		}
 
-		public void Remove(EntityDataRow row)
-		{
-			this.collections.ForEach (x => x.Remove (row));
-		}
-
-		private EntityDataMetadata					metadata;
+		private readonly EntityDataMetadata			metadata;
 		private readonly List<EntityDataRow>		rows;
 		private readonly List<EntityDataCollection>	collections;
 	}
