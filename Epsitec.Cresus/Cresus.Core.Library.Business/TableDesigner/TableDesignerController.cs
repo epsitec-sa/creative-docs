@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.TableDesigner
 			var mainViewController    = this.orchestrator.MainViewController;
 			var browserViewController = mainViewController.BrowserViewController;
 			
-			browserViewController.Select (entity);
+			browserViewController.SelectEntity (entity);
 		}
 
 

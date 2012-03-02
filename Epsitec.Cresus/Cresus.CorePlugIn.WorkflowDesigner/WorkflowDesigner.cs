@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 			var mainViewController    = this.orchestrator.MainViewController;
 			var browserViewController = mainViewController.BrowserViewController;
 			
-			browserViewController.Select (workflow);
+			browserViewController.SelectEntity (workflow);
 		}
 
 		private Widget CreateWorkflowEditorUI(WorkflowDefinitionEntity workflow)

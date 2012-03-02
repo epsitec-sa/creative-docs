@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// Selects the specified entity in the list.
 		/// </summary>
 		/// <param name="entity">The entity.</param>
-		public void Select(AbstractEntity entity)
+		public void SelectEntity(AbstractEntity entity)
 		{
 			if (this.scrollListController != null)
 			{
@@ -197,6 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
 		private void HandleScrollListControllerCurrentChanged(object sender)
 		{
 			this.OnCurrentChanged ();

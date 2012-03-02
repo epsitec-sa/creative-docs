@@ -272,7 +272,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void RefreshScrollList(bool reset = false)
 		{
 			if ((this.scrollList != null) &&
-					(this.collection != null))
+				(this.collection != null))
 			{
 				int newCount = this.collection == null ? 0 : this.collection.Count;
 
