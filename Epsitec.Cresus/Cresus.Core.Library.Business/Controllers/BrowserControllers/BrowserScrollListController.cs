@@ -49,8 +49,50 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public EntityKey? ActiveEntityKey
+		{
+			get
+			{
+				return this.activeEntityKey;
+			}
+			set
+			{
+				if (this.activeEntityKey != value)
+				{
+					this.activeEntityKey = value;
+				}
+			}
+		}
+		
+		
+		public void Remove(AbstractEntity entity)
+		{
+			int index = this.collection.IndexOf (entity);
+
+			if (index < 0)
+			{
+				return;
+			}
+
+			this.suspendUpdates++;
+			this.collection.RemoveAt (index);
+			this.scrollList.Items.RemoveAt (index);
+			this.suspendUpdates--;
+		}
+
+
 		public void Delete(AbstractEntity entity)
 		{
+			if (entity.IsNull ())
+			{
+				return;
+			}
+
+			this.Remove (entity);
+
+			//	Archive or delete the entity, depending on the presence of an ILifetime
+			//	implementation :
+
 			var lifetime = entity as ILifetime;
 
 			if (lifetime != null)
@@ -177,7 +219,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				int newCount = this.collection == null ? 0 : this.collection.Count;
 
-				int oldActive = reset ? 0 : this.collection.GetIndex (this.activeEntityKey);
+				int oldActive = reset ? 0 : this.collection.IndexOf (this.activeEntityKey);
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
 				this.suspendUpdates++;

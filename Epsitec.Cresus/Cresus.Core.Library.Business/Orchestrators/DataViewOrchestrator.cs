@@ -149,6 +149,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		{
 			this.OnSettingActiveEntity (new ActiveEntityCancelEventArgs ());
 
+			if (this.activeEntityKey == null)
+			{
+				return;
+			}
+
 			this.activeEntityKey = null;
 			this.DataViewController.PopAllViewControllers ();
 			this.ClearBusinessContext ();

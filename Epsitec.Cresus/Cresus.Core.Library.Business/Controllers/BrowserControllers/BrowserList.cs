@@ -4,6 +4,7 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -60,6 +61,20 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.list.ForEach (x => x.ClearCachedDisplayText ());
 		}
 
+		public AbstractEntity GetEntity(int index)
+		{
+			if ((index >= 0) &&
+				(index < this.list.Count))
+			{
+				var item = this.list[index];
+				return item.Entity;
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
 		public EntityKey? GetEntityKey(int index)
 		{
 			if ((index >= 0) &&
@@ -74,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		public int GetIndex(EntityKey? key)
+		public int IndexOf(EntityKey? key)
 		{
 			if (key == null)
 			{
@@ -84,6 +99,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			var rowKey = key.Value.RowKey;
 
 			return this.list.FindIndex (x => x.GetRowKey (this) == rowKey);
+		}
+
+		public int IndexOf(AbstractEntity entity)
+		{
+			if (entity.IsNull ())
+			{
+				return -1;
+			}
+
+			return this.list.FindIndex (x => x.Entity == entity);
 		}
 
 		
