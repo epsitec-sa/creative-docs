@@ -19,6 +19,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Controllers
 {
+	/// <summary>
+	/// Contrôleur gérant la saisie du noeud d'un critère SearchNodeData pour les recherches ou les filtres.
+	/// Ce contrôleur utilise SearchTabController pour les lignes.
+	/// </summary>
 	public class SearchNodeController
 	{
 		public SearchNodeController(AbstractController controller, SearchController parentController, SearchNodeData nodeData, bool isFilter)

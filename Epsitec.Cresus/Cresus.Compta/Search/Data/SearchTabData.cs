@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
+	/// <summary>
+	/// Contient les données d'une ligne pour une recherche ou un filtre. Le texte n'est pas directement
+	/// inclu, mais contenu dans SearchText.
+	/// </summary>
 	public class SearchTabData
 	{
 		public SearchTabData()
@@ -44,14 +48,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			this.searchText.Clear ();
 			this.Column = ColumnType.None;
-		}
-
-		public bool IsValid
-		{
-			get
-			{
-				return !this.IsEmpty;
-			}
 		}
 
 		public bool IsEmpty

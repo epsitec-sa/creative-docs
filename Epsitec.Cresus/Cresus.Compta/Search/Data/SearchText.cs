@@ -14,6 +14,9 @@ using System.Text.RegularExpressions;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
+	/// <summary>
+	/// Textes pour une recherche ou un filtre. Avec un intervalle, il y a deux textes (from/to).
+	/// </summary>
 	public class SearchText
 	{
 		public SearchText()
@@ -131,14 +134,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.PreparesSearch ();
 		}
 
-		public bool IsValid
-		{
-			get
-			{
-				return !this.IsEmpty;
-			}
-		}
-
 		public bool IsEmpty
 		{
 			get
@@ -184,7 +179,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public int Search(ref FormattedText target)
 		{
-			//	Effectue une recherche et retourne le nombre d'occurences trouvées.
+			//	Effectue une recherche et retourne le nombre d'occurences trouvées ainsi que le texte
+			//	tagué mettant en évidence les caractères trouvés.
 
 			//	Attention: Les mécanismes ci-dessous sont totalement incompatibles avec des textes contenants des tags !
 			int count = 0;
@@ -559,7 +555,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public FormattedText GetSummary(FormattedText columnName)
 		{
-			if (this.IsValid)
+			if (this.IsEmpty)
+			{
+				return FormattedText.Empty;
+			}
+			else
 			{
 				var builder = new System.Text.StringBuilder ();
 
@@ -597,10 +597,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 
 				return builder.ToString ();
-			}
-			else
-			{
-				return FormattedText.Empty;
 			}
 		}
 

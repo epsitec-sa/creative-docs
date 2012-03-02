@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
+	/// <summary>
+	/// Contient les données d'un noeud pour une recherche ou un filtre. Les données sont constituées d'une liste
+	/// de SearchTabData.
+	/// </summary>
 	public class SearchNodeData
 	{
 		public SearchNodeData()
@@ -57,32 +61,9 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			set;
 		}
 
-		public bool IsValid
-		{
-			//	Indique si les données sont certifiées valides, c'est-à-dire aptes à être exploitées.
-			get
-			{
-				if (this.IsEmpty)
-				{
-					return false;
-				}
-
-				foreach (var tab in this.tabsData)
-				{
-					if (!tab.IsValid)
-					{
-						return false;
-					}
-				}
-
-				return true;
-			}
-		}
-
 		public bool IsEmpty
 		{
 			//	Indique si les données sont totalement vides.
-			//	Si les données sont partiellement remplies, on peut avoir IsValid et IsEmpty = false !
 			get
 			{
 				if (this.tabsData.Count > 1)
@@ -455,7 +436,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			if (this.IsValid)
+			if (this.IsEmpty)
+			{
+				return FormattedText.Empty;
+			}
+			else
 			{
 				var builder = new System.Text.StringBuilder ();
 
@@ -477,10 +462,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 
 				return builder.ToString ();
-			}
-			else
-			{
-				return FormattedText.Empty;
 			}
 		}
 

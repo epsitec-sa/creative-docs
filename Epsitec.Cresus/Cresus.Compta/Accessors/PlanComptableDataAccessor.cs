@@ -550,7 +550,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.filterData == null || !this.filterData.IsValid;
+				return this.filterData == null || this.filterData.IsEmpty;
 			}
 		}
 

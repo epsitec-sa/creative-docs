@@ -12,6 +12,10 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
+	/// <summary>
+	/// Contient les données complètes pour une recherche ou un filtre. Les données sont constituées d'une liste
+	/// de SearchNodeData, elles-mêmes constituées d'une liste de SearchTabData.
+	/// </summary>
 	public class SearchData : ISettingsData
 	{
 		public SearchData()
@@ -75,32 +79,9 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			set;
 		}
 
-		public bool IsValid
-		{
-			//	Indique si les données sont certifiées valides, c'est-à-dire aptes à être exploitées.
-			get
-			{
-				if (this.IsEmpty)
-				{
-					return false;
-				}
-
-				foreach (var node in this.nodesData)
-				{
-					if (!node.IsValid)
-					{
-						return false;
-					}
-				}
-
-				return true;
-			}
-		}
-
 		public bool IsEmpty
 		{
 			//	Indique si les données sont totalement vides.
-			//	Si les données sont partiellement remplies, on peut avoir IsValid et IsEmpty = false !
 			get
 			{
 				if (this.nodesData.Count > 1)
@@ -244,7 +225,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			if (this.IsValid)
+			if (this.IsEmpty)
+			{
+				return FormattedText.Empty;
+			}
+			else
 			{
 				var builder = new System.Text.StringBuilder ();
 
@@ -279,17 +264,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 				return builder.ToString ();
 			}
-			else
-			{
-				return FormattedText.Empty;
-			}
 		}
 
 
 		public bool Process(List<SearchResult> results, int row, System.Func<int, ColumnType, FormattedText> getText, IEnumerable<ColumnType> columnTypes)
 		{
-			//	Effectue une recherche/filtre sur une ligne de données. Gère les modes or/and subtils liés aux node/tab.
-			//	La liste 'results' peut être nulle, ce qui est pratique pour le filtre.
+			//	Effectue une recherche/filtre sur une ligne de données. Gère les modes or/and subtils liés aux nodes/tabs.
+			//	La liste 'results' peut être nulle, ce qui est pratique pour le filtre, car on veut juste savoir si la ligne
+			//	doit être exclue/inclue en fonction du bool en sortie.
 			//	Retourne true si qq chose a été trouvé.
 			bool allNode = true;
 			bool oneNode = false;

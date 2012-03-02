@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.planComptableAll = this.compta.PlanComptable;
 
-			if (this.filterData == null || !this.filterData.IsValid)
+			if (this.filterData == null || this.filterData.IsEmpty)
 			{
 				this.planComptable = this.planComptableAll;
 			}

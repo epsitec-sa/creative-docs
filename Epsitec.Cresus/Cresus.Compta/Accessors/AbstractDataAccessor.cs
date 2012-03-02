@@ -206,7 +206,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Met à jour le filtre.
 			this.readonlyData.Clear ();
 
-			if (this.filterData == null || !this.filterData.IsValid)
+			if (this.filterData == null || this.filterData.IsEmpty)
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
