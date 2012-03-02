@@ -19,13 +19,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserScrollListController : System.IDisposable
 	{
-		public BrowserScrollListController(CoreData data, ScrollList scrollList, System.Type dataSetType)
+		public BrowserScrollListController(CoreData data, ScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
 		{
 			this.data        = data;
 			this.scrollList  = scrollList;
 			this.dataSetType = dataSetType;
 			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 			this.collection  = new BrowserList (this.dataContext);
+			this.filter      = filter;
 
 			this.scrollList.Items.ValueConverter = this.collection.ConvertBrowserListItemToString;
 
@@ -91,6 +92,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			set
 			{
 				this.SetSelectedIndex (value);
+			}
+		}
+
+		public System.Predicate<AbstractEntity> Filter
+		{
+			get
+			{
+				return this.filter;
+			}
+			set
+			{
+				this.filter = value;
+				this.UpdateCollection ();
 			}
 		}
 
@@ -201,13 +215,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.collectionGetter    = collectionGetter;
 			this.collectionEntityId  = entityId;
-			this.extractor           = null;
-			this.extractedCollection = null;
 
-			if (EntityInfo<CustomerEntity>.GetTypeId () == entityId)
+			this.SetupContentExtractor ();
+			
+			this.UpdateCollection ();
+		}
+
+		private void SetupContentExtractor()
+		{
+			if (EntityInfo<CustomerEntity>.GetTypeId () == this.collectionEntityId)
 			{
 				this.extractor =
-					new EntityDataExtractor (
+						new EntityDataExtractor (
 						new EntityDataMetadataRecorder<CustomerEntity> ()
 							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode)
 							.Column (x => x.MainRelation.DefaultMailContact.Location.Name)
@@ -215,9 +234,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 						.GetMetadata ());
 
 				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
+				
+				return;
 			}
 
-			this.UpdateCollection ();
+			this.extractor           = null;
+			this.extractedCollection = null;
 		}
 
 		private void HandleScrollListSelectedItemChanged(object sender)
@@ -230,11 +252,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
-			if ((this.collection != null) &&
-					(this.scrollList != null))
-			{
-				this.UpdateCollection (reset: false);
-			}
+			this.UpdateCollection (reset: false);
 		}
 
 		private AbstractEntity[] GetCollectionEntities()
@@ -245,7 +263,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 			else
 			{
-				return this.collectionGetter (this.dataContext).ToArray ();
+				if (this.filter == null)
+				{
+					return this.collectionGetter (this.dataContext).ToArray ();
+				}
+				else
+				{
+					return this.collectionGetter (this.dataContext).Where (x => this.filter (x)).ToArray ();
+				}
 			}
 		}
 
@@ -317,6 +342,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly System.Type			dataSetType;
 		private readonly DataContext			dataContext;
 
+		private System.Predicate<AbstractEntity> filter;
 		private EntityDataExtractor             extractor;
 		private EntityDataCollection			extractedCollection;
 

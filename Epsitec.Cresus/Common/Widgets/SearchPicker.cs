@@ -30,7 +30,7 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Stacked,
 			};
 
-			this.searchResults = new ScrollList ()
+			this.scrollList = new ScrollList ()
 			{
 				Parent = this,
 				Dock = DockStyle.Stacked,
@@ -41,19 +41,19 @@ namespace Epsitec.Common.Widgets
 
 			this.messageContainerStateEmpty = new FrameBox ()
 			{
-				Parent = this.searchResults,
+				Parent = this.scrollList,
 				Dock = DockStyle.Fill,
 			};
 
 			this.messageContainerStateError = new FrameBox ()
 			{
-				Parent = this.searchResults,
+				Parent = this.scrollList,
 				Dock = DockStyle.Fill,
 			};
 
 			this.progressIndicator = new ProgressIndicator ()
 			{
-				Parent = this.searchResults,
+				Parent = this.scrollList,
 				VerticalAlignment = Widgets.VerticalAlignment.Center,
 				HorizontalAlignment = Widgets.HorizontalAlignment.Stretch,
 				Dock = DockStyle.Fill,
@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public SearchPickerState State
+		public SearchPickerState				State
 		{
 			get
 			{
@@ -84,7 +84,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public FrameBox MessageContainerStateEmpty
+		public FrameBox							MessageContainerStateEmpty
 		{
 			get
 			{
@@ -92,7 +92,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public FrameBox MessageContainerStateError
+		public FrameBox							MessageContainerStateError
 		{
 			get
 			{
@@ -100,11 +100,19 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public FormattedText SearchText
+		public FormattedText					SearchText
 		{
 			get
 			{
 				return this.searchBox.FormattedText;
+			}
+		}
+
+		public ScrollList						ScrollList
+		{
+			get
+			{
+				return this.scrollList;
 			}
 		}
 
@@ -117,28 +125,28 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SearchPickerState.Empty:
-					this.searchResults.DisableListDisplay      = true;
+					this.scrollList.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = true;
 					this.messageContainerStateError.Visibility = false;
 					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Ready:
-					this.searchResults.DisableListDisplay      = false;
+					this.scrollList.DisableListDisplay      = false;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = false;
 					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Error:
-					this.searchResults.DisableListDisplay      = true;
+					this.scrollList.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = true;
 					this.progressIndicator.Visibility = false;
 					break;
 
 				case SearchPickerState.Busy:
-					this.searchResults.DisableListDisplay      = true;
+					this.scrollList.DisableListDisplay      = true;
 					this.messageContainerStateEmpty.Visibility = false;
 					this.messageContainerStateError.Visibility = false;
 					this.progressIndicator.Visibility = true;
@@ -207,7 +215,7 @@ namespace Epsitec.Common.Widgets
 
 		private readonly SearchBox				searchBox;
 		private readonly StaticText				spacer;
-		private readonly ScrollList				searchResults;
+		private readonly ScrollList				scrollList;
 
 		private readonly FrameBox				messageContainerStateEmpty;
 		private readonly FrameBox				messageContainerStateError;

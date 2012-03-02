@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Core.Bricks
 
 			private void CreateActionForSearchPanel(ExpandoObject settings)
 			{
-				var factory = new Factories.SearchPanelFactory (this.business, settings);
+				var factory = new Factories.SearchPanelFactory<T> (this.business, settings);
 				this.actions.Add (new UIAction ((tile, builder) => factory.CreateUI (tile, builder)));
 			}
 

@@ -88,13 +88,13 @@ namespace Epsitec.Cresus.Bricks
 			return this as TSelf;
 		}
 
-		public TSelf SearchPanel(FormattedText searchTitle, FormattedText actionTitle, System.Action action)
+		public TSelf SearchPanel(FormattedText searchTitle, FormattedText actionTitle, System.Action<Epsitec.Common.Support.EntityEngine.AbstractEntity> action)
 		{
 			dynamic expando = new ExpandoObject ();
 
-			expando.SearchTitle       = searchTitle;
-			expando.ButtonTitle       = actionTitle;
-			expando.ButtonAction      = action;
+			expando.SearchTitle  = searchTitle;
+			expando.ButtonTitle  = actionTitle;
+			expando.ButtonAction = action;
 			
 			this.AddProperty (new BrickProperty (BrickPropertyKey.SearchPanel, expando));
 			return this as TSelf;

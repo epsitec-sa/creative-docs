@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
@@ -12,6 +13,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
+	/// <summary>
+	/// The <c>BrowserList</c> class stores the collection of items, which are then
+	/// presented to the user, usually in a <see cref="ScrollList"/>, as managed by
+	/// <see cref="BrowserScrollListController"/>.
+	/// </summary>
 	public sealed class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
 	{
 		public BrowserList(DataContext context)
