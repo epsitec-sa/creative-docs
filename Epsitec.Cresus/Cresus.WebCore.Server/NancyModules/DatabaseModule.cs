@@ -185,7 +185,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				ok = context.DeleteEntity (entity);
 
-				context.ApplyRulesToRegisteredEntities (RuleType.Update);
 				context.SaveChanges ();
 			}
 

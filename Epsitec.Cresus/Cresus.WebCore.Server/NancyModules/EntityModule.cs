@@ -68,8 +68,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 						propertyAccessor.SetValue (entity, value);
 					}
 
-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
-
 					businessContext.SaveChanges ();
 					return Response.AsCoreSuccess ();
 				}

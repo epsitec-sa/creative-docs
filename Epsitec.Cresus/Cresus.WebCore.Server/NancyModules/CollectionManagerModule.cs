@@ -70,7 +70,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				collection.Remove (d);
 				context.DeleteEntity (d);
 
-				context.ApplyRulesToRegisteredEntities (RuleType.Update);
 				context.SaveChanges ();
 			}
 
@@ -106,7 +105,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				var collection = propertyAccessor.GetCollection (parentEntity);
 				collection.Add (newEntity);
 
-				context.ApplyRulesToRegisteredEntities (RuleType.Update);
 				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 			}
 
