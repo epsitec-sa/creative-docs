@@ -125,6 +125,7 @@
     <Compile Include="Controllers\ArticleParameterControllers\OptionValueArticleParameterController.cs" />
     <Compile Include="Controllers\ArticleParameterControllers\ValuesArticleParameterController.cs" />
     <Compile Include="Bricks\FieldInfo.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserScrollListController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.CommandProcessors.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineRibbonController.cs" />

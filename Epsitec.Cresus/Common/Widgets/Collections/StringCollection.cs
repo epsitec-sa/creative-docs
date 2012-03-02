@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -90,9 +90,9 @@ namespace Epsitec.Common.Widgets.Collections
 		public void AddRange(IEnumerable<object> values)
 		{
 			if (values == null)
-            {
+			{
 				return;
-            }
+			}
 
 			foreach (var value in values)
 			{
@@ -103,9 +103,9 @@ namespace Epsitec.Common.Widgets.Collections
 		public void AddRange(IEnumerable<string> values)
 		{
 			if (values == null)
-            {
+			{
 				return;
-            }
+			}
 			
 			foreach (var value in values)
 			{
@@ -164,9 +164,9 @@ namespace Epsitec.Common.Widgets.Collections
 		public int FindIndexByValueExactMatch(string find, int startAt = 0)
 		{
 			if (string.IsNullOrEmpty (find))
-            {
+			{
 				return -1;
-            }
+			}
 
 			return this.FindIndexByValue (find, startAt, (x, y) => x == y);
 		}

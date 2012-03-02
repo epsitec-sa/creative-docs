@@ -158,14 +158,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var businessContext = this.orchestrator.DefaultBusinessContext;
 				var localEntity     = businessContext.GetLocalEntity (entity);
 				var localEntityKey  = businessContext.DataContext.GetNormalizedEntityKey (localEntity);
-				var browserEntity   = this.browser.browserDataContext.ResolveEntity (localEntityKey);
+				var browserEntity   = this.browser.scrollListController.DataContext.ResolveEntity (localEntityKey);
 
 				context.Dispose ();
 
-				this.browser.InsertIntoCollection (browserEntity);
+				this.browser.scrollListController.InsertIntoCollection (browserEntity);
 				this.browser.SetActiveEntityKey (localEntityKey);
 				this.browser.SelectActiveEntity ();
-				this.browser.RefreshScrollList ();
+				this.browser.scrollListController.RefreshScrollList ();
 
 				return localEntity;
 			}

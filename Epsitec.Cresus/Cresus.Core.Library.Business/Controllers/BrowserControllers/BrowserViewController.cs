@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -78,8 +78,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.DisposeBrowserDataContext ();
 				this.dataSetName = dataSetName;
 				this.CreateBrowserDataContext ();
-
-				this.SetContentsBasedOnDataSet ();
 				this.OnDataSetSelected ();
 			}
 		}
@@ -138,22 +136,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				this.Orchestrator.ClearActiveEntity ();
 				this.suspendUpdates--;
 
-				//	Archive or delete the entity, depending on the presence of a ILifetime
+				//	Archive or delete the entity, depending on the presence of an ILifetime
 				//	implementation :
 
-				var lifetime = entity as ILifetime;
-
-				if (lifetime != null)
-				{
-					lifetime.IsArchive = true;
-				}
-				else
-				{
-					this.browserDataContext.DeleteEntity (entity);
-				}
-				
-				this.browserDataContext.SaveChanges ();
-
+				this.scrollListController.Delete (entity);
 				this.SelectItem (active);
 			}
 		}
@@ -203,63 +189,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				ScrollListStyle = ScrollListStyle.Standard,
 				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
 			};
-
-			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 		}
 		
 		
 		private void CreateBrowserDataContext()
-		{
-			this.browserDataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.DataSetName));
-			this.collection         = new BrowserList (this.browserDataContext);
-
-			this.scrollList.Items.ValueConverter   = this.collection.ConvertBrowserListItemToString;
-			this.browserDataContext.EntityChanged += this.HandleDataContextEntityChanged;
-		}
-
-		private void DisposeBrowserDataContext()
-		{
-			if (this.browserDataContext != null)
-			{
-				this.browserDataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-				this.scrollList.Items.ValueConverter   = null;
-
-				this.collection.Dispose ();
-				this.data.DisposeDataContext (this.browserDataContext);
-				
-				this.collection         = null;
-				this.browserDataContext = null;
-			}
-		}
-
-		
-		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
-		{
-			if ((this.collection != null) &&
-				(this.scrollList != null))
-			{
-				this.UpdateCollection (reset: false);
-			}
-		}
-
-		private void HandleScrollListSelectedItemChanged(object sender)
-		{
-			if (this.suspendUpdates == 0)
-			{
-				this.NotifySelectedItemChange ();
-			}
-		}
-
-		
-		private void SetContentsBasedOnDataSet()
-		{
-			var component = this.data.GetComponent<DataSetGetter> ();
-			var getter = component.ResolveDataSet (this.dataSetName);
-			
-			this.SetContents (getter, component.GetRootEntityId (this.dataSetName));
-		}
-
-		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -267,26 +200,31 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.collectionGetter    = collectionGetter;
-			this.collectionEntityId  = entityId;
-			this.extractor           = null;
-			this.extractedCollection = null;
-
-			if (EntityInfo<CustomerEntity>.GetTypeId () == entityId)
-			{
-				this.extractor =
-					new EntityDataExtractor (
-						new EntityDataMetadataRecorder<CustomerEntity> ()
-							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.Name)
-							.Column (x => x.MainRelation.DefaultMailContact.StreetName)
-						.GetMetadata ());
-
-				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
-			}
-
-			this.UpdateCollection ();
+			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.dataSetName);
+			this.collection = this.scrollListController.Collection;
+			this.scrollListController.SelectedItemChange += this.HandlerScrollListControllerSelectedItemChange;
+			this.NotifySelectedItemChange ();
 		}
+
+		private void DisposeBrowserDataContext()
+		{
+			if (this.scrollListController != null)
+			{
+				this.scrollListController.SelectedItemChange -= this.HandlerScrollListControllerSelectedItemChange;
+				this.scrollListController.Dispose ();
+				this.collection = null;
+			}
+		}
+
+		private void HandlerScrollListControllerSelectedItemChange(object sender)
+		{
+			if (this.suspendUpdates == 0)
+			{
+				this.NotifySelectedItemChange ();
+			}
+		}
+		
+		
 
 		private bool SelectActiveEntity()
 		{
@@ -321,49 +259,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				this.Orchestrator.ClearActiveEntity ();
 				return false;
-			}
-		}
-
-
-		private AbstractEntity[] GetCollectionEntities()
-		{
-			if (this.collectionGetter == null)
-			{
-				return new AbstractEntity[0];
-			}
-			else
-			{
-				return this.collectionGetter (this.browserDataContext).ToArray ();
-			}
-		}
-
-		private void UpdateCollection(bool reset = true)
-		{
-			if (this.collectionGetter == null)
-			{
-				return;
-			}
-
-			if (this.extractedCollection != null)
-			{
-				this.extractor.Fill (this.GetCollectionEntities ());
-				this.collection.ClearAndAddRange (this.extractedCollection.Rows.Select (x => x.Entity));
-			}
-			else
-			{
-				this.collection.ClearAndAddRange (this.GetCollectionEntities ());
-			}
-
-			this.RefreshScrollList (reset);
-		}
-
-		private void InsertIntoCollection(AbstractEntity entity)
-		{
-			this.collection.Add (entity);
-
-			if (this.extractor != null)
-			{
-				this.extractor.Insert (entity);
 			}
 		}
 
@@ -442,26 +337,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void RefreshScrollList(bool reset = false)
-		{
-			if ((this.scrollList != null) &&
-				(this.collection != null))
-			{
-				int newCount = this.collection == null ? 0 : this.collection.Count;
-
-				int oldActive = reset ? 0 : this.collection.GetIndex (this.activeEntityKey);
-				int newActive = oldActive < newCount ? oldActive : newCount-1;
-
-				this.suspendUpdates++;
-				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (this.collection);
-				this.scrollList.SelectedItemIndex = newActive;
-				this.suspendUpdates--;
-
-				this.NotifySelectedItemChange ();
-			}
-		}
-
 
 		#region IWidgetUpdater Members
 
@@ -469,8 +344,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.collection != null)
 			{
-//				this.collection.Invalidate ();
-//				this.RefreshScrollList ();
 			}
 		}
 
@@ -488,16 +361,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				DataSetSelected;
 
 		private readonly CoreData				data;
-		
+		private BrowserScrollListController		scrollListController;
 		private BrowserList						collection;
 		private string							dataSetName;
-		private DataContext						browserDataContext;
 
-		private EntityDataExtractor             extractor;
-		private EntityDataCollection			extractedCollection;
-
-		private DataSetCollectionGetter			collectionGetter;
-		private Druid							collectionEntityId;
 		private int								suspendUpdates;
 
 		private ScrollList						scrollList;
