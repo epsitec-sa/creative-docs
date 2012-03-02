@@ -123,12 +123,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Texte unique de recherche en mode débutant.
 			get
 			{
-				return this.nodesData[0].TabsData[0].SearchText.FromText;
+				return this.nodesData[0].BeginnerSearch;
 			}
 			set
 			{
-				this.nodesData[0].TabsData[0].SearchText.FromText = value;
-				this.BeginnerAdjust (false);
+				this.nodesData[0].BeginnerSearch = value;
 			}
 		}
 
@@ -189,6 +188,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Ajuste les données après une modification en mode débutant.
 			//	Il faut supprimer les données surnuméraires, afin d'obtenir un résultat
 			//	conforme à ce qui est visible.
+
+			//	Ne conserve que la première ligne.
+			while (this.nodesData.Count > 1)
+			{
+				this.nodesData.RemoveAt (1);
+			}
+
 			this.nodesData[0].BeginnerAdjust (isFilter);
 		}
 

@@ -858,6 +858,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void SearchStartAction()
 		{
+			//	Appelé lorsque le critère de recherche a changé et qu'il faut démarrer une nouvelle recherche.
 			this.UpdateSummary ();
 			this.searchStartAction ();
 		}
