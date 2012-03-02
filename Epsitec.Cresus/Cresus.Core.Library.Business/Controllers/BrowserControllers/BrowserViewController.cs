@@ -245,11 +245,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private void SetActiveEntityKey(EntityKey? entityKey)
-		{
-			this.scrollListController.SelectedEntityKey = entityKey;
-		}
-
 		private void OnCurrentChanged()
 		{
 			this.CurrentChanged.Raise (this);

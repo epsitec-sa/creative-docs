@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Cresus.Core.Controllers.BrowserControllers;
@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var browserViewController = navigator.BrowserViewController;
 
 				browserViewController.SelectDataSet (this.dataSetName);
-				browserViewController.SetActiveEntityKey (this.entityKey);
+				browserViewController.scrollListController.SelectedEntityKey = this.entityKey;
 				browserViewController.scrollListController.RefreshScrollList ();
 				
 				return browserViewController.ReselectActiveEntity ();
