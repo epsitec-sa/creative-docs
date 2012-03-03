@@ -87,11 +87,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.Résumé)
-				{
-					field.IsReadOnly = true;
-				}
-
 				field.Box.TabIndex = ++tabIndex;
 
 				this.fieldControllers[line].Add (field);

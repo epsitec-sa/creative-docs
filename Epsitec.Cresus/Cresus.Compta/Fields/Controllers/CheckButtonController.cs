@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				return !this.InternalButton.Enable;
 			}
-			set
+			protected set
 			{
 				this.InternalButton.Enable = !value;
 			}
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				using (this.ignoreChanges.Enter ())
 				{
 					this.InternalButton.ActiveState = (this.editionData.Text == "1") ? ActiveState.Yes : ActiveState.No;
-					this.IsReadOnly = !this.editionData.Enable;
+					this.IsReadOnly = !this.editionData.Enable || !this.columnMapper.Enable;
 				}
 			}
 		}

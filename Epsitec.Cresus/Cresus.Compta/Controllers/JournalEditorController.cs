@@ -185,11 +185,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.Pièce && this.settingsList.GetBool (SettingsType.EcritureForcePièces))
-				{
-					field.IsReadOnly = true;
-				}
-
 				if (mapper.Column == ColumnType.Montant)
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
@@ -434,7 +429,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
 				}
 
-				this.SetTextFieldReadonly (ColumnType.Montant, line, totalAutomatique);
+				this.dataAccessor.GetEditionData (line, ColumnType.Montant).Enable = !totalAutomatique;
 			}
 
 			this.UpdateMultiEditionData ();

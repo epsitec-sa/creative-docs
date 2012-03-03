@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true)
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true, bool enable = true)
 		{
 			this.Column        = column;
 			this.RelativeWidth = relativeWidth;
@@ -39,6 +39,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.Show          = show;
 			this.HideForSearch = hideForSearch;
 			this.Edition       = edition;
+			this.Enable        = enable;
 		}
 
 		public ColumnType Column
@@ -84,6 +85,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public bool Edition
+		{
+			get;
+			private set;
+		}
+
+		public bool Enable
 		{
 			get;
 			private set;

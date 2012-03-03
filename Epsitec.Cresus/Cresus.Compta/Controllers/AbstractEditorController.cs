@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected bool GetTextFieldReadonly(ColumnType columnType, int line)
+		private bool GetTextFieldReadonly(ColumnType columnType, int line)
 		{
 			var controller = this.GetFieldController (columnType, line);
 
@@ -211,16 +211,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				return controller.IsReadOnly;
-			}
-		}
-
-		protected void SetTextFieldReadonly(ColumnType columnType, int line, bool readOnly)
-		{
-			var controller = this.GetFieldController (columnType, line);
-
-			if (controller != null)
-			{
-				controller.IsReadOnly = readOnly;
 			}
 		}
 

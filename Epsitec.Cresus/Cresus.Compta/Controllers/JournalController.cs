@@ -189,7 +189,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.settingsList.GetBool (SettingsType.EcriturePièces))
 				{
-					yield return new ColumnMapper (ColumnType.Pièce, 0.20, ContentAlignment.MiddleLeft, "Pièce", "Numéro de la pièce comptable correspondant à l'écriture");
+					bool enable = this.settingsList.GetBool (SettingsType.EcritureForcePièces);
+					yield return new ColumnMapper (ColumnType.Pièce, 0.20, ContentAlignment.MiddleLeft, "Pièce", "Numéro de la pièce comptable correspondant à l'écriture", enable);
 				}
 
 				yield return new ColumnMapper (ColumnType.Libellé, 0.80, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");

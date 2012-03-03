@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				return this.InternalField.IsReadOnly;
 			}
-			set
+			protected set
 			{
 				this.InternalField.IsReadOnly = value;
 				this.InternalField.Invalidate ();  // pour contourner un bug !
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				using (this.ignoreChanges.Enter ())
 				{
 					this.InternalField.FormattedText = Strings.GetStandardPassword (this.editionData.Text.ToString ());
-					this.IsReadOnly = !this.editionData.Enable;
+					this.IsReadOnly = !this.editionData.Enable || !this.columnMapper.Enable;
 					this.dirty = false;
 				}
 			}

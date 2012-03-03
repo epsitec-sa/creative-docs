@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				return false;
 			}
-			set
+			protected set
 			{
 			}
 		}
