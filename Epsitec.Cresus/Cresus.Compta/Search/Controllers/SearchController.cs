@@ -766,14 +766,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		public void SearchClear()
 		{
-			while (this.data.NodesData.Count > 1)
+			if (this.data.Specialist)
 			{
-				this.data.NodesData.RemoveAt (1);
-			}
+				while (this.data.NodesData.Count > 1)
+				{
+					this.data.NodesData.RemoveAt (1);
+				}
 
-			if (this.nodeControllers.Count != 0)
+				if (this.nodeControllers.Count != 0)
+				{
+					this.nodeControllers[0].SearchClear ();
+				}
+			}
+			else
 			{
-				this.nodeControllers[0].SearchClear ();
+				this.data.NodesData[0].TabsData[0].Clear ();
 			}
 
 			this.CreateMiddleUI ();

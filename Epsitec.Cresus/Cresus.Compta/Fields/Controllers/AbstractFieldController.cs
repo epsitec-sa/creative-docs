@@ -76,6 +76,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		public virtual bool IsReadOnly
 		{
+			//	Attention: Le setter est protégé. Pour modifier le mode IsReadOnly, il faut soit utiliser
+			//	ColumnMapper.Enable, soit EditionData.Enable.
 			get
 			{
 				return false;
