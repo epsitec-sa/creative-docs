@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
+			this.Add (new IntSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5));
 
 			//	Réglages pour les montants :
 			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits2,        SettingsEnum.DecimalDigits0, SettingsEnum.DecimalDigits1, SettingsEnum.DecimalDigits2, SettingsEnum.DecimalDigits3, SettingsEnum.DecimalDigits4, SettingsEnum.DecimalDigits5));
@@ -199,6 +200,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.errors.Clear ();
 			this.errorCount = 0;
 
+			if (this.GetInt (SettingsType.EcritureMultiEditionLineCount) < 3 ||
+				this.GetInt (SettingsType.EcritureMultiEditionLineCount) > 10)
+			{
+				this.AddError (SettingsType.EcritureMultiEditionLineCount, "Doit être compris entre 3 et 10");
+			}
+
 			if (this.GetEnum (SettingsType.PriceDecimalSeparator) == this.GetEnum (SettingsType.PriceGroupSeparator))
 			{
 				this.AddError (SettingsType.PriceDecimalSeparator, SettingsType.PriceGroupSeparator, "Mêmes séparateurs");
@@ -210,6 +217,13 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			{
 				this.AddError (SettingsType.PriceNegativeFormat, SettingsType.PriceNullParts, "Choix incompatibles");
 			}
+		}
+
+		private void AddError(SettingsType type, FormattedText message)
+		{
+			//	Ajoute une erreur à un champs.
+			this.errors.Add (type, message);
+			this.errorCount++;
 		}
 
 		private void AddError(SettingsType type1, SettingsType type2, FormattedText message)

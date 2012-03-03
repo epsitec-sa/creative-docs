@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Compta
 		EcritureAutoPièces,
 		EcriturePlusieursPièces,
 		EcritureForcePièces,
+		EcritureMultiEditionLineCount,
 
 		PriceDecimalDigits,
 		PriceDecimalSeparator,

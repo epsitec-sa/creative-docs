@@ -40,7 +40,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.linesFrames      = new List<FrameBox> ();
 			this.fieldControllers = new List<List<AbstractFieldController>> ();
 
-			this.maxLines = 5;  // une valeur impaire donne de meilleurs résultats
+			this.maxLines = this.controller.SettingsList.GetInt (SettingsType.EcritureMultiEditionLineCount).GetValueOrDefault (5);
+			this.maxLines = System.Math.Max (this.maxLines, 3);
+			this.maxLines = System.Math.Min (this.maxLines, 10);
+
+			//?this.maxLines = 5;  // une valeur impaire donne de meilleurs résultats
 		}
 
 

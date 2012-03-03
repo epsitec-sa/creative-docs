@@ -68,6 +68,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureForcePièces:
 					return "Force un numéro de pièce non modifiable";
 
+				case SettingsType.EcritureMultiEditionLineCount:
+					return "Lignes visibles d'une écriture multiple";
+
 
 				case SettingsType.PriceDecimalDigits:
 					return "Nombre de décimales";
