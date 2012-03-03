@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		private void UpdatePrice()
 		{
-			if (this.Data.SettingsList.HasError)
+			if (this.Data.SettingsList.HasError (SettingsType.PriceDecimalSeparator, SettingsType.PriceGroupSeparator, SettingsType.PriceNegativeFormat, SettingsType.PriceNullParts))
 			{
 				this.frame.BackColor = UIBuilder.ErrorColor;
 
@@ -154,7 +154,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		private void UpdateDate()
 		{
-			if (this.Data.SettingsList.HasError)
+			if (this.Data.SettingsList.HasError (SettingsType.DateSeparator, SettingsType.DateOrder, SettingsType.DateYear))
 			{
 				this.frame.BackColor = UIBuilder.ErrorColor;
 

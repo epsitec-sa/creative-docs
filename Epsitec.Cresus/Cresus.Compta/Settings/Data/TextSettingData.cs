@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	public class TextSettingData : AbstractSettingData
 	{
 		public TextSettingData(SettingsGroup group, SettingsType type, int maxLength, FormattedText defaultValue, bool skipCompareTo = false)
-			: base (group, type, skipCompareTo)
+			: base (group, type, skipCompareTo: skipCompareTo)
 		{
 			this.MaxLength = maxLength;
 			this.Value     = defaultValue;
@@ -53,6 +53,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 		public FormattedText Value
+		{
+			get;
+			set;
+		}
+
+		public FormattedText EditedValue
 		{
 			get;
 			set;

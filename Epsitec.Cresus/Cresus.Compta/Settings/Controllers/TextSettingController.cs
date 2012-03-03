@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		public TextSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
+			this.Data.EditedValue = this.Data.Value;
 		}
 
 		public override void CreateUI(Widget parent)
@@ -50,11 +51,28 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.field.TextChanged += delegate
 			{
-				this.Data.Value = this.field.FormattedText;
-				this.actionChanged ();
+				this.Data.EditedValue = this.field.FormattedText;
+				this.changedAction ();
 			};
 		}
 
+		public override void Validate()
+		{
+			if (this.data.ValidateAction != null)
+			{
+				var error = this.data.ValidateAction ();
+				if (!error.IsNullOrEmpty)
+				{
+					this.SetError (error);
+					return;
+				}
+			}
+
+			this.SetError (FormattedText.Null);
+			this.Data.Value = this.Data.EditedValue;
+		}
+
+	
 		private double PreferredWidth
 		{
 			get

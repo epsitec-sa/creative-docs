@@ -19,7 +19,6 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		public SettingsList()
 		{
 			this.settings = new Dictionary<SettingsType, AbstractSettingData> ();
-			this.errors = new Dictionary<SettingsType, FormattedText> ();
 
 			this.Initialize ();
 		}
@@ -38,26 +37,52 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
-			this.Add (new IntSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5));
+			this.Add (new IntSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5, 3, 10));
 
 			//	Réglages pour les montants :
-			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits2,        SettingsEnum.DecimalDigits0, SettingsEnum.DecimalDigits1, SettingsEnum.DecimalDigits2, SettingsEnum.DecimalDigits3, SettingsEnum.DecimalDigits4, SettingsEnum.DecimalDigits5));
-			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceDecimalSeparator, SettingsEnum.SeparatorDot,          SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
-			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceGroupSeparator,   SettingsEnum.SeparatorApostrophe,   SettingsEnum.SeparatorNone, SettingsEnum.SeparatorApostrophe, SettingsEnum.SeparatorSpace, SettingsEnum.SeparatorComma, SettingsEnum.SeparatorDot));
-			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceNullParts,        SettingsEnum.NullPartsZeroZero,     SettingsEnum.NullPartsZeroZero, SettingsEnum.NullPartsZeroDash, SettingsEnum.NullPartsDashZero, SettingsEnum.NullPartsDashDash));
-			this.Add (new EnumSettingData   (SettingsGroup.Price,   SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,         SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
-			this.Add (new SampleSettingData (SettingsGroup.Price,   SettingsType.PriceSample, this));
+			this.Add (new IntSettingData    (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    2, 0, 5));
+			this.Add (new EnumSettingData   (SettingsGroup.Price, SettingsType.PriceDecimalSeparator, SettingsEnum.SeparatorDot,        this.ValidateSeparator, SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
+			this.Add (new EnumSettingData   (SettingsGroup.Price, SettingsType.PriceGroupSeparator,   SettingsEnum.SeparatorApostrophe, this.ValidateSeparator, SettingsEnum.SeparatorNone, SettingsEnum.SeparatorApostrophe, SettingsEnum.SeparatorSpace, SettingsEnum.SeparatorComma, SettingsEnum.SeparatorDot));
+			this.Add (new EnumSettingData   (SettingsGroup.Price, SettingsType.PriceNullParts,        SettingsEnum.NullPartsZeroZero,   this.ValidateNegative,  SettingsEnum.NullPartsZeroZero, SettingsEnum.NullPartsZeroDash, SettingsEnum.NullPartsDashZero, SettingsEnum.NullPartsDashDash));
+			this.Add (new EnumSettingData   (SettingsGroup.Price, SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,       this.ValidateNegative,  SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
+			this.Add (new SampleSettingData (SettingsGroup.Price, SettingsType.PriceSample, this));
 
 			//	Réglages pour les dates :
-			this.Add (new EnumSettingData   (SettingsGroup.Date,    SettingsType.DateSeparator, SettingsEnum.SeparatorDot,   SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
-			this.Add (new EnumSettingData   (SettingsGroup.Date,    SettingsType.DateYear,      SettingsEnum.YearDigits4,    SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));
-			this.Add (new EnumSettingData   (SettingsGroup.Date,    SettingsType.DateOrder,     SettingsEnum.YearDMY,        SettingsEnum.YearDMY, SettingsEnum.YearYMD));
-			this.Add (new SampleSettingData (SettingsGroup.Date,    SettingsType.DateSample, this));
+			this.Add (new EnumSettingData   (SettingsGroup.Date, SettingsType.DateSeparator, SettingsEnum.SeparatorDot, null, SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
+			this.Add (new EnumSettingData   (SettingsGroup.Date, SettingsType.DateYear,      SettingsEnum.YearDigits4,  null, SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));
+			this.Add (new EnumSettingData   (SettingsGroup.Date, SettingsType.DateOrder,     SettingsEnum.YearDMY,      null, SettingsEnum.YearDMY, SettingsEnum.YearYMD));
+			this.Add (new SampleSettingData (SettingsGroup.Date, SettingsType.DateSample, this));
 		}
 
 		private void Add(AbstractSettingData data)
 		{
 			this.settings.Add (data.Type, data);
+		}
+
+		private FormattedText ValidateSeparator()
+		{
+			if (this.GetEditedEnum (SettingsType.PriceDecimalSeparator) == this.GetEditedEnum (SettingsType.PriceGroupSeparator))
+			{
+				return "Mêmes séparateurs";
+			}
+			else
+			{
+				return FormattedText.Null;
+			}
+		}
+
+		private FormattedText ValidateNegative()
+		{
+			if (this.GetEditedEnum (SettingsType.PriceNegativeFormat) == SettingsEnum.NegativeMinus &&
+				(this.GetEditedEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashZero ||
+				 this.GetEditedEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashDash))
+			{
+				return "Choix incompatibles";
+			}
+			else
+			{
+				return FormattedText.Null;
+			}
 		}
 
 
@@ -67,6 +92,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			{
 				return this.settings.Values;
 			}
+		}
+
+		public AbstractSettingData GetSettingData(SettingsType type)
+		{
+			return this.settings[type];
 		}
 
 
@@ -139,6 +169,19 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
+		private SettingsEnum GetEditedEnum(SettingsType type)
+		{
+			AbstractSettingData data;
+			if (this.settings.TryGetValue (type, out data))
+			{
+				return (data as EnumSettingData).EditedValue;
+			}
+			else
+			{
+				return SettingsEnum.Unknown;
+			}
+		}
+
 		public SettingsEnum GetEnum(SettingsType type)
 		{
 			AbstractSettingData data;
@@ -159,6 +202,36 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			{
 				(data as EnumSettingData).Value = value;
 			}
+		}
+
+
+		public bool IsOk
+		{
+			get
+			{
+				return !this.settings.Values.Where (x => x.HasError).Any ();
+			}
+		}
+
+		public int ErrorCount
+		{
+			get
+			{
+				return this.settings.Values.Where (x => x.HasError).Count ();
+			}
+		}
+
+		public bool HasError(params SettingsType[] types)
+		{
+			foreach (var setting in this.settings.Values)
+			{
+				if (setting.HasError && types.Contains (setting.Type))
+				{
+					return true;
+				}
+			}
+
+			return false;
 		}
 
 
@@ -194,82 +267,6 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 
-		public void Validate()
-		{
-			//	Vérifie la cohérence de l'ensemble des réglages.
-			this.errors.Clear ();
-			this.errorCount = 0;
-
-			if (this.GetInt (SettingsType.EcritureMultiEditionLineCount) < 3 ||
-				this.GetInt (SettingsType.EcritureMultiEditionLineCount) > 10)
-			{
-				this.AddError (SettingsType.EcritureMultiEditionLineCount, "Doit être compris entre 3 et 10");
-			}
-
-			if (this.GetEnum (SettingsType.PriceDecimalSeparator) == this.GetEnum (SettingsType.PriceGroupSeparator))
-			{
-				this.AddError (SettingsType.PriceDecimalSeparator, SettingsType.PriceGroupSeparator, "Mêmes séparateurs");
-			}
-
-			if (this.GetEnum (SettingsType.PriceNegativeFormat) == SettingsEnum.NegativeMinus &&
-				(this.GetEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashZero ||
-				 this.GetEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashDash))
-			{
-				this.AddError (SettingsType.PriceNegativeFormat, SettingsType.PriceNullParts, "Choix incompatibles");
-			}
-		}
-
-		private void AddError(SettingsType type, FormattedText message)
-		{
-			//	Ajoute une erreur à un champs.
-			this.errors.Add (type, message);
-			this.errorCount++;
-		}
-
-		private void AddError(SettingsType type1, SettingsType type2, FormattedText message)
-		{
-			//	Ajoute une erreur à deux champs.
-			this.errors.Add (type1, message);
-			this.errors.Add (type2, message);
-
-			this.errorCount++;  // on ne la compte que comme une seule erreur
-		}
-
-		public bool HasError
-		{
-			get
-			{
-				return this.errorCount != 0;
-			}
-		}
-
-		public int ErrorCount
-		{
-			get
-			{
-				return this.errorCount;
-			}
-		}
-
-		public FormattedText GetError(SettingsType type)
-		{
-			//	Retourne l'erreur éventuelle liée à un réglage.
-			FormattedText error;
-
-			if (errors.TryGetValue (type, out error))
-			{
-				return error;
-			}
-			else
-			{
-				return FormattedText.Null;
-			}
-		}
-
-
 		private readonly Dictionary<SettingsType, AbstractSettingData>		settings;
-		private readonly Dictionary<SettingsType, FormattedText>			errors;
-
-		private int errorCount;
 	}
 }

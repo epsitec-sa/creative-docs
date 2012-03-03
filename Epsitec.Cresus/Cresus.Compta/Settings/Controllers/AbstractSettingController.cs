@@ -19,10 +19,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 {
 	public abstract class AbstractSettingController
 	{
-		public AbstractSettingController(AbstractSettingData data, System.Action actionChanged)
+		public AbstractSettingController(AbstractSettingData data, System.Action changedAction)
 		{
-			this.data = data;
-			this.actionChanged = actionChanged;
+			this.data           = data;
+			this.changedAction  = changedAction;
 		}
 
 		public virtual void CreateUI(Widget parent)
@@ -41,31 +41,22 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			}
 		}
 
-		public bool HasError
+
+		public virtual void Validate()
 		{
-			get
-			{
-				return !this.error.IsNullOrEmpty;
-			}
 		}
 
-		public void SetError(FormattedText error)
-		{
-			if (this.error != error)
-			{
-				this.error = error;
-				this.UpdateError ();
-			}
-		}
 
-		private void UpdateError()
+		protected void SetError(FormattedText error)
 		{
+			this.data.SetError (error);
+
 			if (this.errorField != null)
 			{
-				if (this.HasError)
+				if (this.data.HasError)
 				{
 					this.errorField.BackColor = UIBuilder.ErrorColor;
-					this.errorField.FormattedText = "  " + this.error;
+					this.errorField.FormattedText = "  " + this.data.Error;
 				}
 				else
 				{
@@ -104,11 +95,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 		protected readonly static int labelWidth = 210;
 
-		protected readonly AbstractSettingData		data;
-		protected readonly System.Action			actionChanged;
+		protected readonly AbstractSettingData			data;
+		protected readonly System.Action				changedAction;
 
-		protected FormattedText						error;
-		protected StaticText						errorField;
-		protected int								tabIndex;
+		protected StaticText							errorField;
+		protected int									tabIndex;
 	}
 }

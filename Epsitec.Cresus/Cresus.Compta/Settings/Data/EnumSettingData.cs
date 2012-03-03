@@ -16,8 +16,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class EnumSettingData : AbstractSettingData
 	{
-		public EnumSettingData(SettingsGroup group, SettingsType type, SettingsEnum defaultValue, params SettingsEnum[] enums)
-			: base (group, type)
+		public EnumSettingData(SettingsGroup group, SettingsType type, SettingsEnum defaultValue, System.Func<FormattedText> validateAction, params SettingsEnum[] enums)
+			: base (group, type, validateAction)
 		{
 			this.Value = defaultValue;
 			this.enums = enums;
@@ -40,6 +40,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 		public SettingsEnum Value
+		{
+			get;
+			set;
+		}
+
+		public SettingsEnum EditedValue
 		{
 			get;
 			set;

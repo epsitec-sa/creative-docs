@@ -43,5 +43,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			get;
 			set;
 		}
+
+		public bool EditedValue
+		{
+			get;
+			set;
+		}
 	}
 }

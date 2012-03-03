@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static decimal? ParseMontant(string text)
 		{
-			//	Parse un montant en francs.
+			//	Parse un montant en francs, selon les réglages.
 			if (string.IsNullOrEmpty (text))
 			{
 				return null;
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 
 			if (Converters.numberFormatNullParts != SettingsEnum.NullPartsDashZero &&
-				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret ?
+				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret si zéro ?
 			{
 				if (text.StartsWith ("-"))
 				{
@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string MontantToString(decimal? montant)
 		{
+			//	Conversion d'un montant en francs en chaîne, selon les réglages.
 			if (montant.HasValue)
 			{
 				bool neg = false;
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				string s = montant.Value.ToString ("C", Converters.numberFormatMontant);
 
 				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
-					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret ?
+					Converters.numberFormatNullParts == SettingsEnum.NullPartsDashDash)  // commence par un tiret si zéro ?
 				{
 					string pattern = "0" + Converters.numberFormatMontant.CurrencyDecimalSeparator;  // "0."
 					if (s.StartsWith (pattern))
@@ -1004,7 +1005,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static void ExportSettings(SettingsList settingsList)
 		{
 			//	Converters -> Settings
-			settingsList.SetEnum (SettingsType.PriceDecimalDigits,    SettingsEnum.DecimalDigits0 + Converters.numberFormatMontant.CurrencyDecimalDigits);
+			settingsList.SetInt  (SettingsType.PriceDecimalDigits,    Converters.numberFormatMontant.CurrencyDecimalDigits);
 			settingsList.SetEnum (SettingsType.PriceDecimalSeparator, Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyDecimalSeparator));
 			settingsList.SetEnum (SettingsType.PriceGroupSeparator,   Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyGroupSeparator));
 			settingsList.SetEnum (SettingsType.PriceNullParts,        Converters.numberFormatNullParts);
@@ -1021,10 +1022,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Settings -> Converters
 			SettingsEnum e;
 
-			e = settingsList.GetEnum (SettingsType.PriceDecimalDigits);
-			if (e >= SettingsEnum.DecimalDigits0 && e <= SettingsEnum.DecimalDigits5)
+			int? i = settingsList.GetInt (SettingsType.PriceDecimalDigits);
+			if (i.HasValue)
 			{
-				Converters.numberFormatMontant.CurrencyDecimalDigits = e - SettingsEnum.DecimalDigits0;
+				Converters.numberFormatMontant.CurrencyDecimalDigits = i.Value;
 			}
 
 			e = settingsList.GetEnum (SettingsType.PriceDecimalSeparator);
@@ -1052,6 +1053,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		static Converters()
 		{
+			//	Constructeur statique.
 			Converters.numberFormatMontant = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
 
 			Converters.numberFormatMontant.CurrencySymbol           = "";

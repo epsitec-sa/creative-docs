@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "Force un numéro de pièce non modifiable";
 
 				case SettingsType.EcritureMultiEditionLineCount:
-					return "Lignes visibles d'une écriture multiple";
+					return "Nb lignes éditables d'une écriture multiple";
 
 
 				case SettingsType.PriceDecimalDigits:
@@ -114,30 +114,11 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			switch (type)
 			{
-				case SettingsEnum.DecimalDigits0:
-					return "0";
-
-				case SettingsEnum.DecimalDigits1:
-					return "1";
-
-				case SettingsEnum.DecimalDigits2:
-					return "2";
-
-				case SettingsEnum.DecimalDigits3:
-					return "3";
-
-				case SettingsEnum.DecimalDigits4:
-					return "4";
-
-				case SettingsEnum.DecimalDigits5:
-					return "5";
-
-
 				case SettingsEnum.YearDigits2:
-					return "2";
+					return string.Format ("2 ({0})", (Date.Today.Year%100).ToString ());
 
 				case SettingsEnum.YearDigits4:
-					return "4";
+					return string.Format ("4 ({0})", Date.Today.Year.ToString ());
 
 
 				case SettingsEnum.YearDMY:

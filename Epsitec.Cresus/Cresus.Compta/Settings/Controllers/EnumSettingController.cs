@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		public EnumSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
+			this.Data.EditedValue = this.Data.Value;
 		}
 
 		public override void CreateUI(Widget parent)
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			this.field.SelectedItemChanged += delegate
 			{
 				this.UpdateValue (this.field.SelectedItemIndex);
-				this.actionChanged ();
+				this.changedAction ();
 			};
 		}
 
@@ -74,10 +75,27 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		{
 			if (sel >= 0 && sel < this.Data.Enum.Count ())
 			{
-				this.Data.Value = this.Data.Enum.ElementAt (sel);
+				this.Data.EditedValue = this.Data.Enum.ElementAt (sel);
 			}
 		}
 
+		public override void Validate()
+		{
+			if (this.data.ValidateAction != null)
+			{
+				var error = this.data.ValidateAction ();
+				if (!error.IsNullOrEmpty)
+				{
+					this.SetError (error);
+					return;
+				}
+			}
+
+			this.SetError (FormattedText.Null);
+			this.Data.Value = this.Data.EditedValue;
+		}
+
+	
 		private EnumSettingData Data
 		{
 			get

@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		public IntSettingsController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
+			this.Data.EditedValue = this.Data.Value;
 		}
 
 		public override void CreateUI(Widget parent)
@@ -53,10 +54,42 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				int? i = Converters.ParseInt (this.field.FormattedText);
 				if (i.HasValue)
 				{
-					this.Data.Value = i.Value;
-					this.actionChanged ();
+					this.Data.EditedValue = i.Value;
 				}
+				else
+				{
+					this.Data.EditedValue = -1;
+				}
+
+				this.changedAction ();
 			};
+		}
+
+		public override void Validate()
+		{
+			if (this.data.ValidateAction != null)
+			{
+				var error = this.data.ValidateAction ();
+				if (!error.IsNullOrEmpty)
+				{
+					this.SetError (error);
+					return;
+				}
+			}
+
+			if (this.Data.EditedValue == -1)
+			{
+				this.SetError ("Ce n'est pas un nombre");
+			}
+			else if (this.Data.EditedValue < this.Data.MinValue || this.Data.EditedValue > this.Data.MaxValue)
+			{
+				this.SetError (string.Format ("Doit être compris entre {0} et {1}", this.Data.MinValue.ToString (), this.Data.MaxValue.ToString ()));
+			}
+			else
+			{
+				this.SetError (FormattedText.Null);
+				this.Data.Value = this.Data.EditedValue;
+			}
 		}
 
 

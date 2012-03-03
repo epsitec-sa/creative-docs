@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 		public BoolSettingController(AbstractSettingData data, System.Action actionChanged)
 			: base (data, actionChanged)
 		{
+			this.Data.EditedValue = this.Data.Value;
 		}
 
 		public override void CreateUI(Widget parent)
@@ -48,9 +49,25 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 			this.button.ActiveStateChanged += delegate
 			{
-				this.Data.Value = (this.button.ActiveState == ActiveState.Yes);
-				this.actionChanged ();
+				this.Data.EditedValue = (this.button.ActiveState == ActiveState.Yes);
+				this.changedAction ();
 			};
+		}
+
+		public override void Validate()
+		{
+			if (this.data.ValidateAction != null)
+			{
+				var error = this.data.ValidateAction ();
+				if (!error.IsNullOrEmpty)
+				{
+					this.SetError (error);
+					return;
+				}
+			}
+
+			this.SetError (FormattedText.Null);
+			this.Data.Value = this.Data.EditedValue;
 		}
 
 

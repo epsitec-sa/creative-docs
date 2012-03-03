@@ -16,11 +16,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public abstract class AbstractSettingData
 	{
-		public AbstractSettingData(SettingsGroup group, SettingsType type, bool skipCompareTo = false)
+		public AbstractSettingData(SettingsGroup group, SettingsType type, System.Func<FormattedText> validateAction = null, bool skipCompareTo = false)
 		{
-			this.Group         = group;
-			this.Type          = type;
-			this.SkipCompareTo = skipCompareTo;
+			this.Group          = group;
+			this.Type           = type;
+			this.ValidateAction = validateAction;
+			this.SkipCompareTo  = skipCompareTo;
+
+			this.error = FormattedText.Null;
 		}
 
 		public SettingsGroup Group
@@ -30,6 +33,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		}
 
 		public SettingsType Type
+		{
+			get;
+			private set;
+		}
+
+		public System.Func<FormattedText> ValidateAction
 		{
 			get;
 			private set;
@@ -49,5 +58,30 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		public virtual void CopyFrom(AbstractSettingData other)
 		{
 		}
+
+
+		public bool HasError
+		{
+			get
+			{
+				return !this.error.IsNullOrEmpty;
+			}
+		}
+
+		public void SetError(FormattedText error)
+		{
+			this.error = error;
+		}
+
+		public FormattedText Error
+		{
+			get
+			{
+				return this.error;
+			}
+		}
+
+
+		protected FormattedText						error;
 	}
 }

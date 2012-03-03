@@ -16,10 +16,12 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 	/// </summary>
 	public class IntSettingData : AbstractSettingData
 	{
-		public IntSettingData(SettingsGroup group, SettingsType type, int defaultValue)
+		public IntSettingData(SettingsGroup group, SettingsType type, int defaultValue, int minValue, int maxValue)
 			: base (group, type)
 		{
-			this.Value = defaultValue;
+			this.Value    = defaultValue;
+			this.MinValue = minValue;
+			this.MaxValue = maxValue;
 		}
 
 		public IntSettingData(SettingsGroup group, SettingsType type)
@@ -42,6 +44,24 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 			get;
 			set;
+		}
+
+		public int EditedValue
+		{
+			get;
+			set;
+		}
+
+		public int MinValue
+		{
+			get;
+			private set;
+		}
+
+		public int MaxValue
+		{
+			get;
+			private set;
 		}
 	}
 }

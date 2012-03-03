@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CloseSettings()
 		{
-			if (!this.settingsList.HasError)
+			if (this.settingsList.IsOk)
 			{
 				this.compta.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
 				this.compta.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
@@ -348,12 +348,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void Validate()
 		{
-			this.settingsList.Validate ();
-
-			foreach (var controller in this.controllers)
-			{
-				controller.SetError (this.settingsList.GetError (controller.Type));
-			}
+			this.UpdateError ();
 
 			int count = this.settingsList.ErrorCount;
 			if (count == 0)  // ok ?
@@ -365,6 +360,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.infoFrame.BackColor = UIBuilder.ErrorColor;
 				this.infoField.Text = string.Format ("Il y a {0} erreur{1}", count.ToString (), (count == 1)?"":"s");
+			}
+		}
+
+		private void UpdateError()
+		{
+			foreach (var controller in this.controllers)
+			{
+				controller.Validate ();
 			}
 		}
 

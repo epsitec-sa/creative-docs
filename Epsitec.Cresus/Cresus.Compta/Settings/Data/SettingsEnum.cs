@@ -12,13 +12,6 @@ namespace Epsitec.Cresus.Compta
 	{
 		Unknown,
 
-		DecimalDigits0,
-		DecimalDigits1,
-		DecimalDigits2,
-		DecimalDigits3,
-		DecimalDigits4,
-		DecimalDigits5,
-
 		YearDigits2,
 		YearDigits4,
 
