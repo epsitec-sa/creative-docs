@@ -83,6 +83,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				using (this.ignoreChanges.Enter ())
 				{
 					this.InternalButton.ActiveState = (this.editionData.Text == "1") ? ActiveState.Yes : ActiveState.No;
+					this.IsReadOnly = !this.editionData.Enable;
 				}
 			}
 		}

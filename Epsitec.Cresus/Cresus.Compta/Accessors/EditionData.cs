@@ -24,6 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.compta  = this.controller.ComptaEntity;
 			this.période = this.controller.PériodeEntity;
+
+			this.Enable = true;
 		}
 
 
@@ -34,6 +36,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.validateAction (this);
 			}
+		}
+
+
+		public bool Enable
+		{
+			set;
+			get;
 		}
 
 

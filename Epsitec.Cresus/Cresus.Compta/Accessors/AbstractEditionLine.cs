@@ -62,6 +62,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public void SetEnable(ColumnType columnType, bool enable)
+		{
+			if (!this.dataDict.ContainsKey (columnType))
+			{
+				this.dataDict.Add (columnType, new EditionData (this.controller));
+			}
+
+			this.dataDict[columnType].Enable = enable;
+		}
+
+		public bool GetEnable(ColumnType columnType)
+		{
+			if (this.dataDict.ContainsKey (columnType))
+			{
+				return this.dataDict[columnType].Enable;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
 		protected void SetMontant(ColumnType columnType, decimal? value)
 		{
 			this.SetText (columnType, Converters.MontantToString (value));

@@ -90,6 +90,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				using (this.ignoreChanges.Enter ())
 				{
 					this.InternalField.FormattedText = Strings.GetStandardPassword (this.editionData.Text.ToString ());
+					this.IsReadOnly = !this.editionData.Enable;
 					this.dirty = false;
 				}
 			}

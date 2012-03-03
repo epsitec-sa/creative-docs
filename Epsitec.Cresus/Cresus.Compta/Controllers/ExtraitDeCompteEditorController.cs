@@ -60,14 +60,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 				field.CreateUI (editorFrame);
 
-				if (mapper.Column == ColumnType.Solde          ||
-					mapper.Column == ColumnType.SoldeGraphique ||
-					mapper.Column == ColumnType.Journal        )
-				{
-					//?field.IsReadOnly = true;
-					field.Box.Visibility = false;
-				}
-
 				if (mapper.Column == ColumnType.Débit ||
 					mapper.Column == ColumnType.Crédit)
 				{

@@ -102,6 +102,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				using (this.ignoreChanges.Enter ())
 				{
 					this.InternalField.SetSilentFormattedText (this.editionData.Text);
+					this.IsReadOnly = !this.editionData.Enable;
 				}
 			}
 		}

@@ -40,6 +40,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
+			if (!data.Enable)
+			{
+				return;  // toujours ok si disable
+			}
+
 			if (data.HasText)
 			{
 				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
@@ -73,7 +78,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateMontant(EditionData data)
 		{
 			data.ClearError ();
-			return; //?
+
+			if (!data.Enable)
+			{
+				return;  // toujours ok si disable
+			}
 
 			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
 				data.Text == Converters.MontantToString (0))  // montant nul ?
@@ -89,6 +98,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractData data)
 		{
+			//	ExtraitDeCompteData/ComptaEcritureEntity -> EditionData
 			var extrait = data as ExtraitDeCompteData;
 			var écriture = data.Entity as ComptaEcritureEntity;
 
@@ -100,16 +110,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.SetText (ColumnType.CP,    JournalDataAccessor.GetNuméro (écriture.Crédit));
 				this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
+
+				this.SetEnable (ColumnType.CP,     écriture.Crédit != null);
+				this.SetEnable (ColumnType.Débit,  true);
+				this.SetEnable (ColumnType.Crédit, false);
 			}
 			else
 			{
 				this.SetText (ColumnType.CP,     JournalDataAccessor.GetNuméro (écriture.Débit));
 				this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant));
+
+				this.SetEnable (ColumnType.CP,     écriture.Débit != null);
+				this.SetEnable (ColumnType.Débit,  false);
+				this.SetEnable (ColumnType.Crédit, true);
 			}
 		}
 
 		public override void DataToEntity(AbstractData data)
 		{
+			//	EditionData -> ExtraitDeCompteData/ComptaEcritureEntity
 			var extrait = data as ExtraitDeCompteData;
 			var écriture = data.Entity as ComptaEcritureEntity;
 
@@ -138,6 +157,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void EcritureToData(ComptaEcritureEntity écriture, ExtraitDeCompteData extrait)
 		{
+			//	ComptaEcritureEntity -> ExtraitDeCompteData
 			extrait.Date    = écriture.Date;
 			extrait.Pièce   = écriture.Pièce;
 			extrait.Libellé = écriture.Libellé;
