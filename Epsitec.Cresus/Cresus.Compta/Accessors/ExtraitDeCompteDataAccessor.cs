@@ -138,6 +138,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void UpdateSoldes()
 		{
+			//	Met à jour l'évolution du solde du compte, visible dans la colonne 'Solde'.
 			this.MinMaxClear ();
 
 			FormattedText numéroCompte = this.Permanents.NuméroCompte;
@@ -309,9 +310,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var data = this.readonlyData[row];
 			var écriture = data.Entity as ComptaEcritureEntity;
 			var initialDate    = écriture.Date;
+			var initialPièce   = écriture.Pièce;
 			var initialMontant = écriture.Montant;
 
 			this.editionLine[0].DataToEntity (data);
+
+			if (écriture.MultiId != 0)  // écriture multiple ?
+			{
+				if (écriture.Date != initialDate)  // changement de date ?
+				{
+					this.UpdateMultiDate (écriture);
+				}
+
+				if (écriture.Pièce != initialPièce && !this.PlusieursPièces)  // changement de pièce ?
+				{
+					this.UpdateMultiPièce (écriture);
+				}
+
+				if (écriture.Montant != initialMontant)  // changement de montant ?
+				{
+					this.UpdateMultiMontant (écriture);
+				}
+			}
 
 			if (écriture.Date != initialDate)  // changement de date ?
 			{
@@ -321,6 +341,45 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (écriture.Montant != initialMontant)  // changement de montant ?
 			{
 				this.UpdateSoldes ();
+			}
+		}
+
+		private void UpdateMultiDate(ComptaEcritureEntity source)
+		{
+			foreach (var écriture in this.période.Journal.Where (x => x.MultiId == source.MultiId))
+			{
+				écriture.Date = source.Date;
+			}
+		}
+
+		private void UpdateMultiPièce(ComptaEcritureEntity source)
+		{
+			foreach (var écriture in this.période.Journal.Where (x => x.MultiId == source.MultiId))
+			{
+				écriture.Pièce = source.Pièce;
+			}
+		}
+
+		private void UpdateMultiMontant(ComptaEcritureEntity source)
+		{
+			decimal total = 0;
+			ComptaEcritureEntity auto = null;
+
+			foreach (var écriture in this.période.Journal.Where (x => x.MultiId == source.MultiId))
+			{
+				if (écriture.TotalAutomatique)
+				{
+					auto = écriture;
+				}
+				else
+				{
+					total += écriture.Montant;
+				}
+			}
+
+			if (auto != null)
+			{
+				auto.Montant = total;
 			}
 		}
 
@@ -368,6 +427,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			return false;
+		}
+
+		private bool PlusieursPièces
+		{
+			//	Retourne true si les écritures multiples peuvent avoir une pièce par ligne.
+			get
+			{
+				return this.controller.SettingsList.GetBool (SettingsType.EcriturePlusieursPièces);
+			}
 		}
 
 	}
