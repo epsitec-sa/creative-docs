@@ -40,6 +40,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public System.Func<FormattedText> ValidateAction
 		{
+			//	Valide le réglage et retourne un éventuel message d'erreur.
+			//	On l'utilise pour valider les réglages qui dépendent d'autres réglages.
 			get;
 			private set;
 		}

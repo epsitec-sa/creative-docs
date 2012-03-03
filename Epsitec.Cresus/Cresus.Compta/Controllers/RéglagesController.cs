@@ -115,13 +115,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CloseSettings()
 		{
-			if (this.settingsList.IsOk)
-			{
-				this.compta.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
-				this.compta.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
+			this.compta.Nom         = this.settingsList.GetText (SettingsType.GlobalTitre);
+			this.compta.Description = this.settingsList.GetText (SettingsType.GlobalDescription);
 
-				Converters.ImportSettings (this.settingsList);
-			}
+			Converters.ImportSettings (this.settingsList);
 		}
 
 
@@ -348,7 +345,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void Validate()
 		{
-			this.UpdateError ();
+			//	Valide tous les contrôleurs de la page actuelle. Les autres réglages n'ont pas besoin
+			//	d'être validés, car ils sont forcément ok.
+			foreach (var controller in this.controllers)
+			{
+				controller.Validate ();
+			}
 
 			int count = this.settingsList.ErrorCount;
 			if (count == 0)  // ok ?
@@ -360,14 +362,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.infoFrame.BackColor = UIBuilder.ErrorColor;
 				this.infoField.Text = string.Format ("Il y a {0} erreur{1}", count.ToString (), (count == 1)?"":"s");
-			}
-		}
-
-		private void UpdateError()
-		{
-			foreach (var controller in this.controllers)
-			{
-				controller.Validate ();
 			}
 		}
 

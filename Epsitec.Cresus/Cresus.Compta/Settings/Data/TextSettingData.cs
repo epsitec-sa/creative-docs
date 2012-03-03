@@ -54,12 +54,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public FormattedText Value
 		{
+			//	Valeur finale, forcément valide.
 			get;
 			set;
 		}
 
 		public FormattedText EditedValue
 		{
+			//	Valeur en édition, pouvant être invalide.
 			get;
 			set;
 		}

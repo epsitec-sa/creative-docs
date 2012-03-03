@@ -41,12 +41,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public SettingsEnum Value
 		{
+			//	Valeur finale, forcément valide.
 			get;
 			set;
 		}
 
 		public SettingsEnum EditedValue
 		{
+			//	Valeur en édition, pouvant être invalide.
 			get;
 			set;
 		}

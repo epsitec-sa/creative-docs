@@ -42,12 +42,14 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		public int Value
 		{
+			//	Valeur finale, forcément valide.
 			get;
 			set;
 		}
 
 		public int EditedValue
 		{
+			//	Valeur en édition, pouvant être invalide.
 			get;
 			set;
 		}
