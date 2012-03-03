@@ -32,13 +32,31 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return null;
 			}
 
+			decimal neg = 1;
+			
+			if (text.StartsWith ("("))
+			{
+				neg = -1;
+				text = text.Substring (1).Replace (")", "");
+			}
+
+			if (Converters.numberFormatNullParts != SettingsEnum.NullPartsDashZero &&
+				Converters.numberFormatNullParts != SettingsEnum.NullPartsDashDash)  // ne commence pas par un tiret ?
+			{
+				if (text.StartsWith ("-"))
+				{
+					neg = -1;
+					text = text.Substring (1);
+				}
+			}
+			
 			text = text.Replace ("-", "0");
 			text = text.Replace ("—", "0");
 
 			decimal d;
 			if (decimal.TryParse (text, out d))
 			{
-				return d;
+				return d*neg;
 			}
 
 			return null;
@@ -48,6 +66,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (montant.HasValue)
 			{
+				bool neg = false;
+				if (montant < 0)
+				{
+					neg = true;
+					montant = -montant;
+				}
+
 				string s = montant.Value.ToString ("C", Converters.numberFormatMontant);
 
 				if (Converters.numberFormatNullParts == SettingsEnum.NullPartsDashZero ||
@@ -67,6 +92,18 @@ namespace Epsitec.Cresus.Compta.Helpers
 					if (s.EndsWith (pattern))
 					{
 						s = s.Substring (0, s.Length-pattern.Length+1) + "—";  // tiret long
+					}
+				}
+
+				if (neg)
+				{
+					if (Converters.numberFormatNegative == SettingsEnum.NegativeParentheses)
+					{
+						s = "(" + s + ")";
+					}
+					else
+					{
+						s = "-" + s;
 					}
 				}
 
@@ -971,15 +1008,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			settingsList.SetEnum (SettingsType.PriceDecimalSeparator, Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyDecimalSeparator));
 			settingsList.SetEnum (SettingsType.PriceGroupSeparator,   Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyGroupSeparator));
 			settingsList.SetEnum (SettingsType.PriceNullParts,        Converters.numberFormatNullParts);
-
-			if (Converters.numberFormatMontant.CurrencyNegativePattern == 1)
-			{
-				settingsList.SetEnum (SettingsType.PriceNegativeFormat, SettingsEnum.NegativeMinus);
-			}
-			if (Converters.numberFormatMontant.CurrencyNegativePattern == 0)
-			{
-				settingsList.SetEnum (SettingsType.PriceNegativeFormat, SettingsEnum.NegativeParentheses);
-			}
+			settingsList.SetEnum (SettingsType.PriceNegativeFormat,   Converters.numberFormatNegative);
 
 			//	Dates.
 			settingsList.SetEnum (SettingsType.DateSeparator, Converters.dateFormatSeparator);
@@ -1011,16 +1040,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 
 			Converters.numberFormatNullParts = settingsList.GetEnum (SettingsType.PriceNullParts);
-
-			e = settingsList.GetEnum (SettingsType.PriceNegativeFormat);
-			if (e == SettingsEnum.NegativeMinus)
-			{
-				Converters.numberFormatMontant.CurrencyNegativePattern = 1;  // -$
-			}
-			if (e == SettingsEnum.NegativeParentheses)
-			{
-				Converters.numberFormatMontant.CurrencyNegativePattern = 0;  // ($n)
-			}
+			Converters.numberFormatNegative  = settingsList.GetEnum (SettingsType.PriceNegativeFormat);
 
 			//	Dates.
 			Converters.dateFormatSeparator = settingsList.GetEnum (SettingsType.DateSeparator);
@@ -1046,6 +1066,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
 
 		private static SettingsEnum numberFormatNullParts = SettingsEnum.NullPartsZeroZero;
+		private static SettingsEnum numberFormatNegative  = SettingsEnum.NegativeMinus;
 		private static SettingsEnum dateFormatSeparator   = SettingsEnum.SeparatorDot;
 		private static SettingsEnum dateFormatYear        = SettingsEnum.YearDigits4;
 		private static SettingsEnum dateFormatOrder       = SettingsEnum.YearDMY;
