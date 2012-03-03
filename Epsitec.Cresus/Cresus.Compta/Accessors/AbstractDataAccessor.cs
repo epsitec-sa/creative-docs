@@ -292,6 +292,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual int GetIndexOf(AbstractEntity entity)
 		{
+			for (int i=0; i<this.readonlyData.Count; i++)
+			{
+				var data = this.readonlyData[i];
+
+				if (data.Entity == entity)
+				{
+					return i;
+				}
+			}
+
 			return -1;
 		}
 

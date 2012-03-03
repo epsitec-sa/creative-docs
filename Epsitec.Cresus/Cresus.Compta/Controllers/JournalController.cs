@@ -148,12 +148,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (écriture != null)
 			{
-				this.PutContextMenuExtrait (menu, écriture.Débit);
-				this.PutContextMenuExtrait (menu, écriture.Crédit);
+				this.PutContextMenuExtrait (menu, écriture, écriture.Débit);
+				this.PutContextMenuExtrait (menu, écriture, écriture.Crédit);
 			}
 		}
 
-		private void PutContextMenuExtrait(VMenu menu, ComptaCompteEntity compte)
+		private void PutContextMenuExtrait(VMenu menu, ComptaEcritureEntity écriture, ComptaCompteEntity compte)
 		{
 			if (compte != null)
 			{
@@ -167,6 +167,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 					permanent.NuméroCompte = compte.Numéro;
 
 					présentation.UpdateAfterChanged ();
+
+					int row = (présentation.DataAccessor as ExtraitDeCompteDataAccessor).GetIndexOf (écriture);
+					if (row != -1)
+					{
+						présentation.SelectedArrayLine = row;
+					}
 				};
 			}
 		}
