@@ -653,8 +653,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private int GetSortedRow(Date date, bool global = false)
 		{
-			var journal = this.GetJournal (global);
+			return JournalDataAccessor.GetSortedRow (this.GetJournal (global), date);
+		}
 
+		public static int GetSortedRow(IList<ComptaEcritureEntity> journal, Date date)
+		{
 #if false
 			for (int row = count-1; row >= 0; row--)
             {
@@ -731,16 +734,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ExploreMulti(int row, out int firstRow, out int countRow)
 		{
+			JournalDataAccessor.ExploreMulti (this.journal, row, out firstRow, out countRow);
+		}
+
+		public static void ExploreMulti(IList<ComptaEcritureEntity> journal, int row, out int firstRow, out int countRow)
+		{
 			//	A partir d'une ligne quelconque d'une écriture multiple, retourne la première et le nombre (1..n).
 			firstRow = row;
 			countRow = 1;
 
-			if (row < 0 || row >= this.journal.Count)  // garde-fou
+			if (row < 0 || row >= journal.Count)  // garde-fou
 			{
 				return;
 			}
 
-			var écriture = this.journal[row];
+			var écriture = journal[row];
 
 			if (écriture == null)
 			{
@@ -756,7 +764,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			while (row > 0)
 			{
-				écriture = this.journal[--row];
+				écriture = journal[--row];
 
 				if (écriture.MultiId != multiId)
 				{
@@ -768,9 +776,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			countRow = 0;
-			while (row < this.Count)
+			while (row < journal.Count)
 			{
-				écriture = this.journal[row++];
+				écriture = journal[row++];
 
 				if (écriture.MultiId != multiId)
 				{

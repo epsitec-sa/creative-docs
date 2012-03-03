@@ -307,7 +307,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var data = this.readonlyData[row];
+			var data = this.readonlyData[row] as ExtraitDeCompteData;
 			var écriture = data.Entity as ComptaEcritureEntity;
 			var initialDate    = écriture.Date;
 			var initialPièce   = écriture.Pièce;
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (écriture.Date != initialDate)  // changement de date ?
 			{
-				//...
+				this.UpdateDate (écriture, data);
 			}
 
 			if (écriture.Montant != initialMontant)  // changement de montant ?
@@ -380,6 +380,57 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (auto != null)
 			{
 				auto.Montant = total;
+			}
+		}
+
+		private void UpdateDate(ComptaEcritureEntity écriture, ExtraitDeCompteData extrait)
+		{
+			this.readonlyData.Remove (extrait);
+			int row = this.GetSortedRow (extrait.Date.Value);
+			this.readonlyData.Insert (row, extrait);
+			this.firstEditedRow = row;
+
+			this.JournalAdjust (écriture);
+		}
+
+		private int GetSortedRow(Date date)
+		{
+			int count = this.readonlyData.Count;
+			for (int row = count-1; row >= 0; row--)
+			{
+				var data = this.readonlyData[row] as ExtraitDeCompteData;
+
+				if (data.Date <= date)
+				{
+					return row+1;
+				}
+			}
+
+			return 0;
+		}
+
+		private void JournalAdjust(ComptaEcritureEntity écriture)
+		{
+			//	Ajuste une écriture dans son journal après un changement de date.
+			var journal = this.période.Journal;
+
+			int row = journal.IndexOf (écriture);
+			int firstRow, countRow;
+			JournalDataAccessor.ExploreMulti (journal, row, out firstRow, out countRow);
+
+			var temp = new List<ComptaEcritureEntity> ();
+
+			for (int i = 0; i < countRow; i++)
+			{
+				temp.Add (journal[firstRow]);
+				journal.RemoveAt (firstRow);
+			}
+
+			int index = JournalDataAccessor.GetSortedRow (journal, écriture.Date);
+
+			for (int i = 0; i < countRow; i++)
+			{
+				journal.Insert (index+i, temp[i]);
 			}
 		}
 
