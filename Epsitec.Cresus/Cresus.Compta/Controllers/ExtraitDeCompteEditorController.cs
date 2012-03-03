@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-			foreach (var mapper in this.columnMappers.Where (x => x.Show))
+			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
 				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 				field.CreateUI (editorFrame);
@@ -64,7 +64,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					mapper.Column == ColumnType.SoldeGraphique ||
 					mapper.Column == ColumnType.Journal        )
 				{
-					field.IsReadOnly = true;
+					//?field.IsReadOnly = true;
+					field.Box.Visibility = false;
 				}
 
 				if (mapper.Column == ColumnType.Débit ||

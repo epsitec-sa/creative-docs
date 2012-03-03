@@ -213,15 +213,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft,  "Date");
-				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P");
-				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce");
-				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé");
-				yield return new ColumnMapper (ColumnType.Débit,          0.20, ContentAlignment.MiddleRight, "Débit");
-				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit");
-				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde");
-				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
-				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft,  "Journal");
+				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft,  "Date",    "Date de l'écriture");
+				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P",     "Numéro ou nom du compte de la contrepartie");
+				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce",   "Numéro de la pièce comptable correspondant à l'écriture");
+				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
+				yield return new ColumnMapper (ColumnType.Débit,          0.20, ContentAlignment.MiddleRight, "Débit",   "Montant de l'écriture");
+				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit",  "Montant de l'écriture");
+				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde",   edition: false);
+				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "",        edition: false, hideForSearch: true);
+				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft,  "Journal", edition: false);
 			}
 		}
 

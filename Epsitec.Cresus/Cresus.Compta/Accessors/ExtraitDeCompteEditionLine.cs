@@ -72,6 +72,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontant(EditionData data)
 		{
+			data.ClearError ();
+			return; //?
+
 			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
 				data.Text == Converters.MontantToString (0))  // montant nul ?
 			{
@@ -128,6 +131,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				écriture.Débit   = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CP));
 				écriture.Montant = Converters.ParseMontant (this.GetText (ColumnType.Crédit)).GetValueOrDefault ();
+			}
+
+			this.EcritureToData (écriture, extrait);
+		}
+
+		private void EcritureToData(ComptaEcritureEntity écriture, ExtraitDeCompteData extrait)
+		{
+			extrait.Date    = écriture.Date;
+			extrait.Pièce   = écriture.Pièce;
+			extrait.Libellé = écriture.Libellé;
+
+			if (extrait.IsDébit)
+			{
+				extrait.CP    = écriture.Crédit;
+				extrait.Débit = écriture.Montant;
+			}
+			else
+			{
+				extrait.CP     = écriture.Débit;
+				extrait.Crédit = écriture.Montant;
 			}
 		}
 	}

@@ -32,6 +32,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public override bool IsEditionCreationEnable
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+
 		public override void FilterUpdate()
 		{
 			Date? beginDate, endDate;
