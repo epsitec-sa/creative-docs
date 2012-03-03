@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
 
 				this.SetEnable (ColumnType.CP,     écriture.Crédit != null);
-				this.SetEnable (ColumnType.Débit,  true);
+				this.SetEnable (ColumnType.Débit,  écriture.MultiId == 0 || !écriture.TotalAutomatique);
 				this.SetEnable (ColumnType.Crédit, false);
 			}
 			else
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				this.SetEnable (ColumnType.CP,     écriture.Débit != null);
 				this.SetEnable (ColumnType.Débit,  false);
-				this.SetEnable (ColumnType.Crédit, true);
+				this.SetEnable (ColumnType.Crédit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
 			}
 		}
 
@@ -152,10 +152,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Montant = Converters.ParseMontant (this.GetText (ColumnType.Crédit)).GetValueOrDefault ();
 			}
 
-			this.EcritureToData (écriture, extrait);
+			this.EcritureToExtrait (écriture, extrait);
 		}
 
-		private void EcritureToData(ComptaEcritureEntity écriture, ExtraitDeCompteData extrait)
+		private void EcritureToExtrait(ComptaEcritureEntity écriture, ExtraitDeCompteData extrait)
 		{
 			//	ComptaEcritureEntity -> ExtraitDeCompteData
 			extrait.Date    = écriture.Date;

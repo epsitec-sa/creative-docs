@@ -57,7 +57,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateAfterOptionsChanged()
 		{
 			this.readonlyAllData.Clear ();
-			this.MinMaxClear ();
 
 			FormattedText numéroCompte = this.Permanents.NuméroCompte;
 			if (numéroCompte.IsNullOrEmpty)
@@ -69,10 +68,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
-
-			decimal solde       = 0;
-			decimal totalDébit  = 0;
-			decimal totalCrédit = 0;
+			if (compte == null)
+			{
+				return;
+			}
 
 			foreach (var écriture in this.période.Journal)
 			{
@@ -86,79 +85,120 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (débit)
 				{
-					var data = new ExtraitDeCompteData ();
-
-					data.IsDébit = true;
-					data.Entity  = écriture;
-					data.Date    = écriture.Date;
-					data.Pièce   = écriture.Pièce;
-					data.Libellé = écriture.Libellé;
-					data.CP      = écriture.Crédit;
-					data.Débit   = écriture.Montant;
-					data.Journal = écriture.Journal.Nom;
-
-					solde        += écriture.Montant;
-					totalDébit   += écriture.Montant;
-
-					if (compte != null &&
-						(compte.Catégorie == CatégorieDeCompte.Passif ||
-						 compte.Catégorie == CatégorieDeCompte.Produit))
+					var data = new ExtraitDeCompteData ()
 					{
-						solde = -solde;
-					}
-
-					data.Solde = solde;
+						IsDébit = true,
+						Entity  = écriture,
+						Date    = écriture.Date,
+						Pièce   = écriture.Pièce,
+						Libellé = écriture.Libellé,
+						CP      = écriture.Crédit,
+						Débit   = écriture.Montant,
+						Journal = écriture.Journal.Nom,
+					};
 
 					this.readonlyAllData.Add (data);
 				}
 
 				if (crédit)
 				{
-					var data = new ExtraitDeCompteData ();
-
-					data.IsDébit = false;
-					data.Entity  = écriture;
-					data.Date    = écriture.Date;
-					data.Pièce   = écriture.Pièce;
-					data.Libellé = écriture.Libellé;
-					data.CP      = écriture.Débit;
-					data.Crédit  = écriture.Montant;
-					data.Journal = écriture.Journal.Nom;
-
-					solde        -= écriture.Montant;
-					totalCrédit  += écriture.Montant;
-
-					if (compte != null &&
-						(compte.Catégorie == CatégorieDeCompte.Passif ||
-						 compte.Catégorie == CatégorieDeCompte.Produit))
+					var data = new ExtraitDeCompteData ()
 					{
-						solde = -solde;
-					}
-
-					data.Solde = solde;
+						IsDébit = false,
+						Entity  = écriture,
+						Date    = écriture.Date,
+						Pièce   = écriture.Pièce,
+						Libellé = écriture.Libellé,
+						CP      = écriture.Débit,
+						Crédit  = écriture.Montant,
+						Journal = écriture.Journal.Nom,
+					};
 
 					this.readonlyAllData.Add (data);
 				}
-
-				this.SetMinMaxValue (solde);
 			}
 
 			this.SetBottomSeparatorToPreviousLine ();
 
 			//	Génère la dernière ligne.
 			{
-				var data = new ExtraitDeCompteData ();
-
-				data.Libellé       = "Mouvement";
-				data.Débit         = totalDébit;
-				data.Crédit        = totalCrédit;
-				data.IsItalic      = true;
-				data.NeverFiltered = true;
+				var data = new ExtraitDeCompteData ()
+				{
+					Libellé       = "Mouvement",
+					IsItalic      = true,
+					NeverFiltered = true,
+				};
 
 				this.readonlyAllData.Add (data);
 			}
 
+			this.UpdateSoldes ();
+
 			this.FilterUpdate ();
+		}
+
+		private void UpdateSoldes()
+		{
+			this.MinMaxClear ();
+
+			FormattedText numéroCompte = this.Permanents.NuméroCompte;
+			if (numéroCompte.IsNullOrEmpty)
+			{
+				return;
+			}
+
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
+			if (compte == null)
+			{
+				return;
+			}
+
+			decimal solde       = 0;
+			decimal totalDébit  = 0;
+			decimal totalCrédit = 0;
+
+			foreach (var d in this.readonlyAllData)
+			{
+				var data = d as ExtraitDeCompteData;
+				var écriture = data.Entity as ComptaEcritureEntity;
+
+				if (data.NeverFiltered)  // dernière ligne "mouvement" ?
+				{
+					data.Débit  = totalDébit;
+					data.Crédit = totalCrédit;
+				}
+				else
+				{
+					if (data.IsDébit)
+					{
+						solde      += écriture.Montant;
+						totalDébit += écriture.Montant;
+
+						if (compte.Catégorie == CatégorieDeCompte.Passif ||
+							compte.Catégorie == CatégorieDeCompte.Produit)
+						{
+							solde = -solde;
+						}
+
+						data.Solde = solde;
+					}
+					else
+					{
+						solde       -= écriture.Montant;
+						totalCrédit += écriture.Montant;
+
+						if (compte.Catégorie == CatégorieDeCompte.Passif ||
+							compte.Catégorie == CatégorieDeCompte.Produit)
+						{
+							solde = -solde;
+						}
+
+						data.Solde = solde;
+					}
+
+					this.SetMinMaxValue (solde);
+				}
+			}
 		}
 
 
@@ -268,7 +308,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int row = this.firstEditedRow;
 
 			var data = this.readonlyData[row];
+			var écriture = data.Entity as ComptaEcritureEntity;
+			var initialDate    = écriture.Date;
+			var initialMontant = écriture.Montant;
+
 			this.editionLine[0].DataToEntity (data);
+
+			if (écriture.Date != initialDate)  // changement de date ?
+			{
+				//...
+			}
+
+			if (écriture.Montant != initialMontant)  // changement de montant ?
+			{
+				this.UpdateSoldes ();
+			}
 		}
 
 
