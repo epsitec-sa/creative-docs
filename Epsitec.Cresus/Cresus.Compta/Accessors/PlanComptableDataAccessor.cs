@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void FilterUpdate()
+		public override void UpdateFilter()
 		{
 			this.UpdateAfterOptionsChanged ();
 		}

@@ -581,7 +581,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
 				this.topFilterController.ShowPanel = this.mainWindowController.ShowSearchPanel;
 
-				this.dataAccessor.FilterUpdate ();
+				this.dataAccessor.UpdateFilter ();
 			}
 		}
 
@@ -599,7 +599,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
 
-				this.dataAccessor.FilterUpdate ();
+				this.dataAccessor.UpdateFilter ();
 				this.dataAccessor.SearchUpdate ();
 				this.BaseUpdateArrayContent ();
 

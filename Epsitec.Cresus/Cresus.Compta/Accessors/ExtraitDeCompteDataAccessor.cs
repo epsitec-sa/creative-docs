@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public override void FilterUpdate()
+		public override void UpdateFilter()
 		{
 			Date? beginDate, endDate;
 			this.filterData.GetBeginnerDates (out beginDate, out endDate);
@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.UpdateAfterOptionsChanged ();
 			}
 
-			base.FilterUpdate ();
+			base.UpdateFilter ();
 		}
 
 		public override void UpdateAfterOptionsChanged()
@@ -133,8 +133,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.UpdateSoldes ();
-
-			this.FilterUpdate ();
+			this.UpdateFilter ();
 		}
 
 		private void UpdateSoldes()

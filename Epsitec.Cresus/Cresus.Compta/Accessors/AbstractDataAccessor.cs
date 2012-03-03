@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public virtual void FilterUpdate()
+		public virtual void UpdateFilter()
 		{
 			//	Met à jour le filtre.
 			this.readonlyData.Clear ();
