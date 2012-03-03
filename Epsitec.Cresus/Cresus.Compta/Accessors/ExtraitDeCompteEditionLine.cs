@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Libellé, new EditionData (this.controller, this.ValidateLibellé));
 			this.dataDict.Add (ColumnType.Débit,   new EditionData (this.controller, this.ValidateMontant));
 			this.dataDict.Add (ColumnType.Crédit,  new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Journal, new EditionData (this.controller, this.ValidateJournal));
 		}
 
 
@@ -93,6 +94,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Validators.ValidateMontant (data, emptyAccepted: false);
 		}
+
+		private void ValidateJournal(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var t = data.Text;
+				if (!this.compta.Journaux.Where (x => x.Nom == t).Any ())
+				{
+					data.Error = "Ce journal n'existe pas";
+				}
+			}
+			else
+			{
+				data.Error = "Il manque le journal";
+			}
+		}
 		#endregion
 
 
@@ -105,6 +124,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Date,    Converters.DateToString (écriture.Date));
 			this.SetText (ColumnType.Pièce,   écriture.Pièce);
 			this.SetText (ColumnType.Libellé, écriture.Libellé);
+			this.SetText (ColumnType.Journal, écriture.Journal.Nom);
 			
 			if (extrait.IsDébit)
 			{
@@ -152,6 +172,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Montant = Converters.ParseMontant (this.GetText (ColumnType.Crédit)).GetValueOrDefault ();
 			}
 
+			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
+			if (journal == null)  // dans un journal spécifique ?
+			{
+				//	Normalement, le journal a déjà été initialisé. Mais si ce n'est pas le cas, on met le premier,
+				//	car il est impératif qu'une écriture ait un journal !
+				if (écriture.Journal == null)
+				{
+					écriture.Journal = this.compta.Journaux.FirstOrDefault ();
+				}
+			}
+			else  // mode "tous les journaux" ?
+			{
+				//	Utilise le journal choisi par l'utilisateur dans le widget ad-hoc.
+				écriture.Journal = journal;
+			}
+
 			this.EcritureToExtrait (écriture, extrait);
 		}
 
@@ -161,6 +197,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			extrait.Date    = écriture.Date;
 			extrait.Pièce   = écriture.Pièce;
 			extrait.Libellé = écriture.Libellé;
+			extrait.Journal = écriture.Journal.Nom;
 
 			if (extrait.IsDébit)
 			{

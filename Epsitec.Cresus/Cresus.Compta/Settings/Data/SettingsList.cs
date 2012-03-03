@@ -61,7 +61,8 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 
 		private FormattedText ValidateSeparator()
 		{
-			//	Valide le choix du séparateur pour la partie fractionnaire des nombres.
+			//	Valide le choix du séparateur pour les milliers et la partie fractionnaire des nombres.
+			//	On ne peut pas utiliser le même séparateur pour les milliers et pour la partie fractionnaire.
 			if (this.GetEditedEnum (SettingsType.PriceDecimalSeparator) == this.GetEditedEnum (SettingsType.PriceGroupSeparator))
 			{
 				return "Mêmes séparateurs";
@@ -75,6 +76,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		private FormattedText ValidateNegative()
 		{
 			//	Valide le choix de la représentation des nombres négatifs.
+			//	Les choix '-n' et '-.0' ou '-.-' sont incompatibles.
 			if (this.GetEditedEnum (SettingsType.PriceNegativeFormat) == SettingsEnum.NegativeMinus &&
 				(this.GetEditedEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashZero ||
 				 this.GetEditedEnum (SettingsType.PriceNullParts) == SettingsEnum.NullPartsDashDash))

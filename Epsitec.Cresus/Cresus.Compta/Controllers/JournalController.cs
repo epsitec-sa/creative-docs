@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.settingsList.GetBool (SettingsType.EcriturePièces))
 				{
-					bool enable = this.settingsList.GetBool (SettingsType.EcritureForcePièces);
+					bool enable = !this.settingsList.GetBool (SettingsType.EcritureForcePièces);
 					yield return new ColumnMapper (ColumnType.Pièce, 0.20, ContentAlignment.MiddleLeft, "Pièce", "Numéro de la pièce comptable correspondant à l'écriture", enable);
 				}
 

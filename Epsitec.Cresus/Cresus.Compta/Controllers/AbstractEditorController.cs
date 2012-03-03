@@ -572,7 +572,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					for (int column = 0; column < columnCount; column++)
 					{
-						this.fieldControllers[line][column].Box.PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
+						if (column < this.fieldControllers[line].Count)
+						{
+							this.fieldControllers[line][column].Box.PreferredWidth = this.arrayController.GetColumnsAbsoluteWidth (column) - (column == 0 ? 0 : 1);
+						}
 					}
 				}
 			}

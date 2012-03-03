@@ -101,6 +101,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				using (this.ignoreChanges.Enter ())
 				{
+					//	Il ne faut surtout pas utiliser this.InternalField.FormattedText directement !
 					this.InternalField.SetSilentFormattedText (this.editionData.Text);
 					this.IsReadOnly = !this.editionData.Enable || !this.columnMapper.Enable;
 				}

@@ -9,6 +9,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
@@ -57,8 +58,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-				field.CreateUI (editorFrame);
+				AbstractFieldController field;
+
+				if (mapper.Column == ColumnType.Journal)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					var journaux = this.compta.Journaux.Select (x => x.Nom);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
+				}
+				else
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+				}
 
 				if (mapper.Column == ColumnType.Débit ||
 					mapper.Column == ColumnType.Crédit)

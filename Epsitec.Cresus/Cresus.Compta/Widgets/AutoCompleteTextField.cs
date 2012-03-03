@@ -38,9 +38,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void SetSilentFormattedText(FormattedText text)
 		{
+			//	Donne un nouveau texte à éditer.
 			using (this.ignoreChanges.Enter ())
 			{
 				this.FormattedText = text;
+				this.selectedHint = -1;
+				this.HintText = null;
 			}
 		}
 
@@ -349,7 +352,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				this.selectedHint = sel;
 				this.UseSelectedHint (SelectedHintMode.StartEdition);
 
-				this.hintListIndex.Clear ();
+				base.OnTextChanged ();
 			}
 		}
 
@@ -400,7 +403,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (selectedHintMode == SelectedHintMode.AcceptEdition)
 				{
-					if (this.hintListIndex.Count != 0 || this.selectedHint != -1)  // pas un texte erroné ?
+					if (this.hintListIndex.Count != 0 && i != -1)  // pas un texte erroné ?
 					{
 						this.HintText = null;
 						this.TextNavigator.TextLayout.FormattedText = this.GetItemText (i, true);

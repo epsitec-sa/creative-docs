@@ -313,6 +313,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var initialDate    = écriture.Date;
 			var initialPièce   = écriture.Pièce;
 			var initialMontant = écriture.Montant;
+			var initialJournal = écriture.Journal;
 
 			this.editionLine[0].DataToEntity (data);
 
@@ -331,6 +332,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (écriture.Montant != initialMontant)  // changement de montant ?
 				{
 					this.UpdateMultiMontant (écriture);
+				}
+
+				if (écriture.Journal != initialJournal)  // changement de journal ?
+				{
+					this.UpdateMultiJournal (écriture);
 				}
 			}
 
@@ -381,6 +387,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (auto != null)
 			{
 				auto.Montant = total;
+			}
+		}
+
+		private void UpdateMultiJournal(ComptaEcritureEntity source)
+		{
+			foreach (var écriture in this.période.Journal.Where (x => x.MultiId == source.MultiId))
+			{
+				écriture.Journal = source.Journal;
 			}
 		}
 
