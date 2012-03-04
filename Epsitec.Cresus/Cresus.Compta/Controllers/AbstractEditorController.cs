@@ -272,6 +272,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateToolbar ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.UpdateInsertionRow (forceUpdate: true);
 				this.UpdateEditorContent ();
 				this.EditorSelect (0, 0);
 			}
