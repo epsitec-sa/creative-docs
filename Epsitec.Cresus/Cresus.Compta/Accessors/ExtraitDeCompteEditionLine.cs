@@ -120,29 +120,41 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	ExtraitDeCompteData/ComptaEcritureEntity -> EditionData
 			var extrait = data as ExtraitDeCompteData;
 			var écriture = data.Entity as ComptaEcritureEntity;
+			bool enable = (écriture != null);
 
-			this.SetText (ColumnType.Date,    Converters.DateToString (écriture.Date));
-			this.SetText (ColumnType.Pièce,   écriture.Pièce);
-			this.SetText (ColumnType.Libellé, écriture.Libellé);
-			this.SetText (ColumnType.Journal, écriture.Journal.Nom);
-			
-			if (extrait.IsDébit)
+			this.SetEnable (ColumnType.Date,    enable);
+			this.SetEnable (ColumnType.CP,      enable);
+			this.SetEnable (ColumnType.Pièce,   enable);
+			this.SetEnable (ColumnType.Libellé, enable);
+			this.SetEnable (ColumnType.Débit,   enable);
+			this.SetEnable (ColumnType.Crédit,  enable);
+			this.SetEnable (ColumnType.Journal, enable);
+
+			if (écriture != null)
 			{
-				this.SetText (ColumnType.CP,    JournalDataAccessor.GetNuméro (écriture.Crédit));
-				this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
+				this.SetText (ColumnType.Date, Converters.DateToString (écriture.Date));
+				this.SetText (ColumnType.Pièce, écriture.Pièce);
+				this.SetText (ColumnType.Libellé, écriture.Libellé);
+				this.SetText (ColumnType.Journal, écriture.Journal.Nom);
 
-				this.SetEnable (ColumnType.CP,     écriture.Crédit != null);
-				this.SetEnable (ColumnType.Débit,  écriture.MultiId == 0 || !écriture.TotalAutomatique);
-				this.SetEnable (ColumnType.Crédit, false);
-			}
-			else
-			{
-				this.SetText (ColumnType.CP,     JournalDataAccessor.GetNuméro (écriture.Débit));
-				this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant));
+				if (extrait.IsDébit)
+				{
+					this.SetText (ColumnType.CP, JournalDataAccessor.GetNuméro (écriture.Crédit));
+					this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
 
-				this.SetEnable (ColumnType.CP,     écriture.Débit != null);
-				this.SetEnable (ColumnType.Débit,  false);
-				this.SetEnable (ColumnType.Crédit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
+					this.SetEnable (ColumnType.CP, écriture.Crédit != null);
+					this.SetEnable (ColumnType.Débit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
+					this.SetEnable (ColumnType.Crédit, false);
+				}
+				else
+				{
+					this.SetText (ColumnType.CP, JournalDataAccessor.GetNuméro (écriture.Débit));
+					this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant));
+
+					this.SetEnable (ColumnType.CP, écriture.Débit != null);
+					this.SetEnable (ColumnType.Débit, false);
+					this.SetEnable (ColumnType.Crédit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
+				}
 			}
 		}
 
