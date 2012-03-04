@@ -472,6 +472,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					if (!this.allowMultipleSelection)
 					{
 						this.SelectedCell = cell;
+						System.Diagnostics.Debug.Assert (this.Window != null);
 						this.OnFinalCellSelectionChanged (new MessageEventArgs (message, this.MapClientToScreen (pos)));
 					}
 

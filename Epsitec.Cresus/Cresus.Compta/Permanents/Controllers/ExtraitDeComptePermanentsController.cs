@@ -11,6 +11,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
@@ -62,32 +63,16 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			AbstractTextField field;
-			UIBuilder.CreateAutoCompleteTextField (frame, out this.compteFrame, out field);
-			this.compteField = field as AutoCompleteTextField;
-			this.compteFrame.PreferredWidth = 150;
-			this.compteFrame.Dock = DockStyle.Left;
-			this.compteFrame.Margins = new Margins (0, 1, 0, 0);
-			this.compteFrame.TabIndex = ++this.tabIndex;
+			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, frame, this.NuméroCompte, "Choix du compte", this.ValidateCompteAction, this.CompteChangedAction);
 
 			this.comboModeFrame = UIBuilder.CreatePseudoCombo (frame, out this.comboModeField, out this.comboModeButton);
 			this.comboModeFrame.PreferredWidth = 120;
 
-			this.UpdateWidgets ();
-
-			ToolTip.Default.SetToolTip (this.compteFrame,    "Choix du compte");
 			ToolTip.Default.SetToolTip (this.comboModeFrame, "Filtre pour le choix du compte");
 
-			//	Connexion des événements.
-			this.compteField.TextChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.NuméroCompte = this.compteField.FormattedText;
-					this.PermanentsChanged ();
-				}
-			};
+			this.UpdateWidgets ();
 
+			//	Connexion des événements.
 			this.comboModeField.Clicked += delegate
 			{
 				this.ShowComboModeMenu (this.comboModeFrame);
@@ -98,6 +83,21 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 				this.ShowComboModeMenu (this.comboModeFrame);
 			};
 		}
+
+		private void ValidateCompteAction(EditionData data)
+		{
+			data.ClearError ();
+		}
+
+		private void CompteChangedAction()
+		{
+			if (this.ignoreChanges.IsZero)
+			{
+				this.NuméroCompte = this.compteController.EditionData.Text;
+				this.PermanentsChanged ();
+			}
+		}
+
 
 		protected override void PermanentsChanged()
 		{
@@ -239,12 +239,12 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 		private void UpdateComptes()
 		{
 			var comptes = this.compta.PlanComptable.Where (x => this.CompteFilter (x));
-			UIBuilder.UpdateAutoCompleteTextField (this.compteField, comptes);
+			UIBuilder.UpdateAutoCompleteTextField (this.compteController.EditWidget as AutoCompleteTextField, comptes);
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.compteField.FormattedText = this.NuméroCompte;
-				this.compteFrame.Enable = comptes.Any ();
+				this.compteController.EditionData.Text = this.NuméroCompte;
+				this.compteController.EditionData.Enable = comptes.Any ();
 			}
 		}
 
@@ -299,8 +299,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 		}
 
 
-		private FrameBox						compteFrame;
-		private AutoCompleteTextField			compteField;
+		private AutoCompleteFieldController		compteController;
 
 		private FrameBox						comboModeFrame;
 		private StaticText						comboModeField;

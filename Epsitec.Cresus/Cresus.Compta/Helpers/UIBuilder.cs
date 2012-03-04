@@ -94,6 +94,21 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static AutoCompleteFieldController CreateAutoCompleteField(AbstractController controller, Widget parent, FormattedText initialText, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
+		{
+			//	Crée un contrôleur permettant de saisir un texte.
+			var fieldController = new AutoCompleteFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
+
+			fieldController.CreateUI (parent);
+			fieldController.Box.PreferredWidth = 70;
+			fieldController.EditionData = new EditionData (controller, validateAction);
+			fieldController.EditionData.Text = initialText;
+			fieldController.EditionDataToWidget ();
+			fieldController.Validate ();
+
+			return fieldController;
+		}
+
 		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir une date.
