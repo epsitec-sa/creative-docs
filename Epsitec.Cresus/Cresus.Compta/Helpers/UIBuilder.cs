@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			var fieldController = new AutoCompleteFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
 
 			fieldController.CreateUI (parent);
-			fieldController.Box.PreferredWidth = 70;
+			fieldController.Box.PreferredWidth = 120;
 			fieldController.EditionData = new EditionData (controller, validateAction);
 			fieldController.EditionData.Text = initialText;
 			fieldController.EditionDataToWidget ();

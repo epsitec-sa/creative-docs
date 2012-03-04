@@ -82,6 +82,8 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 			{
 				this.ShowComboModeMenu (this.comboModeFrame);
 			};
+
+			this.compteController.SetFocus ();
 		}
 
 		private void ValidateCompteAction(EditionData data)

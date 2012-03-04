@@ -425,6 +425,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public bool IsActive
+		{
+			get
+			{
+				return this.isCreation || this.isModification;
+			}
+		}
+
 		public bool IsCreation
 		{
 			get

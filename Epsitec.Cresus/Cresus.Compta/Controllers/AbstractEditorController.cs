@@ -101,9 +101,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty && this.dataAccessor.IsEditionCreationEnable);
 				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
-				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsCreation || this.dataAccessor.IsModification);
+				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsActive);
 
-				if (this.dataAccessor.IsCreation || this.dataAccessor.IsModification)
+				if (this.dataAccessor.IsActive)
 				{
 					this.editorFrameBox.Enable = true;
 					this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
@@ -615,7 +615,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 
-				if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count)
+				if (this.selectedLine >= 0 && this.selectedLine < this.fieldControllers.Count && this.dataAccessor.IsActive)
 				{
 					//	Normalement, le SetFocus va provoquer l'appel de HandleSetFocus. Mais, si le focus est
 					//	déjà présent dans le widget, l'appel n'a pas lieu (c'est sans doute une optimisation de

@@ -216,6 +216,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			if (controller != null)
 			{
 				controller.SelectedArrayLine = data.ArrayIndex.Value;
+
+				if (controller.EditorController != null)
+				{
+					controller.EditorController.EditorSelect (0, 0);
+				}
 			}
 		}
 

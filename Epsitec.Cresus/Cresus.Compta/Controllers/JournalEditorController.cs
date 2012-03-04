@@ -659,7 +659,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.UpdateToolbar ();
 
-			bool enable = this.dataAccessor.IsCreation || this.dataAccessor.IsModification;
+			bool enable = this.dataAccessor.IsActive;
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
