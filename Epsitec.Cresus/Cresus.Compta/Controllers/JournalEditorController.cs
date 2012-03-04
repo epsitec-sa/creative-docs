@@ -659,15 +659,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			base.UpdateToolbar ();
 
+			bool enable = this.dataAccessor.IsCreation || this.dataAccessor.IsModification;
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
-			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, count > 1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, count > 2 && this.selectedLine != cp);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     count > 1 && this.selectedLine > 0);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   count > 1 && this.selectedLine < count-1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   count != 0);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   count > 1 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, enable && count >  1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, enable && count >  2 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     enable && count >  1 && this.selectedLine > 0);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   enable && count >  1 && this.selectedLine < count-1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   enable && count != 0 && this.selectedLine != -1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   enable && count >  1 && this.selectedLine != cp);
 		}
 
 
