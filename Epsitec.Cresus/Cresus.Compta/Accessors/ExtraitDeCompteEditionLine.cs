@@ -34,6 +34,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateDate(EditionData data)
 		{
+			data.ClearError ();
+
+			if (!data.Enable)
+			{
+				return;  // toujours ok si disable
+			}
+
 			Validators.ValidateDate (this.période, data, emptyAccepted: false);
 		}
 
@@ -73,6 +80,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateLibellé(EditionData data)
 		{
+			data.ClearError ();
+
+			if (!data.Enable)
+			{
+				return;  // toujours ok si disable
+			}
+
 			Validators.ValidateText (data, "Il manque le libellé");
 		}
 
@@ -98,6 +112,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateJournal(EditionData data)
 		{
 			data.ClearError ();
+
+			if (!data.Enable)
+			{
+				return;  // toujours ok si disable
+			}
 
 			if (data.HasText)
 			{

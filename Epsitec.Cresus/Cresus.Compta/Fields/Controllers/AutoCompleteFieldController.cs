@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			};
 
 			AbstractTextField textField;
-			UIBuilder.CreateAutoCompleteTextField (this.container, out this.container, out textField);
+			UIBuilder.CreateAutoCompleteTextField (this.container, out this.container, out textField, out this.menuButton);
 			this.editWidget = textField;
 
 			this.editWidget.TextChanged += new EventHandler (this.HandleTextChanged);
@@ -86,6 +86,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				this.InternalField.IsReadOnly = value;
 				this.InternalField.Invalidate ();  // pour contourner un bug !
+
+				this.menuButton.Enable = !value;
 			}
 		}
 
@@ -180,5 +182,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				return this.editWidget as AutoCompleteTextField;
 			}
 		}
+
+
+		private GlyphButton				menuButton;
 	}
 }

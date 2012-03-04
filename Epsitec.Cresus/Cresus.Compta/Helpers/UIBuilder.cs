@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 	
-		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field)
+		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field, out GlyphButton menuButton)
 		{
 			//	Crée un widget permettant de saisir un numéro de compte.
 			container = new FrameBox
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				TabIndex        = 1,
 			};
 
-			var menuButton = new GlyphButton
+			menuButton = new GlyphButton
 			{
 				Parent          = container,
 				ButtonStyle     = Common.Widgets.ButtonStyle.Combo,

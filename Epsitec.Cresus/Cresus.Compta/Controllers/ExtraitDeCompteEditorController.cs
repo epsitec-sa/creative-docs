@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
+			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
 			{
 				AbstractFieldController field;
 
