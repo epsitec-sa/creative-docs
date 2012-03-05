@@ -63,5 +63,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Désactivé,
 		Exemple,
 		Icône,
+		Taux,
+		Déduction,
+		CodeEquivalent,
+		Chiffre,
+		MontantFictif,
+		Compte,
 	}
 }

@@ -65,6 +65,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 					s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
 				}
 
+				if (s.EndsWith ("."))
+				{
+					s = s.Substring (0, s.Length-1);
+				}
+
 				return s + "%";
 			}
 			else
@@ -985,6 +990,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.DécompteTVA;
 
 				yield return Res.Commands.Présentation.PlanComptable;
+				yield return Res.Commands.Présentation.CodesTVA;
 				yield return Res.Commands.Présentation.Libellés;
 				yield return Res.Commands.Présentation.Modèles;
 				yield return Res.Commands.Présentation.Journaux;

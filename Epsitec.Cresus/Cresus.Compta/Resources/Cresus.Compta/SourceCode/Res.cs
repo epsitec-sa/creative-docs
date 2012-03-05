@@ -212,6 +212,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Budgets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
 				//	designer:cap/OVKJ1
 				public static readonly global::Epsitec.Common.Widgets.Command Change = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
+				//	designer:cap/OVKR6
+				public static readonly global::Epsitec.Common.Widgets.Command CodesTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 219));
 				//	designer:cap/OVKM1
 				public static readonly global::Epsitec.Common.Widgets.Command DécompteTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 54));
 				//	designer:cap/OVKH1
@@ -471,6 +473,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Budgets = 0x3F800014000032L;
 				//	designer:cap/OVKJ1
 				public const long Change = 0x3F800014000033L;
+				//	designer:cap/OVKR6
+				public const long CodesTVA = 0x3F8000140000DBL;
 				//	designer:cap/OVKM1
 				public const long DécompteTVA = 0x3F800014000036L;
 				//	designer:cap/OVKH1

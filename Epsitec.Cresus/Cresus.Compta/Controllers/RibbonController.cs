@@ -109,16 +109,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Réglages");
 
+				UIBuilder.CreateButton (section, Res.Commands.Présentation.PlanComptable, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
+
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PlanComptable, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Libellés, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Modèles, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Journaux, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Périodes, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Périodes, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.PiècesGenerator, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.CodesTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Utilisateurs, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Réglages, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 			}

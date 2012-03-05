@@ -2119,19 +2119,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVKD6/OVKK6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKK6]")]
-		public int Chiffre
+		public int? Chiffre
 		{
 			get
 			{
-				return this.GetField<int> ("[OVKK6]");
+				return this.GetField<int?> ("[OVKK6]");
 			}
 			set
 			{
-				int oldValue = this.Chiffre;
+				int? oldValue = this.Chiffre;
 				if (oldValue != value || !this.IsFieldDefined("[OVKK6]"))
 				{
 					this.OnChiffreChanging (oldValue, value);
-					this.SetField<int> ("[OVKK6]", oldValue, value);
+					this.SetField<int?> ("[OVKK6]", oldValue, value);
 					this.OnChiffreChanged (oldValue, value);
 				}
 			}
@@ -2141,19 +2141,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVKD6/OVKM6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKM6]")]
-		public global::System.Decimal MontantFictif
+		public global::System.Decimal? MontantFictif
 		{
 			get
 			{
-				return this.GetField<global::System.Decimal> ("[OVKM6]");
+				return this.GetField<global::System.Decimal?> ("[OVKM6]");
 			}
 			set
 			{
-				global::System.Decimal oldValue = this.MontantFictif;
+				global::System.Decimal? oldValue = this.MontantFictif;
 				if (oldValue != value || !this.IsFieldDefined("[OVKM6]"))
 				{
 					this.OnMontantFictifChanging (oldValue, value);
-					this.SetField<global::System.Decimal> ("[OVKM6]", oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKM6]", oldValue, value);
 					this.OnMontantFictifChanged (oldValue, value);
 				}
 			}
@@ -2193,10 +2193,10 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDéductionChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCodeEquivalentChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnCodeEquivalentChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnChiffreChanging(int oldValue, int newValue);
-		partial void OnChiffreChanged(int oldValue, int newValue);
-		partial void OnMontantFictifChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnMontantFictifChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnChiffreChanging(int? oldValue, int? newValue);
+		partial void OnChiffreChanged(int? oldValue, int? newValue);
+		partial void OnMontantFictifChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMontantFictifChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnFlagsChanging(int oldValue, int newValue);
 		partial void OnFlagsChanged(int oldValue, int newValue);
 		

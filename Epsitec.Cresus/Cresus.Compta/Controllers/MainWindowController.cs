@@ -541,6 +541,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new PiècesGeneratorController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.CodesTVA"))
+			{
+				controller = new CodesTVAController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Utilisateurs"))
 			{
 				controller = new UtilisateursController (this.app, this.businessContext, this);
@@ -1132,6 +1137,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.CodesTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PiècesGenerator)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Utilisateurs)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]

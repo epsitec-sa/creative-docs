@@ -54,11 +54,15 @@
     <Compile Include="Accessors\AbstractDataAccessor.cs" />
     <Compile Include="Accessors\AbstractEditionLine.cs" />
     <Compile Include="Accessors\BudgetsManager.cs" />
+    <Compile Include="Accessors\CodesTVAEditionLine.cs" />
+    <Compile Include="Accessors\CodesTVADataAccessor.cs" />
     <Compile Include="Accessors\ExtraitDeCompteEditionLine.cs" />
     <Compile Include="Accessors\PiècesGeneratorDataAccessor.cs" />
     <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
+    <Compile Include="Controllers\CodesTVAController.cs" />
+    <Compile Include="Controllers\CodesTVAEditorController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteEditorController.cs" />
     <Compile Include="Controllers\SaveController.cs" />
     <Compile Include="Controllers\PrintController.cs" />
@@ -314,6 +318,7 @@
     <EmbeddedResource Include="Images\Search.SubNode.icon" />
     <EmbeddedResource Include="Images\Search.SubTab.icon" />
     <EmbeddedResource Include="Images\Search.ActivateTab.icon" />
+    <EmbeddedResource Include="Images\Présentation.CodesTVA.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
