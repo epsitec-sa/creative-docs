@@ -23,6 +23,7 @@ namespace Epsitec.Cresus.Compta
 		EcritureTVA,
 		EcritureMontreCompteTVA,
 		EcritureEditeMontantTVA,
+		EcritureArrondiTVA,
 
 		PriceDecimalDigits,
 		PriceDecimalSeparator,

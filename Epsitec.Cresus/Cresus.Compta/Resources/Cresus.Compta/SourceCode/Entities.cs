@@ -733,6 +733,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>TauxTVA</c> field.
+		///	designer:fld/OVKB/OVKU6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKU6]")]
+		public global::System.Decimal? TauxTVA
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVKU6]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.TauxTVA;
+				if (oldValue != value || !this.IsFieldDefined("[OVKU6]"))
+				{
+					this.OnTauxTVAChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKU6]", oldValue, value);
+					this.OnTauxTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>CodeAnalytique</c> field.
 		///	designer:fld/OVKB/OVKM
 		///	</summary>
@@ -799,6 +821,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCodeTVAChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnCodeTVAChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
+		partial void OnTauxTVAChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTauxTVAChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
 		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
 		partial void OnJournalChanging(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);

@@ -179,22 +179,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Cherche la description du code TVA à utiliser.
 			FormattedText currentCodeTVA = this.GetText (ColumnType.CodeTVA);
 			FormattedText newCodeTVA = FormattedText.Empty;
+			ComptaCodeTVAEntity codeTVA = null;
 
 			//	Attention, il ne peut y avoir qu'un seul compte (débit ou crédit) avec un code TVA.
 			if (codeTVADébit != null && codeTVACrédit == null)
 			{
 				newCodeTVA = JournalEditionLine.GetCodeTVADescription (codeTVADébit);
+				codeTVA = codeTVADébit;
 			}
 
 			if (codeTVADébit == null && codeTVACrédit != null)
 			{
 				newCodeTVA = JournalEditionLine.GetCodeTVADescription (codeTVACrédit);
+				codeTVA = codeTVACrédit;
 			}
 
 			//	Effectue le changement seulement s'il y a lieu.
 			if (newCodeTVA != currentCodeTVA)
 			{
 				this.SetText (ColumnType.CodeTVA, newCodeTVA);
+				this.SetText (ColumnType.TauxTVA, (codeTVA == null) ? null : Converters.PercentToString (codeTVA.Taux1));
 				this.CodeTVAChanged ();  // met à jour les autres colonnes
 			}
 		}
@@ -204,10 +208,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
 			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
 			var codeTVA     = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			var tauxTVA     = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 
-			if (montantBrut.HasValue && codeTVA != null)
+			if (montantBrut.HasValue && codeTVA != null && tauxTVA.HasValue)
 			{
-				var tva   = montantBrut.Value * codeTVA.Taux1;
+				var tva   = montantBrut.Value * tauxTVA.Value;
 				var total = montantBrut.Value + tva;
 
 				this.SetText (ColumnType.MontantTVA, Converters.MontantToString (tva));
@@ -217,14 +222,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void MontantTVAChanged()
 		{
-			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
-			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
+			var montant    = Converters.ParseMontant (this.GetText (ColumnType.Montant));
+			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
 
-			if (montantBrut.HasValue && montantTVA.HasValue)
+			if (montant.HasValue && montantTVA.HasValue)
 			{
-				var total = montantBrut.Value + montantTVA.Value;
+				var brut = montant.Value - montantTVA.Value;
 
-				this.SetText (ColumnType.Montant, Converters.MontantToString (total));
+				this.SetText (ColumnType.MontantBrut, Converters.MontantToString (brut));
 			}
 		}
 
@@ -233,10 +238,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
 			var montant    = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 			var codeTVA    = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			var tauxTVA     = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 
-			if (montant.HasValue && codeTVA != null)
+			if (montant.HasValue && codeTVA != null && tauxTVA.HasValue)
 			{
-				var montantBrut = montant.Value / (1+codeTVA.Taux1);
+				var montantBrut = montant.Value / (1+tauxTVA.Value);
 				var tva         = montant.Value - montantBrut;
 
 				this.SetText (ColumnType.MontantBrut, Converters.MontantToString (montantBrut));
@@ -255,10 +261,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.SetText (ColumnType.MontantBrut, null);
 				this.SetText (ColumnType.MontantTVA,  null);
+				this.SetText (ColumnType.TauxTVA,     null);
 				this.SetText (ColumnType.CompteTVA,   null);
 			}
 			else
 			{
+				if (codeTVA.Taux2.HasValue)
+				{
+					this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.Taux2));
+				}
+				else
+				{
+					this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.Taux1));
+				}
+
 				if (montantBrut.HasValue && montant.GetValueOrDefault () == 0)
 				{
 					this.MontantBrutChanged ();
@@ -287,6 +303,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Montant,          Converters.MontantToString (écriture.Montant));
 			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
 			this.SetText (ColumnType.CodeTVA,          JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
+			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
 			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
 		}
@@ -311,6 +328,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			écriture.Montant          = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
 			écriture.CodeTVA          = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			écriture.TauxTVA          = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 
 			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
 			if (journal == null)  // dans un journal spécifique ?
@@ -338,7 +356,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return codeTVA.ShortDescription;
+				return codeTVA.Code;
 			}
 		}
 
@@ -376,6 +394,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return codeTVA.Compte.Numéro;
 			}
 		}
-
 	}
 }

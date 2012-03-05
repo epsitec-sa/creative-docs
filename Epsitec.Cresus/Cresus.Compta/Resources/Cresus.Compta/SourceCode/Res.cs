@@ -826,6 +826,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid MultiId = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13);
 				//	designer:cap/OVKG
 				public static readonly global::Epsitec.Common.Support.Druid Pièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16);
+				//	designer:cap/OVKU6
+				public static readonly global::Epsitec.Common.Support.Druid TauxTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 222);
 				//	designer:cap/OVKA1
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
 			}

@@ -182,6 +182,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
 
+				case ColumnType.TauxTVA:
+					return Converters.PercentToString (écriture.TauxTVA);
+
 				case ColumnType.CompteTVA:
 					return JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA);
 

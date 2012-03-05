@@ -296,6 +296,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new IntSettingsController (data, this.ActionChanged);
 			}
 
+			if (data is DecimalSettingData)
+			{
+				controller = new DecimalSettingsController (data, this.ActionChanged);
+			}
+
 			if (data is TextSettingData)
 			{
 				controller = new TextSettingController (data, this.ActionChanged);

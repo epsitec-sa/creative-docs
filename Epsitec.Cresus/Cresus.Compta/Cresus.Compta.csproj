@@ -86,6 +86,8 @@
     <Compile Include="Permanents\Data\ExtraitDeComptePermanents.cs" />
     <Compile Include="Search\Controllers\SearchNodeController.cs" />
     <Compile Include="Search\Data\SearchNodeData.cs" />
+    <Compile Include="Settings\Controllers\DecimalSettingController.cs" />
+    <Compile Include="Settings\Data\DecimalSettingData.cs" />
     <Compile Include="ViewSettings\Data\NavigatorEngine.cs" />
     <Compile Include="ViewSettings\Data\NavigatorData.cs" />
     <Compile Include="ViewSettings\Data\ShowPanelMode.cs" />

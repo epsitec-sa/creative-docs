@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.CodesTVADescription);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
 				}
 				else if (mapper.Column == ColumnType.Monnaie)
 				{

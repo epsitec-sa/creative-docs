@@ -12,16 +12,16 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
-		public FormattedText[] CodesTVADescription
+		public FormattedText[] CodesTVAMenuDescription
 		{
-			//	Retourne la liste des descriptions des codes TVA.
+			//	Retourne la liste des descriptions des codes TVA pour le menu d'un AutoCompleteTextField.
 			get
 			{
 				var list = new List<FormattedText> ();
 
-				foreach (var codeTVA in this.CodesTVA.OrderBy (x => x.Code))
+				foreach (var codeTVA in this.CodesTVA)
 				{
-					list.Add (codeTVA.ShortDescription);
+					list.Add (codeTVA.MenuDescription);
 				}
 
 				return list.ToArray ();

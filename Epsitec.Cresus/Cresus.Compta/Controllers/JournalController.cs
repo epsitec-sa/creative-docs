@@ -197,7 +197,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.MontantBrut, 0.25, ContentAlignment.MiddleRight, "Brut",       "Montant de l'écriture sans la TVA");
 				yield return new ColumnMapper (ColumnType.MontantTVA,  0.20, ContentAlignment.MiddleRight, "TVA",        "Montant de la TVA", enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA));
 				yield return new ColumnMapper (ColumnType.Montant,     0.25, ContentAlignment.MiddleRight, "Montant",    "Montant de l'écriture");
-				yield return new ColumnMapper (ColumnType.CodeTVA,     0.30, ContentAlignment.MiddleLeft,  "Code TVA",   "Code TVA et taux");
+				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,  "Code TVA",   "Code TVA");
+				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight, "Taux",       "Taux de la TVA");
 				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,  "Compte TVA", "Compte de la TVA", enable: false);
 				yield return new ColumnMapper (ColumnType.Journal,     0.25, ContentAlignment.MiddleLeft,  "Journal",    "Journal auquel appartient l'écriture");
 			}
@@ -215,6 +216,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowHideColumn (ColumnType.MontantBrut, hasTVA);
 			this.ShowHideColumn (ColumnType.MontantTVA,  hasTVA);
 			this.ShowHideColumn (ColumnType.CodeTVA,     hasTVA);
+			this.ShowHideColumn (ColumnType.TauxTVA,     hasTVA);
 			this.ShowHideColumn (ColumnType.CompteTVA,   compteTVA);
 		}
 	}

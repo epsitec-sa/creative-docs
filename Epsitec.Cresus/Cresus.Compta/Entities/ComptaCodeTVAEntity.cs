@@ -13,11 +13,18 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaCodeTVAEntity
 	{
-		public FormattedText ShortDescription
+		public FormattedText MenuDescription
 		{
 			get
 			{
-				return FormattedText.Concat (this.Code.ApplyBold (), " ", Converters.PercentToString (this.Taux1));
+				if (this.Taux2.HasValue && this.Taux1 != this.Taux2.Value)
+				{
+					return FormattedText.Concat (this.Code.ApplyBold (), "#", Converters.PercentToString (this.Taux1), " ", Converters.PercentToString (this.Taux2));
+				}
+				else
+				{
+					return FormattedText.Concat (this.Code.ApplyBold (), "#", Converters.PercentToString (this.Taux1));
+				}
 			}
 		}
 	}
