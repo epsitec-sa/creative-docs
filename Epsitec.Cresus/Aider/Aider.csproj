@@ -63,6 +63,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
     <Compile Include="Data\Ech\EChAddress.PatchEngine.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
+    <Compile Include="Data\Eerv\EervDataImporter.cs" />
     <Compile Include="Data\Eerv\EervDataLoader.cs" />
     <Compile Include="Data\Eerv\EervGroupDefinition.cs" />
     <Compile Include="Data\Eerv\EervGroup.cs" />
