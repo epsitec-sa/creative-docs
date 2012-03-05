@@ -106,7 +106,14 @@ namespace Epsitec.Aider.Data
 
 		public IEnumerable<ParishAddressInformation> FindAll()
 		{
-			return this.infos.AsReadOnly ();
+			if (this.infos == null)
+			{
+				return this.GetItems ();
+			}
+			else
+			{
+				return this.infos.AsReadOnly ();
+			}
 		}
 
 		
