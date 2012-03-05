@@ -232,7 +232,7 @@ namespace Epsitec.Aider.Data.Ech
 			eChAddressEntity.Street = eChAddress.Street;
 			eChAddressEntity.HouseNumber = eChAddress.HouseNumber;
 			eChAddressEntity.Town = eChAddress.Town;
-			eChAddressEntity.SwissZipCode = eChAddressEntity.SwissZipCode;
+			eChAddressEntity.SwissZipCode = eChAddress.SwissZipCode;
 			eChAddressEntity.SwissZipCodeAddOn = eChAddress.SwissZipCodeAddOn;
 			eChAddressEntity.SwissZipCodeId = eChAddress.SwissZipCodeId;
 			eChAddressEntity.Country = eChAddress.CountryCode;
