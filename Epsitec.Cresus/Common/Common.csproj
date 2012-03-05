@@ -1325,6 +1325,7 @@
     <Compile Include="Widgets\Tools\MagnifierDragSource.cs" />
     <Compile Include="Widgets\Tools\MagnifierZoomView.cs" />
     <Compile Include="Widgets\ToolTip.cs" />
+    <Compile Include="Widgets\ToolTipBehaviour.cs" />
     <Compile Include="Widgets\ValidationContext.cs" />
     <Compile Include="Widgets\Validators\AbstractTextValidator.cs" />
     <Compile Include="Widgets\Validators\AbstractValidator.cs" />

@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
@@ -10,20 +10,16 @@ using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets
 {
-	public enum ToolTipBehaviour
-	{
-		Normal,							//	presque comme Windows
-		FollowMouse,					//	suit la souris
-		Manual,							//	position définie manuellement
-	}
-
 	/// <summary>
 	/// La classe ToolTip implémente les "info bulles".
 	/// </summary>
-	public class ToolTip : DependencyObject
+	public sealed class ToolTip : DependencyObject
 	{
 		private ToolTip()
 		{
+			this.hash = new Dictionary<long, object> ();
+			this.behaviour = ToolTipBehaviour.Normal;
+
 			this.window = new Window ();
 			this.window.MakeFramelessWindow ();
 			this.window.MakeFloatingWindow ();
@@ -83,6 +79,7 @@ namespace Epsitec.Common.Widgets
 				return false;
 			}
 		}
+		
 		
 		public void ShowToolTipForWidget(Widget widget)
 		{
@@ -159,6 +156,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		public void SetToolTip(Widget widget, string caption)
 		{
 			ToolTip.SetToolTipText (widget, caption);
@@ -183,6 +181,12 @@ namespace Epsitec.Common.Widgets
 			this.DefineToolTip (widget, caption);
 		}
 
+		public void ClearToolTip(Widget widget)
+		{
+			ToolTip.SetToolTipText (widget, null);
+			this.UnregisterWidget (widget);
+		}
+
 
 		private void DefineToolTip(Widget widget, object caption)
 		{
@@ -193,7 +197,7 @@ namespace Epsitec.Common.Widgets
 			
 			System.Diagnostics.Debug.Assert (widget != null);
 			
-			if ((this.hash.Contains (widget)) &&
+			if ((this.hash.ContainsKey (widget.GetVisualSerialId ())) &&
 				(caption == null))
 			{
 				this.UnregisterWidget (widget);
@@ -218,8 +222,8 @@ namespace Epsitec.Common.Widgets
 			}
 
 			this.RegisterWidget (widget);
-			
-			this.hash[widget] = caption;
+
+			this.hash[widget.GetVisualSerialId ()] = caption;
 			
 			if ((this.widget == widget) &&
 				(this.isDisplayed))
@@ -231,13 +235,13 @@ namespace Epsitec.Common.Widgets
 
 		private void RegisterWidget(Widget widget)
 		{
-			if (this.hash.Contains (widget) == false)
+			if (this.hash.ContainsKey (widget.GetVisualSerialId ()) == false)
 			{
 				widget.Entered   += this.HandleWidgetEntered;
 				widget.Exited    += this.HandleWidgetExited;
 				widget.Disposed  += this.HandleWidgetDisposed;
 
-				this.hash[widget] = null;
+				this.hash[widget.GetVisualSerialId ()] = null;
 			}
 		}
 
@@ -248,7 +252,7 @@ namespace Epsitec.Common.Widgets
 				this.DetachFromWidget (this.widget);
 			}
 
-			this.hash.Remove (widget);
+			this.hash.Remove (widget.GetVisualSerialId ());
 
 			widget.Entered  -= this.HandleWidgetEntered;
 			widget.Exited   -= this.HandleWidgetExited;
@@ -266,7 +270,7 @@ namespace Epsitec.Common.Widgets
 			System.Diagnostics.Debug.Assert (widget != null);
 			
 			this.widget  = widget;
-			this.caption = this.hash[this.widget];
+			this.caption = this.hash[this.widget.GetVisualSerialId ()];
 			this.hostProvidedCaption = null;
 			
 			this.widget.PreProcessing += this.HandleWidgetPreProcessing;
@@ -431,7 +435,7 @@ namespace Epsitec.Common.Widgets
 			}
 			
 			System.Diagnostics.Debug.Assert(this.widget != widget);
-//-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget));
+//-			System.Diagnostics.Debug.Assert(this.hash.Contains(widget.GetVisualSerialId ()));
 
 			if (ToolTip.HasToolTip (widget))
 			{
@@ -494,9 +498,9 @@ namespace Epsitec.Common.Widgets
 			string  textCaption = caption as string;
 			
 			if (caption is FormattedText)
-            {
+			{
 				textCaption = ((FormattedText)caption).ToString ();
-            }
+			}
 
 			if (realCaption != null)
 			{
@@ -600,9 +604,25 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		internal void AttachToolTipSource(DependencyObject sender)
+		{
+			Widget widget = sender as Widget;
+
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (this.hash.ContainsKey (widget.GetVisualSerialId ()) == false);
+		}
+
+		internal void DetachToolTipSource(DependencyObject sender)
+		{
+			Widget widget = sender as Widget;
+
+			System.Diagnostics.Debug.Assert (widget != null);
+			System.Diagnostics.Debug.Assert (this.hash.ContainsKey (widget.GetVisualSerialId ()) == true);
+		}
 		
 		#region Contents Class
-		public class Contents : Widget
+		public sealed class Contents : Widget
 		{
 			public Contents()
 			{
@@ -628,8 +648,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		#endregion
-		
-		private class PrivateDependencyPropertyMetadata : DependencyPropertyMetadata
+
+		#region PrivateDependencyPropertyMetadata Class
+
+		private sealed class PrivateDependencyPropertyMetadata : DependencyPropertyMetadata
 		{
 			public PrivateDependencyPropertyMetadata()
 			{
@@ -660,7 +682,9 @@ namespace Epsitec.Common.Widgets
 
 			public static readonly PrivateDependencyPropertyMetadata Default = new PrivateDependencyPropertyMetadata ();
 		}
-		
+
+		#endregion
+
 		public static string GetToolTipText(DependencyObject obj)
 		{
 			return obj.GetValue (ToolTip.ToolTipTextProperty) as string;
@@ -780,14 +804,14 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipWidget",  typeof (Widget), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipCaption", typeof (Caption), PrivateDependencyPropertyMetadata.Default);
 		public static readonly DependencyProperty ToolTipColorProperty   = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipColor",   typeof (Color), PrivateDependencyPropertyMetadata.Default);
+
+		private readonly Dictionary<long, object> hash;
+		private ToolTipBehaviour				behaviour;
 		
-		protected ToolTipBehaviour				behaviour = ToolTipBehaviour.Normal;
-		
-		protected Window						owner;
-		protected Window						window;
-		protected bool							isDisplayed;
-		protected Timer							timer;
-		protected System.DateTime				lastChangeTime;
+		private Window							window;
+		private bool							isDisplayed;
+		private Timer							timer;
+		private System.DateTime					lastChangeTime;
 		
 		private Widget							widget;
 		private object							caption;
@@ -796,26 +820,9 @@ namespace Epsitec.Common.Widgets
 		
 		private Drawing.Point					birthPos;
 		private Drawing.Point					initialPos;
-		private System.Collections.Hashtable	hash = new System.Collections.Hashtable();
 		
 		private static readonly double			hideDistance = 24;
 		private static readonly Drawing.Point	margin = new Drawing.Point(3, 2);
 		private static readonly Drawing.Point	offset = new Drawing.Point(8, -16);
-		
-		internal void AttachToolTipSource(DependencyObject sender)
-		{
-			Widget widget = sender as Widget;
-
-			System.Diagnostics.Debug.Assert (widget != null);
-			System.Diagnostics.Debug.Assert (this.hash.Contains (widget) == false);
-		}
-
-		internal void DetachToolTipSource(DependencyObject sender)
-		{
-			Widget widget = sender as Widget;
-
-			System.Diagnostics.Debug.Assert (widget != null);
-			System.Diagnostics.Debug.Assert (this.hash.Contains (widget) == true);
-		}
 	}
 }
