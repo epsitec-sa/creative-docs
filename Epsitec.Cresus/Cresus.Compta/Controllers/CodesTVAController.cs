@@ -113,14 +113,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Code,           1.00, ContentAlignment.MiddleLeft,  "Code",             "Code unique");
-				yield return new ColumnMapper (ColumnType.Titre,          5.00, ContentAlignment.MiddleLeft,  "Description",      "Description du code TVA");
-				yield return new ColumnMapper (ColumnType.Taux,           0.50, ContentAlignment.MiddleRight, "Taux",             "Taux en pourcents");
-				yield return new ColumnMapper (ColumnType.Compte,         1.00, ContentAlignment.MiddleLeft,  "Compte TVA",       "Compte TVA");
+				yield return new ColumnMapper (ColumnType.Code,           1.00, ContentAlignment.MiddleLeft,  "Code",            "Code unique");
+				yield return new ColumnMapper (ColumnType.Titre,          5.00, ContentAlignment.MiddleLeft,  "Description",     "Description du code TVA");
+				yield return new ColumnMapper (ColumnType.Taux1,          0.50, ContentAlignment.MiddleRight, "Taux 1",          "Premier taux en pourcents");
+				yield return new ColumnMapper (ColumnType.Taux2,          0.50, ContentAlignment.MiddleRight, "Taux 2",          "Deuxième taux en pourcents");
+				yield return new ColumnMapper (ColumnType.Compte,         1.00, ContentAlignment.MiddleLeft,  "Compte TVA",      "Compte TVA");
 
-				yield return new ColumnMapper (ColumnType.CodeEquivalent, 0.00, ContentAlignment.MiddleLeft,  "Code équivalent",  "Code équivalent");
-				yield return new ColumnMapper (ColumnType.Chiffre,        0.00, ContentAlignment.MiddleLeft,  "Chiffre",          "Chiffre sur le formulaire de décompte TVA");
-				yield return new ColumnMapper (ColumnType.MontantFictif,  0.00, ContentAlignment.MiddleRight, "Montant fictif",   "Montant fictif pour le contrôle de la disposition");
+				yield return new ColumnMapper (ColumnType.Chiffre,        0.00, ContentAlignment.MiddleLeft,  "Chiffre",         "Chiffre sur le formulaire de décompte TVA");
+				yield return new ColumnMapper (ColumnType.MontantFictif,  0.00, ContentAlignment.MiddleRight, "Montant fictif",  "Montant fictif pour le contrôle de la disposition");
+
+				yield return new ColumnMapper (ColumnType.ParDéfaut,      0.00, ContentAlignment.MiddleRight, "Code par défaut", "Ce code est le code par défaut");
+				yield return new ColumnMapper (ColumnType.Désactivé,      0.00, ContentAlignment.MiddleRight, "Code désactivé",  "Ce code n'est provisoirement plus disponible");
 			}
 		}
 	}

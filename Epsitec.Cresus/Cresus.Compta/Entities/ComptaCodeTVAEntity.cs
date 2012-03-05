@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			get
 			{
-				return FormattedText.Concat (this.Code.ApplyBold (), " ", Converters.PercentToString (this.Taux));
+				return FormattedText.Concat (this.Code.ApplyBold (), " ", Converters.PercentToString (this.Taux1));
 			}
 		}
 	}

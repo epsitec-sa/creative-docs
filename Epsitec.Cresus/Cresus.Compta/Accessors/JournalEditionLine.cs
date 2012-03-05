@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (montantBrut.HasValue && codeTVA != null)
 			{
-				var tva   = montantBrut.Value * codeTVA.Taux;
+				var tva   = montantBrut.Value * codeTVA.Taux1;
 				var total = montantBrut.Value + tva;
 
 				this.SetText (ColumnType.MontantTVA, Converters.MontantToString (tva));
@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (montant.HasValue && codeTVA != null)
 			{
-				var montantBrut = montant.Value / (1+codeTVA.Taux);
+				var montantBrut = montant.Value / (1+codeTVA.Taux1);
 				var tva         = montant.Value - montantBrut;
 
 				this.SetText (ColumnType.MontantBrut, Converters.MontantToString (montantBrut));

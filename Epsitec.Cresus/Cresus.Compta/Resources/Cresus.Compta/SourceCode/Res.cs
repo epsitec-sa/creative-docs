@@ -748,20 +748,22 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Chiffre = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 212);
 				//	designer:cap/OVKE6
 				public static readonly global::Epsitec.Common.Support.Druid Code = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 206);
-				//	designer:cap/OVKL6
-				public static readonly global::Epsitec.Common.Support.Druid CodeEquivalent = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 213);
 				//	designer:cap/OVKH6
 				public static readonly global::Epsitec.Common.Support.Druid Compte = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 209);
 				//	designer:cap/OVKI6
 				public static readonly global::Epsitec.Common.Support.Druid Déduction = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 210);
+				//	designer:cap/OVKJ6
+				public static readonly global::Epsitec.Common.Support.Druid Désactivé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 211);
 				//	designer:cap/OVKF6
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 207);
-				//	designer:cap/OVKJ6
-				public static readonly global::Epsitec.Common.Support.Druid Flags = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 211);
 				//	designer:cap/OVKM6
 				public static readonly global::Epsitec.Common.Support.Druid MontantFictif = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 214);
+				//	designer:cap/OVKT6
+				public static readonly global::Epsitec.Common.Support.Druid ParDéfaut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 221);
 				//	designer:cap/OVKG6
-				public static readonly global::Epsitec.Common.Support.Druid Taux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 208);
+				public static readonly global::Epsitec.Common.Support.Druid Taux1 = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 208);
+				//	designer:cap/OVKS6
+				public static readonly global::Epsitec.Common.Support.Druid Taux2 = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 220);
 			}
 			
 			public static class ComptaCompte

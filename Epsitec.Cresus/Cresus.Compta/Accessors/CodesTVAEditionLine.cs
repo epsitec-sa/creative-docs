@@ -21,13 +21,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public CodesTVAEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.dataDict.Add (ColumnType.Code,           new EditionData (this.controller, this.ValidateCode));
-			this.dataDict.Add (ColumnType.Titre,          new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Taux,           new EditionData (this.controller, this.ValidateTaux));
-			this.dataDict.Add (ColumnType.Compte,         new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.CodeEquivalent, new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Chiffre,        new EditionData (this.controller, this.ValidateChiffre));
-			this.dataDict.Add (ColumnType.MontantFictif,  new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Code,          new EditionData (this.controller, this.ValidateCode));
+			this.dataDict.Add (ColumnType.Titre,         new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Taux1,         new EditionData (this.controller, this.ValidateTaux1));
+			this.dataDict.Add (ColumnType.Taux2,         new EditionData (this.controller, this.ValidateTaux2));
+			this.dataDict.Add (ColumnType.Compte,        new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Chiffre,       new EditionData (this.controller, this.ValidateChiffre));
+			this.dataDict.Add (ColumnType.MontantFictif, new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.ParDéfaut,     new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Désactivé,     new EditionData (this.controller));
 		}
 
 
@@ -58,7 +60,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private void ValidateTaux(EditionData data)
+		private void ValidateTaux1(EditionData data)
 		{
 			data.ClearError ();
 
@@ -77,6 +79,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				data.Error = "Il manque le taux";
+			}
+		}
+
+		private void ValidateTaux2(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				decimal? montant = Converters.ParsePercent (data.Text);
+				if (montant.HasValue)
+				{
+					data.Text = Converters.MontantToString (montant);
+				}
+				else
+				{
+					data.Error = "Le taux n'est pas correct";
+				}
 			}
 		}
 
@@ -144,26 +164,30 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
-			this.SetText (ColumnType.Code,           codeTVA.Code);
-			this.SetText (ColumnType.Titre,          codeTVA.Description);
-			this.SetText (ColumnType.Taux,           Converters.PercentToString (codeTVA.Taux));
-			this.SetText (ColumnType.Compte,         JournalDataAccessor.GetNuméro (codeTVA.Compte));
-			this.SetText (ColumnType.CodeEquivalent, codeTVA.CodeEquivalent);
-			this.SetText (ColumnType.Chiffre,        Converters.IntToString (codeTVA.Chiffre));
-			this.SetText (ColumnType.MontantFictif,  Converters.MontantToString (codeTVA.MontantFictif));
+			this.SetText (ColumnType.Code,          codeTVA.Code);
+			this.SetText (ColumnType.Titre,         codeTVA.Description);
+			this.SetText (ColumnType.Taux1,         Converters.PercentToString (codeTVA.Taux1));
+			this.SetText (ColumnType.Taux2,         Converters.PercentToString (codeTVA.Taux2));
+			this.SetText (ColumnType.Compte,        JournalDataAccessor.GetNuméro (codeTVA.Compte));
+			this.SetText (ColumnType.Chiffre,       Converters.IntToString (codeTVA.Chiffre));
+			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
+			this.SetText (ColumnType.ParDéfaut,     codeTVA.ParDéfaut ? "1" : "0");
+			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "1" : "0");
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
-			codeTVA.Code           = this.GetText (ColumnType.Code);
-			codeTVA.Description    = this.GetText (ColumnType.Titre);
-			codeTVA.Taux           = Converters.ParsePercent (this.GetText (ColumnType.Titre)).GetValueOrDefault ();
-			codeTVA.Compte         = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Compte));
-			codeTVA.CodeEquivalent = this.GetText (ColumnType.CodeEquivalent);
-			codeTVA.Chiffre        = Converters.ParseInt (this.GetText (ColumnType.Chiffre));
-			codeTVA.MontantFictif  = Converters.ParseMontant (this.GetText (ColumnType.Titre));
+			codeTVA.Code          = this.GetText (ColumnType.Code);
+			codeTVA.Description   = this.GetText (ColumnType.Titre);
+			codeTVA.Taux1         = Converters.ParsePercent (this.GetText (ColumnType.Taux1)).GetValueOrDefault ();
+			codeTVA.Taux2         = Converters.ParsePercent (this.GetText (ColumnType.Taux2)).GetValueOrDefault ();
+			codeTVA.Compte        = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Compte));
+			codeTVA.Chiffre       = Converters.ParseInt (this.GetText (ColumnType.Chiffre));
+			codeTVA.MontantFictif = Converters.ParseMontant (this.GetText (ColumnType.MontantFictif));
+			codeTVA.ParDéfaut     = this.GetText (ColumnType.ParDéfaut) == "1";
+			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "1";
 		}
 	}
 }

@@ -97,14 +97,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Titre:
 					return codeTVA.Description;
 
-				case ColumnType.Taux:
-					return Converters.PercentToString (codeTVA.Taux);
+				case ColumnType.Taux1:
+					return Converters.PercentToString (codeTVA.Taux1);
+
+				case ColumnType.Taux2:
+					return Converters.PercentToString (codeTVA.Taux2);
 
 				case ColumnType.Compte:
 					return JournalDataAccessor.GetNuméro (codeTVA.Compte);
-
-				case ColumnType.CodeEquivalent:
-					return codeTVA.CodeEquivalent;
 
 				case ColumnType.Chiffre:
 					return Converters.IntToString (codeTVA.Chiffre);

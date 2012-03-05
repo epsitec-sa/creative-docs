@@ -57,7 +57,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				if (mapper.Column == ColumnType.CodeEquivalent)  // insère un gap ?
+				if (mapper.Column == ColumnType.Chiffre  ||
+					mapper.Column == ColumnType.ParDéfaut)  // insère un gap ?
 				{
 					new FrameBox
 					{
@@ -76,6 +77,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
+				}
+				else if (mapper.Column == ColumnType.ParDéfaut ||
+						 mapper.Column == ColumnType.Désactivé)
+				{
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
 				}
 				else
 				{

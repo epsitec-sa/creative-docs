@@ -2027,11 +2027,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Taux</c> field.
+		///	The <c>Taux1</c> field.
 		///	designer:fld/OVKD6/OVKG6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKG6]")]
-		public global::System.Decimal Taux
+		public global::System.Decimal Taux1
 		{
 			get
 			{
@@ -2039,12 +2039,34 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::System.Decimal oldValue = this.Taux;
+				global::System.Decimal oldValue = this.Taux1;
 				if (oldValue != value || !this.IsFieldDefined("[OVKG6]"))
 				{
-					this.OnTauxChanging (oldValue, value);
+					this.OnTaux1Changing (oldValue, value);
 					this.SetField<global::System.Decimal> ("[OVKG6]", oldValue, value);
-					this.OnTauxChanged (oldValue, value);
+					this.OnTaux1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Taux2</c> field.
+		///	designer:fld/OVKD6/OVKS6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKS6]")]
+		public global::System.Decimal? Taux2
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVKS6]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.Taux2;
+				if (oldValue != value || !this.IsFieldDefined("[OVKS6]"))
+				{
+					this.OnTaux2Changing (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKS6]", oldValue, value);
+					this.OnTaux2Changed (oldValue, value);
 				}
 			}
 		}
@@ -2093,28 +2115,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>CodeEquivalent</c> field.
-		///	designer:fld/OVKD6/OVKL6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKL6]")]
-		public global::Epsitec.Common.Types.FormattedText CodeEquivalent
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL6]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.CodeEquivalent;
-				if (oldValue != value || !this.IsFieldDefined("[OVKL6]"))
-				{
-					this.OnCodeEquivalentChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL6]", oldValue, value);
-					this.OnCodeEquivalentChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Chiffre</c> field.
 		///	designer:fld/OVKD6/OVKK6
 		///	</summary>
@@ -2159,24 +2159,46 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Flags</c> field.
-		///	designer:fld/OVKD6/OVKJ6
+		///	The <c>ParDéfaut</c> field.
+		///	designer:fld/OVKD6/OVKT6
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKJ6]")]
-		public int Flags
+		[global::Epsitec.Common.Support.EntityField ("[OVKT6]")]
+		public bool ParDéfaut
 		{
 			get
 			{
-				return this.GetField<int> ("[OVKJ6]");
+				return this.GetField<bool> ("[OVKT6]");
 			}
 			set
 			{
-				int oldValue = this.Flags;
+				bool oldValue = this.ParDéfaut;
+				if (oldValue != value || !this.IsFieldDefined("[OVKT6]"))
+				{
+					this.OnParDéfautChanging (oldValue, value);
+					this.SetField<bool> ("[OVKT6]", oldValue, value);
+					this.OnParDéfautChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Désactivé</c> field.
+		///	designer:fld/OVKD6/OVKJ6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKJ6]")]
+		public bool Désactivé
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVKJ6]");
+			}
+			set
+			{
+				bool oldValue = this.Désactivé;
 				if (oldValue != value || !this.IsFieldDefined("[OVKJ6]"))
 				{
-					this.OnFlagsChanging (oldValue, value);
-					this.SetField<int> ("[OVKJ6]", oldValue, value);
-					this.OnFlagsChanged (oldValue, value);
+					this.OnDésactivéChanging (oldValue, value);
+					this.SetField<bool> ("[OVKJ6]", oldValue, value);
+					this.OnDésactivéChanged (oldValue, value);
 				}
 			}
 		}
@@ -2185,20 +2207,22 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnTauxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnTauxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnTaux1Changing(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnTaux1Changed(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnTaux2Changing(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTaux2Changed(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnCompteChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnCompteChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnDéductionChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnDéductionChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnCodeEquivalentChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnCodeEquivalentChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnChiffreChanging(int? oldValue, int? newValue);
 		partial void OnChiffreChanged(int? oldValue, int? newValue);
 		partial void OnMontantFictifChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnMontantFictifChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnFlagsChanging(int oldValue, int newValue);
-		partial void OnFlagsChanged(int oldValue, int newValue);
+		partial void OnParDéfautChanging(bool oldValue, bool newValue);
+		partial void OnParDéfautChanged(bool oldValue, bool newValue);
+		partial void OnDésactivéChanging(bool oldValue, bool newValue);
+		partial void OnDésactivéChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
