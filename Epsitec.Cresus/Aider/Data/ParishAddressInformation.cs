@@ -1,9 +1,12 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Types;
+
+using Epsitec.Data.Platform;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Data.Platform;
 
 namespace Epsitec.Aider.Data
 {
@@ -17,7 +20,7 @@ namespace Epsitec.Aider.Data
 		{
 			string[] cols = line.Split ('\t');
 
-			System.Diagnostics.Debug.Assert (cols.Length == 8);
+			System.Diagnostics.Debug.Assert (cols.Length == 9);
 
 			this.Row     = int.Parse (cols[0], System.Globalization.CultureInfo.InvariantCulture);
 			this.ZipCode = int.Parse (cols[1], System.Globalization.CultureInfo.InvariantCulture);
@@ -27,6 +30,7 @@ namespace Epsitec.Aider.Data
 			this.StreetName       = cols[4];
 			this.StreetPrefix     = cols[5];
 			this.ParishName       = cols[7];
+			this.RegionCode       = ParishAddressInformation.ParseRegionCode (cols[8]);
 
 			this.NormalizedStreetName = SwissPostStreet.NormalizeStreetName (this.StreetName + ", " + this.StreetPrefix);
 
@@ -45,7 +49,7 @@ namespace Epsitec.Aider.Data
 			}
 		}
 
-		
+
 		public readonly int						Row;
 
 		public readonly int						ZipCode;
@@ -64,6 +68,8 @@ namespace Epsitec.Aider.Data
 
 		public readonly HashSet<int>			StreetNumberSubset;
 
+		public readonly int						RegionCode;
+
 
 		public bool CheckStreetNumber(int number)
 		{
@@ -75,6 +81,18 @@ namespace Epsitec.Aider.Data
 			{
 				return this.StreetNumberSubset.Contains (number);
 			}
+		}
+
+
+		private static int ParseRegionCode(string regionName)
+		{
+			if ((string.IsNullOrEmpty (regionName)) ||
+				(regionName[0] != 'R'))
+			{
+				return 0;
+			}
+
+			return InvariantConverter.ParseInt (regionName, 1);
 		}
 
 

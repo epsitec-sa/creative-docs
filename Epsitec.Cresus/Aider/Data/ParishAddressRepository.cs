@@ -53,6 +53,15 @@ namespace Epsitec.Aider.Data
 		}
 
 		/// <summary>
+		/// Finds all address informations (without duplicates).
+		/// </summary>
+		/// <returns>The collection of address informations.</returns>
+		public IEnumerable<ParishAddressInformation> FindAllAddressInformations()
+		{
+			return this.addresses.Values.SelectMany (x => x.FindAll ()).Distinct ();
+		}
+
+		/// <summary>
 		/// Finds the name of the parish, based on the zip code, the town name and a normalized
 		/// street address.
 		/// </summary>

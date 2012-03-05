@@ -235,10 +235,14 @@ namespace Epsitec.Common.Types
 		/// before the first digit. This method never throws an exception.
 		/// </summary>
 		/// <param name="value">The string containing a numeric value.</param>
-		/// <returns>The number or <c>0</c> if the value is not a number.</returns>
-		public static int ParseInt(string value)
+		/// <param name="startIndex">The start index.</param>
+		/// <returns>
+		/// The number or <c>0</c> if the value is not a number.
+		/// </returns>
+		public static int ParseInt(string value, int startIndex = 0)
 		{
-			if (string.IsNullOrEmpty (value))
+			if ((value == null) ||
+				(startIndex >= value.Length))
 			{
 				return 0;
 			}
@@ -248,7 +252,7 @@ namespace Epsitec.Common.Types
 			bool ok  = false;
 			int  len = value.Length;
 
-			for (int i = 0; i < len; i++)
+			for (int i = startIndex; i < len; i++)
 			{
 				char c = value[i];
 
@@ -300,13 +304,14 @@ namespace Epsitec.Common.Types
 		/// </summary>
 		/// <typeparam name="T">The enumeration type.</typeparam>
 		/// <param name="value">The string containing a numeric value.</param>
+		/// <param name="startIndex">The start index.</param>
 		/// <returns></returns>
-		public static T ParseInt<T>(string value)
+		public static T ParseInt<T>(string value, int startIndex = 0)
 			where T : struct
 		{
 			return string.IsNullOrEmpty (value)
 				? default(T)
-				: (T) (System.Enum.ToObject (typeof (T), InvariantConverter.ParseInt (value)));
+				: (T) (System.Enum.ToObject (typeof (T), InvariantConverter.ParseInt (value, startIndex)));
 		}
 
 		public static long ParseLong(string value)

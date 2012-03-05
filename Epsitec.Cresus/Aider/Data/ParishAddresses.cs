@@ -103,6 +103,12 @@ namespace Epsitec.Aider.Data
 			return null;
 		}
 
+
+		public IEnumerable<ParishAddressInformation> FindAll()
+		{
+			return this.infos.AsReadOnly ();
+		}
+
 		
 		internal void Add(ParishAddressInformation info)
 		{
