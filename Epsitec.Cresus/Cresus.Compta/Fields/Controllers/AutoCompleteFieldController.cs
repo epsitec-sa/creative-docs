@@ -106,6 +106,11 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 					//	Il ne faut surtout pas utiliser this.InternalField.FormattedText directement !
 					this.InternalField.SetSilentFormattedText (this.editionData.Text);
 					this.IsReadOnly = !this.editionData.Enable || !this.columnMapper.Enable;
+
+					if (this.editionData.Parameters.Any ())
+					{
+						UIBuilder.UpdateAutoCompleteTextField (this.InternalField, this.editionData.Parameters.ToArray ());
+					}
 				}
 			}
 		}

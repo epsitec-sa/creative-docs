@@ -187,7 +187,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.TauxTVA)
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
+					//?field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
+					//?field.CreateUI (editorFrame);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
 					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.Journal)

@@ -309,6 +309,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				this.SetText (ColumnType.CompteTVA, JournalEditionLine.GetCodeTVACompte (codeTVA));
 			}
+
+			this.UpdateCodeTVAParameters ();
 		}
 
 		public void TauxTVAChanged()
@@ -355,6 +357,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
 			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
+
+			this.UpdateCodeTVAParameters ();
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -393,6 +397,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				//	Utilise le journal choisi par l'utilisateur dans le widget ad-hoc.
 				écriture.Journal = journal;
+			}
+		}
+
+		private void UpdateCodeTVAParameters()
+		{
+			var parameters = this.GetParameters (ColumnType.TauxTVA);
+			parameters.Clear ();
+
+			var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+
+			if (codeTVA != null)
+			{
+				parameters.Add (Converters.PercentToString (codeTVA.Taux1));
+
+				if (codeTVA.Taux2.HasValue)
+				{
+					parameters.Add (Converters.PercentToString (codeTVA.Taux2));
+				}
 			}
 		}
 

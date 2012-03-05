@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				var list = new List<FormattedText> ();
 
-				foreach (var codeTVA in this.CodesTVA)
+				foreach (var codeTVA in this.CodesTVA.Where (x => !x.Désactivé))
 				{
 					list.Add (codeTVA.MenuDescription);
 				}

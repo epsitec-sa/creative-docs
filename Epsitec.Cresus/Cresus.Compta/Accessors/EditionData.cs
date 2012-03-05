@@ -25,6 +25,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.compta  = this.controller.ComptaEntity;
 			this.période = this.controller.PériodeEntity;
 
+			this.parameters = new List<FormattedText> ();
+
 			this.Enable = true;
 		}
 
@@ -66,6 +68,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public List<FormattedText> Parameters
+		{
+			get
+			{
+				return this.parameters;
+			}
+		}
+
 
 		public void ClearError()
 		{
@@ -97,6 +107,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private readonly System.Action<EditionData>			validateAction;
 		private readonly ComptaEntity						compta;
 		private readonly ComptaPériodeEntity				période;
+		private readonly List<FormattedText>				parameters;
 
 		private FormattedText								text;
 		private FormattedText								error;
