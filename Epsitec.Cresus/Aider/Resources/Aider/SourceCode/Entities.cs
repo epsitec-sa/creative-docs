@@ -6226,8 +6226,18 @@ namespace Epsitec.Aider.Entities
 	///	The <c>IAiderWarning</c> entity.
 	///	designer:cap/LVAEB
 	///	</summary>
-	public interface IAiderWarning
+	public interface IAiderWarning : global::Epsitec.Aider.Entities.IDateRange
 	{
+		///	<summary>
+		///	The <c>HideUntilDate</c> field.
+		///	designer:fld/LVAEB/LVAAC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAAC]")]
+		global::Epsitec.Common.Types.Date? HideUntilDate
+		{
+			get;
+			set;
+		}
 		///	<summary>
 		///	The <c>Title</c> field.
 		///	designer:fld/LVAEB/LVAKB
@@ -6270,6 +6280,24 @@ namespace Epsitec.Aider.Entities
 	}
 	public static partial class IAiderWarningInterfaceImplementation
 	{
+		public static global::Epsitec.Common.Types.Date? GetHideUntilDate(global::Epsitec.Aider.Entities.IAiderWarning obj)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			return entity.GetField<global::Epsitec.Common.Types.Date?> ("[LVAAC]");
+		}
+		public static void SetHideUntilDate(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.Date? value)
+		{
+			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
+			global::Epsitec.Common.Types.Date? oldValue = obj.HideUntilDate;
+			if (oldValue != value || !entity.IsFieldDefined("[LVAAC]"))
+			{
+				IAiderWarningInterfaceImplementation.OnHideUntilDateChanging (obj, oldValue, value);
+				entity.SetField<global::Epsitec.Common.Types.Date?> ("[LVAAC]", oldValue, value);
+				IAiderWarningInterfaceImplementation.OnHideUntilDateChanged (obj, oldValue, value);
+			}
+		}
+		static partial void OnHideUntilDateChanged(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		static partial void OnHideUntilDateChanging(global::Epsitec.Aider.Entities.IAiderWarning obj, global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		public static global::Epsitec.Common.Types.FormattedText GetTitle(global::Epsitec.Aider.Entities.IAiderWarning obj)
 		{
 			global::Epsitec.Common.Support.EntityEngine.AbstractEntity entity = obj as global::Epsitec.Common.Support.EntityEngine.AbstractEntity;
@@ -6449,7 +6477,57 @@ namespace Epsitec.Aider.Entities
 	///	</summary>
 	public partial class AiderPersonWarningEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity, global::Epsitec.Aider.Entities.IAiderWarning
 	{
+		#region IDateRange Members
+		///	<summary>
+		///	The <c>StartDate</c> field.
+		///	designer:fld/LVALB/LVAN3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAN3]")]
+		public global::Epsitec.Common.Types.Date? StartDate
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetStartDate (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetStartDate (this, value);
+			}
+		}
+		///	<summary>
+		///	The <c>EndDate</c> field.
+		///	designer:fld/LVALB/LVAO3
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAO3]")]
+		public global::Epsitec.Common.Types.Date? EndDate
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.GetEndDate (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IDateRangeInterfaceImplementation.SetEndDate (this, value);
+			}
+		}
+		#endregion
 		#region IAiderWarning Members
+		///	<summary>
+		///	The <c>HideUntilDate</c> field.
+		///	designer:fld/LVALB/LVAAC
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[LVAAC]")]
+		public global::Epsitec.Common.Types.Date? HideUntilDate
+		{
+			get
+			{
+				return global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.GetHideUntilDate (this);
+			}
+			set
+			{
+				global::Epsitec.Aider.Entities.IAiderWarningInterfaceImplementation.SetHideUntilDate (this, value);
+			}
+		}
 		///	<summary>
 		///	The <c>Title</c> field.
 		///	designer:fld/LVALB/LVAKB

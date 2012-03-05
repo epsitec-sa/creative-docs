@@ -1820,6 +1820,8 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid Actions = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 371);
 				//	designer:cap/LVANB
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 375);
+				//	designer:cap/LVAAC
+				public static readonly global::Epsitec.Common.Support.Druid HideUntilDate = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 394);
 				//	designer:cap/LVAKB
 				public static readonly global::Epsitec.Common.Support.Druid Title = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 372);
 				//	designer:cap/LVA7C
