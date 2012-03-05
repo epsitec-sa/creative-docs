@@ -55,7 +55,6 @@ namespace Epsitec.Aider.Data.Ech
 						EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChReportedPerson);
 					}
 
-//-					businessContext.ApplyRulesToRegisteredEntities (RuleType.Update);
 					businessContext.SaveChanges ();
 					businessContextCleaner (businessContext);
 
