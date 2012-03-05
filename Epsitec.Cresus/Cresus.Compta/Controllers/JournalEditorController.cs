@@ -504,6 +504,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				this.dataAccessor.GetEditionData (line, ColumnType.Montant).Enable = !totalAutomatique;
+
+				this.SetWidgetVisibility (ColumnType.MontantBrut, line, !totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.MontantTVA,  line, !totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.CodeTVA,     line, !totalAutomatique);
 			}
 
 			this.UpdateMultiEditionData ();
@@ -556,6 +560,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					decimal montant = totalCrédit - totalDébit;
 					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (montant));
 				}
+
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantBrut, null);
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA,  null);
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA,     null);
 			}
 		}
 
