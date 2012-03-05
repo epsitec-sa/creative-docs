@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.MontantTVA,  new EditionData (this.controller, this.ValidateMontantTVA));
 			this.dataDict.Add (ColumnType.Montant,     new EditionData (this.controller, this.ValidateMontant));
 			this.dataDict.Add (ColumnType.CodeTVA,     new EditionData (this.controller, this.ValidateCodeTVA));
-			this.dataDict.Add (ColumnType.CompteTVA,   new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.TauxTVA,     new EditionData (this.controller, this.ValidateTauxTVA));
 			this.dataDict.Add (ColumnType.Journal,     new EditionData (this.controller, this.ValidateJournal));
 		}
 
@@ -80,18 +80,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Validators.ValidateText (data, "Il manque le libellé");
 		}
 
-		private void ValidateMontant(EditionData data)
-		{
-			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
-				data.Text == Converters.MontantToString (0))  // montant nul ?
-			{
-				data.Error = "Le montant ne peut pas être nul";
-				return;
-			}
-
-			Validators.ValidateMontant (data, emptyAccepted: false);
-		}
-
 		private void ValidateMontantTVA(EditionData data)
 		{
 			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
@@ -106,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (!data.HasText)
 				{
-					data.Error = "Vous devez donner un montant, on supprimer le code TVA";
+					data.Error = "Vous devez donner un montant, ou supprimer le code TVA";
 					return;
 				}
 			}
@@ -114,9 +102,43 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Validators.ValidateMontant (data, emptyAccepted: true);
 		}
 
+		private void ValidateMontant(EditionData data)
+		{
+			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+				data.Text == Converters.MontantToString (0))  // montant nul ?
+			{
+				data.Error = "Le montant ne peut pas être nul";
+				return;
+			}
+
+			Validators.ValidateMontant (data, emptyAccepted: false);
+		}
+
 		private void ValidateCodeTVA(EditionData data)
 		{
 			data.ClearError ();
+		}
+
+		private void ValidateTauxTVA(EditionData data)
+		{
+			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
+			{
+				if (data.HasText)
+				{
+					data.Error = "Vous devez donner un code TVA pour pouvoir mettre un taux dans cette colonne";
+					return;
+				}
+			}
+			else
+			{
+				if (!data.HasText)
+				{
+					data.Error = "Vous devez donner un taux, ou supprimer le code TVA";
+					return;
+				}
+			}
+
+			Validators.ValidatePercent (data, emptyAccepted: true);
 		}
 
 		private void ValidateJournal(EditionData data)
@@ -261,6 +283,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.SetText (ColumnType.MontantBrut, null);
 				this.SetText (ColumnType.MontantTVA,  null);
+				this.SetText (ColumnType.Montant,     null);
 				this.SetText (ColumnType.TauxTVA,     null);
 				this.SetText (ColumnType.CompteTVA,   null);
 			}
@@ -285,6 +308,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				this.SetText (ColumnType.CompteTVA, JournalEditionLine.GetCodeTVACompte (codeTVA));
+			}
+		}
+
+		public void TauxTVAChanged()
+		{
+			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
+			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
+			var montant     = Converters.ParseMontant (this.GetText (ColumnType.Montant));
+			var codeTVA     = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+
+			if (codeTVA == null)
+			{
+				this.SetText (ColumnType.MontantBrut, null);
+				this.SetText (ColumnType.MontantTVA,  null);
+				this.SetText (ColumnType.Montant,     null);
+			}
+			else
+			{
+				if (montantBrut.HasValue && montant.GetValueOrDefault () == 0)
+				{
+					this.MontantBrutChanged ();
+				}
+				else
+				{
+					this.MontantChanged ();
+				}
 			}
 		}
 

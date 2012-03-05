@@ -52,6 +52,32 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static void ValidatePercent(EditionData data, bool emptyAccepted)
+		{
+			//	Valide un pourcent.
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				decimal? montant = Converters.ParsePercent (data.Text);
+				if (montant.HasValue)
+				{
+					data.Text = Converters.PercentToString (montant);
+				}
+				else
+				{
+					data.Error = "Le pourcentage n'est pas correct";
+				}
+			}
+			else
+			{
+				if (!emptyAccepted)
+				{
+					data.Error = "Il manque le pourcentage";
+				}
+			}
+		}
+
 		public static void ValidateDate(EditionData data, bool emptyAccepted)
 		{
 			//	Valide une date située dans n'importe quelle période.

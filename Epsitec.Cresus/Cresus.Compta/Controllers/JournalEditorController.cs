@@ -185,6 +185,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
 				}
+				else if (mapper.Column == ColumnType.TauxTVA)
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
+					field.CreateUI (editorFrame);
+				}
 				else if (mapper.Column == ColumnType.Journal)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
@@ -282,6 +287,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
 			editionLine.CodeTVAChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void TauxTVAChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.TauxTVAChanged ();
 			this.EditorTextChanged ();
 		}
 
