@@ -14,6 +14,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKK4]", typeof (Epsitec.Cresus.Compta.Entities.ComptaBudgetEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK75]", typeof (Epsitec.Cresus.Compta.Entities.ComptaUtilisateurEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB5]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKD6]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -137,6 +138,18 @@ namespace Epsitec.Cresus.Compta.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity> ("[OVKH5]");
+			}
+		}
+		///	<summary>
+		///	The <c>CodesTVA</c> field.
+		///	designer:fld/OVK/OVKN6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKN6]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> CodesTVA
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKN6]");
 			}
 		}
 		///	<summary>
@@ -345,6 +358,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>CodeTVA</c> field.
+		///	designer:fld/OVK3/OVKO6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKO6]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity CodeTVA
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKO6]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue = this.CodeTVA;
+				if (oldValue != value || !this.IsFieldDefined("[OVKO6]"))
+				{
+					this.OnCodeTVAChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKO6]", oldValue, value);
+					this.OnCodeTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Monnaie</c> field.
 		///	designer:fld/OVK3/OVK9
 		///	</summary>
@@ -415,6 +450,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCompteOuvBouclChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnIndexOuvBouclChanging(int oldValue, int newValue);
 		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
+		partial void OnCodeTVAChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
+		partial void OnCodeTVAChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnMonnaieChanging(string oldValue, string newValue);
 		partial void OnMonnaieChanged(string oldValue, string newValue);
 		partial void OnNiveauChanging(int oldValue, int newValue);
@@ -608,6 +645,50 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>MontantBrut</c> field.
+		///	designer:fld/OVKB/OVKQ6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKQ6]")]
+		public global::System.Decimal? MontantBrut
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVKQ6]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.MontantBrut;
+				if (oldValue != value || !this.IsFieldDefined("[OVKQ6]"))
+				{
+					this.OnMontantBrutChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKQ6]", oldValue, value);
+					this.OnMontantBrutChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MontantTVA</c> field.
+		///	designer:fld/OVKB/OVKP6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKP6]")]
+		public global::System.Decimal? MontantTVA
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVKP6]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.MontantTVA;
+				if (oldValue != value || !this.IsFieldDefined("[OVKP6]"))
+				{
+					this.OnMontantTVAChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKP6]", oldValue, value);
+					this.OnMontantTVAChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Montant</c> field.
 		///	designer:fld/OVKB/OVKI
 		///	</summary>
@@ -630,67 +711,23 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TypeTVA</c> field.
-		///	designer:fld/OVKB/OVKJ
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKJ]")]
-		public string TypeTVA
-		{
-			get
-			{
-				return this.GetField<string> ("[OVKJ]");
-			}
-			set
-			{
-				string oldValue = this.TypeTVA;
-				if (oldValue != value || !this.IsFieldDefined("[OVKJ]"))
-				{
-					this.OnTypeTVAChanging (oldValue, value);
-					this.SetField<string> ("[OVKJ]", oldValue, value);
-					this.OnTypeTVAChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>NuméroTVA</c> field.
-		///	designer:fld/OVKB/OVKK
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKK]")]
-		public string NuméroTVA
-		{
-			get
-			{
-				return this.GetField<string> ("[OVKK]");
-			}
-			set
-			{
-				string oldValue = this.NuméroTVA;
-				if (oldValue != value || !this.IsFieldDefined("[OVKK]"))
-				{
-					this.OnNuméroTVAChanging (oldValue, value);
-					this.SetField<string> ("[OVKK]", oldValue, value);
-					this.OnNuméroTVAChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>CodeTVA</c> field.
 		///	designer:fld/OVKB/OVKL
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKL]")]
-		public string CodeTVA
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity CodeTVA
 		{
 			get
 			{
-				return this.GetField<string> ("[OVKL]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKL]");
 			}
 			set
 			{
-				string oldValue = this.CodeTVA;
+				global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue = this.CodeTVA;
 				if (oldValue != value || !this.IsFieldDefined("[OVKL]"))
 				{
 					this.OnCodeTVAChanging (oldValue, value);
-					this.SetField<string> ("[OVKL]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKL]", oldValue, value);
 					this.OnCodeTVAChanged (oldValue, value);
 				}
 			}
@@ -754,14 +791,14 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnPièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnMontantBrutChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMontantBrutChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMontantTVAChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMontantTVAChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnMontantChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnTypeTVAChanging(string oldValue, string newValue);
-		partial void OnTypeTVAChanged(string oldValue, string newValue);
-		partial void OnNuméroTVAChanging(string oldValue, string newValue);
-		partial void OnNuméroTVAChanged(string oldValue, string newValue);
-		partial void OnCodeTVAChanging(string oldValue, string newValue);
-		partial void OnCodeTVAChanged(string oldValue, string newValue);
+		partial void OnCodeTVAChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
+		partial void OnCodeTVAChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
 		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
 		partial void OnJournalChanging(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
@@ -1926,6 +1963,257 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaPiècesGeneratorEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaCodeTVA Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaCodeTVA</c> entity.
+	///	designer:cap/OVKD6
+	///	</summary>
+	public partial class ComptaCodeTVAEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Code</c> field.
+		///	designer:fld/OVKD6/OVKE6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKE6]")]
+		public global::Epsitec.Common.Types.FormattedText Code
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKE6]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Code;
+				if (oldValue != value || !this.IsFieldDefined("[OVKE6]"))
+				{
+					this.OnCodeChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKE6]", oldValue, value);
+					this.OnCodeChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Description</c> field.
+		///	designer:fld/OVKD6/OVKF6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKF6]")]
+		public global::Epsitec.Common.Types.FormattedText Description
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKF6]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Description;
+				if (oldValue != value || !this.IsFieldDefined("[OVKF6]"))
+				{
+					this.OnDescriptionChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKF6]", oldValue, value);
+					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Taux</c> field.
+		///	designer:fld/OVKD6/OVKG6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKG6]")]
+		public global::System.Decimal Taux
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[OVKG6]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Taux;
+				if (oldValue != value || !this.IsFieldDefined("[OVKG6]"))
+				{
+					this.OnTauxChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[OVKG6]", oldValue, value);
+					this.OnTauxChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Compte</c> field.
+		///	designer:fld/OVKD6/OVKH6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKH6]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity Compte
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKH6]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue = this.Compte;
+				if (oldValue != value || !this.IsFieldDefined("[OVKH6]"))
+				{
+					this.OnCompteChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity> ("[OVKH6]", oldValue, value);
+					this.OnCompteChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Déduction</c> field.
+		///	designer:fld/OVKD6/OVKI6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKI6]")]
+		public global::System.Decimal Déduction
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[OVKI6]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Déduction;
+				if (oldValue != value || !this.IsFieldDefined("[OVKI6]"))
+				{
+					this.OnDéductionChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[OVKI6]", oldValue, value);
+					this.OnDéductionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>CodeEquivalent</c> field.
+		///	designer:fld/OVKD6/OVKL6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKL6]")]
+		public global::Epsitec.Common.Types.FormattedText CodeEquivalent
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL6]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.CodeEquivalent;
+				if (oldValue != value || !this.IsFieldDefined("[OVKL6]"))
+				{
+					this.OnCodeEquivalentChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVKL6]", oldValue, value);
+					this.OnCodeEquivalentChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Chiffre</c> field.
+		///	designer:fld/OVKD6/OVKK6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKK6]")]
+		public int Chiffre
+		{
+			get
+			{
+				return this.GetField<int> ("[OVKK6]");
+			}
+			set
+			{
+				int oldValue = this.Chiffre;
+				if (oldValue != value || !this.IsFieldDefined("[OVKK6]"))
+				{
+					this.OnChiffreChanging (oldValue, value);
+					this.SetField<int> ("[OVKK6]", oldValue, value);
+					this.OnChiffreChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MontantFictif</c> field.
+		///	designer:fld/OVKD6/OVKM6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKM6]")]
+		public global::System.Decimal MontantFictif
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[OVKM6]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.MontantFictif;
+				if (oldValue != value || !this.IsFieldDefined("[OVKM6]"))
+				{
+					this.OnMontantFictifChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[OVKM6]", oldValue, value);
+					this.OnMontantFictifChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Flags</c> field.
+		///	designer:fld/OVKD6/OVKJ6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKJ6]")]
+		public int Flags
+		{
+			get
+			{
+				return this.GetField<int> ("[OVKJ6]");
+			}
+			set
+			{
+				int oldValue = this.Flags;
+				if (oldValue != value || !this.IsFieldDefined("[OVKJ6]"))
+				{
+					this.OnFlagsChanging (oldValue, value);
+					this.SetField<int> ("[OVKJ6]", oldValue, value);
+					this.OnFlagsChanged (oldValue, value);
+				}
+			}
+		}
+		
+		partial void OnCodeChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTauxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnTauxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnCompteChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnCompteChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
+		partial void OnDéductionChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnDéductionChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnCodeEquivalentChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnCodeEquivalentChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnChiffreChanging(int oldValue, int newValue);
+		partial void OnChiffreChanged(int oldValue, int newValue);
+		partial void OnMontantFictifChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantFictifChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnFlagsChanging(int oldValue, int newValue);
+		partial void OnFlagsChanged(int oldValue, int newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 205);	// [OVKD6]
+		public static readonly string EntityStructuredTypeKey = "[OVKD6]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaCodeTVAEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Catégorie,      new EditionData (this.controller, this.ValidateCatégorie));
 			this.dataDict.Add (ColumnType.Type,           new EditionData (this.controller, this.ValidateType));
 			this.dataDict.Add (ColumnType.Groupe,         new EditionData (this.controller, this.ValidateGroupe));
-			this.dataDict.Add (ColumnType.TVA,            new EditionData (this.controller, this.ValidateTVA));
+			this.dataDict.Add (ColumnType.CodeTVA,        new EditionData (this.controller, this.ValidateCodeTVA));
 			this.dataDict.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
 			this.dataDict.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
 			this.dataDict.Add (ColumnType.Monnaie,        new EditionData (this.controller));
@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		}
 
-		private void ValidateTVA(EditionData data)
+		private void ValidateCodeTVA(EditionData data)
 		{
 			data.ClearError ();
 		}
@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Catégorie,      PlanComptableDataAccessor.CatégorieToText (compte.Catégorie));
 			this.SetText (ColumnType.Type,           PlanComptableDataAccessor.TypeToText (compte.Type));
 			this.SetText (ColumnType.Groupe,         PlanComptableDataAccessor.GetNuméro (compte.Groupe));
-//			this.SetText (ColumnType.TVA,            PlanComptableAccessor.TVAToText (compte.TVA));
+			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVA));
 			this.SetText (ColumnType.CompteOuvBoucl, PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl));
 			this.SetText (ColumnType.IndexOuvBoucl,  (compte.IndexOuvBoucl == 0) ? FormattedText.Empty : compte.IndexOuvBoucl.ToString ());
 			this.SetText (ColumnType.Monnaie,        compte.Monnaie);
@@ -222,16 +222,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				compte.Type = type;
 			}
 
-			compte.Groupe = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
-
-#if false
-			VatCode tva;
-			if (PlanComptableDataAccessor.TextToTVA (this.GetText (ColumnType.TVA), out tva))
-			{
-//				compte.TVA = tva;
-			}
-#endif
-
+			compte.Groupe         = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
+			compte.CodeTVA        = JournalEditionLine.TextToCodeTVA (this.compta, this.GetText (ColumnType.CodeTVA));
 			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOuvBoucl));
 
 			int index;

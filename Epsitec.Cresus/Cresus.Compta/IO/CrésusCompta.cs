@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			var groups  = new Dictionary<string, string> ();
 			var boucles = new Dictionary<string, string> ();
+			var codesTVA = new Dictionary<ComptaCompteEntity, string> ();
 
 			while (++indexCompte < this.lines.Length)
 			{
@@ -193,6 +194,9 @@ namespace Epsitec.Cresus.Compta.IO
 						boucles.Add (numéro, boucle);
 					}
 
+					var codeTVA = this.GetEntryContentText (indexCompte, "VATCODE");
+					codesTVA.Add (compte, codeTVA);
+
 					this.compta.PlanComptable.Add (compte);
 				}
 			}
@@ -221,6 +225,46 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			this.compta.UpdateNiveauCompte ();
+
+			//	Importe des codes TVA.
+			int indexTVA = this.IndexOfLine ("BEGIN=TVACODES");
+
+			while (++indexTVA < this.lines.Length)
+			{
+				var line = this.lines[indexTVA];
+
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				if (line.StartsWith ("END=TVACODES"))
+				{
+					break;
+				}
+
+				if (line.StartsWith ("ENTRY"))
+				{
+					var codeTVA = new ComptaCodeTVAEntity ();
+
+					codeTVA.Code        = this.GetEntryContentText (indexTVA, "NAME");
+					codeTVA.Description = this.GetEntryContentText (indexTVA, "COMMENT");
+					codeTVA.Taux        = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
+					codeTVA.Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault ();
+					codeTVA.Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT"));
+
+					this.compta.CodesTVA.Add (codeTVA);
+				}
+			}
+
+			//	Met à jour les codes TVA dans les comptes.
+			foreach (var pair in codesTVA)
+			{
+				var compte  = pair.Key;
+				var codeTVA = pair.Value;
+
+				compte.CodeTVA = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
+			}
 
 			return null;  // ok
 		}

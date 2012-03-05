@@ -149,6 +149,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Libellé:
 					return écriture.Libellé;
 
+				case ColumnType.MontantBrut:
+					if (écriture.CodeTVA == null)
+					{
+						return FormattedText.Null;
+					}
+					else
+					{
+						return Converters.MontantToString (écriture.MontantBrut);
+					}
+
+				case ColumnType.MontantTVA:
+					if (écriture.CodeTVA == null)
+					{
+						return FormattedText.Null;
+					}
+					else
+					{
+						return Converters.MontantToString (écriture.MontantTVA);
+					}
+
 				case ColumnType.Montant:
 					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
 
@@ -158,6 +178,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 
 					return montant;
+
+				case ColumnType.CodeTVA:
+					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
+
+				case ColumnType.CompteTVA:
+					return JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA);
 
 				case ColumnType.Journal:
 					return écriture.Journal.Nom;

@@ -18,6 +18,63 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Converters
 	{
+		#region Pourcent
+		public static decimal? ParsePercent(FormattedText text)
+		{
+			return Converters.ParsePercent (text.ToSimpleText ());
+		}
+
+		public static decimal? ParsePercent(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+
+			bool hasPercent = false;
+			if (text.Contains ('%'))
+			{
+				hasPercent = true;
+				text = text.Replace ("%", "");
+			}
+
+			decimal d;
+			if (decimal.TryParse (text, out d))
+			{
+				if (hasPercent)
+				{
+					d /= 100;
+				}
+
+				return d;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public static string PercentToString(decimal? percent)
+		{
+			if (percent.HasValue)
+			{
+				string s = (percent.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+				while (s.EndsWith ("0"))
+				{
+					s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
+				}
+
+				return s + "%";
+			}
+			else
+			{
+				return null;
+			}
+		}
+		#endregion
+
+
 		#region Montant
 		public static decimal? ParseMontant(FormattedText text)
 		{

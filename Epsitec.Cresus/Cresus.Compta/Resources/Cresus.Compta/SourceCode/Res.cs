@@ -551,6 +551,8 @@ namespace Epsitec.Cresus.Compta
 			public static readonly Epsitec.Common.Types.StructuredType Compta = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 0));
 			//	designer:cap/OVKK4
 			public static readonly Epsitec.Common.Types.StructuredType ComptaBudget = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 148));
+			//	designer:cap/OVKD6
+			public static readonly Epsitec.Common.Types.StructuredType ComptaCodeTVA = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 205));
 			//	designer:cap/OVK3
 			public static readonly Epsitec.Common.Types.StructuredType ComptaCompte = (global::Epsitec.Common.Types.StructuredType) global::Epsitec.Common.Types.TypeRosetta.CreateTypeObject (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 3));
 			//	designer:cap/OVKB
@@ -696,6 +698,8 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVKN6
+				public static readonly global::Epsitec.Common.Support.Druid CodesTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 215);
 				//	designer:cap/OVKJ4
 				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 147);
 				//	designer:cap/OVKH3
@@ -730,6 +734,32 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Période = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 153);
 			}
 			
+			public static class ComptaCodeTVA
+			{
+				internal static void _Initialize()
+				{
+				}
+				
+				//	designer:cap/OVKK6
+				public static readonly global::Epsitec.Common.Support.Druid Chiffre = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 212);
+				//	designer:cap/OVKE6
+				public static readonly global::Epsitec.Common.Support.Druid Code = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 206);
+				//	designer:cap/OVKL6
+				public static readonly global::Epsitec.Common.Support.Druid CodeEquivalent = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 213);
+				//	designer:cap/OVKH6
+				public static readonly global::Epsitec.Common.Support.Druid Compte = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 209);
+				//	designer:cap/OVKI6
+				public static readonly global::Epsitec.Common.Support.Druid Déduction = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 210);
+				//	designer:cap/OVKF6
+				public static readonly global::Epsitec.Common.Support.Druid Description = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 207);
+				//	designer:cap/OVKJ6
+				public static readonly global::Epsitec.Common.Support.Druid Flags = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 211);
+				//	designer:cap/OVKM6
+				public static readonly global::Epsitec.Common.Support.Druid MontantFictif = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 214);
+				//	designer:cap/OVKG6
+				public static readonly global::Epsitec.Common.Support.Druid Taux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 208);
+			}
+			
 			public static class ComptaCompte
 			{
 				internal static void _Initialize()
@@ -740,6 +770,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Budgets = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 154);
 				//	designer:cap/OVKI2
 				public static readonly global::Epsitec.Common.Support.Druid Catégorie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 82);
+				//	designer:cap/OVKO6
+				public static readonly global::Epsitec.Common.Support.Druid CodeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 216);
 				//	designer:cap/OVK7
 				public static readonly global::Epsitec.Common.Support.Druid CompteOuvBoucl = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7);
 				//	designer:cap/OVK6
@@ -780,16 +812,16 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17);
 				//	designer:cap/OVKI
 				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
+				//	designer:cap/OVKQ6
+				public static readonly global::Epsitec.Common.Support.Druid MontantBrut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218);
+				//	designer:cap/OVKP6
+				public static readonly global::Epsitec.Common.Support.Druid MontantTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 217);
 				//	designer:cap/OVKD
 				public static readonly global::Epsitec.Common.Support.Druid MultiId = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13);
-				//	designer:cap/OVKK
-				public static readonly global::Epsitec.Common.Support.Druid NuméroTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 20);
 				//	designer:cap/OVKG
 				public static readonly global::Epsitec.Common.Support.Druid Pièce = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 16);
 				//	designer:cap/OVKA1
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
-				//	designer:cap/OVKJ
-				public static readonly global::Epsitec.Common.Support.Druid TypeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 19);
 			}
 			
 			public static class ComptaJournal
@@ -995,6 +1027,7 @@ namespace Epsitec.Cresus.Compta
 			Values.Enum.TypeDeCompte._Initialize ();
 			Fields.Compta._Initialize ();
 			Fields.ComptaBudget._Initialize ();
+			Fields.ComptaCodeTVA._Initialize ();
 			Fields.ComptaCompte._Initialize ();
 			Fields.ComptaEcriture._Initialize ();
 			Fields.ComptaJournal._Initialize ();

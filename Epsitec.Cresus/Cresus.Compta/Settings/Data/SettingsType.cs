@@ -20,6 +20,9 @@ namespace Epsitec.Cresus.Compta
 		EcriturePlusieursPièces,
 		EcritureForcePièces,
 		EcritureMultiEditionLineCount,
+		EcritureTVA,
+		EcritureMontreCompteTVA,
+		EcritureEditeMontantTVA,
 
 		PriceDecimalDigits,
 		PriceDecimalSeparator,

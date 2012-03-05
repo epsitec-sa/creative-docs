@@ -38,6 +38,10 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
 			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
 			this.Add (new IntSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5, 3, 10));
+//			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureTVA,             false));
+			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureTVA,             true));
+			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureMontreCompteTVA, false));
+			this.Add (new BoolSettingData   (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantTVA, false));
 
 			//	Réglages pour les montants :
 			this.Add (new IntSettingData    (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    2, 0, 5));

@@ -172,13 +172,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Catégorie,      0.20, "Catégorie",       "Catégorie du compte");
 				yield return new ColumnMapper (ColumnType.Type,           0.20, "Type",            "Type du compte");
 				yield return new ColumnMapper (ColumnType.Groupe,         0.20, "Groupe",          "Numéro du compte servant à regrouper celui-ci");
-				yield return new ColumnMapper (ColumnType.TVA,            0.15, "TVA",             "Choix pour la TVA");
+				yield return new ColumnMapper (ColumnType.CodeTVA,        0.20, "Code TVA",        "Code TVA et taux");
 				yield return new ColumnMapper (ColumnType.CompteOuvBoucl, 0.20, "Ouv/Boucl",       "Numéro de compte utilisé lors des bouclements ou réouvertures");
 				yield return new ColumnMapper (ColumnType.IndexOuvBoucl,  0.05, "",                "Ordre utilisé lors des bouclements ou réouvertures");
 				yield return new ColumnMapper (ColumnType.Monnaie,        0.20, "Monnaie",         "Monnaie de ce compte");
 
 				yield return new ColumnMapper (ColumnType.Profondeur, 0.20, ContentAlignment.MiddleLeft, "Profondeur", show: false);
 			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			bool hasTVA = this.settingsList.GetBool (SettingsType.EcritureTVA);
+
+			this.ShowHideColumn (ColumnType.CodeTVA, hasTVA);
 		}
 	}
 }

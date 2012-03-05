@@ -12,6 +12,23 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public FormattedText[] CodesTVADescription
+		{
+			//	Retourne la liste des descriptions des codes TVA.
+			get
+			{
+				var list = new List<FormattedText> ();
+
+				foreach (var codeTVA in this.CodesTVA.OrderBy (x => x.Code))
+				{
+					list.Add (codeTVA.ShortDescription);
+				}
+
+				return list.ToArray ();
+			}
+		}
+
+
 		public FormattedText GetCompteRemoveError(ComptaCompteEntity compte)
 		{
 			if (compte.Type == TypeDeCompte.Groupe)

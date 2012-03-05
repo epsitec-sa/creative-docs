@@ -71,6 +71,15 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureMultiEditionLineCount:
 					return "Nb lignes éditables d'une écriture multiple";
 
+				case SettingsType.EcritureTVA:
+					return "Gère la TVA";
+
+				case SettingsType.EcritureMontreCompteTVA:
+					return "Montre le compte pour la TVA";
+
+				case SettingsType.EcritureEditeMontantTVA:
+					return "Permet l'édition du montant de la TVA";
+
 
 				case SettingsType.PriceDecimalDigits:
 					return "Nombre de décimales";

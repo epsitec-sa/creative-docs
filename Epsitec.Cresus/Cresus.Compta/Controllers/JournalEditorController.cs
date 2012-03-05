@@ -154,9 +154,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
-				else if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
+				else if (mapper.Column == ColumnType.Débit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteDébitChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
+				}
+				else if (mapper.Column == ColumnType.Crédit)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteCréditChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
@@ -171,6 +178,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.CreateButtonModèleUI (field, line);
 				}
+				else if (mapper.Column == ColumnType.CodeTVA)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CodeTVAChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.CodesTVADescription);
+				}
 				else if (mapper.Column == ColumnType.Journal)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
@@ -179,13 +193,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
+				else if (mapper.Column == ColumnType.MontantBrut)
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantBrutChanged);
+					field.CreateUI (editorFrame);
+				}
+				else if (mapper.Column == ColumnType.MontantTVA)
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantTVAChanged);
+					field.CreateUI (editorFrame);
+				}
+				else if (mapper.Column == ColumnType.Montant)
+				{
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantChanged);
+					field.CreateUI (editorFrame);
+				}
 				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.Montant)
+				if (mapper.Column == ColumnType.MontantBrut ||
+					mapper.Column == ColumnType.MontantTVA  ||
+					mapper.Column == ColumnType.Montant     )
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
@@ -209,6 +240,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
 			return modify ? "Modification d'une écriture :" : "Création d'une écriture :";
+		}
+
+
+		private void CompteDébitChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.CompteDébitChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void CompteCréditChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.CompteCréditChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void MontantBrutChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.MontantBrutChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void MontantTVAChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.MontantTVAChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void MontantChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.MontantChanged ();
+			this.EditorTextChanged ();
+		}
+
+		private void CodeTVAChanged()
+		{
+			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
+			editionLine.CodeTVAChanged ();
+			this.EditorTextChanged ();
 		}
 
 

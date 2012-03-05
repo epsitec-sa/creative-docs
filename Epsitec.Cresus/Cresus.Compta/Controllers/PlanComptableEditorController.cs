@@ -91,6 +91,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal && x.Catégorie == CatégorieDeCompte.Exploitation);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
+				else if (mapper.Column == ColumnType.CodeTVA)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.CodesTVADescription);
+				}
 				else if (mapper.Column == ColumnType.Monnaie)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
