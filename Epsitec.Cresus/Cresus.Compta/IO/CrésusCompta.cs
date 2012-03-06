@@ -620,6 +620,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			this.MergeStep1 (journal);
 			this.MergeStep2 (journal);
+			this.MergeStep3 (journal);
 
 			return null;  // ok
 		}
@@ -804,7 +805,7 @@ namespace Epsitec.Cresus.Compta.IO
 				if (count == 2)
 				{
 					var merge = this.MergeEcritures2 (écriture, suivante);
-					
+
 					if (merge != null)
 					{
 						journal.RemoveAt (i);
@@ -817,27 +818,6 @@ namespace Epsitec.Cresus.Compta.IO
 
 				i += count;
 			}
-		}
-
-		private int MergeMultiCount(List<ComptaEcritureEntity> journal, int i)
-		{
-			int count = 1;
-			int id = journal[i].MultiId;
-
-			if (id != 0)
-			{
-				while (++i < journal.Count)
-				{
-					if (id != journal[i].MultiId)
-					{
-						break;
-					}
-
-					count++;
-				}
-			}
-
-			return count;
 		}
 		
 		private ComptaEcritureEntity MergeEcritures2(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
@@ -864,6 +844,107 @@ namespace Epsitec.Cresus.Compta.IO
 			};
 
 			return merge;
+		}
+
+		private void MergeStep3(List<ComptaEcritureEntity> journal)
+		{
+			int i = 0;
+			while (i < journal.Count)
+			{
+				int count = this.MergeMultiCount (journal, i);
+				if (count > 1)
+				{
+					this.MergeMultiTotal (journal, i, count);
+				}
+
+				i += count;
+			}
+		}
+
+		private void MergeMultiTotal(List<ComptaEcritureEntity> journal, int i, int count)
+		{
+			int cp = -1;
+			
+			decimal totalBrutDébit  = 0;
+			decimal totalBrutCrédit = 0;
+			decimal totalTVADébit   = 0;
+			decimal totalTVACrédit  = 0;
+
+			for (int index = i; index < i+count; index++)
+			{
+				var écriture = journal[index];
+
+				if (écriture.TotalAutomatique)
+				{
+					cp = index;
+				}
+				else
+				{
+					if (écriture.Débit == null)  // débit multiple ?
+					{
+						totalBrutCrédit += écriture.MontantBrut.GetValueOrDefault ();
+						totalTVACrédit  += écriture.MontantTVA.GetValueOrDefault ();
+					}
+
+					if (écriture.Crédit == null)  // crédit multiple ?
+					{
+						totalBrutDébit += écriture.MontantBrut.GetValueOrDefault ();
+						totalTVADébit  += écriture.MontantTVA.GetValueOrDefault ();
+					}
+				}
+			}
+
+			if (cp != -1)
+			{
+				decimal? totalBrut = 0;
+				decimal? totalTVA  = 0;
+
+				if (journal[cp].Débit == null)  // débit multiple ?
+				{
+					totalBrut = totalBrutDébit - totalBrutCrédit;
+					totalTVA  = totalTVADébit  - totalTVACrédit;
+				}
+
+				if (journal[cp].Crédit == null)  // crédit multiple ?
+				{
+					totalBrut = totalBrutCrédit - totalBrutDébit;
+					totalTVA  = totalTVACrédit  - totalTVADébit;
+				}
+
+				if (totalBrut == 0)
+				{
+					totalBrut = null;
+				}
+
+				if (totalTVA == 0)
+				{
+					totalTVA = null;
+				}
+
+				journal[cp].MontantBrut = totalBrut;
+				journal[cp].MontantTVA  = totalTVA;
+			}
+		}
+
+		private int MergeMultiCount(List<ComptaEcritureEntity> journal, int i)
+		{
+			int count = 1;
+			int id = journal[i].MultiId;
+
+			if (id != 0)
+			{
+				while (++i < journal.Count)
+				{
+					if (id != journal[i].MultiId)
+					{
+						break;
+					}
+
+					count++;
+				}
+			}
+
+			return count;
 		}
 		#endregion
 

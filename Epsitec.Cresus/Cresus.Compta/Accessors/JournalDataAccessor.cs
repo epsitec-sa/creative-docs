@@ -150,24 +150,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Libellé;
 
 				case ColumnType.MontantBrut:
-					if (écriture.CodeTVA == null)
-					{
-						return FormattedText.Null;
-					}
-					else
-					{
-						return Converters.MontantToString (écriture.MontantBrut);
-					}
+					return Converters.MontantToString (écriture.MontantBrut);
 
 				case ColumnType.MontantTVA:
-					if (écriture.CodeTVA == null)
-					{
-						return FormattedText.Null;
-					}
-					else
-					{
-						return Converters.MontantToString (écriture.MontantTVA);
-					}
+					return Converters.MontantToString (écriture.MontantTVA);
 
 				case ColumnType.Montant:
 					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
