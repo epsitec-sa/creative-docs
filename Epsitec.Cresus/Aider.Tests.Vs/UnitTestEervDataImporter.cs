@@ -41,12 +41,12 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
-				var parishes = ParishAddressRepository.Current.FindAllAddressInformations ().ToList ();
+				var parishRepository = ParishAddressRepository.Current;
 
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
-				
-				EervDataImporter.ImportEervData (businessContextCreator, businessContextCleaner, parishes);
+
+				EervDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
 
 				Services.ShutDown ();
 			}

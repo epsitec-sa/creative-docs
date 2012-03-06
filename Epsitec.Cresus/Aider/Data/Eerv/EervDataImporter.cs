@@ -1,16 +1,21 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System;
 
 using System.Collections.Generic;
 
+using System.Diagnostics;
+
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -21,21 +26,23 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void ImportEervData(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<ParishAddressInformation> parishInformations)
+		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository)
 		{
-			var result = EervDataImporter.ImportRegionsAndParishes (businessContextCreator, businessContextCleaner, parishInformations);
+			var result = EervDataImporter.ImportRegionsAndParishes (businessContextCreator, businessContextCleaner, parishRepository);
 
 			var regionNumbersToEntityKeys = result.Item1;
 			var parishNamesToEntityKeys = result.Item2;
+
+			EervDataImporter.AssignPersonsToParishes (businessContextCreator, businessContextCleaner, parishRepository, parishNamesToEntityKeys);
 		}
 
 
-		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<ParishAddressInformation> parishInformations)
+		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository)
 		{
 			Dictionary<int, EntityKey> regionNumbersToEntityKeys;
 			Dictionary<string, EntityKey> parishNamesToEntityKeys;
 
-			var regions = EervDataImporter.GetRegions (parishInformations);
+			var regions = EervDataImporter.GetRegions (parishRepository);
 
 			using (var businessContext = businessContextCreator ())
 			{
@@ -61,9 +68,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> GetRegions(IEnumerable<ParishAddressInformation> parishInformations)
+		private static Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> GetRegions(ParishAddressRepository parishRepository)
 		{
-			return parishInformations
+			return parishRepository.FindAllAddressInformations ()
 				.GroupBy (pi => pi.RegionCode)
 				.ToDictionary (g => g.Key, g => g.GroupBy (pi => pi.ParishName).ToDictionary (g2 => g2.Key, g2 => g2.ToList ()));
 		}
@@ -143,6 +150,147 @@ namespace Epsitec.Aider.Data.Eerv
 			groupDefinition.Type = type;
 
 			return groupDefinition;
+		}
+
+
+		private static void AssignPersonsToParishes(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
+		{
+			// TODO This method could be significantly improved performance wise if we could have a
+			// way to return only a subset of entities from a request to the DataContext. Because
+			// now we have to rely on the set of persons that have already processed and we have to
+			// load all persons in memory at each batch, which is useless and horribly slow.
+
+			var processedPersons = new HashSet<EntityKey> ();
+
+			var batchSize = 5000;
+			var finished = false;
+
+			var batchIndex = 0;
+
+			do
+			{
+				BusinessContext businessContext = null;
+
+				try
+				{
+					businessContext = businessContextCreator ();
+
+					var processed = EervDataImporter.AssignPersonsToParishes (businessContext, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
+
+					if (processed.Any ())
+					{
+						processedPersons.AddRange (processed);
+					}
+					else
+					{
+						finished = true;
+					}
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						businessContext.SaveChanges ();
+						businessContextCleaner (businessContext);
+						businessContext.Dispose ();
+					}
+				}
+
+				var t = DateTime.Now;
+				var lowerBound = batchIndex * batchSize;
+				var upperBound = (batchIndex + 1) * batchSize;
+
+				Debug.WriteLine (string.Format ("[{0}]\tAssigned person batch ({1}-{2}) to parish", t, lowerBound, upperBound));
+
+				batchIndex++;
+			}
+			while (!finished);
+		}
+
+
+		private static HashSet<EntityKey> AssignPersonsToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, HashSet<EntityKey> processedPersons, int batchSize)
+		{
+			var processed = new HashSet<EntityKey> ();
+			var persons = businessContext.GetAllEntities<AiderPersonEntity> ().ToList ();
+
+			for (int i = 0; i < persons.Count && processed.Count < batchSize; i++)
+			{
+				var person = persons[i];
+				var personEntityKey = businessContext.DataContext.GetNormalizedEntityKey (person).Value;
+
+				var alreadyProcessed = processedPersons.Contains (personEntityKey);
+
+				if (!alreadyProcessed)
+				{
+					EervDataImporter.AssignPersonToParish (businessContext, parishRepository, parishNamesToEntityKeys, person);
+
+					processed.Add (personEntityKey);
+				}
+			}
+
+			return processed;
+		}
+
+
+		private static void AssignPersonToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderPersonEntity person)
+		{
+			var address = person.eCH_Person.Address1;
+			var parishGroup = EervDataImporter.FindParishGroup (businessContext, parishRepository, parishNamesToEntityKeys, address);
+
+			if (parishGroup == null)
+			{
+				var nameText = person.DisplayName;
+				var addressText = address.GetSummary ().ToSimpleText ().Replace ("\n", "; ");
+
+				Debug.WriteLine ("WARNING: parish not found for " + nameText + " at address " + addressText);
+			}
+			else
+			{
+				EervDataImporter.AssignPersonToParish (businessContext, person, parishGroup);
+			}
+		}
+
+
+		private static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, eCH_AddressEntity address)
+		{
+			var parishName = EervDataImporter.FindParishName (parishRepository, address);
+
+			AiderGroupEntity parishGroup;
+
+			if (parishName == null)
+			{
+				parishGroup = null;
+			}
+			else
+			{
+				var parishEntityKey = parishNamesToEntityKeys[parishName];
+				parishGroup = (AiderGroupEntity) businessContext.DataContext.ResolveEntity (parishEntityKey);
+			}
+
+			return parishGroup;
+		}
+
+
+		private static string FindParishName(ParishAddressRepository parishRepository, eCH_AddressEntity address)
+		{
+			var zipCode = address.SwissZipCode;
+			var townName = address.Town;
+			var normalizedStreetName = address.Street;
+			var houseNumber = InvariantConverter.ParseInt (address.HouseNumber);
+
+			return parishRepository.FindParishName (zipCode, townName, normalizedStreetName, houseNumber);
+		}
+
+
+		private static AiderGroupParticipantEntity AssignPersonToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
+		{
+			var participant = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
+
+			participant.Person = person;
+			participant.StartDate = Date.Today;
+			participant.Group = parishGroup;
+
+			return participant;
 		}
 
 

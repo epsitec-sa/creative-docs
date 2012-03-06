@@ -3,13 +3,18 @@
 
 using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.Ech;
-
+using Epsitec.Aider.Data.Eerv;
+using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Library.UI;
 using Epsitec.Data.Platform;
 
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-
 
 namespace Epsitec.Aider
 {
@@ -73,6 +78,7 @@ namespace Epsitec.Aider
 			
 			return;
 #endif
+
 #if false
 			new eCH_Importer ().ParseAll ();
 #endif
@@ -89,21 +95,15 @@ namespace Epsitec.Aider
 			{
 				app.SetupApplication ();
 
-				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
-				var eChReportedPersons = EChDataLoader.Load (inputFile).Take (200).ToList ();
+				var inputData = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
+				var eChReportedPersons = EChDataLoader.Load (inputData);
+				var parishRepository = ParishAddressRepository.Current;
 
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
-
-				// HACK Here we need to call this, because there is somewhere something that
-				// registers a callback with a reference to the business context that we
-				// have disposed. If we don't execute that callback, the pointer stays there
-				// and the garbage collector can't reclaim the memory and we have a memory
-				// leak. I think that this is a hack because that callback is related to user
-				// interface stuff and we should be able to get a business context without being
-				// related to a user interface.
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
-				
+
 				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				EervDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
 
 				Services.ShutDown ();
 			}
