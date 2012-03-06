@@ -68,6 +68,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public ComptaCodeTVAEntity CodeTVA
+		{
+			get;
+			set;
+		}
+
+		public decimal? TauxTVA
+		{
+			get;
+			set;
+		}
+
 		public FormattedText Journal
 		{
 			get;

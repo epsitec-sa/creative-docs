@@ -213,15 +213,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft,  "Date",    "Date de l'écriture");
-				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P",     "Numéro ou nom du compte de la contrepartie");
-				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce",   "Numéro de la pièce comptable correspondant à l'écriture");
-				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
-				yield return new ColumnMapper (ColumnType.Débit,          0.20, ContentAlignment.MiddleRight, "Débit",   "Montant de l'écriture");
-				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit",  "Montant de l'écriture");
-				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft,  "Journal", "Journal auquel appartient l'écriture");
-				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde",   edition: false);
-				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "",        edition: false, hideForSearch: true);
+				yield return new ColumnMapper (ColumnType.Date,           0.20, ContentAlignment.MiddleLeft,  "Date",       "Date de l'écriture");
+				yield return new ColumnMapper (ColumnType.CP,             0.20, ContentAlignment.MiddleLeft,  "C/P",        "Numéro ou nom du compte de la contrepartie");
+				yield return new ColumnMapper (ColumnType.Pièce,          0.20, ContentAlignment.MiddleLeft,  "Pièce",      "Numéro de la pièce comptable correspondant à l'écriture");
+				yield return new ColumnMapper (ColumnType.Libellé,        0.60, ContentAlignment.MiddleLeft,  "Libellé",    "Libellé de l'écriture");
+				yield return new ColumnMapper (ColumnType.Débit,          0.20, ContentAlignment.MiddleRight, "Débit",      "Montant de l'écriture");
+				yield return new ColumnMapper (ColumnType.Crédit,         0.20, ContentAlignment.MiddleRight, "Crédit",     "Montant de l'écriture");
+				yield return new ColumnMapper (ColumnType.CodeTVA,        0.20, ContentAlignment.MiddleLeft,  "Code TVA",   edition: false);
+				yield return new ColumnMapper (ColumnType.TauxTVA,        0.15, ContentAlignment.MiddleRight, "Taux",       edition: false);
+				yield return new ColumnMapper (ColumnType.CompteTVA,      0.25, ContentAlignment.MiddleLeft,  "Compte TVA", edition: false);
+				yield return new ColumnMapper (ColumnType.Journal,        0.20, ContentAlignment.MiddleLeft,  "Journal",    "Journal auquel appartient l'écriture");
+				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde",      edition: false);
+				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.20, ContentAlignment.MiddleRight, "",           edition: false, hideForSearch: true);
 			}
 		}
 
@@ -231,6 +234,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 			this.ShowHideColumn (ColumnType.Journal,        this.compta.Journaux.Count > 1);
+
+			bool hasTVA    = this.settingsList.GetBool (SettingsType.EcritureTVA);
+			bool compteTVA = this.settingsList.GetBool (SettingsType.EcritureMontreCompteTVA) && hasTVA;
+
+			this.ShowHideColumn (ColumnType.CodeTVA,   hasTVA);
+			this.ShowHideColumn (ColumnType.TauxTVA,   hasTVA);
+			this.ShowHideColumn (ColumnType.CompteTVA, compteTVA);
 		}
 	}
 }

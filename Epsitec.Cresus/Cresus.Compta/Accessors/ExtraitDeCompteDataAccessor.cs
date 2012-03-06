@@ -95,6 +95,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Libellé = écriture.Libellé,
 						CP      = écriture.Crédit,
 						Débit   = écriture.Montant,
+						CodeTVA = écriture.CodeTVA,
+						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
 					};
 
@@ -112,6 +114,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Libellé = écriture.Libellé,
 						CP      = écriture.Débit,
 						Crédit  = écriture.Montant,
+						CodeTVA = écriture.CodeTVA,
+						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
 					};
 
@@ -244,6 +248,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.SoldeGraphique:
 					return this.GetMinMaxText (data.Solde);
+
+				case ColumnType.CodeTVA:
+					return JournalEditionLine.GetCodeTVADescription (data.CodeTVA);
+
+				case ColumnType.TauxTVA:
+					return Converters.PercentToString (data.TauxTVA);
+
+				case ColumnType.CompteTVA:
+					return JournalEditionLine.GetCodeTVACompte (data.CodeTVA);
 
 				case ColumnType.Journal:
 					return data.Journal;
