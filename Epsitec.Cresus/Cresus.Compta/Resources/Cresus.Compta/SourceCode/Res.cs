@@ -224,8 +224,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
 				//	designer:cap/OVKM3
 				public static readonly global::Epsitec.Common.Widgets.Command Journaux = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 118));
-				//	designer:cap/OVK77
-				public static readonly global::Epsitec.Common.Widgets.Command Last = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 231));
 				//	designer:cap/OVKR3
 				public static readonly global::Epsitec.Common.Widgets.Command Libellés = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 123));
 				//	designer:cap/OVKQ5
@@ -491,8 +489,6 @@ namespace Epsitec.Cresus.Compta
 				public const long Journal = 0x3F80001400002BL;
 				//	designer:cap/OVKM3
 				public const long Journaux = 0x3F800014000076L;
-				//	designer:cap/OVK77
-				public const long Last = 0x3F8000140000E7L;
 				//	designer:cap/OVKR3
 				public const long Libellés = 0x3F80001400007BL;
 				//	designer:cap/OVKQ5

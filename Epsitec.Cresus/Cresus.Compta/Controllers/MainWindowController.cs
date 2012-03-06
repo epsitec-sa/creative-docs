@@ -392,7 +392,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SelectedCommandDocument = Res.Commands.Présentation.PlanComptable;
 			}
 
-			this.menuCommandDocument = Res.Commands.Présentation.Réglages;
+			this.ribbonController.PrésentationsLastButton.CommandObject = Res.Commands.Présentation.Réglages;
 
 			this.CreateController ();
 			this.UpdateTitle ();
@@ -709,7 +709,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//	S'il s'agit d'une présentation accessible par le menu, on met à jour la commande.
 				if (Converters.MenuPrésentationCommands.Contains (this.selectedCommandDocument))
 				{
-					this.menuCommandDocument = this.selectedCommandDocument;
+					this.ribbonController.PrésentationsLastButton.CommandObject = this.selectedCommandDocument;
 				}
 			}
 		}
@@ -758,9 +758,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
-
-			//	Met à jour le bouton 'last' dans le ruban.
-			this.ribbonController.PrésentationsLastButton.CommandObject = this.menuCommandDocument;
 
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.Menu);
@@ -1181,12 +1178,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowPrésentation (e.Command);
 		}
 
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Last)]
-		private void ProcessLastPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
-		{
-			this.LastPrésentationsMenu ();
-		}
-
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Menu)]
 		private void ProcessMenuPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1462,10 +1453,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		#region Présentations menu
-		private void LastPrésentationsMenu()
-		{
-		}
-
 		private void ShowPrésentationsMenu()
 		{
 			this.ShowPrésentationsMenu (this.ribbonController.PrésentationsMenuButton);
@@ -1642,7 +1629,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private ComptaEntity								compta;
 		private ComptaPériodeEntity							période;
 		private Command										selectedCommandDocument;
-		private Command										menuCommandDocument;
 		private AbstractController							controller;
 		private RibbonController							ribbonController;
 		private FrameBox									mainFrame;

@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Widget topSection2, bottomSection2;
 					this.CreateSubsections (section, out topSection2, out bottomSection2);
 
-					this.présentationsLastButton = UIBuilder.CreateButton (topSection2, Res.Commands.Présentation.Last, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+					this.présentationsLastButton = UIBuilder.CreateButton (topSection2, Res.Commands.Présentation.Réglages, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 					this.présentationsMenuButton = UIBuilder.CreateButton (bottomSection2, Res.Commands.Présentation.Menu, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				}
 			}

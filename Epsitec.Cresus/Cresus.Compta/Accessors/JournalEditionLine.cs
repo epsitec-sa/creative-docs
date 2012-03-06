@@ -82,6 +82,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontantTVA(EditionData data)
 		{
+			data.ClearError ();
+
+			if (this.GetText (ColumnType.TotalAutomatique) == "True")
+			{
+				return;
+			}
+
 			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
 			{
 				if (data.HasText)

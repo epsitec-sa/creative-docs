@@ -493,6 +493,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
+			bool éditeMontantTVA = this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA);
+
 			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
 				if (this.IsDébitMulti (line))
@@ -517,11 +519,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
 				}
 
-				this.dataAccessor.GetEditionData (line, ColumnType.Montant).Enable = !totalAutomatique;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantBrut).Enable = !totalAutomatique;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA ).Enable = !totalAutomatique && éditeMontantTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.Montant    ).Enable = !totalAutomatique;
 
-				this.SetWidgetVisibility (ColumnType.MontantBrut, line, !totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.MontantTVA,  line, !totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.CodeTVA,     line, !totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
+				this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
 			}
 
 			this.UpdateMultiEditionData ();
@@ -533,14 +536,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				decimal totalDébit  = 0;
-				decimal totalCrédit = 0;
+				decimal totalBrutDébit  = 0;
+				decimal totalBrutCrédit = 0;
+				decimal totalTVADébit   = 0;
+				decimal totalTVACrédit  = 0;
+				decimal totalDébit      = 0;
+				decimal totalCrédit     = 0;
 
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
 					if (line != cp)
 					{
-						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
 						if (!this.PlusieursPièces)
@@ -548,36 +555,102 @@ namespace Epsitec.Cresus.Compta.Controllers
 							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 						}
 
-						var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant).ToSimpleText ();
-						decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
-
-						if (this.IsDébitMulti (line))
 						{
-							totalCrédit += montant;
+							var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantBrut);
+							decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
+
+							if (this.IsDébitMulti (line))
+							{
+								totalBrutCrédit += montant;
+							}
+
+							if (this.IsCréditMulti (line))
+							{
+								totalBrutDébit += montant;
+							}
 						}
 
-						if (this.IsCréditMulti (line))
 						{
-							totalDébit += montant;
+							var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTVA);
+							decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
+
+							if (this.IsDébitMulti (line))
+							{
+								totalTVACrédit += montant;
+							}
+
+							if (this.IsCréditMulti (line))
+							{
+								totalTVADébit += montant;
+							}
+						}
+
+						{
+							var text = this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant);
+							decimal montant = Converters.ParseMontant (text).GetValueOrDefault ();
+
+							if (this.IsDébitMulti (line))
+							{
+								totalCrédit += montant;
+							}
+
+							if (this.IsCréditMulti (line))
+							{
+								totalDébit += montant;
+							}
 						}
 					}
 				}
 
+				decimal? totalBrut = 0;
+				decimal? totalTVA  = 0;
+				decimal? total     = 0;
+
+
 				if (this.IsDébitMulti (cp))
 				{
-					decimal montant = totalDébit - totalCrédit;
-					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (montant));
+					totalBrut = totalBrutDébit - totalBrutCrédit;
+					totalTVA  = totalTVADébit  - totalTVACrédit;
+					total     = totalDébit     - totalCrédit;
 				}
 
 				if (this.IsCréditMulti (cp))
 				{
-					decimal montant = totalCrédit - totalDébit;
-					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (montant));
+					totalBrut = totalBrutCrédit - totalBrutDébit;
+					totalTVA  = totalTVACrédit  - totalTVADébit;
+					total     = totalCrédit     - totalDébit;
 				}
 
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantBrut, null);
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA,  null);
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA,     null);
+				if (totalBrut == 0)
+				{
+					totalBrut = null;
+				}
+
+				if (totalTVA == 0)
+				{
+					totalTVA = null;
+				}
+
+				if (total == 0)
+				{
+					total = null;
+				}
+
+				if (this.IsDébitMulti (cp))
+				{
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantBrut, Converters.MontantToString (totalBrut));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA,  Converters.MontantToString (totalTVA));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant,     Converters.MontantToString (total));
+				}
+
+				if (this.IsCréditMulti (cp))
+				{
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantBrut, Converters.MontantToString (totalBrut));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA,  Converters.MontantToString (totalTVA));
+					this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant,     Converters.MontantToString (total));
+				}
+
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
 			}
 		}
 
