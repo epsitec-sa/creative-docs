@@ -363,12 +363,16 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVAB2
 				public static readonly global::Epsitec.Common.Support.Druid Complement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
+				//	designer:cap/FVAR2
+				public static readonly global::Epsitec.Common.Support.Druid HouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 91);
 				//	designer:cap/FVAE2
 				public static readonly global::Epsitec.Common.Support.Druid Location = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
 				//	designer:cap/FVAH2
 				public static readonly global::Epsitec.Common.Support.Druid PersonAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 81);
 				//	designer:cap/FVAD2
 				public static readonly global::Epsitec.Common.Support.Druid PostBoxNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
+				//	designer:cap/FVAS2
+				public static readonly global::Epsitec.Common.Support.Druid StreetAndHouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
 				//	designer:cap/FVAC2
 				public static readonly global::Epsitec.Common.Support.Druid StreetName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
 			}

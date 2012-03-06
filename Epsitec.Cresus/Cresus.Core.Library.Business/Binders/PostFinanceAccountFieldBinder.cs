@@ -47,11 +47,11 @@ namespace Epsitec.Cresus.Core.Binders
 		{
 			if (Isr.IsFormattedSubscriberNumber (value))
 			{
-				return new ValidationResult (ValidationState.Ok);
+				return ValidationResult.Ok;
 			}
 			else
 			{
-				return new ValidationResult (ValidationState.Error, FormattedText.FromSimpleText ("Le n° ne respecte pas le format nn-nnn-n ou est incorrect"));
+				return ValidationResult.CreateError ("Le numéro ne respecte pas le format <i>nn-nnn-n</i> ou est incorrect");
 			}
 		}
 

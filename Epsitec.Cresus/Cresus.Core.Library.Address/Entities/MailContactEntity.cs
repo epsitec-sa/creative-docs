@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.Core.Library.Address;
 
 namespace Epsitec.Cresus.Core.Entities
 {
@@ -60,7 +61,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private FormattedText GetLocalSummary()
 		{
-			return TextFormatter.FormatText (this.PersonAddress, "\n", this.Complement, "\n", this.StreetName, "\n", this.PostBoxNumber, "\n", this.Location.PostalCode, this.Location.Name);
+			return TextFormatter.FormatText (this.PersonAddress, "\n", this.Complement, "\n", this.StreetAndHouseNumber, "\n", this.PostBoxNumber, "\n", this.Location.PostalCode, this.Location.Name);
 		}
 
 		private FormattedText GetForeignSummary()
@@ -74,7 +75,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					TextFormatter.FormatText (this.PersonAddress).ToSimpleText ().Split ('\n').Last (), "~,",
-					this.StreetName, "~,",
+					this.StreetAndHouseNumber, "~,",
 					this.Location.PostalCode, this.Location.Name
 				);
 		}
@@ -82,7 +83,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return TextFormatter.FormatText (this.PersonAddress).Lines.Last ();
-			yield return TextFormatter.FormatText (this.StreetName);
+			yield return TextFormatter.FormatText (this.StreetAndHouseNumber);
 			yield return TextFormatter.FormatText (this.Location.PostalCode);
 			yield return TextFormatter.FormatText (this.Location.Name);
 		}
@@ -94,6 +95,7 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.PersonAddress.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.StreetName.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.HouseNumber.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.PostBoxNumber.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Location.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
@@ -102,11 +104,31 @@ namespace Epsitec.Cresus.Core.Entities
 				return a.EntityStatus;
 			}
 		}
-
+		
 
 		[Action (ActionClasses.Output, Library.Address.Res.CaptionIds.ActionButton.Print)]
 		public void Print()
 		{
+		}
+
+
+		partial void GetStreetAndHouseNumber(ref string value)
+		{
+			var format = StreetAddressConverter.Classify (this);
+
+			var street = this.StreetName;
+			var house  = this.HouseNumber;
+
+			value = StreetAddressConverter.MergeStreetAndHouseNumber (street, house, format);
+		}
+
+		partial void OnStreetAndHouseNumberChanged(string oldValue, string newValue)
+		{
+			var format = StreetAddressConverter.Classify (this);
+			var split  = StreetAddressConverter.SplitStreetAndHouseNumber (newValue, format);
+
+			this.StreetName  = split.Item1;
+			this.HouseNumber = split.Item2;
 		}
 	}
 }

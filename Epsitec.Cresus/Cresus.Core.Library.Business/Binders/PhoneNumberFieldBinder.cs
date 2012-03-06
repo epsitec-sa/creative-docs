@@ -36,11 +36,11 @@ namespace Epsitec.Cresus.Core.Binders
 		{
 			if (Epsitec.TwixClip.TwixTel.IsValidPhoneNumber (value, acceptEmptyNumbers: true))
 			{
-				return new ValidationResult (ValidationState.Ok);
+				return ValidationResult.Ok;
 			}
 			else
 			{
-				return new ValidationResult (ValidationState.Error, "Numéro de téléphone incorrect. Pour la Suisse, le numéro a le<br/>format 021 345 67 89, par exemple.");
+				return ValidationResult.CreateError ("Numéro de téléphone incorrect. Pour la Suisse, le numéro a le<br/>format <i>021 345 67 89</i>, par exemple.");
 			}
 		}
 

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support.EntityEngine;
@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 				  .Field (x => x.Complement)
-				  .Field (x => x.StreetName)
+				  .Field (x => x.StreetAndHouseNumber)
 				  .Field (x => x.PostBoxNumber)
 				  .Field (x => x.Location)
 				.End ();

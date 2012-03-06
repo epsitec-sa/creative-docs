@@ -1078,6 +1078,52 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>HouseNumber</c> field.
+		///	designer:fld/FVAR/FVAR2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAR2]")]
+		public string HouseNumber
+		{
+			get
+			{
+				return this.GetField<string> ("[FVAR2]");
+			}
+			set
+			{
+				string oldValue = this.HouseNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVAR2]"))
+				{
+					this.OnHouseNumberChanging (oldValue, value);
+					this.SetField<string> ("[FVAR2]", oldValue, value);
+					this.OnHouseNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>StreetAndHouseNumber</c> field.
+		///	designer:fld/FVAR/FVAS2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAS2]")]
+		public string StreetAndHouseNumber
+		{
+			get
+			{
+				string value = default (string);
+				this.GetStreetAndHouseNumber (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.StreetAndHouseNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVAS2]"))
+				{
+					this.OnStreetAndHouseNumberChanging (oldValue, value);
+					this.SetStreetAndHouseNumber (value);
+					this.OnStreetAndHouseNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>PostBoxNumber</c> field.
 		///	designer:fld/FVAR/FVAD2
 		///	</summary>
@@ -1128,11 +1174,17 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnComplementChanged(string oldValue, string newValue);
 		partial void OnStreetNameChanging(string oldValue, string newValue);
 		partial void OnStreetNameChanged(string oldValue, string newValue);
+		partial void OnHouseNumberChanging(string oldValue, string newValue);
+		partial void OnHouseNumberChanged(string oldValue, string newValue);
+		partial void OnStreetAndHouseNumberChanging(string oldValue, string newValue);
+		partial void OnStreetAndHouseNumberChanged(string oldValue, string newValue);
 		partial void OnPostBoxNumberChanging(string oldValue, string newValue);
 		partial void OnPostBoxNumberChanged(string oldValue, string newValue);
 		partial void OnLocationChanging(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		partial void OnLocationChanged(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		
+		partial void GetStreetAndHouseNumber(ref string value);
+		partial void SetStreetAndHouseNumber(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Debug;
@@ -239,7 +239,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			foreach (var x in this.Entity.Person.Contacts.OfType<MailContactEntity> ())
 			{
 				table.SetText (0, index, TextFormatter.FormatText (string.Join (", ", x.ContactGroups.Select (role => role.Name))), this.FontSize);
-				table.SetText (1, index, TextFormatter.FormatText (x.PersonAddress, "\n", x.Complement, "\n", x.StreetName, "\n", x.PostBoxNumber, "\n", x.Location.Country.CountryCode, "~-", x.Location.PostalCode, x.Location.Name), this.FontSize);
+				table.SetText (1, index, TextFormatter.FormatText (x.PersonAddress, "\n", x.Complement, "\n", x.StreetAndHouseNumber, "\n", x.PostBoxNumber, "\n", x.Location.Country.CountryCode, "~-", x.Location.PostalCode, x.Location.Name), this.FontSize);
 				table.SetText (2, index, x.Location.PostalCode, this.FontSize);
 				table.SetText (3, index, x.Location.Name, this.FontSize);
 				table.SetText (4, index, x.Location.Country.Name, this.FontSize);
