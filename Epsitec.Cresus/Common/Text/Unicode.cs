@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+
 namespace Epsitec.Common.Text
 {
 	/// <summary>
@@ -404,7 +406,8 @@ namespace Epsitec.Common.Text
 				
 				this.table1  = new Unicode.BreakClass[0x3200];	//	Unicode 000000-0031FF
 				this.table2  = new Unicode.BreakClass[0x0700];	//	Unicode 00F900-00FFFF
-				this.elements = new System.Collections.ArrayList ();
+				
+				this.elements = new List<Element> ();
 			}
 			
 			
@@ -919,7 +922,7 @@ namespace Epsitec.Common.Text
 			if (cclass[j] == agg::unicode_helper::OP_OpeningPunctuation)
 			{
 				breaks[i] = agg::unicode_helper::break_no;
-                continue;
+				continue;
 			}
 		}
 		if (cclass[i] == agg::unicode_helper::CL_ClosingPunctuation)				//	LB 11 / Don't break within ']<non starter>', even with intervening spaces
@@ -935,7 +938,7 @@ namespace Epsitec.Common.Text
 			if (cclass[j] == agg::unicode_helper::NS_NonStarter)
 			{
 				breaks[i] = agg::unicode_helper::break_no;
-                continue;
+				continue;
 			}
 		}
 #endif
@@ -1224,9 +1227,10 @@ namespace Epsitec.Common.Text
 			}
 			#endregion
 			
-			Unicode.BreakClass[]				table1;
-			Unicode.BreakClass[]				table2;
-			System.Collections.ArrayList		elements;
+			readonly Unicode.BreakClass[]		table1;
+			readonly Unicode.BreakClass[]		table2;
+			
+			readonly List<Element>				elements;
 		}
 		
 		

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -304,6 +304,17 @@ namespace Epsitec.Common.Types
 			return new FormattedText (string.Concat (list));
 		}
 
+		public static FormattedText Format(FormattedText format, object arg)
+		{
+			string escapedArg = FormattedText.Escape (arg);
+			return new FormattedText (string.Format (format.text, escapedArg));
+		}
+
+		public static FormattedText Format(FormattedText format, params object[] args)
+		{
+			string[] escapedArgs = args.Select (x => FormattedText.Escape (x)).ToArray ();
+			return new FormattedText (string.Format (format.text, escapedArgs));
+		}
 
 		#region IEquatable<FormattedText> Members
 
@@ -476,6 +487,22 @@ namespace Epsitec.Common.Types
 			else
 			{
 				return Converters.TextConverter.ConvertToTaggedText (text);
+			}
+		}
+
+		public static string Escape(object value)
+		{
+			if (value is FormattedText)
+			{
+				return ((FormattedText) value).text;
+			}
+			else if (value == null)
+			{
+				return null;
+			}
+			else
+			{
+				return FormattedText.Escape (value.ToString ());
 			}
 		}
 

@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -54,6 +54,52 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the valid state.
+		/// </summary>
+		public static readonly ValidationResult Ok = new ValidationResult (ValidationState.Ok);
+
+
+		/// <summary>
+		/// Creates an error.
+		/// </summary>
+		/// <param name="errorMessage">The error message.</param>
+		/// <returns>The error.</returns>
+		public static ValidationResult CreateError(FormattedText errorMessage)
+		{
+			return new ValidationResult (ValidationState.Error, errorMessage);
+		}
+
+		public static ValidationResult CreateError(FormattedText errorMessage, string arg)
+		{
+			return new ValidationResult (ValidationState.Error, FormattedText.Format (errorMessage, arg));
+		}
+
+		public static ValidationResult CreateError(FormattedText errorMessage, params object[] args)
+		{
+			return new ValidationResult (ValidationState.Error, FormattedText.Format (errorMessage, args));
+		}
+
+		/// <summary>
+		/// Creates a warning.
+		/// </summary>
+		/// <param name="warningMessage">The warning message.</param>
+		/// <returns>The warning.</returns>
+		public static ValidationResult CreateWarning(FormattedText warningMessage)
+		{
+			return new ValidationResult (ValidationState.Warning, warningMessage);
+		}
+
+		public static ValidationResult CreateWarning(FormattedText warningMessage, string arg)
+		{
+			return new ValidationResult (ValidationState.Warning, FormattedText.Format (warningMessage, arg));
+		}
+
+		public static ValidationResult CreateWarning(FormattedText warningMessage, params object[] args)
+		{
+			return new ValidationResult (ValidationState.Warning, FormattedText.Format (warningMessage, args));
+		}
 
 		private readonly ValidationState		state;
 		private readonly FormattedText			errorMessage;

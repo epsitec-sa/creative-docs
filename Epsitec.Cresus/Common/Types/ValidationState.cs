@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Types
@@ -23,6 +23,11 @@ namespace Epsitec.Common.Types
 		/// Error state (incorrect or invalid data found).
 		/// </summary>
 		Error,
+
+		/// <summary>
+		/// Warning state (possibly incorrect or invalid data found).
+		/// </summary>
+		Warning,
 
 		/// <summary>
 		/// Dirty state (needs a validation to find out what the state is).
