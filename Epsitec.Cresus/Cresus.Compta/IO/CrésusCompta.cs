@@ -260,6 +260,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			//	Importe des codes TVA.
 			int indexTVA = this.IndexOfLine ("BEGIN=TVACODES");
+			var codesTVAList = new List<ComptaCodeTVAEntity> ();
 
 			while (++indexTVA < this.lines.Length)
 			{
@@ -290,9 +291,14 @@ namespace Epsitec.Cresus.Compta.IO
 					if (taux != null)
 					{
 						this.InsertTaux (codeTVA, taux);
-						this.compta.CodesTVA.Add (codeTVA);
+						codesTVAList.Add (codeTVA);
 					}
 				}
+			}
+
+			foreach (var code in codesTVAList.OrderBy (x => x.Code))
+			{
+				this.compta.CodesTVA.Add (code);
 			}
 
 			//	Met à jour les codes TVA dans les comptes.
@@ -690,6 +696,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void MergeStep1(List<ComptaEcritureEntity> journal)
 		{
+			//	Fusionne les 2 écritures de TVA (lignes 'brut' et 'TVA').
 			int i = 0;
 			while (i < journal.Count-1)
 			{
@@ -795,6 +802,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void MergeStep2(List<ComptaEcritureEntity> journal)
 		{
+			//	Fusionne les écritures multiples de 2 lignes en une seule.
 			int i = 0;
 			while (i < journal.Count-1)
 			{
@@ -848,6 +856,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void MergeStep3(List<ComptaEcritureEntity> journal)
 		{
+			//	Recalcule les totaux 'brut' et 'TVA'.
 			int i = 0;
 			while (i < journal.Count)
 			{
