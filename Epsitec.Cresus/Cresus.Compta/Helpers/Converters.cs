@@ -970,6 +970,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static IEnumerable<Command> PrésentationCommands
 		{
+			//	Liste de toutes les présentations existantes.
+			//	L'ordre est utilisé lors du choix d'un utilisateur, pour afficher les boutons à cocher.
 			get
 			{
 				yield return Res.Commands.Présentation.Open;
@@ -997,6 +999,24 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Journaux;
 				yield return Res.Commands.Présentation.Périodes;
 				yield return Res.Commands.Présentation.PiècesGenerator;
+				yield return Res.Commands.Présentation.Utilisateurs;
+				yield return Res.Commands.Présentation.Réglages;
+			}
+		}
+
+		public static IEnumerable<Command> MenuPrésentationCommands
+		{
+			//	Présentations rarement utilisées, accessible par un menu.
+			//	L'ordre est utilisé pour construire le menu.
+			get
+			{
+				yield return Res.Commands.Présentation.Libellés;
+				yield return Res.Commands.Présentation.Modèles;
+				yield return Res.Commands.Présentation.Journaux;
+				yield return Res.Commands.Présentation.Périodes;
+				yield return Res.Commands.Présentation.PiècesGenerator;
+				yield return Res.Commands.Présentation.CodesTVA;
+				yield return Res.Commands.Présentation.TauxTVA;
 				yield return Res.Commands.Présentation.Utilisateurs;
 				yield return Res.Commands.Présentation.Réglages;
 			}

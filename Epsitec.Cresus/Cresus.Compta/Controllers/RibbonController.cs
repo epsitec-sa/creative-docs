@@ -74,10 +74,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Open, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
 
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Save, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
+				UIBuilder.CreateButton (section, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Print, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 			}
 
@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
+				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PlanComptable, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Balance, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Bilan, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PP, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
@@ -102,28 +103,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.RésuméTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.DécompteTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
-				//?section.Children.Add (this.CreateGap ();
-				this.présentationMenuButton = UIBuilder.CreateButton (section, Res.Commands.Présentation.New, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
+				//	Ces 2 commandes doivent être l'une sous l'autre.
+				{
+					Widget topSection2, bottomSection2;
+					this.CreateSubsections (section, out topSection2, out bottomSection2);
+
+					this.présentationsLastButton = UIBuilder.CreateButton (topSection2, Res.Commands.Présentation.Last, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+					this.présentationsMenuButton = UIBuilder.CreateButton (bottomSection2, Res.Commands.Présentation.Menu, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				}
 			}
 
 			{
-				var section = this.CreateSection (this.container, DockStyle.Left, "Réglages");
+				var section = this.CreateSection (this.container, DockStyle.Left, "Fenêtres");
 
-				UIBuilder.CreateButton (section, Res.Commands.Présentation.PlanComptable, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
-
-				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
-
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Libellés, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Modèles, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Journaux, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Périodes, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.PiècesGenerator, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.CodesTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.TauxTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Utilisateurs, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Réglages, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				this.newWindowMenuButton = UIBuilder.CreateButton (section, Res.Commands.Présentation.New, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 			}
 
 			{
@@ -221,11 +214,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public IconButton PrésentationMenuButton
+		public IconButton PrésentationsMenuButton
 		{
 			get
 			{
-				return this.présentationMenuButton;
+				return this.présentationsMenuButton;
+			}
+		}
+
+		public IconButton PrésentationsLastButton
+		{
+			get
+			{
+				return this.présentationsLastButton;
+			}
+		}
+
+		public IconButton NewWindowMenuButton
+		{
+			get
+			{
+				return this.newWindowMenuButton;
 			}
 		}
 
@@ -559,7 +568,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private Widget								container;
 		private RibbonViewMode						ribbonViewMode;
-		private IconButton							présentationMenuButton;
+		private IconButton							présentationsLastButton;
+		private IconButton							présentationsMenuButton;
+		private IconButton							newWindowMenuButton;
 		private GlyphButton							navigatorMenuButton;
 	}
 }

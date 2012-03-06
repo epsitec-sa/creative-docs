@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Utilise une autre présentation.
 			this.NavigatorUpdate ();
 
-			this.selectedCommandDocument = cmd;
+			this.SelectedCommandDocument = cmd;
 			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void NavigatorRestore(Command cmd)
 		{
 			//	Restaure une présentation utilisée précédemment.
-			this.selectedCommandDocument = cmd;
+			this.SelectedCommandDocument = cmd;
 			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
@@ -376,20 +376,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.compta == null)  // compta fermée ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Open;
+				this.SelectedCommandDocument = Res.Commands.Présentation.Open;
 			}
 			else if (this.currentUser == null)  // déconnecté ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Login;
+				this.SelectedCommandDocument = Res.Commands.Présentation.Login;
 			}
 			else if (this.compta.PlanComptable.Any ())  // plan comptable existe ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.Journal;
+				this.SelectedCommandDocument = Res.Commands.Présentation.Journal;
 			}
 			else  // plan comptable vide ?
 			{
-				this.selectedCommandDocument = Res.Commands.Présentation.PlanComptable;
+				this.SelectedCommandDocument = Res.Commands.Présentation.PlanComptable;
 			}
+
+			this.menuCommandDocument = Res.Commands.Présentation.Réglages;
 
 			this.CreateController ();
 			this.UpdateTitle ();
@@ -693,6 +695,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private Command SelectedCommandDocument
+		{
+			get
+			{
+				return this.selectedCommandDocument;
+			}
+			set
+			{
+				this.selectedCommandDocument = value;
+
+				//	S'il s'agit d'une présentation accessible par le menu, on met à jour la commande.
+				if (Converters.MenuPrésentationCommands.Contains (this.selectedCommandDocument))
+				{
+					this.menuCommandDocument = this.selectedCommandDocument;
+				}
+			}
+		}
+
 		private void UpdatePrésentationCommands()
 		{
 			foreach (var command in Converters.PrésentationCommands)
@@ -736,6 +756,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 						}
 					}
 				}
+			}
+
+			//	Met à jour le bouton 'last' dans le ruban.
+			this.ribbonController.PrésentationsLastButton.CommandObject = this.menuCommandDocument;
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.Menu);
+				cs.Enable = (this.compta != null && this.currentUser != null);
 			}
 
 			{
@@ -1152,6 +1180,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowPrésentation (e.Command);
 		}
 
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Last)]
+		private void ProcessLastPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.LastPrésentationsMenu ();
+		}
+
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Menu)]
+		private void ProcessMenuPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			this.ShowPrésentationsMenu ();
+		}
+
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1420,15 +1460,59 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		#region Présentations menu
+		private void LastPrésentationsMenu()
+		{
+		}
+
+		private void ShowPrésentationsMenu()
+		{
+			this.ShowPrésentationsMenu (this.ribbonController.PrésentationsMenuButton);
+		}
+
+		private void ShowPrésentationsMenu(Widget parentButton)
+		{
+			var menu = new VMenu ();
+
+			foreach (var command in Converters.MenuPrésentationCommands)
+			{
+				this.AddPrésentationToMenu (menu, command);
+			}
+
+			if (menu.Items.Count == 0)
+			{
+				return;
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddPrésentationToMenu(VMenu menu, Command cmd)
+		{
+			if (this.HasPrésentationCommand (cmd))
+			{
+				var item = new MenuItem ()
+				{
+					CommandObject = cmd,
+				};
+
+				menu.Items.Add (item);
+			}
+		}
+		#endregion
+
+
 		#region New window menu
 		public void ShowNewWindowMenu()
 		{
-			this.ShowNewWindowMenu (this.ribbonController.PrésentationMenuButton);
+			this.ShowNewWindowMenu (this.ribbonController.NewWindowMenuButton);
 		}
 
 		private void ShowNewWindowMenu(Widget parentButton)
 		{
-			//	Affiche le menu permettant de choisir le mode pour le ruban.
 			var menu = new VMenu ();
 
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Journal,          Res.CommandIds.NouvellePrésentation.Journal);
@@ -1557,6 +1641,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private ComptaEntity								compta;
 		private ComptaPériodeEntity							période;
 		private Command										selectedCommandDocument;
+		private Command										menuCommandDocument;
 		private AbstractController							controller;
 		private RibbonController							ribbonController;
 		private FrameBox									mainFrame;

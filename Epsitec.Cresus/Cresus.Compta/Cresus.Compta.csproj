@@ -326,6 +326,7 @@
     <EmbeddedResource Include="Images\Search.ActivateTab.icon" />
     <EmbeddedResource Include="Images\Présentation.CodesTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.TauxTVA.icon" />
+    <EmbeddedResource Include="Images\Présentation.Menu.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
