@@ -37,9 +37,10 @@ namespace Epsitec.Cresus.Core.Maintenance
 				this.countryRepository  = this.context.GetRepository<CountryEntity> ();
 				this.languageRepository = this.context.GetRepository<LanguageEntity> ();
 				
+				this.ImportCountries ();
+
 				this.countryCH  = this.GetCountry ("CH");
 				
-				this.ImportCountries ();
 				this.ImportSwissCantons ();
 				this.ImportSwissLocations ();
 			}
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.Core.Maintenance
 				location.Name       = FormattedText.FromSimpleText (zipInfo.LongName);
 				location.PostalCode = zipInfo.ZipCode.ToString ("####");
 				location.Country    = this.countryCH;
+				location.Region     = this.GetCanton (zipInfo.Canton);
 				location.Language1  = languages.ContainsKey (zipInfo.LanguageCode1) ? languages[zipInfo.LanguageCode1] : null;
 
 				count++;
@@ -82,9 +84,17 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 		private void ImportSwissCantons()
 		{
+			//	The flags can be found here: http://zefix.admin.ch/images/flg_{id}.gif
+
 			var cantonTable = new StringLineTable (MaintenanceEngine.GetCantonTableLines ());
 
 			string[] ids = cantonTable.Header.Split ('\t');
+
+			System.Diagnostics.Debug.WriteLine ("Importing Swiss cantons");
+			System.Diagnostics.Stopwatch watch = new System.Diagnostics.Stopwatch ();
+			watch.Start ();
+
+			int count = 0;
 
 			foreach (var row in cantonTable.Rows)
 			{
@@ -107,6 +117,10 @@ namespace Epsitec.Cresus.Core.Maintenance
 					canton.Name = multilingualName.GetGlobalText ();
 				}
 			}
+			System.Diagnostics.Debug.WriteLine (string.Format ("Updated/created {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
+			watch.Restart ();
+			context.SaveChanges ();
+			System.Diagnostics.Debug.WriteLine (string.Format ("Persisted {0} cantons -> {1} ms", count, watch.ElapsedMilliseconds));
 		}
 
 		public void ImportCountries()
@@ -232,7 +246,10 @@ namespace Epsitec.Cresus.Core.Maintenance
 
 			using (System.IO.Stream stream = assembly.GetManifestResourceStream (resource))
 			{
-				return Epsitec.Common.IO.StringLineExtractor.GetLines (stream);
+				foreach (var line in StringLineExtractor.GetLines (stream))
+				{
+					yield return line;
+				}
 			}
 		}
 		

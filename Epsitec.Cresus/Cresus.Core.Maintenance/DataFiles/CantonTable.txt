@@ -25,4 +25,3 @@ VS	Valais	Vallese	Vallais	Wallis
 VD	Vaud	Vaud	Vad	Waadt
 ZG	Zoug	Zugo	Zug	Zug
 ZH	Zurich	Zurigo	Turitg	Zürich
-http://zefix.admin.ch/images/flg_
