@@ -231,6 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode)
 							.Column (x => x.MainRelation.DefaultMailContact.Location.Name)
 							.Column (x => x.MainRelation.DefaultMailContact.StreetName)
+							.Column (x => x.MainRelation.DefaultMailContact.HouseNumber)
 						.GetMetadata ());
 
 				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
