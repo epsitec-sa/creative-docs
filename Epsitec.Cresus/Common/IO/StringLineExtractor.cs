@@ -40,5 +40,16 @@ namespace Epsitec.Common.IO
 				pos = end+1;
 			}
 		}
+		
+		public static IEnumerable<string> GetLines(System.IO.Stream stream, System.Text.Encoding encoding = null)
+		{
+			using (var reader = new System.IO.StreamReader (stream, encoding ?? System.Text.Encoding.Default))
+			{
+				while (reader.EndOfStream == false)
+				{
+					yield return reader.ReadLine ();
+				}
+			}
+		}
 	}
 }
