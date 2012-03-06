@@ -23,8 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.dataDict.Add (ColumnType.Code,          new EditionData (this.controller, this.ValidateCode));
 			this.dataDict.Add (ColumnType.Titre,         new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Taux1,         new EditionData (this.controller, this.ValidateTaux1));
-			this.dataDict.Add (ColumnType.Taux2,         new EditionData (this.controller, this.ValidateTaux2));
+			this.dataDict.Add (ColumnType.Taux,          new EditionData (this.controller, this.ValidateTaux));
 			this.dataDict.Add (ColumnType.Compte,        new EditionData (this.controller, this.ValidateCompte));
 			this.dataDict.Add (ColumnType.Chiffre,       new EditionData (this.controller, this.ValidateChiffre));
 			this.dataDict.Add (ColumnType.MontantFictif, new EditionData (this.controller, this.ValidateMontant));
@@ -40,8 +39,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var generator = this.compta.CodesTVA.Where (x => x.Code == data.Text).FirstOrDefault ();
-				if (generator == null)
+				var code = this.compta.CodesTVA.Where (x => x.Code == data.Text).FirstOrDefault ();
+				if (code == null)
 				{
 					return;
 				}
@@ -60,43 +59,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private void ValidateTaux1(EditionData data)
+		private void ValidateTaux(EditionData data)
 		{
 			data.ClearError ();
 
 			if (data.HasText)
 			{
-				decimal? montant = Converters.ParsePercent (data.Text);
-				if (montant.HasValue)
+				decimal? percent = Converters.ParsePercent (data.Text);
+				if (percent.HasValue)
 				{
-					data.Text = Converters.MontantToString (montant);
+					data.Error = "Le taux ne doit pas être un nombre, mais un nom";
 				}
-				else
+
+				var taux = this.compta.TauxTVA.Where (x => x.Nom == data.Text).FirstOrDefault ();
+				if (taux == null)
 				{
-					data.Error = "Le taux n'est pas correct";
+					data.Error = "Ce taux n'existe pas";
+					return;
 				}
 			}
 			else
 			{
 				data.Error = "Il manque le taux";
-			}
-		}
-
-		private void ValidateTaux2(EditionData data)
-		{
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				decimal? montant = Converters.ParsePercent (data.Text);
-				if (montant.HasValue)
-				{
-					data.Text = Converters.MontantToString (montant);
-				}
-				else
-				{
-					data.Error = "Le taux n'est pas correct";
-				}
 			}
 		}
 
@@ -166,8 +150,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText (ColumnType.Code,          codeTVA.Code);
 			this.SetText (ColumnType.Titre,         codeTVA.Description);
-			this.SetText (ColumnType.Taux1,         Converters.PercentToString (codeTVA.Taux1));
-			this.SetText (ColumnType.Taux2,         Converters.PercentToString (codeTVA.Taux2));
+			this.SetText (ColumnType.Taux,          this.GetTaux (codeTVA));
 			this.SetText (ColumnType.Compte,        JournalDataAccessor.GetNuméro (codeTVA.Compte));
 			this.SetText (ColumnType.Chiffre,       Converters.IntToString (codeTVA.Chiffre));
 			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
@@ -181,13 +164,43 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			codeTVA.Code          = this.GetText (ColumnType.Code);
 			codeTVA.Description   = this.GetText (ColumnType.Titre);
-			codeTVA.Taux1         = Converters.ParsePercent (this.GetText (ColumnType.Taux1)).GetValueOrDefault ();
-			codeTVA.Taux2         = Converters.ParsePercent (this.GetText (ColumnType.Taux2)).GetValueOrDefault ();
+			this.SetTaux (codeTVA, this.GetText (ColumnType.Taux));
 			codeTVA.Compte        = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Compte));
 			codeTVA.Chiffre       = Converters.ParseInt (this.GetText (ColumnType.Chiffre));
 			codeTVA.MontantFictif = Converters.ParseMontant (this.GetText (ColumnType.MontantFictif));
 			codeTVA.ParDéfaut     = this.GetText (ColumnType.ParDéfaut) == "1";
 			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "1";
+		}
+
+		private FormattedText GetTaux(ComptaCodeTVAEntity codeTVA)
+		{
+			var list = new List<string> ();
+
+			foreach (var taux in codeTVA.Taux)
+			{
+				list.Add (taux.Nom.ToString ());
+			}
+
+			return string.Join ("$", list);
+		}
+
+		private void SetTaux(ComptaCodeTVAEntity codeTVA, FormattedText text)
+		{
+			codeTVA.Taux.Clear ();
+
+			if (!text.IsNullOrEmpty)
+			{
+				var words = text.ToString ().Split ('$');
+				foreach (var word in words)
+				{
+					var taux = this.compta.TauxTVA.Where (x => x.Nom == word).FirstOrDefault ();
+
+					if (taux != null && !codeTVA.Taux.Contains (taux))
+					{
+						codeTVA.Taux.Add (taux);
+					}
+				}
+			}
 		}
 	}
 }

@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (line.StartsWith ("ENTRY"))
 				{
-					var rank = this.GetEntryContentInt  (indexJournal, "NUM");
+					var rank = this.GetEntryContentInt (indexJournal, "NUM");
 					var name = this.GetEntryContentText (indexJournal, "NAME");
 					journaux.Add (rank, name);
 				}
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Compta.IO
 					compte.Numéro    = numéro;
 					compte.Titre     = titre;
 					compte.Catégorie = this.GetEntryContentCatégorie (indexCompte, "CAT");
-					compte.Type      = this.GetEntryContentType      (indexCompte, "STATUS");
+					compte.Type      = this.GetEntryContentType (indexCompte, "STATUS");
 					//compte.Monnaie   = this.GetEntryContentText      (indexCompte, "CURRENCY");
 
 					var niveau = this.GetEntryContentInt (indexCompte, "LEVEL");
@@ -227,6 +227,9 @@ namespace Epsitec.Cresus.Compta.IO
 			this.compta.UpdateNiveauCompte ();
 
 			//	Importe les taux de TVA.
+			this.CreateTaux ();
+
+#if false
 			int indexTaux = this.IndexOfLine ("BEGIN=VATRATES");
 
 			var taux = new Dictionary<decimal, decimal> ();
@@ -253,6 +256,7 @@ namespace Epsitec.Cresus.Compta.IO
 					taux.Add (t1, t2);
 				}
 			}
+#endif
 
 			//	Importe des codes TVA.
 			int indexTVA = this.IndexOfLine ("BEGIN=TVACODES");
@@ -277,18 +281,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 					codeTVA.Code        = this.GetEntryContentText (indexTVA, "NAME");
 					codeTVA.Description = this.GetEntryContentText (indexTVA, "COMMENT");
-					codeTVA.Taux1       = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
-
-					decimal t2;
-					if (taux.TryGetValue (codeTVA.Taux1, out t2))
-					{
-						codeTVA.Taux2 = t2;
-					}
-
 					codeTVA.Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault ();
 					codeTVA.Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT"));
 
-					this.compta.CodesTVA.Add (codeTVA);
+					var t = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
+					var taux = this.compta.TauxTVA.Where (x => x.Taux == t).FirstOrDefault ();
+
+					if (taux != null)
+					{
+						this.InsertTaux (codeTVA, taux);
+						this.compta.CodesTVA.Add (codeTVA);
+					}
 				}
 			}
 
@@ -302,6 +305,93 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return null;  // ok
+		}
+
+		private void CreateTaux()
+		{
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Normal 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.076m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Normal 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.08m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Réduit 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.024m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Réduit 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.025m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Hébergement 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.036m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Hébergement 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.038m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Exclu",
+					Taux    = 0.0m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+		}
+
+		private void InsertTaux(ComptaCodeTVAEntity codeTVA, ComptaTauxTVAEntity taux)
+		{
+			codeTVA.Taux.Add (taux);
+
+			var nom = taux.Nom.ToString ().Split (' ').FirstOrDefault ();
+
+			foreach (var t in this.compta.TauxTVA)
+			{
+				if (t.Nom.ToString ().StartsWith (nom) && !codeTVA.Taux.Contains (t))
+				{
+					codeTVA.Taux.Add (t);
+				}
+			}
 		}
 
 		private Date GetDate(string text)

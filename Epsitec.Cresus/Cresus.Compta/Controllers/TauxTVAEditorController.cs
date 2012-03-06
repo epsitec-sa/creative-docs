@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class CodesTVAEditorController : AbstractEditorController
+	public class TauxTVAEditorController : AbstractEditorController
 	{
-		public CodesTVAEditorController(AbstractController controller)
+		public TauxTVAEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -57,8 +57,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				if (mapper.Column == ColumnType.Chiffre  ||
-					mapper.Column == ColumnType.ParDéfaut)  // insère un gap ?
+				if (mapper.Column == ColumnType.DateDébut ||
+					mapper.Column == ColumnType.Taux      )  // insère un gap ?
 				{
 					new FrameBox
 					{
@@ -70,29 +70,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Compte)
-				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
-
-					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
-				}
-				else if (mapper.Column == ColumnType.Taux)
-				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
-
-					var taux = this.compta.TauxTVA.Select (x => x.Nom);
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, taux.ToArray ());
-				}
-				else if (mapper.Column == ColumnType.ParDéfaut ||
-						 mapper.Column == ColumnType.Désactivé)
-				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
-				}
-				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
@@ -106,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un code TVA :" : "Création d'un code TVA :";
+			return modify ? "Modification d'un taux de TVA :" : "Création d'un taux de TVA :";
 		}
 	}
 }
