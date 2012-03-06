@@ -80,11 +80,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Taux)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new ListController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
-
-					var taux = this.compta.TauxTVA.Select (x => x.Nom);
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, taux.ToArray ());
 				}
 				else if (mapper.Column == ColumnType.ParDéfaut ||
 						 mapper.Column == ColumnType.Désactivé)

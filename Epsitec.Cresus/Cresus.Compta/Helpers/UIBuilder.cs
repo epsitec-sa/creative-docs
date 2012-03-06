@@ -168,6 +168,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return frame;
 		}
 
+		public static void SetErrorPseudoCombo(StaticText field, bool error)
+		{
+			field.Parent.BackColor = error ? UIBuilder.ErrorColor : Color.FromBrightness (0.96);
+		}
+
 	
 		public static void CreateAutoCompleteTextField(Widget parent, out FrameBox container, out AbstractTextField field, out GlyphButton menuButton)
 		{

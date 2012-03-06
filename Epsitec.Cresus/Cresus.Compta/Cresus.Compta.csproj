@@ -79,6 +79,7 @@
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
     <Compile Include="Fields\Controllers\CheckButtonController.cs" />
+    <Compile Include="Fields\Controllers\ListController.cs" />
     <Compile Include="Fields\Controllers\RadioButtonController.cs" />
     <Compile Include="Fields\Controllers\PasswordFieldController.cs" />
     <Compile Include="Helpers\Strings.cs" />

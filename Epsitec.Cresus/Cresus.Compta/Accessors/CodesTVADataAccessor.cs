@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return codeTVA.Description;
 
 				case ColumnType.Taux:
-					return codeTVA.Taux.Last ().Nom;
+					return codeTVA.LastTauxNom;
 
 				case ColumnType.Compte:
 					return JournalDataAccessor.GetNuméro (codeTVA.Compte);

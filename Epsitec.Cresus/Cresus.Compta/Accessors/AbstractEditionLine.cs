@@ -131,6 +131,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public List<FormattedText> GetTexts(ColumnType columnType)
+		{
+			if (this.dataDict.ContainsKey (columnType))
+			{
+				return this.dataDict[columnType].Texts;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		public bool HasError(ColumnType columnType)
 		{

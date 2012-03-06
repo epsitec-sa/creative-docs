@@ -309,22 +309,13 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void CreateTaux()
 		{
+			//	Plutôt que d'essayer d'importer difficilement les données de Crésus Comptabilité, je préfère les
+			//	recréer de toutes pièces. A priori, il n'y a pas de raison qu'elles soient différentes, non !?
 			{
 				var taux = new ComptaTauxTVAEntity ()
 				{
-					Nom     = "Normal 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.076m,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Normal 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.08m,
+					Nom     = "Exclu",
+					Taux    = 0.0m,
 				};
 				this.compta.TauxTVA.Add (taux);
 			}
@@ -372,8 +363,19 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var taux = new ComptaTauxTVAEntity ()
 				{
-					Nom     = "Exclu",
-					Taux    = 0.0m,
+					Nom     = "Normal 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.076m,
+				};
+				this.compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Normal 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.08m,
 				};
 				this.compta.TauxTVA.Add (taux);
 			}

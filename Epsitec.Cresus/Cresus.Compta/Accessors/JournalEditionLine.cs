@@ -220,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (newCodeTVA != currentCodeTVA)
 			{
 				this.SetText (ColumnType.CodeTVA, newCodeTVA);
-				this.SetText (ColumnType.TauxTVA, (codeTVA == null) ? null : Converters.PercentToString (codeTVA.Taux.Last ().Taux));
+				this.SetText (ColumnType.TauxTVA, (codeTVA == null) ? null : Converters.PercentToString (codeTVA.LastTauxValue));
 				this.CodeTVAChanged ();  // met à jour les autres colonnes
 			}
 		}
@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.Taux.Last ().Taux));
+				this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.LastTauxValue));
 
 				if (montantBrut.HasValue && montant.GetValueOrDefault () == 0)
 				{
