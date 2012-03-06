@@ -1,0 +1,28 @@
+﻿id	fr	it	rm	de
+AG	Argovie	Argovia	Argovia	Aargau
+AI	Appenzell Rhodes-Intérieures	Appenzello Interno	Appenzell dadens	Appenzell Innerrhoden
+AR	Appenzell Rhodes-Extérieures	Appenzello Esterno	Appenzell dador	Appenzell Ausserrhoden
+BS	Bâle-Ville	Basilea-Città	Basilea-Citad	Basel-Landschaft
+BL	Bâle-Campagne	Basilea-Campagna	Basilea-Champagna	Basel-Stadt
+BE	Berne	Berna	Berna	Bern
+FR	Fribourg	Friborgo	Friburg	Freiburg
+GE	Genève	Ginevra	Genevra	Genf
+GL	Glaris	Glarona	Glaruna	Glarus
+GR	Grisons	Grigioni	Grischun	Graubünden
+JU	Jura	Giura	Giura	Jura
+LU	Lucerne	Lucerna	Lucerna	Luzern
+NE	Neuchâtel	Neuchâtel	Neuchâtel	Neuenburg
+NW	Nidwald	Nidvaldo	Sutsilvania	Nidwalden
+OW	Obwald	Obvaldo	Sursilvania	Obwalden
+SH	Schaffhouse	Sciaffusa	Schaffusa	Schaffhausen
+SZ	Schwyz	Svitto	Sviz	Schwyz
+SO	Soleure	Soletta	Soloturn	Solothurn
+SG	Saint-Gall	San Gallo	Son Gagl	St. Gallen
+TG	Thurgovie	Turgovia	Turgovia	Thurgau
+TI	Tessin	Ticino	Tessin	Tessin
+UR	Uri	Uri	Uri	Uri
+VS	Valais	Vallese	Vallais	Wallis
+VD	Vaud	Vaud	Vad	Waadt
+ZG	Zoug	Zugo	Zug	Zug
+ZH	Zurich	Zurigo	Turitg	Zürich
+http://zefix.admin.ch/images/flg_
