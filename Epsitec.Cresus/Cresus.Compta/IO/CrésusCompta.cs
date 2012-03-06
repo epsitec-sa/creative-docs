@@ -618,6 +618,9 @@ namespace Epsitec.Cresus.Compta.IO
 				return "Le fichier ne contient aucune écriture.";
 			}
 
+			this.MergeStep1 (journal);
+			this.MergeStep2 (journal);
+
 			return null;  // ok
 		}
 
@@ -681,6 +684,186 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return 0;
+		}
+
+
+		private void MergeStep1(List<ComptaEcritureEntity> journal)
+		{
+			int i = 0;
+			while (i < journal.Count-1)
+			{
+				var écriture = journal[i];
+				var suivante = journal[i+1];
+
+				var merge = this.MergeEcritures1 (écriture, suivante);
+				if (merge != null)
+				{
+					journal.RemoveAt (i);
+					journal.RemoveAt (i);
+					journal.Insert (i, merge);
+				}
+
+				i++;
+			}
+		}
+
+		private ComptaEcritureEntity MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
+		{
+			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
+			{
+				return null;
+			}
+
+			if ((écriture.Débit  != null || suivante.Débit  != null) &&
+				(écriture.Crédit != null || suivante.Crédit != null))
+			{
+				return null;
+			}
+
+			var lib1 = écriture.Libellé.ToString ();
+			var lib2 = suivante.Libellé.ToString ();
+
+			int i1 = lib1.LastIndexOf (", ");
+			int i2 = lib2.LastIndexOf (", ");
+
+			if (i1 == -1 || i2 == -1 || i1 != i2)
+			{
+				return null;
+			}
+
+			if (lib1.Substring (0, i1) != lib2.Substring (0, i2))
+			{
+				return null;
+			}
+
+			//	Cherche le code TVA.
+			if (lib1[i1+2] != '(')
+			{
+				return null;
+			}
+
+			int i = lib1.IndexOf (')', i1+2);
+			if (i == -1)
+			{
+				return null;
+			}
+
+			string code = lib1.Substring (i1+3, i-i1-3);
+			var codeTVA = this.compta.CodesTVA.Where (x => x.Code == code).FirstOrDefault ();
+			if (codeTVA == null)
+			{
+				return null;
+			}
+
+			//	Cherche le taux.
+			int j = lib2.IndexOf ('%', i2+2);
+			if (j == -1)
+			{
+				return null;
+			}
+
+			decimal taux;
+			if (decimal.TryParse (lib2.Substring (i2+2, j-i2-2), out taux))
+			{
+				taux /= 100;
+			}
+			else
+			{
+				return null;
+			}
+
+			//	Crée la nouvelle écriture qui fusionne les 2 autres.
+			var merge = new ComptaEcritureEntity ()
+			{
+				Date        = écriture.Date,
+				Débit       = écriture.Débit,
+				Crédit      = écriture.Crédit,
+				Pièce       = écriture.Pièce,
+				Libellé     = lib1.Substring (0, i1),
+				Montant     = écriture.Montant + suivante.Montant,
+				MontantTVA  = suivante.Montant,
+				MontantBrut = écriture.Montant,
+				CodeTVA     = codeTVA,
+				TauxTVA     = taux,
+				Journal     = écriture.Journal,
+				MultiId     = écriture.MultiId,
+			};
+
+			return merge;
+		}
+
+		private void MergeStep2(List<ComptaEcritureEntity> journal)
+		{
+			int i = 0;
+			while (i < journal.Count-1)
+			{
+				var écriture = journal[i];
+				var suivante = journal[i+1];
+
+				int count = this.MergeMultiCount (journal, i);
+				if (count == 2)
+				{
+					var merge = this.MergeEcritures2 (écriture, suivante);
+					
+					if (merge != null)
+					{
+						journal.RemoveAt (i);
+						journal.RemoveAt (i);
+						journal.Insert (i, merge);
+						i++;
+						continue;
+					}
+				}
+
+				i += count;
+			}
+		}
+
+		private int MergeMultiCount(List<ComptaEcritureEntity> journal, int i)
+		{
+			int count = 1;
+			int id = journal[i].MultiId;
+
+			if (id != 0)
+			{
+				while (++i < journal.Count)
+				{
+					if (id != journal[i].MultiId)
+					{
+						break;
+					}
+
+					count++;
+				}
+			}
+
+			return count;
+		}
+		
+		private ComptaEcritureEntity MergeEcritures2(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
+		{
+			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
+			{
+				return null;
+			}
+
+			//	Crée la nouvelle écriture qui fusionne les 2 autres.
+			var merge = new ComptaEcritureEntity ()
+			{
+				Date        = écriture.Date,
+				Débit       = (écriture.Débit  == null) ? suivante.Débit  : écriture.Débit,
+				Crédit      = (écriture.Crédit == null) ? suivante.Crédit : écriture.Crédit,
+				Pièce       = écriture.Pièce,
+				Libellé     = écriture.Libellé,
+				Montant     = écriture.Montant,
+				MontantTVA  = écriture.MontantTVA,
+				MontantBrut = écriture.MontantBrut,
+				CodeTVA     = écriture.CodeTVA,
+				TauxTVA     = écriture.TauxTVA,
+				Journal     = écriture.Journal,
+			};
+
+			return merge;
 		}
 		#endregion
 
