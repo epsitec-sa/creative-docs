@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureTVA,             true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreCompteTVA, false));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantTVA, false));
-			this.Add (new DecimalSettingData (SettingsGroup.Ecriture, SettingsType.EcritureArrondiTVA, 0.01m, 0.0m, 1.0m));
+			this.Add (new DecimalSettingData (SettingsGroup.Ecriture, SettingsType.EcritureArrondiTVA, 0.05m, 0.0m, 1.0m));
 
 			//	Réglages pour les montants :
 			this.Add (new IntSettingData    (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    2, 0, 5));
@@ -151,6 +151,29 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			if (this.settings.TryGetValue (type, out data))
 			{
 				(data as IntSettingData).Value = value;
+			}
+		}
+
+
+		public decimal? GetDecimal(SettingsType type)
+		{
+			AbstractSettingData data;
+			if (this.settings.TryGetValue (type, out data))
+			{
+				return (data as DecimalSettingData).Value;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public void SetDecimal(SettingsType type, decimal value)
+		{
+			AbstractSettingData data;
+			if (this.settings.TryGetValue (type, out data))
+			{
+				(data as DecimalSettingData).Value = value;
 			}
 		}
 

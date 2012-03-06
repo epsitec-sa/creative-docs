@@ -52,6 +52,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.showViewSettingsPanel = false;
 			this.showInfoPanel         = true;
 
+			Converters.ImportSettings (this.settingsList);
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 

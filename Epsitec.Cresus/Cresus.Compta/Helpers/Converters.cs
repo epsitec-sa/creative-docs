@@ -81,6 +81,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 
 		#region Montant
+		public static decimal RoundMontant(decimal montant)
+		{
+			//	Retourne un montant en francs arrondi selon les réglages.
+			return System.Math.Floor ((montant / Converters.roundMontantValue) + 0.5m) * Converters.roundMontantValue;
+		}
+
 		public static decimal? ParseMontant(FormattedText text)
 		{
 			return Converters.ParseMontant (text.ToSimpleText ());
@@ -1127,6 +1133,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.numberFormatNullParts = settingsList.GetEnum (SettingsType.PriceNullParts);
 			Converters.numberFormatNegative  = settingsList.GetEnum (SettingsType.PriceNegativeFormat);
 
+			Converters.roundMontantValue = settingsList.GetDecimal (SettingsType.EcritureArrondiTVA).GetValueOrDefault (0.01m);
+
 			//	Dates.
 			Converters.dateFormatSeparator = settingsList.GetEnum (SettingsType.DateSeparator);
 			Converters.dateFormatYear      = settingsList.GetEnum (SettingsType.DateYear);
@@ -1156,5 +1164,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		private static SettingsEnum dateFormatSeparator   = SettingsEnum.SeparatorDot;
 		private static SettingsEnum dateFormatYear        = SettingsEnum.YearDigits4;
 		private static SettingsEnum dateFormatOrder       = SettingsEnum.YearDMY;
+		private static decimal      roundMontantValue     = 0.01m;
 	}
 }
