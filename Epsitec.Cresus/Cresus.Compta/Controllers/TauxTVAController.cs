@@ -113,10 +113,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Nom,       2.00, ContentAlignment.MiddleLeft,  "Nom court",                "Nom court unique");
-				yield return new ColumnMapper (ColumnType.DateDébut, 1.00, ContentAlignment.MiddleLeft,  "Dates de début et de fin", "Date de début de validité (inclue)");
-				yield return new ColumnMapper (ColumnType.DateFin,   1.00, ContentAlignment.MiddleLeft,  "",                         "Date de fin de validité (inclue)");
-				yield return new ColumnMapper (ColumnType.Taux,      1.00, ContentAlignment.MiddleRight, "Taux",                     "Taux de TVA");
+				yield return new ColumnMapper (ColumnType.Nom,       2.00, ContentAlignment.MiddleLeft,   "Nom court",       "Nom court unique");
+				yield return new ColumnMapper (ColumnType.DateDébut, 1.00, ContentAlignment.MiddleLeft,   "Date de début",   "Date de début de validité (inclue)");
+				yield return new ColumnMapper (ColumnType.DateFin,   1.00, ContentAlignment.MiddleLeft,   "Date de fin",     "Date de fin de validité (inclue)");
+				yield return new ColumnMapper (ColumnType.Taux,      1.00, ContentAlignment.MiddleRight,  "Taux",            "Taux de TVA");
+				yield return new ColumnMapper (ColumnType.ParDéfaut, 1.00, ContentAlignment.MiddleCenter, "Taux par défaut", "Ce taux est le taux par défaut");
 			}
 		}
 	}

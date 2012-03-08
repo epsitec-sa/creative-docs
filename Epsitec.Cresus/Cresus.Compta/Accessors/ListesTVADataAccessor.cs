@@ -15,14 +15,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Gère l'accès aux taux de TVA de la comptabilité.
+	/// Gère l'accès aux listes de taux de TVA de la comptabilité.
 	/// </summary>
-	public class TauxTVADataAccessor : AbstractDataAccessor
+	public class ListesTVADataAccessor : AbstractDataAccessor
 	{
-		public TauxTVADataAccessor(AbstractController controller)
+		public ListesTVADataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.TauxTVA.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ListesTVA.Search");
 		}
 
 
@@ -48,20 +48,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.compta.TauxTVA.Count;
+				return this.compta.ListesTVA.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.compta.TauxTVA.Count)
+			if (row < 0 || row >= this.compta.ListesTVA.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.compta.TauxTVA[row];
+				return this.compta.ListesTVA[row];
 			}
 		}
 
@@ -73,38 +73,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.compta.TauxTVA.IndexOf (entity as ComptaTauxTVAEntity);
+				return this.compta.ListesTVA.IndexOf (entity as ComptaListeTVAEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var tauxTVA = compta.TauxTVA;
+			var listesTVA = compta.ListesTVA;
 
-			if (row < 0 || row >= tauxTVA.Count)
+			if (row < 0 || row >= listesTVA.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var taux = tauxTVA[row];
+			var listeTVA = listesTVA[row];
 
 			switch (column)
 			{
 				case ColumnType.Nom:
-					return taux.Nom;
-
-				case ColumnType.DateDébut:
-					return taux.DateDébut.ToString ();
-
-				case ColumnType.DateFin:
-					return taux.DateFin.ToString ();
+					return listeTVA.Nom;
 
 				case ColumnType.Taux:
-					return Converters.PercentToString (taux.Taux);
-
-				case ColumnType.ParDéfaut:
-					return taux.ParDéfaut ? "Oui" : "";
+					return listeTVA.SummaryTaux;
 
 				default:
 					return FormattedText.Null;
@@ -114,7 +105,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionLine(int index)
 		{
-			var newData = new TauxTVAEditionLine (this.controller);
+			var newData = new ListesTVAEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -131,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationLine()
 		{
 			this.editionLine.Clear ();
-			this.editionLine.Add (new TauxTVAEditionLine (this.controller));
+			this.editionLine.Add (new ListesTVAEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -158,11 +149,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.compta.TauxTVA.Count)
+			if (row >= 0 && row < this.compta.ListesTVA.Count)
 			{
-				var data = new TauxTVAEditionLine (this.controller);
-				var tauxTVA = this.compta.TauxTVA[row];
-				data.EntityToData (tauxTVA);
+				var data = new ListesTVAEditionLine (this.controller);
+				var listeTVA = this.compta.ListesTVA[row];
+				data.EntityToData (listeTVA);
 
 				this.editionLine.Add (data);
 				this.countEditedRow++;
@@ -199,14 +190,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var tauxTVA = this.CreateTauxTVA ();
-				data.DataToEntity (tauxTVA);
+				var listeTVA = this.CreateListeTVA ();
+				data.DataToEntity (listeTVA);
 
-				this.compta.TauxTVA.Add (tauxTVA);
+				this.compta.ListesTVA.Add (listeTVA);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.compta.TauxTVA.Count-1;
+					firstRow = this.compta.ListesTVA.Count-1;
 				}
 			}
 
@@ -217,8 +208,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var tauxTVA = this.compta.TauxTVA[row];
-			this.editionLine[0].DataToEntity (tauxTVA);
+			var listeTVA = this.compta.ListesTVA[row];
+			this.editionLine[0].DataToEntity (listeTVA);
 		}
 
 
@@ -229,8 +220,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var tauxTVA = this.compta.TauxTVA[this.firstEditedRow];
-			return string.Format ("Voulez-vous supprimer le taux de TVA \"{0}\" ?", tauxTVA.Nom);
+			var listeTVA = this.compta.ListesTVA[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer la liste de taux de TVA \"{0}\" ?", listeTVA.Nom);
 		}
 
 		public override void RemoveModificationLine()
@@ -239,14 +230,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var tauxTVA = this.compta.TauxTVA[row];
-					this.DeleteTauxTVA (tauxTVA);
-					this.compta.TauxTVA.RemoveAt (row);
+					var listeTVA = this.compta.ListesTVA[row];
+					this.DeleteListeTVA (listeTVA);
+					this.compta.ListesTVA.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.compta.TauxTVA.Count)
+				if (this.firstEditedRow >= this.compta.ListesTVA.Count)
 				{
-					this.firstEditedRow = this.compta.TauxTVA.Count-1;
+					this.firstEditedRow = this.compta.ListesTVA.Count-1;
 				}
 			}
 		}
@@ -256,11 +247,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.compta.TauxTVA[this.firstEditedRow];
-				var t2 = this.compta.TauxTVA[this.firstEditedRow+direction];
+				var t1 = this.compta.ListesTVA[this.firstEditedRow];
+				var t2 = this.compta.ListesTVA[this.firstEditedRow+direction];
 
-				this.compta.TauxTVA[this.firstEditedRow] = t2;
-				this.compta.TauxTVA[this.firstEditedRow+direction] = t1;
+				this.compta.ListesTVA[this.firstEditedRow] = t2;
+				this.compta.ListesTVA[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -283,25 +274,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptaTauxTVAEntity CreateTauxTVA()
+		private ComptaListeTVAEntity CreateListeTVA()
 		{
 			this.controller.MainWindowController.SetDirty ();
 
-			ComptaTauxTVAEntity tauxTVA;
+			ComptaListeTVAEntity listeTVA;
 
 			if (this.businessContext == null)
 			{
-				tauxTVA = new ComptaTauxTVAEntity ();
+				listeTVA = new ComptaListeTVAEntity ();
 			}
 			else
 			{
-				tauxTVA = this.businessContext.CreateEntity<ComptaTauxTVAEntity> ();
+				listeTVA = this.businessContext.CreateEntity<ComptaListeTVAEntity> ();
 			}
 
-			return tauxTVA;
+			return listeTVA;
 		}
 
-		private void DeleteTauxTVA(ComptaTauxTVAEntity tauxTVA)
+		private void DeleteListeTVA(ComptaListeTVAEntity listeTVA)
 		{
 			this.controller.MainWindowController.SetDirty ();
 
@@ -311,7 +302,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.businessContext.DeleteEntity (tauxTVA);
+				this.businessContext.DeleteEntity (listeTVA);
 			}
 		}
 	}

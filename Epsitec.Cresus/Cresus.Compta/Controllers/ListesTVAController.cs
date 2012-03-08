@@ -17,22 +17,22 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère les codes TVA de la comptabilité.
+	/// Ce contrôleur gère les listes de taux de TVA de la comptabilité.
 	/// </summary>
-	public class CodesTVAController : AbstractController
+	public class ListesTVAController : AbstractController
 	{
-		public CodesTVAController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public ListesTVAController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.dataAccessor = new CodesTVADataAccessor (this);
+			this.dataAccessor = new ListesTVADataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.CodesTVA.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ListesTVA.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
-			this.SetTitle ("Codes TVA");
+			this.SetTitle ("Listes de taux de TVA");
 		}
 
 
@@ -50,6 +50,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return true;
+			}
+		}
+
+		public override double RightEditorWidth
+		{
+			get
+			{
+				return 400;
 			}
 		}
 
@@ -103,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateEditor(FrameBox parent)
 		{
-			this.editorController = new CodesTVAEditorController (this);
+			this.editorController = new ListesTVAEditorController (this);
 			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 			this.editorController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
@@ -113,16 +121,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Code,          1.00, ContentAlignment.MiddleLeft,  "Code",            "Code unique");
-				yield return new ColumnMapper (ColumnType.Titre,         5.00, ContentAlignment.MiddleLeft,  "Description",     "Description du code TVA");
-				yield return new ColumnMapper (ColumnType.Taux,          1.00, ContentAlignment.MiddleLeft,  "Liste de taux",   "Liste de taux de TVA");
-				yield return new ColumnMapper (ColumnType.Compte,        1.00, ContentAlignment.MiddleLeft,  "Compte TVA",      "Compte TVA");
-
-				yield return new ColumnMapper (ColumnType.Chiffre,       0.00, ContentAlignment.MiddleLeft,  "Chiffre",         "Chiffre sur le formulaire de décompte TVA");
-				yield return new ColumnMapper (ColumnType.MontantFictif, 0.00, ContentAlignment.MiddleRight, "Montant fictif",  "Montant fictif pour le contrôle de la disposition");
-
-				yield return new ColumnMapper (ColumnType.ParDéfaut,     0.00, ContentAlignment.MiddleLeft,  "Code par défaut", "Ce code est le code par défaut");
-				yield return new ColumnMapper (ColumnType.Désactivé,     0.00, ContentAlignment.MiddleLeft,  "Code désactivé",  "Ce code n'est provisoirement plus disponible");
+				yield return new ColumnMapper (ColumnType.Nom,  1.00, ContentAlignment.MiddleLeft, "Nom",           "Nom unique");
+				yield return new ColumnMapper (ColumnType.Taux, 2.00, ContentAlignment.MiddleLeft, "Taux utilisés", "Taux de TVA utilisés");
 			}
 		}
 	}

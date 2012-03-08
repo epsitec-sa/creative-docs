@@ -25,6 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.DateDébut, new EditionData (this.controller, this.ValidateDate));
 			this.dataDict.Add (ColumnType.DateFin,   new EditionData (this.controller, this.ValidateDate));
 			this.dataDict.Add (ColumnType.Taux,      new EditionData (this.controller, this.ValidateTaux));
+			this.dataDict.Add (ColumnType.ParDéfaut, new EditionData (this.controller));
 		}
 
 
@@ -97,14 +98,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.DateDébut, tauxTVA.DateDébut.ToString ());
 			this.SetText (ColumnType.DateFin,   tauxTVA.DateFin.ToString ());
 			this.SetText (ColumnType.Taux,      Converters.PercentToString (tauxTVA.Taux));
+			this.SetText (ColumnType.ParDéfaut, tauxTVA.ParDéfaut ? "1" : "0");
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var tauxTVA = entity as ComptaTauxTVAEntity;
 
-			tauxTVA.Nom  = this.GetText (ColumnType.Nom);
-			tauxTVA.Taux = Converters.ParsePercent (this.GetText (ColumnType.Taux)).GetValueOrDefault ();
+			tauxTVA.Nom       = this.GetText (ColumnType.Nom);
+			tauxTVA.Taux      = Converters.ParsePercent (this.GetText (ColumnType.Taux)).GetValueOrDefault ();
+			tauxTVA.ParDéfaut = this.GetText (ColumnType.ParDéfaut) == "1";
 
 			Date date;
 

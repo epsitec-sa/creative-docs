@@ -16,6 +16,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKB5]", typeof (Epsitec.Cresus.Compta.Entities.ComptaPiècesGeneratorEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKD6]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK07]", typeof (Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVK87]", typeof (Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -151,6 +152,18 @@ namespace Epsitec.Cresus.Compta.Entities
 			get
 			{
 				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity> ("[OVKN6]");
+			}
+		}
+		///	<summary>
+		///	The <c>ListesTVA</c> field.
+		///	designer:fld/OVK/OVKC7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKC7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity> ListesTVA
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity> ("[OVKC7]");
 			}
 		}
 		///	<summary>
@@ -2064,15 +2077,25 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>Taux</c> field.
+		///	The <c>ListeTaux</c> field.
 		///	designer:fld/OVKD6/OVKG6
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKG6]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> Taux
+		public global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity ListeTaux
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVKG6]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity> ("[OVKG6]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity oldValue = this.ListeTaux;
+				if (oldValue != value || !this.IsFieldDefined("[OVKG6]"))
+				{
+					this.OnListeTauxChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity> ("[OVKG6]", oldValue, value);
+					this.OnListeTauxChanged (oldValue, value);
+				}
 			}
 		}
 		///	<summary>
@@ -2212,6 +2235,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCodeChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnListeTauxChanging(global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity newValue);
+		partial void OnListeTauxChanged(global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity newValue);
 		partial void OnCompteChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnCompteChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCompteEntity newValue);
 		partial void OnDéductionChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
@@ -2346,6 +2371,28 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>ParDéfaut</c> field.
+		///	designer:fld/OVK07/OVKD7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKD7]")]
+		public bool ParDéfaut
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVKD7]");
+			}
+			set
+			{
+				bool oldValue = this.ParDéfaut;
+				if (oldValue != value || !this.IsFieldDefined("[OVKD7]"))
+				{
+					this.OnParDéfautChanging (oldValue, value);
+					this.SetField<bool> ("[OVKD7]", oldValue, value);
+					this.OnParDéfautChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
@@ -2355,6 +2402,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDateFinChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
 		partial void OnTauxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTauxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnParDéfautChanging(bool oldValue, bool newValue);
+		partial void OnParDéfautChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -2370,6 +2419,77 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		#region Repository Class
 		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaTauxTVAEntity>
+		{
+			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
+			{
+			}
+		}
+		#endregion
+	}
+}
+#endregion
+
+#region Epsitec.Cresus.Compta.ComptaListeTVA Entity
+namespace Epsitec.Cresus.Compta.Entities
+{
+	///	<summary>
+	///	The <c>ComptaListeTVA</c> entity.
+	///	designer:cap/OVK87
+	///	</summary>
+	public partial class ComptaListeTVAEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	{
+		///	<summary>
+		///	The <c>Nom</c> field.
+		///	designer:fld/OVK87/OVK97
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK97]")]
+		public global::Epsitec.Common.Types.FormattedText Nom
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK97]");
+			}
+			set
+			{
+				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
+				if (oldValue != value || !this.IsFieldDefined("[OVK97]"))
+				{
+					this.OnNomChanging (oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK97]", oldValue, value);
+					this.OnNomChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Taux</c> field.
+		///	designer:fld/OVK87/OVKA7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKA7]")]
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> Taux
+		{
+			get
+			{
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVKA7]");
+			}
+		}
+		
+		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		
+		
+		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity.EntityStructuredTypeId;
+		}
+		public override string GetEntityStructuredTypeKey()
+		{
+			return global::Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity.EntityStructuredTypeKey;
+		}
+		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 232);	// [OVK87]
+		public static readonly string EntityStructuredTypeKey = "[OVK87]";
+		
+		#region Repository Class
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaListeTVAEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

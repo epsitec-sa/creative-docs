@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
+    <Compile Include="Accessors\ListesTVADataAccessor.cs" />
+    <Compile Include="Accessors\ListesTVAEditionLine.cs" />
     <Compile Include="Accessors\TauxTVADataAccessor.cs" />
     <Compile Include="Accessors\TauxTVAEditionLine.cs" />
     <Compile Include="Accessors\ExtraitDeCompteEditionLine.cs" />
@@ -65,6 +67,8 @@
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\ListesTVAEditorController.cs" />
+    <Compile Include="Controllers\ListesTVAController.cs" />
     <Compile Include="Controllers\TauxTVAEditorController.cs" />
     <Compile Include="Controllers\TauxTVAController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteEditorController.cs" />
@@ -78,6 +82,7 @@
     <Compile Include="Controllers\UtilisateursController.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
+    <Compile Include="Entities\ComptaListeTVAEntity.cs" />
     <Compile Include="Fields\Controllers\CheckButtonController.cs" />
     <Compile Include="Fields\Controllers\ListController.cs" />
     <Compile Include="Fields\Controllers\RadioButtonController.cs" />
@@ -328,6 +333,7 @@
     <EmbeddedResource Include="Images\Présentation.CodesTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.TauxTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.Menu.icon" />
+    <EmbeddedResource Include="Images\Présentation.ListeTVA.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

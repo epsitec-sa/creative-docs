@@ -70,18 +70,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.Compte)
+				if (mapper.Column == ColumnType.Taux)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					var listes = this.compta.ListesTVA.Select (x => x.Nom);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, listes.ToArray ());
+				}
+				else if (mapper.Column == ColumnType.Compte)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
-				}
-				else if (mapper.Column == ColumnType.Taux)
-				{
-					field = new ListController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.ParDéfaut ||
 						 mapper.Column == ColumnType.Désactivé)

@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class TauxTVAEditorController : AbstractEditorController
+	public class ListesTVAEditorController : AbstractEditorController
 	{
-		public TauxTVAEditorController(AbstractController controller)
+		public ListesTVAEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -42,9 +42,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var editorFrame = new TabCatcherFrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 1, 0),
+				Parent         = parent,
+				Dock           = DockStyle.Fill,
+				Margins        = new Margins (0, 0, 1, 0),
 			};
 
 			editorFrame.TabPressed += new TabCatcherFrameBox.TabPressedEventHandler (this.HandleLinesContainerTabPressed);
@@ -57,22 +57,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				if (mapper.Column == ColumnType.DateDébut ||
-					mapper.Column == ColumnType.Taux      )  // insère un gap ?
-				{
-					new FrameBox
-					{
-						Parent          = editorFrame,
-						PreferredHeight = 20,
-						Dock            = DockStyle.Top,
-					};
-				}
-
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.ParDéfaut)
+				if (mapper.Column == ColumnType.Taux)
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new ListController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
@@ -89,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un taux de TVA :" : "Création d'un taux de TVA :";
+			return modify ? "Modification d'une liste de taux de TVA :" : "Création d'une liste de taux de TVA :";
 		}
 	}
 }

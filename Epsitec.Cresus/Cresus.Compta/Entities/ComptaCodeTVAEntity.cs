@@ -17,36 +17,36 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			get
 			{
-				return FormattedText.Concat (this.Code.ApplyBold (), "#", Converters.PercentToString (this.LastTauxValue));
+				return FormattedText.Concat (this.Code.ApplyBold (), "#", Converters.PercentToString (this.DefaultTauxValue));
 			}
 		}
 
-		public decimal? LastTauxValue
+		public decimal? DefaultTauxValue
 		{
 			get
 			{
-				if (this.Taux.Any ())
-				{
-					return this.Taux.Last ().Taux;
-				}
-				else
+				if (this.ListeTaux == null)
 				{
 					return null;
 				}
+				else
+				{
+					return this.ListeTaux.DefaultTauxValue;
+				}
 			}
 		}
 
-		public FormattedText LastTauxNom
+		public FormattedText DefaultTauxNom
 		{
 			get
 			{
-				if (this.Taux.Any ())
+				if (this.ListeTaux == null)
 				{
-					return this.Taux.Last ().Nom;
+					return FormattedText.Empty;
 				}
 				else
 				{
-					return FormattedText.Empty;
+					return this.ListeTaux.DefaultTauxNom;
 				}
 			}
 		}

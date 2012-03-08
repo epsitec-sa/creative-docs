@@ -270,6 +270,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public virtual double RightEditorWidth
+		{
+			get
+			{
+				return 200;
+			}
+		}
+
 		public virtual bool HasCreateCommand
 		{
 			//	Avec false, la commande Edit.Cancel passe automatiquement en mode 'création'.

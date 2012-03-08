@@ -999,6 +999,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 				yield return Res.Commands.Présentation.PlanComptable;
 				yield return Res.Commands.Présentation.CodesTVA;
+				yield return Res.Commands.Présentation.ListeTVA;
 				yield return Res.Commands.Présentation.TauxTVA;
 				yield return Res.Commands.Présentation.Libellés;
 				yield return Res.Commands.Présentation.Modèles;
@@ -1022,6 +1023,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Périodes;
 				yield return Res.Commands.Présentation.PiècesGenerator;
 				yield return Res.Commands.Présentation.CodesTVA;
+				yield return Res.Commands.Présentation.ListeTVA;
 				yield return Res.Commands.Présentation.TauxTVA;
 				yield return Res.Commands.Présentation.Utilisateurs;
 				yield return Res.Commands.Présentation.Réglages;

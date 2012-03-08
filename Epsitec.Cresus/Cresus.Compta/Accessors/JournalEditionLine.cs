@@ -250,7 +250,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				if (codeTVA != currentCodeTVA)
 				{
 					this.SetText (ColumnType.CodeTVA, codeTVA);
-					this.SetText (ColumnType.TauxTVA, (codeTVAEntity == null) ? null : Converters.PercentToString (codeTVAEntity.LastTauxValue));
+					this.SetText (ColumnType.TauxTVA, (codeTVAEntity == null) ? null : Converters.PercentToString (codeTVAEntity.DefaultTauxValue));
 					this.CodeTVAChanged ();  // met à jour les autres colonnes
 				}
 			}
@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.LastTauxValue));
+				this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.DefaultTauxValue));
 
 				if (montantHT.HasValue && montant.GetValueOrDefault () == 0)
 				{
@@ -432,7 +432,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 			if (codeTVA != null)
 			{
-				foreach (var taux in codeTVA.Taux)
+				foreach (var taux in codeTVA.ListeTaux.Taux)
 				{
 					parameters.Add (Converters.PercentToString (taux.Taux));
 				}

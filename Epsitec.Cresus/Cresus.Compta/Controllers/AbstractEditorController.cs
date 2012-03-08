@@ -766,7 +766,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met la "toolbar", qui affiche le mode "Création/Modification d'un ...". 
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
 			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
-			toolbar.PreferredWidth = 200;
+
+			toolbar.PreferredWidth = this.controller.RightEditorWidth;
 			toolbar.Dock           = DockStyle.Top;
 			toolbar.Margins        = new Margins (0);
 			toolbar.Padding        = new Margins (0);
@@ -823,13 +824,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met le panneau éditable.
 			this.editorBackgroundFrameBox = new FrameBox
 			{
-				Parent        = mainFrame,
-				DrawFullFrame = true,
-				Dock          = DockStyle.Fill,
-				Padding       = new Margins (10),
+				Parent = mainFrame,
+				Dock   = DockStyle.Fill,
 			};
 
 			this.CreateForegroundEditorUI ();
+
+			this.editorFrameBox.DrawFullFrame = true;
+			this.editorFrameBox.Padding = new Margins (10);
 
 			return this.editorFrameBox;
 		}
@@ -837,9 +839,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateForegroundEditorUI()
 		{
 			//	Crée 3 'calques' exactement les uns sur les autres.
-			//	Dessus:		this.editorForegroundFrameBox	surcouche cliquable, visible seulement en mode 'rien'
+			//	Dessus:		this.editorForegroundFrameBox	surcouche cliquable, présente (mais invisible) seulement en mode 'rien'
 			//				this.editorFrameBox				zone éditable
-			//	Dessous:	this.editorBackgroundFrameBox	parent commnu toujours présent
+			//	Dessous:	this.editorBackgroundFrameBox	parent commun toujours présent
 			this.editorFrameBox = new FrameBox
 			{
 				Parent = this.editorBackgroundFrameBox,

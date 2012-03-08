@@ -228,6 +228,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			//	Importe les taux de TVA.
 			this.CreateTaux ();
+			this.CreateListesTaux ();
 
 #if false
 			int indexTaux = this.IndexOfLine ("BEGIN=VATRATES");
@@ -285,14 +286,10 @@ namespace Epsitec.Cresus.Compta.IO
 					codeTVA.Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault ();
 					codeTVA.Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT"));
 
-					var t = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
-					var taux = this.compta.TauxTVA.Where (x => x.Taux == t).FirstOrDefault ();
+					var taux = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
+					this.InsertTaux (codeTVA, taux);
 
-					if (taux != null)
-					{
-						this.InsertTaux (codeTVA, taux);
-						codesTVAList.Add (codeTVA);
-					}
+					codesTVAList.Add (codeTVA);
 				}
 			}
 
@@ -342,6 +339,7 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom       = "Réduit 2",
 					DateDébut = new Date (2011, 1, 1),
 					Taux      = 0.025m,
+					ParDéfaut = true,
 				};
 				this.compta.TauxTVA.Add (taux);
 			}
@@ -362,6 +360,7 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom       = "Hébergement 2",
 					DateDébut = new Date (2011, 1, 1),
 					Taux      = 0.038m,
+					ParDéfaut = true,
 				};
 				this.compta.TauxTVA.Add (taux);
 			}
@@ -382,22 +381,74 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom       = "Normal 2",
 					DateDébut = new Date (2011, 1, 1),
 					Taux      = 0.08m,
+					ParDéfaut = true,
 				};
 				this.compta.TauxTVA.Add (taux);
 			}
 		}
 
-		private void InsertTaux(ComptaCodeTVAEntity codeTVA, ComptaTauxTVAEntity taux)
+		private void CreateListesTaux()
 		{
-			codeTVA.Taux.Add (taux);
-
-			var nom = taux.Nom.ToString ().Split (' ').FirstOrDefault ();
-
-			foreach (var t in this.compta.TauxTVA)
 			{
-				if (t.Nom.ToString ().StartsWith (nom) && !codeTVA.Taux.Contains (t))
+				var liste = new ComptaListeTVAEntity
 				{
-					codeTVA.Taux.Add (t);
+					Nom = "Exclu",
+				};
+
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Exclu").FirstOrDefault ());
+
+				this.compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Réduit",
+				};
+
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Réduit 1").FirstOrDefault ());
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Réduit 2").FirstOrDefault ());
+
+				this.compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Hébergement",
+				};
+
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Hébergement 1").FirstOrDefault ());
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Hébergement 2").FirstOrDefault ());
+
+				this.compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Normal",
+				};
+
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Normal 1").FirstOrDefault ());
+				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Normal 2").FirstOrDefault ());
+
+				this.compta.ListesTVA.Add (liste);
+			}
+		}
+
+		private void InsertTaux(ComptaCodeTVAEntity codeTVA, decimal taux)
+		{
+			var tauxEntity = this.compta.TauxTVA.Where (x => x.Taux == taux).FirstOrDefault ();
+			if (tauxEntity != null)
+			{
+				foreach (var liste in this.compta.ListesTVA)
+				{
+					if (liste.Taux.Contains (tauxEntity))
+					{
+						codeTVA.ListeTaux = liste;
+						return;
+					}
 				}
 			}
 		}
