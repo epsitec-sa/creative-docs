@@ -195,11 +195,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				yield return new ColumnMapper (ColumnType.Libellé,     0.80, ContentAlignment.MiddleLeft,  "Libellé",     "Libellé de l'écriture");
 				yield return new ColumnMapper (ColumnType.MontantTTC,  0.25, ContentAlignment.MiddleRight, "Montant TTC", "Montant de l'écriture");
-				yield return new ColumnMapper (ColumnType.MontantTVA,  0.20, ContentAlignment.MiddleRight, "TVA",         "Montant de la TVA", enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA));
-				yield return new ColumnMapper (ColumnType.MontantHT,   0.25, ContentAlignment.MiddleRight, "Montant HT",  "Montant de l'écriture sans la TVA");
-				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,  "Code TVA",    "Code TVA");
-				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight, "Taux",        "Taux de la TVA");
-				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,  "Compte TVA",  "Compte de la TVA", enable: false);
+				yield return new ColumnMapper (ColumnType.MontantTVA,  0.20, ContentAlignment.MiddleRight, "TVA",         "Montant de la TVA",                 enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA));
+				yield return new ColumnMapper (ColumnType.MontantHT,   0.25, ContentAlignment.MiddleRight, "Montant HT",  "Montant de l'écriture sans la TVA", enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT));
+				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,  "Code TVA",    "Code TVA",                          enable: this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA));
+				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight, "Taux",        "Taux de la TVA",                    enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA));
+				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,  "Compte TVA",  "Compte de la TVA",                  enable: false);
 				yield return new ColumnMapper (ColumnType.Journal,     0.25, ContentAlignment.MiddleLeft,  "Journal",     "Journal auquel appartient l'écriture");
 			}
 		}

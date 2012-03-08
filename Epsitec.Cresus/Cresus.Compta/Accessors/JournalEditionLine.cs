@@ -168,67 +168,91 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#endregion
 
 
-		public void CompteDébitChanged()
-		{
-			this.CompteChanged ();
-		}
-
-		public void CompteCréditChanged()
-		{
-			this.CompteChanged ();
-		}
-
-		private void CompteChanged()
+		public void CompteChanged()
 		{
 			var numéroDébit  = this.GetText (ColumnType.Débit);
 			var numéroCrédit = this.GetText (ColumnType.Crédit);
 
 			//	Cherche les codes TVA des comptes donnés au débit et au crédit.
-			ComptaCodeTVAEntity codeTVADébit  = null;
-			ComptaCodeTVAEntity codeTVACrédit = null;
+			ComptaCodeTVAEntity codeTVADébitEntity  = null;
+			ComptaCodeTVAEntity codeTVACréditEntity = null;
+			FormattedText codeTVADébit  = FormattedText.Null;  // Null = pas de changement
+			FormattedText codeTVACrédit = FormattedText.Null;
 
-			if (!numéroDébit.IsNullOrEmpty)
+			if (!numéroDébit.IsNullOrEmpty && numéroDébit != JournalDataAccessor.multi)
 			{
 				var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroDébit).FirstOrDefault ();
-				if (compte != null)
+				if (compte == null || compte.Type != TypeDeCompte.Normal)
 				{
-					codeTVADébit = compte.CodeTVA;
+					return;
 				}
+
+				codeTVADébitEntity = compte.CodeTVA;
+				codeTVADébit       = (codeTVADébitEntity == null) ? FormattedText.Empty : compte.CodeTVA.Code;  // Empty = pas de TVA
 			}
 
-			if (!numéroCrédit.IsNullOrEmpty)
+			if (!numéroCrédit.IsNullOrEmpty && numéroCrédit != JournalDataAccessor.multi)
 			{
 				var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCrédit).FirstOrDefault ();
-				if (compte != null)
+				if (compte == null || compte.Type != TypeDeCompte.Normal)
 				{
-					codeTVACrédit = compte.CodeTVA;
+					return;
 				}
-			}
 
-			//	Cherche la description du code TVA à utiliser.
-			FormattedText currentCodeTVA = this.GetText (ColumnType.CodeTVA);
-			FormattedText newCodeTVA = FormattedText.Empty;
-			ComptaCodeTVAEntity codeTVA = null;
+				codeTVACréditEntity = compte.CodeTVA;
+				codeTVACrédit       = (codeTVACréditEntity == null) ? FormattedText.Empty : compte.CodeTVA.Code;  // Empty = pas de TVA
+			}
 
 			//	Attention, il ne peut y avoir qu'un seul compte (débit ou crédit) avec un code TVA.
-			if (codeTVADébit != null && codeTVACrédit == null)
+			if (codeTVADébitEntity != null && codeTVACréditEntity != null)
 			{
-				newCodeTVA = JournalEditionLine.GetCodeTVADescription (codeTVADébit);
-				codeTVA = codeTVADébit;
+				codeTVADébitEntity  = null;
+				codeTVACréditEntity = null;
+				codeTVADébit  = FormattedText.Null;
+				codeTVACrédit = FormattedText.Null;
 			}
 
-			if (codeTVADébit == null && codeTVACrédit != null)
+			//	Choisi le code TVA unique à utiliser (débit ou crédit).
+			ComptaCodeTVAEntity codeTVAEntity = null;
+			FormattedText codeTVA  = FormattedText.Null;
+
+			if (codeTVADébit == FormattedText.Empty)
 			{
-				newCodeTVA = JournalEditionLine.GetCodeTVADescription (codeTVACrédit);
-				codeTVA = codeTVACrédit;
+				codeTVA = FormattedText.Empty;
 			}
 
-			//	Effectue le changement seulement s'il y a lieu.
-			if (newCodeTVA != currentCodeTVA)
+			if (codeTVACrédit == FormattedText.Empty)
 			{
-				this.SetText (ColumnType.CodeTVA, newCodeTVA);
-				this.SetText (ColumnType.TauxTVA, (codeTVA == null) ? null : Converters.PercentToString (codeTVA.LastTauxValue));
-				this.CodeTVAChanged ();  // met à jour les autres colonnes
+				codeTVA = FormattedText.Empty;
+			}
+
+			if (!codeTVADébit.IsNullOrEmpty)
+			{
+				codeTVAEntity = codeTVADébitEntity;
+				codeTVA       = codeTVADébit;
+			}
+
+			if (!codeTVACrédit.IsNullOrEmpty)
+			{
+				codeTVAEntity = codeTVACréditEntity;
+				codeTVA       = codeTVACrédit;
+			}
+
+			if (codeTVA != FormattedText.Null)  // changement ?
+			{
+				FormattedText currentCodeTVA = this.GetText (ColumnType.CodeTVA);
+
+				if (currentCodeTVA.IsNullOrEmpty)
+				{
+					currentCodeTVA = FormattedText.Empty;
+				}
+
+				if (codeTVA != currentCodeTVA)
+				{
+					this.SetText (ColumnType.CodeTVA, codeTVA);
+					this.SetText (ColumnType.TauxTVA, (codeTVAEntity == null) ? null : Converters.PercentToString (codeTVAEntity.LastTauxValue));
+					this.CodeTVAChanged ();  // met à jour les autres colonnes
+				}
 			}
 		}
 

@@ -80,6 +80,15 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureEditeMontantTVA:
 					return "Permet l'édition du montant de la TVA";
 
+				case SettingsType.EcritureEditeMontantHT:
+					return "Permet l'édition du montant HT";
+
+				case SettingsType.EcritureEditeCodeTVA:
+					return "Permet l'édition du code TVA";
+
+				case SettingsType.EcritureEditeTauxTVA:
+					return "Permet l'édition du taux de la TVA";
+
 				case SettingsType.EcritureArrondiTVA:
 					return "Arrondi pour la TVA";
 

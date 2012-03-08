@@ -21,8 +21,11 @@ namespace Epsitec.Cresus.Compta
 		EcritureForcePièces,
 		EcritureMultiEditionLineCount,
 		EcritureTVA,
-		EcritureMontreCompteTVA,
 		EcritureEditeMontantTVA,
+		EcritureEditeMontantHT,
+		EcritureEditeCodeTVA,
+		EcritureEditeTauxTVA,
+		EcritureMontreCompteTVA,
 		EcritureArrondiTVA,
 
 		PriceDecimalDigits,

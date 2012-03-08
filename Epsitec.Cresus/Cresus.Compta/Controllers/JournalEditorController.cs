@@ -156,14 +156,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Débit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteDébitChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.Crédit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteCréditChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
@@ -250,17 +250,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CompteDébitChanged()
+		private void CompteChanged()
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.CompteDébitChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void CompteCréditChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.CompteCréditChanged ();
+			editionLine.CompteChanged ();
 			this.EditorTextChanged ();
 		}
 
@@ -494,6 +487,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			bool éditeMontantTVA = this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA);
+			bool éditeMontantHT  = this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT);
+			bool éditeCodeTVA    = this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA);
+			bool éditeTauxTVA    = this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA);
 
 			if (!this.isMulti)
 			{
@@ -532,10 +528,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bool hasTVA = !this.dataAccessor.EditionLine[line].GetText (ColumnType.CodeTVA).IsNullOrEmpty;
 
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && hasTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && éditeMontantHT && hasTVA;
 				this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA).Enable = !totalAutomatique && éditeMontantTVA;
 				this.dataAccessor.GetEditionData (line, ColumnType.MontantTTC).Enable = !totalAutomatique;
-				this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && hasTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA   ).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
 
 				this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
 				this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
