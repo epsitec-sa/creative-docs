@@ -1,6 +1,7 @@
 ﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
@@ -49,27 +50,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (!string.IsNullOrEmpty (text))
 			{
-				return Strings.RemoveDiacritics (text).ToLower ();
+				return StringUtils.RemoveDiacritics (text).ToLower ();
 			}
 
 			return text;
-		}
-
-		private static string RemoveDiacritics(string text)
-		{
-			string norm = text.Normalize (System.Text.NormalizationForm.FormD);
-			var builder = new System.Text.StringBuilder ();
-
-			for (int i = 0; i < norm.Length; i++)
-			{
-				var uc = System.Globalization.CharUnicodeInfo.GetUnicodeCategory (norm[i]);
-				if (uc != System.Globalization.UnicodeCategory.NonSpacingMark)
-				{
-					builder.Append (norm[i]);
-				}
-			}
-
-			return builder.ToString ().Normalize (System.Text.NormalizationForm.FormC);
 		}
 
 

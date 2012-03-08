@@ -1,7 +1,13 @@
-﻿using System;
+﻿using Epsitec.Common.Types;
+
+using System;
+
+using System.Globalization;
 
 using System.Linq;
-using Epsitec.Common.Types;
+
+using System.Text;
+
 
 namespace Epsitec.Common.Support
 {
@@ -70,6 +76,44 @@ namespace Epsitec.Common.Support
 			{
 				return null;
 			}
+		}
+
+
+		public static string RemoveDiacritics(string text)
+		{
+			// NOTE This code is strongly inspired by the code found at these two places :
+			// - http://stackoverflow.com/questions/249087
+			// - http://blogs.msdn.com/b/michkap/archive/2007/05/14/2629747.aspx
+			
+			// What happens here is that first separate the chars from their diacritic. That's what
+			// the formD transformation does. Then we discard all diacritics to build the result,
+			// and finally we recompose some chars together. That's what the formC transform does.
+			// However, I don't really understand why we must do so.
+
+			if (text == null)
+			{
+				return text;
+			}
+
+			var formD = text.Normalize (NormalizationForm.FormD);
+			
+			var stripped = new StringBuilder (text.Length);
+
+			for (int i = 0; i < text.Length; i++)
+			{
+				var c = text[i];
+
+				var charCategory = CharUnicodeInfo.GetUnicodeCategory (c);
+
+				if (charCategory != UnicodeCategory.NonSpacingMark)
+				{
+					stripped.Append (c);
+				}
+			}
+
+			var formC = stripped.ToString ().Normalize (NormalizationForm.FormC);
+
+			return formC;
 		}
 
 

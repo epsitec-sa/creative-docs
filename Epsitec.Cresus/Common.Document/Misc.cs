@@ -1,6 +1,7 @@
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Support;
 using Epsitec.Common.Text;
+using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Document
 {
@@ -560,8 +561,8 @@ namespace Epsitec.Common.Document
 
 			if ( (mode&StringSearch.IgnoreAccent) != 0 )  // é = e ?
 			{
-				text = Misc.RemoveAccent(text);
-				value = Misc.RemoveAccent(value);
+				text = StringUtils.RemoveDiacritics(text);
+				value = StringUtils.RemoveDiacritics(value);
 			}
 
 			if ( (mode&StringSearch.WholeWord) != 0 )  // mot entier ?
@@ -624,68 +625,6 @@ namespace Epsitec.Common.Document
 			}
 
 			return true;
-		}
-
-		static protected string RemoveAccent(string s)
-		{
-			//	Retourne la même chaîne sans accent (é -> e).
-			System.Text.StringBuilder builder;
-				
-			builder = new System.Text.StringBuilder(s.Length);
-			for ( int i=0 ; i<s.Length ; i++ )
-			{
-				builder.Append(Misc.RemoveAccent(s[i]));
-			}
-			return builder.ToString();
-		}
-
-		static protected char RemoveAccent(char c)
-		{
-			//	Retourne le même caractère sans accent (é -> e).
-			//	TODO: traiter tous les accents unicode ?
-			char lower = System.Char.ToLower(c);
-			char cc = lower;
-
-			switch ( cc )
-			{
-				case 'á':
-				case 'à':
-				case 'â':
-				case 'ä':
-				case 'ã':  cc = 'a';  break;
-
-				case 'ç':  cc = 'c';  break;
-
-				case 'é':
-				case 'è':
-				case 'ê':
-				case 'ë':  cc = 'e';  break;
-
-				case 'í':
-				case 'ì':
-				case 'î':
-				case 'ï':  cc = 'i';  break;
-
-				case 'ñ':  cc = 'n';  break;
-
-				case 'ó':
-				case 'ò':
-				case 'ô':
-				case 'ö':
-				case 'õ':  cc = 'o';  break;
-
-				case 'ú':
-				case 'ù':
-				case 'û':
-				case 'ü':  cc = 'u';  break;
-			}
-
-			if ( lower != c )  // a-t-on utilisé une majuscule transformée en minuscule ?
-			{
-				cc = System.Char.ToUpper(cc);  // remet en majuscule
-			}
-
-			return cc;
 		}
 
 
