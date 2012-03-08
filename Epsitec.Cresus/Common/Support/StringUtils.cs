@@ -96,12 +96,12 @@ namespace Epsitec.Common.Support
 			}
 
 			var formD = text.Normalize (NormalizationForm.FormD);
-			
-			var stripped = new StringBuilder (text.Length);
 
-			for (int i = 0; i < text.Length; i++)
+			var stripped = new StringBuilder (formD.Length);
+
+			for (int i = 0; i < formD.Length; i++)
 			{
-				var c = text[i];
+				var c = formD[i];
 
 				var charCategory = CharUnicodeInfo.GetUnicodeCategory (c);
 

@@ -69,6 +69,7 @@
     <Compile Include="Support\UnitTestAutoCache.cs" />
     <Compile Include="Support\UnitTestDisposableWrapper.cs" />
     <Compile Include="Support\UnitTestSafeCounter.cs" />
+    <Compile Include="Support\UnitTestStringUtils.cs" />
     <Compile Include="Support\UnitTestTimedReaderWriterLock.cs" />
     <Compile Include="Support\UnitTestXmlValidator.cs" />
     <Compile Include="TestHelper.cs" />
