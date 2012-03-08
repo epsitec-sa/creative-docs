@@ -836,6 +836,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateForegroundEditorUI()
 		{
+			//	Crée 3 'calques' exactement les uns sur les autres.
+			//	Dessus:		this.editorForegroundFrameBox	surcouche cliquable, visible seulement en mode 'rien'
+			//				this.editorFrameBox				zone éditable
+			//	Dessous:	this.editorBackgroundFrameBox	parent commnu toujours présent
 			this.editorFrameBox = new FrameBox
 			{
 				Parent = this.editorBackgroundFrameBox,
