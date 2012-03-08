@@ -77,18 +77,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public FrameBox EditorFrameBox
-		{
-			get
-			{
-				return this.editorFrameBox;
-			}
-			set
-			{
-				this.editorFrameBox = value;
-			}
-		}
-
 
 		protected virtual void UpdateAfterSelectedLineChanged()
 		{
@@ -107,11 +95,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.editorFrameBox.Enable = true;
 					this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+
+					this.editorForegroundFrameBox.Visibility = false;
 				}
 				else
 				{
 					this.editorFrameBox.Enable = false;
 					this.editorFrameBox.BackColor = Color.Empty;
+
+					this.editorForegroundFrameBox.Visibility = true;
 				}
 			}
 			else
@@ -121,6 +113,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
 
 				this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+				this.editorForegroundFrameBox.Visibility = false;
 			}
 
 			this.controller.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
@@ -750,11 +743,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox CreateFooterEditorUI(Widget parent)
 		{
 			//	Crée le panneau inférieur, lorsque l'éditeur n'est pas en mode HasRightEditor.
-			this.editorFrameBox = new FrameBox
+			this.editorBackgroundFrameBox = new FrameBox
 			{
 				Parent = parent,
 				Dock   = DockStyle.Bottom,
 			};
+
+			this.CreateForegroundEditorUI ();
 
 			return this.editorFrameBox;
 		}
@@ -826,7 +821,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 
 			//	Met le panneau éditable.
-			this.editorFrameBox = new FrameBox
+			this.editorBackgroundFrameBox = new FrameBox
 			{
 				Parent        = mainFrame,
 				DrawFullFrame = true,
@@ -834,7 +829,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding       = new Margins (10),
 			};
 
+			this.CreateForegroundEditorUI ();
+
 			return this.editorFrameBox;
+		}
+
+		private void CreateForegroundEditorUI()
+		{
+			this.editorFrameBox = new FrameBox
+			{
+				Parent = this.editorBackgroundFrameBox,
+				Anchor = AnchorStyles.All,
+			};
+
+			this.editorForegroundFrameBox = new FrameBox
+			{
+				Parent = this.editorBackgroundFrameBox,
+				Anchor = AnchorStyles.All,
+			};
+
+			this.editorForegroundFrameBox.Clicked += delegate
+			{
+				this.CreateAction ();
+			};
+
+			ToolTip.Default.SetToolTip (this.editorForegroundFrameBox, "Cliquez ici pour créer une nouvelle ligne");
 		}
 
 
@@ -907,6 +926,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected bool											dirty;
 		protected bool											hasError;
 		protected bool											duplicate;
+		protected FrameBox										editorBackgroundFrameBox;
+		protected FrameBox										editorForegroundFrameBox;
 		protected FrameBox										editorFrameBox;
 	}
 }
