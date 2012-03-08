@@ -593,14 +593,14 @@ namespace Epsitec.Cresus.Compta.IO
 
 				var écriture = new ComptaEcritureEntity
 				{
-					Date    = date.Value,
-					Débit   = débit,
-					Crédit  = crédit,
-					Pièce   = pièce,
-					Libellé = libellé,
-					Montant = montant,
-					MultiId = multi,
-					Journal = jp,
+					Date       = date.Value,
+					Débit      = débit,
+					Crédit     = crédit,
+					Pièce      = pièce,
+					Libellé    = libellé,
+					MontantTTC = montant,
+					MultiId    = multi,
+					Journal    = jp,
 				};
 
 				journal.Add (écriture);
@@ -788,9 +788,9 @@ namespace Epsitec.Cresus.Compta.IO
 				Crédit      = écriture.Crédit,
 				Pièce       = écriture.Pièce,
 				Libellé     = lib1.Substring (0, i1),
-				Montant     = écriture.Montant + suivante.Montant,
-				MontantTVA  = suivante.Montant,
-				MontantBrut = écriture.Montant,
+				MontantTTC  = écriture.MontantTTC + suivante.MontantTTC,
+				MontantTVA  = suivante.MontantTTC,
+				MontantHT   = écriture.MontantTTC,
 				CodeTVA     = codeTVA,
 				TauxTVA     = taux,
 				Journal     = écriture.Journal,
@@ -838,17 +838,17 @@ namespace Epsitec.Cresus.Compta.IO
 			//	Crée la nouvelle écriture qui fusionne les 2 autres.
 			var merge = new ComptaEcritureEntity ()
 			{
-				Date        = écriture.Date,
-				Débit       = (écriture.Débit  == null) ? suivante.Débit  : écriture.Débit,
-				Crédit      = (écriture.Crédit == null) ? suivante.Crédit : écriture.Crédit,
-				Pièce       = écriture.Pièce,
-				Libellé     = écriture.Libellé,
-				Montant     = écriture.Montant,
-				MontantTVA  = écriture.MontantTVA,
-				MontantBrut = écriture.MontantBrut,
-				CodeTVA     = écriture.CodeTVA,
-				TauxTVA     = écriture.TauxTVA,
-				Journal     = écriture.Journal,
+				Date       = écriture.Date,
+				Débit      = (écriture.Débit  == null) ? suivante.Débit  : écriture.Débit,
+				Crédit     = (écriture.Crédit == null) ? suivante.Crédit : écriture.Crédit,
+				Pièce      = écriture.Pièce,
+				Libellé    = écriture.Libellé,
+				MontantTTC = écriture.MontantTTC,
+				MontantTVA = écriture.MontantTVA,
+				MontantHT  = écriture.MontantHT,
+				CodeTVA    = écriture.CodeTVA,
+				TauxTVA    = écriture.TauxTVA,
+				Journal    = écriture.Journal,
 			};
 
 			return merge;
@@ -874,10 +874,10 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			int cp = -1;
 			
-			decimal totalBrutDébit  = 0;
-			decimal totalBrutCrédit = 0;
-			decimal totalTVADébit   = 0;
-			decimal totalTVACrédit  = 0;
+			decimal totalHTDébit   = 0;
+			decimal totalHTCrédit  = 0;
+			decimal totalTVADébit  = 0;
+			decimal totalTVACrédit = 0;
 
 			for (int index = i; index < i+count; index++)
 			{
@@ -891,38 +891,38 @@ namespace Epsitec.Cresus.Compta.IO
 				{
 					if (écriture.Débit == null)  // débit multiple ?
 					{
-						totalBrutCrédit += écriture.MontantBrut.GetValueOrDefault ();
-						totalTVACrédit  += écriture.MontantTVA.GetValueOrDefault ();
+						totalHTCrédit  += écriture.MontantHT.GetValueOrDefault ();
+						totalTVACrédit += écriture.MontantTVA.GetValueOrDefault ();
 					}
 
 					if (écriture.Crédit == null)  // crédit multiple ?
 					{
-						totalBrutDébit += écriture.MontantBrut.GetValueOrDefault ();
-						totalTVADébit  += écriture.MontantTVA.GetValueOrDefault ();
+						totalHTDébit  += écriture.MontantHT.GetValueOrDefault ();
+						totalTVADébit += écriture.MontantTVA.GetValueOrDefault ();
 					}
 				}
 			}
 
 			if (cp != -1)
 			{
-				decimal? totalBrut = 0;
-				decimal? totalTVA  = 0;
+				decimal? totalHT  = 0;
+				decimal? totalTVA = 0;
 
 				if (journal[cp].Débit == null)  // débit multiple ?
 				{
-					totalBrut = totalBrutDébit - totalBrutCrédit;
-					totalTVA  = totalTVADébit  - totalTVACrédit;
+					totalHT  = totalHTDébit  - totalHTCrédit;
+					totalTVA = totalTVADébit - totalTVACrédit;
 				}
 
 				if (journal[cp].Crédit == null)  // crédit multiple ?
 				{
-					totalBrut = totalBrutCrédit - totalBrutDébit;
-					totalTVA  = totalTVACrédit  - totalTVADébit;
+					totalHT  = totalHTCrédit  - totalHTDébit;
+					totalTVA = totalTVACrédit - totalTVADébit;
 				}
 
-				if (totalBrut == 0)
+				if (totalHT == 0)
 				{
-					totalBrut = null;
+					totalHT = null;
 				}
 
 				if (totalTVA == 0)
@@ -930,8 +930,8 @@ namespace Epsitec.Cresus.Compta.IO
 					totalTVA = null;
 				}
 
-				journal[cp].MontantBrut = totalBrut;
-				journal[cp].MontantTVA  = totalTVA;
+				journal[cp].MontantHT  = totalHT;
+				journal[cp].MontantTVA = totalTVA;
 			}
 		}
 

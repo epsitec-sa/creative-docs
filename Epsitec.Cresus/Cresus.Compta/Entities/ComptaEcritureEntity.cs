@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override FormattedText GetSummary()
 		{
-			return Core.TextFormatter.FormatText (this.Date, this.Débit.Numéro, this.Crédit.Numéro, this.Pièce, this.Libellé, this.Montant.ToString ());
+			return Core.TextFormatter.FormatText (this.Date, this.Débit.Numéro, this.Crédit.Numéro, this.Pièce, this.Libellé, this.MontantTTC.ToString ());
 		}
 	}
 }

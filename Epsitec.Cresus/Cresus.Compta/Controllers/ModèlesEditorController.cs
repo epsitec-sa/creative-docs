@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.Montant)
+				if (mapper.Column == ColumnType.MontantTTC)
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}

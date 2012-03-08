@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Libellé:
 					return modèle.Libellé;
 
-				case ColumnType.Montant:
+				case ColumnType.MontantTTC:
 					return Converters.MontantToString (modèle.Montant);
 
 				default:

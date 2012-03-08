@@ -21,17 +21,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.dataDict.Add (ColumnType.Date,        new EditionData (this.controller, this.ValidateDate));
-			this.dataDict.Add (ColumnType.Débit,       new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.Crédit,      new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.Pièce,       new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Libellé,     new EditionData (this.controller, this.ValidateLibellé));
-			this.dataDict.Add (ColumnType.MontantBrut, new EditionData (this.controller, this.ValidateMontantTVA));
-			this.dataDict.Add (ColumnType.MontantTVA,  new EditionData (this.controller, this.ValidateMontantTVA));
-			this.dataDict.Add (ColumnType.Montant,     new EditionData (this.controller, this.ValidateMontant));
-			this.dataDict.Add (ColumnType.CodeTVA,     new EditionData (this.controller, this.ValidateCodeTVA));
-			this.dataDict.Add (ColumnType.TauxTVA,     new EditionData (this.controller, this.ValidateTauxTVA));
-			this.dataDict.Add (ColumnType.Journal,     new EditionData (this.controller, this.ValidateJournal));
+			this.dataDict.Add (ColumnType.Date,       new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.Débit,      new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Crédit,     new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Pièce,      new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Libellé,    new EditionData (this.controller, this.ValidateLibellé));
+			this.dataDict.Add (ColumnType.MontantHT,  new EditionData (this.controller, this.ValidateMontantTVA));
+			this.dataDict.Add (ColumnType.MontantTVA, new EditionData (this.controller, this.ValidateMontantTVA));
+			this.dataDict.Add (ColumnType.MontantTTC, new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.CodeTVA,    new EditionData (this.controller, this.ValidateCodeTVA));
+			this.dataDict.Add (ColumnType.TauxTVA,    new EditionData (this.controller, this.ValidateTauxTVA));
+			this.dataDict.Add (ColumnType.Journal,    new EditionData (this.controller, this.ValidateJournal));
 		}
 
 
@@ -234,71 +234,71 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void MontantBrutChanged()
 		{
-			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
-			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
-			var codeTVA     = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
-			var tauxTVA     = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
+			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.MontantHT));
+			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
+			var codeTVA    = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			var tauxTVA    = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 
-			if (montantBrut.HasValue && codeTVA != null && tauxTVA.HasValue)
+			if (montantHT.HasValue && codeTVA != null && tauxTVA.HasValue)
 			{
-				var montant = Converters.RoundMontant (montantBrut.Value + montantBrut.Value * tauxTVA.Value);
-				var tva     = montant - montantBrut.Value;
+				var montant = Converters.RoundMontant (montantHT.Value + montantHT.Value * tauxTVA.Value);
+				var tva     = montant - montantHT.Value;
 
 				this.SetText (ColumnType.MontantTVA, Converters.MontantToString (tva));
-				this.SetText (ColumnType.Montant,    Converters.MontantToString (montant));
+				this.SetText (ColumnType.MontantTTC, Converters.MontantToString (montant));
 			}
 		}
 
 		public void MontantTVAChanged()
 		{
-			var montant    = Converters.ParseMontant (this.GetText (ColumnType.Montant));
+			var montant    = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
 
 			if (montant.HasValue && montantTVA.HasValue)
 			{
-				var brut = montant.Value - montantTVA.Value;
+				var montantHT = montant.Value - montantTVA.Value;
 
-				this.SetText (ColumnType.MontantBrut, Converters.MontantToString (brut));
+				this.SetText (ColumnType.MontantHT, Converters.MontantToString (montantHT));
 			}
 		}
 
 		public void MontantChanged()
 		{
 			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
-			var montant    = Converters.ParseMontant (this.GetText (ColumnType.Montant));
+			var montant    = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var codeTVA    = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
-			var tauxTVA     = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
+			var tauxTVA    = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 
 			if (montant.HasValue && codeTVA != null && tauxTVA.HasValue)
 			{
-				var montantBrut = Converters.RoundMontant (montant.Value / (1+tauxTVA.Value));
-				var tva         = montant.Value - montantBrut;
+				var montantHT = Converters.RoundMontant (montant.Value / (1+tauxTVA.Value));
+				var tva         = montant.Value - montantHT;
 
-				this.SetText (ColumnType.MontantBrut, Converters.MontantToString (montantBrut));
+				this.SetText (ColumnType.MontantHT, Converters.MontantToString (montantHT));
 				this.SetText (ColumnType.MontantTVA,  Converters.MontantToString (tva));
 			}
 		}
 
 		public void CodeTVAChanged()
 		{
-			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
-			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
-			var montant     = Converters.ParseMontant (this.GetText (ColumnType.Montant));
-			var codeTVA     = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.MontantHT));
+			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
+			var montant    = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
+			var codeTVA    = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 
 			if (codeTVA == null)
 			{
-				this.SetText (ColumnType.MontantBrut, null);
-				this.SetText (ColumnType.MontantTVA,  null);
-				this.SetText (ColumnType.Montant,     null);
-				this.SetText (ColumnType.TauxTVA,     null);
-				this.SetText (ColumnType.CompteTVA,   null);
+				this.SetText (ColumnType.MontantHT,  null);
+				this.SetText (ColumnType.MontantTVA, null);
+				this.SetText (ColumnType.MontantTTC, null);
+				this.SetText (ColumnType.TauxTVA,    null);
+				this.SetText (ColumnType.CompteTVA,  null);
 			}
 			else
 			{
 				this.SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.LastTauxValue));
 
-				if (montantBrut.HasValue && montant.GetValueOrDefault () == 0)
+				if (montantHT.HasValue && montant.GetValueOrDefault () == 0)
 				{
 					this.MontantBrutChanged ();
 				}
@@ -315,20 +315,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void TauxTVAChanged()
 		{
-			var montantBrut = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut));
-			var montantTVA  = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
-			var montant     = Converters.ParseMontant (this.GetText (ColumnType.Montant));
-			var codeTVA     = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.MontantHT));
+			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
+			var montant    = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
+			var codeTVA    = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 
 			if (codeTVA == null)
 			{
-				this.SetText (ColumnType.MontantBrut, null);
-				this.SetText (ColumnType.MontantTVA,  null);
-				this.SetText (ColumnType.Montant,     null);
+				this.SetText (ColumnType.MontantHT,  null);
+				this.SetText (ColumnType.MontantTVA, null);
+				this.SetText (ColumnType.MontantTTC, null);
 			}
 			else
 			{
-				if (montantBrut.HasValue && montant.GetValueOrDefault () == 0)
+				if (montantHT.HasValue && montant.GetValueOrDefault () == 0)
 				{
 					this.MontantBrutChanged ();
 				}
@@ -349,9 +349,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Crédit,           JournalDataAccessor.GetNuméro (écriture.Crédit));
 			this.SetText (ColumnType.Pièce,            écriture.Pièce);
 			this.SetText (ColumnType.Libellé,          écriture.Libellé);
-			this.SetText (ColumnType.MontantBrut,      (écriture.CodeTVA == null) ? null : Converters.MontantToString (écriture.MontantBrut));
+			this.SetText (ColumnType.MontantHT,        (écriture.CodeTVA == null) ? null : Converters.MontantToString (écriture.MontantHT));
 			this.SetText (ColumnType.MontantTVA,       (écriture.CodeTVA == null) ? null : Converters.MontantToString (écriture.MontantTVA));
-			this.SetText (ColumnType.Montant,          Converters.MontantToString (écriture.Montant));
+			this.SetText (ColumnType.MontantTTC,       Converters.MontantToString (écriture.MontantTTC));
 			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
 			this.SetText (ColumnType.CodeTVA,          JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
@@ -376,9 +376,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			écriture.Pièce            = this.GetText (ColumnType.Pièce);
 			écriture.Libellé          = this.GetText (ColumnType.Libellé);
-			écriture.MontantBrut      = Converters.ParseMontant (this.GetText (ColumnType.MontantBrut)).GetValueOrDefault ();
+			écriture.MontantHT        = Converters.ParseMontant (this.GetText (ColumnType.MontantHT)).GetValueOrDefault ();
 			écriture.MontantTVA       = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA)).GetValueOrDefault ();
-			écriture.Montant          = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
+			écriture.MontantTTC       = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
 			écriture.CodeTVA          = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 			écriture.TauxTVA          = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));

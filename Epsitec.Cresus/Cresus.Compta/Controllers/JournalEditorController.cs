@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
-				else if (mapper.Column == ColumnType.MontantBrut)
+				else if (mapper.Column == ColumnType.MontantHT)
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantBrutChanged);
 					field.CreateUI (editorFrame);
@@ -210,7 +210,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantTVAChanged);
 					field.CreateUI (editorFrame);
 				}
-				else if (mapper.Column == ColumnType.Montant)
+				else if (mapper.Column == ColumnType.MontantTTC)
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantChanged);
 					field.CreateUI (editorFrame);
@@ -221,9 +221,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.MontantBrut ||
-					mapper.Column == ColumnType.MontantTVA  ||
-					mapper.Column == ColumnType.Montant     )
+				if (mapper.Column == ColumnType.MontantHT  ||
+					mapper.Column == ColumnType.MontantTVA ||
+					mapper.Column == ColumnType.MontantTTC )
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
@@ -347,7 +347,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les données de la 2ème ligne.
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          Converters.MontantToString (0));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.MontantTTC,       Converters.MontantToString (0));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
@@ -499,9 +499,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				bool hasTVA = !this.dataAccessor.EditionLine[0].GetText (ColumnType.CodeTVA).IsNullOrEmpty;
 
-				this.dataAccessor.GetEditionData (0, ColumnType.MontantBrut).Enable = hasTVA;
-				this.dataAccessor.GetEditionData (0, ColumnType.MontantTVA ).Enable = éditeMontantTVA;
-				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA    ).Enable = hasTVA;
+				this.dataAccessor.GetEditionData (0, ColumnType.MontantHT ).Enable = hasTVA;
+				this.dataAccessor.GetEditionData (0, ColumnType.MontantTVA).Enable = éditeMontantTVA;
+				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA   ).Enable = hasTVA;
 
 				return;
 			}
@@ -532,10 +532,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				bool hasTVA = !this.dataAccessor.EditionLine[line].GetText (ColumnType.CodeTVA).IsNullOrEmpty;
 
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantBrut).Enable = !totalAutomatique && hasTVA;
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA ).Enable = !totalAutomatique && éditeMontantTVA;
-				this.dataAccessor.GetEditionData (line, ColumnType.Montant    ).Enable = !totalAutomatique;
-				this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA    ).Enable = !totalAutomatique && hasTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && hasTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA).Enable = !totalAutomatique && éditeMontantTVA;
+				this.dataAccessor.GetEditionData (line, ColumnType.MontantTTC).Enable = !totalAutomatique;
+				this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && hasTVA;
 
 				this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
 				this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
@@ -550,12 +550,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				decimal totalBrutDébit  = 0;
-				decimal totalBrutCrédit = 0;
-				decimal totalTVADébit   = 0;
-				decimal totalTVACrédit  = 0;
-				decimal totalDébit      = 0;
-				decimal totalCrédit     = 0;
+				decimal totalHTDébit   = 0;
+				decimal totalHTCrédit  = 0;
+				decimal totalTVADébit  = 0;
+				decimal totalTVACrédit = 0;
+				decimal totalTTCDébit  = 0;
+				decimal totalTTCCrédit = 0;
 
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
@@ -569,48 +569,48 @@ namespace Epsitec.Cresus.Compta.Controllers
 							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 						}
 
-						decimal montantBrut = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantBrut)).GetValueOrDefault ();
-						decimal montantTVA  = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTVA )).GetValueOrDefault ();
-						decimal montant     = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant    )).GetValueOrDefault ();
+						decimal montantBrut = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantHT )).GetValueOrDefault ();
+						decimal montantTVA  = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTVA)).GetValueOrDefault ();
+						decimal montant     = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
 
 						if (this.IsDébitMulti (line))
 						{
-							totalBrutCrédit += montantBrut;
+							totalHTCrédit += montantBrut;
 							totalTVACrédit  += montantTVA;
-							totalCrédit     += montant;
+							totalTTCCrédit     += montant;
 						}
 
 						if (this.IsCréditMulti (line))
 						{
-							totalBrutDébit += montantBrut;
+							totalHTDébit += montantBrut;
 							totalTVADébit  += montantTVA;
-							totalDébit     += montant;
+							totalTTCDébit     += montant;
 						}
 					}
 				}
 
-				decimal? totalBrut = 0;
-				decimal? totalTVA  = 0;
-				decimal? total     = 0;
+				decimal? totalHT  = 0;
+				decimal? totalTVA = 0;
+				decimal? totalTTC = 0;
 
 
 				if (this.IsDébitMulti (cp))
 				{
-					totalBrut = totalBrutDébit - totalBrutCrédit;
-					totalTVA  = totalTVADébit  - totalTVACrédit;
-					total     = totalDébit     - totalCrédit;
+					totalHT  = totalHTDébit  - totalHTCrédit;
+					totalTVA = totalTVADébit - totalTVACrédit;
+					totalTTC = totalTTCDébit - totalTTCCrédit;
 				}
 
 				if (this.IsCréditMulti (cp))
 				{
-					totalBrut = totalBrutCrédit - totalBrutDébit;
-					totalTVA  = totalTVACrédit  - totalTVADébit;
-					total     = totalCrédit     - totalDébit;
+					totalHT  = totalHTCrédit  - totalHTDébit;
+					totalTVA = totalTVACrédit - totalTVADébit;
+					totalTTC = totalTTCCrédit - totalTTCDébit;
 				}
 
-				if (totalBrut == 0)
+				if (totalHT == 0)
 				{
-					totalBrut = null;
+					totalHT = null;
 				}
 
 				if (totalTVA == 0)
@@ -618,14 +618,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					totalTVA = null;
 				}
 
-				if (total == 0)
+				if (totalTTC == 0)
 				{
-					total = null;
+					totalTTC = null;
 				}
 
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantBrut, Converters.MontantToString (totalBrut));
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA,  Converters.MontantToString (totalTVA));
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant,     Converters.MontantToString (total));
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantHT,  Converters.MontantToString (totalHT));
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA, Converters.MontantToString (totalTVA));
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTTC, Converters.MontantToString (totalTTC));
 
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
 			}
@@ -944,7 +944,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (modèle.Montant.HasValue)
 			{
-				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (modèle.Montant));
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (modèle.Montant));
 			}
 
 			this.UpdateEditorContent ();

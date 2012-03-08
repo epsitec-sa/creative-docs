@@ -151,27 +151,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (écriture != null)
 			{
-				this.SetText (ColumnType.Date, Converters.DateToString (écriture.Date));
-				this.SetText (ColumnType.Pièce, écriture.Pièce);
+				this.SetText (ColumnType.Date,    Converters.DateToString (écriture.Date));
+				this.SetText (ColumnType.Pièce,   écriture.Pièce);
 				this.SetText (ColumnType.Libellé, écriture.Libellé);
 				this.SetText (ColumnType.Journal, écriture.Journal.Nom);
 
 				if (extrait.IsDébit)
 				{
-					this.SetText (ColumnType.CP, JournalDataAccessor.GetNuméro (écriture.Crédit));
-					this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
+					this.SetText (ColumnType.CP,    JournalDataAccessor.GetNuméro (écriture.Crédit));
+					this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.MontantTTC));
 
-					this.SetEnable (ColumnType.CP, écriture.Crédit != null);
-					this.SetEnable (ColumnType.Débit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
+					this.SetEnable (ColumnType.CP,     écriture.Crédit != null);
+					this.SetEnable (ColumnType.Débit,  écriture.MultiId == 0 || !écriture.TotalAutomatique);
 					this.SetEnable (ColumnType.Crédit, false);
 				}
 				else
 				{
-					this.SetText (ColumnType.CP, JournalDataAccessor.GetNuméro (écriture.Débit));
-					this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant));
+					this.SetText (ColumnType.CP,     JournalDataAccessor.GetNuméro (écriture.Débit));
+					this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.MontantTTC));
 
-					this.SetEnable (ColumnType.CP, écriture.Débit != null);
-					this.SetEnable (ColumnType.Débit, false);
+					this.SetEnable (ColumnType.CP,     écriture.Débit != null);
+					this.SetEnable (ColumnType.Débit,  false);
 					this.SetEnable (ColumnType.Crédit, écriture.MultiId == 0 || !écriture.TotalAutomatique);
 				}
 			}
@@ -194,13 +194,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (extrait.IsDébit)
 			{
-				écriture.Crédit  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CP));
-				écriture.Montant = Converters.ParseMontant (this.GetText (ColumnType.Débit)).GetValueOrDefault ();
+				écriture.Crédit     = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CP));
+				écriture.MontantTTC = Converters.ParseMontant (this.GetText (ColumnType.Débit)).GetValueOrDefault ();
 			}
 			else
 			{
-				écriture.Débit   = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CP));
-				écriture.Montant = Converters.ParseMontant (this.GetText (ColumnType.Crédit)).GetValueOrDefault ();
+				écriture.Débit      = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CP));
+				écriture.MontantTTC = Converters.ParseMontant (this.GetText (ColumnType.Crédit)).GetValueOrDefault ();
 			}
 
 			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
@@ -233,12 +233,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (extrait.IsDébit)
 			{
 				extrait.CP    = écriture.Crédit;
-				extrait.Débit = écriture.Montant;
+				extrait.Débit = écriture.MontantTTC;
 			}
 			else
 			{
 				extrait.CP     = écriture.Débit;
-				extrait.Crédit = écriture.Montant;
+				extrait.Crédit = écriture.MontantTTC;
 			}
 		}
 	}

@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SelectDefaultPrésentation ();
 
-#if false
+#if true
 			//	Hack pour éviter de devoir tout refaire à chaque exécution !
 			this.compta = new ComptaEntity ();  // crée une compta vide
 			new NewCompta ().NewEmpty (this.compta);

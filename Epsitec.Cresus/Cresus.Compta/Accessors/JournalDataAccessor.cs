@@ -149,14 +149,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Libellé:
 					return écriture.Libellé;
 
-				case ColumnType.MontantBrut:
-					return Converters.MontantToString (écriture.MontantBrut);
+				case ColumnType.MontantHT:
+					return Converters.MontantToString (écriture.MontantHT);
 
 				case ColumnType.MontantTVA:
 					return Converters.MontantToString (écriture.MontantTVA);
 
-				case ColumnType.Montant:
-					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
+				case ColumnType.MontantTTC:
+					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.MontantTTC));
 
 					if (écriture.TotalAutomatique)
 					{
@@ -275,9 +275,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.période.ProchaineDate));
-			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
-			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
+			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
+			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
+			this.editionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
 		}
 
 		public override void StartModificationLine(int row)

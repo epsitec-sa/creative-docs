@@ -150,12 +150,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
 				{
-					this.AddSoldeCompteDébit (écriture.Débit, écriture.Montant);
+					this.AddSoldeCompteDébit (écriture.Débit, écriture.MontantTTC);
 				}
 
 				if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
 				{
-					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.Montant);
+					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.MontantTTC);
 				}
 			}
 

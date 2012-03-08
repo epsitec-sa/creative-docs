@@ -826,10 +826,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 100);
 				//	designer:cap/OVKH
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17);
-				//	designer:cap/OVKI
-				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
 				//	designer:cap/OVKQ6
-				public static readonly global::Epsitec.Common.Support.Druid MontantBrut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218);
+				public static readonly global::Epsitec.Common.Support.Druid MontantHT = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218);
+				//	designer:cap/OVKI
+				public static readonly global::Epsitec.Common.Support.Druid MontantTTC = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
 				//	designer:cap/OVKP6
 				public static readonly global::Epsitec.Common.Support.Druid MontantTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 217);
 				//	designer:cap/OVKD

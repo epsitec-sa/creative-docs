@@ -97,13 +97,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Code,      0.20, ContentAlignment.MiddleLeft,  "Code",      "Code mnémotechnique");
-				yield return new ColumnMapper (ColumnType.Raccourci, 0.20, ContentAlignment.MiddleLeft,  "Raccourci", "Raccourci clavier");
-				yield return new ColumnMapper (ColumnType.Débit,     0.25, ContentAlignment.MiddleLeft,  "Débit",     "Numéro ou nom du compte à débiter (facultatif)");
-				yield return new ColumnMapper (ColumnType.Crédit,    0.25, ContentAlignment.MiddleLeft,  "Crédit",    "Numéro ou nom du compte à créditer (facultatif)");
-				yield return new ColumnMapper (ColumnType.Pièce,     0.20, ContentAlignment.MiddleLeft,  "Pièce",     "Numéro de la pièce comptable (facultatif)");
-				yield return new ColumnMapper (ColumnType.Libellé,   0.80, ContentAlignment.MiddleLeft,  "Libellé",   "Libellé de l'écriture modèle<br/>Le caractère @ indique le point d'insertion");
-				yield return new ColumnMapper (ColumnType.Montant,   0.25, ContentAlignment.MiddleRight, "Montant",   "Montant de l'écriture modèle (facultatif)");
+				yield return new ColumnMapper (ColumnType.Code,       0.20, ContentAlignment.MiddleLeft,  "Code",      "Code mnémotechnique");
+				yield return new ColumnMapper (ColumnType.Raccourci,  0.20, ContentAlignment.MiddleLeft,  "Raccourci", "Raccourci clavier");
+				yield return new ColumnMapper (ColumnType.Débit,      0.25, ContentAlignment.MiddleLeft,  "Débit",     "Numéro ou nom du compte à débiter (facultatif)");
+				yield return new ColumnMapper (ColumnType.Crédit,     0.25, ContentAlignment.MiddleLeft,  "Crédit",    "Numéro ou nom du compte à créditer (facultatif)");
+				yield return new ColumnMapper (ColumnType.Pièce,      0.20, ContentAlignment.MiddleLeft,  "Pièce",     "Numéro de la pièce comptable (facultatif)");
+				yield return new ColumnMapper (ColumnType.Libellé,    0.80, ContentAlignment.MiddleLeft,  "Libellé",   "Libellé de l'écriture modèle<br/>Le caractère @ indique le point d'insertion");
+				yield return new ColumnMapper (ColumnType.MontantTTC, 0.25, ContentAlignment.MiddleRight, "Montant",   "Montant de l'écriture modèle (facultatif)");
 			}
 		}
 	}

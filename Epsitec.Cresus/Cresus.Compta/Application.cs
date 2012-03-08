@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Compta
 
 			window.Icon = Bitmap.FromManifestResource ("Epsitec.Common.DocumentEditor.Images.Application.icon", typeof (Application).Assembly);
 			window.Root.MinSize = new Size(640, 480);
-#if true
+#if false
 			window.WindowBounds = new Rectangle (100, 50, 880, 600);
 #else
 			window.WindowBounds = new Rectangle (2560+100, 1600-600-100, 880, 600);  // coin sup/gauche de mon 2ème écran 2560x1600 !!!
