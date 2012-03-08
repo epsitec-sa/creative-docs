@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
 
@@ -253,7 +254,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, eCH_AddressEntity address)
 		{
-			var parishName = EervDataImporter.FindParishName (parishRepository, address);
+			var parishName = ParishLocator.FindParishName (parishRepository, address);
 
 			AiderGroupEntity parishGroup;
 
@@ -268,17 +269,6 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			return parishGroup;
-		}
-
-
-		private static string FindParishName(ParishAddressRepository parishRepository, eCH_AddressEntity address)
-		{
-			var zipCode = address.SwissZipCode;
-			var townName = address.Town;
-			var normalizedStreetName = address.Street;
-			var houseNumber = InvariantConverter.ParseInt (address.HouseNumber);
-
-			return parishRepository.FindParishName (zipCode, townName, normalizedStreetName, houseNumber);
 		}
 
 
