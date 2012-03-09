@@ -63,22 +63,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-#if false
 			if (data.HasText)
 			{
-				var liste = this.compta.CodesTVA.Where (x => x.Nom == data.Text).FirstOrDefault ();
+				var code = this.compta.ListesTVA.Where (x => x.Nom == data.Text).FirstOrDefault ();
 
-				if (liste == null)
+				if (code == null)
 				{
-					data.Error = "Cette liste de taux de TVA n'existe pas";
+					data.Error = "Cette liste de taux n'existe pas";
 					return;
 				}
 			}
 			else
 			{
-				data.Error = "Il manque la liste de taux de TVA";
+				data.Error = "Il manque la liste de taux";
 			}
-#endif
 		}
 
 		private void ValidateCompte(EditionData data)

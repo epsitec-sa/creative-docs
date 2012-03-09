@@ -45,11 +45,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				data.Error = "Ce nom de taux de TVA existe déjà";
+				data.Error = "Ce nom de liste de taux existe déjà";
 			}
 			else
 			{
-				data.Error = "Il manque le nom du taux de TVA";
+				data.Error = "Il manque le nom de la liste de taux";
 			}
 		}
 
