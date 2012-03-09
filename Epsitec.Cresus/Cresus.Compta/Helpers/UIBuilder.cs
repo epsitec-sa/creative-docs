@@ -23,25 +23,19 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			var toolbar = new FrameBox
 			{
-				Parent          = parent,
-				DrawFullFrame   = true,
-				PreferredHeight = 40,
-				BackColor       = UIBuilder.MiniToolbarColor,
-				Padding         = new Margins (2),
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, -1),
+				Parent              = parent,
+				DrawFullFrame       = true,
+				PreferredHeight     = 40,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				BackColor           = UIBuilder.MiniToolbarColor,
+				Padding             = new Margins (2),
+				Dock                = DockStyle.Top,
+				Margins             = new Margins (0, 0, 0, -1),
 			};
 
 			foreach (var command in commands)
 			{
-				var accept = new IconButton
-				{
-					Parent        = toolbar,
-					CommandObject = command,
-					PreferredSize = new Size (40, 40),
-					Dock          = DockStyle.Left,
-					Margins       = new Margins (0, 0, 0, 0),
-				};
+				UIBuilder.CreateButton (toolbar, command, 40, 32, isActivable: true);
 			}
 
 			return toolbar;
@@ -206,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			menuButton = new GlyphButton
 			{
 				Parent          = container,
-				ButtonStyle     = Common.Widgets.ButtonStyle.Combo,
+				ButtonStyle     = ButtonStyle.Combo,
 				GlyphShape      = GlyphShape.Menu,
 				PreferredWidth  = UIBuilder.ComboButtonWidth,
 				PreferredHeight = 20,

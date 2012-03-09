@@ -12,6 +12,21 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public int GetDefaultTVACount(IEnumerable<FormattedText> nomsDesTaux)
+		{
+			int count = 0;
+
+			foreach (var taux in this.TauxTVA)
+			{
+				if (taux.ParDéfaut && nomsDesTaux.Contains (taux.Nom))
+				{
+					count++;
+				}
+			}
+
+			return count;
+		}
+
 		public FormattedText[] CodesTVAMenuDescription
 		{
 			//	Retourne la liste des descriptions des codes TVA pour le menu d'un AutoCompleteTextField.

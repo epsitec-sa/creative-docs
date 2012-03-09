@@ -61,6 +61,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				data.Error = "Il faut donner au moins un taux";
 			}
+
+			int count = this.compta.GetDefaultTVACount (data.Texts);
+			if (count == 0)
+			{
+				data.Error = "Il doit y avoir un taux par défaut";
+			}
+			if (count > 1)
+			{
+				data.Error = "Il ne doit pas y avoir plus d'un taux par défaut";
+			}
 		}
 		#endregion
 
