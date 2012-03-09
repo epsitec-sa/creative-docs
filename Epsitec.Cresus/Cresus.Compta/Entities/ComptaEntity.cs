@@ -30,21 +30,13 @@ namespace Epsitec.Cresus.Compta.Entities
 			return null;
 		}
 
-		public int GetDefaultTVACount(IEnumerable<FormattedText> nomsDesTaux)
+		public IEnumerable<ComptaTauxTVAEntity> NomsTauxToEntities(IEnumerable<FormattedText> nomsTaux)
 		{
-			//	Compte le nombre de taux par défaut utilisés par une liste de taux.
-			//	Normalement, il devrait y en avoir un et un seul.
-			int count = 0;
-
-			foreach (var taux in this.TauxTVA)
+			//	Conversion d'une liste de noms de taux en une liste des entités correspondantes.
+			foreach (var nomTaux in nomsTaux)
 			{
-				if (taux.ParDéfaut && nomsDesTaux.Contains (taux.Nom))
-				{
-					count++;
-				}
+				yield return this.TauxTVA.Where (x => x.Nom == nomTaux).FirstOrDefault ();
 			}
-
-			return count;
 		}
 
 		public FormattedText[] CodesTVAMenuDescription

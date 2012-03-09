@@ -87,6 +87,7 @@
     <Compile Include="Fields\Controllers\ListController.cs" />
     <Compile Include="Fields\Controllers\RadioButtonController.cs" />
     <Compile Include="Fields\Controllers\PasswordFieldController.cs" />
+    <Compile Include="Helpers\TVA.cs" />
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultViewSettings.cs" />

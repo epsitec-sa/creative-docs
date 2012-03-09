@@ -57,20 +57,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (!data.Texts.Any ())
-			{
-				data.Error = "Il faut donner au moins un taux";
-			}
-
-			int count = this.compta.GetDefaultTVACount (data.Texts);
-			if (count == 0)
-			{
-				data.Error = "Il doit y avoir un taux par défaut";
-			}
-			if (count > 1)
-			{
-				data.Error = "Il ne doit pas y avoir plus d'un taux par défaut";
-			}
+			data.Error = TVA.GetError (this.compta.NomsTauxToEntities (data.Texts));
 		}
 		#endregion
 
@@ -119,18 +106,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void SetTaux(ComptaListeTVAEntity listeTVA)
 		{
+			var tauxEntities = this.compta.NomsTauxToEntities (this.GetTexts (ColumnType.Taux)).Where (x => x != null).ToList ();
+
 			listeTVA.Taux.Clear ();
-
-			var texts = this.GetTexts (ColumnType.Taux);
-			foreach (var text in texts)
-			{
-				var taux = this.compta.TauxTVA.Where (x => x.Nom == text).FirstOrDefault ();
-
-				if (taux != null && !listeTVA.Taux.Contains (taux))
-				{
-					listeTVA.Taux.Add (taux);
-				}
-			}
+			tauxEntities.ForEach (x => listeTVA.Taux.Add (x));
 		}
 	}
 }

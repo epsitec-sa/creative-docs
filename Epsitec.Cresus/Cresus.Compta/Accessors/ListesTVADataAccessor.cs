@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return listeTVA.SummaryNoms;
 
 				case ColumnType.Erreur:
-					return listeTVA.Diagnostic;
+					return TVA.GetError (listeTVA.Taux);
 
 				default:
 					return FormattedText.Null;
