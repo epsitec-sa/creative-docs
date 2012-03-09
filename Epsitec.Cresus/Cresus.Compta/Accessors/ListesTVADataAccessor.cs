@@ -97,6 +97,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Taux:
 					return listeTVA.SummaryTaux;
 
+				case ColumnType.Résumé:
+					return listeTVA.SummaryNoms;
+
 				default:
 					return FormattedText.Null;
 			}

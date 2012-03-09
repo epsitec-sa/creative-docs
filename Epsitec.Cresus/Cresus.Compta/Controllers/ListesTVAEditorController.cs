@@ -78,7 +78,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'une liste de taux de TVA :" : "Création d'une liste de taux de TVA :";
+			return modify ? "Modification d'une liste de taux :" : "Création d'une liste de taux :";
+		}
+
+		protected override IEnumerable<Command> MiniToolbarCommands
+		{
+			get
+			{
+				yield return Res.Commands.Présentation.CodesTVA;
+				yield return Res.Commands.Présentation.ListeTVA;
+				yield return Res.Commands.Présentation.TauxTVA;
+			}
 		}
 	}
 }

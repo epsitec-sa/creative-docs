@@ -108,5 +108,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			return modify ? "Modification d'un code TVA :" : "Création d'un code TVA :";
 		}
+
+		protected override IEnumerable<Command> MiniToolbarCommands
+		{
+			get
+			{
+				yield return Res.Commands.Présentation.CodesTVA;
+				yield return Res.Commands.Présentation.ListeTVA;
+				yield return Res.Commands.Présentation.TauxTVA;
+			}
+		}
 	}
 }

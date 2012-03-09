@@ -772,54 +772,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			toolbar.Margins        = new Margins (0);
 			toolbar.Padding        = new Margins (0);
 
-#if false
-			//	Met la petite toolbar avec les boutons "+/-", qui doublent les commandes Edit.Cancel/Edit.Delete.
-			double iconSize = 24;
-			var mini = UIBuilder.CreateMiniToolbar (mainFrame, iconSize);
-
-			if (this.controller.HasCreateCommand)
+			//	Met la petite toolbar qui contient des icônes liées à des commandes.
+			var commands = this.MiniToolbarCommands;
+			if (commands != null && commands.Any ())
 			{
-				var add = new IconButton
-				{
-					Parent        = mini,
-					CommandObject = Res.Commands.Edit.Create,
-					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Create"),
-					PreferredSize = new Size (iconSize, iconSize),
-					Dock          = DockStyle.Left,
-					Margins       = new Margins (0, 1, 0, 0),
-				};
+				UIBuilder.CreateMiniToolbar (mainFrame, commands.ToArray ());
 			}
-
-			var accept = new IconButton
-			{
-				Parent        = mini,
-				CommandObject = Res.Commands.Edit.Accept,
-				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Accept"),
-				PreferredSize = new Size (iconSize, iconSize),
-				Dock          = DockStyle.Left,
-				Margins       = new Margins (0, 1, 0, 0),
-			};
-
-			var cancel = new IconButton
-			{
-				Parent        = mini,
-				CommandObject = Res.Commands.Edit.Cancel,
-				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Cancel"),
-				PreferredSize = new Size (iconSize, iconSize),
-				Dock          = DockStyle.Left,
-				Margins       = new Margins (0, 1, 0, 0),
-			};
-
-			var sub = new IconButton
-			{
-				Parent        = mini,
-				CommandObject = Res.Commands.Edit.Delete,
-				IconUri       = UIBuilder.GetResourceIconUri ("Edit.Delete"),
-				PreferredSize = new Size (iconSize, iconSize),
-				Dock          = DockStyle.Left,
-				Margins       = new Margins (0, 1, 0, 0),
-			};
-#endif
 
 			//	Met le panneau éditable.
 			this.editorBackgroundFrameBox = new FrameBox
@@ -860,6 +818,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			ToolTip.Default.SetToolTip (this.editorForegroundFrameBox, "Cliquez ici pour créer une nouvelle ligne");
+		}
+
+
+		protected virtual IEnumerable<Command> MiniToolbarCommands
+		{
+			get
+			{
+				return null;
+			}
 		}
 
 

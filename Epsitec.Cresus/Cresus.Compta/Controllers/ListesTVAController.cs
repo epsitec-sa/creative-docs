@@ -53,14 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override double RightEditorWidth
-		{
-			get
-			{
-				return 400;
-			}
-		}
-
 		public override bool HasShowSearchPanel
 		{
 			get
@@ -121,8 +113,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Nom,  1.00, ContentAlignment.MiddleLeft, "Nom",           "Nom unique");
-				yield return new ColumnMapper (ColumnType.Taux, 2.00, ContentAlignment.MiddleLeft, "Taux utilisés", "Taux de TVA utilisés");
+				yield return new ColumnMapper (ColumnType.Nom,    1.00, ContentAlignment.MiddleLeft, "Nom",           "Nom unique");
+				yield return new ColumnMapper (ColumnType.Taux,   1.00, ContentAlignment.MiddleLeft, "Taux utilisés", "Taux de TVA utilisés");
+				yield return new ColumnMapper (ColumnType.Résumé, 4.00, ContentAlignment.MiddleLeft, "Noms des taux", edition: false);
 			}
 		}
 	}

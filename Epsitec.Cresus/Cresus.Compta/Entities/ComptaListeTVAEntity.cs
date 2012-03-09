@@ -81,5 +81,33 @@ namespace Epsitec.Cresus.Compta.Entities
 				return string.Join (", ", list);
 			}
 		}
+
+		public FormattedText SummaryNoms
+		{
+			get
+			{
+				if (this.Taux == null || !this.Taux.Any ())
+				{
+					return FormattedText.Empty;
+				}
+
+				var list = new List<string> ();
+
+				foreach (var taux in this.Taux)
+				{
+					FormattedText text = taux.Nom;
+
+					if (taux.ParDéfaut)
+					{
+						text = text.ApplyBold ();
+					}
+
+					;
+					list.Add (text.ToString ());
+				}
+
+				return Strings.SentenceConcat (list);
+			}
+		}
 	}
 }
