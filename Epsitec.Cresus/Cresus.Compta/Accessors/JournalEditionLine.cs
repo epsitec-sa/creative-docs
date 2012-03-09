@@ -134,6 +134,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "Ce code TVA n'existe pas";
 					return;
 				}
+				else
+				{
+					var débit = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+					if (débit != null && débit.Type == TypeDeCompte.TVA)
+					{
+						data.Error = string.Format ("Il est interdit d'utiliser un code TVA avec le compte de TVA {0}", débit.Numéro);
+						return;
+					}
+
+					var crédit = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
+					if (crédit != null && crédit.Type == TypeDeCompte.TVA)
+					{
+						data.Error = string.Format ("Il est interdit d'utiliser un code TVA avec le compte de TVA {0}", crédit.Numéro);
+						return;
+					}
+				}
 			}
 		}
 
@@ -193,6 +209,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (!numéroDébit.IsNullOrEmpty && numéroDébit != JournalDataAccessor.multi)
 			{
 				var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroDébit).FirstOrDefault ();
+
+				if (compte != null && compte.Type == TypeDeCompte.TVA)
+				{
+					this.ClearTVA ();
+					return;
+				}
+
 				if (compte == null || compte.Type != TypeDeCompte.Normal)
 				{
 					return;
@@ -205,6 +228,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (!numéroCrédit.IsNullOrEmpty && numéroCrédit != JournalDataAccessor.multi)
 			{
 				var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCrédit).FirstOrDefault ();
+
+				if (compte != null && compte.Type == TypeDeCompte.TVA)
+				{
+					this.ClearTVA ();
+					return;
+				}
+
 				if (compte == null || compte.Type != TypeDeCompte.Normal)
 				{
 					return;
@@ -265,6 +295,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.CodeTVAChanged ();  // met à jour les autres colonnes
 				}
 			}
+		}
+
+		private void ClearTVA()
+		{
+			this.SetText (ColumnType.CodeTVA, null);
+			this.SetText (ColumnType.TauxTVA, null);
+			this.CodeTVAChanged ();  // met à jour les autres colonnes
 		}
 
 		public void MontantBrutChanged()
