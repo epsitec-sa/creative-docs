@@ -100,6 +100,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Résumé:
 					return listeTVA.SummaryNoms;
 
+				case ColumnType.Erreur:
+					return listeTVA.Diagnostic;
+
 				default:
 					return FormattedText.Null;
 			}

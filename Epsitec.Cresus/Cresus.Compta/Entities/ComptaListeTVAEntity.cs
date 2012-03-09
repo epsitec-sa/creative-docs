@@ -13,6 +13,29 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaListeTVAEntity
 	{
+		public FormattedText Diagnostic
+		{
+			get
+			{
+				if (this.Taux.Count == 0)
+				{
+					return FormattedText.Format ("Aucun taux").ApplyBold ();
+				}
+
+				int count = this.Taux.Where (x => x.ParDéfaut).Count ();
+				if (count == 0)
+				{
+					return FormattedText.Format ("Pas de taux par défaut").ApplyBold ();
+				}
+				if (count > 1)
+				{
+					return FormattedText.Format ("Plusieurs taux par défaut").ApplyBold ();
+				}
+
+				return FormattedText.Empty;  // ok
+			}
+		}
+
 		public decimal? DefaultTauxValue
 		{
 			get

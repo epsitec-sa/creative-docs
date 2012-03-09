@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
 			this.SetText (ColumnType.ParDéfaut,     codeTVA.ParDéfaut ? "1" : "0");
 			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "1" : "0");
-			this.SetText (ColumnType.Erreur,        codeTVA.Diagnostic);
+			this.SetText (ColumnType.Erreur,        codeTVA.ListeTaux.Diagnostic);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

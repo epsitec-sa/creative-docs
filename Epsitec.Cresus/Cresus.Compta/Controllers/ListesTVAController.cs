@@ -116,6 +116,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Nom,    1.00, ContentAlignment.MiddleLeft, "Nom",           "Nom unique");
 				yield return new ColumnMapper (ColumnType.Taux,   1.00, ContentAlignment.MiddleLeft, "Taux utilisés", "Taux de TVA utilisés");
 				yield return new ColumnMapper (ColumnType.Résumé, 4.00, ContentAlignment.MiddleLeft, "Noms des taux", edition: false);
+				yield return new ColumnMapper (ColumnType.Erreur, 1.50, ContentAlignment.MiddleLeft, "Diagnostique",  edition: false);
 			}
 		}
 	}

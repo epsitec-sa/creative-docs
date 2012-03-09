@@ -105,6 +105,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void GetTaux(ComptaListeTVAEntity listeTVA)
 		{
+			this.Prepare ();
+
 			//	Texts <- taux utilisés par le codeTVA
 			var texts = this.GetTexts (ColumnType.Taux);
 			texts.Clear ();

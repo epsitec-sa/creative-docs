@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (codeTVA.MontantFictif);
 
 				case ColumnType.Erreur:
-					return (codeTVA.Diagnostic.IsNullOrEmpty) ? null : FormattedText.Format ("Erreur").ApplyBold ();
+					return (codeTVA.ListeTaux.Diagnostic.IsNullOrEmpty) ? null : FormattedText.Format ("Erreur").ApplyBold ();
 
 				default:
 					return FormattedText.Null;
