@@ -288,7 +288,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 			}
 			set
 			{
-				this.Permanents.NuméroCompte = PlanComptableDataAccessor.GetCompteNuméro (value);
+				this.Permanents.NuméroCompte = value;
 			}
 		}
 

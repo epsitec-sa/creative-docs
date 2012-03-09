@@ -52,8 +52,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 
 				if (compte == null)
 				{
@@ -66,8 +65,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "C'est un compte de groupement";
 					return;
 				}
-
-				data.Text = n;
 			}
 			else
 			{

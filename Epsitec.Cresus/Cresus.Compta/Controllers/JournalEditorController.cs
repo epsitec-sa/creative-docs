@@ -835,7 +835,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
 		{
-			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 
 			if (compte == null)

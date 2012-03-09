@@ -327,8 +327,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
-			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
-
 			if (numéro.IsNullOrEmpty)
 			{
 				return null;

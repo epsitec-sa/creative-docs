@@ -127,10 +127,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return compte.Titre;
 
 				case ColumnType.Catégorie:
-					return PlanComptableDataAccessor.CatégorieToText (compte.Catégorie);
+					return Converters.CatégorieToString (compte.Catégorie);
 
 				case ColumnType.Type:
-					return PlanComptableDataAccessor.TypeToText (compte.Type);
+					return Converters.TypeToString (compte.Type);
 
 				case ColumnType.Groupe:
 					return PlanComptableDataAccessor.GetNuméro (compte.Groupe);
@@ -570,8 +570,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
-			numéro = PlanComptableDataAccessor.GetCompteNuméro (numéro);
-
 			if (numéro.IsNullOrEmpty)
 			{
 				return null;
@@ -581,87 +579,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
 			}
 		}
-
-
-		public static FormattedText GetCompteNuméro(FormattedText description)
-		{
-			if (!description.IsNullOrEmpty)
-			{
-				int i = description.ToSimpleText ().IndexOf (' ');  // contient "numéro titre" ?
-				if (i != -1)
-				{
-					description = description.ToSimpleText ().Substring (0, i);
-				}
-			}
-
-			return description;
-		}
-
-		public static ComptaCompteEntity GetCompteEntity(ComptaEntity compta, FormattedText description)
-		{
-			//	Retourne le compte, à partir de la description "numéro titre".
-			description = PlanComptableDataAccessor.GetCompteNuméro (description);
-			return compta.PlanComptable.Where (x => x.Numéro == description).FirstOrDefault ();
-		}
-
-		public static FormattedText GetCompteDescription(ComptaCompteEntity compte)
-		{
-			//	Retourne la description "numéro titre" d'un compte.
-			return Core.TextFormatter.FormatText (compte.Numéro, compte.Titre);
-		}
-
-
-		public static bool TextToCatégorie(FormattedText text, out CatégorieDeCompte catégorie)
-		{
-			if (System.Enum.TryParse<CatégorieDeCompte> (text.ToSimpleText (), out catégorie))
-			{
-				return true;
-			}
-
-			catégorie = CatégorieDeCompte.Inconnu;
-			return false;
-		}
-
-		public static FormattedText CatégorieToText(CatégorieDeCompte catégorie)
-		{
-			return catégorie.ToString ();
-		}
-
-
-		public static bool TextToType(FormattedText text, out TypeDeCompte type)
-		{
-			if (System.Enum.TryParse<TypeDeCompte> (text.ToSimpleText (), out type))
-			{
-				return true;
-			}
-
-			type = TypeDeCompte.Normal;
-			return false;
-		}
-
-		public static FormattedText TypeToText(TypeDeCompte type)
-		{
-			return type.ToString ();
-		}
-
-
-#if false
-		public static bool TextToTVA(FormattedText text, out VatCode tva)
-		{
-			if (System.Enum.TryParse<VatCode> (text.ToSimpleText (), out tva))
-			{
-				return true;
-			}
-
-			tva = VatCode.None;
-			return false;
-		}
-
-		public static FormattedText TVAToText(VatCode tva)
-		{
-			return tva.ToString ();
-		}
-#endif
 
 
 		private IList<ComptaCompteEntity>			planComptableAll;

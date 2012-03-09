@@ -11,8 +11,9 @@ namespace Epsitec.Cresus.Compta
 	[DesignerVisible]
 	public enum TypeDeCompte
 	{
-		Normal = 0,
-		Groupe = 1,
-		TVA    = 2,
+		Inconnu = 0,
+		Normal  = 1,
+		Groupe  = 2,
+		TVA     = 3,
 	}
 }

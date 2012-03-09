@@ -185,10 +185,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Titre;
 
 				case ColumnType.Catégorie:
-					return PlanComptableDataAccessor.CatégorieToText (data.Catégorie);
+					return Converters.CatégorieToString (data.Catégorie);
 
 				case ColumnType.Type:
-					return PlanComptableDataAccessor.TypeToText (data.Type);
+					return Converters.TypeToString (data.Type);
 
 				case ColumnType.Débit:
 					return Converters.MontantToString (data.Débit);

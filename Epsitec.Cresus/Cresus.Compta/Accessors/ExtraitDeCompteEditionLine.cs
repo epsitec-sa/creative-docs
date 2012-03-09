@@ -55,8 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 
 				if (compte == null)
 				{
@@ -69,8 +68,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "Ce compte n'a pas le type \"Normal\"";
 					return;
 				}
-
-				data.Text = n;
 			}
 			else
 			{

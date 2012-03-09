@@ -77,8 +77,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				CatégorieDeCompte catégorie;
-				if (!PlanComptableDataAccessor.TextToCatégorie (data.Text, out catégorie))
+				var catégorie = Converters.StringToCatégorie (data.Text.ToSimpleText ());
+				if (catégorie == CatégorieDeCompte.Inconnu)
 				{
 					data.Error = "La catégorie du compte n'est pas correcte";
 				}
@@ -95,8 +95,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				TypeDeCompte type;
-				if (!PlanComptableDataAccessor.TextToType (data.Text, out type))
+				var type = Converters.StringToType (data.Text.ToSimpleText ());
+				if (type == TypeDeCompte.Inconnu)
 				{
 					data.Error = "Le type du compte n'est pas correct";
 				}
@@ -140,8 +140,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					data.Error = "Ce compte n'existe pas";
@@ -153,8 +152,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "Ce n'est pas un compte de groupement";
 					return;
 				}
-
-				data.Text = n;
 			}
 		}
 
@@ -164,8 +161,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var n = PlanComptableDataAccessor.GetCompteNuméro (data.Text);
-				var compte = this.compta.PlanComptable.Where (x => x.Numéro == n).FirstOrDefault ();
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
 				if (compte == null)
 				{
 					data.Error = "Ce compte n'existe pas";
@@ -183,8 +179,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "Ce n'est pas un compte d'exploitation";
 					return;
 				}
-
-				data.Text = n;
 			}
 		}
 
@@ -215,8 +209,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText (ColumnType.Numéro,         compte.Numéro);
 			this.SetText (ColumnType.Titre,          compte.Titre);
-			this.SetText (ColumnType.Catégorie,      PlanComptableDataAccessor.CatégorieToText (compte.Catégorie));
-			this.SetText (ColumnType.Type,           PlanComptableDataAccessor.TypeToText (compte.Type));
+			this.SetText (ColumnType.Catégorie,      Converters.CatégorieToString(compte.Catégorie));
+			this.SetText (ColumnType.Type,           Converters.TypeToString (compte.Type));
 			this.SetText (ColumnType.Groupe,         PlanComptableDataAccessor.GetNuméro (compte.Groupe));
 			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVA));
 			this.SetText (ColumnType.CompteOuvBoucl, PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl));
@@ -228,21 +222,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var compte = entity as ComptaCompteEntity;
 
-			compte.Numéro = this.GetText (ColumnType.Numéro);
-			compte.Titre  = this.GetText (ColumnType.Titre);
-
-			CatégorieDeCompte catégorie;
-			if (PlanComptableDataAccessor.TextToCatégorie (this.GetText (ColumnType.Catégorie), out catégorie))
-			{
-				compte.Catégorie = catégorie;
-			}
-
-			TypeDeCompte type;
-			if (PlanComptableDataAccessor.TextToType (this.GetText (ColumnType.Type), out type))
-			{
-				compte.Type = type;
-			}
-
+			compte.Numéro         = this.GetText (ColumnType.Numéro);
+			compte.Titre          = this.GetText (ColumnType.Titre);
+			compte.Catégorie      = Converters.StringToCatégorie (this.GetText (ColumnType.Catégorie).ToSimpleText ());
+			compte.Type           = Converters.StringToType (this.GetText (ColumnType.Type).ToSimpleText ());
 			compte.Groupe         = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
 			compte.CodeTVA        = JournalEditionLine.TextToCodeTVA (this.compta, this.GetText (ColumnType.CodeTVA));
 			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOuvBoucl));

@@ -534,6 +534,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Conversion d'une chaîne en type de compte.
 			switch (Strings.PreparingForSearh (text))
 			{
+				case "normal":
+					return TypeDeCompte.Normal;
+
 				case "groupe":
 					return TypeDeCompte.Groupe;
 
@@ -541,7 +544,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 					return TypeDeCompte.TVA;
 
 				default:
-					return TypeDeCompte.Normal;
+					return TypeDeCompte.Inconnu;
 			}
 		}
 
