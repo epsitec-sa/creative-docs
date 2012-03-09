@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-			var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
+			var comptes = this.compta.PlanComptable.Where (x => x.Type != TypeDeCompte.Groupe);
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{

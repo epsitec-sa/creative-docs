@@ -61,9 +61,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				if (compte.Type != TypeDeCompte.Normal)
+				if (compte.Type == TypeDeCompte.Groupe)
 				{
-					data.Error = "Ce compte n'a pas le type \"Normal\"";
+					data.Error = "C'est un compte de groupement";
 					return;
 				}
 
@@ -124,6 +124,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateCodeTVA(EditionData data)
 		{
 			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var edit = data.Text.ToSimpleText ();
+				var code = this.compta.CodesTVA.Where (x => x.Code == edit).FirstOrDefault ();
+				if (code == null)
+				{
+					data.Error = "Ce code TVA n'existe pas";
+					return;
+				}
+			}
 		}
 
 		private void ValidateTauxTVA(EditionData data)

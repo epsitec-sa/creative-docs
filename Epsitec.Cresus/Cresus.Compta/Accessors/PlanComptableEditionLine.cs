@@ -111,6 +111,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateCodeTVA(EditionData data)
 		{
 			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var edit = data.Text.ToSimpleText ();
+				var code = this.compta.CodesTVA.Where (x => x.Code == edit).FirstOrDefault ();
+				var type = Converters.StringToType (this.GetText (ColumnType.Type).ToSimpleText ());
+
+				if (code == null)
+				{
+					data.Error = "Ce code TVA n'existe pas";
+					return;
+				}
+				else
+				{
+					if (type != TypeDeCompte.Normal)
+					{
+						data.Error = "Seuls les comptes de type \"Normal\" peuvent utiliser un code TVA";
+						return;
+					}
+				}
+			}
 		}
 
 		private void ValidateGroupe(EditionData data)
