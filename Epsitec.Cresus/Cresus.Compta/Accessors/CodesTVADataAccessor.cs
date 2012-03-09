@@ -93,6 +93,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			switch (column)
 			{
+				case ColumnType.Désactivé:
+					string icon = codeTVA.Désactivé ? "Button.CheckNo" : "Button.CheckYes";
+					return string.Format (@"<img src=""{0}"" voff=""-5""/>", UIBuilder.GetResourceIconUri (icon));
+
 				case ColumnType.Code:
 					result = codeTVA.Code;
 					break;

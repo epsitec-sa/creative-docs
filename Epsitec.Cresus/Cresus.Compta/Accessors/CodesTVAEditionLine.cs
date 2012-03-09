@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public CodesTVAEditionLine(AbstractController controller)
 			: base (controller)
 		{
+			this.dataDict.Add (ColumnType.Désactivé,     new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Code,          new EditionData (this.controller, this.ValidateCode));
 			this.dataDict.Add (ColumnType.Titre,         new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Taux,          new EditionData (this.controller, this.ValidateTaux));
@@ -28,7 +29,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Chiffre,       new EditionData (this.controller, this.ValidateChiffre));
 			this.dataDict.Add (ColumnType.MontantFictif, new EditionData (this.controller, this.ValidateMontant));
 			this.dataDict.Add (ColumnType.ParDéfaut,     new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Désactivé,     new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Erreur,        new EditionData (this.controller, this.ValidateError));
 		}
 
@@ -151,6 +151,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
+			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "0" : "1");
 			this.SetText (ColumnType.Code,          codeTVA.Code);
 			this.SetText (ColumnType.Titre,         codeTVA.Description);
 			this.SetText (ColumnType.Taux,          this.GetTaux (codeTVA));
@@ -158,7 +159,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Chiffre,       Converters.IntToString (codeTVA.Chiffre));
 			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
 			this.SetText (ColumnType.ParDéfaut,     codeTVA.ParDéfaut ? "1" : "0");
-			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "1" : "0");
 			this.SetText (ColumnType.Erreur,        TVA.GetError (codeTVA.ListeTaux.Taux));
 		}
 
@@ -166,6 +166,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
+			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "0";
 			codeTVA.Code          = this.GetText (ColumnType.Code);
 			codeTVA.Description   = this.GetText (ColumnType.Titre);
 			codeTVA.ListeTaux     = this.SetTaux (this.GetText (ColumnType.Taux));
@@ -173,7 +174,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			codeTVA.Chiffre       = Converters.ParseInt (this.GetText (ColumnType.Chiffre));
 			codeTVA.MontantFictif = Converters.ParseMontant (this.GetText (ColumnType.MontantFictif));
 			codeTVA.ParDéfaut     = this.GetText (ColumnType.ParDéfaut) == "1";
-			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "1";
 		}
 
 		private FormattedText GetTaux(ComptaCodeTVAEntity codeTVA)
