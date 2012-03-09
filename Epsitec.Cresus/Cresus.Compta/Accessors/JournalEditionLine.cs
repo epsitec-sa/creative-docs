@@ -253,6 +253,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Choisi le code TVA unique à utiliser (débit ou crédit).
 			ComptaCodeTVAEntity codeTVAEntity = null;
 			FormattedText codeTVA  = FormattedText.Null;
+			bool TVAAuDébit = false;
 
 			if (codeTVADébit == FormattedText.Empty)
 			{
@@ -268,12 +269,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				codeTVAEntity = codeTVADébitEntity;
 				codeTVA       = codeTVADébit;
+				TVAAuDébit    = true;
 			}
 
 			if (!codeTVACrédit.IsNullOrEmpty)
 			{
 				codeTVAEntity = codeTVACréditEntity;
 				codeTVA       = codeTVACrédit;
+				TVAAuDébit    = false;
 			}
 
 			if (codeTVA != FormattedText.Null)  // changement ?
@@ -289,6 +292,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					this.SetText (ColumnType.CodeTVA, codeTVA);
 					this.SetText (ColumnType.TauxTVA, (codeTVAEntity == null) ? null : Converters.PercentToString (codeTVAEntity.DefaultTauxValue));
+					this.SetText (ColumnType.TVAAuDébit, TVAAuDébit ? "1" : "0");
 					this.CodeTVAChanged ();  // met à jour les autres colonnes
 				}
 			}
@@ -425,6 +429,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.CodeTVA,          JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
+			this.SetText (ColumnType.TVAAuDébit,       écriture.TVAAuDébit ? "1" : "0");
 			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
 
 			this.UpdateCodeTVAParameters ();
@@ -451,6 +456,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
 			écriture.CodeTVA          = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 			écriture.TauxTVA          = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
+			écriture.TVAAuDébit       = this.GetText (ColumnType.TVAAuDébit) == "1";
 
 			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
 			if (journal == null)  // dans un journal spécifique ?

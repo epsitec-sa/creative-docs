@@ -200,6 +200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,  "Code TVA",    "Code TVA",                          enable: this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA));
 				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight, "Taux",        "Taux de la TVA",                    enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA));
 				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,  "Compte TVA",  "Compte de la TVA",                  enable: false);
+				//?yield return new ColumnMapper (ColumnType.TVAAuDébit,  0.10, ContentAlignment.MiddleLeft,  "DBG", "DBG", enable: false); //?
 				yield return new ColumnMapper (ColumnType.Journal,     0.25, ContentAlignment.MiddleLeft,  "Journal",     "Journal auquel appartient l'écriture");
 			}
 		}

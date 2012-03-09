@@ -36,35 +36,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-#if false
-		public void AddEcriture(ComptaEcritureEntity écriture)
-		{
-			if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
-			{
-				this.AddSoldeCompteDébit (écriture.Débit, écriture.Montant);
-			}
-
-			if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
-			{
-				this.AddSoldeCompteCrédit (écriture.Crédit, écriture.Montant);
-			}
-		}
-
-		public void SubEcriture(ComptaEcritureEntity écriture)
-		{
-			if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
-			{
-				this.AddSoldeCompteDébit (écriture.Débit, -écriture.Montant);
-			}
-
-			if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
-			{
-				this.AddSoldeCompteCrédit (écriture.Crédit, -écriture.Montant);
-			}
-		}
-#endif
-
-
 		public decimal? GetSolde(ComptaCompteEntity compte)
 		{
 			if (this.journal == null)
@@ -73,7 +44,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			if (compte.Type != TypeDeCompte.Normal &&
-				compte.Type != TypeDeCompte.Groupe)
+				compte.Type != TypeDeCompte.TVA    &&
+				compte.Type != TypeDeCompte.Groupe )
 			{
 				return null;
 			}
@@ -148,25 +120,37 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Cummule les totaux de tous les comptes finaux.
 			foreach (var écriture in journal)
 			{
-				if (écriture.Débit != null && !écriture.Débit.Numéro.IsNullOrEmpty)
+				if (écriture.Débit != null)
 				{
-					this.AddSoldeCompteDébit (écriture.Débit, écriture.MontantTTC);
+					this.AddSoldeCompteDébit (écriture.Débit, écriture.MontantDébit);
 				}
 
-				if (écriture.Crédit != null && !écriture.Crédit.Numéro.IsNullOrEmpty)
+				if (écriture.Crédit != null)
 				{
-					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.MontantTTC);
+					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.MontantCrédit);
+				}
+
+				if (écriture.CodeTVA != null)  // écriture avec TVA ?
+				{
+					if (écriture.TVAAuDébit)
+					{
+						this.AddSoldeCompteDébit (écriture.CodeTVA.Compte, écriture.MontantTVA.GetValueOrDefault ());
+					}
+					else
+					{
+						this.AddSoldeCompteCrédit (écriture.CodeTVA.Compte, écriture.MontantTVA.GetValueOrDefault ());
+					}
 				}
 			}
 
 			//	Calcule les totaux des comptes de regroupement.
-			foreach (var compte in this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal))
+			foreach (var compte in this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal || x.Type == TypeDeCompte.TVA))
 			{
 				var soldeDébit  = this.GetSoldeDébit  (compte).GetValueOrDefault ();
 				var soldeCrédit = this.GetSoldeCrédit (compte).GetValueOrDefault ();
 
 				var c = compte;
-				while (c != null && c.Groupe != null && !c.Groupe.Numéro.IsNullOrEmpty)
+				while (c != null && c.Groupe != null)
 				{
 					c = c.Groupe;
 

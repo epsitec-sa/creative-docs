@@ -781,6 +781,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>TVAAuDébit</c> field.
+		///	designer:fld/OVKB/OVKE7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKE7]")]
+		public bool TVAAuDébit
+		{
+			get
+			{
+				return this.GetField<bool> ("[OVKE7]");
+			}
+			set
+			{
+				bool oldValue = this.TVAAuDébit;
+				if (oldValue != value || !this.IsFieldDefined("[OVKE7]"))
+				{
+					this.OnTVAAuDébitChanging (oldValue, value);
+					this.SetField<bool> ("[OVKE7]", oldValue, value);
+					this.OnTVAAuDébitChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>CodeAnalytique</c> field.
 		///	designer:fld/OVKB/OVKM
 		///	</summary>
@@ -849,6 +871,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCodeTVAChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnTauxTVAChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnTauxTVAChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnTVAAuDébitChanging(bool oldValue, bool newValue);
+		partial void OnTVAAuDébitChanged(bool oldValue, bool newValue);
 		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
 		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
 		partial void OnJournalChanging(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
@@ -2187,28 +2211,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>ParDéfaut</c> field.
-		///	designer:fld/OVKD6/OVKT6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKT6]")]
-		public bool ParDéfaut
-		{
-			get
-			{
-				return this.GetField<bool> ("[OVKT6]");
-			}
-			set
-			{
-				bool oldValue = this.ParDéfaut;
-				if (oldValue != value || !this.IsFieldDefined("[OVKT6]"))
-				{
-					this.OnParDéfautChanging (oldValue, value);
-					this.SetField<bool> ("[OVKT6]", oldValue, value);
-					this.OnParDéfautChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>Désactivé</c> field.
 		///	designer:fld/OVKD6/OVKJ6
 		///	</summary>
@@ -2245,8 +2247,6 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnChiffreChanged(int? oldValue, int? newValue);
 		partial void OnMontantFictifChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnMontantFictifChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnParDéfautChanging(bool oldValue, bool newValue);
-		partial void OnParDéfautChanged(bool oldValue, bool newValue);
 		partial void OnDésactivéChanging(bool oldValue, bool newValue);
 		partial void OnDésactivéChanged(bool oldValue, bool newValue);
 		

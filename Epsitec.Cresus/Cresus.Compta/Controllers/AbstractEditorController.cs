@@ -765,6 +765,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock   = DockStyle.Fill,
 			};
 
+			//	Met la petite toolbar qui contient des icônes liées à des commandes.
+			var commands = this.MiniToolbarCommands;
+			if (commands != null && commands.Any ())
+			{
+				UIBuilder.CreateMiniToolbar (mainFrame, commands.ToArray ());
+			}
+
 			//	Met la "toolbar", qui affiche le mode "Création/Modification d'un ...". 
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
 			var toolbar = this.bottomToolbarController.CreateUI (mainFrame);
@@ -773,13 +780,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			toolbar.Dock           = DockStyle.Top;
 			toolbar.Margins        = new Margins (0);
 			toolbar.Padding        = new Margins (0);
-
-			//	Met la petite toolbar qui contient des icônes liées à des commandes.
-			var commands = this.MiniToolbarCommands;
-			if (commands != null && commands.Any ())
-			{
-				UIBuilder.CreateMiniToolbar (mainFrame, commands.ToArray ());
-			}
 
 			//	Met le panneau éditable.
 			this.editorBackgroundFrameBox = new FrameBox

@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				bool débit  = (ExtraitDeCompteDataAccessor.Match (écriture.Débit,  numéroCompte));
-				bool crédit = (ExtraitDeCompteDataAccessor.Match (écriture.Crédit, numéroCompte));
+				bool débit  = ExtraitDeCompteDataAccessor.Match (écriture.Débit,  numéroCompte);
+				bool crédit = ExtraitDeCompteDataAccessor.Match (écriture.Crédit, numéroCompte);
 
 				if (débit)
 				{
@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Pièce   = écriture.Pièce,
 						Libellé = écriture.Libellé,
 						CP      = écriture.Crédit,
-						Débit   = écriture.MontantTTC,
+						Débit   = écriture.MontantDébit,
 						CodeTVA = écriture.CodeTVA,
 						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Pièce   = écriture.Pièce,
 						Libellé = écriture.Libellé,
 						CP      = écriture.Débit,
-						Crédit  = écriture.MontantTTC,
+						Crédit  = écriture.MontantCrédit,
 						CodeTVA = écriture.CodeTVA,
 						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
@@ -176,8 +176,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (data.IsDébit)
 					{
-						solde      += écriture.MontantTTC;
-						totalDébit += écriture.MontantTTC;
+						var m = écriture.MontantDébit;
+						solde      += m;
+						totalDébit += m;
 
 						if (compte.Catégorie == CatégorieDeCompte.Passif ||
 							compte.Catégorie == CatégorieDeCompte.Produit)
@@ -189,8 +190,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						solde       -= écriture.MontantTTC;
-						totalCrédit += écriture.MontantTTC;
+						var m = écriture.MontantCrédit;
+						solde       -= m;
+						totalCrédit += m;
 
 						if (compte.Catégorie == CatégorieDeCompte.Passif ||
 							compte.Catégorie == CatégorieDeCompte.Produit)

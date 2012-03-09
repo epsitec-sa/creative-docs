@@ -780,8 +780,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid ListeTaux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 208);
 				//	designer:cap/OVKM6
 				public static readonly global::Epsitec.Common.Support.Druid MontantFictif = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 214);
-				//	designer:cap/OVKT6
-				public static readonly global::Epsitec.Common.Support.Druid ParDéfaut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 221);
 			}
 			
 			public static class ComptaCompte
@@ -848,6 +846,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid TauxTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 222);
 				//	designer:cap/OVKA1
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
+				//	designer:cap/OVKE7
+				public static readonly global::Epsitec.Common.Support.Druid TVAAuDébit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 238);
 			}
 			
 			public static class ComptaJournal

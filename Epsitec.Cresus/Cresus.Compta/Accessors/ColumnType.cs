@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		CodeTVA,
 		TauxTVA,
 		CompteTVA,
+		TVAAuDébit,
 		Solde,
 		Numéro,
 		CP,

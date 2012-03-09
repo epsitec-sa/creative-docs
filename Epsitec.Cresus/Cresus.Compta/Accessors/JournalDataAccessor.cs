@@ -174,6 +174,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.CompteTVA:
 					return JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA);
 
+				case ColumnType.TVAAuDébit:
+					return écriture.TVAAuDébit ? "1" : "0";
+
 				case ColumnType.Journal:
 					return écriture.Journal.Nom;
 

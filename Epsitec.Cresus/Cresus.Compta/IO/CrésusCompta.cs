@@ -709,6 +709,7 @@ namespace Epsitec.Cresus.Compta.IO
 				TauxTVA     = taux,
 				Journal     = écriture.Journal,
 				MultiId     = écriture.MultiId,
+				TVAAuDébit  = écriture.Crédit == null,
 			};
 
 			return merge;
@@ -763,6 +764,7 @@ namespace Epsitec.Cresus.Compta.IO
 				CodeTVA    = écriture.CodeTVA,
 				TauxTVA    = écriture.TauxTVA,
 				Journal    = écriture.Journal,
+				TVAAuDébit = écriture.TVAAuDébit,
 			};
 
 			return merge;

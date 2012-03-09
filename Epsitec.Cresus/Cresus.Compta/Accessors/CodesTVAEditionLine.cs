@@ -28,7 +28,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Compte,        new EditionData (this.controller, this.ValidateCompte));
 			this.dataDict.Add (ColumnType.Chiffre,       new EditionData (this.controller, this.ValidateChiffre));
 			this.dataDict.Add (ColumnType.MontantFictif, new EditionData (this.controller, this.ValidateMontant));
-			this.dataDict.Add (ColumnType.ParDéfaut,     new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Erreur,        new EditionData (this.controller, this.ValidateError));
 		}
 
@@ -158,7 +157,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Compte,        JournalDataAccessor.GetNuméro (codeTVA.Compte));
 			this.SetText (ColumnType.Chiffre,       Converters.IntToString (codeTVA.Chiffre));
 			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
-			this.SetText (ColumnType.ParDéfaut,     codeTVA.ParDéfaut ? "1" : "0");
 			this.SetText (ColumnType.Erreur,        TVA.GetError (codeTVA.ListeTaux.Taux));
 		}
 
@@ -173,7 +171,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			codeTVA.Compte        = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Compte));
 			codeTVA.Chiffre       = Converters.ParseInt (this.GetText (ColumnType.Chiffre));
 			codeTVA.MontantFictif = Converters.ParseMontant (this.GetText (ColumnType.MontantFictif));
-			codeTVA.ParDéfaut     = this.GetText (ColumnType.ParDéfaut) == "1";
 		}
 
 		private FormattedText GetTaux(ComptaCodeTVAEntity codeTVA)

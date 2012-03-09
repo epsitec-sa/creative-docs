@@ -142,7 +142,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Indique si le solde du compte doit figurer dans le tableau.
 			//	Si la profondeur n'est pas spécifiée, on accepte tous les comptes normaux.
 			//	Si la profondeur est spécifiée, on accepte les comptes qui ont exactement cette profondeur.
-			if (compte.Type == TypeDeCompte.Normal)
+			if (compte.Type == TypeDeCompte.Normal ||
+				compte.Type == TypeDeCompte.TVA    )
 			{
 				return true;
 			}
