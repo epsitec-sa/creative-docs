@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return;
 				}
 
-				if (compte.Type != TypeDeCompte.Normal)
+				if (compte.Type != TypeDeCompte.TVA)
 				{
-					data.Error = "Ce compte n'a pas le type \"Normal\"";
+					data.Error = "Ce compte n'a pas le type \"TVA\"";
 					return;
 				}
 

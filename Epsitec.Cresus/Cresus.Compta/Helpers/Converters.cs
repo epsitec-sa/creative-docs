@@ -518,14 +518,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case TypeDeCompte.Normal:
 					return "Normal";
 
-				case TypeDeCompte.Titre:
-					return "Titre";
-
 				case TypeDeCompte.Groupe:
 					return "Groupe";
 
-				case TypeDeCompte.Bloqué:
-					return "Bloqué";
+				case TypeDeCompte.TVA:
+					return "TVA";
 
 				default:
 					return "?";
@@ -537,14 +534,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Conversion d'une chaîne en type de compte.
 			switch (Strings.PreparingForSearh (text))
 			{
-				case "titre":
-					return TypeDeCompte.Titre;
-
 				case "groupe":
 					return TypeDeCompte.Groupe;
 
-				case "bloque":
-					return TypeDeCompte.Bloqué;
+				case "tva":
+					return TypeDeCompte.TVA;
 
 				default:
 					return TypeDeCompte.Normal;
@@ -569,8 +563,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 			get
 			{
 				yield return TypeDeCompte.Normal;
-				yield return TypeDeCompte.Titre;
 				yield return TypeDeCompte.Groupe;
+				yield return TypeDeCompte.TVA;
 			}
 		}
 		#endregion

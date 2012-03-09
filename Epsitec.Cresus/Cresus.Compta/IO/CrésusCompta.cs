@@ -169,6 +169,12 @@ namespace Epsitec.Cresus.Compta.IO
 					compte.Type      = this.GetEntryContentType (indexCompte, "STATUS");
 					//compte.Monnaie   = this.GetEntryContentText      (indexCompte, "CURRENCY");
 
+					//	Il ne samble pas y avoir d'autre moyen pour savoir s'il s'agit d'un compte de TVA !
+					if (compte.Type == TypeDeCompte.Normal && titre.Contains ("TVA"))
+					{
+						compte.Type = TypeDeCompte.TVA;
+					}
+
 					var niveau = this.GetEntryContentInt (indexCompte, "LEVEL");
 					if (niveau.HasValue)
 					{
@@ -361,8 +367,6 @@ namespace Epsitec.Cresus.Compta.IO
 					{
 						case 0x00:
 							return TypeDeCompte.Normal;
-						case 0x08:
-							return TypeDeCompte.Titre;
 						case 0x10:
 							return TypeDeCompte.Groupe;
 					}

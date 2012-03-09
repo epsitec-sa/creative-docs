@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
-					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal);
+					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.TVA);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.ParDéfaut ||
