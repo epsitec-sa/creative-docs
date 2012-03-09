@@ -15,9 +15,9 @@ namespace Epsitec.Cresus.Compta.IO
 	/// <summary>
 	/// Cette classe s'occupe de créer une nouvelle comptabilité de toutes pièces.
 	/// </summary>
-	public class NewCompta
+	public static class NewCompta
 	{
-		public void NewNull(ComptaEntity compta)
+		public static void NewNull(ComptaEntity compta)
 		{
 			compta.Nom         = "vide";
 			compta.Description = null;
@@ -28,12 +28,12 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.PiècesGenerator.Clear ();
 			compta.Utilisateurs.Clear ();
 
-			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
-			compta.Utilisateurs.Add (this.CreateAdminUser ());
-			//?compta.Utilisateurs.Add (this.CreateFirstUser ());
+			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
+			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
+			//?compta.Utilisateurs.Add (NewCompta.CreateFirstUser ());
 		}
 
-		public void NewEmpty(ComptaEntity compta)
+		public static void NewEmpty(ComptaEntity compta)
 		{
 			compta.Nom         = "vide";
 			compta.Description = null;
@@ -44,25 +44,26 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.PiècesGenerator.Clear ();
 			compta.Utilisateurs.Clear ();
 
-			this.CreatePériodes (compta);
-			compta.PiècesGenerator.Add (this.CreatePiècesGenerator ());
-			compta.Journaux.Add (this.CreateJournal (compta));
-			compta.Utilisateurs.Add (this.CreateAdminUser ());
-			//?compta.Utilisateurs.Add (this.CreateFirstUser ());
+			NewCompta.CreateTVA (compta);
+			NewCompta.CreatePériodes (compta);
+			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
+			compta.Journaux.Add (NewCompta.CreateJournal (compta));
+			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
+			//?compta.Utilisateurs.Add (NewCompta.CreateFirstUser ());
 		}
 
-		public void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
+		public static void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
 		{
 			compta.Périodes.Clear ();
 
 			var now = Date.Today;
 			for (int year = now.Year+pastCount; year < now.Year+postCount; year++)
 			{
-				compta.Périodes.Add (this.CreatePériode (year));
+				compta.Périodes.Add (NewCompta.CreatePériode (year));
 			}
 		}
 
-		private ComptaPériodeEntity CreatePériode(int year)
+		private static ComptaPériodeEntity CreatePériode(int year)
 		{
 			//	Crée une période couvrant une année.
 			var beginDate = new Date (year,  1,  1);  // du 1 janvier
@@ -76,7 +77,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return période;
 		}
 
-		private ComptaJournalEntity CreateJournal(ComptaEntity compta)
+		private static ComptaJournalEntity CreateJournal(ComptaEntity compta)
 		{
 			//	Crée un journal principal.
 			var journal = new ComptaJournalEntity ();
@@ -87,7 +88,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return journal;
 		}
 
-		private ComptaUtilisateurEntity CreateAdminUser()
+		private static ComptaUtilisateurEntity CreateAdminUser()
 		{
 			//	Crée l'utilisteur administrateur. Il est préférable qu'il n'ait pas de mot de passe,
 			//	pour permettre un login automatique à l'ouverture.
@@ -101,7 +102,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return utilisateur;
 		}
 
-		private ComptaUtilisateurEntity CreateFirstUser()
+		private static ComptaUtilisateurEntity CreateFirstUser()
 		{
 			//	Crée un premier utilisateur neutre, sans mot de passe.
 			var utilisateur = new ComptaUtilisateurEntity ();
@@ -123,7 +124,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return utilisateur;
 		}
 
-		private ComptaPiècesGeneratorEntity CreatePiècesGenerator()
+		private static ComptaPiècesGeneratorEntity CreatePiècesGenerator()
 		{
 			//	Crée le générateur de numéros de pièces de base.
 			var pièce = new ComptaPiècesGeneratorEntity ();
@@ -137,10 +138,145 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		public void NewModel(ComptaEntity compta)
+		public static void CreateTVA(ComptaEntity compta)
+		{
+			//	Crée tout ce qui concerne la TVA pour toutes comptabilités.
+			NewCompta.CreateTauxTVA (compta);
+			NewCompta.CreateListesTVA (compta);
+		}
+
+		private static void CreateTauxTVA(ComptaEntity compta)
+		{
+			//	Crée les taux de TVA nécessaires pour toutes comptabilités.
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Exclu",
+					Taux    = 0.0m,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Réduit 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.024m,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Réduit 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.025m,
+					ParDéfaut = true,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Hébergement 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.036m,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Hébergement 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.038m,
+					ParDéfaut = true,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom     = "Normal 1",
+					DateFin = new Date (2010, 12, 31),
+					Taux    = 0.076m,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+
+			{
+				var taux = new ComptaTauxTVAEntity ()
+				{
+					Nom       = "Normal 2",
+					DateDébut = new Date (2011, 1, 1),
+					Taux      = 0.08m,
+					ParDéfaut = true,
+				};
+				compta.TauxTVA.Add (taux);
+			}
+		}
+
+		private static void CreateListesTVA(ComptaEntity compta)
+		{
+			//	Crée les listes de taux de TVA nécessaires pour toutes comptabilités.
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Exclu",
+				};
+
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Exclu").FirstOrDefault ());
+
+				compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Réduit",
+				};
+
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Réduit 1").FirstOrDefault ());
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Réduit 2").FirstOrDefault ());
+
+				compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Hébergement",
+				};
+
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Hébergement 1").FirstOrDefault ());
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Hébergement 2").FirstOrDefault ());
+
+				compta.ListesTVA.Add (liste);
+			}
+
+			{
+				var liste = new ComptaListeTVAEntity
+				{
+					Nom = "Normal",
+				};
+
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Normal 1").FirstOrDefault ());
+				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Normal 2").FirstOrDefault ());
+
+				compta.ListesTVA.Add (liste);
+			}
+		}
+
+
+		public static void NewModel(ComptaEntity compta)
 		{
 			// TODO...
-			this.NewEmpty (compta);
+			NewCompta.NewEmpty (compta);
 		}
 	}
 }

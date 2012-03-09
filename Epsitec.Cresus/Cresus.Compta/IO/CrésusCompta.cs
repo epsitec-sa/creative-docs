@@ -69,9 +69,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private string ImportPlanComptable(ref ComptaPériodeEntity période)
 		{
-			var nc = new NewCompta ();
-			nc.NewNull (this.compta);
-			nc.CreatePériodes (this.compta);
+			NewCompta.NewNull (this.compta);
+			NewCompta.CreatePériodes (this.compta);
 
 			var now = Date.Today;
 			période = this.compta.Périodes.Where (x => x.DateDébut.Year == now.Year).FirstOrDefault ();
@@ -226,11 +225,12 @@ namespace Epsitec.Cresus.Compta.IO
 
 			this.compta.UpdateNiveauCompte ();
 
+#if true
+			//	Plutôt que d'essayer d'importer difficilement les données de Crésus Comptabilité, je préfère les
+			//	recréer de toutes pièces. A priori, il n'y a pas de raison qu'elles soient différentes, non !?
+			NewCompta.CreateTVA (this.compta);
+#else
 			//	Importe les taux de TVA.
-			this.CreateTaux ();
-			this.CreateListesTaux ();
-
-#if false
 			int indexTaux = this.IndexOfLine ("BEGIN=VATRATES");
 
 			var taux = new Dictionary<decimal, decimal> ();
@@ -308,133 +308,6 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return null;  // ok
-		}
-
-		private void CreateTaux()
-		{
-			//	Plutôt que d'essayer d'importer difficilement les données de Crésus Comptabilité, je préfère les
-			//	recréer de toutes pièces. A priori, il n'y a pas de raison qu'elles soient différentes, non !?
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Exclu",
-					Taux    = 0.0m,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Réduit 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.024m,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Réduit 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.025m,
-					ParDéfaut = true,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Hébergement 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.036m,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Hébergement 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.038m,
-					ParDéfaut = true,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Normal 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.076m,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Normal 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.08m,
-					ParDéfaut = true,
-				};
-				this.compta.TauxTVA.Add (taux);
-			}
-		}
-
-		private void CreateListesTaux()
-		{
-			{
-				var liste = new ComptaListeTVAEntity
-				{
-					Nom = "Exclu",
-				};
-
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Exclu").FirstOrDefault ());
-
-				this.compta.ListesTVA.Add (liste);
-			}
-
-			{
-				var liste = new ComptaListeTVAEntity
-				{
-					Nom = "Réduit",
-				};
-
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Réduit 1").FirstOrDefault ());
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Réduit 2").FirstOrDefault ());
-
-				this.compta.ListesTVA.Add (liste);
-			}
-
-			{
-				var liste = new ComptaListeTVAEntity
-				{
-					Nom = "Hébergement",
-				};
-
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Hébergement 1").FirstOrDefault ());
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Hébergement 2").FirstOrDefault ());
-
-				this.compta.ListesTVA.Add (liste);
-			}
-
-			{
-				var liste = new ComptaListeTVAEntity
-				{
-					Nom = "Normal",
-				};
-
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Normal 1").FirstOrDefault ());
-				liste.Taux.Add (this.compta.TauxTVA.Where (x => x.Nom == "Normal 2").FirstOrDefault ());
-
-				this.compta.ListesTVA.Add (liste);
-			}
 		}
 
 		private void InsertTaux(ComptaCodeTVAEntity codeTVA, decimal taux)

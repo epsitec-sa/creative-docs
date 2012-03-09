@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #if true
 			//	Hack pour éviter de devoir tout refaire à chaque exécution !
 			this.compta = new ComptaEntity ();  // crée une compta vide
-			new NewCompta ().NewEmpty (this.compta);
+			NewCompta.NewEmpty (this.compta);
 
 			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
 			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
@@ -1071,7 +1071,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandFileNew()
 		{
 			this.compta = new ComptaEntity ();  // crée une compta vide
-			new NewCompta ().NewEmpty (this.compta);
+			NewCompta.NewEmpty (this.compta);
 
 			this.InitializeAfterNewCompta ();
 		}
