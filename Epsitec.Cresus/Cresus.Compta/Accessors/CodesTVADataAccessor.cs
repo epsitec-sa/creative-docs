@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Compta.Controllers;
@@ -88,33 +89,45 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var codeTVA = codesTVA[row];
+			var result = FormattedText.Empty;
 
 			switch (column)
 			{
 				case ColumnType.Code:
-					return codeTVA.Code;
+					result = codeTVA.Code;
+					break;
 
 				case ColumnType.Titre:
-					return codeTVA.Description;
+					result = codeTVA.Description;
+					break;
 
 				case ColumnType.Taux:
-					return (codeTVA.ListeTaux == null) ? FormattedText.Empty : codeTVA.ListeTaux.Nom;
+					result = (codeTVA.ListeTaux == null) ? FormattedText.Empty : codeTVA.ListeTaux.Nom;
+					break;
 
 				case ColumnType.Compte:
-					return JournalDataAccessor.GetNuméro (codeTVA.Compte);
+					result = JournalDataAccessor.GetNuméro (codeTVA.Compte);
+					break;
 
 				case ColumnType.Chiffre:
-					return Converters.IntToString (codeTVA.Chiffre);
+					result = Converters.IntToString (codeTVA.Chiffre);
+					break;
 
 				case ColumnType.MontantFictif:
-					return Converters.MontantToString (codeTVA.MontantFictif);
+					result = Converters.MontantToString (codeTVA.MontantFictif);
+					break;
 
 				case ColumnType.Erreur:
-					return TVA.GetShortError (codeTVA.ListeTaux.Taux);
-
-				default:
-					return FormattedText.Null;
+					result = TVA.GetShortError (codeTVA.ListeTaux.Taux);
+					break;
 			}
+
+			if (codeTVA.Désactivé)
+			{
+				result = result.ApplyItalic ().ApplyFontColor (Color.FromBrightness (0.5));
+			}
+
+			return result;
 		}
 
 

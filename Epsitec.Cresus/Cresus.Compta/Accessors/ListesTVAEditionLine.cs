@@ -55,8 +55,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateTaux(EditionData data)
 		{
-			data.ClearError ();
-
 			data.Error = TVA.GetError (this.compta.NomsTauxToEntities (data.Texts));
 		}
 		#endregion
