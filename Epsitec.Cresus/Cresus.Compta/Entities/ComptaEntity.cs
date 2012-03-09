@@ -12,8 +12,28 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public ComptaListeTVAEntity GetListeTVA(decimal taux)
+		{
+			//	Cherche dans quelle liste se trouve un taux de TVA.
+			var tauxEntity = this.TauxTVA.Where (x => x.Taux == taux).FirstOrDefault ();
+			if (tauxEntity != null)
+			{
+				foreach (var liste in this.ListesTVA)
+				{
+					if (liste.Taux.Contains (tauxEntity))
+					{
+						return liste;
+					}
+				}
+			}
+
+			return null;
+		}
+
 		public int GetDefaultTVACount(IEnumerable<FormattedText> nomsDesTaux)
 		{
+			//	Compte le nombre de taux par défaut utilisés par une liste de taux.
+			//	Normalement, il devrait y en avoir un et un seul.
 			int count = 0;
 
 			foreach (var taux in this.TauxTVA)

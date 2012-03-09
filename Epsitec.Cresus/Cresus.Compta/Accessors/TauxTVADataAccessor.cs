@@ -224,7 +224,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			return FormattedText.Empty;
+			var tauxTVA = this.compta.TauxTVA[this.firstEditedRow];
+			int count = this.compta.ListesTVA.Where (x => x.Taux.Contains (tauxTVA)).Count ();
+
+			if (count == 0)
+			{
+				return FormattedText.Empty;  // ok
+			}
+			else
+			{
+				return string.Format ("Ce taux de TVA ne peut pas être supprimé,<br/>car il est utilisé dans {0} liste{1} de taux.", count.ToString (), (count>1)?"s":"");
+			}
 		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()

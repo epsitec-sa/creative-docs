@@ -279,17 +279,19 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (line.StartsWith ("ENTRY"))
 				{
-					var codeTVA = new ComptaCodeTVAEntity ();
+					var codeTVA = new ComptaCodeTVAEntity ()
+					{
+						Code        = this.GetEntryContentText (indexTVA, "NAME"),
+						Description = this.GetEntryContentText (indexTVA, "COMMENT"),
+						Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault (),
+						Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT")),
+						ListeTaux   = this.compta.GetListeTVA (this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100),
+					};
 
-					codeTVA.Code        = this.GetEntryContentText (indexTVA, "NAME");
-					codeTVA.Description = this.GetEntryContentText (indexTVA, "COMMENT");
-					codeTVA.Compte      = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexTVA, "COMPTE")).FirstOrDefault ();
-					codeTVA.Déduction   = this.GetMontant (this.GetEntryContentText (indexTVA, "PCTDEDUCT"));
-
-					var taux = this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100;
-					this.InsertTaux (codeTVA, taux);
-
-					codesTVAList.Add (codeTVA);
+					if (codeTVA.ListeTaux != null)
+					{
+						codesTVAList.Add (codeTVA);
+					}
 				}
 			}
 
@@ -308,22 +310,6 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return null;  // ok
-		}
-
-		private void InsertTaux(ComptaCodeTVAEntity codeTVA, decimal taux)
-		{
-			var tauxEntity = this.compta.TauxTVA.Where (x => x.Taux == taux).FirstOrDefault ();
-			if (tauxEntity != null)
-			{
-				foreach (var liste in this.compta.ListesTVA)
-				{
-					if (liste.Taux.Contains (tauxEntity))
-					{
-						codeTVA.ListeTaux = liste;
-						return;
-					}
-				}
-			}
 		}
 
 		private Date GetDate(string text)

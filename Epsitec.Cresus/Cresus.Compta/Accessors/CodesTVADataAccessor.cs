@@ -227,7 +227,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			return FormattedText.Empty;
+			var codeTVA = this.compta.CodesTVA[this.firstEditedRow];
+			int count = 0;
+
+			foreach (var période in this.compta.Périodes)
+			{
+				count += période.Journal.Where (x => x.CodeTVA == codeTVA).Count ();
+			}
+
+			if (count == 0)
+			{
+				return FormattedText.Empty;  // ok
+			}
+			else
+			{
+				return string.Format ("Ce code TVA ne peut pas être supprimé,<br/>car il est utilisé dans {0} écriture{1}.", count.ToString (), (count>1)?"s":"");
+			}
 		}
 
 		public override FormattedText GetRemoveModificationLineQuestion()

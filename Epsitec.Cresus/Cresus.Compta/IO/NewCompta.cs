@@ -148,6 +148,8 @@ namespace Epsitec.Cresus.Compta.IO
 		private static void CreateTauxTVA(ComptaEntity compta)
 		{
 			//	Crée les taux de TVA nécessaires pour toutes comptabilités.
+			compta.TauxTVA.Clear ();
+
 			{
 				var taux = new ComptaTauxTVAEntity ()
 				{
@@ -224,6 +226,8 @@ namespace Epsitec.Cresus.Compta.IO
 		private static void CreateListesTVA(ComptaEntity compta)
 		{
 			//	Crée les listes de taux de TVA nécessaires pour toutes comptabilités.
+			compta.ListesTVA.Clear ();
+
 			{
 				var liste = new ComptaListeTVAEntity
 				{
