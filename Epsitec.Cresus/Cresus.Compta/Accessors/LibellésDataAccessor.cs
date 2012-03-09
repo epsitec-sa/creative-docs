@@ -139,6 +139,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void PrepareEditionLine(int line)
 		{
 			this.editionLine[line].SetText (ColumnType.Permanent, "1");
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

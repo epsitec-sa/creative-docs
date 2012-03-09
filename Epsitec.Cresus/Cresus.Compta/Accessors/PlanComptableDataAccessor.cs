@@ -239,6 +239,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.editionLine[line].SetText (ColumnType.Type, Converters.TypeToString (TypeDeCompte.Normal));
 			this.editionLine[line].SetText (ColumnType.IndexOuvBoucl, "1");
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

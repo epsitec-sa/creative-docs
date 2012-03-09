@@ -164,6 +164,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Converters.SetPrésentationCommand (ref s, Res.Commands.Présentation.Extrait, true);
 
 			this.editionLine[line].SetText (ColumnType.Présentations, s);
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

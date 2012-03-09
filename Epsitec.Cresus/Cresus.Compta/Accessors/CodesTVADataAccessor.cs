@@ -109,6 +109,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.MontantFictif:
 					return Converters.MontantToString (codeTVA.MontantFictif);
 
+				case ColumnType.Erreur:
+					return (codeTVA.Diagnostic.IsNullOrEmpty) ? null : FormattedText.Format ("Erreur").ApplyBold ();
+
 				default:
 					return FormattedText.Null;
 			}
@@ -145,13 +148,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 
 			this.controller.EditorController.UpdateFieldsEditionData ();
-		}
-
-		protected override void PrepareEditionLine(int line)
-		{
-			this.editionLine[line].SetText (ColumnType.Format,    Converters.IntToString (1));
-			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
-			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
 		}
 
 		public override void StartModificationLine(int row)

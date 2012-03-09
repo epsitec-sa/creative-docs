@@ -57,8 +57,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Edition))
 			{
-				if (mapper.Column == ColumnType.Chiffre  ||
-					mapper.Column == ColumnType.ParDéfaut)  // insère un gap ?
+				if (mapper.Column == ColumnType.Chiffre   ||
+					mapper.Column == ColumnType.ParDéfaut ||
+					mapper.Column == ColumnType.Erreur    )  // insère un gap ?
 				{
 					new FrameBox
 					{

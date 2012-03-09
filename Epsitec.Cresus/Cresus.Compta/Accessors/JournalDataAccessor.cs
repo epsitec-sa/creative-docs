@@ -278,6 +278,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
 			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

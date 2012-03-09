@@ -162,6 +162,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public virtual void Prepare()
+		{
+		}
+
 		public virtual void EntityToData(AbstractEntity entity)
 		{
 		}

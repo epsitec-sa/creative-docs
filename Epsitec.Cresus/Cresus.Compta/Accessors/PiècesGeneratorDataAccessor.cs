@@ -158,6 +158,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Format,    Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

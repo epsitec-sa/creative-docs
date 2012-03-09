@@ -166,10 +166,13 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				menu.Items.Add (item);
 			}
 
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+			if (menu.Items.Any ())
+			{
+				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
-			menu.Host = parentButton.Window;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+				menu.Host = parentButton.Window;
+				menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+			}
 		}
 
 		private void EditionDataSort()

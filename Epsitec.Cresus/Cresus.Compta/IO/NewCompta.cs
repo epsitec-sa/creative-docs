@@ -153,8 +153,9 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var taux = new ComptaTauxTVAEntity ()
 				{
-					Nom     = "Exclu",
-					Taux    = 0.0m,
+					Nom       = "Exclu",
+					Taux      = 0.0m,
+					ParDéfaut = true,
 				};
 				compta.TauxTVA.Add (taux);
 			}
@@ -162,9 +163,9 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var taux = new ComptaTauxTVAEntity ()
 				{
-					Nom     = "Réduit 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.024m,
+					Nom       = "Réduit 1",
+					DateFin   = new Date (2010, 12, 31),
+					Taux      = 0.024m,
 				};
 				compta.TauxTVA.Add (taux);
 			}

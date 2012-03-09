@@ -75,6 +75,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#endregion
 
 
+		public override void Prepare()
+		{
+			//	Parameters <- ensemble des taux définis
+			var parameters = this.GetParameters (ColumnType.Taux);
+			parameters.Clear ();
+
+			foreach (var taux in this.compta.TauxTVA)
+			{
+				parameters.Add (taux.Nom.ToString ());
+			}
+		}
+
 		public override void EntityToData(AbstractEntity entity)
 		{
 			var liste = entity as ComptaListeTVAEntity;
@@ -93,15 +105,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void GetTaux(ComptaListeTVAEntity listeTVA)
 		{
-			//	Parameters <- ensemble des taux définis
-			var parameters = this.GetParameters (ColumnType.Taux);
-			parameters.Clear ();
-
-			foreach (var taux in this.compta.TauxTVA)
-			{
-				parameters.Add (taux.Nom.ToString ());
-			}
-
 			//	Texts <- taux utilisés par le codeTVA
 			var texts = this.GetTexts (ColumnType.Taux);
 			texts.Clear ();

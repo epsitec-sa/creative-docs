@@ -153,6 +153,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void PrepareEditionLine(int line)
 		{
 			this.editionLine[line].SetText (ColumnType.Raccourci, Converters.RaccourciToString (RaccourciModèle.None));
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

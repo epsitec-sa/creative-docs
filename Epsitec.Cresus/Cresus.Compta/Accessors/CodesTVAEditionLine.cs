@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.MontantFictif, new EditionData (this.controller, this.ValidateMontant));
 			this.dataDict.Add (ColumnType.ParDéfaut,     new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Désactivé,     new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Erreur,        new EditionData (this.controller, this.ValidateError));
 		}
 
 
@@ -136,6 +137,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			Validators.ValidateMontant (data, emptyAccepted: true);
 		}
+
+		private void ValidateError(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				data.Error = "Il y a une erreur dans la liste de taux de TVA";
+			}
+		}
 		#endregion
 
 
@@ -151,6 +162,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
 			this.SetText (ColumnType.ParDéfaut,     codeTVA.ParDéfaut ? "1" : "0");
 			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "1" : "0");
+			this.SetText (ColumnType.Erreur,        codeTVA.Diagnostic);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

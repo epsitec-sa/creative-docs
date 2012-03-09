@@ -490,6 +490,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected virtual void PrepareEditionLine(int line)
 		{
+			this.editionLine[0].Prepare ();
 		}
 
 		public virtual void StartModificationLine(int row)

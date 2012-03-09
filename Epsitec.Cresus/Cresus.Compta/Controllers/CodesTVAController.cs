@@ -123,6 +123,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				yield return new ColumnMapper (ColumnType.ParDéfaut,     0.00, ContentAlignment.MiddleLeft,  "Code par défaut", "Ce code est le code par défaut");
 				yield return new ColumnMapper (ColumnType.Désactivé,     0.00, ContentAlignment.MiddleLeft,  "Code désactivé",  "Ce code n'est provisoirement plus disponible");
+
+				yield return new ColumnMapper (ColumnType.Erreur,        1.00, ContentAlignment.MiddleLeft,  "Diagnostique",    "Diagnostique général", enable: false);
 			}
 		}
 	}
