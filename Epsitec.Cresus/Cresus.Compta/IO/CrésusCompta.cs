@@ -494,6 +494,7 @@ namespace Epsitec.Cresus.Compta.IO
 				var montant = this.GetMontant (words[5]);
 				var multi   = this.GetInt (words[8]);
 				var jp      = this.compta.Journaux[0];
+				var codeTVA = words[12];
 
 				if (!date.HasValue)
 				{
@@ -516,6 +517,19 @@ namespace Epsitec.Cresus.Compta.IO
 					MultiId    = multi,
 					Journal    = jp,
 				};
+
+				if (débit != null && crédit != null && !string.IsNullOrEmpty (codeTVA))
+				{
+					var codeTVAEntity = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
+					if (codeTVAEntity != null && codeTVAEntity.DefaultTauxValue.GetValueOrDefault () == 0)
+					{
+						écriture.CodeTVA    = codeTVAEntity;
+						écriture.MontantTVA = 0;
+						écriture.MontantHT  = écriture.MontantTTC;
+						écriture.TauxTVA    = 0;
+						écriture.TVAAuDébit = débit.CodeTVA != null;
+					}
+				}
 
 				journal.Add (écriture);
 

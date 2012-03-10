@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			{
 				string s = (percent.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
 
-				while (s.EndsWith ("0"))
+				while (s.Length > 1 && s.EndsWith ("0"))
 				{
 					s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
 				}
