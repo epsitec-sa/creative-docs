@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.GetText (ColumnType.TotalAutomatique) == "True")
+			if (this.GetText (ColumnType.TotalAutomatique) == "1")
 			{
 				return;
 			}
@@ -425,7 +425,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.MontantHT,        (écriture.CodeTVA == null) ? null : Converters.MontantToString (écriture.MontantHT));
 			this.SetText (ColumnType.MontantTVA,       (écriture.CodeTVA == null) ? null : Converters.MontantToString (écriture.MontantTVA));
 			this.SetText (ColumnType.MontantTTC,       Converters.MontantToString (écriture.MontantTTC));
-			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "True" : "False");
+			this.SetText (ColumnType.TotalAutomatique, écriture.TotalAutomatique ? "1" : "0");
 			this.SetText (ColumnType.CodeTVA,          JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
@@ -453,7 +453,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			écriture.MontantHT        = Converters.ParseMontant (this.GetText (ColumnType.MontantHT)).GetValueOrDefault ();
 			écriture.MontantTVA       = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA)).GetValueOrDefault ();
 			écriture.MontantTTC       = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
-			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "True");
+			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "1");
 			écriture.CodeTVA          = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 			écriture.TauxTVA          = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
 			écriture.TVAAuDébit       = this.GetText (ColumnType.TVAAuDébit) == "1";

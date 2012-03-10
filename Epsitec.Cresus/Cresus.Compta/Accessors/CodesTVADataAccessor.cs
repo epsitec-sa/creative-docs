@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Désactivé, "1");
+			this.editionLine[line].SetText (ColumnType.Désactivé, "1");  // met la coche 'Code activé' (logique inversée)
 
 			base.PrepareEditionLine (line);
 		}

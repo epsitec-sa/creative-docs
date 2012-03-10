@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
-			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "0" : "1");
+			this.SetText (ColumnType.Désactivé,     codeTVA.Désactivé ? "0" : "1");  // logique inversée !
 			this.SetText (ColumnType.Code,          codeTVA.Code);
 			this.SetText (ColumnType.Titre,         codeTVA.Description);
 			this.SetText (ColumnType.Taux,          this.GetTaux (codeTVA));
@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var codeTVA = entity as ComptaCodeTVAEntity;
 
-			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "0";
+			codeTVA.Désactivé     = this.GetText (ColumnType.Désactivé) == "0";  // logique inversée !
 			codeTVA.Code          = this.GetText (ColumnType.Code);
 			codeTVA.Description   = this.GetText (ColumnType.Titre);
 			codeTVA.ListeTaux     = this.SetTaux (this.GetText (ColumnType.Taux));

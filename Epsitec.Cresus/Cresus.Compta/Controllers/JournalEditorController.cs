@@ -383,7 +383,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
-			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "True");
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "1");
 
 			if (this.PlusieursPièces)
 			{
@@ -485,7 +485,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met le total automatique dans la ligne courante.
 			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
-				this.dataAccessor.EditionLine[line].SetText (ColumnType.TotalAutomatique, (line == this.selectedLine) ? "True" : "False");
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.TotalAutomatique, (line == this.selectedLine) ? "1" : "0");
 			}
 
 			this.dirty = true;
@@ -551,7 +551,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Crédit, line, false);
 				}
 
-				bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "True");
+				bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "1");
 
 				this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
 				this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
@@ -678,7 +678,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Retourne l'index de la ligne qui contient le total automatique.
 			get
 			{
-				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "True");
+				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "1");
 			}
 		}
 
