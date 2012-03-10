@@ -2,6 +2,7 @@
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus;
@@ -131,6 +132,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var écriture = journal[row];
+			bool hasTVA;
 
 			switch (column)
 			{
@@ -138,22 +140,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.DateToString (écriture.Date);
 
 				case ColumnType.Débit:
-					return JournalDataAccessor.GetNuméro (écriture.Débit);
+					hasTVA = écriture.CodeTVA != null && écriture.TVAAuDébit;
+					return JournalDataAccessor.FormatForTVA (JournalDataAccessor.GetNuméro (écriture.Débit), hasTVA);
 
 				case ColumnType.Crédit:
-					return JournalDataAccessor.GetNuméro (écriture.Crédit);
+					hasTVA = écriture.CodeTVA != null && !écriture.TVAAuDébit;
+					return JournalDataAccessor.FormatForTVA (JournalDataAccessor.GetNuméro (écriture.Crédit), hasTVA);
 
 				case ColumnType.Pièce:
 					return écriture.Pièce;
 
 				case ColumnType.Libellé:
 					return écriture.Libellé;
-
-				case ColumnType.MontantHT:
-					return Converters.MontantToString (écriture.MontantHT);
-
-				case ColumnType.MontantTVA:
-					return Converters.MontantToString (écriture.MontantTVA);
 
 				case ColumnType.MontantTTC:
 					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.MontantTTC));
@@ -162,6 +160,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 						montantTTC = montantTTC.ApplyBold ();
 					}
 					return montantTTC;
+
+				case ColumnType.MontantTVA:
+					return JournalDataAccessor.FormatForTVA (Converters.MontantToString (écriture.MontantTVA));
+
+				case ColumnType.MontantHT:
+					return JournalDataAccessor.FormatForTVA (Converters.MontantToString (écriture.MontantHT));
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
@@ -880,6 +884,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				date = Date.Today;
 				return false;
+			}
+		}
+
+
+		private static FormattedText FormatForTVA(FormattedText text, bool isTVA = true)
+		{
+			//	Formate un texte pour montrer qu'il est lié à la TVA.
+			if (isTVA)
+			{
+				return text.ApplyItalic ().ApplyFontColor (UIBuilder.TVAColor);
+			}
+			else
+			{
+				return text;
 			}
 		}
 

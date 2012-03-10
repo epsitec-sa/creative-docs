@@ -165,6 +165,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility     = false,
 			};
 
+			this.labelTVA = new StaticText
+			{
+				Parent         = line1,
+				Text           = "TVA au",
+				PreferredWidth = 45,
+				Dock           = DockStyle.Right,
+				Visibility     = false,
+			};
+
 			this.radioDébitTVA.Clicked += delegate
 			{
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, "D");
@@ -706,6 +715,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			bool hasTVA = this.HasTVA (this.selectedLine);
 
+			this.labelTVA      .Visibility = hasTVA;
 			this.radioDébitTVA .Visibility = hasTVA;
 			this.radioCréditTVA.Visibility = hasTVA;
 
@@ -1066,6 +1076,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
 		private VScroller							scroller;
+		private StaticText							labelTVA;
 		private RadioButton							radioDébitTVA;
 		private RadioButton							radioCréditTVA;
 
