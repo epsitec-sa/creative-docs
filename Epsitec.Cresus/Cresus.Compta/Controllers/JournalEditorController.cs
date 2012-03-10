@@ -503,6 +503,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Débit,  crédit);
 			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Crédit, débit);
 
+			var d = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit);
+			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, (d == "D") ? "C":"D");
+
 			this.dirty = true;
 			this.UpdateEditorContent ();
 		}
