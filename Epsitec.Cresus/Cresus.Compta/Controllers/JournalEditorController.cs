@@ -143,20 +143,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-			new RadioButton
+			this.radioCréditTVA = new RadioButton
 			{
 				Parent         = line1,
 				Text           = "Crédit",
 				PreferredWidth = 60,
 				Dock           = DockStyle.Right,
+				Visibility     = false,
 			};
 
-			new RadioButton
+			this.radioDébitTVA = new RadioButton
 			{
 				Parent         = line1,
 				Text           = "Débit",
 				PreferredWidth = 60,
 				Dock           = DockStyle.Right,
+				Visibility     = false,
 			};
 		}
 
@@ -526,54 +528,56 @@ namespace Epsitec.Cresus.Compta.Controllers
 			bool éditeCodeTVA    = this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA);
 			bool éditeTauxTVA    = this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA);
 
-			if (!this.isMulti)
+			if (this.isMulti)
 			{
-				bool hasTVA = !this.dataAccessor.EditionLine[0].GetText (ColumnType.CodeTVA).IsNullOrEmpty;
+				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+				{
+					if (this.IsDébitMulti (line))
+					{
+						this.SetWidgetVisibility (ColumnType.Débit,  line, false);
+						this.SetWidgetVisibility (ColumnType.Crédit, line, true);
+					}
+
+					if (this.IsCréditMulti (line))
+					{
+						this.SetWidgetVisibility (ColumnType.Débit,  line, true);
+						this.SetWidgetVisibility (ColumnType.Crédit, line, false);
+					}
+
+					bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "1");
+
+					this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
+
+					if (!this.PlusieursPièces)
+					{
+						this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
+					}
+
+					bool hasTVA = this.HasTVA (line);
+
+					this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && éditeMontantHT && hasTVA;
+					this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA).Enable = !totalAutomatique && éditeMontantTVA;
+					this.dataAccessor.GetEditionData (line, ColumnType.MontantTTC).Enable = !totalAutomatique;
+					this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA   ).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
+					this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
+
+					this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
+				}
+
+				this.UpdateMultiEditionData ();
+			}
+			else
+			{
+				bool hasTVA = this.HasTVA (0);
 
 				this.dataAccessor.GetEditionData (0, ColumnType.MontantHT ).Enable = hasTVA;
 				this.dataAccessor.GetEditionData (0, ColumnType.MontantTVA).Enable = éditeMontantTVA;
 				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA   ).Enable = hasTVA;
-
-				return;
 			}
 
-			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
-			{
-				if (this.IsDébitMulti (line))
-				{
-					this.SetWidgetVisibility (ColumnType.Débit,  line, false);
-					this.SetWidgetVisibility (ColumnType.Crédit, line, true);
-				}
-
-				if (this.IsCréditMulti (line))
-				{
-					this.SetWidgetVisibility (ColumnType.Débit,  line, true);
-					this.SetWidgetVisibility (ColumnType.Crédit, line, false);
-				}
-
-				bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "1");
-
-				this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
-
-				if (!this.PlusieursPièces)
-				{
-					this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
-				}
-
-				bool hasTVA = !this.dataAccessor.EditionLine[line].GetText (ColumnType.CodeTVA).IsNullOrEmpty;
-
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && éditeMontantHT && hasTVA;
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA).Enable = !totalAutomatique && éditeMontantTVA;
-				this.dataAccessor.GetEditionData (line, ColumnType.MontantTTC).Enable = !totalAutomatique;
-				this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA   ).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
-				this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
-
-				this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
-				this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
-			}
-
-			this.UpdateMultiEditionData ();
+			this.UpdateRadioTVA ();
 		}
 
 		private void UpdateMultiEditionData()
@@ -679,6 +683,35 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "1");
+			}
+		}
+
+		private void UpdateRadioTVA()
+		{
+			bool hasTVA = this.HasTVA (this.selectedLine);
+
+			this.radioDébitTVA .Visibility = hasTVA;
+			this.radioCréditTVA.Visibility = hasTVA;
+
+			if (hasTVA)
+			{
+				bool TVAAuDébit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit) == "1";
+
+				this.radioDébitTVA .ActiveState =  TVAAuDébit ? ActiveState.Yes : ActiveState.No;
+				this.radioCréditTVA.ActiveState = !TVAAuDébit ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+		private bool HasTVA(int line)
+		{
+			if (line < 0 || line >= this.dataAccessor.EditionLine.Count)
+			{
+				return false;
+			}
+			else
+			{
+				var editionLine = this.dataAccessor.EditionLine[line] as JournalEditionLine;
+				return editionLine.HasTVA;
 			}
 		}
 
@@ -822,6 +855,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
 				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
 			}
+
+			this.UpdateRadioTVA ();
 		}
 
 		private void UpdateEditorInfo(FormattedText numéro, bool isDébit)
@@ -997,6 +1032,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
 		private VScroller							scroller;
+		private RadioButton							radioDébitTVA;
+		private RadioButton							radioCréditTVA;
 
 		private bool								isMulti;
 	}

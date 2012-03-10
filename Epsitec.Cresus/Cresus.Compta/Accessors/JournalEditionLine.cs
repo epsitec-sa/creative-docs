@@ -86,19 +86,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
-			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
-			{
-				if (data.HasText)
-				{
-					data.Error = "Vous devez donner un code TVA pour pouvoir mettre un montant dans cette colonne";
-					return;
-				}
-			}
-			else
+			if (this.HasTVA)  // y a-t-il un code TVA reconnu ?
 			{
 				if (!data.HasText)
 				{
 					data.Error = "Vous devez donner un montant, ou supprimer le code TVA";
+					return;
+				}
+			}
+			else  // pas de code TVA ?
+			{
+				if (data.HasText)
+				{
+					data.Error = "Vous devez donner un code TVA pour pouvoir mettre un montant dans cette colonne";
 					return;
 				}
 			}
@@ -363,7 +363,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.SetText (ColumnType.MontantHT,  null);
 				this.SetText (ColumnType.MontantTVA, null);
-				this.SetText (ColumnType.MontantTTC, null);
 				this.SetText (ColumnType.TauxTVA,    null);
 				this.SetText (ColumnType.CompteTVA,  null);
 			}
@@ -535,6 +534,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				return codeTVA.Compte.Numéro;
+			}
+		}
+
+		public bool HasTVA
+		{
+			get
+			{
+				var code = this.GetText (ColumnType.CodeTVA);
+				return this.compta.CodesTVA.Where (x => x.Code == code).Any ();
 			}
 		}
 	}

@@ -620,6 +620,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.editorFrameBox.Focus ();  // met le focus à un parent bidon
 					this.fieldControllers[this.selectedLine][column].SetFocus ();
 				}
+
+				this.UpdateEditorInfo ();
 			}
 		}
 
