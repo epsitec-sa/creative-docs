@@ -167,6 +167,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
+		protected override void PrepareEditionLine(int line)
+		{
+			this.editionLine[line].SetText (ColumnType.Désactivé, "1");
+
+			base.PrepareEditionLine (line);
+		}
+
 		public override void StartModificationLine(int row)
 		{
 			this.editionLine.Clear ();

@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			};
 
 			this.InternalButton.ActiveStateChanged += new EventHandler (this.HandleActiveStateChanged);
+			this.editWidget.IsFocusedChanged += new EventHandler<DependencyPropertyChangedEventArgs> (this.HandleIsFocusedChanged);
 		}
 
 
@@ -131,6 +132,21 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 			this.Validate ();
 			this.ContentChangedAction ();
+		}
+
+		private void HandleIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if (this.editionData == null)
+			{
+				return;
+			}
+
+			this.hasFocus = (bool) e.NewValue;
+
+			if (this.hasFocus)  // prise du focus ?
+			{
+				this.SetFocusAction ();
+			}
 		}
 
 

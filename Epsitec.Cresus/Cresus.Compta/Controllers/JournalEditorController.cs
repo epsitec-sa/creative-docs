@@ -119,10 +119,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins       = new Margins (0, 1, 0, 0),
 			};
 
+			this.CreateComplementUI (this.infoFrameBox);
+
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
 
 			base.CreateUI (footer, updateArrayContentAction);
+		}
+
+		private void CreateComplementUI(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent  = parent,
+				Dock    = DockStyle.Fill,
+				Margins = new Margins (0, 20, 0, 0),
+			};
+
+			var line1 = new FrameBox
+			{
+				Parent          = frame,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+			};
+
+			new RadioButton
+			{
+				Parent         = line1,
+				Text           = "Crédit",
+				PreferredWidth = 60,
+				Dock           = DockStyle.Right,
+			};
+
+			new RadioButton
+			{
+				Parent         = line1,
+				Text           = "Débit",
+				PreferredWidth = 60,
+				Dock           = DockStyle.Right,
+			};
 		}
 
 		private void CreateLineUI(Widget parent)

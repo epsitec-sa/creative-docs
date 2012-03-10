@@ -104,7 +104,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.SoldeCrédit = différence;
 				}
 
-				if (compte.Type == TypeDeCompte.Normal)
+				if (compte.Type == TypeDeCompte.Normal ||
+					compte.Type == TypeDeCompte.TVA    )
 				{
 					totalDébit  += soldeDébit;
 					totalCrédit += soldeCrédit;
