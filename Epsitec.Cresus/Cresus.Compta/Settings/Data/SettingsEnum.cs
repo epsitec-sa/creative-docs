@@ -33,5 +33,10 @@ namespace Epsitec.Cresus.Compta
 		NullPartsDashZero,
 		NullPartsZeroDash,
 		NullPartsDashDash,
+
+		PercentFloating,
+		PercentFrac1,
+		PercentFrac2,
+		PercentFrac3,
 	}
 }

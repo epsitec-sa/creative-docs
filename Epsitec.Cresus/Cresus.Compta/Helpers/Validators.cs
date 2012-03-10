@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static void ValidatePercent(EditionData data, bool emptyAccepted)
 		{
-			//	Valide un pourcent.
+			//	Valide un pourcentage.
 			data.ClearError ();
 
 			if (data.HasText)

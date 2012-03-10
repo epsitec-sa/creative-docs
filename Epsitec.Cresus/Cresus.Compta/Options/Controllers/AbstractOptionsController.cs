@@ -287,8 +287,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Montant));
 			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Différence));
-			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Pourcent));
-			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.PourcentMontant));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Pourcentage));
+			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.PourcentageMontant));
 			combo.Items.Add (Converters.GetComparisonDisplayModeDescription (ComparisonDisplayMode.Graphique));
 		}
 

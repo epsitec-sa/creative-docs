@@ -27,10 +27,13 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
             	case SettingsGroup.Ecriture:
 					return "Journal des écritures";
 
-            	case SettingsGroup.Price:
+				case SettingsGroup.Price:
 					return "Format des montants";
 
-            	case SettingsGroup.Date:
+				case SettingsGroup.Percent:
+					return "Format des pourcentages";
+
+				case SettingsGroup.Date:
 					return "Format des dates";
 
 				default:
@@ -112,6 +115,16 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					return "Exemples";
 
 
+				case SettingsType.PercentDecimalSeparator:
+					return "Séparateur de la partie fractionnaire";
+
+				case SettingsType.PercentFracFormat:
+					return "Partie fractionnaire";
+
+				case SettingsType.PercentSample:
+					return "Exemples";
+
+
 				case SettingsType.DateSeparator:
 					return "Séparateur";
 
@@ -189,6 +202,20 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 				case SettingsEnum.NullPartsDashDash:
 					return "-.—";
+
+
+				case SettingsEnum.PercentFloating:
+					return "Variable";
+
+				case SettingsEnum.PercentFrac1:
+					return "1 décimale";
+
+				case SettingsEnum.PercentFrac2:
+					return "2 décimales";
+
+				case SettingsEnum.PercentFrac3:
+					return "3 décimales";
+
 
 				default:
 					return TextFormatter.FormatText (type).ApplyFontColor (Color.FromName ("Red"));

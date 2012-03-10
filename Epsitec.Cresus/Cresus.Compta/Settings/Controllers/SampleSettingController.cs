@@ -41,6 +41,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 					this.CreatePriceUI (frame);
 					break;
 
+				case SettingsType.PercentSample:
+					this.CreatePercentUI (frame);
+					break;
+
 				case SettingsType.DateSample:
 					this.CreateDateUI (frame);
 					break;
@@ -53,6 +57,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				case SettingsType.PriceSample:
 					this.UpdatePrice ();
+					break;
+
+				case SettingsType.PercentSample:
+					this.UpdatePercent ();
 					break;
 
 				case SettingsType.DateSample:
@@ -114,6 +122,51 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				this.sample2.Text = Converters.MontantToString (-12500.75m);
 				this.sample3.Text = Converters.MontantToString (0.61m);
 			}
+		}
+		#endregion
+
+
+		#region Percent
+		private void CreatePercentUI(Widget parent)
+		{
+			this.frame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 100,
+				DrawFullFrame  = true,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (10),
+			};
+
+			this.sample1 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Top,
+			};
+
+			this.sample2 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Top,
+			};
+
+			this.sample3 = new StaticText
+			{
+				Parent           = this.frame,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				Dock             = DockStyle.Top,
+			};
+		}
+
+		private void UpdatePercent()
+		{
+			this.frame.BackColor = Color.Empty;
+
+			this.sample1.Text = Converters.PercentToString (0.06789m);
+			this.sample2.Text = Converters.PercentToString (0.024m);
+			this.sample3.Text = Converters.PercentToString (0.08m);
 		}
 		#endregion
 

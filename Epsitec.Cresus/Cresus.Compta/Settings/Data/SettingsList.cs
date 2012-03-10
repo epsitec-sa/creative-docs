@@ -54,6 +54,11 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new EnumSettingData   (SettingsGroup.Price, SettingsType.PriceNegativeFormat,   SettingsEnum.NegativeMinus,       this.ValidateNegative,  SettingsEnum.NegativeMinus, SettingsEnum.NegativeParentheses));
 			this.Add (new SampleSettingData (SettingsGroup.Price, SettingsType.PriceSample, this));
 
+			//	Réglages pour les pourcents :
+			this.Add (new EnumSettingData   (SettingsGroup.Percent, SettingsType.PercentDecimalSeparator, SettingsEnum.SeparatorDot, null, SettingsEnum.SeparatorDot, SettingsEnum.SeparatorComma));
+			this.Add (new EnumSettingData   (SettingsGroup.Percent, SettingsType.PercentFracFormat, SettingsEnum.PercentFrac1, null, SettingsEnum.PercentFloating, SettingsEnum.PercentFrac1, SettingsEnum.PercentFrac2, SettingsEnum.PercentFrac3));
+			this.Add (new SampleSettingData (SettingsGroup.Percent, SettingsType.PercentSample, this));
+
 			//	Réglages pour les dates :
 			this.Add (new EnumSettingData   (SettingsGroup.Date, SettingsType.DateSeparator, SettingsEnum.SeparatorDot, null, SettingsEnum.SeparatorDot, SettingsEnum.SeparatorSlash, SettingsEnum.SeparatorDash));
 			this.Add (new EnumSettingData   (SettingsGroup.Date, SettingsType.DateYear,      SettingsEnum.YearDigits4,  null, SettingsEnum.YearDigits2, SettingsEnum.YearDigits4));

@@ -146,11 +146,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Pourcent)
+				if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Pourcentage)
 				{
 					return BudgetsManager.GetPercent (solde, budget);
 				}
-				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.PourcentMontant)
+				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.PourcentageMontant)
 				{
 					var percent = BudgetsManager.GetPercent (solde, budget);
 					var montant = Converters.MontantToString (budget);

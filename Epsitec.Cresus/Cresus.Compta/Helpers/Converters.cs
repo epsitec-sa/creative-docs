@@ -18,7 +18,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Converters
 	{
-		#region Pourcent
+		#region Pourcentage
 		public static decimal? ParsePercent(FormattedText text)
 		{
 			return Converters.ParsePercent (text.ToSimpleText ());
@@ -58,16 +58,47 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			if (percent.HasValue)
 			{
-				string s = (percent.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
+				string s;
 
-				while (s.Length > 1 && s.EndsWith ("0"))
+				if (Converters.percentFracFormat == SettingsEnum.PercentFloating)
 				{
-					s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
+					s = (percent.Value*100).ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+					while (s.Length > 1 && s.EndsWith ("0"))
+					{
+						s = s.Substring (0, s.Length-1);  // TODO: on doit pouvoir faire plus simple...
+					}
+
+					if (s.EndsWith ("."))
+					{
+						s = s.Substring (0, s.Length-1);
+					}
+				}
+				else
+				{
+					string format = null;
+
+					switch (Converters.percentFracFormat)
+					{
+						case SettingsEnum.PercentFrac1:
+							format = "0.0";
+							break;
+
+						case SettingsEnum.PercentFrac2:
+							format = "0.00";
+							break;
+
+						case SettingsEnum.PercentFrac3:
+							format = "0.000";
+							break;
+					}
+
+					s = (percent.Value*100).ToString (format);
 				}
 
-				if (s.EndsWith ("."))
+				if (Converters.percentDecimalSeparator == SettingsEnum.SeparatorComma)
 				{
-					s = s.Substring (0, s.Length-1);
+					s = s.Replace (".", ",");
 				}
 
 				return s + "%";
@@ -782,10 +813,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ComparisonDisplayMode.Différence:
 					return "Différence en francs";
 
-				case ComparisonDisplayMode.Pourcent:
+				case ComparisonDisplayMode.Pourcentage:
 					return "Comparaison en %";
 
-				case ComparisonDisplayMode.PourcentMontant:
+				case ComparisonDisplayMode.PourcentageMontant:
 					return "Comparaison en % avec montant";
 
 				case ComparisonDisplayMode.Graphique:
@@ -1132,6 +1163,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			Converters.roundMontantValue = settingsList.GetDecimal (SettingsType.EcritureArrondiTVA).GetValueOrDefault (0.01m);
 
+			//	Pourcentages.
+			Converters.percentDecimalSeparator = settingsList.GetEnum (SettingsType.PercentDecimalSeparator);
+			Converters.percentFracFormat       = settingsList.GetEnum (SettingsType.PercentFracFormat);
+
 			//	Dates.
 			Converters.dateFormatSeparator = settingsList.GetEnum (SettingsType.DateSeparator);
 			Converters.dateFormatYear      = settingsList.GetEnum (SettingsType.DateYear);
@@ -1156,11 +1191,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		private static readonly System.Globalization.NumberFormatInfo numberFormatMontant;
 
-		private static SettingsEnum numberFormatNullParts = SettingsEnum.NullPartsZeroZero;
-		private static SettingsEnum numberFormatNegative  = SettingsEnum.NegativeMinus;
-		private static SettingsEnum dateFormatSeparator   = SettingsEnum.SeparatorDot;
-		private static SettingsEnum dateFormatYear        = SettingsEnum.YearDigits4;
-		private static SettingsEnum dateFormatOrder       = SettingsEnum.YearDMY;
-		private static decimal      roundMontantValue     = 0.01m;
+		private static SettingsEnum numberFormatNullParts   = SettingsEnum.NullPartsZeroZero;
+		private static SettingsEnum numberFormatNegative    = SettingsEnum.NegativeMinus;
+		private static SettingsEnum dateFormatSeparator     = SettingsEnum.SeparatorDot;
+		private static SettingsEnum dateFormatYear          = SettingsEnum.YearDigits4;
+		private static SettingsEnum dateFormatOrder         = SettingsEnum.YearDMY;
+		private static decimal      roundMontantValue       = 0.01m;
+		private static SettingsEnum percentDecimalSeparator = SettingsEnum.SeparatorDot;
+		private static SettingsEnum percentFracFormat       = SettingsEnum.PercentFrac1;
 	}
 }

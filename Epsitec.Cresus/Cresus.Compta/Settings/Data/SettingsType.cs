@@ -35,6 +35,10 @@ namespace Epsitec.Cresus.Compta
 		PriceNegativeFormat,
 		PriceSample,
 
+		PercentFracFormat,
+		PercentDecimalSeparator,
+		PercentSample,
+
 		DateSeparator,
 		DateYear,
 		DateOrder,

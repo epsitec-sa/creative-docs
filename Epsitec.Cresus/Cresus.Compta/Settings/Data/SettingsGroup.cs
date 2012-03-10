@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Compta
 		Global,
 		Ecriture,
 		Price,
+		Percent,
 		Date,
 	}
 }

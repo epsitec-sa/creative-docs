@@ -7,8 +7,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	{
 		Montant,
 		Différence,
-		Pourcent,
-		PourcentMontant,
+		Pourcentage,
+		PourcentageMontant,
 		Graphique,
 	}
 }
