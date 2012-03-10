@@ -143,22 +143,38 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
+			//	Tout à droite.
 			this.radioCréditTVA = new RadioButton
 			{
 				Parent         = line1,
 				Text           = "Crédit",
 				PreferredWidth = 60,
+				AutoToggle     = false,
 				Dock           = DockStyle.Right,
 				Visibility     = false,
 			};
 
+			//	A gauche.
 			this.radioDébitTVA = new RadioButton
 			{
 				Parent         = line1,
 				Text           = "Débit",
 				PreferredWidth = 60,
+				AutoToggle     = false,
 				Dock           = DockStyle.Right,
 				Visibility     = false,
+			};
+
+			this.radioDébitTVA.Clicked += delegate
+			{
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, "D");
+				this.EditorTextChanged ();
+			};
+
+			this.radioCréditTVA.Clicked += delegate
+			{
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, "C");
+				this.EditorTextChanged ();
 			};
 		}
 
@@ -695,10 +711,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (hasTVA)
 			{
-				bool TVAAuDébit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit) == "1";
+				bool TVAAuDébit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit) == "D";
 
 				this.radioDébitTVA .ActiveState =  TVAAuDébit ? ActiveState.Yes : ActiveState.No;
 				this.radioCréditTVA.ActiveState = !TVAAuDébit ? ActiveState.Yes : ActiveState.No;
+
+				bool locked = this.LockedTVA (this.selectedLine);
+
+				this.radioDébitTVA .Enable = !locked ||  TVAAuDébit;
+				this.radioCréditTVA.Enable = !locked || !TVAAuDébit;
 			}
 		}
 
@@ -712,6 +733,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var editionLine = this.dataAccessor.EditionLine[line] as JournalEditionLine;
 				return editionLine.HasTVA;
+			}
+		}
+
+		private bool LockedTVA(int line)
+		{
+			if (line < 0 || line >= this.dataAccessor.EditionLine.Count)
+			{
+				return false;
+			}
+			else
+			{
+				var editionLine = this.dataAccessor.EditionLine[line] as JournalEditionLine;
+				return editionLine.LockedTVA;
 			}
 		}
 

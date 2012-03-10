@@ -156,14 +156,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (écriture.MontantTVA);
 
 				case ColumnType.MontantTTC:
-					var montant = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.MontantTTC));
-
+					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.MontantTTC));
 					if (écriture.TotalAutomatique)
 					{
-						montant = montant.ApplyBold ();
+						montantTTC = montantTTC.ApplyBold ();
 					}
-
-					return montant;
+					return montantTTC;
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
@@ -175,7 +173,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA);
 
 				case ColumnType.TVAAuDébit:
-					return écriture.TVAAuDébit ? "1" : "0";
+					if (écriture.CodeTVA == null)
+					{
+						return FormattedText.Empty;
+					}
+					else
+					{
+						return écriture.TVAAuDébit ? "D" : "C";
+					}
 
 				case ColumnType.Journal:
 					return écriture.Journal.Nom;
@@ -281,6 +286,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
 			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
+			this.editionLine[line].SetText (ColumnType.TVAAuDébit, "D");
 
 			base.PrepareEditionLine (line);
 		}

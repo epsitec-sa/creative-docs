@@ -193,15 +193,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 					yield return new ColumnMapper (ColumnType.Pièce, 0.20, ContentAlignment.MiddleLeft, "Pièce", "Numéro de la pièce comptable correspondant à l'écriture", enable: enable);
 				}
 
-				yield return new ColumnMapper (ColumnType.Libellé,     0.80, ContentAlignment.MiddleLeft,  "Libellé",     "Libellé de l'écriture");
-				yield return new ColumnMapper (ColumnType.MontantTTC,  0.25, ContentAlignment.MiddleRight, "Montant TTC", "Montant de l'écriture");
-				yield return new ColumnMapper (ColumnType.MontantTVA,  0.20, ContentAlignment.MiddleRight, "TVA",         "Montant de la TVA",                 enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA));
-				yield return new ColumnMapper (ColumnType.MontantHT,   0.25, ContentAlignment.MiddleRight, "Montant HT",  "Montant de l'écriture sans la TVA", enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT));
-				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,  "Code TVA",    "Code TVA",                          enable: this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA));
-				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight, "Taux",        "Taux de la TVA",                    enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA));
-				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,  "Compte TVA",  "Compte de la TVA",                  enable: false);
-				//?yield return new ColumnMapper (ColumnType.TVAAuDébit,  0.10, ContentAlignment.MiddleLeft,  "DBG", "DBG", enable: false); //?
-				yield return new ColumnMapper (ColumnType.Journal,     0.25, ContentAlignment.MiddleLeft,  "Journal",     "Journal auquel appartient l'écriture");
+				yield return new ColumnMapper (ColumnType.Libellé,     0.80, ContentAlignment.MiddleLeft,   "Libellé",     "Libellé de l'écriture");
+				yield return new ColumnMapper (ColumnType.MontantTTC,  0.25, ContentAlignment.MiddleRight,  "Montant TTC", "Montant de l'écriture");
+				yield return new ColumnMapper (ColumnType.MontantTVA,  0.25, ContentAlignment.MiddleRight,  "TVA",         "Montant de la TVA",                 enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA));
+				yield return new ColumnMapper (ColumnType.MontantHT,   0.25, ContentAlignment.MiddleRight,  "Montant HT",  "Montant de l'écriture sans la TVA", enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT));
+				yield return new ColumnMapper (ColumnType.TVAAuDébit,  0.05, ContentAlignment.MiddleCenter, "",            "",                                  enable: false);
+				yield return new ColumnMapper (ColumnType.CodeTVA,     0.20, ContentAlignment.MiddleLeft,   "Code TVA",    "Code TVA",                          enable: this.settingsList.GetBool (SettingsType.EcritureEditeCodeTVA));
+				yield return new ColumnMapper (ColumnType.TauxTVA,     0.15, ContentAlignment.MiddleRight,  "Taux",        "Taux de la TVA",                    enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA));
+				yield return new ColumnMapper (ColumnType.CompteTVA,   0.25, ContentAlignment.MiddleLeft,   "Compte TVA",  "Compte de la TVA",                  enable: false);
+				yield return new ColumnMapper (ColumnType.Journal,     0.25, ContentAlignment.MiddleLeft,   "Journal",     "Journal auquel appartient l'écriture");
 			}
 		}
 
@@ -214,8 +214,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			bool hasTVA    = this.settingsList.GetBool (SettingsType.EcritureTVA);
 			bool compteTVA = this.settingsList.GetBool (SettingsType.EcritureMontreCompteTVA) && hasTVA;
 
-			this.ShowHideColumn (ColumnType.MontantHT,  hasTVA);
 			this.ShowHideColumn (ColumnType.MontantTVA, hasTVA);
+			this.ShowHideColumn (ColumnType.MontantHT,  hasTVA);
+			this.ShowHideColumn (ColumnType.TVAAuDébit, hasTVA);
 			this.ShowHideColumn (ColumnType.CodeTVA,    hasTVA);
 			this.ShowHideColumn (ColumnType.TauxTVA,    hasTVA);
 			this.ShowHideColumn (ColumnType.CompteTVA,  compteTVA);

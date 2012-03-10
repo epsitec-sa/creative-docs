@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Choisi le code TVA unique à utiliser (débit ou crédit).
 			ComptaCodeTVAEntity codeTVAEntity = null;
 			FormattedText codeTVA  = FormattedText.Null;
-			bool TVAAuDébit = false;
+			string TVAAuDébit = null;
 
 			if (codeTVADébit == FormattedText.Empty)
 			{
@@ -269,14 +269,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				codeTVAEntity = codeTVADébitEntity;
 				codeTVA       = codeTVADébit;
-				TVAAuDébit    = true;
+				TVAAuDébit    = "D";
 			}
 
 			if (!codeTVACrédit.IsNullOrEmpty)
 			{
 				codeTVAEntity = codeTVACréditEntity;
 				codeTVA       = codeTVACrédit;
-				TVAAuDébit    = false;
+				TVAAuDébit    = "C";
 			}
 
 			if (codeTVA != FormattedText.Null)  // changement ?
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					this.SetText (ColumnType.CodeTVA, codeTVA);
 					this.SetText (ColumnType.TauxTVA, (codeTVAEntity == null) ? null : Converters.PercentToString (codeTVAEntity.DefaultTauxValue));
-					this.SetText (ColumnType.TVAAuDébit, TVAAuDébit ? "1" : "0");
+					this.SetText (ColumnType.TVAAuDébit, TVAAuDébit);
 					this.CodeTVAChanged ();  // met à jour les autres colonnes
 				}
 			}
@@ -428,7 +428,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.CodeTVA,          JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
-			this.SetText (ColumnType.TVAAuDébit,       écriture.TVAAuDébit ? "1" : "0");
+			this.SetText (ColumnType.TVAAuDébit,       (écriture.CodeTVA == null) ? null : (écriture.TVAAuDébit ? "D" : "C"));
 			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
 
 			this.UpdateCodeTVAParameters ();
@@ -455,7 +455,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			écriture.TotalAutomatique = (this.GetText (ColumnType.TotalAutomatique) == "1");
 			écriture.CodeTVA          = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 			écriture.TauxTVA          = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
-			écriture.TVAAuDébit       = this.GetText (ColumnType.TVAAuDébit) == "1";
+			écriture.TVAAuDébit       = this.GetText (ColumnType.TVAAuDébit) == "D";
 
 			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
 			if (journal == null)  // dans un journal spécifique ?
@@ -541,8 +541,31 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				var code = this.GetText (ColumnType.CodeTVA);
+				var code = this.GetText (ColumnType.CodeTVA).ToSimpleText ();
 				return this.compta.CodesTVA.Where (x => x.Code == code).Any ();
+			}
+		}
+
+		public bool LockedTVA
+		{
+			get
+			{
+				var compteDébit  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+				var compteCrédit = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
+
+				int count = 0;
+
+				if (compteDébit != null && compteDébit.CodeTVA != null)
+				{
+					count++;
+				}
+
+				if (compteCrédit != null && compteCrédit.CodeTVA != null)
+				{
+					count++;
+				}
+
+				return count == 1;
 			}
 		}
 	}
