@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Data.Ech
 			public static readonly XName Child = EVd0002.Namespace + "child";
 			public static readonly XName MaritalStatus = EVd0002.Namespace + "maritalStatus";
 			public static readonly XName Nationality = EVd0002.Namespace + "nationality";
-			public static readonly XName Origin = EVd0002.Namespace + "origins";
+			public static readonly XName Origin = EVd0002.Namespace + "origin";
 			public static readonly XName Person = EVd0002.Namespace + "person";
 			public static readonly XName ReportedPerson = EVd0002.Namespace + "reportedPerson";
 
