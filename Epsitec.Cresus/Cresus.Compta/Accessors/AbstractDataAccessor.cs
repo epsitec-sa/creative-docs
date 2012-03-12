@@ -459,22 +459,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void StartDefaultLine()
 		{
-			if (this.controller.HasCreateCommand)
-			{
-				this.isCreation = false;
-				this.isModification = false;
+			this.isCreation = false;
+			this.isModification = false;
 
-				this.firstEditedRow = -1;
-				this.countEditedRow = 1;
+			this.firstEditedRow = -1;
+			this.countEditedRow = 1;
 
-				foreach (var e in this.editionLine)
-				{
-					e.Clear ();
-				}
-			}
-			else
+			foreach (var e in this.editionLine)
 			{
-				this.StartCreationLine ();
+				e.Clear ();
 			}
 		}
 

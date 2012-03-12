@@ -9,7 +9,7 @@ using Epsitec.Cresus.Compta.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Assistant.Data
+namespace Epsitec.Cresus.Compta.Assistants.Data
 {
 	/// <summary>
 	/// Données génériques pour un assistant de la comptabilité.

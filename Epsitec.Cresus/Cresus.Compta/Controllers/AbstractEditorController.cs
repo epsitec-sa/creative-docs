@@ -86,35 +86,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateToolbar()
 		{
-			if (this.controller.HasCreateCommand)
-			{
-				this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty && this.dataAccessor.IsEditionCreationEnable);
-				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
-				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsActive);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty && this.dataAccessor.IsEditionCreationEnable);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsActive);
 
+			if (this.assistantController == null)
+			{
 				if (this.dataAccessor.IsActive)
 				{
 					this.editorFrameBox.Enable = true;
 					this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
 
+					this.editorAssistantFrameBox .Visibility = false;
 					this.editorForegroundFrameBox.Visibility = false;
+					this.editorFrameBox          .Visibility = true;
+					this.editorBackgroundFrameBox.Visibility = true;
 				}
-				else
+				else  // mode 'rien' ?
 				{
 					this.editorFrameBox.Enable = false;
 					this.editorFrameBox.BackColor = Color.Empty;
 
-					this.editorForegroundFrameBox.Visibility = true;
+					this.editorAssistantFrameBox .Visibility = false;
+					this.editorForegroundFrameBox.Visibility = this.HasAssistant;
+					this.editorFrameBox          .Visibility = false;
+					this.editorBackgroundFrameBox.Visibility = this.HasAssistant;
 				}
 			}
 			else
 			{
-				this.controller.SetCommandEnable (Res.Commands.Edit.Create, false);
-				this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
-				this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, true);
-
-				this.editorFrameBox.BackColor = this.dataAccessor.IsCreation ? UIBuilder.CreationBackColor : UIBuilder.ModificationBackColor;
+				this.editorAssistantFrameBox .Visibility = true;
 				this.editorForegroundFrameBox.Visibility = false;
+				this.editorFrameBox          .Visibility = false;
+				this.editorBackgroundFrameBox.Visibility = true;
 			}
 
 			this.controller.SetCommandEnable (Res.Commands.Edit.Up,        !this.dirty && this.arrayController.SelectedRow != -1 && !this.dataAccessor.JustCreated && this.dataAccessor.IsEditionCreationEnable);
@@ -279,6 +283,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
+			if (this.assistantController != null)
+			{
+				this.assistantController = null;
+			}
+
 			this.dataAccessor.UpdateEditionLine ();
 			this.EditionDataToWidgets (ignoreFocusField: false);
 
@@ -321,6 +330,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller.GetCommandEnable (Res.Commands.Edit.Cancel))
 			{
+				if (this.assistantController != null)
+				{
+					this.assistantController = null;
+				}
+
 				this.dirty = false;
 				this.arrayController.SelectedRow = -1;
 				this.dataAccessor.StartDefaultLine ();
@@ -589,7 +603,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 								if (this.arrayController.GetColumnGeometry (mapper.Column, out left, out width))
 								{
 									fieldController.Box.Visibility = true;
-									fieldController.Box.Margins = new Margins (left, 0, 0, 0);
+									fieldController.Box.Margins = new Margins (left+1, 0, 0, 0);
 									fieldController.Box.PreferredWidth = width-1;
 								}
 								else
@@ -834,7 +848,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateForegroundEditorUI()
 		{
 			//	Crée 3 'calques' exactement les uns sur les autres.
-			//	Dessus:		this.editorForegroundFrameBox	surcouche cliquable, présente (mais invisible) seulement en mode 'rien'
+			//	Dessus:		this.editorAssistantFrameBox	pour l'assistant
+			//				this.editorForegroundFrameBox	choix de l'assistant, présent en mode 'rien'
 			//				this.editorFrameBox				zone éditable
 			//	Dessous:	this.editorBackgroundFrameBox	parent commun toujours présent
 			this.editorFrameBox = new FrameBox
@@ -845,21 +860,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.editorForegroundFrameBox = new FrameBox
 			{
+				Parent    = this.editorBackgroundFrameBox,
+				BackColor = Color.FromBrightness (0.95),
+				Anchor    = AnchorStyles.All,
+			};
+
+			this.editorAssistantFrameBox = new FrameBox
+			{
 				Parent = this.editorBackgroundFrameBox,
 				Anchor = AnchorStyles.All,
 			};
 
-			this.CreateForegroundEditorUI (this.editorForegroundFrameBox);
-
-			this.editorForegroundFrameBox.Clicked += delegate
-			{
-				this.CreateAction ();
-			};
-
-			//?ToolTip.Default.SetToolTip (this.editorForegroundFrameBox, "Cliquez ici pour créer une nouvelle ligne");
+			this.CreateAssistantEditorUI ();
 		}
 
-		protected virtual void CreateForegroundEditorUI(Widget parent)
+		protected virtual bool HasAssistant
+		{
+			get
+			{
+				return false;
+			}
+		}
+
+		protected virtual void CreateAssistantEditorUI()
 		{
 		}
 
@@ -942,9 +965,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected bool											dirty;
 		protected bool											hasError;
 		protected bool											duplicate;
-		protected FrameBox										editorBackgroundFrameBox;
+
+		protected FrameBox										editorAssistantFrameBox;
 		protected FrameBox										editorForegroundFrameBox;
 		protected FrameBox										editorFrameBox;
+		protected FrameBox										editorBackgroundFrameBox;
+
 		protected AbstractAssistantController					assistantController;
 	}
 }

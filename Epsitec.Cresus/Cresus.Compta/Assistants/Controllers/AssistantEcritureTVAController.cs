@@ -17,6 +17,7 @@ using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Assistants.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -31,7 +32,17 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 		public AssistantEcritureTVAController(AbstractController controller)
 			: base (controller)
 		{
+			this.editionLine = new AssistantEcritureTVA (this.controller);
+			this.data = new AssistantEcritureTVAData ();
 
+			var écritureTVAData = this.data as AssistantEcritureTVAData;
+			écritureTVAData.Date      = this.controller.MainWindowController.Période.ProchaineDate;
+			//?écritureTVAData.Pièce     = this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal);
+			écritureTVAData.DateDébut = Date.Today;
+			écritureTVAData.DateFin   = Date.Today;
+			écritureTVAData.Journal   = this.compta.Journaux.FirstOrDefault ();
+
+			this.editionLine.EntityToData (this.data);
 		}
 
 
@@ -46,6 +57,15 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 			};
 
 			int tabIndex = 0;
+
+			new StaticText
+			{
+				Parent          = frame,
+				FormattedText   = "Création d'une écriture pour une prestation avec TVA sur une période :",
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (1, 0, 1, 0),
+			};
 
 			var line0 = new FrameBox
 			{
@@ -167,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 			foreach (var mapper in this.columnMappers.Where (x => x.LineLayout == line))
 			{
 				bool docked = false;
-				bool date = false;
+				bool jours = false;
 
 				if (mapper.Column == ColumnType.DateDébut ||
 					mapper.Column == ColumnType.DateFin   )
@@ -183,7 +203,23 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 					};
 
 					docked = true;
-					date = true;
+				}
+
+				if (mapper.Column == ColumnType.Jours1 ||
+					mapper.Column == ColumnType.Jours2)
+				{
+					new StaticText
+					{
+						Parent           = parent,
+						FormattedText    = mapper.Description,
+						ContentAlignment = ContentAlignment.MiddleRight,
+						PreferredWidth   = 200,
+						Dock             = DockStyle.Left,
+						Margins          = new Margins (0, 5, 0, 0),
+					};
+
+					docked = true;
+					jours = true;
 				}
 
 				AbstractFieldController field;
@@ -206,22 +242,22 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 					new StaticText
 					{
 						Parent           = parent,
-						FormattedText    = mapper.Description,
+						FormattedText    = "jours",
 						ContentAlignment = ContentAlignment.MiddleLeft,
-						PreferredWidth   = 50,
+						PreferredWidth   = 40,
 						Dock             = DockStyle.Left,
 						Margins          = new Margins (5, 0, 0, 0),
 					};
 
 					docked = true;
+					jours = true;
 				}
 
 				if (docked)
 				{
-					field.Box.PreferredWidth = date ? 60 : 35;
+					field.Box.PreferredWidth = jours ? 35 : 60;
 					field.Box.Anchor = AnchorStyles.None;
 					field.Box.Dock = DockStyle.Left;
-					field.Box.Margins = new Margins (date ? 0:1, 0, 0, 0);
 				}
 
 				if (mapper.Column == ColumnType.Jours1      ||
@@ -249,34 +285,32 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 
 		private void CompteChanged()
 		{
+			this.EditorTextChanged ();
 		}
 
 		private void CodeTVAChanged()
 		{
+			this.EditorTextChanged ();
 		}
 
 		private void MontantTTCChanged()
 		{
+			this.EditorTextChanged ();
 		}
 
 		private void TauxTVAChanged()
 		{
+			this.EditorTextChanged ();
 		}
 
 		private void MontantBrutChanged()
 		{
+			this.EditorTextChanged ();
 		}
 
 		private void MontantTVAChanged()
 		{
-		}
-
-		private void MontantChanged()
-		{
-		}
-
-		private void EditorTextChanged()
-		{
+			this.EditorTextChanged ();
 		}
 
 
@@ -319,16 +353,16 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 
 			this.columnMappers.Add (new ColumnMapper (ColumnType.DateDébut, "Début prestation", "Date de début de la prestation", lineLayout: 1));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.DateFin, "Fin prestation", "Date de fin de la prestation", lineLayout: 2));
-			this.columnMappers.Add (new ColumnMapper (ColumnType.Jours1, "jours", "Nombre de jours", lineLayout: 1, enable: false));
-			this.columnMappers.Add (new ColumnMapper (ColumnType.Jours2, "jours", "Nombre de jours", lineLayout: 2, enable: false));
-			this.columnMappers.Add (new ColumnMapper (ColumnType.TauxTVA1, "Taux", "Taux de la TVA", lineLayout: 1, enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA)));
-			this.columnMappers.Add (new ColumnMapper (ColumnType.TauxTVA2, "Taux", "Taux de la TVA", lineLayout: 2, enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA)));
+			this.columnMappers.Add (new ColumnMapper (ColumnType.Jours1, "Première écriture", "Nombre de jours", lineLayout: 1, enable: false));
+			this.columnMappers.Add (new ColumnMapper (ColumnType.Jours2, "Deuxième écriture", "Nombre de jours", lineLayout: 2, enable: false));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantTTC1, "Montant TTC", "Montant de l'écriture", lineLayout: 1));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantTTC2, "Montant TTC", "Montant de l'écriture", lineLayout: 2));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantTVA1, "TVA", "Montant de la TVA", lineLayout: 1, enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA)));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantTVA2, "TVA", "Montant de la TVA", lineLayout: 2, enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA)));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantHT1, "Montant HT", "Montant de l'écriture sans la TVA", lineLayout: 1, enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT)));
 			this.columnMappers.Add (new ColumnMapper (ColumnType.MontantHT2, "Montant HT", "Montant de l'écriture sans la TVA", lineLayout: 2, enable: this.settingsList.GetBool (SettingsType.EcritureEditeMontantHT)));
+			this.columnMappers.Add (new ColumnMapper (ColumnType.TauxTVA1, "Taux", "Taux de la TVA", lineLayout: 1, enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA)));
+			this.columnMappers.Add (new ColumnMapper (ColumnType.TauxTVA2, "Taux", "Taux de la TVA", lineLayout: 2, enable: this.settingsList.GetBool (SettingsType.EcritureEditeTauxTVA)));
 		}
 	}
 }

@@ -35,12 +35,14 @@ namespace Epsitec.Cresus.Compta.Assistants.Data
 			this.dataDict.Add (ColumnType.DateFin,     new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Jours1,      new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Jours2,      new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.TauxTVA1,    new EditionData (this.controller, this.ValidateTauxTVA));
-			this.dataDict.Add (ColumnType.TauxTVA2,    new EditionData (this.controller, this.ValidateTauxTVA));
+			this.dataDict.Add (ColumnType.MontantTTC1, new EditionData (this.controller, this.ValidateMontantTVA));
+			this.dataDict.Add (ColumnType.MontantTTC2, new EditionData (this.controller, this.ValidateMontantTVA));
 			this.dataDict.Add (ColumnType.MontantTVA1, new EditionData (this.controller, this.ValidateMontantTVA));
 			this.dataDict.Add (ColumnType.MontantTVA2, new EditionData (this.controller, this.ValidateMontantTVA));
 			this.dataDict.Add (ColumnType.MontantHT1,  new EditionData (this.controller, this.ValidateMontantTVA));
 			this.dataDict.Add (ColumnType.MontantHT2,  new EditionData (this.controller, this.ValidateMontantTVA));
+			this.dataDict.Add (ColumnType.TauxTVA1,    new EditionData (this.controller, this.ValidateTauxTVA));
+			this.dataDict.Add (ColumnType.TauxTVA2,    new EditionData (this.controller, this.ValidateTauxTVA));
 		}
 
 
@@ -165,5 +167,99 @@ namespace Epsitec.Cresus.Compta.Assistants.Data
 		#endregion
 
 
+		public override void EntityToData(AbstractData data)
+		{
+			var écritureTVAData = data as AssistantEcritureTVAData;
+
+			this.SetText (ColumnType.Date,       Converters.DateToString (écritureTVAData.Date));
+			this.SetText (ColumnType.Débit,      AssistantEcritureTVA.GetNuméro (écritureTVAData.Débit));
+			this.SetText (ColumnType.Crédit,     AssistantEcritureTVA.GetNuméro (écritureTVAData.Crédit));
+			this.SetText (ColumnType.Pièce,      écritureTVAData.Pièce);
+			this.SetText (ColumnType.Libellé,    écritureTVAData.Libellé);
+			this.SetText (ColumnType.MontantTTC, Converters.MontantToString (écritureTVAData.MontantTTC));
+			this.SetText (ColumnType.CodeTVA,    JournalEditionLine.GetCodeTVADescription (écritureTVAData.CodeTVA));
+			this.SetText (ColumnType.Journal,    écritureTVAData.Journal.Nom);
+
+			this.SetText (ColumnType.DateDébut,   Converters.DateToString (écritureTVAData.DateDébut));
+			this.SetText (ColumnType.DateFin,     Converters.DateToString (écritureTVAData.DateFin));
+			this.SetText (ColumnType.MontantTTC1, Converters.MontantToString (écritureTVAData.MontantTTC1));
+			this.SetText (ColumnType.MontantTTC2, Converters.MontantToString (écritureTVAData.MontantTTC2));
+			this.SetText (ColumnType.MontantTVA1, Converters.MontantToString (écritureTVAData.MontantTVA1));
+			this.SetText (ColumnType.MontantTVA2, Converters.MontantToString (écritureTVAData.MontantTVA2));
+			this.SetText (ColumnType.MontantHT1,  Converters.MontantToString (écritureTVAData.MontantHT1));
+			this.SetText (ColumnType.MontantHT2,  Converters.MontantToString (écritureTVAData.MontantHT2));
+			this.SetText (ColumnType.TauxTVA1,    Converters.PercentToString (écritureTVAData.TauxTVA1));
+			this.SetText (ColumnType.TauxTVA2,    Converters.PercentToString (écritureTVAData.TauxTVA2));
+		}
+
+		public override void DataToEntity(AbstractData data)
+		{
+			var écritureTVAData = data as AssistantEcritureTVAData;
+
+			Date? date;
+			if (this.période.ParseDate (this.GetText (ColumnType.Date), out date))
+			{
+				écritureTVAData.Date = date.Value;
+			}
+
+			écritureTVAData.Débit      = AssistantEcritureTVA.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+			écritureTVAData.Crédit     = AssistantEcritureTVA.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
+			écritureTVAData.Pièce      = this.GetText (ColumnType.Pièce);
+			écritureTVAData.Libellé    = this.GetText (ColumnType.Libellé);
+			écritureTVAData.MontantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
+			écritureTVAData.CodeTVA    = JournalEditionLine.TextToCodeTVA (this.compta, this.GetText (ColumnType.CodeTVA));
+
+			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
+			if (journal == null)  // dans un journal spécifique ?
+			{
+				//	Normalement, le journal a déjà été initialisé. Mais si ce n'est pas le cas, on met le premier,
+				//	car il est impératif qu'une écriture ait un journal !
+				if (écritureTVAData.Journal == null)
+				{
+					écritureTVAData.Journal = this.compta.Journaux.FirstOrDefault ();
+				}
+			}
+			else  // mode "tous les journaux" ?
+			{
+				//	Utilise le journal choisi par l'utilisateur dans le widget ad-hoc.
+				écritureTVAData.Journal = journal;
+			}
+
+			écritureTVAData.DateDébut   = Converters.ParseDate (this.GetText (ColumnType.DateDébut));
+			écritureTVAData.DateFin     = Converters.ParseDate (this.GetText (ColumnType.DateFin));
+			écritureTVAData.MontantTTC1 = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC1));
+			écritureTVAData.MontantTTC2 = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC2));
+			écritureTVAData.MontantTVA1 = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA1));
+			écritureTVAData.MontantTVA2 = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA2));
+			écritureTVAData.MontantHT1  = Converters.ParseMontant (this.GetText (ColumnType.MontantHT1));
+			écritureTVAData.MontantHT2  = Converters.ParseMontant (this.GetText (ColumnType.MontantHT2));
+			écritureTVAData.TauxTVA1    = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA1));
+			écritureTVAData.TauxTVA2    = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA2));
+		}
+
+
+		private static FormattedText GetNuméro(ComptaCompteEntity compte)
+		{
+			if (compte == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return compte.Numéro;
+			}
+		}
+
+		private static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
+		{
+			if (numéro.IsNullOrEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			}
+		}
 	}
 }

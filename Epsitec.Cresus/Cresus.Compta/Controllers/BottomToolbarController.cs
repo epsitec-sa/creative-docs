@@ -58,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = BottomToolbarController.toolbarHeight,
 				Dock             = DockStyle.Fill,
+				Margins          = new Margins (1, 0, 0, 0),
 			};
 
 			this.editionLabel = new StaticText

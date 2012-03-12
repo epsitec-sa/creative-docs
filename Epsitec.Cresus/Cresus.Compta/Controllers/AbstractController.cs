@@ -278,15 +278,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasCreateCommand
-		{
-			//	Avec false, la commande Edit.Cancel passe automatiquement en mode 'création'.
-			get
-			{
-				return true;
-			}
-		}
-
 		public virtual bool HasArray
 		{
 			get
@@ -926,14 +917,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			if (row == -1)
-			{
-				if (this.editorController != null && !this.editorController.Duplicate && !this.HasCreateCommand)
-				{
-					this.dataAccessor.StartCreationLine ();
-				}
-			}
-			else
+			if (row != -1)
 			{
 				this.dataAccessor.StartModificationLine (row);
 			}

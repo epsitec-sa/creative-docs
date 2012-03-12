@@ -48,6 +48,12 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 			return null;
 		}
 
+		public void UpdateContent()
+		{
+			this.EditionDataToWidgets (ignoreFocusField: true);
+			this.EditorValidate ();
+		}
+
 		public virtual void UpdateGeometry()
 		{
 			foreach (var mapper in this.columnMappers.Where (x => x.LineLayout == 0))
@@ -66,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 				if (this.arrayController.GetColumnGeometry (columnTypeModel, out left, out width))
 				{
 					fieldController.Box.Visibility = true;
-					fieldController.Box.Margins = new Margins (left, 0, 0, 0);
+					fieldController.Box.Margins = new Margins (left+1, 0, 0, 0);
 					fieldController.Box.PreferredWidth = width-1;
 				}
 				else
@@ -76,14 +82,75 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 			}
 		}
 
-		private AbstractFieldController GetFieldController(ColumnType columnType)
+
+		protected void EditorTextChanged()
 		{
-			return this.fieldControllers.Where (x => x.ColumnMapper.Column == columnType).FirstOrDefault ();
+			this.controller.EditorController.Dirty = true;
+
+			//?this.UpdateEditionWidgets ();
+			this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
+
+			this.EditorValidate ();
+			//?this.UpdateToolbar ();
+			//?this.UpdateEditorInfo ();
+			//?this.UpdateInsertionRow ();
+		}
+
+		private void EditionDataToWidgets(bool ignoreFocusField)
+		{
+			//	Effectue le transfert this.dataAccessor.EditionData -> widgets éditables.
+			using (this.controller.IgnoreChanges.Enter ())
+			{
+				foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+				{
+					var controller = this.GetFieldController (mapper.Column);
+
+					if (controller != null)
+					{
+						controller.EditionData = this.editionLine.GetData (mapper.Column);
+
+						//	Le widget en cours d'édition ne doit absolument pas être modifié.
+						//	Par exemple, s'il contient "123" et qu'on a tapé "4", la chaîne actuellement contenue
+						//	est "1234". Si on le mettait à jour, il contiendrait "1234.00", ce qui serait une
+						//	catastrophe !
+						if (!ignoreFocusField || !controller.HasFocus)
+						{
+							controller.EditionDataToWidget ();
+						}
+					}
+				}
+			}
+		}
+
+		private void EditorValidate()
+		{
+			this.hasError = false;
+
+			foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+			{
+				var controller = this.GetFieldController (mapper.Column);
+
+				if (controller != null)
+				{
+					controller.Validate ();
+
+					if (controller.EditionData != null && controller.EditionData.HasError)
+					{
+						this.hasError = true;
+					}
+				}
+			}
 		}
 
 
 		protected virtual void InitializeColumnMappers()
 		{
+		}
+
+
+		private AbstractFieldController GetFieldController(ColumnType columnType)
+		{
+			return this.fieldControllers.Where (x => x.ColumnMapper.Column == columnType).FirstOrDefault ();
 		}
 
 
@@ -96,5 +163,9 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 		protected readonly SettingsList							settingsList;
 		protected readonly List<ColumnMapper>					columnMappers;
 		protected readonly List<AbstractFieldController>		fieldControllers;
+
+		protected AbstractEditionLine							editionLine;
+		protected AbstractData									data;
+		protected bool											hasError;
 	}
 }

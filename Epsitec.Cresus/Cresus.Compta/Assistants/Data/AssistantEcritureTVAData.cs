@@ -4,17 +4,18 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Assistant.Data
+namespace Epsitec.Cresus.Compta.Assistants.Data
 {
 	/// <summary>
 	/// Données génériques pour l'assistant "écriture avec TVA" la comptabilité.
 	/// </summary>
-	public class AssistantEcritureTVAData : AbstractAssistantData
+	public class AssistantEcritureTVAData : AbstractData
 	{
 		public Date Date
 		{
@@ -46,13 +47,19 @@ namespace Epsitec.Cresus.Compta.Assistant.Data
 			set;
 		}
 
-		public decimal Montant
+		public decimal MontantTTC
 		{
 			get;
 			set;
 		}
 
 		public ComptaCodeTVAEntity CodeTVA
+		{
+			get;
+			set;
+		}
+
+		public ComptaJournalEntity Journal
 		{
 			get;
 			set;
@@ -71,37 +78,49 @@ namespace Epsitec.Cresus.Compta.Assistant.Data
 			set;
 		}
 
-		public decimal TauxTVA1
+		public decimal? MontantTTC1
 		{
 			get;
 			set;
 		}
 
-		public decimal TauxTVA2
+		public decimal? MontantTTC2
 		{
 			get;
 			set;
 		}
 
-		public decimal MontantTVA1
+		public decimal? MontantTVA1
 		{
 			get;
 			set;
 		}
 
-		public decimal MontantTVA2
+		public decimal? MontantTVA2
 		{
 			get;
 			set;
 		}
 
-		public decimal MontantHT1
+		public decimal? MontantHT1
 		{
 			get;
 			set;
 		}
 
-		public decimal MontantHT2
+		public decimal? MontantHT2
+		{
+			get;
+			set;
+		}
+
+		public decimal? TauxTVA1
+		{
+			get;
+			set;
+		}
+
+		public decimal? TauxTVA2
 		{
 			get;
 			set;

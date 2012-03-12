@@ -974,17 +974,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateForegroundEditorUI(Widget parent)
+		protected override bool HasAssistant
+		{
+			get
+			{
+				return true;
+			}
+		}
+
+		protected override void CreateAssistantEditorUI()
 		{
 			bool hasTVA = this.settingsList.GetBool (SettingsType.EcritureTVA);
-			parent.BackColor =  Color.FromBrightness (0.95);
-			parent.Padding = new Margins (10, 10, 20, 20);
 
 			{
-				var button = UIBuilder.CreateButton (parent, "Edit.Create", "Créer normalement une écriture");
+				var button = UIBuilder.CreateButton (this.editorForegroundFrameBox, "Edit.Create", "Normal");
 				button.PreferredWidth = 250;
 				button.Dock = DockStyle.Left;
-				button.Margins = new Margins (0, 20, 0, 0);
 
 				button.Clicked += delegate
 				{
@@ -994,26 +999,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (hasTVA)
 			{
-				var button = UIBuilder.CreateButton (parent, "Edit.Create", "Créer une écriture avec TVA");
+				var button = UIBuilder.CreateButton (this.editorForegroundFrameBox, "Edit.Create", "Prestation avec TVA sur une période");
 				button.PreferredWidth = 250;
 				button.Dock = DockStyle.Left;
-				button.Margins = new Margins (0, 20, 0, 0);
 
 				button.Clicked += delegate
 				{
-					this.CreateAssistant (parent);
+					this.CreateAssistant ();
+					this.CreateAction ();
 				};
 			}
 		}
 
-		private void CreateAssistant(Widget parent)
+		private void CreateAssistant()
 		{
-			parent.Children.Clear ();
-			parent.BackColor =  UIBuilder.CreationBackColor;
-			parent.Padding = new Margins (0);
+			this.editorAssistantFrameBox.Children.Clear ();
+			this.editorAssistantFrameBox.BackColor =  UIBuilder.CreationBackColor;
+			this.editorAssistantFrameBox.Padding = new Margins (0);
 
 			this.assistantController = new Assistants.Controllers.AssistantEcritureTVAController (this.controller);
-			this.assistantController.CreateUI (parent);
+			this.assistantController.CreateUI (this.editorAssistantFrameBox);
+			this.assistantController.UpdateContent ();
 			this.assistantController.UpdateGeometry ();
 		}
 

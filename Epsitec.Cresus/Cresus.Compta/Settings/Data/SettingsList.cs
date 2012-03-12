@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData (SettingsGroup.Global, SettingsType.GlobalRemoveConfirmation, true));
 										     
 			//	Réglages pur les écritures :
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontantZéro,     true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontantZéro,     false));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
