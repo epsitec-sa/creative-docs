@@ -32,15 +32,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		public override void CreateUI(Widget parent)
 		{
 			this.CreateLabelUI (parent);
-
-			this.box = new FrameBox
-			{
-				Parent          = parent,
-				DrawFullFrame   = true,
-				PreferredHeight = 20,
-				Dock            = this.HasRightEditor ? DockStyle.Top : DockStyle.Left,
-				Margins         = this.BoxMargins,
-			};
+			this.CreateBoxUI (parent);
 
 			this.container = new FrameBox
 			{

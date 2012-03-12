@@ -29,7 +29,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true, bool enable = true)
+		public ColumnMapper(ColumnType column, FormattedText description, FormattedText tooltip, bool enable = true, bool show = true, int lineLayout = 0)
+			: this (column, 0, ContentAlignment.MiddleLeft, description, tooltip, enable: enable, show: show, lineLayout: lineLayout)
+		{
+			//	Ce constructeur est utilisé par les assistants.
+		}
+
+		public ColumnMapper(ColumnType column, double relativeWidth, ContentAlignment alignment, FormattedText description, FormattedText tooltip, bool show = true, bool hideForSearch = false, bool edition = true, bool enable = true, int lineLayout = 0)
 		{
 			this.Column        = column;
 			this.RelativeWidth = relativeWidth;
@@ -40,6 +46,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.HideForSearch = hideForSearch;
 			this.Edition       = edition;
 			this.Enable        = enable;
+			this.LineLayout    = lineLayout;
 		}
 
 		public ColumnType Column
@@ -91,6 +98,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public bool Enable
+		{
+			get;
+			private set;
+		}
+
+		public int LineLayout
 		{
 			get;
 			private set;

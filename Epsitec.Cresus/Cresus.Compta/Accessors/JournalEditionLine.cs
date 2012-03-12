@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public void MontantChanged()
+		public void MontantTTCChanged()
 		{
 			var montantTVA = Converters.ParseMontant (this.GetText (ColumnType.MontantTVA));
 			var montant    = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
@@ -376,7 +376,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.MontantChanged ();
+					this.MontantTTCChanged ();
 				}
 
 				this.SetText (ColumnType.CompteTVA, JournalEditionLine.GetCodeTVACompte (codeTVA));
@@ -406,7 +406,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					this.MontantChanged ();
+					this.MontantTTCChanged ();
 				}
 			}
 		}

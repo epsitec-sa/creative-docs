@@ -249,8 +249,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.TauxTVA)
 				{
-					//?field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
-					//?field.CreateUI (editorFrame);
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
 					field.CreateUI (editorFrame);
 				}
@@ -274,7 +272,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.MontantTTC)
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantTTCChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
@@ -333,10 +331,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.EditorTextChanged ();
 		}
 
-		private void MontantChanged()
+		private void MontantTTCChanged()
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.MontantChanged ();
+			editionLine.MontantTTCChanged ();
 			this.EditorTextChanged ();
 		}
 
@@ -973,6 +971,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return this.settingsList.GetBool (SettingsType.EcriturePlusieursPièces);
 			}
+		}
+
+
+		protected override void CreateForegroundEditorUI(Widget parent)
+		{
+			bool hasTVA = this.settingsList.GetBool (SettingsType.EcritureTVA);
+			parent.BackColor =  Color.FromBrightness (0.95);
+			parent.Padding = new Margins (10, 10, 20, 20);
+
+			{
+				var button = UIBuilder.CreateButton (parent, "Edit.Create", "Créer normalement une écriture");
+				button.PreferredWidth = 250;
+				button.Dock = DockStyle.Left;
+				button.Margins = new Margins (0, 20, 0, 0);
+
+				button.Clicked += delegate
+				{
+					this.CreateAction ();
+				};
+			}
+
+			if (hasTVA)
+			{
+				var button = UIBuilder.CreateButton (parent, "Edit.Create", "Créer une écriture avec TVA");
+				button.PreferredWidth = 250;
+				button.Dock = DockStyle.Left;
+				button.Margins = new Margins (0, 20, 0, 0);
+
+				button.Clicked += delegate
+				{
+					this.CreateAssistant (parent);
+				};
+			}
+		}
+
+		private void CreateAssistant(Widget parent)
+		{
+			parent.Children.Clear ();
+			parent.BackColor =  UIBuilder.CreationBackColor;
+			parent.Padding = new Margins (0);
+
+			this.assistantController = new Assistants.Controllers.AssistantEcritureTVAController (this.controller);
+			this.assistantController.CreateUI (parent);
+			this.assistantController.UpdateGeometry ();
 		}
 
 

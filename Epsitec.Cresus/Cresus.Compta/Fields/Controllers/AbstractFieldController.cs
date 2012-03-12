@@ -37,6 +37,14 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 		}
 
+		public ColumnMapper ColumnMapper
+		{
+			get
+			{
+				return this.columnMapper;
+			}
+		}
+
 		public EditionData EditionData
 		{
 			get
@@ -140,6 +148,26 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 					Dock          = DockStyle.Top,
 					Margins       = new Margins (0, 0, 0, 2),
 				};
+			}
+		}
+
+		protected void CreateBoxUI(Widget parent)
+		{
+			this.box = new FrameBox
+			{
+				Parent          = parent,
+				DrawFullFrame   = true,
+				PreferredHeight = 20,
+				Margins         = this.BoxMargins,
+			};
+
+			if (this.HasRightEditor)
+			{
+				this.box.Dock = DockStyle.Top;
+			}
+			else
+			{
+				this.box.Anchor = AnchorStyles.Left;
 			}
 		}
 

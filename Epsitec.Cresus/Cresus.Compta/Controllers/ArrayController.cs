@@ -106,6 +106,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public bool GetColumnGeometry(ColumnType columnType, out double left, out double width)
+		{
+			//	Retourne la géométrie d'une colonne. Retourne false si la colonne n'est pas visible.
+			int index = this.GetColumnIndex (columnType);
+
+			if (index != -1 && this.columnMappers[index].Show)
+			{
+				left = 0;
+				for (int column = 0; column < index; column++)
+				{
+					left += this.GetColumnsAbsoluteWidth (column);
+				}
+
+				width = this.GetColumnsAbsoluteWidth (index);
+
+				return true;
+			}
+			else
+			{
+				left = 0;
+				width = 0;
+
+				return false;
+			}
+		}
+
+
 		public void MoveSelection(int direction)
 		{
 			int firstRow, countRow, sel;

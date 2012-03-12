@@ -14,6 +14,7 @@ using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Fields.Controllers;
+using Epsitec.Cresus.Compta.Assistants.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -560,6 +561,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				//?this.UpdateArrayColumns ();  // provoque un Stack overflow !!!
 
+#if false
 				int columnCount = this.columnMappers.Where (x => x.Show && x.Edition).Count ();
 
 				for (int line = 0; line < this.fieldControllers.Count; line++)
@@ -572,6 +574,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 						}
 					}
 				}
+#else
+				if (this.assistantController == null)
+				{
+					for (int line = 0; line < this.fieldControllers.Count; line++)
+					{
+						foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+						{
+							var fieldController = this.fieldControllers[line].Where (x => x.ColumnMapper.Column == mapper.Column).FirstOrDefault ();
+
+							if (fieldController != null)
+							{
+								double left, width;
+								if (this.arrayController.GetColumnGeometry (mapper.Column, out left, out width))
+								{
+									fieldController.Box.Visibility = true;
+									fieldController.Box.Margins = new Margins (left, 0, 0, 0);
+									fieldController.Box.PreferredWidth = width-1;
+								}
+								else
+								{
+									fieldController.Box.Visibility = false;
+								}
+							}
+						}
+					}
+				}
+				else
+				{
+					this.assistantController.UpdateGeometry ();
+				}
+#endif
 			}
 		}
 
@@ -816,12 +849,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Anchor = AnchorStyles.All,
 			};
 
+			this.CreateForegroundEditorUI (this.editorForegroundFrameBox);
+
 			this.editorForegroundFrameBox.Clicked += delegate
 			{
 				this.CreateAction ();
 			};
 
-			ToolTip.Default.SetToolTip (this.editorForegroundFrameBox, "Cliquez ici pour créer une nouvelle ligne");
+			//?ToolTip.Default.SetToolTip (this.editorForegroundFrameBox, "Cliquez ici pour créer une nouvelle ligne");
+		}
+
+		protected virtual void CreateForegroundEditorUI(Widget parent)
+		{
 		}
 
 
@@ -906,5 +945,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected FrameBox										editorBackgroundFrameBox;
 		protected FrameBox										editorForegroundFrameBox;
 		protected FrameBox										editorFrameBox;
+		protected AbstractAssistantController					assistantController;
 	}
 }

@@ -41,7 +41,23 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return toolbar;
 		}
 
-	
+
+		public static Button CreateButton(Widget parent, string icon, FormattedText description)
+		{
+			//	Crée un gros bouton contenant à gauche une icône, suivi d'un texte libre.
+			icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>  ", UIBuilder.GetResourceIconUri (icon));
+
+			return new IconButton
+			{
+				Parent           = parent,
+				FormattedText    = "  " + icon + "  " + description,
+				ContentAlignment = ContentAlignment.MiddleLeft,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredHeight  = 42,
+				Dock             = DockStyle.Top,
+			};
+		}
+
 		public static Button CreateButton(Widget parent, Command command, FormattedText description)
 		{
 			//	Crée un gros bouton contenant à gauche l'icône de la commande, suivi d'un texte libre indépendant de la commande.
