@@ -18,7 +18,7 @@ using System.Diagnostics;
 using System.Linq;
 
 
-namespace Epsitec.Aider.Data.Ech
+namespace Epsitec.Aider.Data.ECh
 {
 
 

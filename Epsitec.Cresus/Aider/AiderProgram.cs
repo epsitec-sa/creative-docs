@@ -2,7 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Aider.Data;
-using Epsitec.Aider.Data.Ech;
+using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Core;
@@ -28,7 +28,7 @@ namespace Epsitec.Aider
 #endif
 
 #if false
-			AiderProgram.TestEchImporter ();
+			AiderProgram.TestEChImporter ();
 			return;
 #endif
 
@@ -95,7 +95,7 @@ namespace Epsitec.Aider
 			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);		
 		}
 
-		private static void TestEchImporter()
+		private static void TestEChImporter()
 		{
 			new eCH_Importer ().ParseAll ();
 		}

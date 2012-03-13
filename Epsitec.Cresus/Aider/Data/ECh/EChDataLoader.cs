@@ -19,7 +19,7 @@ using System.Reflection;
 using System.Xml.Linq;
 
 
-namespace Epsitec.Aider.Data.Ech
+namespace Epsitec.Aider.Data.ECh
 {
 
 
@@ -105,7 +105,7 @@ namespace Epsitec.Aider.Data.Ech
 		{
 			foreach (var xAdult in xReportedPerson.Elements (EChXmlTags.EVd0002.Adult))
 			{
-				yield return EChDataLoader.GetEchPerson (xAdult);
+				yield return EChDataLoader.GetEChPerson (xAdult);
 			}
 		}
 
@@ -118,13 +118,13 @@ namespace Epsitec.Aider.Data.Ech
 			{
 				foreach (var xChild in xChildren.Elements (EChXmlTags.EVd0002.Child))
 				{
-					yield return EChDataLoader.GetEchPerson (xChild);
+					yield return EChDataLoader.GetEChPerson (xChild);
 				}
 			}
 		}
 
 
-		public static EChPerson GetEchPerson(XElement xEChPerson)
+		public static EChPerson GetEChPerson(XElement xEChPerson)
 		{
 			string id = null;
 			string officialName = null;
@@ -139,8 +139,8 @@ namespace Epsitec.Aider.Data.Ech
 				id = EChDataLoader.GetEChPersonId (xPerson);
 				officialName = EChDataLoader.GetEChPersonOfficialName (xPerson);
 				firstNames = EChDataLoader.GetEChPersonFirstNames (xPerson);
-				dateOfBirth = EChDataLoader.GetEchPersonDateOfBirth (xPerson);
-				sex = EChDataLoader.GetEchPersonSex (xPerson);
+				dateOfBirth = EChDataLoader.GetEChPersonDateOfBirth (xPerson);
+				sex = EChDataLoader.GetEChPersonSex (xPerson);
 			}
 
 			PersonNationalityStatus nationalityStatus = PersonNationalityStatus.None;
@@ -198,7 +198,7 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		private static Date GetEchPersonDateOfBirth(XElement xPerson)
+		private static Date GetEChPersonDateOfBirth(XElement xPerson)
 		{
 			var xDateOfBirth = xPerson.Element (EChXmlTags.EVd0004.DateOfBirth);
 
@@ -219,7 +219,7 @@ namespace Epsitec.Aider.Data.Ech
 		}
 
 
-		public static PersonSex GetEchPersonSex(XElement xPerson)
+		public static PersonSex GetEChPersonSex(XElement xPerson)
 		{
 			var sex = EChDataLoader.GetChildStringValue (xPerson, EChXmlTags.EVd0004.Sex);
 

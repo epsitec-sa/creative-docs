@@ -434,16 +434,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static NormalizedPerson Normalize(AiderPersonEntity person)
 		{
-			var echPerson = person.eCH_Person;
+			var eChPerson = person.eCH_Person;
 
 			return new NormalizedPerson ()
 			{
-				Firstnames = EervParishDataImporter.NormalizeComposedName (echPerson.PersonFirstNames),
-				Lastnames = EervParishDataImporter.NormalizeComposedName (echPerson.PersonOfficialName),
-				DateOfBirth = echPerson.PersonDateOfBirth,
-				Sex = echPerson.PersonSex,
-				Origins = echPerson.Origins,
-				Address = EervParishDataImporter.Normalize (echPerson.Address1),
+				Firstnames = EervParishDataImporter.NormalizeComposedName (eChPerson.PersonFirstNames),
+				Lastnames = EervParishDataImporter.NormalizeComposedName (eChPerson.PersonOfficialName),
+				DateOfBirth = eChPerson.PersonDateOfBirth,
+				Sex = eChPerson.PersonSex,
+				Origins = eChPerson.Origins,
+				Address = EervParishDataImporter.Normalize (eChPerson.Address1),
 			};
 		}
 

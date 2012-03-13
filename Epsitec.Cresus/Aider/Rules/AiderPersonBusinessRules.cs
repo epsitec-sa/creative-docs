@@ -22,12 +22,12 @@ namespace Epsitec.Aider.Rules
 		{
 			var businessContext = Logic.Current.GetComponent<BusinessContext> ();
 
-			var echPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
+			var eChPerson = businessContext.CreateEntity<eCH_PersonEntity> ();
 			
-			echPerson.CreationDate = Date.Today;
-			echPerson.DataSource   = Enumerations.DataSource.Undefined;
+			eChPerson.CreationDate = Date.Today;
+			eChPerson.DataSource   = Enumerations.DataSource.Undefined;
 
-			person.eCH_Person = echPerson;
+			person.eCH_Person = eChPerson;
 		}
 
 		public override void ApplyUpdateRule(AiderPersonEntity person)

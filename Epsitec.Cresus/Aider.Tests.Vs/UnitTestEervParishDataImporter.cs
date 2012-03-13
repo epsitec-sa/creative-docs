@@ -1,5 +1,5 @@
 ﻿using Epsitec.Aider.Data;
-using Epsitec.Aider.Data.Ech;
+using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 
 using Epsitec.Common.Widgets;

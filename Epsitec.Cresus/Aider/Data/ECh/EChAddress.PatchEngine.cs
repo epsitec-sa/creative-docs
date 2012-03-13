@@ -8,7 +8,7 @@ using Epsitec.Data.Platform;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Aider.Data.Ech
+namespace Epsitec.Aider.Data.ECh
 {
 	internal sealed partial class EChAddress
 	{

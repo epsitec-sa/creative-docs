@@ -1,4 +1,4 @@
-﻿using Epsitec.Aider.Data.Ech;
+﻿using Epsitec.Aider.Data.ECh;
 
 using Epsitec.Aider.Entities;
 

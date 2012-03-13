@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
 
-namespace Epsitec.Aider.Data.Ech
+namespace Epsitec.Aider.Data.ECh
 {
 	/// <summary>
 	/// The <c>EChAddress</c> class represents an eCH address element. The street and
