@@ -221,7 +221,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var profession = record[PersonIndex.Profession];
 			var confession = EervDataLoader.ParseConfession (record[PersonIndex.Confession]);
 			var emailAddress = record[PersonIndex.EmailAddress];
-			var mobilPhoneNumber = record[PersonIndex.MobilPhoneNumber];
+			var mobilePhoneNumber = record[PersonIndex.MobilPhoneNumber];
 			var remarks = record[PersonIndex.Remarks];
 			var father = record[PersonIndex.Father];
 			var mother = record[PersonIndex.Mother];
@@ -236,7 +236,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var householdId = record[PersonIndex.HouseholdId];
 			var householdRank = int.Parse (record[PersonIndex.HouseholdRank]);
 
-			return new EervPerson (id, firstname1, firstname2, lastname, originalName, corporateName, dateOfBirth, dateOfDeath, honorific, sex, maritalStatus, origins, profession, confession, emailAddress, mobilPhoneNumber, remarks, father, mother, placeOfBirth, placeOfBaptism, dateOfBaptism, placeOfChildBenediction, dateOfChildBenediction, placeOfCatechismBenediction, dateOfCatechismBenediction, schoolYearOffset, householdId, householdRank);
+			return new EervPerson (id, firstname1, firstname2, lastname, originalName, corporateName, dateOfBirth, dateOfDeath, honorific, sex, maritalStatus, origins, profession, confession, emailAddress, mobilePhoneNumber, remarks, father, mother, placeOfBirth, placeOfBaptism, dateOfBaptism, placeOfChildBenediction, dateOfChildBenediction, placeOfCatechismBenediction, dateOfCatechismBenediction, schoolYearOffset, householdId, householdRank);
 		}
 
 

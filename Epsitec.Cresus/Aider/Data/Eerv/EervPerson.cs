@@ -14,7 +14,7 @@ namespace Epsitec.Aider.Data.Eerv
 	internal sealed class EervPerson
 	{
 
-		public EervPerson(string id, string firstname1, string firstname2, string lastname, string originalName, string corporateName, Date? dateOfBirth, Date? dateOfDeath, string honorific, PersonSex sex, PersonMaritalStatus maritalStatus, string origins, string profession, PersonConfession confession, string emailAddress, string mobilPhoneNumber, string remarks, string father, string mother, string placeOfBirth, string placeOfBaptism, Date? dateOfBaptism, string placeOfChildBenediction, Date? dateOfChildBenediction, string placeOfCatechismBenediction, Date? dateOfCatechismBenediction, int? schoolYearOffset, string householdId, int householdRank)
+		public EervPerson(string id, string firstname1, string firstname2, string lastname, string originalName, string corporateName, Date? dateOfBirth, Date? dateOfDeath, string honorific, PersonSex sex, PersonMaritalStatus maritalStatus, string origins, string profession, PersonConfession confession, string emailAddress, string mobilePhoneNumber, string remarks, string father, string mother, string placeOfBirth, string placeOfBaptism, Date? dateOfBaptism, string placeOfChildBenediction, Date? dateOfChildBenediction, string placeOfCatechismBenediction, Date? dateOfCatechismBenediction, int? schoolYearOffset, string householdId, int householdRank)
 		{
 			this.Id = id;
 
@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Data.Eerv
 			this.Profession = profession;
 			this.Confession = confession;
 			this.EmailAddress =	 emailAddress;
-			this.MobilPhoneNumber = mobilPhoneNumber;
+			this.MobilePhoneNumber = mobilePhoneNumber;
 			this.Remarks = remarks;
 
 			this.Father = father;
@@ -102,7 +102,7 @@ namespace Epsitec.Aider.Data.Eerv
 		public readonly string Profession;
 		public readonly PersonConfession Confession;
 		public readonly string EmailAddress;
-		public readonly string MobilPhoneNumber;
+		public readonly string MobilePhoneNumber;
 		public readonly string Remarks;
 
 		public readonly string Father;

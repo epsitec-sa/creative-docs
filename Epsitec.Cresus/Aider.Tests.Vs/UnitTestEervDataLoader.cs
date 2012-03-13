@@ -182,7 +182,7 @@ namespace Aider.Tests.Vs
 			Assert.AreEqual (expected.Profession, actual.Profession);
 			Assert.AreEqual (expected.Confession, actual.Confession);
 			Assert.AreEqual (expected.EmailAddress, actual.EmailAddress);
-			Assert.AreEqual (expected.MobilPhoneNumber, actual.MobilPhoneNumber);
+			Assert.AreEqual (expected.MobilePhoneNumber, actual.MobilePhoneNumber);
 			Assert.AreEqual (expected.Remarks, actual.Remarks);
 			Assert.AreEqual (expected.Father, actual.Father);
 			Assert.AreEqual (expected.Mother, actual.Mother);
