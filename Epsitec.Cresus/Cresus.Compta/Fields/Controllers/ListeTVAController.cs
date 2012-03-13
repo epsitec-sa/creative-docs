@@ -157,6 +157,9 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				};
 			}
 
+			ToolTip.Default.SetToolTip (this.addButton, "Ajoute un nouveau taux dans la liste");
+			ToolTip.Default.SetToolTip (this.removeButton, "Supprime le taux sélectionné dans la liste");
+
 			//	Connexion ds événements.
 			this.addButton.Clicked += delegate
 			{
@@ -295,6 +298,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			else
 			{
 				this.dateField.SetError (true);
+				ToolTip.Default.SetToolTip (this.dateField, "La date n'est pas correcte");
 			}
 		}
 
@@ -312,6 +316,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			else
 			{
 				this.rateField.SetError (true);
+				ToolTip.Default.SetToolTip (this.rateField, "Le taux n'est pas correct");
 			}
 		}
 
@@ -362,6 +367,9 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 					this.rateField.FormattedText = this.Array.GetText (sel, ColumnType.Taux);
 					this.dateField.SetError (false);
 					this.rateField.SetError (false);
+
+					ToolTip.Default.ClearToolTip (this.dateField);
+					ToolTip.Default.ClearToolTip (this.rateField);
 				}
 			}
 		}
