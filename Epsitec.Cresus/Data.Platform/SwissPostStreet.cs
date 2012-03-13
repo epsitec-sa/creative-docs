@@ -72,6 +72,41 @@ namespace Epsitec.Data.Platform
 			return InvariantConverter.ParseInt (number);
 		}
 
+
+		/// <summary>
+		/// Strips an house number from its terminal non digit part. This will remove any "bis",
+		/// "ter", "A", "B", "C", etc at the end of the house number.
+		/// </summary>
+		public static string StripHouseNumber(string number)
+		{
+			string result = null;
+
+			if (number != null)
+			{
+				int index = 0;
+
+				while (index < number.Length && System.Char.IsDigit (number[index]))
+				{
+					index++;
+				}
+
+				if (index > 0)
+				{
+					result = number.Substring (0, index);
+				}
+			}
+
+			return result;
+		}
+
+
+		public static int StripAndNormalizeHouseNumber(string number)
+		{
+			var strippedNumber = SwissPostStreet.StripHouseNumber (number);
+
+			return SwissPostStreet.NormalizeHouseNumber (strippedNumber);
+		}
+
 		
 		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
 		{
