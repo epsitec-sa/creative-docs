@@ -83,11 +83,6 @@ namespace Epsitec.Cresus.Compta.Assistants.Data
 			Validators.ValidateText (data, "Il manque le libellé");
 		}
 
-		private void ValidateMontantTVA(EditionData data)
-		{
-			Validators.ValidateMontant (data, emptyAccepted: false);
-		}
-
 		private void ValidateMontant(EditionData data)
 		{
 			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
@@ -97,6 +92,11 @@ namespace Epsitec.Cresus.Compta.Assistants.Data
 				return;
 			}
 
+			Validators.ValidateMontant (data, emptyAccepted: false);
+		}
+
+		private void ValidateMontantTVA(EditionData data)
+		{
 			Validators.ValidateMontant (data, emptyAccepted: false);
 		}
 

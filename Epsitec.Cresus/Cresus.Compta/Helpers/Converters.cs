@@ -31,22 +31,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return null;
 			}
 
-			bool hasPercent = false;
 			if (text.Contains ('%'))
 			{
-				hasPercent = true;
 				text = text.Replace ("%", "");
 			}
 
 			decimal d;
 			if (decimal.TryParse (text, out d))
 			{
-				if (hasPercent)
-				{
-					d /= 100;
-				}
-
-				return d;
+				return d / 100;
 			}
 			else
 			{

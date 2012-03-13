@@ -262,12 +262,14 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 
 				if (mapper.Column == ColumnType.Jours1      ||
 					mapper.Column == ColumnType.Jours2      ||
-					mapper.Column == ColumnType.TauxTVA1    ||
-					mapper.Column == ColumnType.TauxTVA2    ||
+					mapper.Column == ColumnType.MontantTTC1 ||
+					mapper.Column == ColumnType.MontantTTC2 ||
 					mapper.Column == ColumnType.MontantTVA1 ||
 					mapper.Column == ColumnType.MontantTVA2 ||
 					mapper.Column == ColumnType.MontantHT1  ||
-					mapper.Column == ColumnType.MontantHT2  )
+					mapper.Column == ColumnType.MontantHT2  ||
+					mapper.Column == ColumnType.TauxTVA1    ||
+					mapper.Column == ColumnType.TauxTVA2    )
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
@@ -318,14 +320,14 @@ namespace Epsitec.Cresus.Compta.Assistants.Controllers
 		{
 			base.UpdateGeometry ();
 
-			this.UpdateColumnGeometry (ColumnType.TauxTVA1, ColumnType.TauxTVA);
-			this.UpdateColumnGeometry (ColumnType.TauxTVA2, ColumnType.TauxTVA);
 			this.UpdateColumnGeometry (ColumnType.MontantTTC1, ColumnType.MontantTTC);
 			this.UpdateColumnGeometry (ColumnType.MontantTTC2, ColumnType.MontantTTC);
 			this.UpdateColumnGeometry (ColumnType.MontantTVA1, ColumnType.MontantTVA);
 			this.UpdateColumnGeometry (ColumnType.MontantTVA2, ColumnType.MontantTVA);
 			this.UpdateColumnGeometry (ColumnType.MontantHT1, ColumnType.MontantHT);
 			this.UpdateColumnGeometry (ColumnType.MontantHT2, ColumnType.MontantHT);
+			this.UpdateColumnGeometry (ColumnType.TauxTVA1, ColumnType.TauxTVA);
+			this.UpdateColumnGeometry (ColumnType.TauxTVA2, ColumnType.TauxTVA);
 		}
 
 
