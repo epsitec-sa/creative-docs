@@ -62,6 +62,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonViewController2.cs" />
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
     <Compile Include="Data\Ech\EChAddress.PatchEngine.cs" />
+    <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
     <Compile Include="Data\Eerv\EervDataImporter.cs" />
     <Compile Include="Data\Eerv\EervDataLoader.cs" />
@@ -70,6 +71,11 @@
     <Compile Include="Data\Eerv\EervHousehold.cs" />
     <Compile Include="Data\Eerv\EervPerson.cs" />
     <Compile Include="Data\Ech\EChAddressFixesRepository.cs" />
+    <Compile Include="Data\Eerv\EervParishDataImporter.cs" />
+    <Compile Include="Data\Eerv\MatchData.cs" />
+    <Compile Include="Data\Eerv\NameMatch.cs" />
+    <Compile Include="Data\Eerv\NormalizedAddress.cs" />
+    <Compile Include="Data\Eerv\NormalizedPerson.cs" />
     <Compile Include="Data\ParishAddresses.cs" />
     <Compile Include="Data\ParishAddressInformation.cs" />
     <Compile Include="Data\ParishAddressRepository.cs" />

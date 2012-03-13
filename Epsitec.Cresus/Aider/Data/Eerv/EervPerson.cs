@@ -1,9 +1,10 @@
 ﻿using Epsitec.Aider.Enumerations;
 
+using Epsitec.Common.Support.Extensions;
+
 using Epsitec.Common.Types;
 
-using System;
-
+using System.Linq;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -34,7 +35,7 @@ namespace Epsitec.Aider.Data.Eerv
 			this.Confession = confession;
 			this.EmailAddress =	 emailAddress;
 			this.MobilPhoneNumber = mobilPhoneNumber;
-			this.Remarks =	 remarks;
+			this.Remarks = remarks;
 
 			this.Father = father;
 			this.Mother = mother;
@@ -51,6 +52,36 @@ namespace Epsitec.Aider.Data.Eerv
 			this.HouseholdRank = householdRank;
 		}
 
+
+		public string Firstnames
+		{
+			get
+			{
+				string firstnames;
+
+				var hasFirstname1 = !string.IsNullOrWhiteSpace (this.Firstname1);
+				var hasFirstname2 = !string.IsNullOrWhiteSpace (this.Firstname2);
+
+				if (hasFirstname1 && hasFirstname2)
+				{
+					firstnames = this.Firstname1 + " " + this.Firstname2;
+				}
+				else if (hasFirstname1)
+				{
+					firstnames = this.Firstname1;
+				}
+				else if (hasFirstname2)
+				{
+					firstnames = this.Firstname2;
+				}
+				else
+				{
+					firstnames = "";
+				}
+
+				return firstnames.Split (new char[] { ' ' }).Distinct ().Join (" ");
+			}
+		}
 
 
 		public readonly string Id;
