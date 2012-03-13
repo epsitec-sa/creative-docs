@@ -120,9 +120,9 @@ namespace Epsitec.Aider
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
-								
+
 				var parishRepository = ParishAddressRepository.Current;
-				EervDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
+				EervMainDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");

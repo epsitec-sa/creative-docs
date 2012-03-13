@@ -23,7 +23,7 @@ namespace Aider.Tests.Vs
 
 
 	[TestClass]
-	public class UnitTestEervDataImporter
+	public class UnitTestEervMainDataImporter
 	{
 
 
@@ -31,7 +31,7 @@ namespace Aider.Tests.Vs
 		public void Test()
 		{
 			CoreData.ForceDatabaseCreationRequest = true;
-
+			
 			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
 			CoreContext.ParseOptionalSettingsFile (lines);
 			CoreContext.StartAsInteractive ();
@@ -41,12 +41,17 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
-				var parishRepository = ParishAddressRepository.Current;
-
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
 
-				EervDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
+				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
+				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
+
+				var parishRepository = ParishAddressRepository.Current;
+				EervMainDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
+				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
 			}

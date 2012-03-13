@@ -51,9 +51,10 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="UnitTestEervParishDataImporter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UnitTestEChDataImport.cs" />
-    <Compile Include="UnitTestEervDataImporter.cs" />
+    <Compile Include="UnitTestEChDataImporter.cs" />
+    <Compile Include="UnitTestEervMainDataImporter.cs" />
     <Compile Include="UnitTestEervDataLoader.cs" />
     <Compile Include="UnitTestIsoCountryNames.cs" />
   </ItemGroup>

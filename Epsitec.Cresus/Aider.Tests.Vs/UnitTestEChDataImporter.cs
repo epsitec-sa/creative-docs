@@ -31,7 +31,7 @@ namespace Aider.Tests.Vs
 
 
 	[TestClass]
-	public sealed class UnitTestEChDataImport
+	public sealed class UnitTestEChDataImporter
 	{
 
 
