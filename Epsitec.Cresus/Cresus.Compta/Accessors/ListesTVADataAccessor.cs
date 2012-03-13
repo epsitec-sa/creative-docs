@@ -97,12 +97,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Taux:
 					return listeTVA.SummaryTaux;
 
-				case ColumnType.Résumé:
-					return listeTVA.SummaryNoms;
-
-				case ColumnType.Erreur:
-					return TVA.GetError (listeTVA.Taux);
-
 				default:
 					return FormattedText.Null;
 			}
@@ -139,6 +133,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 
 			this.controller.EditorController.UpdateFieldsEditionData ();
+		}
+
+		protected override void PrepareEditionLine(int line)
+		{
+			var array = this.editionLine[line].GetArray (ColumnType.Taux);
+
+			array.SetBool    (0, ColumnType.ParDéfaut, true);
+			array.SetDate    (0, ColumnType.Date, new Date (Date.Today.Year, 1, 1));
+			array.SetPercent (0, ColumnType.Taux, 0.05m);
+
+			base.PrepareEditionLine (line);
 		}
 
 		public override void StartModificationLine(int row)

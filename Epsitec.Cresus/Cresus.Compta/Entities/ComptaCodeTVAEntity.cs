@@ -35,20 +35,5 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
-
-		public FormattedText DefaultTauxNom
-		{
-			get
-			{
-				if (this.ListeTaux == null)
-				{
-					return FormattedText.Empty;
-				}
-				else
-				{
-					return this.ListeTaux.DefaultTauxNom;
-				}
-			}
-		}
 	}
 }

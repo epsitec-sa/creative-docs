@@ -116,7 +116,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				yield return Res.Commands.Présentation.CodesTVA;
 				yield return Res.Commands.Présentation.ListeTVA;
-				yield return Res.Commands.Présentation.TauxTVA;
 			}
 		}
 	}

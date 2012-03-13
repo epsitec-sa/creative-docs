@@ -56,10 +56,9 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
+    <Compile Include="Accessors\DataArray.cs" />
     <Compile Include="Accessors\ListesTVADataAccessor.cs" />
     <Compile Include="Accessors\ListesTVAEditionLine.cs" />
-    <Compile Include="Accessors\TauxTVADataAccessor.cs" />
-    <Compile Include="Accessors\TauxTVAEditionLine.cs" />
     <Compile Include="Accessors\ExtraitDeCompteEditionLine.cs" />
     <Compile Include="Accessors\PiècesGeneratorDataAccessor.cs" />
     <Compile Include="Accessors\PiècesGeneratorEditionLine.cs" />
@@ -74,8 +73,6 @@
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
     <Compile Include="Controllers\ListesTVAEditorController.cs" />
     <Compile Include="Controllers\ListesTVAController.cs" />
-    <Compile Include="Controllers\TauxTVAEditorController.cs" />
-    <Compile Include="Controllers\TauxTVAController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteEditorController.cs" />
     <Compile Include="Controllers\SaveController.cs" />
     <Compile Include="Controllers\PrintController.cs" />
@@ -89,6 +86,7 @@
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
     <Compile Include="Entities\ComptaListeTVAEntity.cs" />
     <Compile Include="Fields\Controllers\CheckButtonController.cs" />
+    <Compile Include="Fields\Controllers\ListeTVAController.cs" />
     <Compile Include="Fields\Controllers\ListController.cs" />
     <Compile Include="Fields\Controllers\RadioButtonController.cs" />
     <Compile Include="Fields\Controllers\PasswordFieldController.cs" />

@@ -120,10 +120,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.MontantFictif:
 					result = Converters.MontantToString (codeTVA.MontantFictif);
 					break;
-
-				case ColumnType.Erreur:
-					result = TVA.GetShortError (codeTVA.ListeTaux.Taux);
-					break;
 			}
 
 			if (codeTVA.Désactivé)

@@ -17,40 +17,13 @@ namespace Epsitec.Cresus.Compta.Entities
 		{
 			get
 			{
-				if (this.Taux == null || !this.Taux.Any ())
+				if (this.TauxParDéfaut == null)
 				{
 					return null;
 				}
-
-				var taux = this.Taux.Where (x => x.ParDéfaut).FirstOrDefault ();
-				if (taux == null)
-				{
-					return this.Taux.Last ().Taux;
-				}
 				else
 				{
-					return taux.Taux;
-				}
-			}
-		}
-
-		public FormattedText DefaultTauxNom
-		{
-			get
-			{
-				if (this.Taux == null || !this.Taux.Any ())
-				{
-					return FormattedText.Empty;
-				}
-
-				var taux = this.Taux.Where (x => x.ParDéfaut).FirstOrDefault ();
-				if (taux == null)
-				{
-					return this.Taux.Last ().Nom;
-				}
-				else
-				{
-					return taux.Nom;
+					return this.TauxParDéfaut.Taux;
 				}
 			}
 		}
@@ -70,7 +43,7 @@ namespace Epsitec.Cresus.Compta.Entities
 				{
 					FormattedText text = Converters.PercentToString (taux.Taux);
 
-					if (taux.ParDéfaut)
+					if (taux == this.TauxParDéfaut)
 					{
 						text = text.ApplyBold ();
 					}
@@ -79,34 +52,6 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 
 				return string.Join (", ", list);
-			}
-		}
-
-		public FormattedText SummaryNoms
-		{
-			get
-			{
-				if (this.Taux == null || !this.Taux.Any ())
-				{
-					return FormattedText.Empty;
-				}
-
-				var list = new List<string> ();
-
-				foreach (var taux in this.Taux)
-				{
-					FormattedText text = taux.Nom;
-
-					if (taux.ParDéfaut)
-					{
-						text = text.ApplyBold ();
-					}
-
-					;
-					list.Add (text.ToString ());
-				}
-
-				return Strings.SentenceConcat (list);
 			}
 		}
 	}

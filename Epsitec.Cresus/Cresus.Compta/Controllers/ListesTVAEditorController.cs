@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Taux)
 				{
-					field = new ListController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new ListeTVAController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
@@ -87,7 +87,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				yield return Res.Commands.Présentation.CodesTVA;
 				yield return Res.Commands.Présentation.ListeTVA;
-				yield return Res.Commands.Présentation.TauxTVA;
 			}
 		}
 	}

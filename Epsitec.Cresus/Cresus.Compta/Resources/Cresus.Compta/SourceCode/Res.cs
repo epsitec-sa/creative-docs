@@ -256,8 +256,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 				//	designer:cap/OVKS5
 				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
-				//	designer:cap/OVKV6
-				public static readonly global::Epsitec.Common.Widgets.Command TauxTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 223));
 				//	designer:cap/OVK55
 				public static readonly global::Epsitec.Common.Widgets.Command Utilisateurs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 165));
 			}
@@ -523,8 +521,6 @@ namespace Epsitec.Cresus.Compta
 				public const long RésuméTVA = 0x3F800014000035L;
 				//	designer:cap/OVKS5
 				public const long Save = 0x3F8000140000BCL;
-				//	designer:cap/OVKV6
-				public const long TauxTVA = 0x3F8000140000DFL;
 				//	designer:cap/OVK55
 				public const long Utilisateurs = 0x3F8000140000A5L;
 			}
@@ -738,8 +734,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid PiècesGenerator = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 177);
 				//	designer:cap/OVKN
 				public static readonly global::Epsitec.Common.Support.Druid PlanComptable = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 23);
-				//	designer:cap/OVK57
-				public static readonly global::Epsitec.Common.Support.Druid TauxTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 229);
 				//	designer:cap/OVKI5
 				public static readonly global::Epsitec.Common.Support.Druid Utilisateurs = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 178);
 			}
@@ -888,6 +882,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 233);
 				//	designer:cap/OVKA7
 				public static readonly global::Epsitec.Common.Support.Druid Taux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 234);
+				//	designer:cap/OVKF7
+				public static readonly global::Epsitec.Common.Support.Druid TauxParDéfaut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 239);
 			}
 			
 			public static class ComptaModèle
@@ -960,12 +956,6 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVK27
 				public static readonly global::Epsitec.Common.Support.Druid DateDébut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 226);
-				//	designer:cap/OVK37
-				public static readonly global::Epsitec.Common.Support.Druid DateFin = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 227);
-				//	designer:cap/OVK17
-				public static readonly global::Epsitec.Common.Support.Druid Nom = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 225);
-				//	designer:cap/OVKD7
-				public static readonly global::Epsitec.Common.Support.Druid ParDéfaut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 237);
 				//	designer:cap/OVK47
 				public static readonly global::Epsitec.Common.Support.Druid Taux = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 228);
 			}

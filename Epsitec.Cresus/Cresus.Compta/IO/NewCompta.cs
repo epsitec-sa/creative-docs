@@ -141,92 +141,6 @@ namespace Epsitec.Cresus.Compta.IO
 		public static void CreateTVA(ComptaEntity compta)
 		{
 			//	Crée tout ce qui concerne la TVA pour toutes comptabilités.
-			NewCompta.CreateTauxTVA (compta);
-			NewCompta.CreateListesTVA (compta);
-		}
-
-		private static void CreateTauxTVA(ComptaEntity compta)
-		{
-			//	Crée les taux de TVA nécessaires pour toutes comptabilités.
-			compta.TauxTVA.Clear ();
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Exclu",
-					Taux      = 0.0m,
-					ParDéfaut = true,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Réduit 1",
-					DateFin   = new Date (2010, 12, 31),
-					Taux      = 0.024m,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Réduit 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.025m,
-					ParDéfaut = true,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Hébergement 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.036m,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Hébergement 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.038m,
-					ParDéfaut = true,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom     = "Normal 1",
-					DateFin = new Date (2010, 12, 31),
-					Taux    = 0.076m,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-
-			{
-				var taux = new ComptaTauxTVAEntity ()
-				{
-					Nom       = "Normal 2",
-					DateDébut = new Date (2011, 1, 1),
-					Taux      = 0.08m,
-					ParDéfaut = true,
-				};
-				compta.TauxTVA.Add (taux);
-			}
-		}
-
-		private static void CreateListesTVA(ComptaEntity compta)
-		{
-			//	Crée les listes de taux de TVA nécessaires pour toutes comptabilités.
 			compta.ListesTVA.Clear ();
 
 			{
@@ -235,7 +149,7 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom = "Exclu",
 				};
 
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Exclu").FirstOrDefault ());
+				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 1995, 0.0m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -246,8 +160,10 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom = "Réduit",
 				};
 
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Réduit 1").FirstOrDefault ());
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Réduit 2").FirstOrDefault ());
+				NewCompta.CreateTauxTVA (liste, 1995, 2.0m);
+				NewCompta.CreateTauxTVA (liste, 1999, 2.3m);
+				NewCompta.CreateTauxTVA (liste, 2001, 2.4m);
+				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 2.5m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -258,8 +174,10 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom = "Hébergement",
 				};
 
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Hébergement 1").FirstOrDefault ());
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Hébergement 2").FirstOrDefault ());
+				NewCompta.CreateTauxTVA (liste, 1996, 3.0m);
+				NewCompta.CreateTauxTVA (liste, 1999, 3.5m);
+				NewCompta.CreateTauxTVA (liste, 2001, 3.6m);
+				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 3.8m);
 
 				compta.ListesTVA.Add (liste);
 			}
@@ -270,11 +188,26 @@ namespace Epsitec.Cresus.Compta.IO
 					Nom = "Normal",
 				};
 
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Normal 1").FirstOrDefault ());
-				liste.Taux.Add (compta.TauxTVA.Where (x => x.Nom == "Normal 2").FirstOrDefault ());
+				NewCompta.CreateTauxTVA (liste, 1995, 6.5m);
+				NewCompta.CreateTauxTVA (liste, 1999, 7.5m);
+				NewCompta.CreateTauxTVA (liste, 2001, 7.6m);
+				liste.TauxParDéfaut = NewCompta.CreateTauxTVA (liste, 2011, 8.0m);
 
 				compta.ListesTVA.Add (liste);
 			}
+		}
+
+		private static ComptaTauxTVAEntity CreateTauxTVA(ComptaListeTVAEntity liste, int year, decimal taux)
+		{
+			var entity = new ComptaTauxTVAEntity ()
+			{
+				DateDébut = new Date (year, 1, 1),
+				Taux      = taux/100,
+			};
+
+			liste.Taux.Add (entity);
+
+			return entity;
 		}
 
 

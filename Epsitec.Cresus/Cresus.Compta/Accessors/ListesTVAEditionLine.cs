@@ -6,6 +6,7 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -22,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.dataDict.Add (ColumnType.Nom,  new EditionData (this.controller, this.ValidateNom));
-			this.dataDict.Add (ColumnType.Taux, new EditionData (this.controller, this.ValidateTaux));
+			this.dataDict.Add (ColumnType.Taux, new EditionData (this.controller));
 		}
 
 
@@ -52,32 +53,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.Error = "Il manque le nom de la liste de taux";
 			}
 		}
-
-		private void ValidateTaux(EditionData data)
-		{
-			data.Error = TVA.GetError (this.compta.NomsTauxToEntities (data.Texts));
-		}
 		#endregion
 
-
-		public override void Prepare()
-		{
-			//	Parameters <- ensemble des taux définis
-			var parameters = this.GetParameters (ColumnType.Taux);
-			parameters.Clear ();
-
-			foreach (var taux in this.compta.TauxTVA)
-			{
-				parameters.Add (taux.Nom.ToString ());
-			}
-		}
 
 		public override void EntityToData(AbstractEntity entity)
 		{
 			var liste = entity as ComptaListeTVAEntity;
 
 			this.SetText (ColumnType.Nom, liste.Nom);
-			this.GetTaux (liste);
+			this.TauxToArray (liste);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -85,29 +69,50 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var liste = entity as ComptaListeTVAEntity;
 
 			liste.Nom = this.GetText (ColumnType.Nom);
-			this.SetTaux (liste);
+			this.ArrayToTaux (liste);
 		}
 
-		private void GetTaux(ComptaListeTVAEntity listeTVA)
+		private void TauxToArray(ComptaListeTVAEntity listeTVA)
 		{
-			this.Prepare ();
+			//	Transfert la liste des entités de taux dans un tableau.
+			//	ComptaListeTVA -> DataArray
+			var array = this.GetArray (ColumnType.Taux);
+			array.Clear ();
 
-			//	Texts <- taux utilisés par le codeTVA
-			var texts = this.GetTexts (ColumnType.Taux);
-			texts.Clear ();
-
+			int row = 0;
 			foreach (var taux in listeTVA.Taux)
 			{
-				texts.Add (taux.Nom.ToString ());
+				array.SetBool    (row, ColumnType.ParDéfaut, taux == listeTVA.TauxParDéfaut);
+				array.SetDate    (row, ColumnType.Date, taux.DateDébut);
+				array.SetPercent (row, ColumnType.Taux, taux.Taux);
+
+				row++;
 			}
 		}
 
-		private void SetTaux(ComptaListeTVAEntity listeTVA)
+		private void ArrayToTaux(ComptaListeTVAEntity listeTVA)
 		{
-			var tauxEntities = this.compta.NomsTauxToEntities (this.GetTexts (ColumnType.Taux)).Where (x => x != null).ToList ();
+			//	Transfert le tableau des taux dans la liste des entités.
+			//	DataArray -> ComptaListeTVA
+			var array = this.GetArray (ColumnType.Taux);
+			listeTVA.Taux.Clear ();  // efface la liste actuelle
 
-			listeTVA.Taux.Clear ();
-			tauxEntities.ForEach (x => listeTVA.Taux.Add (x));
+			//	Recrée la liste des ComptaTauxTVAEntity.
+			for (int row = 0; row < array.RowCount; row++)
+			{
+				var taux = new ComptaTauxTVAEntity
+				{
+					DateDébut = array.GetDate    (row, ColumnType.Date).GetValueOrDefault (),
+					Taux      = array.GetPercent (row, ColumnType.Taux).GetValueOrDefault (),
+				};
+
+				if (array.GetBool (row, ColumnType.ParDéfaut))
+				{
+					listeTVA.TauxParDéfaut = taux;
+				}
+
+				listeTVA.Taux.Add (taux);
+			}
 		}
 	}
 }

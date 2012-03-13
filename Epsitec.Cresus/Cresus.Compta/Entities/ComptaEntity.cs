@@ -15,28 +15,18 @@ namespace Epsitec.Cresus.Compta.Entities
 		public ComptaListeTVAEntity GetListeTVA(decimal taux)
 		{
 			//	Cherche dans quelle liste se trouve un taux de TVA.
-			var tauxEntity = this.TauxTVA.Where (x => x.Taux == taux).FirstOrDefault ();
-			if (tauxEntity != null)
+			foreach (var listeTVA in this.ListesTVA)
 			{
-				foreach (var liste in this.ListesTVA)
+				foreach (var tauxTVA in listeTVA.Taux)
 				{
-					if (liste.Taux.Contains (tauxEntity))
+					if (tauxTVA.Taux == taux)
 					{
-						return liste;
+						return listeTVA;
 					}
 				}
 			}
 
 			return null;
-		}
-
-		public IEnumerable<ComptaTauxTVAEntity> NomsTauxToEntities(IEnumerable<FormattedText> nomsTaux)
-		{
-			//	Conversion d'une liste de noms de taux en une liste des entités correspondantes.
-			foreach (var nomTaux in nomsTaux)
-			{
-				yield return this.TauxTVA.Where (x => x.Nom == nomTaux).FirstOrDefault ();
-			}
 		}
 
 		public FormattedText[] CodesTVAMenuDescription

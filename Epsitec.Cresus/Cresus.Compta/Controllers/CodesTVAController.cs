@@ -117,12 +117,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Code,          1.00, ContentAlignment.MiddleLeft,   "Code",            "Code unique");
 				yield return new ColumnMapper (ColumnType.Titre,         5.00, ContentAlignment.MiddleLeft,   "Description",     "Description du code TVA");
 				yield return new ColumnMapper (ColumnType.Taux,          1.00, ContentAlignment.MiddleLeft,   "Liste de taux",   "Liste de taux de TVA");
-				yield return new ColumnMapper (ColumnType.Compte,        1.00, ContentAlignment.MiddleLeft,   "Compte de TVA",   "Compte de TVA");
+				yield return new ColumnMapper (ColumnType.Compte,        0.60, ContentAlignment.MiddleLeft,   "Compte",          "Compte de TVA");
 																											  
 				yield return new ColumnMapper (ColumnType.Chiffre,       0.00, ContentAlignment.MiddleLeft,   "Chiffre",         "Chiffre sur le formulaire de décompte TVA");
 				yield return new ColumnMapper (ColumnType.MontantFictif, 0.00, ContentAlignment.MiddleRight,  "Montant fictif",  "Montant fictif pour le contrôle de la disposition");
-																											  
-				yield return new ColumnMapper (ColumnType.Erreur,        1.00, ContentAlignment.MiddleLeft,   "Diagnostique",    "Diagnostique général", enable: false);
 			}
 		}
 	}

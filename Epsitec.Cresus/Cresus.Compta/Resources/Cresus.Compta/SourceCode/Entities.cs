@@ -167,18 +167,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TauxTVA</c> field.
-		///	designer:fld/OVK/OVK57
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK57]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> TauxTVA
-		{
-			get
-			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVK57]");
-			}
-		}
-		///	<summary>
 		///	The <c>Utilisateurs</c> field.
 		///	designer:fld/OVK/OVKI5
 		///	</summary>
@@ -2284,68 +2272,24 @@ namespace Epsitec.Cresus.Compta.Entities
 	public partial class ComptaTauxTVAEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
-		///	The <c>Nom</c> field.
-		///	designer:fld/OVK07/OVK17
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK17]")]
-		public global::Epsitec.Common.Types.FormattedText Nom
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.FormattedText> ("[OVK17]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.FormattedText oldValue = this.Nom;
-				if (oldValue != value || !this.IsFieldDefined("[OVK17]"))
-				{
-					this.OnNomChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK17]", oldValue, value);
-					this.OnNomChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
 		///	The <c>DateDébut</c> field.
 		///	designer:fld/OVK07/OVK27
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK27]")]
-		public global::Epsitec.Common.Types.Date? DateDébut
+		public global::Epsitec.Common.Types.Date DateDébut
 		{
 			get
 			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVK27]");
+				return this.GetField<global::Epsitec.Common.Types.Date> ("[OVK27]");
 			}
 			set
 			{
-				global::Epsitec.Common.Types.Date? oldValue = this.DateDébut;
+				global::Epsitec.Common.Types.Date oldValue = this.DateDébut;
 				if (oldValue != value || !this.IsFieldDefined("[OVK27]"))
 				{
 					this.OnDateDébutChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVK27]", oldValue, value);
+					this.SetField<global::Epsitec.Common.Types.Date> ("[OVK27]", oldValue, value);
 					this.OnDateDébutChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>DateFin</c> field.
-		///	designer:fld/OVK07/OVK37
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVK37]")]
-		public global::Epsitec.Common.Types.Date? DateFin
-		{
-			get
-			{
-				return this.GetField<global::Epsitec.Common.Types.Date?> ("[OVK37]");
-			}
-			set
-			{
-				global::Epsitec.Common.Types.Date? oldValue = this.DateFin;
-				if (oldValue != value || !this.IsFieldDefined("[OVK37]"))
-				{
-					this.OnDateFinChanging (oldValue, value);
-					this.SetField<global::Epsitec.Common.Types.Date?> ("[OVK37]", oldValue, value);
-					this.OnDateFinChanged (oldValue, value);
 				}
 			}
 		}
@@ -2371,39 +2315,11 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>ParDéfaut</c> field.
-		///	designer:fld/OVK07/OVKD7
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKD7]")]
-		public bool ParDéfaut
-		{
-			get
-			{
-				return this.GetField<bool> ("[OVKD7]");
-			}
-			set
-			{
-				bool oldValue = this.ParDéfaut;
-				if (oldValue != value || !this.IsFieldDefined("[OVKD7]"))
-				{
-					this.OnParDéfautChanging (oldValue, value);
-					this.SetField<bool> ("[OVKD7]", oldValue, value);
-					this.OnParDéfautChanged (oldValue, value);
-				}
-			}
-		}
 		
-		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnDateDébutChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateDébutChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateFinChanging(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
-		partial void OnDateFinChanged(global::Epsitec.Common.Types.Date? oldValue, global::Epsitec.Common.Types.Date? newValue);
+		partial void OnDateDébutChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
+		partial void OnDateDébutChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnTauxChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnTauxChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnParDéfautChanging(bool oldValue, bool newValue);
-		partial void OnParDéfautChanged(bool oldValue, bool newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -2472,9 +2388,33 @@ namespace Epsitec.Cresus.Compta.Entities
 				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVKA7]");
 			}
 		}
+		///	<summary>
+		///	The <c>TauxParDéfaut</c> field.
+		///	designer:fld/OVK87/OVKF7
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKF7]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity TauxParDéfaut
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVKF7]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity oldValue = this.TauxParDéfaut;
+				if (oldValue != value || !this.IsFieldDefined("[OVKF7]"))
+				{
+					this.OnTauxParDéfautChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity> ("[OVKF7]", oldValue, value);
+					this.OnTauxParDéfautChanged (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnNomChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnNomChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnTauxParDéfautChanging(global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity newValue);
+		partial void OnTauxParDéfautChanged(global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()

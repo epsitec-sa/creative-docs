@@ -144,6 +144,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public DataArray GetArray(ColumnType columnType)
+		{
+			if (this.dataDict.ContainsKey (columnType))
+			{
+				return this.dataDict[columnType].Array;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		public bool HasError(ColumnType columnType)
 		{
