@@ -41,9 +41,12 @@ namespace Epsitec.Cresus.Compta
 			Common.Support.ImageProvider.Default.EnableLongLifeCache = true;
 			Common.Support.ImageProvider.Default.PrefillManifestIconCache();
 
-			Application.application = new Application();
+			using (Application.application = new Application ())
+			{
+				Application.application.Window.Run ();
+			}
 			
-			Application.application.Window.Run();
+			Epsitec.Cresus.Core.Library.UI.Services.ShutDown ();
 		}
 		
 		
