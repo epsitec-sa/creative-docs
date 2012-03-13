@@ -22,14 +22,32 @@ namespace Epsitec.Aider
 	{
 		public static void Main(string[] args)
 		{
-//-			var test = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
 #if false
+			AiderProgram.TestMatchStreet ();		
+			return;
+#endif
+
+#if false
+			AiderProgram.TestEchImporter ();
+			return;
+#endif
+
+#if true
+			AiderProgram.TestDatabaseCreation ();
+			return;
+#endif
+
+			CoreProgram.Main (args);
+		}
+
+		private static void TestMatchStreet()
+		{
 			var streets = SwissPostStreetRepository.Current;
 			var zips    = SwissPostZipRepository.Current;
 
 			var repo = ParishAddressRepository.Current;
 			var name = repo.FindParishName (1400, "Yverdon-les-Bains", SwissPostStreet.NormalizeStreetName ("Fontenay, ch. du"), 6);
-						
+
 			var inputFile = new System.IO.FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 			var persons = EChDataLoader.Load (inputFile);
 
@@ -74,16 +92,16 @@ namespace Epsitec.Aider
 
 			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved.OrderBy (x => x), System.Text.Encoding.Default);
 			System.IO.File.WriteAllLines ("unresolved addresses (compact).txt", unresolvedCompact.OrderBy (x => x), System.Text.Encoding.Default);
-			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);
-			
-			return;
-#endif
+			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);		
+		}
 
-#if false
+		private static void TestEchImporter()
+		{
 			new eCH_Importer ().ParseAll ();
-#endif
+		}
 
-#if false
+		private static void TestDatabaseCreation()
+		{
 			CoreData.ForceDatabaseCreationRequest = true;
 
 			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
@@ -95,23 +113,26 @@ namespace Epsitec.Aider
 			{
 				app.SetupApplication ();
 
-				var inputData = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
-				var eChReportedPersons = EChDataLoader.Load (inputData);
-				var parishRepository = ParishAddressRepository.Current;
-
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
 
+				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
+				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
+								
+				var parishRepository = ParishAddressRepository.Current;
 				EervDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
+				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
+
+				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
+				var eervPersons = EervDataLoader.LoadEervPersons (eervDataFile).ToList ();
+				var eervHouseholds = EervDataLoader.LoadEervHouseholds (eervDataFile).ToList ();	
+				EervParishDataImporter.Import (businessContextCreator, businessContextCleaner, eervPersons, eervHouseholds);
+				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
 			}
-#endif
-
-#if true
-			CoreProgram.Main (args);
-#endif
 		}
 	}
 }
