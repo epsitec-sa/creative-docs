@@ -57,7 +57,7 @@ namespace Epsitec.Aider.Data.Ech
 		private static void CheckDocument(XDocument xDocument)
 		{
 			var assembly = Assembly.GetExecutingAssembly ();
-			
+
 			var xsdResourceNames = new List<string> ()
 			{
 				"Epsitec.Aider.Resources.Xsd.eCH-0006-2-0.xsd",
@@ -70,7 +70,7 @@ namespace Epsitec.Aider.Data.Ech
 				"Epsitec.Aider.Resources.Xsd.eVD-0002-1-0.xsd",
 				"Epsitec.Aider.Resources.Xsd.eVD-0004-1-0.xsd",
 			};
-			
+
 			var xmlValidator = XmlValidator.Create (assembly, xsdResourceNames);
 
 			xmlValidator.Validate (xDocument);
@@ -214,7 +214,7 @@ namespace Epsitec.Aider.Data.Ech
 			{
 				throw new FormatException ("Partial dates are not supported.");
 			}
-			
+
 			return new Date ((DateTime) xDateOfBirthChild);
 		}
 
@@ -345,29 +345,7 @@ namespace Epsitec.Aider.Data.Ech
 			var swissZipCodeId    = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
 			var countryCode       = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
 
-			// Sometimes, the town name has the suffix of the county appended. Here we remove it
-			// because we don't need it and it is not part of the name.
-			town = EChDataLoader.StripTownFromCountySuffix (town);
-
 			return new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode);
-		}
-
-
-		private static string StripTownFromCountySuffix(string town)
-		{
-			var result = town;
-
-			if (town.Length > 3)
-			{
-				var suffix = town.Substring (town.Length - 2, 2);
-
-				if (town[town.Length - 3] == ' ' && EChDataLoader.CountyAbreviations.Contains (suffix))
-				{
-					result = town.Substring (0, town.Length - 3);
-				}
-			}
-
-			return result;
 		}
 
 
@@ -387,13 +365,6 @@ namespace Epsitec.Aider.Data.Ech
 
 
 		private static readonly string[] yearFormats = new string[] { "yyyy", "'+'yyyy", "'-'yyyy", "yyyyzzz", "'+'yyyyzzz", "'-'yyyyzzz" };
-
-
-		private static readonly ISet<string> CountyAbreviations = new HashSet<string> ()
-		{
-			"AG", "AI", "AR", "BE", "BL", "BS", "FR", "GE", "GL", "GR", "JU", "LU", "NE",
-			"NW", "OW", "SG", "SH", "SO", "SZ", "TG", "TI", "UR", "VD", "VS", "ZG", "ZH",
-		};
 
 
 	}
