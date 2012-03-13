@@ -1,8 +1,9 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using System.Linq;
+
 using System.Windows.Media.Imaging;
 using System.Windows.Media;
 
@@ -525,13 +526,18 @@ namespace Epsitec.Common.Drawing.Platform
 			}
 		}
 
+		public override string  ToString()
+		{
+			return string.Format ("ColorType={0} DpiX={1} DpiY={2} Size={3}x{4} Info={5} Bpp={6} MemorySize={7}",
+								  this.ColorType, this.DpiX, this.DpiY, this.Width, this.Height, this.Information, this.BitsPerPixel, this.MemorySize);
+		}
+		
 		internal static NativeBitmap CreateFromPremultipliedArgb32(byte[] imageBytes, int pitch, int dx, int dy)
 		{
 			WriteableBitmap bitmap = new WriteableBitmap (dx, dy, 72, 72, PixelFormats.Pbgra32, null);
 			bitmap.WritePixels (new System.Windows.Int32Rect (0, 0, dx, dy), imageBytes, pitch, 0);
 
 			return new NativeBitmap (bitmap, colorType: BitmapColorType.RgbAlpha);
-			
 		}
 
 

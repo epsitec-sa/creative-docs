@@ -2073,6 +2073,51 @@ namespace Epsitec.Common.Document
 			return true;
 		}
 
+
+
+		//---------------------------------------------------------------------------
+		/// <summary>
+		/// Adds an image in current page at specified position.
+		/// </summary>
+		///
+		/// <param name = "imageFile">	Path of image to add 	</param>
+		/// <param name = "position">	Position of image (should fit into current page)	</param>
+		//---------------------------------------------------------------------------
+		public virtual bool AddImage (string imageFile, Rectangle position)
+		{
+			DrawingContext drawingContext = this.ActiveViewer.DrawingContext;
+//+			Size pageSize = drawingContext.PageSize;
+
+			using (this.OpletQueueBeginAction(Res.Strings.Action.ImageImport))
+			{
+				this.DeselectAll();
+				this.Tool = "ToolSelect";
+
+				Objects.Image obj = Objects.Abstract.CreateObject(this.document, "ObjectImage", this.objectMemory) as Objects.Image;
+
+				Objects.Abstract layer = drawingContext.RootObject();
+				layer.Objects.Add(obj);
+
+				obj.CreateMouseDown (position.BottomLeft,  drawingContext);
+				obj.CreateMouseMove (position.BottomRight, drawingContext);
+				obj.CreateMouseUp 	(position.BottomRight, drawingContext);
+
+				if (!string.IsNullOrEmpty(imageFile))
+				{
+				    obj.ImportClipboard(imageFile);  // importe le fichier temporaire créé
+				}
+
+				obj.Select();  						// Select added image
+				this.TotalSelected++;
+				this.ActiveViewer.UpdateSelector();
+
+				this.document.SetDirtySerialize(CacheBitmapChanging.Local);
+				this.OpletQueueValidateAction();
+			}
+			return true;
+		}
+
+
 		protected System.Drawing.Bitmap GetPastedBitmap()
 		{
 			//	Retourne les données 'bitmap' contenues dans le clipboard, si elles existent.

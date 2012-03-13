@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Document.PDF;
@@ -24,7 +24,7 @@ namespace Common.Document.ExportEngine
 				System.Diagnostics.Debug.WriteLine ("ExportEngine: version " + typeof (Program).AssemblyQualifiedName.Split ('=')[1].Split (',')[0]);
 				System.Diagnostics.Debug.WriteLine ("ExportEngine: operating on file " + args[1]);
 
-				string source = System.IO.File.ReadAllText (args[1], System.Text.Encoding.Default);
+				string source = System.IO.File.ReadAllText (args[1], System.Text.Encoding.UTF8);
 
 				System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
 				System.Diagnostics.Debug.WriteLine (source);
@@ -41,7 +41,7 @@ namespace Common.Document.ExportEngine
 				System.Diagnostics.Debug.WriteLine (source);
 				System.Diagnostics.Debug.WriteLine ("----------------------------------------------------------------------");
 
-				System.IO.File.WriteAllText (args[1], source, System.Text.Encoding.Default);
+				System.IO.File.WriteAllText (args[1], source, System.Text.Encoding.UTF8);
 
 				System.Diagnostics.Debug.WriteLine (string.Format ("ExportEngine: executed in {0} ms", watch.ElapsedMilliseconds));
 			}

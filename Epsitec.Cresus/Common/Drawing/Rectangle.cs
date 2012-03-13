@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing
@@ -182,8 +182,8 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 
-
-		public Point Center
+		[XmlIgnore]
+		public Point							Center
 		{
 			get
 			{
@@ -200,6 +200,31 @@ namespace Epsitec.Common.Drawing
 			}
 		}
 		
+		[XmlIgnore]
+		public Point							MiddleLeft
+		{
+			get { return new Point (this.x1, (this.y2 - this.y1) / 2); }
+		}
+
+		[XmlIgnore]
+		public Point							MiddleRight
+		{
+			get { return new Point (this.x2, (this.y2 - this.y1) / 2); }
+		}
+
+		[XmlIgnore]
+		public Point							MiddleTop
+		{
+			get { return new Point ((this.x2 - this.x1) / 2, this.y2); }
+		}
+
+		[XmlIgnore]
+		public Point							MiddleBottom
+		{
+			get { return new Point ((this.x2 - this.x1) / 2, this.y1); }
+		}
+		
+		[XmlIgnore]
 		public double							Surface
 		{
 			get
@@ -228,10 +253,10 @@ namespace Epsitec.Common.Drawing
 				case GripId.VertexBottomRight:	return this.BottomRight;
 				case GripId.VertexTopLeft:		return this.TopLeft;
 				case GripId.VertexTopRight:		return this.TopRight;
-				case GripId.EdgeBottom:			return new Point (this.Center.X, this.Bottom);
-				case GripId.EdgeTop:			return new Point (this.Center.X, this.Top);
-				case GripId.EdgeLeft:			return new Point (this.Left, this.Center.Y);
-				case GripId.EdgeRight:			return new Point (this.Right, this.Center.Y);
+				case GripId.EdgeBottom:			return this.MiddleBottom;
+				case GripId.EdgeTop:			return this.MiddleTop;
+				case GripId.EdgeLeft:			return this.MiddleLeft;
+				case GripId.EdgeRight:			return this.MiddleRight;
 				case GripId.Body:				return this.Center;
 			}
 			

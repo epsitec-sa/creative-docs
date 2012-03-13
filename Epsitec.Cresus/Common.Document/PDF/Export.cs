@@ -1,9 +1,10 @@
-//	Copyright © 2004-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 
 using System.Collections.Generic;
+using System;
 
 namespace Epsitec.Common.Document.PDF
 {
@@ -1925,22 +1926,32 @@ namespace Epsitec.Common.Document.PDF
 
 		private static NativeBitmap PrepareImage(ImageSurface image)
 		{
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, image:\n{0}", image == null ? "<null>" : image.GetDebugInformation()));
 			double imageMinDpi = image.MinDpi;
 			double imageMaxDpi = image.MaxDpi;
 
-			NativeBitmap fi;
+			int dx = image.DX;
+			int dy = image.DY;
 
-			int dx;
-			int dy;
+			NativeBitmap fi = Export.LoadImage (image);
 
-			fi = Export.LoadImage (image);
-
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: before crop and resizing, ColorType={0}", fi == null ? "<null>" : fi.ColorType.ToString ()));
-			
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, before crop and resizing:\n{0}", fi == null ? "<null>" : fi.ToString()));
 			fi = Export.CropImage (image, fi);
-			fi = Export.ResizeImage (image, fi, imageMinDpi, imageMaxDpi, out dx, out dy);
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage, After crop:\n{0}", fi == null ? "<null>" : fi.ToString()));
 
-			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: after crop/resize, Size={0}x{1}, ColorType={2}", dx, dy, fi == null ? "<null>" : fi.ColorType.ToString ()));
+			// --------------- 06-02-2012 15:45 -----------------
+			// Start of JFC modification : For debug purpose
+			// --------------------------------------------------
+			// Original Code :
+
+			fi = Export.ResizeImage (image, fi, imageMinDpi, imageMaxDpi, out dx, out dy);
+			// Modified Code :
+//+			dx = fi.Width;
+//+			dy = fi.Height;
+			// --------------------------------------------------
+			// End of JFC modification (06-févr.-2012 15:45)
+			// --------------------------------------------------
+			System.Diagnostics.Debug.WriteLine (string.Format ("PrepareImage: after crop & resize, Size={0}x{1}\n{2}", dx, dy, fi == null ? "<null>" : fi.ToString()));
 
 			image.ColorType     = fi.ColorType;
 			image.IsTransparent = fi.IsTransparent;
@@ -1981,10 +1992,10 @@ namespace Epsitec.Common.Document.PDF
 
 			try
 			{
-				System.IO.File.WriteAllText (path, ImageSurface.Serialize (image), System.Text.Encoding.Default);
+				System.IO.File.WriteAllText (path, ImageSurface.Serialize (image), System.Text.Encoding.UTF8);
 
 				string program = "Common.Document.ExportEngine.exe";
-                
+
 				string exe1 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.Executable, program);
 				string exe2 = System.IO.Path.Combine (Epsitec.Common.Support.Globals.Directories.InitialDirectory, program);
 				string exe3 = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (typeof (Export).Assembly.Location), program);
@@ -1998,7 +2009,7 @@ namespace Epsitec.Common.Document.PDF
 
 				process.WaitForExit ();
 
-				return ImageSurface.Deserialize (System.IO.File.ReadAllText (path, System.Text.Encoding.Default));
+				return ImageSurface.Deserialize (System.IO.File.ReadAllText (path, System.Text.Encoding.UTF8));
 			}
 			finally
 			{
@@ -2294,16 +2305,20 @@ namespace Epsitec.Common.Document.PDF
 			return fi;
 		}
 
+		/// <summary>
+		/// Rescales image to limit its printed resolution to what is sufficient for
+		/// printing (usually 300 dpi)
+		/// </summary>
 		private static NativeBitmap ResizeImage(ImageSurface image, NativeBitmap fi, double imageMinDpi, double imageMaxDpi, out int dx, out int dy)
 		{
 			dx = fi.Width;
 			dy = fi.Height;
-
 			//	Mise à l'échelle éventuelle de l'image selon les choix de l'utilisateur.
 			//	Une image sans filtrage n'est jamais mise à l'échelle !
-			double currentDpiX = dx*254.0/image.ImageSize.Width;
-			double currentDpiY = dy*254.0/image.ImageSize.Height;
-
+			const double tenthMillimeterPerInch = 254;
+			double currentDpiX = dx * tenthMillimeterPerInch / image.ImageSize.Width;      	// Image size is expressed in mm/10 !!!
+			double currentDpiY = dy * tenthMillimeterPerInch / image.ImageSize.Height;
+			System.Diagnostics.Debug.WriteLine("Current Dpi: {0} x {1}", currentDpiX, currentDpiY);
 			double finalDpiX = currentDpiX;
 			double finalDpiY = currentDpiY;
 
@@ -2318,25 +2333,51 @@ namespace Epsitec.Common.Document.PDF
 				finalDpiX = System.Math.Min (finalDpiX, imageMaxDpi);
 				finalDpiY = System.Math.Min (finalDpiY, imageMaxDpi);
 			}
+			System.Diagnostics.Debug.WriteLine("Final Dpi:   {0} x {1}", finalDpiX, finalDpiY);
 
 			bool resizeRequired = false;
 
-			if (currentDpiX != finalDpiX || currentDpiY != finalDpiY)
-			{
-				dx = (int) System.Math.Ceiling ((dx+0.5)*finalDpiX/currentDpiX);
-				dy = (int) System.Math.Ceiling ((dy+0.5)*finalDpiY/currentDpiY);
+			// --------------- 07-02-2012 14:52 ------------------
+			//+ Start of JFC modification: This is a workaround to compensate the fact that either image.ImageSize.Width or image.ImageSize.Height
+			//+ 						   may be not correct (for example square source image inserted as a thin rectangle will have its height equal
+			//+                            to its width)
+			// --------------------------------------------------
+			//  Original Code:
+//+			if (currentDpiX != finalDpiX || currentDpiY != finalDpiY)
+//+			{
+//+				dx = (int) System.Math.Ceiling ((dx+0.5)*finalDpiX/currentDpiX);
+//+				dy = (int) System.Math.Ceiling ((dy+0.5)*finalDpiY/currentDpiY);
 
-				if (dx < 1)
-				{
-					dx = 1;
-				}
-				if (dy < 1)
-				{
-					dy = 1;
-				}
+//+				if (dx < 1)
+//+				{
+//+					dx = 1;
+//+				}
+//+				if (dy < 1)
+//+				{
+//+					dy = 1;
+//+				}
+
+//+				resizeRequired = true;
+//+				System.Diagnostics.Debug.WriteLine("Dpi are different, resizeRequired: {0}", resizeRequired);
+//+			}
+			//  Modified Code:
+			System.Diagnostics.Debug.WriteLine("Export.ResizeImage: USING TEMPORARY WORKAROUND !!!!!");
+			var usedCurrentDpi = System.Math.Min(currentDpiX, currentDpiY);
+			var usedFinalDpi   = (usedCurrentDpi == currentDpiX) ? finalDpiX : finalDpiY;
+			if (usedCurrentDpi != usedFinalDpi)
+			{
+				dx = (int) System.Math.Ceiling ((dx + 0.5) * usedFinalDpi / usedCurrentDpi);
+				dy = (int) System.Math.Ceiling ((dy + 0.5) * usedFinalDpi / usedCurrentDpi);
+
+				dx = System.Math.Max(1, dx);
+				dy = System.Math.Max(1, dy);
 
 				resizeRequired = true;
+				System.Diagnostics.Debug.WriteLine("Dpi are different, resize is required:, now, dx = {0}, dy = {1}", dx, dy);
 			}
+			// --------------------------------------------------
+			// End of JFC modification (07-févr.-2012 14:52)
+			// --------------------------------------------------
 
 			if (resizeRequired)
 			{

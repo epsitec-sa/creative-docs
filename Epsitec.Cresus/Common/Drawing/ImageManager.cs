@@ -1,4 +1,4 @@
-//	Copyright © 2007-2008, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, OPaC bright ideas, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -481,19 +481,56 @@ namespace Epsitec.Common.Drawing
 			image.ClearCache (mode);
 		}
 
+		/// <summary>
+		/// Gets or sets the image size used by the cache for thumbnail images. The thumbnails
+		/// are used to represent image miniatures.
+		/// </summary>
+		///
+		/// <remarks>
+		/// This property should be set only at application initialization.
+		/// Excessive size can prevent the application from running properly, due to to
+		/// excessive memory consumption. The default value is set to 128.
+		/// Values are clipped to the range [64..512].
+		/// </remarks>
 		public int ThumbnailSize
 		{
 			get
 			{
 				return this.thumbnailSize;
 			}
+			set
+			{
+				value = System.Math.Min (value, 512);
+				value = System.Math.Max (value,  64);
+				
+				this.thumbnailSize = value;
+			}
 		}
 
+		/// <summary>
+		/// Gets or sets the image size used by the cache for previewing images. The samples
+		/// are used to display images in a document view. They should not be too large to
+		/// avoid excessive memory pressure, nor be to low, to avoid poor display quality.
+		/// </summary>
+		///
+		/// <remarks>
+		/// This property should be called only at application initialization.
+		/// Excessive size can prevent the application from running properly, due to to
+		/// excessive memory consumption. The default value is set to 512.
+		/// Values are clipped to the range [64..512].
+		/// </remarks>
 		public int SampleImageSize
 		{
 			get
 			{
 				return this.sampleImageSize;
+			}
+			set
+			{
+				value = System.Math.Min (value, 8192);
+				value = System.Math.Max (value, 128);
+				
+				this.sampleImageSize = value;
 			}
 		}
 

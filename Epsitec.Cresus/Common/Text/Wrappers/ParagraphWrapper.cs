@@ -1,5 +1,5 @@
-//	Copyright © 2005-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Text.Wrappers
 {
@@ -577,9 +577,12 @@ namespace Epsitec.Common.Text.Wrappers
 		internal override void UpdateState(bool active)
 		{
 			State state = active ? this.Active : this.Defined;
-			
-			System.Diagnostics.Debug.Assert (state.IsDirty == false);
-			
+
+			if (state.IsDirty)
+			{
+				System.Diagnostics.Debug.WriteLine ("Unexpected dirty flag when updating '{0}' state", (active ? "Active" : "Defined"));
+			}
+
 			this.UpdateMargins (state, active);
 			this.UpdateLeading (state, active);
 			this.UpdateKeep (state, active);
