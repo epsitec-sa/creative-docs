@@ -104,12 +104,9 @@ namespace Epsitec.Aider.Data.Eerv
 				.GroupBy (p => p.Lastnames, comparer)
 				.ToDictionary (g => g.Key, g => g.ToList (), comparer);
 		}
-		private static int index = 0;
 
 		private static List<Tuple<NormalizedPerson, MatchData>> FindMatches(NormalizedPerson eervPerson, IEnumerable<NormalizedPerson> databasePersons, Dictionary<string[], List<NormalizedPerson>> lastNamesToDatabasePersons)
 		{
-			index++;
-
 			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> fullLastnameMatcher = null;
 			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> orderedPartialLastnameMatcher = null;
 			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> partialLastnameMatcher = null;
