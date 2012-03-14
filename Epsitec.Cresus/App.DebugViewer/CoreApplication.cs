@@ -7,6 +7,7 @@ using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DebugViewer.ViewControllers;
 
 namespace Epsitec.Cresus.DebugViewer
 {
@@ -62,9 +63,18 @@ namespace Epsitec.Cresus.DebugViewer
 			this.businessContext = new BusinessContext (this.Data);
 
 			var window = this.Window;
+
+			this.mainController = new MainViewController (this);
+			this.mainController.CreateUI (window.Root);
+
+			this.mainAccessor = new Accessors.LogDataAccessor (@"S:\elite23@poste08-63467137422993.1376");
+			this.mainController.DefineAccessor (this.mainAccessor);
+
 			window.Root.BackColor = Common.Drawing.Color.FromName ("Lime");
 		}
 
 		private BusinessContext					businessContext;
+		private MainViewController				mainController;
+		private Accessors.LogDataAccessor		mainAccessor;
 	}
 }

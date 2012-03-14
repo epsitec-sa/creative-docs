@@ -19,6 +19,20 @@ namespace Epsitec.Cresus.Core.Library.Business
 	/// </summary>
 	public class CoreSnapshotService
 	{
+		public static class Keyword
+		{
+			public const string SET_DB_FIELD = "SET_DB_FIELD";
+			public const string SET_LIVE_FIELD = "SET_LIVE_FIELD";
+			public const string WIDGET_FOCUS = "WIDGET_FOCUS";
+			public const string WINDOW_SHOW = "WINDOW_SHOW";
+			public const string MOUSE_DOWN = "MOUSE_DOWN";
+			public const string WINDOW_FOCUS = "WINDOW_FOCUS";
+			public const string NAV = "NAV";
+			public const string USER_MESSAGE = "USER_MESSAGE";
+			public const string CMD = "CMD";
+			public const string TRACE = "TRACE";
+		}
+
 		public CoreSnapshotService()
 		{
 			CoreSnapshotService.SetDefaultThreadName ();
@@ -64,7 +78,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			if (CoreSnapshotService.defaultService != null)
 			{
-				CoreSnapshotService.defaultService.RecordEvent ("USER_MESSAGE", message);
+				CoreSnapshotService.defaultService.RecordEvent (Keyword.USER_MESSAGE, message);
 			}
 		}
 
@@ -159,7 +173,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		private void HandleCommandDispatcherCommandDispatching(object sender, CommandEventArgs e)
 		{
-			this.RecordEvent ("CMD", string.Format ("{0} ({1})", e.Command.CommandId, e.Command.Name));
+			this.RecordEvent (Keyword.CMD, string.Format ("{0} ({1})", e.Command.CommandId, e.Command.Name));
 			this.commandDispatchDepth++;
 		}
 
@@ -177,11 +191,11 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			if (entityKey.HasValue)
 			{
-				this.RecordEvent ("SET_DB_FIELD", string.Format ("{0}/{1} : {2} -> {3}", entityKey.Value, e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+				this.RecordEvent (Keyword.SET_DB_FIELD, string.Format ("{0}/{1} : {2} -> {3}", entityKey.Value, e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
 			}
 			else
 			{
-				this.RecordEvent ("SET_LIVE_FIELD", string.Format ("{0}/{1} : {2} -> {3}", e.Entity.GetEntityStructuredTypeId (), e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
+				this.RecordEvent (Keyword.SET_LIVE_FIELD, string.Format ("{0}/{1} : {2} -> {3}", e.Entity.GetEntityStructuredTypeId (), e.FieldCaption.Name, e.OldValue ?? "<null>", e.NewValue ?? "<null>"));
 			}
 		}
 
@@ -192,7 +206,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			if ((widget != null) &&
 				(widget.IsFocused))
 			{
-				this.RecordEvent ("WIDGET_FOCUS", InvariantConverter.Format ("{0}:{1}/{2}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName));
+				this.RecordEvent (Keyword.WIDGET_FOCUS, InvariantConverter.Format ("{0}:{1}/{2}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName));
 
 				Application.QueueAsyncCallback (() => this.CreateWindowFocusSnapshot (widget, System.Drawing.Pens.Red));
 			}
@@ -202,7 +216,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 		{
 			var window = sender as Window;
 
-			this.RecordEvent ("WINDOW_SHOW", InvariantConverter.Format ("{0}:{1}/{2}", window.GetWindowSerialId (), window.GetType ().Name, window.Name));
+			this.RecordEvent (Keyword.WINDOW_SHOW, InvariantConverter.Format ("{0}:{1}/{2}", window.GetWindowSerialId (), window.GetType ().Name, window.Name));
 			this.CreateWindowSnapshot (window);
 		}
 
@@ -218,7 +232,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			this.lastUserMessageId = messageId;
 
-			this.RecordEvent ("MOUSE_DOWN", InvariantConverter.Format ("{0}:{1}/{2}:{3}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName, e.Message.Cursor.ToString ()));
+			this.RecordEvent (Keyword.MOUSE_DOWN, InvariantConverter.Format ("{0}:{1}/{2}:{3}", widget.GetVisualSerialId (), widget.GetType ().Name, widget.FullPathName, e.Message.Cursor.ToString ()));
 
 			this.CreateWindowClickSnapshot (widget, e.Message.Cursor, System.Drawing.Brushes.Red);
 		}
@@ -230,7 +244,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 			if ((window != null) &&
 				(window.IsFocused))
 			{
-				this.RecordEvent ("WINDOW_FOCUS", InvariantConverter.Format ("{0}:{1}/{2}", window.GetWindowSerialId (), window.GetType ().Name, window.Name));
+				this.RecordEvent (Keyword.WINDOW_FOCUS, InvariantConverter.Format ("{0}:{1}/{2}", window.GetWindowSerialId (), window.GetType ().Name, window.Name));
 			}
 		}
 
@@ -241,13 +255,13 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 			if (navigationPath != null)
 			{
-				this.RecordEvent ("NAV", navigationPath.ToString ());
+				this.RecordEvent (Keyword.NAV, navigationPath.ToString ());
 			}
 		}
 
 		private void HandleDebugOutputWriter(string text)
 		{
-			this.RecordEventData ("TRACE", text);
+			this.RecordEventData (Keyword.TRACE, text);
 		}
 
 		private void CreateWindowSnapshot(Window window)
@@ -346,7 +360,7 @@ namespace Epsitec.Cresus.Core.Library.Business
 
 		private static CoreSnapshotService		defaultService;
 
-		private string							sessionId;
+		private readonly string					sessionId;
 		private string							sessionPath;
 		private int								commandDispatchDepth;
 		private long							lastUserMessageId;
