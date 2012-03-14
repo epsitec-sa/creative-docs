@@ -134,7 +134,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				var result = EChDataImporter.Import (businessContext, eChPersonIdToEntityKey, eChPersonIdToEntity, eChAdult2, eChReportedPersonEntity, eChAddressEntity, aiderHousehold);
 
-				eChReportedPersonEntity.Adult1 = result.Item1;
+				eChReportedPersonEntity.Adult2 = result.Item1;
 				aiderHousehold.Head2 = result.Item2;
 			}
 
