@@ -73,14 +73,14 @@ namespace Epsitec.Aider.Entities
 
 			DataContext dataContext = null;
 
-			members.AddRange (this.Blabla (dataContext, example1));
-			members.AddRange (this.Blabla (dataContext, example2));
+			members.AddRange (this.GetMembers (dataContext, example1));
+			members.AddRange (this.GetMembers (dataContext, example2));
 
 			value = members.AsReadOnlyCollection ();
 		}
 
 
-		private IEnumerable<AiderPersonEntity> Blabla(DataContext dataContext, AiderPersonEntity example)
+		private IEnumerable<AiderPersonEntity> GetMembers(DataContext dataContext, AiderPersonEntity example)
 		{
 			if (dataContext == null)
 			{
