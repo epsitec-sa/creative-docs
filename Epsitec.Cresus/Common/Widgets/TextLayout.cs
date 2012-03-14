@@ -1,4 +1,4 @@
-﻿//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -427,6 +427,18 @@ namespace Epsitec.Common.Widgets
 				{
 					this.verticalMark = value;
 				}
+			}
+		}
+
+		public System.Func<string, Drawing.Image> ImageCallback
+		{
+			get
+			{
+				return this.imageCallback;
+			}
+			set
+			{
+				this.imageCallback = value;
 			}
 		}
 
@@ -4205,15 +4217,8 @@ namespace Epsitec.Common.Widgets
 								System.Diagnostics.Debug.Assert( parameters != null && parameters.ContainsKey("src") );
 								string imageName = parameters["src"];
 								double verticalOffset = 0;
-							
-								Drawing.Image image = Support.ImageProvider.Default.GetImage(imageName, this.ResourceManager);
-								
-								if ( image == null )
-								{
-									image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
-									System.Diagnostics.Debug.WriteLine (string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
-//-									throw new System.FormatException(string.Format("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory()));
-								}
+
+								Drawing.Image image = this.ResolveImage (imageName);
 
 								if (parameters.ContainsKey("voff"))
 								{
@@ -5112,6 +5117,31 @@ noText:
 		}
 
 
+		private Drawing.Image ResolveImage(string imageName)
+		{
+			Drawing.Image image = null;
+
+			if (imageName.StartsWith ("callback:"))
+			{
+				if (this.imageCallback != null)
+				{
+					image = this.imageCallback (imageName.Substring (9));
+				}
+			}
+			else
+			{
+				image = Support.ImageProvider.Default.GetImage (imageName, this.ResourceManager);
+			}
+
+			if (image == null)
+			{
+				image = Support.ImageProvider.Default.GetImage ("manifest:Epsitec.Common.Widgets.Images.Missing.icon", this.ResourceManager);
+				System.Diagnostics.Debug.WriteLine (string.Format ("<img> tag references unknown image '{0}' while painting. Current directory is {1}.", imageName, System.IO.Directory.GetCurrentDirectory ()));
+			}
+
+			return image;
+		}
+		
 		public OneCharStructure[] ComputeStructure()
 		{
 			//	Génère la structure pour chaque caractère du texte, ce qui permet
@@ -5640,6 +5670,7 @@ noText:
 		private readonly List<JustifLine>		lines  = new List<JustifLine> ();
 		private Queue<Support.SimpleCallback>	textChangeEventQueue;
 		private Dictionary<string, string>		parameters;
+		private System.Func<string, Drawing.Image> imageCallback;
 		
 		public const double						Infinite		= 1000000;
 

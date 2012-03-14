@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -78,6 +78,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public Drawing.Image			Image
+		{
+			get
+			{
+				return this.image;
+			}
+			set
+			{
+				this.image = value;
+				this.imageName = "callback:";
+				this.RebuildTextLayout ();
+			}
+		}
+
 		
 		private void RebuildTextLayout()
 		{
@@ -124,10 +138,23 @@ namespace Epsitec.Common.Widgets
 				this.Text = buffer.ToString ();
 			}
 		}
+
+		protected override void UpdateTextLayout()
+		{
+			this.TextLayout.ImageCallback = this.ImageCallback;
+			
+			base.UpdateTextLayout ();
+		}
+
+		private Drawing.Image ImageCallback(string name)
+		{
+			return this.image;
+		}
 		
 		
 		protected string				imageName;
 		protected Drawing.Size			imageSize;
 		protected double				verticalOffset;
+		protected Drawing.Image			image;
 	}
 }
