@@ -3,17 +3,19 @@ using Epsitec.Aider.Enumerations;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Data.Platform;
+
+using Epsitec.TwixClip;
 
 using System;
 
 using System.Collections.Generic;
-
 
 using System.Linq;
 
@@ -28,39 +30,69 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			BusinessContext businessContext = null;
-			
-			try
+			// TODO Import group & activity data.
+			// TODO Import household data (match and merge or create if no match)
+		
+			var eervPhysicalPersons = eervPersons.Where (p => string.IsNullOrWhiteSpace (p.CorporateName));
+			EervParishDataImporter.ImportEervPhysicalPersons (businessContextCreator, businessContextCleaner, eervPhysicalPersons, eervHouseholds);
+		
+			var eervLegalPersons = eervPersons.Where (p => !string.IsNullOrWhiteSpace (p.CorporateName));
+			EervParishDataImporter.ImportEervLegalPersons (businessContextCreator, businessContextCleaner, eervLegalPersons);
+		}
+
+
+		private static void ImportEervPhysicalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		{
+			var matches = EervParishDataImporter.FindMatches (businessContextCreator, businessContextCleaner, eervPersons, eervHouseholds);
+
+			EervParishDataImporter.ProcessMatches (businessContextCreator, businessContextCleaner, matches, eervHouseholds);
+		}
+
+
+		private static void ImportEervLegalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons)
+		{
+			// TODO Import legal persons.
+		}
+
+
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		{
+			using (BusinessContext businessContext = businessContextCreator ())
 			{
-				businessContext = businessContextCreator ();
-
-				// Filters the legal persons. We don't match them here.
-				eervPersons = eervPersons.Where (p => string.IsNullOrWhiteSpace (p.CorporateName));
-
-				var databasePersons = businessContext.GetAllEntities<AiderPersonEntity> ();
-				
-				// Fetches all this stuff in memory at once, so we don't make gazillions of requests
-				// to the database.
-				businessContext.GetAllEntities<eCH_PersonEntity> ();
-				businessContext.GetAllEntities<eCH_AddressEntity> ();
-				businessContext.GetAllEntities<eCH_ReportedPersonEntity> ();
-				
-				var matches = EervParishDataImporter.FindMatches (eervPersons, eervHouseholds, databasePersons);
-
-				foreach (var match in matches)
+				try
 				{
-					EervParishDataImporter.ProcessMatch (businessContext, match);
+					return EervParishDataImporter.FindMatches (businessContext, eervPersons, eervHouseholds);
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						businessContextCleaner (businessContext);
+					}
 				}
 			}
-			finally
-			{
-				if (businessContext != null)
-				{
-					businessContext.SaveChanges ();
-					businessContextCleaner (businessContext);
-					businessContext.Dispose ();
-				}
-			}
+		}
+
+		
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContext businessContext, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		{
+			var databasePersons = businessContext.GetAllEntities<AiderPersonEntity> ();
+
+			// NOTE Here we fetch all this stuff in memory at once, so we don't make gazillions of
+			// requests to the database later, by fetching them one by one.
+			businessContext.GetAllEntities<eCH_PersonEntity> ();
+			businessContext.GetAllEntities<eCH_AddressEntity> ();
+			businessContext.GetAllEntities<eCH_ReportedPersonEntity> ();
+
+			var dataContext = businessContext.DataContext;
+
+			var matches = EervParishDataImporter.FindMatches (eervPersons, eervHouseholds, databasePersons);
+
+			return matches.ToDictionary
+			(
+				kvp => kvp.Key,
+				kvp => kvp.Value.Select (m => Tuple.Create (dataContext.GetNormalizedEntityKey (m.Item1).Value, m.Item2)).ToList ()
+			);
 		}
 
 
@@ -480,9 +512,255 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessMatch(BusinessContext businessContext, KeyValuePair<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> match)
+		private static void ProcessMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			// TODO
+			using (BusinessContext businessContext = businessContextCreator ())
+			{
+				try
+				{
+					EervParishDataImporter.ProcessMatches (businessContext, matches, eervHouseholds);
+				}
+				finally
+				{
+					if (businessContext != null)
+					{
+						businessContext.SaveChanges ();
+						businessContextCleaner (businessContext);
+					}
+				}
+			}
+		}
+
+
+		private static void ProcessMatches(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, IEnumerable<EervHousehold> eervHouseholds)
+		{
+			var dataContext = businessContext.DataContext;
+
+			var idToEervHouseholds = eervHouseholds.ToDictionary (h => h.Id);
+
+			foreach (var match in matches)
+			{
+				var eervPerson = match.Key;
+				var eervHousehold = idToEervHouseholds[eervPerson.HouseholdId];
+
+				if (match.Value.Any ())
+				{
+					foreach (var m in match.Value)
+					{
+						var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
+						var matchData = m.Item2;
+
+						EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson, matchData);
+					}
+				}
+				else
+				{
+					var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
+					
+					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson, null);
+				}
+			}
+		}
+
+
+		private static void CombineAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson, MatchData matchData)
+		{
+			// TODO ADD PlaceOfBirth ?
+			// TODO ADD PlaceOfBaptism ?
+			// TODO ADD DateOfBaptism ?
+			// TODO ADD PlaceOfChildBenediction ?
+			// TODO ADD DateOfChildBenediction ?
+			// TODO ADD PlaceOfCatechismBenediction ?
+			// TODO ADD DateOfCatechismBenediction ?
+			// TODO ADD SchoolYearOffset ?
+
+			EervParishDataImporter.CombineOriginalName (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineHonorific (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineProfession (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineDateOfDeath (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineConfession (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineRemarks (eervPerson, aiderPerson);
+			EervParishDataImporter.CombineCoordinates (businessContext, eervPerson, aiderPerson);
+		}
+
+
+		private static void CombineOriginalName(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var originalName = eervPerson.OriginalName;
+
+			if (!string.IsNullOrEmpty (originalName))
+			{
+				aiderPerson.OriginalName = originalName;
+			}
+		}
+
+
+		private static void CombineHonorific(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var honorific = eervPerson.Honorific;
+
+			if (!string.IsNullOrEmpty (honorific))
+			{
+				switch (honorific)
+				{
+					case "Monsieur":
+						aiderPerson.MrMrs = PersonMrMrs.Monsieur;
+						break;
+
+					case "Madame":
+						aiderPerson.MrMrs = PersonMrMrs.Madame;
+						break;
+
+					case "Mademoiselle":
+						aiderPerson.MrMrs = PersonMrMrs.Mademoiselle;
+						break;
+
+					default:
+						aiderPerson.Title = honorific;
+						break;
+				}
+			}
+		}
+
+
+		private static void CombineProfession(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var profession = eervPerson.Profession;
+
+			if (!string.IsNullOrEmpty (profession))
+			{
+				aiderPerson.Profession = profession;
+			}
+		}
+
+
+		private static void CombineDateOfDeath(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var dateOfDeath = eervPerson.DateOfDeath;
+
+			if (dateOfDeath.HasValue)
+			{
+				aiderPerson.eCH_Person.PersonDateOfDeath = dateOfDeath;
+			}
+		}
+
+
+		private static void CombineConfession(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var confession = eervPerson.Confession;
+
+			if (confession != PersonConfession.Unknown)
+			{
+				aiderPerson.Confession = confession;
+			}
+		}
+
+
+		private static void CombineRemarks(EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var remarks = eervPerson.Remarks;
+
+			if (!string.IsNullOrEmpty (remarks))
+			{
+				EervParishDataImporter.CombineComments (aiderPerson, remarks);
+			}
+		}
+
+
+		private static void CombineCoordinates(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
+		{
+			var email = eervPerson.EmailAddress;
+			var mobile = eervPerson.MobilePhoneNumber;
+
+			var hasEmail = !string.IsNullOrEmpty (email);
+			var hasMobile = !string.IsNullOrEmpty (mobile);
+
+			if (hasEmail || hasMobile)
+			{
+				// NOTE Here we need to check this because the list is implemented by 4 fields and
+				// we don't want to skip the address in this case. It will probably never happen,
+				// but in case it does, it won't go unnoticed.
+				if (aiderPerson.AdditionalAddresses.Count >= 4)
+				{
+					throw new InvalidOperationException ();
+				}
+
+				var address = businessContext.CreateEntity<AiderAddressEntity> ();
+
+				EervParishDataImporter.AddEmail (address, email);
+				EervParishDataImporter.AddMobilePhoneNumber (address, mobile);
+
+				aiderPerson.AdditionalAddresses.Add (address);
+			}
+		}
+
+
+		private static void AddEmail(AiderAddressEntity address, string email)
+		{
+			if (!string.IsNullOrEmpty (email))
+			{
+				address.Email = email;
+			}
+		}
+
+
+		private static void AddMobilePhoneNumber(AiderAddressEntity address, string mobilePhoneNumber)
+		{
+			if (!string.IsNullOrEmpty (mobilePhoneNumber))
+			{
+				var parsedNumber = TwixTel.ParsePhoneNumber (mobilePhoneNumber);
+
+				if (TwixTel.IsValidPhoneNumber (parsedNumber, false))
+				{
+					address.Mobile = parsedNumber;
+				}
+				else
+				{
+					var text = "Téléphone invalide ou non reconnu par le système : " + mobilePhoneNumber;
+					
+					EervParishDataImporter.CombineComments (address, text);
+				}
+			}
+		}
+
+
+		private static void CombineComments(IComment entity, string text)
+		{
+			// With the null reference virtualizer, we don't need to handle explicitely the case
+			// when there is no comment defined yet.
+
+			var comment = entity.Comment;
+
+			var escapedText = FormattedText.Escape (text);
+			var combinedText = TextFormatter.FormatText (comment.Text, "~\n\n", escapedText);
+
+			comment.Text = combinedText;
+		}
+
+
+		private static AiderPersonEntity CreateAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson)
+		{
+			var aiderPerson = businessContext.CreateEntity<AiderPersonEntity> ();
+			var eChPerson = aiderPerson.eCH_Person;
+
+			eChPerson.PersonFirstNames = eervPerson.Firstnames;
+			eChPerson.PersonOfficialName = eervPerson.Lastname;
+			eChPerson.PersonDateOfBirth = eervPerson.DateOfBirth;
+			eChPerson.PersonSex = eervPerson.Sex;
+			eChPerson.AdultMaritalStatus = eervPerson.MaritalStatus;
+
+			var origins = eervPerson.Origins;
+
+			if (!string.IsNullOrEmpty (origins))
+			{
+				eChPerson.Origins = origins;
+			}
+
+			eChPerson.DataSource = Enumerations.DataSource.Undefined;
+			eChPerson.DeclarationStatus = PersonDeclarationStatus.NotDeclared;
+			eChPerson.RemovalReason = RemovalReason.None;
+
+			return aiderPerson;
 		}
 
 
