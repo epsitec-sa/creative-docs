@@ -244,6 +244,7 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="Epsitec.Cresus.snk" />
+    <Content Include="External\Data\écritures.txt" />
     <Content Include="Resources\Cresus.Compta\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -338,6 +339,7 @@
     <EmbeddedResource Include="Images\Présentation.TauxTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.Menu.icon" />
     <EmbeddedResource Include="Images\Présentation.ListeTVA.icon" />
+    <None Include="External\Data\pme 2011.crp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

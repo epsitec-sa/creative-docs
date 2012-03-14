@@ -1,0 +1,342 @@
+01.01.2011	1000	9100	172	Solde à nouveau Caisse	10051.28	0.00	0.000000	0	1	0	0		
+01.01.2011	9100	1010	173	Solde à nouveau CCP	4420.44	0.00	0.000000	0	1	0	0		
+01.01.2011	1020	9100	174	Solde à nouveau Compte courant	8008.19	0.00	0.000000	0	1	0	0		
+01.01.2011	1022	9100	175	Solde à nouveau Compte courant EUR	6040.00	4000.00	1.510000	0	1	0	0		
+01.01.2011	1023	9100	176	Solde à nouveau Compte courant USD	14623.13	8840.00	1.654200	0	1	0	0		
+01.01.2011	1100	9100	177	Solde à nouveau Créances envers des tiers	3117.55	0.00	0.000000	0	1	0	0		
+01.01.2011	1170	9100	178	Solde à nouveau TVA à récupérer s/achats matières et prest.	1862.00	0.00	0.000000	0	1	0	0		
+01.01.2011	1171	9100	179	Solde à nouveau TVA à récupérer s/invest. autres ch. exploit.	1384.32	0.00	0.000000	0	1	0	0		
+01.01.2011	1200	9100	180	Solde à nouveau Stocks	1200.00	0.00	0.000000	0	1	0	0		
+01.01.2011	9100	2000	181	Solde à nouveau Créanciers	11042.15	0.00	0.000000	0	1	0	0		
+01.01.2011	9100	2200	182	Solde à nouveau TVA due	3732.18	0.00	0.000000	0	1	0	0		
+01.01.2011	9100	2800	183	Solde à nouveau Capital	27091.70	0.00	0.000000	0	1	0	0		
+05.01.2011	4200	...	1	Fact Maxo 01, (IPM) net	875.74	0.00	0.000000	1	1	1	1240	IPM	Fact Maxo 01
+05.01.2011	1170	...	1	Fact Maxo 01, 7.6% deTVA (IPM)	66.56	0.00	0.000000	1	1	1	1240	IPM	
+05.01.2011	...	2000	1	Fact Maxo 01 Total, (IPM)	942.30	0.00	0.000000	1	1	1	1240	IPM	
+06.01.2011	1010	1000	2	Viré à poste	4000.00	0.00	0.000000	0	1	0	0		
+07.01.2011	6000	1010	3	Loyer janvier	2500.00	0.00	0.000000	0	0	0	0		
+12.01.2011	6400	...	4	Electricité Janvier, (IPI) net	87.64	0.00	0.000000	2	0	1	1241	IPI	Electricité Janvier
+12.01.2011	1171	...	4	Electricité Janvier, 7.6% deTVA (IPI)	6.66	0.00	0.000000	2	0	1	1241	IPI	Electricité Janvier
+12.01.2011	6430	...	4	Eau 1er trimestre, (IPIRED) net	45.00	0.00	0.000000	2	0	1	1242	IPIRED	Eau 1er trimestre
+12.01.2011	1171	...	4	Eau 1er trimestre, 2.4% deTVA (IPIRED)	1.08	0.00	0.000000	2	0	1	1242	IPIRED	Eau 1er trimestre
+12.01.2011	6510	...	4	Tél déc.-Janv., (IPI) net, (IPI) net	100.00	0.00	0.000000	2	0	1	1243	IPI	Tél déc.-Janv., (IPI) net
+12.01.2011	1171	...	4	Tél déc.-Janv., (IPI) net, 7.6% deTVA (IPI)	7.60	0.00	0.000000	2	0	1	1243	IPI	Tél déc.-Janv., (IPI) net
+12.01.2011	...	1010	4	Paiement janvier	247.98	0.00	0.000000	2	0	0	0		
+15.01.2011	...	3200	7	Vente sem. 1, (TVA) net	18684.94	0.00	0.000000	3	1	1	1244	TVA	Vente sem. 1
+15.01.2011	...	2200	7	Vente sem. 1, 7.6% de TVA (TVA)	1420.06	0.00	0.000000	3	1	1	1244	TVA	Vente sem. 1
+15.01.2011	...	3200	7	Vente sem. 2, (TVA) net	19563.20	0.00	0.000000	3	1	1	1245	TVA	Vente sem. 2
+15.01.2011	...	2200	7	Vente sem. 2, 7.6% de TVA (TVA)	1486.80	0.00	0.000000	3	1	1	1245	TVA	Vente sem. 2
+15.01.2011	1000	...	7	Vente Janvier 1	41155.00	0.00	0.000000	3	1	0	0		
+15.01.2011	...	3200	5	Vente Girard, (TVA) net	593.87	0.00	0.000000	4	1	1	1246	TVA	Vente Girard
+15.01.2011	...	2200	5	Vente Girard, 7.6% de TVA (TVA)	45.13	0.00	0.000000	4	1	1	1246	TVA	
+15.01.2011	1100	...	5	Vente Girard Total, (TVA)	639.00	0.00	0.000000	4	1	1	1246	TVA	
+15.01.2011	4200	...	6	Tech (fact 105), (IPM) net	494.42	0.00	0.000000	5	1	1	1247	IPM	Tech (fact 105)
+15.01.2011	1170	...	6	Tech (fact 105), 7.6% deTVA (IPM)	37.58	0.00	0.000000	5	1	1	1247	IPM	
+15.01.2011	...	2000	6	Tech (fact 105) Total, (IPM)	532.00	0.00	0.000000	5	1	1	1247	IPM	
+17.01.2011	1000	1020	8	Retrait	200.00	0.00	0.000000	0	0	0	0		
+17.01.2011	6300	...	184	Assurance incendie	125.00	0.00	0.000000	6	0	0	0		
+17.01.2011	6400	...	185	Electricité, (IPI) net	140.61	0.00	0.000000	6	1	1	1248	IPI	Electricité
+17.01.2011	1171	...	185	Electricité, 7.6% deTVA (IPI)	10.69	0.00	0.000000	6	1	1	1248	IPI	Electricité
+17.01.2011	6410	...	187	Gaz, (IPI) net	20.07	0.00	0.000000	6	1	1	1249	IPI	Gaz
+17.01.2011	1171	...	187	Gaz, 7.6% deTVA (IPI)	1.53	0.00	0.000000	6	1	1	1249	IPI	Gaz
+17.01.2011	6510	...	189	Téléphone, (IPI) net	297.40	0.00	0.000000	6	1	1	1250	IPI	Téléphone
+17.01.2011	1171	...	189	Téléphone, 7.6% deTVA (IPI)	22.60	0.00	0.000000	6	1	1	1250	IPI	Téléphone
+17.01.2011	...	1020	191	Total paiement	617.90	0.00	0.000000	6	0	0	0		
+17.01.2011	6000	1020	21	Loyer février	1200.00	0.00	0.000000	0	1	0	0		
+17.01.2011	4200	...	9-A	Achat E2, (IPM) net	97.58	0.00	0.000000	7	1	1	1251	IPM	Achat E2
+17.01.2011	1170	...	9-A	Achat E2, 7.6% deTVA (IPM)	7.42	0.00	0.000000	7	1	1	1251	IPM	
+17.01.2011	...	1000	9-A	Achat E2 Total, (IPM)	105.00	0.00	0.000000	7	1	1	1251	IPM	
+17.01.2011	4200	...	118	Achat E345, (IPM) net	18.59	0.00	0.000000	8	1	1	1252	IPM	Achat E345
+17.01.2011	1170	...	118	Achat E345, 7.6% deTVA (IPM)	1.41	0.00	0.000000	8	1	1	1252	IPM	
+17.01.2011	...	1000	118	Achat E345 Total, (IPM)	20.00	0.00	0.000000	8	1	1	1252	IPM	
+17.01.2011	...	3200	20	Vente au comptant, (TVA) net	1449.81	0.00	0.000000	9	1	1	1253	TVA	Vente au comptant
+17.01.2011	...	2200	20	Vente au comptant, 7.6% de TVA (TVA)	110.19	0.00	0.000000	9	1	1	1253	TVA	
+17.01.2011	1000	...	20	Vente au comptant Total, (TVA)	1560.00	0.00	0.000000	9	1	1	1253	TVA	
+17.01.2011	4200	...	22	Fact Mini 02, (IPM) net	97.58	0.00	0.000000	10	1	1	1254	IPM	Fact Mini 02
+17.01.2011	1170	...	22	Fact Mini 02, 7.6% deTVA (IPM)	7.42	0.00	0.000000	10	1	1	1254	IPM	
+17.01.2011	...	2000	22	Fact Mini 02 Total, (IPM)	105.00	0.00	0.000000	10	1	1	1254	IPM	
+19.01.2011	6101	...	15	Réparation, (IPI) net	2555.16	0.00	0.000000	11	1	1	1255	IPI	Réparation
+19.01.2011	1171	...	15	Réparation, 7.6% deTVA (IPI)	194.19	0.00	0.000000	11	1	1	1255	IPI	R‚paration
+19.01.2011	...	2000	15	Réparation Total, (IPI)	2749.35	0.00	0.000000	11	1	1	1255	IPI	R‚paration
+19.01.2011	6400	...	16	SI, (IPI) net	9157.25	0.00	1.510000	12	1	1	1256	IPI	SI
+19.01.2011	1171	...	16	SI, 7.6% deTVA (IPI)	695.95	0.00	1.510000	12	1	1	1256	IPI	R‚paration
+19.01.2011	...	1010	16	SI Total, (IPI)	9853.20	0.00	1.510000	12	1	1	1256	IPI	R‚paration
+22.01.2011	...	3200	192	Ventes faites, (TVA) net	54299.54	0.00	0.000000	13	1	1	1257	TVA	Ventes faites
+22.01.2011	...	2200	192	Ventes faites, 7.6% de TVA (TVA)	4126.76	0.00	0.000000	13	1	1	1257	TVA	Ventes faites
+22.01.2011	1100	...	192	Ventes faites Total, (TVA)	58426.30	0.00	0.000000	13	1	1	1257	TVA	Ventes faites
+25.01.2011	6006	1010	23	Loyer janvier, garage	125.00	0.00	0.000000	0	0	0	0		
+25.01.2011	1010	1000	366	Virement caisse à poste	2000.00	0.00	0.000000	0	1	0	0		
+25.01.2011	5283	...	6	Invitation client, (IPFREP) net	96.47	0.00	0.000000	14	1	1	1258	IPFREP	Invitation client
+25.01.2011	1171	...	6	Invitation client, 7.6% deTVA déduit à 50.00%	3.53	0.00	0.000000	14	1	1	1258	IPFREP	Invitation client
+25.01.2011	...	1000	6	Invitation client Total, (IPFREP)	100.00	0.00	0.000000	14	1	1	1258	IPFREP	Invitation client
+28.01.2011	5200	9905	S-1	 [1] Salaire mensuel  	109500.00	0.00	0.000000	0	0	0	0		
+28.01.2011	5200	9905	S-1	 [1] Salaire horaire  	10070.00	0.00	0.000000	0	0	0	0		
+28.01.2011	5200	9905	S-1	 [1] Indemnités jours fériés (horaire)  	954.50	0.00	0.000000	0	0	0	0		
+28.01.2011	5200	2158	S-1	 [1] Droit aux vacances (non payé)  	581.00	0.00	0.000000	0	0	0	0		
+28.01.2011	2158	9905	S-1	 [1] Indemnités vacances  	581.00	0.00	0.000000	0	0	0	0		
+28.01.2011	5200	2158	S-1	 [1] Droit au 13ème salaire (non payé)  	7222.45	0.00	0.000000	0	0	0	0		
+28.01.2011	2158	9905	S-1	 [1] 13è salaire  	3962.85	0.00	0.000000	0	0	0	0		
+28.01.2011	5201	9905	S-1	 [1] Prime sur chiffre d’affaires  	2614.00	0.00	0.000000	0	0	0	0		
+28.01.2011	2152.2	9905	S-1	 [1] Allocation pour enfant  	610.00	0.00	0.000000	0	0	0	0		
+28.01.2011	2153.9	9905	S-1	 [1] Allocation sociale (ménage)  	176.00	0.00	0.000000	0	0	0	0		
+28.01.2011	5283	9905	S-1	 [1] Ind: Frais de représentation GROSSOU Lala	750.00	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2152.1	S-1	 [1] Cotisation AVS/AI/APG  	6321.05	0.00	0.000000	0	0	0	0		
+28.01.2011	5270	2152.1	S-1	 [1] Employeur: Cotisation AVS/AI/APG  	6321.05	0.00	0.000000	0	0	0	0		
+28.01.2011	5270	2152.1	S-1	 [1] Employeur: AVS frais administration  	250.40	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2152.1	S-1	 [1] Cotisation assurance maternité  	11.40	0.00	0.000000	0	0	0	0		
+28.01.2011	5270	2152.1	S-1	 [1] Employeur: Cotisation assurance maternité  	11.40	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2152.1	S-1	 [1] Cotisation AC  	1146.60	0.00	0.000000	0	0	0	0		
+28.01.2011	5270	2152.1	S-1	 [1] Employeur: Cotisation AC  	1146.60	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.1	S-1	 [1] Cotisation AANP  	2256.75	0.00	0.000000	0	0	0	0		
+28.01.2011	5273.1	2153.1	S-1	 [1] Employeur: Cotisation AAP  	534.45	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.2	S-1	 [1] Cotisation assurance accident compl.  	17.90	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.2	S-1	 [1] Cotisation assurance accident compl. (2)  	70.35	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.9	S-1	 [1] Cotisation maladie FT (%)  	678.95	0.00	0.000000	0	0	0	0		
+28.01.2011	5275	2153.9	S-1	 [1] Employeur: Cotisation maladie FT (%)  	678.95	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.9	S-1	 [1] Cotisation maladie FT (fixe)  	400.00	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.5	S-1	 [1] Cotisation assurance indemnité maladie (1)  	514.75	0.00	0.000000	0	0	0	0		
+28.01.2011	5274.1	2153.5	S-1	 [1] Employeur: Cotisation assurance indemnité maladie (1)  	514.75	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2153.3	S-1	 [1] Cotisation LPP  	4017.60	0.00	0.000000	0	0	0	0		
+28.01.2011	5272.1	2153.3	S-1	 [1] Employeur: Cotisation LPP  	4017.60	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2154	S-1	 [1] Retenue impôt à la source VIENG Delaba	213.85	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2152.2	S-1	 [1] Contribution ALFA  	375.50	0.00	0.000000	0	0	0	0		
+28.01.2011	5271	2152.2	S-1	 [1] Employeur: Contribution ALFA  	2127.95	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	5281	S-1	 [1] Location véhicule  	250.00	0.00	0.000000	0	0	0	0		
+28.01.2011	9905	2151	S-1	 [1] Montant versé  	112943.65	0.00	0.000000	0	0	0	0		
+29.01.2011	...	3200	113	Vente sem 3, (TVA) net	19284.39	0.00	0.000000	15	1	1	1259	TVA	Vente sem 3
+29.01.2011	...	2200	113	Vente sem 3, 7.6% de TVA (TVA)	1465.61	0.00	0.000000	15	1	1	1259	TVA	Vente sem 3
+29.01.2011	...	3200	113	Vente sem 4, (TVA) net	18408.69	0.00	0.000000	15	1	1	1260	TVA	Vente sem 4
+29.01.2011	...	2200	113	Vente sem 4, 7.6% de TVA (TVA)	1399.06	0.00	0.000000	15	1	1	1260	TVA	Vente sem 4
+29.01.2011	1000	...	113	Ventes janvier 2	40557.75	0.00	0.000000	15	1	0	0		
+31.01.2011	2000	...	27	Payé solde Maxo	942.30	0.00	0.000000	16	0	0	0		
+31.01.2011	2000	...	27	Payé solde Mini	740.70	0.00	0.000000	16	0	0	0		
+31.01.2011	...	1020	27	Payé solde fact. Maxo + Mini 99	1683.00	0.00	0.000000	16	0	0	0		
+03.02.2011	4200	...	30	Achats Denis, (IPM) net	335.00	0.00	0.000000	17	0	1	1261	IPM	Achats Denis
+03.02.2011	1170	...	30	Achats Denis, 7.6% deTVA (IPM)	25.46	0.00	0.000000	17	0	1	1261	IPM	
+03.02.2011	...	1000	30	Achats Denis Total, (IPM)	360.46	0.00	0.000000	17	0	1	1261	IPM	
+04.02.2011	4200	...	31	Fact Maxo 03, (IPM) net	1662.64	0.00	0.000000	18	1	1	1262	IPM	Fact Maxo 03
+04.02.2011	1170	...	31	Fact Maxo 03, 7.6% deTVA (IPM)	126.36	0.00	0.000000	18	1	1	1262	IPM	Fact Maxo 03
+04.02.2011	...	2000	31	Fact Maxo 03 Total, (IPM)	1789.00	0.00	0.000000	18	1	1	1262	IPM	Fact Maxo 03
+06.02.2011	1020	1000	40	Viré caisse-banque	4500.00	0.00	0.000000	0	0	0	0		
+06.02.2011	6000	1010	41	Loyer février	2500.00	0.00	0.000000	0	0	0	0		
+06.02.2011	4200	...	42	Fact Maxo 04, (IPM) net	1789.00	0.00	0.000000	19	0	1	1270	IPM	Fact Maxo 04
+06.02.2011	1170	...	42	Fact Maxo 04, 7.6% deTVA (IPM)	135.96	0.00	0.000000	19	0	1	1270	IPM	
+06.02.2011	...	2000	42	Fact Maxo 04 Total, (IPM)	1924.96	0.00	0.000000	19	0	1	1270	IPM	
+12.02.2011	1020	1000	10	Virement	10000.00	0.00	0.000000	0	1	0	0		
+12.02.2011	6210	...	11	Carte Essence, (IPI) net	829.28	0.00	0.000000	20	1	1	1276	IPI	Carte Essence
+12.02.2011	1171	...	11	Carte Essence, 7.6% deTVA (IPI)	63.02	0.00	0.000000	20	1	1	1276	IPI	
+12.02.2011	...	1020	11	Carte Essence Total, (IPI)	892.30	0.00	0.000000	20	1	1	1276	IPI	
+13.02.2011	...	3200	50	Facture 106, (TVA) net	8902.30	0.00	0.000000	21	0	1	1277	TVA	Facture 106
+13.02.2011	...	2200	50	Facture 106, 7.6% de TVA (TVA)	676.57	0.00	0.000000	21	0	1	1277	TVA	Facture 106
+13.02.2011	1100	...	50	Facture 106 Total, (TVA)	9578.87	0.00	0.000000	21	0	1	1277	TVA	Facture 106
+15.02.2011	2000	1020	51	Paiement facture 105	532.00	0.00	0.000000	0	0	0	0		
+17.02.2011	6006	1000	54	Loyer Février garage	125.00	0.00	0.000000	0	0	0	0		
+17.02.2011	...	3200	52	Facture 102, (TVA) net	6000.00	0.00	0.000000	22	0	1	1278	TVA	Facture 102
+17.02.2011	...	2200	52	Facture 102, 7.6% de TVA (TVA)	456.00	0.00	0.000000	22	0	1	1278	TVA	Facture 102
+17.02.2011	1100	...	52	Facture 102 Total, (TVA)	6456.00	0.00	0.000000	22	0	1	1278	TVA	Facture 102
+17.02.2011	4200	...	53	Achat Fact  345 Hg, (IPM) net	700.00	0.00	0.000000	23	0	1	1687	IPM	Achat Fact  345 Hg
+17.02.2011	1170	...	53	Achat Fact  345 Hg, 7.6% deTVA (IPM)	53.20	0.00	0.000000	23	0	1	1687	IPM	Achat Fact  345 Hg
+17.02.2011	...	2000	53	Achat Fact  345 Hg Total, (IPM)	753.20	0.00	0.000000	23	0	1	1687	IPM	Achat Fact  345 Hg
+18.02.2011	6640	1022	90	Rome	6040.00	4000.00	1.510000	0	1	0	0		
+18.02.2011	4200	...	55	Fact Mini 05, (IPM) net	1452.25	0.00	0.000000	24	0	1	1280	IPM	Fact Mini 05
+18.02.2011	1170	...	55	Fact Mini 05, 7.6% deTVA (IPM)	110.37	0.00	0.000000	24	0	1	1280	IPM	
+18.02.2011	...	2000	55	Fact Mini 05 Total, (IPM)	1562.62	0.00	0.000000	24	0	1	1280	IPM	
+19.02.2011	...	1020	56	Payé fact 04 montant payé	1780.00	0.00	0.000000	25	0	2	1281	IPM	Payé fact 04
+19.02.2011	...	4900	56	Escompte net	8.36	0.00	0.000000	25	0	2	1281	IPM	
+19.02.2011	...	1170	56	Part TVA Escompte (IPM)	0.64	0.00	0.000000	25	0	2	1281	IPM	
+19.02.2011	2000	...	56	Payé fact 04, montant dû	1789.00	0.00	0.000000	25	0	5	1281	IPM	
+23.02.2011	4200	...	67	Fact Maxo 07, (IPM) net	1870.40	0.00	0.000000	26	1	1	1686	IPM	Fact Maxo 07
+23.02.2011	1170	...	67	Fact Maxo 07, 7.6% deTVA (IPM)	142.15	0.00	0.000000	26	1	1	1686	IPM	Fact Maxo 07
+23.02.2011	...	2000	67	Fact Maxo 07 Total, (IPM)	2012.55	0.00	0.000000	26	1	1	1686	IPM	Fact Maxo 07
+25.02.2011	4200	...	75	Achat march. fact 118.9, (IPM) net	371.75	0.00	0.000000	27	1	1	1685	IPM	Achat march. fact 118.9
+25.02.2011	1170	...	75	Achat march. fact 118.9, 7.6% deTVA (IPM)	28.25	0.00	0.000000	27	1	1	1685	IPM	Achat march. fact 118.9
+25.02.2011	...	2000	75	Achat march. fact 118.9 Total, (IPM)	400.00	0.00	0.000000	27	1	1	1685	IPM	Achat march. fact 118.9
+25.02.2011	...	1020	76	Payé fact Maxo 07 montant payé	2000.00	0.00	0.000000	28	1	2	1294	IPM	Payé fact Maxo 07
+25.02.2011	...	4900	76	Escompte net	11.66	0.00	0.000000	28	1	2	1294	IPM	
+25.02.2011	...	1170	76	Part TVA Escompte (IPM)	0.89	0.00	0.000000	28	1	2	1294	IPM	
+25.02.2011	2000	...	76	Payé fact Maxo 07, montant dû	2012.55	0.00	0.000000	28	1	5	1294	IPM	
+25.02.2011	...	3200	77	Vente march. fact 11, (TVA) net	21780.34	0.00	0.000000	29	1	1	1684	TVA	Vente march. fact 11
+25.02.2011	...	2200	77	Vente march. fact 11, 7.6% de TVA (TVA)	1655.31	0.00	0.000000	29	1	1	1684	TVA	Vente march. fact 11
+25.02.2011	1000	...	77	Vente march. fact 11 Total, (TVA)	23435.65	0.00	0.000000	29	1	1	1684	TVA	Vente march. fact 11
+27.02.2011	1010	1000	78	Viré caisse-poste	3500.00	0.00	0.000000	0	1	0	0		
+28.02.2011	5200	9905	S-2	 [2] Salaire mensuel  	98000.00	0.00	0.000000	0	0	0	0		
+28.02.2011	5200	9905	S-2	 [2] Salaire horaire  	9867.50	0.00	0.000000	0	0	0	0		
+28.02.2011	5200	2158	S-2	 [2] Droit aux vacances (non payé)  	484.60	0.00	0.000000	0	0	0	0		
+28.02.2011	2158	9905	S-2	 [2] Indemnités vacances  	484.60	0.00	0.000000	0	0	0	0		
+28.02.2011	5200	2158	S-2	 [2] Droit au 13ème salaire (non payé)  	7106.59	0.00	0.000000	0	0	0	0		
+28.02.2011	2158	9905	S-2	 [2] 13è salaire  	3858.70	0.00	0.000000	0	0	0	0		
+28.02.2011	5201	9905	S-2	 [2] Prime sur chiffre d’affaires  	2477.00	0.00	0.000000	0	0	0	0		
+28.02.2011	2152.2	9905	S-2	 [2] Allocation pour enfant  	610.00	0.00	0.000000	0	0	0	0		
+28.02.2011	2153.9	9905	S-2	 [2] Allocation sociale (ménage)  	176.00	0.00	0.000000	0	0	0	0		
+28.02.2011	5283	9905	S-2	 [2] Ind: Frais de représentation GROSSOU Lala	750.00	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2152.1	S-2	 [2] Cotisation AVS/AI/APG  	5671.75	0.00	0.000000	0	0	0	0		
+28.02.2011	5270	2152.1	S-2	 [2] Employeur: Cotisation AVS/AI/APG  	5671.75	0.00	0.000000	0	0	0	0		
+28.02.2011	5270	2152.1	S-2	 [2] Employeur: AVS frais administration  	224.70	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2152.1	S-2	 [2] Cotisation assurance maternité  	11.10	0.00	0.000000	0	0	0	0		
+28.02.2011	5270	2152.1	S-2	 [2] Employeur: Cotisation assurance maternité  	11.10	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2152.1	S-2	 [2] Cotisation AC  	1028.25	0.00	0.000000	0	0	0	0		
+28.02.2011	5270	2152.1	S-2	 [2] Employeur: Cotisation AC  	1028.25	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.1	S-2	 [2] Cotisation AANP  	2029.20	0.00	0.000000	0	0	0	0		
+28.02.2011	5273.1	2153.1	S-2	 [2] Employeur: Cotisation AAP  	480.60	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.2	S-2	 [2] Cotisation assurance accident compl.  	17.90	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.2	S-2	 [2] Cotisation assurance accident compl. (2)  	70.40	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.9	S-2	 [2] Cotisation maladie FT (%)  	572.00	0.00	0.000000	0	0	0	0		
+28.02.2011	5275	2153.9	S-2	 [2] Employeur: Cotisation maladie FT (%)  	572.00	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.9	S-2	 [2] Cotisation maladie FT (fixe)  	360.00	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.5	S-2	 [2] Cotisation assurance indemnité maladie (1)  	514.75	0.00	0.000000	0	0	0	0		
+28.02.2011	5274.1	2153.5	S-2	 [2] Employeur: Cotisation assurance indemnité maladie (1)  	514.75	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2153.3	S-2	 [2] Cotisation LPP  	3646.20	0.00	0.000000	0	0	0	0		
+28.02.2011	5272.1	2153.3	S-2	 [2] Employeur: Cotisation LPP  	3646.20	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2154	S-2	 [2] Retenue impôt à la source VIENG Delaba	213.90	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2152.2	S-2	 [2] Contribution ALFA  	336.95	0.00	0.000000	0	0	0	0		
+28.02.2011	5271	2152.2	S-2	 [2] Employeur: Contribution ALFA  	1909.35	0.00	0.000000	0	0	0	0		
+28.02.2011	5204	9905	S-2	 [2] Correctif pour les arrondis  	0.30	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	5281	S-2	 [2] Location véhicule  	250.00	0.00	0.000000	0	0	0	0		
+28.02.2011	9905	2151	S-2	 [2] Montant versé  	101501.70	0.00	0.000000	0	0	0	0		
+02.03.2011	4200	...	79	Fact Mini 08, (IPM) net	627.32	0.00	0.000000	30	1	1	1296	IPM	Fact Mini 08
+02.03.2011	1170	...	79	Fact Mini 08, 7.6% deTVA (IPM)	47.68	0.00	0.000000	30	1	1	1296	IPM	
+02.03.2011	...	2000	79	Fact Mini 08 Total, (IPM)	675.00	0.00	0.000000	30	1	1	1296	IPM	
+05.03.2011	6000	1010	80	Loyer mars	2500.00	0.00	0.000000	0	0	0	0		
+07.03.2011	1010	1020	88	Viré banque-poste	4000.00	0.00	0.000000	0	0	0	0		
+08.03.2011	6430	...	91	Eau mars, (IPIRED) net	24.44	0.00	0.000000	31	0	1	1303	IPIRED	Eau mars
+08.03.2011	1171	...	91	Eau mars, 2.4% deTVA (IPIRED)	0.59	0.00	0.000000	31	0	1	1303	IPIRED	Eau mars, (IPIRED) net
+08.03.2011	6510	...	92	Téléphones Fév.-mars, (IPI) net	269.26	0.00	0.000000	31	0	1	1304	IPI	Téléphones Fév.-mars
+08.03.2011	1171	...	92	Téléphones Fév.-mars, 7.6% deTVA (IPI)	20.46	0.00	0.000000	31	0	1	1304	IPI	Téléphones Fév.-mars
+08.03.2011	...	1010	93	Paiements mars	314.75	0.00	0.000000	31	0	0	0		
+08.03.2011	4200	...	89	Fact Maxo 09, (IPM) net	423.79	0.00	1.510000	32	1	1	1305	IPM	Fact Maxo 09
+08.03.2011	1170	...	89	Fact Maxo 09, 7.6% deTVA (IPM)	32.21	0.00	1.510000	32	1	1	1305	IPM	Fact Maxo 09
+08.03.2011	...	2000	89	Fact Maxo 09 Total, (IPM)	456.00	0.00	1.510000	32	1	1	1305	IPM	Fact Maxo 09
+08.03.2011	4200	...	90	Fact Mini 10, (IPM) net	238.85	0.00	0.000000	33	1	1	1306	IPM	Fact Mini 10
+08.03.2011	1170	...	90	Fact Mini 10, 7.6% deTVA (IPM)	18.15	0.00	0.000000	33	1	1	1306	IPM	Fact Mini 10
+08.03.2011	...	2000	90	Fact Mini 10 Total, (IPM)	257.00	0.00	0.000000	33	1	1	1306	IPM	Fact Mini 10
+10.03.2011	1010	1000	94	Viré caisse-poste	6500.00	0.00	0.000000	0	1	0	0		
+12.03.2011	6210	...	91	Carte essence, (IPI) net	915.99	0.00	1.510000	34	1	1	1307	IPI	Carte essence
+12.03.2011	1171	...	91	Carte essence, 7.6% deTVA (IPI)	69.61	0.00	1.510000	34	1	1	1307	IPI	Carte essence
+12.03.2011	...	1020	91	Carte essence Total, (IPI)	985.60	0.00	1.510000	34	1	1	1307	IPI	Carte essence
+14.03.2011	1020	...	102	Encaissé facture 106 montant payé	1200.00	0.00	0.000000	35	0	5	1308	TVA	Encaissé facture 106
+14.03.2011	3900	...	102	Escompte net	71.51	0.00	0.000000	35	0	5	1308	TVA	Encaissé facture 106
+14.03.2011	2200	...	102	Part TVA Escompte (TVA)	5.44	0.00	0.000000	35	0	5	1308	TVA	Encaissé facture 106
+14.03.2011	...	1100	102	Encaissé facture 106, montant dû	1276.95	0.00	0.000000	35	0	2	1308	TVA	Encaissé facture 106
+15.03.2011	4200	...	103	Fact Maxo 11, (IPM) net	917.29	0.00	0.000000	36	1	1	1309	IPM	Fact Maxo 11
+15.03.2011	1170	...	103	Fact Maxo 11, 7.6% deTVA (IPM)	69.71	0.00	0.000000	36	1	1	1309	IPM	Fact Maxo 11
+15.03.2011	...	2000	103	Fact Maxo 11 Total, (IPM)	987.00	0.00	0.000000	36	1	1	1309	IPM	Fact Maxo 11
+16.03.2011	6006	1020	8	Loyer MAR - AVR	240.00	0.00	0.000000	0	1	0	0		Voyage pour la foire
+17.03.2011	...	3200	104	Facture 107, (TVA) net	999.07	0.00	0.000000	37	1	1	1310	TVA	Facture 107
+17.03.2011	...	2200	104	Facture 107, 7.6% de TVA (TVA)	75.93	0.00	0.000000	37	1	1	1310	TVA	Facture 107
+17.03.2011	1100	...	104	Facture 107 Total, (TVA)	1075.00	0.00	0.000000	37	1	1	1310	TVA	Facture 107
+18.03.2011	...	3200	195	Ventes de la semaine, (TVA) net	6132.25	0.00	0.000000	38	1	1	1311	TVA	Ventes de la semaine
+18.03.2011	...	2200	196	Ventes de la semaine, 7.6% de TVA (TVA)	466.05	0.00	0.000000	38	1	1	1311	TVA	Ventes de la semaine
+18.03.2011	1000	...	197	Ventes de la semaine Total, (TVA)	6598.30	0.00	0.000000	38	1	1	1311	TVA	Ventes de la semaine
+19.03.2011	5281	...	7	Voyage pour la foire, (IPI) net	673.79	0.00	0.000000	39	1	1	1312	IPI	Voyage pour la foire
+19.03.2011	1171	...	7	Voyage pour la foire, 7.6% deTVA (IPI)	51.21	0.00	0.000000	39	1	1	1312	IPI	Voyage pour la foire
+19.03.2011	...	1010	7	Voyage pour la foire Total, (IPI)	725.00	0.00	0.000000	39	1	1	1312	IPI	Voyage pour la foire
+21.03.2011	6006	1010	105	Loyer mars, garage	125.00	0.00	0.000000	0	0	0	0		
+21.03.2011	2000	...	107	Payé fact 09	456.00	0.00	0.000000	40	1	0	0		
+21.03.2011	2000	...	108	Payé fact 10	257.00	0.00	0.000000	40	1	0	0		
+21.03.2011	2000	...	109	Payé fact 11	987.00	0.00	0.000000	40	1	0	0		
+21.03.2011	...	1020	110	Payé fact 09 - 11	1700.00	0.00	0.000000	40	1	0	0		
+21.03.2011	6000	1010	2	Loyer de AVR	1850.00	0.00	0.000000	0	1	0	0		
+21.03.2011	...	3200	106	Ventes 15-20.3, (TVA) net	2012.50	0.00	0.000000	41	1	1	1313	TVA	Ventes 15-20.3
+21.03.2011	...	2200	106	Ventes 15-20.3, 7.6% de TVA (TVA)	152.95	0.00	0.000000	41	1	1	1313	TVA	Ventes 15-20.3
+21.03.2011	1000	...	106	Ventes 15-20.3 Total, (TVA)	2165.45	0.00	0.000000	41	1	1	1313	TVA	Ventes 15-20.3
+23.03.2011	4200	...	111	Fact Maxo 13, (IPM) net	917.80	0.00	0.000000	42	1	1	1314	IPM	Fact Maxo 13
+23.03.2011	1170	...	111	Fact Maxo 13, 7.6% deTVA (IPM)	69.75	0.00	0.000000	42	1	1	1314	IPM	
+23.03.2011	...	2000	111	Fact Maxo 13 Total, (IPM)	987.55	0.00	0.000000	42	1	1	1314	IPM	
+25.03.2011	8900	1020	364	Impôts 1er tiers	2567.00	0.00	0.000000	0	1	0	0		
+26.03.2011	4200	...	112	Fact Mini 14, (IPM) net	1165.43	0.00	0.000000	43	1	1	1315	IPM	Fact Mini 14
+26.03.2011	1170	...	112	Fact Mini 14, 7.6% deTVA (IPM)	88.57	0.00	0.000000	43	1	1	1315	IPM	Fact Mini 14
+26.03.2011	...	2000	112	Fact Mini 14 Total, (IPM)	1254.00	0.00	0.000000	43	1	1	1315	IPM	Fact Mini 14
+28.03.2011	1010	1000	113	Viré caisse-poste	6500.00	0.00	0.000000	0	1	0	0		
+28.03.2011	...	3200	114	Ventes 21.3 - 27.3, (TVA) net	2189.59	0.00	0.000000	44	1	1	1316	TVA	Ventes 21.3 - 27.3
+28.03.2011	...	2200	114	Ventes 21.3 - 27.3, 7.6% de TVA (TVA)	166.41	0.00	0.000000	44	1	1	1316	TVA	Ventes 21.3 - 27.3
+28.03.2011	1000	...	114	Ventes 21.3 - 27.3 Total, (TVA)	2356.00	0.00	0.000000	44	1	1	1316	TVA	Ventes 21.3 - 27.3
+01.04.2011	4200	...	115	Achat poisson Denis, (IPM) net	320.63	0.00	0.000000	45	1	1	1317	IPM	Achat poisson Denis
+01.04.2011	1170	...	115	Achat poisson Denis, 7.6% deTVA (IPM)	24.37	0.00	0.000000	45	1	1	1317	IPM	Achat poisson Denis
+01.04.2011	...	1000	115	Achat poisson Denis Total, (IPM)	345.00	0.00	0.000000	45	1	1	1317	IPM	Achat poisson Denis
+03.04.2011	6000	1010	116	Loyer avril	2500.00	0.00	0.000000	0	1	0	0		
+05.04.2011	4200	...	117	Fact Maxo 15, (IPM) net	2151.07	0.00	0.000000	46	1	1	1318	IPM	Fact Maxo 15
+05.04.2011	1170	...	117	Fact Maxo 15, 7.6% deTVA (IPM)	163.48	0.00	0.000000	46	1	1	1318	IPM	
+05.04.2011	...	2000	117	Fact Maxo 15 Total, (IPM)	2314.55	0.00	0.000000	46	1	1	1318	IPM	
+05.04.2011	...	3200	118	Ventes 29.3-4.4, (TVA) net	1840.57	0.00	0.000000	47	1	1	1319	TVA	Ventes 29.3-4.4
+05.04.2011	...	2200	118	Ventes 29.3-4.4, 7.6% de TVA (TVA)	139.88	0.00	0.000000	47	1	1	1319	TVA	Ventes 29.3-4.4
+05.04.2011	1000	...	118	Ventes 29.3-4.4 Total, (TVA)	1980.45	0.00	0.000000	47	1	1	1319	TVA	Ventes 29.3-4.4
+11.04.2011	...	3200	198	Vente 6.4, (TVA) net	203.16	0.00	0.000000	48	1	1	1320	TVA	Vente 6.4
+11.04.2011	...	2200	198	Vente 6.4, 7.6% de TVA (TVA)	15.44	0.00	0.000000	48	1	1	1320	TVA	Vente 6.4
+11.04.2011	...	3400	200	Vente 7.4, (TVA) net	197.54	0.00	0.000000	48	1	1	1321	TVA	Vente 7.4
+11.04.2011	...	2200	200	Vente 7.4, 7.6% de TVA (TVA)	15.01	0.00	0.000000	48	1	1	1321	TVA	Vente 7.4
+11.04.2011	...	3200	202	Vente 8.4, (TVA) net	488.85	0.00	0.000000	48	0	1	1322	TVA	Vente 8.4
+11.04.2011	...	2200	203	Vente 8.4, 7.6% de TVA (TVA)	37.15	0.00	0.000000	48	0	1	1322	TVA	Vente 8.4
+11.04.2011	...	3200	204	Vente 9.4, (TVA) net	231.41	0.00	0.000000	48	0	1	1323	TVA	Vente 9.4
+11.04.2011	...	2200	205	Vente 9.4, 7.6% de TVA (TVA)	17.59	0.00	0.000000	48	0	1	1323	TVA	Vente 9.4
+11.04.2011	...	3400	206	Vente 10.4, (TVA) net	545.54	0.00	0.000000	48	0	1	1324	TVA	Vente 10.4
+11.04.2011	...	2200	207	Vente 10.4, 7.6% de TVA (TVA)	41.46	0.00	0.000000	48	0	1	1324	TVA	
+11.04.2011	...	3200	208	Vente 11.4, (TVA) net	419.38	0.00	0.000000	48	1	1	1325	TVA	Vente 11.4
+11.04.2011	...	2200	208	Vente 11.4, 7.6% de TVA (TVA)	31.87	0.00	0.000000	48	1	1	1325	TVA	Vente 11.4
+11.04.2011	1000	...	210	Vente 6.4 - 11.4	2244.40	0.00	0.000000	48	1	0	0		
+12.04.2011	1020	1000	126	Viré caisse-banque	3750.00	0.00	0.000000	0	0	0	0		
+13.04.2011	...	3200	101	Ventes 8.3, (TVA) net	24.72	0.00	0.000000	49	1	1	1326	TVA	Ventes 8.3
+13.04.2011	...	2200	101	Ventes 8.3, 7.6% de TVA (TVA)	1.88	0.00	0.000000	49	1	1	1326	TVA	Ventes 8.3
+13.04.2011	...	3200	101	Ventes 9.3, (TVA) net	16.08	0.00	0.000000	49	1	1	1327	TVA	Ventes 9.3
+13.04.2011	...	2200	101	Ventes 9.3, 7.6% de TVA (TVA)	1.22	0.00	0.000000	49	1	1	1327	TVA	Ventes 9.3
+13.04.2011	...	3200	101	Ventes 11.3, (TVA) net	20.68	0.00	0.000000	49	1	1	1328	TVA	Ventes 11.3
+13.04.2011	...	2200	101	Ventes 11.3, 7.6% de TVA (TVA)	1.57	0.00	0.000000	49	1	1	1328	TVA	Ventes 11.3
+13.04.2011	...	3200	101	Ventes 12.3, (TVA) net	19.61	0.00	0.000000	49	1	1	1329	TVA	Ventes 12.3
+13.04.2011	...	2200	101	Ventes 12.3, 7.6% de TVA (TVA)	1.49	0.00	0.000000	49	1	1	1329	TVA	Ventes 12.3
+13.04.2011	...	3200	101	Ventes 13.3, (TVA) net	15.33	0.00	0.000000	49	1	1	1330	TVA	Ventes 13.3
+13.04.2011	...	2200	101	Ventes 13.3, 7.6% de TVA (TVA)	1.17	0.00	0.000000	49	1	1	1330	TVA	Ventes 13.3
+13.04.2011	1000	...	101	Ventes 8.3 - 13.3	103.75	0.00	0.000000	49	1	0	0		
+15.04.2011	4200	...	127	Achat march. fact 45, (IPM) net	1115.24	0.00	0.000000	50	1	1	1331	IPM	Achat march. fact 45
+15.04.2011	1170	...	127	Achat march. fact 45, 7.6% deTVA (IPM)	84.76	0.00	0.000000	50	1	1	1331	IPM	
+15.04.2011	...	2000	127	Achat march. fact 45 Total, (IPM)	1200.00	0.00	0.000000	50	1	1	1331	IPM	
+16.04.2011	1020	1010	128	Viré poste-banque	11000.00	0.00	0.000000	0	1	0	0		
+18.04.2011	1020	1000	129	Viré caisse-banque	2000.00	0.00	0.000000	0	1	0	0		
+18.04.2011	2000	...	130	Payé fact. 13	1546.00	0.00	0.000000	51	1	0	0		
+18.04.2011	2000	...	131	Payé fact. 14	987.55	0.00	0.000000	51	1	0	0		
+18.04.2011	2000	...	132	Payé fact. 15	2314.55	0.00	0.000000	51	1	0	0		
+18.04.2011	2000	...	116	Payé fact. 16	0.00	0.00	1.510000	51	1	0	0		
+18.04.2011	...	1020	134	Payé fact 13/14/15/16	4848.10	0.00	0.000000	51	1	0	0		
+18.04.2011	...	3400	135	Vente prestations 13.4 - 18.4, (TVA) net	2179.97	0.00	0.000000	52	1	1	1332	TVA	Vente prestations 13.4 - 18.4
+18.04.2011	...	2200	135	Vente prestations 13.4 - 18.4, 7.6% de TVA (TVA)	165.68	0.00	0.000000	52	1	1	1332	TVA	
+18.04.2011	1000	...	135	Vente prestations 13.4 - 18.4 Total, (TVA)	2345.65	0.00	0.000000	52	1	1	1332	TVA	
+19.04.2011	4200	...	137	Achats Louis, (IPIRED) net	543.90	0.00	0.000000	53	1	1	1333	IPIRED	Achats Louis
+19.04.2011	1171	...	137	Achats Louis, 2.4% deTVA (IPIRED)	13.05	0.00	0.000000	53	1	1	1333	IPIRED	
+19.04.2011	...	1000	137	Achats Louis Total, (IPIRED)	556.95	0.00	0.000000	53	1	1	1333	IPIRED	
+19.04.2011	4200	...	136	Achats Charles, (IPM) net	597.82	0.00	0.000000	54	1	1	1334	IPM	Achats Charles
+19.04.2011	1170	...	136	Achats Charles, 7.6% deTVA (IPM)	45.43	0.00	0.000000	54	1	1	1334	IPM	
+19.04.2011	...	1000	136	Achats Charles Total, (IPM)	643.25	0.00	0.000000	54	1	1	1334	IPM	
+21.04.2011	4200	...	138	Fact Maxo 17, (IPM) net	1319.70	0.00	0.000000	55	1	1	1335	IPM	Fact Maxo 17
+21.04.2011	1170	...	138	Fact Maxo 17, 7.6% deTVA (IPM)	100.30	0.00	0.000000	55	1	1	1335	IPM	Fact Maxo 17
+21.04.2011	...	2000	138	Fact Maxo 17 Total, (IPM)	1420.00	0.00	0.000000	55	1	1	1335	IPM	Fact Maxo 17
+22.04.2011	1010	1000	366	Virement caisse - poste	2000.00	0.00	0.000000	0	1	0	0		
+24.04.2011	1000	3200	139	Ventes 20-25.4	23709.45	0.00	0.000000	0	1	0	0	EXPORT	Ventes 20-25.4
+25.04.2011	6006	1010	140	Loyer avril, garage	125.00	0.00	0.000000	0	1	0	0		
+25.04.2011	4200	...	141	Fact mini 18, (IPM) net	1044.10	0.00	0.000000	56	1	1	1337	IPM	Fact mini 18
+25.04.2011	1170	...	141	Fact mini 18, 7.6% deTVA (IPM)	79.35	0.00	0.000000	56	1	1	1337	IPM	
+25.04.2011	...	2000	141	Fact mini 18 Total, (IPM)	1123.45	0.00	0.000000	56	1	1	1337	IPM	
+30.04.2011	6000	1010	3	Loyer de MAI	1850.00	0.00	0.000000	0	1	0	0		
+02.05.2011	...	3200	143	Ventes 27.4 - 2.5, (TVA) net	3252.79	0.00	1.510000	57	1	1	1338	TVA	Ventes 27.4 - 2.5
+02.05.2011	...	2200	143	Ventes 27.4 - 2.5, 7.6% de TVA (TVA)	247.21	0.00	1.510000	57	1	1	1338	TVA	Ventes 27.4 - 2.5
+02.05.2011	1000	...	143	Ventes 27.4 - 2.5 Total, (TVA)	3500.00	0.00	1.510000	57	1	1	1338	TVA	Ventes 27.4 - 2.5
+09.05.2011	...	3200	144	Ventes 4.5-9.5, (TVA) net	5800.00	0.00	0.000000	58	0	1	1339	TVA	Ventes 4.5-9.5
+09.05.2011	...	2200	144	Ventes 4.5-9.5, 7.6% de TVA (TVA)	440.80	0.00	0.000000	58	0	1	1339	TVA	Ventes 4.5-9.5
+09.05.2011	1000	...	144	Ventes 4.5-9.5 Total, (TVA)	6240.80	0.00	0.000000	58	0	1	1339	TVA	Ventes 4.5-9.5
+10.05.2011	1010	1000	145	Viré caisse-poste	6000.00	0.00	0.000000	0	1	0	0		
+10.05.2011	6400	...	146	Elec avril-mai, (IPI) net	255.81	0.00	0.000000	59	0	1	1340	IPI	Elec avril-mai
+10.05.2011	1171	...	146	Elec avril-mai, 7.6% deTVA (IPI)	19.44	0.00	0.000000	59	0	1	1340	IPI	Elec avril-mai
+10.05.2011	6430	...	147	Eau avril-mai, (IPIRED) net	53.76	0.00	0.000000	59	0	1	1341	IPIRED	Eau avril-mai
+10.05.2011	1171	...	147	Eau avril-mai, 2.4% deTVA (IPIRED)	1.29	0.00	0.000000	59	0	1	1341	IPIRED	Eau avril-mai
+10.05.2011	6510	...	148	Téléphone avril mai,, (IPI) net	293.59	0.00	0.000000	59	0	1	1342	IPI	Téléphone avril mai,
+10.05.2011	1171	...	148	Téléphone avril mai,, 7.6% deTVA (IPI)	22.31	0.00	0.000000	59	0	1	1342	IPI	Téléphone avril mai,
+10.05.2011	...	1020	149	Paiements mai	646.20	0.00	0.000000	59	0	0	0		
+10.05.2011	...	1020	150	Payé Fact 17 montant payé	2315.00	0.00	0.000000	60	0	2	1343	TVA	Payé Fact 17
+10.05.2011	...	3900	150	Escompte net	-106.88	0.00	0.000000	60	0	2	1343	TVA	Payé Fact 17
+10.05.2011	...	2200	150	Part TVA Escompte (TVA)	-8.12	0.00	0.000000	60	0	2	1343	TVA	Payé Fact 17
+10.05.2011	2000	...	150	Payé Fact 17, montant dû	2200.00	0.00	0.000000	60	0	5	1343	TVA	Payé Fact 17
+12.05.2011	4200	...	154	Achats Roger, (IPM) net	918.12	0.00	0.000000	61	1	1	1344	IPM	Achats Roger
+12.05.2011	1170	...	154	Achats Roger, 7.6% deTVA (IPM)	69.78	0.00	0.000000	61	1	1	1344	IPM	Achats Roger
+12.05.2011	...	1000	154	Achats Roger Total, (IPM)	987.90	0.00	0.000000	61	1	1	1344	IPM	Achats Roger
+12.05.2011	4200	...	155	Fact. maxo 19, (IPM) net	1746.75	0.00	0.000000	62	1	1	1345	IPM	Fact. maxo 19
+12.05.2011	1170	...	155	Fact. maxo 19, 7.6% deTVA (IPM)	132.75	0.00	0.000000	62	1	1	1345	IPM	
+12.05.2011	...	2000	155	Fact. maxo 19 Total, (IPM)	1879.50	0.00	0.000000	62	1	1	1345	IPM	
+14.05.2011	6006	1020	9	Loyer MAI - JUI	240.00	0.00	0.000000	0	1	0	0		Voyage pour la foire
+31.05.2011	6000	1010	4	Loyer de JUI	1850.00	0.00	0.000000	0	1	0	0		

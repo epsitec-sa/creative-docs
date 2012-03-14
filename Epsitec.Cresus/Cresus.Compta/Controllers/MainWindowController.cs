@@ -81,8 +81,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			NewCompta.NewEmpty (this.compta);
 
 			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\pme 2011.crp");
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "C:\\Users\\Daniel\\Desktop\\Comptas\\écritures.txt");
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\pme 2011.crp");
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\écritures.txt");
 
 			this.InitializeAfterNewCompta ();
 			this.ChangePériode (-1);  // en 2011
