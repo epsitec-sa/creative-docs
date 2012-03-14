@@ -28,24 +28,24 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			// TODO Import group & activity data.
 			// TODO Import household data (match and merge or create if no match)
 		
 			var eervPhysicalPersons = eervPersons.Where (p => string.IsNullOrWhiteSpace (p.CorporateName));
-			EervParishDataImporter.ImportEervPhysicalPersons (businessContextCreator, businessContextCleaner, eervPhysicalPersons, eervHouseholds);
+			EervParishDataImporter.ImportEervPhysicalPersons (businessContextCreator, businessContextCleaner, parishName, eervPhysicalPersons, eervHouseholds);
 		
 			var eervLegalPersons = eervPersons.Where (p => !string.IsNullOrWhiteSpace (p.CorporateName));
 			EervParishDataImporter.ImportEervLegalPersons (businessContextCreator, businessContextCleaner, eervLegalPersons);
 		}
 
 
-		private static void ImportEervPhysicalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ImportEervPhysicalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			var matches = EervParishDataImporter.FindMatches (businessContextCreator, businessContextCleaner, eervPersons, eervHouseholds);
 
-			EervParishDataImporter.ProcessMatches (businessContextCreator, businessContextCleaner, matches, eervHouseholds);
+			EervParishDataImporter.ProcessMatches (businessContextCreator, businessContextCleaner, parishName, matches);
 		}
 
 
@@ -337,13 +337,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (!date1.HasValue || !date2.HasValue)
 				{
-					match.SameDateOfBirth = null;
+					match.DateOfBirth = null;
 
 					yield return databasePerson;
 				}
 				else if (date1 == date2)
 				{
-					match.SameDateOfBirth = true;
+					match.DateOfBirth = true;
 
 					yield return databasePerson;
 				}
@@ -362,13 +362,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (sex1 == PersonSex.Unknown || sex2 == PersonSex.Unknown)
 				{
-					match.SameSex = null;
+					match.Sex = null;
 
 					yield return databasePerson;
 				}
 				else if (sex1 == sex2)
 				{
-					match.SameSex = true;
+					match.Sex = true;
 
 					yield return databasePerson;
 				}
@@ -512,13 +512,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
 		{
 			using (BusinessContext businessContext = businessContextCreator ())
 			{
 				try
 				{
-					EervParishDataImporter.ProcessMatches (businessContext, matches, eervHouseholds);
+					EervParishDataImporter.ProcessMatches (businessContext, parishName, matches);
 				}
 				finally
 				{
@@ -532,16 +532,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessMatches(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessMatches(BusinessContext businessContext, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
 		{
 			var dataContext = businessContext.DataContext;
-
-			var idToEervHouseholds = eervHouseholds.ToDictionary (h => h.Id);
 
 			foreach (var match in matches)
 			{
 				var eervPerson = match.Key;
-				var eervHousehold = idToEervHouseholds[eervPerson.HouseholdId];
 
 				if (match.Value.Any ())
 				{
@@ -550,20 +547,22 @@ namespace Epsitec.Aider.Data.Eerv
 						var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
 						var matchData = m.Item2;
 
-						EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson, matchData);
+						EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+						EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
 					}
 				}
 				else
 				{
 					var aiderPerson = EervParishDataImporter.CreateAiderPersonWithEervPerson (businessContext, eervPerson);
-					
-					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson, null);
+
+					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+					EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, null, parishName);
 				}
 			}
 		}
 
 
-		private static void CombineAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson, MatchData matchData)
+		private static void CombineAiderPersonWithEervPerson(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
 		{
 			// TODO ADD PlaceOfBirth ?
 			// TODO ADD PlaceOfBaptism ?
@@ -761,6 +760,109 @@ namespace Epsitec.Aider.Data.Eerv
 			eChPerson.RemovalReason = RemovalReason.None;
 
 			return aiderPerson;
+		}
+
+
+		private static void AddMatchComment(EervPerson eervPerson, AiderPersonEntity aiderPerson, MatchData match, string parishName)
+		{
+			string text;
+
+			if (match != null)
+			{
+				text = "Cette Personne correspond à la personne N° " + eervPerson.Id + " du fichier de la paroisse de " + parishName + ".";
+
+				text += "\nLa correspondance a été faite sur les critères suivants : ";
+				text += "\n - Nom de famille : " + EervParishDataImporter.GetTextForNameMatch (match.Lastname);
+				text += "\n - Prénom : " + EervParishDataImporter.GetTextForNameMatch (match.Firstname);
+				text += "\n - Sexe : " + EervParishDataImporter.GetTextForSexMatch (match.Sex);
+				text += "\n - Date de naissance : " + EervParishDataImporter.GetTextForDateOfBirthMatch (match.DateOfBirth);
+				text += "\n - Adresse : " + EervParishDataImporter.GetTextForAddressMatch (match.Address);
+			}
+			else
+			{
+				text = "Cette personne a été crée à partir de la personne N°" + eervPerson.Id + " du fichier de la paroisse de " + parishName + " et n'existe pas dans le registre cantonal des personnes protestantes.";
+			}
+
+			EervParishDataImporter.CombineComments (aiderPerson, text);
+		}
+
+
+		private static string GetTextForAddressMatch(AddressMatch match)
+		{
+			switch (match)
+			{
+				case AddressMatch.Full:
+					return "la rue, le numéro dans la rue, le numéro postal et la localité correspondent";
+
+				case AddressMatch.None:
+					return "l'adresse ne correspond pas";
+
+				case AddressMatch.StreetZipCity:
+					return "la rue, le numéro postal et la localité correspondent";
+
+				case AddressMatch.ZipCity:
+					return "le numéro postal et la localité correspondent";
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static string GetTextForNameMatch(NameMatch match)
+		{
+			switch (match)
+			{
+				case NameMatch.Full:
+					return "le nom correspond";
+
+				case NameMatch.OrderedPartial:
+					return "une partie du nom manque (nom composé)";
+
+				case NameMatch.Partial:
+					return "une partie du nom manque ou est dans le désordre (nom composé)";
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static string GetTextForSexMatch(bool? match)
+		{
+			switch (match)
+			{
+				case true:
+					return "le sexe correspond";
+
+				case false:
+					return "le sexe ne correspond pas";
+
+				case null:
+					return "la correspondance n'a pas pu être établie (sexe manquant)";
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static string GetTextForDateOfBirthMatch(bool? match)
+		{
+			switch (match)
+			{
+				case true:
+					return "la date de naissance correspond";
+
+				case false:
+					return "la date de naissance ne correspond pas";
+
+				case null:
+					return "la correspondance n'a pas pu être établie (date manquante)";
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 

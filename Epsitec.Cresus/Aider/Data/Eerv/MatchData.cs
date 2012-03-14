@@ -24,7 +24,7 @@ namespace Epsitec.Aider.Data.Eerv
 		/// True means that the date of birth is the same. False means that they are different. Null
 		/// means that at least one of them is undefined.
 		/// </summary>
-		public bool? SameDateOfBirth
+		public bool? DateOfBirth
 		{
 			get;
 			set;
@@ -35,7 +35,7 @@ namespace Epsitec.Aider.Data.Eerv
 		/// True means that the sex is the same. False means that they are different. Null means
 		/// that at least one of them is undefined.
 		/// </summary>
-		public bool? SameSex
+		public bool? Sex
 		{
 			get;
 			set;

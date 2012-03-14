@@ -56,7 +56,7 @@ namespace Aider.Tests.Vs
 				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
 				var eervPersons = EervDataLoader.LoadEervPersons (eervDataFile).ToList ();
 				var eervHouseholds = EervDataLoader.LoadEervHouseholds (eervDataFile).ToList ();
-				EervParishDataImporter.Import (businessContextCreator, businessContextCleaner, eervPersons, eervHouseholds);
+				EervParishDataImporter.Import (businessContextCreator, businessContextCleaner, "Morges", eervPersons, eervHouseholds);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
