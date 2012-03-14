@@ -178,6 +178,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.CreateButtonModèleUI (field, line);
 				}
+				else if (mapper.Column == ColumnType.LibelléTVA)
+				{
+					field = new StaticTextController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+				}
 				else if (mapper.Column == ColumnType.CodeTVA)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CodeTVAChanged);
@@ -652,6 +657,68 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.débitInfoFrame.PreferredWidth  = w1+w2;
 			this.créditInfoFrame.PreferredWidth = w1+w2-1;
+		}
+
+		protected override bool GetColumnGeometry(int line, ColumnType columnType, out double left, out double width)
+		{
+			left = width = 0;
+
+			var type = TypeEcriture.Normal;
+			if (line < this.dataAccessor.EditionLine.Count)
+			{
+				type = (TypeEcriture) Converters.ParseInt (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
+			}
+
+			if (type == TypeEcriture.TVA)
+			{
+				if (columnType == ColumnType.Libellé)
+				{
+					return false;  // cache le libellé
+				}
+				else if (columnType == ColumnType.LibelléTVA ||
+						 columnType == ColumnType.CodeTVA    ||
+						 columnType == ColumnType.TauxTVA    )
+				{
+					this.arrayController.GetColumnGeometry (ColumnType.Libellé, out left, out width);
+
+					double codeWidth = System.Math.Min (100, System.Math.Floor (width/3));
+					double tauxWidth = System.Math.Min ( 55, System.Math.Floor (width/3));
+
+					if (columnType == ColumnType.LibelléTVA)
+					{
+						width -= codeWidth + tauxWidth;
+					}
+					else if (columnType == ColumnType.CodeTVA)
+					{
+						left += width - tauxWidth - codeWidth;
+						width = codeWidth;
+					}
+					else
+					{
+						left += width - tauxWidth;
+						width = tauxWidth;
+					}
+
+					return true;
+				}
+				else
+				{
+					return this.arrayController.GetColumnGeometry (columnType, out left, out width);
+				}
+			}
+			else
+			{
+				if (columnType == ColumnType.LibelléTVA ||
+					columnType == ColumnType.CodeTVA    ||
+					columnType == ColumnType.TauxTVA    )
+				{
+					return false;  // cache les champs pour la TVA
+				}
+				else
+				{
+					return this.arrayController.GetColumnGeometry (columnType, out left, out width);
+				}
+			}
 		}
 
 		protected override void UpdateArrayColumns()

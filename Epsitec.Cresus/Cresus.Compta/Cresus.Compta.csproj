@@ -79,7 +79,8 @@
     <Compile Include="Controllers\UtilisateursEditorController.cs" />
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
-    <Compile Include="EcritureType.cs" />
+    <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
     <Compile Include="Entities\ComptaListeTVAEntity.cs" />

@@ -193,6 +193,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					yield return new ColumnMapper (ColumnType.Pièce, 0.20, ContentAlignment.MiddleLeft, "Pièce", "Numéro de la pièce comptable correspondant à l'écriture", enable: enable);
 				}
 
+				yield return new ColumnMapper (ColumnType.LibelléTVA, 0.00, ContentAlignment.MiddleRight, "Code TVA et taux");
+				yield return new ColumnMapper (ColumnType.CodeTVA,    0.00, ContentAlignment.MiddleLeft,  "Code TVA", "Code TVA");
+				yield return new ColumnMapper (ColumnType.TauxTVA,    0.00, ContentAlignment.MiddleLeft,  "Taux TVA", "Taux de la TVA");
+
 				yield return new ColumnMapper (ColumnType.Libellé, 0.80, ContentAlignment.MiddleLeft,  "Libellé", "Libellé de l'écriture");
 				yield return new ColumnMapper (ColumnType.Montant, 0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
 				yield return new ColumnMapper (ColumnType.Journal, 0.25, ContentAlignment.MiddleLeft,  "Journal", "Journal auquel appartient l'écriture");

@@ -615,8 +615,9 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var écriture = journal[i];
 				var suivante = journal[i+1];
+				var encore   = (i+2 < journal.Count) ? journal[i+2] : null;
 
-				if (this.MergeEcritures1 (écriture, suivante))
+				if (this.MergeEcritures1 (écriture, suivante, encore))
 				{
 					i += 2;
 				}
@@ -627,7 +628,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 		}
 
-		private bool MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
+		private bool MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante, ComptaEcritureEntity encore)
 		{
 			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
 			{
@@ -692,15 +693,28 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
+			écriture.Libellé = lib1.Substring (0, i1);
 			écriture.MontantComplément = suivante.Montant;
 			écriture.CodeTVA = codeTVA;
 			écriture.TauxTVA = taux;
-			écriture.Type = (int) EcritureType.Normal;
+			écriture.Type = (int) TypeEcriture.Normal;
 
+			suivante.Libellé = string.Format ("TVA {0} ({1})", Converters.PercentToString (taux), codeTVA.Code);
 			suivante.MontantComplément = écriture.Montant;
 			suivante.CodeTVA = codeTVA;
 			suivante.TauxTVA = taux;
-			suivante.Type = (int) EcritureType.TVA;
+			suivante.Type = (int) TypeEcriture.TVA;
+
+			if (encore != null)
+			{
+				string ending = string.Concat (" Total, (", codeTVA.Code, ")");
+				var lib = encore.Libellé.ToString ();
+
+				if (lib.EndsWith (ending))
+				{
+					encore.Libellé = lib.Substring (0, lib.Length-ending.Length);
+				}
+			}
 
 			return true;
 		}

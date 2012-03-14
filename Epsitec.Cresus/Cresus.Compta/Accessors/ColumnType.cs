@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Libellé,
 		Titre,
 		Montant,
+		LibelléTVA,
 		CodeTVA,
 		TauxTVA,
 		CompteTVA,
@@ -68,17 +69,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Chiffre,
 		MontantFictif,
 		Compte,
-		Erreur,
-
-		Jours1,
-		Jours2,
-		MontantTVA1,
-		MontantTVA2,
-		TauxTVA1,
-		TauxTVA2,
-		MontantHT1,
-		MontantHT2,
-		MontantTTC1,
-		MontantTTC2,
 	}
 }

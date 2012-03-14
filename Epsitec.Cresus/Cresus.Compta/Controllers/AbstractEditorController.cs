@@ -600,7 +600,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 							if (fieldController != null)
 							{
 								double left, width;
-								if (this.arrayController.GetColumnGeometry (mapper.Column, out left, out width))
+								if (this.GetColumnGeometry (line, mapper.Column, out left, out width))
 								{
 									fieldController.Box.Visibility = true;
 									fieldController.Box.Margins = new Margins (left+1, 0, 0, 0);
@@ -621,6 +621,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 			}
 		}
+
+		protected virtual bool GetColumnGeometry(int line, ColumnType columnType, out double left, out double width)
+		{
+			return this.arrayController.GetColumnGeometry (columnType, out left, out width);
+		}
+
 
 		protected virtual void UpdateArrayColumns()
 		{
@@ -702,7 +708,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			do
 			{
 				//	Cherche la colonne suivante.
-				if (!this.GetNextPrevColumn (ref column, direction))  // est-on arrivé à une extrémité ?
+				if (!this.GetNextPrevColumn (line, ref column, direction))  // est-on arrivé à une extrémité ?
 				{
 					//	Cherche la ligne suivante.
 					line += direction;
@@ -744,11 +750,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.EditorSelect (column, line, selectedLineChanged: false);
 		}
 
-		private bool GetNextPrevColumn(ref ColumnType columnType, int direction)
+		private bool GetNextPrevColumn(int line, ref ColumnType columnType, int direction)
 		{
 			//	Cherche la colonne suivante, en avant ou en arrière.
 			//	Retourne false si on est arrivé à une extrémité.
-			var mappers = this.columnMappers.Where (x => x.Show && x.Edition).ToList ();  // seulement les colonnes visibles
+			var mappers = this.columnMappers.Where (x => this.IsVisibleColumn (line, x)).ToList ();  // seulement les colonnes visibles
 
 			var c = columnType;
 			int i = mappers.FindIndex (x => x.Column == c);
@@ -768,6 +774,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 				columnType = mappers.First ().Column;  // retourne la colonne de gauche
 			}
 			return false;
+		}
+
+		private bool IsVisibleColumn(int line, ColumnMapper mapper)
+		{
+			if (mapper.Show && mapper.Edition)
+			{
+				var controller = this.GetFieldController (mapper.Column, line);
+				if (controller != null && !controller.Box.Visibility)
+				{
+					return false;
+				}
+
+				return true;
+			}
+			else
+			{
+				return false;
+			}
 		}
 
 

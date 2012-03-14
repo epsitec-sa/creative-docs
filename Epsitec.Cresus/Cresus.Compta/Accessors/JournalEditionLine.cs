@@ -100,6 +100,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Error = "Ce code TVA n'existe pas";
 					return;
 				}
+#if false
 				else
 				{
 					var débit = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						return;
 					}
 				}
+#endif
 			}
 		}
 
@@ -398,6 +400,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.TauxTVA,          Converters.PercentToString (écriture.TauxTVA));
 			this.SetText (ColumnType.CompteTVA,        JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
 			this.SetText (ColumnType.Journal,          écriture.Journal.Nom);
+			this.SetText (ColumnType.Type,             Converters.IntToString (écriture.Type));
 
 			this.UpdateCodeTVAParameters ();
 		}

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta
 {
-	public enum EcritureType
+	public enum TypeEcriture
 	{
 		Normal,
 		TVA,
