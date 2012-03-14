@@ -508,28 +508,15 @@ namespace Epsitec.Cresus.Compta.IO
 
 				var écriture = new ComptaEcritureEntity
 				{
-					Date       = date.Value,
-					Débit      = débit,
-					Crédit     = crédit,
-					Pièce      = pièce,
-					Libellé    = libellé,
-					MontantTTC = montant,
-					MultiId    = multi,
-					Journal    = jp,
+					Date    = date.Value,
+					Débit   = débit,
+					Crédit  = crédit,
+					Pièce   = pièce,
+					Libellé = libellé,
+					Montant = montant,
+					MultiId = multi,
+					Journal = jp,
 				};
-
-				if (débit != null && crédit != null && !string.IsNullOrEmpty (codeTVA))
-				{
-					var codeTVAEntity = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
-					if (codeTVAEntity != null && codeTVAEntity.DefaultTauxValue.GetValueOrDefault () == 0)
-					{
-						écriture.CodeTVA    = codeTVAEntity;
-						écriture.MontantTVA = 0;
-						écriture.MontantHT  = écriture.MontantTTC;
-						écriture.TauxTVA    = 0;
-						écriture.TVAAuDébit = débit.CodeTVA != null;
-					}
-				}
 
 				journal.Add (écriture);
 
@@ -553,8 +540,6 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			this.MergeStep1 (journal);
-			this.MergeStep2 (journal);
-			this.MergeStep3 (journal);
 
 			return null;  // ok
 		}
@@ -631,29 +616,28 @@ namespace Epsitec.Cresus.Compta.IO
 				var écriture = journal[i];
 				var suivante = journal[i+1];
 
-				var merge = this.MergeEcritures1 (écriture, suivante);
-				if (merge != null)
+				if (this.MergeEcritures1 (écriture, suivante))
 				{
-					journal.RemoveAt (i);
-					journal.RemoveAt (i);
-					journal.Insert (i, merge);
+					i += 2;
 				}
-
-				i++;
+				else
+				{
+					i++;
+				}
 			}
 		}
 
-		private ComptaEcritureEntity MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
+		private bool MergeEcritures1(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
 		{
 			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
 			{
-				return null;
+				return false;
 			}
 
 			if ((écriture.Débit  != null || suivante.Débit  != null) &&
 				(écriture.Crédit != null || suivante.Crédit != null))
 			{
-				return null;
+				return false;
 			}
 
 			var lib1 = écriture.Libellé.ToString ();
@@ -664,38 +648,38 @@ namespace Epsitec.Cresus.Compta.IO
 
 			if (i1 == -1 || i2 == -1 || i1 != i2)
 			{
-				return null;
+				return false;
 			}
 
 			if (lib1.Substring (0, i1) != lib2.Substring (0, i2))
 			{
-				return null;
+				return false;
 			}
 
 			//	Cherche le code TVA.
 			if (lib1[i1+2] != '(')
 			{
-				return null;
+				return false;
 			}
 
 			int i = lib1.IndexOf (')', i1+2);
 			if (i == -1)
 			{
-				return null;
+				return false;
 			}
 
 			string code = lib1.Substring (i1+3, i-i1-3);
 			var codeTVA = this.compta.CodesTVA.Where (x => x.Code == code).FirstOrDefault ();
 			if (codeTVA == null)
 			{
-				return null;
+				return false;
 			}
 
 			//	Cherche le taux.
 			int j = lib2.IndexOf ('%', i2+2);
 			if (j == -1)
 			{
-				return null;
+				return false;
 			}
 
 			decimal taux;
@@ -705,30 +689,23 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 			else
 			{
-				return null;
+				return false;
 			}
 
-			//	Crée la nouvelle écriture qui fusionne les 2 autres.
-			var merge = new ComptaEcritureEntity ()
-			{
-				Date        = écriture.Date,
-				Débit       = écriture.Débit,
-				Crédit      = écriture.Crédit,
-				Pièce       = écriture.Pièce,
-				Libellé     = lib1.Substring (0, i1),
-				MontantTTC  = écriture.MontantTTC + suivante.MontantTTC,
-				MontantTVA  = suivante.MontantTTC,
-				MontantHT   = écriture.MontantTTC,
-				CodeTVA     = codeTVA,
-				TauxTVA     = taux,
-				Journal     = écriture.Journal,
-				MultiId     = écriture.MultiId,
-				TVAAuDébit  = écriture.Crédit == null,
-			};
+			écriture.MontantComplément = suivante.Montant;
+			écriture.CodeTVA = codeTVA;
+			écriture.TauxTVA = taux;
+			écriture.Type = (int) EcritureType.Normal;
 
-			return merge;
+			suivante.MontantComplément = écriture.Montant;
+			suivante.CodeTVA = codeTVA;
+			suivante.TauxTVA = taux;
+			suivante.Type = (int) EcritureType.TVA;
+
+			return true;
 		}
 
+#if false
 		private void MergeStep2(List<ComptaEcritureEntity> journal)
 		{
 			//	Fusionne les écritures multiples de 2 lignes en une seule.
@@ -885,6 +862,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			return count;
 		}
+#endif
 		#endregion
 
 

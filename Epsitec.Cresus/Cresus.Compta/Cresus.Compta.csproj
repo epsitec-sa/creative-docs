@@ -65,10 +65,7 @@
     <Compile Include="Accessors\UtilisateursDataAccessor.cs" />
     <Compile Include="Accessors\UtilisateursEditionLine.cs" />
     <Compile Include="Assistants\Controllers\AbstractAssistantController.cs" />
-    <Compile Include="Assistants\Controllers\AssistantEcritureTVAController.cs" />
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
-    <Compile Include="Assistants\Data\AssistantEcritureTVA.cs" />
-    <Compile Include="Assistants\Data\AssistantEcritureTVAData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
     <Compile Include="Controllers\ListesTVAEditorController.cs" />
@@ -82,6 +79,7 @@
     <Compile Include="Controllers\UtilisateursEditorController.cs" />
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
+    <Compile Include="EcritureType.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
     <Compile Include="Entities\ComptaListeTVAEntity.cs" />

@@ -132,7 +132,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			var écriture = journal[row];
-			bool hasTVA;
 
 			switch (column)
 			{
@@ -140,12 +139,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.DateToString (écriture.Date);
 
 				case ColumnType.Débit:
-					hasTVA = écriture.CodeTVA != null && écriture.TVAAuDébit;
-					return JournalDataAccessor.FormatForTVA (JournalDataAccessor.GetNuméro (écriture.Débit), hasTVA);
+					return JournalDataAccessor.GetNuméro (écriture.Débit);
 
 				case ColumnType.Crédit:
-					hasTVA = écriture.CodeTVA != null && !écriture.TVAAuDébit;
-					return JournalDataAccessor.FormatForTVA (JournalDataAccessor.GetNuméro (écriture.Crédit), hasTVA);
+					return JournalDataAccessor.GetNuméro (écriture.Crédit);
 
 				case ColumnType.Pièce:
 					return écriture.Pièce;
@@ -153,19 +150,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Libellé:
 					return écriture.Libellé;
 
-				case ColumnType.MontantTTC:
-					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.MontantTTC));
+				case ColumnType.Montant:
+					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
 					if (écriture.TotalAutomatique)
 					{
 						montantTTC = montantTTC.ApplyBold ();
 					}
 					return montantTTC;
-
-				case ColumnType.MontantTVA:
-					return JournalDataAccessor.FormatForTVA (Converters.MontantToString (écriture.MontantTVA));
-
-				case ColumnType.MontantHT:
-					return JournalDataAccessor.FormatForTVA (Converters.MontantToString (écriture.MontantHT));
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
@@ -175,16 +166,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.CompteTVA:
 					return JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA);
-
-				case ColumnType.TVAAuDébit:
-					if (écriture.CodeTVA == null)
-					{
-						return FormattedText.Empty;
-					}
-					else
-					{
-						return écriture.TVAAuDébit ? "D" : "C";
-					}
 
 				case ColumnType.Journal:
 					return écriture.Journal.Nom;
@@ -287,10 +268,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
-			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
-			this.editionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
-			this.editionLine[line].SetText (ColumnType.TVAAuDébit, "D");
+			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.période.ProchaineDate));
+			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
+			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
 
 			base.PrepareEditionLine (line);
 		}
@@ -884,20 +864,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				date = Date.Today;
 				return false;
-			}
-		}
-
-
-		private static FormattedText FormatForTVA(FormattedText text, bool isTVA = true)
-		{
-			//	Formate un texte pour montrer qu'il est lié à la TVA.
-			if (isTVA)
-			{
-				return text.ApplyItalic ().ApplyFontColor (UIBuilder.TVAColor);
-			}
-			else
-			{
-				return text;
 			}
 		}
 

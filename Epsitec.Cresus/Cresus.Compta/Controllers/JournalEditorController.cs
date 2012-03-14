@@ -119,72 +119,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins       = new Margins (0, 1, 0, 0),
 			};
 
-			this.CreateComplementUI (this.infoFrameBox);
-
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
 
 			base.CreateUI (footer, updateArrayContentAction);
-		}
-
-		private void CreateComplementUI(Widget parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 20, 0, 0),
-			};
-
-			var line1 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
-
-			//	Tout à droite.
-			this.radioCréditTVA = new RadioButton
-			{
-				Parent         = line1,
-				Text           = "Crédit",
-				PreferredWidth = 60,
-				AutoToggle     = false,
-				Dock           = DockStyle.Right,
-				Visibility     = false,
-			};
-
-			//	A gauche.
-			this.radioDébitTVA = new RadioButton
-			{
-				Parent         = line1,
-				Text           = "Débit",
-				PreferredWidth = 60,
-				AutoToggle     = false,
-				Dock           = DockStyle.Right,
-				Visibility     = false,
-			};
-
-			this.labelTVA = new StaticText
-			{
-				Parent         = line1,
-				Text           = "TVA au",
-				PreferredWidth = 45,
-				Dock           = DockStyle.Right,
-				Visibility     = false,
-			};
-
-			this.radioDébitTVA.Clicked += delegate
-			{
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, "D");
-				this.EditorTextChanged ();
-			};
-
-			this.radioCréditTVA.Clicked += delegate
-			{
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, "C");
-				this.EditorTextChanged ();
-			};
 		}
 
 		private void CreateLineUI(Widget parent)
@@ -260,19 +198,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
-				else if (mapper.Column == ColumnType.MontantHT)
+				else if (mapper.Column == ColumnType.Montant)
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantBrutChanged);
-					field.CreateUI (editorFrame);
-				}
-				else if (mapper.Column == ColumnType.MontantTVA)
-				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantTVAChanged);
-					field.CreateUI (editorFrame);
-				}
-				else if (mapper.Column == ColumnType.MontantTTC)
-				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.MontantTTCChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
@@ -281,9 +209,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.MontantHT  ||
-					mapper.Column == ColumnType.MontantTVA ||
-					mapper.Column == ColumnType.MontantTTC )
+				if (mapper.Column == ColumnType.Montant)
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
@@ -313,42 +239,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CompteChanged()
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.CompteChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void MontantBrutChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.MontantBrutChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void MontantTVAChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.MontantTVAChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void MontantTTCChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.MontantTTCChanged ();
+			//?editionLine.CompteChanged ();
 			this.EditorTextChanged ();
 		}
 
 		private void CodeTVAChanged()
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.CodeTVAChanged ();
+			//?editionLine.CodeTVAChanged ();
 			this.EditorTextChanged ();
 		}
 
 		private void TauxTVAChanged()
 		{
 			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			editionLine.TauxTVAChanged ();
+			//?editionLine.TauxTVAChanged ();
 			this.EditorTextChanged ();
 		}
 
@@ -400,7 +305,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les données de la 2ème ligne.
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[1].SetText (ColumnType.MontantTTC,       Converters.MontantToString (0));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          Converters.MontantToString (0));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 																				   
 			//	Met à jour les données de la contrepartie.						   
@@ -501,9 +406,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Débit,  crédit);
 			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Crédit, débit);
 
-			var d = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit);
-			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.TVAAuDébit, (d == "D") ? "C":"D");
-
 			this.dirty = true;
 			this.UpdateEditorContent ();
 		}
@@ -582,11 +484,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					bool hasTVA = this.HasTVA (line);
 
-					this.dataAccessor.GetEditionData (line, ColumnType.MontantHT ).Enable = !totalAutomatique && éditeMontantHT && hasTVA;
-					this.dataAccessor.GetEditionData (line, ColumnType.MontantTVA).Enable = !totalAutomatique && éditeMontantTVA;
-					this.dataAccessor.GetEditionData (line, ColumnType.MontantTTC).Enable = !totalAutomatique;
-					this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA   ).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
-					this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA   ).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
+					this.dataAccessor.GetEditionData (line, ColumnType.Montant).Enable = !totalAutomatique;
+					this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
+					this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
 
 					this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
 					this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
@@ -598,12 +498,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				bool hasTVA = this.HasTVA (0);
 
-				this.dataAccessor.GetEditionData (0, ColumnType.MontantHT ).Enable = hasTVA;
-				this.dataAccessor.GetEditionData (0, ColumnType.MontantTVA).Enable = éditeMontantTVA;
-				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA   ).Enable = hasTVA;
+				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA).Enable = hasTVA;
 			}
-
-			this.UpdateRadioTVA ();
 		}
 
 		private void UpdateMultiEditionData()
@@ -612,12 +508,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				decimal totalHTDébit   = 0;
-				decimal totalHTCrédit  = 0;
-				decimal totalTVADébit  = 0;
-				decimal totalTVACrédit = 0;
-				decimal totalTTCDébit  = 0;
-				decimal totalTTCCrédit = 0;
+				decimal totalDébit  = 0;
+				decimal totalCrédit = 0;
 
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
@@ -631,63 +523,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 						}
 
-						decimal montantBrut = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantHT )).GetValueOrDefault ();
-						decimal montantTVA  = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTVA)).GetValueOrDefault ();
-						decimal montant     = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
+						decimal montant = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant)).GetValueOrDefault ();
 
 						if (this.IsDébitMulti (line))
 						{
-							totalHTCrédit += montantBrut;
-							totalTVACrédit  += montantTVA;
-							totalTTCCrédit     += montant;
+							totalCrédit += montant;
 						}
 
 						if (this.IsCréditMulti (line))
 						{
-							totalHTDébit += montantBrut;
-							totalTVADébit  += montantTVA;
-							totalTTCDébit     += montant;
+							totalDébit += montant;
 						}
 					}
 				}
 
-				decimal? totalHT  = 0;
-				decimal? totalTVA = 0;
-				decimal? totalTTC = 0;
+				decimal? total = 0;
 
 
 				if (this.IsDébitMulti (cp))
 				{
-					totalHT  = totalHTDébit  - totalHTCrédit;
-					totalTVA = totalTVADébit - totalTVACrédit;
-					totalTTC = totalTTCDébit - totalTTCCrédit;
+					total = totalDébit - totalCrédit;
 				}
 
 				if (this.IsCréditMulti (cp))
 				{
-					totalHT  = totalHTCrédit  - totalHTDébit;
-					totalTVA = totalTVACrédit - totalTVADébit;
-					totalTTC = totalTTCCrédit - totalTTCDébit;
+					total = totalCrédit - totalDébit;
 				}
 
-				if (totalHT == 0)
+				if (total == 0)
 				{
-					totalHT = null;
+					total = null;
 				}
 
-				if (totalTVA == 0)
-				{
-					totalTVA = null;
-				}
-
-				if (totalTTC == 0)
-				{
-					totalTTC = null;
-				}
-
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantHT,  Converters.MontantToString (totalHT));
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTVA, Converters.MontantToString (totalTVA));
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.MontantTTC, Converters.MontantToString (totalTTC));
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (total));
 
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
 			}
@@ -709,28 +577,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "1");
-			}
-		}
-
-		private void UpdateRadioTVA()
-		{
-			bool hasTVA = this.HasTVA (this.selectedLine);
-
-			this.labelTVA      .Visibility = hasTVA;
-			this.radioDébitTVA .Visibility = hasTVA;
-			this.radioCréditTVA.Visibility = hasTVA;
-
-			if (hasTVA)
-			{
-				bool TVAAuDébit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.TVAAuDébit) == "D";
-
-				this.radioDébitTVA .ActiveState =  TVAAuDébit ? ActiveState.Yes : ActiveState.No;
-				this.radioCréditTVA.ActiveState = !TVAAuDébit ? ActiveState.Yes : ActiveState.No;
-
-				bool locked = this.LockedTVA (this.selectedLine);
-
-				this.radioDébitTVA .Enable = !locked ||  TVAAuDébit;
-				this.radioCréditTVA.Enable = !locked || !TVAAuDébit;
 			}
 		}
 
@@ -900,8 +746,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Débit ), isDébit: true);
 				this.UpdateEditorInfo (this.dataAccessor.GetEditionText (this.selectedLine, ColumnType.Crédit), isDébit: false);
 			}
-
-			this.UpdateRadioTVA ();
 		}
 
 		private void UpdateEditorInfo(FormattedText numéro, bool isDébit)
@@ -1107,7 +951,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (modèle.Montant.HasValue)
 			{
-				this.dataAccessor.EditionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (modèle.Montant));
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (modèle.Montant));
 			}
 
 			this.UpdateEditorContent ();
@@ -1129,9 +973,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox							débitInfoFrame;
 		private FrameBox							créditInfoFrame;
 		private VScroller							scroller;
-		private StaticText							labelTVA;
-		private RadioButton							radioDébitTVA;
-		private RadioButton							radioCréditTVA;
 
 		private bool								isMulti;
 	}

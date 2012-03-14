@@ -122,24 +122,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if (écriture.Débit != null)
 				{
-					this.AddSoldeCompteDébit (écriture.Débit, écriture.MontantDébit);
+					this.AddSoldeCompteDébit (écriture.Débit, écriture.Montant);
 				}
 
 				if (écriture.Crédit != null)
 				{
-					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.MontantCrédit);
-				}
-
-				if (écriture.CodeTVA != null)  // écriture avec TVA ?
-				{
-					if (écriture.TVAAuDébit)
-					{
-						this.AddSoldeCompteDébit (écriture.CodeTVA.Compte, écriture.MontantTVA.GetValueOrDefault ());
-					}
-					else
-					{
-						this.AddSoldeCompteCrédit (écriture.CodeTVA.Compte, écriture.MontantTVA.GetValueOrDefault ());
-					}
+					this.AddSoldeCompteCrédit (écriture.Crédit, écriture.Montant);
 				}
 			}
 

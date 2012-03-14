@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Pièce   = écriture.Pièce,
 						Libellé = écriture.Libellé,
 						CP      = écriture.Crédit,
-						Débit   = écriture.MontantDébit,
+						Débit   = écriture.Montant,
 						CodeTVA = écriture.CodeTVA,
 						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						Pièce   = écriture.Pièce,
 						Libellé = écriture.Libellé,
 						CP      = écriture.Débit,
-						Crédit  = écriture.MontantCrédit,
+						Crédit  = écriture.Montant,
 						CodeTVA = écriture.CodeTVA,
 						TauxTVA = écriture.TauxTVA,
 						Journal = écriture.Journal.Nom,
@@ -176,9 +176,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (data.IsDébit)
 					{
-						var m = écriture.MontantDébit;
-						solde      += m;
-						totalDébit += m;
+						solde      += écriture.Montant;
+						totalDébit += écriture.Montant;
 
 						if (compte.Catégorie == CatégorieDeCompte.Passif ||
 							compte.Catégorie == CatégorieDeCompte.Produit)
@@ -190,9 +189,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						var m = écriture.MontantCrédit;
-						solde       -= m;
-						totalCrédit += m;
+						solde       -= écriture.Montant;
+						totalCrédit += écriture.Montant;
 
 						if (compte.Catégorie == CatégorieDeCompte.Passif ||
 							compte.Catégorie == CatégorieDeCompte.Produit)
@@ -327,7 +325,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var écriture = data.Entity as ComptaEcritureEntity;
 			var initialDate    = écriture.Date;
 			var initialPièce   = écriture.Pièce;
-			var initialMontant = écriture.MontantTTC;
+			var initialMontant = écriture.Montant;
 			var initialJournal = écriture.Journal;
 
 			this.editionLine[0].DataToEntity (data);
@@ -344,7 +342,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.UpdateMultiPièce (écriture);
 				}
 
-				if (écriture.MontantTTC != initialMontant)  // changement de montant ?
+				if (écriture.Montant != initialMontant)  // changement de montant ?
 				{
 					this.UpdateMultiMontant (écriture);
 				}
@@ -360,7 +358,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.UpdateDate (écriture, data);
 			}
 
-			if (écriture.MontantTTC != initialMontant)  // changement de montant ?
+			if (écriture.Montant != initialMontant)  // changement de montant ?
 			{
 				this.UpdateSoldes ();
 			}
@@ -395,13 +393,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					total += écriture.MontantTTC;
+					total += écriture.Montant;
 				}
 			}
 
 			if (auto != null)
 			{
-				auto.MontantTTC = total;
+				auto.Montant = total;
 			}
 		}
 

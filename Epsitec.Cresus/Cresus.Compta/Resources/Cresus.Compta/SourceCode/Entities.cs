@@ -659,55 +659,11 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>MontantHT</c> field.
-		///	designer:fld/OVKB/OVKQ6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKQ6]")]
-		public global::System.Decimal? MontantHT
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[OVKQ6]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.MontantHT;
-				if (oldValue != value || !this.IsFieldDefined("[OVKQ6]"))
-				{
-					this.OnMontantHTChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[OVKQ6]", oldValue, value);
-					this.OnMontantHTChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>MontantTVA</c> field.
-		///	designer:fld/OVKB/OVKP6
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKP6]")]
-		public global::System.Decimal? MontantTVA
-		{
-			get
-			{
-				return this.GetField<global::System.Decimal?> ("[OVKP6]");
-			}
-			set
-			{
-				global::System.Decimal? oldValue = this.MontantTVA;
-				if (oldValue != value || !this.IsFieldDefined("[OVKP6]"))
-				{
-					this.OnMontantTVAChanging (oldValue, value);
-					this.SetField<global::System.Decimal?> ("[OVKP6]", oldValue, value);
-					this.OnMontantTVAChanged (oldValue, value);
-				}
-			}
-		}
-		///	<summary>
-		///	The <c>MontantTTC</c> field.
+		///	The <c>Montant</c> field.
 		///	designer:fld/OVKB/OVKI
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVKI]")]
-		public global::System.Decimal MontantTTC
+		public global::System.Decimal Montant
 		{
 			get
 			{
@@ -715,12 +671,34 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 			set
 			{
-				global::System.Decimal oldValue = this.MontantTTC;
+				global::System.Decimal oldValue = this.Montant;
 				if (oldValue != value || !this.IsFieldDefined("[OVKI]"))
 				{
-					this.OnMontantTTCChanging (oldValue, value);
+					this.OnMontantChanging (oldValue, value);
 					this.SetField<global::System.Decimal> ("[OVKI]", oldValue, value);
-					this.OnMontantTTCChanged (oldValue, value);
+					this.OnMontantChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>MontantComplément</c> field.
+		///	designer:fld/OVKB/OVKQ6
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVKQ6]")]
+		public global::System.Decimal? MontantComplément
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal?> ("[OVKQ6]");
+			}
+			set
+			{
+				global::System.Decimal? oldValue = this.MontantComplément;
+				if (oldValue != value || !this.IsFieldDefined("[OVKQ6]"))
+				{
+					this.OnMontantComplémentChanging (oldValue, value);
+					this.SetField<global::System.Decimal?> ("[OVKQ6]", oldValue, value);
+					this.OnMontantComplémentChanged (oldValue, value);
 				}
 			}
 		}
@@ -769,46 +747,46 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TVAAuDébit</c> field.
-		///	designer:fld/OVKB/OVKE7
+		///	The <c>TVAId</c> field.
+		///	designer:fld/OVKB/OVKG7
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKE7]")]
-		public bool TVAAuDébit
+		[global::Epsitec.Common.Support.EntityField ("[OVKG7]")]
+		public int TVAId
 		{
 			get
 			{
-				return this.GetField<bool> ("[OVKE7]");
+				return this.GetField<int> ("[OVKG7]");
 			}
 			set
 			{
-				bool oldValue = this.TVAAuDébit;
-				if (oldValue != value || !this.IsFieldDefined("[OVKE7]"))
+				int oldValue = this.TVAId;
+				if (oldValue != value || !this.IsFieldDefined("[OVKG7]"))
 				{
-					this.OnTVAAuDébitChanging (oldValue, value);
-					this.SetField<bool> ("[OVKE7]", oldValue, value);
-					this.OnTVAAuDébitChanged (oldValue, value);
+					this.OnTVAIdChanging (oldValue, value);
+					this.SetField<int> ("[OVKG7]", oldValue, value);
+					this.OnTVAIdChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>CodeAnalytique</c> field.
-		///	designer:fld/OVKB/OVKM
+		///	The <c>Type</c> field.
+		///	designer:fld/OVKB/OVKH7
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[OVKM]")]
-		public string CodeAnalytique
+		[global::Epsitec.Common.Support.EntityField ("[OVKH7]")]
+		public int Type
 		{
 			get
 			{
-				return this.GetField<string> ("[OVKM]");
+				return this.GetField<int> ("[OVKH7]");
 			}
 			set
 			{
-				string oldValue = this.CodeAnalytique;
-				if (oldValue != value || !this.IsFieldDefined("[OVKM]"))
+				int oldValue = this.Type;
+				if (oldValue != value || !this.IsFieldDefined("[OVKH7]"))
 				{
-					this.OnCodeAnalytiqueChanging (oldValue, value);
-					this.SetField<string> ("[OVKM]", oldValue, value);
-					this.OnCodeAnalytiqueChanged (oldValue, value);
+					this.OnTypeChanging (oldValue, value);
+					this.SetField<int> ("[OVKH7]", oldValue, value);
+					this.OnTypeChanged (oldValue, value);
 				}
 			}
 		}
@@ -849,20 +827,18 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnPièceChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnLibelléChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
-		partial void OnMontantHTChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMontantHTChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMontantTVAChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMontantTVAChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnMontantTTCChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
-		partial void OnMontantTTCChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnMontantComplémentChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMontantComplémentChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnCodeTVAChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnCodeTVAChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnTauxTVAChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnTauxTVAChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
-		partial void OnTVAAuDébitChanging(bool oldValue, bool newValue);
-		partial void OnTVAAuDébitChanged(bool oldValue, bool newValue);
-		partial void OnCodeAnalytiqueChanging(string oldValue, string newValue);
-		partial void OnCodeAnalytiqueChanged(string oldValue, string newValue);
+		partial void OnTVAIdChanging(int oldValue, int newValue);
+		partial void OnTVAIdChanged(int oldValue, int newValue);
+		partial void OnTypeChanging(int oldValue, int newValue);
+		partial void OnTypeChanged(int oldValue, int newValue);
 		partial void OnJournalChanging(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
 		partial void OnJournalChanged(global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaJournalEntity newValue);
 		

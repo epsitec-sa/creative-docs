@@ -812,8 +812,6 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
-				//	designer:cap/OVKM
-				public static readonly global::Epsitec.Common.Support.Druid CodeAnalytique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 22);
 				//	designer:cap/OVKL
 				public static readonly global::Epsitec.Common.Support.Druid CodeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21);
 				//	designer:cap/OVKF
@@ -826,12 +824,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 100);
 				//	designer:cap/OVKH
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17);
-				//	designer:cap/OVKQ6
-				public static readonly global::Epsitec.Common.Support.Druid MontantHT = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218);
 				//	designer:cap/OVKI
-				public static readonly global::Epsitec.Common.Support.Druid MontantTTC = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
-				//	designer:cap/OVKP6
-				public static readonly global::Epsitec.Common.Support.Druid MontantTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 217);
+				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
+				//	designer:cap/OVKQ6
+				public static readonly global::Epsitec.Common.Support.Druid MontantComplément = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 218);
 				//	designer:cap/OVKD
 				public static readonly global::Epsitec.Common.Support.Druid MultiId = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 13);
 				//	designer:cap/OVKG
@@ -840,8 +836,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid TauxTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 222);
 				//	designer:cap/OVKA1
 				public static readonly global::Epsitec.Common.Support.Druid TotalAutomatique = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 42);
-				//	designer:cap/OVKE7
-				public static readonly global::Epsitec.Common.Support.Druid TVAAuDébit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 238);
+				//	designer:cap/OVKG7
+				public static readonly global::Epsitec.Common.Support.Druid TVAId = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 240);
+				//	designer:cap/OVKH7
+				public static readonly global::Epsitec.Common.Support.Druid Type = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 241);
 			}
 			
 			public static class ComptaJournal

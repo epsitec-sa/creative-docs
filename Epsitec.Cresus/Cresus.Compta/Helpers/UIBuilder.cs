@@ -394,8 +394,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color SelectionColor			= Color.FromHexa ("ffd700");  // orange "gold"
 		public static readonly Color JustCreatedColor		= Color.FromHexa ("b3d7ff");  // bleu pastel
 
-		public static readonly Color TVAColor				= Color.FromHexa ("30648f");  // bleu foncé
-
 		public static readonly Color InfoColor				= Color.FromAlphaColor (0.5, Color.FromHexa ("eeeeee"));   // gris transparent
 		public static readonly Color ErrorColor				= Color.FromHexa ("ffb1b1");  // rouge pâle
 		public static readonly Color MiniToolbarColor		= Color.FromHexa ("f4f9ff");  // bleu très léger

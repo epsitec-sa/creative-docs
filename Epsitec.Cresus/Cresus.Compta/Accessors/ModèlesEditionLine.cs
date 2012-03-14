@@ -21,13 +21,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ModèlesEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.dataDict.Add (ColumnType.Code,       new EditionData (this.controller, this.ValidateCode));
-			this.dataDict.Add (ColumnType.Raccourci,  new EditionData (this.controller, this.ValidateRaccourci));
-			this.dataDict.Add (ColumnType.Débit,      new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.Crédit,     new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.Pièce,      new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Libellé,    new EditionData (this.controller, this.ValidateLibellé));
-			this.dataDict.Add (ColumnType.MontantTTC, new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Code,      new EditionData (this.controller, this.ValidateCode));
+			this.dataDict.Add (ColumnType.Raccourci, new EditionData (this.controller, this.ValidateRaccourci));
+			this.dataDict.Add (ColumnType.Débit,     new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Crédit,    new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Pièce,     new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Libellé,   new EditionData (this.controller, this.ValidateLibellé));
+			this.dataDict.Add (ColumnType.Montant,   new EditionData (this.controller, this.ValidateMontant));
 		}
 
 
@@ -128,13 +128,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var modèle = entity as ComptaModèleEntity;
 
-			this.SetText (ColumnType.Code,       modèle.Code);
-			this.SetText (ColumnType.Raccourci,  modèle.Raccourci);
-			this.SetText (ColumnType.Débit,      ModèlesDataAccessor.GetNuméro (modèle.Débit));
-			this.SetText (ColumnType.Crédit,     ModèlesDataAccessor.GetNuméro (modèle.Crédit));
-			this.SetText (ColumnType.Pièce,      modèle.Pièce);
-			this.SetText (ColumnType.Libellé,    modèle.Libellé);
-			this.SetText (ColumnType.MontantTTC, Converters.MontantToString (modèle.Montant));
+			this.SetText (ColumnType.Code,      modèle.Code);
+			this.SetText (ColumnType.Raccourci, modèle.Raccourci);
+			this.SetText (ColumnType.Débit,     ModèlesDataAccessor.GetNuméro (modèle.Débit));
+			this.SetText (ColumnType.Crédit,    ModèlesDataAccessor.GetNuméro (modèle.Crédit));
+			this.SetText (ColumnType.Pièce,     modèle.Pièce);
+			this.SetText (ColumnType.Libellé,   modèle.Libellé);
+			this.SetText (ColumnType.Montant,   Converters.MontantToString (modèle.Montant));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			modèle.Raccourci = this.GetText (ColumnType.Raccourci).ToSimpleText ();
 			modèle.Pièce     = this.GetText (ColumnType.Pièce);
 			modèle.Libellé   = this.GetText (ColumnType.Libellé);
-			modèle.Montant   = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
+			modèle.Montant   = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 		}
 	}
 }
