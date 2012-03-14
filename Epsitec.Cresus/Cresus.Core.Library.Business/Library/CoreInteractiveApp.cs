@@ -79,6 +79,14 @@ namespace Epsitec.Cresus.Core.Library
 			this.DisposePlugIns ();
 		}
 
+		public virtual bool StartupLogin()
+		{
+			var userManager   = this.UserManager;
+			var activeSysUser = userManager.FindActiveSystemUser ();
+
+			return userManager.Authenticate (this, activeSysUser, softwareStartup: true);
+		}
+
 
 		protected override void Dispose(bool disposing)
 		{
@@ -92,7 +100,6 @@ namespace Epsitec.Cresus.Core.Library
 		protected abstract void SaveApplicationState(XDocument doc);
 
 		protected abstract XDocument LoadApplicationState();
-
 
 		private void ProbeTemplateDatabase()
 		{

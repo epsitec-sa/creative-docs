@@ -51,9 +51,7 @@ namespace Epsitec.Cresus.Core
 
 				SplashScreen.DismissSplashScreen ();
 
-				var user = app.UserManager.FindActiveSystemUser ();
-
-				if (app.UserManager.Authenticate (app, user, softwareStartup: true))
+				if (app.StartupLogin ())
 				{
 					app.Window.Show ();
 					app.Window.Run ();

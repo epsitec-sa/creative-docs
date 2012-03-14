@@ -103,8 +103,16 @@ namespace Epsitec.Cresus.Core.Library.Business
 			{
 				WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden
 			};
-			
-			System.Diagnostics.Process.Start (startInfo);
+
+			try
+			{
+				System.Diagnostics.Process.Start (startInfo);
+			}
+			catch (System.Exception ex)
+			{
+				System.Diagnostics.Debug.WriteLine ("Could not start Debug Monitor");
+				System.Diagnostics.Debug.WriteLine (ex.Message);
+			}
 		}
 		
 		private void CreateDatabaseSnapshot()
