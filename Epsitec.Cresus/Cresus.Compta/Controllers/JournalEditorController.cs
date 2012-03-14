@@ -974,6 +974,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+#if false
 		protected override bool HasAssistant
 		{
 			get
@@ -1022,6 +1023,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.assistantController.UpdateContent ();
 			this.assistantController.UpdateGeometry ();
 		}
+#endif
 
 
 		#region Menu des écritures modèles
