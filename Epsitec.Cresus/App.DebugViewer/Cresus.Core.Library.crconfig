@@ -1,0 +1,2 @@
+DefineDatabase ("debugviewer", "localhost");
+DefineApplicationClass ("App.DebugViewer.exe", "Epsitec.Cresus.DebugViewer.CoreApplication");
