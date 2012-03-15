@@ -36,13 +36,12 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.frameRoot = new FrameBox
 			{
-				Parent     = this.viewRoot,
 				Anchor     = AnchorStyles.All,
 				Visibility = false,
 			};
 
-			this.frameRoot.Pressed  += this.HandleFrameRoot_Pressed;
-			this.frameRoot.Released += this.HandleFrameRoot_Released;
+			this.frameRoot.Pressed  += this.HandleFrameRootPressed;
+			this.frameRoot.Released += this.HandleFrameRootReleased;
 
 			this.windowRoot.AltModifierChanged += this.HandleWindowRootAltModifierChanged;
 
@@ -91,7 +90,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			ActionItemLayout.UpdateLayout (this.layouts);
 			
 			this.RemoveDuplicates ();
-			this.CreateUI ();
+			this.RefreshUI ();
 		}
 
 		public void Remove(TileContainerController controller)
@@ -100,7 +99,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.layouts.RemoveAll (x => x.SerialId == serialId);
 			
-			this.CreateUI ();
+			this.RefreshUI ();
 		}
 
 		private void RemoveDuplicates()
@@ -109,9 +108,8 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		private void CreateUI()
+		private void RefreshUI()
 		{
-			this.frameRoot.Parent = this.viewRoot;
 			this.frameRoot.Children.Clear ();
 			this.layouts.ForEach (x => this.CreateLayoutUI (x));
 			this.UpdateFrameRoot ();
@@ -171,6 +169,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateFrameRoot()
 		{
+			//	Make sure the frame root is a child of the data view controller's root. Every
+			//	time the ViewLayoutController refreshes its columns, it removes all children,
+			//	including the frame root. That's why we need to reparent it every time:
+
 			this.frameRoot.Parent = this.viewRoot;
 
 			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
@@ -289,7 +291,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private void HandleFrameRoot_Pressed(object sender, MessageEventArgs e)
+		private void HandleFrameRootPressed(object sender, MessageEventArgs e)
 		{
 			if (this.showMode == ActionViewControllerMode.Full)
 			{
@@ -299,7 +301,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			e.Message.Swallowed = true;
 		}
 
-		private void HandleFrameRoot_Released(object sender, MessageEventArgs e)
+		private void HandleFrameRootReleased(object sender, MessageEventArgs e)
 		{
 			e.Message.Swallowed = true;
 		}
@@ -327,8 +329,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			this.windowRoot.AltModifierChanged -= this.HandleWindowRootAltModifierChanged;
 
-			this.frameRoot.Pressed  -= this.HandleFrameRoot_Pressed;
-			this.frameRoot.Released -= this.HandleFrameRoot_Released;
+			this.frameRoot.Pressed  -= this.HandleFrameRootPressed;
+			this.frameRoot.Released -= this.HandleFrameRootReleased;
 
 			this.frameRoot.Children.Clear ();
 			
