@@ -86,26 +86,104 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontantTTC(EditionData data)
 		{
-			Validators.ValidateMontant (data, emptyAccepted: true);
+			data.ClearError ();
+
+			var type = Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
+			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
+
+			if (type == TypeEcriture.Nouvelle)
+			{
+				if (this.GetEnable (ColumnType.MontantTTC))
+				{
+					if (!montantTTC.HasValue && !montantHT.HasValue)
+					{
+						data.Error = "Donnez ici le montant TTC, ou à côté le montant HT";
+						return;
+					}
+
+					if (montantTTC.HasValue && montantHT.HasValue)
+					{
+						data.Error = "Il faut donner le montant TTC ou le montant HT, mais pas les deux";
+						return;
+					}
+				}
+
+				if (montantTTC.HasValue)
+				{
+					if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+						montantTTC.GetValueOrDefault () == 0)  // montant nul ?
+					{
+						data.Error = "Le montant ne peut pas être nul";
+						data.Text = Converters.MontantToString (0);
+						return;
+					}
+
+					Validators.ValidateMontant (data, emptyAccepted: false);
+				}
+
+				return;
+			}
+
+			if (type == TypeEcriture.BaseTVA ||
+				type == TypeEcriture.Nouvelle)
+			{
+				if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+					montantTTC.GetValueOrDefault () == 0)  // montant nul ?
+				{
+					data.Error = "Le montant ne peut pas être nul";
+					data.Text = Converters.MontantToString (0);
+					return;
+				}
+
+				Validators.ValidateMontant (data, emptyAccepted: false);
+				return;
+			}
 		}
 
 		private void ValidateMontant(EditionData data)
 		{
 			data.ClearError ();
 
+			var type = Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
-			if (montantTTC.GetValueOrDefault () != 0 || montantHT.GetValueOrDefault () != 0)
+			if (type == TypeEcriture.Nouvelle)
 			{
-				return;
+				if (this.GetEnable (ColumnType.MontantTTC))
+				{
+					if (!montantTTC.HasValue && !montantHT.HasValue)
+					{
+						data.Error = "Donnez ici le montant HT, ou à côté le montant TTC";
+						return;
+					}
+
+					if (montantTTC.HasValue && montantHT.HasValue)
+					{
+						data.Error = "Il faut donner le montant TTC ou le montant HT, mais pas les deux";
+						return;
+					}
+
+					if (montantTTC.HasValue)
+					{
+						return;
+					}
+				}
 			}
 
-			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
-				montantHT.GetValueOrDefault () == 0)  // montant nul ?
+			if (type != TypeEcriture.CodeTVA)  // sur la ligne CodeTVA, le montant peut être nul (par ex. lors d'exportation)
 			{
-				data.Error = "Le montant ne peut pas être nul";
-				return;
+				if (montantHT.HasValue)
+				{
+					if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+						montantHT.GetValueOrDefault () == 0)  // montant nul ?
+					{
+						data.Error = "Le montant ne peut pas être nul";
+						data.Text = Converters.MontantToString (0);
+						return;
+					}
+				}
 			}
 
 			Validators.ValidateMontant (data, emptyAccepted: false);

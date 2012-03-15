@@ -198,6 +198,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Journal:
 					return écriture.Journal.Nom;
 
+				case ColumnType.Type:
+					return Converters.TypeEcritureToString (écriture.Type);
+
 				default:
 					return FormattedText.Null;
 			}
@@ -296,9 +299,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Date,    Converters.DateToString (this.période.ProchaineDate));
-			this.editionLine[line].SetText (ColumnType.Pièce,   this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
-			this.editionLine[line].SetText (ColumnType.Montant, Converters.MontantToString (0));
+			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
+			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
+			this.editionLine[line].SetText (ColumnType.MontantTTC, FormattedText.Empty);
+			this.editionLine[line].SetText (ColumnType.Montant,    FormattedText.Empty);
+			this.editionLine[line].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.Nouvelle));
 
 			base.PrepareEditionLine (line);
 		}

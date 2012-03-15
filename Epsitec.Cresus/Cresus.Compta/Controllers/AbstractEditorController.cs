@@ -172,6 +172,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetWidgetVisibility(ColumnType columnType, int line, bool visibility)
 		{
+			this.dataAccessor.EditionLine[line].SetEnable (columnType, visibility);
+
 			var container = this.GetContainer (columnType, line);
 
 			if (container != null)
