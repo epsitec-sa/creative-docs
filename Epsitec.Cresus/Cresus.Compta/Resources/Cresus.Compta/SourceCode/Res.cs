@@ -685,6 +685,14 @@ namespace Epsitec.Cresus.Compta
 							return global::Epsitec.Cresus.Compta.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 80));
 						}
 					}
+					//	designer:cap/OVA
+					public static global::Epsitec.Common.Types.Caption Inconnu
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Compta.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 0));
+						}
+					}
 					//	designer:cap/OVKE2
 					public static global::Epsitec.Common.Types.Caption Normal
 					{
@@ -699,6 +707,14 @@ namespace Epsitec.Cresus.Compta
 						get
 						{
 							return global::Epsitec.Cresus.Compta.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 79));
+						}
+					}
+					//	designer:cap/OVA1
+					public static global::Epsitec.Common.Types.Caption TVA
+					{
+						get
+						{
+							return global::Epsitec.Cresus.Compta.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 1));
 						}
 					}
 				}
