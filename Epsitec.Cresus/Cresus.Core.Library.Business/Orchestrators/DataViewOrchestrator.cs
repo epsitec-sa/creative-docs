@@ -97,6 +97,19 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		public ActionViewController				ActionViewController
+		{
+			get
+			{
+				if (this.actionViewController == null)
+				{
+					this.actionViewController = new ActionViewController (this);
+				}
+
+				return this.actionViewController;
+			}
+		}
+
 		public NavigationOrchestrator			Navigator
 		{
 			get
@@ -486,6 +499,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		private readonly WorkflowController		workflowController;
 		private readonly NavigationOrchestrator navigator;
 
+		private ActionViewController			actionViewController;
 
 		private BusinessContext					businessContext;
 		private EntityKey?						activeEntityKey;

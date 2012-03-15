@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -95,10 +95,20 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		public long								SerialId
+		{
+			get
+			{
+				return this.serialId;
+			}
+		}
 
-		public static ActionItemLayout Create(TileDataItem tileDataItem, ActionItem actionItem)
+
+		public static ActionItemLayout Create(TileDataItem tileDataItem, ActionItem actionItem, long serialId)
 		{
 			ActionItemLayout layout = new ActionItemLayout (actionItem);
+
+			layout.serialId = serialId;
 
 			switch (tileDataItem.DataType)
 			{
@@ -498,6 +508,10 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public int CompareTo(ActionItemLayout other)
 		{
+			if (this.serialId != other.serialId)
+			{
+				return (this.serialId < other.serialId) ? -1 : 1;
+			}
 			if (this.row != other.row)
 			{
 				return this.row - other.row;
@@ -535,6 +549,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 		private ControllerTile					container;
 		private StaticTitleTile					titleTile;
 		private ActionTarget					actionTarget;
+		private long							serialId;
 		private int								row;
 		private int								priority;
 		private double							textWidth;

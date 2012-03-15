@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -25,8 +25,9 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 	/// </summary>
 	public sealed class ActionItemGenerator
 	{
-		public ActionItemGenerator(DataViewOrchestrator orchestrator, BusinessContext context, IEnumerable<TileDataItem> items)
+		public ActionItemGenerator(DataViewOrchestrator orchestrator, BusinessContext context, IEnumerable<TileDataItem> items, long serialId)
 		{
+			this.serialId     = serialId;
 			this.orchestrator = orchestrator;
 			this.context      = context;
 			
@@ -194,7 +195,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		private void CreateLayout(TileDataItem item, ActionItem actionItem)
 		{
-			var layout = ActionItemLayout.Create (item, actionItem);
+			var layout = ActionItemLayout.Create (item, actionItem, this.serialId);
 
 			if (layout != null)
 			{
@@ -217,6 +218,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 			}
 		}
 
+		private readonly long								serialId;
 		private readonly DataViewOrchestrator				orchestrator;
 		private readonly BusinessContext					context;
 		private readonly List<TileDataItem>					tileDataItems;

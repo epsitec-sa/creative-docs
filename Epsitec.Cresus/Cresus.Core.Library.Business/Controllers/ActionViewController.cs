@@ -80,16 +80,26 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public void Refresh(IEnumerable<TileDataItem> items)
+		public void Refresh(TileContainerController controller, IEnumerable<TileDataItem> items)
 		{
-			var generator = new ActionItemGenerator (this.Orchestrator, this.BusinessContext, items);
+			var serialId  = controller.SerialId;
+			var generator = new ActionItemGenerator (this.Orchestrator, this.BusinessContext, items, serialId);
 
-			this.layouts.Clear ();
+			this.layouts.RemoveAll (x => x.SerialId == serialId);
 			this.layouts.AddRange (generator.GenerateLayouts ());
 
 			ActionItemLayout.UpdateLayout (this.layouts);
+			
 			this.RemoveDuplicates ();
+			this.CreateUI ();
+		}
 
+		public void Remove(TileContainerController controller)
+		{
+			var serialId  = controller.SerialId;
+			
+			this.layouts.RemoveAll (x => x.SerialId == serialId);
+			
 			this.CreateUI ();
 		}
 
@@ -101,6 +111,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void CreateUI()
 		{
+			this.frameRoot.Parent = this.viewRoot;
 			this.frameRoot.Children.Clear ();
 			this.layouts.ForEach (x => this.CreateLayoutUI (x));
 			this.UpdateFrameRoot ();
@@ -160,6 +171,8 @@ namespace Epsitec.Cresus.Core.Controllers
 
 		private void UpdateFrameRoot()
 		{
+			this.frameRoot.Parent = this.viewRoot;
+
 			if (ActionButton.SmoothTransition && !ActionButton.HasIcon)
 			{
 				switch (this.showMode)
@@ -203,6 +216,8 @@ namespace Epsitec.Cresus.Core.Controllers
 						break;
 				}
 			}
+
+			this.frameRoot.Invalidate ();
 		}
 
 		private void ImmediateFrameRootButtonsAlpha(double alpha)

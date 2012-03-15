@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Core.Controllers
 	{
 		private TileContainerController(EntityViewController controller)
 		{
+			this.serialId     = System.Threading.Interlocked.Increment (ref TileContainerController.nextSerialId);
 			this.controller   = controller;
 			
 			this.dataContext  = this.controller.DataContext;
@@ -54,7 +55,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				Delay      = 0.5,
 			};
 
-			this.actionViewController = new ActionViewController (this.orchestrator);
+			this.actionViewController = this.orchestrator.ActionViewController;
 
 			this.closeButton = UIBuilder.CreateColumnTileCloseButton (this.container);
 
@@ -97,6 +98,13 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
+		public long								SerialId
+		{
+			get
+			{
+				return this.serialId;
+			}
+		}
 
 		public static Initializer Setup(EntityViewController controller)
 		{
@@ -223,7 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.isDisposed = true;
 			this.refreshTimer.Stop ();
 
-			this.actionViewController.Dispose ();
+			this.actionViewController.Remove (this);
 			this.navigator.Unregister (this);
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
@@ -309,7 +317,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			//	TODO: ...
 
-			actionViewController.Refresh (this.liveItems);
+			actionViewController.Refresh (this, this.liveItems);
 		}
 
 		private void RefreshLayout()
@@ -883,19 +891,22 @@ namespace Epsitec.Cresus.Core.Controllers
 			}
 		}
 
-		private readonly EntityViewController		controller;
-		private readonly DataViewOrchestrator		orchestrator; 
-		private readonly NavigationOrchestrator		navigator;
-		private readonly TileContainer				container;
-		private readonly TileDataItems				dataItems;
-		private readonly List<TileDataItem>			liveItems;
-		private readonly DataContext				dataContext;
-		private readonly Timer						refreshTimer;
-		private readonly ActionViewController		actionViewController;
+		private static long						nextSerialId;
 
-		private readonly Button						closeButton;
+		private readonly EntityViewController	controller;
+		private readonly DataViewOrchestrator	orchestrator; 
+		private readonly NavigationOrchestrator	navigator;
+		private readonly TileContainer			container;
+		private readonly TileDataItems			dataItems;
+		private readonly List<TileDataItem>		liveItems;
+		private readonly DataContext			dataContext;
+		private readonly Timer					refreshTimer;
+		private readonly ActionViewController	actionViewController;
+		private readonly long					serialId;
 
-		private bool								refreshNeeded;
-		private bool								isDisposed;
+		private readonly Button					closeButton;
+
+		private bool							refreshNeeded;
+		private bool							isDisposed;
 	}
 }
