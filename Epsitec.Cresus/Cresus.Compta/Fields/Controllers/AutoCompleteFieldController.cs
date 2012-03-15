@@ -168,7 +168,10 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			else  // perte du focus ?
 			{
 				//	La mise à jour du contenu lors de la perte du focus est déjà gérée par le widget lui-même.
-				this.HandleTextChanged (null);
+				if (this.InternalField.FormattedText != this.editionData.Text)
+				{
+					this.HandleTextChanged (null);
+				}
 			}
 		}
 

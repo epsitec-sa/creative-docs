@@ -517,7 +517,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
 			}
 
-			if (type == TypeEcriture.BaseTVA)
+			if (type == TypeEcriture.BaseTVA && line < this.dataAccessor.EditionLine.Count-1)
 			{
 				if (columnType == ColumnType.MontantTTC)
 				{
@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			if (type == TypeEcriture.CodeTVA)
+			if (type == TypeEcriture.CodeTVA && line > 0)
 			{
 				if (columnType == ColumnType.CodeTVA)
 				{

@@ -158,10 +158,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Libellé:
 					if (écriture.Type == (int) TypeEcriture.CodeTVA)
 					{
-						//?return StringArray.SpecialContentRightAlignment + écriture.Libellé;
+						return StringArray.SpecialContentRightAlignment + écriture.Libellé;
 						//?return new string (' ', 10) + écriture.Libellé;
 						//?return FormattedText.Concat (UIBuilder.leftIndentText, écriture.Libellé);
-						return "□   " + écriture.Libellé;
+						//?return "□   " + écriture.Libellé;
 					}
 					else
 					{
