@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.UpdateEditorContent ();
-			this.EditorSelect (this.arrayController.SelectedColumn);
+			this.EditorSelect (this.arrayController.SelectedColumnType);
 			this.ShowSelection ();
 			this.EditorSelect (0);
 		}
@@ -635,7 +635,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected void EditorSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
+		public void EditorSelect(ColumnType columnType, int? line = null, bool selectedLineChanged = true)
 		{
 			var column = this.GetMapperColumnRank (columnType);
 			this.EditorSelect (column, line, selectedLineChanged);

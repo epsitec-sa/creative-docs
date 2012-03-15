@@ -337,6 +337,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public ColumnType SelectedColumnType
+		{
+			//	Colonne sélectionnée.
+			get
+			{
+				int index = this.array.SelectedColumn;
+
+				if (index >= 0 && index < this.columnMappersShowed.Count)
+				{
+					return this.columnMappersShowed[index].Column;
+				}
+				else
+				{
+					return ColumnType.None;
+				}
+			}
+		}
+
 		public int InsertionPointRow
 		{
 			//	Point d'insertion.

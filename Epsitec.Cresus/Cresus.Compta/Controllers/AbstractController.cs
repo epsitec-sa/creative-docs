@@ -928,7 +928,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.editorController != null)
 			{
 				this.editorController.UpdateEditorContent ();
-				this.editorController.EditorSelect (this.arrayController.SelectedColumn, row - this.dataAccessor.FirstEditedRow);
+				this.editorController.EditorSelect (this.arrayController.SelectedColumnType, row - this.dataAccessor.FirstEditedRow);
 				this.editorController.ShowSelection ();
 			}
 		}
