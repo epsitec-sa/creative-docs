@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournauxController : AbstractController
 	{
-		public JournauxController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public JournauxController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new JournauxDataAccessor (this);

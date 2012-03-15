@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ExtraitDeCompteController : AbstractController
 	{
-		public ExtraitDeCompteController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public ExtraitDeCompteController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);

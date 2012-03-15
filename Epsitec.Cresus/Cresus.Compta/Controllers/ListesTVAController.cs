@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ListesTVAController : AbstractController
 	{
-		public ListesTVAController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public ListesTVAController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new ListesTVADataAccessor (this);

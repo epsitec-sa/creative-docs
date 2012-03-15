@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PériodesController : AbstractController
 	{
-		public PériodesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public PériodesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new PériodesDataAccessor (this);

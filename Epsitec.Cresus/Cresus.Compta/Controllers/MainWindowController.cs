@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class MainWindowController
 	{
-		public MainWindowController(Application app)
+		public MainWindowController(ComptaApplication app)
 		{
 			this.app = app;
 
@@ -1616,7 +1616,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		private readonly Application						app;
+		private readonly ComptaApplication						app;
 		private readonly List<AbstractController>			controllers;
 		private readonly Dictionary<string, ISettingsData>	settingsData;
 		private readonly SettingsList						settingsList;

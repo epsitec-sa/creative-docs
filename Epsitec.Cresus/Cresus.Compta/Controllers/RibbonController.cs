@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class RibbonController
 	{
-		public RibbonController(Application app)
+		public RibbonController(ComptaApplication app)
 		{
 			this.app = app;
 
@@ -560,7 +560,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private const int IconSmallWidth		= 20;
 		private const int IconLargeWidth		= 32;
 
-		private readonly Application				app;
+		private readonly ComptaApplication				app;
 		private readonly List<FrameBox>				sectionGroupFrames;
 		private readonly List<FrameBox>				sectionIconFrames;
 		private readonly List<StaticText>			sectionTitleFrames;

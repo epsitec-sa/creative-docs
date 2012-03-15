@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class LoginController : AbstractController
 	{
-		public LoginController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public LoginController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 		}

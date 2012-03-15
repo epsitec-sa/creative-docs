@@ -37,8 +37,8 @@ namespace Epsitec.Compta
 
 		static void ExecuteCoreProgram(string[] args, SplashScreen splash)
 		{
-			//?Epsitec.Cresus.Core.CoreProgram.Main (args);
-			Epsitec.Cresus.Compta.Application.Start ("N");
+			Epsitec.Cresus.Core.CoreProgram.Main (args);
+//-			Epsitec.Cresus.Compta.Application.Start ("N");
 		}
 	}
 }

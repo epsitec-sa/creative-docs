@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BalanceController : AbstractController
 	{
-		public BalanceController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public BalanceController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BalanceDataAccessor (this);

@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class JournalController : AbstractController
 	{
-		public JournalController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public JournalController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new JournalDataAccessor (this);

@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class UtilisateursController : AbstractController
 	{
-		public UtilisateursController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public UtilisateursController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new UtilisateursDataAccessor (this);

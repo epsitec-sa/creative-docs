@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class RéglagesController : AbstractController
 	{
-		public RéglagesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public RéglagesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.groups = new List<SettingsGroup> ();

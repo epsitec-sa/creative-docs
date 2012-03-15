@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class BilanController : DoubleController
 	{
-		public BilanController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public BilanController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BilanDataAccessor (this);

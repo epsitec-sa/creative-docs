@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PPController : DoubleController
 	{
-		public PPController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public PPController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new PPDataAccessor (this);

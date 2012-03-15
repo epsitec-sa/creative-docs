@@ -1,4 +1,4 @@
-//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+#if false//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Widgets;
@@ -76,8 +76,8 @@ namespace Epsitec.Cresus.Compta
 			//?this.editor.Dock = DockStyle.Fill;
 			//?this.editor.SetParent(window.Root);
 
-			this.windowController = new MainWindowController (this);
-			this.windowController.CreateUI (window);
+//			this.windowController = new MainWindowController (this);
+///			this.windowController.CreateUI (window);
 
 			window.Show ();
 			window.MakeActive();
@@ -140,3 +140,4 @@ namespace Epsitec.Cresus.Compta
 		private MainWindowController		windowController;
 	}
 }
+#endif

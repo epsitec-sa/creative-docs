@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class OpenController : AbstractController
 	{
-		public OpenController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public OpenController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 		}

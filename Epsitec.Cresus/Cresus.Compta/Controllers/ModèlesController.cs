@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class ModèlesController : AbstractController
 	{
-		public ModèlesController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public ModèlesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new ModèlesDataAccessor (this);

@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class PrintController : AbstractController
 	{
-		public PrintController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public PrintController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 		}

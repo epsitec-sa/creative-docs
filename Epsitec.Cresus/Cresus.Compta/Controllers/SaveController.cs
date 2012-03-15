@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class SaveController : AbstractController
 	{
-		public SaveController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public SaveController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 		}

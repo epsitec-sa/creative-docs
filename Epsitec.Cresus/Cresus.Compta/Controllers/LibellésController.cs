@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// </summary>
 	public class LibellésController : AbstractController
 	{
-		public LibellésController(Application app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public LibellésController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new LibellésDataAccessor (this);
