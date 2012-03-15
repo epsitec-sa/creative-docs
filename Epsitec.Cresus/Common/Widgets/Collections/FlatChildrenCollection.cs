@@ -1,5 +1,5 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +15,7 @@ namespace Epsitec.Common.Widgets.Collections
 		internal FlatChildrenCollection(Visual host)
 		{
 			this.host = host;
+			this.visuals = new List<Visual> ();
 		}
 
 		public Widget[]							Widgets
@@ -75,6 +76,7 @@ namespace Epsitec.Common.Widgets.Collections
 				return this.visuals[index+1];
 			}
 		}
+		
 		public Visual FindPrevious(Visual find)
 		{
 			int index = this.visuals.IndexOf (find);
@@ -100,6 +102,7 @@ namespace Epsitec.Common.Widgets.Collections
 			
 			return this.Count - index - 1;
 		}
+		
 		public void ChangeZOrder(Visual visual, int z)
 		{
 			if (this.Contains (visual) == false)
@@ -158,6 +161,37 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
+		public void ReplaceAll(IEnumerable<Visual> collection)
+		{
+			this.Change (x => collection);
+		}
+		
+		public void Change(System.Func<IEnumerable<Visual>, IEnumerable<Visual>> changeFunction)
+		{
+			var oldItems = this.visuals.ToArray ();
+			var newItems = changeFunction (this.visuals).ToArray ();
+
+			var delta = new HashSet<Visual> (oldItems);
+			delta.SymmetricExceptWith (newItems);
+
+			Snapshot snapshot = Snapshot.RecordTree (delta);
+
+			this.visuals.Clear ();
+			this.visuals.AddRange (newItems);
+
+			foreach (Visual visual in oldItems.Except (newItems))
+			{
+				this.DetachVisual (visual);
+			}
+			foreach (Visual visual in newItems.Except (oldItems))
+			{
+				this.AttachVisual (visual);
+			}
+
+			this.NotifyChanges (snapshot);
+		}
+
+		
 		internal void RefreshLayoutStatistics()
 		{
 			this.dockLayoutCount = 0;
@@ -308,6 +342,7 @@ namespace Epsitec.Common.Widgets.Collections
 					break;
 			}
 		}
+		
 		private void UpdateLayoutStatistics(Visual visual, DockStyle dock, AnchorStyles anchor, int increment)
 		{
 			switch (Layouts.LayoutEngine.GetLayoutMode (visual, dock, anchor))
@@ -493,31 +528,6 @@ namespace Epsitec.Common.Widgets.Collections
 			}
 		}
 
-		public void Change(System.Func<IEnumerable<Visual>, IEnumerable<Visual>> changeFunction)
-		{
-			var oldItems = this.visuals.ToArray ();
-			var newItems = changeFunction (this.visuals).ToArray ();
-
-			var delta = new HashSet<Visual> (oldItems);
-			delta.SymmetricExceptWith (newItems);
-			
-			Snapshot snapshot = Snapshot.RecordTree (delta);
-
-			this.visuals.Clear ();
-			this.visuals.AddRange (newItems);
-
-			foreach (Visual visual in oldItems.Except (newItems))
-			{
-				this.DetachVisual (visual);
-			}
-			foreach (Visual visual in newItems.Except (oldItems))
-			{
-				this.AttachVisual (visual);
-			}
-
-			this.NotifyChanges (snapshot);
-		}
-
 		public bool Contains(Visual item)
 		{
 			return this.visuals.Contains (item);
@@ -688,9 +698,9 @@ namespace Epsitec.Common.Widgets.Collections
 
 		private const string					NullVisualMessage = "Visual children may not be null";
 		private const string					NotTwiceMessage = "Visual may not be inserted twice";
-		
-		private Visual							host;
-		private List<Visual>					visuals = new List<Visual> ();
+
+		private readonly Visual					host;
+		private readonly List<Visual>			visuals;
 		
 		private int								dockLayoutCount;
 		private int								anchorLayoutCount;

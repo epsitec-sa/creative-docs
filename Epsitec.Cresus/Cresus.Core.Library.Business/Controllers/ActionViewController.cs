@@ -2,7 +2,6 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
@@ -12,9 +11,6 @@ using Epsitec.Cresus.Core.Orchestrators;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
-using System.Linq;
-using Epsitec.Common.Support;
-
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -55,7 +51,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		}
 
 
-		public ActionViewControllerMode ShowMode
+		public ActionViewControllerMode			ShowMode
 		{
 			get
 			{
@@ -93,7 +89,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshUI ();
 		}
 
-		public void Remove(TileContainerController controller)
+		
+		internal void NotifyRemoval(TileContainerController controller)
 		{
 			var serialId  = controller.SerialId;
 			
@@ -102,11 +99,11 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.RefreshUI ();
 		}
 
+		
 		private void RemoveDuplicates()
 		{
 			this.layouts.RemoveAll (x => x.IsDuplicate);
 		}
-
 
 		private void RefreshUI()
 		{

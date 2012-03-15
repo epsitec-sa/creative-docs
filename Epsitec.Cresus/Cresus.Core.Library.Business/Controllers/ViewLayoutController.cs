@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				this.totalWidth = x + overlap;
 			}
 
-			this.container.Children.Change (collection => visuals);
+			this.container.Children.ReplaceAll (visuals);
 			this.OnLayoutChanged ();
 		}
 

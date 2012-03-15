@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Core.Controllers
 			this.isDisposed = true;
 			this.refreshTimer.Stop ();
 
-			this.actionViewController.Remove (this);
+			this.actionViewController.NotifyRemoval (this);
 			this.navigator.Unregister (this);
 
 			this.refreshTimer.TimeElapsed -= this.HandleTimerTimeElapsed;
