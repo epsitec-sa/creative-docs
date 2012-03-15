@@ -15,5 +15,19 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class TVA
 	{
+		public static decimal CalculeTTC(decimal ht, decimal taux)
+		{
+			return Converters.RoundMontant (ht + ht*taux);
+		}
+
+		public static decimal CalculeHT(decimal ttc, decimal taux)
+		{
+			return Converters.RoundMontant (ttc / (1+taux));
+		}
+
+		public static decimal CalculeTVA(decimal ht, decimal taux)
+		{
+			return Converters.RoundMontant (ht*taux);
+		}
 	}
 }

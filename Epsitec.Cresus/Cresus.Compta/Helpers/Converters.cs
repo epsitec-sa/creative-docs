@@ -822,6 +822,36 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		#region TypeEcriture
+		public static string TypeEcritureToString(int type)
+		{
+			return Converters.TypeEcritureToString ((TypeEcriture) type);
+		}
+
+		public static string TypeEcritureToString(TypeEcriture type)
+		{
+			return type.ToString ();
+		}
+
+		public static TypeEcriture StringToTypeEcriture(FormattedText text)
+		{
+			return Converters.StringToTypeEcriture (text.ToString ());
+		}
+
+		public static TypeEcriture StringToTypeEcriture(string text)
+		{
+			TypeEcriture type;
+			if (System.Enum.TryParse<TypeEcriture> (text, out type))
+			{
+				return type;
+			}
+			else
+			{
+				return TypeEcriture.Normal;
+			}
+		}
+		#endregion
+
 		#region Présentations
 		public static FormattedText GetPrésentationCommandDescription(Command cmd)
 		{

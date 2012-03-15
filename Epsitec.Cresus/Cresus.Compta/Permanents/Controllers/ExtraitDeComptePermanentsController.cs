@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 			data.ClearError ();
 		}
 
-		private void CompteChangedAction()
+		private void CompteChangedAction(int line, ColumnType columnType)
 		{
 			if (this.ignoreChanges.IsZero)
 			{

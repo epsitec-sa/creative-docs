@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public class RadioButtonController : AbstractFieldController
 	{
-		public RadioButtonController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
+		public RadioButtonController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
 			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
 		{
 		}

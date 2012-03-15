@@ -592,7 +592,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			Validators.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
 		}
 
-		private void BeginnerDateChanged()
+		private void BeginnerDateChanged(int line, ColumnType columnType)
 		{
 			Date? beginDate = Converters.ParseDate (this.beginnerBeginDateController.EditionData.Text);
 			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);

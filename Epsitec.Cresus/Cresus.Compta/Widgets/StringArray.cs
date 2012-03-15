@@ -1285,10 +1285,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 		#endregion
 
 
-		public static readonly string SpecialContentStart        = "$${_";
-		public static readonly string SpecialContentEnd          = "_}$$";
-		public static readonly string SpecialContentSearchTarget = StringArray.SpecialContentStart + "hilite"  + StringArray.SpecialContentEnd;
-		public static readonly string SpecialContentGraphicValue = StringArray.SpecialContentStart + "graphic" + StringArray.SpecialContentEnd;
+		public static readonly string SpecialContentStart          = "$${_";
+		public static readonly string SpecialContentEnd            = "_}$$";
+		public static readonly string SpecialContentSearchTarget   = StringArray.SpecialContentStart + "hilite"  + StringArray.SpecialContentEnd;
+		public static readonly string SpecialContentGraphicValue   = StringArray.SpecialContentStart + "graphic" + StringArray.SpecialContentEnd;
+		public static readonly string SpecialContentLeftAlignment  = StringArray.SpecialContentStart + "left"    + StringArray.SpecialContentEnd;
+		public static readonly string SpecialContentRightAlignment = StringArray.SpecialContentStart + "right"   + StringArray.SpecialContentEnd;
 
 		private StringList[]				columns;
 		private VScroller					scroller;

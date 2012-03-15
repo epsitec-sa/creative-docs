@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public class ListController : AbstractFieldController
 	{
-		public ListController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
+		public ListController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
 			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
 		{
 		}

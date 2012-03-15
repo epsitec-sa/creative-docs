@@ -252,15 +252,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.ignoreChanges.IsZero && this.EditionLine != null)
 				{
 					this.EditionLine.SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
-					this.EditorTextChanged ();
+					this.EditorTextChanged (0, ColumnType.None);
 				}
 			};
 		}
 
 
-		protected override void UpdateEditionWidgets()
+		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
 		{
-			base.UpdateEditionWidgets ();
+			base.UpdateEditionWidgets (line, columnType);
 			this.UpdatePrésentationsButtons ();
 		}
 

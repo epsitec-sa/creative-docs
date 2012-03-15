@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public class AutoCompleteFieldController : AbstractFieldController
 	{
-		public AutoCompleteFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
+		public AutoCompleteFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
 			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
 		{
 		}
@@ -168,6 +168,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			else  // perte du focus ?
 			{
 				//	La mise à jour du contenu lors de la perte du focus est déjà gérée par le widget lui-même.
+				this.HandleTextChanged (null);
 			}
 		}
 

@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public abstract class AbstractFieldController
 	{
-		public AbstractFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action contentChangedAction = null)
+		public AbstractFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
 		{
 			this.controller           = controller;
 			this.line                 = line;
@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			if (this.contentChangedAction != null)
 			{
-				this.contentChangedAction ();
+				this.contentChangedAction (this.line, this.columnMapper.Column);
 			}
 		}
 
@@ -211,7 +211,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		protected readonly int									line;
 		protected readonly ColumnMapper							columnMapper;
 		protected readonly System.Action<int, ColumnType>		setFocusAction;
-		protected readonly System.Action						contentChangedAction;
+		protected readonly System.Action<int, ColumnType>		contentChangedAction;
 		protected SafeCounter									ignoreChanges;
 
 		protected EditionData									editionData;

@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static AutoCompleteFieldController CreateAutoCompleteField(AbstractController controller, Widget parent, FormattedText initialText, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
+		public static AutoCompleteFieldController CreateAutoCompleteField(AbstractController controller, Widget parent, FormattedText initialText, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action<int, ColumnType> changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir un texte.
 			var fieldController = new AutoCompleteFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return fieldController;
 		}
 
-		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action changedAction)
+		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action<int, ColumnType> changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir une date.
 			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);

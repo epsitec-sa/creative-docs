@@ -152,7 +152,22 @@ namespace Epsitec.Cresus.Compta.Widgets
 			if ( this.cells == null )  return;
 			if ( index < 0 || index >= this.cells.Length )  return;
 
-			if ( this.cells[index].TextLayout.Text != text )
+			this.forceLeftAlignment[index] = false;
+			this.forceRightAlignment[index] = false;
+
+			if (text.StartsWith (StringArray.SpecialContentLeftAlignment))
+			{
+				text = text.Substring (StringArray.SpecialContentLeftAlignment.Length);
+				this.forceLeftAlignment[index] = true;
+			}
+
+			if (text.StartsWith (StringArray.SpecialContentRightAlignment))
+			{
+				text = text.Substring (StringArray.SpecialContentRightAlignment.Length);
+				this.forceRightAlignment[index] = true;
+			}
+
+			if (this.cells[index].TextLayout.Text != text)
 			{
 				this.cells[index].TextLayout.Text = text;
 				this.Invalidate();
@@ -526,7 +541,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void CreateCells(int length)
 		{
-			this.cells = new Cell[length];
+			this.cells               = new Cell[length];
+			this.forceLeftAlignment  = new bool[length];
+			this.forceRightAlignment = new bool[length];
+
 			for (int i=0; i<this.cells.Length; i++)
 			{
 				this.cells[i] = new Cell ();
@@ -652,13 +670,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 							state |= WidgetPaintState.Selected;
 						}
 
+						var alignment = this.alignment;
+
+						if (this.forceLeftAlignment[i])
+						{
+							alignment = ContentAlignment.MiddleLeft;
+						}
+
+						if (this.forceRightAlignment[i])
+						{
+							alignment = ContentAlignment.MiddleRight;
+						}
+
 						double leftMargin = 0;
-						if (this.alignment == ContentAlignment.MiddleLeft || this.alignment == ContentAlignment.TopLeft || this.alignment == ContentAlignment.BottomLeft)
+						if (alignment == ContentAlignment.MiddleLeft || alignment == ContentAlignment.TopLeft || alignment == ContentAlignment.BottomLeft)
 						{
 							leftMargin = rect.Left+5;
 						}
 
-						this.cells[i].TextLayout.Alignment = this.alignment;
+						this.cells[i].TextLayout.Alignment = alignment;
 						this.cells[i].TextLayout.BreakMode = this.breakMode;
 						this.cells[i].TextLayout.LayoutSize = new Size (rect.Width-5, rect.Height);
 						adorner.PaintButtonTextLayout (graphics, new Point (leftMargin, rect.Bottom+1), this.cells[i].TextLayout, state, ButtonStyle.ListItem);
@@ -957,6 +987,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private ContentAlignment			alignment = ContentAlignment.MiddleLeft;
 		private TextBreakMode				breakMode = TextBreakMode.None;
 		private Cell[]						cells;
+		private bool[]						forceLeftAlignment;
+		private bool[]						forceRightAlignment;
 		private bool						isDynamicToolTips = false;
 		private bool						isDragging = false;
 		private bool						allowMultipleSelection = false;

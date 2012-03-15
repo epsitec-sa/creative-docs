@@ -487,11 +487,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected virtual void UpdateEditionWidgets()
+		protected virtual void UpdateEditionWidgets(int line, ColumnType columnType)
 		{
 		}
 
-		protected void EditorTextChanged()
+		protected void EditorTextChanged(int line, ColumnType columnType)
 		{
 			//	Appelé lorsqu'un texte éditable a changé.
 			if (this.controller.IgnoreChanges.IsZero)
@@ -499,7 +499,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dirty = true;
 				//?this.WidgetToEditionData ();
 
-				this.UpdateEditionWidgets ();
+				this.UpdateEditionWidgets (line, columnType);
 				this.EditionDataToWidgets (ignoreFocusField: true);  // nécessaire pour le feedback du travail de UpdateMultiWidgets !
 
 				this.EditorValidate ();
@@ -559,7 +559,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateEditorContent()
 		{
-			this.UpdateEditionWidgets ();
+			this.UpdateEditionWidgets (0, ColumnType.None);
 			this.EditionDataToWidgets (ignoreFocusField: false);
 			this.EditorValidate ();
 			this.UpdateEditorInfo ();

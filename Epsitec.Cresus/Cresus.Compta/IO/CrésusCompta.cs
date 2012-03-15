@@ -697,13 +697,13 @@ namespace Epsitec.Cresus.Compta.IO
 			écriture.MontantComplément = suivante.Montant;
 			écriture.CodeTVA = codeTVA;
 			écriture.TauxTVA = taux;
-			écriture.Type = (int) TypeEcriture.Normal;
+			écriture.Type = (int) TypeEcriture.BaseTVA;
 
-			suivante.Libellé = string.Format ("TVA {0} ({1})", Converters.PercentToString (taux), codeTVA.Code);
 			suivante.MontantComplément = écriture.Montant;
 			suivante.CodeTVA = codeTVA;
 			suivante.TauxTVA = taux;
-			suivante.Type = (int) TypeEcriture.TVA;
+			suivante.Type = (int) TypeEcriture.CodeTVA;
+			suivante.Libellé = suivante.LibelléTVA;
 
 			if (encore != null)
 			{

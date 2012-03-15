@@ -156,14 +156,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Débit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.Crédit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CompteChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
@@ -185,14 +185,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.CodeTVA)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.CodeTVAChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
 				}
 				else if (mapper.Column == ColumnType.TauxTVA)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.TauxTVAChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.Journal)
@@ -203,18 +203,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
-				else if (mapper.Column == ColumnType.Montant)
-				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
-					field.CreateUI (editorFrame);
-				}
 				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 
-				if (mapper.Column == ColumnType.Montant)
+				if (mapper.Column == ColumnType.Montant   ||
+					mapper.Column == ColumnType.MontantTTC)
 				{
 					field.EditWidget.ContentAlignment = ContentAlignment.MiddleRight;
 				}
@@ -241,28 +237,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CompteChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			//?editionLine.CompteChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void CodeTVAChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			//?editionLine.CodeTVAChanged ();
-			this.EditorTextChanged ();
-		}
-
-		private void TauxTVAChanged()
-		{
-			var editionLine = this.dataAccessor.EditionLine[this.selectedLine] as JournalEditionLine;
-			//?editionLine.TauxTVAChanged ();
-			this.EditorTextChanged ();
-		}
-
-
 		public override void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
@@ -276,6 +250,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.isMulti = true;
 					this.PrepareFirstMulti ();
+					return;
+				}
+
+				if (this.IsDébitTVA (0) || this.IsCréditTVA (0))
+				{
+					this.isMulti = true;
+					this.PrepareFirstTVA ();
 					return;
 				}
 			}
@@ -318,6 +299,80 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "1");
+
+			if (this.PlusieursPièces)
+			{
+				var nomJournal = this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal);
+				var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
+
+				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, 1));
+				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, 2));
+			}
+			else
+			{
+				this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+				this.dataAccessor.EditionLine[2].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+			}
+
+			this.UpdateEditorContent ();
+
+			this.selectedLine = 1;  // dans la 2ème ligne
+			this.EditorSelect (multiActiveColumn);
+		}
+
+		private void PrepareFirstTVA()
+		{
+			//	Met à jour l'interface pour permettre de créer une écriture multiple avec TVA, lorsqu'on passe de 1 ligne à 3.
+			bool isDébitMulti = !this.IsDébitTVA (0);
+			var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
+			var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
+
+			var p  = this.dataAccessor.EditionLine[0].GetText (multiActiveColumn);
+			var cp = this.dataAccessor.EditionLine[0].GetText (multiInactiveColumn);
+			var compteP  = this.compta.PlanComptable.Where (x => x.Numéro == p).FirstOrDefault ();
+			var compteCP = this.compta.PlanComptable.Where (x => x.Numéro == cp).FirstOrDefault ();
+			var taux = compteP.CodeTVA.DefaultTauxValue.GetValueOrDefault ();
+
+			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[0].GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
+			var montantHT  = Converters.ParseMontant (this.dataAccessor.EditionLine[0].GetText (ColumnType.Montant)).GetValueOrDefault ();
+
+			if (montantTTC == 0)
+			{
+				montantTTC  = TVA.CalculeHT (montantHT, taux);
+			}
+			else
+			{
+				montantHT  = TVA.CalculeHT (montantTTC, taux);
+			}
+
+			var montantTVA = TVA.CalculeTVA (montantHT, taux);
+
+			this.dataAccessor.InsertEditionLine (-1);  // 2ème ligne
+			this.dataAccessor.InsertEditionLine (-1);  // contrepartie
+
+			//	Met à jour les données de la 1ère ligne (BaseTVA).
+			this.dataAccessor.EditionLine[0].SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.BaseTVA));
+			this.dataAccessor.EditionLine[0].SetText (multiInactiveColumn, JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[0].SetText (ColumnType.MontantTTC, Converters.MontantToString (montantTTC));
+			this.dataAccessor.EditionLine[0].SetText (ColumnType.Montant, Converters.MontantToString (montantHT));
+
+			//	Met à jour les données de la 2ème ligne (CodeTVA).
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.CodeTVA));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date, this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[1].SetText (multiActiveColumn, compteP.CodeTVA.Compte.Numéro);
+			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn, JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.CodeTVA, compteP.CodeTVA.Code);
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.TauxTVA, Converters.PercentToString (compteP.CodeTVA.DefaultTauxValue));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant, Converters.MontantToString (montantTVA));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
+
+			//	Met à jour les données de la contrepartie.						   
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date, this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn, JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[2].SetText (multiInactiveColumn, compteCP.Numéro);
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé, this.dataAccessor.EditionLine[0].GetText (ColumnType.Libellé));
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "1");
 
 			if (this.PlusieursPièces)
@@ -448,12 +503,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void UpdateEditionWidgets()
+		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
 		{
 			//	Met à jour toutes les données en édition d'une écriture multiple.
 			if (this.controller.IgnoreChanges.IsNotZero || !this.dataAccessor.EditionLine.Any ())
 			{
 				return;
+			}
+
+			var type = TypeEcriture.Normal;
+			if (line < this.dataAccessor.EditionLine.Count)
+			{
+				type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
+			}
+
+			if (type == TypeEcriture.BaseTVA)
+			{
+				if (columnType == ColumnType.MontantTTC)
+				{
+					this.MontantTTCChanged (line);
+				}
+
+				if (columnType == ColumnType.Montant)
+				{
+					this.MontantHTChanged (line);
+				}
+			}
+
+			if (type == TypeEcriture.CodeTVA)
+			{
+				if (columnType == ColumnType.CodeTVA)
+				{
+					this.CodeChanged (line-1);
+				}
+
+				if (columnType == ColumnType.TauxTVA)
+				{
+					this.TauxChanged (line-1);
+				}
+
+				if (columnType == ColumnType.Montant)
+				{
+					this.MontantTVAChanged (line-1);
+				}
 			}
 
 			bool éditeMontantTVA = this.settingsList.GetBool (SettingsType.EcritureEditeMontantTVA);
@@ -463,49 +555,127 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.isMulti)
 			{
-				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+				for (int i = 0; i < this.dataAccessor.EditionLine.Count; i++)
 				{
-					if (this.IsDébitMulti (line))
+					type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[i].GetText (ColumnType.Type));
+
+					if (this.IsDébitMulti (i))
 					{
-						this.SetWidgetVisibility (ColumnType.Débit,  line, false);
-						this.SetWidgetVisibility (ColumnType.Crédit, line, true);
+						this.SetWidgetVisibility (ColumnType.Débit,  i, false);
+						this.SetWidgetVisibility (ColumnType.Crédit, i, true);
 					}
 
-					if (this.IsCréditMulti (line))
+					if (this.IsCréditMulti (i))
 					{
-						this.SetWidgetVisibility (ColumnType.Débit,  line, true);
-						this.SetWidgetVisibility (ColumnType.Crédit, line, false);
+						this.SetWidgetVisibility (ColumnType.Débit,  i, true);
+						this.SetWidgetVisibility (ColumnType.Crédit, i, false);
 					}
 
-					bool totalAutomatique = (this.dataAccessor.EditionLine[line].GetText (ColumnType.TotalAutomatique) == "1");
+					bool totalAutomatique = (this.dataAccessor.EditionLine[i].GetText (ColumnType.TotalAutomatique) == "1");
 
-					this.SetWidgetVisibility (ColumnType.Date,    line, totalAutomatique);
-					this.SetWidgetVisibility (ColumnType.Journal, line, totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.Date,    i, totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.Journal, i, totalAutomatique);
 
 					if (!this.PlusieursPièces)
 					{
-						this.SetWidgetVisibility (ColumnType.Pièce, line, totalAutomatique);
+						this.SetWidgetVisibility (ColumnType.Pièce, i, totalAutomatique);
 					}
 
-					bool hasTVA = this.HasTVA (line);
+					this.dataAccessor.GetEditionData (i, ColumnType.Montant).Enable = !totalAutomatique;
 
-					this.dataAccessor.GetEditionData (line, ColumnType.Montant).Enable = !totalAutomatique;
-					this.dataAccessor.GetEditionData (line, ColumnType.CodeTVA).Enable = !totalAutomatique && éditeCodeTVA && hasTVA;
-					this.dataAccessor.GetEditionData (line, ColumnType.TauxTVA).Enable = !totalAutomatique && éditeTauxTVA && hasTVA;
-
-					this.SetWidgetVisibility (ColumnType.CodeTVA, line, !totalAutomatique);
-					this.SetWidgetVisibility (ColumnType.TauxTVA, line, !totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.CodeTVA,    i, !totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.TauxTVA,    i, !totalAutomatique);
+					this.SetWidgetVisibility (ColumnType.MontantTTC, i, type == TypeEcriture.BaseTVA);
 				}
 
 				this.UpdateMultiEditionData ();
 			}
+		}
+
+		private void CodeChanged(int line)
+		{
+			var code = this.dataAccessor.EditionLine[line+1].GetText (ColumnType.CodeTVA);
+			var codeTVA = this.compta.CodesTVA.Where (x => x.Code == code).FirstOrDefault ();
+
+			if (codeTVA == null)
+			{
+				this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA, Converters.PercentToString (0));
+			}
 			else
 			{
-				bool hasTVA = this.HasTVA (0);
+				this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.DefaultTauxValue));
+			}
 
-				this.dataAccessor.GetEditionData (0, ColumnType.TauxTVA).Enable = hasTVA;
+			this.UpdateMontantHT (line);
+			this.UpdateMontantTVA (line);
+		}
+
+		private void TauxChanged(int line)
+		{
+			this.UpdateMontantHT (line);
+			this.UpdateMontantTVA (line);
+		}
+
+		private void MontantTVAChanged(int line)
+		{
+			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line+0].GetText (ColumnType.MontantTTC));
+			var montantTVA = Converters.ParseMontant (this.dataAccessor.EditionLine[line+1].GetText (ColumnType.Montant));
+
+			if (montantTTC.HasValue && montantTVA.HasValue)
+			{
+				var montantHT = montantTTC.Value - montantTVA.Value;
+				this.dataAccessor.EditionLine[line+0].SetText (ColumnType.Montant, Converters.MontantToString (montantHT));
 			}
 		}
+
+		private void MontantHTChanged(int line)
+		{
+			this.UpdateMontantTTC (line);
+			this.UpdateMontantTVA (line);
+		}
+
+		private void MontantTTCChanged(int line)
+		{
+			this.UpdateMontantHT (line);
+			this.UpdateMontantTVA (line);
+		}
+
+		private void UpdateMontantHT(int line)
+		{
+			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line+0].GetText (ColumnType.MontantTTC));
+			var tauxTVA    = Converters.ParsePercent (this.dataAccessor.EditionLine[line+1].GetText (ColumnType.TauxTVA));
+
+			if (montantTTC.HasValue && tauxTVA.HasValue)
+			{
+				var montantHT = TVA.CalculeHT (montantTTC.Value, tauxTVA.Value);
+				this.dataAccessor.EditionLine[line+0].SetText (ColumnType.Montant, Converters.MontantToString (montantHT));
+			}
+		}
+
+		private void UpdateMontantTTC(int line)
+		{
+			var montantHT = Converters.ParseMontant (this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Montant));
+			var tauxTVA   = Converters.ParsePercent (this.dataAccessor.EditionLine[line+1].GetText (ColumnType.TauxTVA));
+
+			if (montantHT.HasValue && tauxTVA.HasValue)
+			{
+				var montantTTC = TVA.CalculeTTC (montantHT.Value, tauxTVA.Value);
+				this.dataAccessor.EditionLine[line+0].SetText (ColumnType.MontantTTC, Converters.MontantToString (montantTTC));
+			}
+		}
+
+		private void UpdateMontantTVA(int line)
+		{
+			var montantHT  = Converters.ParseMontant (this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Montant));
+			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line+0].GetText (ColumnType.MontantTTC));
+
+			if (montantHT.HasValue && montantTTC.HasValue)
+			{
+				var montantTVA = montantTTC.Value - montantHT.Value;
+				this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Montant, Converters.MontantToString (montantTVA));
+			}
+		}
+
 
 		private void UpdateMultiEditionData()
 		{
@@ -516,11 +686,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 				decimal totalDébit  = 0;
 				decimal totalCrédit = 0;
 
-				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++ )
 				{
+					var type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
+
+					if (type == TypeEcriture.BaseTVA && line < this.dataAccessor.EditionLine.Count-1)
+					{
+						var code = this.dataAccessor.EditionLine[line+1].GetText (ColumnType.CodeTVA);
+						var taux = this.dataAccessor.EditionLine[line+1].GetText (ColumnType.TauxTVA);
+
+						this.dataAccessor.EditionLine[line+0].SetText (ColumnType.CodeTVA,           code);
+						this.dataAccessor.EditionLine[line+0].SetText (ColumnType.TauxTVA,           taux);
+						this.dataAccessor.EditionLine[line+0].SetText (ColumnType.MontantComplément, this.dataAccessor.EditionLine[line+1].GetText (ColumnType.Montant));
+						this.dataAccessor.EditionLine[line+1].SetText (ColumnType.MontantComplément, this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Montant));
+
+						this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Libellé, ComptaEcritureEntity.GetLibelléTVA (code, Converters.ParsePercent (taux)));
+					}
+
 					if (line != cp)
 					{
-						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
 						if (!this.PlusieursPièces)
@@ -543,7 +728,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				decimal? total = 0;
-
 
 				if (this.IsDébitMulti (cp))
 				{
@@ -576,25 +760,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit) == JournalDataAccessor.multi;
 		}
 
+		private bool IsDébitTVA(int line)
+		{
+			var numéro = this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit);
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			return compte != null && compte.CodeTVA != null;
+		}
+
+		private bool IsCréditTVA(int line)
+		{
+			var numéro = this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit);
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			return compte != null && compte.CodeTVA != null;
+		}
+
 		private int IndexTotalAutomatique
 		{
 			//	Retourne l'index de la ligne qui contient le total automatique.
 			get
 			{
 				return this.dataAccessor.EditionLine.FindIndex (x => x.GetText (ColumnType.TotalAutomatique) == "1");
-			}
-		}
-
-		private bool HasTVA(int line)
-		{
-			if (line < 0 || line >= this.dataAccessor.EditionLine.Count)
-			{
-				return false;
-			}
-			else
-			{
-				var editionLine = this.dataAccessor.EditionLine[line] as JournalEditionLine;
-				return editionLine.HasTVA;
 			}
 		}
 
@@ -666,10 +851,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var type = TypeEcriture.Normal;
 			if (line < this.dataAccessor.EditionLine.Count)
 			{
-				type = (TypeEcriture) Converters.ParseInt (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
+				type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
 			}
 
-			if (type == TypeEcriture.TVA)
+			if (type == TypeEcriture.CodeTVA)
 			{
 				if (columnType == ColumnType.Libellé)
 				{

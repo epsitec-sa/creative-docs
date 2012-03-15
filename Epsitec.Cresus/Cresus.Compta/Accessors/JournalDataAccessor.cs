@@ -9,6 +9,7 @@ using Epsitec.Cresus;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
@@ -136,7 +137,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Date:
-					return Converters.DateToString (écriture.Date);
+					if (écriture.MultiId != 0 && !écriture.TotalAutomatique)
+					{
+						return FormattedText.Empty;
+					}
+					else
+					{
+						return Converters.DateToString (écriture.Date);
+					}
 
 				case ColumnType.Débit:
 					return JournalDataAccessor.GetNuméro (écriture.Débit);
@@ -148,7 +156,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Pièce;
 
 				case ColumnType.Libellé:
-					return écriture.Libellé;
+					if (écriture.Type == (int) TypeEcriture.CodeTVA)
+					{
+						//?return StringArray.SpecialContentRightAlignment + écriture.Libellé;
+						//?return new string (' ', 10) + écriture.Libellé;
+						//?return FormattedText.Concat (UIBuilder.leftIndentText, écriture.Libellé);
+						return "□   " + écriture.Libellé;
+					}
+					else
+					{
+						return écriture.Libellé;
+					}
 
 				case ColumnType.Montant:
 					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
@@ -157,6 +175,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 						montantTTC = montantTTC.ApplyBold ();
 					}
 					return montantTTC;
+
+				case ColumnType.MontantTTC:
+					if (écriture.Type == (int) TypeEcriture.BaseTVA)
+					{
+						return Converters.MontantToString (écriture.Montant + écriture.MontantComplément);
+					}
+					else
+					{
+						return FormattedText.Empty;
+					}
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
