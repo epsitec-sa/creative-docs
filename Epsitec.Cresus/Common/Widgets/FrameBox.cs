@@ -18,6 +18,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public FrameBox()
 		{
+			this.borderAlpha = 1;
 		}
 
 		public FrameBox(Widget embedder)
@@ -36,6 +37,22 @@ namespace Epsitec.Common.Widgets
 			set
 			{
 				this.SetValue (FrameBox.DrawFullFrameProperty, value);
+			}
+		}
+
+		public double BorderAlpha
+		{
+			get
+			{
+				return this.borderAlpha;
+			}
+			set
+			{
+				if (this.borderAlpha != value)
+				{
+					this.borderAlpha = value;
+					this.Invalidate ();
+				}
 			}
 		}
 
@@ -95,7 +112,7 @@ namespace Epsitec.Common.Widgets
 			if (this.DrawFullFrame)
 			{
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (adorner.ColorBorder);
+				graphics.RenderSolid (Color.FromAlphaColor(this.borderAlpha, adorner.ColorBorder));
 			}
 
 			if (this.DrawDesignerFrame)
@@ -135,7 +152,7 @@ namespace Epsitec.Common.Widgets
 					}
 
 					graphics.Rasterizer.AddOutline (path, this.DrawFrameWidth, CapStyle.Square, JoinStyle.Round, 5.0);
-					graphics.RenderSolid (adorner.ColorBorder);
+					graphics.RenderSolid (Color.FromAlphaColor (this.borderAlpha, adorner.ColorBorder));
 				}
 			}
 		}
@@ -154,5 +171,7 @@ namespace Epsitec.Common.Widgets
 
 		public static readonly DependencyProperty DrawFullFrameProperty = DependencyProperty.Register ("DrawFullFrame", typeof (bool), typeof (FrameBox), new VisualPropertyMetadata (false, VisualPropertyMetadataOptions.AffectsDisplay));
 		public static readonly DependencyProperty BestFitSizeProperty = DependencyProperty.Register ("BestFitSize", typeof (Drawing.Size), typeof (FrameBox), new VisualPropertyMetadata (Drawing.Size.Empty));
+
+		private double borderAlpha;
 	}
 }

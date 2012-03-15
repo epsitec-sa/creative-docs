@@ -158,15 +158,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected bool GetWidgetVisibility(ColumnType columnType, int line)
 		{
-			var container = this.GetContainer (columnType, line);
+			var controller = this.GetFieldController (columnType, line);
 
-			if (container == null)
+			if (controller == null)
 			{
 				return false;
 			}
 			else
 			{
-				return container.Visibility;
+				return controller.Container.Visibility;
 			}
 		}
 
@@ -174,27 +174,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor.EditionLine[line].SetEnable (columnType, visibility);
 
-			var container = this.GetContainer (columnType, line);
-
-			if (container != null)
-			{
-				container.Visibility = visibility;
-			}
-		}
-
-		private Widget GetContainer(ColumnType columnType, int line = 0)
-		{
 			var controller = this.GetFieldController (columnType, line);
 
-			if (controller == null)
+			if (controller != null)
 			{
-				return null;
-			}
-			else
-			{
-				return controller.Container;
+				controller.Container.Visibility = visibility;
+				controller.Box.BorderAlpha = visibility ? 1.0 : 0.3;
 			}
 		}
+
 
 		private bool GetTextFieldReadonly(ColumnType columnType, int line)
 		{
