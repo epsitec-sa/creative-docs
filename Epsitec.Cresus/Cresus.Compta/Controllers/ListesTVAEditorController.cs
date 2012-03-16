@@ -61,12 +61,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Taux)
 				{
-					field = new ListeTVAController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new ListeTVAController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 

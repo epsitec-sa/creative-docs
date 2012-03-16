@@ -62,12 +62,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Permanent)
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 

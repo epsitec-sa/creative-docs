@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var controller = this.GetFieldController (columnType, line);
 
-			if (controller == null)
+			if (controller == null || controller.Container == null)
 			{
 				return false;
 			}
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var controller = this.GetFieldController (columnType, line);
 
-			if (controller != null)
+			if (controller != null && controller.Container != null)
 			{
 				controller.Container.Visibility = visibility;
 				controller.Box.BorderAlpha = visibility ? 1.0 : 0.3;
@@ -497,6 +497,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.UpdateEditorInfo ();
 				this.UpdateInsertionRow ();
 			}
+		}
+
+		protected virtual void HandleClearFocus(int line, ColumnType columnType)
+		{
 		}
 
 		protected void HandleSetFocus(int line, ColumnType columnType)

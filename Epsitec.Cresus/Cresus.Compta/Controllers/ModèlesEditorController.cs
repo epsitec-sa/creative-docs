@@ -64,21 +64,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Raccourci)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, Converters.RaccourciDescriptions.ToArray ());
 				}
 				else if (mapper.Column == ColumnType.Débit || mapper.Column == ColumnType.Crédit)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 

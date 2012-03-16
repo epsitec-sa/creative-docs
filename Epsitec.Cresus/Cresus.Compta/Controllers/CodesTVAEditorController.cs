@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Taux)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					var listes = this.compta.ListesTVA.Select (x => x.Nom);
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else if (mapper.Column == ColumnType.Compte)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					var comptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.TVA);
@@ -89,12 +89,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.ParDéfaut ||
 						 mapper.Column == ColumnType.Désactivé)
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 

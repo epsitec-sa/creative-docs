@@ -21,11 +21,12 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public abstract class AbstractFieldController
 	{
-		public AbstractFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
+		public AbstractFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> clearFocusAction, System.Action<int, ColumnType> setFocusAction, System.Action<int, ColumnType> contentChangedAction)
 		{
 			this.controller           = controller;
 			this.line                 = line;
 			this.columnMapper         = columnMapper;
+			this.clearFocusAction     = clearFocusAction;
 			this.setFocusAction       = setFocusAction;
 			this.contentChangedAction = contentChangedAction;
 
@@ -120,6 +121,14 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		}
 
 
+		protected void ClearFocusAction()
+		{
+			if (this.clearFocusAction != null && this.columnMapper != null)
+			{
+				this.clearFocusAction (this.line, this.columnMapper.Column);
+			}
+		}
+
 		protected void SetFocusAction()
 		{
 			if (this.setFocusAction != null && this.columnMapper != null)
@@ -210,6 +219,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		protected readonly AbstractController					controller;
 		protected readonly int									line;
 		protected readonly ColumnMapper							columnMapper;
+		protected readonly System.Action<int, ColumnType>		clearFocusAction;
 		protected readonly System.Action<int, ColumnType>		setFocusAction;
 		protected readonly System.Action<int, ColumnType>		contentChangedAction;
 		protected SafeCounter									ignoreChanges;

@@ -57,7 +57,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
-				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+				AbstractFieldController field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 				field.CreateUI (editorFrame);
 
 				if (mapper.Column == ColumnType.Solde           ||

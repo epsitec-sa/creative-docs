@@ -693,17 +693,17 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
-			écriture.Libellé = lib1.Substring (0, i1);
+			écriture.Type              = (int) TypeEcriture.BaseTVA;
+			écriture.Libellé           = lib1.Substring (0, i1);
 			écriture.MontantComplément = suivante.Montant;
-			écriture.CodeTVA = codeTVA;
-			écriture.TauxTVA = taux;
-			écriture.Type = (int) TypeEcriture.BaseTVA;
+			écriture.CodeTVA           = codeTVA;
+			écriture.TauxTVA           = taux;
 
+			suivante.Type              = (int) TypeEcriture.CodeTVA;
+			suivante.Libellé           = écriture.Libellé;
 			suivante.MontantComplément = écriture.Montant;
-			suivante.CodeTVA = codeTVA;
-			suivante.TauxTVA = taux;
-			suivante.Type = (int) TypeEcriture.CodeTVA;
-			suivante.Libellé = suivante.LibelléTVA;
+			suivante.CodeTVA           = codeTVA;
+			suivante.TauxTVA           = taux;
 
 			if (encore != null)
 			{

@@ -11,7 +11,7 @@ namespace Epsitec.Cresus.Compta
 	public enum TypeEcriture
 	{
 		Normal,
-		Nouvelle,
+		Nouveau,
 		BaseTVA,
 		CodeTVA,
 		Arrondi,

@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public class PasswordFieldController : AbstractFieldController
 	{
-		public PasswordFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
-			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
+		public PasswordFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> clearFocusAction, System.Action<int, ColumnType> setFocusAction, System.Action<int, ColumnType> contentChangedAction)
+			: base (controller, line, columnMapper, clearFocusAction, setFocusAction, contentChangedAction)
 		{
 		}
 
@@ -154,6 +154,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			else  // perte du focus ?
 			{
 				//	Lorsqu'on perd le focus, il faut rien faire avec un mot de passe.
+
+				this.ClearFocusAction ();
 			}
 		}
 

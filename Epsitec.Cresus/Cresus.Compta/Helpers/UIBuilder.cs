@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static AutoCompleteFieldController CreateAutoCompleteField(AbstractController controller, Widget parent, FormattedText initialText, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action<int, ColumnType> changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir un texte.
-			var fieldController = new AutoCompleteFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
+			var fieldController = new AutoCompleteFieldController (controller, 0, new ColumnMapper (tooltip), null, null, changedAction);
 
 			fieldController.CreateUI (parent);
 			fieldController.Box.PreferredWidth = 120;
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static DateFieldController CreateDateField(AbstractController controller, Widget parent, FormattedText initialDate, FormattedText tooltip, System.Action<EditionData> validateAction, System.Action<int, ColumnType> changedAction)
 		{
 			//	Crée un contrôleur permettant de saisir une date.
-			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, changedAction);
+			var fieldController = new DateFieldController (controller, 0, new ColumnMapper (tooltip), null, null, changedAction);
 
 			fieldController.CreateUI (parent);
 			fieldController.Box.PreferredWidth = 70;
@@ -383,33 +383,35 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static readonly Color CreationBackColor		= Color.FromHexa ("e5f4ff");  // bleu pastel
-		public static readonly Color ModificationBackColor	= Color.FromHexa ("fff8d5");  // orange pastel
+		public static readonly Color CreationBackColor			= Color.FromHexa ("e5f4ff");  // bleu pastel
+		public static readonly Color ModificationBackColor		= Color.FromHexa ("fff8d5");  // orange pastel
+		public static readonly Color CreationHiliteColor		= Color.FromHexa ("bee3ff");  // bleu moins pastel
+		public static readonly Color ModificationHiliteColor	= Color.FromHexa ("ffeb85");  // orange moins pastel
 
-		public static readonly Color ViewSettingsBackColor	= Color.FromHexa ("ccffcc");  // vert pastel
-		public static readonly Color SearchBackColor		= Color.FromHexa ("ffffcc");  // jaune pastel
-		public static readonly Color FilterBackColor		= Color.FromHexa ("ffeecc");  // orange pastel
-		public static readonly Color OptionsBackColor		= Color.FromHexa ("d2f0ff");  // bleu pastel
+		public static readonly Color ViewSettingsBackColor		= Color.FromHexa ("ccffcc");  // vert pastel
+		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffcc");  // jaune pastel
+		public static readonly Color FilterBackColor			= Color.FromHexa ("ffeecc");  // orange pastel
+		public static readonly Color OptionsBackColor			= Color.FromHexa ("d2f0ff");  // bleu pastel
 
-		public static readonly Color SelectionColor			= Color.FromHexa ("ffd700");  // orange "gold"
-		public static readonly Color JustCreatedColor		= Color.FromHexa ("b3d7ff");  // bleu pastel
+		public static readonly Color SelectionColor				= Color.FromHexa ("ffd700");  // orange "gold"
+		public static readonly Color JustCreatedColor			= Color.FromHexa ("b3d7ff");  // bleu pastel
 
-		public static readonly Color InfoColor				= Color.FromAlphaColor (0.5, Color.FromHexa ("eeeeee"));   // gris transparent
-		public static readonly Color ErrorColor				= Color.FromHexa ("ffb1b1");  // rouge pâle
-		public static readonly Color MiniToolbarColor		= Color.FromHexa ("f4f9ff");  // bleu très léger
+		public static readonly Color InfoColor					= Color.FromAlphaColor (0.5, Color.FromHexa ("eeeeee"));   // gris transparent
+		public static readonly Color ErrorColor					= Color.FromHexa ("ffb1b1");  // rouge pâle
+		public static readonly Color MiniToolbarColor			= Color.FromHexa ("f4f9ff");  // bleu très léger
 
-		public static readonly Color TextInsideSearchColor  = Color.FromBrightness (0);    // noir
-		public static readonly Color TextOutsideSearchColor = Color.FromBrightness (0.6);  // gris
-		public static readonly Color BackInsideSearchColor  = Color.FromHexa ("fff000");   // jaune pétant
-		public static readonly Color BackOutsideSearchColor = Color.FromAlphaColor (0.1, Color.FromHexa ("fff000"));   // jaune très transparent
+		public static readonly Color TextInsideSearchColor		= Color.FromBrightness (0);    // noir
+		public static readonly Color TextOutsideSearchColor		= Color.FromBrightness (0.6);  // gris
+		public static readonly Color BackInsideSearchColor		= Color.FromHexa ("fff000");   // jaune pétant
+		public static readonly Color BackOutsideSearchColor		= Color.FromAlphaColor (0.1, Color.FromHexa ("fff000"));   // jaune très transparent
 
-		public static readonly Color GraphicGreenColor		= Color.FromHexa ("00bb00");  // vert
-		public static readonly Color GraphicRedColor		= Color.FromHexa ("ff0000");  // rouge
+		public static readonly Color GraphicGreenColor			= Color.FromHexa ("00bb00");  // vert
+		public static readonly Color GraphicRedColor			= Color.FromHexa ("ff0000");  // rouge
 
-		public static readonly double LeftLabelWidth		= 83;
-		public static readonly double ComboButtonWidth		= 14;
+		public static readonly double LeftLabelWidth			= 83;
+		public static readonly double ComboButtonWidth			= 14;
 
-		public static readonly FormattedText leftIndentText  = "●  ";
-		public static readonly FormattedText rightIndentText = "  ";
+		public static readonly FormattedText leftIndentText		= "●  ";
+		public static readonly FormattedText rightIndentText	= "  ";
 	}
 }

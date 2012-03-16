@@ -156,17 +156,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Pièce;
 
 				case ColumnType.Libellé:
-					if (écriture.Type == (int) TypeEcriture.CodeTVA)
-					{
-						return StringArray.SpecialContentRightAlignment + écriture.Libellé;
-						//?return new string (' ', 10) + écriture.Libellé;
-						//?return FormattedText.Concat (UIBuilder.leftIndentText, écriture.Libellé);
-						//?return "□   " + écriture.Libellé;
-					}
-					else
-					{
-						return écriture.Libellé;
-					}
+					return this.GetLibellé (écriture);
 
 				case ColumnType.Montant:
 					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
@@ -205,6 +195,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return FormattedText.Null;
 			}
 		}
+
+		private FormattedText GetLibellé(ComptaEcritureEntity écriture)
+		{
+			//	Retourne le libellé à afficher dans le tableau.
+			if (écriture.Type == (int) TypeEcriture.CodeTVA)
+			{
+				//	Une ligne 'CodeTVA' suit toujours une ligne 'BaseTVA'. Son champ Libellé est toujours
+				//	identique au champ libellé de la ligne précédente 'BaseTVA'. Mais dans le journal, ce
+				//	n'est pas ce qu'on désire afficher. On calcule donc un texte mieux adapté.
+
+				return StringArray.SpecialContentRightAlignment + écriture.LibelléTVA;
+				//?return new string (' ', 10) + écriture.LibelléTVA;
+				//?return FormattedText.Concat (UIBuilder.leftIndentText, écriture.LibelléTVA);
+				//?return "□   " + écriture.LibelléTVA;
+			}
+			else
+			{
+				return écriture.Libellé;
+			}
+		}
+
 
 		public override bool HasBottomSeparator(int row)
 		{
@@ -303,7 +314,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.MontantTTC, FormattedText.Empty);
 			this.editionLine[line].SetText (ColumnType.Montant,    FormattedText.Empty);
-			this.editionLine[line].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.Nouvelle));
+			this.editionLine[line].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 
 			base.PrepareEditionLine (line);
 		}

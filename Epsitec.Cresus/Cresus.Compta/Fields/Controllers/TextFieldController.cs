@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 	/// </summary>
 	public class TextFieldController : AbstractFieldController
 	{
-		public TextFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> setFocusAction = null, System.Action<int, ColumnType> contentChangedAction = null)
-			: base (controller, line, columnMapper, setFocusAction, contentChangedAction)
+		public TextFieldController(AbstractController controller, int line, ColumnMapper columnMapper, System.Action<int, ColumnType> clearFocusAction, System.Action<int, ColumnType> setFocusAction, System.Action<int, ColumnType> contentChangedAction)
+			: base (controller, line, columnMapper, clearFocusAction, setFocusAction, contentChangedAction)
 		{
 		}
 
@@ -156,6 +156,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 					this.InternalField.FormattedText = text;
 					//?this.ContentChangedAction ();  // TODO: Normalement inutile ?
 				}
+
+				this.ClearFocusAction ();
 			}
 		}
 

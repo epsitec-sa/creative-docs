@@ -92,9 +92,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
-			if (type == TypeEcriture.Nouvelle)
+			if (type == TypeEcriture.Nouveau)
 			{
-				if (this.GetEnable (ColumnType.MontantTTC))
+				if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
 				{
 					if (!montantTTC.HasValue && !montantHT.HasValue)
 					{
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			if (type == TypeEcriture.BaseTVA ||
-				type == TypeEcriture.Nouvelle)
+				type == TypeEcriture.Nouveau)
 			{
 				if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
 					montantTTC.GetValueOrDefault () == 0)  // montant nul ?
@@ -149,9 +149,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
-			if (type == TypeEcriture.Nouvelle)
+			if (type == TypeEcriture.Nouveau)
 			{
-				if (this.GetEnable (ColumnType.MontantTTC))
+				if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
 				{
 					if (!montantTTC.HasValue && !montantHT.HasValue)
 					{

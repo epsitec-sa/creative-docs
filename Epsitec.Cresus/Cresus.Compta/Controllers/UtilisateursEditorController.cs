@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (mapper.Column == ColumnType.Pièce)
 				{
-					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.PiècesGenerator.Select (x => x.Nom).ToArray ());
@@ -105,23 +105,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 				else if (mapper.Column == ColumnType.DateDébut ||
 						 mapper.Column == ColumnType.DateFin   )
 				{
-					field = new DateFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new DateFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.MotDePasse)
 				{
-					field = new PasswordFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new PasswordFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else if (mapper.Column == ColumnType.IdentitéWindows ||
 						 mapper.Column == ColumnType.Désactivé       )
 				{
-					field = new CheckButtonController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new CheckButtonController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 				else
 				{
-					field = new TextFieldController (this.controller, line, mapper, this.HandleSetFocus, this.EditorTextChanged);
+					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
 
