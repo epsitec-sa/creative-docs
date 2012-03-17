@@ -530,6 +530,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
+			this.UpdateAfterValidate ();
 		}
 
 		private void EditorValidate(int line)
@@ -548,6 +549,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
+		}
+
+		protected virtual void UpdateAfterValidate()
+		{
 		}
 
 

@@ -98,6 +98,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public CommandContext CommandContext
+		{
+			get
+			{
+				return this.app.CommandContext;
+			}
+		}
+
 		public ComptaEntity Compta
 		{
 			get

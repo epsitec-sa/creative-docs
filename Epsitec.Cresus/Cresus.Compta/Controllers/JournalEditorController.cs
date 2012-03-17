@@ -31,12 +31,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void CreateUI(FrameBox parent, System.Action updateArrayContentAction)
 		{
-			var footer = this.CreateEditorUI (parent);
+			var editor = this.CreateEditorUI (parent);
+
+			this.footer = new CustomFrameBox
+			{
+				Parent = editor,
+				Dock   = DockStyle.Fill,
+			};
 
 			//	Crée les boîtes.
 			this.infoFrameBox = new FrameBox
 			{
-				Parent          = footer,
+				Parent          = this.footer,
 				PreferredHeight = 39,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -44,7 +50,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.infoFrameSeparator = new FrameBox
 			{
-				Parent          = footer,
+				Parent          = this.footer,
 				PreferredHeight = 5,
 				Dock            = DockStyle.Bottom,
 				Margins         = new Margins (0, 0, 0, 0),
@@ -53,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var linesBox = new FrameBox
 				{
-					Parent              = footer,
+					Parent              = this.footer,
 					ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 					Dock                = DockStyle.Bottom,
 				};
@@ -122,7 +128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
 
-			base.CreateUI (footer, updateArrayContentAction);
+			base.CreateUI (this.footer, updateArrayContentAction);
 		}
 
 		private void CreateLineUI(Widget parent)
@@ -299,10 +305,42 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		private bool IsThereSomethingToComplete
+		{
+			get
+			{
+				if (!this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
+				{
+					if (this.IsDébitMulti (0) || this.IsCréditMulti (0))
+					{
+						return true;
+					}
+				}
+
+				int line = 0;
+				while (line < this.dataAccessor.CountEditedRow)
+				{
+					var type = this.GetTypeEcriture (line);
+
+					if (type == TypeEcriture.Nouveau)  // ligne fraichement créée ?
+					{
+						if (this.IsTVA (line))
+						{
+							return true;
+						}
+					}
+
+					line++;
+				}
+
+				return false;
+			}
+		}
+
 		private bool Complete(ref int lineToSelect, ref ColumnType columnToSelect)
 		{
-			//	Avant de créer réellement l'écriture, on regarde si elle peut être "complétét", c'est-à-dire:
-			//		- Si on a donné 1000 / ..., on complète avec 3 lignes pour démarrer ue écriture multiple.
+			//	Avant de créer réellement l'écriture, on regarde si elle peut être "complétée", c'est-à-dire:
+			//		- Si on a donné 1000 / ..., on complète avec 3 lignes pour démarrer une écriture multiple.
 			//		- Si on a donné un compte avec code TVA, on complète par une deuxième ligne avec code/taux.
 			//	Dans tous les cas, si l'écriture est complétée, on ne la crée pas.
 
@@ -684,9 +722,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		protected override void UpdateAfterValidate()
+		{
+			var acceptEnable = this.dirty && !this.hasError;
+			this.footer.Hilited = (acceptEnable && this.IsThereSomethingToComplete);
+		}
+
 		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
 		{
-			//	Met à jour toutes les données en édition d'une écriture multiple.
+			//	Met à jour toutes les données en édition.
 			if (this.controller.IgnoreChanges.IsNotZero || !this.dataAccessor.EditionLine.Any ())
 			{
 				return;
@@ -1462,6 +1506,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		private CustomFrameBox						footer;
 		private TabCatcherFrameBox					linesContainer;
 		private FrameBox							infoFrameSeparator;
 		private FrameBox							infoFrameBox;
