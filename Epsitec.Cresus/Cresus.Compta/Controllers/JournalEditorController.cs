@@ -222,6 +222,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var journaux = this.compta.Journaux.Select (x => x.Nom);
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, journaux.ToArray ());
 				}
+				else if (mapper.Column == ColumnType.Type)
+				{
+					field = new FixedTextController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					(field as FixedTextController).TextConverter = x => ComptaEcritureEntity.GetShortType (Converters.StringToTypeEcriture (x));
+				}
 				else
 				{
 					field = new TextFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
@@ -396,10 +403,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.InsertEditionLine (-1);  // contrepartie
 
 			//	Met à jour les données de la 1ère ligne.
-			this.dataAccessor.EditionLine[0].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Normal));
+			this.dataAccessor.EditionLine[0].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 
 			//	Met à jour les données de la 2ème ligne.
-			this.dataAccessor.EditionLine[1].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Normal));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant,          Converters.MontantToString (0));
@@ -407,7 +414,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Hilited,          "1");
 																				   
 			//	Met à jour les données de la contrepartie.						   
-			this.dataAccessor.EditionLine[2].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Normal));
+			this.dataAccessor.EditionLine[2].SetText (ColumnType.Type,             Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
@@ -724,6 +731,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateAfterValidate()
 		{
+			//	Si la commande 'Enter' est valide et que l'écriture doit être complétée,
+			//	hachure toute la zone d'édition.
 			var acceptEnable = this.dirty && !this.hasError;
 			this.footer.Hilited = (acceptEnable && this.IsThereSomethingToComplete);
 		}

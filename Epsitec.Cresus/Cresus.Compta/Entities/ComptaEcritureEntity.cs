@@ -13,6 +13,42 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEcritureEntity
 	{
+		public FormattedText ShortType
+		{
+			get
+			{
+				return ComptaEcritureEntity.GetShortType ((TypeEcriture) this.Type);
+			}
+		}
+
+		public static FormattedText GetShortType(TypeEcriture type)
+		{
+			switch ((TypeEcriture) type)
+			{
+				case TypeEcriture.Nouveau:
+					return "N";
+
+				case TypeEcriture.Vide:
+					return "V";
+
+				case TypeEcriture.BaseTVA:
+					return "T";
+
+				case TypeEcriture.CodeTVA:
+					return "C";
+
+				case TypeEcriture.Arrondi:
+					return "A";
+
+				case TypeEcriture.Escompte:
+					return "E";
+
+				default:
+					return null;
+			}
+		}
+
+
 		public FormattedText LibelléTVA
 		{
 			get

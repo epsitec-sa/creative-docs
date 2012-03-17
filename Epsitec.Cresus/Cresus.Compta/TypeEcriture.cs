@@ -12,6 +12,7 @@ namespace Epsitec.Cresus.Compta
 	{
 		Normal,
 		Nouveau,
+		Vide,
 		BaseTVA,
 		CodeTVA,
 		Arrondi,

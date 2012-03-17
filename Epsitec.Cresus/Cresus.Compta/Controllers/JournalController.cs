@@ -201,9 +201,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.MontantTTC, 0.25, ContentAlignment.MiddleRight, "Montant TTC", "Montant TTC");
 				yield return new ColumnMapper (ColumnType.Montant,    0.25, ContentAlignment.MiddleRight, "Montant", "Montant de l'écriture");
 				yield return new ColumnMapper (ColumnType.Journal,    0.25, ContentAlignment.MiddleLeft,  "Journal", "Journal auquel appartient l'écriture");
-
-				// PROVISOIRE:
-				yield return new ColumnMapper (ColumnType.Type,       0.25, ContentAlignment.MiddleLeft,  "Type", "Type de la ligne");
+				yield return new ColumnMapper (ColumnType.Type,       0.05, ContentAlignment.MiddleCenter, "", "Type de la ligne", enable: false);
 			}
 		}
 

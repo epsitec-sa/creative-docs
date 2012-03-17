@@ -79,6 +79,7 @@
     <Compile Include="Controllers\UtilisateursEditorController.cs" />
     <Compile Include="Controllers\PiècesGeneratorController.cs" />
     <Compile Include="Controllers\UtilisateursController.cs" />
+    <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
     <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />

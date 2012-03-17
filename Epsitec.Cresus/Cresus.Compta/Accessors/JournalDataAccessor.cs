@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return écriture.Journal.Nom;
 
 				case ColumnType.Type:
-					return Converters.TypeEcritureToString (écriture.Type);
+					return écriture.ShortType;
 
 				default:
 					return FormattedText.Null;
@@ -330,15 +330,31 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.firstEditedRow = firstRow;
 				this.countEditedRow = countRow;
+				ComptaJournalEntity journal = null;
 
 				for (int i = 0; i < this.countEditedRow; i++)
-                {
+				{
 					var data = new JournalEditionLine (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
+					journal = écriture.Journal;
 					data.EntityToData (écriture);
 
 					this.editionLine.Add (data);
-                }
+				}
+
+				if (this.countEditedRow > 1)
+				{
+					var data = new JournalEditionLine (this.controller);
+					var écriture = new ComptaEcritureEntity ();
+					écriture.Journal = journal;
+					data.EntityToData (écriture);
+					data.SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.Vide));
+
+					int i = this.editionLine.Count-1;
+					this.editionLine.Insert (i, data);
+
+					this.countEditedRow++;
+				}
 			}
 
 			this.initialCountEditedRow = this.countEditedRow;
