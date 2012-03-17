@@ -26,6 +26,8 @@ namespace Epsitec.Cresus.Compta
 		EcritureEditeCodeTVA,
 		EcritureEditeTauxTVA,
 		EcritureMontreCompteTVA,
+		EcritureMontreType,
+		EcritureProposeVide,
 		EcritureArrondiTVA,
 
 		PriceDecimalDigits,

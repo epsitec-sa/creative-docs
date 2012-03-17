@@ -44,6 +44,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
 			if (data.HasText)
 			{
 				if (data.Text == JournalDataAccessor.multi)
@@ -75,7 +80,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			var type = Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
+			var type = this.TypeEcriture;
 			if (type == TypeEcriture.CodeTVA)
 			{
 				return;  // toujours ok
@@ -88,21 +98,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			var type = Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
+			var type = this.TypeEcriture;
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
-			if (type == TypeEcriture.Nouveau)
+			if (type == TypeEcriture.Nouveau ||
+				type == TypeEcriture.Vide    )
 			{
 				if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
 				{
-					if (!montantTTC.HasValue && !montantHT.HasValue)
+					if (montantTTC.GetValueOrDefault () == 0 && montantHT.GetValueOrDefault () == 0)
 					{
 						data.Error = "Donnez ici le montant TTC, ou à côté le montant HT";
 						return;
 					}
 
-					if (montantTTC.HasValue && montantHT.HasValue)
+					if (montantTTC.GetValueOrDefault () != 0 && montantHT.GetValueOrDefault () != 0)
 					{
 						data.Error = "Il faut donner le montant TTC ou le montant HT, mais pas les deux";
 						return;
@@ -125,8 +141,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
-			if (type == TypeEcriture.BaseTVA ||
-				type == TypeEcriture.Nouveau)
+			if (type == TypeEcriture.BaseTVA)
 			{
 				if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
 					montantTTC.GetValueOrDefault () == 0)  // montant nul ?
@@ -145,21 +160,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			var type = Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
+			var type = this.TypeEcriture;
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
-			if (type == TypeEcriture.Nouveau)
+			if (type == TypeEcriture.Nouveau ||
+				type == TypeEcriture.Vide    )
 			{
 				if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
 				{
-					if (!montantTTC.HasValue && !montantHT.HasValue)
+					if (montantTTC.GetValueOrDefault () == 0 && montantHT.GetValueOrDefault () == 0)
 					{
 						data.Error = "Donnez ici le montant HT, ou à côté le montant TTC";
 						return;
 					}
 
-					if (montantTTC.HasValue && montantHT.HasValue)
+					if (montantTTC.GetValueOrDefault () != 0 && montantHT.GetValueOrDefault () != 0)
 					{
 						data.Error = "Il faut donner le montant TTC ou le montant HT, mais pas les deux";
 						return;
@@ -193,6 +214,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
 			if (data.HasText)
 			{
 				var edit = data.Text.ToSimpleText ();
@@ -225,6 +251,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateTauxTVA(EditionData data)
 		{
+			data.ClearError ();
+
+			if (this.IsEmpty)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
 			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
 			{
 				if (data.HasText)
@@ -269,20 +302,39 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var écriture = entity as ComptaEcritureEntity;
 
-			this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
-			this.SetText (ColumnType.Débit,             JournalDataAccessor.GetNuméro (écriture.Débit));
-			this.SetText (ColumnType.Crédit,            JournalDataAccessor.GetNuméro (écriture.Crédit));
-			this.SetText (ColumnType.Pièce,             écriture.Pièce);
-			this.SetText (ColumnType.Libellé,           écriture.Libellé);
-			this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
-			this.SetText (ColumnType.MontantTTC,        Converters.MontantToString (écriture.Montant + écriture.MontantComplément));
-			this.SetText (ColumnType.MontantComplément, Converters.MontantToString (écriture.MontantComplément));
-			this.SetText (ColumnType.TotalAutomatique,  écriture.TotalAutomatique ? "1" : "0");
-			this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
-			this.SetText (ColumnType.TauxTVA,           Converters.PercentToString (écriture.TauxTVA));
-			this.SetText (ColumnType.CompteTVA,         JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
-			this.SetText (ColumnType.Journal,           écriture.Journal.Nom);
-			this.SetText (ColumnType.Type,              Converters.TypeEcritureToString (écriture.Type));
+			if (this.IsEmptyEcriture (écriture))
+			{
+				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
+				this.SetText (ColumnType.Débit,             FormattedText.Empty);
+				this.SetText (ColumnType.Crédit,            FormattedText.Empty);
+				this.SetText (ColumnType.Pièce,             FormattedText.Empty);
+				this.SetText (ColumnType.Libellé,           FormattedText.Empty);
+				this.SetText (ColumnType.Montant,           FormattedText.Empty);
+				this.SetText (ColumnType.MontantTTC,        FormattedText.Empty);
+				this.SetText (ColumnType.MontantComplément, FormattedText.Empty);
+				this.SetText (ColumnType.TotalAutomatique,  "0");
+				this.SetText (ColumnType.CodeTVA,           FormattedText.Empty);
+				this.SetText (ColumnType.TauxTVA,           FormattedText.Empty);
+				this.SetText (ColumnType.CompteTVA,         FormattedText.Empty);
+				this.SetText (ColumnType.Journal,           écriture.Journal.Nom);
+				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
+			}
+			else{
+				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
+				this.SetText (ColumnType.Débit,             JournalDataAccessor.GetNuméro (écriture.Débit));
+				this.SetText (ColumnType.Crédit,            JournalDataAccessor.GetNuméro (écriture.Crédit));
+				this.SetText (ColumnType.Pièce,             écriture.Pièce);
+				this.SetText (ColumnType.Libellé,           écriture.Libellé);
+				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
+				this.SetText (ColumnType.MontantTTC,        Converters.MontantToString (écriture.Montant + écriture.MontantComplément));
+				this.SetText (ColumnType.MontantComplément, Converters.MontantToString (écriture.MontantComplément));
+				this.SetText (ColumnType.TotalAutomatique,  écriture.TotalAutomatique ? "1" : "0");
+				this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
+				this.SetText (ColumnType.TauxTVA,           Converters.PercentToString (écriture.TauxTVA));
+				this.SetText (ColumnType.CompteTVA,         JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
+				this.SetText (ColumnType.Journal,           écriture.Journal.Nom);
+				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
+			}
 
 			this.UpdateCodeTVAParameters ();
 		}
@@ -297,17 +349,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Date = date.Value;
 			}
 
-			écriture.Débit  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
-			écriture.Crédit = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
-
-			écriture.Pièce             = this.GetText (ColumnType.Pièce);
-			écriture.Libellé           = this.GetText (ColumnType.Libellé);
-			écriture.Montant           = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
-			écriture.MontantComplément = Converters.ParseMontant (this.GetText (ColumnType.MontantComplément)).GetValueOrDefault ();
-			écriture.TotalAutomatique  = (this.GetText (ColumnType.TotalAutomatique) == "1");
-			écriture.CodeTVA           = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
-			écriture.TauxTVA           = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
-			écriture.Type              = (int) Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			if (this.IsEmpty)
+			{
+				écriture.Débit             = null;
+				écriture.Crédit            = null;
+				écriture.Pièce             = FormattedText.Empty;
+				écriture.Libellé           = FormattedText.Empty;
+				écriture.Montant           = 0;
+				écriture.MontantComplément = null;
+				écriture.TotalAutomatique  = false;
+				écriture.CodeTVA           = null;
+				écriture.TauxTVA           = null;
+				écriture.Type              = (int) this.TypeEcriture;
+			}
+			else
+			{
+				écriture.Débit             = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
+				écriture.Crédit            = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
+				écriture.Pièce             = this.GetText (ColumnType.Pièce);
+				écriture.Libellé           = this.GetText (ColumnType.Libellé);
+				écriture.Montant           = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
+				écriture.MontantComplément = Converters.ParseMontant (this.GetText (ColumnType.MontantComplément)).GetValueOrDefault ();
+				écriture.TotalAutomatique  = (this.GetText (ColumnType.TotalAutomatique) == "1");
+				écriture.CodeTVA           = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+				écriture.TauxTVA           = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
+				écriture.Type              = (int) this.TypeEcriture;
+			}
 
 			var journal = JournalDataAccessor.GetJournal (this.compta, this.GetText (ColumnType.Journal));
 			if (journal == null)  // dans un journal spécifique ?
@@ -389,26 +456,39 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public bool LockedTVA
+
+		private bool IsEmptyEcriture(ComptaEcritureEntity écriture)
+		{
+			return écriture.Type == (int) TypeEcriture.Vide &&
+				   écriture.Débit == null &&
+				   écriture.Crédit == null &&
+				   écriture.Pièce.IsNullOrEmpty &&
+				   écriture.Libellé.IsNullOrEmpty &&
+				   écriture.Montant == 0;
+		}
+
+		private bool IsEmpty
+		{
+			//	Retourne true si une ligne de type 'vide' est effectivement entièrement vide.
+			get
+			{
+				return this.TypeEcriture == Compta.TypeEcriture.Vide &&
+					   this.GetText (ColumnType.Débit).IsNullOrEmpty &&
+					   this.GetText (ColumnType.Crédit).IsNullOrEmpty &&
+					   this.GetText (ColumnType.Libellé).IsNullOrEmpty &&
+					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0;
+			}
+		}
+
+		private TypeEcriture TypeEcriture
 		{
 			get
 			{
-				var compteDébit  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
-				var compteCrédit = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
-
-				int count = 0;
-
-				if (compteDébit != null && compteDébit.CodeTVA != null)
-				{
-					count++;
-				}
-
-				if (compteCrédit != null && compteCrédit.CodeTVA != null)
-				{
-					count++;
-				}
-
-				return count == 1;
+				return Converters.StringToTypeEcriture (this.GetText (ColumnType.Type));
+			}
+			set
+			{
+				this.SetText (ColumnType.Type, Converters.TypeEcritureToString (value));
 			}
 		}
 	}

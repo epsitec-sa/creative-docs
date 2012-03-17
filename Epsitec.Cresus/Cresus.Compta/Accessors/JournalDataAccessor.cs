@@ -313,7 +313,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
 			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.MontantTTC, FormattedText.Empty);
-			this.editionLine[line].SetText (ColumnType.Montant,    FormattedText.Empty);
+			this.editionLine[line].SetText (ColumnType.Montant,    Converters.MontantToString (0));
 			this.editionLine[line].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 
 			base.PrepareEditionLine (line);
@@ -342,13 +342,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.editionLine.Add (data);
 				}
 
-				if (this.countEditedRow > 1)
+				if (this.countEditedRow > 1 && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
 				{
 					var data = new JournalEditionLine (this.controller);
 					var écriture = new ComptaEcritureEntity ();
+					écriture.Type = (int) TypeEcriture.Vide;
 					écriture.Journal = journal;
 					data.EntityToData (écriture);
-					data.SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.Vide));
 
 					int i = this.editionLine.Count-1;
 					this.editionLine.Insert (i, data);
