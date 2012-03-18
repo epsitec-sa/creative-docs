@@ -312,6 +312,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		private void UpdateToComplete()
+		{
+			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture.
+			for (int line = 0; line < this.fieldControllers.Count; line++)
+			{
+				for (int column = 0; column < this.fieldControllers[line].Count; column++)
+				{
+					this.fieldControllers[line][column].ToComplete = false;
+				}
+			}
+
+			if (this.dataAccessor.EditionLine.Count != 0 && !this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
+			{
+				if (this.IsDébitMulti (0))
+				{
+					this.GetFieldController (ColumnType.Débit, 0).ToComplete = true;
+				}
+
+				if (this.IsCréditMulti (0))
+				{
+					this.GetFieldController (ColumnType.Crédit, 0).ToComplete = true;
+				}
+			}
+
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+			{
+				var type = this.GetTypeEcriture (line);
+
+				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
+					type == TypeEcriture.Vide)
+				{
+					if (this.IsDébitTVA (line))
+					{
+						this.GetFieldController (ColumnType.Débit, line).ToComplete = true;
+					}
+
+					if (this.IsCréditTVA (line))
+					{
+						this.GetFieldController (ColumnType.Crédit, line).ToComplete = true;
+					}
+				}
+			}
+		}
+
 		private bool IsThereSomethingToComplete
 		{
 			get
@@ -660,8 +704,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Si la commande 'Enter' est valide et que l'écriture doit être complétée,
 			//	hachure toute la zone d'édition.
-			var acceptEnable = this.dirty && !this.hasError;
-			this.footer.Hilited = (acceptEnable && this.IsThereSomethingToComplete);
+			//?var acceptEnable = this.dirty && !this.hasError;
+			//?this.footer.Hilited = (acceptEnable && this.IsThereSomethingToComplete);
+			this.UpdateToComplete ();
 		}
 
 		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
@@ -748,6 +793,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.CodeTVA, i, !totalAutomatique);
 					this.SetWidgetVisibility (ColumnType.TauxTVA, i, !totalAutomatique);
 				}
+				else
+				{
+					this.SetWidgetVisibility (ColumnType.Date,    i, true);
+					this.SetWidgetVisibility (ColumnType.Débit,   i, true);
+					this.SetWidgetVisibility (ColumnType.Crédit,  i, true);
+					this.SetWidgetVisibility (ColumnType.Pièce,   i, true);
+					this.SetWidgetVisibility (ColumnType.Journal, i, true);
+				}
 
 				//	Décide de la visibilité du champ 'Montant TTC'.
 				bool showTTC = false;
@@ -783,21 +836,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Lorsqu'on crée une nouvelle ligne avec TVA, il faut permettre d'éditer soit le montant TTC,
 			//	soit le montant HT, mais pas les deux.
+			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTTC));
+			var montantHT  = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant));
+
 			if (columnType == ColumnType.MontantTTC)  // montant TTC ?
 			{
-				var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTTC));
 				if (montantTTC.HasValue)
 				{
 					this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant, FormattedText.Empty);  // vide le montant HT
 				}
 			}
-
-			if (columnType == ColumnType.Montant)  // montant HT ?
+			else if (columnType == ColumnType.Montant)  // montant HT ?
 			{
-				var montantHT = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant));
 				if (montantHT.HasValue)
 				{
 					this.dataAccessor.EditionLine[line].SetText (ColumnType.MontantTTC, FormattedText.Empty);  // vide le montant TTC
+				}
+			}
+			else
+			{
+				if (montantTTC.GetValueOrDefault () == 0 && montantHT.GetValueOrDefault () == 0)
+				{
+					this.dataAccessor.EditionLine[line].SetText (ColumnType.Montant,    Converters.MontantToString (0));
+					this.dataAccessor.EditionLine[line].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
 				}
 			}
 		}

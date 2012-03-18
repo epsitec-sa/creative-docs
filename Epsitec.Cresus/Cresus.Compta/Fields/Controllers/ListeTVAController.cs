@@ -194,6 +194,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				this.ChangeRate ();
 			};
+
+			base.CreateForegroundUI ();
 		}
 
 

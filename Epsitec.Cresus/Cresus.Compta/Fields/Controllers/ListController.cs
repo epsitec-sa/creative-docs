@@ -57,6 +57,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				this.ShowMenu (this.comboFrame);
 			};
+
+			base.CreateForegroundUI ();
 		}
 
 

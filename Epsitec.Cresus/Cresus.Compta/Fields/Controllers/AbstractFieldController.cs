@@ -9,6 +9,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Controllers;
 
 using System.Collections.Generic;
@@ -36,6 +37,17 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		public virtual void CreateUI(Widget parent)
 		{
+		}
+
+		protected void CreateForegroundUI()
+		{
+			this.toCompleteFrame = new CustomFrameBox
+			{
+				Parent     = this.editWidget,
+				ToComplete = true,
+				Visibility = false,
+				Anchor     = AnchorStyles.All,
+			};
 		}
 
 		public ColumnMapper ColumnMapper
@@ -93,6 +105,29 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			}
 			protected set
 			{
+			}
+		}
+
+		public bool ToComplete
+		{
+			//	Détermine si le champ a un cadre rouge pointillé.
+			get
+			{
+				if (this.toCompleteFrame == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.toCompleteFrame.Visibility;
+				}
+			}
+			set
+			{
+				if (this.toCompleteFrame != null)
+				{
+					this.toCompleteFrame.Visibility = value;
+				}
 			}
 		}
 
@@ -228,6 +263,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		protected FrameBox										box;
 		protected FrameBox										container;
 		protected Widget										editWidget;
+		protected CustomFrameBox								toCompleteFrame;
 		protected bool											hasFocus;
 	}
 }

@@ -51,6 +51,8 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 			this.editWidget.TextChanged += new EventHandler (this.HandleTextChanged);
 			this.editWidget.IsFocusedChanged += new EventHandler<DependencyPropertyChangedEventArgs> (this.HandleIsFocusedChanged);
+
+			base.CreateForegroundUI ();
 		}
 
 
