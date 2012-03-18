@@ -381,7 +381,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 					else
 					{
-						this.dataAccessor.EditionLine[line].SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.Normal));
+						if (!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+						{
+							this.dataAccessor.EditionLine[line].SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.Normal));
+						}
 						line++;
 					}
 				}

@@ -330,34 +330,50 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.firstEditedRow = firstRow;
 				this.countEditedRow = countRow;
-				ComptaJournalEntity journal = null;
+				this.countEmptyRow = 0;
+				ComptaEcritureEntity last = null;
 
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
 					var data = new JournalEditionLine (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
-					journal = écriture.Journal;
+					last = écriture;
 					data.EntityToData (écriture);
 
 					this.editionLine.Add (data);
 				}
 
+				//	Crée éventuellement la ligne vide supplémentaire, permettant à l'utilisateur d'ajouter une
+				//	ligne à son écriture multiple sans utiliser le bouton "+".
 				if (this.countEditedRow > 1 && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
 				{
+					var écriture = new ComptaEcritureEntity ()
+					{
+						Type    = (int) TypeEcriture.Vide,
+						Journal = last.Journal,
+					};
+
 					var data = new JournalEditionLine (this.controller);
-					var écriture = new ComptaEcritureEntity ();
-					écriture.Type = (int) TypeEcriture.Vide;
-					écriture.Journal = journal;
 					data.EntityToData (écriture);
+
+					if (last.Débit == null)
+					{
+						data.SetText (ColumnType.Crédit, JournalDataAccessor.multi);
+					}
+					else
+					{
+						data.SetText (ColumnType.Débit, JournalDataAccessor.multi);
+					}
 
 					int i = this.editionLine.Count-1;
 					this.editionLine.Insert (i, data);
 
 					this.countEditedRow++;
+					this.countEmptyRow++;
 				}
 			}
 
-			this.initialCountEditedRow = this.countEditedRow;
+			this.initialCountEditedRow = this.countEditedRow - this.countEmptyRow;
 			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
@@ -441,6 +457,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 			var initialEcriture = this.journal[row];
+			this.countEmptyRow = 0;
 
 			//	On passe dans l'espace global.
 			row = this.période.Journal.IndexOf (initialEcriture);
@@ -453,6 +470,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
+				if ((data as JournalEditionLine).IsEmptyLine)
+				{
+					this.countEmptyRow++;
+					continue;
+				}
+
 				this.compta.AddLibellé (this.période, data.GetText (ColumnType.Libellé));
 
 				ComptaEcritureEntity écriture;
@@ -483,7 +506,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			//	Supprime les écritures surnuméraires.
-			int countToDelete  = this.initialCountEditedRow - this.editionLine.Count;
+			int countToDelete  = this.initialCountEditedRow - (this.editionLine.Count - this.countEmptyRow);
 			while (countToDelete > 0)
             {
 				var écriture = this.période.Journal[row];

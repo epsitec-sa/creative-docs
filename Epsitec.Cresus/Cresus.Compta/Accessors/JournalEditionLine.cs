@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -160,7 +160,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -214,7 +214,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -253,7 +253,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			data.ClearError ();
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
@@ -302,14 +302,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var écriture = entity as ComptaEcritureEntity;
 
-			if (this.IsEmptyEcriture (écriture))
+			if (écriture.IsEmptyLine)
 			{
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             FormattedText.Empty);
 				this.SetText (ColumnType.Crédit,            FormattedText.Empty);
 				this.SetText (ColumnType.Pièce,             FormattedText.Empty);
 				this.SetText (ColumnType.Libellé,           FormattedText.Empty);
-				this.SetText (ColumnType.Montant,           FormattedText.Empty);
+				this.SetText (ColumnType.Montant,           Converters.MontantToString (0));
 				this.SetText (ColumnType.MontantTTC,        FormattedText.Empty);
 				this.SetText (ColumnType.MontantComplément, FormattedText.Empty);
 				this.SetText (ColumnType.TotalAutomatique,  "0");
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Date = date.Value;
 			}
 
-			if (this.IsEmpty)
+			if (this.IsEmptyLine)
 			{
 				écriture.Débit             = null;
 				écriture.Crédit            = null;
@@ -457,24 +457,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private bool IsEmptyEcriture(ComptaEcritureEntity écriture)
-		{
-			return écriture.Type == (int) TypeEcriture.Vide &&
-				   écriture.Débit == null &&
-				   écriture.Crédit == null &&
-				   écriture.Pièce.IsNullOrEmpty &&
-				   écriture.Libellé.IsNullOrEmpty &&
-				   écriture.Montant == 0;
-		}
-
-		private bool IsEmpty
+		public bool IsEmptyLine
 		{
 			//	Retourne true si une ligne de type 'vide' est effectivement entièrement vide.
 			get
 			{
+				var débit  = this.GetText (ColumnType.Débit);
+				var crédit = this.GetText (ColumnType.Crédit);
+
 				return this.TypeEcriture == Compta.TypeEcriture.Vide &&
-					   this.GetText (ColumnType.Débit).IsNullOrEmpty &&
-					   this.GetText (ColumnType.Crédit).IsNullOrEmpty &&
+					   (débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
+					   (crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi) &&
 					   this.GetText (ColumnType.Libellé).IsNullOrEmpty &&
 					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0;
 			}

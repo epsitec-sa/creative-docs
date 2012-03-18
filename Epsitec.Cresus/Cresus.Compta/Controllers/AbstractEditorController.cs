@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.arrayController.ColorSelection = UIBuilder.SelectionColor;
 				}
 
-				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
 				this.dataAccessor.ResetCreationLine ();
 			}
 

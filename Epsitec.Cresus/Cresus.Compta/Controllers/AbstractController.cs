@@ -596,7 +596,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.arrayController.SelectedRow = -1;
 				this.dataAccessor.StartDefaultLine ();
 				this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+				this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
 
 				this.dataAccessor.UpdateFilter ();
 				this.dataAccessor.SearchUpdate ();
@@ -923,7 +923,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.arrayController.ColorSelection = UIBuilder.SelectionColor;
-			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRow);
+			this.arrayController.SetHilitedRows (this.dataAccessor.FirstEditedRow, this.dataAccessor.CountEditedRowWithoutEmpty);
 
 			if (this.editorController != null)
 			{

@@ -13,6 +13,24 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEcritureEntity
 	{
+		public bool IsEmptyLine
+		{
+			//	Retourne true s'il s'agit d'une ligne additionnelle vide. Ces lignes sont proposées
+			//	lors de la sélection d'une écriture multiple, pour permettre à l'utilisateur de
+			//	facilement créer une nouvelle ligne, simplement en la remplissant. S'il la laisse
+			//	vide, elle est ignorée.
+			get
+			{
+				return this.Type == (int) TypeEcriture.Vide &&
+					   this.Débit == null &&
+					   this.Crédit == null &&
+					   this.Pièce.IsNullOrEmpty &&
+					   this.Libellé.IsNullOrEmpty &&
+					   this.Montant == 0;
+			}
+		}
+
+
 		public FormattedText ShortType
 		{
 			get

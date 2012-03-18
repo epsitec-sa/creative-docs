@@ -409,6 +409,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public int CountEditedRowWithoutEmpty
+		{
+			get
+			{
+				return this.countEditedRow - this.countEmptyRow;
+			}
+		}
+
 		public virtual ColumnType ColumnForInsertionPoint
 		{
 			get
@@ -618,6 +626,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
+		protected int									countEmptyRow;
 		protected int									initialCountEditedRow;
 		protected bool									isCreation;
 		protected bool									isModification;
