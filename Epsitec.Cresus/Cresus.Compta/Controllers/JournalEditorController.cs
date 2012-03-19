@@ -1293,12 +1293,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
-			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, this.InsertEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, this.DeleteEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     enable && count >  1 && this.selectedLine > 0);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   enable && count >  1 && this.selectedLine < count-1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   enable && count != 0 && this.selectedLine != -1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   enable && count >  1 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.InsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.InsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.DeleteEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        enable && count >  1 && this.selectedLine > 0);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      enable && count >  1 && this.selectedLine < count-1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      enable && count != 0 && this.selectedLine != -1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      enable && count >  1 && this.selectedLine != cp);
 		}
 
 		private bool InsertEnable

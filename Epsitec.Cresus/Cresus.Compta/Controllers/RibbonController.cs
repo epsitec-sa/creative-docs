@@ -157,10 +157,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Multi.Insert, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
+				UIBuilder.CreateButton (topSection, Res.Commands.Multi.InsertTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (topSection, Res.Commands.Multi.Up, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
-				UIBuilder.CreateButton (topSection, Res.Commands.Multi.Swap, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Delete, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
+				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Swap, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Down, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Auto, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 			}

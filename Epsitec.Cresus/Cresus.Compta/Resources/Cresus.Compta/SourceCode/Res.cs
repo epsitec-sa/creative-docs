@@ -128,6 +128,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 62));
 				//	designer:cap/OVKR1
 				public static readonly global::Epsitec.Common.Widgets.Command Insert = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
+				//	designer:cap/OVKI7
+				public static readonly global::Epsitec.Common.Widgets.Command InsertTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 242));
 				//	designer:cap/OVKV1
 				public static readonly global::Epsitec.Common.Widgets.Command Swap = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
 				//	designer:cap/OVKT1
@@ -393,6 +395,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Down = 0x3F80001400003EL;
 				//	designer:cap/OVKR1
 				public const long Insert = 0x3F80001400003BL;
+				//	designer:cap/OVKI7
+				public const long InsertTVA = 0x3F8000140000F2L;
 				//	designer:cap/OVKV1
 				public const long Swap = 0x3F80001400003FL;
 				//	designer:cap/OVKT1

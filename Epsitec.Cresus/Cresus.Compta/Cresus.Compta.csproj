@@ -341,6 +341,7 @@
     <EmbeddedResource Include="Images\Présentation.Menu.icon" />
     <EmbeddedResource Include="Images\Présentation.ListeTVA.icon" />
     <None Include="External\Data\pme 2011.crp" />
+    <EmbeddedResource Include="Images\Multi.InsertTVA.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
