@@ -17,7 +17,16 @@ namespace Epsitec.Common.BigList
 			};
 		}
 
-		public override int Count
+
+		public override ItemCache				Cache
+		{
+			get
+			{
+				return this.cache;
+			}
+		}
+
+		public override int						Count
 		{
 			get
 			{
@@ -32,18 +41,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		protected override void ResetCache()
-		{
-			this.cache.Reset ();
-		}
 
-
-		protected override int GetItemHeight(int index)
-		{
-			return this.cache.GetItemHeight (index);
-		}
-
-
-		private readonly ItemCache<T>	cache;
+		private readonly ItemCache<T>			cache;
 	}
 }

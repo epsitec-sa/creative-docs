@@ -9,11 +9,9 @@ namespace Epsitec.Common.BigList
 	public class ItemCache<T> : ItemCache
 	{
 		public ItemCache(int capacity)
+			: base (capacity)
 		{
-			this.capacity = capacity;
-
 			this.exclusion   = new ReadWriteLock ();
-			this.states      = new IndexedArray<ushort> (this.capacity);
 			this.extraStates = new IndexedStore<ItemState> (ItemCache.DefaultExtraCapacity);
 			this.data        = new IndexedStore<ItemData<T>> (ItemCache.DefaultDataCapacity);
 		}
@@ -31,8 +29,15 @@ namespace Epsitec.Common.BigList
 			set;
 		}
 
+		public override int ExtraStateCount
+		{
+			get
+			{
+				return this.extraStates.Count;
+			}
+		}
 
-		public void Reset()
+		public override void Reset()
 		{
 			int count = this.DataProvider.Count;
 			var array = new ushort[count];
@@ -52,7 +57,7 @@ namespace Epsitec.Common.BigList
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <returns>The height of the item or zero if the item does not exist.</returns>
-		public int GetItemHeight(int index)
+		public override int GetItemHeight(int index)
 		{
 			return this.GetItemState (index, fullState: false).Height;
 		}
@@ -84,7 +89,7 @@ namespace Epsitec.Common.BigList
 		/// <param name="index">The index.</param>
 		/// <param name="fullState">if set to <c>true</c>, retrieves the full state.</param>
 		/// <returns></returns>
-		public ItemState GetItemState(int index, bool fullState = false)
+		public override ItemState GetItemState(int index, bool fullState = false)
 		{
 			if ((index < 0) ||
 				(index >= this.states.Count))
@@ -117,7 +122,7 @@ namespace Epsitec.Common.BigList
 			return state;
 		}
 
-		public void SetItemState(int index, ItemState state)
+		public override void SetItemState(int index, ItemState state)
 		{
 			if ((index < 0) ||
 				(index >= this.states.Count))
@@ -211,8 +216,6 @@ namespace Epsitec.Common.BigList
 			return null;
 		}
 
-		private readonly int						capacity;
-		private readonly IndexedArray<ushort>		states;
 		private readonly IndexedStore<ItemState>	extraStates;
 		private readonly ReadWriteLock				exclusion;
 		private readonly IndexedStore<ItemData<T>>	data;

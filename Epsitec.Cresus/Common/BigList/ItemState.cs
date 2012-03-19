@@ -78,7 +78,7 @@ namespace Epsitec.Common.BigList
 				{
 					throw new System.ArgumentOutOfRangeException ("value", string.Format ("Height may not be negative: {0}", value));
 				}
-				if (value > ItemState.MaxCompactHeight)
+				if (value+1 > ItemState.MaxCompactHeight)
 				{
 					this.Partial = true;
 				}
@@ -110,7 +110,7 @@ namespace Epsitec.Common.BigList
 				(this.Hilite1  ? Mask.Hilite1  : 0) |
 				(this.Hilite2  ? Mask.Hilite2  : 0) |
 				(partialFlag   ? Mask.Partial  : 0) |
-				System.Math.Min (this.height, ItemState.MaxCompactHeight);
+				System.Math.Min (this.height + 1, ItemState.MaxCompactHeight);
 
 			return (ushort) compact;
 		}
@@ -136,13 +136,13 @@ namespace Epsitec.Common.BigList
 		{
 			return new ItemState ()
 			{
-				Loaded   = (state & Mask.Height)   != 0,
+				Loaded   = (state & Mask.Loaded)   != 0,
 				Selected = (state & Mask.Selected) != 0,
 				Hidden   = (state & Mask.Hidden)   != 0,
 				Hilite1  = (state & Mask.Hilite1)  != 0,
 				Hilite2  = (state & Mask.Hilite2)  != 0,
 				Partial  = (state & Mask.Partial)  != 0,
-				Height   = (state & Mask.Height)
+				Height   = (state & Mask.Height) - 1
 			};
 		}
 
@@ -156,7 +156,7 @@ namespace Epsitec.Common.BigList
 			//	TODO: evaluate the extra arguments to see if they still require that the full
 			//	state, including extra information, needs to be stored.
 
-			return this.height > ItemState.MaxCompactHeight;
+			return this.height+1 > ItemState.MaxCompactHeight;
 		}
 
 		#region Mask Constants

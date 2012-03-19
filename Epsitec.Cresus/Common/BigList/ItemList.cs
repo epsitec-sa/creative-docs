@@ -48,6 +48,14 @@ namespace Epsitec.Common.BigList
 			}
 			set
 			{
+				var count = this.Count;
+
+				if ((value >= count) &&
+					(value > 0))
+				{
+					value = count-1;
+				}
+
 				if (this.visibleIndex != value)
 				{
 					this.SetVisibleIndex (value);
@@ -87,7 +95,12 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public abstract ItemCache Cache
+		{
+			get;
+		}
 
+		
 		public void Reset()
 		{
 			this.ResetCache ();
@@ -96,6 +109,17 @@ namespace Epsitec.Common.BigList
 
 		public void Select(int index, bool isSelected)
 		{
+			if ((index < 0) ||
+				(index >= this.Count))
+			{
+				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
+			}
+
+			var state = this.GetItemState (index, fullState: true);
+
+			state.Selected = isSelected;
+
+			this.SetItemState (index, state);
 		}
 
 		public void MoveVisibleContent(int distance)
@@ -117,10 +141,25 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		
-		protected abstract void ResetCache();
+		public ItemState GetItemState(int index, bool fullState = false)
+		{
+			return this.Cache.GetItemState (index, fullState);
+		}
 
-		protected abstract int GetItemHeight(int index);
+		public void SetItemState(int index, ItemState state)
+		{
+			this.Cache.SetItemState (index, state);
+		}
+
+		protected void ResetCache()
+		{
+			this.Cache.Reset ();
+		}
+
+		protected int GetItemHeight(int index)
+		{
+			return this.Cache.GetItemHeight (index);
+		}
 
 
 		private void SetActiveIndex(int index)

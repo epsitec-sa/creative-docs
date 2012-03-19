@@ -17,8 +17,10 @@ namespace Epsitec.Common.Tests.Vs.BigList
 	{
 		public UnitTestItemList()
 		{
-			this.provider1 = new Provider (60, 30, 20);
-			this.mapper1   = new Mapper ();
+			this.provider1 = new SeqProvider (60, 30, 20);
+			this.provider2 = new RangeProvider (1000000);
+			this.mapper1   = new SeqMapper ();
+			this.mapper2   = new ConstMapper (10);
 			
 			this.itemList1 = new ItemList<int> (this.provider1, this.mapper1);
 			this.itemList1.Reset ();
@@ -213,8 +215,87 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			Assert.AreEqual (1, this.itemList1.VisibleCount);
 		}
 
+		[TestMethod]
+		public void TestPerf()
+		{
+			long memory0 = System.GC.GetTotalMemory (true);
 
-		private class Mapper : IItemDataMapper<int>
+			ItemList<int> list = new ItemList<int> (this.provider2, this.mapper2);
+
+			long memory1 = System.GC.GetTotalMemory (true);
+
+			list.Reset ();
+			list.VisibleHeight = 100;
+
+			Assert.AreEqual (10, list.VisibleCount);
+
+			list.VisibleIndex = 1000;
+
+			Assert.AreEqual (1000, list.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleCount);
+
+			list.VisibleIndex = 100*1000;
+
+			Assert.AreEqual (100*1000, list.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleCount);
+
+			list.VisibleIndex = 1000;
+
+			Assert.AreEqual (1000, list.VisibleIndex);
+			Assert.AreEqual (0, list.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleCount);
+
+			list.VisibleIndex = 1000*1000;		//	overflow (items 0..999999)
+
+			long memory2 = System.GC.GetTotalMemory (true);
+
+			Assert.AreEqual (999999, list.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleCount);
+
+			System.Diagnostics.Debug.WriteLine ("Before: {0:###,###,###}\n" +
+												"After:  {1:###,###,###}\tdelta={2}\n" +
+												"End:    {3:###,###,###}\tdelta={4}", memory0, memory1, memory1-memory0, memory2, memory2-memory1);
+		}
+
+		[TestMethod]
+		public void TestSelection()
+		{
+			this.itemList1.Reset ();
+
+			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+
+			this.itemList1.Select (0, true);
+
+			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.IsTrue (this.itemList1.GetItemState (0).Selected);
+
+			this.itemList1.Select (1, true);
+
+			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.IsTrue (this.itemList1.GetItemState (0).Selected);
+			Assert.IsTrue (this.itemList1.GetItemState (1).Selected);
+
+			this.itemList1.Select (0, false);
+
+			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			
+			Assert.IsFalse (this.itemList1.GetItemState (0).Selected);
+			Assert.IsTrue (this.itemList1.GetItemState (1).Selected);
+
+			this.itemList1.GetItemState (2);
+
+			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+		}
+
+		private class SeqMapper : IItemDataMapper<int>
 		{
 			#region IItemDataMapper<int> Members
 
@@ -229,9 +310,9 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			#endregion
 		}
 
-		private class Provider : IItemDataProvider<int>
+		private class SeqProvider : IItemDataProvider<int>
 		{
-			public Provider(params int[] values)
+			public SeqProvider(params int[] values)
 			{
 				this.list = new List<int> (values);
 			}
@@ -265,10 +346,70 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			private readonly List<int> list;
 		}
 
+		private class ConstMapper : IItemDataMapper<int>
+		{
+			public ConstMapper(int height)
+			{
+				this.height = height;
+			}
+
+			#region IItemDataMapper<int> Members
+
+			public ItemData<int> Map(int value)
+			{
+				return new ItemData<int> ()
+				{
+					Height = this.height,
+				};
+			}
+
+			#endregion
+
+			private readonly int height;
+		}
+
+		private class RangeProvider : IItemDataProvider<int>
+		{
+			public RangeProvider(int num)
+			{
+				this.num = num;
+			}
+
+			#region IItemDataProvider<int> Members
+
+			public bool Resolve(int index, out int value)
+			{
+				if ((index < 0) ||
+					(index > this.num))
+				{
+					value = 0;
+					return false;
+				}
+
+				value = index;
+
+				return true;
+			}
+
+			public int Count
+			{
+				get
+				{
+					return this.num;
+				}
+			}
+
+			#endregion
+
+			private readonly int num;
+		}
+
 
 
 		private readonly ItemList<int>			itemList1;
-		private readonly Provider				provider1;
-		private readonly Mapper					mapper1;
+		private readonly SeqProvider			provider1;
+		private readonly RangeProvider			provider2;
+		private readonly SeqMapper				mapper1;
+		private readonly ConstMapper			mapper2;
 	}
 }

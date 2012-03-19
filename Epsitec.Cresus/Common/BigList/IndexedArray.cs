@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	internal class IndexedArray<TValue> : List<TValue>
+	public class IndexedArray<TValue> : List<TValue>
 	{
 		public IndexedArray(int capacity)
 			: base (capacity)
