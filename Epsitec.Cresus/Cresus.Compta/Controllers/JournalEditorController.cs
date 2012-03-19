@@ -555,7 +555,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiDeleteLineAction()
 		{
 			//	Supprime la ligne courante.
-			this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+			var type = this.GetTypeEcriture (this.selectedLine);
+
+			if (type == TypeEcriture.BaseTVA)
+			{
+				this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				{
+					this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+				}
+			}
+			else if (type == TypeEcriture.CodeTVA)
+			{
+				if (this.GetTypeEcriture (this.selectedLine-1) == TypeEcriture.BaseTVA)
+				{
+					this.SetTypeEcriture (this.selectedLine-1, TypeEcriture.Normal);
+					this.dataAccessor.EditionLine[this.selectedLine-1].SetText (ColumnType.Montant, this.dataAccessor.EditionLine[this.selectedLine-1].GetText (ColumnType.MontantTTC));
+				}
+
+				this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+			}
+			else
+			{
+				this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
+			}
+
 			this.selectedLine = System.Math.Min (this.selectedLine, this.dataAccessor.CountEditedRow-1);
 
 			this.dirty = true;
@@ -629,8 +654,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateAfterValidate()
 		{
 			//	Met à jour les décorations des champs.
-			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture.
-			//	Met des hachures aux champs vides d'une ligne vide.
+			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture (complément nécessaire).
+			//	Met des hachures grises aux champs vides d'une ligne vide.
+
+			//	On commence par enlever toutes les décorations.
 			for (int line = 0; line < this.fieldControllers.Count; line++)
 			{
 				for (int column = 0; column < this.fieldControllers[line].Count; column++)
@@ -640,6 +667,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
+			//	Met les décorations s'il s'agit de la création d'une nouvelle écriture multiple.
 			if (this.dataAccessor.EditionLine.Count != 0 && !this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
 			{
 				if (this.IsDébitMulti (0))
@@ -653,6 +681,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
+			//	Met les autres décorations.
 			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
 				var type = this.GetTypeEcriture (line);
@@ -1264,12 +1293,74 @@ namespace Epsitec.Cresus.Compta.Controllers
 			int count = this.linesFrames.Count;
 			int cp = this.IndexTotalAutomatique;
 
-			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, enable && count >  1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, enable && count >  2 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Insert, this.InsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete, this.DeleteEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Up,     enable && count >  1 && this.selectedLine > 0);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,   enable && count >  1 && this.selectedLine < count-1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,   enable && count != 0 && this.selectedLine != -1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,   enable && count >  1 && this.selectedLine != cp);
+		}
+
+		private bool InsertEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
+				{
+					return false;
+				}
+
+				if (this.GetTypeEcriture (this.selectedLine+0) == TypeEcriture.BaseTVA &&
+					this.GetTypeEcriture (this.selectedLine+1) == TypeEcriture.CodeTVA)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		private bool DeleteEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 2)
+				{
+					return false;
+				}
+
+				var type = this.GetTypeEcriture (this.selectedLine);
+
+				if (type == TypeEcriture.Vide   ||
+					type == TypeEcriture.CodeTVA)
+				{
+					return true;
+				}
+
+				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
+					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
+					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
+				{
+					return false;
+				}
+
+				if (this.selectedLine == this.IndexTotalAutomatique)
+				{
+					return false;
+				}
+
+				return true;
+			}
 		}
 
 
@@ -1291,11 +1382,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private void SetTypeEcriture(int line, TypeEcriture type)
+		{
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.Type, Converters.TypeEcritureToString (type));
+			}
+		}
+
 		private TypeEcriture GetTypeEcriture(int line)
 		{
 			var type = TypeEcriture.Normal;
 
-			if (line < this.dataAccessor.EditionLine.Count)
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
 			{
 				type = Converters.StringToTypeEcriture (this.dataAccessor.EditionLine[line].GetText (ColumnType.Type));
 			}

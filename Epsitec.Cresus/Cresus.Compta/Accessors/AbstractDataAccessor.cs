@@ -413,7 +413,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.countEditedRow - this.countEmptyRow;
+				return this.countEditedRow - this.CountEmptyRow;
+			}
+		}
+
+		public virtual int CountEmptyRow
+		{
+			get
+			{
+				return 0;
 			}
 		}
 
@@ -626,7 +634,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
-		protected int									countEmptyRow;
 		protected int									initialCountEditedRow;
 		protected bool									isCreation;
 		protected bool									isModification;

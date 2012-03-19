@@ -330,7 +330,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.firstEditedRow = firstRow;
 				this.countEditedRow = countRow;
-				this.countEmptyRow = 0;
 				ComptaEcritureEntity last = null;
 
 				for (int i = 0; i < this.countEditedRow; i++)
@@ -369,11 +368,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.editionLine.Insert (i, data);
 
 					this.countEditedRow++;
-					this.countEmptyRow++;
 				}
 			}
 
-			this.initialCountEditedRow = this.countEditedRow - this.countEmptyRow;
+			this.initialCountEditedRow = this.countEditedRow - this.CountEmptyRow;
 			this.isCreation = false;
 			this.isModification = true;
 			this.justCreated = false;
@@ -457,7 +455,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 			var initialEcriture = this.journal[row];
-			this.countEmptyRow = 0;
 
 			//	On passe dans l'espace global.
 			row = this.période.Journal.IndexOf (initialEcriture);
@@ -472,7 +469,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				if ((data as JournalEditionLine).IsEmptyLine)
 				{
-					this.countEmptyRow++;
 					continue;
 				}
 
@@ -506,7 +502,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			//	Supprime les écritures surnuméraires.
-			int countToDelete  = this.initialCountEditedRow - (this.editionLine.Count - this.countEmptyRow);
+			int countToDelete  = this.initialCountEditedRow - (this.editionLine.Count - this.CountEmptyRow);
 			while (countToDelete > 0)
             {
 				var écriture = this.période.Journal[row];
@@ -547,6 +543,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 
 			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, pièces);
+		}
+
+		public override int CountEmptyRow
+		{
+			//	Retourne le nombre de lignes vides.
+			get
+			{
+				int count = 0;
+
+				foreach (var x in this.editionLine)
+				{
+					if ((x as JournalEditionLine).IsEmptyLine)
+					{
+						count++;
+					}
+				}
+
+				return count;
+			}
 		}
 
 
