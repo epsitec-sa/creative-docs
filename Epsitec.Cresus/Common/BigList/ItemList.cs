@@ -74,7 +74,7 @@ namespace Epsitec.Common.BigList
 				if (this.visibleHeight != value)
 				{
 					this.visibleHeight = value;
-					this.SetVisibleIndex (this.visibleIndex);
+					this.MoveVisibleContent (0);
 				}
 			}
 		}
@@ -109,6 +109,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		
 		protected abstract void ResetCache();
 
 		protected abstract int GetItemHeight(int index);
@@ -197,7 +198,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			int start  = index;
-			int offset = startOffset;
+			int offset = startOffset < 0 ? startOffset : 0;
 
 			//	Assign each row an offset and a height, until we fill all the available space.
 			
