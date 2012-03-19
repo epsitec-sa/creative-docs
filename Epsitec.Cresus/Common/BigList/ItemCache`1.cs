@@ -152,13 +152,13 @@ namespace Epsitec.Common.BigList
 			var state = ItemState.FromCompactState (compact);
 
 			if ((state.Partial && fullState) ||
-				(state.Height == ItemState.MaxCompactHeight))
+				(state.Height+1 == ItemState.MaxCompactHeight))
 			{
 				ItemState extra;
 
 				if (this.extraStates.TryGetValue (index, out extra) == false)
 				{
-					//	TODO: build extra state
+					extra = new ItemState (state);
 				}
 
 				state.Apply (extra);

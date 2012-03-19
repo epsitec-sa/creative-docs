@@ -117,7 +117,7 @@ namespace Epsitec.Common.BigList
 
 		public void Apply(ItemState other)
 		{
-			if (this.height == ItemState.MaxCompactHeight)
+			if (this.height+1 == ItemState.MaxCompactHeight)
 			{
 				this.height = other.Height;
 			}
