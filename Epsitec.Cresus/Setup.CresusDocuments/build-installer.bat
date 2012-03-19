@@ -78,9 +78,9 @@ copy "%CD%\X.Setup.CresusDocuments\%BUILD%\Setup.exe" "%CD%\X.Setup.CresusDocume
 copy "%CD%\X.Setup.CresusDocuments\%BUILD%\CresusDocuments.msi" "%CD%\X.Setup.CresusDocuments\CresusDocuments.msi"
 
 
-%SIGNTOOL% sign /a /n Epsitec /i QV /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\Sleep.exe"
-%SIGNTOOL% sign /a /n Epsitec /i QV /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\Setup.exe"
-%SIGNTOOL% sign /a /n Epsitec /i QV /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\CresusDocuments.msi"
+%SIGNTOOL% sign /a /n Epsitec /i QuoVadis /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\Sleep.exe"
+%SIGNTOOL% sign /a /n Epsitec /i QuoVadis /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\Setup.exe"
+%SIGNTOOL% sign /a /n Epsitec /i QuoVadis /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll "%CD%\X.Setup.CresusDocuments\CresusDocuments.msi"
 
 echo Packaging installer into %EXE%
 
@@ -93,7 +93,7 @@ rename CrDoc-Installer.exe %EXE%
 
 cd ..
 
-%SIGNTOOL% sign /a /n Epsitec /i QV /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
+%SIGNTOOL% sign /a /n Epsitec /i QuoVadis /d "Installateur Cr‚sus Documents" /t http://timestamp.verisign.com/scripts/timstamp.dll %EXEPATH%
 
 del "%CD%\X.Setup.CresusDocuments\Sleep.exe" 2>NUL
 del "%CD%\X.Setup.CresusDocuments\Setup.exe" 2>NUL
