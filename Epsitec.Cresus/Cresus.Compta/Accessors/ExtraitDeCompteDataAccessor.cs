@@ -88,16 +88,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var data = new ExtraitDeCompteData ()
 					{
-						IsDébit = true,
-						Entity  = écriture,
-						Date    = écriture.Date,
-						Pièce   = écriture.Pièce,
-						Libellé = écriture.Libellé,
-						CP      = écriture.Crédit,
-						Débit   = écriture.Montant,
-						CodeTVA = écriture.CodeTVA,
-						TauxTVA = écriture.TauxTVA,
-						Journal = écriture.Journal.Nom,
+						IsDébit        = true,
+						Entity         = écriture,
+						Date           = écriture.Date,
+						Pièce          = écriture.Pièce,
+						Libellé        = écriture.Libellé,
+						FullLibelléTVA = écriture.FullLibelléTVA,
+						CP             = écriture.Crédit,
+						Débit          = écriture.Montant,
+						CodeTVA        = écriture.CodeTVA,
+						TauxTVA        = écriture.TauxTVA,
+						Journal        = écriture.Journal.Nom,
 					};
 
 					this.readonlyAllData.Add (data);
@@ -107,16 +108,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var data = new ExtraitDeCompteData ()
 					{
-						IsDébit = false,
-						Entity  = écriture,
-						Date    = écriture.Date,
-						Pièce   = écriture.Pièce,
-						Libellé = écriture.Libellé,
-						CP      = écriture.Débit,
-						Crédit  = écriture.Montant,
-						CodeTVA = écriture.CodeTVA,
-						TauxTVA = écriture.TauxTVA,
-						Journal = écriture.Journal.Nom,
+						IsDébit        = false,
+						Entity         = écriture,
+						Date           = écriture.Date,
+						Pièce          = écriture.Pièce,
+						Libellé        = écriture.Libellé,
+						FullLibelléTVA = écriture.FullLibelléTVA,
+						CP             = écriture.Débit,
+						Crédit         = écriture.Montant,
+						CodeTVA        = écriture.CodeTVA,
+						TauxTVA        = écriture.TauxTVA,
+						Journal        = écriture.Journal.Nom,
 					};
 
 					this.readonlyAllData.Add (data);
@@ -129,9 +131,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new ExtraitDeCompteData ()
 				{
-					Libellé       = "Mouvement",
-					IsItalic      = true,
-					NeverFiltered = true,
+					FullLibelléTVA = "Mouvement",
+					IsItalic       = true,
+					NeverFiltered  = true,
 				};
 
 				this.readonlyAllData.Add (data);
@@ -235,7 +237,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Pièce;
 
 				case ColumnType.Libellé:
-					return data.Libellé;
+					return data.FullLibelléTVA;
 
 				case ColumnType.Débit:
 					return Converters.MontantToString (data.Débit);

@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetEnable (ColumnType.Date,    enable);
 			this.SetEnable (ColumnType.CP,      enable);
 			this.SetEnable (ColumnType.Pièce,   enable);
-			this.SetEnable (ColumnType.Libellé, enable);
+			this.SetEnable (ColumnType.Libellé, enable && écriture.Type != (int) TypeEcriture.CodeTVA);
 			this.SetEnable (ColumnType.Débit,   enable);
 			this.SetEnable (ColumnType.Crédit,  enable);
 			this.SetEnable (ColumnType.Journal, enable);

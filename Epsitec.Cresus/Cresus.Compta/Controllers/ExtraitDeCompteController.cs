@@ -235,8 +235,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 			this.ShowHideColumn (ColumnType.Journal,        this.compta.Journaux.Count > 1);
 
+#if false
 			bool hasTVA    = this.settingsList.GetBool (SettingsType.EcritureTVA);
 			bool compteTVA = this.settingsList.GetBool (SettingsType.EcritureMontreCompteTVA) && hasTVA;
+#else
+			bool hasTVA    = false;
+			bool compteTVA = false;
+#endif
 
 			this.ShowHideColumn (ColumnType.CodeTVA,   hasTVA);
 			this.ShowHideColumn (ColumnType.TauxTVA,   hasTVA);

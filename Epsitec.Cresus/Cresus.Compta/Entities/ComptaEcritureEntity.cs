@@ -67,8 +67,9 @@ namespace Epsitec.Cresus.Compta.Entities
 		}
 
 
-		public FormattedText LibelléTVA
+		public FormattedText ShortLibelléTVA
 		{
+			//	Retourne le libellé court, avec juste les détails de la TVA, ou rien s'il s'agit d'une écriture sans TVA.
 			get
 			{
 				if (this.CodeTVA == null)
@@ -78,6 +79,22 @@ namespace Epsitec.Cresus.Compta.Entities
 				else
 				{
 					return ComptaEcritureEntity.GetLibelléTVA (this.CodeTVA.Code, this.TauxTVA);
+				}
+			}
+		}
+
+		public FormattedText FullLibelléTVA
+		{
+			//	Retourne le libellé complet, avec les détails de la TVA s'ils existent.
+			get
+			{
+				if (this.CodeTVA == null)
+				{
+					return this.Libellé;
+				}
+				else
+				{
+					return FormattedText.Concat (this.Libellé, ", ", ComptaEcritureEntity.GetLibelléTVA (this.CodeTVA.Code, this.TauxTVA));
 				}
 			}
 		}

@@ -50,6 +50,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public FormattedText FullLibelléTVA
+		{
+			get;
+			set;
+		}
+
 		public decimal? Débit
 		{
 			get;

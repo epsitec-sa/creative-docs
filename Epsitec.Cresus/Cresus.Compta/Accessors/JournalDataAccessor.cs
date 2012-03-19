@@ -205,7 +205,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				//	identique au champ libellé de la ligne précédente 'BaseTVA'. Mais dans le journal, ce
 				//	n'est pas ce qu'on désire afficher. On calcule donc un texte mieux adapté.
 
-				return StringArray.SpecialContentRightAlignment + écriture.LibelléTVA;
+				return StringArray.SpecialContentRightAlignment + écriture.ShortLibelléTVA;
 				//?return new string (' ', 10) + écriture.LibelléTVA;
 				//?return FormattedText.Concat (UIBuilder.leftIndentText, écriture.LibelléTVA);
 				//?return "□   " + écriture.LibelléTVA;
