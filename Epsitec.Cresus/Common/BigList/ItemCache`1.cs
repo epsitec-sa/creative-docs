@@ -19,6 +19,18 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		public IItemDataProvider<T> DataProvider
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
+		/// Gets the height of the item.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <returns>The height of the item or zero if the item does not exist.</returns>
 		public int GetItemHeight(int index)
 		{
 			return this.GetItemState (index, fullState: false).Height;
@@ -32,14 +44,33 @@ namespace Epsitec.Common.BigList
 
 			if (data == null)
 			{
-				//	TODO: retrieve the data from an external repository
+				data = this.FromDataProvider (index);
+
+				if (data != null)
+				{
+					this.exclusion.EnterWriteLock ();
+					this.data[index] = data;
+					this.exclusion.ExitWriteLock ();
+				}
 			}
 			
 			return data;
 		}
 
+		/// <summary>
+		/// Gets the state of the item.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="fullState">if set to <c>true</c>, retrieves the full state.</param>
+		/// <returns></returns>
 		public ItemState GetItemState(int index, bool fullState = false)
 		{
+			if ((index < 0) ||
+				(index >= this.states.Count))
+			{
+				return ItemState.Empty;
+			}
+
 			this.exclusion.EnterReadLock ();
 			var state = this.GetItemStateLocked (index, fullState);
 			this.exclusion.ExitReadLock ();
@@ -49,6 +80,17 @@ namespace Epsitec.Common.BigList
 
 		public void SetItemState(int index, ItemState state)
 		{
+			if ((index < 0) ||
+				(index >= this.states.Count))
+			{
+				if (state.IsEmpty)
+				{
+					return;
+				}
+
+				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
+			}
+
 			this.exclusion.EnterWriteLock ();
 			this.SetItemStateLocked (index, state);
 			this.exclusion.ExitWriteLock ();
@@ -102,6 +144,25 @@ namespace Epsitec.Common.BigList
 			return null;
 		}
 
+		private ItemData<T> FromDataProvider(int index)
+		{
+			var provider = this.DataProvider;
+
+			if (provider == null)
+			{
+				return null;
+			}
+
+			T value;
+
+			if (provider.Resolve (index, out value))
+			{
+				//	TODO: allocate ItemData
+			}
+
+			return null;
+		}
+
 		private readonly int						capacity;
 		private readonly IndexedArray<ushort>		states;
 		private readonly IndexedStore<ItemState>	extraStates;
@@ -115,5 +176,10 @@ namespace Epsitec.Common.BigList
 
 	public class ItemData<T>
 	{
+	}
+
+	public interface IItemDataProvider<T>
+	{
+		bool Resolve(int index, out T value);
 	}
 }

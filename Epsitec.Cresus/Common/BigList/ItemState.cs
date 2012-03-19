@@ -56,14 +56,14 @@ namespace Epsitec.Common.BigList
 
 		public bool Partial
 		{
-			get
-			{
-				return this.needsExtraState;
-			}
-			private set
-			{
-				this.needsExtraState = value;
-			}
+			get;
+			private set;
+		}
+
+		public bool IsEmpty
+		{
+			get;
+			private set;
 		}
 
 		public int Height
@@ -80,13 +80,24 @@ namespace Epsitec.Common.BigList
 				}
 				if (value > ItemState.MaxCompactHeight)
 				{
-					this.needsExtraState = true;
+					this.Partial = true;
 				}
 
 				this.height = value;
 			}
 		}
 
+
+		public static ItemState Empty
+		{
+			get
+			{
+				return new ItemState ()
+				{
+					IsEmpty = true
+				};
+			}
+		}
 
 		public ushort ToCompactState()
 		{
@@ -137,7 +148,7 @@ namespace Epsitec.Common.BigList
 
 		public bool ComputePartialFlag()
 		{
-			if (this.needsExtraState == false)
+			if (this.Partial == false)
 			{
 				return false;
 			}
@@ -166,6 +177,5 @@ namespace Epsitec.Common.BigList
 		public const int MaxCompactHeight		= 1000;
 
 		private int								height;
-		private bool							needsExtraState;
 	}
 }
