@@ -16,24 +16,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		public bool Hilited
-		{
-			get
-			{
-				return this.hilited;
-			}
-			set
-			{
-				if (this.hilited != value)
-				{
-					this.hilited = value;
-					this.Invalidate ();
-				}
-			}
-		}
-
 		public bool ToComplete
 		{
+			//	Indique si le champ nécessite un complément avant de pouvoir créer l'écriture.
 			get
 			{
 				return this.toComplete;
@@ -43,6 +28,23 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (this.toComplete != value)
 				{
 					this.toComplete = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool EmptyLine
+		{
+			//	Indique si le champ fait partie d'une ligne vide.
+			get
+			{
+				return this.emptyLine;
+			}
+			set
+			{
+				if (this.emptyLine != value)
+				{
+					this.emptyLine = value;
 					this.Invalidate ();
 				}
 			}
@@ -58,8 +60,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			Rectangle rect = this.GetFrameRectangle ();
 
-			if (this.hilited)
+			if (this.toComplete)
 			{
+				//	Dessine un cadre rouge pointillé.
+				rect.Deflate (0.5);
+				using (Path path = new Path (rect))
+				{
+					graphics.PaintDashedOutline (path, 2, 3, 5, CapStyle.Square, Color.FromName ("Red"));
+				}
+			}
+
+			if (this.emptyLine)
+			{
+				//	Dessine des hachures grises translucides dans le fond.
 				graphics.LineWidth = 7;
 
 				for (double x = rect.Left-rect.Height; x < rect.Right; x+=20)
@@ -67,36 +80,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 					graphics.AddLine (x, rect.Bottom, x+rect.Height, rect.Top);
 				}
 
-				graphics.RenderSolid (Color.FromAlphaRgb (0.05, 0, 0, 0));
-				//?graphics.RenderSolid (Color.FromAlphaRgb (1.0, 1, 1, 1));
+				graphics.RenderSolid (Color.FromAlphaRgb (0.05, 0, 0, 0));  // gris très transparent
 				graphics.LineWidth = 1;
-			}
-
-			if (this.toComplete)
-			{
-#if true
-				rect.Deflate (0.5);
-				using (Path path = new Path (rect))
-				{
-					graphics.PaintDashedOutline (path, 2, 3, 5, CapStyle.Square, Color.FromName ("Red"));
-				}
-#else
-				//	Dessine des hachures rouges.
-				graphics.LineWidth = 3;
-
-				for (double x = rect.Left-rect.Height; x < rect.Right; x+=8)
-				{
-					graphics.AddLine (x, rect.Bottom, x+rect.Height, rect.Top);
-				}
-
-				graphics.RenderSolid (Color.FromAlphaRgb (0.1, 1, 0, 0));  // rouge très transparent
-				graphics.LineWidth = 1;
-#endif
 			}
 		}
 
 
-		private bool			hilited;
 		private bool			toComplete;
+		private bool			emptyLine;
 	}
 }

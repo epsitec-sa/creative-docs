@@ -41,10 +41,9 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		protected void CreateForegroundUI()
 		{
-			this.toCompleteFrame = new CustomFrameBox
+			this.foregroundFrame = new CustomFrameBox
 			{
 				Parent     = this.editWidget,
-				ToComplete = true,
 				Visibility = false,
 				Anchor     = AnchorStyles.All,
 			};
@@ -113,21 +112,42 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			//	Détermine si le champ a un cadre rouge pointillé.
 			get
 			{
-				if (this.toCompleteFrame == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.toCompleteFrame.Visibility;
-				}
+				return this.toComplete;
 			}
 			set
 			{
-				if (this.toCompleteFrame != null)
+				if (this.toComplete != value)
 				{
-					this.toCompleteFrame.Visibility = value;
+					this.toComplete = value;
+					this.UpdateForegroundFrame ();
 				}
+			}
+		}
+
+		public bool EmptyLine
+		{
+			//	Détermine si le champ a un fond hachuré.
+			get
+			{
+				return this.emptyLine;
+			}
+			set
+			{
+				if (this.emptyLine != value)
+				{
+					this.emptyLine = value;
+					this.UpdateForegroundFrame ();
+				}
+			}
+		}
+
+		private void UpdateForegroundFrame()
+		{
+			if (this.foregroundFrame != null)
+			{
+				this.foregroundFrame.ToComplete = this.toComplete;
+				this.foregroundFrame.EmptyLine  = this.emptyLine;
+				this.foregroundFrame.Visibility = this.toComplete || this.emptyLine;
 			}
 		}
 
@@ -263,7 +283,9 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		protected FrameBox										box;
 		protected FrameBox										container;
 		protected Widget										editWidget;
-		protected CustomFrameBox								toCompleteFrame;
+		protected CustomFrameBox								foregroundFrame;
+		protected bool											toComplete;
+		protected bool											emptyLine;
 		protected bool											hasFocus;
 	}
 }

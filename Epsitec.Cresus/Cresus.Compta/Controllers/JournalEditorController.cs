@@ -315,83 +315,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void UpdateToComplete()
-		{
-			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture.
-			for (int line = 0; line < this.fieldControllers.Count; line++)
-			{
-				for (int column = 0; column < this.fieldControllers[line].Count; column++)
-				{
-					this.fieldControllers[line][column].ToComplete = false;
-				}
-			}
-
-			if (this.dataAccessor.EditionLine.Count != 0 && !this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
-			{
-				if (this.IsDébitMulti (0))
-				{
-					this.GetFieldController (ColumnType.Débit, 0).ToComplete = true;
-				}
-
-				if (this.IsCréditMulti (0))
-				{
-					this.GetFieldController (ColumnType.Crédit, 0).ToComplete = true;
-				}
-			}
-
-			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
-			{
-				var type = this.GetTypeEcriture (line);
-
-				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
-					type == TypeEcriture.Vide)
-				{
-					if (this.IsDébitTVA (line))
-					{
-						this.GetFieldController (ColumnType.Débit, line).ToComplete = true;
-					}
-
-					if (this.IsCréditTVA (line))
-					{
-						this.GetFieldController (ColumnType.Crédit, line).ToComplete = true;
-					}
-				}
-			}
-		}
-
-		private bool IsThereSomethingToComplete
-		{
-			get
-			{
-				if (!this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
-				{
-					if (this.IsDébitMulti (0) || this.IsCréditMulti (0))
-					{
-						return true;
-					}
-				}
-
-				int line = 0;
-				while (line < this.dataAccessor.CountEditedRow)
-				{
-					var type = this.GetTypeEcriture (line);
-
-					if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
-						type == TypeEcriture.Vide    )
-					{
-						if (this.IsTVA (line))
-						{
-							return true;
-						}
-					}
-
-					line++;
-				}
-
-				return false;
-			}
-		}
-
 		private bool Complete(ref int lineToSelect, ref ColumnType columnToSelect)
 		{
 			//	Avant de créer réellement l'écriture, on regarde si elle peut être "complétée", c'est-à-dire:
@@ -705,11 +628,59 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateAfterValidate()
 		{
-			//	Si la commande 'Enter' est valide et que l'écriture doit être complétée,
-			//	hachure toute la zone d'édition.
-			//?var acceptEnable = this.dirty && !this.hasError;
-			//?this.footer.Hilited = (acceptEnable && this.IsThereSomethingToComplete);
-			this.UpdateToComplete ();
+			//	Met à jour les décorations des champs.
+			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture.
+			//	Met des hachures aux champs vides d'une ligne vide.
+			for (int line = 0; line < this.fieldControllers.Count; line++)
+			{
+				for (int column = 0; column < this.fieldControllers[line].Count; column++)
+				{
+					this.fieldControllers[line][column].ToComplete = false;
+					this.fieldControllers[line][column].EmptyLine  = false;
+				}
+			}
+
+			if (this.dataAccessor.EditionLine.Count != 0 && !this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
+			{
+				if (this.IsDébitMulti (0))
+				{
+					this.GetFieldController (ColumnType.Débit, 0).ToComplete = true;
+				}
+
+				if (this.IsCréditMulti (0))
+				{
+					this.GetFieldController (ColumnType.Crédit, 0).ToComplete = true;
+				}
+			}
+
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+			{
+				var type = this.GetTypeEcriture (line);
+
+				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
+					type == TypeEcriture.Vide)
+				{
+					if (this.IsDébitTVA (line))
+					{
+						this.GetFieldController (ColumnType.Débit, line).ToComplete = true;
+					}
+
+					if (this.IsCréditTVA (line))
+					{
+						this.GetFieldController (ColumnType.Crédit, line).ToComplete = true;
+					}
+				}
+
+				if (type == TypeEcriture.Vide)
+				{
+					bool emptyLine = (this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine;
+
+					for (int column = 0; column < this.fieldControllers[line].Count; column++)
+					{
+						this.fieldControllers[line][column].EmptyLine = emptyLine;
+					}
+				}
+			}
 		}
 
 		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
