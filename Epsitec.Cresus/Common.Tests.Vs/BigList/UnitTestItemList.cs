@@ -33,26 +33,31 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (30, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 2;
 
 			Assert.AreEqual (2, this.itemList1.VisibleIndex);
 			Assert.AreEqual (40, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (10, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 0;
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 		}
 
 		[TestMethod]
@@ -63,26 +68,31 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (60, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 2;
 
 			Assert.AreEqual (2, this.itemList1.VisibleIndex);
 			Assert.AreEqual (80, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (50, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 0;
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleCount);
 		}
 
 		[TestMethod]
@@ -93,26 +103,31 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 2;
 
 			Assert.AreEqual (2, this.itemList1.VisibleIndex);
 			Assert.AreEqual (10, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 1;
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.VisibleIndex = 0;
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 		}
 
 		[TestMethod]
@@ -123,66 +138,79 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (10);
+			this.itemList1.MoveVisibleContent (10);		//	cannot move further down !
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-10, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-30, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-40, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-50, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-10, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (-10);
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.MoveVisibleContent (-10);	//	cannot move further up !
 
 			Assert.AreEqual (1, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (30);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (-50, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
 
 			this.itemList1.MoveVisibleContent (1000);
 
 			Assert.AreEqual (0, this.itemList1.VisibleIndex);
 			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
 		}
 
 

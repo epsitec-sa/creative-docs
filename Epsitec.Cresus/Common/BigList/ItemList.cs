@@ -79,6 +79,14 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int VisibleCount
+		{
+			get
+			{
+				return this.visibleRows.Count;
+			}
+		}
+
 
 		public void Reset()
 		{
