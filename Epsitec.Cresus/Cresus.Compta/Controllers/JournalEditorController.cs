@@ -250,11 +250,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void ResetLineUI()
 		{
 			//	Recrée une seule ligne.
-			this.linesContainer.Children.Clear ();
-			this.fieldControllers.Clear ();
-			this.linesFrames.Clear ();
+			using (this.controller.IgnoreChanges.Enter ())
+			{
+				this.linesContainer.Children.Clear ();
+				this.fieldControllers.Clear ();
+				this.linesFrames.Clear ();
 
-			this.CreateLineUI (this.linesContainer);
+				this.CreateLineUI (this.linesContainer);
+			}
 		}
 
 		protected override FormattedText GetOperationDescription(bool modify)
