@@ -53,6 +53,7 @@
     </CodeAnalysisDependentAssemblyPaths>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BigList\UnitTestItemList.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Entities.cs" />
     <Compile Include="Resources\Common.Tests.Vs\SourceCode\Res.cs" />

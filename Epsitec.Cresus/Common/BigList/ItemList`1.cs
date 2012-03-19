@@ -8,10 +8,35 @@ namespace Epsitec.Common.BigList
 {
 	public class ItemList<T> : ItemList
 	{
-		public ItemList()
+		public ItemList(IItemDataProvider<T> provider, IItemDataMapper<T> mapper)
 		{
-			this.cache = new ItemCache<T> (1000);
+			this.cache = new ItemCache<T> (provider == null ? 100 : provider.Count)
+			{
+				DataProvider = provider,
+				DataMapper = mapper,
+			};
 		}
+
+		public override int Count
+		{
+			get
+			{
+				var provider = this.cache.DataProvider;
+
+				if (provider == null)
+				{
+					return 0;
+				}
+
+				return provider.Count;
+			}
+		}
+
+		protected override void ResetCache()
+		{
+			this.cache.Reset ();
+		}
+
 
 		protected override int GetItemHeight(int index)
 		{

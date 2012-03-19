@@ -99,6 +99,7 @@
     <Compile Include="BigList\ItemCache`1.cs" />
     <Compile Include="BigList\ItemCache.cs" />
     <Compile Include="BigList\ItemList.cs" />
+    <Compile Include="BigList\ItemListRow.cs" />
     <Compile Include="BigList\ItemList`1.cs" />
     <Compile Include="BigList\ItemSelectionMode.cs" />
     <Compile Include="BigList\ItemState.cs" />
