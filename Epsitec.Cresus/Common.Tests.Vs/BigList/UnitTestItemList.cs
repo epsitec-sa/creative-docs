@@ -272,22 +272,22 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.IsTrue (this.itemList1.GetItemState (0).Selected);
+			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.Select (1, true);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.IsTrue (this.itemList1.GetItemState (0).Selected);
-			Assert.IsTrue (this.itemList1.GetItemState (1).Selected);
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
 
 			this.itemList1.Select (0, false);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
 
-			Assert.IsFalse (this.itemList1.GetItemState (0).Selected);
-			Assert.IsTrue (this.itemList1.GetItemState (1).Selected);
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
 
 			this.itemList1.GetItemState (2);
 
@@ -303,8 +303,8 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
 
-			var state1 = this.itemList1.GetItemState (0, true);
-			var state2 = this.itemList1.GetItemState (0, true);
+			var state1 = this.itemList1.GetItemState (0);
+			var state2 = this.itemList1.GetItemState (0);
 
 			Assert.AreNotSame (state1, state2);
 
@@ -312,40 +312,54 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (60, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (60, this.itemList1.GetItemHeight (0));
 
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (100, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (100, this.itemList1.GetItemHeight (0));
 
 			state1.Height = 999;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (999, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (999, this.itemList1.GetItemHeight (0));
 
 			state1.Height = 1000;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (1000, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (1000, this.itemList1.GetItemHeight (0));
 
-			state1.Height = 1001;
-			this.itemList1.SetItemState (0, state1);
+			this.itemList1.SetItemHeight (0, 1001);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (1001, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0));
+
+			this.itemList1.Select (0, true);
+			
+			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+
+			this.itemList1.SetItemHeight (0, 100);
+			
+			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (100, this.itemList1.GetItemHeight (0));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.SetItemState (0, state2);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.AreEqual (60, this.itemList1.GetItemState (0).Height);
+			Assert.AreEqual (60, this.itemList1.GetItemHeight (0));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
 		}
 
 		private class SeqMapper : IItemDataMapper<int>

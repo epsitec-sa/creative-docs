@@ -11,21 +11,22 @@ namespace Epsitec.Common.BigList
 		protected ItemList()
 		{
 			this.visibleRows = new List<ItemListRow> ();
+			this.SelectionMode = ItemSelectionMode.ExactlyOne;
 		}
 
 		
-		public ItemSelectionMode SelectionMode
+		public ItemSelectionMode				SelectionMode
 		{
 			get;
 			set;
 		}
 
-		public abstract int Count
+		public abstract int						Count
 		{
 			get;
 		}
 
-		public int ActiveIndex
+		public int								ActiveIndex
 		{
 			get
 			{
@@ -40,7 +41,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleIndex
+		public int								VisibleIndex
 		{
 			get
 			{
@@ -63,7 +64,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleOffset
+		public int								VisibleOffset
 		{
 			get
 			{
@@ -71,7 +72,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleHeight
+		public int								VisibleHeight
 		{
 			get
 			{
@@ -87,7 +88,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleCount
+		public int								VisibleCount
 		{
 			get
 			{
@@ -95,7 +96,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public abstract ItemCache Cache
+		public abstract ItemCache				Cache
 		{
 			get;
 		}
@@ -115,11 +116,18 @@ namespace Epsitec.Common.BigList
 				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
 			}
 
-			var state = this.GetItemState (index, fullState: true);
 
-			state.Selected = isSelected;
+			if (this.ChangeFlagState (index, x => x.Selected = isSelected))
+			{
+				//	Process state change. We might need to deselect/reselect others.
 
-			this.SetItemState (index, state);
+				this.ChangeSelection (index, isSelected);
+			}
+		}
+
+		public bool IsSelected(int index)
+		{
+			return this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected;
 		}
 
 		public void MoveVisibleContent(int distance)
@@ -141,26 +149,64 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public ItemState GetItemState(int index, bool fullState = false)
+		
+		public ItemState GetItemState(int index)
 		{
-			return this.Cache.GetItemState (index, fullState);
+			return this.Cache.GetItemState (index, ItemStateDetails.Full);
+		}
+
+		public int GetItemHeight(int index)
+		{
+			return this.Cache.GetItemHeight (index);
 		}
 
 		public void SetItemState(int index, ItemState state)
 		{
-			this.Cache.SetItemState (index, state);
+			this.Cache.SetItemState (index, state, ItemStateDetails.Full);
 		}
 
+		public void SetItemHeight(int index, int height)
+		{
+			var state = this.GetItemState (index);
+			state.Height = height;
+			this.SetItemState (index, state);
+		}
+
+		
 		protected void ResetCache()
 		{
 			this.Cache.Reset ();
 		}
 
-		protected int GetItemHeight(int index)
-		{
-			return this.Cache.GetItemHeight (index);
-		}
 
+
+		private void ChangeSelection(int index, bool isSelected)
+		{
+			if (isSelected)
+			{
+				switch (this.SelectionMode)
+				{
+					case ItemSelectionMode.ExactlyOne:
+					case ItemSelectionMode.Multiple:
+					case ItemSelectionMode.None:
+					case ItemSelectionMode.OneOrMore:
+					case ItemSelectionMode.ZeroOrOne:
+						break;
+				}
+			}
+			else
+			{
+				switch (this.SelectionMode)
+				{
+					case ItemSelectionMode.ExactlyOne:
+					case ItemSelectionMode.Multiple:
+					case ItemSelectionMode.None:
+					case ItemSelectionMode.OneOrMore:
+					case ItemSelectionMode.ZeroOrOne:
+						break;
+				}
+			}
+		}
 
 		private void SetActiveIndex(int index)
 		{
@@ -217,6 +263,18 @@ namespace Epsitec.Common.BigList
 			this.visibleRows   = rows;
 			this.visibleIndex  = index;
 			this.visibleOffset = offset;
+		}
+
+		private bool ChangeFlagState(int index, System.Action<ItemState> action)
+		{
+			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags);
+			var copy  = new ItemState (state);
+			
+			action (copy);
+			
+			this.Cache.SetItemState (index, copy, ItemStateDetails.Flags);
+			
+			return state.Equals (copy);
 		}
 
 		private List<ItemListRow> GetVisibleRowsStartingWith(int index, int startOffset = 0)
@@ -374,9 +432,9 @@ namespace Epsitec.Common.BigList
 		
 		private List<ItemListRow> visibleRows;
 		
-		private int activeIndex;
-		private int visibleIndex;
-		private int visibleOffset;
-		private int visibleHeight;
+		private int								activeIndex;
+		private int								visibleIndex;
+		private int								visibleOffset;
+		private int								visibleHeight;
 	}
 }

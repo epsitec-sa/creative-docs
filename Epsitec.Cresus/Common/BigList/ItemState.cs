@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemState
+	public class ItemState : System.IEquatable<ItemState>
 	{
 		public ItemState()
 		{
@@ -124,7 +124,7 @@ namespace Epsitec.Common.BigList
 
 			bool applied = false;
 
-			//	TODO: recopy properties which do not fit into a compact state...
+			//	TODO: recopy other properties which do not fit into a compact state...
 
 			if (applied)
 			{
@@ -170,6 +170,21 @@ namespace Epsitec.Common.BigList
 			public const int Hilite1  = 0x2000;
 			public const int Hilite2  = 0x4000;
 			public const int Partial  = 0x8000;
+		}
+
+		#endregion
+
+		#region IEquatable<ItemState> Members
+
+		public bool Equals(ItemState other)
+		{
+			return this.Loaded == other.Loaded
+				&& this.Selected == other.Selected
+				&& this.Hidden == other.Hidden
+				&& this.Hilite1 == other.Hilite1
+				&& this.Hilite2 == other.Hilite2
+				&& this.Partial == other.Partial
+				&& this.Height == other.Height;
 		}
 
 		#endregion

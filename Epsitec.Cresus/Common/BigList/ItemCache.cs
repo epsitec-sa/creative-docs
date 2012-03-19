@@ -30,8 +30,8 @@ namespace Epsitec.Common.BigList
 		public abstract void Reset();
 		public abstract int GetItemHeight(int index);
 
-		public abstract ItemState GetItemState(int index, bool fullState = false);
-		public abstract void SetItemState(int index, ItemState state);
+		public abstract ItemState GetItemState(int index, ItemStateDetails details);
+		public abstract void SetItemState(int index, ItemState state, ItemStateDetails details);
 
 		protected static readonly int DefaultExtraCapacity = 1000;
 		protected static readonly int DefaultDataCapacity  = 1000;

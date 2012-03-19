@@ -59,7 +59,7 @@ namespace Epsitec.Common.BigList
 		/// <returns>The height of the item or zero if the item does not exist.</returns>
 		public override int GetItemHeight(int index)
 		{
-			return this.GetItemState (index, fullState: false).Height;
+			return this.GetItemState (index, ItemStateDetails.Full).Height;
 		}
 
 		public ItemData<T> GetItemData(int index)
@@ -89,7 +89,7 @@ namespace Epsitec.Common.BigList
 		/// <param name="index">The index.</param>
 		/// <param name="fullState">if set to <c>true</c>, retrieves the full state.</param>
 		/// <returns></returns>
-		public override ItemState GetItemState(int index, bool fullState = false)
+		public override ItemState GetItemState(int index, ItemStateDetails details)
 		{
 			if ((index < 0) ||
 				(index >= this.states.Count))
@@ -98,7 +98,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.exclusion.EnterReadLock ();
-			var state = this.GetItemStateLocked (index, fullState);
+			var state = this.GetItemStateLocked (index, details);
 			this.exclusion.ExitReadLock ();
 
 			if (state == null)
@@ -115,15 +115,20 @@ namespace Epsitec.Common.BigList
 						Height = data.Height
 					};
 
-					this.SetItemState (index, state);
+					this.SetItemState (index, state, details);
 				}
 			}
 
 			return state;
 		}
 
-		public override void SetItemState(int index, ItemState state)
+		public override void SetItemState(int index, ItemState state, ItemStateDetails details)
 		{
+			if (details == ItemStateDetails.None)
+			{
+				return;
+			}
+
 			if ((index < 0) ||
 				(index >= this.states.Count))
 			{
@@ -136,11 +141,11 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.exclusion.EnterWriteLock ();
-			this.SetItemStateLocked (index, state);
+			this.SetItemStateLocked (index, state, details);
 			this.exclusion.ExitWriteLock ();
 		}
 
-		private ItemState GetItemStateLocked(int index, bool fullState)
+		private ItemState GetItemStateLocked(int index, ItemStateDetails details)
 		{
 			var compact = this.states[index];
 
@@ -151,33 +156,39 @@ namespace Epsitec.Common.BigList
 
 			var state = ItemState.FromCompactState (compact);
 
-			if ((state.Partial && fullState) ||
-				(state.Height+1 == ItemState.MaxCompactHeight))
+			if (details.HasFlag (ItemStateDetails.Full))
 			{
-				ItemState extra;
-
-				if (this.extraStates.TryGetValue (index, out extra) == false)
+				if ((state.Partial) ||
+					(state.Height+1 == ItemState.MaxCompactHeight))
 				{
-					extra = new ItemState (state);
-				}
+					ItemState extra;
 
-				state.Apply (extra);
+					if (this.extraStates.TryGetValue (index, out extra) == false)
+					{
+						extra = new ItemState (state);
+					}
+
+					state.Apply (extra);
+				}
 			}
 
 			return state;
 		}
 
-		private void SetItemStateLocked(int index, ItemState state)
+		private void SetItemStateLocked(int index, ItemState state, ItemStateDetails details)
 		{
 			var compact = state.ToCompactState ();
 
-			if (state.ComputePartialFlag ())
+			if (details.HasFlag (ItemStateDetails.Full))
 			{
-				this.extraStates[index] = new ItemState (state);
-			}
-			else
-			{
-				this.extraStates.Remove (index);
+				if (state.ComputePartialFlag ())
+				{
+					this.extraStates[index] = new ItemState (state);
+				}
+				else
+				{
+					this.extraStates.Remove (index);
+				}
 			}
 
 			this.states[index] = compact;
