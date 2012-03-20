@@ -12,6 +12,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
+using Epsitec.Cresus.Compta.Dialogs;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -415,9 +416,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			columnToSelect = multiActiveColumn;
 		}
 
-		private int ExplodeForTVA(int line, ref int lineToSelect, ref ColumnType columnToSelect)
+		private int ExplodeForTVA(int line, ref int lineToSelect, ref ColumnType columnToSelect, bool defaultDébit = true)
 		{
-			bool isDébitMulti = !this.IsDébitTVA (line);
+			bool isDébitMulti  = this.IsCréditTVA (line);
+			bool isCréditMulti = this.IsDébitTVA  (line);
+
+			if (!isDébitMulti && !isCréditMulti)
+			{
+				isDébitMulti  =  defaultDébit;
+				isCréditMulti = !defaultDébit;
+			}
+
 			var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 			var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
@@ -425,12 +434,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var cp = this.dataAccessor.EditionLine[line].GetText (multiInactiveColumn);
 			var compteP  = this.compta.PlanComptable.Where (x => x.Numéro == p ).FirstOrDefault ();
 			var compteCP = this.compta.PlanComptable.Where (x => x.Numéro == cp).FirstOrDefault ();
-			var taux = compteP.CodeTVA.DefaultTauxValue.GetValueOrDefault ();
+
+			//	Cherche le code TVA à utiliser.
+			var codeTVA = compteP.CodeTVA;
+			bool hasDefaultCodeTVA = true;
+
+			if (codeTVA == null)
+			{
+				codeTVA = this.compta.CodesTVA.FirstOrDefault ();
+				hasDefaultCodeTVA = false;
+			}
+			if (codeTVA == null)  // garde-fou
+			{
+				return 1;
+			}
+
+			var taux = codeTVA.DefaultTauxValue.GetValueOrDefault ();
 
 			var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantTTC)).GetValueOrDefault ();
 			var montantHT  = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant   )).GetValueOrDefault ();
 
-			if (montantTTC == 0)
+			if (!hasDefaultCodeTVA)
+			{
+				montantTTC = montantHT;
+				montantHT  = TVA.CalculeHT (montantHT, taux);
+			}
+			else if (montantTTC == 0)
 			{
 				montantTTC  = TVA.CalculeTTC (montantHT, taux);
 			}
@@ -459,10 +488,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les données de la 2ème ligne (CodeTVA).
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.CodeTVA));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Date,       this.dataAccessor.EditionLine[line].GetText (ColumnType.Date));
-			this.dataAccessor.EditionLine[line+1].SetText (multiActiveColumn,     compteP.CodeTVA.Compte.Numéro);
+			this.dataAccessor.EditionLine[line+1].SetText (multiActiveColumn,     codeTVA.Compte.Numéro);
 			this.dataAccessor.EditionLine[line+1].SetText (multiInactiveColumn,   JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CodeTVA,    compteP.CodeTVA.Code);
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA,    Converters.PercentToString (compteP.CodeTVA.DefaultTauxValue));
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CodeTVA,    codeTVA.Code);
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA,    Converters.PercentToString (codeTVA.DefaultTauxValue));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Montant,    Converters.MontantToString (montantTVA));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,    this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Hilited,    "1");
@@ -555,6 +584,45 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiInsertTVALineAction()
 		{
 			//	Insère une nouvelle ligne de TVA après la ligne courante.
+			this.ClearLineHilite ();
+
+			var débit  = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit )).FirstOrDefault ();
+			var crédit = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit)).FirstOrDefault ();
+
+			bool defaultDébit = false;
+
+			if (débit  != null && débit .CodeTVA == null &&
+				crédit != null && crédit.CodeTVA == null)
+			{
+				//	Demande s'il faut passer la TVA sur le compte au débit ou au crédit.
+				var dialog = new DébitCréditDialog (this.controller, débit, crédit);
+				dialog.Show ();
+
+				if (!dialog.IsDébit && !dialog.IsCrédit)  // fermé sans choisir ?
+				{
+					return;
+				}
+
+				defaultDébit = dialog.IsCrédit;
+			}
+			else if (débit == null)
+			{
+				defaultDébit = true;
+			}
+
+			int lineToSelect = -1;
+			ColumnType columnToSelect = ColumnType.None;
+
+			this.ExplodeForTVA (this.selectedLine, ref lineToSelect, ref columnToSelect, defaultDébit: defaultDébit);
+
+			this.dirty = true;
+			this.UpdateEditorContent ();
+
+			if (lineToSelect != -1 && columnToSelect != ColumnType.None)
+			{
+				this.selectedLine = lineToSelect;
+				this.EditorSelect (columnToSelect);
+			}
 		}
 
 		public override void MultiDeleteLineAction()
@@ -575,8 +643,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (this.GetTypeEcriture (this.selectedLine-1) == TypeEcriture.BaseTVA)
 				{
+					//	Transforme la ligne précédente 'BaseTVA' en une ligne normale avec le montant TTC.
 					this.SetTypeEcriture (this.selectedLine-1, TypeEcriture.Normal);
-					this.dataAccessor.EditionLine[this.selectedLine-1].SetText (ColumnType.Montant, this.dataAccessor.EditionLine[this.selectedLine-1].GetText (ColumnType.MontantTTC));
+
+					var montantTTC = this.dataAccessor.EditionLine[this.selectedLine-1].GetText (ColumnType.MontantTTC);
+					this.dataAccessor.EditionLine[this.selectedLine-1].SetText (ColumnType.Montant, montantTTC);
 				}
 
 				this.dataAccessor.RemoveAtEditionLine (this.selectedLine);
@@ -1303,18 +1374,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			bool enable = this.dataAccessor.IsActive;
 			int count = this.linesFrames.Count;
-			int cp = this.IndexTotalAutomatique;
 
-			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.InsertEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.InsertEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.DeleteEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.IsCommandInsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.IsCommandInsertTVAEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        enable && count >  1 && this.selectedLine > 0);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      enable && count >  1 && this.selectedLine < count-1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      enable && count != 0 && this.selectedLine != -1);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      enable && count >  1 && this.selectedLine != cp);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      this.IsCommandAutoEnable);
 		}
 
-		private bool InsertEnable
+		private bool IsCommandInsertEnable
 		{
 			get
 			{
@@ -1328,8 +1398,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				if (this.GetTypeEcriture (this.selectedLine+0) == TypeEcriture.BaseTVA &&
-					this.GetTypeEcriture (this.selectedLine+1) == TypeEcriture.CodeTVA)
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.BaseTVA ||
+					this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
 				{
 					return false;
 				}
@@ -1338,7 +1408,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private bool DeleteEnable
+		private bool IsCommandInsertTVAEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+#if false
+				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
+				{
+					return false;
+				}
+#endif
+
+				if (this.GetTypeEcriture (this.selectedLine) != TypeEcriture.Normal)
+				{
+					return false;
+				}
+
+				if (this.selectedLine == this.IndexTotalAutomatique)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		private bool IsCommandDeleteEnable
 		{
 			get
 			{
@@ -1363,6 +1463,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
 					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
 					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
+				{
+					return false;
+				}
+
+				if (this.selectedLine == this.IndexTotalAutomatique)
+				{
+					return false;
+				}
+
+				return true;
+			}
+		}
+
+		private bool IsCommandAutoEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
+				{
+					return false;
+				}
+
+				if (this.GetTypeEcriture (this.selectedLine) != TypeEcriture.Normal)
 				{
 					return false;
 				}
