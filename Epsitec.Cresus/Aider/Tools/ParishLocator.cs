@@ -63,16 +63,6 @@ namespace Epsitec.Aider.Tools
 			return ParishLocator.FindParishName (repository, zipCode, townName, streetName, houseNumber);
 		}
 
-		public static string FindParishName(ParishAddressRepository repository, eCH_AddressEntity address)
-		{
-			var zipCode = address.SwissZipCode;
-			var townName = address.Town;
-			var streetName = address.Street;
-			var houseNumber = address.HouseNumber;
-			
-			return ParishLocator.FindParishName (repository, zipCode, townName, streetName, houseNumber);
-		}
-
 		private static string FindParishName(ParishAddressRepository repository, int zipCode, string townName, string streetName, string houseNumber)
 		{
 			var normalizedStreetName = SwissPostStreet.NormalizeStreetName (streetName);

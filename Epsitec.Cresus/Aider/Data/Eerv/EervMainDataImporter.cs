@@ -210,6 +210,10 @@ namespace Epsitec.Aider.Data.Eerv
 			var processed = new HashSet<EntityKey> ();
 			var persons = businessContext.GetAllEntities<AiderPersonEntity> ().ToList ();
 
+			businessContext.GetAllEntities<AiderHouseholdEntity> ();
+			businessContext.GetAllEntities<AiderAddressEntity> ();
+			businessContext.GetAllEntities<AiderTownEntity> ();
+
 			for (int i = 0; i < persons.Count && processed.Count < batchSize; i++)
 			{
 				var person = persons[i];
@@ -233,7 +237,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignPersonToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderPersonEntity person)
 		{
-			var address = person.eCH_Person.Address1;
+			var address = person.Households.First ().Address;
 			var parishGroup = EervMainDataImporter.FindParishGroup (businessContext, parishRepository, parishNamesToEntityKeys, address);
 
 			if (parishGroup == null)
@@ -250,7 +254,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, eCH_AddressEntity address)
+		private static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderAddressEntity address)
 		{
 			var parishName = ParishLocator.FindParishName (parishRepository, address);
 
