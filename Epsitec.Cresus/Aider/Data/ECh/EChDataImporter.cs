@@ -59,7 +59,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			return towns.ToDictionary
 			(
-				t => Tuple.Create (InvariantConverter.ToInt (t.ZipCode), t.Name),
+				t => Tuple.Create (t.SwissZipCode.Value, t.Name),
 				t => businessContext.DataContext.GetNormalizedEntityKey (t).Value
 			);
 		}
@@ -90,9 +90,9 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static IEnumerable<AiderTownEntity> ImportTowns(BusinessContext businessContext, IEnumerable<EChReportedPerson> echReportedPersons, AiderCountryEntity switzerland)
 		{
-			// TODO Do we need to care about the swiss zip code, the swiss zip code add on and the
-			// swiss zip code id ?
-			
+			// TODO Do we need to care about the zip code, the swiss zip code add on and the
+			// swiss zip code id that are either in AiderTownEntity or in EChAddress ?
+
 			var towns = echReportedPersons
 				.Select (rp => rp.Address)
 				.Select (a => Tuple.Create (a.SwissZipCode, a.Town))
@@ -102,7 +102,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			foreach (var town in towns)
 			{
-				var zipCode = InvariantConverter.ToString (town.Item1);
+				var zipCode = town.Item1;
 				var name = town.Item2;
 
 				var aiderTown = EChDataImporter.ImportTown (businessContext, switzerland, zipCode, name);
@@ -114,11 +114,11 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static AiderTownEntity ImportTown(BusinessContext businessContext, AiderCountryEntity switzerland, string zipCode, string name)
+		private static AiderTownEntity ImportTown(BusinessContext businessContext, AiderCountryEntity switzerland, int zipCode, string name)
 		{
 			var townSample = new AiderTownEntity ()
 			{
-				ZipCode = zipCode,
+				SwissZipCode = zipCode,
 				Name = name,
 			};
 
@@ -130,7 +130,7 @@ namespace Epsitec.Aider.Data.ECh
 			{
 				aiderTown = businessContext.CreateEntity<AiderTownEntity> ();
 
-				aiderTown.ZipCode = zipCode;
+				aiderTown.SwissZipCode = zipCode;
 				aiderTown.Name = name;
 				aiderTown.Country = switzerland;
 			}
