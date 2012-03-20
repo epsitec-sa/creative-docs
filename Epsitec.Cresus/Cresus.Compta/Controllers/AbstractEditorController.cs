@@ -405,6 +405,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		public virtual void MultiInsertTVALineAction()
+		{
+		}
+
 		public virtual void MultiDeleteLineAction()
 		{
 		}

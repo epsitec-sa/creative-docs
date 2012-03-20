@@ -4,6 +4,8 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -62,11 +64,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			if (this.toComplete)
 			{
-				//	Dessine un cadre rouge pointillé.
+				//	Dessine un cadre vert pointillé.
 				rect.Deflate (0.5);
 				using (Path path = new Path (rect))
 				{
-					graphics.PaintDashedOutline (path, 2, 3, 5, CapStyle.Square, Color.FromName ("Red"));
+					graphics.PaintDashedOutline (path, 2, 3, 5, CapStyle.Square, UIBuilder.FieldToCompleteColor);
 				}
 			}
 
@@ -80,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					graphics.AddLine (x, rect.Bottom, x+rect.Height, rect.Top);
 				}
 
-				graphics.RenderSolid (Color.FromAlphaRgb (0.05, 0, 0, 0));  // gris très transparent
+				graphics.RenderSolid (UIBuilder.FieldEmptyLineColor);
 				graphics.LineWidth = 1;
 			}
 		}

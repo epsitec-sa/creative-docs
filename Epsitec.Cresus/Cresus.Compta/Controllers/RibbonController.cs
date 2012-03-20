@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
 
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Create, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
-				UIBuilder.CreateButton (section, Res.Commands.Edit.Accept, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
+				this.acceptButton = UIBuilder.CreateButton (section, Res.Commands.Edit.Accept, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Cancel, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				//?section.Children.Add (this.CreateGap ();
 
@@ -205,6 +205,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.ShowRibbonModeMenu (showRibbonButton);
 			};
+		}
+
+		public string AcceptButtonStyle
+		{
+			get
+			{
+				return this.acceptButton.PreferredIconStyle;
+			}
+			set
+			{
+				this.acceptButton.PreferredIconStyle = value;
+			}
 		}
 
 		public GlyphButton NavigatorMenuButton
@@ -573,5 +585,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private IconButton							présentationsMenuButton;
 		private IconButton							newWindowMenuButton;
 		private GlyphButton							navigatorMenuButton;
+		private IconButton							acceptButton;
 	}
 }

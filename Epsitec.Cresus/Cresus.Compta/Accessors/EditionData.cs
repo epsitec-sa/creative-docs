@@ -49,6 +49,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get;
 		}
 
+		public bool ToComplete
+		{
+			//	Détermine si le champ a un cadre rouge pointillé.
+			set;
+			get;
+		}
+
+		public bool EmptyLine
+		{
+			//	Détermine si le champ a un fond hachuré.
+			set;
+			get;
+		}
+
 
 		public bool HasText
 		{

@@ -343,16 +343,35 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static string GetTextIconUri(string icon, double verticalOffset = -6, double? iconSize = null)
+		public static string GetTextIconUri(string icon, double verticalOffset = -6, double? iconSize = null, string style = null)
 		{
+			var builder = new System.Text.StringBuilder ();
+
+			builder.Append ("<img src=\"");
+			builder.Append (UIBuilder.GetResourceIconUri (icon));
+			builder.Append ("\" voff=\"");
+			builder.Append (verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
+			builder.Append ("\"");
+
 			if (iconSize.HasValue)
 			{
-				return string.Format (@"<img src=""{0}"" voff=""{1}"" dx=""{2}"" dy=""{2}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture), iconSize.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append (" dx=\"");
+				builder.Append (iconSize.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append ("\" dy=\"");
+				builder.Append (iconSize.Value.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append ("\"");
 			}
-			else
+
+			if (!string.IsNullOrEmpty (style))
 			{
-				return string.Format (@"<img src=""{0}"" voff=""{1}""/>", UIBuilder.GetResourceIconUri (icon), verticalOffset.ToString (System.Globalization.CultureInfo.InvariantCulture));
+				builder.Append (" style=\"");
+				builder.Append (style);
+				builder.Append ("\"");
 			}
+
+			builder.Append ("/>");
+
+			return builder.ToString ();
 		}
 
 		public static string GetMarkStateIconUri(bool state)
@@ -407,6 +426,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static readonly Color GraphicGreenColor			= Color.FromHexa ("00bb00");  // vert
 		public static readonly Color GraphicRedColor			= Color.FromHexa ("ff0000");  // rouge
+
+		public static readonly Color FieldToCompleteColor		= Color.FromHexa ("52c519");  // vert
+		public static readonly Color FieldEmptyLineColor		= Color.FromAlphaRgb (0.05, 0, 0, 0);  // gris très transparent
 
 		public static readonly double LeftLabelWidth			= 83;
 		public static readonly double ComboButtonWidth			= 14;

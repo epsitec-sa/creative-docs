@@ -173,6 +173,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public string AcceptButtonStyle
+		{
+			get
+			{
+				return this.ribbonController.AcceptButtonStyle;
+			}
+			set
+			{
+				this.ribbonController.AcceptButtonStyle = value;
+			}
+		}
+
 		public List<AbstractController> Controllers
 		{
 			//	Retourne la liste de contrôleurs de toutes les fenêtres ouvertes.
@@ -1359,6 +1371,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.controller != null && this.controller.EditorController != null)
 			{
 				this.controller.EditorController.MultiInsertLineAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.InsertTVA)]
+		private void CommandMultiInsertTVA()
+		{
+			if (this.controller != null && this.controller.EditorController != null)
+			{
+				this.controller.EditorController.MultiInsertTVALineAction ();
 			}
 		}
 

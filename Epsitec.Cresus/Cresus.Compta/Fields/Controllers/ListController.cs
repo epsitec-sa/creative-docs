@@ -110,18 +110,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			this.WidgetToEditionData ();
 
 			UIBuilder.SetErrorPseudoCombo (this.InternalField, this.editionData.HasError);
-
-			if (this.editionData.HasError)
-			{
-				ToolTip.Default.SetToolTip (this.editWidget, this.editionData.Error);
-			}
-			else
-			{
-				if (this.columnMapper != null)
-				{
-					ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
-				}
-			}
+			this.UpdateTooltip ();
 		}
 
 

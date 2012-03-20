@@ -552,6 +552,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.EditorSelect (multiActiveColumn, this.selectedLine);
 		}
 
+		public override void MultiInsertTVALineAction()
+		{
+			//	Insère une nouvelle ligne de TVA après la ligne courante.
+		}
+
 		public override void MultiDeleteLineAction()
 		{
 			//	Supprime la ligne courante.
@@ -656,6 +661,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les décorations des champs.
 			//	Met des cadres rouges pointillés aux champs qui empêchent de créer l'écriture (complément nécessaire).
 			//	Met des hachures grises aux champs vides d'une ligne vide.
+			bool toComplete = false;
 
 			//	On commence par enlever toutes les décorations.
 			for (int line = 0; line < this.fieldControllers.Count; line++)
@@ -673,11 +679,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.IsDébitMulti (0))
 				{
 					this.GetFieldController (ColumnType.Débit, 0).ToComplete = true;
+					toComplete = true;
 				}
 
 				if (this.IsCréditMulti (0))
 				{
 					this.GetFieldController (ColumnType.Crédit, 0).ToComplete = true;
+					toComplete = true;
 				}
 			}
 
@@ -692,11 +700,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					if (this.IsDébitTVA (line))
 					{
 						this.GetFieldController (ColumnType.Débit, line).ToComplete = true;
+						toComplete = true;
 					}
 
 					if (this.IsCréditTVA (line))
 					{
 						this.GetFieldController (ColumnType.Crédit, line).ToComplete = true;
+						toComplete = true;
 					}
 				}
 
@@ -710,6 +720,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
+
+			this.controller.MainWindowController.AcceptButtonStyle = toComplete ? "ToComplete" : null;
 		}
 
 		protected override void UpdateEditionWidgets(int line, ColumnType columnType)
