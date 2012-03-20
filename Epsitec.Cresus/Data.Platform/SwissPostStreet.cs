@@ -72,10 +72,9 @@ namespace Epsitec.Data.Platform
 			return InvariantConverter.ParseInt (number);
 		}
 
-
 		/// <summary>
 		/// Strips an house number from its terminal non digit part. This will remove any "bis",
-		/// "ter", "A", "B", "C", etc at the end of the house number.
+		/// "ter", "A", "B", "C", etc. at the end of the house number.
 		/// </summary>
 		public static string StripHouseNumber(string number)
 		{
@@ -83,12 +82,7 @@ namespace Epsitec.Data.Platform
 
 			if (number != null)
 			{
-				int index = 0;
-
-				while (index < number.Length && System.Char.IsDigit (number[index]))
-				{
-					index++;
-				}
+				var index = SwissPostStreet.GetHouseNumberComplementIndex (number);
 
 				if (index > 0)
 				{
@@ -99,6 +93,35 @@ namespace Epsitec.Data.Platform
 			return result;
 		}
 
+		/// <summary>
+		/// Returns terminal non digit part of an house number. This will return "bis", "ter", "A",
+		/// "B", "C", ect. at the end of the house number if present.
+		/// </summary>
+		public static string GetHouseNumberComplement(string number)
+		{
+			string result = null;
+
+			if (number != null)
+			{
+				var index = SwissPostStreet.GetHouseNumberComplementIndex (number);
+
+				result = number.Substring (index).Trim ();
+			}
+
+			return result;
+		}
+
+		private static int GetHouseNumberComplementIndex(string number)
+		{
+			int index = 0;
+
+			while (index < number.Length && System.Char.IsDigit (number[index]))
+			{
+				index++;
+			}
+
+			return index;
+		}
 
 		public static int StripAndNormalizeHouseNumber(string number)
 		{
@@ -106,8 +129,7 @@ namespace Epsitec.Data.Platform
 
 			return SwissPostStreet.NormalizeHouseNumber (strippedNumber);
 		}
-
-		
+	
 		internal static IEnumerable<SwissPostStreetInformation> GetStreets()
 		{
 			foreach (var line in SwissPostStreet.GetStreetFile ())

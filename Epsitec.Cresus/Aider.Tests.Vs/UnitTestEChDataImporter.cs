@@ -1,14 +1,10 @@
 ﻿using Epsitec.Aider.Data.ECh;
-
 using Epsitec.Aider.Entities;
-
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
-
 using Epsitec.Common.Types;
-
-using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
@@ -38,6 +34,8 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void Test()
 		{
+			var hack = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
+
 			CoreData.ForceDatabaseCreationRequest = true;
 
 			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
@@ -49,20 +47,11 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
+				var businessContextManager = new BusinessContextManager (app.Data);
+				
 				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (inputFile);
-				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
-				
-				// HACK Here we need to call this, because there is somewhere something that
-				// registers a callback with a reference to the business context that we
-				// have disposed. If we don't execute that callback, the pointer stays there
-				// and the garbage collector can't reclaim the memory and we have a memory
-				// leak. I think that this is a hack because that callback is related to user
-				// interface stuff and we should be able to get a business context without being
-				// related to a user interface.
-				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
-
-				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				EChDataImporter.Import (businessContextManager, eChReportedPersons);
 
 				Services.ShutDown ();
 			}
@@ -72,6 +61,8 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void GenerateDatabase()
 		{
+			var hack = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
+
 			CoreData.ForceDatabaseCreationRequest = true;
 
 			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
@@ -83,13 +74,12 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
+				var businessContextManager = new BusinessContextManager (app.Data);
+				
 				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (inputFile, 50).ToList ();
-				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
-
-				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
-
-				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				
+				EChDataImporter.Import (businessContextManager, eChReportedPersons);
 
 				this.AddStuffToDatabase (app.Data);
 
@@ -111,18 +101,12 @@ namespace Aider.Tests.Vs
 				{
 					this.AddStuffToPerson (businessContext, towns, aiderPerson);
 				}
-
-				foreach (var aiderHousehold in businessContext.GetAllEntities<AiderHouseholdEntity> ())
-				{
-					this.AddStuffToHousehold (businessContext, towns, aiderHousehold);
-				}
 			}
 		}
 
 
 		private IEnumerable<AiderCountryEntity> GenerateCountries(BusinessContext businessContext)
 		{
-			yield return this.GenerateCountry (businessContext, "Suisse", "CH");
 			yield return this.GenerateCountry (businessContext, "Italie", "IT");
 			yield return this.GenerateCountry (businessContext, "France", "FR");
 			yield return this.GenerateCountry (businessContext, "Allemagne", "DE");
@@ -172,14 +156,6 @@ namespace Aider.Tests.Vs
 			town.ZipCode = zipCode;
 
 			return town;
-		}
-
-
-		private void AddStuffToHousehold(BusinessContext businessContext, List<AiderTownEntity> towns, AiderHouseholdEntity aiderHousehold)
-		{
-			var address = businessContext.CreateEntity<AiderAddressEntity> ();
-
-			aiderHousehold.Address = this.GenerateAddress (address, towns, true);
 		}
 
 

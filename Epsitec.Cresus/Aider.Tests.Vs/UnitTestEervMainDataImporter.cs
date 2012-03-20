@@ -1,6 +1,7 @@
 ﻿using Epsitec.Aider.Data;
 using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Widgets;
 
@@ -30,6 +31,8 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void Test()
 		{
+			var hack = new Epsitec.Data.Platform.Entities.MatchStreetEntity ();
+
 			CoreData.ForceDatabaseCreationRequest = true;
 			
 			var lines = CoreContext.ReadCoreContextSettingsFile ().ToList ();
@@ -41,12 +44,13 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
+				var businessContextManager = new BusinessContextManager (app.Data);
 				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
 				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
 
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
-				EChDataImporter.Import (businessContextCreator, businessContextCleaner, eChReportedPersons);
+				EChDataImporter.Import (businessContextManager, eChReportedPersons);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				var parishRepository = ParishAddressRepository.Current;

@@ -151,6 +151,10 @@
       <Project>{E85C5738-4267-4F95-B6B0-A30B47B76D01}</Project>
       <Name>Cresus.WebCore.Server</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Data.Platform\Data.Platform.csproj">
+      <Project>{222C0C9C-AF0D-4B77-9BB2-D1440EF333B2}</Project>
+      <Name>Data.Platform</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Solution Items\Epsitec.Cresus.snk">
