@@ -1,5 +1,6 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -28,49 +29,41 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		public static void Import(BusinessContextManager businessContextManager, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			// TODO Import group & activity data.
 			// TODO Import household data (match and merge or create if no match)
 		
 			var eervPhysicalPersons = eervPersons.Where (p => string.IsNullOrWhiteSpace (p.CorporateName));
-			EervParishDataImporter.ImportEervPhysicalPersons (businessContextCreator, businessContextCleaner, parishName, eervPhysicalPersons, eervHouseholds);
+			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervPhysicalPersons, eervHouseholds);
 		
 			var eervLegalPersons = eervPersons.Where (p => !string.IsNullOrWhiteSpace (p.CorporateName));
-			EervParishDataImporter.ImportEervLegalPersons (businessContextCreator, businessContextCleaner, eervLegalPersons);
+			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervLegalPersons);
 		}
 
 
-		private static void ImportEervPhysicalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			var matches = EervParishDataImporter.FindMatches (businessContextCreator, businessContextCleaner, eervPersons, eervHouseholds);
+			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervPersons, eervHouseholds);
 
-			EervParishDataImporter.ProcessMatches (businessContextCreator, businessContextCleaner, parishName, matches);
+			EervParishDataImporter.ProcessMatches (businessContextManager, parishName, matches);
 		}
 
 
-		private static void ImportEervLegalPersons(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons)
+		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, IEnumerable<EervPerson> eervPersons)
 		{
 			// TODO Import legal persons.
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContextManager businessContextManager, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			using (BusinessContext businessContext = businessContextCreator ())
+			Func<BusinessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>>> function = b =>
 			{
-				try
-				{
-					return EervParishDataImporter.FindMatches (businessContext, eervPersons, eervHouseholds);
-				}
-				finally
-				{
-					if (businessContext != null)
-					{
-						businessContextCleaner (businessContext);
-					}
-				}
-			}
+				return EervParishDataImporter.FindMatches (b, eervPersons, eervHouseholds);
+			};
+
+			return businessContextManager.Execute (function);			
 		}
 
 		
@@ -512,23 +505,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessMatches(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
+		private static void ProcessMatches(BusinessContextManager businessContextManager, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
 		{
-			using (BusinessContext businessContext = businessContextCreator ())
+			Action<BusinessContext> action = b =>
 			{
-				try
-				{
-					EervParishDataImporter.ProcessMatches (businessContext, parishName, matches);
-				}
-				finally
-				{
-					if (businessContext != null)
-					{
-						businessContext.SaveChanges ();
-						businessContextCleaner (businessContext);
-					}
-				}
-			}
+				EervParishDataImporter.ProcessMatches (b, parishName, matches);
+			};
+
+			businessContextManager.Execute (action);
 		}
 
 

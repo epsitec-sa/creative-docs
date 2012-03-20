@@ -3,10 +3,7 @@ using Epsitec.Aider.Data.ECh;
 using Epsitec.Aider.Data.Eerv;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Widgets;
-
 using Epsitec.Cresus.Core;
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
@@ -46,9 +43,6 @@ namespace Aider.Tests.Vs
 
 				var businessContextManager = new BusinessContextManager (app.Data);
 
-				Func<BusinessContext> businessContextCreator = () => new BusinessContext (app.Data);
-				Action<BusinessContext> businessContextCleaner = b => Application.ExecuteAsyncCallbacks ();
-
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextManager, eChReportedPersons);
@@ -61,7 +55,7 @@ namespace Aider.Tests.Vs
 				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
 				var eervPersons = EervDataLoader.LoadEervPersons (eervDataFile).ToList ();
 				var eervHouseholds = EervDataLoader.LoadEervHouseholds (eervDataFile).ToList ();
-				EervParishDataImporter.Import (businessContextCreator, businessContextCleaner, "Morges", eervPersons, eervHouseholds);
+				EervParishDataImporter.Import (businessContextManager, "Morges", eervPersons, eervHouseholds);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
