@@ -496,6 +496,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,    this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Hilited,    "1");
 
+			this.UpdateAfterCodeTVAChanged (line+1);
+
 			if (total == 3)
 			{
 				//	Met à jour les données de la contrepartie.						   
@@ -803,6 +805,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
+			if (columnType == ColumnType.CodeTVA)
+			{
+				this.UpdateAfterCodeTVAChanged (line);
+			}
+
 			var type = this.GetTypeEcriture (line);
 
 			if ((type == TypeEcriture.Nouveau || type == TypeEcriture.Vide) && this.IsTVA (line))
@@ -916,6 +923,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.UpdateMultiEditionData ();  // recalcule le total
+		}
+
+		private void UpdateAfterCodeTVAChanged(int line)
+		{
+			//	Appelé lorsque le code TVA a changé, pour mettre à jour les taux de TVA dans le menu.
+			if (line > 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				(this.dataAccessor.EditionLine[line] as JournalEditionLine).UpdateCodeTVAParameters ();
+			}
 		}
 
 		private void NouveauMontant_TTC_HT_Changed(int line, ColumnType columnType)

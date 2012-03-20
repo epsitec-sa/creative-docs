@@ -393,7 +393,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private void UpdateCodeTVAParameters()
+		public void UpdateCodeTVAParameters()
 		{
 			var parameters = this.GetParameters (ColumnType.TauxTVA);
 			parameters.Clear ();
