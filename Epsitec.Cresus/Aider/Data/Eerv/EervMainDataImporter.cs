@@ -27,43 +27,44 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository)
+		public static void Import(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository)
 		{
-			var result = EervMainDataImporter.ImportRegionsAndParishes (businessContextCreator, businessContextCleaner, parishRepository);
+			var result = EervMainDataImporter.ImportRegionsAndParishes (businessContextManager, parishRepository);
 
 			var regionNumbersToEntityKeys = result.Item1;
 			var parishNamesToEntityKeys = result.Item2;
 
-			EervMainDataImporter.AssignPersonsToParishes (businessContextCreator, businessContextCleaner, parishRepository, parishNamesToEntityKeys);
+			EervMainDataImporter.AssignPersonsToParishes (businessContextManager, parishRepository, parishNamesToEntityKeys);
 		}
 
 
-		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository)
+		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository)
+		{
+			Func<BusinessContext, Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>>> function = b =>
+			{
+				return ImportRegionsAndParishes (b, parishRepository);
+			};
+
+			return businessContextManager.Execute (function);
+		}
+
+
+		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(BusinessContext businessContext, ParishAddressRepository parishRepository)
 		{
 			Dictionary<int, EntityKey> regionNumbersToEntityKeys;
 			Dictionary<string, EntityKey> parishNamesToEntityKeys;
 
 			var regions = EervMainDataImporter.GetRegions (parishRepository);
 
-			using (var businessContext = businessContextCreator ())
-			{
-				try
-				{
-					var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
-					var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regionGroups, regions);
+			var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
+			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regionGroups, regions);
 
-					businessContext.SaveChanges ();
+			businessContext.SaveChanges ();
 
-					var dataContext = businessContext.DataContext;
+			var dataContext = businessContext.DataContext;
 
-					regionNumbersToEntityKeys = regionGroups.ToDictionary (r => r.Key, r => dataContext.GetNormalizedEntityKey (r.Value).Value);
-					parishNamesToEntityKeys = parishGroups.ToDictionary (p=> p.Key, p => dataContext.GetNormalizedEntityKey (p.Value).Value);
-				}
-				finally
-				{
-					businessContextCleaner (businessContext);
-				}
-			}
+			regionNumbersToEntityKeys = regionGroups.ToDictionary (r => r.Key, r => dataContext.GetNormalizedEntityKey (r.Value).Value);
+			parishNamesToEntityKeys = parishGroups.ToDictionary (p => p.Key, p => dataContext.GetNormalizedEntityKey (p.Value).Value);
 
 			return Tuple.Create (regionNumbersToEntityKeys, parishNamesToEntityKeys);
 		}
@@ -154,7 +155,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignPersonsToParishes(Func<BusinessContext> businessContextCreator, Action<BusinessContext> businessContextCleaner, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
+		private static void AssignPersonsToParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
 		{
 			// TODO This method could be significantly improved performance wise if we could have a
 			// way to return only a subset of entities from a request to the DataContext. Because
@@ -170,32 +171,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 			do
 			{
-				BusinessContext businessContext = null;
+				var processed = EervMainDataImporter.AssignPersonsToParishes (businessContextManager, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
 
-				try
-				{
-					businessContext = businessContextCreator ();
-
-					var processed = EervMainDataImporter.AssignPersonsToParishes (businessContext, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
-
-					if (processed.Any ())
-					{
-						processedPersons.AddRange (processed);
-					}
-					else
-					{
-						finished = true;
-					}
-				}
-				finally
-				{
-					if (businessContext != null)
-					{
-						businessContext.SaveChanges ();
-						businessContextCleaner (businessContext);
-						businessContext.Dispose ();
-					}
-				}
+				 if (processed.Any ())
+				 {
+					 processedPersons.AddRange (processed);
+				 }
+				 else
+				 {
+					 finished = true;
+				 }
 
 				var t = DateTime.Now;
 				var lowerBound = batchIndex * batchSize;
@@ -206,6 +191,17 @@ namespace Epsitec.Aider.Data.Eerv
 				batchIndex++;
 			}
 			while (!finished);
+		}
+
+
+		private static HashSet<EntityKey> AssignPersonsToParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, HashSet<EntityKey> processedPersons, int batchSize)
+		{
+			Func<BusinessContext, HashSet<EntityKey>> function = b =>
+			{
+				return EervMainDataImporter.AssignPersonsToParishes (b, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
+			};
+
+			return businessContextManager.Execute (function);
 		}
 
 
@@ -228,6 +224,8 @@ namespace Epsitec.Aider.Data.Eerv
 					processed.Add (personEntityKey);
 				}
 			}
+
+			businessContext.SaveChanges ();
 
 			return processed;
 		}

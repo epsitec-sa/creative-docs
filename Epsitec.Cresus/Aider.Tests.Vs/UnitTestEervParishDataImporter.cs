@@ -55,7 +55,7 @@ namespace Aider.Tests.Vs
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				var parishRepository = ParishAddressRepository.Current;
-				EervMainDataImporter.Import (businessContextCreator, businessContextCleaner, parishRepository);
+				EervMainDataImporter.Import (businessContextManager, parishRepository);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
