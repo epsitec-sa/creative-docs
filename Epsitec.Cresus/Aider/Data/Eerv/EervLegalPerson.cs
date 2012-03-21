@@ -1,4 +1,4 @@
-﻿using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -9,25 +9,32 @@ namespace Epsitec.Aider.Data.Eerv
 {
 
 
-	internal sealed class EervGroup : Freezable
+	internal sealed class EervLegalPerson : Freezable
 	{
 
 
-		public EervGroup(string id, string name)
+		public EervLegalPerson(string id, string name, EervAddress address, EervCoordinates coordinates)
 		{
 			this.Id = id;
 			this.Name = name;
+			this.Address = address;
+			this.Coordinates = coordinates;
 
 			this.activities = new List<EervActivity> ();
-			this.groupDefinitionIds = new List<string> ();
 		}
 
 
-		public IList<string> GroupDefinitionIds
+		public EervPerson ContactPerson
 		{
 			get
 			{
-				return this.groupDefinitionIds;
+				return this.contactPerson;
+			}
+			set
+			{
+				this.ThrowIfReadOnly ();
+
+				this.contactPerson = value;
 			}
 		}
 
@@ -43,20 +50,24 @@ namespace Epsitec.Aider.Data.Eerv
 
 		protected override void HandleFreeze()
 		{
+			base.HandleFreeze ();
+
 			this.activities = this.activities.AsReadOnlyCollection ();
-			this.groupDefinitionIds = this.groupDefinitionIds.AsReadOnlyCollection ();
 		}
 
 
 		public readonly string Id;
 		public readonly string Name;
+		public readonly EervAddress Address;
+		public readonly EervCoordinates Coordinates;
 
 
+		private EervPerson contactPerson;
 		private IList<EervActivity> activities;
-		private IList<string> groupDefinitionIds;
 
 
 	}
 
 
 }
+

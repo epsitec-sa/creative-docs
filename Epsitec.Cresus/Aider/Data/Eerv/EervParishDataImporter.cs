@@ -29,45 +29,37 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		public static void Import(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
 		{
-			// TODO Import group & activity data.
-			// TODO Import household data (match and merge or create if no match)
+			// TODO Import legal persons
+			// TODO Import group & activity data
 		
-			var eervPhysicalPersons = eervPersons.Where (p => string.IsNullOrWhiteSpace (p.CorporateName));
-			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervPhysicalPersons, eervHouseholds);
-		
-			var eervLegalPersons = eervPersons.Where (p => !string.IsNullOrWhiteSpace (p.CorporateName));
-			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervLegalPersons);
+			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervParishData);
 		}
 
 
-		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, string parishName, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
 		{
-			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervPersons, eervHouseholds);
+			// TODO Import household data
+
+			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
 
 			EervParishDataImporter.ProcessMatches (businessContextManager, parishName, matches);
 		}
 
 
-		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, IEnumerable<EervPerson> eervPersons)
-		{
-			// TODO Import legal persons.
-		}
-
-
-		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContextManager businessContextManager, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContextManager businessContextManager, EervParishData eervParishData)
 		{
 			Func<BusinessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>>> function = b =>
 			{
-				return EervParishDataImporter.FindMatches (b, eervPersons, eervHouseholds);
+				return EervParishDataImporter.FindMatches (b, eervParishData);
 			};
 
 			return businessContextManager.Execute (function);			
 		}
 
 		
-		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContext businessContext, IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds)
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContext businessContext, EervParishData eervParishData)
 		{
 			var databasePersons = businessContext.GetAllEntities<AiderPersonEntity> ();
 
@@ -79,7 +71,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var dataContext = businessContext.DataContext;
 
-			var matches = EervParishDataImporter.FindMatches (eervPersons, eervHouseholds, databasePersons);
+			var matches = EervParishDataImporter.FindMatches (eervParishData, databasePersons);
 
 			return matches.ToDictionary
 			(
@@ -89,21 +81,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> FindMatches(IEnumerable<EervPerson> eervPersons, IEnumerable<EervHousehold> eervHouseholds, IEnumerable<AiderPersonEntity> databasePersons)
+		private static Dictionary<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> FindMatches(EervParishData eervParishData, IEnumerable<AiderPersonEntity> databasePersons)
 		{
 			var normalizedDatabasePersons = databasePersons.ToDictionary (p => EervParishDataImporter.Normalize (p));
-			
-			var idToEervHouseholds = eervHouseholds.ToDictionary (h => h.Id);
-
-			var normalizedEervPersons = eervPersons
-				.Select (p => Tuple.Create (p, idToEervHouseholds[p.HouseholdId]))
-				.ToDictionary (p => EervParishDataImporter.Normalize (p.Item1, p.Item2));
+			var normalizedEervPersons = eervParishData.Persons.ToDictionary (p => EervParishDataImporter.Normalize (p));
 
 			var matches = EervParishDataImporter.FindMatches (normalizedEervPersons.Keys, normalizedDatabasePersons.Keys);
 
 			return matches.ToDictionary
 			(
-				kvp => normalizedEervPersons[kvp.Key].Item1,
+				kvp => normalizedEervPersons[kvp.Key],
 				kvp => kvp.Value.Select (m => Tuple.Create (normalizedDatabasePersons[m.Item1], m.Item2)).ToList ()
 			);
 		}
@@ -431,28 +418,28 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static NormalizedPerson Normalize(EervPerson person, EervHousehold household)
+		private static NormalizedPerson Normalize(EervPerson person)
 		{
 			return new NormalizedPerson ()
 			{
-				Firstnames = EervParishDataImporter.NormalizeComposedName (person.Firstnames),
+				Firstnames = EervParishDataImporter.NormalizeComposedName (person.Firstname),
 				Lastnames = EervParishDataImporter.NormalizeComposedName (person.Lastname),
 				DateOfBirth = person.DateOfBirth,
 				Sex = person.Sex,
 				Origins = person.Origins,
-				Address = EervParishDataImporter.Normalize (household),
+				Address = EervParishDataImporter.Normalize (person.HouseHold.Address),
 			};
 		}
 
 
-		private static NormalizedAddress Normalize(EervHousehold household)
+		private static NormalizedAddress Normalize(EervAddress address)
 		{
 			return new NormalizedAddress ()
 			{
-				Street = SwissPostStreet.NormalizeStreetName (household.StreetName),
-				HouseNumber = SwissPostStreet.NormalizeHouseNumber ((household.HouseNumber ?? 0).ToString ()),
-				ZipCode = InvariantConverter.ParseInt (household.ZipCode),
-				Town = EervParishDataImporter.NormalizeTown (household.City),
+				Street = SwissPostStreet.NormalizeStreetName (address.StreetName),
+				HouseNumber = SwissPostStreet.NormalizeHouseNumber ((address.HouseNumber ?? 0).ToString ()),
+				ZipCode = InvariantConverter.ParseInt (address.ZipCode),
+				Town = EervParishDataImporter.NormalizeTown (address.Town),
 			};
 		}
 
@@ -652,8 +639,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CombineCoordinates(BusinessContext businessContext, EervPerson eervPerson, AiderPersonEntity aiderPerson)
 		{
-			var email = eervPerson.EmailAddress;
-			var mobile = eervPerson.MobilePhoneNumber;
+			var email = eervPerson.Coordinates.EmailAddress;
+			var mobile = eervPerson.Coordinates.MobilePhoneNumber;
 
 			var hasEmail = !string.IsNullOrEmpty (email);
 			var hasMobile = !string.IsNullOrEmpty (mobile);
@@ -726,7 +713,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var aiderPerson = businessContext.CreateEntity<AiderPersonEntity> ();
 			var eChPerson = aiderPerson.eCH_Person;
 
-			eChPerson.PersonFirstNames = eervPerson.Firstnames;
+			eChPerson.PersonFirstNames = eervPerson.Firstname;
 			eChPerson.PersonOfficialName = eervPerson.Lastname;
 			eChPerson.PersonDateOfBirth = eervPerson.DateOfBirth;
 			eChPerson.PersonSex = eervPerson.Sex;

@@ -64,8 +64,15 @@
     <Compile Include="Data\ECh\EChAddress.PatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
+    <Compile Include="Data\Eerv\EervAddress.cs" />
+    <Compile Include="Data\Eerv\EervCoordinates.cs" />
+    <Compile Include="Data\Eerv\RecordHelper.cs" />
+    <Compile Include="Data\Eerv\EervMainDataLoader.cs" />
+    <Compile Include="Data\Eerv\EervParishData.cs" />
+    <Compile Include="Data\Eerv\EervLegalPerson.cs" />
+    <Compile Include="Data\Eerv\EervMainData.cs" />
     <Compile Include="Data\Eerv\EervMainDataImporter.cs" />
-    <Compile Include="Data\Eerv\EervDataLoader.cs" />
+    <Compile Include="Data\Eerv\EervParishDataLoader.cs" />
     <Compile Include="Data\Eerv\EervGroupDefinition.cs" />
     <Compile Include="Data\Eerv\EervGroup.cs" />
     <Compile Include="Data\Eerv\EervHousehold.cs" />

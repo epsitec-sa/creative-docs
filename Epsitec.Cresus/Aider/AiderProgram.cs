@@ -93,7 +93,7 @@ namespace Epsitec.Aider
 
 			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved.OrderBy (x => x), System.Text.Encoding.Default);
 			System.IO.File.WriteAllLines ("unresolved addresses (compact).txt", unresolvedCompact.OrderBy (x => x), System.Text.Encoding.Default);
-			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);		
+			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);
 		}
 
 		private static void TestEChImporter()
@@ -117,7 +117,7 @@ namespace Epsitec.Aider
 				app.SetupApplication ();
 
 				var businessContextManager = new BusinessContextManager (app.Data);
-				
+
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextManager, eChReportedPersons);
@@ -127,10 +127,11 @@ namespace Epsitec.Aider
 				EervMainDataImporter.Import (businessContextManager, parishRepository);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
-				var eervDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
-				var eervPersons = EervDataLoader.LoadEervPersons (eervDataFile).ToList ();
-				var eervHouseholds = EervDataLoader.LoadEervHouseholds (eervDataFile).ToList ();
-				EervParishDataImporter.Import (businessContextManager, "Morges", eervPersons, eervHouseholds);
+				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
+				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.csv");
+				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.csv");
+				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile);
+				EervParishDataImporter.Import (businessContextManager, "Morges", eervParishData);
 				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
