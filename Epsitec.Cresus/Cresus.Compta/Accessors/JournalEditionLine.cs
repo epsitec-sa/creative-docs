@@ -123,19 +123,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 						data.Error = "Il faut donner le montant TTC ou le montant HT, mais pas les deux";
 						return;
 					}
-				}
 
-				if (montantTTC.HasValue)
-				{
-					if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
-						montantTTC.GetValueOrDefault () == 0)  // montant nul ?
+					if (montantTTC.HasValue)
 					{
-						data.Error = "Le montant ne peut pas être nul";
-						data.Text = Converters.MontantToString (0);
-						return;
-					}
+						if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+						montantTTC.GetValueOrDefault () == 0)  // montant nul ?
+						{
+							data.Error = "Le montant ne peut pas être nul";
+							data.Text = Converters.MontantToString (0);
+							return;
+						}
 
-					Validators.ValidateMontant (data, emptyAccepted: false);
+						Validators.ValidateMontant (data, emptyAccepted: false);
+					}
 				}
 
 				return;

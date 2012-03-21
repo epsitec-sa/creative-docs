@@ -593,23 +593,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			bool defaultDébit = false;
 
-			if (débit  != null && débit .CodeTVA == null &&
-				crédit != null && crédit.CodeTVA == null)
+			if (débit == null || crédit == null)  // est-ce une écriture multiple ?
 			{
-				//	Demande s'il faut passer la TVA sur le compte au débit ou au crédit.
-				var dialog = new DébitCréditDialog (this.controller, débit, crédit);
-				dialog.Show ();
-
-				if (!dialog.IsDébit && !dialog.IsCrédit)  // fermé sans choisir ?
-				{
-					return;
-				}
-
-				defaultDébit = dialog.IsCrédit;
+				defaultDébit = (débit == null);
 			}
-			else if (débit == null)
+			else
 			{
-				defaultDébit = true;
+				bool débitSansCodeTVA  = (débit  != null && débit.CodeTVA == null);
+				bool créditSansCodeTVA = (crédit != null && crédit.CodeTVA == null);
+
+				if ((débitSansCodeTVA && créditSansCodeTVA) || (!débitSansCodeTVA && !créditSansCodeTVA))
+				{
+					//	Demande s'il faut passer la TVA sur le compte au débit ou au crédit.
+					var dialog = new DébitCréditDialog (this.controller, débit, crédit);
+					dialog.Show ();
+
+					if (!dialog.IsDébit && !dialog.IsCrédit)  // fermé sans choisir ?
+					{
+						return;
+					}
+
+					defaultDébit = dialog.IsCrédit;
+				}
 			}
 
 			int lineToSelect = -1;
@@ -770,13 +775,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
 					type == TypeEcriture.Vide)
 				{
-					if (this.IsDébitTVA (line))
+					if (this.IsDébitTVA (line) && !this.IsCréditTVA (line))
 					{
 						this.GetFieldController (ColumnType.Débit, line).ToComplete = true;
 						toComplete = true;
 					}
 
-					if (this.IsCréditTVA (line))
+					if (this.IsCréditTVA (line) && !this.IsDébitTVA (line))
 					{
 						this.GetFieldController (ColumnType.Crédit, line).ToComplete = true;
 						toComplete = true;
@@ -1146,8 +1151,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private bool IsTVA(int line)
 		{
-			//	Retourne true si le compte au débit ou au crédit a un code TVA.
-			return this.IsDébitTVA (line) || this.IsCréditTVA (line);
+			//	Retourne true si le compte au débit ou au crédit a un code TVA, mais pas les deux.
+			return this.IsDébitTVA (line) ^ this.IsCréditTVA (line);
 		}
 
 		private bool IsDébitTVA(int line)
