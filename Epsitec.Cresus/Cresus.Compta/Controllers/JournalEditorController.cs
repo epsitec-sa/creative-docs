@@ -599,8 +599,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				bool débitSansCodeTVA  = (débit  != null && débit.CodeTVA == null);
-				bool créditSansCodeTVA = (crédit != null && crédit.CodeTVA == null);
+				bool débitSansCodeTVA  = débit .CodeTVA == null;
+				bool créditSansCodeTVA = crédit.CodeTVA == null;
 
 				if ((débitSansCodeTVA && créditSansCodeTVA) || (!débitSansCodeTVA && !créditSansCodeTVA))
 				{
@@ -687,14 +687,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiLineSwapAction()
 		{
 			//	Permute le débit et le crédit dans la ligne courante.
-			var débit  = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit);
-			var crédit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit);
+			var type = this.GetTypeEcriture (this.selectedLine);
 
-			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Débit,  crédit);
-			this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Crédit, débit);
+			this.SwapDébitCrédit (this.selectedLine);
+
+			if (type == TypeEcriture.BaseTVA &&
+				this.GetTypeEcriture (this.selectedLine+1) == TypeEcriture.CodeTVA)
+			{
+				this.SwapDébitCrédit (this.selectedLine+1);
+			}
+
+			if (type == TypeEcriture.CodeTVA &&
+				this.GetTypeEcriture (this.selectedLine-1) == TypeEcriture.BaseTVA)
+			{
+				this.SwapDébitCrédit (this.selectedLine-1);
+			}
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
+		}
+
+		private void SwapDébitCrédit(int line)
+		{
+			var débit  = this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit);
+			var crédit = this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit);
+
+			this.dataAccessor.EditionLine[line].SetText (ColumnType.Débit, crédit);
+			this.dataAccessor.EditionLine[line].SetText (ColumnType.Crédit, débit);
 		}
 
 		public override void MultiLineAutoAction()

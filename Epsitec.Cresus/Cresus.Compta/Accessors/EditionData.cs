@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get;
 		}
 
+#if false
 		public bool ToComplete
 		{
 			//	Détermine si le champ a un cadre rouge pointillé.
@@ -62,6 +63,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 			get;
 		}
+#endif
 
 
 		public bool HasText

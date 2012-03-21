@@ -113,20 +113,20 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			//	Détermine si le champ a un cadre rouge pointillé.
 			get
 			{
-				if (this.editionData == null)
+				if (this.foregroundFrame == null)
 				{
 					return false;
 				}
 				else
 				{
-					return this.editionData.ToComplete;
+					return this.foregroundFrame.ToComplete;
 				}
 			}
 			set
 			{
-				if (this.editionData != null && this.editionData.ToComplete != value)
+				if (this.foregroundFrame != null && this.foregroundFrame.ToComplete != value)
 				{
-					this.editionData.ToComplete = value;
+					this.foregroundFrame.ToComplete = value;
 					this.UpdateForegroundFrame ();
 					this.UpdateTooltip ();
 				}
@@ -138,20 +138,20 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			//	Détermine si le champ a un fond hachuré.
 			get
 			{
-				if (this.editionData == null)
+				if (this.foregroundFrame == null)
 				{
 					return false;
 				}
 				else
 				{
-					return this.editionData.EmptyLine;
+					return this.foregroundFrame.EmptyLine;
 				}
 			}
 			set
 			{
-				if (this.editionData != null && this.editionData.EmptyLine != value)
+				if (this.foregroundFrame != null && this.foregroundFrame.EmptyLine != value)
 				{
-					this.editionData.EmptyLine = value;
+					this.foregroundFrame.EmptyLine = value;
 					this.UpdateForegroundFrame ();
 				}
 			}
@@ -161,9 +161,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			if (this.foregroundFrame != null)
 			{
-				this.foregroundFrame.ToComplete = this.ToComplete;
-				this.foregroundFrame.EmptyLine  = this.EmptyLine;
-				this.foregroundFrame.Visibility = this.ToComplete || this.EmptyLine;
+				this.foregroundFrame.Visibility = this.foregroundFrame.ToComplete || this.foregroundFrame.EmptyLine;
 			}
 		}
 
