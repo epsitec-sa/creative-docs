@@ -1,14 +1,16 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using System.Collections.Generic;
-using System.Linq;
+using Epsitec.Common.BigList;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Cresus.DebugViewer.Accessors
 {
-	public class LogDataAccessor
+	public class LogDataAccessor : IItemDataProvider<Data.LogRecord>, IItemDataMapper<Data.LogRecord>
 	{
 		public LogDataAccessor(string folderPath)
 		{
@@ -81,5 +83,39 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 		private readonly string folderPath;
 		private readonly List<Data.LogRecord> messageRecords;
 		private readonly List<Data.LogRecord> imageRecords;
+
+		#region IItemDataMapper<Data.LogRecord> Members
+
+		public ItemData<Data.LogRecord> Map(Data.LogRecord value)
+		{
+			return new ItemData<Data.LogRecord> (value)
+			{
+				Height = 20,
+			};
+		}
+
+		#endregion
+
+		#region IItemDataProvider<string> Members
+
+		public bool Resolve(int index, out Data.LogRecord value)
+		{
+			value = this.messageRecords[index];
+			return true;
+		}
+
+		#endregion
+
+		#region IItemDataProvider Members
+
+		public int Count
+		{
+			get
+			{
+				return this.messageRecords.Count;
+			}
+		}
+
+		#endregion
 	}
 }

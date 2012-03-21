@@ -1,4 +1,4 @@
-//	Copyright © 2005-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -1676,6 +1676,32 @@ namespace Epsitec.Common.Widgets
 				}
 
 				return new Drawing.Size (this.width, this.height);
+			}
+		}
+
+		double Helpers.IClientInfo.Width
+		{
+			get
+			{
+				if (this.IsActualGeometryValid == false)
+				{
+//					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Width");
+				}
+
+				return this.width;
+			}
+		}
+
+		double Helpers.IClientInfo.Height
+		{
+			get
+			{
+				if (this.IsActualGeometryValid == false)
+				{
+//					System.Diagnostics.Debug.WriteLine ("Layout dirty when calling Client.Height");
+				}
+
+				return this.height;
 			}
 		}
 

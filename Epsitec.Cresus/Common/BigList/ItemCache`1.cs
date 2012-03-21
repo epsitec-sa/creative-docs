@@ -63,7 +63,12 @@ namespace Epsitec.Common.BigList
 			return this.GetItemState (index, ItemStateDetails.Full).Height;
 		}
 
-		public ItemData<TData> GetItemData(int index)
+		public override ItemData GetItemData(int index)
+		{
+			return this.GetItemDataExact (index);
+		}
+
+		public ItemData<TData> GetItemDataExact(int index)
 		{
 			this.exclusion.EnterReadLock ();
 			var data = this.GetItemDataLocked (index);
@@ -240,19 +245,6 @@ namespace Epsitec.Common.BigList
 	}
 
 	public class ItemCacheEntry<T> : ItemCacheEntry
-	{
-	}
-
-	public abstract class ItemData
-	{
-		public int Height
-		{
-			get;
-			set;
-		}
-	}
-
-	public class ItemData<T> : ItemData
 	{
 	}
 }

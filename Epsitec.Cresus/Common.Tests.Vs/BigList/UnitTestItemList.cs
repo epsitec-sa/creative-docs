@@ -368,7 +368,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			public ItemData<int> Map(int value)
 			{
-				return new ItemData<int> ()
+				return new ItemData<int> (value)
 				{
 					Height = value,
 				};
@@ -424,7 +424,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			public ItemData<int> Map(int value)
 			{
-				return new ItemData<int> ()
+				return new ItemData<int> (value)
 				{
 					Height = this.height,
 				};

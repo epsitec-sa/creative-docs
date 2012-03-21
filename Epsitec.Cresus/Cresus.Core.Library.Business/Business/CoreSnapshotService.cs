@@ -113,6 +113,12 @@ namespace Epsitec.Cresus.Core.Library.Business
 			string arguments = InvariantConverter.Format (@"-monitor ""{0}"" {1}", this.sessionPath, System.Diagnostics.Process.GetCurrentProcess ().Id);
 			string exePath   = System.IO.Path.Combine (System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location), "App.DebugService.exe");
 
+			if (System.IO.File.Exists (exePath) == false)
+			{
+				System.Diagnostics.Debug.WriteLine ("Could not start Debug Monitor, not installed");
+				return;
+			}
+
 			var startInfo = new System.Diagnostics.ProcessStartInfo (exePath, arguments)
 			{
 				WindowStyle = System.Diagnostics.ProcessWindowStyle.Hidden

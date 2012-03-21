@@ -15,7 +15,8 @@ namespace Epsitec.Common.BigList
 			this.height = height;
 		}
 
-		public int Index
+		
+		public int								Index
 		{
 			get
 			{
@@ -23,7 +24,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int Offset
+		public int								Offset
 		{
 			get
 			{
@@ -31,7 +32,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int Height
+		public int								Height
 		{
 			get
 			{
@@ -39,8 +40,9 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		private int index;
-		private int offset;
-		private int height;
+		
+		private int								index;
+		private int								offset;
+		private int								height;
 	}
 }

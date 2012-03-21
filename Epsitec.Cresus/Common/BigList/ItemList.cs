@@ -101,6 +101,14 @@ namespace Epsitec.Common.BigList
 			get;
 		}
 
+		public IList<ItemListRow>				VisibleRows
+		{
+			get
+			{
+				return this.visibleRows.AsReadOnly ();
+			}
+		}
+
 		
 		public void Reset()
 		{
@@ -430,8 +438,7 @@ namespace Epsitec.Common.BigList
 		}
 
 		
-		private List<ItemListRow> visibleRows;
-		
+		private List<ItemListRow>				visibleRows;
 		private int								activeIndex;
 		private int								visibleIndex;
 		private int								visibleOffset;

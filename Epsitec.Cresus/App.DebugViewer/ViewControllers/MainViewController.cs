@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.BigList;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Library;
@@ -75,14 +76,15 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Dock = DockStyle.Fill,
 			};
 
-			this.historyList = new ScrollList ()
+			this.historyList = new ItemListVerticalContentView ()
 			{
 				Parent = left,
 				Dock = DockStyle.Fill,
+				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.accessor.GetMessage (x)),
 			};
 
-			this.historyList.Items.ValueConverter = x => this.accessor.GetMessage ((Data.LogRecord) x).ToString ();
-			this.historyList.SelectedItemChanged += this.HandleHistoryListSelectedItemChanged;
+//			this.historyList.Items.ValueConverter = x => this.accessor.GetMessage ((Data.LogRecord) x).ToString ();
+//			this.historyList.SelectedItemChanged += this.HandleHistoryListSelectedItemChanged;
 
 			this.RefreshContents ();
 		}
@@ -90,16 +92,20 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		public void DefineAccessor(LogDataAccessor accessor)
 		{
 			this.accessor = accessor;
+			
+			this.historyData = new ItemList<Data.LogRecord> (this.accessor, this.accessor);
+			this.historyList.ItemList = this.historyData;
+			
 			this.RefreshContents ();
 		}
 
-		private void HandleHistoryListSelectedItemChanged(object sender)
-		{
-			var item = this.historyList.Items.Values[this.historyList.SelectedItemIndex] as Data.LogRecord;
-			var time = item.TimeStamp;
+		//private void HandleHistoryListSelectedItemChanged(object sender)
+		//{
+		//    var item = this.historyList.Items.Values[this.historyList.SelectedItemIndex] as Data.LogRecord;
+		//    var time = item.TimeStamp;
 
-			this.SetMainImage (this.accessor.GetStaticImage (this.accessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
-		}
+		//    this.SetMainImage (this.accessor.GetStaticImage (this.accessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
+		//}
 
 		private void SetMainImage(StaticImage staticImage)
 		{
@@ -121,16 +127,17 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				return;
 			}
 
-			this.historyList.Items.Clear ();
-			this.historyList.Items.AddRange (this.accessor.Messages);
+			this.historyData.Reset ();
+//			this.historyList.Items.Clear ();
+//			this.historyList.Items.AddRange (this.accessor.Messages);
 		}
 
 		private readonly CoreInteractiveApp		host;
 
 		private FrameBox						container;
 		private FrameBox						view;
-		private ScrollList						historyList;
-		private ScrollList						screenList;
+		private ItemListVerticalContentView		historyList;
+		private ItemList						historyData;
 		private StaticImage						mainImage;
 		private LogDataAccessor					accessor;
 	}
