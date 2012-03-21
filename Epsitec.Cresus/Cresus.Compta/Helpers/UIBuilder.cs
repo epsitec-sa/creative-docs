@@ -424,6 +424,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color BackInsideSearchColor		= Color.FromHexa ("fff000");   // jaune pétant
 		public static readonly Color BackOutsideSearchColor		= Color.FromAlphaColor (0.1, Color.FromHexa ("fff000"));   // jaune très transparent
 
+		public static readonly Color CompteYesColor				= Color.FromHexa ("c2f3c2");  // vert pastel
+		public static readonly Color CompteNoColor				= Color.FromHexa ("f3c2c2");  // rouge pastel
+
 		public static readonly Color GraphicGreenColor			= Color.FromHexa ("00bb00");  // vert
 		public static readonly Color GraphicRedColor			= Color.FromHexa ("ff0000");  // rouge
 

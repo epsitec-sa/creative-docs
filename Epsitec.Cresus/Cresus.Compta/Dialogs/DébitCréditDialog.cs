@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -128,10 +129,28 @@ namespace Epsitec.Cresus.Compta.Dialogs
 
 		private void CreateInfo(Widget parent, ComptaCompteEntity compte)
 		{
+			var color = Color.Empty;
+
+			if (compte != null)
+			{
+				//	On met la couleur verte aux comptes de charge/produit pour inciter à les utiliser.
+				//	A l'inverse, les comptes actif/passif ont la couleur rouge, pour décourager de les choisir.
+				if (compte.Catégorie == CatégorieDeCompte.Charge ||
+					compte.Catégorie == CatégorieDeCompte.Produit)
+				{
+					color = UIBuilder.CompteYesColor;
+				}
+				else
+				{
+					color = UIBuilder.CompteNoColor;
+				}
+			}
+
 			var frame = new FrameBox
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
+				BackColor     = color,
 				Dock          = DockStyle.Fill,
 				Margins = new Margins (1, 1, 0, 0),
 			};
