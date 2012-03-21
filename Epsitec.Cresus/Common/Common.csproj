@@ -903,6 +903,7 @@
     <Compile Include="Types\FieldRelation.cs" />
     <Compile Include="Types\FieldSource.cs" />
     <Compile Include="Types\FormattedText.cs" />
+    <Compile Include="Types\Freezable.cs" />
     <Compile Include="Types\GroupDescription.cs" />
     <Compile Include="Types\HiddenAttribute.cs" />
     <Compile Include="Types\ICaption.cs" />
