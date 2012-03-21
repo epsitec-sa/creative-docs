@@ -14,19 +14,19 @@ namespace Epsitec.Common.BigList
 			this.SelectionMode = ItemSelectionMode.ExactlyOne;
 		}
 
-		
-		public ItemSelectionMode				SelectionMode
+
+		public ItemSelectionMode SelectionMode
 		{
 			get;
 			set;
 		}
 
-		public abstract int						Count
+		public abstract int Count
 		{
 			get;
 		}
 
-		public int								ActiveIndex
+		public int ActiveIndex
 		{
 			get
 			{
@@ -41,7 +41,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								VisibleIndex
+		public int VisibleIndex
 		{
 			get
 			{
@@ -64,7 +64,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								VisibleOffset
+		public int VisibleOffset
 		{
 			get
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								VisibleHeight
+		public int VisibleHeight
 		{
 			get
 			{
@@ -88,7 +88,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								VisibleCount
+		public int VisibleCount
 		{
 			get
 			{
@@ -96,12 +96,12 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public abstract ItemCache				Cache
+		public abstract ItemCache Cache
 		{
 			get;
 		}
 
-		public IList<ItemListRow>				VisibleRows
+		public IList<ItemListRow> VisibleRows
 		{
 			get
 			{
@@ -109,14 +109,14 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		
+
 		public void Reset()
 		{
 			this.ResetCache ();
 			this.SetVisibleIndex (0);
 		}
 
-		public void Select(int index, bool isSelected)
+		public void Select(int index, ItemSelection selectionMode)
 		{
 			if ((index < 0) ||
 				(index >= this.Count))
@@ -125,11 +125,11 @@ namespace Epsitec.Common.BigList
 			}
 
 
-			if (this.ChangeFlagState (index, x => x.Selected = isSelected))
+			if (this.ChangeFlagState (index, x => x.Select (selectionMode)))
 			{
 				//	Process state change. We might need to deselect/reselect others.
 
-				this.ChangeSelection (index, isSelected);
+				this.ChangeSelection (index, this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected);
 			}
 		}
 
@@ -157,7 +157,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		
+
 		public ItemState GetItemState(int index)
 		{
 			return this.Cache.GetItemState (index, ItemStateDetails.Full);
@@ -180,7 +180,7 @@ namespace Epsitec.Common.BigList
 			this.SetItemState (index, state);
 		}
 
-		
+
 		protected void ResetCache()
 		{
 			this.Cache.Reset ();
@@ -228,7 +228,7 @@ namespace Epsitec.Common.BigList
 				this.visibleIndex  = 0;
 				this.visibleOffset = 0;
 				this.visibleRows   = new List<ItemListRow> ();
-				
+
 				return;
 			}
 
@@ -251,7 +251,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			int offset = 0;
-			
+
 			if (row != null)
 			{
 				if (row.Offset < 0)
@@ -277,11 +277,11 @@ namespace Epsitec.Common.BigList
 		{
 			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags);
 			var copy  = state.Clone ();
-			
+
 			action (copy);
-			
+
 			this.Cache.SetItemState (index, copy, ItemStateDetails.Flags);
-			
+
 			return state.Equals (copy);
 		}
 
@@ -314,7 +314,7 @@ namespace Epsitec.Common.BigList
 			int offset = startOffset < 0 ? startOffset : 0;
 
 			//	Assign each row an offset and a height, until we fill all the available space.
-			
+
 			while (offset < this.visibleHeight)
 			{
 				if (index >= count)
@@ -325,7 +325,7 @@ namespace Epsitec.Common.BigList
 					{
 						//	We already started at the beginning of the collection, stop here;
 						//	this will result in an incomplete list of rows. We can't do better.
-						
+
 						break;
 					}
 
@@ -372,7 +372,7 @@ namespace Epsitec.Common.BigList
 			int total  = 0;
 
 			//	Assign each row an offset and a height, until we fill all the available space.
-			
+
 			while ((index >= 0) && (offset > 0))
 			{
 				int height = this.GetItemHeight (index);
@@ -437,7 +437,7 @@ namespace Epsitec.Common.BigList
 			return rows.Select (x => new ItemListRow (x.Index, x.Offset + offset, x.Height));
 		}
 
-		
+
 		private List<ItemListRow>				visibleRows;
 		private int								activeIndex;
 		private int								visibleIndex;

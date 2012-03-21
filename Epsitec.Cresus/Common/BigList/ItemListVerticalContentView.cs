@@ -15,10 +15,12 @@ namespace Epsitec.Common.BigList
 	{
 		public ItemListVerticalContentView()
 		{
+			this.DefaultLineHeight = 20;
+			this.processor = new ItemListVerticalContentViewEventProcessor (this);
 		}
 
 
-		public ItemList ItemList
+		public ItemList							ItemList
 		{
 			get
 			{
@@ -34,12 +36,19 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public IItemDataRenderer ItemRenderer
+		public IItemDataRenderer				ItemRenderer
 		{
 			get;
 			set;
 		}
 
+		public int								DefaultLineHeight
+		{
+			get;
+			set;
+		}
+
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
@@ -52,29 +61,44 @@ namespace Epsitec.Common.BigList
 			this.PaintContents (graphics, clipRect);
 		}
 
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (this.processor.ProcessMessage (message, pos))
+			{
+				message.Consumer = this;
+			}
+		}
+		
+		
 		private void PaintContents(Graphics graphics, Rectangle clipRect)
 		{
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
-
 			foreach (var row in this.list.VisibleRows)
 			{
-				double y2 = dy - row.Offset;
-				double y1 = y2 - row.Height;
+				var bounds = this.GetRowBounds (row);
 
-				if ((clipRect.Bottom >= y2) ||
-					(clipRect.Top <= y1))
+				if (bounds.IntersectsWith (clipRect) == false)
 				{
 					continue;
 				}
 
-				graphics.AddFilledRectangle (0, y1, dx, y2-y1);
+				graphics.AddFilledRectangle (bounds);
 				graphics.RenderSolid (Color.FromBrightness ((row.Index & 1) == 0 ? 1.0 : 0.9));
 
 				var data = this.list.Cache.GetItemData (row.Index);
 
-				this.ItemRenderer.Render (data, graphics, new Rectangle (0, y1, dx, y2-y1));
+				this.ItemRenderer.Render (data, graphics, bounds);
 			}
+		}
+
+		public Rectangle GetRowBounds(ItemListRow row)
+		{
+			double dx = this.Client.Width;
+			double dy = this.Client.Height;
+
+			double y2 = dy - row.Offset;
+			double y1 = y2 - row.Height;
+
+			return new Rectangle (0, y1, dx, y2-y1);
 		}
 
 		private void UpdateListHeight()
@@ -87,5 +111,6 @@ namespace Epsitec.Common.BigList
 		}
 		
 		private ItemList						list;
+		private ItemListVerticalContentViewEventProcessor processor;
 	}
 }

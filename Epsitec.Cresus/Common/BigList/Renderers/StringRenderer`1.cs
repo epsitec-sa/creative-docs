@@ -21,6 +21,7 @@ namespace Epsitec.Common.BigList.Renderers
 			this.converter = x => converter (x).ToSimpleText ();
 		}
 
+		
 		protected override string GetStringValue(ItemData data)
 		{
 			return this.converter (data.GetData<TData> ());

@@ -94,6 +94,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\ItemListVerticalContentViewEventProcessor.cs" />
     <Compile Include="BigList\IItemDataRenderer.cs" />
     <Compile Include="BigList\ItemData.cs" />
     <Compile Include="BigList\ItemData`1.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="BigList\ItemList.cs" />
     <Compile Include="BigList\ItemListRow.cs" />
     <Compile Include="BigList\ItemList`2.cs" />
+    <Compile Include="BigList\ItemSelection.cs" />
     <Compile Include="BigList\ItemSelectionMode.cs" />
     <Compile Include="BigList\ItemState.cs" />
     <Compile Include="BigList\ItemStateDetails.cs" />

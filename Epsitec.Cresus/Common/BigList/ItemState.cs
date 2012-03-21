@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -147,6 +149,27 @@ namespace Epsitec.Common.BigList
 			if (applied)
 			{
 				this.Partial = true;
+			}
+		}
+
+		public void Select(ItemSelection selectionMode)
+		{
+			switch (selectionMode)
+			{
+				case ItemSelection.Select:
+					this.Selected = true;
+					break;
+
+				case ItemSelection.Deselect:
+					this.Selected = false;
+					break;
+
+				case ItemSelection.Toggle:
+					this.Selected = !this.Selected;
+					break;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("Unsupported selection mode {0}", selectionMode.GetQualifiedName ()));
 			}
 		}
 
