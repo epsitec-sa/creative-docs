@@ -98,6 +98,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
 				}
+				else if (mapper.Column == ColumnType.CodesTVA)
+				{
+					field = new ListController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+				}
 				else if (mapper.Column == ColumnType.Monnaie)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);

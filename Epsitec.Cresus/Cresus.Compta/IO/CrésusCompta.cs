@@ -200,7 +200,10 @@ namespace Epsitec.Cresus.Compta.IO
 					}
 
 					var codeTVA = this.GetEntryContentText (indexCompte, "VATCODE");
-					codesTVA.Add (compte, codeTVA);
+					if (!string.IsNullOrEmpty (codeTVA))
+					{
+						codesTVA.Add (compte, codeTVA);
+					}
 
 					this.compta.PlanComptable.Add (compte);
 				}
@@ -312,7 +315,8 @@ namespace Epsitec.Cresus.Compta.IO
 				var compte  = pair.Key;
 				var codeTVA = pair.Value;
 
-				compte.CodeTVA = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
+				compte.CodeTVAParDéfaut = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
+				compte.CodesTVAPossibles.Add (compte.CodeTVAParDéfaut);
 			}
 
 			return null;  // ok
@@ -641,6 +645,8 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
+			var compte = (écriture.Débit == null) ? écriture.Crédit : écriture.Débit;
+
 			var lib1 = écriture.Libellé.ToString ();
 			var lib2 = suivante.Libellé.ToString ();
 
@@ -694,12 +700,14 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			écriture.Type              = (int) TypeEcriture.BaseTVA;
+			écriture.CompteOrigineTVA  = compte;
 			écriture.Libellé           = lib1.Substring (0, i1);
 			écriture.MontantComplément = suivante.Montant;
 			écriture.CodeTVA           = codeTVA;
 			écriture.TauxTVA           = taux;
 
 			suivante.Type              = (int) TypeEcriture.CodeTVA;
+			suivante.CompteOrigineTVA  = compte;
 			suivante.Libellé           = écriture.Libellé;
 			suivante.MontantComplément = écriture.Montant;
 			suivante.CodeTVA           = codeTVA;

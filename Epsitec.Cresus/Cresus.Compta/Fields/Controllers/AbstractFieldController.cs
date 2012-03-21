@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		public bool ToComplete
 		{
-			//	Détermine si le champ a un cadre rouge pointillé.
+			//	Détermine si le champ a un cadre vert pointillé.
 			get
 			{
 				if (this.foregroundFrame == null)

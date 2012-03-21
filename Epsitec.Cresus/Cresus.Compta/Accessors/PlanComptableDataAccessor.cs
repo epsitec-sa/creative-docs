@@ -136,7 +136,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return PlanComptableDataAccessor.GetNuméro (compte.Groupe);
 
 				case ColumnType.CodeTVA:
-					return JournalEditionLine.GetCodeTVADescription (compte.CodeTVA);
+					return JournalEditionLine.GetCodeTVADescription (compte.CodeTVAParDéfaut);
+
+				case ColumnType.CodesTVA:
+					return compte.CodesTVASummary;
 
 				case ColumnType.CompteOuvBoucl:
 					return PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl);

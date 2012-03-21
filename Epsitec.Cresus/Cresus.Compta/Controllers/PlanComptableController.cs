@@ -172,7 +172,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Catégorie,      0.20, "Catégorie",       "Catégorie du compte");
 				yield return new ColumnMapper (ColumnType.Type,           0.20, "Type",            "Type du compte");
 				yield return new ColumnMapper (ColumnType.Groupe,         0.20, "Groupe",          "Numéro du compte servant à regrouper celui-ci");
-				yield return new ColumnMapper (ColumnType.CodeTVA,        0.20, "Code TVA",        "Code TVA et taux");
+				yield return new ColumnMapper (ColumnType.CodeTVA,        0.20, "Code TVA",        "Code TVA par défaut");
+				yield return new ColumnMapper (ColumnType.CodesTVA,       0.30, "Codes TVA",       "Codes TVA possibles");
 				yield return new ColumnMapper (ColumnType.CompteOuvBoucl, 0.20, "Ouv/Boucl",       "Numéro de compte utilisé lors des bouclements ou réouvertures");
 				yield return new ColumnMapper (ColumnType.IndexOuvBoucl,  0.05, "",                "Ordre utilisé lors des bouclements ou réouvertures");
 				yield return new ColumnMapper (ColumnType.Monnaie,        0.20, "Monnaie",         "Monnaie de ce compte");

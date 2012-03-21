@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Type,           new EditionData (this.controller, this.ValidateType));
 			this.dataDict.Add (ColumnType.Groupe,         new EditionData (this.controller, this.ValidateGroupe));
 			this.dataDict.Add (ColumnType.CodeTVA,        new EditionData (this.controller, this.ValidateCodeTVA));
+			this.dataDict.Add (ColumnType.CodesTVA,       new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
 			this.dataDict.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
 			this.dataDict.Add (ColumnType.Monnaie,        new EditionData (this.controller));
@@ -212,23 +213,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Catégorie,      Converters.CatégorieToString(compte.Catégorie));
 			this.SetText (ColumnType.Type,           Converters.TypeToString (compte.Type));
 			this.SetText (ColumnType.Groupe,         PlanComptableDataAccessor.GetNuméro (compte.Groupe));
-			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVA));
+			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVAParDéfaut));
 			this.SetText (ColumnType.CompteOuvBoucl, PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl));
 			this.SetText (ColumnType.IndexOuvBoucl,  (compte.IndexOuvBoucl == 0) ? FormattedText.Empty : compte.IndexOuvBoucl.ToString ());
 			this.SetText (ColumnType.Monnaie,        compte.Monnaie);
+
+			this.SetCodesTVA (compte);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
 			var compte = entity as ComptaCompteEntity;
 
-			compte.Numéro         = this.GetText (ColumnType.Numéro);
-			compte.Titre          = this.GetText (ColumnType.Titre);
-			compte.Catégorie      = Converters.StringToCatégorie (this.GetText (ColumnType.Catégorie).ToSimpleText ());
-			compte.Type           = Converters.StringToType (this.GetText (ColumnType.Type).ToSimpleText ());
-			compte.Groupe         = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
-			compte.CodeTVA        = JournalEditionLine.TextToCodeTVA (this.compta, this.GetText (ColumnType.CodeTVA));
-			compte.CompteOuvBoucl = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOuvBoucl));
+			compte.Numéro           = this.GetText (ColumnType.Numéro);
+			compte.Titre            = this.GetText (ColumnType.Titre);
+			compte.Catégorie        = Converters.StringToCatégorie (this.GetText (ColumnType.Catégorie).ToSimpleText ());
+			compte.Type             = Converters.StringToType (this.GetText (ColumnType.Type).ToSimpleText ());
+			compte.Groupe           = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Groupe));
+			compte.CodeTVAParDéfaut = JournalEditionLine.TextToCodeTVA (this.compta, this.GetText (ColumnType.CodeTVA));
+			compte.CompteOuvBoucl   = PlanComptableDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOuvBoucl));
 
 			int index;
 			if (int.TryParse (this.GetText (ColumnType.IndexOuvBoucl).ToSimpleText (), out index) && index >= 1 && index <= 9)
@@ -241,6 +244,42 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			compte.Monnaie = this.GetText (ColumnType.Monnaie).ToSimpleText ();
+
+			this.GetCodesTVA (compte);
+		}
+
+		private void SetCodesTVA(ComptaCompteEntity compte)
+		{
+			var parameters = this.GetParameters (ColumnType.CodesTVA);
+			parameters.Clear ();
+
+			foreach (var codeTVA in this.compta.CodesTVA)
+			{
+				parameters.Add (codeTVA.Code);
+			}
+
+			var texts = this.GetTexts (ColumnType.CodesTVA);
+			texts.Clear ();
+
+			foreach (var codeTVA in compte.CodesTVAPossibles)
+			{
+				texts.Add (codeTVA.Code);
+			}
+		}
+
+		private void GetCodesTVA(ComptaCompteEntity compte)
+		{
+			compte.CodesTVAPossibles.Clear ();
+
+			foreach (var text in this.GetTexts (ColumnType.CodesTVA))
+			{
+				var codeTVA = this.compta.CodesTVA.Where (x => x.Code == text).FirstOrDefault ();
+
+				if (codeTVA != null)
+				{
+					compte.CodesTVAPossibles.Add (codeTVA);
+				}
+			}
 		}
 	}
 }

@@ -307,6 +307,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             FormattedText.Empty);
 				this.SetText (ColumnType.Crédit,            FormattedText.Empty);
+				this.SetText (ColumnType.CompteOrigineTVA,  FormattedText.Empty);
 				this.SetText (ColumnType.Pièce,             FormattedText.Empty);
 				this.SetText (ColumnType.Libellé,           FormattedText.Empty);
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (0));
@@ -323,6 +324,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             JournalDataAccessor.GetNuméro (écriture.Débit));
 				this.SetText (ColumnType.Crédit,            JournalDataAccessor.GetNuméro (écriture.Crédit));
+				this.SetText (ColumnType.CompteOrigineTVA,  JournalDataAccessor.GetNuméro (écriture.CompteOrigineTVA));
 				this.SetText (ColumnType.Pièce,             écriture.Pièce);
 				this.SetText (ColumnType.Libellé,           écriture.Libellé);
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
@@ -353,6 +355,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				écriture.Débit             = null;
 				écriture.Crédit            = null;
+				écriture.CompteOrigineTVA  = null;
 				écriture.Pièce             = FormattedText.Empty;
 				écriture.Libellé           = FormattedText.Empty;
 				écriture.Montant           = 0;
@@ -366,6 +369,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				écriture.Débit             = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
 				écriture.Crédit            = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
+				écriture.CompteOrigineTVA  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOrigineTVA));
 				écriture.Pièce             = this.GetText (ColumnType.Pièce);
 				écriture.Libellé           = this.GetText (ColumnType.Libellé);
 				écriture.Montant           = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
@@ -395,15 +399,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void UpdateCodeTVAParameters()
 		{
-			var parameters = this.GetParameters (ColumnType.TauxTVA);
-			parameters.Clear ();
-
-			var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
-			if (codeTVA != null)
 			{
-				foreach (var taux in codeTVA.ListeTaux.Taux)
+				var parameters = this.GetParameters (ColumnType.CodeTVA);
+				parameters.Clear ();
+
+				var compteOrigineTVA = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOrigineTVA));
+
+				if (compteOrigineTVA != null)
 				{
-					parameters.Add (Converters.PercentToString (taux.Taux));
+					//?UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', compteOrigineTVA.CodesTVAMenuDescription);
+				}
+			}
+
+			{
+				var parameters = this.GetParameters (ColumnType.TauxTVA);
+				parameters.Clear ();
+
+				var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+				if (codeTVA != null)
+				{
+					foreach (var taux in codeTVA.ListeTaux.Taux)
+					{
+						parameters.Add (Converters.PercentToString (taux.Taux));
+					}
 				}
 			}
 		}

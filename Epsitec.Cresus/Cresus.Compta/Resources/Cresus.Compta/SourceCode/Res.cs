@@ -806,8 +806,10 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Budgets = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 154);
 				//	designer:cap/OVKI2
 				public static readonly global::Epsitec.Common.Support.Druid Catégorie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 82);
+				//	designer:cap/OVKJ7
+				public static readonly global::Epsitec.Common.Support.Druid CodesTVAPossibles = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 243);
 				//	designer:cap/OVKO6
-				public static readonly global::Epsitec.Common.Support.Druid CodeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 216);
+				public static readonly global::Epsitec.Common.Support.Druid CodeTVAParDéfaut = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 216);
 				//	designer:cap/OVK7
 				public static readonly global::Epsitec.Common.Support.Druid CompteOuvBoucl = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 7);
 				//	designer:cap/OVK6
@@ -834,6 +836,8 @@ namespace Epsitec.Cresus.Compta
 				
 				//	designer:cap/OVKL
 				public static readonly global::Epsitec.Common.Support.Druid CodeTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 21);
+				//	designer:cap/OVKK7
+				public static readonly global::Epsitec.Common.Support.Druid CompteOrigineTVA = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 244);
 				//	designer:cap/OVKF
 				public static readonly global::Epsitec.Common.Support.Druid Crédit = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 15);
 				//	designer:cap/OVKC

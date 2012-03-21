@@ -12,6 +12,45 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaCompteEntity
 	{
+		public FormattedText[] CodesTVAMenuDescription
+		{
+			//	Retourne la liste des descriptions des codes TVA pour le menu d'un AutoCompleteTextField.
+			get
+			{
+				var list = new List<FormattedText> ();
+
+				foreach (var codeTVA in this.CodesTVAPossibles.Where (x => !x.Désactivé))
+				{
+					list.Add (codeTVA.MenuDescription);
+				}
+
+				return list.ToArray ();
+			}
+		}
+
+		public FormattedText CodesTVASummary
+		{
+			get
+			{
+				if (this.CodesTVAPossibles.Count == 0)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					var list = new List<string> ();
+
+					foreach (var codeTVA in this.CodesTVAPossibles)
+					{
+						list.Add (codeTVA.Code.ToString ());
+					}
+
+					return string.Format ("({0}×) {1}", this.CodesTVAPossibles.Count.ToString (), string.Join (", ", list));
+				}
+			}
+		}
+
+
 		public ComptaBudgetEntity GetBudget(ComptaPériodeEntity période)
 		{
 			return this.Budgets.Where (x => x.Période == période).FirstOrDefault ();
