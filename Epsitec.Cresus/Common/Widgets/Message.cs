@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 
@@ -211,6 +211,24 @@ namespace Epsitec.Common.Widgets
 		{
 			get { return this.wheel; }
 		}
+
+		public double						WheelAmplitude
+		{
+			get
+			{
+				int scale;
+
+				if (Win32Api.SystemParametersInfo (Win32Const.SPI_GETWHEELSCROLLLINES, 0, out scale, 0))
+				{
+					return (double) (this.wheel * scale) / Win32Const.WHEEL_DELTA;
+				}
+				else
+				{
+					return (double) (this.wheel) * 3 / Win32Const.WHEEL_DELTA;
+				}
+			}
+		}
+
 		
 		public MouseButtons					Button
 		{
@@ -529,6 +547,7 @@ namespace Epsitec.Common.Widgets
 				
 				case Win32Const.WM_MOUSEMOVE:
 				case Win32Const.WM_MOUSEWHEEL:
+				case Win32Const.WM_MOUSEHWHEEL:
 				
 				case Win32Const.WM_MOUSELEAVE:
 					return true;

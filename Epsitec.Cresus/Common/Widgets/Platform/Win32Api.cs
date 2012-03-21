@@ -1,4 +1,4 @@
-//	Copyright © 2003-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Runtime.InteropServices;
@@ -44,6 +44,9 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("User32.dll")]  internal extern static int MapVirtualKeyEx(int code, int mapType, System.IntPtr layout);
 		[DllImport ("User32.dll")]  internal extern static System.IntPtr GetKeyboardLayout(int threadId);
 		[DllImport ("User32.dll")]	internal extern static bool SetWindowPos(System.IntPtr hWnd, System.IntPtr hWndInsertAfter, int X, int Y, int cx, int cy, uint uFlags);
+		[DllImport ("User32.dll", SetLastError = true)] internal extern static bool SystemParametersInfo(uint uiAction, uint uiParam, System.IntPtr pvParam, int fWinIni);
+		[DllImport ("User32.dll", SetLastError = true)] internal extern static bool SystemParametersInfo(uint uiAction, uint uiParam, out int pvParam, int fWinIni);
+
 
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRestart(string pszCommandLine, int dwFlags);
 		[DllImport ("Kernel32.dll")] internal extern static uint RegisterApplicationRecoveryCallback(System.IntPtr pRecoveryCallback, System.IntPtr pvParameter, int dwPingInterval, int dwFlags);
@@ -54,7 +57,6 @@ namespace Epsitec.Common.Widgets.Platform
 		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static System.IntPtr CreateSemaphore(System.IntPtr securityAttributes, int initialCount, int maximumCount, string name);
 		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static System.IntPtr OpenSemaphore(int desiredAccess, int inheritHandle, string name);
 		[DllImport ("kernel32.dll", SetLastError=true)] internal extern static bool CloseHandle(System.IntPtr handle);
-
 
 
 		internal static uint RegisterApplicationRecoveryCallback(ApplicationRecoveryCallback callback, System.IntPtr parameter, int pingInterval, int flags)

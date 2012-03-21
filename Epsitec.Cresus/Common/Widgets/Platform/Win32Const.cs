@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets.Platform
@@ -48,6 +48,7 @@ namespace Epsitec.Common.Widgets.Platform
 		public const int WM_XBUTTONDOWN		= 0x020B;
 		public const int WM_XBUTTONUP		= 0x020C;
 		public const int WM_XBUTTONDBLCLK	= 0x020D;
+		public const int WM_MOUSEHWHEEL		= 0x020E;
 		public const int WM_SIZING			= 0x0214;
 		public const int WM_ENTERSIZEMOVE	= 0x0231;
 		public const int WM_EXITSIZEMOVE	= 0x0232;
@@ -135,6 +136,10 @@ namespace Epsitec.Common.Widgets.Platform
 		public const uint HT_BOTTOMLEFT		= 16;
 		public const uint HT_BOTTOMRIGHT	= 17;
 		public const uint HT_CLOSE			= 20;
+
+		public const uint WHEEL_DELTA		= 120;
+		public const uint SPI_GETWHEELSCROLLLINES = 0x0068;
+		public const uint SPI_GETWHEELSCROLLCHARS = 0x006C;
 		
 		public const uint SWP_NOSIZE = 0x0001;
 		public const uint SWP_NOMOVE = 0x0002;
