@@ -83,7 +83,6 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.accessor.GetMessage (x)),
 			};
 
-//			this.historyList.Items.ValueConverter = x => this.accessor.GetMessage ((Data.LogRecord) x).ToString ();
 //			this.historyList.SelectedItemChanged += this.HandleHistoryListSelectedItemChanged;
 
 			this.RefreshContents ();
@@ -128,8 +127,6 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			}
 
 			this.historyData.Reset ();
-//			this.historyList.Items.Clear ();
-//			this.historyList.Items.AddRange (this.accessor.Messages);
 		}
 
 		private readonly CoreInteractiveApp		host;

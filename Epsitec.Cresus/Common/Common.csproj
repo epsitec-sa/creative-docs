@@ -115,6 +115,7 @@
     <Compile Include="BigList\ItemStateDetails.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\StringRenderer.cs" />
+    <Compile Include="BigList\Renderers\StringRenderer`1.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\AssertFailedException.cs" />
     <Compile Include="Debugging\DebugOutputTraceListener.cs" />
