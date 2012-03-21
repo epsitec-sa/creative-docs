@@ -22,13 +22,16 @@ namespace Epsitec.Common.BigList.Renderers
 
 		#region IItemDataRenderer Members
 
-		public void Render(ItemState state, ItemData data, Graphics graphics, Rectangle bounds)
+		public void Render(ItemListRow row, ItemState state, ItemData data, Graphics graphics, Rectangle bounds)
 		{
+			var back  = state.Selected ? Color.FromName ("Highlight") : Color.FromBrightness ((row.Index & 1) == 0 ? 1.0 : 0.9);
 			var value = this.GetStringValue (data);
 			var color = state.Selected ? Color.FromName ("HighlightText") : this.textColor;
-
 			var lines = value.Split ('\n');
 
+			graphics.AddFilledRectangle (bounds);
+			graphics.RenderSolid (back);
+			
 			foreach (var line in lines)
 			{
 				graphics.AddText (bounds.X, bounds.Y, bounds.Width, bounds.Height, line, this.textFont, this.textFontSize, this.alignment);

@@ -81,20 +81,10 @@ namespace Epsitec.Common.BigList
 					continue;
 				}
 
-				var color = Color.FromBrightness ((row.Index & 1) == 0 ? 1.0 : 0.9);
-
-				if (this.list.IsSelected (row.Index))
-				{
-					color = Color.FromName ("Highlight");
-				}
-
-				graphics.AddFilledRectangle (bounds);
-				graphics.RenderSolid (color);
-
 				var data  = this.list.Cache.GetItemData (row.Index);
 				var state = this.list.GetItemState (row.Index);
 
-				this.ItemRenderer.Render (state, data, graphics, bounds);
+				this.ItemRenderer.Render (row, state, data, graphics, bounds);
 			}
 		}
 
