@@ -17,16 +17,25 @@ namespace Epsitec.Common.BigList.Renderers
 			this.textFontSize = Font.DefaultFontSize;
 			this.textColor    = Color.FromBrightness (0);
 			this.alignment    = ContentAlignment.TopLeft;
+			this.lineHeight   = 18;
 		}
 
 		#region IItemDataRenderer Members
 
-		public void Render(ItemData data, Graphics graphics, Rectangle bounds)
+		public void Render(ItemState state, ItemData data, Graphics graphics, Rectangle bounds)
 		{
 			var value = this.GetStringValue (data);
+			var color = state.Selected ? Color.FromName ("HighlightText") : this.textColor;
 
-			graphics.AddText (bounds.X, bounds.Y, bounds.Width, bounds.Height, value, this.textFont, this.textFontSize, this.alignment);
-			graphics.RenderSolid (this.textColor);
+			var lines = value.Split ('\n');
+
+			foreach (var line in lines)
+			{
+				graphics.AddText (bounds.X, bounds.Y, bounds.Width, bounds.Height, line, this.textFont, this.textFontSize, this.alignment);
+				bounds = Rectangle.Offset (bounds, 0, -this.lineHeight);
+			}
+
+			graphics.RenderSolid (color);
 		}
 
 		#endregion
@@ -41,5 +50,6 @@ namespace Epsitec.Common.BigList.Renderers
 		private readonly double textFontSize;
 		private readonly Color textColor;
 		private readonly ContentAlignment alignment;
+		private readonly int lineHeight;
 	}
 }

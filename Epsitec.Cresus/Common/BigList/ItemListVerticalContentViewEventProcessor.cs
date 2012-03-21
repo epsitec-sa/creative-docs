@@ -73,6 +73,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.view.ItemList.Select (row.Index, ItemSelection.Toggle);
+			this.view.Invalidate ();
 
 			this.EventProcessor = new MouseDownProcessor (this, message, pos);
 			

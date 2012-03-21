@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 				return FormattedText.Empty;
 			}
 
-			return FormattedText.FromSimpleText (record.GetMessage (this.folderPath));
+			return FormattedText.FromSimpleText (record.GetMessage (this.folderPath).Trim ());
 		}
 
 		public StaticImage GetStaticImage(Data.LogRecord record)
@@ -88,9 +88,12 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 
 		public ItemData<Data.LogRecord> Map(Data.LogRecord value)
 		{
+			var message = this.GetMessage (value).ToSimpleText ();
+			var count   = message.Count (x => x == '\n') + 1;
+
 			return new ItemData<Data.LogRecord> (value)
 			{
-				Height = 20,
+				Height = 18*count,
 			};
 		}
 

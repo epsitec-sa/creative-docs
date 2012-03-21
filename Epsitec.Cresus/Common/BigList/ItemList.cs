@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.Extensions;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -116,7 +118,7 @@ namespace Epsitec.Common.BigList
 			this.SetVisibleIndex (0);
 		}
 
-		public void Select(int index, ItemSelection selectionMode)
+		public void Select(int index, ItemSelection selection)
 		{
 			if ((index < 0) ||
 				(index >= this.Count))
@@ -124,12 +126,25 @@ namespace Epsitec.Common.BigList
 				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
 			}
 
+			switch (this.SelectionMode)
+			{
+				case ItemSelectionMode.ExactlyOne:
+					if (selection == ItemSelection.Deselect)
+					{
+						return;
+					}
+					selection = ItemSelection.Select;
+					break;
 
-			if (this.ChangeFlagState (index, x => x.Select (selectionMode)))
+				case ItemSelectionMode.None:
+					return;
+			}
+
+			if (this.ChangeFlagState (index, x => x.Select (selection)))
 			{
 				//	Process state change. We might need to deselect/reselect others.
 
-				this.ChangeSelection (index, this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected);
+				this.ChangeSelection (index);
 			}
 		}
 
@@ -188,31 +203,70 @@ namespace Epsitec.Common.BigList
 
 
 
-		private void ChangeSelection(int index, bool isSelected)
+		private void ChangeSelection(int index)
 		{
-			if (isSelected)
+			switch (this.SelectionMode)
 			{
-				switch (this.SelectionMode)
+				case ItemSelectionMode.ExactlyOne:
+					this.DeselectAll ();
+					this.SelectOne (index);
+					break;
+				
+				case ItemSelectionMode.Multiple:
+					break;
+				
+				case ItemSelectionMode.OneOrMore:
+					if (this.HasSelectedItems () == false)
+					{
+						this.SelectOne (index);
+					}
+					break;
+				
+				case ItemSelectionMode.ZeroOrOne:
+					if (this.IsSelected (index))
+					{
+						this.DeselectAll ();
+						this.SelectOne (index);
+					}
+					break;
+
+				case ItemSelectionMode.None:
+					break;
+			}
+		}
+
+
+		private void DeselectAll()
+		{
+			for (int i = 0; i < this.Count; i++)
+			{
+				this.ChangeFlagState (i, x => x.Select (ItemSelection.Deselect));
+			}
+		}
+
+		private void SelectOne(int index)
+		{
+			this.ChangeFlagState (index, x => x.Select (ItemSelection.Select));
+		}
+
+		private bool HasSelectedItems()
+		{
+			for (int i = 0; i < this.Count; i++)
+			{
+				if (this.IsSelected (i))
 				{
-					case ItemSelectionMode.ExactlyOne:
-					case ItemSelectionMode.Multiple:
-					case ItemSelectionMode.None:
-					case ItemSelectionMode.OneOrMore:
-					case ItemSelectionMode.ZeroOrOne:
-						break;
+					return true;
 				}
 			}
-			else
+			
+			return false;
+		}
+
+		private IEnumerable<int> EnumerateIndexes()
+		{
+			for (int i = 0; i < this.Count; i++)
 			{
-				switch (this.SelectionMode)
-				{
-					case ItemSelectionMode.ExactlyOne:
-					case ItemSelectionMode.Multiple:
-					case ItemSelectionMode.None:
-					case ItemSelectionMode.OneOrMore:
-					case ItemSelectionMode.ZeroOrOne:
-						break;
-				}
+				yield return i;
 			}
 		}
 
@@ -273,6 +327,11 @@ namespace Epsitec.Common.BigList
 			this.visibleOffset = offset;
 		}
 
+		private bool GetFlagState(int index, System.Predicate<ItemState> predicate)
+		{
+			return predicate (this.Cache.GetItemState (index, ItemStateDetails.Flags));
+		}
+
 		private bool ChangeFlagState(int index, System.Action<ItemState> action)
 		{
 			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags);
@@ -282,7 +341,7 @@ namespace Epsitec.Common.BigList
 
 			this.Cache.SetItemState (index, copy, ItemStateDetails.Flags);
 
-			return state.Equals (copy);
+			return !state.Equals (copy);
 		}
 
 		private List<ItemListRow> GetVisibleRowsStartingWith(int index, int startOffset = 0)
