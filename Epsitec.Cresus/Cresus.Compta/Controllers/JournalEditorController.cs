@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
+					//?UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', this.compta.CodesTVAMenuDescription);
 				}
 				else if (mapper.Column == ColumnType.TauxTVA)
 				{
@@ -498,6 +498,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Hilited,          "1");
 
+			this.UpdateAfterCompteOrigineTVAChanged (line+1);
 			this.UpdateAfterCodeTVAChanged (line+1);
 
 			if (total == 3)
@@ -951,9 +952,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateMultiEditionData ();  // recalcule le total
 
-			//?if (columnType == ColumnType.CodeTVA)
+			for (int i = 0; i < this.dataAccessor.EditionLine.Count; i++)
 			{
-				this.UpdateAfterCodeTVAChanged (line);
+				type = this.GetTypeEcriture (i);
+
+				if (type == TypeEcriture.CodeTVA)
+				{
+					this.UpdateAfterCompteOrigineTVAChanged (i);
+					this.UpdateAfterCodeTVAChanged (i);
+				}
+			}
+		}
+
+		private void UpdateAfterCompteOrigineTVAChanged(int line)
+		{
+			//	Appelé lorsque le compte à l'origine de éa TVA a changé, pour mettre à jour les codes TVA dans le menu.
+			var field = this.GetFieldController (ColumnType.CodeTVA, line);
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.CompteOrigineTVA)).FirstOrDefault ();
+
+			if (field != null && compte != null)
+			{
+				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', compte.CodesTVAMenuDescription);
 			}
 		}
 
@@ -1014,6 +1033,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CompteOrigineTVA, compte.Numéro);
 					this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CodeTVA,          compte.CodeTVAParDéfaut.Code);
 					this.CodeChanged (line);
+					this.UpdateAfterCompteOrigineTVAChanged (line+1);
 				}
 			}
 		}

@@ -399,29 +399,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public void UpdateCodeTVAParameters()
 		{
+			var parameters = this.GetParameters (ColumnType.TauxTVA);
+			parameters.Clear ();
+
+			var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
+			if (codeTVA != null)
 			{
-				var parameters = this.GetParameters (ColumnType.CodeTVA);
-				parameters.Clear ();
-
-				var compteOrigineTVA = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOrigineTVA));
-
-				if (compteOrigineTVA != null)
+				foreach (var taux in codeTVA.ListeTaux.Taux)
 				{
-					//?UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', compteOrigineTVA.CodesTVAMenuDescription);
-				}
-			}
-
-			{
-				var parameters = this.GetParameters (ColumnType.TauxTVA);
-				parameters.Clear ();
-
-				var codeTVA = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
-				if (codeTVA != null)
-				{
-					foreach (var taux in codeTVA.ListeTaux.Taux)
-					{
-						parameters.Add (Converters.PercentToString (taux.Taux));
-					}
+					parameters.Add (Converters.PercentToString (taux.Taux));
 				}
 			}
 		}
