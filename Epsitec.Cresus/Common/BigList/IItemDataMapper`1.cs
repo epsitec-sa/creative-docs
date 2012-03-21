@@ -6,11 +6,8 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemList<TData> : ItemList<TData, ItemState>
+	public interface IItemDataMapper<T> : IItemDataMapper
 	{
-		public ItemList(IItemDataProvider<TData> provider, IItemDataMapper<TData> mapper)
-			: base (provider, mapper)
-		{
-		}
+		ItemData<T> Map(T value);
 	}
 }

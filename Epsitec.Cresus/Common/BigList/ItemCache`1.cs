@@ -6,24 +6,25 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemCache<T> : ItemCache
+	public class ItemCache<TData, TState> : ItemCache
+		where TState : ItemState, new ()
 	{
 		public ItemCache(int capacity)
 			: base (capacity)
 		{
 			this.exclusion   = new ReadWriteLock ();
-			this.extraStates = new IndexedStore<ItemState> (ItemCache.DefaultExtraCapacity);
-			this.data        = new IndexedStore<ItemData<T>> (ItemCache.DefaultDataCapacity);
+			this.extraStates = new IndexedStore<TState> (ItemCache.DefaultExtraCapacity);
+			this.data        = new IndexedStore<ItemData<TData>> (ItemCache.DefaultDataCapacity);
 		}
 
 
-		public IItemDataProvider<T> DataProvider
+		public IItemDataProvider<TData> DataProvider
 		{
 			get;
 			set;
 		}
 
-		public IItemDataMapper<T> DataMapper
+		public IItemDataMapper<TData> DataMapper
 		{
 			get;
 			set;
@@ -62,7 +63,7 @@ namespace Epsitec.Common.BigList
 			return this.GetItemState (index, ItemStateDetails.Full).Height;
 		}
 
-		public ItemData<T> GetItemData(int index)
+		public ItemData<TData> GetItemData(int index)
 		{
 			this.exclusion.EnterReadLock ();
 			var data = this.GetItemDataLocked (index);
@@ -110,7 +111,7 @@ namespace Epsitec.Common.BigList
 
 				if (data != null)
 				{
-					state = new ItemState ()
+					state = new TState ()
 					{
 						Height = data.Height
 					};
@@ -141,11 +142,11 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.exclusion.EnterWriteLock ();
-			this.SetItemStateLocked (index, state, details);
+			this.SetItemStateLocked (index, state as TState, details);
 			this.exclusion.ExitWriteLock ();
 		}
 
-		private ItemState GetItemStateLocked(int index, ItemStateDetails details)
+		private TState GetItemStateLocked(int index, ItemStateDetails details)
 		{
 			var compact = this.states[index];
 
@@ -154,18 +155,18 @@ namespace Epsitec.Common.BigList
 				return null;
 			}
 
-			var state = ItemState.FromCompactState (compact);
+			var state = ItemState.FromCompactState<TState> (compact);
 
 			if (details.HasFlag (ItemStateDetails.Full))
 			{
 				if ((state.Partial) ||
 					(state.Height+1 == ItemState.MaxCompactHeight))
 				{
-					ItemState extra;
+					TState extra;
 
 					if (this.extraStates.TryGetValue (index, out extra) == false)
 					{
-						extra = new ItemState (state);
+						extra = state.Clone<TState> ();
 					}
 
 					state.Apply (extra);
@@ -175,15 +176,16 @@ namespace Epsitec.Common.BigList
 			return state;
 		}
 
-		private void SetItemStateLocked(int index, ItemState state, ItemStateDetails details)
+		private void SetItemStateLocked(int index, TState state, ItemStateDetails details)
 		{
-			var compact = state.ToCompactState ();
+			var compact = state == null ? ItemState.EmptyCompactState : state.ToCompactState ();
 
 			if (details.HasFlag (ItemStateDetails.Full))
 			{
-				if (state.ComputePartialFlag ())
+				if ((state != null) &&
+					(state.ComputePartialFlag ()))
 				{
-					this.extraStates[index] = new ItemState (state);
+					this.extraStates[index] = state.Clone<TState> ();
 				}
 				else
 				{
@@ -194,9 +196,9 @@ namespace Epsitec.Common.BigList
 			this.states[index] = compact;
 		}
 
-		private ItemData<T> GetItemDataLocked(int index)
+		private ItemData<TData> GetItemDataLocked(int index)
 		{
-			ItemData<T> data;
+			ItemData<TData> data;
 
 			if (this.data.TryGetValue (index, out data))
 			{
@@ -206,7 +208,7 @@ namespace Epsitec.Common.BigList
 			return null;
 		}
 
-		private ItemData<T> FromDataProvider(int index)
+		private ItemData<TData> FromDataProvider(int index)
 		{
 			var provider = this.DataProvider;
 			var mapper   = this.DataMapper;
@@ -217,7 +219,7 @@ namespace Epsitec.Common.BigList
 				return null;
 			}
 
-			T value;
+			TData value;
 
 			if (provider.Resolve (index, out value))
 			{
@@ -227,17 +229,21 @@ namespace Epsitec.Common.BigList
 			return null;
 		}
 
-		private readonly IndexedStore<ItemState>	extraStates;
-		private readonly ReadWriteLock				exclusion;
-		private readonly IndexedStore<ItemData<T>>	data;
-		private readonly IItemDataMapper<T>			mapper;
+		private readonly IndexedStore<TState>	extraStates;
+		private readonly ReadWriteLock			exclusion;
+		private readonly IndexedStore<ItemData<TData>>	data;
+		private readonly IItemDataMapper<TData>	mapper;
 	}
 
-	public class ItemCacheEntry<T>
+	public abstract class ItemCacheEntry
 	{
 	}
 
-	public class ItemData<T>
+	public class ItemCacheEntry<T> : ItemCacheEntry
+	{
+	}
+
+	public abstract class ItemData
 	{
 		public int Height
 		{
@@ -246,17 +252,7 @@ namespace Epsitec.Common.BigList
 		}
 	}
 
-	public interface IItemDataProvider<T>
+	public class ItemData<T> : ItemData
 	{
-		bool Resolve(int index, out T value);
-		
-		int Count
-		{
-			get;
-		}
-	}
-	public interface IItemDataMapper<T>
-	{
-		ItemData<T> Map(T value);
 	}
 }

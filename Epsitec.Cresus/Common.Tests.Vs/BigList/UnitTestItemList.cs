@@ -473,7 +473,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 
 
-		private readonly ItemList<int>			itemList1;
+		private readonly ItemList<int>		itemList1;
 		private readonly SeqProvider			provider1;
 		private readonly RangeProvider			provider2;
 		private readonly SeqMapper				mapper1;

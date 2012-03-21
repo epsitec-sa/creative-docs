@@ -268,7 +268,7 @@ namespace Epsitec.Common.BigList
 		private bool ChangeFlagState(int index, System.Action<ItemState> action)
 		{
 			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags);
-			var copy  = new ItemState (state);
+			var copy  = state.Clone ();
 			
 			action (copy);
 			
