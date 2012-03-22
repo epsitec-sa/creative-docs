@@ -213,7 +213,14 @@ namespace Epsitec.Common.BigList
 
 		public bool IsSelected(int index)
 		{
-			return this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected;
+			if (index < 0)
+			{
+				return false;
+			}
+			else
+			{
+				return this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected;
+			}
 		}
 
 		public void MoveVisibleContent(int distance)

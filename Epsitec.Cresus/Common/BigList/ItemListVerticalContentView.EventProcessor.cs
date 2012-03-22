@@ -14,7 +14,7 @@ namespace Epsitec.Common.BigList
 {
 	public partial class ItemListVerticalContentView
 	{
-		class EventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor
+		private class EventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor
 		{
 			public EventProcessor(ItemListVerticalContentView view)
 			{
@@ -29,9 +29,9 @@ namespace Epsitec.Common.BigList
 					return false;
 				}
 
-				if (this.eventProcessor != null)
+				if (this.processor != null)
 				{
-					if (this.eventProcessor.ProcessMessage (message, pos))
+					if (this.processor.ProcessMessage (message, pos))
 					{
 						return true;
 					}
@@ -63,16 +63,8 @@ namespace Epsitec.Common.BigList
 
 			private bool ProcessMouseDown(Message message, Point pos)
 			{
-				if (this.eventProcessor != null)
-				{
-					return false;
-				}
-			
-				new MouseDownProcessor (this, message, pos);
-			
-				return true;
+				return MouseDownProcessor.Attach (this, message, pos);
 			}
-
 
 			private void ProcessMouseWheel(double amplitude)
 			{
@@ -82,24 +74,27 @@ namespace Epsitec.Common.BigList
 
 			#region IEventProcessorHost Members
 
-			IEventProcessor IEventProcessorHost.EventProcessor
+			IEnumerable<IEventProcessor> IEventProcessorHost.EventProcessors
 			{
 				get
 				{
-					return this.eventProcessor;
+					if (this.processor != null)
+					{
+						yield return this.processor;
+					}
 				}
 			}
 
 			void IEventProcessorHost.Register(IEventProcessor processor)
 			{
-				this.eventProcessor = processor;
+				this.processor = processor;
 			}
 
 			void IEventProcessorHost.Remove(IEventProcessor processor)
 			{
-				if (this.eventProcessor == processor)
+				if (this.processor == processor)
 				{
-					this.eventProcessor = null;
+					this.processor = null;
 				}
 			}
 
@@ -109,8 +104,6 @@ namespace Epsitec.Common.BigList
 			}
 
 			#endregion
-
-
 
 			#region IDetectionProcessor Members
 
@@ -154,7 +147,7 @@ namespace Epsitec.Common.BigList
 
 
 			private readonly ItemListVerticalContentView view;
-			private IEventProcessor				eventProcessor;
+			private IEventProcessor				processor;
 		}
 	}
 }

@@ -13,27 +13,33 @@ namespace Epsitec.Common.BigList.Processors
 	{
 		public MouseDownProcessor(IEventProcessorHost host, Message message, Point pos)
 		{
-			this.host   = host;
-			this.selectionProcessor = host as ISelectionProcessor;
-			this.detectionProcessor = host as IDetectionProcessor;
-			this.policy = host.GetPolicy<MouseDownProcessorPolicy> ();
-			this.button = message.Button;
-			this.origin = pos;
+			this.host               = host;
+			this.selectionProcessor = this.host as ISelectionProcessor;
+			this.detectionProcessor = this.host as IDetectionProcessor;
+			this.policy             = this.host.GetPolicy<MouseDownProcessorPolicy> ();
+			this.button             = message.Button;
+			this.origin             = pos;
 
-			int index = this.detectionProcessor.Detect (pos);
+			this.originalIndex     = this.detectionProcessor.Detect (pos);
+			this.originalSelection = this.selectionProcessor.IsSelected (this.originalIndex);
+		}
 
-			if (index < 0)
+
+		public static bool Attach(IEventProcessorHost host, Message message, Point pos)
+		{
+			var proc = new MouseDownProcessor (host, message, pos);
+
+			if (proc.originalIndex < 0)
 			{
-				return;
+				return false;
 			}
 
-			this.host.Register (this);
-
-			this.originalIndex = index;
-			this.originalSelection = this.selectionProcessor.IsSelected (index);
-
-			this.selectionProcessor.Select (index, ItemSelection.Toggle);
+			proc.selectionProcessor.Select (proc.originalIndex, ItemSelection.Toggle);
+			proc.host.Register (proc);
+			
+			return true;
 		}
+
 
 		public override bool ProcessMessage(Message message, Point pos)
 		{

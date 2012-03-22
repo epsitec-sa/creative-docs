@@ -11,7 +11,7 @@ namespace Epsitec.Common.BigList.Processors
 		void Register(IEventProcessor processor);
 		void Remove(IEventProcessor processor);
 
-		IEventProcessor EventProcessor
+		IEnumerable<IEventProcessor> EventProcessors
 		{
 			get;
 		}
