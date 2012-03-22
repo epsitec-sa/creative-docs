@@ -261,31 +261,35 @@ namespace Epsitec.Common.Tests.Vs.BigList
 		}
 
 		[TestMethod]
-		public void TestSelection()
+		public void TestSelection1()
 		{
 			this.itemList1.Reset ();
+			this.itemList1.SelectionMode = ItemSelectionMode.ExactlyOne;
 
+			Assert.AreEqual (0, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
 
-			this.itemList1.Select (0, ItemSelection.Select);
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Select));
 
+			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
-			this.itemList1.Select (1, ItemSelection.Select);
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Select));
 
-			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
+			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
 			Assert.IsTrue (this.itemList1.IsSelected (1));
 
-			this.itemList1.Select (0, ItemSelection.Deselect);
+			Assert.IsFalse (this.itemList1.Select (0, ItemSelection.Deselect));
 
-			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
+			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
+			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
-
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 			Assert.IsTrue (this.itemList1.IsSelected (1));
 
@@ -295,6 +299,96 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
 		}
 
+		[TestMethod]
+		public void TestSelection2()
+		{
+			this.itemList1.Reset ();
+			this.itemList1.SelectionMode = ItemSelectionMode.Multiple;
+
+			Assert.AreEqual (0, this.itemList1.SelectedItemCount);
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Select));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Deselect));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Toggle));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
+			
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Select));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+			Assert.AreEqual (2, this.itemList1.SelectedItemCount);
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Deselect));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Toggle));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+			Assert.AreEqual (2, this.itemList1.SelectedItemCount);
+		}
+
+		[TestMethod]
+		public void TestSelection3()
+		{
+			this.itemList1.Reset ();
+			this.itemList1.SelectionMode = ItemSelectionMode.OneOrMore;
+
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Select));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsFalse (this.itemList1.Select (0, ItemSelection.Deselect));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsFalse (this.itemList1.Select (0, ItemSelection.Toggle));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Select));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Deselect));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Toggle));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+		}
+
+
+		[TestMethod]
+		public void TestSelection4()
+		{
+			this.itemList1.Reset ();
+			this.itemList1.SelectionMode = ItemSelectionMode.ZeroOrOne;
+
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Select));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Deselect));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Toggle));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+
+			Assert.IsFalse (this.itemList1.Select (1, ItemSelection.Deselect));
+			Assert.IsTrue (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Select));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Deselect));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsFalse (this.itemList1.IsSelected (1));
+			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Toggle));
+			Assert.IsFalse (this.itemList1.IsSelected (0));
+			Assert.IsTrue (this.itemList1.IsSelected (1));
+		}
 		[TestMethod]
 		public void TestExtraState()
 		{

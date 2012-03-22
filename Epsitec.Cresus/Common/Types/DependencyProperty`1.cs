@@ -31,6 +31,22 @@ namespace Epsitec.Common.Types
 			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
 		}
 
+		public static DependencyProperty Register<TResult>(Expression<System.Func<T, TResult>> expression, System.Func<T, TResult> getValueOverrideCallback)
+		{
+			return DependencyProperty<T>.Register<TResult> (expression,
+				new DependencyPropertyMetadata (getValueOverrideCallback));
+		}
+
+		public static DependencyProperty Register<TResult>(Expression<System.Func<T, TResult>> expression,
+			System.Func<T, TResult> getValueOverrideCallback, PropertyInvalidatedCallback<T, TResult> propertyInvalidatedCallback)
+		{
+			System.Action<DependencyObject, object, object> genericPropertyInvalidatedCallback = (s, a, b) => propertyInvalidatedCallback ((T) s, (TResult) a, (TResult) b);
+
+			return DependencyProperty<T>.Register<TResult> (expression,
+				new DependencyPropertyMetadata (getValueOverrideCallback,
+					new PropertyInvalidatedCallback (genericPropertyInvalidatedCallback)));
+		}
+
 		/// <summary>
 		/// Registers a read/write property.
 		/// </summary>
@@ -63,6 +79,13 @@ namespace Epsitec.Common.Types
 
 			return DependencyProperty.RegisterReadOnly (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
 		}
+
+		public static DependencyProperty RegisterReadOnly<TResult>(Expression<System.Func<T, TResult>> expression, System.Func<T, TResult> getValueOverrideCallback)
+		{
+			return DependencyProperty<T>.RegisterReadOnly<TResult> (expression,
+				new DependencyPropertyMetadata (getValueOverrideCallback));
+		}
+
 
 		/// <summary>
 		/// Registers an attached property.

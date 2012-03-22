@@ -9,4 +9,7 @@ namespace Epsitec.Common.Types
 	public delegate object CoerceValueCallback(DependencyObject o, DependencyProperty p, object value);
 	
 	public delegate void PropertyInvalidatedCallback(DependencyObject o, object oldValue, object newValue);
+	
+	public delegate void PropertyInvalidatedCallback<in T, in TValue>(T o, TValue oldValue, TValue newValue)
+		where T : DependencyObject;
 }

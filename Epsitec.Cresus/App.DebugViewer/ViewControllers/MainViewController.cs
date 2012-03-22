@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.accessor.GetMessage (x)),
 			};
 
-//			this.historyList.SelectedItemChanged += this.HandleHistoryListSelectedItemChanged;
+			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
 
 			this.RefreshContents ();
 		}
@@ -98,13 +98,20 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			this.RefreshContents ();
 		}
 
-		//private void HandleHistoryListSelectedItemChanged(object sender)
-		//{
-		//    var item = this.historyList.Items.Values[this.historyList.SelectedItemIndex] as Data.LogRecord;
-		//    var time = item.TimeStamp;
+		private void HandleHistoryListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var index = (int) e.NewValue;
 
-		//    this.SetMainImage (this.accessor.GetStaticImage (this.accessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
-		//}
+			if (index < 0)
+			{
+				return;
+			}
+
+		    var item = this.historyList.ItemList.Cache.GetItemData (index).GetData<Data.LogRecord> ();
+		    var time = item.TimeStamp;
+
+		    this.SetMainImage (this.accessor.GetStaticImage (this.accessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
+		}
 
 		private void SetMainImage(StaticImage staticImage)
 		{

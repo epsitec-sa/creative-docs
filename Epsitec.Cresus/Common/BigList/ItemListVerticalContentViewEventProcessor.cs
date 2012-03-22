@@ -72,8 +72,8 @@ namespace Epsitec.Common.BigList
 				return false;
 			}
 
-			this.view.ItemList.Select (row.Index, ItemSelection.Toggle);
-			this.view.Invalidate ();
+			this.view.SelectRow (row.Index, ItemSelection.Toggle);
+			this.view.ActivateRow (row.Index);
 
 			this.EventProcessor = new MouseDownProcessor (this, message, pos);
 			
@@ -83,8 +83,7 @@ namespace Epsitec.Common.BigList
 
 		private void ProcessMouseWheel(double amplitude)
 		{
-			this.view.ItemList.MoveVisibleContent ((int)(amplitude * this.view.DefaultLineHeight));
-			this.view.Invalidate ();
+			this.view.Scroll (amplitude * this.view.DefaultLineHeight);
 		}
 
 
