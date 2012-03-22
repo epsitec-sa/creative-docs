@@ -18,14 +18,17 @@ namespace Epsitec.Common.BigList
 		public TState CreateState<TState>()
 			where TState : ItemState, new ()
 		{
-			var state = new TState ();
+			return this.InitializeState (new TState ()) as TState;
+		}
 
+
+		protected virtual ItemState InitializeState(ItemState state)
+		{
 			state.CopyFrom (this.state);
 			
 			return state;
 		}
-
-
+		
 		protected ItemState state;
 	}
 }
