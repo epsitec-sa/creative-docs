@@ -129,13 +129,21 @@ namespace Epsitec.Common.BigList
 
 		public void Select(int index, ItemSelection selection)
 		{
-			if (selection == ItemSelection.Activate)
+			switch (selection)
 			{
-				this.view.ActivateRow (index);
-			}
-			else
-			{
-				this.view.SelectRow (index, selection);
+				case ItemSelection.Activate:
+					this.view.ActivateRow (index);
+					break;
+
+				case ItemSelection.Focus:
+					this.view.FocusRow (index);
+					break;
+
+				case ItemSelection.Select:
+				case ItemSelection.Deselect:
+				case ItemSelection.Toggle:
+					this.view.SelectRow (index, selection);
+					break;
 			}
 		}
 
@@ -232,10 +240,14 @@ namespace Epsitec.Common.BigList
 					break;
 				
 				case MessageType.MouseUp:
+					
 					this.ProcessMove (pos);
+					
 					if (message.Button == this.button)
 					{
+						this.selectionProcessor.Select (this.originalIndex, ItemSelection.Focus);
 						this.host.Remove (this);
+						
 						return true;
 					}
 					break;

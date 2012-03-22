@@ -154,11 +154,6 @@ namespace Epsitec.Common.BigList
 				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
 			}
 
-			if (selection == ItemSelection.Activate)
-			{
-				throw new System.InvalidOperationException ("ItemList.Select does not accept activation");
-			}
-
 			if (selection == ItemSelection.Toggle)
 			{
 				selection = this.IsSelected (index) ? ItemSelection.Deselect : ItemSelection.Select;
@@ -213,7 +208,7 @@ namespace Epsitec.Common.BigList
 				}
 			}
 
-			throw new System.InvalidOperationException ();
+			throw new System.InvalidOperationException (string.Format ("Select does not understand {0}", selection.GetQualifiedName ()));
 		}
 
 		public bool IsSelected(int index)

@@ -64,7 +64,6 @@ namespace Epsitec.Common.BigList
 		{
 			var oldIndex = this.ActiveIndex;
 
-			this.ItemList.SetVisibleIndex (index);
 			this.ItemList.SetActiveIndex (index);
 
 			var newIndex = this.ActiveIndex;
@@ -74,6 +73,12 @@ namespace Epsitec.Common.BigList
 				this.InvalidateProperty (ItemListVerticalContentView.ActiveIndexProperty, oldIndex, newIndex);
 			}
 
+			this.Invalidate ();
+		}
+
+		public void FocusRow(int index)
+		{
+			this.ItemList.SetVisibleIndex (index);
 			this.Invalidate ();
 		}
 
