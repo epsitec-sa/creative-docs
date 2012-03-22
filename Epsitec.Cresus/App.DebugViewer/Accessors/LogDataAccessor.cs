@@ -91,10 +91,11 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 			var message = this.GetMessage (value).ToSimpleText ();
 			var count   = message.Count (x => x == '\n') + 1;
 
-			return new ItemData<Data.LogRecord> (value)
-			{
-				Height = 18*count,
-			};
+			return new ItemData<Data.LogRecord> (value,
+				new ItemState
+				{
+					Height = 18*count
+				});
 		}
 
 		#endregion

@@ -78,6 +78,30 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int								MarginBefore
+		{
+			get;
+			protected set;
+		}
+		
+		public int								MarginAfter
+		{
+			get;
+			protected set;
+		}
+		
+		public int								PaddingBefore
+		{
+			get;
+			protected set;
+		}
+		
+		public int								PaddingAfter
+		{
+			get;
+			protected set;
+		}
+
 
 		public static ItemState					Empty
 		{
@@ -133,6 +157,11 @@ namespace Epsitec.Common.BigList
 			this.Hilite2  = other.Hilite2;
 			this.Partial  = other.Partial;
 			this.Height   = other.Height;
+			
+			this.MarginBefore  = other.MarginBefore;
+			this.MarginAfter   = other.MarginAfter;
+			this.PaddingBefore = other.PaddingBefore;
+			this.PaddingAfter  = other.PaddingAfter;
 
 			this.ApplyExtraArguments (other);
 		}

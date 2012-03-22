@@ -11,6 +11,11 @@ namespace Epsitec.Common.BigList.Processors
 {
 	public abstract class EventProcessor : IEventProcessor
 	{
-		public abstract bool ProcessMessage(Message message, Point pos);
+		public bool ProcessMessage(Message message, Point pos)
+		{
+			return this.Process (message, pos);
+		}
+
+		protected abstract bool Process(Message message, Point pos);
 	}
 }

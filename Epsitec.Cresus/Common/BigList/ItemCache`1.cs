@@ -116,10 +116,7 @@ namespace Epsitec.Common.BigList
 
 				if (data != null)
 				{
-					state = new TState ()
-					{
-						Height = data.Height
-					};
+					state = data.CreateState<TState> ();
 
 					this.SetItemState (index, state, details);
 				}

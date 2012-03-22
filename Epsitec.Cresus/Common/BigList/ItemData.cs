@@ -8,12 +8,24 @@ namespace Epsitec.Common.BigList
 {
 	public abstract class ItemData
 	{
-		public int Height
+		protected ItemData(ItemState state)
 		{
-			get;
-			set;
+			this.state = state;
 		}
 
 		public abstract TData GetData<TData>();
+
+		public TState CreateState<TState>()
+			where TState : ItemState, new ()
+		{
+			var state = new TState ();
+
+			state.CopyFrom (this.state);
+			
+			return state;
+		}
+
+
+		protected ItemState state;
 	}
 }

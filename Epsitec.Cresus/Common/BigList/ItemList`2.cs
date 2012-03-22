@@ -14,7 +14,7 @@ namespace Epsitec.Common.BigList
 			this.cache = new ItemCache<TData, TState> (provider == null ? 100 : provider.Count)
 			{
 				DataProvider = provider,
-				DataMapper = mapper,
+				DataMapper   = mapper,
 			};
 		}
 

@@ -462,10 +462,11 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			public ItemData<int> Map(int value)
 			{
-				return new ItemData<int> (value)
-				{
-					Height = value,
-				};
+				return new ItemData<int> (value,
+					new ItemState
+					{
+						Height = value
+					});
 			}
 
 			#endregion
@@ -518,10 +519,11 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			public ItemData<int> Map(int value)
 			{
-				return new ItemData<int> (value)
-				{
-					Height = this.height,
-				};
+				return new ItemData<int> (value,
+					new ItemState
+					{
+						Height = this.height
+					});
 			}
 
 			#endregion

@@ -9,9 +9,9 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList.Processors
 {
-	public class MouseDownProcessor : EventProcessor
+	public sealed class MouseDownProcessor : EventProcessor
 	{
-		public MouseDownProcessor(IEventProcessorHost host, Message message, Point pos)
+		private MouseDownProcessor(IEventProcessorHost host, Message message, Point pos)
 		{
 			this.host               = host;
 			this.selectionProcessor = this.host as ISelectionProcessor;
@@ -45,8 +45,7 @@ namespace Epsitec.Common.BigList.Processors
 			return true;
 		}
 
-
-		public override bool ProcessMessage(Message message, Point pos)
+		protected override bool Process(Message message, Point pos)
 		{
 			switch (message.MessageType)
 			{

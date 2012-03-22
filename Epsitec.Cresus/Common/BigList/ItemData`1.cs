@@ -8,7 +8,8 @@ namespace Epsitec.Common.BigList
 {
 	public class ItemData<T> : ItemData
 	{
-		public ItemData(T data)
+		public ItemData(T data, ItemState state)
+			: base (state)
 		{
 			this.data = data;
 		}
