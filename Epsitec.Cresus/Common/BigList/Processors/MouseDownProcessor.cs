@@ -27,6 +27,11 @@ namespace Epsitec.Common.BigList.Processors
 
 		public static bool Attach(IEventProcessorHost host, Message message, Point pos)
 		{
+			if (host.EventProcessors.OfType<MouseDownProcessor> ().Any ())
+			{
+				return false;
+			}
+
 			var proc = new MouseDownProcessor (host, message, pos);
 
 			if (proc.originalIndex < 0)

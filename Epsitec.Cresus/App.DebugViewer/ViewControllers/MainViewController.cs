@@ -32,6 +32,61 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Dock = DockStyle.Fill,
 			};
 
+			var settingsFrame = new FrameBox ()
+			{
+				Parent = windowRoot,
+				Name = "Settings",
+				Dock = DockStyle.Bottom,
+				PreferredHeight = 30,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+			};
+
+			var radio1 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Exactly one",
+				PreferredWidth = 60,
+				ActiveState = ActiveState.Yes,
+			};
+
+			var radio2 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Zero or one",
+				PreferredWidth = 60,
+			};
+
+			var radio3 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Multiple",
+				PreferredWidth = 60,
+			};
+
+			var radio4 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "One or more",
+				PreferredWidth = 60,
+			};
+
+
+
+			radio1.ActiveStateChanged += _ => { if (radio1.IsActive) this.historyData.SelectionMode = ItemSelectionMode.ExactlyOne; };
+			radio2.ActiveStateChanged += _ => { if (radio2.IsActive) this.historyData.SelectionMode = ItemSelectionMode.ZeroOrOne; };
+			radio3.ActiveStateChanged += _ => { if (radio3.IsActive) this.historyData.SelectionMode = ItemSelectionMode.Multiple; };
+			radio4.ActiveStateChanged += _ => { if (radio4.IsActive) this.historyData.SelectionMode = ItemSelectionMode.OneOrMore; };
+
+
+
 			var left = new FrameBox ()
 			{
 				Parent = this.container,
