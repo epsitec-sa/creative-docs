@@ -10,6 +10,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using System.Diagnostics;
+
 using System.IO;
 
 using System.Linq;
@@ -39,29 +41,48 @@ namespace Epsitec.Aider.Data.Eerv
 			var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
 			var idToGroups = groups.ToDictionary (g => g.Id);
 
-			var filteredActivities = FilterActivities(activities, idToPersons, idToLegalPersons, idToGroups);
+			var filteredActivities = EervParishDataLoader.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups);
 
 			EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
 			EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
 
-			FreezeData(rawActivities, groups, legalPersons, rawPersons, households);
+			EervParishDataLoader.FilterHouseholdsAndPersons (households, rawPersons);
 
-			return new EervParishData(households, rawPersons, legalPersons,groups);
+			EervParishDataLoader.FreezeData (rawActivities, groups, legalPersons, rawPersons, households);
+
+			return new EervParishData(households, rawPersons, legalPersons, groups);
 		}
 
 
-		private static void FreezeData(IEnumerable<EervActivity> activities, IEnumerable<EervGroup> groups, IEnumerable<EervLegalPerson> legalPersons, IEnumerable<EervPerson> persons, IEnumerable<EervHousehold> households)
+		private static void FilterHouseholdsAndPersons(List<EervHousehold> households, List<EervPerson> persons)
 		{
-			var freezables = activities
-				.Cast<Freezable> ()
-				.Concat (groups)
-				.Concat (legalPersons)
-				.Concat (persons)
-				.Concat (households);
-
-			foreach (var freezable in freezables)
+			foreach (var household in households.ToList ())
 			{
-				freezable.Freeze ();
+				if (household.Address.Town == null)
+				{
+					EervParishDataLoader.Warn ("household " + household.Id + " is discarded because it has no town in its address");
+
+					households.Remove (household);
+
+					foreach (var member in household.Members)
+					{
+						EervParishDataLoader.Warn ("person " + member.Id + " is discarded because its household is");
+
+						persons.Remove (member);
+					}
+				}
+			}
+		}
+
+
+		private static void FreezeData(params IEnumerable<Freezable>[] freezableSequences)
+		{
+			foreach (var freezableSequence in freezableSequences)
+			{
+				foreach (var freezableItem in freezableSequence)
+				{
+					freezableItem.Freeze ();
+				}
 			}
 		}
 
@@ -79,16 +100,39 @@ namespace Epsitec.Aider.Data.Eerv
 				switch (householdRank)
 				{
 					case 1:
-						household.Head1 = person;
+
+						if (household.Head1 == null)
+						{
+							household.Head1 = person;
+						}
+						else
+						{
+							EervParishDataLoader.Warn ("person " + person.Id + " cannot be head1 in household " + household.Id + " and will be assigned to head2");
+
+							goto case 2;
+						}
+
 						break;
 
 					case 2:
-						household.Head2 = person;
+
+						if (household.Head2 == null)
+						{
+							household.Head2 = person;
+						}
+						else
+						{
+							EervParishDataLoader.Warn ("person " + person.Id + " cannot be head2 in household " + household.Id + " and will be assigned to children");
+
+							goto case 4;
+						}
+
 						break;
 
-					case 3:
 					case 4:
+
 						household.Children.Add (person);
+
 						break;
 
 					default:
@@ -105,12 +149,23 @@ namespace Epsitec.Aider.Data.Eerv
 			// NOTE Here we discard all the activities that are related to an undefined group or to
 			// an undefined person or legal person.
 
-			return from activityData in activities
-				   let memberId = activityData.Item2
-				   let groupId = activityData.Item3
-				   where idToPersons.ContainsKey (memberId) || idToLegalPersons.ContainsKey (memberId)
-				   where idToGroups.ContainsKey (groupId)
-				   select activityData;
+			foreach (var activityData in activities)
+			{
+				var memberId = activityData.Item2;
+				var groupId = activityData.Item3;
+
+				var memberExists = idToPersons.ContainsKey (memberId) || idToLegalPersons.ContainsKey (memberId);
+				var groupExists = idToGroups.ContainsKey (groupId);
+
+				if (memberExists && groupExists)
+				{
+					yield return activityData;
+				}
+				else
+				{
+					EervParishDataLoader.Warn ("activity between member " + memberId + " and group " + groupId + " is discarded because one of these references is not defined");
+				}
+			}
 		}
 
 
@@ -598,6 +653,15 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		private static void Warn(string warning)
+		{
+			if (EervParishDataLoader.displayWarnings)
+			{
+				Debug.WriteLine ("Warning: " + warning);
+			}
+		}
+
+
 		private static class ActivityIndex
 		{
 
@@ -681,6 +745,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		}
+
+
+		private static readonly bool displayWarnings = false;
 
 
 	}

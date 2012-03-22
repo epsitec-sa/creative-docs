@@ -65,6 +65,28 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public IEnumerable<EervPerson> Members
+		{
+			get
+			{
+				if (this.Head1 != null)
+				{
+					yield return this.Head1;
+				}
+
+				if (this.Head2 != null)
+				{
+					yield return this.Head2;
+				}
+
+				foreach (var child in this.Children)
+				{
+					yield return child;
+				}
+			}
+		}
+
+
 		protected override void HandleFreeze()
 		{
 			base.HandleFreeze ();
