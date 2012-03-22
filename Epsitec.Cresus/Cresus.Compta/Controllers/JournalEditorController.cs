@@ -966,13 +966,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateAfterCompteOrigineTVAChanged(int line)
 		{
-			//	Appelé lorsque le compte à l'origine de éa TVA a changé, pour mettre à jour les codes TVA dans le menu.
+			//	Appelé lorsque le compte à l'origine de la TVA a changé, pour mettre à jour les codes TVA dans le menu.
 			var field = this.GetFieldController (ColumnType.CodeTVA, line);
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.CompteOrigineTVA)).FirstOrDefault ();
 
 			if (field != null && compte != null)
 			{
-				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', compte.CodesTVAMenuDescription);
+				var codesTVA = compte.CodesTVAMenuDescription;
+
+				if (!codesTVA.Any ())
+				{
+					codesTVA = this.compta.CodesTVAMenuDescription;
+				}
+
+				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', codesTVA);
 			}
 		}
 

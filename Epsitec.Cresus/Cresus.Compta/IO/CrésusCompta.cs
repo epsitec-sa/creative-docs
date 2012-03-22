@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Compta.IO
 						ListeTaux   = this.compta.GetListeTVA (this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100),
 					};
 
-					if (codeTVA.ListeTaux != null)
+					if (codeTVA.ListeTaux != null && !codeTVA.Description.ToString().ToLower ().Contains ("obsolète"))
 					{
 						codesTVAList.Add (codeTVA);
 					}
@@ -316,10 +316,39 @@ namespace Epsitec.Cresus.Compta.IO
 				var codeTVA = pair.Value;
 
 				compte.CodeTVAParDéfaut = this.compta.CodesTVA.Where (x => x.Code == codeTVA).FirstOrDefault ();
-				compte.CodesTVAPossibles.Add (compte.CodeTVAParDéfaut);
+				this.SetCodeTVA (compte);
 			}
 
 			return null;  // ok
+		}
+
+		private void SetCodeTVA(ComptaCompteEntity compte)
+		{
+			if (compte.CodeTVAParDéfaut != null)
+			{
+				var zero = this.compta.CodesTVA.Where (x => x.Code == "EXPORT").FirstOrDefault ();
+				if (zero != null)
+				{
+					compte.CodesTVAPossibles.Add (zero);
+				}
+
+				if (compte.CodeTVAParDéfaut.Code.Length >= 3)
+				{
+					var prefix = compte.CodeTVAParDéfaut.Code.ToString ().Substring (0, 3);
+
+					foreach (var codeTVA in this.compta.CodesTVA)
+					{
+						if (codeTVA.Code.ToString ().StartsWith (prefix))
+						{
+							compte.CodesTVAPossibles.Add (codeTVA);
+						}
+					}
+				}
+				else
+				{
+					compte.CodesTVAPossibles.Add (compte.CodeTVAParDéfaut);
+				}
+			}
 		}
 
 		private Date GetDate(string text)
