@@ -94,7 +94,13 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="BigList\ItemListVerticalContentViewEventProcessor.cs" />
+    <Compile Include="BigList\Processors\EventProcessor.cs" />
+    <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
+    <Compile Include="BigList\Processors\IDetectionProcessor.cs" />
+    <Compile Include="BigList\Processors\IEventProcessor.cs" />
+    <Compile Include="BigList\Processors\IEventProcessorHost.cs" />
+    <Compile Include="BigList\Processors\ISelectionProcessor.cs" />
+    <Compile Include="BigList\ItemListVerticalContentView.EventProcessor.cs" />
     <Compile Include="BigList\IItemDataRenderer.cs" />
     <Compile Include="BigList\ItemData.cs" />
     <Compile Include="BigList\ItemData`1.cs" />
@@ -115,6 +121,8 @@
     <Compile Include="BigList\ItemSelectionMode.cs" />
     <Compile Include="BigList\ItemState.cs" />
     <Compile Include="BigList\ItemStateDetails.cs" />
+    <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
+    <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\StringRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer`1.cs" />

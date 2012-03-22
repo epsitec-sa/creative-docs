@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.BigList;
+using Epsitec.Common.BigList.Processors;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
@@ -14,12 +15,12 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemListVerticalContentView : Widget
+	public partial class ItemListVerticalContentView : Widget
 	{
 		public ItemListVerticalContentView()
 		{
 			this.DefaultLineHeight = 20;
-			this.processor = new ItemListVerticalContentViewEventProcessor (this);
+			this.processor = new ItemListVerticalContentView.EventProcessor (this);
 		}
 
 
@@ -202,6 +203,6 @@ namespace Epsitec.Common.BigList
 		public static DependencyProperty		ActiveIndexProperty = DependencyProperty<ItemListVerticalContentView>.RegisterReadOnly<int> (x => x.ActiveIndex, x => x.ActiveIndex);
 
 		private ItemList						list;
-		private ItemListVerticalContentViewEventProcessor processor;
+		private ItemListVerticalContentView.EventProcessor					processor;
 	}
 }
