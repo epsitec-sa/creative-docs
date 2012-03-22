@@ -11,5 +11,6 @@ namespace Epsitec.Common.BigList
 		Select,
 		Deselect,
 		Toggle,
+		Activate,
 	}
 }
