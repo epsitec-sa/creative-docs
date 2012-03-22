@@ -194,7 +194,19 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			if (this.clearFocusAction != null && this.columnMapper != null)
 			{
-				this.clearFocusAction (this.line, this.columnMapper.Column);
+				int line   = this.line;
+				var column = this.columnMapper.Column;
+				var action = this.clearFocusAction;
+
+				Application.QueueAsyncCallback
+				(
+					delegate
+					{
+						action (line, column);
+					}
+				);
+
+				//this.clearFocusAction (this.line, this.columnMapper.Column);
 			}
 		}
 
@@ -202,7 +214,19 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			if (this.setFocusAction != null && this.columnMapper != null)
 			{
-				this.setFocusAction (this.line, this.columnMapper.Column);
+				int line   = this.line;
+				var column = this.columnMapper.Column;
+				var action = this.setFocusAction;
+
+				Application.QueueAsyncCallback
+				(
+					delegate
+					{
+						action (line, column);
+					}
+				);
+
+				//this.setFocusAction (this.line, this.columnMapper.Column);
 			}
 		}
 

@@ -324,6 +324,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 		private void SetCodeTVA(ComptaCompteEntity compte)
 		{
+			//	Essaie de "deviner" les codes TVA possibles à partir d'un code défini.
 			if (compte.CodeTVAParDéfaut != null)
 			{
 				var zero = this.compta.CodesTVA.Where (x => x.Code == "EXPORT").FirstOrDefault ();

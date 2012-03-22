@@ -193,17 +193,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			if (type != TypeEcriture.CodeTVA)  // sur la ligne CodeTVA, le montant peut être nul (par ex. lors d'exportation)
+			if (montantHT.HasValue &&
+				type != TypeEcriture.CodeTVA &&  // sur la ligne CodeTVA, le montant peut être nul (par ex. lors d'exportation)
+				this.GetText (ColumnType.TotalAutomatique) != "1")  // le total automatique peut être nul
 			{
-				if (montantHT.HasValue)
+				if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
+					montantHT.GetValueOrDefault () == 0)  // montant nul ?
 				{
-					if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
-						montantHT.GetValueOrDefault () == 0)  // montant nul ?
-					{
-						data.Error = "Le montant ne peut pas être nul";
-						data.Text = Converters.MontantToString (0);
-						return;
-					}
+					data.Error = "Le montant ne peut pas être nul";
+					data.Text = Converters.MontantToString (0);
+					return;
 				}
 			}
 
@@ -317,10 +316,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.CodeTVA,           FormattedText.Empty);
 				this.SetText (ColumnType.TauxTVA,           FormattedText.Empty);
 				this.SetText (ColumnType.CompteTVA,         FormattedText.Empty);
-				this.SetText (ColumnType.Journal,           écriture.Journal.Nom);
+				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? null : écriture.Journal.Nom);
 				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
 			}
-			else{
+			else
+			{
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             JournalDataAccessor.GetNuméro (écriture.Débit));
 				this.SetText (ColumnType.Crédit,            JournalDataAccessor.GetNuméro (écriture.Crédit));
@@ -334,7 +334,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 				this.SetText (ColumnType.TauxTVA,           Converters.PercentToString (écriture.TauxTVA));
 				this.SetText (ColumnType.CompteTVA,         JournalEditionLine.GetCodeTVACompte (écriture.CodeTVA));
-				this.SetText (ColumnType.Journal,           écriture.Journal.Nom);
+				this.SetText (ColumnType.Journal,           (écriture.Journal == null) ? null : écriture.Journal.Nom);
 				this.TypeEcriture =                         (TypeEcriture) écriture.Type;
 			}
 
@@ -463,14 +463,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public bool IsEmptyLine
 		{
-			//	Retourne true si une ligne de type 'vide' est effectivement entièrement vide.
+			//	Retourne true si une ligne est entièrement vide.
 			get
 			{
 				var débit  = this.GetText (ColumnType.Débit);
 				var crédit = this.GetText (ColumnType.Crédit);
 
-				return this.TypeEcriture == Compta.TypeEcriture.Vide &&
-					   (débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
+				return (débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
 					   (crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi) &&
 					   this.GetText (ColumnType.Libellé).IsNullOrEmpty &&
 					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0;

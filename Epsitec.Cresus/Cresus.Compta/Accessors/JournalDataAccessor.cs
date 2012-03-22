@@ -330,44 +330,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.firstEditedRow = firstRow;
 				this.countEditedRow = countRow;
-				ComptaEcritureEntity last = null;
+
+				bool isMulti = this.countEditedRow > 1;
 
 				for (int i = 0; i < this.countEditedRow; i++)
 				{
 					var data = new JournalEditionLine (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
-					last = écriture;
 					data.EntityToData (écriture);
+					data.SetText (ColumnType.IsMulti, isMulti ? "1" : "0");
 
 					this.editionLine.Add (data);
 				}
 
 				//	Crée éventuellement la ligne vide supplémentaire, permettant à l'utilisateur d'ajouter une
 				//	ligne à son écriture multiple sans utiliser le bouton "+".
-				if (this.countEditedRow > 1 && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
+				if (isMulti && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
 				{
-					var écriture = new ComptaEcritureEntity ()
-					{
-						Type    = (int) TypeEcriture.Vide,
-						Journal = last.Journal,
-					};
-
-					var data = new JournalEditionLine (this.controller);
-					data.EntityToData (écriture);
-
-					if (last.Débit == null)
-					{
-						data.SetText (ColumnType.Crédit, JournalDataAccessor.multi);
-					}
-					else
-					{
-						data.SetText (ColumnType.Débit, JournalDataAccessor.multi);
-					}
-
-					int i = this.editionLine.Count-1;
-					this.editionLine.Insert (i, data);
-
-					this.countEditedRow++;
+					this.CreateEmptyLine ();
 				}
 			}
 
@@ -377,6 +357,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.justCreated = false;
 
 			this.controller.EditorController.UpdateFieldsEditionData ();
+		}
+
+		public void CreateEmptyLine()
+		{
+			//	Crée une ligne vide à l'avant-dernière position.
+			var écriture = new ComptaEcritureEntity ()
+			{
+				Type = (int) TypeEcriture.Vide,
+			};
+
+			var data = new JournalEditionLine (this.controller);
+			data.EntityToData (écriture);
+			data.SetText (ColumnType.IsMulti, "1");
+
+			int i = this.editionLine.Count-1;
+			this.editionLine.Insert (i, data);  // insère à l'avant-dernière position
+
+			this.countEditedRow++;
 		}
 
 		public override void UpdateEditionLine()
@@ -411,6 +409,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
+				if ((data as JournalEditionLine).IsEmptyLine)
+				{
+					continue;
+				}
+
 				this.compta.AddLibellé (this.période, data.GetText (ColumnType.Libellé));
 
 				var écriture = this.CreateEcriture ();

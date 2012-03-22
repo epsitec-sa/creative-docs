@@ -21,8 +21,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			//	vide, elle est ignorée.
 			get
 			{
-				return this.Type == (int) TypeEcriture.Vide &&
-					   this.Débit == null &&
+				return this.Débit == null &&
 					   this.Crédit == null &&
 					   this.Pièce.IsNullOrEmpty &&
 					   this.Libellé.IsNullOrEmpty &&

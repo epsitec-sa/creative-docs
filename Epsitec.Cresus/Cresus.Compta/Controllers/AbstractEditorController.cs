@@ -503,11 +503,36 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+#if false
+		protected void GetFocus(out int? focusedLine, out ColumnType? focusedColumn)
+		{
+			//	Retourne la ligne et la colonne où est le focus.
+			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+			{
+				foreach (var mapper in this.columnMappers.Where (x => x.Show && x.Edition))
+				{
+					var controller = this.GetFieldController (mapper.Column, line);
+					if (controller != null)
+					{
+						if (controller.HasFocus)
+						{
+							focusedLine   = line;
+							focusedColumn = mapper.Column;
+						}
+					}
+				}
+			}
+
+			focusedLine   = null;
+			focusedColumn = null;
+		}
+#endif
+
 		protected virtual void HandleClearFocus(int line, ColumnType columnType)
 		{
 		}
 
-		protected void HandleSetFocus(int line, ColumnType columnType)
+		protected virtual void HandleSetFocus(int line, ColumnType columnType)
 		{
 			this.arrayController.HiliteHeaderColumn (columnType);
 			this.selectedColumn = columnType;
@@ -699,6 +724,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		protected void AdjustLineColumn(ref int line, ref ColumnType column)
+		{
+			//	Ajuste un champ sélectionné (désigné par line/column) s'il est caché, pour trouver le prochain visible.
+			int direction = 1;
+
+			while (!this.GetWidgetVisibility (column, line) || this.GetTextFieldReadonly (column, line))
+			{
+				//	Cherche la colonne suivante.
+				if (!this.GetNextPrevColumn (line, ref column, direction))  // est-on arrivé à une extrémité ?
+				{
+					//	Cherche la ligne suivante.
+					line += direction;
+
+					if (line < 0)  // remonté avant le début ?
+					{
+						line = this.dataAccessor.CountEditedRow-1;  // va à la fin
+					}
+
+					if (line >= this.dataAccessor.CountEditedRow)  // descendu après la fin ?
+					{
+						line = 0;  // va au début
+					}
+				}
+			}
+		}
 
 		protected void HandleLinesContainerTabPressed(object sender, Message message)
 		{
