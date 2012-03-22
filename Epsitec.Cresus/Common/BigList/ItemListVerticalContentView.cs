@@ -104,8 +104,8 @@ namespace Epsitec.Common.BigList
 			double dx = this.Client.Width;
 			double dy = this.Client.Height;
 
-			double y2 = dy - row.Offset;
-			double y1 = y2 - row.Height;
+			double y2 = dy - row.Offset - row.Height.MarginBefore;
+			double y1 = y2 - row.Height.Height;
 
 			return new Rectangle (0, y1, dx, y2-y1);
 		}

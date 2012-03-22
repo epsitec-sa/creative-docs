@@ -58,9 +58,48 @@ namespace Epsitec.Common.BigList
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <returns>The height of the item or zero if the item does not exist.</returns>
-		public override int GetItemHeight(int index)
+		public override ItemHeight GetItemHeight(int index)
 		{
-			return this.GetItemState (index, ItemStateDetails.Full).Height;
+			int count = this.states.Count;
+
+			if ((index < 0) ||
+				(index >= count))
+			{
+				return new ItemHeight ();
+			}
+
+			var state  = this.GetItemState (index, ItemStateDetails.Full);
+			int height = 0;
+			
+			int marginBefore;
+			int marginAfter;
+
+			if (index == 0)
+			{
+				marginBefore = state.MarginBefore;
+			}
+			else
+			{
+				var stateBefore = this.GetItemState (index-1, ItemStateDetails.Full);
+				marginBefore = System.Math.Max (state.MarginBefore, stateBefore.MarginAfter) / 2;
+			}
+
+			height += state.PaddingBefore;
+			height += state.Height;
+			height += state.PaddingAfter;
+
+			if (index < count-1)
+			{
+				var stateAfter = this.GetItemState (index+1, ItemStateDetails.Full);
+
+				marginAfter = (System.Math.Max (state.MarginAfter, stateAfter.MarginBefore) + 1) / 2;
+			}
+			else
+			{
+				marginAfter = state.MarginAfter;
+			}
+
+			return new ItemHeight (height, marginBefore, marginAfter);
 		}
 
 		public override ItemData GetItemData(int index)
@@ -161,8 +200,7 @@ namespace Epsitec.Common.BigList
 
 			if (details.HasFlag (ItemStateDetails.Full))
 			{
-				if ((state.Partial) ||
-					(state.Height+1 == ItemState.MaxCompactHeight))
+				if (state.Partial)
 				{
 					TState extra;
 
@@ -171,7 +209,7 @@ namespace Epsitec.Common.BigList
 						extra = state.Clone<TState> ();
 					}
 
-					state.Apply (extra);
+					state.ApplyExtraState (extra);
 				}
 			}
 
@@ -185,7 +223,7 @@ namespace Epsitec.Common.BigList
 			if (details.HasFlag (ItemStateDetails.Full))
 			{
 				if ((state != null) &&
-					(state.ComputePartialFlag ()))
+					(state.RequiresExtraState))
 				{
 					this.extraStates[index] = state.Clone<TState> ();
 				}
@@ -243,5 +281,62 @@ namespace Epsitec.Common.BigList
 
 	public class ItemCacheEntry<T> : ItemCacheEntry
 	{
+	}
+
+	public struct ItemHeight : System.IEquatable<ItemHeight>
+	{
+		public ItemHeight(int height, int marginBefore, int marginAfter)
+		{
+			this.height       = (ushort) height;
+			this.marginBefore = (byte) marginBefore;
+			this.marginAfter  = (byte) marginAfter;
+		}
+
+		public int Height
+		{
+			get
+			{
+				return this.height;
+			}
+		}
+
+		public int TotalHeight
+		{
+			get
+			{
+				return this.Height + this.MarginBefore + this.MarginAfter;
+			}
+		}
+
+		public int MarginBefore
+		{
+			get
+			{
+				return this.marginBefore;
+			}
+		}
+
+		public int MarginAfter
+		{
+			get
+			{
+				return this.marginAfter;
+			}
+		}
+
+		#region IEquatable<ItemHeight> Members
+
+		public bool Equals(ItemHeight other)
+		{
+			return this.height == other.height
+				&& this.marginBefore == other.marginBefore
+				&& this.marginAfter == other.marginAfter;
+		}
+
+		#endregion
+
+		private readonly ushort height;
+		private readonly byte marginBefore;
+		private readonly byte marginAfter;
 	}
 }

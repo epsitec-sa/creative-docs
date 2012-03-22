@@ -47,11 +47,37 @@ namespace Epsitec.Common.BigList
 
 		public bool								Partial
 		{
-			get;
-			private set;
+			get
+			{
+				return this.forcePartial;
+			}
+			private set
+			{
+				this.forcePartial = value;
+			}
 		}
 
-		public bool								IsEmpty
+		public bool RequiresExtraState
+		{
+			get
+			{
+				if ((this.height + 1 > ItemState.MaxCompactHeight) ||
+					(this.MarginBefore  != 0) ||
+					(this.MarginAfter   != 0) ||
+					(this.PaddingBefore != 0) ||
+					(this.PaddingAfter  != 0) ||
+					(this.HasExtraArguments ()))
+				{
+					return true;
+				}
+				else
+				{
+					return false;
+				}
+			}
+		}
+
+		public bool IsEmpty
 		{
 			get;
 			private set;
@@ -69,10 +95,6 @@ namespace Epsitec.Common.BigList
 				{
 					throw new System.ArgumentOutOfRangeException ("value", string.Format ("Height may not be negative: {0}", value));
 				}
-				if (value+1 > ItemState.MaxCompactHeight)
-				{
-					this.Partial = true;
-				}
 
 				this.height = value;
 			}
@@ -81,25 +103,25 @@ namespace Epsitec.Common.BigList
 		public int								MarginBefore
 		{
 			get;
-			protected set;
+			set;
 		}
 		
 		public int								MarginAfter
 		{
 			get;
-			protected set;
+			set;
 		}
 		
 		public int								PaddingBefore
 		{
 			get;
-			protected set;
+			set;
 		}
 		
 		public int								PaddingAfter
 		{
 			get;
-			protected set;
+			set;
 		}
 
 
@@ -119,15 +141,15 @@ namespace Epsitec.Common.BigList
 		
 		public ushort ToCompactState()
 		{
-			bool partialFlag = this.ComputePartialFlag ();
-			
+			bool needsPartial = this.Partial || this.RequiresExtraState;
+
 			int compact =
 				(this.Loaded   ? Mask.Loaded   : 0) |
 				(this.Selected ? Mask.Selected : 0) |
 				(this.Hidden   ? Mask.Hidden   : 0) |
 				(this.Hilite1  ? Mask.Hilite1  : 0) |
 				(this.Hilite2  ? Mask.Hilite2  : 0) |
-				(partialFlag   ? Mask.Partial  : 0) |
+				(needsPartial  ? Mask.Partial  : 0) |
 				System.Math.Min (this.height + 1, ItemState.MaxCompactHeight);
 
 			return (ushort) compact;
@@ -138,47 +160,38 @@ namespace Epsitec.Common.BigList
 		{
 			return new TState ()
 			{
+				Height   = (state & Mask.Height) - 1,
 				Loaded   = (state & Mask.Loaded)   != 0,
 				Selected = (state & Mask.Selected) != 0,
 				Hidden   = (state & Mask.Hidden)   != 0,
 				Hilite1  = (state & Mask.Hilite1)  != 0,
 				Hilite2  = (state & Mask.Hilite2)  != 0,
 				Partial  = (state & Mask.Partial)  != 0,
-				Height   = (state & Mask.Height) - 1
 			};
 		}
 
 		public void CopyFrom(ItemState other)
 		{
+			this.Height   = other.Height;
 			this.Loaded   = other.Loaded;
 			this.Selected = other.Selected;
 			this.Hidden   = other.Hidden;
 			this.Hilite1  = other.Hilite1;
 			this.Hilite2  = other.Hilite2;
 			this.Partial  = other.Partial;
-			this.Height   = other.Height;
-			
-			this.MarginBefore  = other.MarginBefore;
-			this.MarginAfter   = other.MarginAfter;
-			this.PaddingBefore = other.PaddingBefore;
-			this.PaddingAfter  = other.PaddingAfter;
 
 			this.ApplyExtraArguments (other);
 		}
 
-		public void Apply(ItemState other)
+		public void ApplyExtraState(ItemState other)
 		{
 			if (this.height+1 == ItemState.MaxCompactHeight)
 			{
-				this.height = other.Height;
+				this.height = other.height;
 			}
 
-			bool applied = this.ApplyExtraArguments (other);
-
-			if (applied)
-			{
-				this.Partial = true;
-			}
+			this.ApplyExtraArguments (other);
+			this.forcePartial = false;
 		}
 
 		public void Select(ItemSelection selectionMode)
@@ -200,17 +213,6 @@ namespace Epsitec.Common.BigList
 				default:
 					throw new System.NotSupportedException (string.Format ("Unsupported selection mode {0}", selectionMode.GetQualifiedName ()));
 			}
-		}
-
-		public bool ComputePartialFlag()
-		{
-			if (this.Partial == false)
-			{
-				return false;
-			}
-			
-			return this.height+1 > ItemState.MaxCompactHeight
-				|| this.HasExtraArguments ();
 		}
 
 
@@ -253,8 +255,21 @@ namespace Epsitec.Common.BigList
 
 		protected virtual bool ApplyExtraArguments(ItemState other)
 		{
+			this.MarginBefore  = other.MarginBefore;
+			this.MarginAfter   = other.MarginAfter;
+			this.PaddingBefore = other.PaddingBefore;
+			this.PaddingAfter  = other.PaddingAfter;
+
 			//	TODO: recopy other properties which do not fit into a compact state...
 
+			if ((this.MarginBefore != 0) ||
+				(this.MarginAfter != 0) ||
+				(this.PaddingBefore != 0) ||
+				(this.PaddingAfter != 0))
+			{
+				return true;
+			}
+			
 			return false;
 		}
 
@@ -292,5 +307,6 @@ namespace Epsitec.Common.BigList
 		public const int MaxCompactHeight		= 1000;
 
 		private int								height;
+		private bool							forcePartial;
 	}
 }

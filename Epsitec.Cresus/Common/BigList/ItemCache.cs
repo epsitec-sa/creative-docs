@@ -29,7 +29,7 @@ namespace Epsitec.Common.BigList
 
 		public abstract void Reset();
 		
-		public abstract int GetItemHeight(int index);
+		public abstract ItemHeight GetItemHeight(int index);
 
 		public abstract ItemData GetItemData(int index);
 

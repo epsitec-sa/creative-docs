@@ -31,7 +31,9 @@ namespace Epsitec.Common.BigList.Renderers
 
 			graphics.AddFilledRectangle (bounds);
 			graphics.RenderSolid (back);
-			
+
+			bounds = Rectangle.Offset (bounds, 0, -state.PaddingBefore);
+
 			foreach (var line in lines)
 			{
 				graphics.AddText (bounds.X, bounds.Y, bounds.Width, bounds.Height, line, this.textFont, this.textFontSize, this.alignment);

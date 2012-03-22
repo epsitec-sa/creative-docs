@@ -94,7 +94,11 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 			return new ItemData<Data.LogRecord> (value,
 				new ItemState
 				{
-					Height = 18*count
+					Height = 18*count,
+					PaddingBefore = 4,
+					PaddingAfter = 4,
+					MarginBefore = 0,
+					MarginAfter = 0,
 				});
 		}
 

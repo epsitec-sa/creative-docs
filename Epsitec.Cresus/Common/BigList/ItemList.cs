@@ -248,7 +248,7 @@ namespace Epsitec.Common.BigList
 			return this.Cache.GetItemState (index, ItemStateDetails.Full);
 		}
 
-		public int GetItemHeight(int index)
+		public ItemHeight GetItemHeight(int index)
 		{
 			return this.Cache.GetItemHeight (index);
 		}
@@ -360,7 +360,7 @@ namespace Epsitec.Common.BigList
 					rows = this.GetVisibleRowsStartingWith (index);
 					row  = rows.Find (x => x.Index == index);
 				}
-				else if (row.Offset + row.Height > this.visibleHeight)
+				else if (row.Offset + row.Height.TotalHeight > this.visibleHeight)
 				{
 					rows = this.GetVisibleRowsEndingWith (index);
 					row  = rows.Find (x => x.Index == index);
@@ -408,7 +408,7 @@ namespace Epsitec.Common.BigList
 
 			while ((startOffset > 0) && (index > 0))
 			{
-				startOffset -= this.GetItemHeight (--index);
+				startOffset -= this.GetItemHeight (--index).TotalHeight;
 			}
 
 			if (index < 0)
@@ -447,14 +447,15 @@ namespace Epsitec.Common.BigList
 					return this.GetVisibleRowsEndingWith (count-1);
 				}
 
-				int height = this.GetItemHeight (index);
+				var height = this.GetItemHeight (index);
+				var total  = height.TotalHeight;
 
-				if ((height > 0) && (offset + height > 0))
+				if ((total > 0) && (offset + total > 0))
 				{
 					rows.Add (new ItemListRow (index, offset, height));
 				}
 
-				offset += height;
+				offset += total;
 				index  += 1;
 			}
 
@@ -486,9 +487,10 @@ namespace Epsitec.Common.BigList
 
 			while ((index >= 0) && (offset > 0))
 			{
-				int height = this.GetItemHeight (index);
+				var height = this.GetItemHeight (index);
+				var localH = height.TotalHeight;
 
-				offset -= height;
+				offset -= localH;
 
 				if ((offset <= 0) &&
 					(rows.Count == 0))
@@ -501,12 +503,12 @@ namespace Epsitec.Common.BigList
 					return rows;
 				}
 
-				if (height > 0)
+				if (localH > 0)
 				{
 					rows.Insert (0, new ItemListRow (index, offset, height));
 				}
 
-				total += height;
+				total += localH;
 				index -= 1;
 			}
 
@@ -527,14 +529,15 @@ namespace Epsitec.Common.BigList
 
 				while ((total < this.visibleHeight) && (index < count))
 				{
-					int height = this.GetItemHeight (index);
+					var height = this.GetItemHeight (index);
+					var localH = height.TotalHeight;
 
-					if (height > 0)
+					if (localH > 0)
 					{
 						rows.Add (new ItemListRow (index, offset, height));
 					}
 
-					offset += height;
+					offset += localH;
 					index  += 1;
 				}
 			}

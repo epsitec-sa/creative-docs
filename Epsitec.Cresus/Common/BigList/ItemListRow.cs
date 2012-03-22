@@ -8,7 +8,7 @@ namespace Epsitec.Common.BigList
 {
 	public sealed class ItemListRow
 	{
-		public ItemListRow(int index, int offset, int height)
+		public ItemListRow(int index, int offset, ItemHeight height)
 		{
 			this.index  = index;
 			this.offset = offset;
@@ -32,7 +32,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								Height
+		public ItemHeight						Height
 		{
 			get
 			{
@@ -41,8 +41,8 @@ namespace Epsitec.Common.BigList
 		}
 
 		
-		private int								index;
-		private int								offset;
-		private int								height;
+		private readonly int					index;
+		private readonly int					offset;
+		private readonly ItemHeight				height;
 	}
 }
