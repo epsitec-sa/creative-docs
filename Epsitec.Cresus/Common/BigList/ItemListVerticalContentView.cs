@@ -10,9 +10,7 @@ using Epsitec.Common.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-
 [assembly: DependencyClass (typeof (ItemListVerticalContentView))]
-
 
 namespace Epsitec.Common.BigList
 {
@@ -178,7 +176,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public event EventHandler SelectionChanged
+		public event EventHandler				SelectionChanged
 		{
 			add
 			{
@@ -190,13 +188,14 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		#region Strings
 
 		private const string					SelectionChangedEvent = "SelectionChanged";
 
+		#endregion
 
 		public static DependencyProperty		ActiveIndexProperty = DependencyProperty<ItemListVerticalContentView>.RegisterReadOnly<int> (x => x.ActiveIndex, x => x.ActiveIndex);
 
-		
 		private ItemList						list;
 		private ItemListVerticalContentViewEventProcessor processor;
 	}
