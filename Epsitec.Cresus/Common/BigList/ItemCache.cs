@@ -15,6 +15,7 @@ namespace Epsitec.Common.BigList
 			this.states   = new IndexedArray<ushort> (this.capacity);
 		}
 
+		
 		public abstract int						ExtraStateCount
 		{
 			get;
@@ -36,6 +37,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		
 		public abstract void Reset();
 		
 		public abstract ItemHeight GetItemHeight(int index);

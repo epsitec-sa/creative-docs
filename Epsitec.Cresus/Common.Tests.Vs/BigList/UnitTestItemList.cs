@@ -526,6 +526,62 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 		}
 
+		[TestMethod]
+		public void TestMargins1()
+		{
+			var provider = new SeqProvider (5520, 5530, 5210, 5810);
+			var mapper   = new HeightMarginMapper ();
+
+			var itemList = new ItemList<int> (provider, mapper);
+			
+			itemList.Reset ();
+			itemList.Features.EnableRowMargins = true;
+
+			Assert.AreEqual ( 5, itemList.GetItemHeight (0).MarginBefore);
+			Assert.AreEqual (20, itemList.GetItemHeight (0).Height);
+			Assert.AreEqual ( 3, itemList.GetItemHeight (0).MarginAfter);
+
+			Assert.AreEqual ( 2, itemList.GetItemHeight (1).MarginBefore);
+			Assert.AreEqual (30, itemList.GetItemHeight (1).Height);
+			Assert.AreEqual ( 3, itemList.GetItemHeight (1).MarginAfter);
+
+			Assert.AreEqual ( 2, itemList.GetItemHeight (2).MarginBefore);
+			Assert.AreEqual (10, itemList.GetItemHeight (2).Height);
+			Assert.AreEqual ( 4, itemList.GetItemHeight (2).MarginAfter);
+
+			Assert.AreEqual ( 4, itemList.GetItemHeight (3).MarginBefore);
+			Assert.AreEqual (10, itemList.GetItemHeight (3).Height);
+			Assert.AreEqual ( 5, itemList.GetItemHeight (3).MarginAfter);
+		}
+
+		[TestMethod]
+		public void TestMargins2()
+		{
+			var provider = new SeqProvider (5520, 5530, 5210, 5810);
+			var mapper   = new HeightMarginMapper ();
+
+			var itemList = new ItemList<int> (provider, mapper);
+			
+			itemList.Reset ();
+			itemList.Features.EnableRowMargins = false;
+
+			Assert.AreEqual ( 0, itemList.GetItemHeight (0).MarginBefore);
+			Assert.AreEqual (20, itemList.GetItemHeight (0).Height);
+			Assert.AreEqual ( 0, itemList.GetItemHeight (0).MarginAfter);
+
+			Assert.AreEqual ( 0, itemList.GetItemHeight (1).MarginBefore);
+			Assert.AreEqual (30, itemList.GetItemHeight (1).Height);
+			Assert.AreEqual ( 0, itemList.GetItemHeight (1).MarginAfter);
+
+			Assert.AreEqual ( 0, itemList.GetItemHeight (2).MarginBefore);
+			Assert.AreEqual (10, itemList.GetItemHeight (2).Height);
+			Assert.AreEqual ( 0, itemList.GetItemHeight (2).MarginAfter);
+
+			Assert.AreEqual ( 0, itemList.GetItemHeight (3).MarginBefore);
+			Assert.AreEqual (10, itemList.GetItemHeight (3).Height);
+			Assert.AreEqual ( 0, itemList.GetItemHeight (3).MarginAfter);
+		}
+
 		private class SeqMapper : IItemDataMapper<int>
 		{
 			#region IItemDataMapper<int> Members
@@ -601,6 +657,32 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			private readonly int height;
 		}
 
+		private class HeightMarginMapper : IItemDataMapper<int>
+		{
+			public HeightMarginMapper()
+			{
+			}
+
+			#region IItemDataMapper<int> Members
+
+			public ItemData<int> Map(int value)
+			{
+				int height       = (value)        % 100;
+				int marginBefore = (value / 100)  % 10;
+				int marginAfter  = (value / 1000) % 10;
+
+				return new ItemData<int> (value,
+					new ItemState
+					{
+						Height       = height,
+						MarginBefore = marginBefore,
+						MarginAfter  = marginAfter,
+					});
+			}
+
+			#endregion
+		}
+
 		private class RangeProvider : IItemDataProvider<int>
 		{
 			public RangeProvider(int num)
@@ -639,7 +721,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 
 
-		private readonly ItemList<int>		itemList1;
+		private readonly ItemList<int>			itemList1;
 		private readonly SeqProvider			provider1;
 		private readonly RangeProvider			provider2;
 		private readonly SeqMapper				mapper1;
