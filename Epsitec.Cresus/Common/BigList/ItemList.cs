@@ -13,14 +13,20 @@ namespace Epsitec.Common.BigList
 		protected ItemList()
 		{
 			this.visibleRows = new List<ItemListRow> ();
-			this.SelectionMode = ItemSelectionMode.ExactlyOne;
+			
+			this.features = new ItemListFeatures ()
+			{
+				SelectionMode = ItemSelectionMode.ExactlyOne,
+			};
 		}
 
 
-		public ItemSelectionMode SelectionMode
+		public ItemListFeatures					Features
 		{
-			get;
-			set;
+			get
+			{
+				return this.features;
+			}
 		}
 
 		public abstract int Count
@@ -161,7 +167,7 @@ namespace Epsitec.Common.BigList
 			
 			if (selection == ItemSelection.Deselect)
 			{
-				switch (this.SelectionMode)
+				switch (this.features.SelectionMode)
 				{
 					case ItemSelectionMode.ExactlyOne:
 					case ItemSelectionMode.None:
@@ -185,7 +191,7 @@ namespace Epsitec.Common.BigList
 
 			if (selection == ItemSelection.Select)
 			{
-				switch (this.SelectionMode)
+				switch (this.features.SelectionMode)
 				{
 					case ItemSelectionMode.ZeroOrOne:
 					case ItemSelectionMode.ExactlyOne:
@@ -551,6 +557,8 @@ namespace Epsitec.Common.BigList
 			return rows.Select (x => new ItemListRow (x.Index, x.Offset + offset, x.Height));
 		}
 
+
+		protected readonly ItemListFeatures		features;
 
 		private List<ItemListRow>				visibleRows;
 		private int								activeIndex;

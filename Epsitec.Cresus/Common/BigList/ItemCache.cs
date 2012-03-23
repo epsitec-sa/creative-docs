@@ -8,9 +8,10 @@ namespace Epsitec.Common.BigList
 {
 	public abstract class ItemCache
 	{
-		public ItemCache(int capacity)
+		public ItemCache(int capacity, ItemListFeatures features)
 		{
 			this.capacity = capacity;
+			this.features = features;
 			this.states   = new IndexedArray<ushort> (this.capacity);
 		}
 
@@ -24,6 +25,14 @@ namespace Epsitec.Common.BigList
 			get
 			{
 				return this.states.Count (x => x != 0);
+			}
+		}
+
+		public ItemListFeatures					Features
+		{
+			get
+			{
+				return this.features;
 			}
 		}
 
@@ -41,7 +50,8 @@ namespace Epsitec.Common.BigList
 		protected static readonly int			DefaultExtraCapacity = 1000;
 		protected static readonly int			DefaultDataCapacity  = 1000;
 
-		protected readonly int					capacity;
+		private readonly ItemListFeatures		features;
+		private readonly int					capacity;
 		protected readonly IndexedArray<ushort>	states;
 	}
 }

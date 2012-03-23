@@ -9,8 +9,8 @@ namespace Epsitec.Common.BigList
 	public class ItemCache<TData, TState> : ItemCache
 		where TState : ItemState, new ()
 	{
-		public ItemCache(int capacity)
-			: base (capacity)
+		public ItemCache(int capacity, ItemListFeatures features)
+			: base (capacity, features)
 		{
 			this.exclusion   = new ReadWriteLock ();
 			this.extraStates = new IndexedStore<TState> (ItemCache.DefaultExtraCapacity);
@@ -18,18 +18,19 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		public IItemDataProvider<TData> DataProvider
+		public IItemDataProvider<TData>			DataProvider
 		{
 			get;
 			set;
 		}
 
-		public IItemDataMapper<TData> DataMapper
+		public IItemDataMapper<TData>			DataMapper
 		{
 			get;
 			set;
 		}
 
+		
 		public override int ExtraStateCount
 		{
 			get
@@ -68,38 +69,14 @@ namespace Epsitec.Common.BigList
 				return new ItemHeight ();
 			}
 
-			var state  = this.GetItemState (index, ItemStateDetails.Full);
-			int height = 0;
-			
-			int marginBefore;
-			int marginAfter;
-
-			if (index == 0)
+			if (this.Features.EnableRowMargins)
 			{
-				marginBefore = state.MarginBefore;
+				return this.GetItemHeightMergeMargins (index);
 			}
 			else
 			{
-				var stateBefore = this.GetItemState (index-1, ItemStateDetails.Full);
-				marginBefore = System.Math.Max (state.MarginBefore, stateBefore.MarginAfter) / 2;
+				return this.GetItemHeightWithoutMargins (index);
 			}
-
-			height += state.PaddingBefore;
-			height += state.Height;
-			height += state.PaddingAfter;
-
-			if (index < count-1)
-			{
-				var stateAfter = this.GetItemState (index+1, ItemStateDetails.Full);
-
-				marginAfter = (System.Math.Max (state.MarginAfter, stateAfter.MarginBefore) + 1) / 2;
-			}
-			else
-			{
-				marginAfter = state.MarginAfter;
-			}
-
-			return new ItemHeight (height, marginBefore, marginAfter);
 		}
 
 		public override ItemData GetItemData(int index)
@@ -187,6 +164,49 @@ namespace Epsitec.Common.BigList
 			this.exclusion.ExitWriteLock ();
 		}
 
+		private ItemHeight GetItemHeightWithoutMargins(int index)
+		{
+			var state  = this.GetItemState (index, ItemStateDetails.Full);
+			
+			return new ItemHeight (state.PaddingBefore + state.Height + state.PaddingAfter);
+		}
+
+		private ItemHeight GetItemHeightMergeMargins(int index)
+		{
+			int count  = this.states.Count;
+			var state  = this.GetItemState (index, ItemStateDetails.Full);
+			int height = 0;
+
+			int marginBefore;
+			int marginAfter;
+
+			if (index == 0)
+			{
+				marginBefore = state.MarginBefore;
+			}
+			else
+			{
+				var stateBefore = this.GetItemState (index-1, ItemStateDetails.Full);
+				marginBefore = System.Math.Max (state.MarginBefore, stateBefore.MarginAfter) / 2;
+			}
+
+			height += state.PaddingBefore;
+			height += state.Height;
+			height += state.PaddingAfter;
+
+			if (index < count-1)
+			{
+				var stateAfter = this.GetItemState (index+1, ItemStateDetails.Full);
+
+				marginAfter = (System.Math.Max (state.MarginAfter, stateAfter.MarginBefore) + 1) / 2;
+			}
+			else
+			{
+				marginAfter = state.MarginAfter;
+			}
+
+			return new ItemHeight (height, marginBefore, marginAfter);
+		}
 		private TState GetItemStateLocked(int index, ItemStateDetails details)
 		{
 			var compact = this.states[index];
@@ -290,6 +310,13 @@ namespace Epsitec.Common.BigList
 			this.height       = (ushort) height;
 			this.marginBefore = (byte) marginBefore;
 			this.marginAfter  = (byte) marginAfter;
+		}
+		
+		public ItemHeight(int height)
+		{
+			this.height       = (ushort) height;
+			this.marginBefore = 0;
+			this.marginAfter  = 0;
 		}
 
 		public int Height
