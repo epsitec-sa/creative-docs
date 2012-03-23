@@ -94,6 +94,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\ItemHeight.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
