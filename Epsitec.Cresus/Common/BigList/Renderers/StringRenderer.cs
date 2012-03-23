@@ -22,7 +22,7 @@ namespace Epsitec.Common.BigList.Renderers
 
 		#region IItemDataRenderer Members
 
-		public void Render(ItemListRow row, ItemState state, ItemData data, Graphics graphics, Rectangle bounds)
+		public void Render(ItemData data, ItemState state, ItemListRow row, Graphics graphics, Rectangle bounds)
 		{
 			var back  = state.Selected ? Color.FromName ("Highlight") : Color.FromBrightness ((row.Index & 1) == 0 ? 1.0 : 0.9);
 			var value = this.GetStringValue (data);

@@ -189,7 +189,7 @@ namespace Epsitec.Common.BigList
 				var data  = this.list.Cache.GetItemData (row.Index);
 				var state = this.list.GetItemState (row.Index);
 
-				this.ItemRenderer.Render (row, state, data, graphics, bounds);
+				this.ItemRenderer.Render (data, state, row, graphics, bounds);
 			}
 		}
 

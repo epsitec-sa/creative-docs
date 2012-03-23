@@ -10,6 +10,6 @@ namespace Epsitec.Common.BigList
 {
 	public interface IItemDataRenderer
 	{
-		void Render(ItemListRow row, ItemState state, ItemData data, Graphics graphics, Rectangle bounds);
+		void Render(ItemData data, ItemState state, ItemListRow row, Graphics graphics, Rectangle bounds);
 	}
 }
