@@ -45,6 +45,6 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		private readonly ItemCache<TData, TState>			cache;
+		private readonly ItemCache<TData, TState> cache;
 	}
 }

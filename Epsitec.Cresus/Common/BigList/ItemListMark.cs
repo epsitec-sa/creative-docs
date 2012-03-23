@@ -8,6 +8,11 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemListMark</c> class represents a mark in the <see cref="ItemList"/>. The
+	/// mark is either attached before or after an item. Its offset is computed by the
+	/// <see cref="ItemList.GetOffset"/> method.
+	/// </summary>
 	public class ItemListMark
 	{
 		public ItemListMark()

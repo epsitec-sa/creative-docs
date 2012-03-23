@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemListMarkOffset</c> structure describes the offset of an <see cref="ItemListMark"/>
+	/// relative to the <see cref="ItemList"/>.
+	/// </summary>
 	public struct ItemListMarkOffset
 	{
 		public ItemListMarkOffset(int offset)
@@ -14,7 +18,7 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		public bool IsVisible
+		public bool								IsVisible
 		{
 			get
 			{
@@ -28,7 +32,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public bool IsBefore
+		public bool								IsBefore
 		{
 			get
 			{
@@ -36,7 +40,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public bool IsAfter
+		public bool								IsAfter
 		{
 			get
 			{
@@ -44,7 +48,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get
 			{
@@ -52,7 +56,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int Offset
+		public int								Offset
 		{
 			get
 			{
@@ -65,6 +69,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		
 		public static readonly ItemListMarkOffset Empty  = new ItemListMarkOffset ();
 		public static readonly ItemListMarkOffset Before = new ItemListMarkOffset (System.Int32.MinValue);
 		public static readonly ItemListMarkOffset After  = new ItemListMarkOffset (System.Int32.MaxValue);
