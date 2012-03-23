@@ -30,13 +30,10 @@ namespace Epsitec.Common.BigList
 			set;
 		}
 
-		
-		public override int ExtraStateCount
+
+		public override int GetExtraStateCount()
 		{
-			get
-			{
-				return this.extraStates.Count;
-			}
+			return this.extraStates.Count;
 		}
 
 		public override void Reset()

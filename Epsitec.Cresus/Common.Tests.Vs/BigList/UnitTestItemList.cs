@@ -133,6 +133,80 @@ namespace Epsitec.Common.Tests.Vs.BigList
 		}
 
 		[TestMethod]
+		public void TestItemListMark()
+		{
+			var mark = new ItemListMark ()
+			{
+				Attachment = ItemListMarkAttachment.After,
+				Breadth    = 1,
+				Index      = 0,
+			};
+
+			this.itemList1.Reset ();
+			this.itemList1.VisibleHeight = 40;
+			this.itemList1.Marks.Clear ();
+			this.itemList1.Marks.Add (mark);
+
+			//	3 elements: 60 / 30 / 20
+
+			Assert.AreEqual (0, this.itemList1.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsAfter);
+
+			this.itemList1.MoveVisibleContent (-20);
+
+			Assert.AreEqual (0, this.itemList1.VisibleIndex);
+			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
+			Assert.AreEqual (40, this.itemList1.GetOffset (mark).Offset);
+
+			this.itemList1.MoveVisibleContent (-10);
+
+			Assert.AreEqual (0, this.itemList1.VisibleIndex);
+			Assert.AreEqual (-30, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
+			Assert.AreEqual (30, this.itemList1.GetOffset (mark).Offset);
+
+			this.itemList1.MoveVisibleContent (-30);
+
+			Assert.AreEqual (1, this.itemList1.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
+			Assert.AreEqual (0, this.itemList1.GetOffset (mark).Offset);
+
+			this.itemList1.MoveVisibleContent (-1);
+
+			Assert.AreEqual (1, this.itemList1.VisibleIndex);
+			Assert.AreEqual (-1, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
+			Assert.AreEqual (-1, this.itemList1.GetOffset (mark).Offset);
+
+			this.itemList1.MoveVisibleContent (-1);
+
+			Assert.AreEqual (1, this.itemList1.VisibleIndex);
+			Assert.AreEqual (-2, this.itemList1.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsVisible);
+			Assert.IsTrue (this.itemList1.GetOffset (mark).IsBefore);
+			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
+		}
+
+		[TestMethod]
 		public void TestMoveVisibleContent()
 		{
 			this.itemList1.Reset ();
@@ -268,20 +342,20 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (0, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 
 			Assert.IsTrue (this.itemList1.Select (0, ItemSelection.Select));
 
 			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			Assert.IsTrue (this.itemList1.Select (1, ItemSelection.Select));
 
 			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 			Assert.IsTrue (this.itemList1.IsSelected (1));
 
@@ -289,14 +363,14 @@ namespace Epsitec.Common.Tests.Vs.BigList
 
 			Assert.AreEqual (1, this.itemList1.SelectedItemCount);
 			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 			Assert.IsTrue (this.itemList1.IsSelected (1));
 
 			this.itemList1.GetItemState (2);
 
 			Assert.AreEqual (3, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 		}
 
 		[TestMethod]
@@ -397,7 +471,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			this.itemList1.Features.EnableRowMargins = false;
 
 			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 
 			var state1 = this.itemList1.GetItemState (0);
 			var state2 = this.itemList1.GetItemState (0);
@@ -407,53 +481,53 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			state1.Height = 100;
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (60, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (100, this.itemList1.GetItemHeight (0).Height);
 
 			state1.Height = 999;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (999, this.itemList1.GetItemHeight (0).Height);
 
 			state1.Height = 1000;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1000, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.SetItemHeight (0, 1001);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.Select (0, ItemSelection.Select);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.SetItemHeight (0, 100);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (100, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.SetItemState (0, state2);
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (60, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 		}
@@ -465,7 +539,7 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			this.itemList1.Features.EnableRowMargins = true;
 
 			Assert.AreEqual (0, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 
 			var state1 = this.itemList1.GetItemState (0);
 			var state2 = this.itemList1.GetItemState (0);
@@ -475,53 +549,53 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			state1.Height = 100;
 
 			Assert.AreEqual (1, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (60, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (100, this.itemList1.GetItemHeight (0).Height);
 
 			state1.Height = 999;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (999, this.itemList1.GetItemHeight (0).Height);
 
 			state1.Height = 1000;
 			this.itemList1.SetItemState (0, state1);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1000, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.SetItemHeight (0, 1001);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0).Height);
 
 			this.itemList1.Select (0, ItemSelection.Select);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (1, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (1, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (1001, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.SetItemHeight (0, 100);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (100, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsTrue (this.itemList1.IsSelected (0));
 
 			this.itemList1.SetItemState (0, state2);
 
 			Assert.AreEqual (2, this.itemList1.Cache.BasicStateCount);
-			Assert.AreEqual (0, this.itemList1.Cache.ExtraStateCount);
+			Assert.AreEqual (0, this.itemList1.Cache.GetExtraStateCount ());
 			Assert.AreEqual (60, this.itemList1.GetItemHeight (0).Height);
 			Assert.IsFalse (this.itemList1.IsSelected (0));
 		}

@@ -96,6 +96,9 @@
     </Compile>
     <Compile Include="BigList\ItemHeight.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
+    <Compile Include="BigList\ItemListMark.cs" />
+    <Compile Include="BigList\ItemListMarkAttachment.cs" />
+    <Compile Include="BigList\ItemListMarkOffset.cs" />
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\IDetectionProcessor.cs" />

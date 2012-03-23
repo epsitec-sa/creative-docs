@@ -12,6 +12,7 @@ namespace Epsitec.Common.BigList
 	{
 		protected ItemList()
 		{
+			this.marks = new List<ItemListMark> ();
 			this.visibleRows = new List<ItemListRow> ();
 			
 			this.features = new ItemListFeatures ()
@@ -26,6 +27,14 @@ namespace Epsitec.Common.BigList
 			get
 			{
 				return this.features;
+			}
+		}
+
+		public IList<ItemListMark>				Marks
+		{
+			get
+			{
+				return this.marks;
 			}
 		}
 
@@ -271,13 +280,70 @@ namespace Epsitec.Common.BigList
 			this.SetItemState (index, state);
 		}
 
+		public ItemListMarkOffset GetOffset(ItemListMark mark)
+		{
+			if (mark == null)
+			{
+				return ItemListMarkOffset.Empty;
+			}
 
+			var shift = mark.Attachment == ItemListMarkAttachment.After;
+			var index = mark.Index;
+
+		again:
+
+			var row = this.visibleRows.FirstOrDefault (x => x.Index == index);
+
+			if (row == null)
+			{
+				if (shift)
+				{
+					index += 1;
+					shift  = false;
+					goto again;
+				}
+
+				if (index < this.visibleIndex)
+				{
+					return ItemListMarkOffset.Before;
+				}
+				if (index >= this.visibleIndex + this.VisibleCount)
+				{
+					return ItemListMarkOffset.After;
+				}
+
+				return ItemListMarkOffset.Empty;
+			}
+
+			int offset;
+
+			if (shift)
+			{
+				offset = row.Offset + row.Height.TotalHeight;
+			}
+			else
+			{
+				offset = row.Offset;
+			}
+
+			if (offset < -mark.Breadth)
+			{
+				return ItemListMarkOffset.Before;
+			}
+			if (offset > this.visibleHeight + mark.Breadth)
+			{
+				return ItemListMarkOffset.After;
+			}
+
+			return new ItemListMarkOffset (offset);
+		}
+
+		
+		
 		protected void ResetCache()
 		{
 			this.Cache.Reset ();
 		}
-
-
 
 
 
@@ -561,6 +627,7 @@ namespace Epsitec.Common.BigList
 		protected readonly ItemListFeatures		features;
 
 		private List<ItemListRow>				visibleRows;
+		private readonly List<ItemListMark>		marks;
 		private int								activeIndex;
 		private int								visibleIndex;
 		private int								visibleOffset;

@@ -47,17 +47,11 @@ namespace Epsitec.Common.BigList
 
 		public bool								Partial
 		{
-			get
-			{
-				return this.forcePartial;
-			}
-			private set
-			{
-				this.forcePartial = value;
-			}
+			get;
+			private set;
 		}
 
-		public bool RequiresExtraState
+		public bool								RequiresExtraState
 		{
 			get
 			{
@@ -77,7 +71,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public bool IsEmpty
+		public bool								IsEmpty
 		{
 			get;
 			private set;
@@ -191,7 +185,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.ApplyExtraArguments (other);
-			this.forcePartial = false;
+			this.Partial = false;
 		}
 
 		public void Select(ItemSelection selectionMode)
@@ -307,6 +301,5 @@ namespace Epsitec.Common.BigList
 		public const int MaxCompactHeight		= 1000;
 
 		private int								height;
-		private bool							forcePartial;
 	}
 }

@@ -15,11 +15,8 @@ namespace Epsitec.Common.BigList
 			this.states   = new IndexedArray<ushort> (this.capacity);
 		}
 
-		
-		public abstract int						ExtraStateCount
-		{
-			get;
-		}
+
+		public abstract int GetExtraStateCount();
 
 		public int								BasicStateCount
 		{
