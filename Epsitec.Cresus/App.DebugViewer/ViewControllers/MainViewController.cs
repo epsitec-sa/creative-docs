@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Parent = left,
 				Dock = DockStyle.Fill,
 				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.accessor.GetMessage (x)),
+				MarkRenderer = new Epsitec.Common.BigList.Renderers.MarkRenderer (),
 			};
 
 			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;

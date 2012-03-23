@@ -94,6 +94,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\IItemMarkRenderer.cs" />
     <Compile Include="BigList\ItemHeight.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
     <Compile Include="BigList\ItemListMark.cs" />
@@ -129,6 +130,7 @@
     <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
+    <Compile Include="BigList\Renderers\MarkRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer`1.cs" />
     <Compile Include="Debugging\Assert.cs" />

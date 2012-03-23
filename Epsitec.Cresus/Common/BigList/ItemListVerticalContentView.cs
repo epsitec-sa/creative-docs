@@ -46,6 +46,12 @@ namespace Epsitec.Common.BigList
 			set;
 		}
 
+		public IItemMarkRenderer				MarkRenderer
+		{
+			get;
+			set;
+		}
+
 		public int								DefaultLineHeight
 		{
 			get;
@@ -166,6 +172,11 @@ namespace Epsitec.Common.BigList
 
 		private void PaintRows(Graphics graphics, Rectangle clipRect)
 		{
+			if (this.ItemRenderer == null)
+			{
+				return;
+			}
+
 			foreach (var row in this.list.VisibleRows)
 			{
 				var bounds = this.GetRowBounds (row);
@@ -184,6 +195,11 @@ namespace Epsitec.Common.BigList
 
 		private void PaintMarks(Graphics graphics, Rectangle clipRect)
 		{
+			if (this.MarkRenderer == null)
+			{
+				return;
+			}
+
 			foreach (var mark in this.list.Marks)
 			{
 				Rectangle bounds = this.GetMarkBounds (mark);
@@ -192,9 +208,10 @@ namespace Epsitec.Common.BigList
 				{
 					continue;
 				}
+				
+				var offset = this.list.GetOffset (mark);
 
-				graphics.AddFilledRectangle (bounds);
-				graphics.RenderSolid (Color.FromName ("Orange"));
+				this.MarkRenderer.Render (mark, offset, graphics, bounds);
 			}
 		}
 
