@@ -233,8 +233,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return -1;
 		}
 
-#if false
-		private ColumnType GetMapperColumnType(int column)
+		protected ColumnType GetMapperColumnType(int column)
 		{
 			var list = this.columnMappers.Where (x => x.Show && x.Edition).ToList ();
 
@@ -247,7 +246,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return ColumnType.Nom;
 			}
 		}
-#endif
 
 
 		public virtual void CreateAction()

@@ -75,5 +75,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Compte,
 		IsMulti,
 		IsAutoLibellé,
+		MontantEdité,
 	}
 }

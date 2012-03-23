@@ -299,6 +299,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				this.PrepareEditionLine (0);
 
+				//	Il ne doit pas rester de "..." dans les comptes au débit/crédit. Sinon, ils
+				//	sèment le "pétchi", car le contrôleur du journal essaie tout de suite de créer
+				//	les lignes correspondantes.
+				if (this.editionLine[0].GetText (ColumnType.Débit) == JournalDataAccessor.multi)
+				{
+					this.editionLine[0].SetText (ColumnType.Débit, FormattedText.Empty);
+				}
+
+				if (this.editionLine[0].GetText (ColumnType.Crédit) == JournalDataAccessor.multi)
+				{
+					this.editionLine[0].SetText (ColumnType.Crédit, FormattedText.Empty);
+				}
+
 				while (this.editionLine.Count > 1)
 				{
 					this.editionLine.RemoveAt (1);
@@ -570,7 +583,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			if (this.countEditedRow <= 1)
+			if (this.CountEditedRowWithoutEmpty <= 1)
 			{
 				return "Voulez-vous supprimer l'écriture sélectionnée ?";
 			}

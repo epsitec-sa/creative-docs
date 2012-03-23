@@ -765,7 +765,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				for (int column = 0; column < this.fieldControllers[line].Count; column++)
 				{
-					this.fieldControllers[line][column].EmptyLine  = false;
+					this.fieldControllers[line][column].EmptyLineAdorner = false;
+					this.fieldControllers[line][column].BaseTVAAdorner   = false;
+					this.fieldControllers[line][column].CodeTVAAdorner   = false;
 				}
 			}
 
@@ -775,7 +777,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				for (int column = 0; column < this.fieldControllers[line].Count; column++)
 				{
-					this.fieldControllers[line][column].EmptyLine = emptyLine;
+					this.fieldControllers[line][column].EmptyLineAdorner = emptyLine;
+
+					var type = this.GetTypeEcriture (line);
+
+					if (type == TypeEcriture.BaseTVA)
+					{
+						var columnType = this.GetMapperColumnType (column);
+						if (columnType == ColumnType.Débit || columnType == ColumnType.Crédit)
+						{
+							var origineTVA = this.dataAccessor.EditionLine[line].GetText (ColumnType.CompteOrigineTVA);
+							if (origineTVA == this.dataAccessor.EditionLine[line].GetText (columnType))
+							{
+								this.fieldControllers[line][column].BaseTVAAdorner = true;
+							}
+						}
+					}
+
+					if (type == TypeEcriture.CodeTVA)
+					{
+						var columnType = this.GetMapperColumnType (column);
+						if (columnType == ColumnType.Débit || columnType == ColumnType.Crédit)
+						{
+							this.fieldControllers[line][column].CodeTVAAdorner = true;
+						}
+					}
 				}
 			}
 		}
@@ -1065,13 +1091,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA, Converters.PercentToString (codeTVA.DefaultTauxValue));
 			}
 
-			this.UpdateMontantHT (line);
-			this.UpdateMontantTVA (line);
+			this.TauxChanged (line);
 		}
 
 		private void TauxChanged(int line)
 		{
-			this.UpdateMontantHT (line);
+			//	Si on a édité le montant HT, on recalcule le montant TTC, et inversément.
+			//	Si on ne sait pas (modification d'une écriture existante), on recalcule
+			//	toujours le montant HT.
+			if (this.GetTypeMontantEdité (line) == "HT")
+			{
+				this.UpdateMontantTTC (line);
+			}
+			else
+			{
+				this.UpdateMontantHT (line);
+			}
+
 			this.UpdateMontantTVA (line);
 		}
 
@@ -1089,12 +1125,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void MontantHTChanged(int line)
 		{
+			this.SetTypeMontantEdité (line, "HT");
 			this.UpdateMontantTTC (line);
 			this.UpdateMontantTVA (line);
 		}
 
 		private void MontantTTCChanged(int line)
 		{
+			this.SetTypeMontantEdité (line, "TTC");
 			this.UpdateMontantHT (line);
 			this.UpdateMontantTVA (line);
 		}
@@ -1657,6 +1695,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return type;
 		}
+
+
+		private void SetTypeMontantEdité(int line, string type)
+		{
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				this.dataAccessor.EditionLine[line].SetText (ColumnType.MontantEdité, type);
+			}
+		}
+
+		private string GetTypeMontantEdité(int line)
+		{
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				return this.dataAccessor.EditionLine[line].GetText (ColumnType.MontantEdité).ToString ();
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		private ComptaCompteEntity GetCompteDébit(int line)
 		{

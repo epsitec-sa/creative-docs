@@ -108,32 +108,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			}
 		}
 
-		public bool ToComplete
-		{
-			//	Détermine si le champ a un cadre vert pointillé.
-			get
-			{
-				if (this.foregroundFrame == null)
-				{
-					return false;
-				}
-				else
-				{
-					return this.foregroundFrame.ToComplete;
-				}
-			}
-			set
-			{
-				if (this.foregroundFrame != null && this.foregroundFrame.ToComplete != value)
-				{
-					this.foregroundFrame.ToComplete = value;
-					this.UpdateForegroundFrame ();
-					this.UpdateTooltip ();
-				}
-			}
-		}
-
-		public bool EmptyLine
+		public bool EmptyLineAdorner
 		{
 			//	Détermine si le champ a un fond hachuré.
 			get
@@ -144,14 +119,62 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				}
 				else
 				{
-					return this.foregroundFrame.EmptyLine;
+					return this.foregroundFrame.EmptyLineAdorner;
 				}
 			}
 			set
 			{
-				if (this.foregroundFrame != null && this.foregroundFrame.EmptyLine != value)
+				if (this.foregroundFrame != null && this.foregroundFrame.EmptyLineAdorner != value)
 				{
-					this.foregroundFrame.EmptyLine = value;
+					this.foregroundFrame.EmptyLineAdorner = value;
+					this.UpdateForegroundFrame ();
+				}
+			}
+		}
+
+		public bool BaseTVAAdorner
+		{
+			//	Dessine la première partie d'une flèche de haut en bas.
+			get
+			{
+				if (this.foregroundFrame == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.foregroundFrame.BaseTVAAdorner;
+				}
+			}
+			set
+			{
+				if (this.foregroundFrame != null && this.foregroundFrame.BaseTVAAdorner != value)
+				{
+					this.foregroundFrame.BaseTVAAdorner = value;
+					this.UpdateForegroundFrame ();
+				}
+			}
+		}
+
+		public bool CodeTVAAdorner
+		{
+			//	Dessine la seconde partie d'une flèche de haut en bas.
+			get
+			{
+				if (this.foregroundFrame == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.foregroundFrame.CodeTVAAdorner;
+				}
+			}
+			set
+			{
+				if (this.foregroundFrame != null && this.foregroundFrame.CodeTVAAdorner != value)
+				{
+					this.foregroundFrame.CodeTVAAdorner = value;
 					this.UpdateForegroundFrame ();
 				}
 			}
@@ -161,7 +184,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			if (this.foregroundFrame != null)
 			{
-				this.foregroundFrame.Visibility = this.foregroundFrame.ToComplete || this.foregroundFrame.EmptyLine;
+				this.foregroundFrame.Visibility = this.foregroundFrame.EmptyLineAdorner || this.foregroundFrame.BaseTVAAdorner || this.foregroundFrame.CodeTVAAdorner;
 			}
 		}
 
@@ -318,16 +341,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			{
 				if (this.columnMapper != null)
 				{
-					var text = this.columnMapper.Tooltip;
-
-					if (this.ToComplete)
-					{
-						var icon = UIBuilder.GetTextIconUri ("Edit.Accept", iconSize: 20, style: "ToComplete");
-						var add = FormattedText.Concat ("Le pointillé vert indique qu’un complément est requis.<br/>La validation ", icon, " ajoutera de nouvelles lignes en conséquence.").ApplyItalic ();
-						text += "<br/><br/>" + add;
-					}
-
-					ToolTip.Default.SetToolTip (this.editWidget, text);
+					ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
 				}
 			}
 		}

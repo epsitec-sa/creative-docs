@@ -35,18 +35,52 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		public bool EmptyLine
+		public bool EmptyLineAdorner
 		{
 			//	Indique si le champ fait partie d'une ligne vide.
 			get
 			{
-				return this.emptyLine;
+				return this.emptyLineAdorner;
 			}
 			set
 			{
-				if (this.emptyLine != value)
+				if (this.emptyLineAdorner != value)
 				{
-					this.emptyLine = value;
+					this.emptyLineAdorner = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool BaseTVAAdorner
+		{
+			//	Dessine la première partie d'une flèche de haut en bas.
+			get
+			{
+				return this.baseTVAAdorner;
+			}
+			set
+			{
+				if (this.baseTVAAdorner != value)
+				{
+					this.baseTVAAdorner = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public bool CodeTVAAdorner
+		{
+			//	Dessine la seconde partie d'une flèche de haut en bas.
+			get
+			{
+				return this.codeTVAAdorner;
+			}
+			set
+			{
+				if (this.codeTVAAdorner != value)
+				{
+					this.codeTVAAdorner = value;
 					this.Invalidate ();
 				}
 			}
@@ -54,6 +88,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
 			if (this.BackColor.IsVisible)
 			{
 				graphics.AddFilledRectangle (this.Client.Bounds);
@@ -72,7 +108,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 			}
 
-			if (this.emptyLine)
+			if (this.emptyLineAdorner)
 			{
 				//	Dessine des hachures grises translucides dans le fond.
 				graphics.LineWidth = 7;
@@ -85,10 +121,39 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.RenderSolid (UIBuilder.FieldEmptyLineColor);
 				graphics.LineWidth = 1;
 			}
+
+			if (this.baseTVAAdorner)
+			{
+				//	Dessine la première partie d'une flèche de haut en bas.
+				Point o = rect.BottomRight;
+				double h = System.Math.Floor (rect.Height/2);
+
+				graphics.AddLine (o.X-h*2, o.Y+h, o.X-h, o.Y+h);  // _
+				graphics.AddLine (o.X-h, o.Y+h, o.X-h, o.Y);      //  |
+
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
+
+			if (this.codeTVAAdorner)
+			{
+				//	Dessine la seconde partie d'une flèche de haut en bas.
+				Point o = rect.TopRight;
+				double h = System.Math.Floor (rect.Height/2);
+				double a = rect.Height*0.2;
+
+				graphics.AddLine (o.X-h, o.Y, o.X-h, o.Y-h);            //   |
+				graphics.AddLine (o.X-h, o.Y-h, o.X-h*2, o.Y-h);        // <-
+				graphics.AddLine (o.X-h*2, o.Y-h, o.X-h*2+a, o.Y-h+a);  // 
+				graphics.AddLine (o.X-h*2, o.Y-h, o.X-h*2+a, o.Y-h-a);  // 
+
+				graphics.RenderSolid (adorner.ColorBorder);
+			}
 		}
 
 
 		private bool			toComplete;
-		private bool			emptyLine;
+		private bool			emptyLineAdorner;
+		private bool			baseTVAAdorner;
+		private bool			codeTVAAdorner;
 	}
 }
