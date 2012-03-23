@@ -80,10 +80,10 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 
 
 
-			radio1.ActiveStateChanged += _ => { if (radio1.IsActive) this.historyData.SelectionMode = ItemSelectionMode.ExactlyOne; };
-			radio2.ActiveStateChanged += _ => { if (radio2.IsActive) this.historyData.SelectionMode = ItemSelectionMode.ZeroOrOne; };
-			radio3.ActiveStateChanged += _ => { if (radio3.IsActive) this.historyData.SelectionMode = ItemSelectionMode.Multiple; };
-			radio4.ActiveStateChanged += _ => { if (radio4.IsActive) this.historyData.SelectionMode = ItemSelectionMode.OneOrMore; };
+			radio1.ActiveStateChanged += _ => { if (radio1.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.ExactlyOne; };
+			radio2.ActiveStateChanged += _ => { if (radio2.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.ZeroOrOne; };
+			radio3.ActiveStateChanged += _ => { if (radio3.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.Multiple; };
+			radio4.ActiveStateChanged += _ => { if (radio4.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.OneOrMore; };
 
 
 
