@@ -18,6 +18,11 @@ namespace Epsitec.Common.BigList
 		{
 			get
 			{
+				if (this.offset == 0)
+				{
+					return false;
+				}
+
 				return (this.Offset > System.Int32.MinValue)
 					&& (this.Offset < System.Int32.MaxValue);
 			}

@@ -110,7 +110,25 @@ namespace Epsitec.Common.BigList
 			return new Rectangle (0, y1, dx, y2-y1);
 		}
 
-		
+		public Rectangle GetMarkBounds(ItemListMark mark)
+		{
+			var offset = this.list.GetOffset (mark);
+
+			if (offset.IsVisible == false)
+			{
+				return Rectangle.Empty;
+			}
+
+			double dx = this.Client.Width;
+			double dy = this.Client.Height;
+
+			double y2 = dy - offset.Offset + mark.Breadth / 2.0;
+			double y1 = y2 - mark.Breadth;
+
+			return new Rectangle (0, y1, dx, y2-y1);
+		}
+
+
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -142,6 +160,12 @@ namespace Epsitec.Common.BigList
 		
 		private void PaintContents(Graphics graphics, Rectangle clipRect)
 		{
+			this.PaintRows (graphics, clipRect);
+			this.PaintMarks (graphics, clipRect);
+		}
+
+		private void PaintRows(Graphics graphics, Rectangle clipRect)
+		{
 			foreach (var row in this.list.VisibleRows)
 			{
 				var bounds = this.GetRowBounds (row);
@@ -155,6 +179,22 @@ namespace Epsitec.Common.BigList
 				var state = this.list.GetItemState (row.Index);
 
 				this.ItemRenderer.Render (row, state, data, graphics, bounds);
+			}
+		}
+
+		private void PaintMarks(Graphics graphics, Rectangle clipRect)
+		{
+			foreach (var mark in this.list.Marks)
+			{
+				Rectangle bounds = this.GetMarkBounds (mark);
+
+				if (bounds.IntersectsWith (clipRect) == false)
+				{
+					continue;
+				}
+
+				graphics.AddFilledRectangle (bounds);
+				graphics.RenderSolid (Color.FromName ("Orange"));
 			}
 		}
 

@@ -149,6 +149,12 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			
 			this.historyData = new ItemList<Data.LogRecord> (this.accessor, this.accessor);
 			this.historyList.ItemList = this.historyData;
+			this.historyData.Marks.Add (new ItemListMark
+			{
+				Attachment = ItemListMarkAttachment.After,
+				Index = 2,
+				Breadth = 2
+			});
 			
 			this.RefreshContents ();
 		}
