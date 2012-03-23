@@ -25,7 +25,8 @@ namespace Epsitec.Cresus.Compta.Entities
 					   this.Crédit == null &&
 					   this.Pièce.IsNullOrEmpty &&
 					   this.Libellé.IsNullOrEmpty &&
-					   this.Montant == 0;
+					   this.Montant == 0 &&
+					   this.TotalAutomatique == false;
 			}
 		}
 
@@ -69,6 +70,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		public FormattedText ShortLibelléTVA
 		{
 			//	Retourne le libellé court, avec juste les détails de la TVA, ou rien s'il s'agit d'une écriture sans TVA.
+			//	Ce libellé apparaît dans le journal des écritures.
 			get
 			{
 				if (this.CodeTVA == null)
@@ -85,6 +87,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		public FormattedText FullLibelléTVA
 		{
 			//	Retourne le libellé complet, avec les détails de la TVA s'ils existent.
+			//	Ce libellé apparaît dans l'extrait de compte.
 			get
 			{
 				if (this.CodeTVA == null)
@@ -93,7 +96,8 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 				else
 				{
-					return FormattedText.Concat (this.Libellé, ", ", ComptaEcritureEntity.GetLibelléTVA (this.CodeTVA.Code, this.TauxTVA));
+					string m = string.Format (" (TTC {0}), ", Converters.MontantToString (this.Montant + this.MontantComplément.GetValueOrDefault ()));
+					return FormattedText.Concat (this.Libellé, m, ComptaEcritureEntity.GetLibelléTVA (this.CodeTVA.Code, this.TauxTVA));
 				}
 			}
 		}

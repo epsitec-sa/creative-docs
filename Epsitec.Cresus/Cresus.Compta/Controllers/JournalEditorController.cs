@@ -266,32 +266,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return;
 			}
 
+			//	Avant de créer les lignes de l'écriture, met le type 'Normal' partout où
+			//	cela est possible.
 			for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 			{
-				if (this.GetTypeEcriture(line) == TypeEcriture.Vide &&
+				var type = this.GetTypeEcriture (line);
+
+				if ((type == TypeEcriture.Vide || type == TypeEcriture.Nouveau) &&
 					!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
 				{
 					this.SetTypeEcriture (line, TypeEcriture.Normal);
 				}
 			}
-
-#if false
-			int lineToSelect = -1;
-			ColumnType columnToSelect = ColumnType.None;
-
-			if (this.Complete (ref lineToSelect, ref columnToSelect))  // essaie de compléter l'écriture
-			{
-				this.UpdateEditorContent ();
-
-				if (lineToSelect != -1 && columnToSelect != ColumnType.None)
-				{
-					this.selectedLine = lineToSelect;
-					this.EditorSelect (columnToSelect);
-				}
-
-				return;
-			}
-#endif
 
 			base.AcceptAction();
 
@@ -310,59 +296,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-
-#if false
-		private bool Complete(ref int lineToSelect, ref ColumnType columnToSelect)
-		{
-			return false; //?
-			//	Avant de créer réellement l'écriture, on regarde si elle peut être "complétée", c'est-à-dire:
-			//		- Si on a donné 1000 / ..., on complète avec 3 lignes pour démarrer une écriture multiple.
-			//		- Si on a donné un compte avec code TVA, on complète par une deuxième ligne avec code/taux.
-			//	Dans tous les cas, si l'écriture est complétée, on ne la crée pas.
-
-			if (!this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
-			{
-				if (this.IsDébitMulti (0) || this.IsCréditMulti (0))
-				{
-					this.isMulti = true;
-					this.PrepareFirstMulti (ref lineToSelect, ref columnToSelect);
-					return true;
-				}
-			}
-
-			bool complete = false;
-
-			int line = 0;
-			while (line < this.dataAccessor.CountEditedRow)
-			{
-				var type = this.GetTypeEcriture (line);
-
-				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
-					type == TypeEcriture.Vide    )
-				{
-					if (this.IsTVA (line))
-					{
-						line += this.ExplodeForTVA (line, ref lineToSelect, ref columnToSelect);
-						complete = true;
-					}
-					else
-					{
-						if (!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
-						{
-							this.dataAccessor.EditionLine[line].SetText (ColumnType.Type, Converters.TypeEcritureToString (TypeEcriture.Normal));
-						}
-						line++;
-					}
-				}
-				else
-				{
-					line++;
-				}
-			}
-
-			return complete;
-		}
-#endif
 
 		private void PrepareFirstMulti()
 		{
@@ -388,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetTypeEcriture (2, TypeEcriture.Nouveau);
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
+			//?this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "1");
 
@@ -407,7 +340,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private int ExplodeForTVA(int line, ref int lineToSelect, ref ColumnType columnToSelect, bool defaultDébit = true)
+		private int ExplodeForTVA(int line, bool defaultDébit = true)
 		{
 			bool isDébitMulti  = this.IsCréditTVA (line);
 			bool isCréditMulti = this.IsDébitTVA  (line);
@@ -498,10 +431,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Date));
 				this.dataAccessor.EditionLine[line+2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 				this.dataAccessor.EditionLine[line+2].SetText (multiInactiveColumn,         (compteCP == null) ? null : compteCP.Numéro);
-				//?this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Libellé,          this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Libellé));
-				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Libellé,          "Total");
+				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Libellé,          this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Libellé));
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Journal));
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.TotalAutomatique, "1");
+				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.IsAutoLibellé,    "1");
 			}
 
 			if (this.PlusieursPièces)
@@ -524,13 +457,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[line].GetText (ColumnType.Pièce));
 				}
-			}
-
-			if (lineToSelect == -1)
-			{
-				lineToSelect = line+1;
-				//?columnToSelect = multiActiveColumn;
-				columnToSelect = ColumnType.CodeTVA;
 			}
 
 			return total;
@@ -577,8 +503,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiInsertTVALineAction()
 		{
 			//	Insère une nouvelle ligne de TVA après la ligne courante.
-			var débit  = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit )).FirstOrDefault ();
-			var crédit = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit)).FirstOrDefault ();
+			var débit  = this.GetCompteDébit  (this.selectedLine);
+			var crédit = this.GetCompteCrédit (this.selectedLine);
 
 			bool defaultDébit = false;
 
@@ -606,19 +532,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
-			int lineToSelect = -1;
-			ColumnType columnToSelect = ColumnType.None;
-
-			this.ExplodeForTVA (this.selectedLine, ref lineToSelect, ref columnToSelect, defaultDébit: defaultDébit);
+			this.ExplodeForTVA (this.selectedLine, defaultDébit: defaultDébit);
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
 
-			if (lineToSelect != -1 && columnToSelect != ColumnType.None)
-			{
-				this.selectedLine = lineToSelect;
-				this.EditorSelect (columnToSelect);
-			}
+			this.selectedLine = this.selectedLine+1;
+			this.EditorSelect (ColumnType.CodeTVA);
 		}
 
 		public override void MultiDeleteLineAction()
@@ -740,10 +660,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void HandleSetFocus(int line, ColumnType columnType)
 		{
+			//	Appelé lorsqu'un champ prend le focus. C'est ici qu'on complète l'écriture, lorsqu'on crée
+			//	une écriture multiple, qu'on a donné un compte avec code TVA, etc.
 			base.HandleSetFocus (line, columnType);
 
 			bool changed = false;
 
+			//	Création d'une écriture multiple ?
 			if (this.dataAccessor.EditionLine.Count != 0 && !this.isMulti && !this.IsTVA (0) && !this.dataAccessor.IsModification && this.dataAccessor.CountEditedRow == 1)
 			{
 				if (this.IsDébitMulti (0) || this.IsCréditMulti (0))
@@ -753,6 +676,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
+			//	Compte avec code TVA ?
 			int i = 0;
 			while (i < this.dataAccessor.CountEditedRow)
 			{
@@ -761,17 +685,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
 					type == TypeEcriture.Vide)
 				{
-					var débit  = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit )).FirstOrDefault ();
-					var crédit = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit)).FirstOrDefault ();
+					var débit  = this.GetCompteDébit  (i);
+					var crédit = this.GetCompteCrédit (i);
 
-					if (débit != null && crédit != null)
+					if (this.isMulti)
 					{
-						if ((débit.CodeTVAParDéfaut != null && crédit.CodeTVAParDéfaut == null) ||
-							(débit.CodeTVAParDéfaut == null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit, mais pas aux deux ?
+						if ((débit  != null && débit .CodeTVAParDéfaut != null) ||
+							(crédit != null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit ?
 						{
-							int lineToSelect = -1;
-							ColumnType columnToSelect = ColumnType.None;
-							i += this.ExplodeForTVA (i, ref lineToSelect, ref columnToSelect);
+							i += this.ExplodeForTVA (i);
+							changed = true;
+							continue;
+						}
+					}
+					else
+					{
+						if (débit != null && crédit != null)
+						{
+							if ((débit.CodeTVAParDéfaut != null && crédit.CodeTVAParDéfaut == null) ||
+								(débit.CodeTVAParDéfaut == null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit, mais pas aux deux ?
+							{
+								i += this.ExplodeForTVA (i);
+								changed = true;
+								continue;
+							}
+						}
+
+						var numéroDébit  = this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit);
+						var numéroCrédit = this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit);
+
+						if ((débit  != null && débit .CodeTVAParDéfaut != null && numéroCrédit == JournalDataAccessor.multi) ||
+							(crédit != null && crédit.CodeTVAParDéfaut != null && numéroDébit  == JournalDataAccessor.multi))
+						{
+							i += this.ExplodeForTVA (i);
 							changed = true;
 							continue;
 						}
@@ -781,11 +727,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				i++;
 			}
 
+			//	Crée une ligne vide s'il n'y en a plus ?
 			if (this.CreateEmptyLine ())
 			{
 				changed = true;
 			}
 
+			//	Met à jour s'il y a eu un changement.
 			if (changed)
 			{
 				this.UpdateEditorContent ();
@@ -854,6 +802,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if ((type == TypeEcriture.Nouveau || type == TypeEcriture.Vide) && this.IsTVA (line))
 			{
 				this.NouveauMontant_TTC_HT_Changed (line, columnType);
+			}
+
+			if (columnType == ColumnType.Libellé)
+			{
+				this.LibelléChanged (line);
 			}
 
 			if (type == TypeEcriture.BaseTVA && line < this.dataAccessor.EditionLine.Count-1)
@@ -1063,10 +1016,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		private void LibelléChanged(int line)
+		{
+			var libellé = this.dataAccessor.EditionLine[line].GetText (ColumnType.Libellé);
+			var auto = libellé.IsNullOrEmpty ? "1" : "0";
+			this.dataAccessor.EditionLine[line].SetText (ColumnType.IsAutoLibellé, auto);
+
+			if (this.UpdateMultiLibelléTVA ())
+			{
+				int count = this.dataAccessor.EditionLine.Count;
+				this.GetFieldController (ColumnType.Libellé, count-1).EditionDataToWidget ();
+			}
+		}
+
 		private void BaseTVADébitCréditChanged(int line)
 		{
-			var débit  = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit )).FirstOrDefault ();
-			var crédit = this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit)).FirstOrDefault ();
+			var débit  = this.GetCompteDébit  (line);
+			var crédit = this.GetCompteCrédit (line);
 
 			var compte = (débit == null) ? crédit : débit;
 
@@ -1242,15 +1208,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 					total = totalCrédit - totalDébit;
 				}
 
-#if false
-				if (total == 0)
-				{
-					total = null;
-				}
-#endif
-
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (total));
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
+			}
+
+			this.UpdateMultiLibelléTVA ();
+		}
+
+		private bool UpdateMultiLibelléTVA()
+		{
+			//	Si on est dans de cas d'une écriture multiple avec TVA, recopie le libellé de la première ligne
+			//	dans celui de la dernière.
+			int count = this.dataAccessor.EditionLine.Count;
+
+			if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
+				this.GetTypeEcriture (0) == TypeEcriture.BaseTVA &&
+				this.GetTypeEcriture (1) == TypeEcriture.CodeTVA &&
+				this.dataAccessor.EditionLine[count-1].GetText (ColumnType.IsAutoLibellé) == "1")  // libellé jamais entré manuellement ?
+			{
+				this.dataAccessor.EditionLine[count-1].SetText (ColumnType.Libellé, this.dataAccessor.EditionLine[0].GetText (ColumnType.Libellé));
+				return true;
+			}
+			else
+			{
+				return false;
 			}
 		}
 
@@ -1273,16 +1254,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool IsDébitTVA(int line)
 		{
 			//	Retourne true si le compte au débit a un code TVA.
-			var numéro = this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit);
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			var compte = this.GetCompteDébit (line);
 			return compte != null && compte.CodeTVAParDéfaut != null;
 		}
 
 		private bool IsCréditTVA(int line)
 		{
 			//	Retourne true si le compte au crédit a un code TVA.
-			var numéro = this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit);
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+			var compte = this.GetCompteCrédit (line);
 			return compte != null && compte.CodeTVAParDéfaut != null;
 		}
 
@@ -1679,6 +1658,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return type;
 		}
 
+		private ComptaCompteEntity GetCompteDébit(int line)
+		{
+			return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit)).FirstOrDefault ();
+		}
+
+		private ComptaCompteEntity GetCompteCrédit(int line)
+		{
+			return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit)).FirstOrDefault ();
+		}
+
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
 		{
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
@@ -1703,58 +1692,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.settingsList.GetBool (SettingsType.EcriturePlusieursPièces);
 			}
 		}
-
-
-#if false
-		protected override bool HasAssistant
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		protected override void CreateAssistantEditorUI()
-		{
-			bool hasTVA = this.settingsList.GetBool (SettingsType.EcritureTVA);
-
-			{
-				var button = UIBuilder.CreateButton (this.editorForegroundFrameBox, "Edit.Create", "Normal");
-				button.PreferredWidth = 250;
-				button.Dock = DockStyle.Left;
-
-				button.Clicked += delegate
-				{
-					this.CreateAction ();
-				};
-			}
-
-			if (hasTVA)
-			{
-				var button = UIBuilder.CreateButton (this.editorForegroundFrameBox, "Edit.Create", "Prestation avec TVA sur une période");
-				button.PreferredWidth = 250;
-				button.Dock = DockStyle.Left;
-
-				button.Clicked += delegate
-				{
-					this.CreateAssistant ();
-					this.CreateAction ();
-				};
-			}
-		}
-
-		private void CreateAssistant()
-		{
-			this.editorAssistantFrameBox.Children.Clear ();
-			this.editorAssistantFrameBox.BackColor =  UIBuilder.CreationBackColor;
-			this.editorAssistantFrameBox.Padding = new Margins (0);
-
-			this.assistantController = new Assistants.Controllers.AssistantEcritureTVAController (this.controller);
-			this.assistantController.CreateUI (this.editorAssistantFrameBox);
-			this.assistantController.UpdateContent ();
-			this.assistantController.UpdateGeometry ();
-		}
-#endif
 
 
 		#region Menu des écritures modèles

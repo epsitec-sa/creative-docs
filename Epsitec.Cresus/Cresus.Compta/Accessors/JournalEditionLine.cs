@@ -472,7 +472,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return (débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
 					   (crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi) &&
 					   this.GetText (ColumnType.Libellé).IsNullOrEmpty &&
-					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0;
+					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0 &&
+					   this.GetText (ColumnType.TotalAutomatique) != "1";
 			}
 		}
 

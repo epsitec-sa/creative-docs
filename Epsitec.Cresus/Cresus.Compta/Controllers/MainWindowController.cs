@@ -173,18 +173,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public string AcceptButtonStyle
-		{
-			get
-			{
-				return this.ribbonController.AcceptButtonStyle;
-			}
-			set
-			{
-				this.ribbonController.AcceptButtonStyle = value;
-			}
-		}
-
 		public List<AbstractController> Controllers
 		{
 			//	Retourne la liste de contrôleurs de toutes les fenêtres ouvertes.
