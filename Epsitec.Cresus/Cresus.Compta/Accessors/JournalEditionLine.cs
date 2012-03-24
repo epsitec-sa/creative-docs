@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.dataDict.Add (ColumnType.Date,       new EditionData (this.controller, this.ValidateDate));
-			this.dataDict.Add (ColumnType.Débit,      new EditionData (this.controller, this.ValidateCompte));
-			this.dataDict.Add (ColumnType.Crédit,     new EditionData (this.controller, this.ValidateCompte));
+			this.dataDict.Add (ColumnType.Débit,      new EditionData (this.controller, this.ValidateCompteDébit));
+			this.dataDict.Add (ColumnType.Crédit,     new EditionData (this.controller, this.ValidateCompteCrédit));
 			this.dataDict.Add (ColumnType.Pièce,      new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Libellé,    new EditionData (this.controller, this.ValidateLibellé));
 			this.dataDict.Add (ColumnType.MontantTTC, new EditionData (this.controller, this.ValidateMontantTTC));
@@ -40,9 +40,59 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Validators.ValidateDate (this.période, data, emptyAccepted: false);
 		}
 
-		private void ValidateCompte(EditionData data)
+		private void ValidateCompteDébit(EditionData data)
 		{
 			data.ClearError ();
+			data.ClearOverlayText ();
+
+			if (!data.HasText)
+			{
+				data.OverlayText = "Débit";
+			}
+
+
+			if (this.IsEmptyLine)
+			{
+				return;  // une ligne vide est toujours ok
+			}
+
+			if (data.HasText)
+			{
+				if (data.Text == JournalDataAccessor.multi)
+				{
+					return;
+				}
+
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Text).FirstOrDefault ();
+
+				if (compte == null)
+				{
+					data.Error = "Ce compte n'existe pas";
+					return;
+				}
+
+				if (compte.Type == TypeDeCompte.Groupe)
+				{
+					data.Error = "C'est un compte de groupement";
+					return;
+				}
+			}
+			else
+			{
+				data.Error = "Il manque le numéro du compte";
+			}
+		}
+
+		private void ValidateCompteCrédit(EditionData data)
+		{
+			data.ClearError ();
+			data.ClearOverlayText ();
+
+			if (!data.HasText)
+			{
+				data.OverlayText = "Crédit";
+			}
+
 
 			if (this.IsEmptyLine)
 			{
@@ -79,6 +129,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateLibellé(EditionData data)
 		{
 			data.ClearError ();
+			data.ClearOverlayText ();
+
+			if (!data.HasText)
+			{
+				data.OverlayText = "Libellé";
+			}
 
 			if (this.IsEmptyLine)
 			{
@@ -97,6 +153,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateMontantTTC(EditionData data)
 		{
 			data.ClearError ();
+			data.ClearOverlayText ();
+
+			if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
+			{
+				data.OverlayText = "TTC";
+			}
 
 			if (this.IsEmptyLine)
 			{
@@ -159,13 +221,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void ValidateMontant(EditionData data)
 		{
 			data.ClearError ();
+			data.ClearOverlayText ();
+
+			var type = this.TypeEcriture;
+
+			if (this.GetText (ColumnType.TotalAutomatique) == "1")
+			{
+				data.OverlayText = "∑";
+			}
+			else if (type == Compta.TypeEcriture.CodeTVA)
+			{
+				data.OverlayText = "TVA";
+			}
+			else if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
+			{
+				data.OverlayText = "HT";
+			}
 
 			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
 			}
 
-			var type = this.TypeEcriture;
 			var montantTTC = Converters.ParseMontant (this.GetText (ColumnType.MontantTTC));
 			var montantHT  = Converters.ParseMontant (this.GetText (ColumnType.Montant));
 
@@ -194,7 +271,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			if (montantHT.HasValue &&
-				type != TypeEcriture.CodeTVA &&  // sur la ligne CodeTVA, le montant peut être nul (par ex. lors d'exportation)
+				type != TypeEcriture.CodeTVA &&  // sur la ligne CodeTVA, le montant peut être nul (par *ex. lors d'exportation)
 				this.GetText (ColumnType.TotalAutomatique) != "1")  // le total automatique peut être nul
 			{
 				if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?

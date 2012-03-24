@@ -120,6 +120,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public void ClearOverlayText()
+		{
+			this.overlayText = FormattedText.Null;
+		}
+
+		public FormattedText OverlayText
+		{
+			get
+			{
+				return this.overlayText;
+			}
+			set
+			{
+				this.overlayText = value;
+			}
+		}
+
 
 		private readonly AbstractController					controller;
 		private readonly System.Action<EditionData>			validateAction;
@@ -131,5 +148,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private FormattedText								text;
 		private FormattedText								error;
+		private FormattedText								overlayText;
 	}
 }

@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Helpers;
 
@@ -86,6 +87,39 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
+		public FormattedText OverlayText
+		{
+			get
+			{
+				return this.overlayText;
+			}
+			set
+			{
+				if (this.overlayText != value)
+				{
+					this.overlayText = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public Color OverlayTextColor
+		{
+			get
+			{
+				return this.overlayTextColor;
+			}
+			set
+			{
+				if (this.overlayTextColor != value)
+				{
+					this.overlayTextColor = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -141,12 +175,27 @@ namespace Epsitec.Cresus.Compta.Widgets
 				double h = System.Math.Floor (rect.Height/2);
 				double a = rect.Height*0.2;
 
-				graphics.AddLine (o.X-h, o.Y, o.X-h, o.Y-h);            //   |
-				graphics.AddLine (o.X-h, o.Y-h, o.X-h*2, o.Y-h);        // <-
-				graphics.AddLine (o.X-h*2, o.Y-h, o.X-h*2+a, o.Y-h+a);  // 
+				graphics.AddLine (o.X-h, o.Y, o.X-h, o.Y-h);            //
+				graphics.AddLine (o.X-h, o.Y-h, o.X-h*2, o.Y-h);        //   |
+				graphics.AddLine (o.X-h*2, o.Y-h, o.X-h*2+a, o.Y-h+a);  // <- 
 				graphics.AddLine (o.X-h*2, o.Y-h, o.X-h*2+a, o.Y-h-a);  // 
 
 				graphics.RenderSolid (adorner.ColorBorder);
+			}
+
+			if (!this.overlayText.IsNullOrEmpty)
+			{
+				if (this.overlayTextLayout == null)
+				{
+					this.overlayTextLayout = new TextLayout ();
+				}
+
+				var r = rect;
+				r.Deflate (2, 0);
+
+				this.overlayTextLayout.FormattedText = this.overlayText;
+				this.overlayTextLayout.LayoutSize = r.Size;
+				this.overlayTextLayout.Paint (r.BottomLeft, graphics, rect, this.overlayTextColor, GlyphPaintStyle.Normal);
 			}
 		}
 
@@ -155,5 +204,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private bool			emptyLineAdorner;
 		private bool			baseTVAAdorner;
 		private bool			codeTVAAdorner;
+		private FormattedText	overlayText;
+		private Color			overlayTextColor;
+		private TextLayout		overlayTextLayout;
 	}
 }

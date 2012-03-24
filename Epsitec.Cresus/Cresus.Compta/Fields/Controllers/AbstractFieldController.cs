@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			this.foregroundFrame = new CustomFrameBox
 			{
 				Parent     = this.editWidget,
-				Visibility = false,
 				Anchor     = AnchorStyles.All,
 			};
 		}
@@ -182,10 +181,15 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		private void UpdateForegroundFrame()
 		{
+#if false
 			if (this.foregroundFrame != null)
 			{
-				this.foregroundFrame.Visibility = this.foregroundFrame.EmptyLineAdorner || this.foregroundFrame.BaseTVAAdorner || this.foregroundFrame.CodeTVAAdorner;
+				this.foregroundFrame.Visibility = this.foregroundFrame.EmptyLineAdorner ||
+												  this.foregroundFrame.BaseTVAAdorner ||
+												  this.foregroundFrame.CodeTVAAdorner ||
+												  !this.foregroundFrame.OverlayText.IsNullOrEmpty;
 			}
+#endif
 		}
 
 		public bool HasFocus
@@ -343,6 +347,12 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 				{
 					ToolTip.Default.SetToolTip (this.editWidget, this.columnMapper.Tooltip);
 				}
+			}
+
+			if (this.foregroundFrame != null)
+			{
+				this.foregroundFrame.OverlayText = this.editionData.OverlayText;
+				this.foregroundFrame.OverlayTextColor = this.editionData.HasError ? UIBuilder.FieldOverlayTextErrorColor : UIBuilder.FieldOverlayTextColor;
 			}
 		}
 

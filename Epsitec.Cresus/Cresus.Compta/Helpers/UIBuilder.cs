@@ -430,6 +430,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static readonly Color FieldToCompleteColor		= Color.FromHexa ("52c519");  // vert
 		public static readonly Color FieldEmptyLineColor		= Color.FromAlphaRgb (0.05, 0, 0, 0);  // gris très transparent
+		public static readonly Color FieldOverlayTextColor		= Color.FromHexa ("98abc3");  // gris bleu clair
+		public static readonly Color FieldOverlayTextErrorColor	= Color.FromHexa ("a87777");  // gris rouge
 
 		public static readonly double LeftLabelWidth			= 83;
 		public static readonly double ComboButtonWidth			= 14;

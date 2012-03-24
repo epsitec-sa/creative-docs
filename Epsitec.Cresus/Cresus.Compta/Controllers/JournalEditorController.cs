@@ -320,7 +320,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour les données de la contrepartie.						   
 			this.SetTypeEcriture (2, TypeEcriture.Nouveau);
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
-			this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
+			//?this.dataAccessor.EditionLine[2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
 			//?this.dataAccessor.EditionLine[2].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[2].SetText (ColumnType.TotalAutomatique, "1");
@@ -922,7 +922,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					showTTC = true;
 				}
 
-				if (this.GetWidgetVisibility (ColumnType.MontantTTC, i) != showTTC)
+				//?if (this.GetWidgetVisibility (ColumnType.MontantTTC, i) != showTTC)
 				{
 					this.SetWidgetVisibility (ColumnType.MontantTTC, i, showTTC);
 
