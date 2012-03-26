@@ -28,6 +28,7 @@ namespace Epsitec.Common.BigList
 			this.InternalState  |= WidgetInternalState.Focusable;
 
 			this.processor = new ItemListVerticalContentView.EventProcessor (this);
+			this.policies  = new List<EventProcessorPolicy> ();
 		}
 
 
@@ -98,12 +99,20 @@ namespace Epsitec.Common.BigList
 
 		public void FocusRow(int index)
 		{
-			this.ItemList.SetVisibleIndex (index);
-			this.Invalidate ();
+			if (this.ItemList.SetFocusedIndex (index))
+			{
+				this.ItemList.SetVisibleIndex (index);
+				this.Invalidate ();
+			}
 		}
 
 		public void SelectRow(int index, ItemSelection selection)
 		{
+			if (this.ItemList.SetFocusedIndex (index))
+			{
+				this.Invalidate ();
+			}
+
 			if (this.ItemList.Select (index, selection))
 			{
 				this.OnSelectionChanged ();
@@ -121,6 +130,17 @@ namespace Epsitec.Common.BigList
 
 				case ScrollUnit.Page:
 					amplitude *= this.ItemList.VisibleHeight;
+					break;
+
+				case ScrollUnit.Document:
+					if (amplitude < 0)
+					{
+						amplitude = System.Int32.MaxValue;
+					}
+					else if (amplitude > 0)
+					{
+						amplitude = System.Int32.MinValue;
+					}
 					break;
 
 				case ScrollUnit.Pixel:
@@ -161,6 +181,19 @@ namespace Epsitec.Common.BigList
 			return new Rectangle (0, y1, dx, y2-y1);
 		}
 
+		
+		public TPolicy GetPolicy<TPolicy>()
+			where TPolicy : EventProcessorPolicy, new ()
+		{
+			return this.policies.OfType<TPolicy> ().FirstOrDefault ();
+		}
+
+		public void SetPolicy<TPolicy>(TPolicy policy)
+			where TPolicy : EventProcessorPolicy, new ()
+		{
+			this.policies.RemoveAll (x => x.GetType () == typeof (TPolicy));
+			this.policies.Add (policy);
+		}
 
 		
 		protected override void UpdateClientGeometry()
@@ -217,6 +250,17 @@ namespace Epsitec.Common.BigList
 				var state = this.list.GetItemState (row.Index);
 
 				this.ItemRenderer.Render (data, state, row, graphics, bounds);
+
+				if (this.ItemList.FocusedIndex == row.Index)
+				{
+					var rect = Rectangle.Deflate (bounds, 0.5, 0.5);
+					
+					using (var path = new Path (rect))
+					{
+						graphics.PaintDashedOutline (path, 1, 0, 2, Drawing.CapStyle.Square, Color.FromBrightness (0.2));
+					}
+
+				}
 			}
 		}
 
@@ -286,13 +330,9 @@ namespace Epsitec.Common.BigList
 
 		public static DependencyProperty		ActiveIndexProperty = DependencyProperty<ItemListVerticalContentView>.RegisterReadOnly<int> (x => x.ActiveIndex, x => x.ActiveIndex);
 
+		private readonly List<EventProcessorPolicy>	policies;
+		private readonly ItemListVerticalContentView.EventProcessor processor;
+		
 		private ItemList						list;
-		private ItemListVerticalContentView.EventProcessor					processor;
-	}
-	public enum ScrollUnit
-	{
-		Pixel,
-		Line,
-		Page,
 	}
 }

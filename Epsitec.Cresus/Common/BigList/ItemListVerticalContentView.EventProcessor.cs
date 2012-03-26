@@ -127,14 +127,43 @@ namespace Epsitec.Common.BigList
 
 			private bool ProcessScrollWithKeyboard(KeyCode code)
 			{
+				if (false)
+				{
+					switch (code)
+					{
+						case KeyCode.Home:
+							this.view.FocusRow (0);
+							return true;
+
+						case KeyCode.End:
+							this.view.FocusRow (this.view.ItemList.Count-1);
+							return true;
+
+						case KeyCode.ArrowUp:
+							this.view.Scroll (1, ScrollUnit.Line);
+							return true;
+
+						case KeyCode.ArrowDown:
+							this.view.Scroll (-1, ScrollUnit.Line);
+							return true;
+
+						case KeyCode.PageUp:
+							this.view.Scroll (1, ScrollUnit.Page);
+							return true;
+
+						case KeyCode.PageDown:
+							this.view.Scroll (-1, ScrollUnit.Page);
+							return true;
+					}
+				}
 				switch (code)
 				{
 					case KeyCode.Home:
-						this.view.FocusRow (0);
+						this.view.Scroll (-1, ScrollUnit.Document);
 						return true;
 
 					case KeyCode.End:
-						this.view.FocusRow (this.view.ItemList.Count-1);
+						this.view.Scroll (1, ScrollUnit.Document);
 						return true;
 
 					case KeyCode.ArrowUp:
@@ -185,7 +214,7 @@ namespace Epsitec.Common.BigList
 
 			TPolicy IEventProcessorHost.GetPolicy<TPolicy>()
 			{
-				return new TPolicy ();
+				return this.view.GetPolicy<TPolicy> () ?? new TPolicy ();
 			}
 
 			#endregion

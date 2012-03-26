@@ -128,12 +128,16 @@
     <Compile Include="BigList\ItemSelectionMode.cs" />
     <Compile Include="BigList\ItemState.cs" />
     <Compile Include="BigList\ItemStateDetails.cs" />
+    <Compile Include="BigList\Processors\KeyDownProcessor.cs" />
+    <Compile Include="BigList\Processors\KeyDownProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\MarkRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer`1.cs" />
+    <Compile Include="BigList\ScrollMode.cs" />
+    <Compile Include="BigList\ScrollUnit.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\AssertFailedException.cs" />
     <Compile Include="Debugging\DebugOutputTraceListener.cs" />

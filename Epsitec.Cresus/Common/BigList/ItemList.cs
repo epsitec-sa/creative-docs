@@ -38,12 +38,12 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public abstract int Count
+		public abstract int						Count
 		{
 			get;
 		}
 
-		public int ActiveIndex
+		public int								ActiveIndex
 		{
 			get
 			{
@@ -51,9 +51,32 @@ namespace Epsitec.Common.BigList
 			}
 			set
 			{
-				if (this.activeIndex != value)
+				if (value == -1)
+				{
+					this.ClearActiveIndex ();
+				}
+				else
 				{
 					this.SetActiveIndex (value);
+				}
+			}
+		}
+
+		public int								FocusedIndex
+		{
+			get
+			{
+				return this.focusedIndex;
+			}
+			set
+			{
+				if (value == -1)
+				{
+					this.ClearFocusedIndex ();
+				}
+				else
+				{
+					this.SetFocusedIndex (value);
 				}
 			}
 		}
@@ -148,6 +171,12 @@ namespace Epsitec.Common.BigList
 
 		public bool SetActiveIndex(int index)
 		{
+			if ((index < 0) ||
+				(index >= this.Count))
+			{
+				return false;
+			}
+
 			var oldActiveIndex = this.activeIndex;
 			
 			this.activeIndex = index;
@@ -155,9 +184,50 @@ namespace Epsitec.Common.BigList
 			return oldActiveIndex != this.activeIndex;
 		}
 
+		public bool ClearActiveIndex()
+		{
+			if (this.activeIndex == -1)
+			{
+				return false;
+			}
+
+			this.activeIndex = -1;
+			return true;
+		}
+
+		public bool SetFocusedIndex(int index)
+		{
+			if ((index < 0) ||
+				(index >= this.Count))
+			{
+				return false;
+			}
+
+			var oldFocusedIndex = this.focusedIndex;
+
+			this.focusedIndex = index;
+
+			return oldFocusedIndex != this.focusedIndex;
+		}
+
+		public bool ClearFocusedIndex()
+		{
+			if (this.focusedIndex == -1)
+			{
+				return false;
+			}
+
+			this.focusedIndex = -1;
+			return true;
+		}
+
 		public void Reset()
 		{
 			this.ResetCache ();
+
+			this.ClearActiveIndex ();
+			this.ClearFocusedIndex ();
+
 			this.SetVisibleIndex (0);
 		}
 
@@ -166,7 +236,7 @@ namespace Epsitec.Common.BigList
 			if ((index < 0) ||
 				(index >= this.Count))
 			{
-				throw new System.IndexOutOfRangeException (string.Format ("Index {0} out of range", index));
+				return false;
 			}
 
 			if (selection == ItemSelection.Toggle)
@@ -240,7 +310,21 @@ namespace Epsitec.Common.BigList
 
 		public void MoveVisibleContent(int distance)
 		{
-			var rows = this.GetVisibleRowsStartingWith (this.visibleIndex, this.visibleOffset + distance);
+			List<ItemListRow> rows;
+
+			if (distance == System.Int32.MaxValue)
+			{
+				rows = this.GetVisibleRowsStartingWith (0);
+			}
+			else if (distance == System.Int32.MinValue)
+			{
+				rows = this.GetVisibleRowsEndingWith (this.Count-1);
+			}
+			else
+			{
+				rows = this.GetVisibleRowsStartingWith (this.visibleIndex, this.visibleOffset + distance);
+			}
+			
 			var row  = rows.FirstOrDefault ();
 
 			if (row == null)
@@ -503,7 +587,7 @@ namespace Epsitec.Common.BigList
 				if (index >= count)
 				{
 					//	We could not fill the available space.
-
+#if false
 					if (start == 0)
 					{
 						//	We already started at the beginning of the collection, stop here;
@@ -511,6 +595,7 @@ namespace Epsitec.Common.BigList
 
 						break;
 					}
+#endif
 
 					//	Since we did not start at the beginning of the collection, try to
 					//	generate a list with the last item of the collection aligned with the
@@ -629,6 +714,7 @@ namespace Epsitec.Common.BigList
 		private List<ItemListRow>				visibleRows;
 		private readonly List<ItemListMark>		marks;
 		private int								activeIndex;
+		private int								focusedIndex;
 		private int								visibleIndex;
 		private int								visibleOffset;
 		private int								visibleHeight;
