@@ -109,9 +109,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public bool GetColumnGeometry(ColumnType columnType, out double left, out double width)
 		{
 			//	Retourne la géométrie d'une colonne. Retourne false si la colonne n'est pas visible.
-			int index = this.GetColumnIndex (columnType);
+			int index = this.GetShowedColumnIndex (columnType);
 
-			if (index != -1 && this.columnMappers[index].Show)
+			if (index != -1)
 			{
 				left = 0;
 				for (int column = 0; column < index; column++)
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SetSearchLocator(int row, ColumnType columnType)
 		{
-			this.array.SetSearchLocator (row, this.GetColumnIndex (columnType));
+			this.array.SetSearchLocator (row, this.GetShowedColumnIndex (columnType));
 		}
 
 		public void UpdateArrayContent(int rowCount, System.Func<int, ColumnType, FormattedText> getCellText, System.Func<int, bool> getBottomSeparator)
@@ -375,7 +375,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private int GetColumnIndex(ColumnType columnType)
+		private int GetShowedColumnIndex(ColumnType columnType)
 		{
 			return this.columnMappersShowed.FindIndex (x => x.Column == columnType);
 		}
