@@ -20,6 +20,13 @@ namespace Epsitec.Common.BigList
 		public ItemListVerticalContentView()
 		{
 			this.DefaultLineHeight = 20;
+			
+			this.AutoFocus       = true;
+			this.AutoCapture     = true;
+			this.AutoDoubleClick = true;
+			
+			this.InternalState  |= WidgetInternalState.Focusable;
+
 			this.processor = new ItemListVerticalContentView.EventProcessor (this);
 		}
 
@@ -69,6 +76,12 @@ namespace Epsitec.Common.BigList
 
 		public void ActivateRow(int index)
 		{
+			if ((index < 0) ||
+				(index >= this.ItemList.Count))
+			{
+				return;
+			}
+			
 			var oldIndex = this.ActiveIndex;
 
 			this.ItemList.SetActiveIndex (index);
@@ -98,9 +111,21 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public void Scroll(double amplitude)
+		public void Scroll(double amplitude, ScrollUnit scrollUnit)
 		{
-			amplitude *= this.DefaultLineHeight;
+			switch (scrollUnit)
+			{
+				case ScrollUnit.Line:
+					amplitude *= this.DefaultLineHeight;
+					break;
+
+				case ScrollUnit.Page:
+					amplitude *= this.ItemList.VisibleHeight;
+					break;
+
+				case ScrollUnit.Pixel:
+					break;
+			}
 
 			this.ItemList.MoveVisibleContent ((int) (amplitude));
 			this.Invalidate ();
@@ -263,5 +288,11 @@ namespace Epsitec.Common.BigList
 
 		private ItemList						list;
 		private ItemListVerticalContentView.EventProcessor					processor;
+	}
+	public enum ScrollUnit
+	{
+		Pixel,
+		Line,
+		Page,
 	}
 }
