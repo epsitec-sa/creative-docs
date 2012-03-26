@@ -127,13 +127,97 @@ namespace Epsitec.Common.BigList
 				case ScrollMode.MoveActive:
 					this.ScrollActive (amplitude, scrollUnit);
 					break;
+				
+				case ScrollMode.MoveActiveAndSelect:
+					this.ScrollActive (amplitude, scrollUnit);
+					
+					if ((this.ItemList.Features.SelectionMode == ItemSelectionMode.ExactlyOne) ||
+						(this.ItemList.Features.SelectionMode == ItemSelectionMode.ZeroOrOne))
+					{
+						this.SelectRow (this.ActiveIndex, ItemSelection.Select);
+					}
+					break;
+				
 				case ScrollMode.MoveFocus:
 					this.ScrollFocus (amplitude, scrollUnit);
 					break;
+				
 				case ScrollMode.MoveVisible:
 					this.ScrollVisible (amplitude, scrollUnit);
 					break;
 			}
+		}
+
+
+		
+		public Rectangle GetRowBounds(ItemListRow row)
+		{
+			double dx = this.Client.Width;
+			double dy = this.Client.Height;
+
+			double y2 = dy - row.Offset - row.Height.MarginBefore;
+			double y1 = y2 - row.Height.Height;
+
+			return new Rectangle (0, y1, dx, y2-y1);
+		}
+
+		public Rectangle GetMarkBounds(ItemListMark mark)
+		{
+			var offset = this.list.GetOffset (mark);
+
+			if (offset.IsVisible == false)
+			{
+				return Rectangle.Empty;
+			}
+
+			double dx = this.Client.Width;
+			double dy = this.Client.Height;
+
+			double y2 = dy - offset.Offset + mark.Breadth / 2.0;
+			double y1 = y2 - mark.Breadth;
+
+			return new Rectangle (0, y1, dx, y2-y1);
+		}
+
+		
+		public TPolicy GetPolicy<TPolicy>()
+			where TPolicy : EventProcessorPolicy, new ()
+		{
+			return this.policies.OfType<TPolicy> ().FirstOrDefault ();
+		}
+
+		public void SetPolicy<TPolicy>(TPolicy policy)
+			where TPolicy : EventProcessorPolicy, new ()
+		{
+			this.policies.RemoveAll (x => x.GetType () == typeof (TPolicy));
+			this.policies.Add (policy);
+		}
+
+		
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+
+			this.UpdateListHeight ();
+		}
+
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			this.PaintContents (graphics, clipRect);
+		}
+
+		protected override void ProcessMessage(Message message, Point pos)
+		{
+			if (this.processor.ProcessMessage (message, pos))
+			{
+				message.Consumer = this;
+			}
+		}
+
+
+		protected virtual void OnSelectionChanged()
+		{
+			this.GetUserEventHandler (ItemListVerticalContentView.SelectionChangedEvent).Raise (this);
 		}
 
 
@@ -278,78 +362,6 @@ namespace Epsitec.Common.BigList
 			this.ItemList.MoveVisibleContent ((int) (amplitude));
 			this.Invalidate ();
 		}
-
-		
-		public Rectangle GetRowBounds(ItemListRow row)
-		{
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
-
-			double y2 = dy - row.Offset - row.Height.MarginBefore;
-			double y1 = y2 - row.Height.Height;
-
-			return new Rectangle (0, y1, dx, y2-y1);
-		}
-
-		public Rectangle GetMarkBounds(ItemListMark mark)
-		{
-			var offset = this.list.GetOffset (mark);
-
-			if (offset.IsVisible == false)
-			{
-				return Rectangle.Empty;
-			}
-
-			double dx = this.Client.Width;
-			double dy = this.Client.Height;
-
-			double y2 = dy - offset.Offset + mark.Breadth / 2.0;
-			double y1 = y2 - mark.Breadth;
-
-			return new Rectangle (0, y1, dx, y2-y1);
-		}
-
-		
-		public TPolicy GetPolicy<TPolicy>()
-			where TPolicy : EventProcessorPolicy, new ()
-		{
-			return this.policies.OfType<TPolicy> ().FirstOrDefault ();
-		}
-
-		public void SetPolicy<TPolicy>(TPolicy policy)
-			where TPolicy : EventProcessorPolicy, new ()
-		{
-			this.policies.RemoveAll (x => x.GetType () == typeof (TPolicy));
-			this.policies.Add (policy);
-		}
-
-		
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry ();
-
-			this.UpdateListHeight ();
-		}
-
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			this.PaintContents (graphics, clipRect);
-		}
-
-		protected override void ProcessMessage(Message message, Point pos)
-		{
-			if (this.processor.ProcessMessage (message, pos))
-			{
-				message.Consumer = this;
-			}
-		}
-
-
-		protected virtual void OnSelectionChanged()
-		{
-			this.GetUserEventHandler (ItemListVerticalContentView.SelectionChangedEvent).Raise (this);
-		}
-
 
 		
 		private void PaintContents(Graphics graphics, Rectangle clipRect)

@@ -183,8 +183,12 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			}
 
 			this.mainImage = staticImage;
-			this.mainImage.Dock = DockStyle.Fill;
-			this.mainImage.Parent = this.view;
+
+			if (this.mainImage != null)
+			{
+				this.mainImage.Dock = DockStyle.Fill;
+				this.mainImage.Parent = this.view;
+			}
 		}
 
 		private void RefreshContents()

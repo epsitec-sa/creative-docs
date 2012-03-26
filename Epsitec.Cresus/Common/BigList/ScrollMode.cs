@@ -11,5 +11,6 @@ namespace Epsitec.Common.BigList
 		MoveVisible,
 		MoveFocus,
 		MoveActive,
+		MoveActiveAndSelect,
 	}
 }

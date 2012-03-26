@@ -59,62 +59,25 @@ namespace Epsitec.Common.BigList.Processors
 				return false;
 			}
 
+			if (this.scrollingProcessor == null)
+			{
+				return false;
+			}
+
 			if (message.IsControlPressed)
 			{
-				if (this.scrollingProcessor == null)
-				{
-					return false;
-				}
-
-				switch (this.policy.ScrollMode)
+				switch (this.policy.PassiveScrollMode)
 				{
 					case ScrollMode.MoveActive:
 					case ScrollMode.MoveFocus:
 					case ScrollMode.MoveVisible:
-						return this.ProcessScroll (message.KeyCodeOnly, this.policy.ScrollMode);
+						return this.ProcessScroll (message.KeyCodeOnly, this.policy.PassiveScrollMode);
 				}
 
 				return false;
 			}
-#if false
-			int index = this.view.ActiveIndex;
 
-			switch (message.KeyCodeOnly)
-			{
-				case KeyCode.Home:
-					index = 0;
-					break;
-
-				case KeyCode.End:
-					index = this.view.ItemList.Count - 1;
-					break;
-
-				case KeyCode.ArrowUp:
-					index--;
-					break;
-				case KeyCode.ArrowDown:
-					index++;
-					break;
-				case KeyCode.PageUp:
-					index = this.view.ItemList.VisibleRows.First ().Index - 1;
-					break;
-				case KeyCode.PageDown:
-					index = this.view.ItemList.VisibleRows.Last ().Index + 1;
-					break;
-
-				default:
-					return false;
-			}
-
-			this.view.ActivateRow (index);
-			this.view.SelectRow (index, ItemSelection.Select);
-
-			this.view.FocusRow (index);
-
-			return true;
-#endif
-
-			return false;
+			return this.ProcessScroll (message.KeyCodeOnly, ScrollMode.MoveActiveAndSelect);
 		}
 
 		private bool ProcessScroll(KeyCode code, ScrollMode scrollMode)
