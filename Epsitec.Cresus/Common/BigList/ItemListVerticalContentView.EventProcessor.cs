@@ -54,10 +54,10 @@ namespace Epsitec.Common.BigList
 						break;
 
 					case MessageType.MouseWheel:
-						return this.ProcessMouseWheel (message.WheelAmplitude);
+						return this.ProcessMouseWheel (message, pos);
 
 					case MessageType.KeyDown:
-						return this.ProcessKeyDown (message);
+						return this.ProcessKeyDown (message, pos);
 
 				}
 
@@ -69,121 +69,16 @@ namespace Epsitec.Common.BigList
 				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
 			}
 
-			private bool ProcessMouseWheel(double amplitude)
+			private bool ProcessMouseWheel(Message message, Point pos)
 			{
+				double amplitude = message.WheelAmplitude;
 				this.view.Scroll (amplitude, ScrollUnit.Line);
 				return true;
 			}
 
-			private bool ProcessKeyDown(Message message)
+			private bool ProcessKeyDown(Message message, Point pos)
 			{
-				if ((message.IsAltPressed) ||
-					(message.IsShiftPressed))
-				{
-					return false;
-				}
-
-				int index = this.view.ActiveIndex;
-
-				if (message.IsControlPressed)
-				{
-					return this.ProcessScrollWithKeyboard (message.KeyCodeOnly);
-				}
-
-				switch (message.KeyCodeOnly)
-				{
-					case KeyCode.Home:
-						index = 0;
-						break;
-					
-					case KeyCode.End:
-						index = this.view.ItemList.Count - 1;
-						break;
-
-					case KeyCode.ArrowUp:
-						index--;
-						break;
-					case KeyCode.ArrowDown:
-						index++;
-						break;
-					case KeyCode.PageUp:
-						index = this.view.ItemList.VisibleRows.First ().Index - 1;
-						break;
-					case KeyCode.PageDown:
-						index = this.view.ItemList.VisibleRows.Last ().Index + 1;
-						break;
-
-					default:
-						return false;
-				}
-
-				this.view.ActivateRow (index);
-				this.view.SelectRow (index, ItemSelection.Select);
-				
-				this.view.FocusRow (index);
-
-				return true;
-			}
-
-			private bool ProcessScrollWithKeyboard(KeyCode code)
-			{
-				if (false)
-				{
-					switch (code)
-					{
-						case KeyCode.Home:
-							this.view.FocusRow (0);
-							return true;
-
-						case KeyCode.End:
-							this.view.FocusRow (this.view.ItemList.Count-1);
-							return true;
-
-						case KeyCode.ArrowUp:
-							this.view.Scroll (1, ScrollUnit.Line);
-							return true;
-
-						case KeyCode.ArrowDown:
-							this.view.Scroll (-1, ScrollUnit.Line);
-							return true;
-
-						case KeyCode.PageUp:
-							this.view.Scroll (1, ScrollUnit.Page);
-							return true;
-
-						case KeyCode.PageDown:
-							this.view.Scroll (-1, ScrollUnit.Page);
-							return true;
-					}
-				}
-				switch (code)
-				{
-					case KeyCode.Home:
-						this.view.Scroll (-1, ScrollUnit.Document);
-						return true;
-
-					case KeyCode.End:
-						this.view.Scroll (1, ScrollUnit.Document);
-						return true;
-
-					case KeyCode.ArrowUp:
-						this.view.Scroll (1, ScrollUnit.Line);
-						return true;
-
-					case KeyCode.ArrowDown:
-						this.view.Scroll (-1, ScrollUnit.Line);
-						return true;
-
-					case KeyCode.PageUp:
-						this.view.Scroll (1, ScrollUnit.Page);
-						return true;
-
-					case KeyCode.PageDown:
-						this.view.Scroll (-1, ScrollUnit.Page);
-						return true;
-				}
-
-				return false;
+				return KeyDownProcessor.Attach (this, message, pos);
 			}
 
 			#region IEventProcessorHost Members
@@ -266,9 +161,9 @@ namespace Epsitec.Common.BigList
 
 			#region IScrollingProcessor Members
 
-			void IScrollingProcessor.ScrollByAmplitude(Point amplitude)
+			void IScrollingProcessor.Scroll(Point amplitude, ScrollUnit scrollUnit)
 			{
-				this.view.Scroll (amplitude.Y, ScrollUnit.Line);
+				this.view.Scroll (amplitude.Y, scrollUnit);
 			}
 
 			#endregion

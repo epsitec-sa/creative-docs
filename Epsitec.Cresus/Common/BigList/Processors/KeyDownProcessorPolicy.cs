@@ -10,7 +10,7 @@ namespace Epsitec.Common.BigList.Processors
 	{
 		public KeyDownProcessorPolicy()
 		{
-			this.ScrollMode = ScrollMode.MoveActive;
+			this.ScrollMode = ScrollMode.MoveVisible;
 		}
 
 		
