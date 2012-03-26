@@ -72,7 +72,7 @@ namespace Epsitec.Common.BigList
 			private bool ProcessMouseWheel(Message message, Point pos)
 			{
 				double amplitude = message.WheelAmplitude;
-				this.view.Scroll (amplitude, ScrollUnit.Line);
+				this.view.Scroll (amplitude, ScrollUnit.Line, ScrollMode.MoveVisible);
 				return true;
 			}
 
@@ -161,9 +161,9 @@ namespace Epsitec.Common.BigList
 
 			#region IScrollingProcessor Members
 
-			void IScrollingProcessor.Scroll(Point amplitude, ScrollUnit scrollUnit)
+			void IScrollingProcessor.Scroll(Point amplitude, ScrollUnit scrollUnit, ScrollMode scrollMode)
 			{
-				this.view.Scroll (amplitude.Y, scrollUnit);
+				this.view.Scroll (amplitude.Y, scrollUnit, scrollMode);
 			}
 
 			#endregion

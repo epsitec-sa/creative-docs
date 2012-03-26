@@ -120,7 +120,76 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public void Scroll(double amplitude, ScrollUnit scrollUnit)
+		public void Scroll(double amplitude, ScrollUnit scrollUnit, ScrollMode scrollMode)
+		{
+			switch (scrollMode)
+			{
+				case ScrollMode.MoveFocus:
+					this.ScrollFocus (amplitude, scrollUnit);
+					break;
+				case ScrollMode.MoveVisible:
+					this.ScrollVisible (amplitude, scrollUnit);
+					break;
+			}
+		}
+
+
+		private void ScrollFocus(double amplitude, ScrollUnit scrollUnit)
+		{
+			int index = this.ItemList.FocusedIndex;
+
+			switch (scrollUnit)
+			{
+				case ScrollUnit.Line:
+					index -= (int) System.Math.Ceiling (amplitude);
+					break;
+
+				case ScrollUnit.Page:
+					if (amplitude > 0)
+					{
+						//	Page Up
+						index = this.ItemList.GetFirstFullyVisibleIndex ();
+						
+						if (this.ItemList.FocusedIndex == index)
+						{
+							this.ScrollVisible (amplitude, scrollUnit);
+							index = this.ItemList.GetFirstFullyVisibleIndex ();
+						}
+					}
+					if (amplitude < 0)
+					{
+						//	Page Down
+						index = this.ItemList.GetLastFullyVisibleIndex ();
+
+						if (this.ItemList.FocusedIndex == index)
+						{
+							this.ScrollVisible (amplitude, scrollUnit);
+							index = this.ItemList.GetLastFullyVisibleIndex ();
+						}
+					}
+					break;
+
+				case ScrollUnit.Document:
+					if (amplitude > 0)
+					{
+						//	Home
+						index = 0;
+					}
+					if (amplitude < 0)
+					{
+						//	End
+						index = this.ItemList.Count-1;
+					}
+					break;
+
+				case ScrollUnit.Pixel:
+					break;
+			}
+
+			this.FocusRow (index);
+		}
+
+		private void ScrollVisible(double amplitude, ScrollUnit scrollUnit)
 		{
 			switch (scrollUnit)
 			{
@@ -133,11 +202,11 @@ namespace Epsitec.Common.BigList
 					break;
 
 				case ScrollUnit.Document:
-					if (amplitude < 0)
+					if (amplitude > 0)
 					{
 						amplitude = System.Int32.MaxValue;
 					}
-					else if (amplitude > 0)
+					if (amplitude < 0)
 					{
 						amplitude = System.Int32.MinValue;
 					}

@@ -72,10 +72,10 @@ namespace Epsitec.Common.BigList.Processors
 						break;
 					
 					case ScrollMode.MoveFocus:
-						break;
+						return this.ProcessScroll (message.KeyCodeOnly, ScrollMode.MoveFocus);
 					
 					case ScrollMode.MoveVisible:
-						return this.ProcessScrollVisible (message.KeyCodeOnly);
+						return this.ProcessScroll (message.KeyCodeOnly, ScrollMode.MoveVisible);
 				}
 
 				return false;
@@ -121,63 +121,32 @@ namespace Epsitec.Common.BigList.Processors
 			return false;
 		}
 
-		private bool ProcessScrollVisible(KeyCode code)
+		private bool ProcessScroll(KeyCode code, ScrollMode scrollMode)
 		{
-
-#if false
-			{
-				switch (code)
-				{
-					case KeyCode.Home:
-						this.view.FocusRow (0);
-						return true;
-
-					case KeyCode.End:
-						this.view.FocusRow (this.view.ItemList.Count-1);
-						return true;
-
-					case KeyCode.ArrowUp:
-						this.view.Scroll (1, ScrollUnit.Line);
-						return true;
-
-					case KeyCode.ArrowDown:
-						this.view.Scroll (-1, ScrollUnit.Line);
-						return true;
-
-					case KeyCode.PageUp:
-						this.view.Scroll (1, ScrollUnit.Page);
-						return true;
-
-					case KeyCode.PageDown:
-						this.view.Scroll (-1, ScrollUnit.Page);
-						return true;
-				}
-			}
-#endif
 			switch (code)
 			{
 				case KeyCode.Home:
-					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Document);
+					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Document, scrollMode);
 					return true;
 
 				case KeyCode.End:
-					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Document);
+					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Document, scrollMode);
 					return true;
 
 				case KeyCode.ArrowUp:
-					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Line);
+					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Line, scrollMode);
 					return true;
 
 				case KeyCode.ArrowDown:
-					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Line);
+					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Line, scrollMode);
 					return true;
 
 				case KeyCode.PageUp:
-					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Page);
+					this.scrollingProcessor.Scroll (new Point (0, 1), ScrollUnit.Page, scrollMode);
 					return true;
 
 				case KeyCode.PageDown:
-					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Page);
+					this.scrollingProcessor.Scroll (new Point (0, -1), ScrollUnit.Page, scrollMode);
 					return true;
 			}
 

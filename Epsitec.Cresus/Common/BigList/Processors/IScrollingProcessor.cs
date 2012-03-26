@@ -10,6 +10,6 @@ namespace Epsitec.Common.BigList.Processors
 {
 	public interface IScrollingProcessor
 	{
-		void Scroll(Point amplitude, ScrollUnit scrollUnit);
+		void Scroll(Point amplitude, ScrollUnit scrollUnit, ScrollMode scrollMode);
 	}
 }

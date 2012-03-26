@@ -146,7 +146,7 @@ namespace Epsitec.Common.BigList.Processors
 
 		private void HandleScrolling(Point amplitude)
 		{
-			this.scrollingProcessor.Scroll (amplitude, ScrollUnit.Line);
+			this.scrollingProcessor.Scroll (amplitude, ScrollUnit.Line, ScrollMode.MoveVisible);
 			this.ProcessMove (this.originalScrollPos);
 		}
 

@@ -341,6 +341,35 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int GetFirstFullyVisibleIndex()
+		{
+			var row = this.visibleRows.FirstOrDefault (x => x.Offset >= 0)
+				   ?? this.visibleRows.FirstOrDefault ();
+
+			if (row == null)
+			{
+				return -1;
+			}
+			else
+			{
+				return row.Index;
+			}
+		}
+
+		public int GetLastFullyVisibleIndex()
+		{
+			var row = this.visibleRows.LastOrDefault (x => (x.Offset + x.Height.TotalHeight) <= this.visibleHeight)
+				   ?? this.visibleRows.LastOrDefault ();
+
+			if (row == null)
+			{
+				return -1;
+			}
+			else
+			{
+				return row.Index;
+			}
+		}
 
 		public ItemState GetItemState(int index)
 		{
