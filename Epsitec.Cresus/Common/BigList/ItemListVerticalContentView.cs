@@ -124,6 +124,9 @@ namespace Epsitec.Common.BigList
 		{
 			switch (scrollMode)
 			{
+				case ScrollMode.MoveActive:
+					this.ScrollActive (amplitude, scrollUnit);
+					break;
 				case ScrollMode.MoveFocus:
 					this.ScrollFocus (amplitude, scrollUnit);
 					break;
@@ -133,6 +136,62 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+
+		private void ScrollActive(double amplitude, ScrollUnit scrollUnit)
+		{
+			int index = this.ItemList.ActiveIndex;
+
+			switch (scrollUnit)
+			{
+				case ScrollUnit.Line:
+					index -= (int) System.Math.Ceiling (amplitude);
+					break;
+
+				case ScrollUnit.Page:
+					if (amplitude > 0)
+					{
+						//	Page Up
+						index = this.ItemList.GetFirstFullyVisibleIndex ();
+
+						if (this.ItemList.ActiveIndex == index)
+						{
+							this.ScrollVisible (amplitude, scrollUnit);
+							index = this.ItemList.GetFirstFullyVisibleIndex ();
+						}
+					}
+					if (amplitude < 0)
+					{
+						//	Page Down
+						index = this.ItemList.GetLastFullyVisibleIndex ();
+
+						if (this.ItemList.ActiveIndex == index)
+						{
+							this.ScrollVisible (amplitude, scrollUnit);
+							index = this.ItemList.GetLastFullyVisibleIndex ();
+						}
+					}
+					break;
+
+				case ScrollUnit.Document:
+					if (amplitude > 0)
+					{
+						//	Home
+						index = 0;
+					}
+					if (amplitude < 0)
+					{
+						//	End
+						index = this.ItemList.Count-1;
+					}
+					break;
+
+				case ScrollUnit.Pixel:
+					break;
+			}
+
+			this.FocusRow (index);
+			this.ActivateRow (index);
+		}
 
 		private void ScrollFocus(double amplitude, ScrollUnit scrollUnit)
 		{

@@ -69,13 +69,9 @@ namespace Epsitec.Common.BigList.Processors
 				switch (this.policy.ScrollMode)
 				{
 					case ScrollMode.MoveActive:
-						break;
-					
 					case ScrollMode.MoveFocus:
-						return this.ProcessScroll (message.KeyCodeOnly, ScrollMode.MoveFocus);
-					
 					case ScrollMode.MoveVisible:
-						return this.ProcessScroll (message.KeyCodeOnly, ScrollMode.MoveVisible);
+						return this.ProcessScroll (message.KeyCodeOnly, this.policy.ScrollMode);
 				}
 
 				return false;
