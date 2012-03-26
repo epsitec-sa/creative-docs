@@ -1691,13 +1691,6 @@ namespace Epsitec.Common.Tests.Widgets
 			
 			protected override void MeasureMinMax(ref Size min, ref Size max)
 			{
-				LayoutMeasure measureHeight = LayoutMeasure.GetHeight (this);
-
-				if (!measureHeight.SamePassIdAsLayoutContext (this))
-				{
-//					this.ResetColumnLineCount ();
-				}
-				
 				base.MeasureMinMax (ref min, ref max);
 
 				double width = 0;

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			double[] y = new double[this.rowMeasures.Length];
 			double[] b = new double[this.rowMeasures.Length];
 
-			this.GenerateColumnOffsets (rect, x);
+			this.GenerateColumnOffsets (rect.Width, x);
 			this.GenerateRowOffsets (rect, y, b);
 
 			this.LayoutChildren (rect, children, x, y, b);
@@ -267,7 +267,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			return System.Math.Max (0, height);
 		}
 
-		private void GenerateColumnOffsets(Drawing.Rectangle rect, double[] x)
+		private void GenerateColumnOffsets(double rectWidth, double[] x)
 		{
 			double dx = 0;
 			double flexX = 0;
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				}
 			}
 
-			double spaceX = rect.Width - dx;
+			double spaceX = rectWidth - dx;
 
 			if ((spaceX > 0) &&
 				(flexX > 0))
@@ -1068,14 +1068,92 @@ namespace Epsitec.Common.Widgets.Layouts
 				return this.rowMeasureList[row];
 			}
 
-			GridLayoutEngine grid;
-			List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
-			List<RowMeasure> rowMeasureList = new List<RowMeasure> ();
+			#region Info Structure
 
-			List<Info> pendingColumns = new List<Info> ();
-			List<Info> pendingRows = new List<Info> ();
+			private struct Info : System.IComparable<Info>
+			{
+				public Info(Visual visual, LayoutMeasure measure, int index, int span)
+				{
+					this.visual = visual;
+					this.measure = measure;
+					this.index = index;
+					this.span = span;
+				}
 
-			int passId;
+				public Visual					Visual
+				{
+					get
+					{
+						return this.visual;
+					}
+				}
+
+				public LayoutMeasure			Measure
+				{
+					get
+					{
+						return this.measure;
+					}
+				}
+
+				public int						Index
+				{
+					get
+					{
+						return this.index;
+					}
+				}
+
+				public int						Span
+				{
+					get
+					{
+						return this.span;
+					}
+				}
+
+				private readonly Visual			visual;
+				private readonly LayoutMeasure	measure;
+				private readonly int			index;
+				private readonly int			span;
+
+				#region IComparable<Info> Members
+
+				int System.IComparable<Info>.CompareTo(Info other)
+				{
+					if (this.span < other.span)
+					{
+						return -1;
+					}
+					if (this.span > other.span)
+					{
+						return 1;
+					}
+					if (this.index < other.index)
+					{
+						return -1;
+					}
+					if (this.index > other.index)
+					{
+						return 1;
+					}
+
+					return 0;
+				}
+
+				#endregion
+			}
+
+			#endregion
+			
+			private readonly GridLayoutEngine	grid;
+			private readonly List<ColumnMeasure> columnMeasureList = new List<ColumnMeasure> ();
+			private readonly List<RowMeasure> rowMeasureList = new List<RowMeasure> ();
+
+			private readonly List<Info> pendingColumns = new List<Info> ();
+			private readonly List<Info> pendingRows = new List<Info> ();
+
+			private readonly int passId;
 			int columnCount;
 			int rowCount;
 			int minRowIndex, maxRowIndex;
@@ -1084,148 +1162,6 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		#endregion
 
-		#region Info Structure
-		
-		private struct Info : System.IComparable<Info>
-		{
-			public Info(Visual visual, LayoutMeasure measure, int index, int span)
-			{
-				this.visual = visual;
-				this.measure = measure;
-				this.index = index;
-				this.span = span;
-			}
-
-			public Visual Visual
-			{
-				get
-				{
-					return this.visual;
-				}
-			}
-
-			public LayoutMeasure Measure
-			{
-				get
-				{
-					return this.measure;
-				}
-			}
-
-			public int Index
-			{
-				get
-				{
-					return this.index;
-				}
-			}
-
-			public int Span
-			{
-				get
-				{
-					return this.span;
-				}
-			}
-			
-			Visual visual;
-			LayoutMeasure measure;
-			int index;
-			int span;
-
-			#region IComparable<Info> Members
-
-			int System.IComparable<Info>.CompareTo(Info other)
-			{
-				if (this.span < other.span)
-				{
-					return -1;
-				}
-				if (this.span > other.span)
-				{
-					return 1;
-				}
-				if (this.index < other.index)
-				{
-					return -1;
-				}
-				if (this.index > other.index)
-				{
-					return 1;
-				}
-
-				return 0;
-			}
-
-			#endregion
-		}
-
-		#endregion
-
-		#region ColumnMeasure Class
-
-		private class ColumnMeasure : LayoutMeasure
-		{
-			public ColumnMeasure(int passId) : base (passId)
-			{
-			}
-		}
-
-		#endregion
-
-		#region RowMeasure Class
-
-		private class RowMeasure : LayoutMeasure
-		{
-			public RowMeasure(int passId) : base (passId)
-			{
-			}
-
-			public double MinH1
-			{
-				get
-				{
-					return this.minH1;
-				}
-			}
-
-			public double MinH2
-			{
-				get
-				{
-					return this.minH2;
-				}
-			}
-
-			public void UpdateMinH1H2(int passId, double h1, double h2)
-			{
-				double oldH1 = this.minH1;
-				double oldH2 = this.minH2;
-
-				if (this.PassId == passId)
-				{
-					this.minH1 = System.Math.Max (oldH1, h1);
-					this.minH2 = System.Math.Max (oldH2, h2);
-				}
-				else
-				{
-					this.minH1 = h1;
-					this.minH2 = h2;
-				}
-
-				if ((this.minH1 != oldH1) ||
-					(this.minH2 != oldH2))
-				{
-					this.UpdateMin (passId, this.minH1 + this.minH2);
-					this.SetHasChanged ();
-				}
-			}
-			
-			double minH1;
-			double minH2;
-		}
-
-		#endregion
 
 		#region IListHost<ColumnDefinition> Members
 

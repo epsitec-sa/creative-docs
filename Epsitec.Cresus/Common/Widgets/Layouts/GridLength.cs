@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -174,6 +174,7 @@ namespace Epsitec.Common.Widgets.Layouts
 
 		#endregion
 
+		
 		public override bool Equals(object obj)
 		{
 			if (obj is GridLength)
@@ -191,6 +192,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			return this.value.GetHashCode () ^ this.gridUnitType.GetHashCode ();
 		}
 
+		
 		public static bool operator==(GridLength a, GridLength b)
 		{
 			return a.Equals (b);
@@ -201,7 +203,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			return !a.Equals (b);
 		}
 
-		private double							value;
-		private GridUnitType					gridUnitType;
+		
+		private readonly double					value;
+		private readonly GridUnitType			gridUnitType;
 	}
 }

@@ -94,12 +94,16 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\ItemListColumn.cs" />
     <Compile Include="BigList\IItemMarkRenderer.cs" />
     <Compile Include="BigList\ItemHeight.cs" />
+    <Compile Include="BigList\ItemListColumnCollection.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
+    <Compile Include="BigList\ItemListHeaderView.cs" />
     <Compile Include="BigList\ItemListMark.cs" />
     <Compile Include="BigList\ItemListMarkAttachment.cs" />
     <Compile Include="BigList\ItemListMarkOffset.cs" />
+    <Compile Include="BigList\ItemSortOrder.cs" />
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\IDetectionProcessor.cs" />
@@ -1265,6 +1269,8 @@
     <Compile Include="Widgets\Layouts\Collections\ColumnDefinitionCollection.cs" />
     <Compile Include="Widgets\Layouts\Collections\RowDefinitionCollection.cs" />
     <Compile Include="Widgets\Layouts\ColumnDefinition.cs" />
+    <Compile Include="Widgets\Layouts\ColumnLayoutInfo.cs" />
+    <Compile Include="Widgets\Layouts\ColumnMeasure.cs" />
     <Compile Include="Widgets\Layouts\DockLayoutEngine.cs" />
     <Compile Include="Widgets\Layouts\GridLayoutEngine.cs" />
     <Compile Include="Widgets\Layouts\GridLength.cs" />
@@ -1275,9 +1281,11 @@
     <Compile Include="Widgets\Layouts\LayoutEngine.cs" />
     <Compile Include="Widgets\Layouts\LayoutMeasure.cs" />
     <Compile Include="Widgets\Layouts\LayoutMode.cs" />
+    <Compile Include="Widgets\Layouts\ColumnLayoutList.cs" />
     <Compile Include="Widgets\Layouts\NoOpLayoutEngine.cs" />
     <Compile Include="Widgets\Layouts\PermeableCell.cs" />
     <Compile Include="Widgets\Layouts\RowDefinition.cs" />
+    <Compile Include="Widgets\Layouts\RowMeasure.cs" />
     <Compile Include="Widgets\Layouts\StackLayoutEngine.cs" />
     <Compile Include="Widgets\MenuItem.cs" />
     <Compile Include="Widgets\MenuItemContainer.cs" />

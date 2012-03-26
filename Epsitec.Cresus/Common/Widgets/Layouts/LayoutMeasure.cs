@@ -1,21 +1,23 @@
-//	Copyright © 2006-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 
 using System.Collections.Generic;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
-	public class LayoutMeasure : Types.DependencyObject
+	public class LayoutMeasure : DependencyObject
 	{
 		internal LayoutMeasure(int passId)
 		{
-			this.min     = 0;
-			this.max     = double.PositiveInfinity;
-			this.desired = double.NaN;
-			this.passId  = passId;
+			this.Reset (passId);
 		}
 		
-		public double Min
+		
+		public double							Min
 		{
 			get
 			{
@@ -23,7 +25,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double Max
+		public double							Max
 		{
 			get
 			{
@@ -31,7 +33,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 		
-		public double Desired
+		public double							Desired
 		{
 			get
 			{
@@ -49,15 +51,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		internal int PassId
-		{
-			get
-			{
-				return this.passId;
-			}
-		}
-		
-		public bool HasChanged
+		public bool								HasChanged
 		{
 			get
 			{
@@ -65,26 +59,27 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
-		public bool SamePassIdAsLayoutContext(Visual visual)
+		public int								PassId
 		{
-			LayoutContext context = Helpers.VisualTree.FindLayoutContext (visual);
-			
-			if (context == null)
+			get
 			{
-				return false;
+				return this.passId;
 			}
-			
-			return context.PassId == this.passId;
 		}
-
+		
+		
 		public override string ToString()
 		{
 			return string.Format ("{0} in [{1}:{2}], pass={3}, desired={4}", this.Desired, this.Min, this.Max, this.passId, this.desired);
 		}
 
-		protected void SetHasChanged()
+
+		internal void Reset(int passId)
 		{
-			this.hasChanged = true;
+			this.min     = 0;
+			this.max     = double.PositiveInfinity;
+			this.desired = double.NaN;
+			this.passId  = passId;
 		}
 		
 		internal void ClearHasChanged()
@@ -97,7 +92,7 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.passId = id;
 		}
 		
-		internal void UpdateMin(int passId, double value)
+		internal void UpdateMin(int passId, double value, bool forceChange = false)
 		{
 			double old = this.min;
 			
@@ -110,11 +105,13 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.min = value;
 			}
 
-			if (this.min != old)
+			if ((this.min != old) ||
+				(forceChange))
 			{
 				this.hasChanged = true;
 			}
 		}
+		
 		internal void UpdateMax(int passId, double value)
 		{
 			double old = this.max;
@@ -133,6 +130,7 @@ namespace Epsitec.Common.Widgets.Layouts
 				this.hasChanged = true;
 			}
 		}
+		
 		internal void UpdateDesired(double value)
 		{
 			if (double.IsNaN (this.desired))
@@ -152,22 +150,24 @@ namespace Epsitec.Common.Widgets.Layouts
 			}
 		}
 
+		
 		public static LayoutMeasure GetWidth(Visual visual)
 		{
 			return visual.GetValue (LayoutMeasure.WidthProperty) as LayoutMeasure;
 		}
+		
 		public static LayoutMeasure GetHeight(Visual visual)
 		{
 			return visual.GetValue (LayoutMeasure.HeightProperty) as LayoutMeasure;
 		}
 		
-		public static Types.DependencyProperty WidthProperty  = Types.DependencyProperty.RegisterAttached ("Width", typeof (LayoutMeasure), typeof (LayoutMeasure), new Types.DependencyPropertyMetadata ().MakeNotSerializable ());
-		public static Types.DependencyProperty HeightProperty = Types.DependencyProperty.RegisterAttached ("Height", typeof (LayoutMeasure), typeof (LayoutMeasure), new Types.DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static DependencyProperty WidthProperty  = DependencyProperty<LayoutMeasure>.RegisterAttached ("Width", typeof (LayoutMeasure), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static DependencyProperty HeightProperty = DependencyProperty<LayoutMeasure>.RegisterAttached ("Height", typeof (LayoutMeasure), new DependencyPropertyMetadata ().MakeNotSerializable ());
 		
-		private double min;
-		private double max;
-		private int passId;
-		private double desired;
-		private bool hasChanged;
+		private double							min;
+		private double							max;
+		private int								passId;
+		private double							desired;
+		private bool							hasChanged;
 	}
 }
