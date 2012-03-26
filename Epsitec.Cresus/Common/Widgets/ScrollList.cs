@@ -371,24 +371,24 @@ namespace Epsitec.Common.Widgets
 
 				case MessageType.MouseDown:
 					this.MouseSelectBegin ();
-					this.MouseSelect (pos);
+					this.MouseSelect (pos, message);
 					break;
 
 				case MessageType.MouseMove:
 					if (this.mouseDown || this.scrollListStyle == ScrollListStyle.Menu)
 					{
-						this.MouseSelect (pos);
+						this.MouseSelect (pos, message);
 					}
 					break;
 
 				case MessageType.MouseUp:
 					if (this.mouseDown)
 					{
-						this.MouseSelect (pos);
+						this.MouseSelect (pos, message);
 
 						if (this.AutomaticScrollEnable)
 						{
-							this.autoScrollBehavior.ProcessEvent (Point.Zero);
+							this.autoScrollBehavior.ProcessEvent (Point.Zero, message);
 						}
 
 						this.OnSelectionActivated ();
@@ -442,7 +442,7 @@ namespace Epsitec.Common.Widgets
 			this.Invalidate ();
 		}
 
-		protected virtual bool MouseSelect(Point pos)
+		protected virtual bool MouseSelect(Point pos, Message message)
 		{
 			if (this.rowHeight <= 0)
 			{
@@ -457,17 +457,17 @@ namespace Epsitec.Common.Widgets
 			{
 				if (y < 0)
 				{
-					this.autoScrollBehavior.ProcessEvent (new Point (0, -1));
+					this.autoScrollBehavior.ProcessEvent (new Point (0, -1), message);
 					return false;
 				}
 				else if (y >= h)
 				{
-					this.autoScrollBehavior.ProcessEvent (new Point (0, 1));
+					this.autoScrollBehavior.ProcessEvent (new Point (0, 1), message);
 					return false;
 				}
 				else
 				{
-					this.autoScrollBehavior.ProcessEvent (Point.Zero);
+					this.autoScrollBehavior.ProcessEvent (Point.Zero, message);
 				}
 			}
 

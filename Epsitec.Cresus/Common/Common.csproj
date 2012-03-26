@@ -105,6 +105,7 @@
     <Compile Include="BigList\Processors\IDetectionProcessor.cs" />
     <Compile Include="BigList\Processors\IEventProcessor.cs" />
     <Compile Include="BigList\Processors\IEventProcessorHost.cs" />
+    <Compile Include="BigList\Processors\IScrollingProcessor.cs" />
     <Compile Include="BigList\Processors\ISelectionProcessor.cs" />
     <Compile Include="BigList\ItemListVerticalContentView.EventProcessor.cs" />
     <Compile Include="BigList\IItemDataRenderer.cs" />

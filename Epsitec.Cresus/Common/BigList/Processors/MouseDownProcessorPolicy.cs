@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Widgets;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -15,6 +17,10 @@ namespace Epsitec.Common.BigList.Processors
 		public MouseDownProcessorPolicy()
 		{
 			this.AutoFollow = true;
+			this.AutoScroll = true;
+
+			this.AutoScrollDelay  = SystemInformation.InitialKeyboardDelay;
+			this.AutoScrollRepeat = SystemInformation.KeyboardRepeatPeriod;
 		}
 
 
@@ -38,6 +44,12 @@ namespace Epsitec.Common.BigList.Processors
 		}
 
 		public double							AutoScrollDelay
+		{
+			get;
+			set;
+		}
+
+		public double							AutoScrollRepeat
 		{
 			get;
 			set;

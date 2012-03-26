@@ -1,4 +1,4 @@
-//	Copyright © 2009, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2009-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
@@ -27,6 +27,27 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.autoScrollTimer.TimeElapsed += this.HandleAutoScrollTimeElapsed;
 
 			this.callback = callback;
+
+			this.InitialDelay = this.owner == null ? SystemInformation.InitialKeyboardDelay : this.owner.AutoEngageDelay;
+			this.RepeatPeriod = this.owner == null ? SystemInformation.KeyboardRepeatPeriod : this.owner.AutoEngageRepeatPeriod;
+		}
+
+		public AutoScrollBehavior(System.Action<Point> callback)
+			: this (null, callback)
+		{
+		}
+
+
+		public double							InitialDelay
+		{
+			get;
+			set;
+		}
+
+		public double							RepeatPeriod
+		{
+			get;
+			set;
 		}
 
 
@@ -36,11 +57,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 		/// <param name="scrollMagnitude">The scroll magnitude and direction; specify
 		/// <c>Point.Zero</c> to cancel any previous event and stop the automatic
 		/// scrolling behavior.</param>
-		public void ProcessEvent(Point scrollMagnitude)
+		public void ProcessEvent(Point scrollMagnitude, Message message = null)
 		{
 			if (scrollMagnitude != Point.Zero)
 			{
 				this.scrollMagnitude = scrollMagnitude;
+				this.scrollWindow    = (message == null || message.WindowRoot == null) ? null : message.WindowRoot.Window;
 				
 				if (this.autoScrollTimer.State == TimerState.Stopped)
 				{
@@ -51,6 +73,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			else
 			{
 				this.AutoScrollTimerStop ();
+
+				this.scrollMagnitude = scrollMagnitude;
+				this.scrollWindow    = null;
 			}
 		}
 
@@ -82,11 +107,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			switch (phase)
 			{
 				case Phase.InitialDelay:
-					this.autoScrollTimer.AutoRepeat = this.owner == null ? SystemInformation.InitialKeyboardDelay : this.owner.AutoEngageDelay;
+					this.autoScrollTimer.AutoRepeat = this.InitialDelay;
 					break;
 				
 				case Phase.RepeatPeriod:
-					this.autoScrollTimer.AutoRepeat = this.owner == null ? SystemInformation.KeyboardRepeatPeriod : this.owner.AutoEngageRepeatPeriod;
+					this.autoScrollTimer.AutoRepeat = this.RepeatPeriod;
 					break;
 			}
 
@@ -130,5 +155,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private readonly System.Action<Point>	callback;
 		private readonly Timer					autoScrollTimer;
 		private Point							scrollMagnitude;
+		private Window							scrollWindow;
 	}
 }

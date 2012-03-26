@@ -14,7 +14,7 @@ namespace Epsitec.Common.BigList
 {
 	public partial class ItemListVerticalContentView
 	{
-		private class EventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor
+		private class EventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor, IScrollingProcessor
 		{
 			public EventProcessor(ItemListVerticalContentView view)
 			{
@@ -63,12 +63,12 @@ namespace Epsitec.Common.BigList
 
 			private bool ProcessMouseDown(Message message, Point pos)
 			{
-				return MouseDownProcessor.Attach (this, message, pos);
+				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
 			}
 
 			private void ProcessMouseWheel(double amplitude)
 			{
-				this.view.Scroll (amplitude * this.view.DefaultLineHeight);
+				this.view.Scroll (amplitude);
 			}
 
 
@@ -125,6 +125,11 @@ namespace Epsitec.Common.BigList
 
 			public void Select(int index, ItemSelection selection)
 			{
+				if (index < 0)
+				{
+					return;
+				}
+
 				switch (selection)
 				{
 					case ItemSelection.Activate:
@@ -141,6 +146,15 @@ namespace Epsitec.Common.BigList
 						this.view.SelectRow (index, selection);
 						break;
 				}
+			}
+
+			#endregion
+
+			#region IScrollingProcessor Members
+
+			void IScrollingProcessor.ScrollByAmplitude(Point amplitude)
+			{
+				this.view.Scroll (amplitude.Y);
 			}
 
 			#endregion

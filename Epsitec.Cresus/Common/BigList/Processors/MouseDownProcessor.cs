@@ -6,33 +6,45 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Widgets.Behaviors;
 
 namespace Epsitec.Common.BigList.Processors
 {
 	public sealed class MouseDownProcessor : EventProcessor
 	{
-		private MouseDownProcessor(IEventProcessorHost host, Message message, Point pos)
+		private MouseDownProcessor(IEventProcessorHost host, Rectangle bounds, Message message, Point pos)
 		{
 			this.host               = host;
+			this.bounds             = bounds;
 			this.selectionProcessor = this.host as ISelectionProcessor;
 			this.detectionProcessor = this.host as IDetectionProcessor;
+			this.scrollingProcessor = this.host as IScrollingProcessor;
 			this.policy             = this.host.GetPolicy<MouseDownProcessorPolicy> ();
 			this.button             = message.Button;
 			this.origin             = pos;
 
 			this.originalIndex     = this.detectionProcessor.Detect (pos);
 			this.originalSelection = this.selectionProcessor.IsSelected (this.originalIndex);
+
+			if ((this.policy.AutoScroll) &&
+				(this.scrollingProcessor != null))
+			{
+				this.autoScrollBehavior = new AutoScrollBehavior (this.HandleScrolling);
+				
+				this.autoScrollBehavior.InitialDelay = this.policy.AutoScrollDelay;
+				this.autoScrollBehavior.RepeatPeriod = this.policy.AutoScrollRepeat;
+			}
 		}
 
 
-		public static bool Attach(IEventProcessorHost host, Message message, Point pos)
+		public static bool Attach(IEventProcessorHost host, Rectangle bounds, Message message, Point pos)
 		{
 			if (host.EventProcessors.OfType<MouseDownProcessor> ().Any ())
 			{
 				return false;
 			}
 
-			var proc = new MouseDownProcessor (host, message, pos);
+			var proc = new MouseDownProcessor (host, bounds, message, pos);
 
 			if (proc.originalIndex < 0)
 			{
@@ -41,6 +53,7 @@ namespace Epsitec.Common.BigList.Processors
 
 			proc.selectionProcessor.Select (proc.originalIndex, ItemSelection.Toggle);
 			proc.host.Register (proc);
+			proc.Process (message, pos);
 			
 			return true;
 		}
@@ -49,7 +62,9 @@ namespace Epsitec.Common.BigList.Processors
 		{
 			switch (message.MessageType)
 			{
+				case MessageType.MouseDown:
 				case MessageType.MouseMove:
+					this.ProcessAutoScroll (message, pos);
 					this.ProcessMove (pos);
 					break;
 
@@ -59,6 +74,7 @@ namespace Epsitec.Common.BigList.Processors
 
 					if (message.Button == this.button)
 					{
+						this.ProcessAutoScrollEnd ();
 						this.selectionProcessor.Select (this.originalIndex, ItemSelection.Focus);
 						this.host.Remove (this);
 
@@ -91,13 +107,63 @@ namespace Epsitec.Common.BigList.Processors
 			}
 		}
 
+		private void ProcessAutoScroll(Message message, Point pos)
+		{
+			if ((this.policy.AutoScroll) &&
+				(this.scrollingProcessor != null))
+			{
+				var amplitude = Point.Zero;
+				
+				var bounds = this.bounds;
+				var margin = 5;
+
+				if (bounds.Bottom + margin > pos.Y)
+				{
+					amplitude = new Point (0, -1);
+					pos       = new Point (pos.X, System.Math.Max (bounds.Bottom, pos.Y));
+				}
+				if (bounds.Top - margin < pos.Y)
+				{
+					amplitude = new Point (0, 1);
+					pos       = new Point (pos.X, System.Math.Min (bounds.Top-1, pos.Y));
+				}
+				
+				this.originalScrollPos = pos;
+
+				this.autoScrollBehavior.ProcessEvent (amplitude, message);
+			}
+		}
+
+		private void ProcessAutoScrollEnd()
+		{
+			if ((this.policy.AutoScroll) &&
+				(this.scrollingProcessor != null))
+			{
+				this.autoScrollBehavior.ProcessEvent (Point.Zero);
+			}
+		}
+
+
+		private void HandleScrolling(Point amplitude)
+		{
+			this.scrollingProcessor.ScrollByAmplitude (amplitude);
+			this.ProcessMove (this.originalScrollPos);
+		}
+
 		private readonly IEventProcessorHost	host;
+		private readonly Rectangle				bounds;
+		
 		private readonly ISelectionProcessor	selectionProcessor;
 		private readonly IDetectionProcessor	detectionProcessor;
+		private readonly IScrollingProcessor	scrollingProcessor;
+
 		private readonly MouseDownProcessorPolicy policy;
 		private readonly MouseButtons			button;
 		private readonly Point					origin;
+		private readonly AutoScrollBehavior		autoScrollBehavior;
+
 		private bool							originalSelection;
 		private int								originalIndex;
+		private Point							originalScrollPos;
 	}
 }

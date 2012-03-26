@@ -100,6 +100,8 @@ namespace Epsitec.Common.BigList
 
 		public void Scroll(double amplitude)
 		{
+			amplitude *= this.DefaultLineHeight;
+
 			this.ItemList.MoveVisibleContent ((int) (amplitude));
 			this.Invalidate ();
 		}
