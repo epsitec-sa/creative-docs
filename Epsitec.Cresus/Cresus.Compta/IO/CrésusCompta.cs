@@ -730,14 +730,14 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			écriture.Type              = (int) TypeEcriture.BaseTVA;
-			écriture.CompteOrigineTVA  = compte;
+			écriture.OrigineTVA        = (compte == écriture.Débit) ? "D" : "C";
 			écriture.Libellé           = lib1.Substring (0, i1);
 			écriture.MontantComplément = suivante.Montant;
 			écriture.CodeTVA           = codeTVA;
 			écriture.TauxTVA           = taux;
 
 			suivante.Type              = (int) TypeEcriture.CodeTVA;
-			suivante.CompteOrigineTVA  = compte;
+			suivante.OrigineTVA        = (compte == écriture.Débit) ? "D" : "C";
 			suivante.Libellé           = écriture.Libellé;
 			suivante.MontantComplément = écriture.Montant;
 			suivante.CodeTVA           = codeTVA;

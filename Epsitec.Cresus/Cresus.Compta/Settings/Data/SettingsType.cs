@@ -23,10 +23,11 @@ namespace Epsitec.Cresus.Compta
 		EcritureTVA,
 		EcritureEditeMontantTVA,
 		EcritureEditeMontantHT,
+		EcritureEditeCompteTVA,
 		EcritureEditeCodeTVA,
 		EcritureEditeTauxTVA,
-		EcritureMontreCompteTVA,
 		EcritureMontreType,
+		EcritureMontreOrigineTVA,
 		EcritureProposeVide,
 		EcritureArrondiTVA,
 

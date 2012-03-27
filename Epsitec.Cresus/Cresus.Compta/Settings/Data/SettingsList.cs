@@ -32,20 +32,21 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData (SettingsGroup.Global, SettingsType.GlobalRemoveConfirmation, true));
 										     
 			//	Réglages pur les écritures :
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontantZéro,     false));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePièces,          true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,      true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces, false));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,     false));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontantZéro,      false));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePièces,           true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,       true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces,  false));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,      false));
 			this.Add (new IntSettingData     (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5, 3, 10));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureTVA,             true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantTVA, false));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantHT,  true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeCodeTVA,    true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeTauxTVA,    true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreCompteTVA, false));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreType,      true));
-			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureProposeVide,     true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureTVA,              true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantHT,   true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeCompteTVA,   true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeCodeTVA,     true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeTauxTVA,     true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantTVA,  true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureProposeVide,      true));
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreType,       false));  // true pour le debug
+			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreOrigineTVA, false));  // true pour le debug
 			this.Add (new DecimalSettingData (SettingsGroup.Ecriture, SettingsType.EcritureArrondiTVA, 0.05m, 0.0m, 1.0m));
 
 			//	Réglages pour les montants :

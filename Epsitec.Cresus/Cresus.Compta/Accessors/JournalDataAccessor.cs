@@ -191,6 +191,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Type:
 					return écriture.ShortType;
 
+				case ColumnType.OrigineTVA:
+					return écriture.OrigineTVA;
+
 				default:
 					return FormattedText.Null;
 			}

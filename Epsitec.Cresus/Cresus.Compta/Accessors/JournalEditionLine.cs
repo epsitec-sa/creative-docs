@@ -21,16 +21,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalEditionLine(AbstractController controller)
 			: base (controller)
 		{
-			this.dataDict.Add (ColumnType.Date,       new EditionData (this.controller, this.ValidateDate));
-			this.dataDict.Add (ColumnType.Débit,      new EditionData (this.controller, this.ValidateCompteDébit));
-			this.dataDict.Add (ColumnType.Crédit,     new EditionData (this.controller, this.ValidateCompteCrédit));
-			this.dataDict.Add (ColumnType.Pièce,      new EditionData (this.controller));
-			this.dataDict.Add (ColumnType.Libellé,    new EditionData (this.controller, this.ValidateLibellé));
-			this.dataDict.Add (ColumnType.MontantTTC, new EditionData (this.controller, this.ValidateMontantTTC));
-			this.dataDict.Add (ColumnType.Montant,    new EditionData (this.controller, this.ValidateMontant));
-			this.dataDict.Add (ColumnType.CodeTVA,    new EditionData (this.controller, this.ValidateCodeTVA));
-			this.dataDict.Add (ColumnType.TauxTVA,    new EditionData (this.controller, this.ValidateTauxTVA));
-			this.dataDict.Add (ColumnType.Journal,    new EditionData (this.controller, this.ValidateJournal));
+			this.dataDict.Add (ColumnType.Date,        new EditionData (this.controller, this.ValidateDate));
+			this.dataDict.Add (ColumnType.Débit,       new EditionData (this.controller, this.ValidateCompteDébit));
+			this.dataDict.Add (ColumnType.Crédit,      new EditionData (this.controller, this.ValidateCompteCrédit));
+			this.dataDict.Add (ColumnType.Pièce,       new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Libellé,     new EditionData (this.controller, this.ValidateLibellé));
+			this.dataDict.Add (ColumnType.MontantTTC,  new EditionData (this.controller, this.ValidateMontantTTC));
+			this.dataDict.Add (ColumnType.Montant,     new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.CodeTVA,     new EditionData (this.controller, this.ValidateCodeTVA));
+			this.dataDict.Add (ColumnType.TauxTVA,     new EditionData (this.controller, this.ValidateTauxTVA));
+			this.dataDict.Add (ColumnType.Journal,     new EditionData (this.controller, this.ValidateJournal));
 		}
 
 
@@ -270,6 +270,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
+			if (type == Compta.TypeEcriture.BaseTVA && !this.controller.SettingsList.GetBool (SettingsType.EcritureEditeMontantHT))
+			{
+				return;
+			}
+
 			if (montantHT.HasValue &&
 				type != TypeEcriture.CodeTVA &&  // sur la ligne CodeTVA, le montant peut être nul (par *ex. lors d'exportation)
 				this.GetText (ColumnType.TotalAutomatique) != "1")  // le total automatique peut être nul
@@ -383,7 +388,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             FormattedText.Empty);
 				this.SetText (ColumnType.Crédit,            FormattedText.Empty);
-				this.SetText (ColumnType.CompteOrigineTVA,  FormattedText.Empty);
+				this.SetText (ColumnType.OrigineTVA,        FormattedText.Empty);
 				this.SetText (ColumnType.Pièce,             FormattedText.Empty);
 				this.SetText (ColumnType.Libellé,           FormattedText.Empty);
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (0));
@@ -401,7 +406,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Date,              Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Débit,             JournalDataAccessor.GetNuméro (écriture.Débit));
 				this.SetText (ColumnType.Crédit,            JournalDataAccessor.GetNuméro (écriture.Crédit));
-				this.SetText (ColumnType.CompteOrigineTVA,  JournalDataAccessor.GetNuméro (écriture.CompteOrigineTVA));
+				this.SetText (ColumnType.OrigineTVA,        écriture.OrigineTVA);
 				this.SetText (ColumnType.Pièce,             écriture.Pièce);
 				this.SetText (ColumnType.Libellé,           écriture.Libellé);
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
@@ -432,7 +437,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				écriture.Débit             = null;
 				écriture.Crédit            = null;
-				écriture.CompteOrigineTVA  = null;
+				écriture.OrigineTVA        = null;
 				écriture.Pièce             = FormattedText.Empty;
 				écriture.Libellé           = FormattedText.Empty;
 				écriture.Montant           = 0;
@@ -446,7 +451,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				écriture.Débit             = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Débit));
 				écriture.Crédit            = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.Crédit));
-				écriture.CompteOrigineTVA  = JournalDataAccessor.GetCompte (this.compta, this.GetText (ColumnType.CompteOrigineTVA));
+				écriture.OrigineTVA        = this.GetText (ColumnType.OrigineTVA).ToString ();
 				écriture.Pièce             = this.GetText (ColumnType.Pièce);
 				écriture.Libellé           = this.GetText (ColumnType.Libellé);
 				écriture.Montant           = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();

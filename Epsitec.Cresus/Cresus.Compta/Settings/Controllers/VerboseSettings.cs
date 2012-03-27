@@ -77,17 +77,14 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureTVA:
 					return "Gère la TVA";
 
-				case SettingsType.EcritureMontreCompteTVA:
-					return "Montre le compte pour la TVA";
-
-				case SettingsType.EcritureMontreType:
-					return "Montre le type de chaque ligne (debug)";
-
 				case SettingsType.EcritureEditeMontantTVA:
 					return "Permet l'édition du montant de la TVA";
 
 				case SettingsType.EcritureEditeMontantHT:
 					return "Permet l'édition du montant HT";
+
+				case SettingsType.EcritureEditeCompteTVA:
+					return "Permet l'édition du compte de TVA";
 
 				case SettingsType.EcritureEditeCodeTVA:
 					return "Permet l'édition du code TVA";
@@ -97,6 +94,12 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 
 				case SettingsType.EcritureProposeVide:
 					return "Propose des ligne vides pour compléter les écritures multiples";
+
+				case SettingsType.EcritureMontreType:
+					return "Montre le type de chaque ligne (debug)";
+
+				case SettingsType.EcritureMontreOrigineTVA:
+					return "Montre l'origine de la TVA (debug)";
 
 				case SettingsType.EcritureArrondiTVA:
 					return "Arrondi pour la TVA";
