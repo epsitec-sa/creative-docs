@@ -66,6 +66,9 @@
     <Compile Include="Data\Eerv\EervActivity.cs" />
     <Compile Include="Data\Eerv\EervAddress.cs" />
     <Compile Include="Data\Eerv\EervCoordinates.cs" />
+    <Compile Include="Data\Eerv\EervParishDataMatcher.cs" />
+    <Compile Include="Data\Eerv\NormalizedHousehold.cs" />
+    <Compile Include="Data\Eerv\Normalizer.cs" />
     <Compile Include="Data\Eerv\RecordHelper.cs" />
     <Compile Include="Data\Eerv\EervMainDataLoader.cs" />
     <Compile Include="Data\Eerv\EervParishData.cs" />

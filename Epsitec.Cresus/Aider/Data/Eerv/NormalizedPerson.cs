@@ -4,6 +4,10 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
+using System.Collections.Generic;
+
+using System.Linq;
+
 
 namespace Epsitec.Aider.Data.Eerv
 {
@@ -20,10 +24,28 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public string Firstname
+		{
+			get
+			{
+				return this.Firstnames.Join (" ");
+			}
+		}
+
+
 		public string[] Lastnames
 		{
 			get;
 			set;
+		}
+
+
+		public string Lastname
+		{
+			get
+			{
+				return this.Lastnames.Join (" ");
+			}
 		}
 
 
@@ -55,16 +77,32 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public NormalizedAddress Address
+		public List<NormalizedHousehold> Households
 		{
 			get;
 			set;
 		}
 
 
+		public IEnumerable<NormalizedAddress> Addresses
+		{
+			get
+			{
+				return this.Households.Select (h => h.Address);
+			}
+		}
+
+
 		public override string ToString()
 		{
-			return this.Firstnames.Join (" ") + " " + this.Lastnames.Join (" ") + "(" + this.DateOfBirth + "-" + this.DateOfDeath + ", " + this.Sex + ", " + this.Origins + ", " + this.Address + ")";
+			return this.Firstnames.Join (" ")
+				+ " " + this.Lastnames.Join (" ")
+				+ "(" + this.DateOfBirth 
+				+ "-" + this.DateOfDeath 
+				+ ", " + this.Sex
+				+ ", " + this.Origins
+				+ ", " + string.Join (" | ", this.Addresses)
+				+ ")";
 		}
 
 

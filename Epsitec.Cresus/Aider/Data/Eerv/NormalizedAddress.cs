@@ -6,6 +6,9 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
+		// TODO Should we be able to handle addresses outside of Switzerland ?
+
+
 		public string Street
 		{
 			get;
@@ -13,7 +16,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public int HouseNumber
+		public int? HouseNumber
 		{
 			get;
 			set;

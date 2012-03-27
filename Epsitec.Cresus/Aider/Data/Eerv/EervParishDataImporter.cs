@@ -2,15 +2,12 @@
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
-using Epsitec.Cresus.DataLayer.Context;
 
-using Epsitec.Data.Platform;
+using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.TwixClip;
 
@@ -33,7 +30,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			// TODO Import legal persons
 			// TODO Import group & activity data
-		
+
 			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervParishData);
 		}
 
@@ -43,8 +40,10 @@ namespace Epsitec.Aider.Data.Eerv
 			// TODO Import household data
 
 			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
+			GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 			EervParishDataImporter.ProcessMatches (businessContextManager, parishName, matches);
+			GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 		}
 
 
@@ -55,23 +54,28 @@ namespace Epsitec.Aider.Data.Eerv
 				return EervParishDataImporter.FindMatches (b, eervParishData);
 			};
 
-			return businessContextManager.Execute (function);			
+			return businessContextManager.Execute (function);
 		}
 
-		
+
 		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContext businessContext, EervParishData eervParishData)
 		{
-			var databasePersons = businessContext.GetAllEntities<AiderPersonEntity> ();
+			var w = System.Diagnostics.Stopwatch.StartNew ();
+			
+			var aiderHouseholds = businessContext.GetAllEntities<AiderHouseholdEntity> ();
+			var aiderPersons = businessContext.GetAllEntities<AiderPersonEntity> ();
 
 			// NOTE Here we fetch all this stuff in memory at once, so we don't make gazillions of
 			// requests to the database later, by fetching them one by one.
 			businessContext.GetAllEntities<eCH_PersonEntity> ();
-			businessContext.GetAllEntities<eCH_AddressEntity> ();
-			businessContext.GetAllEntities<eCH_ReportedPersonEntity> ();
+			businessContext.GetAllEntities<AiderAddressEntity> ();
+			businessContext.GetAllEntities<AiderTownEntity> ();
+
+			w.Stop ();
 
 			var dataContext = businessContext.DataContext;
 
-			var matches = EervParishDataImporter.FindMatches (eervParishData, databasePersons);
+			var matches = EervParishDataImporter.FindMatches (eervParishData, aiderHouseholds, aiderPersons);
 
 			return matches.ToDictionary
 			(
@@ -81,414 +85,21 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> FindMatches(EervParishData eervParishData, IEnumerable<AiderPersonEntity> databasePersons)
+		private static Dictionary<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> FindMatches(EervParishData eervParishData, IEnumerable<AiderHouseholdEntity> aiderHouseholds, IEnumerable<AiderPersonEntity> aiderPersons)
 		{
-			var normalizedDatabasePersons = databasePersons.ToDictionary (p => EervParishDataImporter.Normalize (p));
-			var normalizedEervPersons = eervParishData.Persons.ToDictionary (p => EervParishDataImporter.Normalize (p));
+			var normalizedAiderData = Normalizer.Normalize (aiderHouseholds, aiderPersons);
+			var normalizedAiderPersons = normalizedAiderData.Item2;
 
-			var matches = EervParishDataImporter.FindMatches (normalizedEervPersons.Keys, normalizedDatabasePersons.Keys);
+			var normalizedEervData = Normalizer.Normalize (eervParishData.Households);
+			var normalizedEervPersons = normalizedEervData.Item2;
+
+			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
 
 			return matches.ToDictionary
 			(
 				kvp => normalizedEervPersons[kvp.Key],
-				kvp => kvp.Value.Select (m => Tuple.Create (normalizedDatabasePersons[m.Item1], m.Item2)).ToList ()
+				kvp => kvp.Value.Select (m => Tuple.Create (normalizedAiderPersons[m], new MatchData ())).ToList ()
 			);
-		}
-
-
-		private static Dictionary<NormalizedPerson, List<Tuple<NormalizedPerson, MatchData>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> databasePersons)
-		{
-			var lastnamesToDatabasePersons = EervParishDataImporter.GroupPersonsByLastnames (databasePersons);
-
-			return eervPersons.ToDictionary
-			(
-				p => p,
-				p => EervParishDataImporter.FindMatches (p, databasePersons, lastnamesToDatabasePersons)
-			);
-		}
-
-
-		private static Dictionary<string[], List<NormalizedPerson>> GroupPersonsByLastnames(IEnumerable<NormalizedPerson> persons)
-		{
-			var comparer = ArrayEqualityComparer<string>.Instance;
-
-			return persons
-				.GroupBy (p => p.Lastnames, comparer)
-				.ToDictionary (g => g.Key, g => g.ToList (), comparer);
-		}
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindMatches(NormalizedPerson eervPerson, IEnumerable<NormalizedPerson> databasePersons, Dictionary<string[], List<NormalizedPerson>> lastNamesToDatabasePersons)
-		{
-			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> fullLastnameMatcher = null;
-			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> orderedPartialLastnameMatcher = null;
-			Func<string[], List<Tuple<NormalizedPerson, MatchData>>> partialLastnameMatcher = null;
-
-			fullLastnameMatcher = ln => EervParishDataImporter.FindFullLastnameMatches (ln, lastNamesToDatabasePersons);
-			orderedPartialLastnameMatcher = ln => EervParishDataImporter.FindOrderedPartialLastnameMatches (ln, databasePersons);
-			partialLastnameMatcher = ln => EervParishDataImporter.FindPartialLastnameMatches (ln, databasePersons);
-
-			var matches = EervParishDataImporter.FindMatches (eervPerson, fullLastnameMatcher)
-				?? EervParishDataImporter.FindMatches (eervPerson, orderedPartialLastnameMatcher)
-				?? EervParishDataImporter.FindMatches (eervPerson, partialLastnameMatcher)
-				?? new List<Tuple<NormalizedPerson, MatchData>> (0);
-
-			matches = EervParishDataImporter.TakeAddressIntoAccount (eervPerson, matches);
-			matches = EervParishDataImporter.TakeFirstFirstnameIntoAccount (eervPerson, matches);
-
-			return matches;
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> TakeAddressIntoAccount(NormalizedPerson eervPerson, List<Tuple<NormalizedPerson, MatchData>> matches)
-		{
-			foreach (var match in matches)
-			{
-				var addressMatch = EervParishDataImporter.AreAddresseMatches (eervPerson.Address, match.Item1.Address);
-
-				match.Item2.Address = addressMatch;
-			}
-
-			if (matches.Count > 1)
-			{
-				var matchesWithSameAddresses = matches
-					.Where (m => m.Item2.Address != AddressMatch.None)
-					.ToList ();
-
-				if (matchesWithSameAddresses.Count > 0)
-				{
-					return matchesWithSameAddresses;
-				}
-			}
-
-			return matches;
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> TakeFirstFirstnameIntoAccount(NormalizedPerson eervPerson, List<Tuple<NormalizedPerson, MatchData>> matches)
-		{
-			if (matches.Count > 1)
-			{
-				var matchesWithSameFirstFirstnames = matches
-					.Where (m => m.Item1.Firstnames[0] == eervPerson.Firstnames[0])
-					.ToList ();
-
-				if (matchesWithSameFirstFirstnames.Count > 0)
-				{
-					return matchesWithSameFirstFirstnames;
-				}
-			}
-
-			return matches;
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindMatches(NormalizedPerson eervPerson, Func<string[], List<Tuple<NormalizedPerson, MatchData>>> lastnameMatcher)
-		{
-			var lastnames = eervPerson.Lastnames;
-			var lastnameMatches = lastnameMatcher (lastnames);
-
-			lastnameMatches = EervParishDataImporter.FilterByDateOfBirthAndSex (eervPerson, lastnameMatches);
-
-			var firstnames = eervPerson.Firstnames;
-
-			return EervParishDataImporter.FindFullFirstnameMatches (firstnames, lastnameMatches)
-				?? EervParishDataImporter.FindOrderedPartialFirstnameMatches (firstnames, lastnameMatches)
-				?? EervParishDataImporter.FindPartialFirstnameMatches (firstnames, lastnameMatches);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindFullLastnameMatches(string[] lastnames, Dictionary<string[], List<NormalizedPerson>> lastNamesToDatabasePersons)
-		{
-			List<NormalizedPerson> matches;
-
-			var isMatch = lastNamesToDatabasePersons.TryGetValue (lastnames, out matches);
-
-			if (!isMatch)
-			{
-				matches = new List<NormalizedPerson> ();
-			}
-
-			return matches
-				.Select (m => Tuple.Create (m, new MatchData () { Lastname = NameMatch.Full } ))
-				.ToList();
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindOrderedPartialLastnameMatches(string[] lastnames, IEnumerable<NormalizedPerson> databasePersons)
-		{
-			Func<string[], string[], bool> predicate = EervParishDataImporter.IsOrderedSubset;
-			var match = NameMatch.OrderedPartial;
-
-			return EervParishDataImporter.FindLastnameMatches (lastnames, databasePersons, predicate, match);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindPartialLastnameMatches(string[] lastnames, IEnumerable<NormalizedPerson> databasePersons)
-		{
-			Func<string[], string[], bool> predicate = EervParishDataImporter.IsSubset;
-			var match = NameMatch.Partial;
-
-			return EervParishDataImporter.FindLastnameMatches (lastnames, databasePersons, predicate, match);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindLastnameMatches(string[] lastnames, IEnumerable<NormalizedPerson> databasePersons, Func<string[], string[], bool> predicate, NameMatch match)
-		{
-			var result = databasePersons
-				.Where (p => predicate (lastnames, p.Lastnames))
-				.Select (m => Tuple.Create (m, new MatchData ()))
-				.ToList ();
-
-			foreach (var r in result)
-			{
-				r.Item2.Lastname = match;
-			}
-
-			return result;
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindFullFirstnameMatches(string[] firstnames, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			Func<string[], string[], bool> predicate = ArrayEqualityComparer<string>.Instance.Equals;
-			var match = NameMatch.Full;
-
-			return EervParishDataImporter.FindFirstnameMatches (firstnames, databasePersons, predicate, match);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindOrderedPartialFirstnameMatches(string[] firstnames, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			Func<string[], string[], bool> predicate = EervParishDataImporter.IsOrderedSubset;
-			var match = NameMatch.OrderedPartial;
-
-			return EervParishDataImporter.FindFirstnameMatches (firstnames, databasePersons, predicate, match);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindPartialFirstnameMatches(string[] firstnames, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			Func<string[], string[], bool> predicate = EervParishDataImporter.IsSubset;
-			var match = NameMatch.Partial;
-
-			return EervParishDataImporter.FindFirstnameMatches (firstnames, databasePersons, predicate, match);
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FindFirstnameMatches(string[] firstnames, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons, Func<string[], string[], bool> predicate, NameMatch match)
-		{
-			var result = databasePersons
-				.Where (p => predicate(firstnames, p.Item1.Firstnames))
-				.ToList ();
-
-			foreach (var r in result)
-			{
-				r.Item2.Firstname = match;
-			}
-
-			if (result.Count == 0)
-			{
-				result = null;
-			}
-
-			return result;
-		}
-
-
-		private static List<Tuple<NormalizedPerson, MatchData>> FilterByDateOfBirthAndSex(NormalizedPerson eervPerson, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			var filtered = databasePersons;
-			
-			filtered = EervParishDataImporter.FilterByDateOfBirth (eervPerson, databasePersons);
-			filtered = EervParishDataImporter.FilterBySex (eervPerson, filtered);
-
-			return filtered.ToList ();
-		}
-
-
-		private static IEnumerable<Tuple<NormalizedPerson, MatchData>> FilterByDateOfBirth(NormalizedPerson eervPerson, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			var date1 = eervPerson.DateOfBirth;
-			
-			foreach (var databasePerson in databasePersons)
-			{
-				var date2 = databasePerson.Item1.DateOfBirth;
-				var match = databasePerson.Item2;
-
-				if (!date1.HasValue || !date2.HasValue)
-				{
-					match.DateOfBirth = null;
-
-					yield return databasePerson;
-				}
-				else if (date1 == date2)
-				{
-					match.DateOfBirth = true;
-
-					yield return databasePerson;
-				}
-			}
-		}
-
-
-		private static IEnumerable<Tuple<NormalizedPerson, MatchData>> FilterBySex(NormalizedPerson eervPerson, IEnumerable<Tuple<NormalizedPerson, MatchData>> databasePersons)
-		{
-			var sex1 = eervPerson.Sex;
-
-			foreach (var databasePerson in databasePersons)
-			{
-				var sex2 = databasePerson.Item1.Sex;
-				var match = databasePerson.Item2;
-
-				if (sex1 == PersonSex.Unknown || sex2 == PersonSex.Unknown)
-				{
-					match.Sex = null;
-
-					yield return databasePerson;
-				}
-				else if (sex1 == sex2)
-				{
-					match.Sex = true;
-
-					yield return databasePerson;
-				}
-			}
-		}
-
-
-		private static bool IsOrderedSubset(string[] a, string[] b)
-		{
-			if (a.Length > b.Length)
-			{
-				return false;
-			}
-
-			int nbMatches = 0;
-
-			for (int i = 0, j = 0; i < a.Length && j < b.Length; i++)
-			{
-				var matched = false;
-
-				for (; !matched && j < b.Length; j++)
-				{
-					matched = a[i] == b[j];
-				}
-
-				if (matched)
-				{
-					nbMatches++;
-				}
-			}
-
-			return nbMatches == a.Length;
-		}
-
-
-		private static bool IsSubset(string[] a, string[] b)
-		{
-			return !a.Except (b).Any ();
-		}
-
-
-		private static AddressMatch AreAddresseMatches(NormalizedAddress a, NormalizedAddress b)
-		{
-			var sameTown = a.Town == b.Town;
-			var sameZipCode = a.ZipCode == b.ZipCode;
-
-			if (!sameTown && !sameZipCode)
-			{
-				return AddressMatch.None;
-			}
-
-			var sameStreet = a.Street == b.Street;
-
-			if (!sameStreet)
-			{
-				return AddressMatch.ZipCity;
-			}
-
-			var sameHouseNumber = a.HouseNumber == b.HouseNumber;
-
-			if (!sameHouseNumber)
-			{
-				return AddressMatch.StreetZipCity;
-			}
-
-			return AddressMatch.Full;
-		}
-
-
-		private static NormalizedPerson Normalize(EervPerson person)
-		{
-			return new NormalizedPerson ()
-			{
-				Firstnames = EervParishDataImporter.NormalizeComposedName (person.Firstname),
-				Lastnames = EervParishDataImporter.NormalizeComposedName (person.Lastname),
-				DateOfBirth = person.DateOfBirth,
-				Sex = person.Sex,
-				Origins = person.Origins,
-				Address = EervParishDataImporter.Normalize (person.HouseHold.Address),
-			};
-		}
-
-
-		private static NormalizedAddress Normalize(EervAddress address)
-		{
-			return new NormalizedAddress ()
-			{
-				Street = SwissPostStreet.NormalizeStreetName (address.StreetName),
-				HouseNumber = SwissPostStreet.NormalizeHouseNumber ((address.HouseNumber ?? 0).ToString ()),
-				ZipCode = InvariantConverter.ParseInt (address.ZipCode),
-				Town = EervParishDataImporter.NormalizeTown (address.Town),
-			};
-		}
-
-
-		private static NormalizedPerson Normalize(AiderPersonEntity person)
-		{
-			var eChPerson = person.eCH_Person;
-
-			return new NormalizedPerson ()
-			{
-				Firstnames = EervParishDataImporter.NormalizeComposedName (eChPerson.PersonFirstNames),
-				Lastnames = EervParishDataImporter.NormalizeComposedName (eChPerson.PersonOfficialName),
-				DateOfBirth = eChPerson.PersonDateOfBirth,
-				Sex = eChPerson.PersonSex,
-				Origins = eChPerson.Origins,
-				Address = EervParishDataImporter.Normalize (eChPerson.Address1),
-			};
-		}
-
-
-		private static NormalizedAddress Normalize(eCH_AddressEntity address)
-		{
-			return new NormalizedAddress ()
-			{
-				Street = SwissPostStreet.NormalizeStreetName (address.Street),
-				HouseNumber = SwissPostStreet.StripAndNormalizeHouseNumber (address.HouseNumber),
-				ZipCode = address.SwissZipCode,
-				Town = EervParishDataImporter.NormalizeTown (address.Town),
-			};
-		}
-		
-
-		private static string[] NormalizeComposedName(string names)
-		{
-			return EervParishDataImporter.Normalize (names).Replace ('-', ' ').Split (new char[] { ' ' });
-		}
-
-
-		private static string Normalize(string data)
-		{
-			return StringUtils.RemoveDiacritics (data).ToLowerInvariant ();
-		}
-
-
-		private static string NormalizeTown(string data)
-		{
-			var tmp = data.Split (new char[] { ' ', '-', }).Join (" ");
-
-			return EervParishDataImporter.Normalize (tmp);
 		}
 
 
@@ -703,6 +314,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var escapedText = FormattedText.Escape (text);
 			var combinedText = TextFormatter.FormatText (comment.Text, "~\n\n", escapedText);
+
+			// HACK This is a temporary hack to avoid texts with 800 or more chars with are not
+			// allowed in this field. The type of the field should be corrected to allow texts of
+			// unlimited size.
+
+			if (combinedText.Length >= 800)
+			{
+				return;
+			}
 
 			comment.Text = combinedText;
 		}
