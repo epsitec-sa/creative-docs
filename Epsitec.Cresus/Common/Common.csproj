@@ -697,6 +697,7 @@
     <Compile Include="Text\ISerializableAsText.cs" />
     <Compile Include="Text\ITextFrame.cs" />
     <Compile Include="Text\ITextRenderer.cs" />
+    <Compile Include="Text\JaroWinkler.cs" />
     <Compile Include="Text\LanguageEngine.cs" />
     <Compile Include="Text\LayoutList.cs" />
     <Compile Include="Text\Layout\BaseEngine.cs" />

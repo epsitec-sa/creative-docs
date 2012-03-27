@@ -77,6 +77,7 @@
     <Compile Include="Support\UnitTestArrayEqualityComparer.cs" />
     <Compile Include="Support\UnitTestLambdaComparer.cs" />
     <Compile Include="Support\UnitTestStringPacker.cs" />
+    <Compile Include="Text\UnitTestJaroWinkler.cs" />
     <Compile Include="Types\Collections\UnitTestCircularBuffer.cs" />
     <Compile Include="Types\UnitTestINameComparer.cs" />
     <Compile Include="Types\UnitTestIReadOnly.cs" />
