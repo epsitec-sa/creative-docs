@@ -452,12 +452,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//	Met à jour les données de la contrepartie.						   
 				this.SetTypeEcriture (line+2, TypeEcriture.Normal);
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Date));
-				this.dataAccessor.EditionLine[line+2].SetText (multiActiveColumn,           JournalDataAccessor.multi);
-				this.dataAccessor.EditionLine[line+2].SetText (multiInactiveColumn,         (compteCP == null) ? null : compteCP.Numéro);
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Libellé,          this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Libellé));
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[line+0].GetText (ColumnType.Journal));
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.TotalAutomatique, "1");
 				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.IsAutoLibellé,    "1");
+
+				if (compteCP != null)
+				{
+					this.dataAccessor.EditionLine[line+2].SetText (multiActiveColumn,   JournalDataAccessor.multi);
+					this.dataAccessor.EditionLine[line+2].SetText (multiInactiveColumn, compteCP.Numéro);
+				}
 			}
 
 			if (this.PlusieursPièces)
