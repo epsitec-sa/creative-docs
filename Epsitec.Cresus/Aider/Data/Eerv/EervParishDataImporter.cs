@@ -60,8 +60,6 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContext businessContext, EervParishData eervParishData)
 		{
-			var w = System.Diagnostics.Stopwatch.StartNew ();
-			
 			var aiderHouseholds = businessContext.GetAllEntities<AiderHouseholdEntity> ();
 			var aiderPersons = businessContext.GetAllEntities<AiderPersonEntity> ();
 
@@ -70,8 +68,6 @@ namespace Epsitec.Aider.Data.Eerv
 			businessContext.GetAllEntities<eCH_PersonEntity> ();
 			businessContext.GetAllEntities<AiderAddressEntity> ();
 			businessContext.GetAllEntities<AiderTownEntity> ();
-
-			w.Stop ();
 
 			var dataContext = businessContext.DataContext;
 
