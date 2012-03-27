@@ -781,7 +781,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateAfterValidate()
 		{
-			//	Met à jour les décorations des champs (hachures grises aux champs d'une ligne vide).
+			//	Met à jour les décorations des champs (hachures grises aux champs d'une ligne vide et flèches BaseTVA -> CodeTVA).
 			int count = System.Math.Min (this.fieldControllers.Count, this.dataAccessor.EditionLine.Count);
 
 			for (int line = 0; line < count; line++)
@@ -833,6 +833,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return;
 			}
+
+			this.UpdateEditorGeometry ();  // pour montrer/cacher les champs libellé/CodeTVA/TauxTVA
 
 			var type = this.GetTypeEcriture (line);
 
