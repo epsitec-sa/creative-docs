@@ -150,12 +150,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
+#if false
 			//	Colle la ligne à la précédente s'il y a lieu.
 			var type = this.GetTypeEcriture (line);
 			if (type == TypeEcriture.CodeTVA)
 			{
 				editorFrame.Margins = new Margins (0, 0, -1, 2);  // la hauteur totale doit rester identique (1+0 = -1+2) !
 			}
+#endif
 
 			var comptes = this.compta.PlanComptable.Where (x => x.Type != TypeDeCompte.Groupe);
 
@@ -428,21 +430,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//	Met à jour les données de la 1ère ligne (BaseTVA).
 			this.SetTypeEcriture (line+0, TypeEcriture.BaseTVA);
-			this.dataAccessor.EditionLine[line+0].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.OrigineTVA,       (multiActiveColumn == ColumnType.Débit) ? "D" : "C");
-			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.MontantTTC,       Converters.MontantToString (montantTTC));
-			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.Montant,          Converters.MontantToString (montantHT));
+			this.dataAccessor.EditionLine[line+0].SetText (multiInactiveColumn,   JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.OrigineTVA, (multiActiveColumn == ColumnType.Débit) ? "D" : "C");
+			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.MontantTTC, Converters.MontantToString (montantTTC));
+			this.dataAccessor.EditionLine[line+0].SetText (ColumnType.Montant,    Converters.MontantToString (montantHT));
 
 			//	Met à jour les données de la 2ème ligne (CodeTVA).
 			this.SetTypeEcriture (line+1, TypeEcriture.CodeTVA);
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[line].GetText (ColumnType.Date));
-			this.dataAccessor.EditionLine[line+1].SetText (multiActiveColumn,           codeTVA.Compte.Numéro);
-			this.dataAccessor.EditionLine[line+1].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.OrigineTVA,       (multiActiveColumn == ColumnType.Débit) ? "D" : "C");
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CodeTVA,          codeTVA.Code);
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA,          Converters.PercentToString (codeTVA.DefaultTauxValue));
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Montant,          Converters.MontantToString (montantTVA));
-			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Date,       this.dataAccessor.EditionLine[line].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[line+1].SetText (multiActiveColumn,     codeTVA.Compte.Numéro);
+			this.dataAccessor.EditionLine[line+1].SetText (multiInactiveColumn,   JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.OrigineTVA, (multiActiveColumn == ColumnType.Débit) ? "D" : "C");
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.CodeTVA,    codeTVA.Code);
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.TauxTVA,    Converters.PercentToString (codeTVA.DefaultTauxValue));
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Montant,    Converters.MontantToString (montantTVA));
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,    this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
 
 			this.UpdateAfterCompteOrigineTVAChanged (line);
 			this.UpdateAfterCodeTVAChanged (line+1);
@@ -611,8 +613,49 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiMoveLineAction(int direction)
 		{
 			//	Monte ou descend la ligne courante.
-			this.SwapLine (this.selectedLine, this.selectedLine+direction);
-			this.selectedLine += direction;
+			int srcIndex = this.selectedLine;
+			int srcCount = 1;
+
+			if (this.GetTypeEcriture (srcIndex) == TypeEcriture.BaseTVA)
+			{
+				srcCount = 2;
+			}
+			else if (this.GetTypeEcriture (srcIndex) == TypeEcriture.CodeTVA)
+			{
+				srcIndex--;
+				srcCount = 2;
+			}
+
+			var deleted = new List<AbstractEditionLine> ();
+			for (int i = 0; i < srcCount; i++)
+			{
+				deleted.Add (this.dataAccessor.EditionLine[srcIndex]);
+				this.dataAccessor.EditionLine.RemoveAt (srcIndex);
+			}
+
+			int dstIndex = srcIndex + direction;
+
+			if (direction > 0)  // descend ?
+			{
+				if (this.GetTypeEcriture (dstIndex) == TypeEcriture.CodeTVA)
+				{
+					dstIndex++;
+				}
+			}
+			else  // monte ?
+			{
+				if (this.GetTypeEcriture (dstIndex) == TypeEcriture.CodeTVA)
+				{
+					dstIndex--;
+				}
+			}
+
+			for (int i = 0; i < srcCount; i++)
+			{
+				this.dataAccessor.EditionLine.Insert (dstIndex+i, deleted[i]);
+			}
+
+			this.selectedLine = dstIndex;
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
@@ -662,14 +705,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dirty = true;
 			this.UpdateEditorContent ();
-		}
-
-		private void SwapLine(int line1, int line2)
-		{
-			//	Permute deux lignes (pour les opérations monte/descend).
-			var t                                = this.dataAccessor.EditionLine[line2];
-			this.dataAccessor.EditionLine[line2] = this.dataAccessor.EditionLine[line1];
-			this.dataAccessor.EditionLine[line1] = t;
 		}
 
 		public override void InsertModèle(int n)
@@ -1607,8 +1642,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.IsCommandInsertEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.IsCommandInsertTVAEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        enable && count >  1 && this.selectedLine > 0);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      enable && count >  1 && this.selectedLine < count-1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        this.IsCommandUpEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      this.IsCommandDownEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      enable && count != 0 && this.selectedLine != -1);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      this.IsCommandAutoEnable);
 		}
@@ -1702,6 +1737,48 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				return true;
+			}
+		}
+
+		private bool IsCommandUpEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				var sel = this.selectedLine;
+				var type = this.GetTypeEcriture (this.selectedLine);
+
+				if (type == TypeEcriture.CodeTVA)
+				{
+					sel--;  // sur BaseTVA
+				}
+
+				return sel > 0;
+			}
+		}
+
+		private bool IsCommandDownEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				var sel = this.selectedLine;
+				var type = this.GetTypeEcriture (this.selectedLine);
+
+				if (type == TypeEcriture.BaseTVA)
+				{
+					sel++;  // sur CodeTVA
+				}
+
+				return sel < this.linesFrames.Count - 1;
 			}
 		}
 
