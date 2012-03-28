@@ -264,6 +264,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public virtual void LastLineAction()
+		{
+			if (!this.controller.GetCommandEnable (Res.Commands.Edit.LastLine))
+			{
+				return;
+			}
+
+		}
+
 		public virtual void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))

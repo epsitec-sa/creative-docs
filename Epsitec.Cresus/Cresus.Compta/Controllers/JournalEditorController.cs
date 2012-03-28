@@ -260,6 +260,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override void LastLineAction()
+		{
+			int line = this.dataAccessor.EditionLine.Count-1;
+			var columnType = ColumnType.Débit;
+			
+			if (!this.GetWidgetVisibility (columnType, line))
+			{
+				columnType = ColumnType.Crédit;
+			}
+
+			this.EditorSelect (columnType, line);
+		}
+
 		public override void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
@@ -879,6 +892,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.isMulti)
 			{
+				if (columnType == ColumnType.Pièce)
+				{
+					this.MultiPièceChanged (line, columnType);
+				}
+
 				if (columnType == ColumnType.Débit ||
 					columnType == ColumnType.Crédit)
 				{
@@ -955,7 +973,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (!this.PlusieursPièces)
 					{
-						this.SetWidgetVisibility (ColumnType.Pièce, i, totalAutomatique);
+						//?this.SetWidgetVisibility (ColumnType.Pièce, i, totalAutomatique);
 					}
 
 
@@ -995,7 +1013,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Date,    i, true);
 					this.SetWidgetVisibility (ColumnType.Débit,   i, true);
 					this.SetWidgetVisibility (ColumnType.Crédit,  i, true);
-					this.SetWidgetVisibility (ColumnType.Pièce,   i, true);
+					//?this.SetWidgetVisibility (ColumnType.Pièce,   i, true);
 					this.SetWidgetVisibility (ColumnType.Journal, i, true);
 				}
 
@@ -1076,6 +1094,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (line > 0 && line < this.dataAccessor.EditionLine.Count)
 			{
 				(this.dataAccessor.EditionLine[line] as JournalEditionLine).UpdateCodeTVAParameters ();
+			}
+		}
+
+		private void MultiPièceChanged(int line, ColumnType columnType)
+		{
+			if (!this.PlusieursPièces)
+			{
+				var pièce = this.dataAccessor.EditionLine[line].GetText (ColumnType.Pièce);
+
+				for (int i = 0; i < this.dataAccessor.EditionLine.Count; i++)
+				{
+					this.dataAccessor.EditionLine[i].SetText (ColumnType.Pièce, pièce);
+				}
 			}
 		}
 
@@ -1326,10 +1357,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
+#if false
 						if (!this.PlusieursPièces)
 						{
 							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 						}
+#endif
 
 						decimal montant = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant)).GetValueOrDefault ();
 
@@ -1639,6 +1672,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			bool enable = this.dataAccessor.IsActive;
 			int count = this.linesFrames.Count;
 
+			this.controller.SetCommandEnable (Res.Commands.Edit.LastLine,   this.isMulti);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.IsCommandInsertEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.IsCommandInsertTVAEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);

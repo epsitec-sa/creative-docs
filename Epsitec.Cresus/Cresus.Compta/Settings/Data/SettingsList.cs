@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureAutoPièces,       true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcriturePlusieursPièces,  false));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureForcePièces,      false));
-			this.Add (new IntSettingData     (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 5, 3, 10));
+			this.Add (new IntSettingData     (SettingsGroup.Ecriture, SettingsType.EcritureMultiEditionLineCount, 10, 3, 20));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureTVA,              true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeMontantHT,   true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureEditeCompteTVA,   true));

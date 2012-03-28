@@ -1289,6 +1289,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		[Command (Res.CommandIds.Edit.LastLine)]
+		private void CommandEditLastLine()
+		{
+			if (this.controller != null)
+			{
+				this.controller.LastLineAction ();
+			}
+		}
+
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{

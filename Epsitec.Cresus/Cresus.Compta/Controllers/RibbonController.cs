@@ -134,6 +134,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var section = this.CreateSection (this.container, DockStyle.Left, "Edition");
 
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Create, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
+				UIBuilder.CreateButton (section, Res.Commands.Edit.LastLine, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Accept, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				UIBuilder.CreateButton (section, Res.Commands.Edit.Cancel, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 				//?section.Children.Add (this.CreateGap ();
