@@ -73,7 +73,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Chiffre,
 		MontantFictif,
 		Compte,
-		IsMulti,
 		IsAutoLibellé,
 		MontantEdité,
 	}

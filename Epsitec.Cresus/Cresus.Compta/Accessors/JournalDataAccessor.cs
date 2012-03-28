@@ -354,7 +354,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var data = new JournalEditionLine (this.controller);
 					var écriture = this.journal[this.firstEditedRow+i];
 					data.EntityToData (écriture);
-					data.SetText (ColumnType.IsMulti, isMulti ? "1" : "0");
 
 					this.editionLine.Add (data);
 				}
@@ -385,7 +384,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			var data = new JournalEditionLine (this.controller);
 			data.EntityToData (écriture);
-			data.SetText (ColumnType.IsMulti, "1");
+
+			if (this.controller.SettingsList.GetBool (SettingsType.EcriturePlusieursPièces))
+			{
+				data.SetText (ColumnType.Pièce, this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal, this.editionLine.Count-1));
+			}
+			else
+			{
+				foreach (var line in this.editionLine)
+				{
+					if (line.GetData (ColumnType.TotalAutomatique).Text == "1")
+					{
+						data.SetText (ColumnType.Pièce, line.GetData (ColumnType.Pièce).Text);
+					}
+				}
+			}
 
 			int i = this.editionLine.Count-1;
 			this.editionLine.Insert (i, data);  // insère à l'avant-dernière position

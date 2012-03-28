@@ -129,6 +129,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			UIBuilder.CreateInfoCompte (this.débitInfoFrame);
 			UIBuilder.CreateInfoCompte (this.créditInfoFrame);
 
+			this.CreateCommandsUI (this.infoFrameBox);
+
 			base.CreateUI (this.footer, updateArrayContentAction);
 		}
 
@@ -253,6 +255,39 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateLineUI (this.linesContainer);
 			}
 		}
+
+		private void CreateCommandsUI(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent              = parent,
+				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				Dock                = DockStyle.Left,
+				Margins             = new Margins (20, 0, 0, 0),
+			};
+
+			double buttonWidth = 40;
+			double iconWidth   = 32;
+
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.LastLine,  buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Insert,    buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertTVA, buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Delete,    buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Swap,      buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Auto,      buttonWidth, iconWidth);
+
+			var upDown = new FrameBox
+			{
+				Parent              = frame,
+				PreferredWidth      = 20,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock                = DockStyle.StackBegin,
+			};
+
+			UIBuilder.CreateButton (upDown, Res.Commands.Multi.Up,   buttonWidth/2, buttonWidth/2);
+			UIBuilder.CreateButton (upDown, Res.Commands.Multi.Down, buttonWidth/2, buttonWidth/2);
+		}
+
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
@@ -515,14 +550,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.selectedLine++;
 			this.dataAccessor.InsertEditionLine (this.selectedLine);
 
-			this.dataAccessor.EditionLine[this.selectedLine].SetText (multiInactiveColumn, JournalDataAccessor.multi);
-			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Nouveau);
+			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
 
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
 
 				if (this.PlusieursPièces)
 				{
@@ -718,6 +753,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dirty = true;
+			this.CreateEmptyLine ();
 			this.UpdateEditorContent ();
 		}
 
@@ -1679,7 +1715,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        this.IsCommandUpEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      this.IsCommandDownEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      enable && count != 0 && this.selectedLine != -1);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      this.IsCommandSwapEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      this.IsCommandAutoEnable);
 		}
 
@@ -1753,18 +1789,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				var type = this.GetTypeEcriture (this.selectedLine);
 
-				if (type == TypeEcriture.Vide   ||
-					type == TypeEcriture.CodeTVA)
+				if (type == TypeEcriture.CodeTVA)
 				{
 					return true;
 				}
 
+				if (type == TypeEcriture.Vide && this.dataAccessor.CountEmptyRow <= 1)
+				{
+					return false;
+				}
+
+#if false
 				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
 					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
 					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
 				{
 					return false;
 				}
+#endif
 
 				if (this.selectedLine == this.IndexTotalAutomatique)
 				{
@@ -1805,8 +1847,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				var sel = this.selectedLine;
 				var type = this.GetTypeEcriture (this.selectedLine);
+				var sel = this.selectedLine;
 
 				if (type == TypeEcriture.BaseTVA)
 				{
@@ -1814,6 +1856,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 
 				return sel < this.linesFrames.Count - 1;
+			}
+		}
+
+		private bool IsCommandSwapEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				if (this.selectedLine == -1)
+				{
+					return false;
+				}
+
+				var débit  = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Débit);
+				var crédit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit);
+
+				return débit != crédit;
 			}
 		}
 
@@ -1826,22 +1889,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
+				if (!this.isMulti || this.selectedLine == this.IndexTotalAutomatique)
 				{
 					return false;
 				}
 
-				if (this.GetTypeEcriture (this.selectedLine) != TypeEcriture.Normal)
-				{
-					return false;
-				}
+				var type = this.GetTypeEcriture (this.selectedLine);
 
-				if (this.selectedLine == this.IndexTotalAutomatique)
-				{
-					return false;
-				}
-
-				return true;
+				return type == TypeEcriture.Normal  ||
+					   type == TypeEcriture.Nouveau ||
+					   type == TypeEcriture.Vide;
 			}
 		}
 

@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var section = this.CreateSection (this.container, DockStyle.Left, "Comptabilité");
 
 				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Open, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.PlanComptable, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Balance, RibbonController.ButtonLargeWidth, RibbonController.IconSmallWidth, isActivable: true);
@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//	Ces 2 commandes doivent être l'une sous l'autre.
 				{
 					Widget topSection2, bottomSection2;
-					this.CreateSubsections (section, out topSection2, out bottomSection2);
+					RibbonController.CreateSubsections (section, out topSection2, out bottomSection2);
 
 					this.présentationsLastButton = UIBuilder.CreateButton (topSection2, Res.Commands.Présentation.Réglages, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 					this.présentationsMenuButton = UIBuilder.CreateButton (bottomSection2, Res.Commands.Présentation.Menu, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Widget topSection, bottomSection;
 				var section = this.CreateSection (this.container, DockStyle.Left, "Repère");
 
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Select.Up, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Select.Down, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				//?section.Children.Add (this.CreateGap ();
 
 				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Edit.Duplicate, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (topSection, Res.Commands.Edit.Delete, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
@@ -150,13 +150,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Edit.Down, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 			}
 
+#if false
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Ecriture");
 
 				UIBuilder.CreateButton (section, Res.Commands.Multi.LastLine, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth);
 
 				Widget topSection, bottomSection;
-				this.CreateSubsections (section, out topSection, out bottomSection);
+				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
 
 				UIBuilder.CreateButton (topSection, Res.Commands.Multi.Insert, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (topSection, Res.Commands.Multi.InsertTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
@@ -167,6 +168,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Down, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Multi.Auto, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth);
 			}
+#endif
 
 			//	<--|
 			{
@@ -448,7 +450,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return iconFrame;
 		}
 
-		private void CreateSubsections(Widget section, out Widget topSection, out Widget bottomSection)
+		private static void CreateSubsections(Widget section, out Widget topSection, out Widget bottomSection)
 		{
 			//	Crée deux sous-sections dans le faux ruban.
 			var frame = new FrameBox
@@ -563,7 +565,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private const int IconSmallWidth		= 20;
 		private const int IconLargeWidth		= 32;
 
-		private readonly ComptaApplication				app;
+		private readonly ComptaApplication			app;
 		private readonly List<FrameBox>				sectionGroupFrames;
 		private readonly List<FrameBox>				sectionIconFrames;
 		private readonly List<StaticText>			sectionTitleFrames;
