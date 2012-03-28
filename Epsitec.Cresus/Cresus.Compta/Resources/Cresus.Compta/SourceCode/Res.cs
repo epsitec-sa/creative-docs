@@ -46,8 +46,6 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Down = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 103));
 				//	designer:cap/OVKP1
 				public static readonly global::Epsitec.Common.Widgets.Command Duplicate = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 57));
-				//	designer:cap/OVKL7
-				public static readonly global::Epsitec.Common.Widgets.Command LastLine = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 245));
 				//	designer:cap/OVKU4
 				public static readonly global::Epsitec.Common.Widgets.Command Redo = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 158));
 				//	designer:cap/OVKT4
@@ -132,6 +130,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Insert = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 59));
 				//	designer:cap/OVKI7
 				public static readonly global::Epsitec.Common.Widgets.Command InsertTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 242));
+				//	designer:cap/OVKL7
+				public static readonly global::Epsitec.Common.Widgets.Command LastLine = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 245));
 				//	designer:cap/OVKV1
 				public static readonly global::Epsitec.Common.Widgets.Command Swap = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
 				//	designer:cap/OVKT1
@@ -315,8 +315,6 @@ namespace Epsitec.Cresus.Compta
 				public const long Down = 0x3F800014000067L;
 				//	designer:cap/OVKP1
 				public const long Duplicate = 0x3F800014000039L;
-				//	designer:cap/OVKL7
-				public const long LastLine = 0x3F8000140000F5L;
 				//	designer:cap/OVKU4
 				public const long Redo = 0x3F80001400009EL;
 				//	designer:cap/OVKT4
@@ -401,6 +399,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Insert = 0x3F80001400003BL;
 				//	designer:cap/OVKI7
 				public const long InsertTVA = 0x3F8000140000F2L;
+				//	designer:cap/OVKL7
+				public const long LastLine = 0x3F8000140000F5L;
 				//	designer:cap/OVKV1
 				public const long Swap = 0x3F80001400003FL;
 				//	designer:cap/OVKT1
