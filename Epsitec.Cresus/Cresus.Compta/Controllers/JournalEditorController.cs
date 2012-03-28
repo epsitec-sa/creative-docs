@@ -260,19 +260,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override void LastLineAction()
-		{
-			int line = this.dataAccessor.EditionLine.Count-1;
-			var columnType = ColumnType.Débit;
-			
-			if (!this.GetWidgetVisibility (columnType, line))
-			{
-				columnType = ColumnType.Crédit;
-			}
-
-			this.EditorSelect (columnType, line);
-		}
-
 		public override void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
@@ -502,6 +489,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			return total;
+		}
+
+
+		public override void MultiLastLineAction()
+		{
+			int line = this.dataAccessor.EditionLine.Count-1;
+			var columnType = ColumnType.Débit;
+
+			if (!this.GetWidgetVisibility (columnType, line))
+			{
+				columnType = ColumnType.Crédit;
+			}
+
+			this.EditorSelect (columnType, line);
 		}
 
 		public override void MultiInsertLineAction()
@@ -1672,7 +1673,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			bool enable = this.dataAccessor.IsActive;
 			int count = this.linesFrames.Count;
 
-			this.controller.SetCommandEnable (Res.Commands.Edit.LastLine,   this.isMulti);
+			this.controller.SetCommandEnable (Res.Commands.Multi.LastLine,  this.isMulti);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.IsCommandInsertEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.IsCommandInsertTVAEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);

@@ -1289,15 +1289,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		[Command (Res.CommandIds.Edit.LastLine)]
-		private void CommandEditLastLine()
-		{
-			if (this.controller != null)
-			{
-				this.controller.LastLineAction ();
-			}
-		}
-
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{
@@ -1359,6 +1350,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.controller != null && this.controller.EditorController != null)
 			{
 				this.controller.EditorController.DeleteAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.LastLine)]
+		private void CommandMultiLastLine()
+		{
+			if (this.controller != null)
+			{
+				this.controller.EditorController.MultiLastLineAction ();
 			}
 		}
 

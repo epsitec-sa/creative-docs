@@ -264,15 +264,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual void LastLineAction()
-		{
-			if (!this.controller.GetCommandEnable (Res.Commands.Edit.LastLine))
-			{
-				return;
-			}
-
-		}
-
 		public virtual void AcceptAction()
 		{
 			if (!this.controller.GetCommandEnable (Res.Commands.Edit.Accept))
@@ -406,6 +397,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.arrayController.SelectedRow = firstRow;
 			this.arrayController.SetHilitedRows (firstRow, countRow);
 			this.arrayController.ShowRow (firstRow, countRow);
+		}
+
+		public virtual void MultiLastLineAction()
+		{
 		}
 
 		public virtual void MultiInsertLineAction()

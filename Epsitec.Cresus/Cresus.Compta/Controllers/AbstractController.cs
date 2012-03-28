@@ -143,7 +143,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Select.Home, false);
 
 			this.SetCommandEnable (Res.Commands.Edit.Create, false);
-			this.SetCommandEnable (Res.Commands.Edit.LastLine, false);
 			this.SetCommandEnable (Res.Commands.Edit.Accept, false);
 			this.SetCommandEnable (Res.Commands.Edit.Cancel, false);
 			this.SetCommandEnable (Res.Commands.Edit.Up, false);
@@ -151,6 +150,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Edit.Duplicate, false);
 			this.SetCommandEnable (Res.Commands.Edit.Delete, false);
 
+			this.SetCommandEnable (Res.Commands.Multi.LastLine, false);
 			this.SetCommandEnable (Res.Commands.Multi.Insert, false);
 			this.SetCommandEnable (Res.Commands.Multi.InsertTVA, false);
 			this.SetCommandEnable (Res.Commands.Multi.Delete, false);
@@ -431,14 +431,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.editorController != null)
 			{
 				this.editorController.CreateAction ();
-			}
-		}
-
-		public virtual void LastLineAction()
-		{
-			if (this.editorController != null)
-			{
-				this.editorController.LastLineAction ();
 			}
 		}
 
