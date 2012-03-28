@@ -94,12 +94,13 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\ItemListColumnHeaderView.ViewEventProcessor.cs" />
     <Compile Include="BigList\ItemListColumn.cs" />
     <Compile Include="BigList\IItemMarkRenderer.cs" />
     <Compile Include="BigList\ItemHeight.cs" />
     <Compile Include="BigList\ItemListColumnCollection.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
-    <Compile Include="BigList\ItemListHeaderView.cs" />
+    <Compile Include="BigList\ItemListColumnHeaderView.cs" />
     <Compile Include="BigList\ItemListMark.cs" />
     <Compile Include="BigList\ItemListMarkAttachment.cs" />
     <Compile Include="BigList\ItemListMarkOffset.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="BigList\Processors\IEventProcessorHost.cs" />
     <Compile Include="BigList\Processors\IScrollingProcessor.cs" />
     <Compile Include="BigList\Processors\ISelectionProcessor.cs" />
-    <Compile Include="BigList\ItemListVerticalContentView.EventProcessor.cs" />
+    <Compile Include="BigList\ItemListVerticalContentView.ViewEventProcessor.cs" />
     <Compile Include="BigList\IItemDataRenderer.cs" />
     <Compile Include="BigList\ItemData.cs" />
     <Compile Include="BigList\ItemData`1.cs" />

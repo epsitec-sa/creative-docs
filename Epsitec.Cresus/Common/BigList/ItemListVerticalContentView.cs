@@ -27,8 +27,8 @@ namespace Epsitec.Common.BigList
 			
 			this.InternalState  |= WidgetInternalState.Focusable;
 
-			this.processor = new ItemListVerticalContentView.EventProcessor (this);
 			this.policies  = new List<EventProcessorPolicy> ();
+			this.processor = new ViewEventProcessor (this);
 		}
 
 
@@ -471,7 +471,7 @@ namespace Epsitec.Common.BigList
 		public static DependencyProperty		ActiveIndexProperty = DependencyProperty<ItemListVerticalContentView>.RegisterReadOnly<int> (x => x.ActiveIndex, x => x.ActiveIndex);
 
 		private readonly List<EventProcessorPolicy>	policies;
-		private readonly ItemListVerticalContentView.EventProcessor processor;
+		private readonly ViewEventProcessor		processor;
 		
 		private ItemList						list;
 	}

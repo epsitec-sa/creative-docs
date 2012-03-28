@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets.Layouts;
 
@@ -15,14 +16,20 @@ namespace Epsitec.Common.BigList
 		{
 		}
 
-		public void Reset()
+
+		public ItemListColumn GetColumn(int index)
 		{
-			this.Sort ((x, y) => y.Index - x.Index);
+			return this.FirstOrDefault (x => x.Index == index);
+		}
+
+		public ItemListColumn DetectColumn(Point pos)
+		{
+			return this.FirstOrDefault (x => x.Contains (pos));
 		}
 
 		public double Layout(double availableSpace)
 		{
-			return ColumnLayoutList.Fit (this.Select (x => x.Layout), availableSpace);
+			return ColumnLayoutList.Fit (this.OrderBy (x => x.Index).Select (x => x.Layout), availableSpace);
 		}
 	}
 }

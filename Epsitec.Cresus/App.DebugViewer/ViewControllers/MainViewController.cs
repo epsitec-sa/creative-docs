@@ -131,6 +131,46 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Dock = DockStyle.Fill,
 			};
 
+			var header = new ItemListColumnHeaderView ()
+			{
+				Parent = left,
+				Dock = DockStyle.Top,
+				PreferredHeight = 24,
+				BackColor = Color.FromBrightness (1.0),
+			};
+
+			var col1 = new ItemListColumn ();
+			var col2 = new ItemListColumn ();
+			var col3 = new ItemListColumn ();
+
+			col1.Title = "Id";
+			col1.Index = 2;
+			col1.CanSort = true;
+			col1.Layout.Definition.LeftBorder = 1;
+			col1.Layout.Definition.RightBorder = 0;
+			col1.Layout.Definition.MinWidth = 20;
+			col1.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (32, Common.Widgets.Layouts.GridUnitType.Absolute);
+
+			col2.Title = "Timestamp";
+			col2.Index = 1;
+			col2.CanSort = true;
+			col2.Layout.Definition.LeftBorder = 1;
+			col2.Layout.Definition.RightBorder = 0;
+			col2.Layout.Definition.MinWidth = 40;
+			col2.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (80, Common.Widgets.Layouts.GridUnitType.Absolute);
+
+			col3.Title = "Message";
+			col3.Index = 3;
+			col3.CanSort = true;
+			col3.Layout.Definition.LeftBorder = 1;
+			col3.Layout.Definition.RightBorder = 0;
+			col3.Layout.Definition.MinWidth = 40;
+			col3.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (100, Common.Widgets.Layouts.GridUnitType.Proportional);
+
+			header.Columns.Add (col1);
+			header.Columns.Add (col2);
+			header.Columns.Add (col3);
+
 			this.historyList = new ItemListVerticalContentView ()
 			{
 				Parent = left,
