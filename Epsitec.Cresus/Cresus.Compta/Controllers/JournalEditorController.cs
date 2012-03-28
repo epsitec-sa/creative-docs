@@ -1868,7 +1868,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				if (this.selectedLine == -1)
+				if (this.selectedLine < 0 || this.selectedLine >= this.dataAccessor.EditionLine.Count)
 				{
 					return false;
 				}
