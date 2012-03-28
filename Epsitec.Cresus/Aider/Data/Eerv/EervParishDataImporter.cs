@@ -75,13 +75,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 			return matches.ToDictionary
 			(
-				kvp => kvp.Key,
-				kvp => kvp.Value.Select (m => Tuple.Create (dataContext.GetNormalizedEntityKey (m.Item1).Value, m.Item2)).ToList ()
+				t => t.Item1,
+				t => t.Item2.Select (m => Tuple.Create (dataContext.GetNormalizedEntityKey (m.Item1).Value, m.Item2)).ToList ()
 			);
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>> FindMatches(EervParishData eervParishData, IEnumerable<AiderHouseholdEntity> aiderHouseholds, IEnumerable<AiderPersonEntity> aiderPersons)
+		private static IEnumerable<Tuple<EervPerson, List<Tuple<AiderPersonEntity, MatchData>>>> FindMatches(EervParishData eervParishData, IEnumerable<AiderHouseholdEntity> aiderHouseholds, IEnumerable<AiderPersonEntity> aiderPersons)
 		{
 			var normalizedAiderData = Normalizer.Normalize (aiderHouseholds, aiderPersons);
 			var normalizedAiderPersons = normalizedAiderData.Item2;
@@ -91,11 +91,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
 
-			return matches.ToDictionary
-			(
-				kvp => normalizedEervPersons[kvp.Key],
-				kvp => kvp.Value.Select (m => Tuple.Create (normalizedAiderPersons[m], new MatchData ())).ToList ()
-			);
+			foreach (var match in matches)
+			{
+				var eervPerson = normalizedEervPersons[match.Item1];		
+				var aiderPersonMatches = match
+					.Item2
+					.Select(t => Tuple.Create(normalizedAiderPersons[t.Item1], t.Item2))
+					.ToList();
+
+				yield return Tuple.Create (eervPerson, aiderPersonMatches);
+			}
 		}
 
 
@@ -359,10 +364,10 @@ namespace Epsitec.Aider.Data.Eerv
 				text = "Cette Personne correspond à la personne N° " + eervPerson.Id + " du fichier de la paroisse de " + parishName + ".";
 
 				text += "\nLa correspondance a été faite sur les critères suivants : ";
-				text += "\n - Nom de famille : " + EervParishDataImporter.GetTextForNameMatch (match.Lastname);
-				text += "\n - Prénom : " + EervParishDataImporter.GetTextForNameMatch (match.Firstname);
+				text += "\n - Nom de famille : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Lastname);
+				text += "\n - Prénom : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.Firstname);
+				text += "\n - Date de naissance : " + EervParishDataImporter.GetTextForJaroWinklerMatch (match.DateOfBirth);
 				text += "\n - Sexe : " + EervParishDataImporter.GetTextForSexMatch (match.Sex);
-				text += "\n - Date de naissance : " + EervParishDataImporter.GetTextForDateOfBirthMatch (match.DateOfBirth);
 				text += "\n - Adresse : " + EervParishDataImporter.GetTextForAddressMatch (match.Address);
 			}
 			else
@@ -379,35 +384,16 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (match)
 			{
 				case AddressMatch.Full:
-					return "la rue, le numéro dans la rue, le numéro postal et la localité correspondent";
+					return "rue, numéro, numéro postal et localité identiques";
 
 				case AddressMatch.None:
-					return "l'adresse ne correspond pas";
+					return "pas de correspondance";
 
 				case AddressMatch.StreetZipCity:
-					return "la rue, le numéro postal et la localité correspondent";
+					return "rue, numéro postal et localité identiques";
 
 				case AddressMatch.ZipCity:
-					return "le numéro postal et la localité correspondent";
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static string GetTextForNameMatch(NameMatch match)
-		{
-			switch (match)
-			{
-				case NameMatch.Full:
-					return "le nom correspond";
-
-				case NameMatch.OrderedPartial:
-					return "une partie du nom manque (nom composé)";
-
-				case NameMatch.Partial:
-					return "une partie du nom manque ou est dans le désordre (nom composé)";
+					return "numéro postal et localité identiques";
 
 				default:
 					throw new NotImplementedException ();
@@ -420,13 +406,13 @@ namespace Epsitec.Aider.Data.Eerv
 			switch (match)
 			{
 				case true:
-					return "le sexe correspond";
+					return "identique";
 
 				case false:
-					return "le sexe ne correspond pas";
+					return "différent";
 
 				case null:
-					return "la correspondance n'a pas pu être établie (sexe manquant)";
+					return "indéterminé";
 
 				default:
 					throw new NotImplementedException ();
@@ -434,21 +420,18 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static string GetTextForDateOfBirthMatch(bool? match)
+		private static string GetTextForJaroWinklerMatch(double? match)
 		{
-			switch (match)
+			if (match.HasValue)
 			{
-				case true:
-					return "la date de naissance correspond";
+				var maxValue = 10;
+				var grade = match.Value * maxValue;
 
-				case false:
-					return "la date de naissance ne correspond pas";
-
-				case null:
-					return "la correspondance n'a pas pu être établie (date manquante)";
-
-				default:
-					throw new NotImplementedException ();
+				return string.Format ("{0:0.#}/{1}", grade, maxValue);
+			}
+			else
+			{
+				return "indéterminé";
 			}
 		}
 

@@ -83,7 +83,6 @@
     <Compile Include="Data\ECh\EChAddressFixesRepository.cs" />
     <Compile Include="Data\Eerv\EervParishDataImporter.cs" />
     <Compile Include="Data\Eerv\MatchData.cs" />
-    <Compile Include="Data\Eerv\NameMatch.cs" />
     <Compile Include="Data\Eerv\NormalizedAddress.cs" />
     <Compile Include="Data\Eerv\NormalizedPerson.cs" />
     <Compile Include="Data\ParishAddresses.cs" />

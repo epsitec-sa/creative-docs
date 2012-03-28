@@ -6,35 +6,27 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public NameMatch Lastname
+		public double Lastname
 		{
 			get;
 			set;
 		}
 
 
-		public NameMatch Firstname
+		public double Firstname
 		{
 			get;
 			set;
 		}
 
 
-		/// <summary>
-		/// True means that the date of birth is the same. False means that they are different. Null
-		/// means that at least one of them is undefined.
-		/// </summary>
-		public bool? DateOfBirth
+		public double? DateOfBirth
 		{
 			get;
 			set;
 		}
 
 
-		/// <summary>
-		/// True means that the sex is the same. False means that they are different. Null means
-		/// that at least one of them is undefined.
-		/// </summary>
 		public bool? Sex
 		{
 			get;

@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Aider.Enumerations;
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Text;
 
@@ -94,7 +96,7 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static Dictionary<NormalizedPerson, List<NormalizedPerson>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons)
+		public static IEnumerable<Tuple<NormalizedPerson, List<Tuple<NormalizedPerson, MatchData>>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons)
 		{
 			var todo = new HashSet<NormalizedPerson> (eervPersons);
 			var done = new Dictionary<NormalizedPerson, List<NormalizedPerson>> ();
@@ -106,7 +108,51 @@ namespace Epsitec.Aider.Data.Eerv
 
 			EervParishDataMatcher.Warn (done);
 
-			return done;
+			return EervParishDataMatcher.GetResultsWithMatchData(done);
+		}
+
+
+		private static IEnumerable<Tuple<NormalizedPerson, List<Tuple<NormalizedPerson, MatchData>>>> GetResultsWithMatchData(Dictionary<NormalizedPerson, List<NormalizedPerson>> matches)
+		{
+			return from match in matches
+				   let eervPerson = match.Key
+				   let aiderPersons = match.Value
+				   let aiderPersonsWithMatchData = EervParishDataMatcher.GetResultsWithMatchData (eervPerson, aiderPersons)
+				   select Tuple.Create (eervPerson, aiderPersonsWithMatchData.ToList ());
+		}
+
+
+		private static IEnumerable<Tuple<NormalizedPerson, MatchData>> GetResultsWithMatchData(NormalizedPerson eervPerson, List<NormalizedPerson> aiderPersons)
+		{
+			return from aiderPerson in aiderPersons
+				   let matchData = EervParishDataMatcher.GetMatchData (eervPerson, aiderPerson)
+				   select Tuple.Create (aiderPerson, matchData);
+		}
+  
+
+		private static MatchData GetMatchData(NormalizedPerson p, NormalizedPerson p2)
+		{
+			var firstname = JaroWinkler.ComputeJaroWinklerDistance(p.Firstname, p2.Firstname);
+			var lastname = JaroWinkler.ComputeJaroWinklerDistance(p.Lastname, p2.Lastname);
+			
+			var dateOfBirth = p.DateOfBirth == null
+				? (double?) null
+				: EervParishDataMatcher.GetDateSimilarity(p.DateOfBirth, p2.DateOfBirth);
+
+			var sex = p.Sex == PersonSex.Unknown
+				? (bool?) null
+				: EervParishDataMatcher.IsSexMatch(p.Sex, p2.Sex);
+
+			var address = EervParishDataMatcher.GetAddressSimilarity(p.Addresses, p2.Addresses);
+
+			return new MatchData()
+			{
+				Firstname = firstname,
+				Lastname = lastname,
+				DateOfBirth = dateOfBirth,
+				Sex = sex,
+				Address = address,
+			};
 		}
 
 
@@ -544,7 +590,13 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static bool IsSexMatch(NormalizedPerson eervPerson, NormalizedPerson aiderPerson, bool fsx)
 		{
-			return !fsx || eervPerson.Sex == aiderPerson.Sex;
+			return !fsx || EervParishDataMatcher.IsSexMatch (eervPerson.Sex, aiderPerson.Sex);
+		}
+
+
+		private static bool IsSexMatch(PersonSex s1, PersonSex s2)
+		{
+			return s1 == s2;
 		}
 
 
@@ -589,51 +641,68 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				foreach (var aiderAddress in aiderPerson.Addresses)
 				{
-					var addressMatch = EervParishDataMatcher.GetAddressSimilarity (eervAddress, aiderAddress);
+					var similarity = EervParishDataMatcher.GetAddressSimilarity (eervAddress, aiderAddress);
 
-					switch (match)
+					if (EervParishDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, match))
 					{
-						case AddressMatch.None:
-							return true;
-
-						case AddressMatch.ZipCity:
-
-							if (addressMatch == AddressMatch.ZipCity)
-							{
-								return true;
-							}
-							else
-							{
-								goto case AddressMatch.StreetZipCity;
-							}
-
-						case AddressMatch.StreetZipCity:
-
-							if (addressMatch == AddressMatch.StreetZipCity)
-							{
-								return true;
-							}
-							else
-							{
-								goto case AddressMatch.Full;
-							}
-
-						case AddressMatch.Full:
-
-							if (addressMatch == AddressMatch.Full)
-							{
-								return true;
-							}
-
-							break;
-
-						default:
-							throw new NotImplementedException ();
+						return true;
 					}
 				}
 			}
 
 			return false;
+		}
+
+
+		private static AddressMatch GetAddressSimilarity(IEnumerable<NormalizedAddress> addresses1, IEnumerable<NormalizedAddress> addresses2)
+		{
+			var result = AddressMatch.None;
+
+			foreach (var address1 in addresses1)
+			{
+				foreach (var address2 in addresses2)
+				{
+					var similarity = EervParishDataMatcher.GetAddressSimilarity (address1, address2);
+
+					if (EervParishDataMatcher.IsAddressMatchBetterThanOrEqualTo (similarity, result))
+					{
+						result = similarity;
+					}
+				}
+			}
+
+			return result;
+		}
+
+
+		private static bool IsAddressMatchBetterThanOrEqualTo(AddressMatch a, AddressMatch b)
+		{
+			switch (a)
+			{
+				case AddressMatch.Full:
+					
+					return true;
+					
+
+				case AddressMatch.StreetZipCity:
+
+					return b == AddressMatch.StreetZipCity
+						|| b == AddressMatch.ZipCity
+						|| b == AddressMatch.None;
+
+				case AddressMatch.ZipCity:
+
+					return b == AddressMatch.ZipCity
+						|| b == AddressMatch.None;
+				
+				
+				case AddressMatch.None:
+
+					return b == AddressMatch.None;
+
+				default:
+					throw new NotImplementedException ();
+			}
 		}
 
 
