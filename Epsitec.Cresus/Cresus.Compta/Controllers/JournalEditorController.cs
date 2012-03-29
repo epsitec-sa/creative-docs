@@ -531,11 +531,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiLastLineAction()
 		{
 			int line = this.dataAccessor.EditionLine.Count-1;
-			var columnType = ColumnType.Débit;
+			var columnType = ColumnType.None;
 
-			if (!this.GetWidgetVisibility (columnType, line))
+			if (!this.GetWidgetVisibility (ColumnType.Débit, line))
 			{
 				columnType = ColumnType.Crédit;
+			}
+			else if (!this.GetWidgetVisibility (ColumnType.Crédit, line))
+			{
+				columnType = ColumnType.Débit;
+			}
+
+			if (columnType == ColumnType.None)
+			{
+				if (!this.GetWidgetVisibility (ColumnType.Débit, 0))
+				{
+					columnType = ColumnType.Débit;
+				}
+				else
+				{
+					columnType = ColumnType.Crédit;
+				}
 			}
 
 			this.EditorSelect (columnType, line);
