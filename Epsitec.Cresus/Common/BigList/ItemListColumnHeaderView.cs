@@ -58,6 +58,11 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		public void SelectSortColumn(ItemListColumn column)
+		{
+			this.Columns.SpecifySort (column, column.GetActiveSortOrder (toggle: column.SortIndex == 0));
+		}
+
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (this.processor.ProcessMessage (message, pos))
@@ -90,14 +95,19 @@ namespace Epsitec.Common.BigList
 				graphics.Color = Color.FromBrightness (0);
 				graphics.PaintText (ox, 0, dx, height, column.Title.ToSimpleText (), Font.DefaultFont, Font.DefaultFontSize, ContentAlignment.MiddleCenter);
 
-				switch (column.SortOrder)
+				if (column.CanSort)
 				{
-					case ItemSortOrder.Ascending:
-						this.PaintGlyph (graphics, new Rectangle (ox, 0, dx, height), GlyphShape.TriangleDown);
-						break;
-					case ItemSortOrder.Descending:
-						this.PaintGlyph (graphics, new Rectangle (ox, 0, dx, height), GlyphShape.TriangleUp);
-						break;
+					graphics.Color = Color.FromBrightness (System.Math.Min (0.80, 0.20 * column.SortIndex));
+
+					switch (column.SortOrder)
+					{
+						case ItemSortOrder.Ascending:
+							this.PaintGlyph (graphics, new Rectangle (ox, 0, dx, height), GlyphShape.TriangleDown);
+							break;
+						case ItemSortOrder.Descending:
+							this.PaintGlyph (graphics, new Rectangle (ox, 0, dx, height), GlyphShape.TriangleUp);
+							break;
+					}
 				}
 			}
 		}
@@ -107,13 +117,22 @@ namespace Epsitec.Common.BigList
 			var cx = rectangle.Center.X;
 			var cy = rectangle.Top;
 			var dx = 8;
+
+			if (glyphShape == GlyphShape.TriangleDown)
+			{
+				cy = rectangle.Bottom;
+			}
+			else
+			{
+				cy = cy - dx;
+			}
 			
-			var adorner = Widgets.Adorners.Factory.Active;
-			var bounds  = new Rectangle (cx-8/2, cy-dx, dx, dx);
+			var bounds = new Rectangle (cx-8/2, cy, dx, dx);
 
-
-			adorner.PaintGlyph (graphics, bounds, this.PaintState, glyphShape, PaintTextStyle.Button);
-
+			using (var path = Epsitec.Common.Widgets.Adorners.Default.GetGlyphPath (bounds, this.PaintState, glyphShape))
+			{
+				graphics.PaintSurface (path);
+			}
 		}
 
 		protected override void UpdateClientGeometry()

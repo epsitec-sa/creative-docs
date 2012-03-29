@@ -1,3 +1,4 @@
+using Epsitec.Common.Drawing;
 namespace Epsitec.Common.Widgets.Adorners
 {
 	/// <summary>
@@ -100,202 +101,218 @@ namespace Epsitec.Common.Widgets.Adorners
 				return;
 			}
 
-			if ( rect.Width > rect.Height )
+			Path path = Default.GetGlyphPath (rect, state, type);
+
+			graphics.Rasterizer.AddSurface (path);
+			path.Dispose();
+			graphics.RenderSolid(color);
+		}
+
+		public static Path GetGlyphPath(Rectangle rect, WidgetPaintState state, GlyphShape glyphShape)
+		{
+			if (rect.Width > rect.Height)
 			{
 				rect.Left += (rect.Width-rect.Height)/2;
 				rect.Width = rect.Height;
 			}
 
-			if ( rect.Height > rect.Width )
+			if (rect.Height > rect.Width)
 			{
 				rect.Bottom += (rect.Height-rect.Width)/2;
 				rect.Height = rect.Width;
 			}
 
-			if ( (state&WidgetPaintState.Engaged) != 0 )  // bouton pressé ?
+			if (state.HasFlag (WidgetPaintState.Engaged))  // bouton pressé ?
 			{
-				rect.Offset(1, -1);
+				rect.Offset (1, -1);
 			}
-			Drawing.Point center = rect.Center;
-			Drawing.Path path = new Drawing.Path();
-			double spikeShift = 0.15;
-			double baseShiftH = 0.30;
-			double baseShiftV = 0.15;
-			switch ( type )
+
+			var center = rect.Center;
+			var path   = new Drawing.Path ();
+
+			const double spikeShift = 0.15;
+			const double baseShiftH = 0.30;
+			const double baseShiftV = 0.15;
+
+			switch (glyphShape)
 			{
 				case GlyphShape.ArrowUp:
 				case GlyphShape.TriangleUp:
-					path.MoveTo(center.X, center.Y+rect.Height*spikeShift);
-					path.LineTo(center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
-					path.LineTo(center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
+					path.MoveTo (center.X, center.Y+rect.Height*spikeShift);
+					path.LineTo (center.X-rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
+					path.LineTo (center.X+rect.Width*baseShiftH, center.Y-rect.Height*baseShiftV);
 					break;
 
 				case GlyphShape.ArrowDown:
 				case GlyphShape.TriangleDown:
-					path.MoveTo(center.X, center.Y-rect.Height*spikeShift);
-					path.LineTo(center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
-					path.LineTo(center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
+					path.MoveTo (center.X, center.Y-rect.Height*spikeShift);
+					path.LineTo (center.X-rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
+					path.LineTo (center.X+rect.Width*baseShiftH, center.Y+rect.Height*baseShiftV);
 					break;
 
 				case GlyphShape.ArrowRight:
 				case GlyphShape.TriangleRight:
-					path.MoveTo(center.X+rect.Width*spikeShift, center.Y);
-					path.LineTo(center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
-					path.LineTo(center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
+					path.MoveTo (center.X+rect.Width*spikeShift, center.Y);
+					path.LineTo (center.X-rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo (center.X-rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
 				case GlyphShape.ArrowLeft:
 				case GlyphShape.TriangleLeft:
-					path.MoveTo(center.X-rect.Width*spikeShift, center.Y);
-					path.LineTo(center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
-					path.LineTo(center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
+					path.MoveTo (center.X-rect.Width*spikeShift, center.Y);
+					path.LineTo (center.X+rect.Width*baseShiftV, center.Y+rect.Height*baseShiftH);
+					path.LineTo (center.X+rect.Width*baseShiftV, center.Y-rect.Height*baseShiftH);
 					break;
 
 				case GlyphShape.HorizontalMove:
-					path.MoveTo(center.X-rect.Width*0.3, center.Y);
-					path.LineTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.3);
-					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.3);
-					path.Close();
-					path.MoveTo(center.X+rect.Width*0.3, center.Y);
-					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.3);
-					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.3);
+					path.MoveTo (center.X-rect.Width*0.3, center.Y);
+					path.LineTo (center.X-rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo (center.X-rect.Width*0.05, center.Y-rect.Height*0.3);
+					path.Close ();
+					path.MoveTo (center.X+rect.Width*0.3, center.Y);
+					path.LineTo (center.X+rect.Width*0.05, center.Y+rect.Height*0.3);
+					path.LineTo (center.X+rect.Width*0.05, center.Y-rect.Height*0.3);
 					break;
 
 				case GlyphShape.VerticalMove:
-					path.MoveTo(center.X, center.Y-rect.Height*0.3);
-					path.LineTo(center.X-rect.Width*0.3, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.3, center.Y-rect.Height*0.05);
-					path.Close();
-					path.MoveTo(center.X, center.Y+rect.Height*0.3);
-					path.LineTo(center.X-rect.Width*0.3, center.Y+rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.3, center.Y+rect.Height*0.05);
+					path.MoveTo (center.X, center.Y-rect.Height*0.3);
+					path.LineTo (center.X-rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.3, center.Y-rect.Height*0.05);
+					path.Close ();
+					path.MoveTo (center.X, center.Y+rect.Height*0.3);
+					path.LineTo (center.X-rect.Width*0.3, center.Y+rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.3, center.Y+rect.Height*0.05);
 					break;
 
 				case GlyphShape.Menu:
-					path.MoveTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.25);
-					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.15);
+					path.MoveTo (center.X+rect.Width*0.00, center.Y-rect.Height*0.25);
+					path.LineTo (center.X-rect.Width*0.30, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.30, center.Y+rect.Height*0.15);
 					break;
 
 				case GlyphShape.Close:
 				case GlyphShape.Reject:
-					path.MoveTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.30);
-					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.20);
-					path.LineTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.00);
-					path.LineTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.20);
-					path.LineTo(center.X-rect.Width*0.20, center.Y+rect.Height*0.30);
-					path.LineTo(center.X-rect.Width*0.00, center.Y+rect.Height*0.10);
-					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
-					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
-					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
-					path.LineTo(center.X+rect.Width*0.30, center.Y-rect.Height*0.20);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.30);
-					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
+					path.MoveTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.30);
+					path.LineTo (center.X-rect.Width*0.30, center.Y-rect.Height*0.20);
+					path.LineTo (center.X-rect.Width*0.10, center.Y+rect.Height*0.00);
+					path.LineTo (center.X-rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo (center.X-rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo (center.X-rect.Width*0.00, center.Y+rect.Height*0.10);
+					path.LineTo (center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo (center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo (center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
+					path.LineTo (center.X+rect.Width*0.30, center.Y-rect.Height*0.20);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.30);
+					path.LineTo (center.X+rect.Width*0.00, center.Y-rect.Height*0.10);
 					break;
 
 				case GlyphShape.Dots:
-					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.06);
-					path.LineTo(center.X-rect.Width*0.18, center.Y+rect.Height*0.06);
-					path.LineTo(center.X-rect.Width*0.18, center.Y-rect.Height*0.06);
-					path.LineTo(center.X-rect.Width*0.30, center.Y-rect.Height*0.06);
-					path.Close();
-					path.MoveTo(center.X-rect.Width*0.06, center.Y+rect.Height*0.06);
-					path.LineTo(center.X+rect.Width*0.06, center.Y+rect.Height*0.06);
-					path.LineTo(center.X+rect.Width*0.06, center.Y-rect.Height*0.06);
-					path.LineTo(center.X-rect.Width*0.06, center.Y-rect.Height*0.06);
-					path.Close();
-					path.MoveTo(center.X+rect.Width*0.18, center.Y+rect.Height*0.06);
-					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.06);
-					path.LineTo(center.X+rect.Width*0.30, center.Y-rect.Height*0.06);
-					path.LineTo(center.X+rect.Width*0.18, center.Y-rect.Height*0.06);
+					path.MoveTo (center.X-rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo (center.X-rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo (center.X-rect.Width*0.18, center.Y-rect.Height*0.06);
+					path.LineTo (center.X-rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.Close ();
+					path.MoveTo (center.X-rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo (center.X+rect.Width*0.06, center.Y+rect.Height*0.06);
+					path.LineTo (center.X+rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.LineTo (center.X-rect.Width*0.06, center.Y-rect.Height*0.06);
+					path.Close ();
+					path.MoveTo (center.X+rect.Width*0.18, center.Y+rect.Height*0.06);
+					path.LineTo (center.X+rect.Width*0.30, center.Y+rect.Height*0.06);
+					path.LineTo (center.X+rect.Width*0.30, center.Y-rect.Height*0.06);
+					path.LineTo (center.X+rect.Width*0.18, center.Y-rect.Height*0.06);
 					break;
 
 				case GlyphShape.Accept:
-					path.MoveTo(center.X-rect.Width*0.30, center.Y+rect.Height*0.00);
-					path.LineTo(center.X-rect.Width*0.20, center.Y+rect.Height*0.10);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
-					path.LineTo(center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.30);
+					path.MoveTo (center.X-rect.Width*0.30, center.Y+rect.Height*0.00);
+					path.LineTo (center.X-rect.Width*0.20, center.Y+rect.Height*0.10);
+					path.LineTo (center.X-rect.Width*0.10, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y+rect.Height*0.30);
+					path.LineTo (center.X+rect.Width*0.30, center.Y+rect.Height*0.20);
+					path.LineTo (center.X-rect.Width*0.10, center.Y-rect.Height*0.30);
 					break;
 
 				case GlyphShape.TabLeft:
-					path.MoveTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.15);
+					path.MoveTo (center.X-rect.Width*0.10, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.10, center.Y-rect.Height*0.15);
 					break;
 
 				case GlyphShape.TabRight:
-					path.MoveTo(center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.10, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
+					path.MoveTo (center.X+rect.Width*0.00, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.10, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.10, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.00, center.Y-rect.Height*0.05);
 					break;
 
 				case GlyphShape.TabCenter:
-					path.MoveTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.MoveTo (center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
 					break;
 
 				case GlyphShape.TabDecimal:
-					path.MoveTo(center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
-					path.LineTo(center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
-					path.LineTo(center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
-					path.LineTo(center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
-					path.Close();
-					path.MoveTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.10);
-					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.10);
-					path.LineTo(center.X+rect.Width*0.20, center.Y+rect.Height*0.00);
-					path.LineTo(center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
+					path.MoveTo (center.X-rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.05, center.Y+rect.Height*0.15);
+					path.LineTo (center.X+rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.15);
+					path.LineTo (center.X-rect.Width*0.20, center.Y-rect.Height*0.05);
+					path.LineTo (center.X-rect.Width*0.05, center.Y-rect.Height*0.05);
+					path.Close ();
+					path.MoveTo (center.X+rect.Width*0.10, center.Y+rect.Height*0.10);
+					path.LineTo (center.X+rect.Width*0.20, center.Y+rect.Height*0.10);
+					path.LineTo (center.X+rect.Width*0.20, center.Y+rect.Height*0.00);
+					path.LineTo (center.X+rect.Width*0.10, center.Y+rect.Height*0.00);
 					break;
 
 				case GlyphShape.TabIndent:
-					path.MoveTo(center.X-rect.Width*0.10, center.Y+rect.Height*0.20);
-					path.LineTo(center.X+rect.Width*0.20, center.Y-rect.Height*0.00);
-					path.LineTo(center.X-rect.Width*0.10, center.Y-rect.Height*0.20);
+					path.MoveTo (center.X-rect.Width*0.10, center.Y+rect.Height*0.20);
+					path.LineTo (center.X+rect.Width*0.20, center.Y-rect.Height*0.00);
+					path.LineTo (center.X-rect.Width*0.10, center.Y-rect.Height*0.20);
 					break;
 
 				case GlyphShape.Plus:
-					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
-					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.07);
-					path.LineTo(center.X-rect.Width*0.07, center.Y+rect.Height*0.29);
-					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.29);
-					path.LineTo(center.X+rect.Width*0.07, center.Y+rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.07, center.Y-rect.Height*0.29);
-					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.29);
-					path.LineTo(center.X-rect.Width*0.07, center.Y-rect.Height*0.07);
-					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.MoveTo (center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo (center.X-rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo (center.X-rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo (center.X+rect.Width*0.07, center.Y+rect.Height*0.29);
+					path.LineTo (center.X+rect.Width*0.07, center.Y+rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo (center.X-rect.Width*0.07, center.Y-rect.Height*0.29);
+					path.LineTo (center.X-rect.Width*0.07, center.Y-rect.Height*0.07);
+					path.LineTo (center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
 					break;
 
 				case GlyphShape.Minus:
-					path.MoveTo(center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
-					path.LineTo(center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
-					path.LineTo(center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.MoveTo (center.X-rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.29, center.Y+rect.Height*0.07);
+					path.LineTo (center.X+rect.Width*0.29, center.Y-rect.Height*0.07);
+					path.LineTo (center.X-rect.Width*0.29, center.Y-rect.Height*0.07);
 					break;
+
+				default:
+					path.Dispose ();
+					return null;
 			}
-			path.Close();
-			graphics.Rasterizer.AddSurface(path);
-			path.Dispose();
-			graphics.RenderSolid(color);
+			
+			path.Close ();
+			
+			return path;
 		}
 
 		public override void PaintCheck(Drawing.Graphics graphics,

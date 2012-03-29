@@ -56,6 +56,22 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int								SortIndex
+		{
+			get
+			{
+				return this.sortIndex;
+			}
+			set
+			{
+				if (this.sortIndex != value)
+				{
+					this.sortIndex = value;
+					this.OnSortIndexChanged ();
+				}
+			}
+		}
+
 		public bool								CanSort
 		{
 			get;
@@ -88,22 +104,37 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public void ToggleSort()
+		public ItemSortOrder GetActiveSortOrder(bool toggle)
 		{
 			if (this.CanSort)
 			{
-				switch (this.SortOrder)
+				if (toggle)
 				{
-					case ItemSortOrder.None:
-					case ItemSortOrder.Descending:
-						this.SortOrder = ItemSortOrder.Ascending;
-						break;
+					switch (this.SortOrder)
+					{
+						case ItemSortOrder.None:
+						case ItemSortOrder.Descending:
+							return ItemSortOrder.Ascending;
 
-					case ItemSortOrder.Ascending:
-						this.SortOrder = ItemSortOrder.Descending;
-						break;
+						case ItemSortOrder.Ascending:
+							return ItemSortOrder.Descending;
+					}
+				}
+				else
+				{
+					switch (this.SortOrder)
+					{
+						case ItemSortOrder.None:
+						case ItemSortOrder.Ascending:
+							return ItemSortOrder.Ascending;
+
+						case ItemSortOrder.Descending:
+							return ItemSortOrder.Descending;
+					}
 				}
 			}
+
+			return ItemSortOrder.None;
 		}
 
 
@@ -113,11 +144,17 @@ namespace Epsitec.Common.BigList
 			this.SortOrderChanged.Raise (this);
 		}
 
+		private void OnSortIndexChanged()
+		{
+			this.SortIndexChanged.Raise (this);
+		}
+
 
 		public event EventHandler				SortOrderChanged;
-
+		public event EventHandler				SortIndexChanged;
 		
 		private readonly ColumnLayoutInfo		layout;
 		private ItemSortOrder					sortOrder;
+		private int								sortIndex;
 	}
 }

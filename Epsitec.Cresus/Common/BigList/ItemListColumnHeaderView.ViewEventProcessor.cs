@@ -147,7 +147,8 @@ namespace Epsitec.Common.BigList
 						break;
 					
 					case ItemSelection.Toggle:
-						column.ToggleSort ();
+						this.view.SelectSortColumn (column);
+						this.view.Invalidate ();
 						break;
 				}
 			}
