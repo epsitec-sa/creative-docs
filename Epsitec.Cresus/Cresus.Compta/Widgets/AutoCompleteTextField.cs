@@ -73,6 +73,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
+		public bool OnlyAtTheBeginning
+		{
+			get;
+			set;
+		}
+
 		public double MenuButtonWidth
 		{
 			get;
@@ -160,7 +166,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						list1.Add (i);
 					}
-					else if (primary.Contains (typed) || secondary.Contains (typed))
+					else if (!this.OnlyAtTheBeginning && (primary.Contains (typed) || secondary.Contains (typed)))
 					{
 						list2.Add (i);
 					}

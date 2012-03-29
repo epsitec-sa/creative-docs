@@ -185,6 +185,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 					(field.EditWidget as AutoCompleteTextField).AcceptFreeText = true;
+					(field.EditWidget as AutoCompleteTextField).OnlyAtTheBeginning = true;
 
 					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, this.compta.GetLibellésDescriptions (this.période).ToArray ());
 
@@ -1746,7 +1747,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
@@ -1761,7 +1762,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
@@ -1791,7 +1792,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
@@ -1835,7 +1836,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
@@ -1856,7 +1857,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
@@ -1898,7 +1899,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (!this.dataAccessor.IsActive)
+				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;
 				}
