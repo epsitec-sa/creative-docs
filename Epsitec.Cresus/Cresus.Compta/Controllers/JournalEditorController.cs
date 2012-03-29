@@ -1890,10 +1890,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
+				//	On accepte de supprimer l'avant-dernière ligne d'une écriture multiple, puisque
+				//	la validation globale va refuser de la créer.
+#if false
 				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 2)
 				{
 					return false;
 				}
+
+				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
+					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
+					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
+				{
+					return false;
+				}
+#endif
 
 				var type = this.GetTypeEcriture (this.selectedLine);
 
@@ -1906,15 +1917,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					return false;
 				}
-
-#if false
-				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
-					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
-					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
-				{
-					return false;
-				}
-#endif
 
 				if (this.selectedLine == this.IndexTotalAutomatique)
 				{
