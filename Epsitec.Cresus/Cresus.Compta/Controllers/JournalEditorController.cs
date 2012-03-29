@@ -564,7 +564,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (line == -1)
 			{
-				//	Insère une nouvelle ligne après la ligne courante.
+				//	Insère une nouvelle ligne vide après la ligne courante.
 				this.InsertEmptyLine ();
 			}
 			else
@@ -589,6 +589,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.selectedLine++;
 
+			//	N'insère jamais entre BaseTVA et CodeTVA !
 			if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
 			{
 				this.selectedLine++;
@@ -1767,6 +1768,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				this.scroller.Visibility = false;
+			}
+		}
+
+
+		protected override void EditorAdditionalValidate()
+		{
+			//	Après la validation ligne par ligne, on peut encore effectuer ici une validation globale, qui
+			//	n'indique pas la nature de l'erreur.
+			if (!this.hasError)
+			{
+				if (this.dataAccessor.CountEditedRowWithoutEmpty == 1)
+				{
+					for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+					{
+						if (!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+						{
+							//	S'il y a une seule ligne active avec un débit/crédit multiple, on active
+							//	le fanion 'erreur' !
+							if (this.GetCompteDébit  (line) == null ||
+								this.GetCompteCrédit (line) == null)
+							{
+								this.hasError = true;
+							}
+						}
+					}
+				}
 			}
 		}
 

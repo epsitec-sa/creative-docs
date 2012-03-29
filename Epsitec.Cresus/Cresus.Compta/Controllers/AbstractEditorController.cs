@@ -559,9 +559,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.EditorValidate (line);
 			}
 
+			this.EditorAdditionalValidate ();
+
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
 			this.UpdateAfterValidate ();
+		}
+
+		protected virtual void EditorAdditionalValidate()
+		{
+			//	Après la validation ligne par ligne, on peut encore effectuer ici une validation globale, qui
+			//	n'indique pas la nature de l'erreur.
 		}
 
 		private void EditorValidate(int line)
