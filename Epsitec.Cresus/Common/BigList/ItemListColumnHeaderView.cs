@@ -97,7 +97,9 @@ namespace Epsitec.Common.BigList
 
 				if (column.CanSort)
 				{
-					graphics.Color = Color.FromBrightness (System.Math.Min (0.80, 0.20 * column.SortIndex));
+					var index = column.SortIndex;
+					var brightness = new double[] { 0.0, 0.5, 0.6, 0.7, 0.8 };
+					graphics.Color = Color.FromBrightness (brightness[System.Math.Min (index, brightness.Length-1)]);
 
 					switch (column.SortOrder)
 					{
@@ -116,18 +118,18 @@ namespace Epsitec.Common.BigList
 		{
 			var cx = rectangle.Center.X;
 			var cy = rectangle.Top;
-			var dx = 8;
+			var dx = 10;
 
-			if (glyphShape == GlyphShape.TriangleDown)
+			if (glyphShape == GlyphShape.TriangleUp)
 			{
-				cy = rectangle.Bottom;
+				cy = rectangle.Bottom - 2;
 			}
 			else
 			{
-				cy = cy - dx;
+				cy = cy - dx + 2;
 			}
 			
-			var bounds = new Rectangle (cx-8/2, cy, dx, dx);
+			var bounds = new Rectangle (cx-dx/2, cy, dx, dx);
 
 			using (var path = Epsitec.Common.Widgets.Adorners.Default.GetGlyphPath (bounds, this.PaintState, glyphShape))
 			{
