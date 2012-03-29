@@ -315,6 +315,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.editionLine[0].SetText (ColumnType.Crédit, FormattedText.Empty);
 				}
 
+				this.editionLine[0].SetText (ColumnType.TotalAutomatique, "0");
+
 				while (this.editionLine.Count > 1)
 				{
 					this.editionLine.RemoveAt (1);
@@ -362,7 +364,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				//	ligne à son écriture multiple sans utiliser le bouton "+".
 				if (isMulti && this.controller.SettingsList.GetBool (SettingsType.EcritureProposeVide))
 				{
-					this.CreateEmptyLine ();
+					this.CreateEmptyLine (-1);
 				}
 			}
 
@@ -374,7 +376,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.controller.EditorController.UpdateFieldsEditionData ();
 		}
 
-		public void CreateEmptyLine()
+		public void CreateEmptyLine(int index)
 		{
 			//	Crée une ligne vide à l'avant-dernière position.
 			var écriture = new ComptaEcritureEntity ()
@@ -401,8 +403,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			int i = this.editionLine.Count-1;
-			this.editionLine.Insert (i, data);  // insère à l'avant-dernière position
+			if (index == -1)
+			{
+				index = this.editionLine.Count-1;
+			}
+
+			this.editionLine.Insert (index, data);  // insère à l'avant-dernière position
 
 			this.countEditedRow++;
 		}

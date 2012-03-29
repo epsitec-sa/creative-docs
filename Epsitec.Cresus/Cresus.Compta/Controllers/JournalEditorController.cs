@@ -753,7 +753,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dirty = true;
-			this.CreateEmptyLine ();
+			this.CreateEmptyLine (-1);
 			this.UpdateEditorContent ();
 		}
 
@@ -840,7 +840,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//	Crée une ligne vide s'il n'y en a plus ?
-			if (this.CreateEmptyLine ())
+			if (this.CreateEmptyLine (line+1))
 			{
 				changed = true;
 			}
@@ -856,12 +856,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private bool CreateEmptyLine()
+		private bool CreateEmptyLine(int index)
 		{
 			//	Crée une ligne vide s'il n'en existe aucune.
 			if (this.isMulti && this.dataAccessor.CountEmptyRow == 0 && this.settingsList.GetBool (SettingsType.EcritureProposeVide))
 			{
-				(this.dataAccessor as JournalDataAccessor).CreateEmptyLine ();
+				if (index != -1 && this.GetTypeEcriture (index) == TypeEcriture.CodeTVA)
+				{
+					index++;
+				}
+
+				(this.dataAccessor as JournalDataAccessor).CreateEmptyLine (index);
 				return true;
 			}
 
