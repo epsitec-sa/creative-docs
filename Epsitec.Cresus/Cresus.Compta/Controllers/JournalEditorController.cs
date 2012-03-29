@@ -543,39 +543,60 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public override void MultiInsertLineAction()
 		{
 			//	Insère une nouvelle ligne après la ligne courante.
-			bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
-			var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
-			var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
-
-			this.selectedLine++;
-			this.dataAccessor.InsertEditionLine (this.selectedLine);
-
-			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
-
-			int cp = this.IndexTotalAutomatique;
-			if (cp != -1)
+			if (this.dataAccessor.CountEmptyRow == 0)
 			{
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
+				bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
+				var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
+				var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
-				if (this.PlusieursPièces)
+				this.selectedLine++;
+
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
 				{
-					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
-					var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
-
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
+					this.selectedLine++;
 				}
-				else
+
+				this.dataAccessor.InsertEditionLine (this.selectedLine);
+
+				this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
+
+				int cp = this.IndexTotalAutomatique;
+				if (cp != -1)
 				{
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
+
+					if (this.PlusieursPièces)
+					{
+						var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
+						var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
+
+						this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
+					}
+					else
+					{
+						this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+					}
+				}
+
+				this.dirty = true;
+				this.UpdateEditorContent ();
+				this.SelectedLineChanged ();
+				this.EditorSelect (multiActiveColumn, this.selectedLine);
+			}
+			else
+			{
+				//	S'il existe une ligne vide, on déplace le curseur dessus.
+				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
+				{
+					if ((this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+					{
+						this.EditorSelect (ColumnType.Débit, line);
+						return;
+					}
 				}
 			}
-
-			this.dirty = true;
-			this.UpdateEditorContent ();
-			this.SelectedLineChanged ();
-			this.EditorSelect (multiActiveColumn, this.selectedLine);
 		}
 
 		public override void MultiInsertTVALineAction()
@@ -861,16 +882,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Crée une ligne vide s'il n'en existe aucune.
 			if (this.isMulti && this.dataAccessor.CountEmptyRow == 0 && this.settingsList.GetBool (SettingsType.EcritureProposeVide))
 			{
-				if (index != -1 && this.GetTypeEcriture (index) == TypeEcriture.CodeTVA)
-				{
-					index++;
-				}
-
 				(this.dataAccessor as JournalDataAccessor).CreateEmptyLine (index);
 				return true;
 			}
-
-			return false;
+			else
+			{
+				return false;
+			}
 		}
 
 		protected override void UpdateAfterValidate()
@@ -1733,17 +1751,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
-				{
-					return false;
-				}
-
-				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.BaseTVA ||
-					this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
-				{
-					return false;
-				}
-
+				//	S'il existe une ligne vide, la commande est active, car elle déplace le curseur sur la
+				//	ligne vide plutôt que d'en créer une.
 				return true;
 			}
 		}
@@ -1757,19 +1766,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-#if false
-				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 1)
-				{
-					return false;
-				}
-#endif
-
-				if (this.GetTypeEcriture (this.selectedLine) != TypeEcriture.Normal)
-				{
-					return false;
-				}
-
 				if (this.selectedLine == this.IndexTotalAutomatique)
+				{
+					return false;
+				}
+
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.BaseTVA ||
+					this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				{
+					return false;
+				}
+
+				if (this.GetCompteDébit  (this.selectedLine) == null &&
+					this.GetCompteCrédit (this.selectedLine) == null)
 				{
 					return false;
 				}
@@ -1970,12 +1979,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private ComptaCompteEntity GetCompteDébit(int line)
 		{
-			return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit)).FirstOrDefault ();
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Débit)).FirstOrDefault ();
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private ComptaCompteEntity GetCompteCrédit(int line)
 		{
-			return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit)).FirstOrDefault ();
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				return this.compta.PlanComptable.Where (x => x.Numéro == this.dataAccessor.EditionLine[line].GetText (ColumnType.Crédit)).FirstOrDefault ();
+			}
+			else
+			{
+				return null;
+			}
 		}
 
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)

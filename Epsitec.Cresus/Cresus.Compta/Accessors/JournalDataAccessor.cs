@@ -403,9 +403,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
+			//	Par défaut, on insère à l'avant-dernière ligne.
 			if (index == -1)
 			{
 				index = this.editionLine.Count-1;
+			}
+
+			//	N'insère jamais une ligne vide entre BaseTVA et CodeTVA.
+			if (index < this.editionLine.Count)
+			{
+				var type = Converters.StringToTypeEcriture (this.editionLine[index].GetText (ColumnType.Type));
+				if (type == TypeEcriture.CodeTVA)
+				{
+					index++;
+				}
 			}
 
 			this.editionLine.Insert (index, data);  // insère à l'avant-dernière position
