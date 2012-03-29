@@ -24,7 +24,7 @@ namespace Epsitec.Common.BigList.Processors
 			this.origin             = pos;
 
 			this.originalIndex     = this.detectionProcessor.Detect (pos);
-			this.originalSelection = this.selectionProcessor.IsSelected (this.originalIndex);
+			this.originalSelection = this.selectionProcessor == null ? false : this.selectionProcessor.IsSelected (this.originalIndex);
 
 			if ((this.policy.AutoScroll) &&
 				(this.scrollingProcessor != null))
@@ -51,7 +51,6 @@ namespace Epsitec.Common.BigList.Processors
 				return false;
 			}
 
-			proc.selectionProcessor.Select (proc.originalIndex, ItemSelection.Toggle);
 			proc.host.Register (proc);
 			proc.Process (message, pos);
 			
@@ -63,6 +62,17 @@ namespace Epsitec.Common.BigList.Processors
 			switch (message.MessageType)
 			{
 				case MessageType.MouseDown:
+					if ((message.Button == this.button) &&
+						(this.policy.SelectOnRelease == false) &&
+						(this.selectionProcessor != null))
+					{
+						this.selectionProcessor.Select (this.originalIndex, ItemSelection.Toggle);
+					}
+					
+					this.ProcessAutoScroll (message, pos);
+					this.ProcessMove (pos);
+					break;
+
 				case MessageType.MouseMove:
 					this.ProcessAutoScroll (message, pos);
 					this.ProcessMove (pos);
@@ -75,7 +85,16 @@ namespace Epsitec.Common.BigList.Processors
 					if (message.Button == this.button)
 					{
 						this.ProcessAutoScrollEnd ();
-						this.selectionProcessor.Select (this.originalIndex, ItemSelection.Focus);
+
+						if (this.selectionProcessor != null)
+						{
+							if (this.policy.SelectOnRelease)
+							{
+								this.selectionProcessor.Select (this.originalIndex, ItemSelection.Toggle);
+							}
+
+							this.selectionProcessor.Select (this.originalIndex, ItemSelection.Focus);
+						}
 						this.host.Remove (this);
 
 						return true;

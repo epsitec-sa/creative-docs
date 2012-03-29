@@ -54,5 +54,11 @@ namespace Epsitec.Common.BigList.Processors
 			get;
 			set;
 		}
+
+		public bool								SelectOnRelease
+		{
+			get;
+			set;
+		}
 	}
 }
