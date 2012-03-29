@@ -393,7 +393,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				foreach (var line in this.editionLine)
 				{
-					if (line.GetData (ColumnType.TotalAutomatique).Text == "1")
+					var auto = line.GetData (ColumnType.TotalAutomatique);
+					if (auto != null && auto.Text == "1")
 					{
 						data.SetText (ColumnType.Pièce, line.GetData (ColumnType.Pièce).Text);
 					}
@@ -411,7 +412,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (this.isModification)
 			{
 				this.UpdateModificationData ();
-				this.justCreated = false;
+				this.justCreated = true;
+				this.isCreation = true;
+				this.isModification = false;
 			}
 			else
 			{

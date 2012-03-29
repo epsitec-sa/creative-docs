@@ -204,7 +204,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (this.isModification)
 			{
 				this.UpdateModificationData ();
-				this.justCreated = false;
+				this.justCreated = true;
+				this.isCreation = true;
+				this.isModification = false;
 			}
 			else
 			{
