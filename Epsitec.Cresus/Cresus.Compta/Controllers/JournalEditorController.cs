@@ -559,60 +559,110 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public override void MultiInsertLineAction()
 		{
-			//	Insère une nouvelle ligne après la ligne courante.
-			if (this.dataAccessor.CountEmptyRow == 0)
+			//	Commande [+] actionnée.
+			int line = this.IndexOfEmptyLine;
+
+			if (line == -1)
 			{
-				bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
-				var multiActiveColumn   =  isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
-				var multiInactiveColumn = !isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
-
-				this.selectedLine++;
-
-				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
-				{
-					this.selectedLine++;
-				}
-
-				this.dataAccessor.InsertEditionLine (this.selectedLine);
-
-				this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
-
-				int cp = this.IndexTotalAutomatique;
-				if (cp != -1)
-				{
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
-					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
-
-					if (this.PlusieursPièces)
-					{
-						var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
-						var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
-
-						this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
-					}
-					else
-					{
-						this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
-					}
-				}
-
-				this.dirty = true;
-				this.UpdateEditorContent ();
-				this.SelectedLineChanged ();
-				this.EditorSelect (multiActiveColumn, this.selectedLine);
+				//	Insère une nouvelle ligne après la ligne courante.
+				this.InsertEmptyLine ();
 			}
 			else
 			{
-				//	S'il existe une ligne vide, on déplace le curseur dessus.
+				if (line == this.selectedLine || line == this.selectedLine+1)  // ligne vide déjà à la bonne place ?
+				{
+					this.GotoEmptyLine ();
+				}
+				else
+				{
+					this.RemoveEmptyLine ();  // supprime-la
+					this.InsertEmptyLine ();  // puis insère-la à la place souhaitée
+				}
+			}
+		}
+
+		private void InsertEmptyLine()
+		{
+			//	Insère une nouvelle ligne vide après la ligne courante.
+			bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
+			var multiActiveColumn = isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
+
+			this.selectedLine++;
+
+			if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+			{
+				this.selectedLine++;
+			}
+
+			this.dataAccessor.InsertEditionLine (this.selectedLine);
+
+			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
+
+			int cp = this.IndexTotalAutomatique;
+			if (cp != -1)
+			{
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
+
+				if (this.PlusieursPièces)
+				{
+					var nomJournal = this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal);
+					var journal = this.compta.Journaux.Where (x => x.Nom == nomJournal).FirstOrDefault ();
+
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.controller.MainWindowController.PiècesGenerator.GetProchainePièce (journal, this.dataAccessor.EditionLine.Count-1));
+				}
+				else
+				{
+					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
+				}
+			}
+
+			this.dirty = true;
+			this.UpdateEditorContent ();
+			this.SelectedLineChanged ();
+			this.EditorSelect (multiActiveColumn, this.selectedLine);
+		}
+
+		private void RemoveEmptyLine()
+		{
+			//	Supprime la ligne vide.
+			int line = this.IndexOfEmptyLine;
+			if (line != -1)
+			{
+				this.dataAccessor.EditionLine.RemoveAt (line);
+
+				if (line < this.selectedLine)
+				{
+					this.selectedLine--;
+				}
+			}
+		}
+
+		private void GotoEmptyLine()
+		{
+			//	Met le curseur sur la ligne vide.
+			int line = this.IndexOfEmptyLine;
+			if (line != -1)
+			{
+				this.EditorSelect (ColumnType.Débit, line);
+			}
+		}
+
+		private int IndexOfEmptyLine
+		{
+			//	Retourne l'index de la ligne vide, ou -1.
+			get
+			{
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
 					if ((this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
 					{
-						this.EditorSelect (ColumnType.Débit, line);
-						return;
+						return line;
 					}
 				}
+
+				return -1;
 			}
 		}
 
