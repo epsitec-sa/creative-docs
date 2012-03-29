@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public virtual void UpdateToolbar()
 		{
 			this.controller.SetCommandEnable (Res.Commands.Edit.Create, !this.dirty && this.dataAccessor.IsEditionCreationEnable);
-			this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && !this.hasError);
+			this.controller.SetCommandEnable (Res.Commands.Edit.Accept, this.dirty && this.errorCount == 0);
 			this.controller.SetCommandEnable (Res.Commands.Edit.Cancel, this.dataAccessor.IsActive);
 
 			if (this.assistantController == null)
@@ -552,7 +552,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void EditorValidate()
 		{
-			this.hasError = false;
+			this.errorCount = 0;
 
 			for (int line = 0; line < this.linesFrames.Count; line++)
 			{
@@ -560,6 +560,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.EditorAdditionalValidate ();
+
+			if (this.errorCount == 0)
+			{
+				this.bottomToolbarController.SetErrorDescription (FormattedText.Null);
+			}
+			else
+			{
+				var error = string.Format ("Il y a {0} erreur{1}. La validation est impossible.", this.errorCount.ToString (), (this.errorCount == 1)?"":"s");
+				this.bottomToolbarController.SetErrorDescription (error);
+			}
 
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
@@ -584,7 +594,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					if (controller.EditionData != null && controller.EditionData.HasError)
 					{
-						this.hasError = true;
+						this.errorCount++;
 					}
 				}
 			}
@@ -1023,11 +1033,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.hasError;
-			}
-			set
-			{
-				this.hasError = value;
+				return this.errorCount != 0;
 			}
 		}
 
@@ -1051,7 +1057,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected int											maxLines;
 		protected int											firstLine;
 		protected bool											dirty;
-		protected bool											hasError;
+		protected int											errorCount;
 		protected bool											duplicate;
 
 		protected FrameBox										editorAssistantFrameBox;

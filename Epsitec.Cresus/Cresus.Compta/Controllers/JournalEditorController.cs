@@ -1776,7 +1776,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Après la validation ligne par ligne, on peut encore effectuer ici une validation globale, qui
 			//	n'indique pas la nature de l'erreur.
-			if (!this.hasError)
+			if (this.errorCount == 0)
 			{
 				if (this.dataAccessor.CountEditedRowWithoutEmpty == 1)
 				{
@@ -1789,7 +1789,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 							if (this.GetCompteDébit  (line) == null ||
 								this.GetCompteCrédit (line) == null)
 							{
-								this.hasError = true;
+								this.errorCount++;
 							}
 						}
 					}

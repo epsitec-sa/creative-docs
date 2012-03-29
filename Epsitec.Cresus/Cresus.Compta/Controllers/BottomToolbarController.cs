@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -47,8 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredHeight     = BottomToolbarController.toolbarHeight,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Bottom,
-				Margins             = new Margins (0, 0, 1, 0),
-				Padding             = new Margins (0, 20, 0, 0),
+				Margins             = new Margins (0, 20, 1, 0),
 			};
 
 			this.operationLabel = new StaticText
@@ -103,14 +103,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SetEditionDescription(FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			this.editionDescription = text;
+			this.UpdateWidgets ();
+		}
+
+		public void SetErrorDescription(FormattedText text)
+		{
+			this.errorDescription = text;
+			this.UpdateWidgets ();
+		}
+
+		private void UpdateWidgets()
+		{
+			if (!this.errorDescription.IsNullOrEmpty)
 			{
-				this.editionLabel.Visibility = false;
+				this.toolbar.BackColor = UIBuilder.ErrorColor;
+				this.editionLabel.Visibility = true;
+				this.editionLabel.FormattedText = FormattedText.Concat (this.errorDescription.ApplyBold (), " ");
+			}
+			else if (!this.editionDescription.IsNullOrEmpty)
+			{
+				this.toolbar.BackColor = Color.Empty;
+				this.editionLabel.Visibility = true;
+				this.editionLabel.FormattedText = this.editionDescription;
 			}
 			else
 			{
-				this.editionLabel.Visibility = true;
-				this.editionLabel.FormattedText = text;
+				this.toolbar.BackColor = Color.Empty;
+				this.editionLabel.Visibility = false;
 			}
 		}
 
@@ -122,6 +142,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox						toolbar;
 		private StaticText						operationLabel;
 		private StaticText						editionLabel;
+		private FormattedText					editionDescription;
+		private FormattedText					errorDescription;
 		private bool							showPanel;
 	}
 }
