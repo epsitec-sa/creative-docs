@@ -17,8 +17,6 @@ namespace Epsitec.Common.BigList
 		public ItemListColumn()
 		{
 			this.layout = new ColumnLayoutInfo (new ColumnDefinition ());
-			
-			this.IsVisible = true;
 		}
 		
 		
@@ -88,8 +86,10 @@ namespace Epsitec.Common.BigList
 
 		public bool								IsVisible
 		{
-			get;
-			set;
+			get
+			{
+				return this.layout.Definition.Visibility;
+			}
 		}
 
 		

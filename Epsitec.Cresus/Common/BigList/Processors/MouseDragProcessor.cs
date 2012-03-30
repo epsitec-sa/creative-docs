@@ -15,6 +15,8 @@ namespace Epsitec.Common.BigList.Processors
 		private MouseDragProcessor(IEventProcessorHost host, Message message, Point pos, IEnumerable<MouseDragFrame> frames)
 		{
 			this.host = host;
+			this.draggingProcessor = this.host as IDraggingProcessor;
+
 			this.policy = this.host.GetPolicy<MouseDragProcessorPolicy> ();
 			this.button = message.Button;
 			this.originalFrames = frames.Where (x => this.policy.Filter (x)).ToArray ();
@@ -61,6 +63,7 @@ namespace Epsitec.Common.BigList.Processors
 					
 					if (this.button == message.Button)
 					{
+						this.ProcessEnd ();
 						this.host.Remove (this);
 					}
 					
@@ -105,6 +108,19 @@ namespace Epsitec.Common.BigList.Processors
 			for (int i = 0; i < this.originalFrames.Length; i++)
 			{
 				this.currentFrames[i] = MouseDragProcessor.ProcessDrag (this.originalFrames[i], delta);
+			}
+		}
+
+		private void ProcessEnd()
+		{
+			if (this.draggingProcessor == null)
+			{
+				return;
+			}
+
+			for (int i = 0; i < this.currentFrames.Length; i++)
+			{
+				this.draggingProcessor.ApplyDrag (this.originalFrames[i], this.currentFrames[i]);
 			}
 		}
 
@@ -165,6 +181,7 @@ namespace Epsitec.Common.BigList.Processors
 
 		
 		private readonly IEventProcessorHost host;
+		private readonly IDraggingProcessor draggingProcessor;
 		private readonly MouseDragProcessorPolicy policy;
 		private readonly Point origin;
 		private readonly MouseButtons button;

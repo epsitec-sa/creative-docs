@@ -206,6 +206,18 @@ namespace Epsitec.Common.BigList
 				}
 			}
 
+			void IDraggingProcessor.ApplyDrag(MouseDragFrame originalFrame, MouseDragFrame currentFrame)
+			{
+				if (originalFrame.Grip == GripId.EdgeRight)
+				{
+					var column = this.view.Columns.GetColumn (originalFrame.Index);
+
+					column.Layout.Definition.Width = new Widgets.Layouts.GridLength (currentFrame.Bounds.Width, Widgets.Layouts.GridUnitType.Absolute);
+					
+					this.view.RefreshColumnLayout ();
+				}
+			}
+
 			#endregion
 
 			private readonly ItemListColumnHeaderView view;
