@@ -74,6 +74,7 @@ namespace Epsitec.Common.BigList
 		{
 			if (this.processor.ProcessMessage (message, pos))
 			{
+				this.Invalidate ();
 				message.Consumer = this;
 			}
 		}
@@ -121,6 +122,16 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.processor.PaintOverlay (graphics, clipRect);
+		}
+
+		private Rectangle GetColumnBounds(ItemListColumn column)
+		{
+			double height = this.Client.Height;
+			
+			var ox = column.Layout.Definition.ActualOffset;
+			var dx = column.Layout.Definition.ActualWidth;
+
+			return new Rectangle (ox, 0, dx, height);
 		}
 
 		private void PaintGlyph(Graphics graphics, Rectangle rectangle, GlyphShape glyphShape)

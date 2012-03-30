@@ -18,7 +18,7 @@ namespace Epsitec.Common.BigList
 {
 	public partial class ItemListColumnHeaderView
 	{
-		private class ViewEventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor
+		private class ViewEventProcessor : IEventProcessorHost, IDetectionProcessor, ISelectionProcessor, IDraggingProcessor
 		{
 			public ViewEventProcessor(ItemListColumnHeaderView view)
 			{
@@ -71,6 +71,13 @@ namespace Epsitec.Common.BigList
 
 			private bool ProcessMouseDown(Message message, Point pos)
 			{
+				var drag = this.DetectDrag (pos).ToArray ();
+
+				if (drag.Length > 0)
+				{
+					return MouseDragProcessor.Attach (this, message, pos, drag);
+				}
+
 				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
 			}
 
@@ -158,6 +165,33 @@ namespace Epsitec.Common.BigList
 						this.view.SelectSortColumn (column);
 						this.view.Invalidate ();
 						break;
+				}
+			}
+
+			#endregion
+
+			#region IDraggingProcessor Members
+
+			public IEnumerable<MouseDragFrame> DetectDrag(Point pos)
+			{
+				foreach (var column in this.view.Columns)
+				{
+					var det   = 2.0;
+					var left  = column.Layout.Definition.ActualOffset;
+					var right = left + column.Layout.Definition.ActualWidth;
+					var rect  = this.view.GetColumnBounds (column);
+
+					if ((pos.X >= left-det) &&
+						(pos.X <= left+det))
+					{
+						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, new Rectangle (0, rect.Bottom, rect.Right, rect.Top));
+					}
+
+					if ((pos.X >= right-det) &&
+						(pos.X <= right+det))
+					{
+						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, new Rectangle (rect.Left, rect.Bottom, this.view.Client.Width, rect.Top));
+					}
 				}
 			}
 

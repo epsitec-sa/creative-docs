@@ -819,7 +819,41 @@ namespace Epsitec.Common.Drawing
 			
 			return defaultValue;
 		}
-		
+
+		public static Rectangle MoveGrip(Rectangle r, GripId grip, Point offset)
+		{
+			return Rectangle.DefineGrip (r, grip, r.GetGrip (grip) + offset);
+		}
+
+		public static Rectangle DefineGrip(Rectangle r, GripId grip, Point pos)
+		{
+			switch (grip)
+			{
+				case GripId.VertexBottomLeft:
+					return Rectangle.FromPoints (pos, r.TopRight);
+				case GripId.VertexBottomRight:
+					return Rectangle.FromPoints (r.Left, pos.Y, pos.X, r.Top);
+				case GripId.VertexTopLeft:
+					return Rectangle.FromPoints (pos.X, r.Bottom, r.Right, pos.Y);
+				case GripId.VertexTopRight:
+					return Rectangle.FromPoints (r.BottomLeft, pos);
+
+				case GripId.EdgeBottom:
+					return Rectangle.FromPoints (r.Left, pos.Y, r.Right, r.Top);
+				case GripId.EdgeTop:
+					return Rectangle.FromPoints (r.Left, r.Bottom, r.Right, pos.Y);
+				case GripId.EdgeLeft:
+					return Rectangle.FromPoints (pos.X, r.Bottom, r.Right, r.Top);
+				case GripId.EdgeRight:
+					return Rectangle.FromPoints (r.Left, r.Bottom, pos.X, r.Top);
+				case GripId.Body:
+					return new Rectangle (r.BottomLeft + pos - r.Center, r.Size);
+
+				default:
+					throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
+			}
+		}
+
 		public static bool operator ==(Rectangle a, Rectangle b)
 		{
 			return (a.x1 == b.x1) && (a.x2 == b.x2) && (a.y1 == b.y1) && (a.y2 == b.y2);
