@@ -224,16 +224,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			data.ClearOverlayText ();
 
 			var type = this.TypeEcriture;
+			var hasTVA = this.controller.SettingsList.GetBool (SettingsType.EcritureTVA);
 
 			if (this.GetText (ColumnType.TotalAutomatique) == "1")
 			{
 				data.OverlayText = "∑";
 			}
-			else if (type == Compta.TypeEcriture.CodeTVA)
+			else if (hasTVA && type == Compta.TypeEcriture.CodeTVA)
 			{
 				data.OverlayText = "TVA";
 			}
-			else if (this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
+			else if (hasTVA && this.GetEnable (ColumnType.MontantTTC))  // création avec soit TTC soit HT ?
 			{
 				data.OverlayText = "HT";
 			}

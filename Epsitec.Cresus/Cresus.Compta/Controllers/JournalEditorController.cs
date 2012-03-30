@@ -878,54 +878,57 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//	Compte avec code TVA ?
-			int i = 0;
-			while (i < this.dataAccessor.CountEditedRow)
+			if (this.settingsList.GetBool (SettingsType.EcritureTVA))
 			{
-				var type = this.GetTypeEcriture (i);
-
-				if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
-					type == TypeEcriture.Vide)
+				int i = 0;
+				while (i < this.dataAccessor.CountEditedRow)
 				{
-					var débit  = this.GetCompteDébit  (i);
-					var crédit = this.GetCompteCrédit (i);
+					var type = this.GetTypeEcriture (i);
 
-					if (this.isMulti)
+					if (type == TypeEcriture.Nouveau ||  // ligne fraichement créée ?
+						type == TypeEcriture.Vide)
 					{
-						if ((débit  != null && débit .CodeTVAParDéfaut != null) ||
-							(crédit != null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit ?
+						var débit  = this.GetCompteDébit (i);
+						var crédit = this.GetCompteCrédit (i);
+
+						if (this.isMulti)
 						{
-							i += this.ExplodeForTVA (i);
-							changed = true;
-							continue;
-						}
-					}
-					else
-					{
-						if (débit != null && crédit != null)
-						{
-							if ((débit.CodeTVAParDéfaut != null && crédit.CodeTVAParDéfaut == null) ||
-								(débit.CodeTVAParDéfaut == null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit, mais pas aux deux ?
+							if ((débit  != null && débit .CodeTVAParDéfaut != null) ||
+								(crédit != null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit ?
 							{
 								i += this.ExplodeForTVA (i);
 								changed = true;
 								continue;
 							}
 						}
-
-						var numéroDébit  = this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit);
-						var numéroCrédit = this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit);
-
-						if ((débit  != null && débit .CodeTVAParDéfaut != null && numéroCrédit == JournalDataAccessor.multi) ||
-							(crédit != null && crédit.CodeTVAParDéfaut != null && numéroDébit  == JournalDataAccessor.multi))
+						else
 						{
-							i += this.ExplodeForTVA (i);
-							changed = true;
-							continue;
+							if (débit != null && crédit != null)
+							{
+								if ((débit.CodeTVAParDéfaut != null && crédit.CodeTVAParDéfaut == null) ||
+									(débit.CodeTVAParDéfaut == null && crédit.CodeTVAParDéfaut != null))  // code TVA au débit ou au crédit, mais pas aux deux ?
+								{
+									i += this.ExplodeForTVA (i);
+									changed = true;
+									continue;
+								}
+							}
+
+							var numéroDébit  = this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit);
+							var numéroCrédit = this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit);
+
+							if ((débit  != null && débit .CodeTVAParDéfaut != null && numéroCrédit == JournalDataAccessor.multi) ||
+								(crédit != null && crédit.CodeTVAParDéfaut != null && numéroDébit  == JournalDataAccessor.multi))
+							{
+								i += this.ExplodeForTVA (i);
+								changed = true;
+								continue;
+							}
 						}
 					}
-				}
 
-				i++;
+					i++;
+				}
 			}
 
 			//	Crée une ligne vide s'il n'y en a plus ?
@@ -1855,6 +1858,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
+				if (!this.settingsList.GetBool (SettingsType.EcritureTVA))
+				{
+					return false;
+				}
+
 				if (!this.dataAccessor.IsActive || !this.isMulti)
 				{
 					return false;

@@ -567,7 +567,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				var error = string.Format ("Il y a {0} erreur{1}. La validation est impossible.", this.errorCount.ToString (), (this.errorCount == 1)?"":"s");
+				var error = string.Format ("Il y a {0} champ{1} incorrect{1}. La validation est impossible.", this.errorCount.ToString (), (this.errorCount == 1)?"":"s");
 				this.bottomToolbarController.SetErrorDescription (error);
 			}
 
