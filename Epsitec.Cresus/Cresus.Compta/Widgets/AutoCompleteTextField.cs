@@ -514,10 +514,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			this.scrollList = new ScrollList ()
 			{
-				Parent = window.Root,
-				ScrollListStyle = ScrollListStyle.Menu,
+				Parent                = window.Root,
+				ScrollListStyle       = ScrollListStyle.Menu,
 				AutomaticScrollEnable = false,
-				Dock = DockStyle.Fill
+				Dock                  = DockStyle.Fill
 			};
 
 			this.Window.WindowPlacementChanged += this.HandleWindowPlacementChanged;
@@ -545,7 +545,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
-				this.selectedHint = 0;
+				this.selectedHint = -1;
+				var typed = Strings.PreparingForSearh (this.Text);
+				
+				for (int i=0; i<this.primaryTexts.Count; i++)
+				{
+					string primary = Strings.PreparingForSearh (this.primaryTexts[i]);
+					if (primary == typed)
+					{
+						this.selectedHint = i;
+					}
+				}
 			}
 		}
 
