@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public JournalEditorController(AbstractController controller)
 			: base (controller)
 		{
+			this.allComptes = this.compta.PlanComptable.Where (x => x.Type != TypeDeCompte.Groupe);
+			this.TVAComptes = this.compta.PlanComptable.Where (x => x.Type == TypeDeCompte.TVA);
 		}
 
 
@@ -152,8 +154,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-			var comptes = this.compta.PlanComptable.Where (x => x.Type != TypeDeCompte.Groupe);
-
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
 			{
 				AbstractFieldController field;
@@ -168,8 +168,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
-
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, comptes);
 				}
 				else if (mapper.Column == ColumnType.Libellé)
 				{
@@ -233,6 +231,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.fieldControllers[line].Add (field);
 			}
+
+			this.UpdateAfterLineTypeChanged (line);
 		}
 
 		private void ResetLineUI()
@@ -300,8 +300,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var type = this.GetTypeEcriture (line);
 
-				if ((type == TypeEcriture.Vide || type == TypeEcriture.Nouveau) &&
-					!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+				if ((type == TypeEcriture.Vide || type == TypeEcriture.Nouveau) && !this.IsEmptyLine (line))
 				{
 					this.SetTypeEcriture (line, TypeEcriture.Normal);
 				}
@@ -645,7 +644,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 				{
-					if ((this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+					if (this.IsEmptyLine (line))
 					{
 						return line;
 					}
@@ -967,7 +966,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			for (int line = 0; line < count; line++)
 			{
-				bool emptyLine = (this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine;
+				bool emptyLine = this.IsEmptyLine (line);
 
 				for (int column = 0; column < this.fieldControllers[line].Count; column++)
 				{
@@ -1166,10 +1165,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		private void UpdateAfterLineTypeChanged(int line)
+		{
+			//	Appelé lorsque le type d'une ligne a changé, pour mettre à jour les comptes dans les menus débit/crédit.
+			var débitField  = this.GetFieldController (ColumnType.Débit,  line);
+			var créditField = this.GetFieldController (ColumnType.Crédit, line);
+
+			if (débitField != null && créditField != null)
+			{
+				var type = this.GetTypeEcriture (line);
+				IEnumerable<ComptaCompteEntity> comptes = (type == TypeEcriture.CodeTVA) ? this.TVAComptes : this.allComptes;
+
+				UIBuilder.UpdateAutoCompleteTextField (débitField .EditWidget as AutoCompleteTextField, comptes);
+				UIBuilder.UpdateAutoCompleteTextField (créditField.EditWidget as AutoCompleteTextField, comptes);
+			}
+		}
+
 		private void UpdateAfterCompteOrigineTVAChanged(int line)
 		{
 			//	Appelé lorsque le compte à l'origine de la TVA a changé, pour mettre à jour les codes TVA dans le menu.
-			var field = this.GetFieldController (ColumnType.CodeTVA, line+1);
+			var codeTVAField = this.GetFieldController (ColumnType.CodeTVA, line+1);
 
 			var origineTVA = this.dataAccessor.EditionLine[line].GetText (ColumnType.OrigineTVA);
 			ComptaCompteEntity compte = null;
@@ -1182,7 +1197,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				compte = this.GetCompteCrédit (line);
 			}
 
-			if (field != null && compte != null)
+			if (codeTVAField != null && compte != null)
 			{
 				var codesTVA = compte.CodesTVAMenuDescription;
 
@@ -1192,7 +1207,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					codesTVA = this.compta.CodesTVAMenuDescription;
 				}
 
-				UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, '#', codesTVA);
+				UIBuilder.UpdateAutoCompleteTextField (codeTVAField.EditWidget as AutoCompleteTextField, '#', codesTVA);
 			}
 		}
 
@@ -1745,7 +1760,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					for (int line = 0; line < this.dataAccessor.EditionLine.Count; line++)
 					{
-						if (!(this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine)
+						if (!this.IsEmptyLine (line))
 						{
 							//	S'il y a une seule ligne active avec un débit/crédit multiple, on active
 							//	le fanion 'erreur' !
@@ -1868,7 +1883,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return true;
 				}
 
-				if (type == TypeEcriture.Vide && this.dataAccessor.CountEmptyRow <= 1)
+				if (this.dataAccessor.CountEmptyRow <= 1 && this.IsEmptyLine (this.selectedLine))
 				{
 					return false;
 				}
@@ -1986,11 +2001,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private bool IsEmptyLine(int line)
+		{
+			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
+			{
+				return (this.dataAccessor.EditionLine[line] as JournalEditionLine).IsEmptyLine;
+			}
+			else
+			{
+				return false;
+			}
+		}
+
+
 		private void SetTypeEcriture(int line, TypeEcriture type)
 		{
 			if (line >= 0 && line < this.dataAccessor.EditionLine.Count)
 			{
 				this.dataAccessor.EditionLine[line].SetText (ColumnType.Type, Converters.TypeEcritureToString (type));
+				this.UpdateAfterLineTypeChanged (line);
 			}
 		}
 
@@ -2184,5 +2213,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private VScroller							scroller;
 
 		private bool								isMulti;
+		private IEnumerable<ComptaCompteEntity>		allComptes;
+		private IEnumerable<ComptaCompteEntity>		TVAComptes;
 	}
 }
