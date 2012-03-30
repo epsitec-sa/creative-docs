@@ -139,7 +139,7 @@
     <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\MouseDragDirection.cs" />
-    <Compile Include="BigList\Processors\MouseDragProcessor.cs" />
+    <Compile Include="BigList\Processors\MouseDragSplitterProcessor.cs" />
     <Compile Include="BigList\Processors\SelectionPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\MarkRenderer.cs" />

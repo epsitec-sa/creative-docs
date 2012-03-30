@@ -16,6 +16,15 @@ namespace Epsitec.Common.BigList.Processors
 			return this.Process (message, pos);
 		}
 
+		public void PaintOverlay(Graphics graphics, Rectangle clipRect)
+		{
+			this.Paint (graphics, clipRect);
+		}
+
 		protected abstract bool Process(Message message, Point pos);
+		
+		protected virtual void Paint(Graphics graphics, Rectangle clipRect)
+		{
+		}
 	}
 }

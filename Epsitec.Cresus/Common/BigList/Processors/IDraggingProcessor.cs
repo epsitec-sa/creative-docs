@@ -11,6 +11,6 @@ namespace Epsitec.Common.BigList.Processors
 {
 	public interface IDraggingProcessor
 	{
-		MouseDragProcessor DetectDrag(Message message, Point pos);
+		MouseDragSplitterProcessor DetectDrag(Message message, Point pos);
 	}
 }

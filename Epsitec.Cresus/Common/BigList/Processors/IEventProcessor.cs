@@ -11,5 +11,6 @@ namespace Epsitec.Common.BigList.Processors
 	public interface IEventProcessor
 	{
 		bool ProcessMessage(Message message, Point pos);
+		void PaintOverlay(Graphics graphics, Rectangle clipRect);
 	}
 }

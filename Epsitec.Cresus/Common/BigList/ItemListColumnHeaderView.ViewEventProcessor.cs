@@ -61,6 +61,14 @@ namespace Epsitec.Common.BigList
 				return false;
 			}
 
+			public void PaintOverlay(Graphics graphics, Rectangle clipRect)
+			{
+				if (this.processor != null)
+				{
+					this.processor.PaintOverlay (graphics, clipRect);
+				}
+			}
+
 			private bool ProcessMouseDown(Message message, Point pos)
 			{
 				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);

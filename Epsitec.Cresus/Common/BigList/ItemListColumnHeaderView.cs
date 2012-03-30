@@ -119,6 +119,8 @@ namespace Epsitec.Common.BigList
 					}
 				}
 			}
+
+			this.processor.PaintOverlay (graphics, clipRect);
 		}
 
 		private void PaintGlyph(Graphics graphics, Rectangle rectangle, GlyphShape glyphShape)
