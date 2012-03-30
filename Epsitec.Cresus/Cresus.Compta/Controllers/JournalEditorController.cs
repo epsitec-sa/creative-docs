@@ -152,15 +152,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			editorFrame.TabIndex = line+1;
 
-#if false
-			//	Colle la ligne à la précédente s'il y a lieu.
-			var type = this.GetTypeEcriture (line);
-			if (type == TypeEcriture.CodeTVA)
-			{
-				editorFrame.Margins = new Margins (0, 0, -1, 2);  // la hauteur totale doit rester identique (1+0 = -1+2) !
-			}
-#endif
-
 			var comptes = this.compta.PlanComptable.Where (x => x.Type != TypeDeCompte.Groupe);
 
 			foreach (var mapper in this.columnMappers.Where (x => x.Show))
@@ -364,17 +355,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (indexVide != -1)
 			{
 				this.SetTypeEcriture (indexVide, TypeEcriture.Nouveau);
-				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
-				//?this.dataAccessor.EditionLine[indexVide].SetText (multiInactiveColumn,         JournalDataAccessor.multi);
-				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Montant,          Converters.MontantToString (0));
-				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
+				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Montant, Converters.MontantToString (0));
+				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			}
 																				   
 			//	Met à jour les données de la contrepartie.						   
 			this.SetTypeEcriture (indexCP, TypeEcriture.Nouveau);
 			this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.Date,             this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
-			//?this.dataAccessor.EditionLine[indexCP].SetText (multiActiveColumn,           JournalDataAccessor.multi);
-			//?this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.Libellé,          "Total");
 			this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.Journal,          this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.TotalAutomatique, "1");
 
@@ -1101,13 +1089,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 					this.SetWidgetVisibility (ColumnType.Date,    i, totalAutomatique);
 					this.SetWidgetVisibility (ColumnType.Journal, i, totalAutomatique);
-
-					if (!this.PlusieursPièces)
-					{
-						//?this.SetWidgetVisibility (ColumnType.Pièce, i, totalAutomatique);
-					}
-
-
 					this.SetWidgetVisibility (ColumnType.CodeTVA, i, !totalAutomatique);
 					this.SetWidgetVisibility (ColumnType.TauxTVA, i, !totalAutomatique);
 
@@ -1144,7 +1125,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetWidgetVisibility (ColumnType.Date,    i, true);
 					this.SetWidgetVisibility (ColumnType.Débit,   i, true);
 					this.SetWidgetVisibility (ColumnType.Crédit,  i, true);
-					//?this.SetWidgetVisibility (ColumnType.Pièce,   i, true);
 					this.SetWidgetVisibility (ColumnType.Journal, i, true);
 				}
 
@@ -1160,17 +1140,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 					showTTC = true;
 				}
 
-				//?if (this.GetWidgetVisibility (ColumnType.MontantTTC, i) != showTTC)
-				{
-					this.SetWidgetVisibility (ColumnType.MontantTTC, i, showTTC);
+				this.SetWidgetVisibility (ColumnType.MontantTTC, i, showTTC);
 
-					if (showTTC)
+				if (showTTC)
+				{
+					var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[i].GetText (ColumnType.MontantTTC));
+					if (!montantTTC.HasValue)
 					{
-						var montantTTC = Converters.ParseMontant (this.dataAccessor.EditionLine[i].GetText (ColumnType.MontantTTC));
-						if (!montantTTC.HasValue)
-						{
-							this.dataAccessor.EditionLine[i].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
-						}
+						this.dataAccessor.EditionLine[i].SetText (ColumnType.MontantTTC, Converters.MontantToString (0));
 					}
 				}
 			}
@@ -1488,13 +1465,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 						this.dataAccessor.EditionLine[line].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 
-#if false
-						if (!this.PlusieursPièces)
-						{
-							this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
-						}
-#endif
-
 						decimal montant = Converters.ParseMontant (this.dataAccessor.EditionLine[line].GetText (ColumnType.Montant)).GetValueOrDefault ();
 
 						if (this.IsDébitMulti (line))
@@ -1590,16 +1560,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateAfterSelectedLineChanged()
 		{
-#if false
-			int sel = this.multiFirstRow + this.selectedLine;
-
-			if (this.arrayController.SelectedRow != sel)
-			{
-				this.controller.IgnoreChanged = true;
-				this.arrayController.SelectedRow = sel;
-				this.controller.IgnoreChanged = false;
-			}
-#endif
 
 			this.UpdateToolbar ();
 			this.UpdateInsertionRow ();
@@ -1900,19 +1860,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				//	On accepte de supprimer l'avant-dernière ligne d'une écriture multiple, puisque
 				//	la validation globale va refuser de la créer.
-#if false
-				if (this.dataAccessor.CountEditedRowWithoutEmpty <= 2)
-				{
-					return false;
-				}
-
-				if (this.dataAccessor.CountEditedRowWithoutEmpty == 3 &&
-					this.GetTypeEcriture(0) == TypeEcriture.BaseTVA   &&
-					this.GetTypeEcriture(1) == TypeEcriture.CodeTVA   )
-				{
-					return false;
-				}
-#endif
 
 				var type = this.GetTypeEcriture (this.selectedLine);
 
