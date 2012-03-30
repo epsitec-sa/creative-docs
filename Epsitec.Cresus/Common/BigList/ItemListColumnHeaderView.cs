@@ -26,6 +26,13 @@ namespace Epsitec.Common.BigList
 			
 			this.policies  = new List<EventProcessorPolicy> ();
 			this.processor = new ViewEventProcessor (this);
+
+			this.policies.Add (
+				new MouseDownProcessorPolicy
+				{
+					AutoFollow = false,
+					SelectionPolicy = SelectionPolicy.OnMouseUp,
+				});
 		}
 
 
@@ -47,7 +54,7 @@ namespace Epsitec.Common.BigList
 		public TPolicy GetPolicy<TPolicy>()
 			where TPolicy : EventProcessorPolicy, new ()
 		{
-			return this.policies.OfType<TPolicy> ().FirstOrDefault ();
+			return this.policies.OfType<TPolicy> ().FirstOrDefault () ?? new TPolicy ();
 		}
 
 		public void SetPolicy<TPolicy>(TPolicy policy)

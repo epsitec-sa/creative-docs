@@ -63,7 +63,7 @@ namespace Epsitec.Common.BigList.Processors
 			{
 				case MessageType.MouseDown:
 					if ((message.Button == this.button) &&
-						(this.policy.SelectOnRelease == false) &&
+						(this.policy.SelectionPolicy == SelectionPolicy.OnMouseDown) &&
 						(this.selectionProcessor != null))
 					{
 						this.selectionProcessor.Select (this.originalIndex, ItemSelection.Toggle);
@@ -88,7 +88,7 @@ namespace Epsitec.Common.BigList.Processors
 
 						if (this.selectionProcessor != null)
 						{
-							if (this.policy.SelectOnRelease)
+							if (this.policy.SelectionPolicy == SelectionPolicy.OnMouseUp)
 							{
 								this.selectionProcessor.Select (this.originalIndex, ItemSelection.Toggle);
 							}

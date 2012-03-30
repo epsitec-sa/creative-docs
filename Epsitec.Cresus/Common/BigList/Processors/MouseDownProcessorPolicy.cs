@@ -21,6 +21,8 @@ namespace Epsitec.Common.BigList.Processors
 
 			this.AutoScrollDelay  = SystemInformation.InitialKeyboardDelay;
 			this.AutoScrollRepeat = SystemInformation.KeyboardRepeatPeriod;
+
+			this.SelectionPolicy  = SelectionPolicy.OnMouseDown;
 		}
 
 
@@ -55,7 +57,7 @@ namespace Epsitec.Common.BigList.Processors
 			set;
 		}
 
-		public bool								SelectOnRelease
+		public SelectionPolicy					SelectionPolicy
 		{
 			get;
 			set;

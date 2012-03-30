@@ -66,22 +66,6 @@ namespace Epsitec.Common.BigList
 				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
 			}
 
-			private static TPolicy GetDefaultPolicy<TPolicy>()
-				where TPolicy : EventProcessorPolicy, new ()
-			{
-				if (typeof (TPolicy) == typeof (MouseDownProcessorPolicy))
-				{
-					var policy = new MouseDownProcessorPolicy
-					{
-						SelectOnRelease = true,
-					};
-
-					return policy as TPolicy;
-				}
-
-				return new TPolicy ();
-			}
-
 
 			#region IEventProcessorHost Members
 
@@ -111,7 +95,7 @@ namespace Epsitec.Common.BigList
 
 			TPolicy IEventProcessorHost.GetPolicy<TPolicy>()
 			{
-				return this.view.GetPolicy<TPolicy> () ?? ViewEventProcessor.GetDefaultPolicy<TPolicy> ();
+				return this.view.GetPolicy<TPolicy> ();
 			}
 
 			#endregion

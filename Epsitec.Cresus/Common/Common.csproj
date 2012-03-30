@@ -137,6 +137,7 @@
     <Compile Include="BigList\Processors\KeyDownProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
+    <Compile Include="BigList\Processors\SelectionPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\MarkRenderer.cs" />
     <Compile Include="BigList\Renderers\StringRenderer.cs" />
