@@ -108,6 +108,7 @@
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\IDetectionProcessor.cs" />
+    <Compile Include="BigList\Processors\IDraggingProcessor.cs" />
     <Compile Include="BigList\Processors\IEventProcessor.cs" />
     <Compile Include="BigList\Processors\IEventProcessorHost.cs" />
     <Compile Include="BigList\Processors\IScrollingProcessor.cs" />
@@ -137,6 +138,8 @@
     <Compile Include="BigList\Processors\KeyDownProcessorPolicy.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessor.cs" />
     <Compile Include="BigList\Processors\MouseDownProcessorPolicy.cs" />
+    <Compile Include="BigList\Processors\MouseDragDirection.cs" />
+    <Compile Include="BigList\Processors\MouseDragProcessor.cs" />
     <Compile Include="BigList\Processors\SelectionPolicy.cs" />
     <Compile Include="BigList\ReadWriteLock.cs" />
     <Compile Include="BigList\Renderers\MarkRenderer.cs" />

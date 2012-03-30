@@ -91,7 +91,7 @@ namespace Epsitec.Common.BigList
 			graphics.AddFilledRectangle (0, 0, width, height);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
-			foreach (var column in this.columns)
+			foreach (var column in this.columns.Where (x => x.IsVisible))
 			{
 				var ox = column.Layout.Definition.ActualOffset;
 				var dx = column.Layout.Definition.ActualWidth;
