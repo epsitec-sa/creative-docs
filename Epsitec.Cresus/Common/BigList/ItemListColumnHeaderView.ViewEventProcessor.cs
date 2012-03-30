@@ -188,20 +188,24 @@ namespace Epsitec.Common.BigList
 				foreach (var column in this.view.Columns)
 				{
 					var det   = 2.0;
-					var left  = column.Layout.Definition.ActualOffset;
-					var right = left + column.Layout.Definition.ActualWidth;
+					var def   = column.Layout.Definition;
+					var left  = def.ActualOffset;
+					var right = left + def.ActualWidth;
 					var rect  = this.view.GetColumnBounds (column);
 
 					if ((pos.X >= left-det) &&
 						(pos.X <= left+det))
 					{
-						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, new Rectangle (0, rect.Bottom, rect.Right, rect.Top));
+						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (0, rect.Bottom, rect.Right, rect.Top));
 					}
 
 					if ((pos.X >= right-det) &&
 						(pos.X <= right+det))
 					{
-						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, new Rectangle (rect.Left, rect.Bottom, this.view.Client.Width, rect.Top));
+						var minWidth = def.MinWidth;
+						var maxWidth = def.MaxWidth;
+
+						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (rect.Left + minWidth, rect.Bottom, System.Math.Min (this.view.Client.Width, rect.Left + maxWidth), rect.Top));
 					}
 				}
 			}
