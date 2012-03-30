@@ -3,10 +3,10 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Behaviors;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Widgets.Behaviors;
 
 namespace Epsitec.Common.BigList.Processors
 {

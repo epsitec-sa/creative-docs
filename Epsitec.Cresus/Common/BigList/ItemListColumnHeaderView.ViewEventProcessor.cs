@@ -55,6 +55,7 @@ namespace Epsitec.Common.BigList
 						break;
 
 					case MessageType.MouseMove:
+						this.ProcessMouseMove (message, pos);
 						break;
 				}
 
@@ -69,16 +70,26 @@ namespace Epsitec.Common.BigList
 				}
 			}
 
+			private void ProcessMouseMove(Message message, Point pos)
+			{
+				var policy = this.view.GetPolicy<MouseDragProcessorPolicy> ();
+
+				if (this.DetectDrag (pos).Any (x => policy.Filter (x)))
+				{
+					this.view.MouseCursor = MouseCursor.AsVSplit;
+				}
+				else
+				{
+					this.view.MouseCursor = MouseCursor.Default;
+				}
+			}
+
 			private bool ProcessMouseDown(Message message, Point pos)
 			{
 				var drag = this.DetectDrag (pos).ToArray ();
 
-				if (drag.Length > 0)
-				{
-					return MouseDragProcessor.Attach (this, message, pos, drag);
-				}
-
-				return MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
+				return MouseDragProcessor.Attach (this, message, pos, drag)
+					|| MouseDownProcessor.Attach (this, this.view.Client.Bounds, message, pos);
 			}
 
 

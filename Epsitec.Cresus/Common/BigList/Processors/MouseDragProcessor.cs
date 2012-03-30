@@ -12,25 +12,30 @@ namespace Epsitec.Common.BigList.Processors
 {
 	public sealed class MouseDragProcessor : EventProcessor
 	{
-		private MouseDragProcessor(IEventProcessorHost host, Message message, Point pos, IEnumerable<MouseDragFrame> rectangles)
+		private MouseDragProcessor(IEventProcessorHost host, Message message, Point pos, IEnumerable<MouseDragFrame> frames)
 		{
 			this.host = host;
 			this.policy = this.host.GetPolicy<MouseDragProcessorPolicy> ();
 			this.button = message.Button;
-			this.originalRectangles = rectangles.Where (x => MouseDragProcessor.Filter (x, this.policy)).ToArray ();
-			this.currentRectangles = this.originalRectangles.ToArray ();
+			this.originalFrames = frames.Where (x => this.policy.Filter (x)).ToArray ();
+			this.currentFrames = this.originalFrames.ToArray ();
 			this.origin = this.Constrain (pos);
 		}
 
 		
-		public static bool Attach(IEventProcessorHost host, Message message, Point pos, IEnumerable<MouseDragFrame> rectangles)
+		public static bool Attach(IEventProcessorHost host, Message message, Point pos, IEnumerable<MouseDragFrame> frames)
 		{
 			if (host.EventProcessors.OfType<MouseDragProcessor> ().Any ())
 			{
 				return false;
 			}
 
-			var proc = new MouseDragProcessor (host, message, pos, rectangles);
+			var proc = new MouseDragProcessor (host, message, pos, frames);
+
+			if (proc.originalFrames.Length == 0)
+			{
+				return false;
+			}
 
 			proc.host.Register (proc);
 			proc.Process (message, pos);
@@ -69,7 +74,7 @@ namespace Epsitec.Common.BigList.Processors
 		{
 			using (var path = new Path ())
 			{
-				foreach (var rect in this.currentRectangles)
+				foreach (var rect in this.currentFrames)
 				{
 					if (clipRect.IntersectsWith (rect.Bounds))
 					{
@@ -97,15 +102,15 @@ namespace Epsitec.Common.BigList.Processors
 		{
 			var delta = this.Constrain (pos) - this.origin;
 
-			for (int i = 0; i < this.originalRectangles.Length; i++)
+			for (int i = 0; i < this.originalFrames.Length; i++)
 			{
-				this.currentRectangles[i] = MouseDragProcessor.ProcessDrag (this.originalRectangles[i], delta);
+				this.currentFrames[i] = MouseDragProcessor.ProcessDrag (this.originalFrames[i], delta);
 			}
 		}
 
 		private Point Constrain(Point pos)
 		{
-			foreach (var dragRectangle in this.originalRectangles)
+			foreach (var dragRectangle in this.originalFrames)
 			{
 				pos = MouseDragProcessor.ConstrainMove (dragRectangle, pos);
 			}
@@ -114,22 +119,6 @@ namespace Epsitec.Common.BigList.Processors
 		}
 
 
-		private static bool Filter(MouseDragFrame frame, MouseDragProcessorPolicy policy)
-		{
-			switch (policy.ResizePolicy)
-			{
-				case ResizePolicy.None:
-					return false;
-				case ResizePolicy.Independent:
-					return frame.Grip == GripId.EdgeRight || frame.Grip == GripId.EdgeBottom;
-				case ResizePolicy.Coupled:
-					return true;
-
-				default:
-					throw new System.NotSupportedException (string.Format ("{0} not supported", policy.ResizePolicy.GetQualifiedName ()));
-			}
-		}
-		
 		private static Point ConstrainMove(MouseDragFrame dragRectangle, Point pos)
 		{
 			if (dragRectangle.Constraint.IsEmpty)
@@ -179,7 +168,7 @@ namespace Epsitec.Common.BigList.Processors
 		private readonly MouseDragProcessorPolicy policy;
 		private readonly Point origin;
 		private readonly MouseButtons button;
-		private readonly MouseDragFrame[] originalRectangles;
-		private readonly MouseDragFrame[] currentRectangles;
+		private readonly MouseDragFrame[] originalFrames;
+		private readonly MouseDragFrame[] currentFrames;
 	}
 }
