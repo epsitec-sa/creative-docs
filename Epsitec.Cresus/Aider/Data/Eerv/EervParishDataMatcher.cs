@@ -76,22 +76,11 @@ namespace Epsitec.Aider.Data.Eerv
 	/// In order to address these shortcomings, I look at each person that has at least one of the
 	/// firstname and one of the lastname in common with the person I want to match. Of course, this
 	/// gives a lot of false positives, so I filter those results to ensure that the matches have
-	/// the same sex and either the same date of birth or the same address. Experimentally, this
-	/// lead to few false positive, even if I would have expected that such an aggressive technique
-	/// would lead to much more. This is probably because most of the persons are already matched by
-	/// the first part of the algorithm.
-	/// 
-	/// There is a third element in the algorithm. I had a few false positives in the sense that
-	/// persons in the ECh group where matched by two persons from the EERV group. In half of the
-	/// cases this was normal as it was because of duplicates in the EERV data. However, for some
-	/// cases, one of the two person was clearly a false positive. This was because I was too
-	/// aggressive in the second part of the algorithm and in the part where I makes matches with
-	/// the household data. It is common to have several person with similar names in a familiy,
-	/// say a father names his son with a name followed by his name, or two persons have similar
-	/// names such as Martin and Mario. In order to avoid these false positives, I keep track of the
-	/// persons that have been matched and they cannot be matched again the the second part of the
-	/// algorithm or in the part where first part of the algorithm where the matches are made based
-	/// on the household members. 
+	/// the same sex and either the same date of birth or the same address and I never consider
+	/// persons that have already been matched by anoter one. Experimentally, this lead to few false
+	/// positive, even if I would have expected that such an aggressive technique would lead to much
+	/// more. This is probably because most of the persons are already matched by the first part of
+	/// the algorithm.
 	/// </summary>
 	internal static class EervParishDataMatcher
 	{
@@ -225,7 +214,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				EervParishDataMatcher.AssignMatches (matches, todo, done, matched);
 
-				var newMatches = EervParishDataMatcher.FindMatchesInHouseholdMembers (matches, todo, matched)
+				var newMatches = EervParishDataMatcher.FindNewMatchesWithinMathingHouseholds (matches, todo)
 					.ToList ();
 
 				EervParishDataMatcher.AssignMatches (newMatches, todo, done, matched);
@@ -259,73 +248,86 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindMatchesInHouseholdMembers(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo, HashSet<NormalizedPerson> matched)
+		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesWithinMathingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches, HashSet<NormalizedPerson> todo)
 		{
-			var newMatches = new List<Tuple<NormalizedPerson, List<NormalizedPerson>>> ();
+			var matchingHouseholds = EervParishDataMatcher.FindMatchingHouseholds(personMatches);
 
-			var householdMatches = new Dictionary<NormalizedHousehold, HashSet<NormalizedHousehold>> ();
+			return EervParishDataMatcher.FindNewMatchesInHousenoldMatches (matchingHouseholds, todo);
+		}
+
+
+		private static Dictionary<NormalizedHousehold, HashSet<NormalizedHousehold>> FindMatchingHouseholds(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> personMatches)
+		{
+			var matchingHouseholds = new Dictionary<NormalizedHousehold, HashSet<NormalizedHousehold>> ();
 
 			foreach (var match in personMatches)
 			{
 				var eervPerson = match.Item1;
-				var eervHousehold = eervPerson.Households.Single();
+				var eervHousehold = eervPerson.Households.Single ();
 
 				HashSet<NormalizedHousehold> aiderHouseholds;
 
-				if (!householdMatches.TryGetValue (eervHousehold, out aiderHouseholds))
+				if (!matchingHouseholds.TryGetValue (eervHousehold, out aiderHouseholds))
 				{
 					aiderHouseholds = new HashSet<NormalizedHousehold> ();
 
-					householdMatches[eervHousehold] = aiderHouseholds;
+					matchingHouseholds[eervHousehold] = aiderHouseholds;
 				}
 
 				var aiderPersons = match.Item2;
-				
+
 				foreach (var aiderPerson in aiderPersons)
 				{
 					aiderHouseholds.AddRange (aiderPerson.Households);
 				}
 			}
 
-			foreach (var householdMatch in householdMatches)
+			return matchingHouseholds;
+		}
+
+  
+		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindNewMatchesInHousenoldMatches(Dictionary<NormalizedHousehold, HashSet<NormalizedHousehold>> matchingHouseholds, HashSet<NormalizedPerson> todo)
+		{
+			foreach (var match in matchingHouseholds)
 			{
-				var eervHousehold = householdMatch.Key;
+				var eervHousehold = match.Key;
 				var eervMembers = eervHousehold
 					.Members
-					.Where (m => todo.Contains (m))
-					.ToList ();
+					.Where(m => todo.Contains(m))
+					.ToList();
 
-				var aiderHouseholds = householdMatch.Value;
+				var aiderHouseholds = match.Value;
 				var aiderMembers = aiderHouseholds
-					.SelectMany (h => h.Members)
-					.Where (m => !matched.Contains (m))
-					.Distinct ()
-					.ToList ();
+					.SelectMany(h => h.Members)
+					.Distinct()
+					.ToList();
 
 				foreach (var eervMember in eervMembers)
 				{
-					var aiderCandidates = EervParishDataMatcher
-						.GetFuzzyMatches (eervMember, aiderMembers)
-						.ToList ();
-
-					var acceptedAiderCandidate = aiderCandidates
-						.Where (c => c.Item2.Item1 >= 0.8)
-						.Where (c => c.Item2.Item2 >= 0.8)
-						.Where (c => c.Item2.Item4)
+					var aiderCandidate = EervParishDataMatcher
+						.GetFuzzyMatches(eervMember, aiderMembers, 0.8, 0.8)
 						.Select (c => c.Item1)
 						.FirstOrDefault ();
 
-					if (acceptedAiderCandidate != null)
+					if (aiderCandidate != null)
 					{
-						var aiderPersons = new List<NormalizedPerson> () { acceptedAiderCandidate };
-						var newMatch = Tuple.Create (eervMember, aiderPersons);
+						var bestMatchForAcceptedAiderCandidate = EervParishDataMatcher
+							.GetFuzzyMatches (aiderCandidate, eervHousehold.Members, 0, 0)
+							.Select (m => m.Item1)
+							.FirstOrDefault ();
 
-						newMatches.Add (newMatch);
+						if (eervMember == bestMatchForAcceptedAiderCandidate)
+						{
+							var aiderPersons = new List<NormalizedPerson> ()
+							{
+								aiderCandidate
+							};
+
+							yield return Tuple.Create (eervMember, aiderPersons);
+						}
 					}
 				}
 			}
-
-			return newMatches;
 		}
 
 
@@ -525,17 +527,52 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<Tuple<NormalizedPerson, Tuple<double, double, double, bool, AddressMatch>>> GetFuzzyMatches(NormalizedPerson eervPerson, IEnumerable<NormalizedPerson> aiderPersons)
+		private static IEnumerable<Tuple<NormalizedPerson, Tuple<double, double, double, bool, AddressMatch>>> GetFuzzyMatches(NormalizedPerson person, IEnumerable<NormalizedPerson> persons, double minSfn, double minSln)
 		{
-			return from aiderPerson in aiderPersons
-				   let sfn = JaroWinkler.ComputeJaroWinklerDistance (eervPerson.Firstname, aiderPerson.Firstname)
-				   let sln = JaroWinkler.ComputeJaroWinklerDistance (eervPerson.Lastname, aiderPerson.Lastname)
-				   let sdb = EervParishDataMatcher.GetDateSimilarity (eervPerson.DateOfBirth, aiderPerson.DateOfBirth)
-				   let ssx = EervParishDataMatcher.IsSexMatch (eervPerson, aiderPerson, true)
-				   let sad = EervParishDataMatcher.GetAddressSimilarity (eervPerson.Addresses.First (), aiderPerson.Addresses.First ())
-				   orderby (sfn + sln) / 2 descending
-				   select Tuple.Create (aiderPerson, Tuple.Create (sfn, sln, sdb, ssx, sad));
+			var p1 = person;
+			
+			return from p2 in persons
+				   let sfn = JaroWinkler.ComputeJaroWinklerDistance (p1.Firstname, p2.Firstname)
+				   where sfn >= minSfn
+				   let sln = JaroWinkler.ComputeJaroWinklerDistance (p1.Lastname, p2.Lastname)
+				   where sln >= minSln
+				   let sdb = EervParishDataMatcher.GetDateSimilarity (p1.DateOfBirth, p2.DateOfBirth)
+				   let ssx = EervParishDataMatcher.IsSexMatch (p1, p2, true)
+				   let sad = EervParishDataMatcher.GetAddressSimilarity (p1.Addresses, p2.Addresses)
+				   let metric = EervParishDataMatcher.GetMetric (sfn, sln, sdb, ssx, p1.DateOfBirth, p2.DateOfBirth, p1.Sex, p2.Sex)
+				   orderby metric descending
+				   select Tuple.Create (p2, Tuple.Create (sfn, sln, sdb, ssx, sad));
 		}
+
+
+		private static double GetMetric(double sfn, double sln, double sdb, bool ssx, Date? d1, Date? d2, PersonSex s1, PersonSex s2)
+		{
+			double numerator = sfn + sln;
+			double denominator = 2;
+
+			if (d1.HasValue && d2.HasValue)
+			{
+				numerator += sdb;
+				denominator++;
+			}
+
+			if (s1 != PersonSex.Unknown && s2 != PersonSex.Unknown)
+			{
+				if (ssx)
+				{
+					numerator += JaroWinkler.MaxValue;
+				}
+				else
+				{
+					numerator += JaroWinkler.MinValue;
+				}
+
+				denominator++;
+			}
+
+			return numerator / denominator;
+		}
+
 
 
 		private static IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> FindMatchesWithSplitMethod(Dictionary<string, Dictionary<string, List<NormalizedPerson>>> splitNamesToAiderPersons, HashSet<NormalizedPerson> eervPersons, HashSet<NormalizedPerson> matched)
