@@ -74,11 +74,12 @@ namespace Epsitec.Aider.Data.Eerv
 	/// data but whose name if the name of their husband or both names together in the data of the
 	/// parish.
 	/// In order to address these shortcomings, I look at each person that has at least one of the
-	/// firstname and one of the lastname. Of course, this gives a lot of false positives, so I
-	/// filter those results to ensure that the matches have the same sex and either the same date
-	/// of birth or the same address. Experimentally, this lead to few false positive, even if I
-	/// would have expected that such an aggressive technique would lead to much more. This is
-	/// probably because most of the persons are already matched by the first part of the algorithm.
+	/// firstname and one of the lastname in common with the person I want to match. Of course, this
+	/// gives a lot of false positives, so I filter those results to ensure that the matches have
+	/// the same sex and either the same date of birth or the same address. Experimentally, this
+	/// lead to few false positive, even if I would have expected that such an aggressive technique
+	/// would lead to much more. This is probably because most of the persons are already matched by
+	/// the first part of the algorithm.
 	/// 
 	/// There is a third element in the algorithm. I had a few false positives in the sense that
 	/// persons in the ECh group where matched by two persons from the EERV group. In half of the
