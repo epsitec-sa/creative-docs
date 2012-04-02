@@ -19,7 +19,7 @@ namespace Epsitec.Common.BigList.Processors
 
 			this.policy = this.host.GetPolicy<MouseDragProcessorPolicy> ();
 			this.button = message.Button;
-			this.originalFrames = frames.Where (x => this.policy.Filter (x)).ToArray ();
+			this.originalFrames = this.policy.Filter (frames).ToArray ();
 			this.currentFrames = this.originalFrames.ToArray ();
 			this.origin = this.Constrain (pos);
 		}

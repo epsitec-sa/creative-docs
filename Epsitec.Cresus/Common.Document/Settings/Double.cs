@@ -156,7 +156,7 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Double.ExportPDFImageMinDpi;
 					this.integer = true;
 					this.factorMinValue = 0.0;
-					this.factorMaxValue = 600.0;
+					this.factorMaxValue = 2400.0;
 					this.factorStep = 1.0;
 					break;
 
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Document.Settings
 					this.text = Res.Strings.Dialog.Double.ExportPDFImageMaxDpi;
 					this.integer = true;
 					this.factorMinValue = 0.0;
-					this.factorMaxValue = 600.0;
+					this.factorMaxValue = 2400.0;
 					this.factorStep = 1.0;
 					break;
 

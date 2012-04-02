@@ -270,6 +270,15 @@ namespace Epsitec.Common.UI
 			}
 		}
 
+		/// <summary>
+		/// Gets embedded vertical scroller
+		/// </summary>
+		public VScroller VerticalScroller
+		{
+			get { return this.vScroller; }
+		}
+
+
 		public void DefineDefaultColumns(IStructuredType sourceType, double width)
 		{
 			System.Threading.Interlocked.Increment (ref this.suspendColumnUpdates);

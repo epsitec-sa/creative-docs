@@ -149,7 +149,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			col1.Layout.Definition.LeftBorder = 1;
 			col1.Layout.Definition.RightBorder = 0;
 			col1.Layout.Definition.MinWidth = 20;
-			col1.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (32, Common.Widgets.Layouts.GridUnitType.Absolute);
+			col1.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (32, Common.Widgets.Layouts.GridUnitType.Proportional);
 
 			col2.Title = "Timestamp";
 			col2.Index = 1;
@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			col3.Layout.Definition.LeftBorder = 1;
 			col3.Layout.Definition.RightBorder = 0;
 			col3.Layout.Definition.MinWidth = 40;
-			col3.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (100, Common.Widgets.Layouts.GridUnitType.Proportional);
+			col3.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (200, Common.Widgets.Layouts.GridUnitType.Absolute);
 
 			header.Columns.Add (col1);
 			header.Columns.Add (col2);

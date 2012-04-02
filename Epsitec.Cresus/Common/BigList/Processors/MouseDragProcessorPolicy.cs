@@ -24,7 +24,23 @@ namespace Epsitec.Common.BigList.Processors
 		}
 		
 		
-		public bool Filter(MouseDragFrame frame)
+		public IEnumerable<MouseDragFrame> Filter(IEnumerable<MouseDragFrame> frames)
+		{
+			MouseDragFrame previous = default (MouseDragFrame);
+
+			foreach (var frame in frames)
+			{
+				if (this.Filter (frame, previous))
+				{
+					yield return frame;
+				}
+
+				previous = frame;
+			}
+
+		}
+		
+		private bool Filter(MouseDragFrame frame, MouseDragFrame previous)
 		{
 			switch (this.ResizePolicy)
 			{
@@ -32,7 +48,22 @@ namespace Epsitec.Common.BigList.Processors
 					return false;
 				
 				case ResizePolicy.Independent:
-					return frame.Grip == GripId.EdgeRight || frame.Grip == GripId.EdgeBottom;
+					if (frame.Elasticity == MouseDragElasticity.None)
+					{
+						if (frame.Grip == GripId.EdgeRight || frame.Grip == GripId.EdgeBottom)
+						{
+							return true;
+						}
+						if (frame.Grip == GripId.EdgeLeft || frame.Grip == GripId.EdgeTop)
+						{
+							if ((previous.IsEmpty == false) &&
+								(previous.Elasticity == MouseDragElasticity.Stretch))
+							{
+								return true;
+							}
+						}
+					}
+					return false;
 				
 				case ResizePolicy.Coupled:
 					return true;

@@ -74,7 +74,7 @@ namespace Epsitec.Common.BigList
 			{
 				var policy = this.view.GetPolicy<MouseDragProcessorPolicy> ();
 
-				if (this.DetectDrag (pos).Any (x => policy.Filter (x)))
+				if (policy.Filter (this.DetectDrag (pos)).Any ())
 				{
 					this.view.MouseCursor = MouseCursor.AsVSplit;
 				}
@@ -193,10 +193,12 @@ namespace Epsitec.Common.BigList
 					var right = left + def.ActualWidth;
 					var rect  = this.view.GetColumnBounds (column);
 
+					var elasticity = def.Width.IsAbsolute ? MouseDragElasticity.None : MouseDragElasticity.Stretch;
+
 					if ((pos.X >= left-det) &&
 						(pos.X <= left+det))
 					{
-						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (0, rect.Bottom, rect.Right, rect.Top));
+						yield return new MouseDragFrame (column.Index, GripId.EdgeLeft, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (0, rect.Bottom, rect.Right, rect.Top), elasticity);
 					}
 
 					if ((pos.X >= right-det) &&
@@ -205,7 +207,7 @@ namespace Epsitec.Common.BigList
 						var minWidth = def.MinWidth;
 						var maxWidth = def.MaxWidth;
 
-						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (rect.Left + minWidth, rect.Bottom, System.Math.Min (this.view.Client.Width, rect.Left + maxWidth), rect.Top));
+						yield return new MouseDragFrame (column.Index, GripId.EdgeRight, rect, MouseDragDirection.Horizontal, Rectangle.FromPoints (rect.Left + minWidth, rect.Bottom, System.Math.Min (this.view.Client.Width, rect.Left + maxWidth), rect.Top), elasticity);
 					}
 				}
 			}
