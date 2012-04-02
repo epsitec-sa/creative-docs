@@ -191,19 +191,23 @@ namespace Epsitec.Aider.Data.Eerv
   			
 			var filters = new List<Tuple<double, double, double, bool, AddressMatch>>()
 			{
-				Tuple.Create(JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.None),
-				Tuple.Create(JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, false, AddressMatch.None),
-				Tuple.Create(JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.Full),
-				Tuple.Create(JaroWinkler.MaxValue, 0.95, JaroWinkler.MinValue, true, AddressMatch.Full),
-				Tuple.Create(JaroWinkler.MaxValue, 0.95, JaroWinkler.MaxValue, true, AddressMatch.None),
-				Tuple.Create(JaroWinkler.MaxValue, 0.90, JaroWinkler.MaxValue, true, AddressMatch.None),
-				Tuple.Create(JaroWinkler.MaxValue, 0.85, JaroWinkler.MaxValue, true, AddressMatch.None),
-				Tuple.Create(JaroWinkler.MaxValue, 0.80, JaroWinkler.MaxValue, true, AddressMatch.Full),
-				Tuple.Create(JaroWinkler.MaxValue, 0.85, JaroWinkler.MinValue, true, AddressMatch.Full),
-				Tuple.Create(JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.StreetZipCity),
-				Tuple.Create(JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.ZipCity),
-				Tuple.Create(JaroWinkler.MaxValue, 0.74, JaroWinkler.MaxValue, true, AddressMatch.ZipCity),
-				Tuple.Create(0.95, 0.95, JaroWinkler.MaxValue, true, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.Full),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.StreetZipCity),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.ZipCity),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, true, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MaxValue, false, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.Full),			
+				Tuple.Create (JaroWinkler.MaxValue, 0.95, JaroWinkler.MinValue, true, AddressMatch.Full),
+				Tuple.Create (JaroWinkler.MaxValue, 0.95, JaroWinkler.MaxValue, true, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, 0.90, JaroWinkler.MaxValue, true, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, 0.85, JaroWinkler.MaxValue, true, AddressMatch.None),
+				Tuple.Create (JaroWinkler.MaxValue, 0.80, JaroWinkler.MaxValue, true, AddressMatch.Full),
+				Tuple.Create (JaroWinkler.MaxValue, 0.85, JaroWinkler.MinValue, true, AddressMatch.Full),			
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.Full),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.StreetZipCity),
+				Tuple.Create (JaroWinkler.MaxValue, JaroWinkler.MaxValue, JaroWinkler.MinValue, true, AddressMatch.ZipCity),
+				Tuple.Create (JaroWinkler.MaxValue, 0.74, JaroWinkler.MaxValue, true, AddressMatch.ZipCity),
+				Tuple.Create (0.95, 0.95, JaroWinkler.MaxValue, true, AddressMatch.None),
 			};
 
 			foreach (var filter in filters)
