@@ -1,14 +1,15 @@
 ﻿using Epsitec.Aider.Enumerations;
+using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support;
 
 using Epsitec.Common.Types;
 
+using Epsitec.Data.Platform;
+
 using System;
 
 using System.Collections.Generic;
-
-using System.Globalization;
 
 using System.IO;
 
@@ -336,16 +337,32 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static EChAddress GetEChAddress(XElement xAddress)
 		{
-			var addressLine1      = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.AddressLine1);
-			var street            = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Street);
-			var houseNumber       = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.HouseNumber);
-			var town              = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Town);
-			var swissZipCode      = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCode);
-			var swissZipCodeAddOn = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeAddOn);
-			var swissZipCodeId    = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
-			var countryCode       = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
+			var addressLine1 = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.AddressLine1);
+			var street = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Street);
 
-			return new EChAddress (addressLine1, street, houseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode);
+			var rawHouseNumber = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.HouseNumber);
+			var stripedHouseNumber = SwissPostStreet.StripHouseNumber (rawHouseNumber);
+			var houseNumber = string.IsNullOrWhiteSpace (stripedHouseNumber)
+				? (int?) null
+				: int.Parse (stripedHouseNumber);
+
+			var town = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Town);
+
+			var rawSwissZipCode = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCode);
+			var swissZipCode = InvariantConverter.ParseInt (rawSwissZipCode);
+
+			var rawSwissZipCodeAddOn = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeAddOn);
+			var swissZipCodeAddOn = InvariantConverter.ParseInt (rawSwissZipCodeAddOn);
+
+			var rawSwissZipCodeId = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.SwissZipCodeId);
+			var swissZipCodeId = InvariantConverter.ParseInt (rawSwissZipCodeId);
+
+			var countryCode = EChDataLoader.GetChildStringValue (xAddress, EChXmlTags.ECh0010.Country);
+
+			EChAddressFixesRepository.FixAddress (ref street, houseNumber, ref swissZipCode, ref swissZipCodeAddOn, ref swissZipCodeId, ref town);
+			AddressPatchEngine.Current.FixAddress (ref addressLine1, ref street, houseNumber, ref swissZipCode, ref swissZipCodeAddOn, ref swissZipCodeId, ref town);
+
+			return new EChAddress (addressLine1, street, rawHouseNumber, town, swissZipCode, swissZipCodeAddOn, swissZipCodeId, countryCode);
 		}
 
 

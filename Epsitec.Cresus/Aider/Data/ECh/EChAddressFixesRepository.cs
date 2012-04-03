@@ -1,11 +1,14 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Tools;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Data.Platform;
 
 using System.Collections.Generic;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Data.ECh
@@ -21,7 +24,6 @@ namespace Epsitec.Aider.Data.ECh
 		private EChAddressFixesRepository()
 		{
 			this.fixes = new DictionaryOfFixes ();
-			this.failures = new HashSet<string> ();
 
 			foreach (var item in EChAddressFixesRepository.GetFixes ())
 			{
@@ -29,13 +31,20 @@ namespace Epsitec.Aider.Data.ECh
 			}
 		}
 
-
 		public static readonly EChAddressFixesRepository	Current = new EChAddressFixesRepository ();
 
-
-		public IEnumerable<string> GetFailures()
+		public static void FixAddress(ref string street, int? houseNumber, ref int zipCode, ref int zipCodeAddOn, ref int zipCodeId, ref string town)
 		{
-			return this.failures;
+			if (EChAddressFixesRepository.Current.ApplyQuickFix (ref zipCode, ref street))
+			{
+				var streetCopy = street;
+
+				var hits = SwissPostStreetRepository.Current
+					.FindStreets (zipCode)
+					.Where (x => x.MatchName (streetCopy));
+
+				AddressPatchEngine.FixAddress (hits, ref street, houseNumber, ref zipCode, ref zipCodeAddOn, ref zipCodeId, ref town);
+			}
 		}
 
 		internal bool ApplyQuickFix(ref int zipCode, ref string streetName)
@@ -54,13 +63,7 @@ namespace Epsitec.Aider.Data.ECh
 
 			return false;
 		}
-
-		internal void RegisterFailure(string message)
-		{
-			this.failures.Add (message);
-		}
-
-		
+	
 		private static IEnumerable<KeyValuePair<string, System.Tuple<string, string>>> GetFixes()
 		{
 			foreach (var line in EChAddressFixesRepository.GetSourceFile ())
@@ -86,8 +89,6 @@ namespace Epsitec.Aider.Data.ECh
 			return Epsitec.Common.IO.StringLineExtractor.GetLines (source);
 		}
 
-
 		private readonly DictionaryOfFixes		fixes;
-		private readonly HashSet<string>		failures;
 	}
 }

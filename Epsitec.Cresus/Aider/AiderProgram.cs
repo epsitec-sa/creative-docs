@@ -93,7 +93,6 @@ namespace Epsitec.Aider
 
 			System.IO.File.WriteAllLines ("unresolved addresses.txt", unresolved.OrderBy (x => x), System.Text.Encoding.Default);
 			System.IO.File.WriteAllLines ("unresolved addresses (compact).txt", unresolvedCompact.OrderBy (x => x), System.Text.Encoding.Default);
-			System.IO.File.WriteAllLines ("unresolved eCH addresses.txt", EChAddressFixesRepository.Current.GetFailures ().OrderBy (x => x), System.Text.Encoding.Default);
 		}
 
 		private static void TestEChImporter()
