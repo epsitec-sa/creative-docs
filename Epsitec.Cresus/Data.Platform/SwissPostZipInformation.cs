@@ -4,9 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 
-using System.Collections.Generic;
-using System.Linq;
-
 namespace Epsitec.Data.Platform
 {
 	/// <summary>
