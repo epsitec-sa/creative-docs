@@ -1,7 +1,4 @@
-﻿using System;
-
-
-namespace Epsitec.Common.Text
+﻿namespace Epsitec.Common.Text
 {
 
 
