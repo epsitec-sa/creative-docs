@@ -46,11 +46,9 @@ namespace Aider.Tests.Vs
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextManager, eChReportedPersons);
-				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (businessContextManager, parishRepository);
-				GC.Collect (GC.MaxGeneration, GCCollectionMode.Forced);
 
 				Services.ShutDown ();
 			}
