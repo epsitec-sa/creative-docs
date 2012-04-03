@@ -1,10 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Entities;
-
 using System.Collections.Generic;
-using System.Linq;
 
 namespace Epsitec.Aider.Entities.Helpers
 {
@@ -15,7 +12,6 @@ namespace Epsitec.Aider.Entities.Helpers
 		{
 		}
 
-
 		public override int MaxCount
 		{
 			get
@@ -24,18 +20,9 @@ namespace Epsitec.Aider.Entities.Helpers
 			}
 		}
 
-
 		protected override IEnumerable<AiderHouseholdEntity> GetItems()
 		{
-			if (this.entity.Household1.IsNotNull ())
-			{
-				yield return this.entity.Household1;
-			}
-
-			if (this.entity.Household2.IsNotNull ())
-			{
-				yield return this.entity.Household2;
-			}
+			return this.entity.GetHouseholds ();
 		}
 
 		protected override void ReplaceItems(IList<AiderHouseholdEntity> list)

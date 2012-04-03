@@ -299,6 +299,23 @@ namespace Epsitec.Aider.Entities
 			value = this.householdList;
 		}
 
+		public IEnumerable<AiderHouseholdEntity> GetHouseholds()
+		{
+			var household1 = this.Household1;
+
+			if (household1.IsNotNull())
+			{
+				yield return household1;
+			}
+
+			var household2 = this.Household2;
+
+			if (household2.IsNotNull ())
+			{
+				yield return household2;
+			}
+		}
+
 		partial void GetAdditionalAddresses(ref IList<AiderAddressEntity> value)
 		{
 			if (this.additionalAddresses == null)
