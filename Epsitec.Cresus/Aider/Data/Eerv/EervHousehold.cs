@@ -56,6 +56,23 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public IEnumerable<EervPerson> Heads
+		{
+			get
+			{
+				if (this.head1 != null)
+				{
+					yield return this.head1;
+				}
+
+				if (this.head2 != null)
+				{
+					yield return this.head2;
+				}
+			}
+		}
+
+
 		public IList<EervPerson> Children
 		{
 			get
@@ -69,14 +86,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			get
 			{
-				if (this.Head1 != null)
+				foreach (var head in this.Heads)
 				{
-					yield return this.Head1;
-				}
-
-				if (this.Head2 != null)
-				{
-					yield return this.Head2;
+					yield return head;
 				}
 
 				foreach (var child in this.Children)
