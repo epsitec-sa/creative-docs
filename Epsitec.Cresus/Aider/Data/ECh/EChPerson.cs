@@ -4,8 +4,6 @@ using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
-using System;
-
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
