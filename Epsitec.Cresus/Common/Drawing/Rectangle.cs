@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Drawing
 {
 	using XmlAttribute = System.Xml.Serialization.XmlAttributeAttribute;
@@ -203,25 +206,25 @@ namespace Epsitec.Common.Drawing
 		[XmlIgnore]
 		public Point							MiddleLeft
 		{
-			get { return new Point (this.x1, (this.y2 - this.y1) / 2); }
+			get { return new Point (this.x1, (this.y1 + this.y2) / 2); }
 		}
 
 		[XmlIgnore]
 		public Point							MiddleRight
 		{
-			get { return new Point (this.x2, (this.y2 - this.y1) / 2); }
+			get { return new Point (this.x2, (this.y1 + this.y2) / 2); }
 		}
 
 		[XmlIgnore]
 		public Point							MiddleTop
 		{
-			get { return new Point ((this.x2 - this.x1) / 2, this.y2); }
+			get { return new Point ((this.x1 + this.x2) / 2, this.y2); }
 		}
 
 		[XmlIgnore]
 		public Point							MiddleBottom
 		{
-			get { return new Point ((this.x2 - this.x1) / 2, this.y1); }
+			get { return new Point ((this.x1 + this.x2) / 2, this.y1); }
 		}
 		
 		[XmlIgnore]
@@ -261,6 +264,13 @@ namespace Epsitec.Common.Drawing
 			}
 			
 			throw new System.ArgumentOutOfRangeException ("GripId", grip, "GripId is out of range.");
+		}
+
+		public IEnumerable<Point> GetGrips()
+		{
+			var rect = this;
+
+			return GripIds.All ().Select (grip => rect.GetGrip (grip));
 		}
 		
 		public void SetGrip(GripId grip, Point pos)
@@ -600,6 +610,29 @@ namespace Epsitec.Common.Drawing
 		}
 
 
+		public double DistanceToOutline(Point p)
+		{
+			var d1 = Point.DistanceToSegment (this.BottomLeft, this.BottomRight, p);
+			var d2 = Point.DistanceToSegment (this.TopLeft, this.TopRight, p);
+			var d3 = Point.DistanceToSegment (this.BottomLeft, this.TopLeft, p);
+			var d4 = Point.DistanceToSegment (this.BottomRight, this.TopRight, p);
+
+			return System.Math.Min (System.Math.Min (d1, d2), System.Math.Min (d3, d4));
+		}
+
+		public double DistanceToSurface(Point p)
+		{
+			if (this.Contains (p))
+			{
+				return 0;
+			}
+			else
+			{
+				return this.DistanceToOutline (p);
+			}
+		}
+
+		
 		public static Rectangle FromOppositeCorners(double x1, double y1, double x2, double y2)
 		{
 			Rectangle r;

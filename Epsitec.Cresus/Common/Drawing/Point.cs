@@ -1,5 +1,8 @@
-﻿//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+﻿//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Drawing
 {
@@ -53,6 +56,28 @@ namespace Epsitec.Common.Drawing
 		public Size ToSize()
 		{
 			return new Size (this.x, this.y);
+		}
+
+		public PointDistance GetNearest<T>(IEnumerable<T> collection, System.Func<T, Point> selector)
+		{
+			return this.GetNearest (collection.Select (selector));
+		}
+
+		public PointDistance GetNearest(IEnumerable<Point> collection)
+		{
+			var best = PointDistance.Empty;
+
+			foreach (var current in collection)
+			{
+				var distance = Point.Distance (this, current);
+				
+				if (distance < best.Distance)
+				{
+					best = new PointDistance (current, distance);
+				}
+			}
+
+			return best;
 		}
 
 
@@ -254,22 +279,84 @@ namespace Epsitec.Common.Drawing
 			
 			return System.Math.Sqrt (dx*dx + dy*dy);
 		}
+
+		public static double DistanceToSegment(Point a, Point b, Point p)
+		{
+			if (a == b)
+			{
+				return Point.Distance (a, p);
+			}
+
+			double k;
+
+			var dx = b.X-a.X;
+			var dy = b.Y-a.Y;
+			
+			k  = dx*(p.X-a.X) + dy*(p.Y-a.Y);
+			k /= dx*dx + dy*dy;
+
+			if (k < 0)
+			{
+				return Point.Distance (a, p);
+			}
+			if (k > 1)
+			{
+				return Point.Distance (b, p);
+			}
+
+			return Point.Distance (new Point (a.X + k*dx, a.Y + k*dy), p);
+		}
+
+		public static bool CanProjectOnSegment(Point a, Point b, Point p)
+		{
+			return Point.GetProjectionScale (a, b, p, strict: true) != null;
+		}
+
+		public static double? GetProjectionScale(Point a, Point b, Point p, bool strict = false)
+		{
+			if (a == b)
+			{
+				return null;
+			}
+
+			double k;
+
+			var dx = b.X-a.X;
+			var dy = b.Y-a.Y;
+
+			k  = dx*(p.X-a.X) + dy*(p.Y-a.Y);
+			k /= dx*dx + dy*dy;
+
+			if (strict)
+			{
+				if ((k < 0) ||
+					(k > 1))
+				{
+					return null;
+				}
+			}
+
+			return k;
+		}
 		
 		public static Point Projection(Point a, Point b, Point p)
 		{
 			//	Calcule la projection d'un point P sur une droite AB.
 
-			if ((a.X == b.X) && (a.Y == b.Y))
+			if (a == b)
 			{
-				return a;
+				return p;
 			}
 			
 			double k;
+
+			var dx = b.X-a.X;
+			var dy = b.Y-a.Y;
 			
-			k  = (b.X-a.X)*(p.X-a.X) + (b.Y-a.Y)*(p.Y-a.Y);
-			k /= (b.X-a.X)*(b.X-a.X) + (b.Y-a.Y)*(b.Y-a.Y);
+			k  = dx*(p.X-a.X) + dy*(p.Y-a.Y);
+			k /= dx*dx + dy*dy;
 			
-			return new Point (a.X + k*(b.X-a.X), a.Y + k*(b.Y-a.Y));
+			return new Point (a.X + k*dx, a.Y + k*dy);
 		}
 		
 		public static Point Scale(Point a, Point b, double scale)
@@ -297,7 +384,8 @@ namespace Epsitec.Common.Drawing
 			return new Point (c.X-(a.X-c.X), c.Y-(a.Y-c.Y));
 		}
 
-
+		
+		
 		public static bool DetectSegment(Point a, Point b, Point p, double width)
 		{
 			//	Détecte si le point P est sur un segment AB d'épaisseur 'width'.
