@@ -2,7 +2,6 @@
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
-using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -51,7 +50,7 @@ namespace Epsitec.Aider.Data.ECh
 
 		private static Dictionary<Tuple<int, string>, EntityKey> ImportTowns(BusinessContext businessContext, IEnumerable<EChReportedPerson> echReportedPersons)
 		{
-			var switzerland = EChDataImporter.ImportSwitzerland (businessContext);
+			var switzerland = AiderCountryEntity.FindOrCreate (businessContext, "CH", "Suisse");
 
 			var towns = EChDataImporter.ImportTowns (businessContext, echReportedPersons, switzerland);
 
@@ -62,29 +61,6 @@ namespace Epsitec.Aider.Data.ECh
 				t => Tuple.Create (t.SwissZipCode.Value, t.Name),
 				t => businessContext.DataContext.GetNormalizedEntityKey (t).Value
 			);
-		}
-
-
-		private static AiderCountryEntity ImportSwitzerland(BusinessContext businessContext)
-		{
-			var switzerlandExample = new AiderCountryEntity ()
-			{
-				IsoCode = "CH",
-			};
-
-			var switzerland = businessContext.DataContext
-				.GetByExample<AiderCountryEntity> (switzerlandExample)
-				.FirstOrDefault ();
-
-			if (switzerland == null)
-			{
-				switzerland = businessContext.CreateEntity<AiderCountryEntity> ();
-
-				switzerland.IsoCode = "CH";
-				switzerland.Name = "Suisse";
-			}
-
-			return switzerland;
 		}
 
 
@@ -105,37 +81,12 @@ namespace Epsitec.Aider.Data.ECh
 				var zipCode = town.Item1;
 				var name = town.Item2;
 
-				var aiderTown = EChDataImporter.ImportTown (businessContext, switzerland, zipCode, name);
+				var aiderTown = AiderTownEntity.FindOrCreate (businessContext, switzerland, zipCode, name);
 
 				aiderTowns.Add (aiderTown);
 			}
 
 			return aiderTowns;
-		}
-
-
-		private static AiderTownEntity ImportTown(BusinessContext businessContext, AiderCountryEntity switzerland, int zipCode, string name)
-		{
-			var townSample = new AiderTownEntity ()
-			{
-				SwissZipCode = zipCode,
-				Name = name,
-			};
-
-			var aiderTown = businessContext.DataContext
-				.GetByExample<AiderTownEntity> (townSample)
-				.FirstOrDefault ();
-
-			if (aiderTown == null)
-			{
-				aiderTown = businessContext.CreateEntity<AiderTownEntity> ();
-
-				aiderTown.SwissZipCode = zipCode;
-				aiderTown.Name = name;
-				aiderTown.Country = switzerland;
-			}
-
-			return aiderTown;
 		}
 
 

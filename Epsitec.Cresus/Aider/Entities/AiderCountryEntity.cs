@@ -1,12 +1,15 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+
+using System.Linq;
 
 namespace Epsitec.Aider.Entities
 {
@@ -16,7 +19,6 @@ namespace Epsitec.Aider.Entities
 		{
 			return TextFormatter.FormatText (this.Name, "(~", this.IsoCode, "~)");
 		}
-
 
 		public override FormattedText GetCompactSummary()
 		{
@@ -32,6 +34,34 @@ namespace Epsitec.Aider.Entities
 				
 				return a.EntityStatus;
 			}
+		}
+
+		public static AiderCountryEntity FindOrCreate(BusinessContext businessContext, string isoCode, string name)
+		{
+			var country = AiderCountryEntity.Find (businessContext, isoCode, name);
+
+			if (country == null)
+			{
+				country = businessContext.CreateEntity<AiderCountryEntity> ();
+
+				country.IsoCode = isoCode;
+				country.Name = name;
+			}
+
+			return country;
+		}
+
+		public static AiderCountryEntity Find(BusinessContext businessContext, string isoCode, string name)
+		{
+			var example = new AiderCountryEntity ()
+			{
+				Name = name,
+				IsoCode = isoCode,
+			};
+
+			return businessContext.DataContext
+				.GetByExample<AiderCountryEntity> (example)
+				.FirstOrDefault ();
 		}
 	}
 }
