@@ -237,7 +237,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignPersonToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderPersonEntity person)
 		{
-			var address = person.Households.First ().Address;
+			var address = person.GetHouseholds ().First ().Address;
 			var parishGroup = EervMainDataImporter.FindParishGroup (businessContext, parishRepository, parishNamesToEntityKeys, address);
 
 			if (parishGroup == null)

@@ -119,7 +119,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var person in persons)
 			{
-				foreach (var household in person.Households)
+				foreach (var household in person.GetHouseholds ())
 				{
 					if (household.Head1 != person && household.Head2 != person)
 					{
