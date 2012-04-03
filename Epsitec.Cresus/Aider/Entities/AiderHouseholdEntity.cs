@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -105,5 +106,29 @@ namespace Epsitec.Aider.Entities
 		}
 
 
+		public IList<AiderPersonEntity> GetHeads()
+		{
+			var heads = new List<AiderPersonEntity> ();
+
+			var head1 = this.Head1;
+
+			if (head1.IsNotNull ())
+			{
+				heads.Add (head1);
+			}
+
+			var head2 = this.Head2;
+
+			if (head2.IsNotNull ())
+			{
+				heads.Add (head2);
+			}
+
+			return heads;
+		}
+
+
 	}
+
+
 }
