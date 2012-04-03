@@ -17,7 +17,10 @@ namespace Epsitec.Data.Platform
 		{
 			foreach (var line in SwissPostZip.GetZipPlusFile ())
 			{
-				yield return new SwissPostZipInformation (line);
+				if (!string.IsNullOrWhiteSpace (line))
+				{
+					yield return new SwissPostZipInformation (line);
+				}
 			}
 		}
 
