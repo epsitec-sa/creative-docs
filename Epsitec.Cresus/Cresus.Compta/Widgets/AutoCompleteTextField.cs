@@ -545,6 +545,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
+				//	Sélectionne dans le menu la case correspondant au texte donné en entrée.
 				this.selectedHint = -1;
 				var typed = Strings.PreparingForSearh (this.Text);
 				

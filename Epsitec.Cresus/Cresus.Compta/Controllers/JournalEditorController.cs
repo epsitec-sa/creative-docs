@@ -140,15 +140,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.fieldControllers.Add (new List<AbstractFieldController> ());
 
-			var editorFrame = new FrameBox
+			var hilitableFrame = new CustomFrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 20,
+				PreferredHeight = 1+20+1,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 1, 0),
 			};
 
-			this.linesFrames.Add (editorFrame);
+			var editorFrame = new FrameBox
+			{
+				Parent          = hilitableFrame,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 1, 1),
+			};
+
+			this.linesFrames.Add (hilitableFrame);
 			int line = this.linesFrames.Count - 1;
 			int tabIndex = 0;
 
@@ -851,6 +857,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Appelé lorsqu'un champ prend le focus. C'est ici qu'on complète l'écriture, lorsqu'on crée
 			//	une écriture multiple, qu'on a donné un compte avec code TVA, etc.
 			base.HandleSetFocus (line, columnType);
+			this.HiliteCurrentLine ();
 
 			bool changed = false;
 
@@ -1746,6 +1753,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				this.scroller.Visibility = false;
+			}
+		}
+
+		private void HiliteCurrentLine()
+		{
+			//	Met en évidence la ligne contenant le curseur (focus).
+			for (int i = 0; i < this.linesFrames.Count; i++)
+			{
+				var box = this.linesFrames[i] as CustomFrameBox;
+				box.HilitedFrame = (i == this.selectedLine);
 			}
 		}
 

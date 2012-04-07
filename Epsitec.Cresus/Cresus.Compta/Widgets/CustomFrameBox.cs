@@ -19,18 +19,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		public bool ToComplete
+		public bool HilitedFrame
 		{
-			//	Indique si le champ nécessite un complément avant de pouvoir créer l'écriture.
+			//	Indique s'il faut mettre en évidence le cadre.
 			get
 			{
-				return this.toComplete;
+				return this.hilitedFrame;
 			}
 			set
 			{
-				if (this.toComplete != value)
+				if (this.hilitedFrame != value)
 				{
-					this.toComplete = value;
+					this.hilitedFrame = value;
 					this.Invalidate ();
 				}
 			}
@@ -132,14 +132,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			Rectangle rect = this.GetFrameRectangle ();
 
-			if (this.toComplete)
+			if (this.hilitedFrame)
 			{
-				//	Dessine un cadre vert pointillé.
-				rect.Deflate (0.5);
-				using (Path path = new Path (rect))
-				{
-					graphics.PaintDashedOutline (path, 2, 3, 5, CapStyle.Square, UIBuilder.FieldToCompleteColor);
-				}
+				//	Met en évidence le cadre.
+				graphics.AddFilledRectangle (rect);
+				graphics.RenderSolid (Color.FromAlphaRgb (0.05, 0.0, 0.0, 0.0));
+
+				graphics.AddRectangle (rect);
+				graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.0, 0.0, 0.0));
 			}
 
 			if (this.emptyLineAdorner)
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		private bool			toComplete;
+		private bool			hilitedFrame;
 		private bool			emptyLineAdorner;
 		private bool			baseTVAAdorner;
 		private bool			codeTVAAdorner;
