@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureProposeVide,      true));
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreType,       false));  // true pour le debug
 			this.Add (new BoolSettingData    (SettingsGroup.Ecriture, SettingsType.EcritureMontreOrigineTVA, false));  // true pour le debug
-			this.Add (new DecimalSettingData (SettingsGroup.Ecriture, SettingsType.EcritureArrondiTVA, 0.05m, 0.0m, 1.0m));
+			this.Add (new DecimalSettingData (SettingsGroup.Ecriture, SettingsType.EcritureArrondiTVA, 0.01m, 0.0m, 1.0m));
 
 			//	Réglages pour les montants :
 			this.Add (new IntSettingData    (SettingsGroup.Price, SettingsType.PriceDecimalDigits,    2, 0, 5));

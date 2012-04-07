@@ -136,10 +136,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				//	Met en évidence le cadre.
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromAlphaRgb (0.05, 0.0, 0.0, 0.0));
+				graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.0, 0.0, 0.0));
 
 				graphics.AddRectangle (rect);
-				graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.0, 0.0, 0.0));
+				graphics.RenderSolid (Color.FromAlphaRgb (0.5, 0.0, 0.0, 0.0));
 			}
 
 			if (this.emptyLineAdorner)
