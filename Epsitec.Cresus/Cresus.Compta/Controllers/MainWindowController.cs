@@ -1362,12 +1362,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		[Command (Res.CommandIds.Multi.Insert)]
-		private void CommandMultiInsert()
+		[Command (Res.CommandIds.Multi.InsertBefore)]
+		private void CommandMultiInsertBefore()
 		{
 			if (this.controller != null && this.controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiInsertLineAction ();
+				this.controller.EditorController.MultiInsertLineAction (true);
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.InsertAfter)]
+		private void CommandMultiInsertAfter()
+		{
+			if (this.controller != null && this.controller.EditorController != null)
+			{
+				this.controller.EditorController.MultiInsertLineAction (false);
 			}
 		}
 

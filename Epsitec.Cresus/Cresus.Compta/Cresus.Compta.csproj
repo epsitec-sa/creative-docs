@@ -345,6 +345,8 @@
     <None Include="External\Data\pme 2011.crp" />
     <EmbeddedResource Include="Images\Multi.InsertTVA.icon" />
     <EmbeddedResource Include="Images\Multi.LastLine.icon" />
+    <EmbeddedResource Include="Images\Multi.InsertAfter.icon" />
+    <EmbeddedResource Include="Images\Multi.InsertBefore.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

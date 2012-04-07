@@ -403,7 +403,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		public virtual void MultiInsertLineAction()
+		public virtual void MultiInsertLineAction(bool before)
 		{
 		}
 

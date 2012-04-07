@@ -151,7 +151,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Edit.Delete, false);
 
 			this.SetCommandEnable (Res.Commands.Multi.LastLine, false);
-			this.SetCommandEnable (Res.Commands.Multi.Insert, false);
+			this.SetCommandEnable (Res.Commands.Multi.InsertBefore, false);
+			this.SetCommandEnable (Res.Commands.Multi.InsertAfter, false);
 			this.SetCommandEnable (Res.Commands.Multi.InsertTVA, false);
 			this.SetCommandEnable (Res.Commands.Multi.Delete, false);
 			this.SetCommandEnable (Res.Commands.Multi.Up, false);

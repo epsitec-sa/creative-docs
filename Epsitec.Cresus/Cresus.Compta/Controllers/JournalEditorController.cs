@@ -267,12 +267,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			double buttonWidth = 40;
 			double iconWidth   = 32;
 
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.LastLine,  buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Insert,    buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertTVA, buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Delete,    buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Swap,      buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Auto,      buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.LastLine,     buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertBefore, buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertAfter,  buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertTVA,    buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Delete,       buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Swap,         buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Auto,         buttonWidth, iconWidth);
 
 			var upDown = new FrameBox
 			{
@@ -550,42 +551,53 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.EditorSelect (columnType, line);
 		}
 
-		public override void MultiInsertLineAction()
+		public override void MultiInsertLineAction(bool before)
 		{
-			//	Commande [+] actionnée.
+			//	Commande [+] before/after actionnée.
 			int line = this.IndexOfEmptyLine;
 
 			if (line == -1)
 			{
 				//	Insère une nouvelle ligne vide après la ligne courante.
-				this.InsertEmptyLine ();
+				this.InsertEmptyLine (before);
 			}
 			else
 			{
-				if (line == this.selectedLine || line == this.selectedLine+1)  // ligne vide déjà à la bonne place ?
+				if (line == this.selectedLine || line == this.selectedLine+(before?-1:1))  // ligne vide déjà à la bonne place ?
 				{
 					this.GotoEmptyLine ();
 				}
 				else
 				{
 					this.RemoveEmptyLine ();  // supprime-la
-					this.InsertEmptyLine ();  // puis insère-la à la place souhaitée
+					this.InsertEmptyLine (before);  // puis insère-la à la place souhaitée
 				}
 			}
 		}
 
-		private void InsertEmptyLine()
+		private void InsertEmptyLine(bool before)
 		{
-			//	Insère une nouvelle ligne vide après la ligne courante.
+			//	Insère une nouvelle ligne vide avant/après la ligne courante.
 			bool isDébitMulti = this.IsDébitMulti (this.selectedLine);
 			var multiActiveColumn = isDébitMulti ? ColumnType.Crédit : ColumnType.Débit;
 
-			this.selectedLine++;
-
-			//	N'insère jamais entre BaseTVA et CodeTVA !
-			if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+			if (before)
+			{
+				//	N'insère jamais entre BaseTVA et CodeTVA !
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				{
+					this.selectedLine--;
+				}
+			}
+			else
 			{
 				this.selectedLine++;
+
+				//	N'insère jamais entre BaseTVA et CodeTVA !
+				if (this.GetTypeEcriture (this.selectedLine) == TypeEcriture.CodeTVA)
+				{
+					this.selectedLine++;
+				}
 			}
 
 			this.dataAccessor.InsertEditionLine (this.selectedLine);
@@ -1821,14 +1833,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			bool enable = this.dataAccessor.IsActive;
 			int count = this.linesFrames.Count;
 
-			this.controller.SetCommandEnable (Res.Commands.Multi.LastLine,  this.isMulti);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Insert,    this.IsCommandInsertEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA, this.IsCommandInsertTVAEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,    this.IsCommandDeleteEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Up,        this.IsCommandUpEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Down,      this.IsCommandDownEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,      this.IsCommandSwapEnable);
-			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,      this.IsCommandAutoEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.LastLine,     this.isMulti);
+			this.controller.SetCommandEnable (Res.Commands.Multi.InsertBefore, this.IsCommandInsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.InsertAfter,  this.IsCommandInsertEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.InsertTVA,    this.IsCommandInsertTVAEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Delete,       this.IsCommandDeleteEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Up,           this.IsCommandUpEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Down,         this.IsCommandDownEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,         this.IsCommandSwapEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,         this.IsCommandAutoEnable);
 		}
 
 		private bool IsCommandInsertEnable
