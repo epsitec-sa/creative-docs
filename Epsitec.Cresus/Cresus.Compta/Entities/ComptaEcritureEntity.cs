@@ -96,7 +96,8 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 				else
 				{
-					string m = string.Format (" (TTC {0}), ", Converters.MontantToString (this.Montant + this.MontantComplément.GetValueOrDefault ()));
+					//?string m = string.Format (" (TTC {0}), ", Converters.MontantToString (this.Montant + this.MontantComplément.GetValueOrDefault ()));
+					string m = string.Format (" (HT {0}), ", Converters.MontantToString (this.MontantComplément.GetValueOrDefault ()));
 					return FormattedText.Concat (this.Libellé, m, ComptaEcritureEntity.GetLibelléTVA (this.CodeTVA.Code, this.TauxTVA));
 				}
 			}
