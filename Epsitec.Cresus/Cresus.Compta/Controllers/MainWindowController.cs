@@ -1425,6 +1425,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		[Command (Res.CommandIds.Multi.Split)]
+		private void CommandMultiSplit()
+		{
+			if (this.controller != null && this.controller.EditorController != null)
+			{
+				this.controller.EditorController.MultiLineSplitAction ();
+			}
+		}
+
+		[Command (Res.CommandIds.Multi.Join)]
+		private void CommandMultiJoin()
+		{
+			if (this.controller != null && this.controller.EditorController != null)
+			{
+				this.controller.EditorController.MultiLineJoinAction ();
+			}
+		}
+
 		[Command (Res.CommandIds.Multi.Auto)]
 		private void CommandMultiAuto()
 		{

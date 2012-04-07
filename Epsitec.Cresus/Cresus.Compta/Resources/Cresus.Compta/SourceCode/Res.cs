@@ -132,8 +132,12 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command InsertBefore = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 246));
 				//	designer:cap/OVKI7
 				public static readonly global::Epsitec.Common.Widgets.Command InsertTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 242));
+				//	designer:cap/OVKO7
+				public static readonly global::Epsitec.Common.Widgets.Command Join = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 248));
 				//	designer:cap/OVKL7
 				public static readonly global::Epsitec.Common.Widgets.Command LastLine = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 245));
+				//	designer:cap/OVKN7
+				public static readonly global::Epsitec.Common.Widgets.Command Split = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 247));
 				//	designer:cap/OVKV1
 				public static readonly global::Epsitec.Common.Widgets.Command Swap = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 63));
 				//	designer:cap/OVKT1
@@ -403,8 +407,12 @@ namespace Epsitec.Cresus.Compta
 				public const long InsertBefore = 0x3F8000140000F6L;
 				//	designer:cap/OVKI7
 				public const long InsertTVA = 0x3F8000140000F2L;
+				//	designer:cap/OVKO7
+				public const long Join = 0x3F8000140000F8L;
 				//	designer:cap/OVKL7
 				public const long LastLine = 0x3F8000140000F5L;
+				//	designer:cap/OVKN7
+				public const long Split = 0x3F8000140000F7L;
 				//	designer:cap/OVKV1
 				public const long Swap = 0x3F80001400003FL;
 				//	designer:cap/OVKT1

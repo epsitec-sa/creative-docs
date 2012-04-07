@@ -158,6 +158,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Multi.Up, false);
 			this.SetCommandEnable (Res.Commands.Multi.Down, false);
 			this.SetCommandEnable (Res.Commands.Multi.Swap, false);
+			this.SetCommandEnable (Res.Commands.Multi.Split, false);
+			this.SetCommandEnable (Res.Commands.Multi.Join, false);
 			this.SetCommandEnable (Res.Commands.Multi.Auto, false);
 
 			this.mainWindowController.SetTitleComplement (null);

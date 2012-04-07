@@ -514,6 +514,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			int multiId = this.période.Journal[row].MultiId;
 
+			if (this.CountEditedRowWithoutEmpty == 1)  // écriture simple ?
+			{
+				multiId = 0;  // ce n'est pas (plus) une écriture multiple
+			}
+			else  // écriture multiple ?
+			{
+				//	S'il s'agit d'une écriture simple devenue multiple, il faut lui attribuer un numéro unique.
+				if (multiId == 0)
+				{
+					multiId = this.période.ProchainMultiId;
+				}
+			}
+
 			ComptaJournalEntity journalUtilisé = null;
 			var pièces = new List<FormattedText> ();
 
@@ -541,6 +554,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					//	Met à jour une écriture existante.
 					écriture = this.période.Journal[row];
 					data.DataToEntity (écriture);
+					écriture.MultiId = multiId;
 				}
 
 				journalUtilisé = écriture.Journal;

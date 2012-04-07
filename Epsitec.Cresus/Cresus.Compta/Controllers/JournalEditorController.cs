@@ -273,6 +273,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertTVA,    buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Delete,       buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Swap,         buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Split,        buttonWidth, iconWidth);
+			UIBuilder.CreateButton (frame, Res.Commands.Multi.Join,         buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Auto,         buttonWidth, iconWidth);
 
 			var upDown = new FrameBox
@@ -601,13 +603,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.dataAccessor.InsertEditionLine (this.selectedLine);
-
 			this.SetTypeEcriture (this.selectedLine, TypeEcriture.Vide);
 
 			int cp = this.IndexTotalAutomatique;
 			if (cp != -1)
 			{
-				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[cp].GetText (ColumnType.Date));
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Journal));
 				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Montant, Converters.MontantToString (0));
 
@@ -836,6 +837,67 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.dataAccessor.EditionLine[line].SetText (ColumnType.Débit, crédit);
 			this.dataAccessor.EditionLine[line].SetText (ColumnType.Crédit, débit);
+		}
+
+		public override void MultiLineSplitAction()
+		{
+			ColumnType d, c;
+
+			if (this.selectedColumn == ColumnType.Crédit)
+			{
+				d = ColumnType.Crédit;
+				c = ColumnType.Débit;
+			}
+			else
+			{
+				d = ColumnType.Débit;
+				c = ColumnType.Crédit;
+			}
+
+			this.dataAccessor.InsertEditionLine (-1);  // 2ème ligne
+
+			this.SetTypeEcriture (1, TypeEcriture.Normal);
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
+			this.dataAccessor.EditionLine[1].SetText (d,                  JournalDataAccessor.multi);
+			this.dataAccessor.EditionLine[1].SetText (c,                  this.dataAccessor.EditionLine[0].GetText (ColumnType.Crédit));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Libellé, this.dataAccessor.EditionLine[0].GetText (ColumnType.Libellé));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant, this.dataAccessor.EditionLine[0].GetText (ColumnType.Montant));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.TotalAutomatique, "1");
+
+			this.SetTypeEcriture (0, TypeEcriture.Normal);
+			this.dataAccessor.EditionLine[0].SetText (c, JournalDataAccessor.multi);
+
+			this.InsertEmptyLine (false);
+		}
+
+		public override void MultiLineJoinAction()
+		{
+			for (int i = 1; i < this.dataAccessor.EditionLine.Count; i++)
+			{
+				if (!this.IsEmptyLine (i))
+				{
+					if (this.IsDébitMulti(0))
+					{
+						this.dataAccessor.EditionLine[0].SetText (ColumnType.Débit, this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit));
+					}
+					else
+					{
+						this.dataAccessor.EditionLine[0].SetText (ColumnType.Crédit, this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit));
+					}
+
+					break;
+				}
+			}
+
+			while (this.dataAccessor.EditionLine.Count > 1)
+			{
+				this.dataAccessor.RemoveAtEditionLine (1);
+			}
+
+			this.dirty = true;
+			this.UpdateEditorContent ();
 		}
 
 		public override void MultiLineAutoAction()
@@ -1841,6 +1903,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controller.SetCommandEnable (Res.Commands.Multi.Up,           this.IsCommandUpEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Down,         this.IsCommandDownEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Swap,         this.IsCommandSwapEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Split,        this.IsCommandSplitEnable);
+			this.controller.SetCommandEnable (Res.Commands.Multi.Join,         this.IsCommandJoinEnable);
 			this.controller.SetCommandEnable (Res.Commands.Multi.Auto,         this.IsCommandAutoEnable);
 		}
 
@@ -1987,6 +2051,32 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var crédit = this.dataAccessor.EditionLine[this.selectedLine].GetText (ColumnType.Crédit);
 
 				return débit != crédit;
+			}
+		}
+
+		private bool IsCommandSplitEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				return !this.isMulti;
+			}
+		}
+
+		private bool IsCommandJoinEnable
+		{
+			get
+			{
+				if (!this.dataAccessor.IsActive)
+				{
+					return false;
+				}
+
+				return this.dataAccessor.CountEditedRowWithoutEmpty == 2;
 			}
 		}
 

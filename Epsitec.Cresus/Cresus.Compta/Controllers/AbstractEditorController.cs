@@ -423,6 +423,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		public virtual void MultiLineSplitAction()
+		{
+		}
+
+		public virtual void MultiLineJoinAction()
+		{
+		}
+
 		public virtual void MultiLineAutoAction()
 		{
 		}

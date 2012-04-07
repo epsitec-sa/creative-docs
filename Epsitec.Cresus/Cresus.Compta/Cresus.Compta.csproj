@@ -347,6 +347,8 @@
     <EmbeddedResource Include="Images\Multi.LastLine.icon" />
     <EmbeddedResource Include="Images\Multi.InsertAfter.icon" />
     <EmbeddedResource Include="Images\Multi.InsertBefore.icon" />
+    <EmbeddedResource Include="Images\Multi.Join.icon" />
+    <EmbeddedResource Include="Images\Multi.Split.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
