@@ -273,11 +273,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.InsertTVA,    buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Delete,       buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Swap,         buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Split,        buttonWidth, iconWidth);
-			UIBuilder.CreateButton (frame, Res.Commands.Multi.Join,         buttonWidth, iconWidth);
 			UIBuilder.CreateButton (frame, Res.Commands.Multi.Auto,         buttonWidth, iconWidth);
 
-			var upDown = new FrameBox
+			var splitJoin = new FrameBox
 			{
 				Parent              = frame,
 				PreferredWidth      = 20,
@@ -285,7 +283,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock                = DockStyle.StackBegin,
 			};
 
-			UIBuilder.CreateButton (upDown, Res.Commands.Multi.Up,   buttonWidth/2, buttonWidth/2);
+			UIBuilder.CreateButton (splitJoin, Res.Commands.Multi.Split, buttonWidth/2, buttonWidth/2);
+			UIBuilder.CreateButton (splitJoin, Res.Commands.Multi.Join,  buttonWidth/2, buttonWidth/2);
+
+			var upDown = new FrameBox
+			{
+				Parent              = frame,
+				PreferredWidth      = 20,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock                = DockStyle.StackBegin,
+				Margins             = new Margins (10, 0, 0, 0),
+			};
+
+			UIBuilder.CreateButton (upDown, Res.Commands.Multi.Up, buttonWidth/2, buttonWidth/2);
 			UIBuilder.CreateButton (upDown, Res.Commands.Multi.Down, buttonWidth/2, buttonWidth/2);
 		}
 
