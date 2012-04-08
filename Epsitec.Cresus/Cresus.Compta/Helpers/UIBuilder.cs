@@ -333,13 +333,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 			};
 		}
 
-		public static void UpdateInfoCompte(FrameBox box, FormattedText titre, decimal? solde)
+		public static void UpdateInfoCompte(FrameBox box, FormattedText titre, FormattedText solde)
 		{
 			var s1 = box.Children[0] as StaticText;
 			s1.FormattedText = titre;
 
 			var s2 = box.Children[2] as StaticText;
-			s2.FormattedText = Converters.MontantToString (solde);
+			s2.FormattedText = solde;
 		}
 
 

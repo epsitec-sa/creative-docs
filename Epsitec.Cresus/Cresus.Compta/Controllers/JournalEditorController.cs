@@ -1533,6 +1533,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateMultiEditionData()
 		{
 			//	Recalcule le total de l'écriture multiple.
+			this.multiSubtotal = 0;
+
 			if (!this.isMulti)
 			{
 				return;
@@ -1585,20 +1587,38 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 
-				decimal? total = 0;
+				FormattedText total;
 
 				if (this.IsDébitMulti (cp))
 				{
-					total = totalDébit - totalCrédit;
+					total = Converters.MontantToString (totalDébit - totalCrédit);
 				}
-
-				if (this.IsCréditMulti (cp))
+				else if (this.IsCréditMulti (cp))
 				{
-					total = totalCrédit - totalDébit;
+					total = Converters.MontantToString (totalCrédit - totalDébit);
+				}
+				else
+				{
+					decimal t = totalDébit - totalCrédit;
+
+					if (t == 0)
+					{
+						total = Converters.MontantToString (0);
+					}
+					else if (t > 0)
+					{
+						total = Converters.MontantToString (t) + " D";
+					}
+					else
+					{
+						total = Converters.MontantToString (-t) + " C";
+					}
 				}
 
-				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, Converters.MontantToString (total));
+				this.dataAccessor.EditionLine[cp].SetText (ColumnType.Montant, total);
 				this.dataAccessor.EditionLine[cp].SetText (ColumnType.CodeTVA, null);
+
+				this.multiSubtotal = totalDébit - totalCrédit;
 			}
 
 			this.UpdateMultiLibelléTVA ();
@@ -1892,11 +1912,61 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateEditorInfo(FormattedText numéro, bool isDébit)
 		{
 			FormattedText title;
-			decimal? solde;
+			FormattedText solde;
 
 			this.GetInfoCompte (numéro, out title, out solde);
 			UIBuilder.UpdateInfoCompte (isDébit ? this.débitInfoFrame : this.créditInfoFrame, title, solde);
 		}
+
+		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out FormattedText solde)
+		{
+			if (numéro.IsNullOrEmpty || numéro == JournalDataAccessor.multi)
+			{
+#if false
+				if (this.isMulti)
+				{
+					titre = "Sous-total";
+
+					if (this.multiSubtotal == 0)
+					{
+						solde = Converters.MontantToString (0);
+					}
+					else if (this.multiSubtotal > 0)
+					{
+						solde = Converters.MontantToString (this.multiSubtotal) + " D";
+					}
+					else
+					{
+						solde = Converters.MontantToString (-this.multiSubtotal) + " C";
+					}
+				}
+				else
+				{
+					titre = FormattedText.Empty;
+					solde = null;
+				}
+#else
+				titre = FormattedText.Empty;
+				solde = null;
+#endif
+			}
+			else
+			{
+				var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
+
+				if (compte == null)
+				{
+					titre = FormattedText.Empty;
+					solde = null;
+				}
+				else
+				{
+					titre = compte.Titre;
+					solde = Converters.MontantToString (this.dataAccessor.SoldesJournalManager.GetSolde (compte));
+				}
+			}
+		}
+
 
 		public override void UpdateToolbar()
 		{
@@ -2211,22 +2281,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out decimal? solde)
-		{
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
-
-			if (compte == null)
-			{
-				titre = FormattedText.Empty;
-				solde = null;
-			}
-			else
-			{
-				titre = compte.Titre;
-				solde = this.dataAccessor.SoldesJournalManager.GetSolde (compte);
-			}
-		}
-
 		private bool PlusieursPièces
 		{
 			//	Retourne true si les écritures multiples peuvent avoir une pièce par ligne.
@@ -2345,5 +2399,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool								isMulti;
 		private IEnumerable<ComptaCompteEntity>		allComptes;
 		private IEnumerable<ComptaCompteEntity>		TVAComptes;
+		private decimal								multiSubtotal;
 	}
 }

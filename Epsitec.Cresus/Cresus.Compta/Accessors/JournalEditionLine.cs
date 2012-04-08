@@ -229,6 +229,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (this.GetText (ColumnType.TotalAutomatique) == "1")
 			{
 				data.OverlayText = "∑";
+				return;  // le total automatique est toujours ok
 			}
 			else if (hasTVA && type == Compta.TypeEcriture.CodeTVA)
 			{
