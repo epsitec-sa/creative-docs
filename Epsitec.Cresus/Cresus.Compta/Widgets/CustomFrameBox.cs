@@ -36,6 +36,23 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
+		public Color FrameColor
+		{
+			//	Couleur de fond pour la mise en évidence du cadre.
+			get
+			{
+				return this.frameColor;
+			}
+			set
+			{
+				if (this.frameColor != value)
+				{
+					this.frameColor = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public bool EmptyLineAdorner
 		{
 			//	Indique si le champ fait partie d'une ligne vide.
@@ -136,7 +153,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				//	Met en évidence le cadre.
 				graphics.AddFilledRectangle (rect);
-				graphics.RenderSolid (Color.FromAlphaRgb (0.1, 0.0, 0.0, 0.0));
+				graphics.RenderSolid (this.frameColor);
 
 				graphics.AddRectangle (rect);
 				graphics.RenderSolid (Color.FromAlphaRgb (0.3, 0.0, 0.0, 0.0));
@@ -201,6 +218,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 
 		private bool			hilitedFrame;
+		private Color			frameColor;
 		private bool			emptyLineAdorner;
 		private bool			baseTVAAdorner;
 		private bool			codeTVAAdorner;
