@@ -20,13 +20,34 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void Clear()
 		{
 			base.Clear ();
-			this.HideZero = false;
+
+			this.MontreEcritures   = false;
+			this.MontantTTC        = false;
+			this.ParCodeTVA        = false;
+			this.IndenteSoustotaux = true;
 		}
 
 
-		public bool HideZero
+		public bool MontreEcritures
 		{
-			//	Affiche en blanc les montants nuls ?
+			get;
+			set;
+		}
+
+		public bool MontantTTC
+		{
+			get;
+			set;
+		}
+
+		public bool ParCodeTVA
+		{
+			get;
+			set;
+		}
+
+		public bool IndenteSoustotaux
+		{
 			get;
 			set;
 		}
@@ -51,7 +72,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as RésuméTVAOptions;
-			d.HideZero = this.HideZero;
+			d.MontreEcritures   = this.MontreEcritures;
+			d.MontantTTC        = this.MontantTTC;
+			d.ParCodeTVA        = this.ParCodeTVA;
+			d.IndenteSoustotaux = this.IndenteSoustotaux;
 
 			base.CopyTo (dst);
 		}
@@ -65,7 +89,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméTVAOptions;
 
-			return this.HideZero == o.HideZero;
+			return this.MontreEcritures   == o.MontreEcritures  &&
+				   this.MontantTTC        == o.MontantTTC       &&
+				   this.ParCodeTVA        == o.ParCodeTVA       &&
+				   this.IndenteSoustotaux == o.IndenteSoustotaux;
 		}
 
 
@@ -75,9 +102,19 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				this.StartSummaryBuilder ();
 
-				if (this.HideZero)
+				if (this.MontreEcritures)
 				{
-					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
+					this.AppendSummaryBuilder ("Montre les écritures");
+				}
+
+				if (this.MontantTTC)
+				{
+					this.AppendSummaryBuilder ("Montants TTC");
+				}
+
+				if (this.ParCodeTVA)
+				{
+					this.AppendSummaryBuilder ("Par code TVA");
 				}
 
 				return this.StopSummaryBuilder ();

@@ -18,13 +18,37 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public bool CodeTVA
+		public bool LigneDeCodeTVA
 		{
 			get;
 			set;
 		}
 
 		public FormattedText Compte
+		{
+			get;
+			set;
+		}
+
+		public FormattedText CodeTVA
+		{
+			get;
+			set;
+		}
+
+		public decimal? Taux
+		{
+			get;
+			set;
+		}
+
+		public Date? Date
+		{
+			get;
+			set;
+		}
+
+		public FormattedText Pièce
 		{
 			get;
 			set;
@@ -43,6 +67,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 		public decimal TVA
+		{
+			get;
+			set;
+		}
+
+		public decimal? Différence
 		{
 			get;
 			set;

@@ -69,11 +69,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					if (bloc == null)
 					{
-						bloc = new BlocDeRésumé (compte);
+						bloc = new BlocDeRésumé (compte, this.Options);
 						blocs.Add (bloc);
 					}
 
-					bloc.AddEcriture (écriture);
+					bloc.AddEcriture (écritureDeBase, écriture, compte);
 				}
 			}
 
@@ -99,10 +99,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					var data = new RésuméTVAData
 					{
-						CodeTVA = true,
-						Titre   = ligne.Titre,
-						Montant = ligne.Montant,
-						TVA     = ligne.TVA,
+						LigneDeCodeTVA = true,
+						Compte         = ligne.Compte,
+						CodeTVA        = ligne.CodeTVA,
+						Taux           = ligne.Taux,
+						Date           = ligne.Date,
+						Pièce          = ligne.Pièce,
+						Titre          = ligne.Titre,
+						Montant        = ligne.Montant,
+						TVA            = ligne.TVA,
 					};
 
 					this.readonlyAllData.Add (data);
@@ -126,16 +131,31 @@ namespace Epsitec.Cresus.Compta.Accessors
 					montantTotal += soustotalMontant;
 					TVATotal     += soustotalTVA;
 
-					var data = new RésuméTVAData
+					if (this.Options.MontreEcritures)
 					{
-						Compte             = bloc.Compte.Numéro,
-						Titre              = bloc.Compte.Titre,
-						Montant            = soustotalMontant,
-						TVA                = soustotalTVA,
-						HasBottomSeparator = true,
-					};
+						var data = new RésuméTVAData
+						{
+							Titre              = "Total",
+							Montant            = soustotalMontant,
+							TVA                = soustotalTVA,
+							HasBottomSeparator = true,
+						};
 
-					this.readonlyAllData.Add (data);
+						this.readonlyAllData.Add (data);
+					}
+					else
+					{
+						var data = new RésuméTVAData
+						{
+							Compte             = bloc.Compte.Numéro,
+							Titre              = bloc.Compte.Titre,
+							Montant            = soustotalMontant,
+							TVA                = soustotalTVA,
+							HasBottomSeparator = true,
+						};
+
+						this.readonlyAllData.Add (data);
+					}
 				}
 			}
 
@@ -166,8 +186,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var data = new RésuméTVAData
 				{
 					Titre              = "Total",
-					Montant            = montantTotal,
-					TVA                = TVATotal,
+					Montant            = montantDu - montantRecup,
+					TVA                = TVADue - TVARecup,
 					IsBold             = true,
 					HasBottomSeparator = true,
 				};
@@ -193,23 +213,42 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Compte:
 					return data.Compte;
 
+				case ColumnType.CodeTVA:
+					return data.CodeTVA;
+
+				case ColumnType.TauxTVA:
+					return Converters.PercentToString (data.Taux);
+
+				case ColumnType.Date:
+					return Converters.DateToString (data.Date);
+
+				case ColumnType.Pièce:
+					return data.Pièce;
+
 				case ColumnType.Titre:
 					return data.Titre;
 
 				case ColumnType.Montant:
-					return RésuméTVADataAccessor.GetMontant (data, data.Montant);
+					if (this.Options.MontantTTC)
+					{
+						return this.GetMontant (data, data.Montant + data.TVA);
+					}
+					else
+					{
+						return this.GetMontant (data, data.Montant);
+					}
 
 				case ColumnType.MontantTVA:
-					return RésuméTVADataAccessor.GetMontant (data, data.TVA);
+					return this.GetMontant (data, data.TVA);
 
 				default:
 					return FormattedText.Null;
 			}
 		}
 
-		private static FormattedText GetMontant(RésuméTVAData data, decimal montant)
+		private FormattedText GetMontant(RésuméTVAData data, decimal montant)
 		{
-			if (data.CodeTVA)
+			if (data.LigneDeCodeTVA && this.Options.IndenteSoustotaux)
 			{
 				return Converters.MontantToString (montant) + "  ";
 			}
@@ -220,11 +259,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		private new RésuméTVAOptions Options
+		{
+			get
+			{
+				return this.options as RésuméTVAOptions;
+			}
+		}
+
+
 		private class BlocDeRésumé
 		{
-			public BlocDeRésumé(ComptaCompteEntity compte)
+			public BlocDeRésumé(ComptaCompteEntity compte, RésuméTVAOptions options)
 			{
-				this.compte = compte;
+				this.compte  = compte;
+				this.options = options;
+
 				this.lignes = new List<RésuméTVAData>();
 			}
 
@@ -236,16 +286,36 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			public void AddEcriture(ComptaEcritureEntity écritureDeCode)
+			public void AddEcriture(ComptaEcritureEntity écritureDeBase, ComptaEcritureEntity écritureDeCode, ComptaCompteEntity compte)
 			{
-				var ligne = this.lignes.Where (x => x.Titre == écritureDeCode.CodeTVA.Code).FirstOrDefault ();
+				RésuméTVAData ligne;
 
-				if (ligne == null)
+				if (this.options.MontreEcritures)
 				{
-					ligne = new RésuméTVAData ();
-					ligne.Titre = écritureDeCode.CodeTVA.Code;
+					ligne = new RésuméTVAData
+					{
+						Compte  = compte.Numéro,
+						Titre   = écritureDeBase.Libellé,
+						CodeTVA = écritureDeCode.CodeTVA.Code,
+						Taux    = écritureDeCode.TauxTVA,
+						Date    = écritureDeBase.Date,
+						Pièce   = écritureDeBase.Pièce,
+					};
 
 					this.lignes.Add (ligne);
+				}
+				else
+				{
+					ligne = this.lignes.Where (x => x.Titre == écritureDeCode.CodeTVA.Code).FirstOrDefault ();
+
+					if (ligne == null)
+					{
+						ligne = new RésuméTVAData ();
+						ligne.Titre = écritureDeCode.CodeTVA.Code;
+
+						this.lignes.Add (ligne);
+					}
+
 				}
 
 				ligne.Montant += écritureDeCode.MontantComplément.GetValueOrDefault ();
@@ -262,6 +332,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 			private readonly ComptaCompteEntity		compte;
+			private readonly RésuméTVAOptions		options;
 			private readonly List<RésuméTVAData>	lignes;
 		}
 	}

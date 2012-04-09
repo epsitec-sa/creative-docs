@@ -75,6 +75,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateColumnMappers ();
 		}
 
+		protected override void OptionsChanged()
+		{
+			this.dataAccessor.UpdateAfterOptionsChanged ();
+			this.ClearHilite ();
+			this.UpdateColumnMappers ();
+			this.UpdateArray ();
+
+			this.UpdateArrayContent ();
+			this.UpdateTitle ();
+			this.FilterUpdateTopToolbar ();
+			this.UpdateViewSettings ();
+		}
+
 		protected override void UpdateTitle()
 		{
 			this.SetTitle ("Résumé TVA");
@@ -88,11 +101,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as RésuméTVAData;
 
-			var options = this.dataAccessor.Options as RésuméTVAOptions;
-
 			if (columnType == ColumnType.Solde)
 			{
-				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0))
+				if (!data.NeverFiltered)
 				{
 					text = FormattedText.Empty;
 				}
@@ -107,10 +118,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				yield return new ColumnMapper (ColumnType.Compte,     0.20, ContentAlignment.MiddleLeft,  "Compte");
-				yield return new ColumnMapper (ColumnType.Titre,      1.40, ContentAlignment.MiddleLeft,  "Code TVA / Titre du compte");
-				yield return new ColumnMapper (ColumnType.Montant,    0.20, ContentAlignment.MiddleRight, "Montant net");
+				yield return new ColumnMapper (ColumnType.CodeTVA,    0.20, ContentAlignment.MiddleLeft,  "Code TVA");
+				yield return new ColumnMapper (ColumnType.TauxTVA,    0.20, ContentAlignment.MiddleLeft,  "Taux");
+				yield return new ColumnMapper (ColumnType.Date,       0.20, ContentAlignment.MiddleLeft,  "Date");
+				yield return new ColumnMapper (ColumnType.Pièce,      0.20, ContentAlignment.MiddleLeft,  "Pièce");
+				yield return new ColumnMapper (ColumnType.Titre,      1.00, ContentAlignment.MiddleLeft,  "Code TVA / Titre du compte");
+				yield return new ColumnMapper (ColumnType.Montant,    0.20, ContentAlignment.MiddleRight, "Montant HT");
 				yield return new ColumnMapper (ColumnType.MontantTVA, 0.20, ContentAlignment.MiddleRight, "TVA");
 			}
+		}
+
+		protected override void UpdateColumnMappers()
+		{
+			var options = this.dataAccessor.Options as RésuméTVAOptions;
+
+			this.ShowHideColumn (ColumnType.CodeTVA, options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.TauxTVA, options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Date,    options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Pièce,   options.MontreEcritures);
+
+			this.SetColumnDescription (ColumnType.Titre,   options.MontreEcritures ? "Libellé" : "Code TVA / Titre du compte");
+			this.SetColumnDescription (ColumnType.Montant, options.MontantTTC      ? "Montant TTC" : "Montant HT");
 		}
 	}
 }

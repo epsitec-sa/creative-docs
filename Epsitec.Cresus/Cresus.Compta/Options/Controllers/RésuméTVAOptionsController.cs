@@ -52,23 +52,80 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.nullButton = new CheckButton
+			this.montreEcrituresButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 200,
-				ActiveState    = this.Options.HideZero ? ActiveState.Yes : ActiveState.No,
+				FormattedText  = "Montre les écritures",
+				PreferredWidth = 160,
+				ActiveState    = this.Options.MontreEcritures ? ActiveState.Yes : ActiveState.No,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.montantTTCButton = new CheckButton
+			{
+				Parent         = frame,
+				FormattedText  = "Affiche les montants TTC",
+				PreferredWidth = 170,
+				ActiveState    = this.Options.MontantTTC ? ActiveState.Yes : ActiveState.No,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.parCodeTVAButton = new CheckButton
+			{
+				Parent         = frame,
+				FormattedText  = "Résumé par code TVA",
+				PreferredWidth = 160,
+				ActiveState    = this.Options.ParCodeTVA ? ActiveState.Yes : ActiveState.No,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.indenteSoustotauxButton = new CheckButton
+			{
+				Parent         = frame,
+				FormattedText  = "Indente les sous-totaux",
+				PreferredWidth = 160,
+				ActiveState    = this.Options.IndenteSoustotaux ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
 
 			this.UpdateWidgets ();
 
-			this.nullButton.ActiveStateChanged += delegate
+			this.montreEcrituresButton.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HideZero = !this.Options.HideZero;
+					this.Options.MontreEcritures = !this.Options.MontreEcritures;
+					this.OptionsChanged ();
+				}
+			};
+
+			this.montantTTCButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.MontantTTC = !this.Options.MontantTTC;
+					this.OptionsChanged ();
+				}
+			};
+
+			this.parCodeTVAButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.ParCodeTVA = !this.Options.ParCodeTVA;
+					this.OptionsChanged ();
+				}
+			};
+
+			this.indenteSoustotauxButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.IndenteSoustotaux = !this.Options.IndenteSoustotaux;
 					this.OptionsChanged ();
 				}
 			};
@@ -84,7 +141,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.nullButton.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
+				this.montreEcrituresButton.ActiveState   = this.Options.MontreEcritures   ? ActiveState.Yes : ActiveState.No;
+				this.montantTTCButton.ActiveState        = this.Options.MontantTTC        ? ActiveState.Yes : ActiveState.No;
+				this.parCodeTVAButton.ActiveState        = this.Options.ParCodeTVA        ? ActiveState.Yes : ActiveState.No;
+				this.indenteSoustotauxButton.ActiveState = this.Options.IndenteSoustotaux ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -99,6 +159,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
-		private CheckButton			nullButton;
+		private CheckButton			montreEcrituresButton;
+		private CheckButton			montantTTCButton;
+		private CheckButton			parCodeTVAButton;
+		private CheckButton			indenteSoustotauxButton;
 	}
 }
