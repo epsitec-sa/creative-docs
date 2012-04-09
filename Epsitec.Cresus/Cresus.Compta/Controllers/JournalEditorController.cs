@@ -1881,6 +1881,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			for (int i = 0; i < this.linesFrames.Count; i++)
 			{
 				var box = this.linesFrames[i] as CustomFrameBox;
+
 				box.HilitedFrame = (i == this.selectedLine);
 				box.FrameColor = this.dataAccessor.IsCreation ? UIBuilder.CreationHiliteBackColor : UIBuilder.ModificationHiliteBackColor;
 			}

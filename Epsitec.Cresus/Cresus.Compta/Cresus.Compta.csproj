@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
+    <Compile Include="Accessors\RésuméTVADataAccessor.cs" />
+    <Compile Include="Accessors\RésuméTVAData.cs" />
     <Compile Include="Accessors\DataArray.cs" />
     <Compile Include="Accessors\ListesTVADataAccessor.cs" />
     <Compile Include="Accessors\ListesTVAEditionLine.cs" />
@@ -68,6 +70,7 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\RésuméTVAController.cs" />
     <Compile Include="Controllers\ListesTVAEditorController.cs" />
     <Compile Include="Controllers\ListesTVAController.cs" />
     <Compile Include="Controllers\ExtraitDeCompteEditorController.cs" />
@@ -83,6 +86,8 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Options\Controllers\RésuméTVAOptionsController.cs" />
+    <Compile Include="Options\Data\RésuméTVAOptions.cs" />
     <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />

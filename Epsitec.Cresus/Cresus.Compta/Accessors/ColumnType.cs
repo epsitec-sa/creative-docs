@@ -18,6 +18,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Montant,
 		MontantTTC,
 		MontantComplément,
+		MontantTVA,
 		LibelléTVA,
 		CodesTVA,
 		CodeTVA,
