@@ -489,7 +489,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Journal,    this.dataAccessor.EditionLine[line].GetText (ColumnType.Journal));
 
 			this.UpdateAfterCompteOrigineTVAChanged (line);
-			this.UpdateAfterCodeTVAChanged (line+1);
+			this.UpdateAfterCodeTVAChanged (line);
 
 			if (total == 3)
 			{
@@ -1306,6 +1306,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateAfterCodeTVAChanged(int line)
 		{
 			//	Appelé lorsque le code TVA a changé, pour mettre à jour les taux de TVA dans le menu.
+			line++;  // sur la ligne CodeTVA
 			if (line > 0 && line < this.dataAccessor.EditionLine.Count)
 			{
 				(this.dataAccessor.EditionLine[line] as JournalEditionLine).UpdateCodeTVAParameters ();
