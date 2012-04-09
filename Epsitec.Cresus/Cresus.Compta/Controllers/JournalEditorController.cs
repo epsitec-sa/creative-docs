@@ -2027,7 +2027,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return false;
 				}
 
-				if (!this.dataAccessor.IsActive || !this.isMulti)
+				if (!this.dataAccessor.IsActive)
 				{
 					return false;
 				}
