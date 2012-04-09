@@ -869,7 +869,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetTypeEcriture (1, TypeEcriture.Normal);
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Date,    this.dataAccessor.EditionLine[0].GetText (ColumnType.Date));
 			this.dataAccessor.EditionLine[1].SetText (d,                  JournalDataAccessor.multi);
-			this.dataAccessor.EditionLine[1].SetText (c,                  this.dataAccessor.EditionLine[0].GetText (ColumnType.Crédit));
+			this.dataAccessor.EditionLine[1].SetText (c,                  this.dataAccessor.EditionLine[0].GetText (c));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Libellé, this.dataAccessor.EditionLine[0].GetText (ColumnType.Libellé));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant, this.dataAccessor.EditionLine[0].GetText (ColumnType.Montant));
@@ -878,6 +878,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SetTypeEcriture (0, TypeEcriture.Normal);
 			this.dataAccessor.EditionLine[0].SetText (c, JournalDataAccessor.multi);
+
+			for (int i = 0; i < 2; i++)
+			{
+				var débit  = this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit);
+				var crédit = this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit);
+
+				if ((débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
+					(crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi))
+				{
+					this.dataAccessor.EditionLine[i].SetText (ColumnType.Débit,  null);
+					this.dataAccessor.EditionLine[i].SetText (ColumnType.Crédit, null);
+				}
+			}
 
 			this.InsertEmptyLine (false);
 		}
