@@ -1174,6 +1174,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.SetWidgetVisibility (ColumnType.Débit,  i, !this.IsDébitMulti  (i));
 					this.SetWidgetVisibility (ColumnType.Crédit, i, !this.IsCréditMulti (i));
+					this.SetWidgetVisibility (ColumnType.Pièce,  i, type != TypeEcriture.CodeTVA);
 
 					bool totalAutomatique = (this.dataAccessor.EditionLine[i].GetText (ColumnType.TotalAutomatique) == "1");
 
