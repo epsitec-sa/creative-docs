@@ -64,21 +64,40 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else if (écriture.Type == (int) TypeEcriture.CodeTVA)
 				{
-					var compte = (écritureDeBase.OrigineTVA == "D") ? écritureDeBase.Débit : écritureDeBase.Crédit;
-					var bloc = blocs.Where (x => x.Compte == compte).FirstOrDefault ();
+					BlocDeRésumé bloc;
+					var compte = écritureDeBase.CompteTVA;
+					var codeTVA = écriture.CodeTVA.Code;
+
+					if (this.Options.ParCodeTVA)
+					{
+						bloc = blocs.Where (x => x.CodeTVA == codeTVA).FirstOrDefault ();
+					}
+					else
+					{
+						bloc = blocs.Where (x => x.Compte == compte).FirstOrDefault ();
+					}
 
 					if (bloc == null)
 					{
-						bloc = new BlocDeRésumé (compte, this.Options);
+						bloc = new BlocDeRésumé (compte, codeTVA, this.Options);
 						blocs.Add (bloc);
 					}
 
-					bloc.AddEcriture (écritureDeBase, écriture, compte);
+					bloc.AddEcriture (écritureDeBase, écriture);
 				}
 			}
 
 			//	Passe en revue tous les blocs.
-			var orderedBlocs = blocs.OrderBy (x => x.Compte.Numéro);
+			IEnumerable<BlocDeRésumé> orderedBlocs;
+
+			if (this.Options.ParCodeTVA)
+			{
+				orderedBlocs = blocs.OrderBy (x => x.CodeTVA);
+			}
+			else
+			{
+				orderedBlocs = blocs.OrderBy (x => x.Compte.Numéro);
+			}
 
 			decimal montantDu    = 0;
 			decimal TVADue       = 0;
@@ -92,7 +111,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				decimal soustotalMontant = 0;
 				decimal soustotalTVA     = 0;
 
-				foreach (var ligne in bloc.Lignes)
+				//	Ajoute les lignes du bloc.
+				IEnumerable<RésuméTVAData> orderedLignes;
+
+				if (this.Options.ParCodeTVA && !this.Options.MontreEcritures)
+				{
+					orderedLignes = bloc.Lignes.OrderBy (x => x.Compte);
+				}
+				else
+				{
+					orderedLignes = bloc.Lignes;
+				}
+
+				foreach (var ligne in orderedLignes)
 				{
 					soustotalMontant += ligne.Montant;
 					soustotalTVA     += ligne.TVA;
@@ -113,6 +144,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					this.readonlyAllData.Add (data);
 				}
 
+				//	Ajoute le total du bloc.
 				{
 					if (bloc.Compte.Catégorie == CatégorieDeCompte.Passif ||
 						bloc.Compte.Catégorie == CatégorieDeCompte.Produit)
@@ -145,16 +177,35 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						var data = new RésuméTVAData
+						if (this.Options.ParCodeTVA)
 						{
-							Compte             = bloc.Compte.Numéro,
-							Titre              = bloc.Compte.Titre,
-							Montant            = soustotalMontant,
-							TVA                = soustotalTVA,
-							HasBottomSeparator = true,
-						};
+							var codeTVA = this.compta.CodesTVA.Where (x => x.Code == bloc.CodeTVA).FirstOrDefault ();
 
-						this.readonlyAllData.Add (data);
+							var data = new RésuméTVAData
+							{
+								CodeTVA            = bloc.CodeTVA,
+								Taux               = codeTVA.DefaultTauxValue.GetValueOrDefault (),
+								Titre              = "Total",
+								Montant            = soustotalMontant,
+								TVA                = soustotalTVA,
+								HasBottomSeparator = true,
+							};
+
+							this.readonlyAllData.Add (data);
+						}
+						else
+						{
+							var data = new RésuméTVAData
+							{
+								Compte             = bloc.Compte.Numéro,
+								Titre              = bloc.Compte.Titre,
+								Montant            = soustotalMontant,
+								TVA                = soustotalTVA,
+								HasBottomSeparator = true,
+							};
+
+							this.readonlyAllData.Add (data);
+						}
 					}
 				}
 			}
@@ -211,6 +262,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Compte:
+				case ColumnType.Compte2:
 					return data.Compte;
 
 				case ColumnType.CodeTVA:
@@ -270,9 +322,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private class BlocDeRésumé
 		{
-			public BlocDeRésumé(ComptaCompteEntity compte, RésuméTVAOptions options)
+			public BlocDeRésumé(ComptaCompteEntity compte, FormattedText codeTVA, RésuméTVAOptions options)
 			{
 				this.compte  = compte;
+				this.codeTVA = codeTVA;
 				this.options = options;
 
 				this.lignes = new List<RésuméTVAData>();
@@ -286,15 +339,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			public void AddEcriture(ComptaEcritureEntity écritureDeBase, ComptaEcritureEntity écritureDeCode, ComptaCompteEntity compte)
+			public FormattedText CodeTVA
+			{
+				get
+				{
+					return this.codeTVA;
+				}
+			}
+
+			public void AddEcriture(ComptaEcritureEntity écritureDeBase, ComptaEcritureEntity écritureDeCode)
 			{
 				RésuméTVAData ligne;
+				var compteTVA = écritureDeBase.CompteTVA;
 
 				if (this.options.MontreEcritures)
 				{
 					ligne = new RésuméTVAData
 					{
-						Compte  = compte.Numéro,
+						Compte  = compteTVA.Numéro,
 						Titre   = écritureDeBase.Libellé,
 						CodeTVA = écritureDeCode.CodeTVA.Code,
 						Taux    = écritureDeCode.TauxTVA,
@@ -306,16 +368,35 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					ligne = this.lignes.Where (x => x.Titre == écritureDeCode.CodeTVA.Code).FirstOrDefault ();
-
-					if (ligne == null)
+					if (this.options.ParCodeTVA)  // par code TVA ?
 					{
-						ligne = new RésuméTVAData ();
-						ligne.Titre = écritureDeCode.CodeTVA.Code;
+						ligne = this.lignes.Where (x => x.Compte == compteTVA.Numéro).FirstOrDefault ();
 
-						this.lignes.Add (ligne);
+						if (ligne == null)
+						{
+							ligne = new RésuméTVAData
+							{
+								Compte = compteTVA.Numéro,
+								Titre  = compteTVA.Titre,
+							};
+
+							this.lignes.Add (ligne);
+						}
 					}
+					else  // par comptes ?
+					{
+						ligne = this.lignes.Where (x => x.Titre == écritureDeCode.CodeTVA.Code).FirstOrDefault ();
 
+						if (ligne == null)
+						{
+							ligne = new RésuméTVAData
+							{
+								Titre = écritureDeCode.CodeTVA.Code,
+							};
+
+							this.lignes.Add (ligne);
+						}
+					}
 				}
 
 				ligne.Montant += écritureDeCode.MontantComplément.GetValueOrDefault ();
@@ -332,6 +413,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 			private readonly ComptaCompteEntity		compte;
+			private readonly FormattedText			codeTVA;
 			private readonly RésuméTVAOptions		options;
 			private readonly List<RésuméTVAData>	lignes;
 		}

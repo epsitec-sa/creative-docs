@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.MontreEcritures   = false;
 			this.MontantTTC        = false;
 			this.ParCodeTVA        = false;
-			this.IndenteSoustotaux = true;
+			this.IndenteSoustotaux = false;
 		}
 
 

@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.TauxTVA,    0.20, ContentAlignment.MiddleLeft,  "Taux");
 				yield return new ColumnMapper (ColumnType.Date,       0.20, ContentAlignment.MiddleLeft,  "Date");
 				yield return new ColumnMapper (ColumnType.Pièce,      0.20, ContentAlignment.MiddleLeft,  "Pièce");
+				yield return new ColumnMapper (ColumnType.Compte2,    0.20, ContentAlignment.MiddleLeft,  "Compte");
 				yield return new ColumnMapper (ColumnType.Titre,      1.00, ContentAlignment.MiddleLeft,  "Code TVA / Titre du compte");
 				yield return new ColumnMapper (ColumnType.Montant,    0.20, ContentAlignment.MiddleRight, "Montant HT");
 				yield return new ColumnMapper (ColumnType.MontantTVA, 0.20, ContentAlignment.MiddleRight, "TVA");
@@ -132,13 +133,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as RésuméTVAOptions;
 
-			this.ShowHideColumn (ColumnType.CodeTVA, options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.TauxTVA, options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Compte,  options.MontreEcritures || !options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.CodeTVA, options.MontreEcritures || options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.TauxTVA, options.MontreEcritures || options.ParCodeTVA);
 			this.ShowHideColumn (ColumnType.Date,    options.MontreEcritures);
 			this.ShowHideColumn (ColumnType.Pièce,   options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Compte2, !options.MontreEcritures && options.ParCodeTVA);
 
-			this.SetColumnDescription (ColumnType.Titre,   options.MontreEcritures ? "Libellé" : "Code TVA / Titre du compte");
-			this.SetColumnDescription (ColumnType.Montant, options.MontantTTC      ? "Montant TTC" : "Montant HT");
+			if (options.MontreEcritures)
+			{
+				this.SetColumnDescription (ColumnType.Titre, "Libellé");
+			}
+			else
+			{
+				this.SetColumnDescription (ColumnType.Titre, options.ParCodeTVA ? "Titre du compte" : "Code TVA / Titre du compte");
+			}
+
+			this.SetColumnDescription (ColumnType.Montant, options.MontantTTC ? "Montant TTC" : "Montant HT");
 		}
 	}
 }

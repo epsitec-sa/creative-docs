@@ -13,6 +13,26 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEcritureEntity
 	{
+		public ComptaCompteEntity CompteTVA
+		{
+			//	Retourne le compte à l'origine de la TVA.
+			get
+			{
+				if (this.OrigineTVA == "D")
+				{
+					return this.Débit;
+				}
+
+				if (this.OrigineTVA == "C")
+				{
+					return this.Crédit;
+				}
+
+				return null;
+			}
+		}
+
+
 		public bool IsEmptyLine
 		{
 			//	Retourne true s'il s'agit d'une ligne additionnelle vide. Ces lignes sont proposées
