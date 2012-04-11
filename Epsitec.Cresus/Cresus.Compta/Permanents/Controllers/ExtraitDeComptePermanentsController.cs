@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Controllers
 			};
 
 			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, frame, this.NuméroCompte, "Choix du compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Box.Dock = DockStyle.Left;
 
 			this.comboModeFrame = UIBuilder.CreatePseudoCombo (frame, out this.comboModeField, out this.comboModeButton);
 			this.comboModeFrame.PreferredWidth = 120;
