@@ -675,69 +675,55 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
-			var compte = (écriture.Débit == null) ? écriture.Crédit : écriture.Débit;
+			var compteBase = (écriture.Débit == null) ? écriture.Crédit : écriture.Débit;
+			var compteTVA  = (suivante.Débit == null) ? suivante.Crédit : suivante.Débit;
+
+			if (compteTVA.Type != TypeDeCompte.TVA)
+			{
+				return false;
+			}
 
 			var lib1 = écriture.Libellé.ToString ();
 			var lib2 = suivante.Libellé.ToString ();
 
-			int i1 = lib1.LastIndexOf (", ");
-			int i2 = lib2.LastIndexOf (", ");
+			//	Exemples d'écritures possibles:
 
-			if (i1 == -1 || i2 == -1 || i1 != i2)
+			//	4200 ...  Achats Roger, (IPM) net
+			//	1170 ...  Achats Roger, 7.6% de TVA (IPM)
+
+			//	5283 ...  Invitation client, (IPFREP) net
+			//	1171 ...  Invitation client, 7.6% de TVA déduit à 50.00%
+
+			//	...  3900 Escompte net
+			//	...  2200 Part TVA escompte (TVA)
+
+			string code = CrésusCompta.ExtractCodeTVA (lib2);
+			if (string.IsNullOrEmpty (code))
 			{
-				return false;
+				code = CrésusCompta.ExtractCodeTVA (lib1);
+				if (string.IsNullOrEmpty (code))
+				{
+					return false;
+				}
 			}
 
-			if (lib1.Substring (0, i1) != lib2.Substring (0, i2))
-			{
-				return false;
-			}
-
-			//	Cherche le code TVA.
-			if (lib1[i1+2] != '(')
-			{
-				return false;
-			}
-
-			int i = lib1.IndexOf (')', i1+2);
-			if (i == -1)
-			{
-				return false;
-			}
-
-			string code = lib1.Substring (i1+3, i-i1-3);
 			var codeTVA = this.compta.CodesTVA.Where (x => x.Code == code).FirstOrDefault ();
 			if (codeTVA == null)
 			{
 				return false;
 			}
 
-			//	Cherche le taux.
-			int j = lib2.IndexOf ('%', i2+2);
-			if (j == -1)
-			{
-				return false;
-			}
-
-			decimal taux;
-			if (decimal.TryParse (lib2.Substring (i2+2, j-i2-2), out taux))
-			{
-				taux /= 100;
-			}
-			else
-			{
-				return false;
-			}
+			decimal taux = CrésusCompta.GetTaux (écriture.Montant, suivante.Montant);
 
 			écriture.Type              = (int) TypeEcriture.BaseTVA;
-			écriture.OrigineTVA        = (compte == écriture.Débit) ? "D" : "C";
-			écriture.Libellé           = lib1.Substring (0, i1);
+			écriture.OrigineTVA        = (compteBase == écriture.Débit) ? "D" : "C";
+			écriture.Libellé           = CrésusCompta.SimplifyLibellé (lib1);
 			écriture.MontantComplément = suivante.Montant;
 			écriture.CodeTVA           = codeTVA;
 			écriture.TauxTVA           = taux;
 
 			suivante.Type              = (int) TypeEcriture.CodeTVA;
-			suivante.OrigineTVA        = (compte == écriture.Débit) ? "D" : "C";
+			suivante.OrigineTVA        = (compteBase == écriture.Débit) ? "D" : "C";
 			suivante.Libellé           = écriture.Libellé;
 			suivante.MontantComplément = écriture.Montant;
 			suivante.CodeTVA           = codeTVA;
@@ -755,6 +741,65 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return true;
+		}
+
+		private static string ExtractCodeTVA(string libellé)
+		{
+			//	Extrait le code TVA d'un libellé.
+			//	"Eau avril, 2.4% de TVA (IPIRED)"	-> IPIRED
+			//	"Elec avril, (IPI) net"				-> IPI
+			//	"Part TVA escompte (TVA)"			-> TVA
+			if (string.IsNullOrEmpty (libellé))
+			{
+				return null;
+			}
+
+			int i1 = libellé.LastIndexOf ('(');
+			if (i1 == -1)
+			{
+				return null;
+			}
+
+			int i2 = libellé.LastIndexOf (')');
+			if (i2 == -1)
+			{
+				return null;
+			}
+
+			return libellé.Substring (i1+1, i2-i1-1);
+		}
+
+		private static decimal GetTaux(decimal montantHT, decimal montantTVA)
+		{
+			//	Retourne le taux de TVA arrondi à une décimale.
+			//	HT = 255.81, TVA = 19.44 -> 0.07599 -> 0.76
+			if (montantHT == 0)
+			{
+				return 0;
+			}
+			else
+			{
+				var taux = montantTVA / montantHT;
+				return System.Math.Floor ((taux*1000) + 0.5m) / 1000;
+			}
+		}
+
+		private static string SimplifyLibellé(string libellé)
+		{
+			//	Simplifie le libellé de base.
+			//	"Elec mars, (IPI) net" -> "Elec mars"
+			if (string.IsNullOrEmpty (libellé))
+			{
+				return null;
+			}
+
+			int i = libellé.LastIndexOf (',');
+			if (i == -1)
+			{
+				return libellé;
+			}
+
+			return libellé.Substring (0, i);
 		}
 
 #if false
