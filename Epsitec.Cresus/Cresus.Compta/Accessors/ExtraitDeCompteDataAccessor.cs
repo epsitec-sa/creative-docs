@@ -160,6 +160,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;
 			}
 
+			decimal sens = (compte.Catégorie == CatégorieDeCompte.Passif ||	compte.Catégorie == CatégorieDeCompte.Produit) ? -1 : 1;
+
 			decimal solde       = 0;
 			decimal totalDébit  = 0;
 			decimal totalCrédit = 0;
@@ -178,27 +180,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (data.IsDébit)
 					{
-						solde      += écriture.Montant;
+						solde      += écriture.Montant * sens;
 						totalDébit += écriture.Montant;
-
-						if (compte.Catégorie == CatégorieDeCompte.Passif ||
-							compte.Catégorie == CatégorieDeCompte.Produit)
-						{
-							solde = -solde;
-						}
 
 						data.Solde = solde;
 					}
 					else
 					{
-						solde       -= écriture.Montant;
+						solde       -= écriture.Montant * sens;
 						totalCrédit += écriture.Montant;
-
-						if (compte.Catégorie == CatégorieDeCompte.Passif ||
-							compte.Catégorie == CatégorieDeCompte.Produit)
-						{
-							solde = -solde;
-						}
 
 						data.Solde = solde;
 					}
