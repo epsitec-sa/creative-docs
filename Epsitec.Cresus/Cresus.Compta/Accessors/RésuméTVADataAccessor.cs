@@ -150,8 +150,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				foreach (var ligne in orderedLignes)
 				{
-					soustotalMontant += ligne.Montant;
-					soustotalTVA     += ligne.TVA;
+					soustotalMontant += ligne.Montant.GetValueOrDefault ();
+					soustotalTVA     += ligne.TVA.GetValueOrDefault ();
 
 					var data = new RésuméTVAData
 					{
@@ -241,9 +241,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new RésuméTVAData
 				{
-					Titre              = "Total TVA due",
-					Montant            = montantDu,
-					TVA                = TVADue,
+					Titre   = "Total TVA due",
+					Montant = montantDu,
+					TVA     = TVADue,
 				};
 
 				this.readonlyAllData.Add (data);
@@ -252,9 +252,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new RésuméTVAData
 				{
-					Titre              = "Total TVA à récupérer",
-					Montant            = montantRecup,
-					TVA                = TVARecup,
+					Titre   = "Total TVA à récupérer",
+					Montant = montantRecup,
+					TVA     = TVARecup,
 				};
 
 				this.readonlyAllData.Add (data);
@@ -443,8 +443,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 
-				ligne.Montant += écritureDeCode.MontantComplément.GetValueOrDefault ();
-				ligne.TVA     += écritureDeCode.Montant;
+				if (écritureDeCode.MontantComplément.HasValue)
+				{
+					if (ligne.Montant.HasValue)
+					{
+						ligne.Montant += écritureDeCode.MontantComplément;
+					}
+					else
+					{
+						ligne.Montant = écritureDeCode.MontantComplément;
+					}
+				}
+
+				if (ligne.TVA.HasValue)
+				{
+					ligne.TVA += écritureDeCode.Montant;
+				}
+				else
+				{
+					ligne.TVA = écritureDeCode.Montant;
+				}
 			}
 
 			public List<RésuméTVAData> Lignes

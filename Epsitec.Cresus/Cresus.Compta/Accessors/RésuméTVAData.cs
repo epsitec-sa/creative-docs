@@ -66,13 +66,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-		public decimal Montant
+		public decimal? Montant
 		{
 			get;
 			set;
 		}
 
-		public decimal TVA
+		public decimal? TVA
 		{
 			get;
 			set;
