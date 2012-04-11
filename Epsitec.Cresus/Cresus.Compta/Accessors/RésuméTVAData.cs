@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
-		public FormattedText Compte
+		public FormattedText Numéro
 		{
 			get;
 			set;

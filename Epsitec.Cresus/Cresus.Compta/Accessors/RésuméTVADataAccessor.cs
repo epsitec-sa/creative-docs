@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						var data = new RésuméTVAData
 						{
 							LigneEnTête = true,
+							Numéro      = bloc.Compte.Numéro,
 							Titre       = bloc.Compte.GetCompactSummary (),
 						};
 
@@ -142,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				if (this.Options.ParCodeTVA && !this.Options.MontreEcritures)
 				{
-					orderedLignes = bloc.Lignes.OrderBy (x => x.Compte);
+					orderedLignes = bloc.Lignes.OrderBy (x => x.Numéro);
 				}
 				else
 				{
@@ -157,7 +158,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					var data = new RésuméTVAData
 					{
-						Compte     = ligne.Compte,
+						Entity     = ligne.Entity,
+						Numéro     = ligne.Numéro,
 						CodeTVA    = ligne.CodeTVA,
 						Taux       = ligne.Taux,
 						Date       = ligne.Date,
@@ -198,6 +200,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 							HasBottomSeparator = true,
 						};
 
+						if (!this.Options.ParCodeTVA)
+						{
+							data.Numéro = bloc.Compte.Numéro;
+						}
+
 						this.readonlyAllData.Add (data);
 					}
 					else
@@ -209,6 +216,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 							var data = new RésuméTVAData
 							{
 								LigneDeTotal       = true,
+								Numéro             = bloc.Compte.Numéro,
 								CodeTVA            = bloc.CodeTVA.Code,
 								Taux               = codeTVA.DefaultTauxValue.GetValueOrDefault (),
 								Titre              = "Total",
@@ -224,7 +232,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 							var data = new RésuméTVAData
 							{
 								LigneDeTotal       = true,
-								Compte             = bloc.Compte.Numéro,
+								Numéro             = bloc.Compte.Numéro,
 								Titre              = bloc.Compte.Titre,
 								Montant            = soustotalMontant,
 								TVA                = soustotalTVA,
@@ -293,7 +301,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				case ColumnType.Compte:
 				case ColumnType.Compte2:
-					return data.Compte;
+					return data.Numéro;
 
 				case ColumnType.CodeTVA:
 					return data.CodeTVA;
@@ -403,7 +411,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					ligne = new RésuméTVAData
 					{
-						Compte  = compteTVA.Numéro,
+						Entity  = écritureDeBase,
+						Numéro  = compteTVA.Numéro,
 						Titre   = écritureDeBase.Libellé,
 						CodeTVA = écritureDeCode.CodeTVA.Code,
 						Taux    = écritureDeCode.TauxTVA,
@@ -417,13 +426,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					if (this.options.ParCodeTVA)  // par code TVA ?
 					{
-						ligne = this.lignes.Where (x => x.Compte == compteTVA.Numéro).FirstOrDefault ();
+						ligne = this.lignes.Where (x => x.Numéro == compteTVA.Numéro).FirstOrDefault ();
 
 						if (ligne == null)
 						{
 							ligne = new RésuméTVAData
 							{
-								Compte = compteTVA.Numéro,
+								Numéro = compteTVA.Numéro,
 								Titre  = compteTVA.Titre,
 							};
 
