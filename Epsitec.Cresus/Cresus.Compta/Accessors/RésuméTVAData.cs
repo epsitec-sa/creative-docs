@@ -18,7 +18,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public bool LigneDeCodeTVA
+		public bool LigneEnTête
+		{
+			get;
+			set;
+		}
+
+		public bool LigneDeTotal
 		{
 			get;
 			set;

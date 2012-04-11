@@ -108,6 +108,31 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var bloc in orderedBlocs)
 			{
+				//	Ajoute l'en-tête du bloc.
+				{
+					if (this.Options.MontreEcritures && !this.Options.ParCodeTVA)
+					{
+						var data = new RésuméTVAData
+						{
+							LigneEnTête = true,
+							Titre       = bloc.Compte.GetCompactSummary (),
+						};
+
+						this.readonlyAllData.Add (data);
+					}
+
+					if (this.Options.MontreEcritures && this.Options.ParCodeTVA)
+					{
+						var data = new RésuméTVAData
+						{
+							LigneEnTête = true,
+							Titre       = bloc.CodeTVA,
+						};
+
+						this.readonlyAllData.Add (data);
+					}
+				}
+
 				decimal soustotalMontant = 0;
 				decimal soustotalTVA     = 0;
 
@@ -130,15 +155,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					var data = new RésuméTVAData
 					{
-						LigneDeCodeTVA = true,
-						Compte         = ligne.Compte,
-						CodeTVA        = ligne.CodeTVA,
-						Taux           = ligne.Taux,
-						Date           = ligne.Date,
-						Pièce          = ligne.Pièce,
-						Titre          = ligne.Titre,
-						Montant        = ligne.Montant,
-						TVA            = ligne.TVA,
+						Compte  = ligne.Compte,
+						CodeTVA = ligne.CodeTVA,
+						Taux    = ligne.Taux,
+						Date    = ligne.Date,
+						Pièce   = ligne.Pièce,
+						Titre   = ligne.Titre,
+						Montant = ligne.Montant,
+						TVA     = ligne.TVA,
 					};
 
 					this.readonlyAllData.Add (data);
@@ -167,6 +191,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					{
 						var data = new RésuméTVAData
 						{
+							LigneDeTotal       = true,
 							Titre              = "Total",
 							Montant            = soustotalMontant,
 							TVA                = soustotalTVA,
@@ -183,6 +208,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 							var data = new RésuméTVAData
 							{
+								LigneDeTotal       = true,
 								CodeTVA            = bloc.CodeTVA,
 								Taux               = codeTVA.DefaultTauxValue.GetValueOrDefault (),
 								Titre              = "Total",
@@ -197,6 +223,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						{
 							var data = new RésuméTVAData
 							{
+								LigneDeTotal       = true,
 								Compte             = bloc.Compte.Numéro,
 								Titre              = bloc.Compte.Titre,
 								Montant            = soustotalMontant,
@@ -278,7 +305,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Pièce;
 
 				case ColumnType.Titre:
-					return data.Titre;
+					if (data.LigneEnTête)
+					{
+						return data.Titre.ApplyBold ();
+					}
+					else
+					{
+						return data.Titre;
+					}
 
 				case ColumnType.Montant:
 					if (this.Options.MontantTTC)
@@ -293,20 +327,30 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.MontantTVA:
 					return this.GetMontant (data, data.TVA);
 
+				case ColumnType.Différence:
+					return this.GetMontant (data, data.Différence);
+
 				default:
 					return FormattedText.Null;
 			}
 		}
 
-		private FormattedText GetMontant(RésuméTVAData data, decimal montant)
+		private FormattedText GetMontant(RésuméTVAData data, decimal? montant)
 		{
-			if (data.LigneDeCodeTVA && this.Options.IndenteSoustotaux)
+			if (montant.HasValue)
 			{
-				return Converters.MontantToString (montant) + "  ";
+				FormattedText m = Converters.MontantToString (montant.Value);
+
+				if (data.LigneDeTotal)
+				{
+					m = m.ApplyBold ();
+				}
+
+				return m;
 			}
 			else
 			{
-				return Converters.MontantToString (montant);
+				return FormattedText.Empty;
 			}
 		}
 

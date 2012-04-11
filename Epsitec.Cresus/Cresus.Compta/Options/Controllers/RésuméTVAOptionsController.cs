@@ -82,16 +82,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.indenteSoustotauxButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Indente les sous-totaux",
-				PreferredWidth = 160,
-				ActiveState    = this.Options.IndenteSoustotaux ? ActiveState.Yes : ActiveState.No,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
-
 			this.UpdateWidgets ();
 
 			this.montreEcrituresButton.ActiveStateChanged += delegate
@@ -120,15 +110,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.OptionsChanged ();
 				}
 			};
-
-			this.indenteSoustotauxButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.IndenteSoustotaux = !this.Options.IndenteSoustotaux;
-					this.OptionsChanged ();
-				}
-			};
 		}
 
 		protected override void OptionsChanged()
@@ -141,10 +122,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.montreEcrituresButton.ActiveState   = this.Options.MontreEcritures   ? ActiveState.Yes : ActiveState.No;
-				this.montantTTCButton.ActiveState        = this.Options.MontantTTC        ? ActiveState.Yes : ActiveState.No;
-				this.parCodeTVAButton.ActiveState        = this.Options.ParCodeTVA        ? ActiveState.Yes : ActiveState.No;
-				this.indenteSoustotauxButton.ActiveState = this.Options.IndenteSoustotaux ? ActiveState.Yes : ActiveState.No;
+				this.montreEcrituresButton.ActiveState = this.Options.MontreEcritures ? ActiveState.Yes : ActiveState.No;
+				this.montantTTCButton.ActiveState      = this.Options.MontantTTC      ? ActiveState.Yes : ActiveState.No;
+				this.parCodeTVAButton.ActiveState      = this.Options.ParCodeTVA      ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -162,6 +142,5 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		private CheckButton			montreEcrituresButton;
 		private CheckButton			montantTTCButton;
 		private CheckButton			parCodeTVAButton;
-		private CheckButton			indenteSoustotauxButton;
 	}
 }

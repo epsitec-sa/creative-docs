@@ -21,10 +21,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.MontreEcritures   = false;
-			this.MontantTTC        = false;
-			this.ParCodeTVA        = false;
-			this.IndenteSoustotaux = false;
+			this.MontreEcritures = false;
+			this.MontantTTC      = false;
+			this.ParCodeTVA      = false;
 		}
 
 
@@ -41,12 +40,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 		public bool ParCodeTVA
-		{
-			get;
-			set;
-		}
-
-		public bool IndenteSoustotaux
 		{
 			get;
 			set;
@@ -72,10 +65,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as RésuméTVAOptions;
-			d.MontreEcritures   = this.MontreEcritures;
-			d.MontantTTC        = this.MontantTTC;
-			d.ParCodeTVA        = this.ParCodeTVA;
-			d.IndenteSoustotaux = this.IndenteSoustotaux;
+			d.MontreEcritures = this.MontreEcritures;
+			d.MontantTTC      = this.MontantTTC;
+			d.ParCodeTVA      = this.ParCodeTVA;
 
 			base.CopyTo (dst);
 		}
@@ -89,10 +81,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméTVAOptions;
 
-			return this.MontreEcritures   == o.MontreEcritures  &&
-				   this.MontantTTC        == o.MontantTTC       &&
-				   this.ParCodeTVA        == o.ParCodeTVA       &&
-				   this.IndenteSoustotaux == o.IndenteSoustotaux;
+			return this.MontreEcritures == o.MontreEcritures &&
+				   this.MontantTTC      == o.MontantTTC      &&
+				   this.ParCodeTVA      == o.ParCodeTVA;
 		}
 
 

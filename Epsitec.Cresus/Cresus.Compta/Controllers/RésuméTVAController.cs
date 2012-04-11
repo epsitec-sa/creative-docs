@@ -126,6 +126,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.Titre,      1.00, ContentAlignment.MiddleLeft,  "Code TVA / Titre du compte");
 				yield return new ColumnMapper (ColumnType.Montant,    0.20, ContentAlignment.MiddleRight, "Montant HT");
 				yield return new ColumnMapper (ColumnType.MontantTVA, 0.20, ContentAlignment.MiddleRight, "TVA");
+				yield return new ColumnMapper (ColumnType.Différence, 0.20, ContentAlignment.MiddleRight, "Diff.");
 			}
 		}
 
@@ -133,12 +134,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as RésuméTVAOptions;
 
-			this.ShowHideColumn (ColumnType.Compte,  options.MontreEcritures || !options.ParCodeTVA);
-			this.ShowHideColumn (ColumnType.CodeTVA, options.MontreEcritures || options.ParCodeTVA);
-			this.ShowHideColumn (ColumnType.TauxTVA, options.MontreEcritures || options.ParCodeTVA);
-			this.ShowHideColumn (ColumnType.Date,    options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.Pièce,   options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.Compte2, !options.MontreEcritures && options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.Compte,     (!options.MontreEcritures && !options.ParCodeTVA) || (options.MontreEcritures && options.ParCodeTVA));
+			this.ShowHideColumn (ColumnType.CodeTVA,    (!options.MontreEcritures && options.ParCodeTVA) || (options.MontreEcritures && !options.ParCodeTVA));
+			this.ShowHideColumn (ColumnType.TauxTVA,    options.MontreEcritures ||  options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.Date,       options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Pièce,      options.MontreEcritures);
+			this.ShowHideColumn (ColumnType.Compte2,    !options.MontreEcritures &&  options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.Différence, options.MontreEcritures);
 
 			if (options.MontreEcritures)
 			{

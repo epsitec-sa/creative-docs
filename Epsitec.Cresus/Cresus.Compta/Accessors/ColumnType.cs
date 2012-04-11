@@ -77,5 +77,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Compte2,
 		IsAutoLibellé,
 		MontantEdité,
+		Différence,
 	}
 }
