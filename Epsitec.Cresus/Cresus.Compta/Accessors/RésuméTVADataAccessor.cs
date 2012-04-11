@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					BlocDeRésumé bloc;
 					var compte = écritureDeBase.CompteTVA;
-					var codeTVA = écriture.CodeTVA.Code;
+					var codeTVA = écriture.CodeTVA;
 
 					if (this.Options.ParCodeTVA)
 					{
@@ -103,8 +103,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal TVADue       = 0;
 			decimal montantRecup = 0;
 			decimal TVARecup     = 0;
-			decimal montantTotal = 0;
-			decimal TVATotal     = 0;
 
 			foreach (var bloc in orderedBlocs)
 			{
@@ -126,7 +124,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						var data = new RésuméTVAData
 						{
 							LigneEnTête = true,
-							Titre       = bloc.CodeTVA,
+							Titre       = bloc.CodeTVA.Code,
 						};
 
 						this.readonlyAllData.Add (data);
@@ -170,22 +168,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				//	Ajoute le total du bloc.
 				{
-					if (bloc.Compte.Catégorie == CatégorieDeCompte.Passif ||
-						bloc.Compte.Catégorie == CatégorieDeCompte.Produit)
+					if (bloc.CodeTVA.Compte.Catégorie == CatégorieDeCompte.Passif)
 					{
 						montantDu += soustotalMontant;
 						TVADue    += soustotalTVA;
 					}
 
-					if (bloc.Compte.Catégorie == CatégorieDeCompte.Actif ||
-						bloc.Compte.Catégorie == CatégorieDeCompte.Charge)
+					if (bloc.CodeTVA.Compte.Catégorie == CatégorieDeCompte.Actif)
 					{
 						montantRecup += soustotalMontant;
 						TVARecup     += soustotalTVA;
 					}
-
-					montantTotal += soustotalMontant;
-					TVATotal     += soustotalTVA;
 
 					if (this.Options.MontreEcritures)
 					{
@@ -204,12 +197,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					{
 						if (this.Options.ParCodeTVA)
 						{
-							var codeTVA = this.compta.CodesTVA.Where (x => x.Code == bloc.CodeTVA).FirstOrDefault ();
+							var codeTVA = this.compta.CodesTVA.Where (x => x == bloc.CodeTVA).FirstOrDefault ();
 
 							var data = new RésuméTVAData
 							{
 								LigneDeTotal       = true,
-								CodeTVA            = bloc.CodeTVA,
+								CodeTVA            = bloc.CodeTVA.Code,
 								Taux               = codeTVA.DefaultTauxValue.GetValueOrDefault (),
 								Titre              = "Total",
 								Montant            = soustotalMontant,
@@ -366,7 +359,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private class BlocDeRésumé
 		{
-			public BlocDeRésumé(ComptaCompteEntity compte, FormattedText codeTVA, RésuméTVAOptions options)
+			public BlocDeRésumé(ComptaCompteEntity compte, ComptaCodeTVAEntity codeTVA, RésuméTVAOptions options)
 			{
 				this.compte  = compte;
 				this.codeTVA = codeTVA;
@@ -383,7 +376,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			public FormattedText CodeTVA
+			public ComptaCodeTVAEntity CodeTVA
 			{
 				get
 				{
@@ -474,10 +467,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 
-			private readonly ComptaCompteEntity		compte;
-			private readonly FormattedText			codeTVA;
-			private readonly RésuméTVAOptions		options;
-			private readonly List<RésuméTVAData>	lignes;
+			private readonly ComptaCompteEntity			compte;
+			private readonly ComptaCodeTVAEntity		codeTVA;
+			private readonly RésuméTVAOptions			options;
+			private readonly List<RésuméTVAData>		lignes;
 		}
 	}
 }
