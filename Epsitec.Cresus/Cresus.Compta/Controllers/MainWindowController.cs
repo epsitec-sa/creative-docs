@@ -68,9 +68,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox
 			{
-				Parent  = window.Root,
-				Dock    = DockStyle.Fill,
-				Padding = new Margins (3),
+				Parent    = window.Root,
+				BackColor = Color.FromBrightness (0.95),
+				Dock      = DockStyle.Fill,
+				Padding   = new Margins (3),
 			};
 
 			this.SelectDefaultPrésentation ();

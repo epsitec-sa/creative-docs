@@ -569,7 +569,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.EditorAdditionalValidate ();
 
-			if (this.errorCount == 0)
+			if (this.errorCount == 0 || this.controller.HasRightEditor)
 			{
 				this.bottomToolbarController.SetErrorDescription (FormattedText.Null);
 			}
