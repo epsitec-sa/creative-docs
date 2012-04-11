@@ -488,6 +488,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var calculHT = TVA.CalculeHT (montantHT+montantTVA, tauxTVA);
 					var diff = montantHT - calculHT;
 
+					if (this.options.MontantLimite.HasValue && System.Math.Abs (diff) <= this.options.MontantLimite.Value)
+					{
+						diff = 0;
+					}
+
+					if (this.options.PourcentLimite.HasValue && montantTVA != 0)
+					{
+						var pc = System.Math.Abs (diff) / montantTVA;
+						if (pc <= this.options.PourcentLimite)
+						{
+							diff = 0;
+						}
+					}
+
 					if (diff != 0)
 					{
 						if (ligne.Différence.HasValue)

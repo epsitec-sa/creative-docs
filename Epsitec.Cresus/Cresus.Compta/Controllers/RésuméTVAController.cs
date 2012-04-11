@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (options.MontreEcritures)
 			{
-				this.SetColumnDescription (ColumnType.Titre, "Libellé");
+				this.SetColumnDescription (ColumnType.Titre, options.ParCodeTVA ? "Code TVA / Libellé écriture" : "Compte / Libellé écriture");
 			}
 			else
 			{

@@ -45,6 +45,18 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
+		public decimal? MontantLimite
+		{
+			get;
+			set;
+		}
+
+		public decimal? PourcentLimite
+		{
+			get;
+			set;
+		}
+
 
 		protected override void CreateEmpty()
 		{
@@ -68,6 +80,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			d.MontreEcritures = this.MontreEcritures;
 			d.MontantTTC      = this.MontantTTC;
 			d.ParCodeTVA      = this.ParCodeTVA;
+			d.MontantLimite   = this.MontantLimite;
+			d.PourcentLimite  = this.PourcentLimite;
 
 			base.CopyTo (dst);
 		}
@@ -83,7 +97,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			return this.MontreEcritures == o.MontreEcritures &&
 				   this.MontantTTC      == o.MontantTTC      &&
-				   this.ParCodeTVA      == o.ParCodeTVA;
+				   this.ParCodeTVA      == o.ParCodeTVA      &&
+				   this.MontantLimite   == o.MontantLimite   &&
+				   this.PourcentLimite  == o.PourcentLimite;
 		}
 
 
