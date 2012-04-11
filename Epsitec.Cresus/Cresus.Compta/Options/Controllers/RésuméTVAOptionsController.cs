@@ -70,18 +70,30 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche les montants TTC",
-				PreferredWidth = 170,
+				PreferredWidth = 180,
 				ActiveState    = this.Options.MontantTTC ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.parCodeTVAButton = new CheckButton
+			this.parCodeTVAButton0 = new RadioButton
 			{
 				Parent         = frame,
-				FormattedText  = "Résumé par code TVA",
+				FormattedText  = "Résumé par comptes",
+				PreferredWidth = 140,
+				ActiveState    = !this.Options.ParCodesTVA ? ActiveState.Yes : ActiveState.No,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.parCodeTVAButton1 = new RadioButton
+			{
+				Parent         = frame,
+				FormattedText  = "Résumé par codes TVA",
 				PreferredWidth = 160,
-				ActiveState    = this.Options.ParCodeTVA ? ActiveState.Yes : ActiveState.No,
+				ActiveState    = this.Options.ParCodesTVA ? ActiveState.Yes : ActiveState.No,
+				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
@@ -104,13 +116,20 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 
-			this.parCodeTVAButton.ActiveStateChanged += delegate
+			this.parCodeTVAButton0.Clicked += delegate
 			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.ParCodeTVA = !this.Options.ParCodeTVA;
-					this.OptionsChanged ();
-				}
+				this.Options.ParCodesTVA = false;
+				this.parCodeTVAButton0.ActiveState = ActiveState.Yes;
+				this.parCodeTVAButton1.ActiveState = ActiveState.No;
+				this.OptionsChanged ();
+			};
+
+			this.parCodeTVAButton1.Clicked += delegate
+			{
+				this.Options.ParCodesTVA = true;
+				this.parCodeTVAButton0.ActiveState = ActiveState.No;
+				this.parCodeTVAButton1.ActiveState = ActiveState.Yes;
+				this.OptionsChanged ();
 			};
 		}
 
@@ -212,6 +231,24 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					}
 				}
 			};
+
+			this.limiteMontantRadio.Clicked += delegate
+			{
+				this.Options.MontantLimite  = 0.05m;  // 5 centimes
+				this.Options.PourcentLimite = null;
+
+				this.UpdateWidgets ();
+				this.OptionsChanged ();
+			};
+
+			this.limitePourcentRadio.Clicked += delegate
+			{
+				this.Options.MontantLimite  = null;
+				this.Options.PourcentLimite = 0.01m;  // 1%
+
+				this.UpdateWidgets ();
+				this.OptionsChanged ();
+			};
 		}
 
 
@@ -235,9 +272,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.montreEcrituresButton.ActiveState = this.Options.MontreEcritures ? ActiveState.Yes : ActiveState.No;
-				this.montantTTCButton.ActiveState      = this.Options.MontantTTC      ? ActiveState.Yes : ActiveState.No;
-				this.parCodeTVAButton.ActiveState      = this.Options.ParCodeTVA      ? ActiveState.Yes : ActiveState.No;
+				this.montreEcrituresButton.ActiveState =  this.Options.MontreEcritures ? ActiveState.Yes : ActiveState.No;
+				this.montantTTCButton.ActiveState      =  this.Options.MontantTTC      ? ActiveState.Yes : ActiveState.No;
+				this.parCodeTVAButton0.ActiveState     = !this.Options.ParCodesTVA     ? ActiveState.Yes : ActiveState.No;
+				this.parCodeTVAButton1.ActiveState     =  this.Options.ParCodesTVA     ? ActiveState.Yes : ActiveState.No;
 
 				bool hasMontantLimit  = this.Options.MontantLimite.HasValue;
 				bool hasPerrcentLimit = this.Options.PourcentLimite.HasValue;
@@ -297,7 +335,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private CheckButton			montreEcrituresButton;
 		private CheckButton			montantTTCButton;
-		private CheckButton			parCodeTVAButton;
+		private RadioButton			parCodeTVAButton0;
+		private RadioButton			parCodeTVAButton1;
 
 		private FrameBox			différenceFrame;
 		private CheckButton			différenceButton;

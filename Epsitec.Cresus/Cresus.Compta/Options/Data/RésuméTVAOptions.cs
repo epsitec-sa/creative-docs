@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			this.MontreEcritures = false;
 			this.MontantTTC      = false;
-			this.ParCodeTVA      = false;
+			this.ParCodesTVA     = false;
 		}
 
 
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
-		public bool ParCodeTVA
+		public bool ParCodesTVA
 		{
 			get;
 			set;
@@ -79,7 +79,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			var d = dst as RésuméTVAOptions;
 			d.MontreEcritures = this.MontreEcritures;
 			d.MontantTTC      = this.MontantTTC;
-			d.ParCodeTVA      = this.ParCodeTVA;
+			d.ParCodesTVA     = this.ParCodesTVA;
 			d.MontantLimite   = this.MontantLimite;
 			d.PourcentLimite  = this.PourcentLimite;
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			return this.MontreEcritures == o.MontreEcritures &&
 				   this.MontantTTC      == o.MontantTTC      &&
-				   this.ParCodeTVA      == o.ParCodeTVA      &&
+				   this.ParCodesTVA     == o.ParCodesTVA     &&
 				   this.MontantLimite   == o.MontantLimite   &&
 				   this.PourcentLimite  == o.PourcentLimite;
 		}
@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 					this.AppendSummaryBuilder ("Montants TTC");
 				}
 
-				if (this.ParCodeTVA)
+				if (this.ParCodesTVA)
 				{
 					this.AppendSummaryBuilder ("Par code TVA");
 				}

@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var compte = écritureDeBase.CompteTVA;
 					var codeTVA = écriture.CodeTVA;
 
-					if (this.Options.ParCodeTVA)
+					if (this.Options.ParCodesTVA)
 					{
 						bloc = blocs.Where (x => x.CodeTVA == codeTVA).FirstOrDefault ();
 					}
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Passe en revue tous les blocs.
 			IEnumerable<BlocDeRésumé> orderedBlocs;
 
-			if (this.Options.ParCodeTVA)
+			if (this.Options.ParCodesTVA)
 			{
 				orderedBlocs = blocs.OrderBy (x => x.CodeTVA.Code);
 			}
@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				//	Ajoute l'en-tête du bloc.
 				{
-					if (this.Options.MontreEcritures && !this.Options.ParCodeTVA)
+					if (this.Options.MontreEcritures && !this.Options.ParCodesTVA)
 					{
 						var data = new RésuméTVAData
 						{
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						this.readonlyAllData.Add (data);
 					}
 
-					if (this.Options.MontreEcritures && this.Options.ParCodeTVA)
+					if (this.Options.MontreEcritures && this.Options.ParCodesTVA)
 					{
 						var data = new RésuméTVAData
 						{
@@ -141,7 +141,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				//	Ajoute les lignes du bloc.
 				IEnumerable<RésuméTVAData> orderedLignes;
 
-				if (this.Options.ParCodeTVA && !this.Options.MontreEcritures)
+				if (this.Options.ParCodesTVA && !this.Options.MontreEcritures)
 				{
 					orderedLignes = bloc.Lignes.OrderBy (x => x.Numéro);
 				}
@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 							HasBottomSeparator = true,
 						};
 
-						if (!this.Options.ParCodeTVA)
+						if (!this.Options.ParCodesTVA)
 						{
 							data.Numéro = bloc.Compte.Numéro;
 						}
@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						if (this.Options.ParCodeTVA)
+						if (this.Options.ParCodesTVA)
 						{
 							var codeTVA = this.compta.CodesTVA.Where (x => x == bloc.CodeTVA).FirstOrDefault ();
 
@@ -424,7 +424,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					if (this.options.ParCodeTVA)  // par code TVA ?
+					if (this.options.ParCodesTVA)  // par code TVA ?
 					{
 						ligne = this.lignes.Where (x => x.Numéro == compteTVA.Numéro).FirstOrDefault ();
 

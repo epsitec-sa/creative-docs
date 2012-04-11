@@ -188,21 +188,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as RésuméTVAOptions;
 
-			this.ShowHideColumn (ColumnType.Compte,     (!options.MontreEcritures && !options.ParCodeTVA) || (options.MontreEcritures && options.ParCodeTVA));
-			this.ShowHideColumn (ColumnType.CodeTVA,    (!options.MontreEcritures && options.ParCodeTVA) || (options.MontreEcritures && !options.ParCodeTVA));
-			this.ShowHideColumn (ColumnType.TauxTVA,    options.MontreEcritures ||  options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.Compte,     (!options.MontreEcritures && !options.ParCodesTVA) || (options.MontreEcritures && options.ParCodesTVA));
+			this.ShowHideColumn (ColumnType.CodeTVA,    (!options.MontreEcritures && options.ParCodesTVA) || (options.MontreEcritures && !options.ParCodesTVA));
+			this.ShowHideColumn (ColumnType.TauxTVA,    options.MontreEcritures ||  options.ParCodesTVA);
 			this.ShowHideColumn (ColumnType.Date,       options.MontreEcritures);
 			this.ShowHideColumn (ColumnType.Pièce,      options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.Compte2,    !options.MontreEcritures &&  options.ParCodeTVA);
+			this.ShowHideColumn (ColumnType.Compte2,    !options.MontreEcritures &&  options.ParCodesTVA);
 			this.ShowHideColumn (ColumnType.Différence, options.MontreEcritures);
 
 			if (options.MontreEcritures)
 			{
-				this.SetColumnDescription (ColumnType.Titre, options.ParCodeTVA ? "Code TVA / Libellé écriture" : "Compte / Libellé écriture");
+				this.SetColumnDescription (ColumnType.Titre, options.ParCodesTVA ? "Code TVA / Libellé écriture" : "Compte / Libellé écriture");
 			}
 			else
 			{
-				this.SetColumnDescription (ColumnType.Titre, options.ParCodeTVA ? "Titre du compte" : "Code TVA / Titre du compte");
+				this.SetColumnDescription (ColumnType.Titre, options.ParCodesTVA ? "Titre du compte" : "Code TVA / Titre du compte");
 			}
 
 			this.SetColumnDescription (ColumnType.Montant, options.MontantTTC ? "Montant TTC" : "Montant HT");
