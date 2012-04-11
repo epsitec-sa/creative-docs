@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (this.Options.ParCodeTVA)
 			{
-				orderedBlocs = blocs.OrderBy (x => x.CodeTVA);
+				orderedBlocs = blocs.OrderBy (x => x.CodeTVA.Code);
 			}
 			else
 			{
@@ -101,8 +101,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			decimal montantDu    = 0;
 			decimal TVADue       = 0;
+			decimal DiffDue      = 0;
 			decimal montantRecup = 0;
 			decimal TVARecup     = 0;
+			decimal DiffRecup    = 0;
 
 			foreach (var bloc in orderedBlocs)
 			{
@@ -133,6 +135,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				decimal soustotalMontant = 0;
 				decimal soustotalTVA     = 0;
+				decimal soustotalDiff    = 0;
 
 				//	Ajoute les lignes du bloc.
 				IEnumerable<RésuméTVAData> orderedLignes;
@@ -150,17 +153,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					soustotalMontant += ligne.Montant.GetValueOrDefault ();
 					soustotalTVA     += ligne.TVA.GetValueOrDefault ();
+					soustotalDiff    += ligne.Différence.GetValueOrDefault ();
 
 					var data = new RésuméTVAData
 					{
-						Compte  = ligne.Compte,
-						CodeTVA = ligne.CodeTVA,
-						Taux    = ligne.Taux,
-						Date    = ligne.Date,
-						Pièce   = ligne.Pièce,
-						Titre   = ligne.Titre,
-						Montant = ligne.Montant,
-						TVA     = ligne.TVA,
+						Compte     = ligne.Compte,
+						CodeTVA    = ligne.CodeTVA,
+						Taux       = ligne.Taux,
+						Date       = ligne.Date,
+						Pièce      = ligne.Pièce,
+						Titre      = ligne.Titre,
+						Montant    = ligne.Montant,
+						TVA        = ligne.TVA,
+						Différence = ligne.Différence,
 					};
 
 					this.readonlyAllData.Add (data);
@@ -172,12 +177,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 					{
 						montantDu += soustotalMontant;
 						TVADue    += soustotalTVA;
+						DiffDue   += soustotalDiff;
 					}
 
 					if (bloc.CodeTVA.Compte.Catégorie == CatégorieDeCompte.Actif)
 					{
 						montantRecup += soustotalMontant;
 						TVARecup     += soustotalTVA;
+						DiffRecup    += soustotalDiff;
 					}
 
 					if (this.Options.MontreEcritures)
@@ -234,9 +241,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new RésuméTVAData
 				{
-					Titre   = "Total TVA due",
-					Montant = montantDu,
-					TVA     = TVADue,
+					Titre      = "Total TVA due",
+					Montant    = montantDu,
+					TVA        = TVADue,
+					Différence = DiffDue,
 				};
 
 				this.readonlyAllData.Add (data);
@@ -245,9 +253,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new RésuméTVAData
 				{
-					Titre   = "Total TVA à récupérer",
-					Montant = montantRecup,
-					TVA     = TVARecup,
+					Titre      = "Total TVA à récupérer",
+					Montant    = montantRecup,
+					TVA        = TVARecup,
+					Différence = DiffRecup,
 				};
 
 				this.readonlyAllData.Add (data);
@@ -259,6 +268,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					Titre              = "Total",
 					Montant            = montantDu - montantRecup,
 					TVA                = TVADue - TVARecup,
+					Différence         = DiffDue - DiffRecup,
 					IsBold             = true,
 					HasBottomSeparator = true,
 				};
@@ -436,6 +446,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 
+				//	Totalise le montant.
 				if (écritureDeCode.MontantComplément.HasValue)
 				{
 					if (ligne.Montant.HasValue)
@@ -448,6 +459,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 
+				//	Totalise la TVA.
 				if (ligne.TVA.HasValue)
 				{
 					ligne.TVA += écritureDeCode.Montant;
@@ -455,6 +467,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 				else
 				{
 					ligne.TVA = écritureDeCode.Montant;
+				}
+
+				//	Calcule la différence éventuelle.
+				if (écritureDeCode.MontantComplément.HasValue)
+				{
+					var montantHT  = ligne.Montant.GetValueOrDefault ();
+					var montantTVA = ligne.TVA.GetValueOrDefault ();
+					var tauxTVA    = écritureDeCode.TauxTVA.GetValueOrDefault ();
+
+					var calculHT = TVA.CalculeHT (montantHT+montantTVA, tauxTVA);
+					var diff = montantHT - calculHT;
+
+					if (diff != 0)
+					{
+						if (ligne.Différence.HasValue)
+						{
+							ligne.Différence += diff;
+						}
+						else
+						{
+							ligne.Différence = diff;
+						}
+					}
 				}
 			}
 
