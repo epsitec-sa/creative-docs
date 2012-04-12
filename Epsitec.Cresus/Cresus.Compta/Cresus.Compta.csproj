@@ -265,7 +265,6 @@
     <EmbeddedResource Include="Images\Présentation.Balance.icon" />
     <EmbeddedResource Include="Images\Présentation.Bilan.icon" />
     <EmbeddedResource Include="Images\Présentation.Budgets.icon" />
-    <EmbeddedResource Include="Images\Présentation.Change.icon" />
     <EmbeddedResource Include="Images\Présentation.Extrait.icon" />
     <EmbeddedResource Include="Images\Présentation.DécompteTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.Exploitation.icon" />
@@ -354,6 +353,8 @@
     <EmbeddedResource Include="Images\Multi.InsertBefore.icon" />
     <EmbeddedResource Include="Images\Multi.Join.icon" />
     <EmbeddedResource Include="Images\Multi.Split.icon" />
+    <EmbeddedResource Include="Images\Présentation.DifférencesChange.icon" />
+    <EmbeddedResource Include="Images\Présentation.TauxChange.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

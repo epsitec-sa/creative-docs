@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Exploitation, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Budgets, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Change, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
+				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.DifférencesChange, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.RésuméPériodique, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.RésuméTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
 				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.DécompteTVA, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
