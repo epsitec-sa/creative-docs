@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (compte == null)
 			{
-				return JournalDataAccessor.multi;
+				return FormattedText.Empty;
 			}
 			else
 			{

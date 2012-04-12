@@ -90,6 +90,7 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Helpers\Currencies.cs" />
     <Compile Include="Options\Controllers\RésuméTVAOptionsController.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
     <Compile Include="TypeEcriture.cs" />

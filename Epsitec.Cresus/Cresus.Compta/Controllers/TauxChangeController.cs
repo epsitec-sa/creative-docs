@@ -113,7 +113,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Code,        0.40, ContentAlignment.MiddleLeft, "Code ISO",         "Code ISO de la monnaie");
+				yield return new ColumnMapper (ColumnType.Code,        0.40, ContentAlignment.MiddleLeft, "Monnaie",          "Code ISO à 3 lettres de la monnaie");
 				yield return new ColumnMapper (ColumnType.Description, 1.00, ContentAlignment.MiddleLeft, "Description",      "Description de la monnaie");
 				yield return new ColumnMapper (ColumnType.Cours,       0.50, ContentAlignment.MiddleLeft, "Cours",            "Cours de la monnaie");
 				yield return new ColumnMapper (ColumnType.Unité,       0.40, ContentAlignment.MiddleLeft, "Unité",            "Facteur multiplicafif du cours");

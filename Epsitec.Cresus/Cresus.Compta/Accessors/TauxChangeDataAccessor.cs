@@ -15,7 +15,7 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Gère l'accès aux générateurs de numéros de pièces de la comptabilité.
+	/// Gère l'accès aux taux de change de la comptabilité.
 	/// </summary>
 	public class TauxChangeDataAccessor : AbstractDataAccessor
 	{
@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			if (row >= 0 && row < this.compta.TauxChange.Count)
 			{
 				var data = new TauxChangeEditionLine (this.controller);
-				var pièce = this.compta.TauxChange[row];
-				data.EntityToData (pièce);
+				var taux = this.compta.TauxChange[row];
+				data.EntityToData (taux);
 
 				this.editionLine.Add (data);
 				this.countEditedRow++;
@@ -221,10 +221,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var pièce = this.CreateTauxChange ();
-				data.DataToEntity (pièce);
+				var taux = this.CreateTauxChange ();
+				data.DataToEntity (taux);
 
-				this.compta.TauxChange.Add (pièce);
+				this.compta.TauxChange.Add (taux);
 
 				if (firstRow == -1)
 				{
@@ -239,8 +239,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var pièce = this.compta.TauxChange[row];
-			this.editionLine[0].DataToEntity (pièce);
+			var taux = this.compta.TauxChange[row];
+			this.editionLine[0].DataToEntity (taux);
 		}
 
 
@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
 			var taux = this.compta.TauxChange[this.firstEditedRow];
-			return string.Format ("Voulez-vous supprimer la monnaie \"{0}\" ?", taux.CodeISO);
+			return string.Format ("Voulez-vous supprimer le taux de change \"{0}\" ?", taux.CodeISO);
 		}
 
 		public override void RemoveModificationLine()
@@ -264,8 +264,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var pièce = this.compta.TauxChange[row];
-					this.DeleteTauxChange (pièce);
+					var taux = this.compta.TauxChange[row];
+					this.DeleteTauxChange (taux);
 					this.compta.TauxChange.RemoveAt (row);
                 }
 

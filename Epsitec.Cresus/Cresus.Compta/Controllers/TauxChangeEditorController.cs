@@ -72,8 +72,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				AbstractFieldController field;
 
-				if (mapper.Column == ColumnType.CompteGain ||
-					mapper.Column == ColumnType.ComptePerte)
+				if (mapper.Column == ColumnType.Code)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, ';', Currencies.CurrenciesForAutoCompleteMenu.ToArray ());
+				}
+				else if (mapper.Column == ColumnType.CompteGain ||
+						 mapper.Column == ColumnType.ComptePerte)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
