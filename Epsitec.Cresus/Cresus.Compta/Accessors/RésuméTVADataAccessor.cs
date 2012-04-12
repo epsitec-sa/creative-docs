@@ -455,27 +455,38 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 
+				decimal sens = 1;
+
+				if (écritureDeCode.Débit != null)
+				{
+					sens = (écritureDeCode.Débit.Catégorie == CatégorieDeCompte.Actif || écritureDeCode.Débit.Catégorie == CatégorieDeCompte.Charge) ? 1 : -1;
+				}
+				else if (écritureDeCode.Crédit != null)
+				{
+					sens = (écritureDeCode.Crédit.Catégorie == CatégorieDeCompte.Actif || écritureDeCode.Crédit.Catégorie == CatégorieDeCompte.Charge) ? -1 : 1;
+				}
+
 				//	Totalise le montant.
 				if (écritureDeCode.MontantComplément.HasValue)
 				{
 					if (ligne.Montant.HasValue)
 					{
-						ligne.Montant += écritureDeCode.MontantComplément;
+						ligne.Montant += écritureDeCode.MontantComplément * sens;
 					}
 					else
 					{
-						ligne.Montant = écritureDeCode.MontantComplément;
+						ligne.Montant = écritureDeCode.MontantComplément * sens;
 					}
 				}
 
 				//	Totalise la TVA.
 				if (ligne.TVA.HasValue)
 				{
-					ligne.TVA += écritureDeCode.Montant;
+					ligne.TVA += écritureDeCode.Montant * sens;
 				}
 				else
 				{
-					ligne.TVA = écritureDeCode.Montant;
+					ligne.TVA = écritureDeCode.Montant * sens;
 				}
 
 				//	Calcule la différence éventuelle.
