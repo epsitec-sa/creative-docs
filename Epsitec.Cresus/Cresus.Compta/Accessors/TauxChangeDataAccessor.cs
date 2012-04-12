@@ -149,11 +149,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Format,    Converters.IntToString (1));
-			this.editionLine[line].SetText (ColumnType.Numéro,    Converters.IntToString (1));
-			this.editionLine[line].SetText (ColumnType.Incrément, Converters.IntToString (1));
+			this.editionLine[line].SetText (ColumnType.Cours,       Converters.DecimalToString (1, 6));
+			this.editionLine[line].SetText (ColumnType.Unité,       Converters.IntToString (1));
+			this.editionLine[line].SetText (ColumnType.CompteGain,  this.GetCompte ("Gains de change"));
+			this.editionLine[line].SetText (ColumnType.ComptePerte, this.GetCompte ("Pertes de change"));
 
 			base.PrepareEditionLine (line);
+		}
+
+		private FormattedText GetCompte(string titre)
+		{
+			var compte = this.compta.PlanComptable.Where (x => x.Titre == titre).FirstOrDefault ();
+
+			if (compte == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return compte.Numéro;
+			}
 		}
 
 		public override void StartModificationLine(int row)

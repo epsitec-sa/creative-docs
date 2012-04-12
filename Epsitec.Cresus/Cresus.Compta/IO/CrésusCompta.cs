@@ -319,6 +319,39 @@ namespace Epsitec.Cresus.Compta.IO
 				this.SetCodeTVA (compte);
 			}
 
+			//	Importe les taux de change.
+			int indexCurrencies = this.IndexOfLine ("BEGIN=CURRENCIES");
+			this.compta.TauxChange.Clear ();
+
+			while (++indexCurrencies < this.lines.Length)
+			{
+				var line = this.lines[indexCurrencies];
+
+				if (string.IsNullOrEmpty (line))
+				{
+					continue;
+				}
+
+				if (line.StartsWith ("END=CURRENCIES"))
+				{
+					break;
+				}
+
+				if (line.StartsWith ("ENTRY"))
+				{
+					var taux = new ComptaTauxChangeEntity ()
+					{
+						CodeISO     = this.GetEntryContentText (indexCurrencies, "NAME"),
+						Cours       = Converters.ParseDecimal (this.GetEntryContentText (indexCurrencies, "COURS")).GetValueOrDefault (1),
+						Unité       = Converters.ParseInt (this.GetEntryContentText (indexCurrencies, "UNITE")).GetValueOrDefault (1),
+						CompteGain  = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CGAIN")).FirstOrDefault (),
+						ComptePerte = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CPERTE")).FirstOrDefault (),
+					};
+
+					this.compta.TauxChange.Add (taux);
+				}
+			}
+
 			return null;  // ok
 		}
 

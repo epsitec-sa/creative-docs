@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Utilisateurs.Clear ();
 
 			NewCompta.CreateTVA (compta);
+			NewCompta.CreateTauxChange (compta);
 			NewCompta.CreatePériodes (compta);
 			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
 			compta.Journaux.Add (NewCompta.CreateJournal (compta));
@@ -208,6 +209,49 @@ namespace Epsitec.Cresus.Compta.IO
 			liste.Taux.Add (entity);
 
 			return entity;
+		}
+
+
+		public static void CreateTauxChange(ComptaEntity compta)
+		{
+			//	Crée tout ce qui concerne les taux de change pour toutes comptabilités.
+			compta.TauxChange.Clear ();
+
+			NewCompta.CreateTauxChange (compta, "EUR", "Euro",      1.2m);
+			NewCompta.CreateTauxChange (compta, "USD", "Dollar US", 1.1m);
+		}
+
+		private static void CreateTauxChange(ComptaEntity compta, FormattedText code, FormattedText description, decimal cours)
+		{
+
+			var taux = new ComptaTauxChangeEntity ()
+			{
+				CodeISO     = code,
+				Description = description,
+				Cours       = cours,
+				Unité       = 1,
+			};
+
+			ComptaCompteEntity compte;
+
+			compte = NewCompta.GetCompte (compta, "Gains de change");
+			if (compte != null)
+			{
+				taux.CompteGain = compte;
+			}
+
+			compte = NewCompta.GetCompte (compta, "Pertes de change");
+			if (compte != null)
+			{
+				taux.ComptePerte = compte;
+			}
+
+			compta.TauxChange.Add (taux);
+		}
+
+		private static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText titre)
+		{
+			return compta.PlanComptable.Where (x => x.Titre == titre).FirstOrDefault ();
 		}
 
 
