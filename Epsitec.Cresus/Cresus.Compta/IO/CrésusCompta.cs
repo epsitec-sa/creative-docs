@@ -697,6 +697,7 @@ namespace Epsitec.Cresus.Compta.IO
 			//	...  3900 Escompte net
 			//	...  2200 Part TVA escompte (TVA)
 
+			//	Cherche le code TVA, dans le 2ème libellé puis dans le 1er.
 			string code = CrésusCompta.ExtractCodeTVA (lib2);
 			if (string.IsNullOrEmpty (code))
 			{
@@ -713,7 +714,16 @@ namespace Epsitec.Cresus.Compta.IO
 				return false;
 			}
 
-			decimal taux = CrésusCompta.GetTaux (écriture.Montant, suivante.Montant);
+			//	Cherche le taux, dans le 2ème libellé puis en le calculant.
+			decimal? taux = CrésusCompta.GetTaux (lib2);
+			if (!taux.HasValue)
+			{
+				taux = CrésusCompta.GetTaux (écriture.Montant, suivante.Montant);
+			}
+			if (!taux.HasValue)
+			{
+				return false;
+			}
 
 			écriture.Type              = (int) TypeEcriture.BaseTVA;
 			écriture.OrigineTVA        = (compteBase == écriture.Débit) ? "D" : "C";
@@ -769,19 +779,46 @@ namespace Epsitec.Cresus.Compta.IO
 			return libellé.Substring (i1+1, i2-i1-1);
 		}
 
-		private static decimal GetTaux(decimal montantHT, decimal montantTVA)
+		private static decimal? GetTaux(decimal montantHT, decimal montantTVA)
 		{
 			//	Retourne le taux de TVA arrondi à une décimale.
-			//	HT = 255.81, TVA = 19.44 -> 0.07599 -> 0.76
+			//	HT = 255.81, TVA = 19.44 -> 0.07599 -> 0.076
 			if (montantHT == 0)
 			{
-				return 0;
+				return null;
 			}
 			else
 			{
 				var taux = montantTVA / montantHT;
 				return System.Math.Floor ((taux*1000) + 0.5m) / 1000;
 			}
+		}
+
+		private static decimal? GetTaux(string libellé)
+		{
+			//	Retourne le taux de TVA contenu dans un libellé.
+			//	"Eau avril, 2.4% de TVA (IPIRED)"	-> 0.024
+			if (string.IsNullOrEmpty (libellé))
+			{
+				return null;
+			}
+
+			var words = libellé.Replace (",", " ").Split (' ');
+
+			foreach (var word in words)
+			{
+				if (!string.IsNullOrEmpty (word) && word.Last () == '%')
+				{
+					var n = Converters.ParsePercent (word);
+
+					if (n.HasValue && n >= 0 && n < 0.2m)  // valeur comprise entre 0% et 20% ?
+					{
+						return n;
+					}
+				}
+			}
+
+			return null;
 		}
 
 		private static string SimplifyLibellé(string libellé)
@@ -801,165 +838,6 @@ namespace Epsitec.Cresus.Compta.IO
 
 			return libellé.Substring (0, i);
 		}
-
-#if false
-		private void MergeStep2(List<ComptaEcritureEntity> journal)
-		{
-			//	Fusionne les écritures multiples de 2 lignes en une seule.
-			int i = 0;
-			while (i < journal.Count-1)
-			{
-				var écriture = journal[i];
-				var suivante = journal[i+1];
-
-				int count = this.MergeMultiCount (journal, i);
-				if (count == 2)
-				{
-					var merge = this.MergeEcritures2 (écriture, suivante);
-
-					if (merge != null)
-					{
-						journal.RemoveAt (i);
-						journal.RemoveAt (i);
-						journal.Insert (i, merge);
-						i++;
-						continue;
-					}
-				}
-
-				i += count;
-			}
-		}
-		
-		private ComptaEcritureEntity MergeEcritures2(ComptaEcritureEntity écriture, ComptaEcritureEntity suivante)
-		{
-			if (écriture.MultiId == 0 || écriture.MultiId != suivante.MultiId)
-			{
-				return null;
-			}
-
-			//	Crée la nouvelle écriture qui fusionne les 2 autres.
-			var merge = new ComptaEcritureEntity ()
-			{
-				Date       = écriture.Date,
-				Débit      = (écriture.Débit  == null) ? suivante.Débit  : écriture.Débit,
-				Crédit     = (écriture.Crédit == null) ? suivante.Crédit : écriture.Crédit,
-				Pièce      = écriture.Pièce,
-				Libellé    = écriture.Libellé,
-				MontantTTC = écriture.MontantTTC,
-				MontantTVA = écriture.MontantTVA,
-				MontantHT  = écriture.MontantHT,
-				CodeTVA    = écriture.CodeTVA,
-				TauxTVA    = écriture.TauxTVA,
-				Journal    = écriture.Journal,
-				TVAAuDébit = écriture.TVAAuDébit,
-			};
-
-			return merge;
-		}
-
-		private void MergeStep3(List<ComptaEcritureEntity> journal)
-		{
-			//	Recalcule les totaux 'brut' et 'TVA'.
-			int i = 0;
-			while (i < journal.Count)
-			{
-				int count = this.MergeMultiCount (journal, i);
-				if (count > 1)
-				{
-					this.MergeMultiTotal (journal, i, count);
-				}
-
-				i += count;
-			}
-		}
-
-		private void MergeMultiTotal(List<ComptaEcritureEntity> journal, int i, int count)
-		{
-			int cp = -1;
-			
-			decimal totalHTDébit   = 0;
-			decimal totalHTCrédit  = 0;
-			decimal totalTVADébit  = 0;
-			decimal totalTVACrédit = 0;
-
-			for (int index = i; index < i+count; index++)
-			{
-				var écriture = journal[index];
-
-				if (écriture.TotalAutomatique)
-				{
-					cp = index;
-				}
-				else
-				{
-					if (écriture.Débit == null)  // débit multiple ?
-					{
-						totalHTCrédit  += écriture.MontantHT.GetValueOrDefault ();
-						totalTVACrédit += écriture.MontantTVA.GetValueOrDefault ();
-					}
-
-					if (écriture.Crédit == null)  // crédit multiple ?
-					{
-						totalHTDébit  += écriture.MontantHT.GetValueOrDefault ();
-						totalTVADébit += écriture.MontantTVA.GetValueOrDefault ();
-					}
-				}
-			}
-
-			if (cp != -1)
-			{
-				decimal? totalHT  = 0;
-				decimal? totalTVA = 0;
-
-				if (journal[cp].Débit == null)  // débit multiple ?
-				{
-					totalHT  = totalHTDébit  - totalHTCrédit;
-					totalTVA = totalTVADébit - totalTVACrédit;
-				}
-
-				if (journal[cp].Crédit == null)  // crédit multiple ?
-				{
-					totalHT  = totalHTCrédit  - totalHTDébit;
-					totalTVA = totalTVACrédit - totalTVADébit;
-				}
-
-				if (totalHT == 0)
-				{
-					totalHT = null;
-				}
-
-				if (totalTVA == 0)
-				{
-					totalTVA = null;
-				}
-
-				journal[cp].MontantHT  = totalHT;
-				journal[cp].MontantTVA = totalTVA;
-			}
-		}
-
-		private int MergeMultiCount(List<ComptaEcritureEntity> journal, int i)
-		{
-			int count = 1;
-			int id = journal[i].MultiId;
-
-			if (id != 0)
-			{
-				while (++i < journal.Count)
-				{
-					if (id != journal[i].MultiId)
-					{
-						break;
-					}
-
-					count++;
-				}
-			}
-
-			return count;
-		}
-#endif
 		#endregion
 
 
