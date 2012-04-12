@@ -18,6 +18,8 @@ namespace Epsitec.Common.BigList
 				DataProvider = provider,
 				DataMapper   = mapper,
 			};
+
+			this.cache.Reset ();
 		}
 
 

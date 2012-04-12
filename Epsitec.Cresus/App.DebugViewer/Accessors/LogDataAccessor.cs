@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 		}
 
 
-		public IList<Data.LogRecord> Messages
+		public IList<Data.LogRecord>			Messages
 		{
 			get
 			{
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 			}
 		}
 
-		public IList<Data.LogRecord> Images
+		public IList<Data.LogRecord>			Images
 		{
 			get
 			{
@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 			}
 		}
 
+		
 		public FormattedText GetMessage(Data.LogRecord record)
 		{
 			if (record == null)
@@ -74,15 +75,6 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 			};
 		}
 
-
-		private IEnumerable<string> GetLogFileNames()
-		{
-			return System.IO.Directory.EnumerateFiles (this.folderPath, "*.*.*", System.IO.SearchOption.TopDirectoryOnly);
-		}
-
-		private readonly string folderPath;
-		private readonly List<Data.LogRecord> messageRecords;
-		private readonly List<Data.LogRecord> imageRecords;
 
 		#region IItemDataMapper<Data.LogRecord> Members
 
@@ -125,5 +117,16 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 		}
 
 		#endregion
+
+		
+		private IEnumerable<string> GetLogFileNames()
+		{
+			return System.IO.Directory.EnumerateFiles (this.folderPath, "*.*.*", System.IO.SearchOption.TopDirectoryOnly);
+		}
+
+		
+		private readonly string					folderPath;
+		private readonly List<Data.LogRecord>	messageRecords;
+		private readonly List<Data.LogRecord>	imageRecords;
 	}
 }

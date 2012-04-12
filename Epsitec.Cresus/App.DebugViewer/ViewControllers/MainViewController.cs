@@ -32,59 +32,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Dock = DockStyle.Fill,
 			};
 
-			var settingsFrame = new FrameBox ()
-			{
-				Parent = windowRoot,
-				Name = "Settings",
-				Dock = DockStyle.Bottom,
-				PreferredHeight = 30,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-			};
-
-			var radio1 = new RadioButton ()
-			{
-				Parent = settingsFrame,
-				Group = "mode",
-				Dock = DockStyle.Stacked,
-				Text = "Exactly one",
-				PreferredWidth = 60,
-				ActiveState = ActiveState.Yes,
-			};
-
-			var radio2 = new RadioButton ()
-			{
-				Parent = settingsFrame,
-				Group = "mode",
-				Dock = DockStyle.Stacked,
-				Text = "Zero or one",
-				PreferredWidth = 60,
-			};
-
-			var radio3 = new RadioButton ()
-			{
-				Parent = settingsFrame,
-				Group = "mode",
-				Dock = DockStyle.Stacked,
-				Text = "Multiple",
-				PreferredWidth = 60,
-			};
-
-			var radio4 = new RadioButton ()
-			{
-				Parent = settingsFrame,
-				Group = "mode",
-				Dock = DockStyle.Stacked,
-				Text = "One or more",
-				PreferredWidth = 60,
-			};
-
-
-
-			radio1.ActiveStateChanged += _ => { if (radio1.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.ExactlyOne; };
-			radio2.ActiveStateChanged += _ => { if (radio2.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.ZeroOrOne; };
-			radio3.ActiveStateChanged += _ => { if (radio3.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.Multiple; };
-			radio4.ActiveStateChanged += _ => { if (radio4.IsActive) this.historyData.Features.SelectionMode = ItemSelectionMode.OneOrMore; };
-
+			this.CreateUISettingsFrame (windowRoot);
 
 
 			var left1 = new FrameBox ()
@@ -152,6 +100,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			this.RefreshContents ();
 		}
 
+		
 		public void DefineHistoryAccessor(LogDataAccessor accessor)
 		{
 			this.historyAccessor = accessor;
@@ -179,6 +128,78 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			this.RefreshContents ();
 		}
 
+
+		private void CreateUISettingsFrame(Widget windowRoot)
+		{
+			var settingsFrame = new FrameBox ()
+						{
+							Parent = windowRoot,
+							Name = "Settings",
+							Dock = DockStyle.Bottom,
+							PreferredHeight = 30,
+							ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+						};
+
+			var radio1 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Exactly one",
+				PreferredWidth = 60,
+				ActiveState = ActiveState.Yes,
+			};
+
+			var radio2 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Zero or one",
+				PreferredWidth = 60,
+			};
+
+			var radio3 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "Multiple",
+				PreferredWidth = 60,
+			};
+
+			var radio4 = new RadioButton ()
+			{
+				Parent = settingsFrame,
+				Group = "mode",
+				Dock = DockStyle.Stacked,
+				Text = "One or more",
+				PreferredWidth = 60,
+			};
+
+
+
+			radio1.ActiveStateChanged += _ =>
+			{
+				if (radio1.IsActive)
+					this.historyData.Features.SelectionMode = ItemSelectionMode.ExactlyOne;
+			};
+			radio2.ActiveStateChanged += _ =>
+			{
+				if (radio2.IsActive)
+					this.historyData.Features.SelectionMode = ItemSelectionMode.ZeroOrOne;
+			};
+			radio3.ActiveStateChanged += _ =>
+			{
+				if (radio3.IsActive)
+					this.historyData.Features.SelectionMode = ItemSelectionMode.Multiple;
+			};
+			radio4.ActiveStateChanged += _ =>
+			{
+				if (radio4.IsActive)
+					this.historyData.Features.SelectionMode = ItemSelectionMode.OneOrMore;
+			};
+		}
 		private void CreateUIListForFolderItems(FrameBox left)
 		{
 			var header = new ItemListColumnHeaderView ()
@@ -284,6 +305,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
 		}
 
+		
 		private void HandleFolderListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			var index = (int) e.NewValue;
@@ -313,6 +335,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		    this.SetMainImage (this.historyAccessor.GetStaticImage (this.historyAccessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
 		}
 
+		
 		private void SetMainImage(StaticImage staticImage)
 		{
 			if (this.mainImage != null)
@@ -349,6 +372,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			}
 		}
 
+		
 		private readonly CoreInteractiveApp		host;
 
 		private FrameBox						container;
