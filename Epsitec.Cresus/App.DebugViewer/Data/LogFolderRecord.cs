@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.DebugViewer.Data
 			}
 		}
 
+		public string Path
+		{
+			get
+			{
+				return this.path;
+			}
+		}
+
 		public string Machine
 		{
 			get

@@ -163,6 +163,11 @@ namespace Epsitec.Common.BigList
 
 		public Rectangle GetMarkBounds(ItemListMark mark)
 		{
+			if (this.list == null)
+			{
+				return Rectangle.Empty;
+			}
+
 			var offset = this.list.GetOffset (mark);
 
 			if (offset.IsVisible == false)
@@ -372,7 +377,8 @@ namespace Epsitec.Common.BigList
 
 		private void PaintRows(Graphics graphics, Rectangle clipRect)
 		{
-			if (this.ItemRenderer == null)
+			if ((this.ItemRenderer == null) ||
+				(this.list == null))
 			{
 				return;
 			}
@@ -406,7 +412,8 @@ namespace Epsitec.Common.BigList
 
 		private void PaintMarks(Graphics graphics, Rectangle clipRect)
 		{
-			if (this.MarkRenderer == null)
+			if ((this.MarkRenderer == null) ||
+				(this.list == null))
 			{
 				return;
 			}

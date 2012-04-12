@@ -94,6 +94,7 @@ namespace Epsitec.Common.BigList.Processors
 							}
 
 							this.selectionProcessor.Select (this.originalIndex, ItemSelection.Focus);
+							this.selectionProcessor.Select (this.originalIndex, ItemSelection.Activate);
 						}
 						this.host.Remove (this);
 

@@ -147,16 +147,16 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			};
 
 			this.CreateUIListForFolderItems (left1);
-			this.CreateUIListForDataItems (left2);
+			this.CreateUIListForHistoryItems (left2);
 
 			this.RefreshContents ();
 		}
 
-		public void DefineAccessor(LogDataAccessor accessor)
+		public void DefineHistoryAccessor(LogDataAccessor accessor)
 		{
-			this.accessor = accessor;
+			this.historyAccessor = accessor;
 			
-			this.historyData = new ItemList<Data.LogRecord> (this.accessor, this.accessor);
+			this.historyData = new ItemList<Data.LogRecord> (this.historyAccessor, this.historyAccessor);
 			this.historyList.ItemList = this.historyData;
 			this.historyData.Marks.Add (new ItemListMark
 			{
@@ -164,8 +164,9 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Index = 2,
 				Breadth = 2
 			});
-			
-			this.RefreshContents ();
+
+			this.historyData.Reset ();
+			this.historyList.Invalidate ();
 		}
 
 		public void DefineFolderAccessor(LogFolderDataAccessor accessor)
@@ -227,10 +228,10 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x)),
 			};
 
-//			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
+			this.folderList.ActiveIndexChanged += this.HandleFolderListActiveIndexChanged;
 		}
 		
-		private void CreateUIListForDataItems(FrameBox left)
+		private void CreateUIListForHistoryItems(FrameBox left)
 		{
 			var header = new ItemListColumnHeaderView ()
 						{
@@ -276,11 +277,25 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			{
 				Parent = left,
 				Dock = DockStyle.Fill,
-				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.accessor.GetMessage (x)),
+				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.historyAccessor.GetMessage (x)),
 				MarkRenderer = new Epsitec.Common.BigList.Renderers.MarkRenderer (),
 			};
 
 			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
+		}
+
+		private void HandleFolderListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			var index = (int) e.NewValue;
+
+			if (index < 0)
+			{
+				return;
+			}
+
+			var item = this.folderList.ItemList.Cache.GetItemData (index).GetData<Data.LogFolderRecord> ();
+			
+			this.DefineHistoryAccessor (new LogDataAccessor (item.Path));
 		}
 		
 		private void HandleHistoryListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -295,7 +310,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		    var item = this.historyList.ItemList.Cache.GetItemData (index).GetData<Data.LogRecord> ();
 		    var time = item.TimeStamp;
 
-		    this.SetMainImage (this.accessor.GetStaticImage (this.accessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
+		    this.SetMainImage (this.historyAccessor.GetStaticImage (this.historyAccessor.Images.FirstOrDefault (x => x.TimeStamp >= time)));
 		}
 
 		private void SetMainImage(StaticImage staticImage)
@@ -316,15 +331,22 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 
 		private void RefreshContents()
 		{
-			if ((this.container == null) ||
-				(this.accessor == null) ||
-				(this.folderAccessor == null))
+			if (this.container == null)
 			{
 				return;
 			}
 
-			this.historyData.Reset ();
-			this.folderData.Reset ();
+			if (this.folderAccessor != null)
+			{
+				this.folderData.Reset ();
+				this.folderList.Invalidate ();
+			}
+
+			if (this.historyAccessor != null)
+			{
+				this.historyData.Reset ();
+				this.historyList.Invalidate ();
+			}
 		}
 
 		private readonly CoreInteractiveApp		host;
@@ -336,7 +358,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		private ItemListVerticalContentView		folderList;
 		private ItemList						folderData;
 		private StaticImage						mainImage;
-		private LogDataAccessor					accessor;
+		private LogDataAccessor					historyAccessor;
 		private LogFolderDataAccessor			folderAccessor;
 	}
 }
