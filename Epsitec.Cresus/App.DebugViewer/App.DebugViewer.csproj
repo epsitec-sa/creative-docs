@@ -54,7 +54,9 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="Accessors\LogDataAccessor.cs" />
+    <Compile Include="Accessors\LogFolderDataAccessor.cs" />
     <Compile Include="Data\LogEventType.cs" />
+    <Compile Include="Data\LogFolderRecord.cs" />
     <Compile Include="Data\LogRecord.cs" />
     <Compile Include="Data\LogRecordType.cs" />
     <Compile Include="ViewControllers\MainViewController.cs" />

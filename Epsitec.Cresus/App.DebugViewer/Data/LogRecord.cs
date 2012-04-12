@@ -15,13 +15,13 @@ namespace Epsitec.Cresus.DebugViewer.Data
 
 			var args = this.path.Split ('.');
 
-			this.timeStamp = new System.DateTime (long.Parse (args[0]));
-			this.eventType = LogRecord.GetEventType (args[1]);
+			this.timeStamp  = new System.DateTime (long.Parse (args[0]));
+			this.eventType  = LogRecord.GetEventType (args[1]);
 			this.recordType = LogRecord.GetRecordType (args[2]);
 		}
 
 
-		public System.DateTime TimeStamp
+		public System.DateTime					TimeStamp
 		{
 			get
 			{
@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.DebugViewer.Data
 			}
 		}
 
-		public LogRecordType RecordType
+		public LogRecordType					RecordType
 		{
 			get
 			{
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.DebugViewer.Data
 			}
 		}
 
-		public LogEventType EventType
+		public LogEventType						EventType
 		{
 			get
 			{
@@ -115,9 +115,9 @@ namespace Epsitec.Cresus.DebugViewer.Data
 			}
 		}
 
-		private readonly string path;
-		private readonly System.DateTime timeStamp;
-		private readonly LogRecordType recordType;
-		private readonly LogEventType eventType;
+		private readonly string					path;
+		private readonly System.DateTime		timeStamp;
+		private readonly LogRecordType			recordType;
+		private readonly LogEventType			eventType;
 	}
 }

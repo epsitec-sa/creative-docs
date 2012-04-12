@@ -67,8 +67,10 @@ namespace Epsitec.Cresus.DebugViewer
 			this.mainController = new MainViewController (this);
 			this.mainController.CreateUI (window.Root);
 
-			this.mainAccessor = new Accessors.LogDataAccessor (@"S:\elite23@poste08-63467137422993.1376");
+			this.folderAccessor = new Accessors.LogFolderDataAccessor (@"Q:\Store");
+			this.mainAccessor = new Accessors.LogDataAccessor (@"Q:\Store\elite23@poste08-63467137422993.1376");
 			this.mainController.DefineAccessor (this.mainAccessor);
+			this.mainController.DefineFolderAccessor (this.folderAccessor);
 
 			window.Root.BackColor = Common.Drawing.Color.FromName ("Lime");
 		}
@@ -76,5 +78,6 @@ namespace Epsitec.Cresus.DebugViewer
 		private BusinessContext					businessContext;
 		private MainViewController				mainController;
 		private Accessors.LogDataAccessor		mainAccessor;
+		private Accessors.LogFolderDataAccessor	folderAccessor;
 	}
 }

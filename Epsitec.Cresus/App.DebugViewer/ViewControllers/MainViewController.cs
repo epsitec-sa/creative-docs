@@ -87,18 +87,33 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 
 
 
-			var left = new FrameBox ()
+			var left1 = new FrameBox ()
 			{
 				Parent = this.container,
-				Name = "Left",
+				Name = "Left1",
 				Dock = DockStyle.Left,
 				PreferredWidth = 240,
 			};
 
-			var splitter1 = new VSplitter ()
+			var splitterLeft1 = new VSplitter ()
 			{
 				Parent = this.container,
-				Name = "Splitter1",
+				Name = "SplitterLeft1",
+				Dock = DockStyle.Left,
+			};
+
+			var left2 = new FrameBox ()
+			{
+				Parent = this.container,
+				Name = "Left2",
+				Dock = DockStyle.Left,
+				PreferredWidth = 240,
+			};
+
+			var splitterLeft2 = new VSplitter ()
+			{
+				Parent = this.container,
+				Name = "SplitterLeft2",
 				Dock = DockStyle.Left,
 			};
 
@@ -131,6 +146,40 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				Dock = DockStyle.Fill,
 			};
 
+			this.CreateUIListForFolderItems (left1);
+			this.CreateUIListForDataItems (left2);
+
+			this.RefreshContents ();
+		}
+
+		public void DefineAccessor(LogDataAccessor accessor)
+		{
+			this.accessor = accessor;
+			
+			this.historyData = new ItemList<Data.LogRecord> (this.accessor, this.accessor);
+			this.historyList.ItemList = this.historyData;
+			this.historyData.Marks.Add (new ItemListMark
+			{
+				Attachment = ItemListMarkAttachment.After,
+				Index = 2,
+				Breadth = 2
+			});
+			
+			this.RefreshContents ();
+		}
+
+		public void DefineFolderAccessor(LogFolderDataAccessor accessor)
+		{
+			this.folderAccessor = accessor;
+
+			this.folderData = new ItemList<Data.LogFolderRecord> (this.folderAccessor, this.folderAccessor);
+			this.folderList.ItemList = this.folderData;
+
+			this.RefreshContents ();
+		}
+
+		private void CreateUIListForFolderItems(FrameBox left)
+		{
 			var header = new ItemListColumnHeaderView ()
 			{
 				Parent = left,
@@ -138,6 +187,58 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				PreferredHeight = 24,
 				BackColor = Color.FromBrightness (1.0),
 			};
+
+			var col1 = new ItemListColumn ();
+			var col2 = new ItemListColumn ();
+			var col3 = new ItemListColumn ();
+
+			col1.Title = "Id";
+			col1.Index = 1;
+			col1.CanSort = true;
+			col1.Layout.Definition.LeftBorder = 1;
+			col1.Layout.Definition.RightBorder = 0;
+			col1.Layout.Definition.MinWidth = 20;
+			col1.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (32, Common.Widgets.Layouts.GridUnitType.Absolute);
+
+			col2.Title = "Timestamp";
+			col2.Index = 2;
+			col2.CanSort = true;
+			col2.Layout.Definition.LeftBorder = 1;
+			col2.Layout.Definition.RightBorder = 0;
+			col2.Layout.Definition.MinWidth = 40;
+			col2.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (80, Common.Widgets.Layouts.GridUnitType.Absolute);
+
+			col3.Title = "Machine";
+			col3.Index = 3;
+			col3.CanSort = true;
+			col3.Layout.Definition.LeftBorder = 1;
+			col3.Layout.Definition.RightBorder = 0;
+			col3.Layout.Definition.MinWidth = 40;
+			col3.Layout.Definition.Width = new Common.Widgets.Layouts.GridLength (200, Common.Widgets.Layouts.GridUnitType.Absolute);
+
+			header.Columns.Add (col1);
+			header.Columns.Add (col2);
+			header.Columns.Add (col3);
+
+			this.folderList = new ItemListVerticalContentView ()
+			{
+				Parent = left,
+				Dock = DockStyle.Fill,
+				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x)),
+			};
+
+//			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
+		}
+		
+		private void CreateUIListForDataItems(FrameBox left)
+		{
+			var header = new ItemListColumnHeaderView ()
+						{
+							Parent = left,
+							Dock = DockStyle.Top,
+							PreferredHeight = 24,
+							BackColor = Color.FromBrightness (1.0),
+						};
 
 			var col1 = new ItemListColumn ();
 			var col2 = new ItemListColumn ();
@@ -180,26 +281,8 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			};
 
 			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
-
-			this.RefreshContents ();
 		}
-
-		public void DefineAccessor(LogDataAccessor accessor)
-		{
-			this.accessor = accessor;
-			
-			this.historyData = new ItemList<Data.LogRecord> (this.accessor, this.accessor);
-			this.historyList.ItemList = this.historyData;
-			this.historyData.Marks.Add (new ItemListMark
-			{
-				Attachment = ItemListMarkAttachment.After,
-				Index = 2,
-				Breadth = 2
-			});
-			
-			this.RefreshContents ();
-		}
-
+		
 		private void HandleHistoryListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			var index = (int) e.NewValue;
@@ -234,12 +317,14 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		private void RefreshContents()
 		{
 			if ((this.container == null) ||
-				(this.accessor == null))
+				(this.accessor == null) ||
+				(this.folderAccessor == null))
 			{
 				return;
 			}
 
 			this.historyData.Reset ();
+			this.folderData.Reset ();
 		}
 
 		private readonly CoreInteractiveApp		host;
@@ -248,7 +333,10 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		private FrameBox						view;
 		private ItemListVerticalContentView		historyList;
 		private ItemList						historyData;
+		private ItemListVerticalContentView		folderList;
+		private ItemList						folderData;
 		private StaticImage						mainImage;
 		private LogDataAccessor					accessor;
+		private LogFolderDataAccessor			folderAccessor;
 	}
 }
