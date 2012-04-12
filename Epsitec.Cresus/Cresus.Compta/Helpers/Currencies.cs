@@ -4,10 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
-using Epsitec.Cresus.Compta.Entities;
-using Epsitec.Cresus.Compta.Accessors;
-using Epsitec.Cresus.Compta.Controllers;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -17,6 +13,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 	{
 		public static IEnumerable<FormattedText> CurrenciesForAutoCompleteMenu
 		{
+			//	Retourne la liste des monnaies pour le menu d'un AutoCompleteFieldController.
+			//	Source 1: http://www.bureaux-de-change.com/codes-iso-devises.php
+			//	Source 2: http://www.currency-iso.org/dl_iso_table_a1.xml
 			get
 			{
 				yield return "AED;dirham (Émirats arabes unis)";
@@ -166,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return "TZS;schilling (Tanzanie)";
 				yield return "UAH;hryvnia (Ukraine)";
 				yield return "UGX;schilling (Ouganda)";
-				yield return "USD;dollar (États-Unis)";
+				yield return "USD;dollar (États-Unis)";  // Iles Marianne du Nord, Iles Vierges américaines, Samoa Américaines, Porto-Rico, Equateur, Guatemala, Haiti, Turks et Caicos, Iles Vierges Britanniques, Iles Marshall, Micronésie, Panama, Salvador, Timor Oriental
 				yield return "UYU;peso (Uruguay)";
 				yield return "UZS;sum (Ouzbékistan)";
 				yield return "VEB;bolivar (Venezuela)";
@@ -182,6 +181,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return "ZMK;kwacha (Zambie)";
 				yield return "ZWD;dollar (Zimbabwe)";
 
+				//	Matières premières:
 				yield return "XAG;Argent";
 				yield return "XAU;Or";
 				yield return "XPD;Palladium";
