@@ -818,7 +818,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return block.Subscript;
+					return false /*block.Subscript*/;
 				}
 			}
 		}
@@ -846,7 +846,7 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					return block.Superscript;
+					return false /*block.Superscript*/;
 				}
 			}
 		}
@@ -5516,8 +5516,8 @@ noText:
 			public bool						Bold;
 			public bool						Italic;
 			public bool						Underline;
-			public bool						Subscript;
-			public bool						Superscript;
+//			public bool						Subscript;
+//			public bool						Superscript;
 			public bool						Anchor;
 			public bool						Wave;
 			public Drawing.Color			WaveColor = Drawing.Color.Empty;
