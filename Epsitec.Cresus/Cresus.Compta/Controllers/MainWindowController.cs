@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainFrame = new FrameBox
 			{
 				Parent    = window.Root,
-				BackColor = Color.FromBrightness (0.95),
+				BackColor = RibbonController.GetBackgroundColor1 (),
 				Dock      = DockStyle.Fill,
 				Padding   = new Margins (3),
 			};

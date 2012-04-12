@@ -491,15 +491,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		#region Color manager
-		private static Color GetBackgroundColor1()
+		public static Color GetBackgroundColor1()
 		{
-			//	Couleur pour l'ombre en haut des zones libres du ruban.
+			//	Couleur pour le fond des zones libres du ruban.
 			return RibbonController.GetColor (RibbonController.GetBaseColor (), saturation: 0.06, value: 0.9);
 		}
 
 		private static Color GetBackgroundColor2()
 		{
-			//	Couleur pour le fond des zones libres du ruban.
+			//	Couleur pour l'ombre en haut des zones libres du ruban.
 			return RibbonController.GetColor (RibbonController.GetBaseColor (), saturation: 0.06, value: 0.7);
 		}
 
