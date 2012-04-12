@@ -50,7 +50,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.OverlayText = "Débit";
 			}
 
-
 			if (this.IsEmptyLine)
 			{
 				return;  // une ligne vide est toujours ok
@@ -92,7 +91,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				data.OverlayText = "Crédit";
 			}
-
 
 			if (this.IsEmptyLine)
 			{

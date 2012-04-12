@@ -568,6 +568,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new ListesTVAController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.TauxChange"))
+			{
+				controller = new TauxChangeController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.Utilisateurs"))
 			{
 				controller = new UtilisateursController (this.app, this.businessContext, this);

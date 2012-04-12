@@ -78,5 +78,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		IsAutoLibellé,
 		MontantEdité,
 		Différence,
+		Description,
+		Cours,
+		Unité,
+		CompteGain,
+		ComptePerte,
 	}
 }

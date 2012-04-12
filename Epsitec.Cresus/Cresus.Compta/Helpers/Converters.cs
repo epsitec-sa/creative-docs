@@ -210,6 +210,52 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		#region Decimal
+		public static decimal? ParseDecimal(FormattedText text)
+		{
+			return Converters.ParseMontant (text.ToSimpleText ());
+		}
+
+		public static decimal? ParseDecimal(string text)
+		{
+			//	Parse un nombre réel.
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+
+			decimal i;
+			if (decimal.TryParse (text, out i))
+			{
+				return i;
+			}
+
+			return null;
+		}
+
+		public static string DecimalToString(decimal? value, int? fracCount)
+		{
+			//	Conversion d'un nombre réel en chaîne.
+			if (value.HasValue)
+			{
+				if (fracCount.HasValue)
+				{
+					string format = string.Format ("F{0}", fracCount.Value.ToString ());
+					return value.Value.ToString (format);
+				}
+				else
+				{
+					return value.Value.ToString ();
+				}
+			}
+			else
+			{
+				return null;
+			}
+		}
+		#endregion
+
+
 		#region Int
 		public static int? ParseInt(FormattedText text)
 		{
