@@ -17,7 +17,7 @@
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVKD6]", typeof (Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK07]", typeof (Epsitec.Cresus.Compta.Entities.ComptaTauxTVAEntity))]
 [assembly: global::Epsitec.Common.Support.EntityClass ("[OVK87]", typeof (Epsitec.Cresus.Compta.Entities.ComptaListeTVAEntity))]
-[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKQ7]", typeof (Epsitec.Cresus.Compta.Entities.ComptaTauxChangeEntity))]
+[assembly: global::Epsitec.Common.Support.EntityClass ("[OVKQ7]", typeof (Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity))]
 #region Epsitec.Cresus.Compta.Compta Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
@@ -168,15 +168,15 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>TauxChange</c> field.
+		///	The <c>Monnaies</c> field.
 		///	designer:fld/OVK/OVK28
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK28]")]
-		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaTauxChangeEntity> TauxChange
+		public global::System.Collections.Generic.IList<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> Monnaies
 		{
 			get
 			{
-				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaTauxChangeEntity> ("[OVK28]");
+				return this.GetFieldCollection<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> ("[OVK28]");
 			}
 		}
 		///	<summary>
@@ -423,19 +423,19 @@ namespace Epsitec.Cresus.Compta.Entities
 		///	designer:fld/OVK3/OVK9
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[OVK9]")]
-		public string Monnaie
+		public global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity Monnaie
 		{
 			get
 			{
-				return this.GetField<string> ("[OVK9]");
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> ("[OVK9]");
 			}
 			set
 			{
-				string oldValue = this.Monnaie;
+				global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue = this.Monnaie;
 				if (oldValue != value || !this.IsFieldDefined("[OVK9]"))
 				{
 					this.OnMonnaieChanging (oldValue, value);
-					this.SetField<string> ("[OVK9]", oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> ("[OVK9]", oldValue, value);
 					this.OnMonnaieChanged (oldValue, value);
 				}
 			}
@@ -491,8 +491,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnIndexOuvBouclChanged(int oldValue, int newValue);
 		partial void OnCodeTVAParDéfautChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
 		partial void OnCodeTVAParDéfautChanged(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);
-		partial void OnMonnaieChanging(string oldValue, string newValue);
-		partial void OnMonnaieChanged(string oldValue, string newValue);
+		partial void OnMonnaieChanging(global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity newValue);
+		partial void OnMonnaieChanged(global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity newValue);
 		partial void OnNiveauChanging(int oldValue, int newValue);
 		partial void OnNiveauChanged(int oldValue, int newValue);
 		
@@ -2465,14 +2465,14 @@ namespace Epsitec.Cresus.Compta.Entities
 }
 #endregion
 
-#region Epsitec.Cresus.Compta.ComptaTauxChange Entity
+#region Epsitec.Cresus.Compta.ComptaMonnaie Entity
 namespace Epsitec.Cresus.Compta.Entities
 {
 	///	<summary>
-	///	The <c>ComptaTauxChange</c> entity.
+	///	The <c>ComptaMonnaie</c> entity.
 	///	designer:cap/OVKQ7
 	///	</summary>
-	public partial class ComptaTauxChangeEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
+	public partial class ComptaMonnaieEntity : global::Epsitec.Common.Support.EntityEngine.AbstractEntity
 	{
 		///	<summary>
 		///	The <c>CodeISO</c> field.
@@ -2515,6 +2515,28 @@ namespace Epsitec.Cresus.Compta.Entities
 					this.OnDescriptionChanging (oldValue, value);
 					this.SetField<global::Epsitec.Common.Types.FormattedText> ("[OVK08]", oldValue, value);
 					this.OnDescriptionChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>Décimales</c> field.
+		///	designer:fld/OVKQ7/OVK38
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK38]")]
+		public int Décimales
+		{
+			get
+			{
+				return this.GetField<int> ("[OVK38]");
+			}
+			set
+			{
+				int oldValue = this.Décimales;
+				if (oldValue != value || !this.IsFieldDefined("[OVK38]"))
+				{
+					this.OnDécimalesChanging (oldValue, value);
+					this.SetField<int> ("[OVK38]", oldValue, value);
+					this.OnDécimalesChanged (oldValue, value);
 				}
 			}
 		}
@@ -2633,6 +2655,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnCodeISOChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanging(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
+		partial void OnDécimalesChanging(int oldValue, int newValue);
+		partial void OnDécimalesChanged(int oldValue, int newValue);
 		partial void OnCoursChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCoursChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnUnitéChanging(int oldValue, int newValue);
@@ -2647,17 +2671,17 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptaTauxChangeEntity.EntityStructuredTypeId;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity.EntityStructuredTypeId;
 		}
 		public override string GetEntityStructuredTypeKey()
 		{
-			return global::Epsitec.Cresus.Compta.Entities.ComptaTauxChangeEntity.EntityStructuredTypeKey;
+			return global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity.EntityStructuredTypeKey;
 		}
 		public static readonly global::Epsitec.Common.Support.Druid EntityStructuredTypeId = new global::Epsitec.Common.Support.Druid (1016, 20, 250);	// [OVKQ7]
 		public static readonly string EntityStructuredTypeKey = "[OVKQ7]";
 		
 		#region Repository Class
-		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaTauxChangeEntity>
+		public partial class Repository : global::Epsitec.Cresus.Core.Repositories.Repository<ComptaMonnaieEntity>
 		{
 			public Repository(global::Epsitec.Cresus.Core.CoreData data, global::Epsitec.Cresus.DataLayer.Context.DataContext dataContext) : base(data, dataContext, global::Epsitec.Common.Types.DataLifetimeExpectancy.Stable)
 			{

@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 
 				case ColumnType.Monnaie:
-					return compte.Monnaie;
+					return (compte.Monnaie == null) ? FormattedText.Empty :  compte.Monnaie.CodeISO;
 
 				case ColumnType.Profondeur:
 					return (compte.Niveau+1).ToString ();
@@ -240,8 +240,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
-			this.editionLine[line].SetText (ColumnType.Type, Converters.TypeToString (TypeDeCompte.Normal));
+			this.editionLine[line].SetText (ColumnType.Type,          Converters.TypeToString (TypeDeCompte.Normal));
 			this.editionLine[line].SetText (ColumnType.IndexOuvBoucl, "1");
+			this.editionLine[line].SetText (ColumnType.Monnaie,       "CHF");
 
 			base.PrepareEditionLine (line);
 		}

@@ -568,9 +568,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new ListesTVAController (this.app, this.businessContext, this);
 			}
 
-			if (command.Name.EndsWith ("Présentation.TauxChange"))
+			if (command.Name.EndsWith ("Présentation.Monnaies"))
 			{
-				controller = new TauxChangeController (this.app, this.businessContext, this);
+				controller = new MonnaiesController (this.app, this.businessContext, this);
 			}
 
 			if (command.Name.EndsWith ("Présentation.Utilisateurs"))
@@ -1184,7 +1184,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Exploitation)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Budgets)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DifférencesChange)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.TauxChange)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Monnaies)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]

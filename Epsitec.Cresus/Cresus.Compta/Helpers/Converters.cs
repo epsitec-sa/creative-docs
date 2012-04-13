@@ -1090,7 +1090,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Exploitation;
 				yield return Res.Commands.Présentation.Budgets;
 				yield return Res.Commands.Présentation.DifférencesChange;
-				yield return Res.Commands.Présentation.TauxChange;
+				yield return Res.Commands.Présentation.Monnaies;
 				yield return Res.Commands.Présentation.RésuméPériodique;
 				yield return Res.Commands.Présentation.RésuméTVA;
 				yield return Res.Commands.Présentation.DécompteTVA;
@@ -1117,7 +1117,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Libellés;
 				yield return Res.Commands.Présentation.Modèles;
 				yield return Res.Commands.Présentation.Journaux;
-				yield return Res.Commands.Présentation.TauxChange;
+				yield return Res.Commands.Présentation.Monnaies;
 				yield return Res.Commands.Présentation.Périodes;
 				yield return Res.Commands.Présentation.PiècesGenerator;
 				yield return Res.Commands.Présentation.CodesTVA;

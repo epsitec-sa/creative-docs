@@ -108,7 +108,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 
-					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, "CHF", "EUR", "USD");
+					var monnaies = this.compta.Monnaies.Select (x => x.CodeISO);
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, monnaies.ToArray ());
 				}
 				else
 				{

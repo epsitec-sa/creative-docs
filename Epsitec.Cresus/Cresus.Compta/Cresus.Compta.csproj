@@ -56,8 +56,8 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
-    <Compile Include="Accessors\TauxChangeDataAccessor.cs" />
-    <Compile Include="Accessors\TauxChangeEditionLine.cs" />
+    <Compile Include="Accessors\MonnaiesDataAccessor.cs" />
+    <Compile Include="Accessors\MonnaiesEditionLine.cs" />
     <Compile Include="Accessors\RésuméTVADataAccessor.cs" />
     <Compile Include="Accessors\RésuméTVAData.cs" />
     <Compile Include="Accessors\DataArray.cs" />
@@ -72,8 +72,8 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
-    <Compile Include="Controllers\TauxChangeEditorController.cs" />
-    <Compile Include="Controllers\TauxChangeController.cs" />
+    <Compile Include="Controllers\MonnaiesEditorController.cs" />
+    <Compile Include="Controllers\MonnaiesController.cs" />
     <Compile Include="Controllers\RésuméTVAController.cs" />
     <Compile Include="Controllers\ListesTVAEditorController.cs" />
     <Compile Include="Controllers\ListesTVAController.cs" />
@@ -359,7 +359,7 @@
     <EmbeddedResource Include="Images\Multi.Join.icon" />
     <EmbeddedResource Include="Images\Multi.Split.icon" />
     <EmbeddedResource Include="Images\Présentation.DifférencesChange.icon" />
-    <EmbeddedResource Include="Images\Présentation.TauxChange.icon" />
+    <EmbeddedResource Include="Images\Présentation.Monnaies.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

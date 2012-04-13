@@ -14,15 +14,16 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Données éditables pour un taux de change de la comptabilité.
+	/// Données éditables pour les monnaies de la comptabilité.
 	/// </summary>
-	public class TauxChangeEditionLine : AbstractEditionLine
+	public class MonnaiesEditionLine : AbstractEditionLine
 	{
-		public TauxChangeEditionLine(AbstractController controller)
+		public MonnaiesEditionLine(AbstractController controller)
 			: base (controller)
 		{
 			this.dataDict.Add (ColumnType.Code,        new EditionData (this.controller, this.ValidateCode));
 			this.dataDict.Add (ColumnType.Description, new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Décimales,   new EditionData (this.controller, this.ValidateDécimales));
 			this.dataDict.Add (ColumnType.Cours,       new EditionData (this.controller, this.ValidateCours));
 			this.dataDict.Add (ColumnType.Unité,       new EditionData (this.controller, this.ValidateUnité));
 			this.dataDict.Add (ColumnType.CompteGain,  new EditionData (this.controller, this.ValidateCompte));
@@ -37,13 +38,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (data.HasText)
 			{
-				var taux = this.compta.TauxChange.Where (x => x.CodeISO == data.Text).FirstOrDefault ();
-				if (taux == null)
+				var monnaie = this.compta.Monnaies.Where (x => x.CodeISO == data.Text).FirstOrDefault ();
+				if (monnaie == null)
 				{
 					return;
 				}
 
-				var himself = (this.controller.DataAccessor.JustCreated || this.controller.EditorController.Duplicate) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaTauxChangeEntity;
+				var himself = (this.controller.DataAccessor.JustCreated || this.controller.EditorController.Duplicate) ? null : this.controller.DataAccessor.GetEditionEntity (this.controller.DataAccessor.FirstEditedRow) as ComptaMonnaieEntity;
 				if (himself != null && himself.CodeISO == data.Text)
 				{
 					return;
@@ -54,6 +55,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				data.Error = "Il manque le code ISO de la monnaie";
+			}
+		}
+
+		private void ValidateDécimales(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				int n;
+				if (int.TryParse (data.Text.ToSimpleText (), out n))
+				{
+					if (n >= 0 && n <= 9)
+					{
+						return;
+					}
+				}
+
+				data.Error = "Vous devez donner un nombre de décimales compris entre 0 et 9";
+			}
+			else
+			{
+				data.Error = "Il manque le nombre de décimales";
 			}
 		}
 
@@ -130,26 +154,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void EntityToData(AbstractEntity entity)
 		{
-			var taux = entity as ComptaTauxChangeEntity;
+			var monnaie = entity as ComptaMonnaieEntity;
 
-			this.SetText (ColumnType.Code,        taux.CodeISO);
-			this.SetText (ColumnType.Description, taux.Description);
-			this.SetText (ColumnType.Cours,       Converters.DecimalToString (taux.Cours, 6));
-			this.SetText (ColumnType.Unité,       Converters.IntToString (taux.Unité));
-			this.SetText (ColumnType.CompteGain,  this.GetNuméro (taux.CompteGain));
-			this.SetText (ColumnType.ComptePerte, this.GetNuméro (taux.ComptePerte));
+			this.SetText (ColumnType.Code,        monnaie.CodeISO);
+			this.SetText (ColumnType.Description, monnaie.Description);
+			this.SetText (ColumnType.Décimales,   Converters.IntToString (monnaie.Décimales));
+			this.SetText (ColumnType.Cours,       Converters.DecimalToString (monnaie.Cours, 6));
+			this.SetText (ColumnType.Unité,       Converters.IntToString (monnaie.Unité));
+			this.SetText (ColumnType.CompteGain,  this.GetNuméro (monnaie.CompteGain));
+			this.SetText (ColumnType.ComptePerte, this.GetNuméro (monnaie.ComptePerte));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)
 		{
-			var taux = entity as ComptaTauxChangeEntity;
+			var monnaie = entity as ComptaMonnaieEntity;
 
-			taux.CodeISO     = this.GetText (ColumnType.Code);
-			taux.Description = this.GetText (ColumnType.Description);
-			taux.Cours       = Converters.ParseDecimal (this.GetText (ColumnType.Cours)).GetValueOrDefault (1);
-			taux.Unité       = Converters.ParseInt (this.GetText (ColumnType.Unité)).GetValueOrDefault (1);
-			taux.CompteGain  = this.GetCompte (this.GetText (ColumnType.CompteGain));
-			taux.ComptePerte = this.GetCompte (this.GetText (ColumnType.ComptePerte));
+			monnaie.CodeISO     = this.GetText (ColumnType.Code);
+			monnaie.Description = this.GetText (ColumnType.Description);
+			monnaie.Décimales   = Converters.ParseInt (this.GetText (ColumnType.Décimales)).GetValueOrDefault (2);
+			monnaie.Cours       = Converters.ParseDecimal (this.GetText (ColumnType.Cours)).GetValueOrDefault (1);
+			monnaie.Unité       = Converters.ParseInt (this.GetText (ColumnType.Unité)).GetValueOrDefault (1);
+			monnaie.CompteGain  = this.GetCompte (this.GetText (ColumnType.CompteGain));
+			monnaie.ComptePerte = this.GetCompte (this.GetText (ColumnType.ComptePerte));
 		}
 
 		private FormattedText GetNuméro(ComptaCompteEntity compte)

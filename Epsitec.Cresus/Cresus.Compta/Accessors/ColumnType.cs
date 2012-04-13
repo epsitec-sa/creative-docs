@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Description,
 		Cours,
 		Unité,
+		Décimales,
 		CompteGain,
 		ComptePerte,
 	}

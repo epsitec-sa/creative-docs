@@ -17,22 +17,22 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère les taux de change de la comptabilité.
+	/// Ce contrôleur gère les monnaies de la comptabilité.
 	/// </summary>
-	public class TauxChangeController : AbstractController
+	public class MonnaiesController : AbstractController
 	{
-		public TauxChangeController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
+		public MonnaiesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.dataAccessor = new TauxChangeDataAccessor (this);
+			this.dataAccessor = new MonnaiesDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TauxChange.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Monnaies.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
-			this.SetTitle ("Taux de change");
+			this.SetTitle ("Monnaies");
 		}
 
 
@@ -103,7 +103,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateEditor(FrameBox parent)
 		{
-			this.editorController = new TauxChangeEditorController (this);
+			this.editorController = new MonnaiesEditorController (this);
 			this.editorController.CreateUI (parent, this.UpdateArrayContent);
 			this.editorController.ShowInfoPanel = this.mainWindowController.ShowInfoPanel;
 		}
@@ -115,6 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				yield return new ColumnMapper (ColumnType.Code,        0.40, ContentAlignment.MiddleLeft, "Monnaie",          "Code ISO à 3 lettres de la monnaie");
 				yield return new ColumnMapper (ColumnType.Description, 1.00, ContentAlignment.MiddleLeft, "Description",      "Description de la monnaie");
+				yield return new ColumnMapper (ColumnType.Décimales,   0.40, ContentAlignment.MiddleLeft, "Décimales",        "Nombre de décimales de la monnaie");
 				yield return new ColumnMapper (ColumnType.Cours,       0.50, ContentAlignment.MiddleLeft, "Cours",            "Cours de la monnaie");
 				yield return new ColumnMapper (ColumnType.Unité,       0.40, ContentAlignment.MiddleLeft, "Unité",            "Facteur multiplicafif du cours");
 				yield return new ColumnMapper (ColumnType.CompteGain,  0.60, ContentAlignment.MiddleLeft, "Gains de change",  "Compte pour les gains de change");

@@ -15,14 +15,14 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Accessors
 {
 	/// <summary>
-	/// Gère l'accès aux taux de change de la comptabilité.
+	/// Gère l'accès aux monnaies de la comptabilité.
 	/// </summary>
-	public class TauxChangeDataAccessor : AbstractDataAccessor
+	public class MonnaiesDataAccessor : AbstractDataAccessor
 	{
-		public TauxChangeDataAccessor(AbstractController controller)
+		public MonnaiesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.TauxChange.Search");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Monnaies.Search");
 		}
 
 
@@ -48,20 +48,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.compta.TauxChange.Count;
+				return this.compta.Monnaies.Count;
 			}
 		}
 
 
 		public override AbstractEntity GetEditionEntity(int row)
 		{
-			if (row < 0 || row >= this.compta.TauxChange.Count)
+			if (row < 0 || row >= this.compta.Monnaies.Count)
 			{
 				return null;
 			}
 			else
 			{
-				return this.compta.TauxChange[row];
+				return this.compta.Monnaies[row];
 			}
 		}
 
@@ -73,41 +73,44 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return this.compta.TauxChange.IndexOf (entity as ComptaTauxChangeEntity);
+				return this.compta.Monnaies.IndexOf (entity as ComptaMonnaieEntity);
 			}
 		}
 
 
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
-			var listeTaux = compta.TauxChange;
+			var monnaies = compta.Monnaies;
 
-			if (row < 0 || row >= listeTaux.Count)
+			if (row < 0 || row >= monnaies.Count)
 			{
 				return FormattedText.Null;
 			}
 
-			var taux = listeTaux[row];
+			var monnaie = monnaies[row];
 
 			switch (column)
 			{
 				case ColumnType.Code:
-					return taux.CodeISO;
+					return monnaie.CodeISO;
 
 				case ColumnType.Description:
-					return taux.Description;
+					return monnaie.Description;
+
+				case ColumnType.Décimales:
+					return Converters.IntToString (monnaie.Décimales);
 
 				case ColumnType.Cours:
-					return Converters.DecimalToString (taux.Cours, 6);
+					return Converters.DecimalToString (monnaie.Cours, 6);
 
 				case ColumnType.Unité:
-					return Converters.IntToString (taux.Unité);
+					return Converters.IntToString (monnaie.Unité);
 
 				case ColumnType.CompteGain:
-					return JournalDataAccessor.GetNuméro (taux.CompteGain);
+					return JournalDataAccessor.GetNuméro (monnaie.CompteGain);
 
 				case ColumnType.ComptePerte:
-					return JournalDataAccessor.GetNuméro (taux.ComptePerte);
+					return JournalDataAccessor.GetNuméro (monnaie.ComptePerte);
 
 				default:
 					return FormattedText.Null;
@@ -117,7 +120,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void InsertEditionLine(int index)
 		{
-			var newData = new TauxChangeEditionLine (this.controller);
+			var newData = new MonnaiesEditionLine (this.controller);
 
 			if (index == -1)
 			{
@@ -134,7 +137,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void StartCreationLine()
 		{
 			this.editionLine.Clear ();
-			this.editionLine.Add (new TauxChangeEditionLine (this.controller));
+			this.editionLine.Add (new MonnaiesEditionLine (this.controller));
 			this.PrepareEditionLine (0);
 
 			this.firstEditedRow = -1;
@@ -149,6 +152,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void PrepareEditionLine(int line)
 		{
+			this.editionLine[line].SetText (ColumnType.Décimales,   Converters.IntToString (2));
 			this.editionLine[line].SetText (ColumnType.Cours,       Converters.DecimalToString (1, 6));
 			this.editionLine[line].SetText (ColumnType.Unité,       Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.CompteGain,  this.GetCompte ("Gains de change"));
@@ -178,11 +182,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.firstEditedRow = row;
 			this.countEditedRow = 0;
 
-			if (row >= 0 && row < this.compta.TauxChange.Count)
+			if (row >= 0 && row < this.compta.Monnaies.Count)
 			{
-				var data = new TauxChangeEditionLine (this.controller);
-				var taux = this.compta.TauxChange[row];
-				data.EntityToData (taux);
+				var data = new MonnaiesEditionLine (this.controller);
+				var monnaie = this.compta.Monnaies[row];
+				data.EntityToData (monnaie);
 
 				this.editionLine.Add (data);
 				this.countEditedRow++;
@@ -221,14 +225,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			foreach (var data in this.editionLine)
 			{
-				var taux = this.CreateTauxChange ();
-				data.DataToEntity (taux);
+				var monnaie = this.CreateMonnaie ();
+				data.DataToEntity (monnaie);
 
-				this.compta.TauxChange.Add (taux);
+				this.compta.Monnaies.Add (monnaie);
 
 				if (firstRow == -1)
 				{
-					firstRow = this.compta.TauxChange.Count-1;
+					firstRow = this.compta.Monnaies.Count-1;
 				}
 			}
 
@@ -239,23 +243,43 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			int row = this.firstEditedRow;
 
-			var taux = this.compta.TauxChange[row];
-			this.editionLine[0].DataToEntity (taux);
+			var monnaie = this.compta.Monnaies[row];
+			this.editionLine[0].DataToEntity (monnaie);
 		}
 
 
-#if false
 		public override FormattedText GetRemoveModificationLineError()
 		{
-			var taux = this.compta.TauxChange[this.firstEditedRow];
-			return this.mainWindowController.TauxChange.GetRemoveError (taux);
+			if (this.compta.Monnaies.Count == 1)
+			{
+				return "Il doit exister au moins une monnaie.";
+			}
+
+			var monnaie = this.compta.Monnaies[this.firstEditedRow];
+			int count = 0;
+
+			foreach (var compte in this.compta.PlanComptable)
+			{
+				if (compte.Monnaie == monnaie)
+				{
+					count++;
+				}
+			}
+
+			if (count == 0)
+			{
+				return FormattedText.Empty;  // ok
+			}
+			else
+			{
+				return string.Format ("Cette monnaie ne peut pas être supprimée,<br/>car elle est utilisée dans {0} compte{1}.", count.ToString (), (count>1)?"s":"");
+			}
 		}
-#endif
 
 		public override FormattedText GetRemoveModificationLineQuestion()
 		{
-			var taux = this.compta.TauxChange[this.firstEditedRow];
-			return string.Format ("Voulez-vous supprimer le taux de change \"{0}\" ?", taux.CodeISO);
+			var monnaie = this.compta.Monnaies[this.firstEditedRow];
+			return string.Format ("Voulez-vous supprimer la monnaie \"{0}\" ?", monnaie.CodeISO);
 		}
 
 		public override void RemoveModificationLine()
@@ -264,14 +288,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				for (int row = this.firstEditedRow+this.countEditedRow-1; row >= this.firstEditedRow; row--)
                 {
-					var taux = this.compta.TauxChange[row];
-					this.DeleteTauxChange (taux);
-					this.compta.TauxChange.RemoveAt (row);
+					var monnaie = this.compta.Monnaies[row];
+					this.DeleteMonnaie (monnaie);
+					this.compta.Monnaies.RemoveAt (row);
                 }
 
-				if (this.firstEditedRow >= this.compta.TauxChange.Count)
+				if (this.firstEditedRow >= this.compta.Monnaies.Count)
 				{
-					this.firstEditedRow = this.compta.TauxChange.Count-1;
+					this.firstEditedRow = this.compta.Monnaies.Count-1;
 				}
 			}
 		}
@@ -281,11 +305,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (this.IsMoveEditionLineEnable (direction))
 			{
-				var t1 = this.compta.TauxChange[this.firstEditedRow];
-				var t2 = this.compta.TauxChange[this.firstEditedRow+direction];
+				var t1 = this.compta.Monnaies[this.firstEditedRow];
+				var t2 = this.compta.Monnaies[this.firstEditedRow+direction];
 
-				this.compta.TauxChange[this.firstEditedRow] = t2;
-				this.compta.TauxChange[this.firstEditedRow+direction] = t1;
+				this.compta.Monnaies[this.firstEditedRow] = t2;
+				this.compta.Monnaies[this.firstEditedRow+direction] = t1;
 
 				this.firstEditedRow += direction;
 
@@ -308,28 +332,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private ComptaTauxChangeEntity CreateTauxChange()
+		private ComptaMonnaieEntity CreateMonnaie()
 		{
 			this.controller.MainWindowController.SetDirty ();
 
-			ComptaTauxChangeEntity taux;
+			ComptaMonnaieEntity monnaie;
 
 			if (this.businessContext == null)
 			{
-				taux = new ComptaTauxChangeEntity ();
+				monnaie = new ComptaMonnaieEntity ();
 			}
 			else
 			{
-				taux = this.businessContext.CreateEntity<ComptaTauxChangeEntity> ();
+				monnaie = this.businessContext.CreateEntity<ComptaMonnaieEntity> ();
 			}
 
-			taux.Cours = 1;
-			taux.Unité = 1;
+			monnaie.Cours = 1;
+			monnaie.Unité = 1;
 
-			return taux;
+			return monnaie;
 		}
 
-		private void DeleteTauxChange(ComptaTauxChangeEntity taux)
+		private void DeleteMonnaie(ComptaMonnaieEntity monnaie)
 		{
 			this.controller.MainWindowController.SetDirty ();
 
@@ -339,7 +363,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				this.businessContext.DeleteEntity (taux);
+				this.businessContext.DeleteEntity (monnaie);
 			}
 		}
 	}

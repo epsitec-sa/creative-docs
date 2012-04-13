@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.CodesTVA,       new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.CompteOuvBoucl, new EditionData (this.controller, this.ValidateCompteOuvBoucl));
 			this.dataDict.Add (ColumnType.IndexOuvBoucl,  new EditionData (this.controller, this.ValidateIndexOuvBoucl));
-			this.dataDict.Add (ColumnType.Monnaie,        new EditionData (this.controller));
+			this.dataDict.Add (ColumnType.Monnaie,        new EditionData (this.controller, this.ValidateMonnaie));
 		}
 
 
@@ -201,6 +201,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.Error = "Vous devez donner un numéro d'ordre compris entre 1 et 9";
 			}
 		}
+
+		private void ValidateMonnaie(EditionData data)
+		{
+			Validators.ValidateText (data, "Il manque la monnaie");
+		}
 		#endregion
 
 
@@ -216,7 +221,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVAParDéfaut));
 			this.SetText (ColumnType.CompteOuvBoucl, PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl));
 			this.SetText (ColumnType.IndexOuvBoucl,  (compte.IndexOuvBoucl == 0) ? FormattedText.Empty : compte.IndexOuvBoucl.ToString ());
-			this.SetText (ColumnType.Monnaie,        compte.Monnaie);
+			this.SetText (ColumnType.Monnaie,        this.GetMonnaie (compte));
 
 			this.SetCodesTVA (compte);
 		}
@@ -243,7 +248,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				compte.IndexOuvBoucl = 0;
 			}
 
-			compte.Monnaie = this.GetText (ColumnType.Monnaie).ToSimpleText ();
+			compte.Monnaie = this.SetMonnaie (this.GetText (ColumnType.Monnaie));
 
 			this.GetCodesTVA (compte);
 		}
@@ -280,6 +285,23 @@ namespace Epsitec.Cresus.Compta.Accessors
 					compte.CodesTVAPossibles.Add (codeTVA);
 				}
 			}
+		}
+
+		private FormattedText GetMonnaie(ComptaCompteEntity compte)
+		{
+			if (compte.Monnaie == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return compte.Monnaie.CodeISO;
+			}
+		}
+
+		private ComptaMonnaieEntity SetMonnaie(FormattedText codeISO)
+		{
+			return this.compta.Monnaies.Where (x => x.CodeISO == codeISO).FirstOrDefault ();
 		}
 	}
 }

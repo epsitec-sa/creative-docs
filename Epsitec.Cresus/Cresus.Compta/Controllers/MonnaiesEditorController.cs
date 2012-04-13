@@ -20,9 +20,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur gère le pied de page pour l'édition de la comptabilité.
 	/// </summary>
-	public class TauxChangeEditorController : AbstractEditorController
+	public class MonnaiesEditorController : AbstractEditorController
 	{
-		public TauxChangeEditorController(AbstractController controller)
+		public MonnaiesEditorController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'un taux de change :" : "Création d'un taux de change :";
+			return modify ? "Modification d'une monnaie :" : "Création d'une monnaie :";
 		}
 	}
 }

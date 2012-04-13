@@ -136,6 +136,7 @@ namespace Epsitec.Cresus.Compta.IO
 			var groups  = new Dictionary<string, string> ();
 			var boucles = new Dictionary<string, string> ();
 			var codesTVA = new Dictionary<ComptaCompteEntity, string> ();
+			var monnaies = new Dictionary<ComptaCompteEntity, int> ();
 
 			while (++indexCompte < this.lines.Length)
 			{
@@ -167,7 +168,12 @@ namespace Epsitec.Cresus.Compta.IO
 					compte.Titre     = titre;
 					compte.Catégorie = this.GetEntryContentCatégorie (indexCompte, "CAT");
 					compte.Type      = this.GetEntryContentType (indexCompte, "STATUS");
-					//compte.Monnaie   = this.GetEntryContentText      (indexCompte, "CURRENCY");
+
+					var monnaie = this.GetEntryContentInt (indexCompte, "CURRENCY").GetValueOrDefault (0);
+					if (monnaie != 0)
+					{
+						monnaies.Add (compte, monnaie);
+					}
 
 					//	Il ne samble pas y avoir d'autre moyen pour savoir s'il s'agit d'un compte de TVA !
 					if (compte.Type == TypeDeCompte.Normal && titre.Contains ("TVA"))
@@ -297,7 +303,7 @@ namespace Epsitec.Cresus.Compta.IO
 						ListeTaux   = this.compta.GetListeTVA (this.GetMontant (this.GetEntryContentText (indexTVA, "TAUX")) / 100),
 					};
 
-					if (codeTVA.ListeTaux != null && !codeTVA.Description.ToString().ToLower ().Contains ("obsolète"))
+					if (codeTVA.ListeTaux != null && !codeTVA.Description.ToString ().ToLower ().Contains ("obsolète"))
 					{
 						codesTVAList.Add (codeTVA);
 					}
@@ -319,9 +325,23 @@ namespace Epsitec.Cresus.Compta.IO
 				this.SetCodeTVA (compte);
 			}
 
-			//	Importe les taux de change.
+			//	Importe les monnaies.
 			int indexCurrencies = this.IndexOfLine ("BEGIN=CURRENCIES");
-			this.compta.TauxChange.Clear ();
+			this.compta.Monnaies.Clear ();
+
+			{
+				//	Crée la monnaie CHF de base.
+				var monnaie = new ComptaMonnaieEntity ()
+				{
+					CodeISO     = "CHF",
+					Description = Currencies.GetCurrencySpecies ("CHF"),
+					Décimales   = 2,
+					Cours       = 1.0m,
+					Unité       = 1,
+				};
+
+				this.compta.Monnaies.Add (monnaie);
+			}
 
 			while (++indexCurrencies < this.lines.Length)
 			{
@@ -339,16 +359,43 @@ namespace Epsitec.Cresus.Compta.IO
 
 				if (line.StartsWith ("ENTRY"))
 				{
-					var taux = new ComptaTauxChangeEntity ()
+					var iso = this.GetEntryContentText (indexCurrencies, "NAME");
+
+					var monnaie = new ComptaMonnaieEntity ()
 					{
-						CodeISO     = this.GetEntryContentText (indexCurrencies, "NAME"),
+						CodeISO     = iso,
+						Description = Currencies.GetCurrencySpecies (iso),
+						Décimales   = 2,
 						Cours       = Converters.ParseDecimal (this.GetEntryContentText (indexCurrencies, "COURS")).GetValueOrDefault (1),
 						Unité       = Converters.ParseInt (this.GetEntryContentText (indexCurrencies, "UNITE")).GetValueOrDefault (1),
 						CompteGain  = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CGAIN")).FirstOrDefault (),
 						ComptePerte = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CPERTE")).FirstOrDefault (),
 					};
 
-					this.compta.TauxChange.Add (taux);
+					this.compta.Monnaies.Add (monnaie);
+				}
+			}
+
+			if (this.compta.Monnaies.Count >= 2)
+			{
+				this.compta.Monnaies[0].CompteGain  = this.compta.Monnaies[1].CompteGain;
+				this.compta.Monnaies[0].ComptePerte = this.compta.Monnaies[1].ComptePerte;
+			}
+
+			//	Met les monnaies dans le plan compatable.
+			foreach (var compte in this.compta.PlanComptable)
+			{
+				if (monnaies.ContainsKey (compte))
+				{
+					int index = monnaies[compte];
+					if (index < this.compta.Monnaies.Count)
+					{
+						compte.Monnaie = this.compta.Monnaies[index];
+					}
+				}
+				else
+				{
+					compte.Monnaie = this.compta.Monnaies[0];
 				}
 			}
 
