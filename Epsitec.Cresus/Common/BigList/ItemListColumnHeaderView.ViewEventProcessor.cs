@@ -106,7 +106,7 @@ namespace Epsitec.Common.BigList
 				}
 			}
 
-			void IEventProcessorHost.Register(IEventProcessor processor)
+			void IEventProcessorHost.Add(IEventProcessor processor)
 			{
 				this.processor = processor;
 			}

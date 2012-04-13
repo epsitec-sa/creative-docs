@@ -33,7 +33,7 @@ namespace Epsitec.Common.BigList.Processors
 
 			var proc = new KeyDownProcessor (host);
 
-			proc.host.Register (proc);
+			proc.host.Add (proc);
 			proc.Process (message, pos);
 
 			return true;

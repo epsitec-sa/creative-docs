@@ -51,7 +51,7 @@ namespace Epsitec.Common.BigList.Processors
 				return false;
 			}
 
-			proc.host.Register (proc);
+			proc.host.Add (proc);
 			proc.Process (message, pos);
 			
 			return true;

@@ -8,7 +8,7 @@ namespace Epsitec.Common.BigList.Processors
 {
 	public interface IEventProcessorHost
 	{
-		void Register(IEventProcessor processor);
+		void Add(IEventProcessor processor);
 		void Remove(IEventProcessor processor);
 
 		IEnumerable<IEventProcessor> EventProcessors
