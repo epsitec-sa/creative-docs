@@ -125,7 +125,7 @@
     <Compile Include="BigList\IItemDataProvider`1.cs" />
     <Compile Include="BigList\IndexedArray.cs" />
     <Compile Include="BigList\IndexedStore.cs" />
-    <Compile Include="BigList\ItemCache`1.cs" />
+    <Compile Include="BigList\ItemCache`2.cs" />
     <Compile Include="BigList\ItemCache.cs" />
     <Compile Include="BigList\ItemList.cs" />
     <Compile Include="BigList\ItemListRow.cs" />
