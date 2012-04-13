@@ -14,6 +14,10 @@ namespace Epsitec.Common.BigList
 		Flags		= 0x01,
 		Full		= 0x02,
 
-		All			= Flags | Full
+		All			= Flags | Full,
+
+		IgnoreNull	= 0x00010000,
+
+		FlagMask	= IgnoreNull,
 	}
 }

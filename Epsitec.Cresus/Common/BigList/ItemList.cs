@@ -471,7 +471,7 @@ namespace Epsitec.Common.BigList
 					continue;
 				}
 
-				if (this.ChangeFlagState (i, x => x.Select (ItemSelection.Deselect)))
+				if (this.ChangeFlagState (i, x => x.Select (ItemSelection.Deselect), ItemStateDetails.IgnoreNull))
 				{
 					this.selectedItemCount--;
 					changes++;
@@ -564,9 +564,17 @@ namespace Epsitec.Common.BigList
 			return predicate (this.Cache.GetItemState (index, ItemStateDetails.Flags));
 		}
 
-		private bool ChangeFlagState(int index, System.Action<ItemState> action)
+		private bool ChangeFlagState(int index, System.Action<ItemState> action, ItemStateDetails flags = ItemStateDetails.None)
 		{
-			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags);
+			flags &= ItemStateDetails.FlagMask;
+
+			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags | flags);
+
+			if (state == null)
+			{
+				return false;
+			}
+			
 			var copy  = state.Clone ();
 
 			action (copy);

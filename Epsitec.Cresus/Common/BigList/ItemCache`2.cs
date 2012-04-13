@@ -122,6 +122,11 @@ namespace Epsitec.Common.BigList
 
 			if (state == null)
 			{
+				if (details.HasFlag (ItemStateDetails.IgnoreNull))
+				{
+					return null;
+				}
+
 				//	Could not retrieve the state, because we never accessed it before and
 				//	we have no data about it in the cache. Retrieve the data first.
 
