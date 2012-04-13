@@ -12,6 +12,18 @@ namespace Epsitec.Cresus.Compta.Entities
 {
 	public partial class ComptaEntity
 	{
+		public IEnumerable<FormattedText> CurrenciesForAutoCompleteMenu
+		{
+			get
+			{
+				foreach (var monnaie in this.Monnaies)
+				{
+					yield return FormattedText.Concat (monnaie.CodeISO, ";", monnaie.Description);
+				}
+			}
+		}
+
+
 		public ComptaListeTVAEntity GetListeTVA(decimal taux)
 		{
 			//	Cherche dans quelle liste se trouve un taux de TVA.
