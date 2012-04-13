@@ -118,9 +118,9 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				this.frame.BackColor = Color.Empty;
 
-				this.sample1.Text = Converters.MontantToString (12500.0m);
-				this.sample2.Text = Converters.MontantToString (-12500.75m);
-				this.sample3.Text = Converters.MontantToString (0.61m);
+				this.sample1.Text = Converters.MontantToString (12500.0m,   null);
+				this.sample2.Text = Converters.MontantToString (-12500.75m, null);
+				this.sample3.Text = Converters.MontantToString (0.61m,      null);
 			}
 		}
 		#endregion

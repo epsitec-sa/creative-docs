@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				var data = this.BeginnerSoldesNulsData;
 
-				if (data != null && data.SearchText.Invert && data.SearchText.FromText == Converters.MontantToString (0))
+				if (data != null && data.SearchText.Invert && data.SearchText.FromText == Converters.MontantToString (0, null))
 				{
 					return false;
 				}
@@ -261,7 +261,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					data.Column              = ColumnType.Solde;
 					data.SearchText.Mode     = SearchMode.WholeContent;
 					data.SearchText.Invert   = true;
-					data.SearchText.FromText = Converters.MontantToString (0);
+					data.SearchText.FromText = Converters.MontantToString (0, null);
 
 					this.BeginnerAdjust (true);
 				}

@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return this.GetLibellé (écriture);
 
 				case ColumnType.Montant:
-					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant));
+					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant, écriture.Monnaie));
 					if (écriture.TotalAutomatique)
 					{
 						montantTTC = montantTTC.ApplyBold ();
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.MontantTTC:
 					if (écriture.Type == (int) TypeEcriture.BaseTVA)
 					{
-						return Converters.MontantToString (écriture.Montant + écriture.MontantComplément);
+						return Converters.MontantToString (écriture.Montant + écriture.MontantComplément, écriture.Monnaie);
 					}
 					else
 					{
@@ -335,7 +335,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.editionLine[line].SetText (ColumnType.Date,       Converters.DateToString (this.période.ProchaineDate));
 			this.editionLine[line].SetText (ColumnType.Pièce,      this.mainWindowController.PiècesGenerator.GetProchainePièce (this.GetDefaultJournal));
 			this.editionLine[line].SetText (ColumnType.MontantTTC, FormattedText.Empty);
-			this.editionLine[line].SetText (ColumnType.Montant,    Converters.MontantToString (0));
+			this.editionLine[line].SetText (ColumnType.Montant,    Converters.MontantToString (0, this.compta.Monnaies[0]));
+			this.editionLine[line].SetText (ColumnType.Monnaie,    this.compta.Monnaies[0].CodeISO);
 			this.editionLine[line].SetText (ColumnType.Type,       Converters.TypeEcritureToString (TypeEcriture.Nouveau));
 
 			base.PrepareEditionLine (line);

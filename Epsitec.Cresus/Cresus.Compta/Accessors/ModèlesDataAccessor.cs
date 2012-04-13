@@ -110,7 +110,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return modèle.Libellé;
 
 				case ColumnType.Montant:
-					return Converters.MontantToString (modèle.Montant);
+					return Converters.MontantToString (modèle.Montant, this.compta.Monnaies[0]);
 
 				default:
 					return FormattedText.Null;

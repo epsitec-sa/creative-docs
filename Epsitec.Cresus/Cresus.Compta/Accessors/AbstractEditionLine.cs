@@ -86,9 +86,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected void SetMontant(ColumnType columnType, decimal? value)
+		protected void SetMontant(ColumnType columnType, decimal? value, ComptaMonnaieEntity monnaie)
 		{
-			this.SetText (columnType, Converters.MontantToString (value));
+			this.SetText (columnType, Converters.MontantToString (value, monnaie));
 		}
 
 		protected decimal? GetMontant(ColumnType columnType)

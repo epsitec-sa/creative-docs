@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public FormattedText GetBudgetText(decimal? solde, decimal? budget, decimal minValue, decimal maxValue)
+		public FormattedText GetBudgetText(decimal? solde, decimal? budget, decimal minValue, decimal maxValue, ComptaMonnaieEntity monnaie)
 		{
 			//	Retourne le texte permettant d'afficher le budget, de différentes manières.
 			if (!this.options.ComparisonEnable)
@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Montant)
 			{
-				return Converters.MontantToString (budget);
+				return Converters.MontantToString (budget, monnaie);
 			}
 			else
 			{
@@ -153,7 +153,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.PourcentageMontant)
 				{
 					var percent = BudgetsManager.GetPercent (solde, budget);
-					var montant = Converters.MontantToString (budget);
+					var montant = Converters.MontantToString (budget, monnaie);
 
 					if (percent.IsNullOrEmpty || string.IsNullOrEmpty (montant))
 					{
@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else
 				{
-					return Converters.MontantToString (budget-solde);
+					return Converters.MontantToString (budget-solde, monnaie);
 				}
 			}
 		}
@@ -201,13 +201,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					(
 						StringArray.SpecialContentGraphicValue,
 						"/",
-						Converters.MontantToString (minValue),
+						Converters.MontantToString (minValue, null),
 						"/",
-						Converters.MontantToString (maxValue),
+						Converters.MontantToString (maxValue, null),
 						"/",
-						Converters.MontantToString (value1),
+						Converters.MontantToString (value1, null),
 						"/",
-						Converters.MontantToString (value2)
+						Converters.MontantToString (value2, null)
 					);
 			}
 		}

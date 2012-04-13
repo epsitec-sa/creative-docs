@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					 columnType == ColumnType.BudgetFutur       ||
 					 columnType == ColumnType.BudgetFuturProrata)
 			{
-				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0))
+				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0, this.compta.Monnaies[0]))
 				{
 					text = FormattedText.Empty;
 				}

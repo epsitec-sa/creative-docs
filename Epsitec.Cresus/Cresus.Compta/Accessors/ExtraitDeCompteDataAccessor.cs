@@ -131,6 +131,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = new ExtraitDeCompteData ()
 				{
+					Entity         = compte,
 					FullLibelléTVA = "Mouvement",
 					IsItalic       = true,
 					NeverFiltered  = true,
@@ -208,6 +209,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Null;
 			}
 
+			var écriture = data.Entity as ComptaEcritureEntity;
+			var compte   = data.Entity as ComptaCompteEntity;
+
+			ComptaMonnaieEntity monnaie = null;
+
+			if (écriture != null)
+			{
+				monnaie = écriture.Monnaie;
+			}
+
+			if (compte != null)
+			{
+				monnaie = compte.Monnaie;
+			}
+
 			switch (column)
 			{
 				case ColumnType.Date:
@@ -230,13 +246,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.FullLibelléTVA;
 
 				case ColumnType.Débit:
-					return Converters.MontantToString (data.Débit);
+					return Converters.MontantToString (data.Débit, monnaie);
 
 				case ColumnType.Crédit:
-					return Converters.MontantToString (data.Crédit);
+					return Converters.MontantToString (data.Crédit, monnaie);
 
 				case ColumnType.Solde:
-					return Converters.MontantToString (data.Solde);
+					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
 					return this.GetMinMaxText (data.Solde);

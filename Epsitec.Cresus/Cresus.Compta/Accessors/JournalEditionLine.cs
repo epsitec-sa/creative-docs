@@ -191,11 +191,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 						montantTTC.GetValueOrDefault () == 0)  // montant nul ?
 						{
 							data.Error = "Le montant ne peut pas être nul";
-							data.Text = Converters.MontantToString (0);
+							data.Text = Converters.MontantToString (0, this.Monnaie);
 							return;
 						}
 
-						Validators.ValidateMontant (data, emptyAccepted: false);
+						Validators.ValidateMontant (data, this.Monnaie, emptyAccepted: false);
 					}
 				}
 
@@ -208,11 +208,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 					montantTTC.GetValueOrDefault () == 0)  // montant nul ?
 				{
 					data.Error = "Le montant ne peut pas être nul";
-					data.Text = Converters.MontantToString (0);
+					data.Text = Converters.MontantToString (0, this.Monnaie);
 					return;
 				}
 
-				Validators.ValidateMontant (data, emptyAccepted: false);
+				Validators.ValidateMontant (data, this.Monnaie, emptyAccepted: false);
 				return;
 			}
 		}
@@ -284,12 +284,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					montantHT.GetValueOrDefault () == 0)  // montant nul ?
 				{
 					data.Error = "Le montant ne peut pas être nul";
-					data.Text = Converters.MontantToString (0);
+					data.Text = Converters.MontantToString (0, this.Monnaie);
 					return;
 				}
 			}
 
-			Validators.ValidateMontant (data, emptyAccepted: false);
+			Validators.ValidateMontant (data, this.Monnaie, emptyAccepted: false);
 		}
 
 		private void ValidateMonnaie(EditionData data)
@@ -397,7 +397,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.OrigineTVA,        FormattedText.Empty);
 				this.SetText (ColumnType.Pièce,             FormattedText.Empty);
 				this.SetText (ColumnType.Libellé,           FormattedText.Empty);
-				this.SetText (ColumnType.Montant,           Converters.MontantToString (0));
+				this.SetText (ColumnType.Montant,           Converters.MontantToString (0, this.Monnaie));
 				this.SetText (ColumnType.MontantTTC,        FormattedText.Empty);
 				this.SetText (ColumnType.MontantComplément, FormattedText.Empty);
 				this.SetText (ColumnType.Monnaie,           this.compta.Monnaies[0].CodeISO);
@@ -416,9 +416,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.OrigineTVA,        écriture.OrigineTVA);
 				this.SetText (ColumnType.Pièce,             écriture.Pièce);
 				this.SetText (ColumnType.Libellé,           écriture.Libellé);
-				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
-				this.SetText (ColumnType.MontantTTC,        Converters.MontantToString (écriture.Montant + écriture.MontantComplément));
-				this.SetText (ColumnType.MontantComplément, Converters.MontantToString (écriture.MontantComplément));
+				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant, this.Monnaie));
+				this.SetText (ColumnType.MontantTTC,        Converters.MontantToString (écriture.Montant + écriture.MontantComplément, this.Monnaie));
+				this.SetText (ColumnType.MontantComplément, Converters.MontantToString (écriture.MontantComplément, this.Monnaie));
 				this.SetText (ColumnType.Monnaie,           this.GetMonnaie (écriture.Monnaie));
 				this.SetText (ColumnType.TotalAutomatique,  écriture.TotalAutomatique ? "1" : "0");
 				this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
@@ -552,6 +552,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+
+		private ComptaMonnaieEntity Monnaie
+		{
+			get
+			{
+				return this.SetMonnaie (this.GetText (ColumnType.Monnaie));
+			}
+		}
 
 		private FormattedText GetMonnaie(ComptaMonnaieEntity monnaie)
 		{

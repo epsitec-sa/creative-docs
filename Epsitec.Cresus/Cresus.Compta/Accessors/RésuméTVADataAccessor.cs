@@ -350,7 +350,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			if (montant.HasValue)
 			{
-				FormattedText m = Converters.MontantToString (montant.Value);
+				FormattedText m = Converters.MontantToString (montant.Value, this.compta.Monnaies[0]);
 
 				if (data.LigneDeTotal)
 				{
@@ -496,7 +496,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var montantTVA = ligne.TVA.GetValueOrDefault ();
 					var tauxTVA    = écritureDeCode.TauxTVA.GetValueOrDefault ();
 
-					var calculHT = TVA.CalculeHT (montantHT+montantTVA, tauxTVA);
+					var calculHT = TVA.CalculeHT (montantHT+montantTVA, tauxTVA, écritureDeBase.Monnaie);
 					var diff = montantHT - calculHT;
 
 					if (this.options.MontantLimite.HasValue && System.Math.Abs (diff) <= this.options.MontantLimite.Value)

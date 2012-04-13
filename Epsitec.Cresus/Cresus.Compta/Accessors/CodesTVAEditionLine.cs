@@ -130,7 +130,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontant(EditionData data)
 		{
-			Validators.ValidateMontant (data, emptyAccepted: true);
+			Validators.ValidateMontant (data, this.compta.Monnaies[0], emptyAccepted: true);
 		}
 
 		private void ValidateError(EditionData data)
@@ -155,7 +155,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Taux,          this.GetTaux (codeTVA));
 			this.SetText (ColumnType.Compte,        JournalDataAccessor.GetNuméro (codeTVA.Compte));
 			this.SetText (ColumnType.Chiffre,       Converters.IntToString (codeTVA.Chiffre));
-			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif));
+			this.SetText (ColumnType.MontantFictif, Converters.MontantToString (codeTVA.MontantFictif, this.compta.Monnaies[0]));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

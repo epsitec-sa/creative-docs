@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					break;
 
 				case ColumnType.MontantFictif:
-					result = Converters.MontantToString (codeTVA.MontantFictif);
+					result = Converters.MontantToString (codeTVA.MontantFictif, this.compta.Monnaies[0]);
 					break;
 			}
 

@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			this.field = new TextField
 			{
 				Parent          = frame,
-				FormattedText   = Converters.MontantToString (this.Data.Value),
+				FormattedText   = Converters.DecimalToString (this.Data.Value, 6),
 				PreferredWidth  = 60,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			}
 			else if (this.Data.EditedValue < this.Data.MinValue || this.Data.EditedValue > this.Data.MaxValue)
 			{
-				this.SetError (string.Format ("Doit être compris entre {0} et {1}", Converters.MontantToString (this.Data.MinValue), Converters.MontantToString (this.Data.MaxValue)));
+				this.SetError (string.Format ("Doit être compris entre {0} et {1}", Converters.DecimalToString (this.Data.MinValue, 6), Converters.DecimalToString (this.Data.MaxValue, 6)));
 			}
 			else
 			{

@@ -113,6 +113,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var data = new DoubleData ();
 				this.readonlyAllData.Add (data);
 
+				data.Entity = compte;
 				data.Gauche = gauche;
 				data.Numéro = compte.Numéro;
 				data.Titre  = compte.Titre;
@@ -187,6 +188,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return FormattedText.Null;
 			}
 
+			var compte = data.Entity as ComptaCompteEntity;
+
+			ComptaMonnaieEntity monnaie = null;
+
+			if (compte == null)
+			{
+				monnaie = this.compta.Monnaies[0];
+			}
+			else
+			{
+				monnaie = compte.Monnaie;
+			}
+
 			switch (column)
 			{
 				case ColumnType.Numéro:
@@ -196,28 +210,28 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return data.Titre;
 
 				case ColumnType.Solde:
-					return Converters.MontantToString (data.Solde);
+					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
 					return this.GetMinMaxText (data.Solde);
 
 				case ColumnType.Budget:
-					return this.GetBudgetText (data.Solde, data.Budget);
+					return this.GetBudgetText (data.Solde, data.Budget, monnaie);
 
 				case ColumnType.BudgetProrata:
-					return this.GetBudgetText (data.Solde, data.BudgetProrata);
+					return this.GetBudgetText (data.Solde, data.BudgetProrata, monnaie);
 
 				case ColumnType.BudgetFutur:
-					return this.GetBudgetText (data.Solde, data.BudgetFutur);
+					return this.GetBudgetText (data.Solde, data.BudgetFutur, monnaie);
 
 				case ColumnType.BudgetFuturProrata:
-					return this.GetBudgetText (data.Solde, data.BudgetFuturProrata);
+					return this.GetBudgetText (data.Solde, data.BudgetFuturProrata, monnaie);
 
 				case ColumnType.PériodePrécédente:
-					return this.GetBudgetText (data.Solde, data.PériodePrécédente);
+					return this.GetBudgetText (data.Solde, data.PériodePrécédente, monnaie);
 
 				case ColumnType.PériodePénultième:
-					return this.GetBudgetText (data.Solde, data.PériodePénultième);
+					return this.GetBudgetText (data.Solde, data.PériodePénultième, monnaie);
 
 				case ColumnType.Profondeur:
 					return (data.Niveau+1).ToString ();
@@ -236,9 +250,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return budget;
 		}
 
-		public FormattedText GetBudgetText(decimal? solde, decimal? budget)
+		private FormattedText GetBudgetText(decimal? solde, decimal? budget, ComptaMonnaieEntity monnaie)
 		{
-			return this.budgetsManager.GetBudgetText (solde, budget, this.minValue, this.maxValue);
+			return this.budgetsManager.GetBudgetText (solde, budget, this.minValue, this.maxValue, monnaie);
 		}
 
 

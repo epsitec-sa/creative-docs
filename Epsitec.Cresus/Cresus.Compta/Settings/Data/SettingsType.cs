@@ -29,9 +29,7 @@ namespace Epsitec.Cresus.Compta
 		EcritureMontreType,
 		EcritureMontreOrigineTVA,
 		EcritureProposeVide,
-		EcritureArrondiTVA,
-
-		PriceDecimalDigits,
+		
 		PriceDecimalSeparator,
 		PriceGroupSeparator,
 		PriceNullParts,

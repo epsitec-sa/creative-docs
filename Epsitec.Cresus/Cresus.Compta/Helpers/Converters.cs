@@ -105,10 +105,17 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 
 		#region Montant
-		public static decimal RoundMontant(decimal montant)
+		public static decimal RoundMontant(decimal montant, ComptaMonnaieEntity monnaie)
 		{
 			//	Retourne un montant en francs arrondi selon les réglages.
-			return System.Math.Floor ((montant / Converters.roundMontantValue) + 0.5m) * Converters.roundMontantValue;
+			decimal arrondi = 0.01m;
+
+			if (monnaie != null)
+			{
+				arrondi = monnaie.Arrondi;
+			}
+
+			return System.Math.Floor ((montant / arrondi) + 0.5m) * arrondi;
 		}
 
 		public static decimal? ParseMontant(FormattedText text)
@@ -154,11 +161,20 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return null;
 		}
 
-		public static string MontantToString(decimal? montant)
+		public static string MontantToString(decimal? montant, ComptaMonnaieEntity monnaie)
 		{
 			//	Conversion d'un montant en francs en chaîne, selon les réglages.
 			if (montant.HasValue)
 			{
+				if (monnaie == null)
+				{
+					Converters.numberFormatMontant.CurrencyDecimalDigits = 2;
+				}
+				else
+				{
+					Converters.numberFormatMontant.CurrencyDecimalDigits = monnaie.Décimales;
+				}
+
 				bool neg = false;
 				if (montant < 0)
 				{
@@ -1193,7 +1209,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static void ExportSettings(SettingsList settingsList)
 		{
 			//	Converters -> Settings
-			settingsList.SetInt  (SettingsType.PriceDecimalDigits,    Converters.numberFormatMontant.CurrencyDecimalDigits);
 			settingsList.SetEnum (SettingsType.PriceDecimalSeparator, Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyDecimalSeparator));
 			settingsList.SetEnum (SettingsType.PriceGroupSeparator,   Converters.CharToSettingsEnum (Converters.numberFormatMontant.CurrencyGroupSeparator));
 			settingsList.SetEnum (SettingsType.PriceNullParts,        Converters.numberFormatNullParts);
@@ -1210,12 +1225,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Settings -> Converters
 			SettingsEnum e;
 
-			int? i = settingsList.GetInt (SettingsType.PriceDecimalDigits);
-			if (i.HasValue)
-			{
-				Converters.numberFormatMontant.CurrencyDecimalDigits = i.Value;
-			}
-
 			e = settingsList.GetEnum (SettingsType.PriceDecimalSeparator);
 			if (e != SettingsEnum.Unknown)
 			{
@@ -1230,8 +1239,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			Converters.numberFormatNullParts = settingsList.GetEnum (SettingsType.PriceNullParts);
 			Converters.numberFormatNegative  = settingsList.GetEnum (SettingsType.PriceNegativeFormat);
-
-			Converters.roundMontantValue = settingsList.GetDecimal (SettingsType.EcritureArrondiTVA).GetValueOrDefault (0.01m);
 
 			//	Pourcentages.
 			Converters.percentDecimalSeparator = settingsList.GetEnum (SettingsType.PercentDecimalSeparator);
@@ -1251,7 +1258,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			Converters.numberFormatMontant = new System.Globalization.CultureInfo ("fr-CH").NumberFormat;
 
 			Converters.numberFormatMontant.CurrencySymbol           = "";
-			Converters.numberFormatMontant.CurrencyDecimalDigits    = 2;
 			Converters.numberFormatMontant.CurrencyDecimalSeparator = ".";
 			Converters.numberFormatMontant.CurrencyGroupSeparator   = "'";
 			Converters.numberFormatMontant.CurrencyGroupSizes       = new int[] { 3 };
@@ -1266,7 +1272,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 		private static SettingsEnum dateFormatSeparator     = SettingsEnum.SeparatorDot;
 		private static SettingsEnum dateFormatYear          = SettingsEnum.YearDigits4;
 		private static SettingsEnum dateFormatOrder         = SettingsEnum.YearDMY;
-		private static decimal      roundMontantValue       = 0.01m;
 		private static SettingsEnum percentDecimalSeparator = SettingsEnum.SeparatorDot;
 		private static SettingsEnum percentFracFormat       = SettingsEnum.PercentFrac1;
 	}

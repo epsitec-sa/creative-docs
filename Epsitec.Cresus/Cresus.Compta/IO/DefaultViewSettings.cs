@@ -423,7 +423,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var tab = data.NodesData[0].TabsData.Last ();
 
-			tab.SearchText.FromText = Converters.MontantToString (0);
+			tab.SearchText.FromText = Converters.MontantToString (0, null);
 			tab.SearchText.Mode     = SearchMode.WholeContent;
 			tab.SearchText.Invert   = true;
 			tab.Column              = ColumnType.Solde;

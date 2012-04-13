@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.différenceButton.ActiveState = ActiveState.Yes;
 
 					this.limiteField.Enable = true;
-					this.limiteField.Text = Converters.MontantToString (this.Options.MontantLimite);
+					this.limiteField.Text = Converters.MontantToString (this.Options.MontantLimite, this.compta.Monnaies[0]);
 					
 					this.limiteMontantRadio.ActiveState = ActiveState.Yes;
 					this.limiteMontantRadio.Enable = true;

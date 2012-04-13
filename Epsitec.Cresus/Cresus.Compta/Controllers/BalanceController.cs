@@ -113,7 +113,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 					 columnType == ColumnType.SoldeCrédit ||
 					 columnType == ColumnType.Budget      )
 			{
-				if (!data.NeverFiltered && options.HideZero && text == Converters.MontantToString (0))
+				var value = Converters.ParseMontant (text);
+				if (!data.NeverFiltered && options.HideZero && value.HasValue && value.Value == 0)
 				{
 					text = FormattedText.Empty;
 				}

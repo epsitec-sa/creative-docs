@@ -30,7 +30,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		#region Validators
 		private void ValidateMontant(EditionData data)
 		{
-			Validators.ValidateMontant (data, emptyAccepted: true);
+			var codeISO = this.GetText (ColumnType.Monnaie);
+			var monnaie = this.compta.Monnaies.Where (x => x.CodeISO == codeISO).FirstOrDefault ();
+
+			Validators.ValidateMontant (data, monnaie, emptyAccepted: true);
 		}
 		#endregion
 
@@ -41,10 +44,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.SetText    (ColumnType.Numéro,          compte.Numéro);
 			this.SetText    (ColumnType.Titre,           compte.Titre);
-			this.SetMontant (ColumnType.Solde,           this.controller.DataAccessor.SoldesJournalManager.GetSolde (compte));
-			this.SetMontant (ColumnType.BudgetPrécédent, this.compta.GetMontantBudget (this.période, -1, compte));
-			this.SetMontant (ColumnType.Budget,          this.compta.GetMontantBudget (this.période,  0, compte));
-			this.SetMontant (ColumnType.BudgetFutur,     this.compta.GetMontantBudget (this.période,  1, compte));
+			this.SetText    (ColumnType.Monnaie,         compte.Monnaie.CodeISO);
+			this.SetMontant (ColumnType.Solde,           this.controller.DataAccessor.SoldesJournalManager.GetSolde (compte), compte.Monnaie);
+			this.SetMontant (ColumnType.BudgetPrécédent, this.compta.GetMontantBudget (this.période, -1, compte), compte.Monnaie);
+			this.SetMontant (ColumnType.Budget,          this.compta.GetMontantBudget (this.période,  0, compte), compte.Monnaie);
+			this.SetMontant (ColumnType.BudgetFutur,     this.compta.GetMontantBudget (this.période,  1, compte), compte.Monnaie);
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void ValidateMontant(EditionData data)
 		{
-			Validators.ValidateMontant (data, emptyAccepted: true);
+			Validators.ValidateMontant (data, this.compta.Monnaies[0], emptyAccepted: true);
 		}
 		#endregion
 
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Crédit,    ModèlesDataAccessor.GetNuméro (modèle.Crédit));
 			this.SetText (ColumnType.Pièce,     modèle.Pièce);
 			this.SetText (ColumnType.Libellé,   modèle.Libellé);
-			this.SetText (ColumnType.Montant,   Converters.MontantToString (modèle.Montant));
+			this.SetText (ColumnType.Montant,   Converters.MontantToString (modèle.Montant, this.compta.Monnaies[0]));
 		}
 
 		public override void DataToEntity(AbstractEntity entity)

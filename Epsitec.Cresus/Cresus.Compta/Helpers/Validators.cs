@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static void ValidateMontant(EditionData data, bool emptyAccepted)
+		public static void ValidateMontant(EditionData data, ComptaMonnaieEntity monnaie, bool emptyAccepted)
 		{
 			//	Valide un montant.
 			data.ClearError ();
@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				decimal? montant = Converters.ParseMontant (data.Text);
 				if (montant.HasValue)
 				{
-					data.Text = Converters.MontantToString (montant);
+					data.Text = Converters.MontantToString (montant, monnaie);
 				}
 				else
 				{

@@ -97,13 +97,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			if (!this.controller.SettingsList.GetBool (SettingsType.EcritureMontantZéro) &&  // refuse les montants nuls ?
-				data.Text == Converters.MontantToString (0))  // montant nul ?
+				data.Text == Converters.MontantToString (0, this.Monnaie))  // montant nul ?
 			{
 				data.Error = "Le montant ne peut pas être nul";
 				return;
 			}
 
-			Validators.ValidateMontant (data, emptyAccepted: false);
+			Validators.ValidateMontant (data, this.Monnaie, emptyAccepted: false);
 		}
 
 		private void ValidateJournal(EditionData data)
@@ -151,12 +151,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Date,    Converters.DateToString (écriture.Date));
 				this.SetText (ColumnType.Pièce,   écriture.Pièce);
 				this.SetText (ColumnType.Libellé, écriture.Libellé);
+				this.SetText (ColumnType.Monnaie, écriture.Monnaie.CodeISO);
 				this.SetText (ColumnType.Journal, écriture.Journal.Nom);
 
 				if (extrait.IsDébit)
 				{
 					this.SetText (ColumnType.CP,    JournalDataAccessor.GetNuméro (écriture.Crédit));
-					this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant));
+					this.SetText (ColumnType.Débit, Converters.MontantToString (écriture.Montant, écriture.Monnaie));
 
 					this.SetEnable (ColumnType.CP,     écriture.Crédit != null);
 					this.SetEnable (ColumnType.Débit,  écriture.MultiId == 0 || !écriture.TotalAutomatique);
@@ -165,7 +166,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				else
 				{
 					this.SetText (ColumnType.CP,     JournalDataAccessor.GetNuméro (écriture.Débit));
-					this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant));
+					this.SetText (ColumnType.Crédit, Converters.MontantToString (écriture.Montant, écriture.Monnaie));
 
 					this.SetEnable (ColumnType.CP,     écriture.Débit != null);
 					this.SetEnable (ColumnType.Débit,  false);
@@ -236,6 +237,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				extrait.CP     = écriture.Débit;
 				extrait.Crédit = écriture.Montant;
+			}
+		}
+
+		private ComptaMonnaieEntity Monnaie
+		{
+			get
+			{
+				var codeISO = this.GetText (ColumnType.Monnaie);
+				return this.compta.Monnaies.Where (x => x.CodeISO == codeISO).FirstOrDefault ();
 			}
 		}
 	}

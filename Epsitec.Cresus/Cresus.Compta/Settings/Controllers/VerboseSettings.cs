@@ -101,12 +101,6 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 				case SettingsType.EcritureMontreOrigineTVA:
 					return "Montre l'origine de la TVA (debug)";
 
-				case SettingsType.EcritureArrondiTVA:
-					return "Arrondi pour la TVA";
-
-
-				case SettingsType.PriceDecimalDigits:
-					return "Nombre de décimales";
 
 				case SettingsType.PriceDecimalSeparator:
 					return "Séparateur de la partie fractionnaire";

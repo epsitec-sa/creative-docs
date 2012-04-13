@@ -605,11 +605,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 					(
 						StringArray.SpecialContentGraphicValue,
 						"/",
-						Converters.MontantToString (this.minValue),
+						Converters.MontantToString (this.minValue, null),
 						"/",
-						Converters.MontantToString (this.maxValue),
+						Converters.MontantToString (this.maxValue, null),
 						"/",
-						Converters.MontantToString (value)
+						Converters.MontantToString (value, null)
 					);
 			}
 		}

@@ -75,6 +75,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+#if false
 		public decimal? GetMontant(int row, ColumnType column)
 		{
 			return Converters.ParseMontant (this.GetText (row, column));
@@ -84,6 +85,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.SetText (row, column, Converters.MontantToString (value));
 		}
+#endif
 
 
 		public decimal? GetPercent(int row, ColumnType column)
