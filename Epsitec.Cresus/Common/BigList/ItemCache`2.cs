@@ -209,6 +209,7 @@ namespace Epsitec.Common.BigList
 
 			return new ItemHeight (height, marginBefore, marginAfter);
 		}
+
 		private TState GetItemStateLocked(int index, ItemStateDetails details)
 		{
 			var compact = this.states[index];
@@ -228,7 +229,11 @@ namespace Epsitec.Common.BigList
 
 					if (this.extraStates.TryGetValue (index, out extra) == false)
 					{
-						extra = state.Clone<TState> ();
+						//	Since we were not able to retrieve the full information, and we know
+						//	that there is more state than what we have at hand, force the caller
+						//	to retrieve the full state from the provider.
+
+						return null;
 					}
 
 					state.ApplyExtraState (extra);

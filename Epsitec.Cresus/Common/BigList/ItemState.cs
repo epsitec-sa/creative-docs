@@ -173,7 +173,7 @@ namespace Epsitec.Common.BigList
 			this.Hilite1  = other.Hilite1;
 			this.Hilite2  = other.Hilite2;
 			this.Partial  = other.Partial;
-
+			
 			this.ApplyExtraArguments (other);
 		}
 
