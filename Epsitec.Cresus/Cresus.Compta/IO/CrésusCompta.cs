@@ -336,6 +336,7 @@ namespace Epsitec.Cresus.Compta.IO
 					CodeISO     = "CHF",
 					Description = Currencies.GetCurrencySpecies ("CHF"),
 					Décimales   = 2,
+					Arrondi     = 0.01m,
 					Cours       = 1.0m,
 					Unité       = 1,
 				};
@@ -366,6 +367,7 @@ namespace Epsitec.Cresus.Compta.IO
 						CodeISO     = iso,
 						Description = Currencies.GetCurrencySpecies (iso),
 						Décimales   = 2,
+						Arrondi     = 0.01m,
 						Cours       = Converters.ParseDecimal (this.GetEntryContentText (indexCurrencies, "COURS")).GetValueOrDefault (1),
 						Unité       = Converters.ParseInt (this.GetEntryContentText (indexCurrencies, "UNITE")).GetValueOrDefault (1),
 						CompteGain  = this.compta.PlanComptable.Where (x => x.Numéro == this.GetEntryContentText (indexCurrencies, "CGAIN")).FirstOrDefault (),

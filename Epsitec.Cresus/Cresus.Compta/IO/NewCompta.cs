@@ -229,6 +229,7 @@ namespace Epsitec.Cresus.Compta.IO
 				CodeISO     = code,
 				Description = description,
 				Décimales   = 2,
+				Arrondi     = 0.01m,
 				Cours       = cours,
 				Unité       = 1,
 			};

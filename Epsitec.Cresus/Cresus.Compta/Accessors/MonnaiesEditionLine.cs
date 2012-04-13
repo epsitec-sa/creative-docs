@@ -24,6 +24,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Code,        new EditionData (this.controller, this.ValidateCode));
 			this.dataDict.Add (ColumnType.Description, new EditionData (this.controller));
 			this.dataDict.Add (ColumnType.Décimales,   new EditionData (this.controller, this.ValidateDécimales));
+			this.dataDict.Add (ColumnType.Arrondi,     new EditionData (this.controller, this.ValidateArrondi));
 			this.dataDict.Add (ColumnType.Cours,       new EditionData (this.controller, this.ValidateCours));
 			this.dataDict.Add (ColumnType.Unité,       new EditionData (this.controller, this.ValidateUnité));
 			this.dataDict.Add (ColumnType.CompteGain,  new EditionData (this.controller, this.ValidateCompte));
@@ -78,6 +79,26 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				data.Error = "Il manque le nombre de décimales";
+			}
+		}
+
+		private void ValidateArrondi(EditionData data)
+		{
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				decimal n;
+				if (decimal.TryParse (data.Text.ToSimpleText (), out n))
+				{
+					return;
+				}
+
+				data.Error = "Vous devez donner une valeur d'arrondi";
+			}
+			else
+			{
+				data.Error = "Il manque l'arrondi";
 			}
 		}
 
@@ -159,6 +180,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.Code,        monnaie.CodeISO);
 			this.SetText (ColumnType.Description, monnaie.Description);
 			this.SetText (ColumnType.Décimales,   Converters.IntToString (monnaie.Décimales));
+			this.SetText (ColumnType.Arrondi,     Converters.DecimalToString (monnaie.Arrondi, monnaie.Décimales));
 			this.SetText (ColumnType.Cours,       Converters.DecimalToString (monnaie.Cours, 6));
 			this.SetText (ColumnType.Unité,       Converters.IntToString (monnaie.Unité));
 			this.SetText (ColumnType.CompteGain,  this.GetNuméro (monnaie.CompteGain));
@@ -172,6 +194,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			monnaie.CodeISO     = this.GetText (ColumnType.Code);
 			monnaie.Description = this.GetText (ColumnType.Description);
 			monnaie.Décimales   = Converters.ParseInt (this.GetText (ColumnType.Décimales)).GetValueOrDefault (2);
+			monnaie.Arrondi     = Converters.ParseDecimal (this.GetText (ColumnType.Arrondi)).GetValueOrDefault (0.01m);
 			monnaie.Cours       = Converters.ParseDecimal (this.GetText (ColumnType.Cours)).GetValueOrDefault (1);
 			monnaie.Unité       = Converters.ParseInt (this.GetText (ColumnType.Unité)).GetValueOrDefault (1);
 			monnaie.CompteGain  = this.GetCompte (this.GetText (ColumnType.CompteGain));

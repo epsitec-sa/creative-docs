@@ -100,6 +100,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Décimales:
 					return Converters.IntToString (monnaie.Décimales);
 
+				case ColumnType.Arrondi:
+					return Converters.DecimalToString (monnaie.Arrondi, monnaie.Décimales);
+
 				case ColumnType.Cours:
 					return Converters.DecimalToString (monnaie.Cours, 6);
 
@@ -153,6 +156,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void PrepareEditionLine(int line)
 		{
 			this.editionLine[line].SetText (ColumnType.Décimales,   Converters.IntToString (2));
+			this.editionLine[line].SetText (ColumnType.Arrondi,     Converters.DecimalToString (0.01m, 2));
 			this.editionLine[line].SetText (ColumnType.Cours,       Converters.DecimalToString (1, 6));
 			this.editionLine[line].SetText (ColumnType.Unité,       Converters.IntToString (1));
 			this.editionLine[line].SetText (ColumnType.CompteGain,  this.GetCompte ("Gains de change"));

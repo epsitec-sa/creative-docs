@@ -2541,6 +2541,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Arrondi</c> field.
+		///	designer:fld/OVKQ7/OVK48
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK48]")]
+		public global::System.Decimal Arrondi
+		{
+			get
+			{
+				return this.GetField<global::System.Decimal> ("[OVK48]");
+			}
+			set
+			{
+				global::System.Decimal oldValue = this.Arrondi;
+				if (oldValue != value || !this.IsFieldDefined("[OVK48]"))
+				{
+					this.OnArrondiChanging (oldValue, value);
+					this.SetField<global::System.Decimal> ("[OVK48]", oldValue, value);
+					this.OnArrondiChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>Cours</c> field.
 		///	designer:fld/OVKQ7/OVKS7
 		///	</summary>
@@ -2657,6 +2679,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnDescriptionChanged(global::Epsitec.Common.Types.FormattedText oldValue, global::Epsitec.Common.Types.FormattedText newValue);
 		partial void OnDécimalesChanging(int oldValue, int newValue);
 		partial void OnDécimalesChanged(int oldValue, int newValue);
+		partial void OnArrondiChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
+		partial void OnArrondiChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCoursChanging(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnCoursChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnUnitéChanging(int oldValue, int newValue);

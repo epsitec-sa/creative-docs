@@ -960,6 +960,8 @@ namespace Epsitec.Cresus.Compta
 				{
 				}
 				
+				//	designer:cap/OVK48
+				public static readonly global::Epsitec.Common.Support.Druid Arrondi = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 260);
 				//	designer:cap/OVKR7
 				public static readonly global::Epsitec.Common.Support.Druid CodeISO = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 251);
 				//	designer:cap/OVKU7
