@@ -58,7 +58,7 @@ namespace Epsitec.Cresus.DebugViewer.Accessors
 		public bool Resolve(int index, out Data.LogFolderRecord value)
 		{
 			if ((index < 0) ||
-					(index >= this.folderRecords.Count))
+				(index >= this.folderRecords.Count))
 			{
 				value = null;
 				return false;

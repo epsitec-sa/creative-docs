@@ -298,7 +298,10 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			{
 				Parent = left,
 				Dock = DockStyle.Fill,
-				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.historyAccessor.GetMessage (x)),
+				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogRecord> (x => this.historyAccessor.GetMessage (x))
+				{
+					AlternateBackgroundColor = true,
+				},
 				MarkRenderer = new Epsitec.Common.BigList.Renderers.MarkRenderer (),
 			};
 

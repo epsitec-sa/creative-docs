@@ -638,7 +638,7 @@ namespace Epsitec.Common.BigList
 
 				if ((total > 0) && (offset + total > 0))
 				{
-					rows.Add (new ItemListRow (index, offset, height));
+					rows.Add (new ItemListRow (index, offset, height, index == count-1));
 				}
 
 				offset += total;
@@ -685,13 +685,13 @@ namespace Epsitec.Common.BigList
 					//	available space. Position it so that the end of the item will be
 					//	visible.
 
-					rows.Add (new ItemListRow (index, 0, height));
+					rows.Add (new ItemListRow (index, 0, height, index == count-1));
 					return rows;
 				}
 
 				if (localH > 0)
 				{
-					rows.Insert (0, new ItemListRow (index, offset, height));
+					rows.Insert (0, new ItemListRow (index, offset, height, index == count-1));
 				}
 
 				total += localH;
@@ -720,7 +720,7 @@ namespace Epsitec.Common.BigList
 
 					if (localH > 0)
 					{
-						rows.Add (new ItemListRow (index, offset, height));
+						rows.Add (new ItemListRow (index, offset, height, index == count-1));
 					}
 
 					offset += localH;
@@ -734,7 +734,7 @@ namespace Epsitec.Common.BigList
 
 		private static IEnumerable<ItemListRow> ShiftRows(IEnumerable<ItemListRow> rows, int offset)
 		{
-			return rows.Select (x => new ItemListRow (x.Index, x.Offset + offset, x.Height));
+			return rows.Select (x => new ItemListRow (x.Index, x.Offset + offset, x.Height, x.IsLast));
 		}
 
 

@@ -20,11 +20,18 @@ namespace Epsitec.Common.BigList.Renderers
 			this.lineHeight   = 18;
 		}
 
+
+		public bool AlternateBackgroundColor
+		{
+			get;
+			set;
+		}
+
 		#region IItemDataRenderer Members
 
 		public void Render(ItemData data, ItemState state, ItemListRow row, Graphics graphics, Rectangle bounds)
 		{
-			var back  = state.Selected ? Color.FromName ("Highlight") : Color.FromBrightness ((row.Index & 1) == 0 ? 1.0 : 0.9);
+			var back  = state.Selected ? Color.FromName ("Highlight") : this.GetRowColor (row);
 			var value = this.GetStringValue (data);
 			var color = state.Selected ? Color.FromName ("HighlightText") : this.textColor;
 			var lines = value.Split ('\n');
@@ -50,6 +57,22 @@ namespace Epsitec.Common.BigList.Renderers
 			return data.GetData<string> ();
 		}
 
+		protected virtual Color GetRowColor(ItemListRow row)
+		{
+			return Color.FromBrightness (this.IsEvenRow (row) ? 1.0 : 0.9);
+		}
+
+		private bool IsEvenRow(ItemListRow row)
+		{
+			if (this.AlternateBackgroundColor)
+			{
+				return row.IsEven;
+			}
+			else
+			{
+				return true;
+			}
+		}
 
 		private readonly Font textFont;
 		private readonly double textFontSize;

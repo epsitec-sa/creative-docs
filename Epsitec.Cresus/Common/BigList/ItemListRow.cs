@@ -8,11 +8,12 @@ namespace Epsitec.Common.BigList
 {
 	public sealed class ItemListRow
 	{
-		public ItemListRow(int index, int offset, ItemHeight height)
+		public ItemListRow(int index, int offset, ItemHeight height, bool isLast)
 		{
 			this.index  = index;
 			this.offset = offset;
 			this.height = height;
+			this.isLast = isLast;
 		}
 
 		
@@ -40,9 +41,42 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public bool								IsLast
+		{
+			get
+			{
+				return this.isLast;
+			}
+		}
+
+		public bool								IsFirst
+		{
+			get
+			{
+				return this.index == 0;
+			}
+		}
+
+		public bool								IsEven
+		{
+			get
+			{
+				return (this.index & 0x01) == 0x00;
+			}
+		}
+
+		public bool								IsOdd
+		{
+			get
+			{
+				return (this.index & 0x01) == 0x01;
+			}
+		}
+
 		
 		private readonly int					index;
 		private readonly int					offset;
 		private readonly ItemHeight				height;
+		private readonly bool					isLast;
 	}
 }
