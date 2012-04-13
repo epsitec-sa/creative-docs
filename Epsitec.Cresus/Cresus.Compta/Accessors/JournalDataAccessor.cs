@@ -176,6 +176,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 						return FormattedText.Empty;
 					}
 
+				case ColumnType.Monnaie:
+					return (écriture.Monnaie == null) ? FormattedText.Empty : écriture.Monnaie.CodeISO;
+
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA);
 
@@ -316,6 +319,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 
 				this.editionLine[0].SetText (ColumnType.TotalAutomatique, "0");
+				this.editionLine[0].SetText (ColumnType.Monnaie, this.compta.Monnaies[0].CodeISO);
 
 				while (this.editionLine.Count > 1)
 				{

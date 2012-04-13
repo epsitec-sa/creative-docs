@@ -870,6 +870,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Support.Druid Journal = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 100);
 				//	designer:cap/OVKH
 				public static readonly global::Epsitec.Common.Support.Druid Libellé = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 17);
+				//	designer:cap/OVK58
+				public static readonly global::Epsitec.Common.Support.Druid Monnaie = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 261);
 				//	designer:cap/OVKI
 				public static readonly global::Epsitec.Common.Support.Druid Montant = new global::Epsitec.Common.Support.Druid (_moduleId, 20, 18);
 				//	designer:cap/OVKQ6

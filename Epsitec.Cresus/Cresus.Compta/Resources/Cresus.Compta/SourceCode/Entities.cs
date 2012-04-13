@@ -728,6 +728,28 @@ namespace Epsitec.Cresus.Compta.Entities
 			}
 		}
 		///	<summary>
+		///	The <c>Monnaie</c> field.
+		///	designer:fld/OVKB/OVK58
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[OVK58]")]
+		public global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity Monnaie
+		{
+			get
+			{
+				return this.GetField<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> ("[OVK58]");
+			}
+			set
+			{
+				global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue = this.Monnaie;
+				if (oldValue != value || !this.IsFieldDefined("[OVK58]"))
+				{
+					this.OnMonnaieChanging (oldValue, value);
+					this.SetField<global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity> ("[OVK58]", oldValue, value);
+					this.OnMonnaieChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
 		///	The <c>OrigineTVA</c> field.
 		///	designer:fld/OVKB/OVKK7
 		///	</summary>
@@ -878,6 +900,8 @@ namespace Epsitec.Cresus.Compta.Entities
 		partial void OnMontantChanged(global::System.Decimal oldValue, global::System.Decimal newValue);
 		partial void OnMontantComplémentChanging(global::System.Decimal? oldValue, global::System.Decimal? newValue);
 		partial void OnMontantComplémentChanged(global::System.Decimal? oldValue, global::System.Decimal? newValue);
+		partial void OnMonnaieChanging(global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity newValue);
+		partial void OnMonnaieChanged(global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaMonnaieEntity newValue);
 		partial void OnOrigineTVAChanging(string oldValue, string newValue);
 		partial void OnOrigineTVAChanged(string oldValue, string newValue);
 		partial void OnCodeTVAChanging(global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity oldValue, global::Epsitec.Cresus.Compta.Entities.ComptaCodeTVAEntity newValue);

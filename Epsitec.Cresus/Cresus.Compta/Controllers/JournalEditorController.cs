@@ -191,6 +191,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 					field = new StaticTextController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
 					field.CreateUI (editorFrame);
 				}
+				else if (mapper.Column == ColumnType.Monnaie)
+				{
+					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
+					field.CreateUI (editorFrame);
+
+					UIBuilder.UpdateAutoCompleteTextField (field.EditWidget as AutoCompleteTextField, ';', this.compta.CurrenciesForAutoCompleteMenu.ToArray ());
+				}
 				else if (mapper.Column == ColumnType.CodeTVA)
 				{
 					field = new AutoCompleteFieldController (this.controller, line, mapper, this.HandleClearFocus, this.HandleSetFocus, this.EditorTextChanged);
@@ -405,6 +412,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			}
+
+			if (indexVide != -1)
+			{
+				this.dataAccessor.EditionLine[indexVide].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[0].GetText (ColumnType.Monnaie));
+			}
+
+			this.dataAccessor.EditionLine[indexCP].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[0].GetText (ColumnType.Monnaie));
 		}
 
 		private int ExplodeForTVA(int line, bool defaultDébit = true)
@@ -530,6 +544,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
+			this.dataAccessor.EditionLine[line+1].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[line].GetText (ColumnType.Monnaie));
+
+			if (total == 3)
+			{
+				this.dataAccessor.EditionLine[line+2].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[line].GetText (ColumnType.Monnaie));
+			}
+
 			return total;
 		}
 
@@ -633,6 +654,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Pièce, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Pièce));
 				}
+
+				this.dataAccessor.EditionLine[this.selectedLine].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[cp].GetText (ColumnType.Monnaie));
 			}
 
 			this.dirty = true;
@@ -873,6 +896,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Pièce,   this.dataAccessor.EditionLine[0].GetText (ColumnType.Pièce));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Libellé, this.dataAccessor.EditionLine[0].GetText (ColumnType.Libellé));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Montant, this.dataAccessor.EditionLine[0].GetText (ColumnType.Montant));
+			this.dataAccessor.EditionLine[1].SetText (ColumnType.Monnaie, this.dataAccessor.EditionLine[0].GetText (ColumnType.Monnaie));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.Journal, this.dataAccessor.EditionLine[0].GetText (ColumnType.Journal));
 			this.dataAccessor.EditionLine[1].SetText (ColumnType.TotalAutomatique, "1");
 
@@ -1185,9 +1209,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.isMulti)
 				{
-					this.SetWidgetVisibility (ColumnType.Débit,  i, !this.IsDébitMulti  (i));
-					this.SetWidgetVisibility (ColumnType.Crédit, i, !this.IsCréditMulti (i));
-					this.SetWidgetVisibility (ColumnType.Pièce,  i, type != TypeEcriture.CodeTVA);
+					this.SetWidgetVisibility (ColumnType.Débit,   i, !this.IsDébitMulti  (i));
+					this.SetWidgetVisibility (ColumnType.Crédit,  i, !this.IsCréditMulti (i));
+					this.SetWidgetVisibility (ColumnType.Pièce,   i, type != TypeEcriture.CodeTVA);
+					this.SetWidgetVisibility (ColumnType.Monnaie, i, type != TypeEcriture.CodeTVA);
 
 					bool totalAutomatique = (this.dataAccessor.EditionLine[i].GetText (ColumnType.TotalAutomatique) == "1");
 

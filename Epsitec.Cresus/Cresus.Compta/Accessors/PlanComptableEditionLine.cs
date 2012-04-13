@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.SetText (ColumnType.CodeTVA,        JournalEditionLine.GetCodeTVADescription (compte.CodeTVAParDéfaut));
 			this.SetText (ColumnType.CompteOuvBoucl, PlanComptableDataAccessor.GetNuméro (compte.CompteOuvBoucl));
 			this.SetText (ColumnType.IndexOuvBoucl,  (compte.IndexOuvBoucl == 0) ? FormattedText.Empty : compte.IndexOuvBoucl.ToString ());
-			this.SetText (ColumnType.Monnaie,        this.GetMonnaie (compte));
+			this.SetText (ColumnType.Monnaie,        this.GetMonnaie (compte.Monnaie));
 
 			this.SetCodesTVA (compte);
 		}
@@ -287,15 +287,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private FormattedText GetMonnaie(ComptaCompteEntity compte)
+		private FormattedText GetMonnaie(ComptaMonnaieEntity monnaie)
 		{
-			if (compte.Monnaie == null)
+			if (monnaie == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return compte.Monnaie.CodeISO;
+				return monnaie.CodeISO;
 			}
 		}
 

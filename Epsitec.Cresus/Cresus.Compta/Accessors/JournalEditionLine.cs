@@ -28,6 +28,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.dataDict.Add (ColumnType.Libellé,     new EditionData (this.controller, this.ValidateLibellé));
 			this.dataDict.Add (ColumnType.MontantTTC,  new EditionData (this.controller, this.ValidateMontantTTC));
 			this.dataDict.Add (ColumnType.Montant,     new EditionData (this.controller, this.ValidateMontant));
+			this.dataDict.Add (ColumnType.Monnaie,     new EditionData (this.controller, this.ValidateMonnaie));
 			this.dataDict.Add (ColumnType.CodeTVA,     new EditionData (this.controller, this.ValidateCodeTVA));
 			this.dataDict.Add (ColumnType.TauxTVA,     new EditionData (this.controller, this.ValidateTauxTVA));
 			this.dataDict.Add (ColumnType.Journal,     new EditionData (this.controller, this.ValidateJournal));
@@ -291,6 +292,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Validators.ValidateMontant (data, emptyAccepted: false);
 		}
 
+		private void ValidateMonnaie(EditionData data)
+		{
+			Validators.ValidateText (data, "Il manque la monnaie");
+		}
+
 		private void ValidateCodeTVA(EditionData data)
 		{
 			data.ClearError ();
@@ -394,6 +400,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (0));
 				this.SetText (ColumnType.MontantTTC,        FormattedText.Empty);
 				this.SetText (ColumnType.MontantComplément, FormattedText.Empty);
+				this.SetText (ColumnType.Monnaie,           this.compta.Monnaies[0].CodeISO);
 				this.SetText (ColumnType.TotalAutomatique,  "0");
 				this.SetText (ColumnType.CodeTVA,           FormattedText.Empty);
 				this.SetText (ColumnType.TauxTVA,           FormattedText.Empty);
@@ -412,6 +419,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.SetText (ColumnType.Montant,           Converters.MontantToString (écriture.Montant));
 				this.SetText (ColumnType.MontantTTC,        Converters.MontantToString (écriture.Montant + écriture.MontantComplément));
 				this.SetText (ColumnType.MontantComplément, Converters.MontantToString (écriture.MontantComplément));
+				this.SetText (ColumnType.Monnaie,           this.GetMonnaie (écriture.Monnaie));
 				this.SetText (ColumnType.TotalAutomatique,  écriture.TotalAutomatique ? "1" : "0");
 				this.SetText (ColumnType.CodeTVA,           JournalEditionLine.GetCodeTVADescription (écriture.CodeTVA));
 				this.SetText (ColumnType.TauxTVA,           Converters.PercentToString (écriture.TauxTVA));
@@ -442,6 +450,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Libellé           = FormattedText.Empty;
 				écriture.Montant           = 0;
 				écriture.MontantComplément = null;
+				écriture.Monnaie           = this.compta.Monnaies[0];
 				écriture.TotalAutomatique  = false;
 				écriture.CodeTVA           = null;
 				écriture.TauxTVA           = null;
@@ -456,6 +465,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				écriture.Libellé           = this.GetText (ColumnType.Libellé);
 				écriture.Montant           = Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault ();
 				écriture.MontantComplément = Converters.ParseMontant (this.GetText (ColumnType.MontantComplément)).GetValueOrDefault ();
+				écriture.Monnaie           = this.SetMonnaie (this.GetText (ColumnType.Monnaie));
 				écriture.TotalAutomatique  = (this.GetText (ColumnType.TotalAutomatique) == "1");
 				écriture.CodeTVA           = this.TextToCodeTVA (this.GetText (ColumnType.CodeTVA));
 				écriture.TauxTVA           = Converters.ParsePercent (this.GetText (ColumnType.TauxTVA));
@@ -543,6 +553,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		private FormattedText GetMonnaie(ComptaMonnaieEntity monnaie)
+		{
+			if (monnaie == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return monnaie.CodeISO;
+			}
+		}
+
+		private ComptaMonnaieEntity SetMonnaie(FormattedText codeISO)
+		{
+			return this.compta.Monnaies.Where (x => x.CodeISO == codeISO).FirstOrDefault ();
+		}
+
+	
 		public bool IsEmptyLine
 		{
 			//	Retourne true si une ligne est entièrement vide.

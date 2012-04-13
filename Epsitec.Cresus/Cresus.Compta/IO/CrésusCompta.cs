@@ -630,6 +630,7 @@ namespace Epsitec.Cresus.Compta.IO
 					Pièce   = pièce,
 					Libellé = libellé,
 					Montant = montant,
+					Monnaie = this.compta.Monnaies[0],
 					MultiId = multi,
 					Journal = jp,
 				};
