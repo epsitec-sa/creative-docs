@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
+    <Compile Include="Accessors\RésuméPériodiqueDataAccessor.cs" />
+    <Compile Include="Accessors\RésuméPériodiqueData.cs" />
     <Compile Include="Accessors\MonnaiesDataAccessor.cs" />
     <Compile Include="Accessors\MonnaiesEditionLine.cs" />
     <Compile Include="Accessors\RésuméTVADataAccessor.cs" />
@@ -72,6 +74,7 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\RésuméPériodiqueController.cs" />
     <Compile Include="Controllers\MonnaiesEditorController.cs" />
     <Compile Include="Controllers\MonnaiesController.cs" />
     <Compile Include="Controllers\RésuméTVAController.cs" />
@@ -91,7 +94,9 @@
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
     <Compile Include="Helpers\Currencies.cs" />
+    <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméTVAOptionsController.cs" />
+    <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
     <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />

@@ -15,6 +15,26 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Dates
 	{
+		public static Date AddDays(Date date, int numberOfDays)
+		{
+			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays);
+		}
+
+		public static Date AddMonths(Date date, int numberOfMonths)
+		{
+			var month = date.Month + numberOfMonths;
+			var year = date.Year;
+
+			while (month > 12)
+			{
+				year++;
+				month -= 12;
+			}
+
+			return new Date (year, month, 1);
+		}
+
+
 		public static bool DateInRange(Date? date, Date? beginDate, Date? endDate)
 		{
 			if (date.HasValue)

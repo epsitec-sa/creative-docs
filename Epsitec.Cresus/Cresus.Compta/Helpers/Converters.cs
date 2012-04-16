@@ -107,7 +107,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#region Montant
 		public static decimal RoundMontant(decimal montant, ComptaMonnaieEntity monnaie)
 		{
-			//	Retourne un montant en francs arrondi selon les réglages.
+			//	Retourne un montant arrondi selon une monnaie.
 			decimal arrondi = 0.01m;
 
 			if (monnaie != null)
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static decimal? ParseMontant(string text)
 		{
-			//	Parse un montant en francs, selon les réglages.
+			//	Parse un montant, selon les réglages.
 			if (string.IsNullOrEmpty (text))
 			{
 				return null;
@@ -163,7 +163,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string MontantToString(decimal? montant, ComptaMonnaieEntity monnaie)
 		{
-			//	Conversion d'un montant en francs en chaîne, selon les réglages.
+			//	Conversion d'un montant, selon les réglages.
 			if (montant.HasValue)
 			{
 				if (monnaie == null)

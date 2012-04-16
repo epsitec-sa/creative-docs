@@ -85,5 +85,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 		Arrondi,
 		CompteGain,
 		ComptePerte,
+
+		Solde1,
+		Solde2,
+		Solde3,
+		Solde4,
+		Solde5,
+		Solde6,
+		Solde7,
+		Solde8,
+		Solde9,
+		Solde10,
+		Solde11,
+		Solde12,
 	}
 }

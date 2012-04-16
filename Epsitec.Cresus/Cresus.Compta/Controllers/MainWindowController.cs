@@ -553,6 +553,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new RésuméTVAController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.RésuméPériodique"))
+			{
+				controller = new RésuméPériodiqueController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.PiècesGenerator"))
 			{
 				controller = new PiècesGeneratorController (this.app, this.businessContext, this);
