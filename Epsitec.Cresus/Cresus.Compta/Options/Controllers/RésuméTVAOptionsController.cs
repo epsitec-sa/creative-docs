@@ -202,7 +202,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 						this.Options.MontantLimite = 0.05m;  // 5 centimes
 					}
 
-					this.UpdateWidgets ();
 					this.OptionsChanged ();
 				}
 			};
@@ -215,7 +214,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.Options.MontantLimite  = m;
 					this.Options.PourcentLimite = null;
 
-					this.UpdateWidgets ();
 					this.OptionsChanged ();
 				}
 				else
@@ -226,7 +224,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 						this.Options.MontantLimite  = null;
 						this.Options.PourcentLimite = m;
 
-						this.UpdateWidgets ();
 						this.OptionsChanged ();
 					}
 				}
@@ -237,7 +234,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.Options.MontantLimite  = 0.05m;  // 5 centimes
 				this.Options.PourcentLimite = null;
 
-				this.UpdateWidgets ();
 				this.OptionsChanged ();
 			};
 
@@ -246,7 +242,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.Options.MontantLimite  = null;
 				this.Options.PourcentLimite = 0.01m;  // 1%
 
-				this.UpdateWidgets ();
 				this.OptionsChanged ();
 			};
 		}

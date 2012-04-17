@@ -31,6 +31,30 @@ namespace Epsitec.Cresus.Compta.Accessors
 			set;
 		}
 
+		public CatégorieDeCompte Catégorie
+		{
+			get;
+			set;
+		}
+
+		public TypeDeCompte Type
+		{
+			get;
+			set;
+		}
+
+		public int Niveau
+		{
+			get;
+			set;
+		}
+
+		public decimal? Solde
+		{
+			get;
+			set;
+		}
+
 		public decimal? GetSolde(int rank)
 		{
 			if (rank >= 0 && rank < this.soldes.Count)

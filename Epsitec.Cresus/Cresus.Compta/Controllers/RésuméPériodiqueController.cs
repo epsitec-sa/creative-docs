@@ -102,11 +102,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var text = this.dataAccessor.GetText (row, columnType);
 			var data = this.dataAccessor.GetReadOnlyData (row) as RésuméPériodiqueData;
 
-			if (columnType == ColumnType.Solde)
+			var options = this.dataAccessor.Options as RésuméPériodiqueOptions;
+			int niveau = this.dataAccessor.FilterData.GetBeginnerNiveau (data.Niveau);
+
+			if (columnType == ColumnType.Titre)
 			{
-				if (!data.NeverFiltered)
+				for (int i = 0; i < niveau; i++)
+				{
+					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
+				}
+			}
+			else if (columnType >= ColumnType.Solde1 &&
+					 columnType <= ColumnType.Solde12)
+			{
+				var value = Converters.ParseMontant (text);
+				if (!data.NeverFiltered && options.HideZero && value.GetValueOrDefault () == 0)
 				{
 					text = FormattedText.Empty;
+				}
+
+				if (!text.IsNullOrEmpty)
+				{
+					for (int i = 0; i < niveau; i++)
+					{
+						text = FormattedText.Concat (text, UIBuilder.rightIndentText);
+					}
 				}
 			}
 
@@ -171,20 +191,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Numéro,  0.20, ContentAlignment.MiddleLeft,  "Numéro");
-				yield return new ColumnMapper (ColumnType.Titre,   1.00, ContentAlignment.MiddleLeft,  "Titre du compte");
-				yield return new ColumnMapper (ColumnType.Solde1,  0.20, ContentAlignment.MiddleRight, "1");
-				yield return new ColumnMapper (ColumnType.Solde2,  0.20, ContentAlignment.MiddleRight, "2");
-				yield return new ColumnMapper (ColumnType.Solde3,  0.20, ContentAlignment.MiddleRight, "3");
-				yield return new ColumnMapper (ColumnType.Solde4,  0.20, ContentAlignment.MiddleRight, "4");
-				yield return new ColumnMapper (ColumnType.Solde5,  0.20, ContentAlignment.MiddleRight, "5");
-				yield return new ColumnMapper (ColumnType.Solde6,  0.20, ContentAlignment.MiddleRight, "6");
-				yield return new ColumnMapper (ColumnType.Solde7,  0.20, ContentAlignment.MiddleRight, "7");
-				yield return new ColumnMapper (ColumnType.Solde8,  0.20, ContentAlignment.MiddleRight, "8");
-				yield return new ColumnMapper (ColumnType.Solde9,  0.20, ContentAlignment.MiddleRight, "9");
-				yield return new ColumnMapper (ColumnType.Solde10, 0.20, ContentAlignment.MiddleRight, "10");
-				yield return new ColumnMapper (ColumnType.Solde11, 0.20, ContentAlignment.MiddleRight, "11");
-				yield return new ColumnMapper (ColumnType.Solde12, 0.20, ContentAlignment.MiddleRight, "12");
+				yield return new ColumnMapper (ColumnType.Numéro,     0.20, ContentAlignment.MiddleLeft,  "Numéro");
+				yield return new ColumnMapper (ColumnType.Titre,      1.00, ContentAlignment.MiddleLeft,  "Titre du compte");
+																      
+				yield return new ColumnMapper (ColumnType.Solde1,     0.20, ContentAlignment.MiddleRight, "1");
+				yield return new ColumnMapper (ColumnType.Solde2,     0.20, ContentAlignment.MiddleRight, "2");
+				yield return new ColumnMapper (ColumnType.Solde3,     0.20, ContentAlignment.MiddleRight, "3");
+				yield return new ColumnMapper (ColumnType.Solde4,     0.20, ContentAlignment.MiddleRight, "4");
+				yield return new ColumnMapper (ColumnType.Solde5,     0.20, ContentAlignment.MiddleRight, "5");
+				yield return new ColumnMapper (ColumnType.Solde6,     0.20, ContentAlignment.MiddleRight, "6");
+				yield return new ColumnMapper (ColumnType.Solde7,     0.20, ContentAlignment.MiddleRight, "7");
+				yield return new ColumnMapper (ColumnType.Solde8,     0.20, ContentAlignment.MiddleRight, "8");
+				yield return new ColumnMapper (ColumnType.Solde9,     0.20, ContentAlignment.MiddleRight, "9");
+				yield return new ColumnMapper (ColumnType.Solde10,    0.20, ContentAlignment.MiddleRight, "10");
+				yield return new ColumnMapper (ColumnType.Solde11,    0.20, ContentAlignment.MiddleRight, "11");
+				yield return new ColumnMapper (ColumnType.Solde12,    0.20, ContentAlignment.MiddleRight, "12");
+
+				yield return new ColumnMapper (ColumnType.Solde,      0.20, ContentAlignment.MiddleRight, "Solde",      show: false);
+				yield return new ColumnMapper (ColumnType.Catégorie,  0.20, ContentAlignment.MiddleLeft,  "Catégorie",  show: false);
+				yield return new ColumnMapper (ColumnType.Profondeur, 0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
 			}
 		}
 
@@ -192,6 +217,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as RésuméPériodiqueOptions;
 
+			//	Cache toutes les colonnes des soldes.
+			for (int i = 0; i < 12; i++)
+			{
+				this.ShowHideColumn (ColumnType.Solde1+i, false);
+			}
+
+			//	Montre les colonnes des soldes requises et détermine leurs titres.
+			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, options, (index, dateDébut, dateFin) =>
+			{
+				this.ShowHideColumn (ColumnType.Solde1+index, true);
+				this.SetColumnDescription (ColumnType.Solde1+index, Dates.GetMonthShortDescription (dateDébut, Dates.AddDays (dateFin, -1)));
+			});
 		}
 	}
 }

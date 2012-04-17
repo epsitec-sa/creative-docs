@@ -438,7 +438,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly double LeftLabelWidth			= 83;
 		public static readonly double ComboButtonWidth			= 14;
 
-		public static readonly FormattedText leftIndentText		= "●  ";
+		//?public static readonly FormattedText leftIndentText		= "●  ";
+		public static readonly FormattedText leftIndentText		= "   ";
 		public static readonly FormattedText rightIndentText	= "  ";
 	}
 }

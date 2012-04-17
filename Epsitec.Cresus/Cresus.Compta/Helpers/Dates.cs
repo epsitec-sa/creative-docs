@@ -15,6 +15,63 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Dates
 	{
+		public static string GetMonthShortDescription(Date date1, Date date2)
+		{
+			if (date1.Month == date2.Month)
+			{
+				return Dates.GetMonthShortDescription (date1);
+			}
+			else
+			{
+				var m1 = Dates.GetMonthShortDescription (date1);
+				var m2 = Dates.GetMonthShortDescription (date2);
+				return string.Concat (m1, "—", m2);
+			}
+		}
+
+		public static string GetMonthShortDescription(Date date)
+		{
+			string[] months =
+			{
+				"Janv.",
+				"Fév.",
+				"Mars",
+				"Avril",
+				"Mai",
+				"Juin",
+				"Juil.",
+				"Août",
+				"Sept.",
+				"Oct.",
+				"Nov.",
+				"Déc."
+			};
+
+			return months[date.Month-1];
+		}
+
+		public static string GetMonthDescription(Date date)
+		{
+			string[] months =
+			{
+				"Janvier",
+				"Février",
+				"Mars",
+				"Avril",
+				"Mai",
+				"Juin",
+				"Juillet",
+				"Août",
+				"Septembre",
+				"Octobre",
+				"Novembre",
+				"Décembre"
+			};
+
+			return months[date.Month-1];
+		}
+
+
 		public static Date AddDays(Date date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays);

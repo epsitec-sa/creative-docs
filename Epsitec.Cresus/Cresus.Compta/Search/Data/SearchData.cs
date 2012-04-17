@@ -146,6 +146,22 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public int GetBeginnerNiveau(int niveau)
+		{
+			//	Retourne le niveau à utiliser pour l'indentation. Si on filtre les comptes inférieures à un
+			//	certain niveau, on ne doit jamais indenter avec un niveau inférieur.
+			int from, to;
+			this.GetBeginnerProfondeurs (out from, out to);
+
+			if (from != int.MaxValue)
+			{
+				from--;  // 0..n
+				niveau = System.Math.Max (niveau-from, 0);
+			}
+
+			return niveau;
+		}
+
 		public void GetBeginnerProfondeurs(out int from, out int to)
 		{
 			this.nodesData[0].GetBeginnerProfondeurs(out from, out to);

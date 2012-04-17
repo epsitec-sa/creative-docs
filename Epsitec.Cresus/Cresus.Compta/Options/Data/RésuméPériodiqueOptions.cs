@@ -22,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.Clear ();
 
 			this.NumberOfMonths = 3;
+			this.HideZero = true;
 		}
 
 
@@ -35,6 +36,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			set;
 			get;
+		}
+
+		public bool HideZero
+		{
+			//	Affiche en blanc les montants nuls ?
+			get;
+			set;
 		}
 
 
@@ -59,6 +67,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			var d = dst as RésuméPériodiqueOptions;
 			d.NumberOfMonths = this.NumberOfMonths;
 			d.Cumul          = this.Cumul;
+			d.HideZero          = this.HideZero;
 
 			base.CopyTo (dst);
 		}
@@ -73,7 +82,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			var o = other as RésuméPériodiqueOptions;
 
 			return this.NumberOfMonths == o.NumberOfMonths &&
-				   this.Cumul          == o.Cumul;
+				   this.Cumul          == o.Cumul          &&
+				   this.HideZero       == o.HideZero;
 		}
 
 
@@ -83,9 +93,43 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				this.StartSummaryBuilder ();
 
-				this.AppendSummaryBuilder (string.Format ("Par {0} mois", this.NumberOfMonths.ToString ()));
+				this.AppendSummaryBuilder (RésuméPériodiqueOptions.MonthsToDescription (this.NumberOfMonths));
+
+				if (this.Cumul)
+				{
+					this.AppendSummaryBuilder ("Chiffres cumulés");
+				}
+
+				if (this.HideZero)
+				{
+					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
+				}
 
 				return this.StopSummaryBuilder ();
+			}
+		}
+
+		public static string MonthsToDescription(int months)
+		{
+			switch (months)
+			{
+				case 1:
+					return "Mensuel";
+
+				case 2:
+					return "Bimestriel";
+
+				case 3:
+					return "Trimestriel";
+
+				case 6:
+					return "Semestriel";
+
+				case 12:
+					return "Annuel";
+
+				default:
+					return string.Format ("Par {0} mois", months.ToString ());
 			}
 		}
 	}

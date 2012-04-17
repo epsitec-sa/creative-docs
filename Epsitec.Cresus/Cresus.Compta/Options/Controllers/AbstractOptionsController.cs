@@ -322,8 +322,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected FrameBox										mainFrame;
 		protected FrameBox										comparisonFrame;
 
-		protected TextFieldCombo								fieldProfondeur;
-
 		protected CheckButton									buttonComparisonEnable;
 		protected FrameBox										frameComparisonShowed;
 		protected StaticText									fieldComparisonShowed;

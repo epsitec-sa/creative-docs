@@ -79,10 +79,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var data = this.dataAccessor.GetReadOnlyData (row) as DoubleData;
 
 			var options = this.dataAccessor.Options as DoubleOptions;
+			int niveau = this.dataAccessor.FilterData.GetBeginnerNiveau (data.Niveau);
 
 			if (columnType == ColumnType.Titre)
 			{
-				for (int i = 0; i < data.Niveau; i++)
+				for (int i = 0; i < niveau; i++)
 				{
 					text = FormattedText.Concat ("    ", text);
 				}

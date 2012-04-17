@@ -29,6 +29,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateAfterOptionsChanged ();
 		}
 
+		private void FilterInitialize(SearchData data)
+		{
+			data.FirstTabData.Column              = ColumnType.Solde;
+			data.FirstTabData.SearchText.Mode     = SearchMode.WholeContent;
+			data.FirstTabData.SearchText.Invert   = true;
+			data.FirstTabData.SearchText.FromText = Converters.MontantToString (0, this.compta.Monnaies[0]);
+		}
+
 
 		public override void UpdateFilter()
 		{
@@ -47,31 +55,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
+			//	Crée un SoldesJournalManager par colunne.
 			var soldesManagers = new List<SoldesJournalManager> ();
-			var dateDébut = this.période.DateDébut;
-			var finPériode = Dates.AddDays (this.période.DateFin, 1);  // normalement, 1er janvier de l'année suivante
-			var dateFin = dateDébut;
-
-			do
+			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{
-				dateFin = Dates.AddMonths (dateDébut, this.Options.NumberOfMonths);
-
-				if (dateFin > finPériode)
-				{
-					dateFin = finPériode;
-				}
-
 				var soldesManager = new SoldesJournalManager (this.compta);
 				soldesManager.Initialize (this.période.Journal, dateDébut, Dates.AddDays (dateFin, -1));
 				soldesManagers.Add (soldesManager);
+			});
 
-				if (!this.Options.Cumul)
-				{
-					dateDébut = dateFin;
-				}
-			}
-			while (dateFin < finPériode);
-
+			//	Génère les différentes lignes, une par compte.
 			foreach (var compte in this.compta.PlanComptable)
 			{
 				if (compte.Catégorie == CatégorieDeCompte.Inconnu)
@@ -79,22 +72,70 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				var data = new RésuméPériodiqueData ();
-
-				data.Numéro = compte.Numéro;
-				data.Titre  = compte.Titre;
-
+#if false
+				bool empty = true;
 				for (int i = 0; i < soldesManagers.Count; i++)
 				{
-					data.SetSolde (i, soldesManagers[i].GetSolde (compte));
+					var solde = soldesManagers[i].GetSolde (compte);
+					if (solde.GetValueOrDefault () != 0)
+					{
+						empty = false;
+					}
 				}
+				if (empty)
+				{
+					continue;
+				}
+#endif
+
+				var data = new RésuméPériodiqueData
+				{
+					Entity    = compte,
+					Numéro    = compte.Numéro,
+					Titre     = compte.Titre,
+					Catégorie = compte.Catégorie,
+					Type      = compte.Type,
+					Niveau    = compte.Niveau,
+				};
+
+				decimal total = 0;
+				for (int i = 0; i < soldesManagers.Count; i++)
+				{
+					var solde = soldesManagers[i].GetSolde (compte).GetValueOrDefault ();
+					data.SetSolde (i, solde);
+					total += solde;
+				}
+
+				data.Solde = total;
 
 				this.readonlyAllData.Add (data);
 			}
 
-
-
 			base.UpdateFilter ();
+		}
+
+		public static void ColumnsProcess(ComptaPériodeEntity période, RésuméPériodiqueOptions options, System.Action<int, Date, Date> action)
+		{
+			var dateDébut    = période.DateDébut;
+			var dateFin      = dateDébut;
+			var débutPériode = période.DateDébut;
+			var finPériode   = Dates.AddDays (période.DateFin, 1);  // normalement, 1er janvier de l'année suivante
+
+			int index = 0;
+			do
+			{
+				dateFin = Dates.AddMonths (dateDébut, options.NumberOfMonths);
+
+				if (dateFin > finPériode)
+				{
+					dateFin = finPériode;
+				}
+
+				action (index++, options.Cumul ? débutPériode : dateDébut, Dates.AddDays (dateFin, -1));
+
+				dateDébut = dateFin;
+			}
+			while (dateFin < finPériode);
 		}
 
 
@@ -111,7 +152,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				int rank = column - ColumnType.Solde1;
 				var solde = data.GetSolde (rank);
-				return Converters.MontantToString (solde, this.compta.Monnaies[0]);
+
+				if (solde.GetValueOrDefault () == 0)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return Converters.MontantToString (solde, this.compta.Monnaies[0]);
+				}
 			}
 
 			switch (column)
@@ -121,6 +170,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				case ColumnType.Titre:
 					return data.Titre;
+
+				case ColumnType.Catégorie:
+					return Converters.CatégorieToString (data.Catégorie);
+
+				case ColumnType.Type:
+					return Converters.TypeToString (data.Type);
+
+				case ColumnType.Profondeur:
+					return (data.Niveau+1).ToString ();
+
+				case ColumnType.Solde:
+					return Converters.MontantToString (data.Solde, this.compta.Monnaies[0]);
 
 				default:
 					return FormattedText.Null;

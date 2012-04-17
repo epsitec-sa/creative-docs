@@ -31,18 +31,19 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public void CreateDefaultViewSettings()
 		{
-			this.CreateDefaultViewSettingsJournal         ("Journal");
-			this.CreateDefaultViewSettingsPlanComptable   ("PlanComptable");
-			this.CreateDefaultViewSettingsBalance         ("Balance");
-			this.CreateDefaultViewSettingsExtraitDeCompte ("ExtraitDeCompte");
-			this.CreateDefaultViewSettingsBilan           ("Bilan");
-			this.CreateDefaultViewSettingsPP              ("PP");
-			this.CreateDefaultViewSettingsExploitation    ("Exploitation");
-			this.CreateDefaultViewSettingsBudgets         ("Budgets");
-			this.CreateDefaultViewSettingsJournaux        ("Journaux");
-			this.CreateDefaultViewSettingsLibellés        ("Libellés");
-			this.CreateDefaultViewSettingsModèles         ("Modèles");
-			this.CreateDefaultViewSettingsPériodes        ("Périodes");
+			this.CreateDefaultViewSettingsJournal          ("Journal");
+			this.CreateDefaultViewSettingsPlanComptable    ("PlanComptable");
+			this.CreateDefaultViewSettingsBalance          ("Balance");
+			this.CreateDefaultViewSettingsExtraitDeCompte  ("ExtraitDeCompte");
+			this.CreateDefaultViewSettingsBilan            ("Bilan");
+			this.CreateDefaultViewSettingsPP               ("PP");
+			this.CreateDefaultViewSettingsExploitation     ("Exploitation");
+			this.CreateDefaultViewSettingsBudgets          ("Budgets");
+			this.CreateDefaultViewSettingsJournaux         ("Journaux");
+			this.CreateDefaultViewSettingsLibellés         ("Libellés");
+			this.CreateDefaultViewSettingsModèles          ("Modèles");
+			this.CreateDefaultViewSettingsPériodes         ("Périodes");
+			this.CreateDefaultViewSettingsRésuméPériodique ("RésuméPériodique");
 		}
 
 
@@ -381,6 +382,31 @@ namespace Epsitec.Cresus.Compta.IO
 			this.Select (list, nomPrésentation);
 		}
 
+		private void CreateDefaultViewSettingsRésuméPériodique(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+
+			bool searchExist  = true;
+			bool filterExist  = true;
+			bool optionsExist = true;
+
+			{
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Charges et produits", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (viewSettings.Filter);
+				this.SearchAdd (viewSettings.Filter);
+				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdd (viewSettings.Filter);
+				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
+			}
+
+			{
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Tout", searchExist, filterExist, optionsExist);
+				this.SearchAdaptForNonZero (viewSettings.Filter);
+			}
+
+			this.Select<RésuméPériodiqueOptions> (list, nomPrésentation);
+		}
+
 
 		private ViewSettingsData CreateViewSettingsData<T>(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
 			where T : AbstractOptions, new ()
@@ -435,8 +461,8 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var tab = data.NodesData[0].TabsData.Last ();
 
-			tab.SearchText.FromText = Converters.IntToString (minProfondeur);
-			tab.SearchText.ToText   = Converters.IntToString (maxProfondeur);
+			tab.SearchText.FromText = (minProfondeur == int.MaxValue) ? null : Converters.IntToString (minProfondeur);
+			tab.SearchText.ToText   = (maxProfondeur == int.MaxValue) ? null : Converters.IntToString (maxProfondeur);
 			tab.SearchText.Mode     = SearchMode.Interval;
 			tab.Column              = ColumnType.Profondeur;
 
@@ -462,7 +488,7 @@ namespace Epsitec.Cresus.Compta.IO
 			var tab = data.NodesData[0].TabsData.Last ();
 
 			tab.SearchText.FromText = Converters.CatégoriesToString (catégorie);
-			tab.SearchText.Mode     = SearchMode.Fragment;
+			tab.SearchText.Mode     = SearchMode.Jokers;
 			tab.Column              = ColumnType.Catégorie;
 
 			this.SearchAdaptOrMode (data);

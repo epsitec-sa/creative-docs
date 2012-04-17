@@ -99,10 +99,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var data = this.dataAccessor.GetReadOnlyData (row) as BalanceData;
 
 			var options = this.dataAccessor.Options as BalanceOptions;
+			int niveau = this.dataAccessor.FilterData.GetBeginnerNiveau (data.Niveau);
 
 			if (columnType == ColumnType.Titre)
 			{
-				for (int i = 0; i < data.Niveau; i++)
+				for (int i = 0; i < niveau; i++)
 				{
 					text = FormattedText.Concat (UIBuilder.leftIndentText, text);
 				}
@@ -121,7 +122,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				
 				if (!text.IsNullOrEmpty)
 				{
-					for (int i = 0; i < data.Niveau; i++)
+					for (int i = 0; i < niveau; i++)
 					{
 						text = FormattedText.Concat (text, UIBuilder.rightIndentText);
 					}

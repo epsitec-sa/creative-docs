@@ -78,23 +78,24 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var soldeCrédit = this.soldesJournalManager.GetSoldeCrédit (compte).GetValueOrDefault ();
 				var différence = soldeCrédit - soldeDébit;
 
-				var data = new BalanceData ();
+				var data = new BalanceData
+				{
+					Entity             = compte,
+					Numéro             = compte.Numéro,
+					Titre              = compte.Titre,
+					Catégorie          = compte.Catégorie,
+					Type               = compte.Type,
+					Niveau             = compte.Niveau,
+					Débit              = soldeDébit,
+					Crédit             = soldeCrédit,
 
-				data.Entity    = compte;
-				data.Numéro    = compte.Numéro;
-				data.Titre     = compte.Titre;
-				data.Catégorie = compte.Catégorie;
-				data.Type      = compte.Type;
-				data.Niveau    = compte.Niveau;
-				data.Débit     = soldeDébit;
-				data.Crédit    = soldeCrédit;
-
-				data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
-				data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
-				data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
-				data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
-				data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
-				data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
+					PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente),
+					PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième),
+					Budget             = this.GetBudget (compte, ComparisonShowed.Budget),
+					BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata),
+					BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur),
+					BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata),
+				};
 
 				if (différence < 0)
 				{
