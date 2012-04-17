@@ -42,7 +42,6 @@ namespace Epsitec.Common.Support.Extensions
 			}
 		}
 
-
 		public static System.IDisposable SuspendNotifications<T>(this IList<T> list)
 			where T : AbstractEntity, new()
 		{
@@ -55,6 +54,32 @@ namespace Epsitec.Common.Support.Extensions
 			else
 			{
 				return collection.SuspendNotifications ();
+			}
+		}
+
+		/// <summary>
+		/// Inserts the given element at the given position within the given list. The main
+		/// difference with the regular Insert method is that if the list is too small, it is
+		/// expanded with default values to the appropriate size before the element is added at its
+		/// end.
+		/// </summary>
+		public static void InsertAtIndex<T>(this IList<T> list, int index, T value)
+		{
+			list.ThrowIfNull ("list");
+			index.ThrowIf (i => i < 0, "index is smaller that zero");
+
+			if (index <= list.Count)
+			{
+				list.Insert (index, value);
+			}
+			else
+			{
+				while (list.Count < index)
+				{
+					list.Add (default (T));
+				}
+
+				list.Add (value);
 			}
 		}
 
