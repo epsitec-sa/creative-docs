@@ -8,7 +8,6 @@ using Epsitec.Common.Types;
 using System;
 
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 
 using System.Diagnostics;
 
@@ -87,7 +86,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignPersonsToHouseholds(IEnumerable<Tuple<EervPerson, Tuple<string, int>>> persons, Dictionary<string, EervHousehold> idToHouseholds)
+		private static void AssignPersonsToHouseholds(IEnumerable<Tuple<EervPerson, Tuple<string, int?>>> persons, Dictionary<string, EervHousehold> idToHouseholds)
 		{
 			foreach (var personData in persons)
 			{
@@ -129,6 +128,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 						break;
 
+					case null:
 					case 4:
 
 						household.Children.Add (person);
@@ -200,9 +200,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 		internal static IEnumerable<EervGroup> LoadEervGroups(FileInfo inputFile)
 		{
-			var groupedRecords = RecordHelper
-				.GetRecords (inputFile, 9)
-				.GroupBy (r => RecordHelper.GetString (r, GroupIndex.Id));
+			var groupedRecords = EervDataReader.ReadGroups (inputFile)
+				.GroupBy (g => g[GroupHeader.Id]);
 
 			foreach (var records in groupedRecords)
 			{
@@ -210,7 +209,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				foreach (var record in records)
 				{
-					var definitionId = RecordHelper.GetString (record, GroupIndex.DefinitionId);
+					var definitionId = record[GroupHeader.DefinitionId];
 
 					if (!string.IsNullOrWhiteSpace (definitionId) && !group.GroupDefinitionIds.Contains (definitionId))
 					{
@@ -226,10 +225,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervGroup GetEervGroup(ReadOnlyCollection<string> record)
+		private static EervGroup GetEervGroup(Dictionary<GroupHeader, string> group)
 		{
-			var id = RecordHelper.GetString (record, GroupIndex.Id);
-			var name = RecordHelper.GetString (record, GroupIndex.Name);
+			var id = group[GroupHeader.Id];
+			var name = group[GroupHeader.Name];
 
 			return new EervGroup (id, name);
 		}
@@ -237,24 +236,24 @@ namespace Epsitec.Aider.Data.Eerv
 
 		internal static IEnumerable<Tuple<EervActivity, string, string>> LoadEervActivities(FileInfo inputFile)
 		{
-			foreach (var record in RecordHelper.GetRecords (inputFile, 8))
+			foreach (var record in EervDataReader.ReadActivities (inputFile))
 			{
 				yield return EervParishDataLoader.GetEervActivity (record);
 			}
 		}
 
 
-		private static Tuple<EervActivity, string, string> GetEervActivity(ReadOnlyCollection<string> record)
+		private static Tuple<EervActivity, string, string> GetEervActivity(Dictionary<ActivityHeader, string> record)
 		{
-			var rawStartDate = RecordHelper.GetString(record, ActivityIndex.StartDate);
-			var rawEndDate = RecordHelper.GetString (record, ActivityIndex.EndDate);
+			var rawStartDate = record[ActivityHeader.StartDate];
+			var rawEndDate = record[ActivityHeader.EndDate];
 			
 			var startDate = StringUtils.ParseNullableDate (rawStartDate);
 			var endDate = StringUtils.ParseNullableDate(rawEndDate);
-			var remarks = RecordHelper.GetString(record, ActivityIndex.Remarks);
+			var remarks = record[ActivityHeader.Remarks];
 
-			var personId = RecordHelper.GetString (record, ActivityIndex.PersonId);
-			var groupId = RecordHelper.GetString (record, ActivityIndex.GroupId);
+			var personId = record[ActivityHeader.PersonId];
+			var groupId = record[ActivityHeader.GroupId];
 			
 			var activity = new EervActivity (startDate, endDate, remarks);
 
@@ -266,13 +265,13 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
-			foreach (var record in RecordHelper.GetRecords (inputFile, 53))
+			foreach (var record in EervDataReader.ReadPersons(inputFile))
 			{
 				var isHousehold = EervParishDataLoader.IsEervPerson (record);
 
 				if (isHousehold)
 				{
-					var householdId = RecordHelper.GetString (record, HouseholdIndex.Id);
+					var householdId = record[PersonHeader.HouseholdId];
 
 					if (!processedIds.Contains (householdId))
 					{
@@ -285,14 +284,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervHousehold GetEervHousehold(ReadOnlyCollection<string> record)
+		private static EervHousehold GetEervHousehold(Dictionary<PersonHeader, string> record)
 		{
-			var id = RecordHelper.GetString (record, HouseholdIndex.Id);
+			var id = record[PersonHeader.HouseholdId];
 
 			var address = EervParishDataLoader.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
 
-			var remarks = RecordHelper.GetString (record, HouseholdIndex.Remarks);
+			var remarks = record[PersonHeader.RemarksHousehold];
 
 			return new EervHousehold (id, address, coordinates, remarks);
 		}
@@ -331,9 +330,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervPerson, Tuple<string, int>>> LoadEervPersons(FileInfo inputFile)
+		internal static IEnumerable<Tuple<EervPerson, Tuple<string, int?>>> LoadEervPersons(FileInfo inputFile)
 		{
-			foreach (var record in RecordHelper.GetRecords (inputFile, 53))
+			foreach (var record in EervDataReader.ReadPersons(inputFile))
 			{
 				var isEervPerson = EervParishDataLoader.IsEervPerson (record);
 
@@ -347,7 +346,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		internal static IEnumerable<EervLegalPerson> LoadEervLegalPersons(FileInfo inputFile)
 		{
-			foreach (var record in RecordHelper.GetRecords (inputFile, 53))
+			foreach (var record in EervDataReader.ReadPersons(inputFile))
 			{
 				var isEervLegalPerson = !EervParishDataLoader.IsEervPerson (record);
 
@@ -359,84 +358,84 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static bool IsEervPerson(ReadOnlyCollection<string> record)
+		private static bool IsEervPerson(Dictionary<PersonHeader, string> record)
 		{
-			var corporateName = RecordHelper.GetString (record, PersonIndex.CorporateName);
-			var lastname = RecordHelper.GetString (record, PersonIndex.Lastname);
-			var firstname1 = RecordHelper.GetString (record, PersonIndex.Firstname1);
-			var firstname2 = RecordHelper.GetString (record, PersonIndex.Firstname2);
-			var firstname =EervParishDataLoader.GetFirstname (firstname1, firstname2);
+			var corporateName = record[PersonHeader.CorporateName];
+			var lastname = record[PersonHeader.Lastname];
+			var firstname1 = record[PersonHeader.Firstname1];
+			var firstname2 = record[PersonHeader.Firstname2];
+			var firstname = EervParishDataLoader.GetFirstname (firstname1, firstname2);
 
-			return string.IsNullOrWhiteSpace (corporateName)
-				&& !string.IsNullOrWhiteSpace (lastname)
-				&& !string.IsNullOrWhiteSpace (firstname);
+			return string.IsNullOrWhiteSpace (corporateName) &&
+				   !string.IsNullOrWhiteSpace (lastname) &&
+				   !string.IsNullOrWhiteSpace (firstname);
 		}
 
 
-		private static Tuple<EervPerson, Tuple<string, int>> GetEervPerson(ReadOnlyCollection<string> record)
+		private static Tuple<EervPerson, Tuple<string, int?>> GetEervPerson(Dictionary<PersonHeader, string> record)
 		{
-			var id = RecordHelper.GetString (record, PersonIndex.Id);
-			var firstname1 = RecordHelper.GetString (record, PersonIndex.Firstname1);
-			var firstname2 = RecordHelper.GetString (record, PersonIndex.Firstname2);
+			var id = record[PersonHeader.PersonId];
+			var firstname1 = record[PersonHeader.Firstname1];
+			var firstname2 = record[PersonHeader.Firstname2];
 			var firstname = EervParishDataLoader.GetFirstname (firstname1, firstname2);
-			
-			var lastname = RecordHelper.GetString (record, PersonIndex.Lastname);
-			var originalName = RecordHelper.GetString (record, PersonIndex.OriginalName);
-						
-			var rawDateOfBirth = RecordHelper.GetString(record, PersonIndex.DateOfBirth);
-			var rawDateOfDeath = RecordHelper.GetString (record, PersonIndex.DateOfDeath);
-			var rawMaritalStatus = RecordHelper.GetString (record, PersonIndex.MaritalStatus);
-			
-			var dateOfBirth = StringUtils.ParseNullableDate(rawDateOfBirth);
+
+			var lastname = record[PersonHeader.Lastname];
+			var originalName = record[PersonHeader.OriginalName];
+
+			var rawDateOfBirth = record[PersonHeader.DateOfBirth];
+			var rawDateOfDeath = record[PersonHeader.DateOfDeath];
+			var rawMaritalStatus = record[PersonHeader.MaritalStatus];
+
+			var dateOfBirth = StringUtils.ParseNullableDate (rawDateOfBirth);
 			Date? dateOfDeath = null;
 
-			if (rawMaritalStatus != null && rawMaritalStatus.ToLowerInvariant() == "dcd")
+			if (rawMaritalStatus != null && rawMaritalStatus.ToLowerInvariant () == "dcd")
 			{
-				dateOfDeath = StringUtils.ParseNullableDate(rawDateOfDeath);
+				dateOfDeath = StringUtils.ParseNullableDate (rawDateOfDeath);
 			}
 
-			var rawHonorific = RecordHelper.GetString(record, PersonIndex.Honorific);
-			var rawSex = RecordHelper.GetString (record, PersonIndex.Sex);
-			var rawConfession = RecordHelper.GetString (record, PersonIndex.Confession);
-			var rawDateOfBaptism = RecordHelper.GetString (record, PersonIndex.DateOfBaptism);
-			var rawDateOfChildBenediction = RecordHelper.GetString (record, PersonIndex.DateOfChildBenediction);
-			var rawDateOfCatechismBenediction = RecordHelper.GetString (record, PersonIndex.DateOfCatechismBenediction);
-			var rawSchoolYearOffset = RecordHelper.GetString (record, PersonIndex.SchoolYearOffset);
+			var rawHonorific = record[PersonHeader.Honorific];
+			var rawSex = record[PersonHeader.Sex];
+			var rawConfession = record[PersonHeader.Confession];
+			var rawDateOfBaptism = record[PersonHeader.DateOfBaptism];
+			var rawDateOfChildBenediction = record[PersonHeader.DateOfChildBenediction];
+			var rawDateOfCatechismBenediction = record[PersonHeader.DateOfCatechismBenediction];
+			var rawSchoolYearOffset = record[PersonHeader.SchoolYearOffset];
 
 			var honorific = EervParishDataLoader.ParseHonorific (rawHonorific);
-			var sex = EervParishDataLoader.ParseSex(rawSex);
-			var maritalStatus = EervParishDataLoader.ParseMaritalStatus(rawMaritalStatus);
-			var origins = RecordHelper.GetString (record, PersonIndex.Origins);
-			var profession = RecordHelper.GetString (record, PersonIndex.Profession);
-			var confession = EervParishDataLoader.ParseConfession(rawConfession);
-			var remarks = RecordHelper.GetString(record, PersonIndex.Remarks);
+			var sex = EervParishDataLoader.ParseSex (rawSex);
+			var maritalStatus = EervParishDataLoader.ParseMaritalStatus (rawMaritalStatus);
+			var origins = record[PersonHeader.Origins];
+			var profession = record[PersonHeader.Profession];
+			var confession = EervParishDataLoader.ParseConfession (rawConfession);
+			var remarks = record[PersonHeader.RemarksPerson];
 
-			var father = RecordHelper.GetString (record, PersonIndex.Father);
-			var mother = RecordHelper.GetString (record, PersonIndex.Mother);
-			var placeOfBirth = RecordHelper.GetString (record, PersonIndex.PlaceOfBirth);
-			var placeOfBaptism = RecordHelper.GetString (record, PersonIndex.PlaceOfBaptism);
-			var dateOfBaptism = StringUtils.ParseNullableDate(rawDateOfBaptism);
-			var placeOfChildBenediction = RecordHelper.GetString(record, PersonIndex.PlaceOfChildBenediction);
-			var dateOfChildBenediction = StringUtils.ParseNullableDate(rawDateOfChildBenediction);
-			var placeOfCatechismBenediction = RecordHelper.GetString(record, PersonIndex.PlaceOfCatechismBenediction);
-			var dateOfCatechismBenediction = StringUtils.ParseNullableDate(rawDateOfCatechismBenediction);
-			var schoolYearOffset = StringUtils.ParseNullableInt(rawSchoolYearOffset);
+			var father = record[PersonHeader.Father];
+			var mother = record[PersonHeader.Mother];
+			var placeOfBirth = record[PersonHeader.PlaceOfBirth];
+			var placeOfBaptism = record[PersonHeader.PlaceOfBaptism];
+			var dateOfBaptism = StringUtils.ParseNullableDate (rawDateOfBaptism);
+			var placeOfChildBenediction = record[PersonHeader.PlaceOfChildBenediction];
+			var dateOfChildBenediction = StringUtils.ParseNullableDate (rawDateOfChildBenediction);
+			var placeOfCatechismBenediction = record[PersonHeader.PlaceOfCatechismBenediction];
+			var dateOfCatechismBenediction = StringUtils.ParseNullableDate (rawDateOfCatechismBenediction);
+			var schoolYearOffset = StringUtils.ParseNullableInt (rawSchoolYearOffset);
 
 			var coordinates = EervParishDataLoader.GetCoordinates2 (record);
 
 			var person = new EervPerson (id, firstname, lastname, originalName, dateOfBirth, dateOfDeath, honorific, sex, maritalStatus, origins, profession, confession, remarks, father, mother, placeOfBirth, placeOfBaptism, dateOfBaptism, placeOfChildBenediction, dateOfChildBenediction, placeOfCatechismBenediction, dateOfCatechismBenediction, schoolYearOffset, coordinates);
-		
-			var householdId = RecordHelper.GetString (record, PersonIndex.HouseholdId);
-			var householdRank = int.Parse (RecordHelper.GetString (record, PersonIndex.HouseholdRank));
+
+			var householdId = record[PersonHeader.HouseholdId];
+			var householdRank = StringUtils.ParseNullableInt (record[PersonHeader.HouseholdRank]);
 
 			return Tuple.Create (person, Tuple.Create (householdId, householdRank));
 		}
 
 
-		private static EervLegalPerson GetEervLegalPerson(ReadOnlyCollection<string> record)
+		private static EervLegalPerson GetEervLegalPerson(Dictionary<PersonHeader, string> record)
 		{
-			var id = RecordHelper.GetString (record, PersonIndex.Id);
-			var name = RecordHelper.GetString (record, PersonIndex.CorporateName);
+			var id = record[PersonHeader.PersonId];
+			var name = record[PersonHeader.CorporateName];
 
 			var address = EervParishDataLoader.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
@@ -449,37 +448,37 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervAddress GetAddress(ReadOnlyCollection<string> record)
+		private static EervAddress GetAddress(Dictionary<PersonHeader, string> record)
 		{
-			var rawStreetNamePart1 = RecordHelper.GetString (record, HouseholdIndex.StreetNamePart1);
-			var rawStreetNamePart2 = RecordHelper.GetString (record, HouseholdIndex.StreetNamePart2);
-			var rawHouseNumber = RecordHelper.GetString (record, HouseholdIndex.HouseNumber);
+			var rawStreetNamePart1 = record[PersonHeader.StreetNamePart1];
+			var rawStreetNamePart2 = record[PersonHeader.StreetNamePart2];
+			var rawHouseNumber = record[PersonHeader.HouseNumber];
 			
-			var firstAddressLine = RecordHelper.GetString (record, HouseholdIndex.FirstAddressLine);
+			var firstAddressLine = record[PersonHeader.FirstAddressLine];
 			var streetName = EervParishDataLoader.GetStreetName (rawStreetNamePart1, rawStreetNamePart2);
 			var houseNumber = StringUtils.ParseNullableInt(rawHouseNumber);
-			var houseNumberComplement = RecordHelper.GetString(record, HouseholdIndex.HouseNumberComplement);
-			var zipCode = RecordHelper.GetString (record, HouseholdIndex.ZipCode);
-			var town = RecordHelper.GetString (record, HouseholdIndex.Town);
+			var houseNumberComplement = record[PersonHeader.HouseNumberComplement];
+			var zipCode = record[PersonHeader.ZipCode];
+			var town = record[PersonHeader.Town];
 
 			return new EervAddress (firstAddressLine, streetName, houseNumber, houseNumberComplement, zipCode, town);
 		}
 
 
-		private static EervCoordinates GetCoordinates1(ReadOnlyCollection<string> record)
+		private static EervCoordinates GetCoordinates1(Dictionary<PersonHeader, string> record)
 		{
-			var faxNumber = RecordHelper.GetString (record, HouseholdIndex.FaxNumber);
-			var privatePhoneNumber = RecordHelper.GetString (record, HouseholdIndex.PrivatePhoneNumber);
-			var professionalPhoneNumber = RecordHelper.GetString (record, HouseholdIndex.ProfessionalPhoneNumber);
+			var faxNumber = record[PersonHeader.FaxNumber];
+			var privatePhoneNumber = record[PersonHeader.PrivatePhoneNumber];
+			var professionalPhoneNumber = record[PersonHeader.ProfessionalPhoneNumber];
 
 			return new EervCoordinates (privatePhoneNumber, professionalPhoneNumber, null, faxNumber, null);
 		}
 
 
-		private static EervCoordinates GetCoordinates2(ReadOnlyCollection<string> record)
+		private static EervCoordinates GetCoordinates2(Dictionary<PersonHeader, string> record)
 		{
-			var emailAddress = RecordHelper.GetString (record, PersonIndex.EmailAddress);
-			var mobilePhoneNumber = RecordHelper.GetString (record, PersonIndex.MobilPhoneNumber);
+			var emailAddress = record[PersonHeader.EmailAddress];
+			var mobilePhoneNumber = record[PersonHeader.MobilPhoneNumber];
 
 			return new EervCoordinates (null, null, mobilePhoneNumber, null, emailAddress);
 		}
@@ -659,91 +658,6 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				Debug.WriteLine ("Warning: " + warning);
 			}
-		}
-
-
-		private static class ActivityIndex
-		{
-
-
-			public static readonly int PersonId = 1;
-			public static readonly int GroupId = 2;
-			public static readonly int StartDate = 4;
-			public static readonly int EndDate = 5;
-			public static readonly int Remarks = 7;
-
-
-		}
-
-
-		private static class GroupIndex
-		{
-
-
-			public static readonly int Id = 1;
-			public static readonly int DefinitionId = 6;
-			public static readonly int Name = 2;
-
-
-		}
-
-
-		private static class PersonIndex
-		{
-
-
-			public static readonly int Id = 23;
-			public static readonly int Firstname1 = 2;
-			public static readonly int Firstname2 = 3;
-			public static readonly int Lastname = 0;
-			public static readonly int OriginalName = 1;
-			public static readonly int CorporateName = 4;
-			public static readonly int DateOfBirth = 30;
-			public static readonly int DateOfDeath = 35;
-			public static readonly int Honorific = 5;
-			public static readonly int Sex = 6;
-			public static readonly int MaritalStatus = 8;
-			public static readonly int Origins = 7;
-			public static readonly int Profession = 15;
-			public static readonly int Confession = 18;
-			public static readonly int EmailAddress = 16;
-			public static readonly int MobilPhoneNumber = 17;
-			public static readonly int Remarks = 22;
-			public static readonly int Father = 9;
-			public static readonly int Mother = 10;
-			public static readonly int PlaceOfBirth = 11;
-			public static readonly int PlaceOfBaptism = 19;
-			public static readonly int DateOfBaptism = 32;
-			public static readonly int PlaceOfChildBenediction = 20;
-			public static readonly int DateOfChildBenediction = 33;
-			public static readonly int PlaceOfCatechismBenediction = 21;
-			public static readonly int DateOfCatechismBenediction = 34;
-			public static readonly int SchoolYearOffset = 29;
-			public static readonly int HouseholdId = 24;
-			public static readonly int HouseholdRank = 28;
-
-
-		}
-
-
-		private static class HouseholdIndex
-		{
-
-
-			public static readonly int Id = 24;
-			public static readonly int FirstAddressLine = 40;
-			public static readonly int StreetNamePart1 = 41;
-			public static readonly int StreetNamePart2 = 42;
-			public static readonly int HouseNumber = 43;
-			public static readonly int HouseNumberComplement = 44;
-			public static readonly int PrivatePhoneNumber = 47;
-			public static readonly int ProfessionalPhoneNumber = 48;
-			public static readonly int FaxNumber = 49;
-			public static readonly int ZipCode = 50;
-			public static readonly int Town = 51;
-			public static readonly int Remarks = 52;
-
-
 		}
 
 

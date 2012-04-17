@@ -16,9 +16,9 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static EervMainData LoadEervData(FileInfo groupDefinitionFile)
+		public static EervMainData LoadEervData(FileInfo inputFile)
 		{
-			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
+			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (inputFile).ToList ();
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
@@ -28,8 +28,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		internal static IEnumerable<EervGroupDefinition> LoadEervGroupDefinitions(FileInfo inputFile)
 		{
-			// Skip the 4 first lines of the file as they are titles.
-			var records = RecordHelper.GetRecords (inputFile, 45).Skip (4);
+			var records = EervDataReader.ReadGroupDefinitions (inputFile);
 
 			var parents = new Stack<EervGroupDefinition> ();
 
@@ -64,11 +63,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static int GetEervGroupDefinitionLevel(ReadOnlyCollection<string> record)
+		private static int GetEervGroupDefinitionLevel(Dictionary<GroupDefinitionHeader, string> record)
 		{
-			for (int i = 0; i < GroupDefinitionIndex.Names.Count; i++)
+			for (int i = 0; i < EervMainDataLoader.names.Count; i++)
 			{
-				var name = RecordHelper.GetString (record, GroupDefinitionIndex.Names[i]);
+				var name = record[EervMainDataLoader.names[i]];
 
 				if (!string.IsNullOrEmpty (name))
 				{
@@ -80,10 +79,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervGroupDefinition GetEervGroupDefinition(ReadOnlyCollection<string> record, int groupLevel)
+		private static EervGroupDefinition GetEervGroupDefinition(Dictionary<GroupDefinitionHeader, string> record, int groupLevel)
 		{
-			var id = RecordHelper.GetString (record, GroupDefinitionIndex.Id);
-			var name = RecordHelper.GetString (record, GroupDefinitionIndex.Names[groupLevel]);
+			var id = record[GroupDefinitionHeader.Id];
+			var name = record[EervMainDataLoader.names[groupLevel]];
 
 			return new EervGroupDefinition (id, name);
 		}
@@ -104,32 +103,17 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static class GroupDefinitionIndex
-		{
-
-
-			public static readonly int Id = 2;
-			public static readonly int NameLevel1 = 4;
-			public static readonly int NameLevel2 = 6;
-			public static readonly int NameLevel3 = 8;
-			public static readonly int NameLevel4 = 10;
-			public static readonly int NameLevel5 = 12;
-
-
-			public static readonly ReadOnlyCollection<int> Names = new ReadOnlyCollection<int>
-			(
-				new List<int> ()
-				{
-					GroupDefinitionIndex.NameLevel1,
-					GroupDefinitionIndex.NameLevel2,
-					GroupDefinitionIndex.NameLevel3,
-					GroupDefinitionIndex.NameLevel4,
-					GroupDefinitionIndex.NameLevel5,
-				}
-			);
-
-
-		}
+		private static readonly ReadOnlyCollection<GroupDefinitionHeader> names = new ReadOnlyCollection<GroupDefinitionHeader>
+		(
+			new List<GroupDefinitionHeader> ()
+			{
+				GroupDefinitionHeader.NameLevel1,
+				GroupDefinitionHeader.NameLevel2,
+				GroupDefinitionHeader.NameLevel3,
+				GroupDefinitionHeader.NameLevel4,
+				GroupDefinitionHeader.NameLevel5,
+			}
+		);
 
 
 	}

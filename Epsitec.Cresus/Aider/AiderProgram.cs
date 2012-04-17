@@ -12,7 +12,6 @@ using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Data.Platform;
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -117,16 +116,16 @@ namespace Epsitec.Aider
 
 				var businessContextManager = new BusinessContextManager (app.Data);
 
-				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
+				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-04-04.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextManager, eChReportedPersons);
 
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (businessContextManager, parishRepository);
 
-				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
-				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.csv");
-				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.csv");
+				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
+				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
+				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
 				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile);
 				EervParishDataImporter.Import (businessContextManager, "Morges", eervParishData);
 

@@ -72,7 +72,7 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private readonly FileInfo GroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupe definition.csv");
+		private readonly FileInfo GroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
 		
 
 	}

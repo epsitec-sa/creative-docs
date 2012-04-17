@@ -9,8 +9,6 @@ using Epsitec.Cresus.Core.Library.UI;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System;
-
 using System.IO;
 
 using System.Linq;
@@ -50,9 +48,9 @@ namespace Aider.Tests.Vs
 				var parishRepository = ParishAddressRepository.Current;
 				EervMainDataImporter.Import (businessContextManager, parishRepository);
 
-				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.csv");
-				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.csv");
-				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.csv");
+				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
+				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
+				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
 				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile);
 				EervParishDataImporter.Import (businessContextManager, "Morges", eervParishData);
 
