@@ -152,15 +152,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				int rank = column - ColumnType.Solde1;
 				var solde = data.GetSolde (rank);
-
-				if (solde.GetValueOrDefault () == 0)
-				{
-					return FormattedText.Empty;
-				}
-				else
-				{
-					return Converters.MontantToString (solde, this.compta.Monnaies[0]);
-				}
+				return Converters.MontantToString (solde, this.compta.Monnaies[0]);
 			}
 
 			switch (column)

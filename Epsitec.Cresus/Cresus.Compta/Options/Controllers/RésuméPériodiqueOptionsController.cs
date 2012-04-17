@@ -143,7 +143,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState = this.Options.Cumul ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState = this.Options.Cumul    ? ActiveState.Yes : ActiveState.No;
+				this.nullButton.ActiveState  = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
