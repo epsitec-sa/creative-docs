@@ -98,6 +98,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
+			this.graphicButton = new CheckButton
+			{
+				Parent         = frame,
+				FormattedText  = "Graphique",
+				PreferredWidth = 100,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
 			this.monthsField.SelectedItemChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -124,6 +133,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.OptionsChanged ();
 				}
 			};
+
+			this.graphicButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.HasGraphics = (this.graphicButton.ActiveState == ActiveState.Yes);
+					this.OptionsChanged ();
+				}
+			};
 		}
 
 
@@ -143,8 +161,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState = this.Options.Cumul    ? ActiveState.Yes : ActiveState.No;
-				this.nullButton.ActiveState  = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState   = this.Options.Cumul       ? ActiveState.Yes : ActiveState.No;
+				this.nullButton.ActiveState    = this.Options.HideZero    ? ActiveState.Yes : ActiveState.No;
+				this.graphicButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -156,22 +175,22 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			switch (index)
 			{
 				case 0:
-					return 1;
+					return 1;  // mensuel
 
 				case 1:
-					return 2;
+					return 2;  // bimestriel
 
 				case 2:
-					return 3;
+					return 3;  // trimestriel
 
 				case 3:
-					return 6;
+					return 6;  // semestriel
 
 				case 4:
-					return 12;
+					return 12;  // annuel
 
 				default:
-					return 0;
+					return 0;  // inconnu
 			}
 		}
 
@@ -188,5 +207,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
 		private CheckButton			nullButton;
+		private CheckButton			graphicButton;
 	}
 }

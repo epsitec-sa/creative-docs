@@ -8,6 +8,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
-			//	Crée un SoldesJournalManager par colunne.
+			//	Crée un SoldesJournalManager par colonne.
 			var soldesManagers = new List<SoldesJournalManager> ();
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{
@@ -64,6 +65,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				soldesManagers.Add (soldesManager);
 			});
 
+			this.columnCount = soldesManagers.Count;
+			this.minTotal = decimal.MaxValue;
+			this.maxTotal = decimal.MinValue;
+
 			//	Génère les différentes lignes, une par compte.
 			foreach (var compte in this.compta.PlanComptable)
 			{
@@ -71,22 +76,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					continue;
 				}
-
-#if false
-				bool empty = true;
-				for (int i = 0; i < soldesManagers.Count; i++)
-				{
-					var solde = soldesManagers[i].GetSolde (compte);
-					if (solde.GetValueOrDefault () != 0)
-					{
-						empty = false;
-					}
-				}
-				if (empty)
-				{
-					continue;
-				}
-#endif
 
 				var data = new RésuméPériodiqueData
 				{
@@ -103,10 +92,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var solde = soldesManagers[i].GetSolde (compte).GetValueOrDefault ();
 					data.SetSolde (i, solde);
-					total += solde;
+					total += System.Math.Abs (solde);
 				}
 
 				data.Solde = total;
+
+				this.minTotal = System.Math.Min (this.minTotal, total);
+				this.maxTotal = System.Math.Max (this.maxTotal, total);
 
 				this.readonlyAllData.Add (data);
 			}
@@ -172,11 +164,45 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.Profondeur:
 					return (data.Niveau+1).ToString ();
 
+				case ColumnType.SoldeGraphique:
+					return this.GetMinMaxText (data);
+
 				case ColumnType.Solde:
 					return Converters.MontantToString (data.Solde, this.compta.Monnaies[0]);
 
 				default:
 					return FormattedText.Null;
+			}
+		}
+
+		private FormattedText GetMinMaxText(RésuméPériodiqueData data)
+		{
+			if (this.minValue == decimal.MaxValue ||
+				this.maxValue == decimal.MinValue)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				var builder = new System.Text.StringBuilder ();
+
+				builder.Append (StringArray.SpecialContentGraphicValue);
+				builder.Append ("/");
+				builder.Append (Converters.MontantToString (this.minTotal, null));
+				builder.Append ("/");
+				builder.Append (Converters.MontantToString (this.maxTotal, null));
+				builder.Append ("/");
+				builder.Append (Converters.MontantToString (this.columnCount, null));
+
+				for (int i = 0; i < 12; i++)
+				{
+					var solde = System.Math.Abs (data.GetSolde (i).GetValueOrDefault ());
+
+					builder.Append ("/");
+					builder.Append (Converters.MontantToString (solde, null));
+				}
+
+				return builder.ToString ();
 			}
 		}
 
@@ -188,5 +214,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return this.options as RésuméPériodiqueOptions;
 			}
 		}
+
+
+		private int			columnCount;
+		private decimal		minTotal;
+		private decimal		maxTotal;
 	}
 }

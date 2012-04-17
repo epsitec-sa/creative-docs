@@ -191,25 +191,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Numéro,     0.20, ContentAlignment.MiddleLeft,  "Numéro");
-				yield return new ColumnMapper (ColumnType.Titre,      1.00, ContentAlignment.MiddleLeft,  "Titre du compte");
-																      
-				yield return new ColumnMapper (ColumnType.Solde1,     0.20, ContentAlignment.MiddleRight, "1");
-				yield return new ColumnMapper (ColumnType.Solde2,     0.20, ContentAlignment.MiddleRight, "2");
-				yield return new ColumnMapper (ColumnType.Solde3,     0.20, ContentAlignment.MiddleRight, "3");
-				yield return new ColumnMapper (ColumnType.Solde4,     0.20, ContentAlignment.MiddleRight, "4");
-				yield return new ColumnMapper (ColumnType.Solde5,     0.20, ContentAlignment.MiddleRight, "5");
-				yield return new ColumnMapper (ColumnType.Solde6,     0.20, ContentAlignment.MiddleRight, "6");
-				yield return new ColumnMapper (ColumnType.Solde7,     0.20, ContentAlignment.MiddleRight, "7");
-				yield return new ColumnMapper (ColumnType.Solde8,     0.20, ContentAlignment.MiddleRight, "8");
-				yield return new ColumnMapper (ColumnType.Solde9,     0.20, ContentAlignment.MiddleRight, "9");
-				yield return new ColumnMapper (ColumnType.Solde10,    0.20, ContentAlignment.MiddleRight, "10");
-				yield return new ColumnMapper (ColumnType.Solde11,    0.20, ContentAlignment.MiddleRight, "11");
-				yield return new ColumnMapper (ColumnType.Solde12,    0.20, ContentAlignment.MiddleRight, "12");
+				yield return new ColumnMapper (ColumnType.Numéro,         0.20, ContentAlignment.MiddleLeft,  "Numéro");
+				yield return new ColumnMapper (ColumnType.Titre,          1.00, ContentAlignment.MiddleLeft,  "Titre du compte");
+																          
+				yield return new ColumnMapper (ColumnType.Solde1,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde2,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde3,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde4,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde5,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde6,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde7,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde8,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde9,         0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde10,        0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde11,        0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.Solde12,        0.20, ContentAlignment.MiddleRight, "");
+				yield return new ColumnMapper (ColumnType.SoldeGraphique, 0.40, ContentAlignment.MiddleRight, "", hideForSearch: true);
 
-				yield return new ColumnMapper (ColumnType.Solde,      0.20, ContentAlignment.MiddleRight, "Solde",      show: false);
-				yield return new ColumnMapper (ColumnType.Catégorie,  0.20, ContentAlignment.MiddleLeft,  "Catégorie",  show: false);
-				yield return new ColumnMapper (ColumnType.Profondeur, 0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
+				yield return new ColumnMapper (ColumnType.Solde,          0.20, ContentAlignment.MiddleRight, "Solde",      show: false);
+				yield return new ColumnMapper (ColumnType.Catégorie,      0.20, ContentAlignment.MiddleLeft,  "Catégorie",  show: false);
+				yield return new ColumnMapper (ColumnType.Profondeur,     0.20, ContentAlignment.MiddleLeft,  "Profondeur", show: false);
 			}
 		}
 
@@ -229,6 +230,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.ShowHideColumn (ColumnType.Solde1+index, true);
 				this.SetColumnDescription (ColumnType.Solde1+index, Dates.GetMonthShortDescription (dateDébut, Dates.AddDays (dateFin, -1)));
 			});
+
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 		}
 	}
 }

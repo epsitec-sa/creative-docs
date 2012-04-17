@@ -744,31 +744,39 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Le format est "$${_graphic_}$$/-10/100/55.2" ou "$${_graphic_}$$/-10/100/55.2/60".
 			var words = text.Split ('/');
 
-			if (words.Length < 4 || words.Length > 5)
+			if (words.Length < 4)
 			{
 				return;
 			}
 
 			decimal? min    = Converters.ParseMontant (words[1]);
 			decimal? max    = Converters.ParseMontant (words[2]);
-			decimal? value1 = Converters.ParseMontant (words[3]);
-			decimal? value2 = (words.Length >= 5) ? Converters.ParseMontant (words[4]) : 0;
 
-			if (!min.HasValue || !max.HasValue || !value1.HasValue || !value2.HasValue)
+			var values = new List<decimal> ();
+
+			for (int i = 3; i < words.Length; i++)
 			{
-				return;
+				decimal? value = Converters.ParseMontant (words[i]);
+
+				if (!value.HasValue)
+				{
+					return;
+				}
+				
+				values.Add (value.Value);
 			}
 
-			min = System.Math.Min (min.Value, 0);
-			max = System.Math.Max (max.Value, 0);
-
-			if (words.Length == 5)
+			if (words.Length == 3+1)
 			{
-				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, value1.Value, value2.Value);
+				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values[0]);
 			}
-			else
+			else if (words.Length == 3+2)
 			{
-				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, value1.Value);
+				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values[0], values[1]);
+			}
+			else if (words.Length == 3+1+12)
+			{
+				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values);
 			}
 		}
 
@@ -857,6 +865,52 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
 			graphics.AddLine (rect.Left+sol, rect.Bottom, rect.Left+sol, rect.Top);
 			graphics.RenderSolid (Color.FromBrightness (0));
+
+			graphics.AddRectangle (rect);
+			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
+		}
+
+		private void PaintGraphicValue(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
+		{
+			if (max == 0)
+			{
+				return;
+			}
+
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromAlphaColor (0.5, adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0)));
+
+			rect.Deflate (2);
+			rect = graphics.Align (rect);
+			rect.Deflate (0.5);
+
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromBrightness (1));
+
+			int columnCount = (int) values[0];
+
+			double x = 0;
+			for (int i = 0; i < 12; i++)
+			{
+				var value = values[i+1];
+
+				if (value != 0)
+				{
+					double dx = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
+					var color = Color.FromHsv (360/columnCount*i, 1, 1);
+
+					var r = new Rectangle (rect.Left+x-0.5, rect.Bottom, dx+1, rect.Height);
+					graphics.AddFilledRectangle (r);
+					graphics.RenderSolid (color);
+
+					graphics.AddLine (rect.Left+x+dx, rect.Bottom, rect.Left+x+dx, rect.Top);
+					graphics.RenderSolid (Color.FromBrightness (0));
+
+					x += dx+1;
+				}
+			}
 
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
