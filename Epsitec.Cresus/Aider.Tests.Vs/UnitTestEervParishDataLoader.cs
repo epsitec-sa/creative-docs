@@ -7,6 +7,8 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System;
 
+using System.Collections.Generic;
+
 using System.IO;
 
 using System.Linq;
@@ -93,18 +95,18 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervGroupsTest()
 		{
-			var groups = EervParishDataLoader.LoadEervGroups (this.GroupFile).ToList ();
+			var groups = EervParishDataLoader.LoadEervGroups (this.GroupFile, this.SuperGroupFile).ToList ();
 
-			Assert.AreEqual (171, groups.Count);
+			Assert.AreEqual (180, groups.Count);
 
-			var g1 = new EervGroup ("4030000008", "Office de Taizé");
-			g1.GroupDefinitionIds.Add ("0403110100");
-			g1.GroupDefinitionIds.Add ("0403060100");
+			var g1 = Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), new List<string> () { "0403110000" });
 			this.CheckForEquality (g1, groups[0]);
 
-			var g2 = new EervGroup ("4030000103", "Groupes d'adultes");
-			g2.GroupDefinitionIds.Add ("0403111700");
+			var g2 = Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" });
 			this.CheckForEquality (g2, groups[16]);
+
+			var g3 = Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> () { });
+			this.CheckForEquality (g3, groups[176]);
 		}
 
 
@@ -113,13 +115,13 @@ namespace Aider.Tests.Vs
 		{
 			var activities = EervParishDataLoader.LoadEervActivities (this.ActivityFile).ToList ();
 
-			Assert.AreEqual (7313, activities.Count);
+			Assert.AreEqual (6330, activities.Count);
 
-			var a1 = Tuple.Create (new EervActivity (new Date (2004, 8, 20), null, null), "4030010057", "4030000147");
+			var a1 = Tuple.Create (new EervActivity (new Date (2004, 8, 20), null, null), "4030010057", "0403050209");
 			this.CheckForEquality (a1, activities[0]);
 
-			var a2 = Tuple.Create (new EervActivity (new Date (2005, 8, 22), new Date (2006, 8, 21), null), "4030042696", "4030000130");
-			this.CheckForEquality (a2, activities[2318]);
+			var a2 = Tuple.Create (new EervActivity (new Date (2005, 8, 22), new Date (2006, 8, 21), null), "4030042696", "0403112400");
+			this.CheckForEquality (a2, activities[2289]);
 		}
 
 
@@ -133,16 +135,17 @@ namespace Aider.Tests.Vs
 		}
 
 
+		private void CheckForEquality(Tuple<EervGroup, List<string>> expected, Tuple<EervGroup, List<string>> actual)
+		{
+			this.CheckForEquality (expected.Item1, actual.Item1);
+			CollectionAssert.AreEqual (expected.Item2, actual.Item2);
+		}
+
+
 		private void CheckForEquality(EervGroup expected, EervGroup actual)
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
 			Assert.AreEqual (expected.Name, actual.Name);
-			Assert.AreEqual (expected.GroupDefinitionIds.Count, actual.GroupDefinitionIds.Count);
-
-			for (int i = 0; i < expected.GroupDefinitionIds.Count; i++)
-			{
-				Assert.AreEqual (expected.GroupDefinitionIds[i], actual.GroupDefinitionIds[i]);
-			}
 		}
 
 
@@ -226,6 +229,7 @@ namespace Aider.Tests.Vs
 
 		private readonly FileInfo PersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
 		private readonly FileInfo GroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
+		private readonly FileInfo SuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx");
 		private readonly FileInfo ActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
 
 

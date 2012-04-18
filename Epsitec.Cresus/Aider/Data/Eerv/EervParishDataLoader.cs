@@ -24,32 +24,34 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static EervParishData LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile)
+		public static EervParishData LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile)
 		{
 			var households = EervParishDataLoader.LoadEervHouseholds (personFile).ToList ();
 			var persons = EervParishDataLoader.LoadEervPersons (personFile).ToList ();
 			var legalPersons = EervParishDataLoader.LoadEervLegalPersons (personFile).ToList ();
 			var activities = EervParishDataLoader.LoadEervActivities (activityFile).ToList ();
-			var groups = EervParishDataLoader.LoadEervGroups (groupFile).ToList ();
+			var groups = EervParishDataLoader.LoadEervGroups (groupFile, superGroupFile).ToList ();
 
 			var rawPersons = persons.Select (t => t.Item1).ToList ();
-			var rawActivities = activities.Select(t => t.Item1);
-			
+			var rawActivities = activities.Select (t => t.Item1).ToList ();
+			var rawGroups = groups.Select (t => t.Item1).ToList ();
+
 			var idToHouseholds = households.ToDictionary (h => h.Id);
 			var idToPersons = rawPersons.ToDictionary (p => p.Id);
 			var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
-			var idToGroups = groups.ToDictionary (g => g.Id);
+			var idToGroups = rawGroups.ToDictionary (g => g.Id);
 
 			var filteredActivities = EervParishDataLoader.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups);
 
 			EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
+			EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
 			EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
 
 			EervParishDataLoader.FilterHouseholdsAndPersons (households, rawPersons);
 
-			EervParishDataLoader.FreezeData (rawActivities, groups, legalPersons, rawPersons, households);
+			EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
-			return new EervParishData(households, rawPersons, legalPersons, groups);
+			return new EervParishData(households, rawPersons, legalPersons, rawGroups);
 		}
 
 
@@ -198,39 +200,65 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<EervGroup> LoadEervGroups(FileInfo inputFile)
+		private static void AssignSuperGroups(IEnumerable<Tuple<EervGroup, List<string>>> groups, Dictionary<string, EervGroup> idToGroups)
 		{
-			var groupedRecords = EervDataReader.ReadGroups (inputFile)
-				.GroupBy (g => g[GroupHeader.Id]);
-
-			foreach (var records in groupedRecords)
+			foreach (var item in groups)
 			{
-				var group = EervParishDataLoader.GetEervGroup (records.First ());
+				var group = item.Item1;
 
-				foreach (var record in records)
+				foreach (var superGroupId in item.Item2)
 				{
-					var definitionId = record[GroupHeader.DefinitionId];
+					EervGroup superGroup;
 
-					if (!string.IsNullOrWhiteSpace (definitionId) && !group.GroupDefinitionIds.Contains (definitionId))
+					if (idToGroups.TryGetValue (superGroupId, out superGroup))
 					{
-						group.GroupDefinitionIds.Add (definitionId);
+						group.SuperGroups.Add (superGroup);
+						superGroup.SubGroups.Add (group);
 					}
-				}
-
-				if (group.GroupDefinitionIds.Any ())
-				{
-					yield return group;
 				}
 			}
 		}
 
 
-		private static EervGroup GetEervGroup(Dictionary<GroupHeader, string> group)
+		internal static IEnumerable<Tuple<EervGroup, List<string>>> LoadEervGroups(FileInfo groupFile, FileInfo superGroupFile)
 		{
-			var id = group[GroupHeader.Id];
+			var groups = EervDataReader.ReadGroups (groupFile);
+			var superGroups = EervDataReader.ReadSuperGroups (superGroupFile);
+
+			return from record in groups.Concat (superGroups)
+				   select EervParishDataLoader.GetEervGroup (record);
+		}
+
+
+		private static Tuple<EervGroup, List<string>> GetEervGroup(Dictionary<GroupHeader, string> group)
+		{
+			var id = EervParishDataLoader.PadGroupId (group[GroupHeader.Id]);
 			var name = group[GroupHeader.Name];
 
-			return new EervGroup (id, name);
+			var superGroupIds = new List<string> ();
+			var superGroupId = EervParishDataLoader.PadGroupId (group[GroupHeader.SuperGroupId]);
+
+			if (!string.IsNullOrWhiteSpace (superGroupId))
+			{
+				superGroupIds.Add (superGroupId);
+			}
+
+			var eervGroup = new EervGroup (id, name);
+
+			return Tuple.Create (eervGroup, superGroupIds);
+		}
+
+
+		private static string PadGroupId(string groupId)
+		{
+			var normalizedGroupId = groupId;
+
+			if (normalizedGroupId != null)
+			{
+				normalizedGroupId = normalizedGroupId.PadLeft (10, '0');
+			}
+
+			return normalizedGroupId;
 		}
 
 
@@ -253,7 +281,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var remarks = record[ActivityHeader.Remarks];
 
 			var personId = record[ActivityHeader.PersonId];
-			var groupId = record[ActivityHeader.GroupId];
+			var groupId = EervParishDataLoader.PadGroupId (record[ActivityHeader.GroupId]);
 			
 			var activity = new EervActivity (startDate, endDate, remarks);
 

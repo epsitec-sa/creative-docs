@@ -26,6 +26,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public static IEnumerable<Dictionary<GroupHeader, string>> ReadSuperGroups(FileInfo input)
+		{
+			return EervDataReader.GetRecords (input, EervDataReader.superGroupHeaders);
+		}
+
+
 		public static IEnumerable<Dictionary<ActivityHeader, string>> ReadActivities(FileInfo input)
 		{
 			return EervDataReader.GetRecords (input, EervDataReader.activityHeaders);
@@ -205,7 +211,7 @@ namespace Epsitec.Aider.Data.Eerv
 							value = DateTime.FromOADate (double.Parse (value)).ToShortDateString ();
 						}
 					}
-				}		
+				}
 			}
 
 			return value;
@@ -263,8 +269,16 @@ namespace Epsitec.Aider.Data.Eerv
 		private static readonly Dictionary<GroupHeader, string> groupHeaders = new Dictionary<GroupHeader, string> ()
 		{
 			{ GroupHeader.Id, "IdxG" },
-			{ GroupHeader.DefinitionId, "IdxGD" },
 			{ GroupHeader.Name, "DesG" },
+			{ GroupHeader.SuperGroupId, "IdxSG" },
+		};
+
+
+		private static readonly Dictionary<GroupHeader, string> superGroupHeaders = new Dictionary<GroupHeader, string> ()
+		{
+			{ GroupHeader.Id, "IdxSG" },
+			{ GroupHeader.Name, "DesSG" },
+			{ GroupHeader.SuperGroupId, "DUMMY" },
 		};
 
 
@@ -341,8 +355,8 @@ namespace Epsitec.Aider.Data.Eerv
 	internal enum GroupHeader
 	{
 		Id,
-		DefinitionId,
 		Name,
+		SuperGroupId
 	}
 
 

@@ -19,16 +19,8 @@ namespace Epsitec.Aider.Data.Eerv
 			this.Name = name;
 
 			this.activities = new List<EervActivity> ();
-			this.groupDefinitionIds = new List<string> ();
-		}
-
-
-		public IList<string> GroupDefinitionIds
-		{
-			get
-			{
-				return this.groupDefinitionIds;
-			}
+			this.subGroups = new List<EervGroup> ();
+			this.superGroups = new List<EervGroup> ();
 		}
 
 
@@ -41,10 +33,29 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public IList<EervGroup> SubGroups
+		{
+			get
+			{
+				return this.subGroups;
+			}
+		}
+
+
+		public IList<EervGroup> SuperGroups
+		{
+			get
+			{
+				return this.superGroups;
+			}
+		}
+
+
 		protected override void HandleFreeze()
 		{
 			this.activities = this.activities.AsReadOnlyCollection ();
-			this.groupDefinitionIds = this.groupDefinitionIds.AsReadOnlyCollection ();
+			this.subGroups = this.subGroups.AsReadOnlyCollection ();
+			this.superGroups = this.superGroups.AsReadOnlyCollection ();
 		}
 
 
@@ -53,7 +64,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 
 		private IList<EervActivity> activities;
-		private IList<string> groupDefinitionIds;
+		private IList<EervGroup> subGroups;
+		private IList<EervGroup> superGroups;
 
 
 	}
