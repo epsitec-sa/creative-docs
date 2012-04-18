@@ -228,6 +228,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 			}
+
+			this.UpdateAfterFilterUpdated ();
+		}
+
+		protected virtual void UpdateAfterFilterUpdated()
+		{
 		}
 
 		protected bool FilterLine(int row)

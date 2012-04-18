@@ -66,8 +66,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			});
 
 			this.columnCount = soldesManagers.Count;
-			this.minTotal = decimal.MaxValue;
-			this.maxTotal = decimal.MinValue;
 
 			//	Génère les différentes lignes, une par compte.
 			foreach (var compte in this.compta.PlanComptable)
@@ -92,13 +90,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					var solde = soldesManagers[i].GetSolde (compte).GetValueOrDefault ();
 					data.SetSolde (i, solde);
-					total += System.Math.Abs (solde);
+					total += System.Math.Max (solde, 0);
 				}
 
 				data.Solde = total;
-
-				this.minTotal = System.Math.Min (this.minTotal, total);
-				this.maxTotal = System.Math.Max (this.maxTotal, total);
 
 				this.readonlyAllData.Add (data);
 			}
@@ -128,6 +123,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 				dateDébut = dateFin;
 			}
 			while (dateFin < finPériode);
+		}
+
+
+		protected override void UpdateAfterFilterUpdated()
+		{
+			this.MinMaxClear ();
+
+			foreach (var d in this.readonlyData)
+			{
+				var data = d as RésuméPériodiqueData;
+				decimal solde = 0;
+
+				if (this.Options.Cumul)
+				{
+					solde = data.GetSolde (this.columnCount-1).GetValueOrDefault ();
+				}
+				else
+				{
+					for (int i = 0; i < this.columnCount; i++)
+					{
+						solde += data.GetSolde (i).GetValueOrDefault ();
+					}
+				}
+
+				this.SetMinMaxValue (solde);
+			}
 		}
 
 
@@ -188,15 +209,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				builder.Append (StringArray.SpecialContentGraphicValue);
 				builder.Append ("/");
-				builder.Append (Converters.MontantToString (this.minTotal, null));
+				builder.Append (Converters.MontantToString (this.minValue, null));
 				builder.Append ("/");
-				builder.Append (Converters.MontantToString (this.maxTotal, null));
+				builder.Append (Converters.MontantToString (this.maxValue, null));
 				builder.Append ("/");
 				builder.Append (Converters.MontantToString (this.columnCount, null));
 
+				decimal lastSolde = 0;
+
 				for (int i = 0; i < 12; i++)
 				{
-					var solde = System.Math.Abs (data.GetSolde (i).GetValueOrDefault ());
+					var solde = System.Math.Max (data.GetSolde (i).GetValueOrDefault (), 0);
+					var soldeBrut = solde;
+
+					if (this.Options.Cumul)
+					{
+						solde -= lastSolde;
+					}
+
+					lastSolde = soldeBrut;
 
 					builder.Append ("/");
 					builder.Append (Converters.MontantToString (solde, null));
@@ -217,7 +248,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 
 		private int			columnCount;
-		private decimal		minTotal;
-		private decimal		maxTotal;
 	}
 }

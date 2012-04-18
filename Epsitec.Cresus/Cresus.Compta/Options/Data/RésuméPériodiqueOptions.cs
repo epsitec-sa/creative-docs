@@ -21,8 +21,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.NumberOfMonths = 3;
-			this.HideZero = true;
+			this.NumberOfMonths = 3;  // périodicité trimestrielle
+			this.Cumul          = false;
+			this.HideZero       = true;
+			this.HasGraphics    = true;
 		}
 
 

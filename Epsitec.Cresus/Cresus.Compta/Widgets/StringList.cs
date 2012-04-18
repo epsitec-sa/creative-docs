@@ -872,6 +872,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void PaintGraphicValue(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
 		{
+			//	Dessine le graphique en mode "résumé périodique", avec jusqu'à 12 barres cumulées.
 			if (max == 0)
 			{
 				return;
@@ -884,33 +885,39 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			rect.Deflate (2);
 			rect = graphics.Align (rect);
-			rect.Deflate (0.5);
+			rect.Deflate (1);
 
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
 			int columnCount = (int) values[0];
 
+			int[] h = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300, 0 };
+
 			double x = 0;
 			for (int i = 0; i < 12; i++)
 			{
 				var value = values[i+1];
 
-				if (value != 0)
+				if (value > 0)
 				{
-					double dx = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
-					var color = Color.FromHsv (360/columnCount*i, 1, 1);
+					double dx = System.Math.Floor (rect.Width * (double) value / (double) max);
+					dx = System.Math.Max (dx, 2);
 
-					var r = new Rectangle (rect.Left+x-0.5, rect.Bottom, dx+1, rect.Height);
+					var color = Color.FromHsv (h[i], 1, 1);
+
+					var r = new Rectangle (rect.Left+x, rect.Bottom, dx, rect.Height);
 					graphics.AddFilledRectangle (r);
 					graphics.RenderSolid (color);
 
-					graphics.AddLine (rect.Left+x+dx, rect.Bottom, rect.Left+x+dx, rect.Top);
+					graphics.AddLine (rect.Left+x+dx-0.5, rect.Bottom+0.5, rect.Left+x+dx-0.5, rect.Top-0.5);
 					graphics.RenderSolid (Color.FromBrightness (0));
 
-					x += dx+1;
+					x += dx;
 				}
 			}
+
+			rect.Inflate (0.5);
 
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));

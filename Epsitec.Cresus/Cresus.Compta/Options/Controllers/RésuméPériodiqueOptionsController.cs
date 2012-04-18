@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = frame,
 				Text           = "Chiffres cumulés",
-				PreferredWidth = 110,
+				PreferredWidth = 120,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
