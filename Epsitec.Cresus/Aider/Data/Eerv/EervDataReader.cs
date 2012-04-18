@@ -85,7 +85,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static SharedStringTable GetSharedStringTable(SpreadsheetDocument document)
 		{
 			var sharedStringTablePart = document.WorkbookPart.SharedStringTablePart;
-
+			
 			return sharedStringTablePart != null
 				? sharedStringTablePart.SharedStringTable
 				: null;
@@ -94,6 +94,11 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<IList<string>> GetLines(Worksheet worksheet, SharedStringTable sharedStringTable)
 		{
+			// NOTE There is a significant performance benefit by getting all the shared strings at
+			// once compared to getting them as they are required within the GetValue method.
+
+			var sharedStrings = EervDataReader.GetSharedStrings(sharedStringTable);
+
 			foreach (var row in worksheet.Descendants<Row> ())
 			{
 				var line = new List<string> ();
@@ -101,13 +106,22 @@ namespace Epsitec.Aider.Data.Eerv
 				foreach (var cell in row.Descendants<Cell> ())
 				{
 					var index = EervDataReader.GetColumnIndex (cell);
-					var value = EervDataReader.GetValue (cell, sharedStringTable);
+					var value = EervDataReader.GetValue (cell, sharedStrings);
 
 					line.InsertAtIndex (index, value);
 				}
 
 				yield return line;
 			}
+		}
+
+  
+		private static Dictionary<int, string> GetSharedStrings(SharedStringTable sharedStringTable)
+		{
+			return sharedStringTable
+				.ChildElements
+				.Select((x, i) => System.Tuple.Create(i, x))
+				.ToDictionary(t => t.Item1, t => t.Item2.InnerText);
 		}
 
 
@@ -142,7 +156,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static string GetValue(Cell cell, SharedStringTable sharedStringTable)
+		private static string GetValue(Cell cell, Dictionary<int, string> sharedStrings)
 		{
 			var value = "";
 
@@ -154,7 +168,7 @@ namespace Epsitec.Aider.Data.Eerv
 				{
 					var index = int.Parse (value);
 
-					value = sharedStringTable.ChildElements[index].InnerText;
+					value = sharedStrings[index];
 				}
 			}
 
