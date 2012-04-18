@@ -70,8 +70,9 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var worksheet = EervDataReader.GetWorksheet (document);
 				var sharedStringTable = EervDataReader.GetSharedStringTable (document);
+				var stylesheet = EervDataReader.GetStylesheet (document);
 
-				return EervDataReader.GetLines (worksheet, sharedStringTable).ToList ();
+				return EervDataReader.GetLines (worksheet, sharedStringTable, stylesheet).ToList ();
 			}
 		}
 
@@ -91,13 +92,20 @@ namespace Epsitec.Aider.Data.Eerv
 				: null;
 		}
 
+  
+		private static Stylesheet GetStylesheet(SpreadsheetDocument document)
+		{
+			return document.WorkbookPart.WorkbookStylesPart.Stylesheet;
+		}
 
-		private static IEnumerable<IList<string>> GetLines(Worksheet worksheet, SharedStringTable sharedStringTable)
+
+		private static IEnumerable<IList<string>> GetLines(Worksheet worksheet, SharedStringTable sharedStringTable, Stylesheet stylesheet)
 		{
 			// NOTE There is a significant performance benefit by getting all the shared strings at
 			// once compared to getting them as they are required within the GetValue method.
 
 			var sharedStrings = EervDataReader.GetSharedStrings(sharedStringTable);
+			var numberFormats = EervDataReader.GetNumberFormats (stylesheet);
 
 			foreach (var row in worksheet.Descendants<Row> ())
 			{
@@ -106,7 +114,7 @@ namespace Epsitec.Aider.Data.Eerv
 				foreach (var cell in row.Descendants<Cell> ())
 				{
 					var index = EervDataReader.GetColumnIndex (cell);
-					var value = EervDataReader.GetValue (cell, sharedStrings);
+					var value = EervDataReader.GetValue (cell, sharedStrings, numberFormats);
 
 					line.InsertAtIndex (index, value);
 				}
@@ -122,6 +130,16 @@ namespace Epsitec.Aider.Data.Eerv
 				.ChildElements
 				.Select((x, i) => System.Tuple.Create(i, x))
 				.ToDictionary(t => t.Item1, t => t.Item2.InnerText);
+		}
+
+
+		private static Dictionary<int, int> GetNumberFormats(Stylesheet stylesheet)
+		{
+			return stylesheet
+				.CellFormats
+				.ChildElements
+				.Select ((x, i) => System.Tuple.Create (i, (CellFormat) x))
+				.ToDictionary (t => t.Item1, t => (int) t.Item2.NumberFormatId.Value);
 		}
 
 
@@ -156,7 +174,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static string GetValue(Cell cell, Dictionary<int, string> sharedStrings)
+		private static string GetValue(Cell cell, Dictionary<int, string> sharedStrings, Dictionary<int, int> numberFormats)
 		{
 			var value = "";
 
@@ -164,12 +182,30 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				value = cell.CellValue.InnerText;
 
+				// Handles the case where the cell value is a shared string.
 				if (cell.DataType != null && cell.DataType == CellValues.SharedString)
 				{
 					var index = int.Parse (value);
 
 					value = sharedStrings[index];
 				}
+
+				// Handle the case where the cell value is a date in the wierd format.
+				if (cell.StyleIndex != null && cell.StyleIndex.HasValue)
+				{
+					var styleIndex = (int) cell.StyleIndex.Value;
+					int numberFormat;
+
+					if (numberFormats.TryGetValue (styleIndex, out numberFormat))
+					{
+						// Number format 14 is the number format id for the date in the OLE
+						// Automation Date format.
+						if (numberFormat == 14)
+						{
+							value = DateTime.FromOADate (double.Parse (value)).ToShortDateString ();
+						}
+					}
+				}		
 			}
 
 			return value;
