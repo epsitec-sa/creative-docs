@@ -1,4 +1,4 @@
-<html xmlns:v="urn:schemas-microsoft-com:vml"
+﻿<html xmlns:v="urn:schemas-microsoft-com:vml"
 xmlns:o="urn:schemas-microsoft-com:office:office"
 xmlns:w="urn:schemas-microsoft-com:office:word"
 xmlns:m="http://schemas.microsoft.com/office/2004/12/omml"
@@ -1028,7 +1028,6 @@ ul
  <o:shapelayout v:ext="edit">
   <o:idmap v:ext="edit" data="1"/>
  </o:shapelayout></xml><![endif]-->
-<title>Open XML SDK 2.0 December 2009 CTP for Microsoft Office</title>
 </head>
 
 <body lang=EN-US link=blue vlink=purple style='tab-interval:.5in'>
@@ -1040,13 +1039,16 @@ style='mso-bidi-font-weight:normal'><span style='font-size:16.0pt;line-height:
 115%'>Open XML </span>
     <span
 style='font-size:16.0pt;line-height:115%;mso-fareast-font-family:"MS Mincho";
-mso-fareast-language:JA'>SDK<o:p> 2.0 December 2009 CTP</o:p><o:p> for Microsoft Office</o:p></span></b></p>
+mso-fareast-language:JA'>SDK<o:p> 2.0 </o:p>
+    <o:p> for Microsoft Office</o:p></span></b></p>
 
-<p>Welcome to the Open XML SDK 2.0 December 2009 CTP for Microsoft Office. The Open XML Formats is an open ECMA
-376 standard and is also approved as the ISO/IEC 29500 standard. Microsoft
-Office Word 2007, Microsoft Office Excel&reg; 2007, and Microsoft Office PowerPoint&reg;
-2007 all use these formats as the default file formats. The latest version of 
-    Microsoft Office 2010 documents also use these formats with some extensions. Open XML formats are
+<p>Welcome to the Open XML SDK 2.0 for Microsoft Office. The Open XML Formats is an 
+    ISO/IEC 29500 standard and open ECMA
+376 standard. Microsoft Office 2007 documents and Microsoft Office 2010 documents, 
+    specifically Microsoft
+Office Word® 2010, Microsoft Office Word® 2007, Microsoft Office Excel&reg; 2010, 
+    Microsoft Office Excel® 2007, and Microsoft Office PowerPoint&reg;
+    2010, and Microsoft Office PowerPoint® 2007, use these file formats with some extensions. Open XML formats are
 useful for developers because they are an open standard and are based on
 well-known technologies: ZIP and XML. This SDK is built on top of the <b>System.IO.Packaging</b>
 API and provides strongly-typed part classes to manipulate Open XML documents.
@@ -1055,14 +1057,11 @@ API and provides strongly-typed part classes to manipulate Open XML documents.
 provide strongly-typed object access to the XML content inside the parts of
 Open XML documents.</p>
 
-<p>In December 2009 CTP, The SDK adds support for manipulating Microsoft Office 2010 
-    documents, and more coverage in validating Microsoft Office 2007 and 2010 
-    documents. The tool for using the SDK has been separated out in a separate 
-    download.</p>
-
-<h1 style='margin-left:.25in;text-indent:-.25in;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+    <h1 style='margin-left:.25in;text-indent:-.25in;mso-list:l0 level1 lfo2'><![if !supportLists]>
+        <span
 style='mso-fareast-font-family:Cambria;mso-fareast-theme-font:major-latin;
-mso-bidi-font-family:Cambria;mso-bidi-theme-font:major-latin'><span
+mso-bidi-font-family:Cambria;mso-bidi-theme-font:major-latin'>
+        <span
 style='mso-list:Ignore'>1.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>System Requirement</h1>
 
@@ -1116,8 +1115,8 @@ SDK.</p>
 auto;text-indent:-.25in;mso-list:l2 level2 lfo6'><![if !supportLists]><span
 style='font-family:"Courier New";mso-fareast-font-family:"Courier New"'><span
 style='mso-list:Ignore'>o<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;
-</span></span></span><![endif]>If .NET Framework 3.5 is not already installed
-on the computer, the Setup wizard asks you to install .NET Framework 3.5 first.</p>
+</span></span></span><![endif]>If .NET Framework 3.5 SP1 is not already installed
+on the computer, the Setup wizard asks you to install .NET Framework 3.5 SP1 first.</p>
 
 <p class=MsoListParagraphCxSpMiddle style='margin-left:.75in;mso-add-space:
 auto;text-indent:-.25in;mso-list:l2 level2 lfo6'><![if !supportLists]><span
@@ -1141,10 +1140,51 @@ style='mso-list:Ignore'>3.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp
 <p class=MsoNormal>To uninstall the SDK, go to Control Panel and click Add or
 Remove Programs.</p>
 
-<h1 style='margin-left:.25in;text-indent:-.25in;mso-list:l0 level1 lfo2'><![if !supportLists]><span
+<h1 style='margin-left:.25in;text-indent:-.25in;mso-list:l0 level1 lfo2'><![if !supportLists]>
+    <span
 style='mso-fareast-font-family:Cambria;mso-fareast-theme-font:major-latin;
-mso-bidi-font-family:Cambria;mso-bidi-theme-font:major-latin'><span
+mso-bidi-font-family:Cambria;mso-bidi-theme-font:major-latin'>
+    <span
 style='mso-list:Ignore'>4.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span></span><![endif]>Registry Key</h1>
+
+<p class=MsoNormal>The installation process will create two registry keys so Windows 
+    Control Panel and other applications could verify that the SDK 2.0 is installed. 
+    The following registry kes are created:</p>
+    <p class=MsoNormal>Key:         <span style="font-size:11.0pt;line-height:115%;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:
+SimSun;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-theme-font:minor-bidi;
+mso-ansi-language:EN-US;mso-fareast-language:ZH-CN;mso-bidi-language:AR-SA">
+        HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\OpenXmlApiV2<br />
+        Default Value -- type REG_ZA; data is the installed path of the binary dll.<br />
+        Note: for 64bit system, the actual key path could be: 
+        HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\.NETFramework\v2.0.50727\AssemblyFoldersEx\OpenXmlApiV2 
+        ; see MSDN article in accessing the registry key in 64bit system.</span></p>
+    <p class=MsoNormal>Key:         <span style="font-size:11.0pt;line-height:115%;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:
+SimSun;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-theme-font:minor-bidi;
+mso-ansi-language:EN-US;mso-fareast-language:ZH-CN;mso-bidi-language:AR-SA">
+        HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Office\OpenXmlSDK<br />
+        Sub key: the version of the SDK being installed on the box, for example 
+        &quot;2.0.4725.0&quot;<br />
+        Default Value -- type REG_ZA; data is the installed path of the binary dll.<br />
+        <span style="font-size:11.0pt;line-height:115%;
+font-family:&quot;Calibri&quot;,&quot;sans-serif&quot;;mso-ascii-theme-font:minor-latin;mso-fareast-font-family:
+SimSun;mso-fareast-theme-font:minor-fareast;mso-hansi-theme-font:minor-latin;
+mso-bidi-font-family:&quot;Times New Roman&quot;;mso-bidi-theme-font:minor-bidi;
+mso-ansi-language:EN-US;mso-fareast-language:ZH-CN;mso-bidi-language:AR-SA">
+        Note: for 64bit system, the actual key path could be: 
+        HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\Microsoft\Office\OpenXmlSDK ; see MSDN 
+        article in accessing the registry key in 64bit system</span></span></p>
+
+<h1 style='margin-left:.25in;text-indent:-.25in;mso-list:l0 level1 lfo2'><![if !supportLists]>
+    <span
+style='mso-fareast-font-family:Cambria;mso-fareast-theme-font:major-latin;
+mso-bidi-font-family:Cambria;mso-bidi-theme-font:major-latin'>
+    <span
+style='mso-list:Ignore'>5.<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>Content in the SDK</h1>
 
 <p class=MsoNormal>The SDK contains the following:</p>
@@ -1167,7 +1207,7 @@ mso-hansi-font-family:Calibri;mso-bidi-font-family:Calibri'><span
 style='mso-list:Ignore'>-<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </span></span></span><![endif]>Intellisense: (DocumentFormat.OpenXML.xml)</p>
 
-<h1><span style='mso-fareast-font-family:"MS Mincho";mso-fareast-language:JA'>5.</span><span
+<h1>6<span style='mso-fareast-font-family:"MS Mincho";mso-fareast-language:JA'>.</span><span
 style='mso-spacerun:yes'>&nbsp; </span>Other resources</h1>
 
 <p class=MsoNormal>You can join the MSDN Forum at 
