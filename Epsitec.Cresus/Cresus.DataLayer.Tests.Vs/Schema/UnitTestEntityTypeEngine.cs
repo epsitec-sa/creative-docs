@@ -521,7 +521,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 
 		private List<StructuredTypeField> GetFields(StructuredType type)
 		{
-			return type.Fields.Values.Where (f => f.Source == FieldSource.Value).ToList ();
+			return type.Fields.Values
+				.Where (f => f.Source == FieldSource.Value)
+				.Where (f => !f.Options.HasFlag (FieldOptions.Virtual))
+				.ToList ();
 		}
 
 
@@ -577,9 +580,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			var tmp = from localType in this.GetBaseTypes (type)
 					  from structuredType in this.GetEntityTypes ()
-					  from structuredField in structuredType.Fields.Values
-					  where structuredField.Membership != FieldMembership.Inherited
-					  where structuredField.Source == FieldSource.Value
+					  from structuredField in this.GetLocalFields (structuredType)
 					  let relation = structuredField.Relation
 					  where relation == FieldRelation.Reference || relation == FieldRelation.Collection
 					  where structuredField.TypeId == localType.CaptionId
