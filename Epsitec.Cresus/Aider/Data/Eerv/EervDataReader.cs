@@ -1,9 +1,6 @@
-﻿using DocumentFormat.OpenXml.Packaging;
-using DocumentFormat.OpenXml.Spreadsheet;
+﻿using ClosedXML.Excel;
 
 using Epsitec.Common.Support.Extensions;
-
-using System;
 
 using System.Collections.Generic;
 
@@ -52,11 +49,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<Dictionary<T, string>> GetRecords<T>(FileInfo input, Dictionary<T, string> stringMapping)
 		{
-			var lines = EervDataReader.GetLines (input);
-
 			Dictionary<T, int?> indexMapping = null;
 
-			foreach (var line in lines)
+			foreach (var line in EervDataReader.GetLines(input))
 			{
 				if (indexMapping == null)
 				{
@@ -72,149 +67,29 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static IEnumerable<IList<string>> GetLines(FileInfo input)
 		{
-			using (var document = SpreadsheetDocument.Open (input.FullName, false))
+			var lines = new List<List<string>> ();
+
+			using (var workbook = new XLWorkbook (input.FullName))
 			{
-				var worksheet = EervDataReader.GetWorksheet (document);
-				var sharedStringTable = EervDataReader.GetSharedStringTable (document);
-				var stylesheet = EervDataReader.GetStylesheet (document);
+				var worksheet = workbook.Worksheets.First();
 
-				return EervDataReader.GetLines (worksheet, sharedStringTable, stylesheet).ToList ();
-			}
-		}
-
-
-		private static Worksheet GetWorksheet(SpreadsheetDocument document)
-		{
-			return document.WorkbookPart.WorksheetParts.First().Worksheet;
-		}
-
-
-		private static SharedStringTable GetSharedStringTable(SpreadsheetDocument document)
-		{
-			var sharedStringTablePart = document.WorkbookPart.SharedStringTablePart;
-			
-			return sharedStringTablePart != null
-				? sharedStringTablePart.SharedStringTable
-				: null;
-		}
-
-  
-		private static Stylesheet GetStylesheet(SpreadsheetDocument document)
-		{
-			return document.WorkbookPart.WorkbookStylesPart.Stylesheet;
-		}
-
-
-		private static IEnumerable<IList<string>> GetLines(Worksheet worksheet, SharedStringTable sharedStringTable, Stylesheet stylesheet)
-		{
-			// NOTE There is a significant performance benefit by getting all the shared strings at
-			// once compared to getting them as they are required within the GetValue method.
-
-			var sharedStrings = EervDataReader.GetSharedStrings(sharedStringTable);
-			var numberFormats = EervDataReader.GetNumberFormats (stylesheet);
-
-			foreach (var row in worksheet.Descendants<Row> ())
-			{
-				var line = new List<string> ();
-
-				foreach (var cell in row.Descendants<Cell> ())
+				foreach (var row in worksheet.RowsUsed())
 				{
-					var index = EervDataReader.GetColumnIndex (cell);
-					var value = EervDataReader.GetValue (cell, sharedStrings, numberFormats);
+					var line = new List<string> ();
 
-					line.InsertAtIndex (index, value);
-				}
-
-				yield return line;
-			}
-		}
-
-  
-		private static Dictionary<int, string> GetSharedStrings(SharedStringTable sharedStringTable)
-		{
-			return sharedStringTable
-				.ChildElements
-				.Select((x, i) => System.Tuple.Create(i, x))
-				.ToDictionary(t => t.Item1, t => t.Item2.InnerText);
-		}
-
-
-		private static Dictionary<int, int> GetNumberFormats(Stylesheet stylesheet)
-		{
-			return stylesheet
-				.CellFormats
-				.ChildElements
-				.Select ((x, i) => System.Tuple.Create (i, (CellFormat) x))
-				.ToDictionary (t => t.Item1, t => (int) t.Item2.NumberFormatId.Value);
-		}
-
-
-		private static int GetColumnIndex(Cell cell)
-		{
-			// We must begin by extracting the colum part of the index which is in upper case.		
-			var cellReference = cell.CellReference.Value;
-
-			var length = 0;
-
-			while (length < cellReference.Length && char.IsLetter (cellReference[length]) && char.IsUpper (cellReference[length]))
-			{
-				length++;
-			}
-
-			var columnReference = cellReference.Substring (0, length);
-			
-			// We start at -1 and not at zero because we want the zero based index and not the
-			// one based index.
-			var columnIndex = -1;
-
-			// We convert the ABC style index to a numeric index.
-			for (int i = 0; i < columnReference.Length; i++)
-			{
-				var power = columnReference.Length - 1 - i;
-				var factor = (int) columnReference[i] - 64;
-
-				columnIndex += factor * (int) Math.Pow (26, power);
-			}
-
-			return columnIndex;
-		}
-
-
-		private static string GetValue(Cell cell, Dictionary<int, string> sharedStrings, Dictionary<int, int> numberFormats)
-		{
-			var value = "";
-
-			if (cell.CellValue != null)
-			{
-				value = cell.CellValue.InnerText;
-
-				// Handles the case where the cell value is a shared string.
-				if (cell.DataType != null && cell.DataType == CellValues.SharedString)
-				{
-					var index = int.Parse (value);
-
-					value = sharedStrings[index];
-				}
-
-				// Handle the case where the cell value is a date in the wierd format.
-				if (cell.StyleIndex != null && cell.StyleIndex.HasValue)
-				{
-					var styleIndex = (int) cell.StyleIndex.Value;
-					int numberFormat;
-
-					if (numberFormats.TryGetValue (styleIndex, out numberFormat))
+					foreach (var cell in row.CellsUsed ())
 					{
-						// Number format 14 is the number format id for the date in the OLE
-						// Automation Date format.
-						if (numberFormat == 14)
-						{
-							value = DateTime.FromOADate (double.Parse (value)).ToShortDateString ();
-						}
+						var columnIndex = cell.Address.ColumnNumber - 1;
+						var value = cell.GetValue<string> ();
+
+						line.InsertAtIndex (columnIndex, value);
 					}
+
+					lines.Add (line);
 				}
 			}
 
-			return value;
+			return lines;
 		}
 
 
