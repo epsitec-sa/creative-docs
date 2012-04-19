@@ -146,6 +146,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{ GroupHeader.Id, "IdxG" },
 			{ GroupHeader.Name, "DesG" },
 			{ GroupHeader.SuperGroupId, "IdxSG" },
+			{ GroupHeader.ParishId, "IdxPar" },
 		};
 
 
@@ -154,6 +155,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{ GroupHeader.Id, "IdxSG" },
 			{ GroupHeader.Name, "DesSG" },
 			{ GroupHeader.SuperGroupId, "DUMMY" },
+			{ GroupHeader.ParishId, "IdxPar" },
 		};
 
 
@@ -164,6 +166,7 @@ namespace Epsitec.Aider.Data.Eerv
 			{ ActivityHeader.StartDate, "Début" },
 			{ ActivityHeader.EndDate, "Fin" },
 			{ ActivityHeader.Remarks, "TextLibre" },
+			{ ActivityHeader.ParishId, "IdxPar" },
 		};
 
 
@@ -210,6 +213,8 @@ namespace Epsitec.Aider.Data.Eerv
 			{ PersonHeader.ZipCode, "NPA" },
 			{ PersonHeader.Town, "Localité" },
 			{ PersonHeader.RemarksHousehold, "Remarque2" },
+
+			{ PersonHeader.ParishId, "IdxPar" },
 		};
 
 
@@ -231,7 +236,8 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 		Id,
 		Name,
-		SuperGroupId
+		SuperGroupId,
+		ParishId,
 	}
 
 
@@ -242,6 +248,7 @@ namespace Epsitec.Aider.Data.Eerv
 		StartDate,
 		EndDate,
 		Remarks,
+		ParishId,
 	}
 
 
@@ -288,6 +295,8 @@ namespace Epsitec.Aider.Data.Eerv
 		ZipCode,
 		Town,
 		RemarksHousehold,
+
+		ParishId,
 	}
 
 

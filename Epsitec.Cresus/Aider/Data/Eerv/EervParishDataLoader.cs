@@ -24,34 +24,77 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static EervParishData LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile)
+		public static IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile)
 		{
-			var households = EervParishDataLoader.LoadEervHouseholds (personFile).ToList ();
-			var persons = EervParishDataLoader.LoadEervPersons (personFile).ToList ();
-			var legalPersons = EervParishDataLoader.LoadEervLegalPersons (personFile).ToList ();
-			var activities = EervParishDataLoader.LoadEervActivities (activityFile).ToList ();
-			var groups = EervParishDataLoader.LoadEervGroups (groupFile, superGroupFile).ToList ();
+			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personFile).ToList ();
+			var allPersons = EervParishDataLoader.LoadEervPersons (personFile).ToList ();
+			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personFile).ToList ();
+			var allActivities = EervParishDataLoader.LoadEervActivities (activityFile).ToList ();
+			var allGroups = EervParishDataLoader.LoadEervGroups (groupFile, superGroupFile).ToList ();
 
-			var rawPersons = persons.Select (t => t.Item1).ToList ();
-			var rawActivities = activities.Select (t => t.Item1).ToList ();
-			var rawGroups = groups.Select (t => t.Item1).ToList ();
+			var groupedHouseholds = EervParishDataLoader.GroupByParish (allHouseholds);
+			var groupedPersons = EervParishDataLoader.GroupByParish (allPersons);
+			var groupedLegalPersons = EervParishDataLoader.GroupByParish (allLegalPersons);
+			var groupedActivities = EervParishDataLoader.GroupByParish (allActivities);
+			var groupedGroups = EervParishDataLoader.GroupByParish (allGroups);
 
-			var idToHouseholds = households.ToDictionary (h => h.Id);
-			var idToPersons = rawPersons.ToDictionary (p => p.Id);
-			var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
-			var idToGroups = rawGroups.ToDictionary (g => g.Id);
+			var parishIds = groupedHouseholds.Keys
+				.Concat (groupedPersons.Keys)
+				.Concat (groupedLegalPersons.Keys)
+				.Concat (groupedActivities.Keys)
+				.Concat (groupedGroups.Keys)
+				.Distinct ();
 
-			var filteredActivities = EervParishDataLoader.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups);
+			foreach (var parishId in parishIds)
+			{
+				var households = EervParishDataLoader.GetParishData (groupedHouseholds, parishId);
+				var persons = EervParishDataLoader.GetParishData (groupedPersons, parishId);
+				var legalPersons = EervParishDataLoader.GetParishData (groupedLegalPersons, parishId);
+				var activities = EervParishDataLoader.GetParishData (groupedActivities, parishId);
+				var groups = EervParishDataLoader.GetParishData (groupedGroups, parishId);
 
-			EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
-			EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
-			EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
+				var rawPersons = persons.Select (t => t.Item1).ToList ();
+				var rawActivities = activities.Select (t => t.Item1).ToList ();
+				var rawGroups = groups.Select (t => t.Item1).ToList ();
+				
+				var idToHouseholds = households.ToDictionary (h => h.Id);
+				var idToPersons = rawPersons.ToDictionary (p => p.Id);
+				var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
+				var idToGroups = rawGroups.ToDictionary (g => g.Id);
 
-			EervParishDataLoader.FilterHouseholdsAndPersons (households, rawPersons);
+				activities = EervParishDataLoader.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups).ToList ();
 
-			EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
+				EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
+				EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
+				EervParishDataLoader.AssignActivitiesToPersonsAndGroups (activities, idToPersons, idToLegalPersons, idToGroups);
 
-			return new EervParishData(households, rawPersons, legalPersons, rawGroups);
+				EervParishDataLoader.FilterHouseholdsAndPersons (households, rawPersons);
+
+				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
+
+				yield return new EervParishData (parishId, households, rawPersons, legalPersons, rawGroups);
+			}
+		}
+
+
+		private static Dictionary<string, List<T>> GroupByParish<T>(IEnumerable<Tuple<T, string>> items)
+		{
+			return items
+				.GroupBy (t => t.Item2)
+				.ToDictionary (g => g.Key, g => g.Select (t => t.Item1).ToList());
+		}
+
+
+		private static List<T> GetParishData<T>(Dictionary<string, List<T>> groupedData, string parishId)
+		{
+			List<T> parishData;
+
+			if (!groupedData.TryGetValue (parishId, out parishData))
+			{
+				parishData = new List<T> ();
+			}
+
+			return parishData;
 		}
 
 
@@ -220,7 +263,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervGroup, List<string>>> LoadEervGroups(FileInfo groupFile, FileInfo superGroupFile)
+		internal static IEnumerable<Tuple<Tuple<EervGroup, List<string>>, string>> LoadEervGroups(FileInfo groupFile, FileInfo superGroupFile)
 		{
 			var groups = EervDataReader.ReadGroups (groupFile);
 			var superGroups = EervDataReader.ReadSuperGroups (superGroupFile);
@@ -230,13 +273,15 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<EervGroup, List<string>> GetEervGroup(Dictionary<GroupHeader, string> group)
+		private static Tuple<Tuple<EervGroup, List<string>>, string> GetEervGroup(Dictionary<GroupHeader, string> group)
 		{
 			var id = EervParishDataLoader.PadGroupId (group[GroupHeader.Id]);
 			var name = group[GroupHeader.Name];
 
 			var superGroupIds = new List<string> ();
 			var superGroupId = EervParishDataLoader.PadGroupId (group[GroupHeader.SuperGroupId]);
+
+			var parishId = group[GroupHeader.ParishId];
 
 			if (!string.IsNullOrWhiteSpace (superGroupId))
 			{
@@ -245,7 +290,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var eervGroup = new EervGroup (id, name);
 
-			return Tuple.Create (eervGroup, superGroupIds);
+			return Tuple.Create (Tuple.Create (eervGroup, superGroupIds), parishId);
 		}
 
 
@@ -262,38 +307,38 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervActivity, string, string>> LoadEervActivities(FileInfo inputFile)
+		internal static IEnumerable<Tuple<Tuple<EervActivity, string, string>, string>> LoadEervActivities(FileInfo inputFile)
 		{
-			foreach (var record in EervDataReader.ReadActivities (inputFile))
-			{
-				yield return EervParishDataLoader.GetEervActivity (record);
-			}
+			return from record in EervDataReader.ReadActivities (inputFile)
+			select EervParishDataLoader.GetEervActivity (record);
 		}
 
 
-		private static Tuple<EervActivity, string, string> GetEervActivity(Dictionary<ActivityHeader, string> record)
+		private static Tuple<Tuple<EervActivity, string, string>, string> GetEervActivity(Dictionary<ActivityHeader, string> record)
 		{
 			var rawStartDate = record[ActivityHeader.StartDate];
 			var rawEndDate = record[ActivityHeader.EndDate];
-			
+
 			var startDate = StringUtils.ParseNullableDate (rawStartDate);
-			var endDate = StringUtils.ParseNullableDate(rawEndDate);
+			var endDate = StringUtils.ParseNullableDate (rawEndDate);
 			var remarks = record[ActivityHeader.Remarks];
 
 			var personId = record[ActivityHeader.PersonId];
 			var groupId = EervParishDataLoader.PadGroupId (record[ActivityHeader.GroupId]);
-			
+
+			var parishId = record[ActivityHeader.ParishId];
+
 			var activity = new EervActivity (startDate, endDate, remarks);
 
-			return Tuple.Create (activity, personId, groupId);
+			return Tuple.Create (Tuple.Create (activity, personId, groupId), parishId);
 		}
 
 
-		internal static IEnumerable<EervHousehold> LoadEervHouseholds(FileInfo inputFile)
+		internal static IEnumerable<Tuple<EervHousehold, string>> LoadEervHouseholds(FileInfo inputFile)
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
-			foreach (var record in EervDataReader.ReadPersons(inputFile))
+			foreach (var record in EervDataReader.ReadPersons (inputFile))
 			{
 				var isHousehold = EervParishDataLoader.IsEervPerson (record);
 
@@ -312,7 +357,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static EervHousehold GetEervHousehold(Dictionary<PersonHeader, string> record)
+		private static Tuple<EervHousehold, string> GetEervHousehold(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.HouseholdId];
 
@@ -321,15 +366,19 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var remarks = record[PersonHeader.RemarksHousehold];
 
-			return new EervHousehold (id, address, coordinates, remarks);
+			var parishId = record[PersonHeader.ParishId];
+
+			var household = new EervHousehold (id, address, coordinates, remarks);
+
+			return Tuple.Create (household, parishId);
 		}
 
 
 		private static string GetStreetName(string part1, string part2)
 		{
-			var hasPart1 = !string.IsNullOrEmpty(part1);
-			var hasPart2 = !string.IsNullOrEmpty(part2);
-		
+			var hasPart1 = !string.IsNullOrEmpty (part1);
+			var hasPart2 = !string.IsNullOrEmpty (part2);
+
 			var result = "";
 
 			if (hasPart1)
@@ -358,31 +407,19 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervPerson, Tuple<string, int?>>> LoadEervPersons(FileInfo inputFile)
+		internal static IEnumerable<Tuple<Tuple<EervPerson, Tuple<string, int?>>, string>> LoadEervPersons(FileInfo inputFile)
 		{
-			foreach (var record in EervDataReader.ReadPersons(inputFile))
-			{
-				var isEervPerson = EervParishDataLoader.IsEervPerson (record);
-
-				if (isEervPerson)
-				{
-					yield return EervParishDataLoader.GetEervPerson (record);
-				}
-			}
+			return from record in EervDataReader.ReadPersons (inputFile)
+				   where EervParishDataLoader.IsEervPerson (record)
+				   select EervParishDataLoader.GetEervPerson (record);
 		}
 
 
-		internal static IEnumerable<EervLegalPerson> LoadEervLegalPersons(FileInfo inputFile)
+		internal static IEnumerable<Tuple<EervLegalPerson, string>> LoadEervLegalPersons(FileInfo inputFile)
 		{
-			foreach (var record in EervDataReader.ReadPersons(inputFile))
-			{
-				var isEervLegalPerson = !EervParishDataLoader.IsEervPerson (record);
-
-				if (isEervLegalPerson)
-				{
-					yield return EervParishDataLoader.GetEervLegalPerson (record);
-				}
-			}
+			return from record in EervDataReader.ReadPersons (inputFile)
+				   where !EervParishDataLoader.IsEervPerson (record)
+				   select EervParishDataLoader.GetEervLegalPerson (record);
 		}
 
 
@@ -400,7 +437,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<EervPerson, Tuple<string, int?>> GetEervPerson(Dictionary<PersonHeader, string> record)
+		private static Tuple<Tuple<EervPerson, Tuple<string, int?>>, string> GetEervPerson(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.PersonId];
 			var firstname1 = record[PersonHeader.Firstname1];
@@ -456,23 +493,29 @@ namespace Epsitec.Aider.Data.Eerv
 			var householdId = record[PersonHeader.HouseholdId];
 			var householdRank = StringUtils.ParseNullableInt (record[PersonHeader.HouseholdRank]);
 
-			return Tuple.Create (person, Tuple.Create (householdId, householdRank));
+			var parishId = record[PersonHeader.ParishId];
+
+			return Tuple.Create (Tuple.Create (person, Tuple.Create (householdId, householdRank)), parishId);
 		}
 
 
-		private static EervLegalPerson GetEervLegalPerson(Dictionary<PersonHeader, string> record)
+		private static Tuple<EervLegalPerson, string> GetEervLegalPerson(Dictionary<PersonHeader, string> record)
 		{
 			var id = record[PersonHeader.PersonId];
 			var name = record[PersonHeader.CorporateName];
 
 			var address = EervParishDataLoader.GetAddress (record);
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
-			var contactPerson = EervParishDataLoader.GetEervPerson (record).Item1;
+			var contactPerson = EervParishDataLoader.GetEervPerson (record).Item1.Item1;
 
-			return new EervLegalPerson (id, name, address, coordinates)
+			var parishId = record[PersonHeader.ParishId];
+
+			var legalPerson = new EervLegalPerson (id, name, address, coordinates)
 			{
 				ContactPerson = contactPerson,
 			};
+
+			return Tuple.Create (legalPerson, parishId);
 		}
 
 
@@ -481,10 +524,10 @@ namespace Epsitec.Aider.Data.Eerv
 			var rawStreetNamePart1 = record[PersonHeader.StreetNamePart1];
 			var rawStreetNamePart2 = record[PersonHeader.StreetNamePart2];
 			var rawHouseNumber = record[PersonHeader.HouseNumber];
-			
+
 			var firstAddressLine = record[PersonHeader.FirstAddressLine];
 			var streetName = EervParishDataLoader.GetStreetName (rawStreetNamePart1, rawStreetNamePart2);
-			var houseNumber = StringUtils.ParseNullableInt(rawHouseNumber);
+			var houseNumber = StringUtils.ParseNullableInt (rawHouseNumber);
 			var houseNumberComplement = record[PersonHeader.HouseNumberComplement];
 			var zipCode = record[PersonHeader.ZipCode];
 			var town = record[PersonHeader.Town];
@@ -597,44 +640,44 @@ namespace Epsitec.Aider.Data.Eerv
 				case "e":
 				case "ae":
 					return PersonConfession.Evangelic;
-				
+
 				case "as":
 					return PersonConfession.SalvationArmy;
-				
+
 				case "ang":
 					return PersonConfession.Anglican;
-				
+
 				case "b":
 					return PersonConfession.Buddhist;
-				
+
 				case "c":
 					return PersonConfession.Catholic;
-				
+
 				case "d":
 					return PersonConfession.Darbyst;
-				
+
 				case "in":
 					return PersonConfession.Unknown;
-				
+
 				case "is":
 					return PersonConfession.Israelite;
-				
+
 				case "mu":
 					return PersonConfession.Muslim;
-				
+
 				case "na":
 					return PersonConfession.NewApostolic;
-				
+
 				case "o":
 					return PersonConfession.Orthodox;
 
 				case "p":
 				case "pc":
 					return PersonConfession.Protestant;
-				
+
 				case "sa":
 					return PersonConfession.Unknown;
-				
+
 				case "tj":
 					return PersonConfession.JehovahsWitness;
 

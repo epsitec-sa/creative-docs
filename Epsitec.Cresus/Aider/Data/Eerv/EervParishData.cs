@@ -13,8 +13,9 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervParishData(IEnumerable<EervHousehold> households, IEnumerable<EervPerson> persons, IEnumerable<EervLegalPerson> legalPersons, IEnumerable<EervGroup> groups)
+		public EervParishData(string id, IEnumerable<EervHousehold> households, IEnumerable<EervPerson> persons, IEnumerable<EervLegalPerson> legalPersons, IEnumerable<EervGroup> groups)
 		{
+			this.Id = id;
 			this.Households = households.AsReadOnlyCollection();
 			this.Persons = persons.AsReadOnlyCollection ();
 			this.LegalPersons = legalPersons.AsReadOnlyCollection ();
@@ -22,6 +23,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public readonly string Id;
 		public readonly ReadOnlyCollection<EervHousehold> Households;
 		public readonly ReadOnlyCollection<EervPerson> Persons;
 		public readonly ReadOnlyCollection<EervLegalPerson> LegalPersons;

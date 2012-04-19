@@ -30,16 +30,16 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (4594, households.Count);
 
-			var h1 = new EervHousehold ("4030000000", new EervAddress (null, "Route de Genève", 24, null, "1131", "Tolochenaz"), new EervCoordinates (null, "801 71 37", null, null, null), null);
+			var h1 = Tuple.Create (new EervHousehold ("4030000000", new EervAddress (null, "Route de Genève", 24, null, "1131", "Tolochenaz"), new EervCoordinates (null, "801 71 37", null, null, null), null), "9040000000");
 			this.CheckForEquality (h1, households[0]);
 
-			var h2 = new EervHousehold ("4030010010", new EervAddress (null, "Avenue des Reneveyres", 14, "B", "1110", "Morges"), new EervCoordinates ("801 89 10", null, null, null, null), null);
+			var h2 = Tuple.Create (new EervHousehold ("4030010010", new EervAddress (null, "Avenue des Reneveyres", 14, "B", "1110", "Morges"), new EervCoordinates ("801 89 10", null, null, null, null), null), "9040000000");
 			this.CheckForEquality (h2, households[7]);
 
-			var h3 = new EervHousehold ("4030044894", new EervAddress (null, "Chemin du Pré", 3, null, "1110", "Morges"), new EervCoordinates ("802 20 26", null, null, "802 63 39", null), null);
+			var h3 = Tuple.Create (new EervHousehold ("4030044894", new EervAddress (null, "Chemin du Pré", 3, null, "1110", "Morges"), new EervCoordinates ("802 20 26", null, null, "802 63 39", null), null), "9040000000");
 			this.CheckForEquality (h3, households[1235]);
 
-			var h4 = new EervHousehold ("4030042257", new EervAddress ("Bureau d'ingénieurs SIA", "Rue des Charpentiers", 36, null, "1110", "Morges"), new EervCoordinates ("021 802 32 55", "021 804 75 40", null, null, null), null);
+			var h4 = Tuple.Create (new EervHousehold ("4030042257", new EervAddress ("Bureau d'ingénieurs SIA", "Rue des Charpentiers", 36, null, "1110", "Morges"), new EervCoordinates ("021 802 32 55", "021 804 75 40", null, null, null), null), "9040000000");
 			this.CheckForEquality (h4, households[1988]);
 		}
 
@@ -51,22 +51,22 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (7255, persons.Count);
 
-			var p1 = Tuple.Create (new EervPerson ("4030000000", "Jacques-André", "Henry", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.Married, null, null, PersonConfession.Evangelic, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, "jajah@bluewin.ch")), Tuple.Create ("4030000000", (int?) 1));
+			var p1 = Tuple.Create (Tuple.Create (new EervPerson ("4030000000", "Jacques-André", "Henry", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.Married, null, null, PersonConfession.Evangelic, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, "jajah@bluewin.ch")), Tuple.Create ("4030000000", (int?) 1)), "9040000000");
 			this.CheckForEquality (p1, persons[0]);
 
-			var p2 = Tuple.Create (new EervPerson ("4030015525", "Anne-Marie", "Aberghouss", "Combremont", new Date (1943, 7, 25), null, "Madame", PersonSex.Female, PersonMaritalStatus.Divorced, "Grandcour", null, PersonConfession.Protestant, null, "Combremont Gérard", "Cusin Lucie", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030010002", (int?) 1));
+			var p2 = Tuple.Create (Tuple.Create (new EervPerson ("4030015525", "Anne-Marie", "Aberghouss", "Combremont", new Date (1943, 7, 25), null, "Madame", PersonSex.Female, PersonMaritalStatus.Divorced, "Grandcour", null, PersonConfession.Protestant, null, "Combremont Gérard", "Cusin Lucie", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030010002", (int?) 1)), "9040000000");
 			this.CheckForEquality (p2, persons[9]);
 
-			var p3 = Tuple.Create (new EervPerson ("4030044955", "Sabrina Françoise", "Bezençon", null, new Date (1988, 12, 10), null, "Mademoiselle", PersonSex.Female, PersonMaritalStatus.Single, "Eclagnens", "Employée atelier protégé", PersonConfession.Protestant, "Ne désire plus recevoir le soutien financier", "Bezençon Jean-Claude", "Cevey Patricia José", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030044414", (int?) 1));
+			var p3 = Tuple.Create (Tuple.Create (new EervPerson ("4030044955", "Sabrina Françoise", "Bezençon", null, new Date (1988, 12, 10), null, "Mademoiselle", PersonSex.Female, PersonMaritalStatus.Single, "Eclagnens", "Employée atelier protégé", PersonConfession.Protestant, "Ne désire plus recevoir le soutien financier", "Bezençon Jean-Claude", "Cevey Patricia José", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030044414", (int?) 1)), "9040000000");
 			this.CheckForEquality (p3, persons[5425]);
 
-			var p4 = Tuple.Create (new EervPerson ("4030027188", "Ghislaine", "Mounoud", "Hiehle", new Date (1929, 7, 10), new Date (2003, 8, 23), "Madame", PersonSex.Female, PersonMaritalStatus.None, "Les Thioleyres / VD", null, PersonConfession.Protestant, null, "Hiehle René Arthur", "Gabriel Mathilde Maria Elisa", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030014392", (int?) 2));
+			var p4 = Tuple.Create (Tuple.Create (new EervPerson ("4030027188", "Ghislaine", "Mounoud", "Hiehle", new Date (1929, 7, 10), new Date (2003, 8, 23), "Madame", PersonSex.Female, PersonMaritalStatus.None, "Les Thioleyres / VD", null, PersonConfession.Protestant, null, "Hiehle René Arthur", "Gabriel Mathilde Maria Elisa", null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)), Tuple.Create ("4030014392", (int?) 2)), "9040000000");
 			this.CheckForEquality (p4, persons[4132]);
 
-			var p5 = Tuple.Create (new EervPerson ("4030045031", "Mélya Orange", "Bulundwe", null, new Date (2006, 9, 20), null, "Mademoiselle", PersonSex.Female, PersonMaritalStatus.Single, "Avenches / Donatyre", null, PersonConfession.Protestant, null, "Bulundwe Mathieu", "Bulundwe Jacques Charlène", null, null, null, "Eglise d'Echichens", new Date (2007, 8, 4), null, null, null, new EervCoordinates (null, null, null, null, "mathieu.bulundway@sanitas.com")), Tuple.Create ("4030044476", (int?) 4));
+			var p5 = Tuple.Create (Tuple.Create (new EervPerson ("4030045031", "Mélya Orange", "Bulundwe", null, new Date (2006, 9, 20), null, "Mademoiselle", PersonSex.Female, PersonMaritalStatus.Single, "Avenches / Donatyre", null, PersonConfession.Protestant, null, "Bulundwe Mathieu", "Bulundwe Jacques Charlène", null, null, null, "Eglise d'Echichens", new Date (2007, 8, 4), null, null, null, new EervCoordinates (null, null, null, null, "mathieu.bulundway@sanitas.com")), Tuple.Create ("4030044476", (int?) 4)), "9040000000");
 			this.CheckForEquality (p5, persons[5456]);
 
-			var p6 = Tuple.Create (new EervPerson ("4030001274", "Nicolas", "Cruchon", null, new Date (1994, 5, 17), null, "Monsieur", PersonSex.Male, PersonMaritalStatus.Single, "Bercher", null, PersonConfession.Protestant, null, "Cruchon Alexandre", "Bindelli Nadia", "Morges VD", "Echichens", new Date (1994, 9, 4), null, null, "Temple de Morges", new Date (2010, 3, 28), 1, new EervCoordinates (null, null, "079/397 78 78", null, "cavedusignal@bluewin.ch")), Tuple.Create ("4030011487", (int?) 4));
+			var p6 = Tuple.Create (Tuple.Create (new EervPerson ("4030001274", "Nicolas", "Cruchon", null, new Date (1994, 5, 17), null, "Monsieur", PersonSex.Male, PersonMaritalStatus.Single, "Bercher", null, PersonConfession.Protestant, null, "Cruchon Alexandre", "Bindelli Nadia", "Morges VD", "Echichens", new Date (1994, 9, 4), null, null, "Temple de Morges", new Date (2010, 3, 28), 1, new EervCoordinates (null, null, "079/397 78 78", null, "cavedusignal@bluewin.ch")), Tuple.Create ("4030011487", (int?) 4)), "9040000000");
 			this.CheckForEquality (p6, persons[677]);
 		}
 
@@ -74,39 +74,41 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervLegalPersonsTest()
 		{
-			var legalPersons = EervParishDataLoader.LoadEervLegalPersons (this.PersonsFile).ToList ();
+		    var legalPersons = EervParishDataLoader.LoadEervLegalPersons (this.PersonsFile).ToList ();
 
-			Assert.AreEqual (34, legalPersons.Count);
+		    Assert.AreEqual (34, legalPersons.Count);
 
-			var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null))
-			{
-				ContactPerson = new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-			};
-			this.CheckForEquality (p1, legalPersons[0]);
+		    var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null))
+		    {
+		        ContactPerson = new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
+		    };
+			var t1 = Tuple.Create (p1, "9040000000");
+		    this.CheckForEquality (t1, legalPersons[0]);
 
-			var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null))
-			{
-				ContactPerson = new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-			};
-			this.CheckForEquality (p2, legalPersons[6]);
+		    var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null))
+		    {
+		        ContactPerson = new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
+		    };
+			var t2 = Tuple.Create (p2, "9040000000");
+			this.CheckForEquality (t2, legalPersons[6]);
 		}
 
 
 		[TestMethod]
 		public void LoadEervGroupsTest()
 		{
-			var groups = EervParishDataLoader.LoadEervGroups (this.GroupFile, this.SuperGroupFile).ToList ();
+		    var groups = EervParishDataLoader.LoadEervGroups (this.GroupFile, this.SuperGroupFile).ToList ();
 
-			Assert.AreEqual (180, groups.Count);
+		    Assert.AreEqual (180, groups.Count);
 
-			var g1 = Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), new List<string> () { "0403110000" });
-			this.CheckForEquality (g1, groups[0]);
+			var g1 = Tuple.Create (Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), new List<string> () { "0403110000" }), "9040000000");
+		    this.CheckForEquality (g1, groups[0]);
 
-			var g2 = Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" });
-			this.CheckForEquality (g2, groups[16]);
+		    var g2 = Tuple.Create (Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" }), "9040000000");
+		    this.CheckForEquality (g2, groups[16]);
 
-			var g3 = Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> () { });
-			this.CheckForEquality (g3, groups[176]);
+		    var g3 = Tuple.Create (Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> () { }), "9040000000");
+		    this.CheckForEquality (g3, groups[176]);
 		}
 
 
@@ -117,28 +119,38 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (6330, activities.Count);
 
-			var a1 = Tuple.Create (new EervActivity (new Date (2004, 8, 20), null, null), "4030010057", "0403050209");
+			var a1 = Tuple.Create (Tuple.Create (new EervActivity (new Date (2004, 8, 20), null, null), "4030010057", "0403050209"), "9040000000");
 			this.CheckForEquality (a1, activities[0]);
 
-			var a2 = Tuple.Create (new EervActivity (new Date (2005, 8, 22), new Date (2006, 8, 21), null), "4030042696", "0403112400");
+			var a2 = Tuple.Create (Tuple.Create (new EervActivity (new Date (2005, 8, 22), new Date (2006, 8, 21), null), "4030042696", "0403112400"), "9040000000");
 			this.CheckForEquality (a2, activities[2289]);
 		}
 
 
-		private void CheckForEquality(Tuple<EervActivity, string, string> expected, Tuple<EervActivity, string, string> actual)
+		private void CheckForEquality(Tuple<Tuple<EervActivity, string, string>, string> expected, Tuple<Tuple<EervActivity, string, string>, string> actual)
 		{
-			Assert.AreEqual (expected.Item1.StartDate, actual.Item1.StartDate);
-			Assert.AreEqual (expected.Item1.EndDate, actual.Item1.EndDate);
-			Assert.AreEqual (expected.Item1.Remarks, actual.Item1.Remarks);
+			this.CheckForEquality (expected.Item1.Item1, actual.Item1.Item1);
+			
+			Assert.AreEqual (expected.Item1.Item2, actual.Item1.Item2);
+			Assert.AreEqual (expected.Item1.Item3, actual.Item1.Item3);
 			Assert.AreEqual (expected.Item2, actual.Item2);
-			Assert.AreEqual (expected.Item3, actual.Item3);
 		}
 
 
-		private void CheckForEquality(Tuple<EervGroup, List<string>> expected, Tuple<EervGroup, List<string>> actual)
+		private void CheckForEquality(EervActivity expected, EervActivity actual)
 		{
-			this.CheckForEquality (expected.Item1, actual.Item1);
-			CollectionAssert.AreEqual (expected.Item2, actual.Item2);
+			Assert.AreEqual (expected.StartDate, actual.StartDate);
+			Assert.AreEqual (expected.EndDate, actual.EndDate);
+			Assert.AreEqual (expected.Remarks, actual.Remarks);
+		}
+
+
+		private void CheckForEquality(Tuple<Tuple<EervGroup, List<string>>, string> expected, Tuple<Tuple<EervGroup, List<string>>, string> actual)
+		{
+			this.CheckForEquality (expected.Item1.Item1, actual.Item1.Item1);
+
+			CollectionAssert.AreEqual (expected.Item1.Item2, actual.Item1.Item2);
+			Assert.AreEqual (expected.Item2, actual.Item2);
 		}
 
 
@@ -149,10 +161,19 @@ namespace Aider.Tests.Vs
 		}
 
 
+		private void CheckForEquality(Tuple<EervHousehold, string> expected, Tuple<EervHousehold, string> actual)
+		{
+			this.CheckForEquality (expected.Item1, actual.Item1);
+
+			Assert.AreEqual (expected.Item2, actual.Item2);
+		}
+
+
 		private void CheckForEquality(EervHousehold expected, EervHousehold actual)
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
 			Assert.AreEqual (expected.Remarks, actual.Remarks);
+			
 			this.CheckForEquality (expected.Address, actual.Address);
 			this.CheckForEquality (expected.Coordinates, actual.Coordinates);
 		}
@@ -179,11 +200,13 @@ namespace Aider.Tests.Vs
 		}
 
 
-		private void CheckForEquality(Tuple<EervPerson, Tuple<string, int?>> expected, Tuple<EervPerson, Tuple<string, int?>> actual)
+		private void CheckForEquality(Tuple<Tuple<EervPerson, Tuple<string, int?>>, string> expected, Tuple<Tuple<EervPerson, Tuple<string, int?>>, string> actual)
 		{
-			this.CheckForEquality (expected.Item1, actual.Item1);
-			Assert.AreEqual (expected.Item2.Item1, actual.Item2.Item1);
-			Assert.AreEqual (expected.Item2.Item2, actual.Item2.Item2);
+			this.CheckForEquality (expected.Item1.Item1, actual.Item1.Item1);
+
+			Assert.AreEqual (expected.Item1.Item2.Item1, actual.Item1.Item2.Item1);
+			Assert.AreEqual (expected.Item1.Item2.Item2, actual.Item1.Item2.Item2);
+			Assert.AreEqual (expected.Item2, actual.Item2);
 		}
 
 
@@ -216,6 +239,14 @@ namespace Aider.Tests.Vs
 		}
 
 
+		private void CheckForEquality(Tuple<EervLegalPerson, string> expected, Tuple<EervLegalPerson, string> actual)
+		{
+			this.CheckForEquality (expected.Item1, actual.Item1);
+
+			Assert.AreEqual (expected.Item2, actual.Item2);
+		}
+		
+		
 		private void CheckForEquality(EervLegalPerson expected, EervLegalPerson actual)
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
