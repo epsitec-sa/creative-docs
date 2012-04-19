@@ -128,6 +128,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void UpdateAfterFilterUpdated()
 		{
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les valeurs min/max
+			//	en fonction des données filtrées, afin que les graphiques utilisent au mieux
+			//	l'espace disponible.
 			this.MinMaxClear ();
 
 			foreach (var d in this.readonlyData)

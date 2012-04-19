@@ -234,6 +234,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected virtual void UpdateAfterFilterUpdated()
 		{
+			//	Appelé après la mise à jour du filtre, par exemple pour mettre à jour les valeurs min/max
+			//	en fonction des données filtrées.
 		}
 
 		protected bool FilterLine(int row)

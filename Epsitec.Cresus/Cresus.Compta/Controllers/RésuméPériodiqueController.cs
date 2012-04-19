@@ -221,14 +221,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Cache toutes les colonnes des soldes.
 			for (int i = 0; i < 12; i++)
 			{
+				//	Une description vide (à spécifier *avant* ShowHideColumn) permet de cacher la colonne
+				//	dans le menu combo du filtre !
+				this.SetColumnDescription (ColumnType.Solde1+i, FormattedText.Null);
 				this.ShowHideColumn (ColumnType.Solde1+i, false);
 			}
 
 			//	Montre les colonnes des soldes requises et détermine leurs titres.
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, options, (index, dateDébut, dateFin) =>
 			{
-				this.ShowHideColumn (ColumnType.Solde1+index, true);
 				this.SetColumnDescription (ColumnType.Solde1+index, Dates.GetMonthShortDescription (dateDébut, Dates.AddDays (dateFin, -1)));
+				this.ShowHideColumn (ColumnType.Solde1+index, true);
 			});
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
