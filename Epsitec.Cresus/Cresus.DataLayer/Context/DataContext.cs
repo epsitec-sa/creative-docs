@@ -1013,32 +1013,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <returns><c>true</c> if an <see cref="AbstractEntity"/> has been deleted, <c>false</c> if none where deleted.</returns>
 		private bool DeleteDeletedEnties()
 		{
-			bool deletions = false;
-
 			long id = System.Math.Max (this.entitiesCache.GetMinimumLogId () ?? 1, 1);
 
-			var entityDeletionEntries = this.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (id));
+			var deletedEntities = new List<AbstractEntity>
+			(
+				from entry in this.DataInfrastructure.GetEntityDeletionEntriesNewerThan (new DbId (id))
+				let entityTypeId = entry.EntityTypeId
+				let rowKey = new DbKey (entry.EntityId)
+				let entityKey = new EntityKey (entityTypeId, rowKey)
+				let entity = this.GetEntity (entityKey)
+				where entity != null
+				select entity
+			);
 
-			foreach (var entityDeletionEntry in entityDeletionEntries)
-			{
-				Druid entityTypeId = entityDeletionEntry.EntityTypeId;
-				DbKey rowKey = new DbKey (entityDeletionEntry.EntityId);
+			this.CleanDeletedEntities (deletedEntities, EntityChangedEventSource.Reload, EntityChangedEventSource.Reload);
 
-				EntityKey entityKey = new EntityKey (entityTypeId, rowKey);
-
-				AbstractEntity deletedEntity = this.GetEntity (entityKey);
-
-				if (deletedEntity != null)
-				{
-					this.RemoveAllReferences (deletedEntity, EntityChangedEventSource.Reload);
-					this.MarkAsDeleted (deletedEntity);
-					this.NotifyEntityChanged (deletedEntity, EntityChangedEventSource.Reload, EntityChangedEventType.Deleted);
-
-					deletions = true;
-				}
-			}
-
-			return deletions;
+			return deletedEntities.Any ();
 		}
 
 
@@ -1183,12 +1173,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			if (this.Contains (job.EntityKey))
 			{
-				AbstractEntity entity = this.GetEntity (job.EntityKey);
+				var deletedEntity = this.GetEntity (job.EntityKey);
+				var deletedEntities = new AbstractEntity[] { deletedEntity };
 
-				this.MarkAsDeleted (entity);
-				this.RemoveAllReferences (entity, EntityChangedEventSource.Synchronization);
-
-				this.NotifyEntityChanged (entity, EntityChangedEventSource.Synchronization, EntityChangedEventType.Deleted);
+				// TODO Here we could have a significant performance benefit by executing all the
+				// delete synchronization jobs at once.
+				this.CleanDeletedEntities(deletedEntities, EntityChangedEventSource.Synchronization, EntityChangedEventSource.Synchronization);
 			}
 		}
 
@@ -1311,78 +1301,129 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Removes all references to an <see cref="AbstractEntity"/> from all the <see cref="AbstractEntity"/>
-		/// managed by this instance.
+		/// Cleans all the stuff associated with entities that have been deleted.
 		/// </summary>
-		/// <param name="target">The <see cref="AbstractEntity"/> whose references to remove.</param>
-		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
-		internal void RemoveAllReferences(AbstractEntity target, EntityChangedEventSource eventSource)
+		/// <param name="deletedEntities">The <see cref="AbstractEntity"/> that have been deleted.</param>
+		/// <param name="referenceRemovalSource">The source of the event that will be fired for any removal of reference towards a deleted entity.</param>
+		/// <param name="deletionSource">The source of the event that will be fired for all deleted entities.</param>
+		internal void CleanDeletedEntities(IEnumerable<AbstractEntity> deletedEntities, EntityChangedEventSource referenceRemovalSource, EntityChangedEventSource deletionSource)
 		{
-			foreach (var item in this.GetPossibleReferencers (target))
-			{
-				AbstractEntity source = item.Key;
-				Druid fieldId = item.Value;
+			this.RemoveAllReferences (deletedEntities, referenceRemovalSource);
 
-				this.RemoveReference (source, fieldId, target, eventSource);
+			foreach (AbstractEntity entity in deletedEntities)
+			{
+				this.MarkAsDeleted (entity);
+				this.NotifyEntityChanged (entity, deletionSource, EntityChangedEventType.Deleted);
 			}
 		}
 
 
 		/// <summary>
-		/// Removes the relation with an <see cref="AbstractEntity"/> in another a field of another
-		/// <see cref="AbstractEntity"/>.
+		/// Removes all references to a sequence of <see cref="AbstractEntity"/> from all the
+		/// <see cref="AbstractEntity"/> managed by this instance.
 		/// </summary>
-		/// <param name="source">The <see cref="AbstractEntity"/> whose reference or collection field to clean up.</param>
-		/// <param name="fieldId">The <see cref="Druid"/> of the field to clean up.</param>
-		/// <param name="target">The <see cref="AbstractEntity"/> that must be removed from the field.</param>
+		/// <param name="targets">The sequence of <see cref="AbstractEntity"/> whose references to remove.</param>
 		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
-		internal void RemoveReference(AbstractEntity source, Druid fieldId, AbstractEntity target, EntityChangedEventSource eventSource)
+		internal void RemoveAllReferences(IEnumerable<AbstractEntity> targets, EntityChangedEventSource eventSource)
 		{
-			Druid entityTypeId = source.GetEntityStructuredTypeId ();
-			StructuredTypeField field = this.TypeEngine.GetField (entityTypeId, fieldId);
+			var targetSet = new HashSet<AbstractEntity> (targets);
 
-			bool updated = false;
+			var fields = targets
+				.Select (e => e.GetEntityStructuredTypeId ())
+				.Distinct ()
+				.SelectMany (id => this.TypeEngine.GetReferencingFields (id).Select (i => System.Tuple.Create (i.Key, i.Value)))
+				.Distinct ()
+				.GroupBy (t => t.Item1)
+				.ToDictionary (g => g.Key, g => g.SelectMany (t => t.Item2).ToList ());
 
-			using (source.UseSilentUpdates ())
-			using (source.DisableEvents ())
-			using (source.DisableReadOnlyChecks ())
+			foreach (var source in this.GetEntities ())
 			{
-				switch (field.Relation)
+				var updated = false;
+
+				Druid leafSourceEntityId = source.GetEntityStructuredTypeId ();
+				var localSourceEntityTypes = this.TypeEngine.GetBaseTypes (leafSourceEntityId);
+
+				using (source.UseSilentUpdates ())
+				using (source.DisableEvents ())
+				using (source.DisableReadOnlyChecks ())
 				{
-					case FieldRelation.Reference:
-
-						if (source.InternalGetValue (field.Id) == target)
+					foreach (var localSourceEntityType in localSourceEntityTypes)
+					{
+						List<StructuredTypeField> localFields;
+						
+						if (fields.TryGetValue (localSourceEntityType, out localFields))
 						{
-							source.InternalSetValue (field.Id, null);
+							foreach (var field in localFields)
+							{
+								var fieldUpdated = this.RemoveReference (source, field, targetSet, eventSource);
 
-							updated = true;
+								updated = updated || fieldUpdated;
+							}
 						}
+					}
+				}
 
-						break;
-
-					case FieldRelation.Collection:
-
-						IList collection = source.InternalGetFieldCollection (field.Id) as IList;
-
-						while (collection.Contains (target))
-						{
-							collection.Remove (target);
-
-							updated = true;
-						}
-
-						break;
-
-					default:
-
-						throw new System.InvalidOperationException ();
+				if (updated)
+				{
+					this.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
 				}
 			}
+		}
 
-			if (updated)
+
+		/// <summary>
+		/// Removes any relation with a sequence of <see cref="AbstractEntity"/> that are referenced
+		/// in a field of another <see cref="AbstractEntity"/>.
+		/// </summary>
+		/// <param name="source">The <see cref="AbstractEntity"/> whose reference or collection field to clean up.</param>
+		/// <param name="field">The <see cref="StructuredTypeField"/> of the field to clean up.</param>
+		/// <param name="targets">The sequence of <see cref="AbstractEntity"/> that must be removed from the field.</param>
+		/// <param name="eventSource">The source that must be used for the event to be fired.</param>
+		internal bool RemoveReference(AbstractEntity source, StructuredTypeField field, HashSet<AbstractEntity> targets, EntityChangedEventSource eventSource)
+		{
+			bool updated = false;
+
+			switch (field.Relation)
 			{
-				this.NotifyEntityChanged (source, eventSource, EntityChangedEventType.Updated);
+				case FieldRelation.Reference:
+
+					var target = source.InternalGetValue (field.Id) as AbstractEntity;
+
+					if (target != null && targets.Contains (target))
+					{
+						source.InternalSetValue (field.Id, null);
+
+						updated = true;
+					}
+
+					break;
+
+				case FieldRelation.Collection:
+
+					IList collection = source.InternalGetFieldCollection (field.Id);
+
+					for (int i = 0; i < collection.Count; i++)
+					{
+						var item = collection[i] as AbstractEntity;
+
+						if (item != null && targets.Contains (item))
+						{
+							collection.RemoveAt (i);
+
+							i--;
+
+							updated = true;
+						}
+					}
+
+					break;
+
+				default:
+
+					throw new System.InvalidOperationException ();
 			}
+
+			return updated;
 		}
 
 

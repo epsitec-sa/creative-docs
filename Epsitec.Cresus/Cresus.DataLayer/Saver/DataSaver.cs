@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.DataLayer.Saver
 
 			var synchronizationJobs = this.ConvertPersistenceJobs (persistenceJobs);
 
-			this.CleanDeletedEntities (entitiesToDelete);
+			this.DataContext.CleanDeletedEntities (entitiesToDelete, EntityChangedEventSource.Internal, EntityChangedEventSource.External);
 			this.DataContext.ClearFieldsToResave ();
 			this.UpdateDataGeneration ();
 
@@ -238,23 +238,6 @@ namespace Epsitec.Cresus.DataLayer.Saver
 				transaction.Commit ();
 
 				return newEntityKeys;
-			}
-		}
-
-
-		/// <summary>
-		/// Tells the associated <see cref="DataContext"/> that the <see cref="AbstractEntity"/>
-		/// that where to be deleted are deleted and that it must take care of the cleaning.
-		/// </summary>
-		/// <param name="entitiesDeleted">The <see cref="AbstractEntity"/> that have been deleted.</param>
-		private void CleanDeletedEntities(IEnumerable<AbstractEntity> entitiesDeleted)
-		{
-			foreach (AbstractEntity entity in entitiesDeleted)
-			{
-				this.DataContext.RemoveAllReferences (entity, EntityChangedEventSource.Internal);
-				this.DataContext.MarkAsDeleted (entity);
-
-				this.DataContext.NotifyEntityChanged (entity, EntityChangedEventSource.External, EntityChangedEventType.Deleted);
 			}
 		}
 
