@@ -17,15 +17,12 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static IEnumerable<Dictionary<GroupHeader, string>> ReadGroups(FileInfo input)
+		public static IEnumerable<Dictionary<GroupHeader, string>> ReadGroups(FileInfo groupFile, FileInfo superGroupFile)
 		{
-			return EervDataReader.GetRecords (input, EervDataReader.groupHeaders);
-		}
+			var groups = EervDataReader.GetRecords (groupFile, EervDataReader.groupHeaders);
+			var superGroups = EervDataReader.GetRecords (superGroupFile, EervDataReader.superGroupHeaders);
 
-
-		public static IEnumerable<Dictionary<GroupHeader, string>> ReadSuperGroups(FileInfo input)
-		{
-			return EervDataReader.GetRecords (input, EervDataReader.superGroupHeaders);
+			return groups.Concat (superGroups);
 		}
 
 

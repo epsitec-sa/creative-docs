@@ -26,11 +26,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile)
 		{
-			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personFile).ToList ();
-			var allPersons = EervParishDataLoader.LoadEervPersons (personFile).ToList ();
-			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personFile).ToList ();
-			var allActivities = EervParishDataLoader.LoadEervActivities (activityFile).ToList ();
-			var allGroups = EervParishDataLoader.LoadEervGroups (groupFile, superGroupFile).ToList ();
+			var personRecords = EervDataReader.ReadPersons (personFile).ToList ();
+			var activityRecords = EervDataReader.ReadActivities (activityFile).ToList ();
+			var groupRecords = EervDataReader.ReadGroups (groupFile, superGroupFile).ToList ();
+
+			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personRecords).ToList ();
+			var allPersons = EervParishDataLoader.LoadEervPersons (personRecords).ToList ();
+			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personRecords).ToList ();
+			var allActivities = EervParishDataLoader.LoadEervActivities (activityRecords).ToList ();
+			var allGroups = EervParishDataLoader.LoadEervGroups (groupRecords).ToList ();
 
 			var groupedHouseholds = EervParishDataLoader.GroupByParish (allHouseholds);
 			var groupedPersons = EervParishDataLoader.GroupByParish (allPersons);
@@ -263,13 +267,10 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<Tuple<EervGroup, List<string>>, string>> LoadEervGroups(FileInfo groupFile, FileInfo superGroupFile)
+		internal static IEnumerable<Tuple<Tuple<EervGroup, List<string>>, string>> LoadEervGroups(IEnumerable<Dictionary<GroupHeader, string>> records)
 		{
-			var groups = EervDataReader.ReadGroups (groupFile);
-			var superGroups = EervDataReader.ReadSuperGroups (superGroupFile);
-
-			return from record in groups.Concat (superGroups)
-				   select EervParishDataLoader.GetEervGroup (record);
+			return from record in records
+				   select EervParishDataLoader.GetEervGroup(record);
 		}
 
 
@@ -307,9 +308,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<Tuple<EervActivity, string, string>, string>> LoadEervActivities(FileInfo inputFile)
+		internal static IEnumerable<Tuple<Tuple<EervActivity, string, string>, string>> LoadEervActivities(IEnumerable<Dictionary<ActivityHeader, string>> records)
 		{
-			return from record in EervDataReader.ReadActivities (inputFile)
+			return from record in records
 			select EervParishDataLoader.GetEervActivity (record);
 		}
 
@@ -334,11 +335,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<EervHousehold, string>> LoadEervHouseholds(FileInfo inputFile)
+		internal static IEnumerable<Tuple<EervHousehold, string>> LoadEervHouseholds(IEnumerable<Dictionary<PersonHeader, string>> records)
 		{
 			HashSet<string> processedIds = new HashSet<string> ();
 
-			foreach (var record in EervDataReader.ReadPersons (inputFile))
+			foreach (var record in records)
 			{
 				var isHousehold = EervParishDataLoader.IsEervPerson (record);
 
@@ -407,17 +408,17 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		internal static IEnumerable<Tuple<Tuple<EervPerson, Tuple<string, int?>>, string>> LoadEervPersons(FileInfo inputFile)
+		internal static IEnumerable<Tuple<Tuple<EervPerson, Tuple<string, int?>>, string>> LoadEervPersons(IEnumerable<Dictionary<PersonHeader, string>> records)
 		{
-			return from record in EervDataReader.ReadPersons (inputFile)
+			return from record in records
 				   where EervParishDataLoader.IsEervPerson (record)
 				   select EervParishDataLoader.GetEervPerson (record);
 		}
 
 
-		internal static IEnumerable<Tuple<EervLegalPerson, string>> LoadEervLegalPersons(FileInfo inputFile)
+		internal static IEnumerable<Tuple<EervLegalPerson, string>> LoadEervLegalPersons(IEnumerable<Dictionary<PersonHeader, string>> records)
 		{
-			return from record in EervDataReader.ReadPersons (inputFile)
+			return from record in records
 				   where !EervParishDataLoader.IsEervPerson (record)
 				   select EervParishDataLoader.GetEervLegalPerson (record);
 		}

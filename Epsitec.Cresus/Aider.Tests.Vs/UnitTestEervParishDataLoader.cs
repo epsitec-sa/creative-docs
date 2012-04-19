@@ -26,7 +26,8 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervHouseholdsTest()
 		{
-			var households = EervParishDataLoader.LoadEervHouseholds (this.PersonsFile).ToList ();
+			var records = EervDataReader.ReadPersons (this.PersonsFile);
+			var households = EervParishDataLoader.LoadEervHouseholds (records).ToList ();
 
 			Assert.AreEqual (4594, households.Count);
 
@@ -47,7 +48,8 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervPersonsTest()
 		{
-			var persons = EervParishDataLoader.LoadEervPersons (this.PersonsFile).ToList ();
+			var records = EervDataReader.ReadPersons (this.PersonsFile);
+			var persons = EervParishDataLoader.LoadEervPersons (records).ToList ();
 
 			Assert.AreEqual (7255, persons.Count);
 
@@ -74,21 +76,22 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervLegalPersonsTest()
 		{
-		    var legalPersons = EervParishDataLoader.LoadEervLegalPersons (this.PersonsFile).ToList ();
+			var records = EervDataReader.ReadPersons (this.PersonsFile);
+			var legalPersons = EervParishDataLoader.LoadEervLegalPersons (records).ToList ();
 
-		    Assert.AreEqual (34, legalPersons.Count);
+			Assert.AreEqual (34, legalPersons.Count);
 
-		    var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null))
-		    {
-		        ContactPerson = new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-		    };
+			var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null))
+			{
+				ContactPerson = new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
+			};
 			var t1 = Tuple.Create (p1, "9040000000");
-		    this.CheckForEquality (t1, legalPersons[0]);
+			this.CheckForEquality (t1, legalPersons[0]);
 
-		    var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null))
-		    {
-		        ContactPerson = new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-		    };
+			var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null))
+			{
+				ContactPerson = new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
+			};
 			var t2 = Tuple.Create (p2, "9040000000");
 			this.CheckForEquality (t2, legalPersons[6]);
 		}
@@ -97,25 +100,29 @@ namespace Aider.Tests.Vs
 		[TestMethod]
 		public void LoadEervGroupsTest()
 		{
-		    var groups = EervParishDataLoader.LoadEervGroups (this.GroupFile, this.SuperGroupFile).ToList ();
+			var records = EervDataReader.ReadGroups (this.GroupFile, this.SuperGroupFile);
+			var groups = EervParishDataLoader.LoadEervGroups (records).ToList ();
 
-		    Assert.AreEqual (180, groups.Count);
+			Assert.AreEqual (180, groups.Count);
 
 			var g1 = Tuple.Create (Tuple.Create (new EervGroup ("0403110100", "Office de Taizé"), new List<string> () { "0403110000" }), "9040000000");
-		    this.CheckForEquality (g1, groups[0]);
+			this.CheckForEquality (g1, groups[0]);
 
-		    var g2 = Tuple.Create (Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" }), "9040000000");
-		    this.CheckForEquality (g2, groups[16]);
+			var g2 = Tuple.Create (Tuple.Create (new EervGroup ("0403111700", "Groupes d'adultes"), new List<string> () { "0403110000" }), "9040000000");
+			this.CheckForEquality (g2, groups[16]);
 
-		    var g3 = Tuple.Create (Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> () { }), "9040000000");
-		    this.CheckForEquality (g3, groups[176]);
+			var g3 = Tuple.Create (Tuple.Create (new EervGroup ("0403120000", "St-Nicolas"), new List<string> ()
+			{
+			}), "9040000000");
+			this.CheckForEquality (g3, groups[176]);
 		}
 
 
 		[TestMethod]
 		public void LoadEervActivitiesTest()
 		{
-			var activities = EervParishDataLoader.LoadEervActivities (this.ActivityFile).ToList ();
+			var records = EervDataReader.ReadActivities (this.ActivityFile);
+			var activities = EervParishDataLoader.LoadEervActivities (records).ToList ();
 
 			Assert.AreEqual (6330, activities.Count);
 
@@ -130,7 +137,7 @@ namespace Aider.Tests.Vs
 		private void CheckForEquality(Tuple<Tuple<EervActivity, string, string>, string> expected, Tuple<Tuple<EervActivity, string, string>, string> actual)
 		{
 			this.CheckForEquality (expected.Item1.Item1, actual.Item1.Item1);
-			
+
 			Assert.AreEqual (expected.Item1.Item2, actual.Item1.Item2);
 			Assert.AreEqual (expected.Item1.Item3, actual.Item1.Item3);
 			Assert.AreEqual (expected.Item2, actual.Item2);
@@ -173,7 +180,7 @@ namespace Aider.Tests.Vs
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
 			Assert.AreEqual (expected.Remarks, actual.Remarks);
-			
+
 			this.CheckForEquality (expected.Address, actual.Address);
 			this.CheckForEquality (expected.Coordinates, actual.Coordinates);
 		}
@@ -245,8 +252,8 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (expected.Item2, actual.Item2);
 		}
-		
-		
+
+
 		private void CheckForEquality(EervLegalPerson expected, EervLegalPerson actual)
 		{
 			Assert.AreEqual (expected.Id, actual.Id);
