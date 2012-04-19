@@ -1102,6 +1102,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		protected void SetColumnParameters(ColumnType columnType, bool show, FormattedText description)
+		{
+			//	Détermine l'état montré/caché d'une colonne ainsi que son titre.
+			//	Si la colonne est cachée, elle sera également invisible dans le menu
+			//	combo du filtre.
+
+			//	Une description vide (à spécifier *avant* ShowHideColumn) permet de cacher la colonne
+			//	dans le menu combo du filtre !
+			this.SetColumnDescription (columnType, show ? description : FormattedText.Null);
+			this.ShowHideColumn (columnType, show);
+		}
+
 		protected void ShowHideColumn(ColumnType columnType, bool show)
 		{
 			//	Détermine l'état montré/caché d'une colonne.

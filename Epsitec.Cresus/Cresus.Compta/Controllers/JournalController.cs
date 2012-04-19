@@ -211,8 +211,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as JournalOptions;
 
-			this.ShowHideColumn (ColumnType.Journal, options.JournalId == 0);  // tous les journaux ?
-			this.ShowHideColumn (ColumnType.Type, this.settingsList.GetBool (SettingsType.EcritureMontreType));
+			this.ShowHideColumn (ColumnType.Journal,    options.JournalId == 0);  // tous les journaux ?
+			this.ShowHideColumn (ColumnType.Type,       this.settingsList.GetBool (SettingsType.EcritureMontreType));
 			this.ShowHideColumn (ColumnType.OrigineTVA, this.settingsList.GetBool (SettingsType.EcritureMontreOrigineTVA));
 			this.ShowHideColumn (ColumnType.MontantTTC, this.settingsList.GetBool (SettingsType.EcritureTVA));
 		}

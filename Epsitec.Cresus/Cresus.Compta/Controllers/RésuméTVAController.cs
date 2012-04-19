@@ -188,13 +188,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as RésuméTVAOptions;
 
-			this.ShowHideColumn (ColumnType.Compte,     (!options.MontreEcritures && !options.ParCodesTVA) || (options.MontreEcritures && options.ParCodesTVA));
-			this.ShowHideColumn (ColumnType.CodeTVA,    (!options.MontreEcritures && options.ParCodesTVA) || (options.MontreEcritures && !options.ParCodesTVA));
-			this.ShowHideColumn (ColumnType.TauxTVA,    options.MontreEcritures ||  options.ParCodesTVA);
-			this.ShowHideColumn (ColumnType.Date,       options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.Pièce,      options.MontreEcritures);
-			this.ShowHideColumn (ColumnType.Compte2,    !options.MontreEcritures &&  options.ParCodesTVA);
-			this.ShowHideColumn (ColumnType.Différence, options.MontreEcritures);
+			this.SetColumnParameters (ColumnType.Compte,     (!options.MontreEcritures && !options.ParCodesTVA) || (options.MontreEcritures && options.ParCodesTVA), "Compte");
+			this.SetColumnParameters (ColumnType.CodeTVA,    (!options.MontreEcritures && options.ParCodesTVA) || (options.MontreEcritures && !options.ParCodesTVA), "Code TVA");
+			this.SetColumnParameters (ColumnType.TauxTVA,    options.MontreEcritures ||  options.ParCodesTVA, "Taux");
+			this.SetColumnParameters (ColumnType.Date,       options.MontreEcritures, "Date");
+			this.SetColumnParameters (ColumnType.Pièce,      options.MontreEcritures, "Pièce");
+			this.SetColumnParameters (ColumnType.Compte2,    !options.MontreEcritures &&  options.ParCodesTVA, "Compte");
+			this.SetColumnParameters (ColumnType.Différence, options.MontreEcritures, "Diff.");
 
 			if (options.MontreEcritures)
 			{
