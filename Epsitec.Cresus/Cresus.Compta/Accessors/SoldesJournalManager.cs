@@ -6,6 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -150,17 +151,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private bool DatesMatch(Date date)
 		{
-			if (this.dateDébut.HasValue && date < this.dateDébut.Value)
-			{
-				return false;
-			}
-
-			if (this.dateFin.HasValue && date > this.dateFin.Value)
-			{
-				return false;
-			}
-
-			return true;
+			return Dates.DateInRange (date, this.dateDébut, this.dateFin);
 		}
 
 

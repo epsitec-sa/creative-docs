@@ -67,6 +67,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override int ArrayLineHeight
+		{
+			get
+			{
+				var options = this.dataAccessor.Options as RésuméPériodiqueOptions;
+
+				if (!options.HasGraphics || options.Cumul)
+				{
+					return 14;
+				}
+				else
+				{
+					var accessor = this.dataAccessor as RésuméPériodiqueDataAccessor;
+					return System.Math.Max (2+accessor.ColumnCount*6, 14);
+				}
+			}
+		}
+
+
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new RésuméPériodiqueOptionsController (this);
@@ -227,7 +246,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Montre les colonnes des soldes requises et détermine leurs titres.
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, options, (index, dateDébut, dateFin) =>
 			{
-				this.SetColumnParameters (ColumnType.Solde1+index, true, Dates.GetMonthShortDescription (dateDébut, Dates.AddDays (dateFin, -1)));
+				this.SetColumnParameters (ColumnType.Solde1+index, true, Dates.GetMonthShortDescription (dateDébut, dateFin));
 			});
 
 			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);

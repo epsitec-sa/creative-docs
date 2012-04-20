@@ -39,6 +39,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		public int ColumnCount
+		{
+			get
+			{
+				return this.columnCount;
+			}
+		}
+
+
 		public override void UpdateFilter()
 		{
 			this.UpdateReadonlyAllData ();
@@ -61,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{
 				var soldesManager = new SoldesJournalManager (this.compta);
-				soldesManager.Initialize (this.période.Journal, dateDébut, Dates.AddDays (dateFin, -1));
+				soldesManager.Initialize (this.période.Journal, dateDébut, dateFin);
 				soldesManagers.Add (soldesManager);
 			});
 
@@ -136,21 +145,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			foreach (var d in this.readonlyData)
 			{
 				var data = d as RésuméPériodiqueData;
-				decimal solde = 0;
 
 				if (this.Options.Cumul)
 				{
-					solde = data.GetSolde (this.columnCount-1).GetValueOrDefault ();
+					decimal solde = System.Math.Max (data.GetSolde (this.columnCount-1).GetValueOrDefault (), 0);
+					this.SetMinMaxValue (solde);
 				}
 				else
 				{
 					for (int i = 0; i < this.columnCount; i++)
 					{
-						solde += data.GetSolde (i).GetValueOrDefault ();
+						decimal solde = data.GetSolde (i).GetValueOrDefault ();
+						this.SetMinMaxValue (solde);
 					}
 				}
-
-				this.SetMinMaxValue (solde);
 			}
 		}
 
@@ -208,21 +216,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (GraphicMode.RésuméPériodique, this.minValue, this.maxValue);
+				var graphicData = new GraphicData (this.Options.Cumul ? GraphicMode.Cumul : GraphicMode.Empile, this.minValue, this.maxValue);
 
-				decimal lastSolde = 0;
 				for (int i = 0; i < this.columnCount; i++)
 				{
-					var solde = System.Math.Max (data.GetSolde (i).GetValueOrDefault (), 0);
-					var soldeBrut = solde;
-
-					if (this.Options.Cumul)
-					{
-						solde -= lastSolde;
-					}
-
-					lastSolde = soldeBrut;
-
+					var solde = data.GetSolde (i).GetValueOrDefault ();
 					graphicData.Values.Add (solde);
 				}
 

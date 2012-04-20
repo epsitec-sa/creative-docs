@@ -15,6 +15,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 	{
 		Normal,
 		Budget,
-		RésuméPériodique,
+		Cumul,
+		Empile,
 	}
 }
