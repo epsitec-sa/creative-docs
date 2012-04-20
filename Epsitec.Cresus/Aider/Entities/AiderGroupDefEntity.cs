@@ -4,8 +4,10 @@
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
+
 using System.Linq;
 
 namespace Epsitec.Aider.Entities
@@ -25,6 +27,18 @@ namespace Epsitec.Aider.Entities
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return this.Name;
+		}
+
+		public static AiderGroupDefEntity Find(BusinessContext businessContext, string name)
+		{
+			var example = new AiderGroupDefEntity ()
+			{
+				Name = name,
+			};
+
+			return businessContext.DataContext
+				.GetByExample<AiderGroupDefEntity> (example)
+				.FirstOrDefault ();
 		}
 	}
 }
