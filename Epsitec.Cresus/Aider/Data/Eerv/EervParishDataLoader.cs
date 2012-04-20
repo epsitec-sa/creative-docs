@@ -30,6 +30,8 @@ namespace Epsitec.Aider.Data.Eerv
 			var activityRecords = EervDataReader.ReadActivities (activityFile).ToList ();
 			var groupRecords = EervDataReader.ReadGroups (groupFile, superGroupFile).ToList ();
 
+			EervParishDataLoader.FixPersonRecords (personRecords);
+
 			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personRecords).ToList ();
 			var allPersons = EervParishDataLoader.LoadEervPersons (personRecords).ToList ();
 			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personRecords).ToList ();
@@ -77,6 +79,43 @@ namespace Epsitec.Aider.Data.Eerv
 				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
 				yield return new EervParishData (parishId, households, rawPersons, legalPersons, rawGroups);
+			}
+		}
+
+
+		private static void FixPersonRecords(IEnumerable<Dictionary<PersonHeader, string>> records)
+		{
+			// Here we fix some records that we know are wrong. I noticed that sometimes, the
+			// corporate name is used for text such as "c/o Monsieur Dupond". There is no way that
+			// this could be a corporate name. It is in fact the first line of the address. So if we
+			// encounter such corporate name, we remove them and place them instead in the first
+			// address line. The additional subtelty is that the first address line might contain
+			// something and that something might be exactly the same text as in the corporate name.
+
+			var prefixes = new List<string> ()
+			{
+				"c/o", "/co", "c /"
+			};
+
+			foreach (var record in records)
+			{
+				var corporateName = record[PersonHeader.CorporateName];
+				var firstAddressLine = record[PersonHeader.FirstAddressLine];
+
+				if (corporateName != null)
+				{
+					var normalizedCorporateName = corporateName.ToLowerInvariant ();
+
+					if (prefixes.Any (p => normalizedCorporateName.StartsWith (p)))
+					{
+						record[PersonHeader.CorporateName] = null;
+
+						if (firstAddressLine != corporateName)
+						{
+							record[PersonHeader.FirstAddressLine] = string.Join (", ", corporateName, firstAddressLine);
+						}
+					}
+				}
 			}
 		}
 
