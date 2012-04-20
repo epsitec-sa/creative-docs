@@ -16,9 +16,9 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static EervMainData LoadEervData(FileInfo inputFile)
+		public static EervMainData LoadEervData(FileInfo groupDefinitionFile)
 		{
-			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (inputFile).ToList ();
+			var groupDefinitions = EervMainDataLoader.LoadEervGroupDefinitions (groupDefinitionFile).ToList ();
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
