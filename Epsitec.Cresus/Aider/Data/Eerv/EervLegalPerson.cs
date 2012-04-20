@@ -13,29 +13,15 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public EervLegalPerson(string id, string name, EervAddress address, EervCoordinates coordinates)
+		public EervLegalPerson(string id, string name, EervAddress address, EervCoordinates coordinates, EervPerson contactPerson)
 		{
 			this.Id = id;
 			this.Name = name;
 			this.Address = address;
 			this.Coordinates = coordinates;
+			this.ContactPerson = contactPerson;
 
 			this.activities = new List<EervActivity> ();
-		}
-
-
-		public EervPerson ContactPerson
-		{
-			get
-			{
-				return this.contactPerson;
-			}
-			set
-			{
-				this.ThrowIfReadOnly ();
-
-				this.contactPerson = value;
-			}
 		}
 
 
@@ -60,9 +46,9 @@ namespace Epsitec.Aider.Data.Eerv
 		public readonly string Name;
 		public readonly EervAddress Address;
 		public readonly EervCoordinates Coordinates;
+		public readonly EervPerson ContactPerson;
 
 
-		private EervPerson contactPerson;
 		private IList<EervActivity> activities;
 
 

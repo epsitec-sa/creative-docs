@@ -509,12 +509,9 @@ namespace Epsitec.Aider.Data.Eerv
 			var coordinates = EervParishDataLoader.GetCoordinates1 (record);
 			var contactPerson = EervParishDataLoader.GetEervPerson (record).Item1.Item1;
 
-			var parishId = record[PersonHeader.ParishId];
+			var legalPerson = new EervLegalPerson (id, name, address, coordinates, contactPerson);
 
-			var legalPerson = new EervLegalPerson (id, name, address, coordinates)
-			{
-				ContactPerson = contactPerson,
-			};
+			var parishId = record[PersonHeader.ParishId];
 
 			return Tuple.Create (legalPerson, parishId);
 		}

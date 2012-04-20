@@ -81,17 +81,11 @@ namespace Aider.Tests.Vs
 
 			Assert.AreEqual (34, legalPersons.Count);
 
-			var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null))
-			{
-				ContactPerson = new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-			};
+			var p1 = new EervLegalPerson ("4030043016", "Services sociaux Couvaloup", new EervAddress (null, "Rue de Couvaloup", 10, null, "1110", "Morges"), new EervCoordinates (null, null, null, null, null), new EervPerson ("4030043016", "Jacques", "Baudat", null, null, null, "Monsieur", PersonSex.Male, PersonMaritalStatus.None, null, null, PersonConfession.Protestant, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)));
 			var t1 = Tuple.Create (p1, "9040000000");
 			this.CheckForEquality (t1, legalPersons[0]);
 
-			var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null))
-			{
-				ContactPerson = new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null))
-			};
+			var p2 = new EervLegalPerson ("4030043037", "Paroisse catholique de Morges", new EervAddress (null, "Route du Rond-Point", 2, null, "1110", "Morges"), new EervCoordinates ("801 24 35", null, null, "803 14 94", null), new EervPerson ("4030043037", null, "Secrétariat", null, null, null, null, PersonSex.Unknown, PersonMaritalStatus.None, null, null, PersonConfession.Unknown, null, null, null, null, null, null, null, null, null, null, null, new EervCoordinates (null, null, null, null, null)));
 			var t2 = Tuple.Create (p2, "9040000000");
 			this.CheckForEquality (t2, legalPersons[6]);
 		}
