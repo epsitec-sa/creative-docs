@@ -31,10 +31,10 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Import(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
 		{
-			// TODO Import legal persons
 			// TODO Import group & activity data
 
 			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervParishData);
+			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, parishName, eervParishData);
 		}
 
 
@@ -194,24 +194,35 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!string.IsNullOrEmpty (honorific))
 			{
-				switch (honorific)
+				var title =	EervParishDataImporter.GetHonorific(honorific);
+
+				if (title != PersonMrMrs.None)
 				{
-					case "Monsieur":
-						aiderPerson.MrMrs = PersonMrMrs.Monsieur;
-						break;
-
-					case "Madame":
-						aiderPerson.MrMrs = PersonMrMrs.Madame;
-						break;
-
-					case "Mademoiselle":
-						aiderPerson.MrMrs = PersonMrMrs.Mademoiselle;
-						break;
-
-					default:
-						aiderPerson.Title = honorific;
-						break;
+					aiderPerson.MrMrs = title;
 				}
+				else
+				{
+					aiderPerson.Title = honorific;
+				}
+			}
+		}
+
+
+		private static PersonMrMrs GetHonorific(string honorific)
+		{
+			switch (honorific)
+			{
+				case "Monsieur":
+					return PersonMrMrs.Monsieur;
+
+				case "Madame":
+					return PersonMrMrs.Madame;
+
+				case "Mademoiselle":
+					return PersonMrMrs.Mademoiselle;
+
+				default:
+					return PersonMrMrs.None;
 			}
 		}
 
@@ -772,6 +783,38 @@ namespace Epsitec.Aider.Data.Eerv
 					EervParishDataImporter.CombineComments (address, text);
 				}
 			}
+
+			var mobilePhoneNumber = coordinates.MobilePhoneNumber;
+
+			if (!string.IsNullOrWhiteSpace (mobilePhoneNumber))
+			{
+				if (string.IsNullOrWhiteSpace (address.Mobile))
+				{
+					EervParishDataImporter.SetPhoneNumber (address, mobilePhoneNumber, (a, s) => a.Mobile = s);
+				}
+				else
+				{
+					var text = "Numéro de téléphone portable supplémentaire: " + mobilePhoneNumber;
+
+					EervParishDataImporter.CombineComments (address, text);
+				}
+			}
+
+			var emailAddress = coordinates.EmailAddress;
+
+			if (!string.IsNullOrWhiteSpace (emailAddress))
+			{
+				if (string.IsNullOrWhiteSpace (address.Email))
+				{
+					address.Email = emailAddress;
+				}
+				else
+				{
+					var text = "Addresse email supplémentaire: " + mobilePhoneNumber;
+
+					EervParishDataImporter.CombineComments (address, text);
+				}
+			}
 		}
 
 
@@ -795,6 +838,90 @@ namespace Epsitec.Aider.Data.Eerv
 
 			aiderHousehold.Head1 = heads.Count > 0 ? heads[0] : null;
 			aiderHousehold.Head2 = heads.Count > 1 ? heads[1] : null;
+		}
+
+
+		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
+		{
+			businessContextManager.Execute (b =>
+			{
+				EervParishDataImporter.ImportEervLegalPersons (b, parishName, eervParishData.LegalPersons);
+			});
+		}
+
+
+		private static void ImportEervLegalPersons(BusinessContext businessContext, string parishName, IEnumerable<EervLegalPerson> legalPersons)
+		{
+			foreach (var legalPerson in legalPersons)
+			{
+				EervParishDataImporter.ImportEervLegalPerson (businessContext, parishName, legalPerson);
+			}
+
+			businessContext.SaveChanges ();
+		}
+
+
+		private static void ImportEervLegalPerson(BusinessContext businessContext, string parishName, EervLegalPerson legalPerson)
+		{
+			var aiderLegalPerson = businessContext.CreateEntity<AiderLegalPersonEntity> ();
+
+			// NOTE It happens often that the corporate name is empty but that the firstname or the
+			// lastname is filled with the value that should have been in the corporate name field.
+			var emptyCorporateName = string.IsNullOrWhiteSpace (legalPerson.Name);
+
+			if (!emptyCorporateName)
+			{
+				aiderLegalPerson.Name = legalPerson.Name;
+			}
+			else
+			{
+				var lastname = legalPerson.ContactPerson.Lastname;
+				var firstname = legalPerson.ContactPerson.Firstname;
+
+				if (!string.IsNullOrWhiteSpace (lastname))
+				{
+					aiderLegalPerson.Name = lastname;
+				}
+				else if (!string.IsNullOrWhiteSpace (firstname))
+				{
+					aiderLegalPerson.Name = firstname;
+				}
+			}
+
+			var aiderAddress = aiderLegalPerson.Address;
+			EervParishDataImporter.CombineAddress (businessContext, aiderAddress, legalPerson.Address);
+			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.Coordinates);
+			EervParishDataImporter.CombineCoordinates (aiderAddress, legalPerson.ContactPerson.Coordinates);
+
+			var contactPerson = legalPerson.ContactPerson;
+			var aiderLegalPersonContact = businessContext.CreateEntity<AiderLegalPersonContactEntity> ();
+
+			if (!emptyCorporateName)
+			{
+				aiderLegalPersonContact.LegalPerson = aiderLegalPerson;
+				aiderLegalPersonContact.FirstName = contactPerson.Firstname;
+				aiderLegalPersonContact.LastName = contactPerson.Lastname;
+				aiderLegalPersonContact.PersonSex = contactPerson.Sex;
+
+				var honorific = contactPerson.Honorific;
+
+				if (!string.IsNullOrEmpty (honorific))
+				{
+					var title =	EervParishDataImporter.GetHonorific (honorific);
+
+					if (title != PersonMrMrs.None)
+					{
+						aiderLegalPersonContact.MrMrs = title;
+					}
+					else
+					{
+						aiderLegalPersonContact.Title = honorific;
+					}
+				}
+			}
+
+			var comment = "Ce contact a été crée à partir de la personne N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
+			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);			
 		}
 
 
