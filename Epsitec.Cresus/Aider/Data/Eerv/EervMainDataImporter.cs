@@ -1,5 +1,4 @@
 ﻿using Epsitec.Aider.Entities;
-using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
 using Epsitec.Common.Support.Extensions;
@@ -139,21 +138,18 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
-			var regionGroup = businessContext.CreateEntity<AiderGroupEntity> ();
+			var name = "R" + InvariantConverter.ToString (regionCode);
 
-			regionGroup.Name = "R" + InvariantConverter.ToString (regionCode);
-			regionGroup.GroupDef = regionGroupDefinition;
-
-			return regionGroup;
+			return regionGroupDefinition.Instantiate (businessContext, name);
 		}
 
 
 		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish)
 		{
-			var parishGroup = businessContext.CreateEntity<AiderGroupEntity> ();
+			var name = parish.ParishName;
 
-			parishGroup.Name = parish.ParishName;
-			parishGroup.GroupDef = parishGroupDefinition;
+			var parishGroup = parishGroupDefinition.Instantiate (businessContext, name);
+			
 			parishGroup.Root = regionGroups[parish.RegionCode];
 
 			return parishGroup;
