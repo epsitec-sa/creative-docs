@@ -883,18 +883,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
-			var cumul = new List<decimal> ();
+			var cumuls = new List<decimal> ();
 			decimal sum = 0;
 			for (int i = 0; i < values.Count; i++)
 			{
 				sum += values[i];
-				cumul.Add (sum);
+				cumuls.Add (sum);
 			}
 
-			for (int i = cumul.Count-1; i >= 0; i--)
+			for (int i = cumuls.Count-1; i >= 0; i--)
 			{
-				var v1 = (i == 0) ? 0 : values[i-1];
-				var v2 = values[i];
+				var v1 = (i == 0) ? 0 : cumuls[i-1];
+				var v2 = cumuls[i];
 
 				double x1 = System.Math.Floor (rect.Width * (double) v1 / (double) max);
 				double x2 = System.Math.Floor (rect.Width * (double) v2 / (double) max);

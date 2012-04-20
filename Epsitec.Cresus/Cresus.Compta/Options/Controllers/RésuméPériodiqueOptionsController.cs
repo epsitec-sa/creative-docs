@@ -93,16 +93,25 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 200,
+				PreferredWidth = 230,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.graphicButton = new CheckButton
+			this.graphicsCumuléButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Graphique",
-				PreferredWidth = 100,
+				FormattedText  = "Graphiques cumulés",
+				PreferredWidth = 130,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.graphicsEmpiléButton = new CheckButton
+			{
+				Parent         = frame,
+				FormattedText  = "Graphiques empilés",
+				PreferredWidth = 130,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
@@ -134,11 +143,32 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 
-			this.graphicButton.ActiveStateChanged += delegate
+			this.graphicsCumuléButton.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HasGraphics = (this.graphicButton.ActiveState == ActiveState.Yes);
+					this.Options.HasGraphicsCumulé = (this.graphicsCumuléButton.ActiveState == ActiveState.Yes);
+
+					if (this.Options.HasGraphicsCumulé)
+					{
+						this.Options.HasGraphicsEmpilé = false;
+					}
+
+					this.OptionsChanged ();
+				}
+			};
+
+			this.graphicsEmpiléButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.HasGraphicsEmpilé = (this.graphicsEmpiléButton.ActiveState == ActiveState.Yes);
+
+					if (this.Options.HasGraphicsEmpilé)
+					{
+						this.Options.HasGraphicsCumulé = false;
+					}
+
 					this.OptionsChanged ();
 				}
 			};
@@ -161,9 +191,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState   = this.Options.Cumul       ? ActiveState.Yes : ActiveState.No;
-				this.nullButton.ActiveState    = this.Options.HideZero    ? ActiveState.Yes : ActiveState.No;
-				this.graphicButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState          = this.Options.Cumul             ? ActiveState.Yes : ActiveState.No;
+				this.nullButton.ActiveState           = this.Options.HideZero          ? ActiveState.Yes : ActiveState.No;
+				this.graphicsCumuléButton.ActiveState = this.Options.HasGraphicsCumulé ? ActiveState.Yes : ActiveState.No;
+				this.graphicsEmpiléButton.ActiveState = this.Options.HasGraphicsEmpilé ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -207,6 +238,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
 		private CheckButton			nullButton;
-		private CheckButton			graphicButton;
+		private CheckButton			graphicsCumuléButton;
+		private CheckButton			graphicsEmpiléButton;
 	}
 }

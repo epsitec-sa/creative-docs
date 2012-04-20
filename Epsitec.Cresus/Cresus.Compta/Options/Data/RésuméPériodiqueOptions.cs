@@ -21,10 +21,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.NumberOfMonths = 3;  // périodicité trimestrielle
-			this.Cumul          = false;
-			this.HideZero       = true;
-			this.HasGraphics    = true;
+			this.NumberOfMonths    = 3;  // périodicité trimestrielle
+			this.Cumul             = false;
+			this.HideZero          = true;
+			this.HasGraphicsCumulé = true;
+			this.HasGraphicsEmpilé = false;
 		}
 
 
@@ -47,7 +48,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
-		public bool HasGraphics
+		public bool HasGraphicsCumulé
+		{
+			get;
+			set;
+		}
+
+		public bool HasGraphicsEmpilé
 		{
 			get;
 			set;
@@ -73,10 +80,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as RésuméPériodiqueOptions;
-			d.NumberOfMonths = this.NumberOfMonths;
-			d.Cumul          = this.Cumul;
-			d.HideZero       = this.HideZero;
-			d.HasGraphics    = this.HasGraphics;
+			d.NumberOfMonths    = this.NumberOfMonths;
+			d.Cumul             = this.Cumul;
+			d.HideZero          = this.HideZero;
+			d.HasGraphicsCumulé = this.HasGraphicsCumulé;
+			d.HasGraphicsEmpilé = this.HasGraphicsEmpilé;
 
 			base.CopyTo (dst);
 		}
@@ -90,10 +98,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméPériodiqueOptions;
 
-			return this.NumberOfMonths == o.NumberOfMonths &&
-				   this.Cumul          == o.Cumul          &&
-				   this.HideZero       == o.HideZero       &&
-				   this.HasGraphics    == o.HasGraphics;
+			return this.NumberOfMonths    == o.NumberOfMonths    &&
+				   this.Cumul             == o.Cumul             &&
+				   this.HideZero          == o.HideZero          &&
+				   this.HasGraphicsCumulé == o.HasGraphicsCumulé &&
+				   this.HasGraphicsEmpilé == o.HasGraphicsEmpilé;
 		}
 
 
@@ -115,9 +124,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
 				}
 
-				if (this.HasGraphics)
+				if (this.HasGraphicsCumulé)
 				{
-					this.AppendSummaryBuilder ("Graphique");
+					this.AppendSummaryBuilder ("Graphique cumulé");
+				}
+
+				if (this.HasGraphicsEmpilé)
+				{
+					this.AppendSummaryBuilder ("Graphique empilé");
 				}
 
 				return this.StopSummaryBuilder ();

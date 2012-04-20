@@ -146,17 +146,34 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = d as RésuméPériodiqueData;
 
-				if (this.Options.Cumul)
+				//	Construit les valeurs distinctes, c'est-à-dire en mode non cumulé.
+				var simples = new List<decimal> ();
+				decimal last = 0;
+				for (int i = 0; i < this.columnCount; i++)
 				{
-					decimal solde = System.Math.Max (data.GetSolde (this.columnCount-1).GetValueOrDefault (), 0);
-					this.SetMinMaxValue (solde);
+					decimal solde = data.GetSolde (i).GetValueOrDefault ();
+					simples.Add (solde-last);
+
+					if (this.Options.Cumul)
+					{
+						last = solde;
+					}
+				}
+
+				if (this.Options.HasGraphicsCumulé)
+				{
+					decimal sum = 0;
+					for (int i = 0; i < this.columnCount; i++)
+					{
+						sum += simples[i];
+						this.SetMinMaxValue (sum);
+					}
 				}
 				else
 				{
 					for (int i = 0; i < this.columnCount; i++)
 					{
-						decimal solde = data.GetSolde (i).GetValueOrDefault ();
-						this.SetMinMaxValue (solde);
+						this.SetMinMaxValue (simples[i]);
 					}
 				}
 			}
@@ -216,12 +233,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (this.Options.Cumul ? GraphicMode.Cumul : GraphicMode.Empile, this.minValue, this.maxValue);
+				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumul : GraphicMode.Empile, this.minValue, this.maxValue);
 
+				//	Les valeurs données au module graphique sont toujours distinctes, c'est-à-dire en
+				//	mode non cumulé.
+				decimal last = 0;
 				for (int i = 0; i < this.columnCount; i++)
 				{
 					var solde = data.GetSolde (i).GetValueOrDefault ();
-					graphicData.Values.Add (solde);
+					graphicData.Values.Add (solde-last);
+					
+					if (this.Options.Cumul)
+					{
+						last = solde;
+					}
 				}
 
 				return graphicData.ToString ();

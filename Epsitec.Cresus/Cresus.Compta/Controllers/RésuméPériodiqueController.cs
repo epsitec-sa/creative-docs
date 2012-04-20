@@ -73,14 +73,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var options = this.dataAccessor.Options as RésuméPériodiqueOptions;
 
-				if (!options.HasGraphics || options.Cumul)
-				{
-					return 14;
-				}
-				else
+				if (options.HasGraphicsEmpilé)
 				{
 					var accessor = this.dataAccessor as RésuméPériodiqueDataAccessor;
 					return System.Math.Max (2+accessor.ColumnCount*6, 14);
+				}
+				else
+				{
+					return 14;
 				}
 			}
 		}
@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SetColumnParameters (ColumnType.Solde1+index, true, Dates.GetMonthShortDescription (dateDébut, dateFin));
 			});
 
-			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphicsCumulé || options.HasGraphicsEmpilé);
 		}
 	}
 }
