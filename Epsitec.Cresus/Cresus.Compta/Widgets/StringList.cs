@@ -772,9 +772,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
 
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0)));
+			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
 
 			rect.Deflate (2);
 			rect = graphics.Align (rect);
@@ -782,6 +783,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
 			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
 			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
@@ -801,10 +804,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
-			graphics.RenderSolid (Color.FromBrightness (0));
+			graphics.RenderSolid (borderColor);
 
 			graphics.AddRectangle (rect);
-			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
+			graphics.RenderSolid (borderColor);
 		}
 
 		private void PaintGraphicValueBudget(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value, decimal solde)
@@ -815,9 +818,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
 
 			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0)));
+			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
 
 			rect.Deflate (2);
 			rect = graphics.Align (rect);
@@ -825,6 +829,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
+			graphics.AddFilledRectangle (rect);
+			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
 			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
 			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
@@ -848,10 +854,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
 			graphics.AddLine (rect.Left+sol, rect.Bottom, rect.Left+sol, rect.Top);
-			graphics.RenderSolid (Color.FromBrightness (0));
+			graphics.RenderSolid (borderColor);
 
 			graphics.AddRectangle (rect);
-			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
+			graphics.RenderSolid (borderColor);
 		}
 
 		private void PaintGraphicValueCumul(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
