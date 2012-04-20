@@ -12,6 +12,7 @@ using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Data.Platform;
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -123,20 +124,41 @@ namespace Epsitec.Aider
 				var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
-				
+
 				EervMainDataImporter.Import (businessContextManager, eervMainData, parishRepository);
 
-				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
-				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
-				var eervSuperGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx");
-				var eervActivityFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx");
-
-				var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile).ToList ();
-				foreach (var eervParishDatum in eervParishData)
+				var eervFileGroups = new List<Tuple<FileInfo, FileInfo, FileInfo, FileInfo>> ()
 				{
-					EervParishDataImporter.Import (businessContextManager, eervParishDatum.Id.ToString (), eervParishDatum);
-				}
+					Tuple.Create
+					(
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx")
+					),
+					Tuple.Create
+					(
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Personnes.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Activites.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Groupes.xlsx"),
+						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\SuperGroupes.xlsx")
+					),
+				};
 
+				foreach (var eervFileGroup in eervFileGroups)
+				{
+					var eervPersonsFile = eervFileGroup.Item1;
+					var eervActivityFile = eervFileGroup.Item2;
+					var eervGroupFile = eervFileGroup.Item3;
+					var eervSuperGroupFile = eervFileGroup.Item4;
+
+					var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile).ToList ();
+					
+					foreach (var eervParishDatum in eervParishData)
+					{
+						EervParishDataImporter.Import (businessContextManager, eervParishDatum.Id.ToString (), eervParishDatum);
+					}
+				}
 				Services.ShutDown ();
 			}
 		}
