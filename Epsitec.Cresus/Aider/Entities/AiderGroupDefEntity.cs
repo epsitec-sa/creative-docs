@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Aider.Enumerations;
+
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
@@ -28,6 +30,30 @@ namespace Epsitec.Aider.Entities
 		{
 			yield return this.Name;
 		}
+
+		public AiderGroupEntity Instantiate(BusinessContext businessContext, string name)
+		{
+			var group = businessContext.CreateEntity<AiderGroupEntity> ();
+
+			group.Name = name;
+			group.GroupDef = this;
+
+			// TODO Add more stuff to the group, such as root, start date, etc.
+
+			foreach (var subGroupDef in this.Subgroups)
+			{
+				var subGroup = subGroupDef.Instantiate (businessContext, subGroupDef.Name);
+
+				var groupRelationship = businessContext.CreateEntity<AiderGroupRelationshipEntity> ();
+
+				groupRelationship.Group1 = group;
+				groupRelationship.Group2 = subGroup;
+				groupRelationship.Type = GroupRelationshipType.Inclusion;
+			}
+
+			return group;
+		}
+
 
 		public static AiderGroupDefEntity Find(BusinessContext businessContext, string name)
 		{
