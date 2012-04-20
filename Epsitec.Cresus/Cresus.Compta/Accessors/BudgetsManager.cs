@@ -197,18 +197,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return FormattedText.Concat
-					(
-						StringArray.SpecialContentGraphicValue,
-						"/",
-						Converters.MontantToString (minValue, null),
-						"/",
-						Converters.MontantToString (maxValue, null),
-						"/",
-						Converters.MontantToString (value1, null),
-						"/",
-						Converters.MontantToString (value2, null)
-					);
+				var graphicData = new GraphicData (GraphicMode.Budget, minValue, maxValue);
+
+				graphicData.Values.Add (value1.GetValueOrDefault ());
+				graphicData.Values.Add (value2.GetValueOrDefault ());
+				
+				return graphicData.ToString ();
 			}
 		}
 

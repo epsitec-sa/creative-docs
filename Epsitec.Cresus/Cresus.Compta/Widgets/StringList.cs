@@ -742,45 +742,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Dessine une valeur numérique dans une cellule, en rouge si elle est négative et en vert
 			//	si elle est positive.
 			//	Le format est "$${_graphic_}$$/-10/100/55.2" ou "$${_graphic_}$$/-10/100/55.2/60".
-			var words = text.Split ('/');
+			var graphicData = new GraphicData (text);
 
-			if (words.Length < 4)
+			switch (graphicData.Mode)
 			{
-				return;
-			}
+				case GraphicMode.Normal:
+					this.PaintGraphicValueNormal (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values[0]);
+					break;
 
-			decimal? min    = Converters.ParseMontant (words[1]);
-			decimal? max    = Converters.ParseMontant (words[2]);
+				case GraphicMode.Budget:
+					this.PaintGraphicValueBudget (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values[0], graphicData.Values[1]);
+					break;
 
-			var values = new List<decimal> ();
-
-			for (int i = 3; i < words.Length; i++)
-			{
-				decimal? value = Converters.ParseMontant (words[i]);
-
-				if (!value.HasValue)
-				{
-					return;
-				}
-				
-				values.Add (value.Value);
-			}
-
-			if (words.Length == 3+1)
-			{
-				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values[0]);
-			}
-			else if (words.Length == 3+2)
-			{
-				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values[0], values[1]);
-			}
-			else if (words.Length == 3+1+12)
-			{
-				this.PaintGraphicValue (graphics, rect, min.Value, max.Value, values);
+				case GraphicMode.RésuméPériodique:
+					this.PaintGraphicValueRésuméPériodique (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values);
+					break;
 			}
 		}
 
-		private void PaintGraphicValue(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value)
+		private void PaintGraphicValueNormal(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value)
 		{
 			if (max-min == 0)
 			{
@@ -823,7 +803,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
 		}
 
-		private void PaintGraphicValue(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value, decimal solde)
+		private void PaintGraphicValueBudget(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value, decimal solde)
 		{
 			if (max-min == 0)
 			{
@@ -870,7 +850,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
 		}
 
-		private void PaintGraphicValue(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
+		private void PaintGraphicValueRésuméPériodique(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
 		{
 			//	Dessine le graphique en mode "résumé périodique", avec jusqu'à 12 barres cumulées.
 			if (max == 0)
@@ -890,21 +870,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromBrightness (1));
 
-			int columnCount = (int) values[0];
-
-			int[] h = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300, 0 };
+			int[] h = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300 };
 
 			double x = 0;
-			for (int i = 0; i < 12; i++)
+			for (int i = 0; i < values.Count; i++)
 			{
-				var value = values[i+1];
+				var value = values[i];
 
 				if (value > 0)
 				{
 					double dx = System.Math.Floor (rect.Width * (double) value / (double) max);
 					dx = System.Math.Max (dx, 2);
 
-					var color = Color.FromHsv (h[i], 1, 1);
+					var color = Color.FromHsv (h[i%h.Length], 1, 1);
 
 					var r = new Rectangle (rect.Left+x, rect.Bottom, dx, rect.Height);
 					graphics.AddFilledRectangle (r);

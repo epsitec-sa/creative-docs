@@ -609,16 +609,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				return FormattedText.Concat
-					(
-						StringArray.SpecialContentGraphicValue,
-						"/",
-						Converters.MontantToString (this.minValue, null),
-						"/",
-						Converters.MontantToString (this.maxValue, null),
-						"/",
-						Converters.MontantToString (value, null)
-					);
+				var graphicData = new GraphicData (GraphicMode.Normal, this.minValue, this.maxValue);
+
+				graphicData.Values.Add (value.GetValueOrDefault ());
+				
+				return graphicData.ToString ();
 			}
 		}
 		#endregion

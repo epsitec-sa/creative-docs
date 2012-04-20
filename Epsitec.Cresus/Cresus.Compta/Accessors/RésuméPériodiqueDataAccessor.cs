@@ -208,19 +208,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var builder = new System.Text.StringBuilder ();
-
-				builder.Append (StringArray.SpecialContentGraphicValue);
-				builder.Append ("/");
-				builder.Append (Converters.MontantToString (this.minValue, null));
-				builder.Append ("/");
-				builder.Append (Converters.MontantToString (this.maxValue, null));
-				builder.Append ("/");
-				builder.Append (Converters.MontantToString (this.columnCount, null));
+				var graphicData = new GraphicData (GraphicMode.RésuméPériodique, this.minValue, this.maxValue);
 
 				decimal lastSolde = 0;
-
-				for (int i = 0; i < 12; i++)
+				for (int i = 0; i < this.columnCount; i++)
 				{
 					var solde = System.Math.Max (data.GetSolde (i).GetValueOrDefault (), 0);
 					var soldeBrut = solde;
@@ -232,11 +223,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 					lastSolde = soldeBrut;
 
-					builder.Append ("/");
-					builder.Append (Converters.MontantToString (solde, null));
+					graphicData.Values.Add (solde);
 				}
 
-				return builder.ToString ();
+				return graphicData.ToString ();
 			}
 		}
 
