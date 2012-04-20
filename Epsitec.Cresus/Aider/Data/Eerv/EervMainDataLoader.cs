@@ -45,16 +45,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 				var groupDefinition = EervMainDataLoader.GetEervGroupDefinition (record, level);
 
-				var parent = parents.Peek ();
-
-				if (parent != null)
-				{
-					parent.Children.Add (groupDefinition);
-					groupDefinition.Parent = parent;
-				}
-
 				if (!EervMainDataLoader.IsGroupDefinitionToDiscard (groupDefinition))
 				{
+					var parent = parents.Peek ();
+
+					if (parent != null)
+					{
+						parent.Children.Add (groupDefinition);
+						groupDefinition.Parent = parent;
+					}
+
 					parents.Push (groupDefinition);
 
 					yield return groupDefinition;
