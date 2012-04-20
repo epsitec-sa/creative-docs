@@ -22,7 +22,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			EervMainDataLoader.FreezeData (groupDefinitions);
 
-			return new EervMainData(groupDefinitions);
+			return new EervMainData (groupDefinitions);
 		}
 
 
@@ -90,7 +90,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static bool IsGroupDefinitionToDiscard(EervGroupDefinition groupDefinition)
 		{
-			return groupDefinition.Name.Contains ("n1, n2, n3");
+			var name = groupDefinition.Name;
+
+			return name.Contains ("n1")
+				|| name.Contains ("n2")
+				|| name.Contains ("n3")
+				|| namesToDiscard.Contains (name);
 		}
 
 
@@ -114,6 +119,21 @@ namespace Epsitec.Aider.Data.Eerv
 				GroupDefinitionHeader.NameLevel5,
 			}
 		);
+
+
+		private static readonly HashSet<string> namesToDiscard = new HashSet<string> ()
+		{
+			"Projets 1",
+			"Projet 2",
+			"Mandat 1, 2, 3",
+			"Groupe pilotage 1",
+			"Groupe de projets 1",
+			"Groupe pilotage 2",
+			"Groupe de projets 2",
+			"Groupe pilotage 1, 2, 3",
+			"Mandataires 1, 2, 3",
+			"Archives 1, Archives 2, Archives 3…",
+		};
 
 
 	}
