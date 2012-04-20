@@ -27,25 +27,63 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository)
+		public static void Import(BusinessContextManager businessContextManager, EervMainData eervData, ParishAddressRepository parishRepository)
 		{
+			EervMainDataImporter.ImportGroupDefinitions (businessContextManager, eervData);
+
 			var result = EervMainDataImporter.ImportRegionsAndParishes (businessContextManager, parishRepository);
 
-			var regionNumbersToEntityKeys = result.Item1;
 			var parishNamesToEntityKeys = result.Item2;
 
 			EervMainDataImporter.AssignPersonsToParishes (businessContextManager, parishRepository, parishNamesToEntityKeys);
 		}
 
 
+		private static void ImportGroupDefinitions(BusinessContextManager businessContextManager, EervMainData eervData)
+		{
+			businessContextManager.Execute (b => EervMainDataImporter.ImportGroupDefinitions (b, eervData));
+		}
+
+
+		private static void ImportGroupDefinitions(BusinessContext businessContext, EervMainData eervData)
+		{
+			var topLevelGroups = eervData.GroupDefinitions.Where (g => g.Parent == null);
+
+			foreach (var groupDefinition in topLevelGroups)
+			{
+				EervMainDataImporter.ImportGroupDefinition (businessContext, groupDefinition);
+			}
+
+			businessContext.SaveChanges ();
+		}
+
+
+		private static AiderGroupDefEntity ImportGroupDefinition(BusinessContext businessContext, EervGroupDefinition groupDefinition)
+		{
+			var aiderGroupDef = businessContext.CreateEntity<AiderGroupDefEntity> ();
+
+			aiderGroupDef.Name = groupDefinition.Name;
+
+			var children = groupDefinition
+				.Children
+				.Select (c => EervMainDataImporter.ImportGroupDefinition (businessContext, c))
+				.ToList ();
+
+			aiderGroupDef.Subgroups.AddRange (children);
+
+			// TODO Add a lot more stuff here to set up properly the group definition level, type,
+			// category, etc.
+
+			return aiderGroupDef;
+		}
+
+
 		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository)
 		{
-			Func<BusinessContext, Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>>> function = b =>
+			return businessContextManager.Execute(b =>
 			{
-				return ImportRegionsAndParishes (b, parishRepository);
-			};
-
-			return businessContextManager.Execute (function);
+				return EervMainDataImporter.ImportRegionsAndParishes(b, parishRepository);
+			});
 		}
 
 
@@ -80,20 +118,22 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<int, AiderGroupEntity> CreateRegionGroups(BusinessContext businessContext, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var regionGroupDefinition = EervMainDataImporter.CreateRegionGroupDefinition (businessContext);
+			var regionGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Régions"); 
 
-			return regions.Keys.ToDictionary (rc => rc, rc => EervMainDataImporter.CreateRegionGroup (businessContext, regionGroupDefinition, rc));
+			return regions
+				.Keys
+				.ToDictionary (rc => rc, rc => EervMainDataImporter.CreateRegionGroup (businessContext, regionGroupDefinition, rc));
 		}
 
 
 		private static Dictionary<string, AiderGroupEntity> CreateParishGroups(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, Dictionary<int, Dictionary<string, List<ParishAddressInformation>>> regions)
 		{
-			var parishGroupDefinitinon = EervMainDataImporter.CreateParishGroupDefinition (businessContext);
+			var parishGroupDefinition = AiderGroupDefEntity.Find (businessContext, "Paroisses");
 
 			return regions
 				.Values
 				.SelectMany (p => p.Values.Select (p2 => p2.First ()))
-				.ToDictionary (p => p.ParishName, p => EervMainDataImporter.CreateParishGroup (businessContext, regionGroups, parishGroupDefinitinon, p));
+				.ToDictionary (p => p.ParishName, p => EervMainDataImporter.CreateParishGroup (businessContext, regionGroups, parishGroupDefinition, p));
 		}
 
 
@@ -117,41 +157,6 @@ namespace Epsitec.Aider.Data.Eerv
 			parishGroup.Root = regionGroups[parish.RegionCode];
 
 			return parishGroup;
-		}
-
-
-		private static AiderGroupDefEntity CreateRegionGroupDefinition(BusinessContext businessContext)
-		{
-			var name = "Définition des groupes régionaux";
-			var category = GroupCategory.SystemDefined;
-			var defType = GroupDefType.Region;
-			var type = GroupType.Root;
-
-			return EervMainDataImporter.CreateGroupDefinition (businessContext, name, category, type, defType);
-		}
-
-
-		private static AiderGroupDefEntity CreateParishGroupDefinition(BusinessContext businessContext)
-		{
-			var name = "Définition des groupes paroissiaux";
-			var category = GroupCategory.SystemDefined;
-			var defType = GroupDefType.Parish;
-			var type = GroupType.Node;
-
-			return EervMainDataImporter.CreateGroupDefinition (businessContext, name, category, type, defType);
-		}
-
-
-		private static AiderGroupDefEntity CreateGroupDefinition(BusinessContext businessContext, string name, GroupCategory category, GroupType type, GroupDefType defType)
-		{
-			var groupDefinition = businessContext.CreateEntity<AiderGroupDefEntity> ();
-
-			groupDefinition.Name = name;
-			groupDefinition.Category = category;
-			groupDefinition.DefType = defType;
-			groupDefinition.Type = type;
-
-			return groupDefinition;
 		}
 
 

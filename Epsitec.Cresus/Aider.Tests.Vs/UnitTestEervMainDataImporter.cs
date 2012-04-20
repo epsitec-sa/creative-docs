@@ -47,8 +47,11 @@ namespace Aider.Tests.Vs
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (businessContextManager, eChReportedPersons);
 
+				var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
+				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
-				EervMainDataImporter.Import (businessContextManager, parishRepository);
+
+				EervMainDataImporter.Import (businessContextManager, eervMainData, parishRepository);
 
 				Services.ShutDown ();
 			}
