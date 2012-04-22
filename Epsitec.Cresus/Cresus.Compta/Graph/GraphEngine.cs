@@ -14,6 +14,12 @@ namespace Epsitec.Cresus.Compta.Graph
 {
 	public class GraphEngine
 	{
+		public GraphEngine()
+		{
+			this.cube = new Cube (1);
+		}
+
+
 		public void PaintGraph(Graphics graphics, Rectangle rect, GraphicData data)
 		{
 			switch (data.Mode)
@@ -267,5 +273,6 @@ namespace Epsitec.Cresus.Compta.Graph
 		private static int[] rainbow = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300 };
 
 
+		private Cube			cube;
 	}
 }
