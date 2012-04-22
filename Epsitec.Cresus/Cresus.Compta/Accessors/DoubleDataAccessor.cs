@@ -213,25 +213,25 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (data.Solde);
+					return this.GetMinMaxText (data.Numéro, data.Solde);
 
 				case ColumnType.Budget:
-					return this.GetBudgetText (data.Solde, data.Budget, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.Budget, monnaie);
 
 				case ColumnType.BudgetProrata:
-					return this.GetBudgetText (data.Solde, data.BudgetProrata, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.BudgetProrata, monnaie);
 
 				case ColumnType.BudgetFutur:
-					return this.GetBudgetText (data.Solde, data.BudgetFutur, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.BudgetFutur, monnaie);
 
 				case ColumnType.BudgetFuturProrata:
-					return this.GetBudgetText (data.Solde, data.BudgetFuturProrata, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.BudgetFuturProrata, monnaie);
 
 				case ColumnType.PériodePrécédente:
-					return this.GetBudgetText (data.Solde, data.PériodePrécédente, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.PériodePrécédente, monnaie);
 
 				case ColumnType.PériodePénultième:
-					return this.GetBudgetText (data.Solde, data.PériodePénultième, monnaie);
+					return this.GetBudgetText (data.Numéro, data.Solde, data.PériodePénultième, monnaie);
 
 				case ColumnType.Profondeur:
 					return (data.Niveau+1).ToString ();
@@ -250,9 +250,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return budget;
 		}
 
-		private FormattedText GetBudgetText(decimal? solde, decimal? budget, ComptaMonnaieEntity monnaie)
+		private FormattedText GetBudgetText(FormattedText name, decimal? solde, decimal? budget, ComptaMonnaieEntity monnaie)
 		{
-			return this.budgetsManager.GetBudgetText (solde, budget, this.minValue, this.maxValue, monnaie);
+			return this.budgetsManager.GetBudgetText (name, solde, budget, this.minValue, this.maxValue, monnaie);
 		}
 
 

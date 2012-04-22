@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (data.Solde);
+					return this.GetMinMaxText (data.Pièce, data.Solde);
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (data.CodeTVA);

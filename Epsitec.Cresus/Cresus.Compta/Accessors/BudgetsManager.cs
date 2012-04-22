@@ -133,7 +133,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		public FormattedText GetBudgetText(decimal? solde, decimal? budget, decimal minValue, decimal maxValue, ComptaMonnaieEntity monnaie)
+		public FormattedText GetBudgetText(FormattedText name, decimal? solde, decimal? budget, decimal minValue, decimal maxValue, ComptaMonnaieEntity monnaie)
 		{
 			//	Retourne le texte permettant d'afficher le budget, de différentes manières.
 			if (!this.options.ComparisonEnable)
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Graphique)
 				{
-					return BudgetsManager.GetMinMaxText (budget, solde, minValue, maxValue);
+					return BudgetsManager.GetMinMaxText (name, budget, solde, minValue, maxValue);
 				}
 				else
 				{
@@ -189,7 +189,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private static FormattedText GetMinMaxText(decimal? value1, decimal? value2, decimal minValue, decimal maxValue)
+		private static FormattedText GetMinMaxText(FormattedText name, decimal? value1, decimal? value2, decimal minValue, decimal maxValue)
 		{
 			if (minValue == decimal.MaxValue ||
 				maxValue == decimal.MinValue)
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (GraphicMode.Budget, minValue, maxValue);
+				var graphicData = new GraphicData (GraphicMode.Budget, name, minValue, maxValue);
 
 				graphicData.Values.Add (value1.GetValueOrDefault ());
 				graphicData.Values.Add (value2.GetValueOrDefault ());

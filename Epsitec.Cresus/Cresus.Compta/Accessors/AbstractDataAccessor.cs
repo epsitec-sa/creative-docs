@@ -601,7 +601,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		protected FormattedText GetMinMaxText(decimal? value)
+		protected FormattedText GetMinMaxText(FormattedText name, decimal? value)
 		{
 			if (this.minValue == decimal.MaxValue ||
 				this.maxValue == decimal.MinValue)
@@ -610,7 +610,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (GraphicMode.Normal, this.minValue, this.maxValue);
+				var graphicData = new GraphicData (GraphicMode.Normal, name, this.minValue, this.maxValue);
 
 				graphicData.Values.Add (value.GetValueOrDefault ());
 				

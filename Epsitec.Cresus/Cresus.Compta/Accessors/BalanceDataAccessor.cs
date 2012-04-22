@@ -219,22 +219,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.SoldeCrédit, monnaie);
 
 				case ColumnType.Budget:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.Budget, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.Budget, monnaie);
 
 				case ColumnType.BudgetProrata:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetProrata, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.BudgetProrata, monnaie);
 
 				case ColumnType.BudgetFutur:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetFutur, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.BudgetFutur, monnaie);
 
 				case ColumnType.BudgetFuturProrata:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.BudgetFuturProrata, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.BudgetFuturProrata, monnaie);
 
 				case ColumnType.PériodePrécédente:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.PériodePrécédente, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.PériodePrécédente, monnaie);
 
 				case ColumnType.PériodePénultième:
-					return this.GetBudgetText (data.SoldeDébit, data.SoldeCrédit, data.PériodePénultième, monnaie);
+					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.PériodePénultième, monnaie);
 
 				case ColumnType.Solde:
 					if (data.Catégorie == CatégorieDeCompte.Passif ||
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return budget;
 		}
 
-		private FormattedText GetBudgetText(decimal? soldeDébit, decimal? soldeCrédit, decimal? budget, ComptaMonnaieEntity monnaie)
+		private FormattedText GetBudgetText(FormattedText name, decimal? soldeDébit, decimal? soldeCrédit, decimal? budget, ComptaMonnaieEntity monnaie)
 		{
 			decimal? solde = null;
 
@@ -278,7 +278,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				solde = soldeCrédit.Value;
 			}
 
-			return this.budgetsManager.GetBudgetText (solde, budget, this.minValue, this.maxValue, monnaie);
+			return this.budgetsManager.GetBudgetText (name, solde, budget, this.minValue, this.maxValue, monnaie);
 		}
 
 

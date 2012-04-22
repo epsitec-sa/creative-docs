@@ -234,7 +234,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé, this.minValue, this.maxValue);
+				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé, data.Numéro, this.minValue, this.maxValue);
 
 				//	Les valeurs données au module graphique sont toujours distinctes, c'est-à-dire en
 				//	mode non cumulé.

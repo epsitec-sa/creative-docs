@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+ï»¿//	Copyright Â© 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Types;
@@ -13,14 +13,15 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Graph
 {
 	/// <summary>
-	/// Cette classe gère les échanges de données graphiques avec StringList.
+	/// Cette classe gÃ¨re les Ã©changes de donnÃ©es graphiques avec StringList.
 	/// </summary>
 	public class GraphicData
 	{
-		public GraphicData(GraphicMode mode, decimal minValue, decimal maxValue)
+		public GraphicData(GraphicMode mode, FormattedText name, decimal minValue, decimal maxValue)
 		{
-			//	Construit une nouvelle instance à partir des paramètres distincts.
+			//	Construit une nouvelle instance Ã  partir des paramÃ¨tres distincts.
 			this.mode     = mode;
+			this.name     = name;
 			this.minValue = minValue;
 			this.maxValue = maxValue;
 
@@ -29,20 +30,21 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphicData(string text)
 		{
-			//	Construit une nouvelle instance à partir des données sérialisées.
+			//	Construit une nouvelle instance Ã  partir des donnÃ©es sÃ©rialisÃ©es.
 			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (text));
 			System.Diagnostics.Debug.Assert (text.StartsWith (StringArray.SpecialContentGraphicValue));
 
-			var words = text.Split ('/');
-			System.Diagnostics.Debug.Assert (words.Length >= 5);
+			var words = text.Split (GraphicData.separator);
+			System.Diagnostics.Debug.Assert (words.Length >= 6);
 
 			this.mode     = (GraphicMode) System.Enum.Parse (typeof (GraphicMode), words[1]);
-			this.minValue = Converters.ParseDecimal (words[2]).GetValueOrDefault ();
-			this.maxValue = Converters.ParseDecimal (words[3]).GetValueOrDefault ();
+			this.name     = words[2];
+			this.minValue = Converters.ParseDecimal (words[3]).GetValueOrDefault ();
+			this.maxValue = Converters.ParseDecimal (words[4]).GetValueOrDefault ();
 
 			this.values = new List<decimal> ();
 
-			for (int i = 4; i < words.Length; i++)
+			for (int i = 5; i < words.Length; i++)
 			{
 				decimal value = Converters.ParseDecimal (words[i]).GetValueOrDefault ();
 				this.values.Add (value);
@@ -55,6 +57,14 @@ namespace Epsitec.Cresus.Compta.Graph
 			get
 			{
 				return this.mode;
+			}
+		}
+
+		public FormattedText Name
+		{
+			get
+			{
+				return this.name;
 			}
 		}
 
@@ -83,22 +93,24 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public string ToString()
+		public new string ToString()
 		{
-			//	Retourne les toutes données sérialisées sous forme d'une string.
+			//	Retourne les toutes donnÃ©es sÃ©rialisÃ©es sous forme d'une string.
 			var builder = new System.Text.StringBuilder ();
 
 			builder.Append (StringArray.SpecialContentGraphicValue);
-			builder.Append ("/");
+			builder.Append (GraphicData.separator);
 			builder.Append (this.mode.ToString ());
-			builder.Append ("/");
+			builder.Append (GraphicData.separator);
+			builder.Append (this.name);
+			builder.Append (GraphicData.separator);
 			builder.Append (Converters.DecimalToString (this.minValue, null));
-			builder.Append ("/");
+			builder.Append (GraphicData.separator);
 			builder.Append (Converters.DecimalToString (this.maxValue, null));
 
 			foreach (var value in this.values)
 			{
-				builder.Append ("/");
+				builder.Append (GraphicData.separator);
 				builder.Append (Converters.DecimalToString (value, null));
 			}
 
@@ -110,7 +122,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		private static readonly char separator = 'â—Š';
+
 		private readonly GraphicMode		mode;
+		private readonly FormattedText		name;
 		private readonly decimal			minValue;
 		private readonly decimal			maxValue;
 		private readonly List<decimal>		values;
