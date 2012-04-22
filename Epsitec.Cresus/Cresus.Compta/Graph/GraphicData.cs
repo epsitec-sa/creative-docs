@@ -4,12 +4,13 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Helpers
+namespace Epsitec.Cresus.Compta.Graph
 {
 	/// <summary>
 	/// Cette classe gère les échanges de données graphiques avec StringList.

@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Widgets;
@@ -233,7 +234,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 			else
 			{
-				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumul : GraphicMode.Empile, this.minValue, this.maxValue);
+				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé, this.minValue, this.maxValue);
 
 				//	Les valeurs données au module graphique sont toujours distinctes, c'est-à-dire en
 				//	mode non cumulé.

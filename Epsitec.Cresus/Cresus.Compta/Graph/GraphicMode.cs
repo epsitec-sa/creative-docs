@@ -9,13 +9,13 @@ using Epsitec.Cresus.Compta.Widgets;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Helpers
+namespace Epsitec.Cresus.Compta.Graph
 {
 	public enum GraphicMode
 	{
 		Normal,
 		Budget,
-		Cumul,
-		Empile,
+		Cumulé,
+		Empilé,
 	}
 }

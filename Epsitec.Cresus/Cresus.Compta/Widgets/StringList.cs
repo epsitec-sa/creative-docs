@@ -7,6 +7,7 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
@@ -30,6 +31,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public StringList() : base()
 		{
+			this.graphEngine = new GraphEngine ();
+
 			this.AutoEngage = false;
 			this.AutoFocus = true;
 			this.AutoDoubleClick = true;
@@ -739,255 +742,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void PaintGraphicValue(Graphics graphics, Rectangle rect, string text)
 		{
-			//	Dessine une valeur numérique dans une cellule, en rouge si elle est négative et en vert
-			//	si elle est positive.
+			//	Dessine une valeur numérique dans une cellule.
 			//	Le format est "$${_graphic_}$$/-10/100/55.2" ou "$${_graphic_}$$/-10/100/55.2/60".
-			var graphicData = new GraphicData (text);
-
-			switch (graphicData.Mode)
-			{
-				case GraphicMode.Normal:
-					this.PaintGraphicValueNormal (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values[0]);
-					break;
-
-				case GraphicMode.Budget:
-					this.PaintGraphicValueBudget (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values[0], graphicData.Values[1]);
-					break;
-
-				case GraphicMode.Cumul:
-					this.PaintGraphicValueCumul (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values);
-					break;
-
-				case GraphicMode.Empile:
-					this.PaintGraphicValueEmpile (graphics, rect, graphicData.MinValue, graphicData.MaxValue, graphicData.Values);
-					break;
-			}
+			var data = new GraphicData (text);
+			this.graphEngine.PaintGraph (graphics, rect, data);
 		}
-
-		private void PaintGraphicValueNormal(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value)
-		{
-			if (max-min == 0)
-			{
-				return;
-			}
-
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (0.5);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
-			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
-
-			if (val < 0)
-			{
-				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (UIBuilder.GraphicRedColor);
-			}
-
-			if (val > 0)
-			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (UIBuilder.GraphicGreenColor);
-			}
-
-			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
-			graphics.RenderSolid (borderColor);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
-		}
-
-		private void PaintGraphicValueBudget(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value, decimal solde)
-		{
-			if (max-min == 0)
-			{
-				return;
-			}
-
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (0.5);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
-			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
-			double sol = System.Math.Floor (rect.Width * (double) solde / (double) (max-min));
-
-			var color = value >= solde ? UIBuilder.GraphicGreenColor : UIBuilder.GraphicRedColor;
-
-			if (val < 0)
-			{
-				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (color);
-			}
-
-			if (val > 0)
-			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (color);
-			}
-
-			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
-			graphics.AddLine (rect.Left+sol, rect.Bottom, rect.Left+sol, rect.Top);
-			graphics.RenderSolid (borderColor);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
-		}
-
-		private void PaintGraphicValueCumul(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
-		{
-			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres cumulées.
-			if (max == 0)
-			{
-				return;
-			}
-
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (1);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			var cumuls = new List<decimal> ();
-			decimal sum = 0;
-			for (int i = 0; i < values.Count; i++)
-			{
-				sum += values[i];
-				cumuls.Add (sum);
-			}
-
-			for (int i = cumuls.Count-1; i >= 0; i--)
-			{
-				var v1 = (i == 0) ? 0 : cumuls[i-1];
-				var v2 = cumuls[i];
-
-				double x1 = System.Math.Floor (rect.Width * (double) v1 / (double) max);
-				double x2 = System.Math.Floor (rect.Width * (double) v2 / (double) max);
-				double dx = x2-x1;
-
-				if (dx > 0)
-				{
-					var color = Color.FromHsv (StringList.rainbow[i%StringList.rainbow.Length], 1, 1);
-
-					var r = new Rectangle (rect.Left+x1, rect.Bottom, dx, rect.Height);
-					graphics.AddFilledRectangle (r);
-					graphics.RenderSolid (color);
-
-					graphics.AddLine (rect.Left+x2-0.5, rect.Bottom+0.5, rect.Left+x2-0.5, rect.Top-0.5);
-					graphics.RenderSolid (borderColor);
-				}
-			}
-
-			rect.Inflate (0.5);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
-		}
-
-		private void PaintGraphicValueEmpile(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
-		{
-			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres empilées.
-			if (max-min == 0)
-			{
-				return;
-			}
-
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-			var borderColor = (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (1);
-
-			int dy = (int) System.Math.Max (rect.Height/values.Count, 1);
-			int h = dy*values.Count - 1;
-			int o = (int) (rect.Height-h)/2;
-			rect = new Rectangle (rect.Left, rect.Bottom+o, rect.Width, h);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			double zero = System.Math.Floor (rect.Width * (double) -min / (double) (max-min));
-
-			double y = 0;
-
-			for (int i = 0; i < values.Count; i++)
-			{
-				var value = values[i];
-
-				double x = System.Math.Floor (rect.Width * (double) (value-min) / (double) (max-min));
-				double x1 = System.Math.Min (x, zero);
-				double x2 = System.Math.Max (x, zero);
-
-				var color = Color.FromHsv (StringList.rainbow[i%StringList.rainbow.Length], 1, 1);
-
-				var r = new Rectangle (rect.Left+x1, rect.Top-y-dy, x2-x1, dy);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (color);
-
-				graphics.AddLine (rect.Left+x-0.5, rect.Top-y-dy+1.5, rect.Left+x-0.5, rect.Top-y-0.5);
-				graphics.RenderSolid (borderColor);
-
-				if (i < values.Count-1)
-				{
-					graphics.AddLine (rect.Left, rect.Top-y-dy+0.5, rect.Right, rect.Top-y-dy+0.5);
-					graphics.RenderSolid (borderColor);
-				}
-
-				y += dy;
-			}
-
-			graphics.AddLine (rect.Left+zero-0.5, rect.Bottom, rect.Left+zero-0.5, rect.Top);
-			graphics.RenderSolid (borderColor);
-
-			rect.Inflate (0.5);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
-		}
-
-		//	Teintes en arc-en-ciel où les couleurs sont visuellement identifiables les unes par rapport aux autres.
-		private static int[] rainbow = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300 };
 
 
 		#region Helpers.IToolTipHost
@@ -1107,6 +866,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 
 		public static readonly double		WidthDraggingDetectMargin = 3;
+
+		private readonly GraphEngine		graphEngine;
 
 		private Color						colorSelection = UIBuilder.SelectionColor;
 		private double						lineHeight = 14;
