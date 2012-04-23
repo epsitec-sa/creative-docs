@@ -756,7 +756,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private void PaintGraphicValue(Graphics graphics, Rectangle rect, string text)
 		{
 			//	Dessine une valeur numérique dans une cellule.
-			//	Le format est "$${_graphic_}$$/-10/100/55.2" ou "$${_graphic_}$$/-10/100/55.2/60".
+			//	Le format est "$${_graphic_}$$;row".
 			this.graphEngine.PaintGraph (graphics, rect, this.cube, text);
 		}
 

@@ -245,8 +245,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected virtual void UpdateAfterFilterUpdated()
 		{
-			//	Appelé après la mise à jour du filtre, par exemple pour mettre à jour les valeurs min/max
-			//	en fonction des données filtrées.
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
 		}
 
 		protected bool FilterLine(int row)
@@ -597,6 +596,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected static FormattedText GetGraphicText(int row)
 		{
+			//	Retourne un texte au format "$${_graphic_}$$;row", qui indique qu'il faut dessiner
+			//	le graphique contenu dans le Cube à la ligne "row".
 			return StringArray.SpecialContentGraphicValue + ";" + Converters.IntToString (row);
 		}
 

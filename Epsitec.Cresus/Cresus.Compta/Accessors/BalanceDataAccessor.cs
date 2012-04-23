@@ -174,6 +174,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void UpdateAfterFilterUpdated()
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+			if (!this.Options.HasGraphics)
+			{
+				return;
+			}
+
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
 			this.cube.Mode = GraphicMode.Empilé;

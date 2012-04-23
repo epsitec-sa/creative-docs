@@ -19,9 +19,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, string param)
+		public void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, string text)
 		{
-			var words = param.Split (';');
+			//	Le format est "$${_graphic_}$$;row".
+			var words = text.Split (';');
 			var row = int.Parse (words[1]);
 
 			this.PaintGraph (graphics, rect, cube, row);

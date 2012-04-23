@@ -138,9 +138,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected override void UpdateAfterFilterUpdated()
 		{
-			//	Appelé après la mise à jour du filtre, pour mettre à jour les valeurs min/max
-			//	en fonction des données filtrées, afin que les graphiques utilisent au mieux
-			//	l'espace disponible.
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+			if (!this.Options.HasGraphicsCumulé && !this.Options.HasGraphicsEmpilé)
+			{
+				return;
+			}
+
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
 			this.cube.Mode = this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé;
