@@ -95,7 +95,6 @@
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
     <Compile Include="Graph\Cube.cs" />
     <Compile Include="Graph\GraphicMode.cs" />
-    <Compile Include="Graph\GraphicData.cs" />
     <Compile Include="Graph\GraphEngine.cs" />
     <Compile Include="Helpers\Currencies.cs" />
     <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />

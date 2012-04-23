@@ -22,12 +22,12 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, string param)
 		{
 			var words = param.Split (';');
-			var y = int.Parse (words[1]);
+			var row = int.Parse (words[1]);
 
-			this.PaintGraph (graphics, rect, cube, y);
+			this.PaintGraph (graphics, rect, cube, row);
 		}
 
-		private void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, int y)
+		private void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, int row)
 		{
 			System.Diagnostics.Debug.Assert (cube.Dimensions == 2);
 
@@ -56,31 +56,20 @@ namespace Epsitec.Cresus.Compta.Graph
 				cube.GetMinMax (null, null, out finalMin, out finalMax);
 			}
 
-			var data = new GraphicData (cube.Mode, cube.GetTitle (1, y), finalMin, finalMax);
-
-			for (int x = 0; x < nx; x++)
-			{
-				data.Values.Add (cube.GetValue (x, y).GetValueOrDefault ());
-			}
-
-			this.PaintGraph (graphics, rect, data);
-		}
-
-		private void PaintGraph(Graphics graphics, Rectangle rect, GraphicData data)
-		{
-			switch (data.Mode)
+			switch (cube.Mode)
 			{
 				case GraphicMode.Cumulé:
-					this.PaintGraphCumulé (graphics, rect, data.MinValue, data.MaxValue, data.Values);
+					this.PaintGraphCumulé (graphics, rect, finalMin, finalMax, cube, row);
 					break;
 
 				case GraphicMode.Empilé:
-					this.PaintGraphEmpilé (graphics, rect, data.MinValue, data.MaxValue, data.Values);
+					this.PaintGraphEmpilé (graphics, rect, finalMin, finalMax, cube, row);
 					break;
 			}
 		}
 
-		private void PaintGraphCumulé(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
+
+		private void PaintGraphCumulé(Graphics graphics, Rectangle rect, decimal min, decimal max, Cube cube, int row)
 		{
 			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres cumulées.
 			if (max == 0)
@@ -102,11 +91,12 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
+			int nx = cube.GetCount (0);
 			var cumuls = new List<decimal> ();
 			decimal sum = 0;
-			for (int i = 0; i < values.Count; i++)
+			for (int i = 0; i < nx; i++)
 			{
-				sum += values[i];
+				sum += cube.GetValue (i, row).GetValueOrDefault ();
 				cumuls.Add (sum);
 			}
 
@@ -138,7 +128,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (borderColor);
 		}
 
-		private void PaintGraphEmpilé(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
+		private void PaintGraphEmpilé(Graphics graphics, Rectangle rect, decimal min, decimal max, Cube cube, int row)
 		{
 			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres empilées.
 			min = System.Math.Min (min, 0);
@@ -158,8 +148,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			rect = graphics.Align (rect);
 			rect.Deflate (1);
 
-			int dy = (int) System.Math.Max (rect.Height/values.Count, 1);
-			int h = dy*values.Count - 1;
+			int nx = cube.GetCount (0);
+
+			int dy = (int) System.Math.Max (rect.Height/nx, 1);
+			int h = dy*nx - 1;
 			int o = (int) (rect.Height-h)/2;
 			rect = new Rectangle (rect.Left, rect.Bottom+o, rect.Width, h);
 
@@ -170,13 +162,13 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			double zero = System.Math.Floor (rect.Width * (double) -min / (double) (max-min));
 			double y = 0;
-			int step = System.Math.Max (11/values.Count, 1);
+			int step = System.Math.Max (11/nx, 1);
 
-			for (int i = 0; i < values.Count; i++)
+			for (int i = 0; i < nx; i++)
 			{
-				var value = values[i];
+				var value = cube.GetValue (i, row).GetValueOrDefault ();
 
-				double x = System.Math.Floor (rect.Width * (double) (value-min) / (double) (max-min));
+				double x  = System.Math.Floor (rect.Width * (double) (value-min) / (double) (max-min));
 				double x1 = System.Math.Min (x, zero);
 				double x2 = System.Math.Max (x, zero);
 
@@ -187,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				graphics.AddLine (rect.Left+x-0.5, rect.Top-y-dy+1.5, rect.Left+x-0.5, rect.Top-y-0.5);
 				graphics.RenderSolid (borderColor);
 
-				if (i < values.Count-1)
+				if (i < nx-1)
 				{
 					graphics.AddLine (rect.Left, rect.Top-y-dy+0.5, rect.Right, rect.Top-y-dy+0.5);
 					graphics.RenderSolid (borderColor);
@@ -204,7 +196,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (borderColor);
 		}
-
 
 
 		private static Color GetBorderColor()
