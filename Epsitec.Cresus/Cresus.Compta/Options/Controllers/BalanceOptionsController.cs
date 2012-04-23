@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.buttonComptesNuls = new CheckButton
+			this.zeroButton = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche en blanc les montants nuls",
@@ -64,11 +64,29 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.buttonComptesNuls.ActiveStateChanged += delegate
+			this.graphicsButton = new CheckButton
+			{
+				Parent         = frame,
+				Text           = "Graphique du solde",
+				PreferredWidth = 120,
+				Dock           = DockStyle.Left,
+				TabIndex        = ++this.tabIndex,
+			};
+
+			this.zeroButton.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.HideZero = !this.Options.HideZero;
+					this.OptionsChanged ();
+				}
+			};
+
+			this.graphicsButton.ActiveStateChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
@@ -86,7 +104,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.buttonComptesNuls.ActiveState = this.Options.HideZero ? ActiveState.Yes : ActiveState.No;
+				this.zeroButton.ActiveState     = this.Options.HideZero    ? ActiveState.Yes : ActiveState.No;
+				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -101,6 +120,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
-		private CheckButton			buttonComptesNuls;
+		private CheckButton			zeroButton;
+		private CheckButton			graphicsButton;
 	}
 }

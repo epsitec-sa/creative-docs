@@ -52,6 +52,49 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
+		public int ComparisonShowedCount
+		{
+			get
+			{
+				int count = 0;
+
+				if (this.ComparisonEnable)
+				{
+					if ((this.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
+					{
+						count++;
+					}
+
+					if ((this.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
+					{
+						count++;
+					}
+
+					if ((this.ComparisonShowed & ComparisonShowed.Budget) != 0)
+					{
+						count++;
+					}
+
+					if ((this.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
+					{
+						count++;
+					}
+
+					if ((this.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
+					{
+						count++;
+					}
+
+					if ((this.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
+					{
+						count++;
+					}
+				}
+
+				return count;
+			}
+		}
+
 		public ComparisonDisplayMode ComparisonDisplayMode
 		{
 			get;

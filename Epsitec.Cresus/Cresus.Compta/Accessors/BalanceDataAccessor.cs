@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 
@@ -170,6 +171,111 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		protected override void UpdateAfterFilterUpdated()
+		{
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+			this.cube.Dimensions = 2;
+			this.cube.Clear ();
+			this.cube.Mode = GraphicMode.Empilé;
+
+			//	Spécifie les légendes de l'axe X.
+			int x = 0;
+			this.cube.SetTitle (0, x++, "Solde");
+
+			if (this.Options.ComparisonEnable)
+			{
+				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Période pénultième");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Période précédente");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.Budget) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget prorata");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget futur");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget futur prorata");
+				}
+			}
+
+			int y = 0;
+			foreach (var d in this.readonlyData)
+			{
+				var data = d as BalanceData;
+
+				if (data.NeverFiltered)
+				{
+					continue;
+				}
+
+				//	Spécifie la légende de l'axe Y.
+				this.cube.SetTitle (1, y, data.Numéro);
+
+				x = 0;
+				if (data.SoldeDébit.HasValue)
+				{
+					this.cube.SetValue (x++, y, data.SoldeDébit);
+				}
+				else
+				{
+					this.cube.SetValue (x++, y, data.SoldeCrédit);
+				}
+
+				if (this.Options.ComparisonEnable)
+				{
+					if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
+					{
+						this.cube.SetValue (x++, y, data.PériodePénultième);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
+					{
+						this.cube.SetValue (x++, y, data.PériodePrécédente);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.Budget) != 0)
+					{
+						this.cube.SetValue (x++, y, data.Budget);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetProrata);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetFutur);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetFuturProrata);
+					}
+				}
+
+				y++;
+			}
+		}
+
+
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
 			var data = this.GetReadOnlyData (row, all) as BalanceData;
@@ -236,6 +342,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				case ColumnType.PériodePénultième:
 					return this.GetBudgetText (data.Numéro, data.SoldeDébit, data.SoldeCrédit, data.PériodePénultième, monnaie);
 
+				case ColumnType.SoldeGraphique:
+					return AbstractDataAccessor.GetGraphicText (row);
+
 				case ColumnType.Solde:
 					if (data.Catégorie == CatégorieDeCompte.Passif ||
 						data.Catégorie == CatégorieDeCompte.Produit)
@@ -259,9 +368,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
 		{
 			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
-			var budget = this.budgetsManager.GetBudget (compte, type);
-			this.SetMinMaxValue (budget);
-			return budget;
+			return this.budgetsManager.GetBudget (compte, type);
 		}
 
 		private FormattedText GetBudgetText(FormattedText name, decimal? soldeDébit, decimal? soldeCrédit, decimal? budget, ComptaMonnaieEntity monnaie)

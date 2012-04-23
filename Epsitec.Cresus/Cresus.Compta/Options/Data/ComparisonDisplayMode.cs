@@ -9,6 +9,5 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		Différence,
 		Pourcentage,
 		PourcentageMontant,
-		Graphique,
 	}
 }

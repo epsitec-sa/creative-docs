@@ -59,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as DoubleOptions;
 
-			return this.HideZero == o.HideZero &&
+			return this.HideZero    == o.HideZero   &&
 				   this.HasGraphics == o.HasGraphics;
 		}
 

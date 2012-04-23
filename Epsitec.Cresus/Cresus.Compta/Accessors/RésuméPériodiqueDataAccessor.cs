@@ -141,10 +141,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les valeurs min/max
 			//	en fonction des données filtrées, afin que les graphiques utilisent au mieux
 			//	l'espace disponible.
-			this.MinMaxClear ();
-
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
+			this.cube.Mode = this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé;
 
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{
@@ -158,35 +157,15 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				this.cube.SetTitle (1, y, data.Numéro);
 
-				//	Construit les valeurs distinctes, c'est-à-dire en mode non cumulé.
-				var simples = new List<decimal> ();
 				decimal last = 0;
 				for (int i = 0; i < this.columnCount; i++)
 				{
 					decimal solde = data.GetSolde (i).GetValueOrDefault ();
-					simples.Add (solde-last);
 					this.cube.SetValue (i, y, solde-last);
 
 					if (this.Options.Cumul)
 					{
 						last = solde;
-					}
-				}
-
-				if (this.Options.HasGraphicsCumulé)
-				{
-					decimal sum = 0;
-					for (int i = 0; i < this.columnCount; i++)
-					{
-						sum += simples[i];
-						this.SetMinMaxValue (sum);
-					}
-				}
-				else
-				{
-					for (int i = 0; i < this.columnCount; i++)
-					{
-						this.SetMinMaxValue (simples[i]);
 					}
 				}
 
@@ -229,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return (data.Niveau+1).ToString ();
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (row, data);
+					return AbstractDataAccessor.GetGraphicText (row);
 
 				case ColumnType.Solde:
 					return Converters.MontantToString (data.Solde, this.compta.Monnaies[0]);
@@ -237,40 +216,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 				default:
 					return FormattedText.Null;
 			}
-		}
-
-		private FormattedText GetMinMaxText(int row, RésuméPériodiqueData data)
-		{
-#if false
-			if (this.minValue == decimal.MaxValue ||
-				this.maxValue == decimal.MinValue)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				var graphicData = new GraphicData (this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé, data.Numéro, this.minValue, this.maxValue);
-
-				//	Les valeurs données au module graphique sont toujours distinctes, c'est-à-dire en
-				//	mode non cumulé.
-				decimal last = 0;
-				for (int i = 0; i < this.columnCount; i++)
-				{
-					var solde = data.GetSolde (i).GetValueOrDefault ();
-					graphicData.Values.Add (solde-last);
-					
-					if (this.Options.Cumul)
-					{
-						last = solde;
-					}
-				}
-
-				return graphicData.ToString ();
-			}
-#else
-			var mode = this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé;
-			return StringArray.SpecialContentGraphicValue + ";" + mode.ToString () + ";" + Converters.IntToString (row);
-#endif
 		}
 
 

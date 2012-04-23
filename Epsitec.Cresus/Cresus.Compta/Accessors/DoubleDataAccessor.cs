@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
@@ -37,7 +38,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void UpdateReadonlyAllData()
 		{
 			this.readonlyAllData.Clear ();
-			this.MinMaxClear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
@@ -67,8 +67,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Titre  = this.DifferenceGaucheDescription;
 					data.Solde  = totalDroite - totalGauche;
 
-					this.SetMinMaxValue (data.Solde);
-
 					this.readonlyAllData.Insert (lignesGauches, data);
 					lignesGauches++;
 				}
@@ -78,8 +76,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.Gauche = false;
 					data.Titre  = this.DifferenceDroiteDescription;
 					data.Solde  = totalGauche - totalDroite;
-
-					this.SetMinMaxValue (data.Solde);
 
 					this.readonlyAllData.Add (data);
 					lignesDroites++;
@@ -131,7 +127,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 					data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
 
 					total += solde;
-					this.SetMinMaxValue (solde);
 				}
 			}
 
@@ -179,6 +174,99 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
+		protected override void UpdateAfterFilterUpdated()
+		{
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+			this.cube.Dimensions = 2;
+			this.cube.Clear ();
+			this.cube.Mode = GraphicMode.Empilé;
+
+			//	Spécifie les légendes de l'axe X.
+			int x = 0;
+			this.cube.SetTitle (0, x++, "Solde");
+
+			if (this.Options.ComparisonEnable)
+			{
+				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Période pénultième");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Période précédente");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.Budget) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget prorata");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget futur");
+				}
+
+				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
+				{
+					this.cube.SetTitle (0, x++, "Budget futur prorata");
+				}
+			}
+
+			int y = 0;
+			foreach (var d in this.readonlyData)
+			{
+				var data = d as DoubleData;
+
+				//	Spécifie la légende de l'axe Y.
+				this.cube.SetTitle (1, y, data.Numéro);
+
+				x = 0;
+				this.cube.SetValue (x++, y, data.Solde);
+
+				if (this.Options.ComparisonEnable)
+				{
+					if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
+					{
+						this.cube.SetValue (x++, y, data.PériodePénultième);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
+					{
+						this.cube.SetValue (x++, y, data.PériodePrécédente);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.Budget) != 0)
+					{
+						this.cube.SetValue (x++, y, data.Budget);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetProrata);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetFutur);
+					}
+
+					if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
+					{
+						this.cube.SetValue (x++, y, data.BudgetFuturProrata);
+					}
+				}
+
+				y++;
+			}
+		}
+
+
 		public override FormattedText GetText(int row, ColumnType column, bool all = false)
 		{
 			var data = this.GetReadOnlyData (row, all) as DoubleData;
@@ -213,7 +301,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (data.Numéro, data.Solde);
+					return AbstractDataAccessor.GetGraphicText (row);
 
 				case ColumnType.Budget:
 					return this.GetBudgetText (data.Numéro, data.Solde, data.Budget, monnaie);
@@ -245,9 +333,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private decimal? GetBudget(ComptaCompteEntity compte, ComparisonShowed type)
 		{
 			//	Retourne le montant d'un compte à considérer pour la colonne "budget".
-			var budget = this.budgetsManager.GetBudget (compte, type);
-			this.SetMinMaxValue (budget);
-			return budget;
+			return this.budgetsManager.GetBudget (compte, type);
 		}
 
 		private FormattedText GetBudgetText(FormattedText name, decimal? solde, decimal? budget, ComptaMonnaieEntity monnaie)

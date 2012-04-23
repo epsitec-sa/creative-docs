@@ -595,39 +595,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		#region Min/max tiny engine
-		protected void MinMaxClear()
+		protected static FormattedText GetGraphicText(int row)
 		{
-			this.minValue = decimal.MaxValue;
-			this.maxValue = decimal.MinValue;
+			return StringArray.SpecialContentGraphicValue + ";" + Converters.IntToString (row);
 		}
-
-		protected void SetMinMaxValue(decimal? value)
-		{
-			if (value.HasValue)
-			{
-				this.minValue = System.Math.Min (this.minValue, value.Value);
-				this.maxValue = System.Math.Max (this.maxValue, value.Value);
-			}
-		}
-
-		protected FormattedText GetMinMaxText(FormattedText name, decimal? value)
-		{
-			if (this.minValue == decimal.MaxValue ||
-				this.maxValue == decimal.MinValue)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				var graphicData = new GraphicData (GraphicMode.Normal, name, this.minValue, this.maxValue);
-
-				graphicData.Values.Add (value.GetValueOrDefault ());
-				
-				return graphicData.ToString ();
-			}
-		}
-		#endregion
 
 
 		protected readonly AbstractController			controller;

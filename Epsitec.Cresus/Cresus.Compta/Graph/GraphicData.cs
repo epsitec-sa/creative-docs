@@ -19,36 +19,12 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphicData(GraphicMode mode, FormattedText name, decimal minValue, decimal maxValue)
 		{
-			//	Construit une nouvelle instance à partir des paramètres distincts.
 			this.mode     = mode;
 			this.name     = name;
 			this.minValue = minValue;
 			this.maxValue = maxValue;
 
 			this.values = new List<decimal> ();
-		}
-
-		public GraphicData(string text)
-		{
-			//	Construit une nouvelle instance à partir des données sérialisées.
-			System.Diagnostics.Debug.Assert (!string.IsNullOrEmpty (text));
-			System.Diagnostics.Debug.Assert (text.StartsWith (StringArray.SpecialContentGraphicValue));
-
-			var words = text.Split (GraphicData.separator);
-			System.Diagnostics.Debug.Assert (words.Length >= 6);
-
-			this.mode     = (GraphicMode) System.Enum.Parse (typeof (GraphicMode), words[1]);
-			this.name     = words[2];
-			this.minValue = Converters.ParseDecimal (words[3]).GetValueOrDefault ();
-			this.maxValue = Converters.ParseDecimal (words[4]).GetValueOrDefault ();
-
-			this.values = new List<decimal> ();
-
-			for (int i = 5; i < words.Length; i++)
-			{
-				decimal value = Converters.ParseDecimal (words[i]).GetValueOrDefault ();
-				this.values.Add (value);
-			}
 		}
 
 
@@ -92,37 +68,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-
-		public new string ToString()
-		{
-			//	Retourne les toutes données sérialisées sous forme d'une string.
-			var builder = new System.Text.StringBuilder ();
-
-			builder.Append (StringArray.SpecialContentGraphicValue);
-			builder.Append (GraphicData.separator);
-			builder.Append (this.mode.ToString ());
-			builder.Append (GraphicData.separator);
-			builder.Append (this.name);
-			builder.Append (GraphicData.separator);
-			builder.Append (Converters.DecimalToString (this.minValue, null));
-			builder.Append (GraphicData.separator);
-			builder.Append (Converters.DecimalToString (this.maxValue, null));
-
-			foreach (var value in this.values)
-			{
-				builder.Append (GraphicData.separator);
-				builder.Append (Converters.DecimalToString (value, null));
-			}
-
-			return builder.ToString ();
-		}
-
-		public void Parse(string text)
-		{
-		}
-
-
-		private static readonly char separator = '◊';
 
 		private readonly GraphicMode		mode;
 		private readonly FormattedText		name;

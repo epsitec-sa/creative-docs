@@ -13,8 +13,6 @@ namespace Epsitec.Cresus.Compta.Graph
 {
 	public enum GraphicMode
 	{
-		Normal,
-		Budget,
 		Cumulé,
 		Empilé,
 	}

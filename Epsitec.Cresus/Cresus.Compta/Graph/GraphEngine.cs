@@ -22,24 +22,43 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, string param)
 		{
 			var words = param.Split (';');
+			var y = int.Parse (words[1]);
 
-			var mode = (GraphicMode) System.Enum.Parse (typeof (GraphicMode), words[1]);
-			var y = int.Parse (words[2]);
-
-			this.PaintGraph (graphics, rect, mode, cube, y);
+			this.PaintGraph (graphics, rect, cube, y);
 		}
 
-		public void PaintGraph(Graphics graphics, Rectangle rect, GraphicMode mode, Cube cube, int y)
+		private void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, int y)
 		{
 			System.Diagnostics.Debug.Assert (cube.Dimensions == 2);
 
-			decimal min, max;
-			cube.GetMinMax(null, null, out min, out max);
-			var data = new GraphicData (mode, cube.GetTitle (1, y), min, max);
+			int nx = cube.GetCount (0);
+			int ny = cube.GetCount (1);
 
-			int count = cube.GetCount(0);
+			decimal finalMin = 0;
+			decimal finalMax = 0;
 
-			for (int x = 0; x < count; x++)
+			if (cube.Mode == GraphicMode.Cumulé)
+			{
+				for (int yy = 0; yy < ny; yy++)
+				{
+					decimal sum = 0;
+
+					for (int xx = 0; xx < nx; xx++)
+					{
+						sum += System.Math.Max (cube.GetValue (xx, yy).GetValueOrDefault (), 0);
+					}
+
+					finalMax = System.Math.Max (finalMax, sum);
+				}
+			}
+			else
+			{
+				cube.GetMinMax (null, null, out finalMin, out finalMax);
+			}
+
+			var data = new GraphicData (cube.Mode, cube.GetTitle (1, y), finalMin, finalMax);
+
+			for (int x = 0; x < nx; x++)
 			{
 				data.Values.Add (cube.GetValue (x, y).GetValueOrDefault ());
 			}
@@ -47,18 +66,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.PaintGraph (graphics, rect, data);
 		}
 
-		public void PaintGraph(Graphics graphics, Rectangle rect, GraphicData data)
+		private void PaintGraph(Graphics graphics, Rectangle rect, GraphicData data)
 		{
 			switch (data.Mode)
 			{
-				case GraphicMode.Normal:
-					this.PaintGraphNormal (graphics, rect, data.MinValue, data.MaxValue, data.Values[0]);
-					break;
-
-				case GraphicMode.Budget:
-					this.PaintGraphBudget (graphics, rect, data.MinValue, data.MaxValue, data.Values[0], data.Values[1]);
-					break;
-
 				case GraphicMode.Cumulé:
 					this.PaintGraphCumulé (graphics, rect, data.MinValue, data.MaxValue, data.Values);
 					break;
@@ -67,100 +78,6 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.PaintGraphEmpilé (graphics, rect, data.MinValue, data.MaxValue, data.Values);
 					break;
 			}
-		}
-
-		private void PaintGraphNormal(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value)
-		{
-			if (max-min == 0)
-			{
-				return;
-			}
-
-			var borderColor = GraphEngine.GetBorderColor ();
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (0.5);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
-			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
-
-			if (val < 0)
-			{
-				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (UIBuilder.GraphicRedColor);
-			}
-
-			if (val > 0)
-			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (UIBuilder.GraphicGreenColor);
-			}
-
-			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
-			graphics.RenderSolid (borderColor);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
-		}
-
-		private void PaintGraphBudget(Graphics graphics, Rectangle rect, decimal min, decimal max, decimal value, decimal solde)
-		{
-			if (max-min == 0)
-			{
-				return;
-			}
-
-			var borderColor = GraphEngine.GetBorderColor ();
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.5, borderColor));
-
-			rect.Deflate (2);
-			rect = graphics.Align (rect);
-			rect.Deflate (0.5);
-
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
-
-			double sep = System.Math.Floor (rect.Width * (double) -min  / (double) (max-min));
-			double val = System.Math.Floor (rect.Width * (double) value / (double) (max-min));
-			double sol = System.Math.Floor (rect.Width * (double) solde / (double) (max-min));
-
-			var color = value >= solde ? UIBuilder.GraphicGreenColor : UIBuilder.GraphicRedColor;
-
-			if (val < 0)
-			{
-				var r = new Rectangle (rect.Left+sep+val+0.5, rect.Bottom, -val, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (color);
-			}
-
-			if (val > 0)
-			{
-				var r = new Rectangle (rect.Left+sep, rect.Bottom, val+0.5, rect.Height);
-				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (color);
-			}
-
-			graphics.AddLine (rect.Left+sep, rect.Bottom, rect.Left+sep, rect.Top);
-			graphics.AddLine (rect.Left+sol, rect.Bottom, rect.Left+sol, rect.Top);
-			graphics.RenderSolid (borderColor);
-
-			graphics.AddRectangle (rect);
-			graphics.RenderSolid (borderColor);
 		}
 
 		private void PaintGraphCumulé(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
@@ -193,6 +110,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				cumuls.Add (sum);
 			}
 
+			int step = System.Math.Max (11/cumuls.Count, 1);
+
 			for (int i = cumuls.Count-1; i >= 0; i--)
 			{
 				var v1 = (i == 0) ? 0 : cumuls[i-1];
@@ -206,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				{
 					var r = new Rectangle (rect.Left+x1, rect.Bottom, dx, rect.Height);
 					graphics.AddFilledRectangle (r);
-					graphics.RenderSolid (GraphEngine.GetRainbowColor (i));
+					graphics.RenderSolid (GraphEngine.GetRainbowColor (i*step));
 
 					graphics.AddLine (rect.Left+x2-0.5, rect.Bottom+0.5, rect.Left+x2-0.5, rect.Top-0.5);
 					graphics.RenderSolid (borderColor);
@@ -222,6 +141,9 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintGraphEmpilé(Graphics graphics, Rectangle rect, decimal min, decimal max, List<decimal> values)
 		{
 			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres empilées.
+			min = System.Math.Min (min, 0);
+			max = System.Math.Max (max, 0);
+
 			if (max-min == 0)
 			{
 				return;
@@ -247,8 +169,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
 			double zero = System.Math.Floor (rect.Width * (double) -min / (double) (max-min));
-
 			double y = 0;
+			int step = System.Math.Max (11/values.Count, 1);
 
 			for (int i = 0; i < values.Count; i++)
 			{
@@ -260,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				var r = new Rectangle (rect.Left+x1, rect.Top-y-dy, x2-x1, dy);
 				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (GraphEngine.GetRainbowColor (i));
+				graphics.RenderSolid (GraphEngine.GetRainbowColor (i*step));
 
 				graphics.AddLine (rect.Left+x-0.5, rect.Top-y-dy+1.5, rect.Left+x-0.5, rect.Top-y-0.5);
 				graphics.RenderSolid (borderColor);

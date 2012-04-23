@@ -212,17 +212,11 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Vue d'ensemble graphique", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Précédent graphique", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
+				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
 			this.Select<BilanOptions> (list, nomPrésentation);
@@ -275,17 +269,11 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Vue d'ensemble graphique", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Budget graphique", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Graphique);
+				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
 			this.Select<PPOptions> (list, nomPrésentation);

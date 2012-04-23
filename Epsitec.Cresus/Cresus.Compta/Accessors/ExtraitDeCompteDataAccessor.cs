@@ -7,6 +7,7 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Permanents.Data;
@@ -147,8 +148,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void UpdateSoldes()
 		{
 			//	Met à jour l'évolution du solde du compte, visible dans la colonne 'Solde'.
-			this.MinMaxClear ();
-
 			FormattedText numéroCompte = this.Permanents.NuméroCompte;
 			if (numéroCompte.IsNullOrEmpty)
 			{
@@ -193,9 +192,29 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 						data.Solde = solde;
 					}
-
-					this.SetMinMaxValue (solde);
 				}
+			}
+		}
+
+
+		protected override void UpdateAfterFilterUpdated()
+		{
+			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+			this.cube.Dimensions = 2;
+			this.cube.Clear ();
+			this.cube.Mode = GraphicMode.Empilé;
+
+			this.cube.SetTitle (0, 0, this.Permanents.NuméroCompte);
+
+			int y = 0;
+			foreach (var d in this.readonlyData)
+			{
+				var data = d as ExtraitDeCompteData;
+
+				this.cube.SetTitle (1, y, data.Pièce);
+				this.cube.SetValue (0, y, data.Solde);
+
+				y++;
 			}
 		}
 
@@ -255,7 +274,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return Converters.MontantToString (data.Solde, monnaie);
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (data.Pièce, data.Solde);
+					return AbstractDataAccessor.GetGraphicText (row);
 
 				case ColumnType.CodeTVA:
 					return JournalEditionLine.GetCodeTVADescription (data.CodeTVA);

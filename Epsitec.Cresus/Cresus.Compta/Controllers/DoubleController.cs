@@ -63,6 +63,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override int ArrayLineHeight
+		{
+			get
+			{
+				var options = this.dataAccessor.Options as DoubleOptions;
+
+				if (options.HasGraphics)
+				{
+					int count = 1 + options.ComparisonShowedCount;
+					return System.Math.Max (2+count*6, 14);
+				}
+				else
+				{
+					return 14;
+				}
+			}
+		}
+
+
 		protected override void OptionsChanged()
 		{
 			this.UpdateColumnMappers ();
@@ -168,11 +187,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return new ColumnMapper (ColumnType.PériodePénultième,  0.20, ContentAlignment.MiddleRight, "Période pénul.");
 				yield return new ColumnMapper (ColumnType.PériodePrécédente,  0.20, ContentAlignment.MiddleRight, "Période préc.");
 				yield return new ColumnMapper (ColumnType.Solde,              0.20, ContentAlignment.MiddleRight, "Montant");
-				yield return new ColumnMapper (ColumnType.SoldeGraphique,     0.20, ContentAlignment.MiddleRight, "", hideForSearch: true);
 				yield return new ColumnMapper (ColumnType.Budget,             0.20, ContentAlignment.MiddleRight, "Budget");
 				yield return new ColumnMapper (ColumnType.BudgetProrata,      0.20, ContentAlignment.MiddleRight, "Budget prorata");
 				yield return new ColumnMapper (ColumnType.BudgetFutur,        0.20, ContentAlignment.MiddleRight, "Budget futur");
 				yield return new ColumnMapper (ColumnType.BudgetFuturProrata, 0.20, ContentAlignment.MiddleRight, "Budget fut. pro.");
+				yield return new ColumnMapper (ColumnType.SoldeGraphique,     0.30, ContentAlignment.MiddleRight, "", hideForSearch: true);
 
 				yield return new ColumnMapper (ColumnType.Date,       0.20, ContentAlignment.MiddleLeft, "Date",       show: false);
 				yield return new ColumnMapper (ColumnType.Profondeur, 0.20, ContentAlignment.MiddleLeft, "Profondeur", show: false);
@@ -182,8 +201,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override void UpdateColumnMappers()
 		{
 			var options = this.dataAccessor.Options as DoubleOptions;
-
-			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 
 			if (options.ComparisonEnable && this.optionsController != null)
 			{
@@ -203,6 +220,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.ShowHideColumn (ColumnType.BudgetFutur,        false);
 				this.ShowHideColumn (ColumnType.BudgetFuturProrata, false);
 			}
+
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
 		}
 	}
 }

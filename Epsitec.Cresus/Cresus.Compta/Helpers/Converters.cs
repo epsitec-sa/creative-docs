@@ -874,9 +874,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ComparisonDisplayMode.PourcentageMontant:
 					return "Comparaison en % avec montant";
 
-				case ComparisonDisplayMode.Graphique:
-					return "Graphique";
-
 				default:
 					return "?";
 			}

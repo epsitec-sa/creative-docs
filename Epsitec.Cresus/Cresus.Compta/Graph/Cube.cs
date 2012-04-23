@@ -90,6 +90,13 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		public GraphicMode Mode
+		{
+			get;
+			set;
+		}
+
+
 		public int Dimensions
 		{
 			get

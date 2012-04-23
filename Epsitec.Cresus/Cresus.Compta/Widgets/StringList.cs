@@ -757,12 +757,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			//	Dessine une valeur numérique dans une cellule.
 			//	Le format est "$${_graphic_}$$/-10/100/55.2" ou "$${_graphic_}$$/-10/100/55.2/60".
-#if false
-			var data = new GraphicData (text);
-			this.graphEngine.PaintGraph (graphics, rect, data);
-#else
 			this.graphEngine.PaintGraph (graphics, rect, this.cube, text);
-#endif
 		}
 
 

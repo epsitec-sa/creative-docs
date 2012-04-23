@@ -165,10 +165,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 						return Core.TextFormatter.FormatText (percent, "de", montant);
 					}
 				}
-				else if (this.options.ComparisonDisplayMode == ComparisonDisplayMode.Graphique)
-				{
-					return BudgetsManager.GetMinMaxText (name, budget, solde, minValue, maxValue);
-				}
 				else
 				{
 					return Converters.MontantToString (budget-solde, monnaie);
@@ -186,24 +182,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				return FormattedText.Empty;
-			}
-		}
-
-		private static FormattedText GetMinMaxText(FormattedText name, decimal? value1, decimal? value2, decimal minValue, decimal maxValue)
-		{
-			if (minValue == decimal.MaxValue ||
-				maxValue == decimal.MinValue)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				var graphicData = new GraphicData (GraphicMode.Budget, name, minValue, maxValue);
-
-				graphicData.Values.Add (value1.GetValueOrDefault ());
-				graphicData.Values.Add (value2.GetValueOrDefault ());
-				
-				return graphicData.ToString ();
 			}
 		}
 
