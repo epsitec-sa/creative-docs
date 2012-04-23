@@ -5,6 +5,8 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 
+using Epsitec.Cresus.Compta.Graph;
+
 using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Compta.Widgets
@@ -40,6 +42,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			base.Dispose(disposing);
+		}
+
+
+		public Cube Cube
+		{
+			get
+			{
+				return this.cube;
+			}
+			set
+			{
+				this.cube = value;
+			}
 		}
 
 
@@ -82,6 +97,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				for (int i=0; i<this.columns.Length; i++)
 				{
 					this.columns[i] = new StringList(this);
+					this.columns[i].Cube = this.cube;
 					this.columns[i].DraggingCellSelectionChanged += this.HandleDraggingCellSelectionChanged;
 					this.columns[i].FinalCellSelectionChanged    += this.HandleFinalCellSelectionChanged;
 					this.columns[i].DoubleClicked                += this.HandleDoubleClicked;
@@ -1292,6 +1308,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public static readonly string SpecialContentLeftAlignment  = StringArray.SpecialContentStart + "left"    + StringArray.SpecialContentEnd;
 		public static readonly string SpecialContentRightAlignment = StringArray.SpecialContentStart + "right"   + StringArray.SpecialContentEnd;
 
+		private Cube						cube;
 		private StringList[]				columns;
 		private VScroller					scroller;
 		private int							totalRows;

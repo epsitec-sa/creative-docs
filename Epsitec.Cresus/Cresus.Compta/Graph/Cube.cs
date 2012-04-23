@@ -4,6 +4,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta;
@@ -12,20 +13,24 @@ using System.Collections.Generic;
 
 namespace Epsitec.Cresus.Compta.Graph
 {
+	/// <summary>
+	/// Cette classe permet de stocker des données numériques à n dimensions, en vue de les représenter graphiquement.
+	/// </summary>
 	public class Cube
 	{
-		public Cube(int dimensions)
+		public Cube()
 		{
-			System.Diagnostics.Debug.Assert (dimensions >= 1 && dimensions <= 10);
-			this.dimensions = dimensions;
 			this.values = new Dictionary<string, decimal?> ();
+			this.titles = new List<Dictionary<int,FormattedText>>();
+			this.maxCoords = new List<int> ();
 		}
 
 
 		static Cube()
 		{
 			//	Auto-test intégré.
-			var cube = new Cube (2);
+			var cube = new Cube ();
+			cube.Dimensions = 2;
 
 			cube.SetValue (0, 0, 10.0m);
 			cube.SetValue (1, 0, 11.0m);
@@ -41,6 +46,19 @@ namespace Epsitec.Cresus.Compta.Graph
 			cube.SetValue (1, 2, 1001.0m);
 			cube.SetValue (2, 2, 1002.0m);
 			cube.SetValue (3, 2, 1003.0m);
+
+			cube.SetTitle (0, 0, "X0");
+			cube.SetTitle (0, 1, "X1");
+			cube.SetTitle (0, 2, "X2");
+			cube.SetTitle (0, 3, "X3");
+
+			cube.SetTitle (1, 0, "Y0");
+			cube.SetTitle (1, 1, "Y1");
+			cube.SetTitle (1, 2, "Y2");
+
+			System.Diagnostics.Debug.Assert (cube.Dimensions == 2);
+			System.Diagnostics.Debug.Assert (cube.GetCount (0) == 4);
+			System.Diagnostics.Debug.Assert (cube.GetCount (1) == 3);
 
 			System.Diagnostics.Debug.Assert (cube.GetValue (0, 0) == 10.0m);
 			System.Diagnostics.Debug.Assert (cube.GetValue (1, 0) == 11.0m);
@@ -61,12 +79,84 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			cube.GetMinMax (3, 1, out min, out max);
 			System.Diagnostics.Debug.Assert (min == 103.0m && max == 103.0m);
+
+			System.Diagnostics.Debug.Assert (cube.GetTitle (0, 1) == "X1");
+			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 1) == "Y1");
+			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 2) == "Y2");
+			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 3) == FormattedText.Null);
+
+			System.Diagnostics.Debug.Assert (cube.GetCount (0) == 4);
+			System.Diagnostics.Debug.Assert (cube.GetCount (1) == 3);
+		}
+
+
+		public int Dimensions
+		{
+			get
+			{
+				return this.dimensions;
+			}
+			set
+			{
+				System.Diagnostics.Debug.Assert (value >= 1 && value <= 10);
+
+				if (this.dimensions != value)
+				{
+					this.dimensions = value;
+
+					this.maxCoords.Clear ();
+					this.titles.Clear ();
+
+					for (int i = 0; i < this.dimensions; i++)
+					{
+						this.maxCoords.Add (-1);
+						this.titles.Add (new Dictionary<int, FormattedText> ());
+					}
+				}
+			}
 		}
 
 
 		public void Clear()
 		{
+			//	Vide le contenu du cube, sans modifier le nombre de dimensions.
 			this.values.Clear ();
+
+			for (int i = 0; i < this.dimensions; i++)
+			{
+				this.maxCoords[i] = -1;
+				this.titles[i].Clear ();
+			}
+		}
+
+
+		public FormattedText GetTitle(int dimension, int coordIndex)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+
+			FormattedText title;
+			if (this.titles[dimension].TryGetValue (coordIndex, out title))
+			{
+				return title;
+			}
+			else
+			{
+				return FormattedText.Null;
+			}
+		}
+
+		public void SetTitle(int dimension, int coordIndex, FormattedText title)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+			this.maxCoords[dimension] = System.Math.Max (this.maxCoords[dimension], coordIndex);
+			this.titles[dimension][coordIndex] = title;
+		}
+
+
+		public int GetCount(int dimension)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+			return this.maxCoords[dimension]+1;
 		}
 
 
@@ -91,6 +181,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void GetMinMax(out decimal min, out decimal max, params int?[] coords)
 		{
 			System.Diagnostics.Debug.Assert (this.dimensions == coords.Length);
+
 			min = decimal.MaxValue;
 			max = decimal.MinValue;
 
@@ -135,6 +226,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void SetValue(int x, decimal? value)
 		{
 			System.Diagnostics.Debug.Assert (this.dimensions == 1);
+			this.UpdateMaxCoords (x);
 			this.SetValue (Cube.CoordsToKey (x), value);
 		}
 
@@ -148,6 +240,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void SetValue(int x, int y, decimal? value)
 		{
 			System.Diagnostics.Debug.Assert (this.dimensions == 2);
+			this.UpdateMaxCoords (x, y);
 			this.SetValue (Cube.CoordsToKey (x, y), value);
 		}
 
@@ -161,6 +254,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void SetValue(int x, int y, int z, decimal? value)
 		{
 			System.Diagnostics.Debug.Assert (this.dimensions == 3);
+			this.UpdateMaxCoords (x, y, z);
 			this.SetValue (Cube.CoordsToKey (x, y, z), value);
 		}
 
@@ -174,6 +268,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void SetValue(decimal? value, params int[] coords)
 		{
 			System.Diagnostics.Debug.Assert (this.dimensions == coords.Length);
+			this.UpdateMaxCoords (coords);
 			this.SetValue (Cube.CoordsToKey (coords), value);
 		}
 
@@ -203,6 +298,37 @@ namespace Epsitec.Cresus.Compta.Graph
 				{
 					this.values.Remove (key);
 				}
+			}
+		}
+
+
+		private void UpdateMaxCoords(int x)
+		{
+			System.Diagnostics.Debug.Assert (this.dimensions == 1);
+			this.maxCoords[0] = System.Math.Max (this.maxCoords[0], x);
+		}
+
+		private void UpdateMaxCoords(int x, int y)
+		{
+			System.Diagnostics.Debug.Assert (this.dimensions == 2);
+			this.maxCoords[0] = System.Math.Max (this.maxCoords[0], x);
+			this.maxCoords[1] = System.Math.Max (this.maxCoords[1], y);
+		}
+
+		private void UpdateMaxCoords(int x, int y, int z)
+		{
+			System.Diagnostics.Debug.Assert (this.dimensions == 3);
+			this.maxCoords[0] = System.Math.Max (this.maxCoords[0], x);
+			this.maxCoords[1] = System.Math.Max (this.maxCoords[1], y);
+			this.maxCoords[2] = System.Math.Max (this.maxCoords[2], z);
+		}
+
+		private void UpdateMaxCoords(params int[] coords)
+		{
+			System.Diagnostics.Debug.Assert (this.dimensions == coords.Length);
+			for (int i = 0; i < coords.Length; i++)
+			{
+				this.maxCoords[i] = System.Math.Max (this.maxCoords[i], coords[i]);
 			}
 		}
 
@@ -257,7 +383,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private readonly int							dimensions;
-		private readonly Dictionary<string, decimal?>	values;
+		private readonly Dictionary<string, decimal?>			values;
+		private readonly List<int>								maxCoords;
+		private readonly List<Dictionary<int, FormattedText>>	titles;
+
+		private int												dimensions;
 	}
 }

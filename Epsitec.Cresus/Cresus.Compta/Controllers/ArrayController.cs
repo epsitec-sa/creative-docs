@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock              = DockStyle.Fill,
 				TabNavigationMode = TabNavigationMode.ActivateOnTab,
 				Margins           = new Margins (0, 0, 0, 1),
+				Cube              = this.controller.DataAccessor.Cube,
 			};
 
 			this.array.UpdateCellContent += delegate

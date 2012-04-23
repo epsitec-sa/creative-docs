@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyData    = new List<AbstractData> ();
 			this.editionLine     = new List<AbstractEditionLine> ();
 			this.searchResults   = new List<SearchResult> ();
+
+			this.cube = new Cube ();
 		}
 
 
@@ -91,6 +93,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.soldesJournalManager;
+			}
+		}
+
+		public Cube Cube
+		{
+			get
+			{
+				return this.cube;
 			}
 		}
 
@@ -647,5 +657,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected decimal								maxValue;
 		protected Date?									lastBeginDate;
 		protected Date?									lastEndDate;
+		protected Cube									cube;
 	}
 }

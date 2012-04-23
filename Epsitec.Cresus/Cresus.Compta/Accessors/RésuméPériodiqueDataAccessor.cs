@@ -143,9 +143,20 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	l'espace disponible.
 			this.MinMaxClear ();
 
+			this.cube.Dimensions = 2;
+			this.cube.Clear ();
+
+			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
+			{
+				this.cube.SetTitle (0, index, Dates.GetMonthShortDescription (dateDébut, dateFin));
+			});
+
+			int y = 0;
 			foreach (var d in this.readonlyData)
 			{
 				var data = d as RésuméPériodiqueData;
+
+				this.cube.SetTitle (1, y, data.Numéro);
 
 				//	Construit les valeurs distinctes, c'est-à-dire en mode non cumulé.
 				var simples = new List<decimal> ();
@@ -154,6 +165,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				{
 					decimal solde = data.GetSolde (i).GetValueOrDefault ();
 					simples.Add (solde-last);
+					this.cube.SetValue (i, y, solde-last);
 
 					if (this.Options.Cumul)
 					{
@@ -177,6 +189,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 						this.SetMinMaxValue (simples[i]);
 					}
 				}
+
+				y++;
 			}
 		}
 
@@ -215,7 +229,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return (data.Niveau+1).ToString ();
 
 				case ColumnType.SoldeGraphique:
-					return this.GetMinMaxText (data);
+					return this.GetMinMaxText (row, data);
 
 				case ColumnType.Solde:
 					return Converters.MontantToString (data.Solde, this.compta.Monnaies[0]);
@@ -225,8 +239,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		private FormattedText GetMinMaxText(RésuméPériodiqueData data)
+		private FormattedText GetMinMaxText(int row, RésuméPériodiqueData data)
 		{
+#if false
 			if (this.minValue == decimal.MaxValue ||
 				this.maxValue == decimal.MinValue)
 			{
@@ -252,6 +267,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				return graphicData.ToString ();
 			}
+#else
+			var mode = this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé;
+			return StringArray.SpecialContentGraphicValue + ";" + mode.ToString () + ";" + Converters.IntToString (row);
+#endif
 		}
 
 

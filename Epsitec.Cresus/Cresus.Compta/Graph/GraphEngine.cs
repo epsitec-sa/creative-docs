@@ -16,9 +16,36 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphEngine()
 		{
-			this.cube = new Cube (1);
 		}
 
+
+		public void PaintGraph(Graphics graphics, Rectangle rect, Cube cube, string param)
+		{
+			var words = param.Split (';');
+
+			var mode = (GraphicMode) System.Enum.Parse (typeof (GraphicMode), words[1]);
+			var y = int.Parse (words[2]);
+
+			this.PaintGraph (graphics, rect, mode, cube, y);
+		}
+
+		public void PaintGraph(Graphics graphics, Rectangle rect, GraphicMode mode, Cube cube, int y)
+		{
+			System.Diagnostics.Debug.Assert (cube.Dimensions == 2);
+
+			decimal min, max;
+			cube.GetMinMax(null, null, out min, out max);
+			var data = new GraphicData (mode, cube.GetTitle (1, y), min, max);
+
+			int count = cube.GetCount(0);
+
+			for (int x = 0; x < count; x++)
+			{
+				data.Values.Add (cube.GetValue (x, y).GetValueOrDefault ());
+			}
+
+			this.PaintGraph (graphics, rect, data);
+		}
 
 		public void PaintGraph(Graphics graphics, Rectangle rect, GraphicData data)
 		{
@@ -271,8 +298,5 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 		private static int[] rainbow = { 0, 40, 60, 90, 180, 190, 200, 210, 240, 270, 300 };
-
-
-		private Cube			cube;
 	}
 }
