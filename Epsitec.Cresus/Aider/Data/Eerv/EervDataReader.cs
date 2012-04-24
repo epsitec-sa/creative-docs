@@ -44,6 +44,12 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public static IEnumerable<Dictionary<IdHeader, string>> ReadIds(FileInfo input)
+		{
+			return EervDataReader.GetRecords (input, EervDataReader.idHeaders);
+		}
+
+
 		private static IEnumerable<Dictionary<T, string>> GetRecords<T>(FileInfo input, Dictionary<T, string> stringMapping)
 		{
 			Dictionary<T, int?> indexMapping = null;
@@ -226,6 +232,13 @@ namespace Epsitec.Aider.Data.Eerv
 		};
 
 
+		private static readonly Dictionary<IdHeader, string> idHeaders = new Dictionary<IdHeader, string> ()
+		{
+			{ IdHeader.Id, "IdxPar" },
+			{ IdHeader.Name, "NomParoisse" },
+		};
+
+
 	}
 
 
@@ -305,6 +318,13 @@ namespace Epsitec.Aider.Data.Eerv
 		NameLevel3,
 		NameLevel4,
 		NameLevel5,
+	}
+
+
+	internal enum IdHeader
+	{
+		Id,
+		Name,
 	}
 
 

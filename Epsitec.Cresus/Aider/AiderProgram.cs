@@ -127,21 +127,23 @@ namespace Epsitec.Aider
 
 				EervMainDataImporter.Import (businessContextManager, eervMainData, parishRepository);
 
-				var eervFileGroups = new List<Tuple<FileInfo, FileInfo, FileInfo, FileInfo>> ()
+				var eervFileGroups = new List<Tuple<FileInfo, FileInfo, FileInfo, FileInfo, FileInfo>> ()
 				{
 					Tuple.Create
 					(
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx")
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Activites.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\SuperGroupes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Ids.xlsx")
 					),
 					Tuple.Create
 					(
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Personnes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Activites.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Groupes.xlsx"),
-						new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\SuperGroupes.xlsx")
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Personnes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Activites.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Groupes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\SuperGroupes.xlsx"),
+					    new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Région 9\Ids.xlsx")
 					),
 				};
 
@@ -151,12 +153,13 @@ namespace Epsitec.Aider
 					var eervActivityFile = eervFileGroup.Item2;
 					var eervGroupFile = eervFileGroup.Item3;
 					var eervSuperGroupFile = eervFileGroup.Item4;
+					var eervIdFile = eervFileGroup.Item5;
 
-					var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile).ToList ();
-					
+					var eervParishData = EervParishDataLoader.LoadEervParishData (eervPersonsFile, eervActivityFile, eervGroupFile, eervSuperGroupFile, eervIdFile).ToList ();
+
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (businessContextManager, eervParishDatum.Id.ToString (), eervMainData, eervParishDatum);
+						EervParishDataImporter.Import (businessContextManager, eervMainData, eervParishDatum);
 					}
 				}
 				Services.ShutDown ();

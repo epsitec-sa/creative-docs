@@ -24,14 +24,16 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile)
+		public static IEnumerable<EervParishData> LoadEervParishData(FileInfo personFile, FileInfo activityFile, FileInfo groupFile, FileInfo superGroupFile, FileInfo idFile)
 		{
+			var idRecords = EervDataReader.ReadIds (idFile).ToList ();
 			var personRecords = EervDataReader.ReadPersons (personFile).ToList ();
 			var activityRecords = EervDataReader.ReadActivities (activityFile).ToList ();
 			var groupRecords = EervDataReader.ReadGroups (groupFile, superGroupFile).ToList ();
 
 			EervParishDataLoader.FixPersonRecords (personRecords);
 
+			var allIds = EervParishDataLoader.LoadEervIds (idRecords).ToList ();
 			var allHouseholds = EervParishDataLoader.LoadEervHouseholds (personRecords).ToList ();
 			var allPersons = EervParishDataLoader.LoadEervPersons (personRecords).ToList ();
 			var allLegalPersons = EervParishDataLoader.LoadEervLegalPersons (personRecords).ToList ();
@@ -44,15 +46,10 @@ namespace Epsitec.Aider.Data.Eerv
 			var groupedActivities = EervParishDataLoader.GroupByParish (allActivities);
 			var groupedGroups = EervParishDataLoader.GroupByParish (allGroups);
 
-			var parishIds = groupedHouseholds.Keys
-				.Concat (groupedPersons.Keys)
-				.Concat (groupedLegalPersons.Keys)
-				.Concat (groupedActivities.Keys)
-				.Concat (groupedGroups.Keys)
-				.Distinct ();
-
-			foreach (var parishId in parishIds)
+			foreach (var id in allIds)
 			{
+				var parishId = id.Id;
+
 				var households = EervParishDataLoader.GetParishData (groupedHouseholds, parishId);
 				var persons = EervParishDataLoader.GetParishData (groupedPersons, parishId);
 				var legalPersons = EervParishDataLoader.GetParishData (groupedLegalPersons, parishId);
@@ -78,7 +75,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
-				yield return new EervParishData (parishId, households, rawPersons, legalPersons, rawGroups);
+				yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups);
 			}
 		}
 
@@ -371,6 +368,21 @@ namespace Epsitec.Aider.Data.Eerv
 			var activity = new EervActivity (startDate, endDate, remarks);
 
 			return Tuple.Create (Tuple.Create (activity, personId, groupId), parishId);
+		}
+
+
+		internal static IEnumerable<EervId> LoadEervIds(IEnumerable<Dictionary<IdHeader, string>> records)
+		{
+			return records.Select (r => EervParishDataLoader.LoadEervId (r));
+		}
+
+
+		internal static EervId LoadEervId(Dictionary<IdHeader, string> record)
+		{
+			var id = record[IdHeader.Id];
+			var name = record[IdHeader.Name];
+
+			return new EervId (id, name);
 		}
 
 

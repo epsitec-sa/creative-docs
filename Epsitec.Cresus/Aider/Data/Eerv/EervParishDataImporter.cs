@@ -2,6 +2,7 @@
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
@@ -21,6 +22,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -31,22 +34,22 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, string parishName, EervMainData eervMainData, EervParishData eervParishData)
+		public static void Import(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
 			// TODO activity data
 
-			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervParishData);
-			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, parishName, eervParishData);
-			EervParishDataImporter.ImportEervGroups (businessContextManager, parishName, eervMainData, eervParishData);
+			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, eervParishData);
+			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervParishData);
+			EervParishDataImporter.ImportEervGroups (businessContextManager, eervMainData, eervParishData);
 		}
 
 
-		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
+		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
 		{
 			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
-			
-			var newEntities = EervParishDataImporter.ProcessMatches (businessContextManager, parishName, matches);
-			
+
+			var newEntities = EervParishDataImporter.ProcessMatches (businessContextManager, eervParishData.Id.Name, matches);
+
 			EervParishDataImporter.ProcessHouseholdMatches (businessContextManager, matches, newEntities, eervParishData.Households);
 		}
 
@@ -102,7 +105,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<NormalizedPerson, EervPerson> GetNormalizedPersons(EervParishData eervParishData)
 		{
-			return Normalizer.Normalize(eervParishData.Households).Item2;
+			return Normalizer.Normalize (eervParishData.Households).Item2;
 		}
 
 
@@ -120,7 +123,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static Dictionary<EervPerson, EntityKey> ProcessMatches(BusinessContext businessContext, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
 		{
 			var newEntities = new Dictionary<EervPerson, AiderPersonEntity> ();
-			
+
 			var dataContext = businessContext.DataContext;
 
 			foreach (var match in matches)
@@ -197,7 +200,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			if (!string.IsNullOrEmpty (honorific))
 			{
-				var title =	EervParishDataImporter.GetHonorific(honorific);
+				var title =	EervParishDataImporter.GetHonorific (honorific);
 
 				if (title != PersonMrMrs.None)
 				{
@@ -470,7 +473,7 @@ namespace Epsitec.Aider.Data.Eerv
 				b.SaveChanges ();
 			};
 
-			businessContextManager.Execute (action);			
+			businessContextManager.Execute (action);
 		}
 
 
@@ -483,15 +486,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 			EervParishDataImporter.ProcessHouseholdMatches (aiderPersons, eervHouseholds, businessContext, matches, newEntities);
 		}
-  
+
 
 		private static void ProcessHouseholdMatches(IEnumerable<AiderPersonEntity> aiderPersons, IEnumerable<EervHousehold> eervHouseholds, BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities)
 		{
-			var aiderHouseholdToPersons = EervParishDataImporter.GetAiderHouseoldToPersons(aiderPersons);
+			var aiderHouseholdToPersons = EervParishDataImporter.GetAiderHouseoldToPersons (aiderPersons);
 
 			foreach (var eervHousehold in eervHouseholds)
 			{
-				EervParishDataImporter.ProcessHouseholdMatch(businessContext, matches, newEntities, eervHousehold, aiderHouseholdToPersons);
+				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderHouseholdToPersons);
 			}
 		}
 
@@ -549,7 +552,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold)
 		{
-			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity>();
+			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity> ();
 
 			foreach (var eervPerson in eervHousehold.Members)
 			{
@@ -559,7 +562,7 @@ namespace Epsitec.Aider.Data.Eerv
 					? match[0].Item1
 					: newEntities[eervPerson];
 
-				var aiderPerson = businessContext.DataContext.ResolveEntity(entityKey);
+				var aiderPerson = businessContext.DataContext.ResolveEntity (entityKey);
 
 				eervToAiderPersons[eervPerson] = (AiderPersonEntity) aiderPerson;
 			}
@@ -570,7 +573,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void CreateHousehold(BusinessContext businessContext, EervHousehold eervHousehold, Dictionary<EervPerson, AiderPersonEntity> eervToAiderPersons, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons)
 		{
-			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity>();
+			var aiderHousehold = businessContext.CreateEntity<AiderHouseholdEntity> ();
 			aiderHouseholdToAiderPersons[aiderHousehold] = new List<AiderPersonEntity> ();
 
 			EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, aiderHousehold, aiderHouseholdToAiderPersons);
@@ -611,7 +614,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			foreach (var effectiveHousehold in effectiveHouseholds)
 			{
-				var households = effectiveHousehold.ToList();
+				var households = effectiveHousehold.ToList ();
 
 				var mainEffectiveHousehold = EervParishDataImporter.CombineEffectiveHouseholds (businessContext, households, aiderHouseholdToAiderPersons);
 
@@ -620,15 +623,15 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var mainHousehold = EervParishDataImporter.GetMainHousehold (mainHouseholds, aiderHouseholdToAiderPersons);
 
-			EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, mainHousehold, aiderHouseholdToAiderPersons); 
+			EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, mainHousehold, aiderHouseholdToAiderPersons);
 		}
 
-		
+
 		private static AiderHouseholdEntity CombineEffectiveHouseholds(BusinessContext businessContext, List<AiderHouseholdEntity> aiderHouseholds, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons)
 		{
 			var mainHousehold = EervParishDataImporter.GetMainHousehold (aiderHouseholds, aiderHouseholdToAiderPersons);
 			var secondaryHouseholds = aiderHouseholds.Where (h => h!= mainHousehold);
-			
+
 			foreach (var secondaryHousehold in secondaryHouseholds)
 			{
 				EervParishDataImporter.CombineEffectiveHouseholds (businessContext, mainHousehold, secondaryHousehold, aiderHouseholdToAiderPersons);
@@ -637,12 +640,12 @@ namespace Epsitec.Aider.Data.Eerv
 			return mainHousehold;
 		}
 
-  
+
 		private static AiderHouseholdEntity GetMainHousehold(List<AiderHouseholdEntity> aiderHouseholds, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons)
 		{
 			return aiderHouseholds
-				.OrderByDescending(h => aiderHouseholdToAiderPersons[h].Count)
-				.First();
+				.OrderByDescending (h => aiderHouseholdToAiderPersons[h].Count)
+				.First ();
 		}
 
 
@@ -680,7 +683,7 @@ namespace Epsitec.Aider.Data.Eerv
 				businessContext.DeleteEntity (address);
 			}
 
-			businessContext.DeleteEntity(secondaryHousehold);
+			businessContext.DeleteEntity (secondaryHousehold);
 
 			// TODO Copy info of deleted households to the proper main household ?
 		}
@@ -704,7 +707,7 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 		}
 
-  
+
 		private static void CombineSwissAddress(BusinessContext businessContext, EervAddress eervAddress, AiderAddressEntity aiderAddress)
 		{
 			var firstAddressLine = eervAddress.FirstAddressLine;
@@ -844,18 +847,20 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
+		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
 		{
 			businessContextManager.Execute (b =>
 			{
-				EervParishDataImporter.ImportEervLegalPersons (b, parishName, eervParishData.LegalPersons);
+				EervParishDataImporter.ImportEervLegalPersons (b, eervParishData);
 			});
 		}
 
 
-		private static void ImportEervLegalPersons(BusinessContext businessContext, string parishName, IEnumerable<EervLegalPerson> legalPersons)
+		private static void ImportEervLegalPersons(BusinessContext businessContext, EervParishData eervParishData)
 		{
-			foreach (var legalPerson in legalPersons)
+			var parishName = eervParishData.Id.Name;
+
+			foreach (var legalPerson in eervParishData.LegalPersons)
 			{
 				EervParishDataImporter.ImportEervLegalPerson (businessContext, parishName, legalPerson);
 			}
@@ -928,43 +933,45 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervGroups(BusinessContextManager businessContextManager, string parishName, EervMainData eervMainData, EervParishData eervParishData)
+		private static void ImportEervGroups(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
 			businessContextManager.Execute (b =>
 			{
-				EervParishDataImporter.ImportEervGroups (b, parishName, eervMainData.GroupDefinitions, eervParishData.Groups);
+				EervParishDataImporter.ImportEervGroups (b, eervMainData, eervParishData);
 			});
 		}
 
 
-		private static void ImportEervGroups(BusinessContext businessContext, string rootGroupId, IEnumerable<EervGroupDefinition> eervGroupDefinitions, IEnumerable<EervGroup> eervGroups)
+		private static void ImportEervGroups(BusinessContext businessContext, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			var rootAiderGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, rootGroupId);
+			var eervGroupDefinitions = eervMainData.GroupDefinitions;
+			var eervGroups = eervParishData.Groups;
+			var eervId = eervParishData.Id;
+
+			var rootAiderGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, eervId);
 			var aiderSubGroupMapping = EervParishDataImporter.BuildAiderSubGroupMapping (businessContext, rootAiderGroup);
 
-			var rootEervGroupDefinition = EervParishDataImporter.FindRootEervGroupDefinition (rootGroupId, eervGroupDefinitions);
+			var rootEervGroupDefinition = EervParishDataImporter.FindRootEervGroupDefinition (eervId, eervGroupDefinitions);
 			var aiderIdMapping = EervParishDataImporter.BuildAiderIdMapping (rootAiderGroup, aiderSubGroupMapping, rootEervGroupDefinition);
 
 			// We sort the groups so that they appear in the right order, that is, the parent before
 			// their children.
 			var sortedEervGroups = eervGroups.OrderBy (g => g.Id);
 
-			var isParish = EervParishDataImporter.IsParish (rootGroupId);
-
 			foreach (var eervGroup in sortedEervGroups)
 			{
-				if (isParish && !eervGroup.Id.StartsWith ("04"))
+				if (eervId.IsParish && !eervGroup.Id.StartsWith ("04"))
 				{
 					throw new Exception ("Invalid group id!");
 				}
-				else if (!isParish && !eervGroup.Id.StartsWith ("03"))
+				else if (!eervId.IsParish && !eervGroup.Id.StartsWith ("03"))
 				{
 					throw new Exception ("Invalid group id!");
 				}
 
 				AiderGroupEntity aiderGroup;
 
-				if (aiderIdMapping.TryGetValue(eervGroup.Id, out aiderGroup))
+				if (aiderIdMapping.TryGetValue (eervGroup.Id, out aiderGroup))
 				{
 					// The group already exists. For now, we don't need to do anything about it.
 				}
@@ -1002,7 +1009,7 @@ namespace Epsitec.Aider.Data.Eerv
 			// iteration of the tree of groups. That's the job the the loop and of the todo stack.
 			// While performing this iteration, we maintain the results in the chain list and return
 			// it at each iteration.
-			
+
 			var chain = new List<AiderGroupEntity> ();
 
 			var todo = new Stack<AiderGroupEntity> ();
@@ -1032,7 +1039,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 			// Here we skip the first element because we know that eervGroupDefinition matches the
 			// first element in the chain.
-			foreach (var aiderGroup in aiderGroupChain.Skip(1))
+			foreach (var aiderGroup in aiderGroupChain.Skip (1))
 			{
 				var nextResult = result
 					.Children
@@ -1051,68 +1058,52 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupEntity FindRootAiderGroup(BusinessContext businessContext, string parishId)
+		private static AiderGroupEntity FindRootAiderGroup(BusinessContext businessContext, EervId eervId)
 		{
-			var example = new AiderGroupEntity()
+			// Here I don't use a simple request by example, because the parish names that are in
+			// the database have their multiple parts separated by " – " such as in "Saint-François
+			// – Saint-Jacques". The name that we might get in the file is likely to be "Saint-
+			// François-Saint-Jacques". We have two problems here, the spaces around the "–" and the
+			// fact that "–" is not "-". Look closer if you don't trust me. Yeah, you can bet I lost
+			// a lot of time on this one :-P Anyway, in this case, there is no way we can know that
+			// we would have to convert the second "-" separating the parish names but not the first
+			// and the third one that are part of the parish names. So it's easier to use a request
+			// with like and that's what we do here.
+
+			var example = new AiderGroupEntity ();
+
+			Request request = new Request ()
 			{
-				Name = EervParishDataImporter.GetRootGroupName(parishId),
+				RootEntity = example,
+				RequestedEntity = example,
 			};
 
-			return businessContext.DataContext.GetByExample(example).FirstOrDefault();
+			var rootGroupNamePattern = EervParishDataImporter.GetRootGroupName (eervId)
+				.Replace ("-", "%");
+
+			request.AddLocalConstraint (example,
+				new ComparisonFieldValue (
+					new Field (new Druid ("[LVAA4]")),
+					BinaryComparator.IsLike,
+					new Constant (rootGroupNamePattern)
+				)
+			);
+
+			return businessContext.DataContext.GetByRequest<AiderGroupEntity> (request).FirstOrDefault ();
 		}
 
 
-		private static string GetRootGroupName(string groupId)
+		private static string GetRootGroupName(EervId eervId)
 		{
-			return EervParishDataImporter.IsParish (groupId)
-				? "Paroisse de " + EervParishDataImporter.GetParishGroupName (groupId)
-				: "Région R" + EervParishDataImporter.GetRegionGroupName (groupId);
+			return eervId.IsParish
+				? "Paroisse de " + eervId.Name
+				: "Région R" + StringUtils.GetDigits (eervId.Name);
 		}
 
 
-		private static bool IsParish(string groupId)
+		private static EervGroupDefinition FindRootEervGroupDefinition(EervId eervId, IEnumerable<EervGroupDefinition> groupDefinitions)
 		{
-			return groupId.Count (c => c== '0') < groupId.Length - 1;
-		}
-
-
-		private static string GetParishGroupName(string parishId)
-		{
-			switch (parishId)
-			{
-				case "9010000000":
-					return "Belmont – Lutry";
-
-				case "9020000000":
-					return "Pully – Paudex";
-
-				case "9030000000":
-					return "Saint-Saphorin";
-
-				case "9040000000":
-					return "Savigny – Forel";
-
-				case "9050000000":
-					return "Villette";
-
-				case "2010000000":
-					return "Morges";
-
-				default:
-					throw new NotImplementedException ();
-			}
-		}
-
-
-		private static string GetRegionGroupName(string regionId)
-		{
-			return regionId.Substring (0, 1);
-		}
-
-
-		private static EervGroupDefinition FindRootEervGroupDefinition(string groupId, IEnumerable<EervGroupDefinition> groupDefinitions)
-		{
-			var groupName = EervParishDataImporter.IsParish (groupId)
+			var groupName = eervId.IsParish
 				? "Paroisses"
 				: "Régions";
 
@@ -1133,7 +1124,7 @@ namespace Epsitec.Aider.Data.Eerv
 				var subGroups = currentGroup.FindSubGroups (businessContext).ToList ();
 
 				mapping[currentGroup] = subGroups;
-				
+
 				todo.PushRange (subGroups);
 			}
 
