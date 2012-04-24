@@ -138,7 +138,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
-			var name = "R" + InvariantConverter.ToString (regionCode);
+			var name = "Région " + InvariantConverter.ToString (regionCode);
 
 			return regionGroupDefinition.Instantiate (businessContext, name);
 		}
@@ -146,7 +146,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish)
 		{
-			var name = parish.ParishName;
+			var name = "Paroisse de " + parish.ParishName;
 
 			var parishGroup = parishGroupDefinition.Instantiate (businessContext, name);
 			
