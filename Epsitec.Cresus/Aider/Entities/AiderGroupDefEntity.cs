@@ -33,10 +33,7 @@ namespace Epsitec.Aider.Entities
 
 		public AiderGroupEntity Instantiate(BusinessContext businessContext, string name)
 		{
-			var group = businessContext.CreateEntity<AiderGroupEntity> ();
-
-			group.Name = name;
-			group.GroupDef = this;
+			var group = AiderGroupEntity.Create (businessContext, this, name);
 
 			// TODO Add more stuff to the group, such as root, start date, etc.
 
@@ -44,16 +41,11 @@ namespace Epsitec.Aider.Entities
 			{
 				var subGroup = subGroupDef.Instantiate (businessContext, subGroupDef.Name);
 
-				var groupRelationship = businessContext.CreateEntity<AiderGroupRelationshipEntity> ();
-
-				groupRelationship.Group1 = group;
-				groupRelationship.Group2 = subGroup;
-				groupRelationship.Type = GroupRelationshipType.Inclusion;
+				AiderGroupRelationshipEntity.Create (businessContext, group, subGroup, GroupRelationshipType.Inclusion);
 			}
 
 			return group;
 		}
-
 
 		public static AiderGroupDefEntity Find(BusinessContext businessContext, string name)
 		{

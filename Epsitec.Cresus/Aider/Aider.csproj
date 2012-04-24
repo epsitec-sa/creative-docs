@@ -71,6 +71,7 @@
     <Compile Include="Controllers\SummaryControllers\SummaryAiderPersonWarningViewController.cs" />
     <Compile Include="Data\Eerv\AiderAddressEntityComparer.cs" />
     <Compile Include="Data\Eerv\EervDataReader.cs" />
+    <Compile Include="Entities\AiderGroupRelationshipEntity.cs" />
     <Compile Include="Tools\AddressPatchEngine.cs" />
     <Compile Include="Data\Eerv\AddressMatch.cs" />
     <Compile Include="Data\Eerv\EervActivity.cs" />
