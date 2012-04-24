@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 
 			var frameRect = new Rectangle (rect.Left+labelDx, rect.Bottom+labelDy, rect.Width-labelDx, rect.Height-labelDy);
-			this.PaintFrame (graphics, frameRect, nx, dx, ny, dy);
+			this.PaintGrid (graphics, frameRect, nx, dx, ny, dy);
 
 			switch (this.options.Mode)
 			{
@@ -231,7 +231,6 @@ namespace Epsitec.Cresus.Compta.Graph
 
 						if (value.HasValue)
 						{
-							//?double h = System.Math.Floor (rect.Height * (double) (value.Value-min) / (double) (max-min));
 							double h = this.ConvValueToY (value.Value);
 							var pos = new Point (rect.Left+dx*x+dx*0.5, h);
 
@@ -269,6 +268,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+
 		private void PaintArray(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
 			for (int x = 0; x < nx; x++)
@@ -287,8 +287,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+
 		private double ConvValueToY(decimal value)
 		{
+			//	Conversion d'un montant en coordonnée Y, selon le type du graphe.
 			return this.drawBottom + System.Math.Floor (this.drawHeight * (double) (value-this.minValue) / (double) (this.maxValue-this.minValue));
 		}
 
@@ -307,6 +309,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Size GetLegendsSize(int dimension)
 		{
+			//	Retourne la taille nécessaire pour la légende.
 			var textLayout = new TextLayout
 			{
 				LayoutSize      = new Size (1000, 100),
@@ -329,6 +332,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintLegends(Graphics graphics, Rectangle rect, int dimension)
 		{
+			//	Dessine la légende complète.
 			int n = this.cube.GetCount (dimension);
 			int dy = (int) (this.fontSize / 0.7);
 
@@ -352,6 +356,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintLegend(Graphics graphics, Rectangle rect, Color color, FormattedText text)
 		{
+			//	Dessine un élément de la légende.
 			rect.Deflate (1);
 
 			var sampleRect = new Rectangle (rect.Left, rect.Bottom, rect.Height, rect.Height);
@@ -366,8 +371,9 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private void PaintFrame(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
+		private void PaintGrid(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
+			//	Dessine la grille de fond.
 			if (this.options.Mode == GraphMode.Lines)
 			{
 				frameRect.Offset (dx/2, 0);
@@ -384,17 +390,18 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			if (this.HasHorizontalLabels)
 			{
-				this.PaintFrameX (graphics, frameRect, nx, dx, h);
+				this.PaintGridX (graphics, frameRect, nx, dx, h);
 			}
 
 			if (this.options.Mode == GraphMode.Array)
 			{
-				this.PaintFrameY (graphics, frameRect, ny, dy, w);
+				this.PaintGridY (graphics, frameRect, ny, dy, w);
 			}
 		}
 
-		private void PaintFrameX(Graphics graphics, Rectangle frameRect, int nx, int dx, int h)
+		private void PaintGridX(Graphics graphics, Rectangle frameRect, int nx, int dx, int h)
 		{
+			//	Dessine la grille en avançant horizontalement, composée de traits verticaux.
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, h);
@@ -406,8 +413,9 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (this.BorderColor);
 		}
 
-		private void PaintFrameY(Graphics graphics, Rectangle frameRect, int ny, int dy, int w)
+		private void PaintGridY(Graphics graphics, Rectangle frameRect, int ny, int dy, int w)
 		{
+			//	Dessine la grille en avançant verticalement, composée de traits horizontaux.
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (frameRect.Left+0.5, frameRect.Bottom+y*dy+0.5, w, dy);
@@ -420,6 +428,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private bool HasHorizontalLabels
 		{
+			//	Y a-t-il un axe horizontal avec des noms ?
 			get
 			{
 				return this.options.Mode != GraphMode.Pie;
@@ -428,6 +437,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private bool HasVerticalLabels
 		{
+			//	Y a-t-il un axe vertical avec des noms ?
 			get
 			{
 				return this.options.Mode != GraphMode.Pie;
@@ -470,10 +480,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintVerticalLabelsUnits(Graphics graphics, Rectangle labelsRect, int ny, int dy)
 		{
 			//	Dessine les unités de l'axe vertical.
-			decimal inc = 1;
+			decimal step = 1;
 			var y1 = this.ConvValueToY (0);
 
-			decimal[] incs =
+			decimal[] steps =
 			{	
 				1, 2, 5,
 				10, 20, 50,
@@ -486,10 +496,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				100000000, 200000000, 500000000,
 			};
 
-			for (int i = 0; i < incs.Length; i++)
+			//	On cherche le plus petit step suffisamment espacé.
+			for (int i = 0; i < steps.Length; i++)
 			{
-				inc = incs[i];
-				var y2 = this.ConvValueToY (inc);
+				step = steps[i];
+				var y2 = this.ConvValueToY (step);
 
 				if (y2-y1 > this.fontSize*3)  // assez espacés ?
 				{
@@ -497,7 +508,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				}
 			}
 
-			//	Dessine les unité positives.
+			//	Dessine les unité positives, y compris le zéro.
 			decimal value = 0;
 			while (true)
 			{
@@ -513,11 +524,11 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.PaintUnit (graphics, labelsRect, y, value);
 				}
 
-				value += inc;
+				value += step;
 			}
 
-			//	Dessine les unité négatives.
-			value = -inc;
+			//	Dessine les unité négatives, sans le zéro.
+			value = -step;
 			while (true)
 			{
 				var y = this.ConvValueToY (value);
@@ -532,7 +543,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.PaintUnit (graphics, labelsRect, y, value);
 				}
 
-				value -= inc;
+				value -= step;
 			}
 		}
 
