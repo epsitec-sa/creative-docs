@@ -18,6 +18,8 @@ using System;
 
 using System.Collections.Generic;
 
+using System.Diagnostics;
+
 using System.Linq;
 
 
@@ -29,12 +31,13 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, string parishName, EervParishData eervParishData)
+		public static void Import(BusinessContextManager businessContextManager, string parishName, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			// TODO Import group & activity data
+			// TODO activity data
 
 			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, parishName, eervParishData);
 			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, parishName, eervParishData);
+			EervParishDataImporter.ImportEervGroups (businessContextManager, parishName, eervMainData, eervParishData);
 		}
 
 
@@ -921,7 +924,220 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			var comment = "Ce contact a été crée à partir de la personne N°" + legalPerson.Id + " du fichier de la paroisse de " + parishName + ".";
-			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);			
+			EervParishDataImporter.CombineComments (aiderLegalPerson, comment);
+		}
+
+
+		private static void ImportEervGroups(BusinessContextManager businessContextManager, string parishName, EervMainData eervMainData, EervParishData eervParishData)
+		{
+			businessContextManager.Execute (b =>
+			{
+				EervParishDataImporter.ImportEervGroups (b, parishName, eervMainData.GroupDefinitions, eervParishData.Groups);
+			});
+		}
+
+
+		private static void ImportEervGroups(BusinessContext businessContext, string rootGroupId, IEnumerable<EervGroupDefinition> eervGroupDefinitions, IEnumerable<EervGroup> eervGroups)
+		{
+			var rootAiderGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, rootGroupId);
+			var aiderSubGroupMapping = EervParishDataImporter.BuildAiderSubGroupMapping (businessContext, rootAiderGroup);
+
+			var rootEervGroupDefinition = EervParishDataImporter.FindRootEervGroupDefinition (rootGroupId, eervGroupDefinitions);
+			var aiderIdMapping = EervParishDataImporter.BuildAiderIdMapping (rootAiderGroup, aiderSubGroupMapping, rootEervGroupDefinition);
+
+			// We sort the groups so that they appear in the right order, that is, the parent before
+			// their children.
+			var sortedEervGroups = eervGroups.OrderBy (g => g.Id);
+
+			var isParish = EervParishDataImporter.IsParish (rootGroupId);
+
+			foreach (var eervGroup in sortedEervGroups)
+			{
+				if (isParish && !eervGroup.Id.StartsWith ("04"))
+				{
+					throw new Exception ("Invalid group id!");
+				}
+				else if (!isParish && !eervGroup.Id.StartsWith ("03"))
+				{
+					throw new Exception ("Invalid group id!");
+				}
+
+				AiderGroupEntity aiderGroup;
+
+				if (aiderIdMapping.TryGetValue(eervGroup.Id, out aiderGroup))
+				{
+					// The group already exists. For now, we don't need to do anything about it.
+				}
+				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
+				{
+					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, eervGroup.Name);
+					AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
+
+					aiderSubGroupMapping[aiderGroup].Add (newAiderGroup);
+					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();
+
+					aiderIdMapping[eervGroup.Id] = newAiderGroup;
+				}
+				else
+				{
+					Debug.WriteLine ("WARNING: group " + eervGroup.Id + " has no parent defined.");
+				}
+			}
+
+			businessContext.SaveChanges ();
+		}
+
+
+		private static Dictionary<string, AiderGroupEntity> BuildAiderIdMapping(AiderGroupEntity rootAiderGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping, EervGroupDefinition rootEervGroupDefinition)
+		{
+			return EervParishDataImporter.GetGroupChains (rootAiderGroup, subGroupMapping)
+				.Select (c => Tuple.Create (c, EervParishDataImporter.FindEervGroupDefinition (c, rootEervGroupDefinition)))
+				.ToDictionary (t => t.Item2.Id, t => t.Item1.Last ());
+		}
+
+
+		private static IEnumerable<IEnumerable<AiderGroupEntity>> GetGroupChains(AiderGroupEntity rootAiderGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping)
+		{
+			// This method looks terrible, but it's not as bad as it seems. It perform a depth first
+			// iteration of the tree of groups. That's the job the the loop and of the todo stack.
+			// While performing this iteration, we maintain the results in the chain list and return
+			// it at each iteration.
+			
+			var chain = new List<AiderGroupEntity> ();
+
+			var todo = new Stack<AiderGroupEntity> ();
+			todo.Push (rootAiderGroup);
+
+			while (todo.Any ())
+			{
+				var group = todo.Pop ();
+
+				while (chain.Count > 0 && !subGroupMapping[chain[chain.Count - 1]].Contains (group))
+				{
+					chain.RemoveAt (chain.Count - 1);
+				}
+
+				chain.Add (group);
+
+				yield return chain.AsReadOnly ();
+
+				todo.PushRange (subGroupMapping[group]);
+			}
+		}
+
+
+		private static EervGroupDefinition FindEervGroupDefinition(IEnumerable<AiderGroupEntity> aiderGroupChain, EervGroupDefinition eervGroupDefinition)
+		{
+			var result = eervGroupDefinition;
+
+			// Here we skip the first element because we know that eervGroupDefinition matches the
+			// first element in the chain.
+			foreach (var aiderGroup in aiderGroupChain.Skip(1))
+			{
+				var nextResult = result
+					.Children
+					.Where (g => g.Name == aiderGroup.Name)
+					.FirstOrDefault ();
+
+				if (nextResult == null)
+				{
+					throw new Exception ("Group definition not found");
+				}
+
+				result = nextResult;
+			}
+
+			return result;
+		}
+
+
+		private static AiderGroupEntity FindRootAiderGroup(BusinessContext businessContext, string parishId)
+		{
+			var example = new AiderGroupEntity()
+			{
+				Name = EervParishDataImporter.GetRootGroupName(parishId),
+			};
+
+			return businessContext.DataContext.GetByExample(example).FirstOrDefault();
+		}
+
+
+		private static string GetRootGroupName(string groupId)
+		{
+			return EervParishDataImporter.IsParish (groupId)
+				? "Paroisse de " + EervParishDataImporter.GetParishGroupName (groupId)
+				: "Région R" + EervParishDataImporter.GetRegionGroupName (groupId);
+		}
+
+
+		private static bool IsParish(string groupId)
+		{
+			return groupId.Count (c => c== '0') < groupId.Length - 1;
+		}
+
+
+		private static string GetParishGroupName(string parishId)
+		{
+			switch (parishId)
+			{
+				case "9010000000":
+					return "Belmont – Lutry";
+
+				case "9020000000":
+					return "Pully – Paudex";
+
+				case "9030000000":
+					return "Saint-Saphorin";
+
+				case "9040000000":
+					return "Savigny – Forel";
+
+				case "9050000000":
+					return "Villette";
+
+				case "2010000000":
+					return "Morges";
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private static string GetRegionGroupName(string regionId)
+		{
+			return regionId.Substring (0, 1);
+		}
+
+
+		private static EervGroupDefinition FindRootEervGroupDefinition(string groupId, IEnumerable<EervGroupDefinition> groupDefinitions)
+		{
+			var groupName = EervParishDataImporter.IsParish (groupId)
+				? "Paroisses"
+				: "Régions";
+
+			return groupDefinitions.Where (g => g.Name == groupName).Single ();
+		}
+
+
+		private static Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> BuildAiderSubGroupMapping(BusinessContext businessContext, AiderGroupEntity aiderGroup)
+		{
+			var mapping = new Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> ();
+
+			var todo = new Stack<AiderGroupEntity> ();
+			todo.Push (aiderGroup);
+
+			while (todo.Count > 0)
+			{
+				var currentGroup = todo.Pop ();
+				var subGroups = currentGroup.FindSubGroups (businessContext).ToList ();
+
+				mapping[currentGroup] = subGroups;
+				
+				todo.PushRange (subGroups);
+			}
+
+			return mapping;
 		}
 
 

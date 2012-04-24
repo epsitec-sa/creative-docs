@@ -156,7 +156,7 @@ namespace Epsitec.Aider
 					
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (businessContextManager, eervParishDatum.Id.ToString (), eervParishDatum);
+						EervParishDataImporter.Import (businessContextManager, eervParishDatum.Id.ToString (), eervMainData, eervParishDatum);
 					}
 				}
 				Services.ShutDown ();
