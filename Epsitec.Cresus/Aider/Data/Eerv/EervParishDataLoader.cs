@@ -75,7 +75,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
-				yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups);
+				yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups, rawActivities);
 			}
 		}
 
