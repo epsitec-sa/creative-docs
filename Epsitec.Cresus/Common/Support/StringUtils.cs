@@ -117,6 +117,22 @@ namespace Epsitec.Common.Support
 		}
 
 
+		public static string GetDigits(string text)
+		{
+			var stringBuilder = new StringBuilder ();
+
+			foreach (var c in text)
+			{
+				if (char.IsDigit (c))
+				{
+					stringBuilder.Append (c);
+				}
+			}
+
+			return stringBuilder.ToString ();
+		}
+
+
 	}
 
 
