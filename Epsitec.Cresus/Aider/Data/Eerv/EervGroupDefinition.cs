@@ -53,6 +53,27 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		public static int GetLevel(string id)
+		{
+			int level = 0;
+
+			for (int i = 0; i < id.Length && id.Substring (i, 2) != "00"; i += 2)
+			{
+				level++;
+			}
+
+			return level;
+		}
+
+
+		public static string GetParentId(string id)
+		{
+			var level = EervGroupDefinition.GetLevel (id);
+
+			return id.Substring (0, (level - 1) * 2).PadRight (10, '0');
+		}
+
+
 		public readonly string Id;
 		public readonly string Name;
 
