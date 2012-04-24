@@ -56,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			rect.Deflate (10);
 
-			if (this.HasVerticalLabels)
+			if (this.options.Mode == GraphMode.Array)
 			{
 				int dxHope = (int) (rect.Width  / (nx+1));
 				int dyHope = (int) (rect.Height / (ny+1));
@@ -88,18 +88,37 @@ namespace Epsitec.Cresus.Compta.Graph
 				return;
 			}
 
+			var frameRect = new Rectangle (rect.Left+labelDx, rect.Bottom+labelDy, rect.Width-labelDx, rect.Height-labelDy);
+			this.PaintFrame (graphics, frameRect, nx, dx, ny, dy);
+
+			switch (this.options.Mode)
+			{
+				case GraphMode.SideBySide:
+					this.InitSideBySide (graphics, frameRect, nx, dx, ny);
+					break;
+
+				case GraphMode.Stacked:
+					break;
+
+				case GraphMode.Lines:
+					this.InitLines (graphics, frameRect, nx, dx, ny);
+					break;
+
+				case GraphMode.Array:
+					break;
+			}
+
 			if (this.HasHorizontalLabels)
 			{
-				this.PaintHorizontalLabels (graphics, new Rectangle (rect.Left+labelDx, rect.Bottom, rect.Width-labelDx, labelDy), nx, dx);
+				var labelsRect = new Rectangle (rect.Left+labelDx, rect.Bottom, rect.Width-labelDx, labelDy);
+				this.PaintHorizontalLabels (graphics, labelsRect, nx, dx);
 			}
 
 			if (this.HasVerticalLabels)
 			{
-				this.PaintVerticalLabels (graphics, new Rectangle (rect.Left, rect.Bottom+labelDy, labelDx, rect.Height-labelDy), ny, dy);
+				var labelsRect = new Rectangle (rect.Left, rect.Bottom+labelDy, labelDx, rect.Height-labelDy);
+				this.PaintVerticalLabels (graphics, labelsRect, ny, dy);
 			}
-
-			var frameRect = new Rectangle (rect.Left+labelDx, rect.Bottom+labelDy, rect.Width-labelDx, rect.Height-labelDy);
-			this.PaintFrame (graphics, frameRect, nx, dx, ny, dy);
 
 			switch (this.options.Mode)
 			{
@@ -119,11 +138,11 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
-			if (!this.HasVerticalLabels)
+			if (this.options.Mode != GraphMode.Array)
 			{
-				int width = this.GetLegendsWidth (this.options.SecondaryDimension);
-				var pos = new Point (rect.Right-width-10, rect.Top-10);
-				this.PaintLegends (graphics, pos, width, this.options.SecondaryDimension);
+				var size = this.GetLegendsSize (this.options.SecondaryDimension);
+				var legendsRect = new Rectangle (rect.Right-size.Width-10, rect.Top-size.Height-10, size.Width, size.Height);
+				this.PaintLegends (graphics, legendsRect, this.options.SecondaryDimension);
 			}
 		}
 
@@ -135,20 +154,26 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (this.BorderColor);
 		}
 
+
+		private void InitSideBySide(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
+		{
+			this.cube.GetMinMax (null, null, out this.minValue, out this.maxValue);
+
+			this.minValue = System.Math.Min (this.minValue, 0);
+			this.maxValue = System.Math.Max (this.maxValue, 0);
+
+			this.drawBottom = frameRect.Bottom+0.5;
+			this.drawHeight = frameRect.Height-2;
+		}
+
 		private void PaintSideBySide(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
 		{
-			decimal min, max;
-			this.cube.GetMinMax (null, null, out min, out max);
-
-			min = System.Math.Min (min, 0);
-			max = System.Math.Max (max, 0);
-
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, frameRect.Height);
 				rect.Deflate (2, 2, 2, 0);
 
-				double zero  = System.Math.Floor (rect.Height * (double) -min / (double) (max-min));
+				double zero = this.ConvValueToY (0);
 				int barWidth = (int) rect.Width / ny;
 
 				for (int pass = 0; pass < 2; pass++)
@@ -159,15 +184,15 @@ namespace Epsitec.Cresus.Compta.Graph
 
 						if (value.HasValue)
 						{
-							double h  = System.Math.Floor (rect.Height * (double) (value.Value-min) / (double) (max-min));
+							double h = this.ConvValueToY (value.Value);
 							double h1 = System.Math.Min (h, zero);
 							double h2 = System.Math.Max (h, zero);
-							var barRect = new Rectangle (rect.Left+barWidth*y, rect.Bottom+h1, barWidth, h2-h1);
+							var barRect = new Rectangle (rect.Left+barWidth*y, h1, barWidth, h2-h1);
 
 							if (pass == 0)
 							{
 								graphics.AddFilledRectangle (barRect);
-								graphics.RenderSolid (this.GetRainbowColor (y, ny));
+								graphics.RenderSolid (this.GetIndexedColor (y, ny));
 							}
 							else
 							{
@@ -180,11 +205,17 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+
+		private void InitLines(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
+		{
+			this.cube.GetMinMax (null, null, out this.minValue, out this.maxValue);
+
+			this.drawBottom = frameRect.Bottom+7;
+			this.drawHeight = frameRect.Height-7*2;
+		}
+		
 		private void PaintLines(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
 		{
-			decimal min, max;
-			this.cube.GetMinMax (null, null, out min, out max);
-
 			var rect = frameRect;
 			rect.Deflate (0, 7);
 
@@ -200,27 +231,35 @@ namespace Epsitec.Cresus.Compta.Graph
 
 						if (value.HasValue)
 						{
-							double h = System.Math.Floor (rect.Height * (double) (value.Value-min) / (double) (max-min));
-							var pos = new Point (rect.Left+x*dx, rect.Bottom+h);
+							//?double h = System.Math.Floor (rect.Height * (double) (value.Value-min) / (double) (max-min));
+							double h = this.ConvValueToY (value.Value);
+							var pos = new Point (rect.Left+dx*x+dx*0.5, h);
 
 							if (pass == 0)
 							{
 								if (!last.IsZero)
 								{
-									graphics.LineWidth = 5;
+									graphics.LineWidth = 2+2;
 									graphics.AddLine (last, pos);
-									graphics.RenderSolid (this.GetRainbowColor (y, ny));
+									graphics.RenderSolid (this.BorderColor);
+
+									graphics.LineWidth = 2;
+									graphics.AddLine (last, pos);
+									graphics.RenderSolid (this.GetIndexedColor (y, ny));
+
 									graphics.LineWidth = 1;
 								}
 							}
 							else
 							{
 								graphics.AddFilledCircle (pos, 4);
-								graphics.RenderSolid (Color.FromName ("White"));
+								graphics.RenderSolid (this.BorderColor);
 
-								graphics.AddCircle (pos, 4);
-								//?graphics.RenderSolid (this.BorderColor);
-								graphics.RenderSolid (this.GetRainbowColor (y, ny));
+								graphics.AddFilledCircle (pos, 3);
+								graphics.RenderSolid (this.GetIndexedColor (y, ny));
+
+								graphics.AddFilledCircle (pos, 2);
+								graphics.RenderSolid (Color.FromName ("White"));
 							}
 
 							last = pos;
@@ -248,6 +287,11 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		private double ConvValueToY(decimal value)
+		{
+			return this.drawBottom + System.Math.Floor (this.drawHeight * (double) (value-this.minValue) / (double) (this.maxValue-this.minValue));
+		}
+
 		private decimal? GetValue(int x, int y)
 		{
 			if (this.options.PrimaryDimension == 0)
@@ -261,7 +305,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private int GetLegendsWidth(int dimension)
+		private Size GetLegendsSize(int dimension)
 		{
 			var textLayout = new TextLayout
 			{
@@ -280,33 +324,30 @@ namespace Epsitec.Cresus.Compta.Graph
 				max = System.Math.Max (max, (int) width);
 			}
 
-			return max + dy + 10;
+			return new Size (max+dy+10, n*dy);
 		}
 
-		private Rectangle PaintLegends(Graphics graphics, Point bottomLeft, int width, int dimension)
+		private void PaintLegends(Graphics graphics, Rectangle rect, int dimension)
 		{
 			int n = this.cube.GetCount (dimension);
 			int dy = (int) (this.fontSize / 0.7);
 
-			var boxRect = new Rectangle (bottomLeft.X, bottomLeft.Y-n*dy, width, n*dy);
-			boxRect.Inflate (2);
-
-			graphics.AddFilledRectangle (boxRect);
+			rect.Inflate (2);
+			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackLegendsColor);
+			rect.Deflate (2);
 
 			for (int y = 0; y < n; y++)
 			{
-				var lineRect = new Rectangle (bottomLeft.X, bottomLeft.Y-(y+1)*dy, width, dy);
+				var lineRect = new Rectangle (rect.Left, rect.Top-(y+1)*dy, rect.Width, dy);
 				var text = this.cube.GetTitle (dimension, y);
 
-				this.PaintLegend (graphics, lineRect, this.GetRainbowColor (y, n), text);
+				this.PaintLegend (graphics, lineRect, this.GetIndexedColor (y, n), text);
 			}
 
-			boxRect.Inflate (0.5);
-			graphics.AddRectangle (boxRect);
+			rect.Inflate (2.5);
+			graphics.AddRectangle (rect);
 			graphics.RenderSolid (this.BorderColor);
-
-			return boxRect;
 		}
 
 		private void PaintLegend(Graphics graphics, Rectangle rect, Color color, FormattedText text)
@@ -327,10 +368,17 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintFrame(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
+			if (this.options.Mode == GraphMode.Lines)
+			{
+				frameRect.Offset (dx/2, 0);
+				nx--;
+			}
+
 			int w = (int) (this.HasHorizontalLabels ? nx*dx : frameRect.Width);
 			int h = (int) (this.HasVerticalLabels   ? ny*dy : frameRect.Height);
 
 			var rect = new Rectangle (frameRect.Left, frameRect.Bottom, w, h);
+
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackIntColor);
 
@@ -339,7 +387,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.PaintFrameX (graphics, frameRect, nx, dx, h);
 			}
 
-			if (this.HasVerticalLabels)
+			if (this.options.Mode == GraphMode.Array)
 			{
 				this.PaintFrameY (graphics, frameRect, ny, dy, w);
 			}
@@ -351,6 +399,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, h);
 				graphics.AddRectangle (rect);
+
+				this.drawRight = rect.Right;
 			}
 
 			graphics.RenderSolid (this.BorderColor);
@@ -380,12 +430,13 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return this.options.Mode == GraphMode.Array;
+				return this.options.Mode != GraphMode.Pie;
 			}
 		}
 
 		private void PaintHorizontalLabels(Graphics graphics, Rectangle labelsRect, int nx, int dx)
 		{
+			//	Dessine l'axe horizontal.
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (labelsRect.Left+dx*x, labelsRect.Bottom, dx, labelsRect.Height);
@@ -395,6 +446,20 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintVerticalLabels(Graphics graphics, Rectangle labelsRect, int ny, int dy)
 		{
+			//	Dessine l'axe vertical.
+			if (this.options.Mode == GraphMode.Array)
+			{
+				this.PaintVerticalLabelsTitles (graphics, labelsRect, ny, dy);
+			}
+			else
+			{
+				this.PaintVerticalLabelsUnits (graphics, labelsRect, ny, dy);
+			}
+		}
+
+		private void PaintVerticalLabelsTitles(Graphics graphics, Rectangle labelsRect, int ny, int dy)
+		{
+			//	Dessine les légendes de l'axe vertical.
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (labelsRect.Left, labelsRect.Bottom+dy*y, labelsRect.Width-5, dy);
@@ -402,8 +467,92 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		private void PaintVerticalLabelsUnits(Graphics graphics, Rectangle labelsRect, int ny, int dy)
+		{
+			//	Dessine les unités de l'axe vertical.
+			decimal inc = 1;
+			var y1 = this.ConvValueToY (0);
+
+			decimal[] incs =
+			{	
+				1, 2, 5,
+				10, 20, 50,
+				100, 200, 500,
+				1000, 2000, 5000,
+				10000, 20000, 50000,
+				100000, 200000, 500000,
+				1000000, 2000000, 5000000,
+				10000000, 20000000, 50000000,
+				100000000, 200000000, 500000000,
+			};
+
+			for (int i = 0; i < incs.Length; i++)
+			{
+				inc = incs[i];
+				var y2 = this.ConvValueToY (inc);
+
+				if (y2-y1 > this.fontSize*3)  // assez espacés ?
+				{
+					break;
+				}
+			}
+
+			//	Dessine les unité positives.
+			decimal value = 0;
+			while (true)
+			{
+				var y = this.ConvValueToY (value);
+
+				if (y > labelsRect.Top)
+				{
+					break;
+				}
+
+				if (y >= labelsRect.Bottom)
+				{
+					this.PaintUnit (graphics, labelsRect, y, value);
+				}
+
+				value += inc;
+			}
+
+			//	Dessine les unité négatives.
+			value = -inc;
+			while (true)
+			{
+				var y = this.ConvValueToY (value);
+
+				if (y < labelsRect.Bottom)
+				{
+					break;
+				}
+
+				if (y <= labelsRect.Top)
+				{
+					this.PaintUnit (graphics, labelsRect, y, value);
+				}
+
+				value -= inc;
+			}
+		}
+
+		private void PaintUnit(Graphics graphics, Rectangle labelsRect, double y, decimal value)
+		{
+			//	Dessine une unité composée d'un montant et d'un trait horizontal.
+			y = System.Math.Floor (y) + 0.5;
+			int h = (int) (this.fontSize/0.6);
+
+			var rect = new Rectangle (labelsRect.Left, y-h/2+2, labelsRect.Width-10, h);
+			var unit = Converters.MontantToString (value, 0);
+			this.PaintText (graphics, rect, unit, ContentAlignment.MiddleRight);
+
+			graphics.AddLine (labelsRect.Right-5, y, this.drawRight, y);
+			graphics.RenderSolid (this.BorderColor);
+		}
+
 		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment)
 		{
+			//	Dessine un texte quelconque dans un rectangle.
 			var textLayout = new TextLayout
 			{
 				FormattedText   = text,
@@ -417,27 +566,36 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private int GetHorizontalLabelsHeight(Rectangle rect)
 		{
+			//	Retourne la hauteur pour les légendes de l'axe horizontal.
 			return (int) (this.fontSize / 0.6);
 		}
 
 		private int GetVerticalLabelsWidth(Rectangle rect, int ny)
 		{
-			var textLayout = new TextLayout
+			//	Retourne la largeur pour les légendes de l'axe vertical.
+			if (this.options.Mode == GraphMode.Array)
 			{
-				LayoutSize      = new Size (1000, 100),
-				DefaultFontSize = this.fontSize,
-			};
+				var textLayout = new TextLayout
+				{
+					LayoutSize      = new Size (1000, 100),
+					DefaultFontSize = this.fontSize,
+				};
 
-			int max = 0;
+				int max = 0;
 
-			for (int y = 0; y < ny; y++)
-			{
-				textLayout.FormattedText = this.cube.GetTitle (this.options.SecondaryDimension, y);
-				double width = textLayout.GetSingleLineSize ().Width;
-				max = System.Math.Max (max, (int) width);
+				for (int y = 0; y < ny; y++)
+				{
+					textLayout.FormattedText = this.cube.GetTitle (this.options.SecondaryDimension, y);
+					double width = textLayout.GetSingleLineSize ().Width;
+					max = System.Math.Max (max, (int) width);
+				}
+
+				return max+10;
 			}
-
-			return max+10;
+			else
+			{
+				return (int) (this.fontSize*7);  // place fixe ok jusqu'à 1'000'000
+			}
 		}
 
 
@@ -538,7 +696,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				{
 					var r = new Rectangle (rect.Left+x1, rect.Bottom, dx, rect.Height);
 					graphics.AddFilledRectangle (r);
-					graphics.RenderSolid (this.GetRainbowColor (i, cumuls.Count));
+					graphics.RenderSolid (this.GetIndexedColor (i, cumuls.Count));
 
 					graphics.AddLine (rect.Left+x2-0.5, rect.Bottom+0.5, rect.Left+x2-0.5, rect.Top-0.5);
 					graphics.RenderSolid (borderColor);
@@ -596,7 +754,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				var r = new Rectangle (rect.Left+x1, rect.Top-y-dy, x2-x1, dy);
 				graphics.AddFilledRectangle (r);
-				graphics.RenderSolid (this.GetRainbowColor (i, nx));
+				graphics.RenderSolid (this.GetIndexedColor (i, nx));
 
 				graphics.AddLine (rect.Left+x-0.5, rect.Top-y-dy+1.5, rect.Left+x-0.5, rect.Top-y-0.5);
 				graphics.RenderSolid (borderColor);
@@ -640,7 +798,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return Color.FromBrightness (0.95);
+				return Color.FromBrightness (0.98);
 			}
 		}
 
@@ -653,7 +811,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		private Color GetRainbowColor(int index, int total)
+		private Color GetIndexedColor(int index, int total)
 		{
 			//	Retourne une couleur de l'arc-en-ciel.
 			index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
@@ -668,5 +826,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		private Cube			cube;
 		private GraphOptions	options;
 		private double			fontSize;
+		private decimal			minValue;
+		private decimal			maxValue;
+		private double			drawBottom;
+		private double			drawHeight;
+		private double			drawRight;
 	}
 }

@@ -164,16 +164,16 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static string MontantToString(decimal? montant, ComptaMonnaieEntity monnaie)
 		{
 			//	Conversion d'un montant, selon les réglages.
+			int decimalDigits = (monnaie == null) ? 2 : monnaie.Décimales;
+			return Converters.MontantToString (montant, decimalDigits);
+		}
+
+		public static string MontantToString(decimal? montant, int decimalDigits)
+		{
+			//	Conversion d'un montant, selon les réglages.
 			if (montant.HasValue)
 			{
-				if (monnaie == null)
-				{
-					Converters.numberFormatMontant.CurrencyDecimalDigits = 2;
-				}
-				else
-				{
-					Converters.numberFormatMontant.CurrencyDecimalDigits = monnaie.Décimales;
-				}
+				Converters.numberFormatMontant.CurrencyDecimalDigits = decimalDigits;
 
 				bool neg = false;
 				if (montant < 0)
