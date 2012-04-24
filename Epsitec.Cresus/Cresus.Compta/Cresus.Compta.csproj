@@ -93,8 +93,10 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Graph\OptionsController.cs" />
+    <Compile Include="Graph\GraphOptions.cs" />
     <Compile Include="Graph\Cube.cs" />
-    <Compile Include="Graph\GraphicMode.cs" />
+    <Compile Include="Graph\GraphMode.cs" />
     <Compile Include="Graph\GraphEngine.cs" />
     <Compile Include="Helpers\Currencies.cs" />
     <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />
@@ -255,6 +257,7 @@
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
+    <Compile Include="Widgets\GraphWidget.cs" />
     <Compile Include="Widgets\CustomFrameBox.cs" />
     <Compile Include="Widgets\TabCatcherFrameBox.cs" />
     <Compile Include="Widgets\StringArray.cs" />

@@ -11,6 +11,8 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Graph;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -306,6 +308,60 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			return ComparisonDisplayMode.Montant;
 		}
 		#endregion
+
+
+		protected void Graph()
+		{
+			var secondaryWindow = new Window ();
+
+			secondaryWindow.WindowBounds = new Rectangle (this.controller.MainWindowController.Window.WindowBounds.Left+50, this.controller.MainWindowController.Window.WindowBounds.Top-600-80, 800, 600);
+			secondaryWindow.Root.MinSize = new Size (100, 100);
+			secondaryWindow.Root.BackColor = Color.FromName ("White");
+			secondaryWindow.Text = "Graphique";
+
+			var toolbar = new FrameBox
+			{
+				Parent          = secondaryWindow.Root,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (10),
+			};
+
+			new Separator
+			{
+				Parent           = secondaryWindow.Root,
+				PreferredHeight  = 1,
+				IsHorizontalLine = true,
+				Dock             = DockStyle.Top,
+			};
+
+			var frame = new FrameBox
+			{
+				Parent          = secondaryWindow.Root,
+				Dock            = DockStyle.Fill,
+			};
+
+			var options = new Graph.GraphOptions ();
+			var controller = new OptionsController (options);
+
+			var graph = new GraphWidget
+			{
+				Parent  = frame,
+				Cube    = this.controller.DataAccessor.Cube,
+				Options = options,
+				Dock    = DockStyle.Fill,
+			};
+
+			controller.CreateUI (toolbar, () => graph.Invalidate ());
+
+			secondaryWindow.Show ();
+			secondaryWindow.MakeActive ();
+
+			secondaryWindow.WindowCloseClicked += delegate
+			{
+				secondaryWindow.Close ();
+			};
+		}
 
 
 		protected readonly AbstractController					controller;

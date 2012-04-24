@@ -61,6 +61,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
+		public GraphOptions GraphOptions
+		{
+			get
+			{
+				return this.graphOptions;
+			}
+			set
+			{
+				this.graphOptions = value;
+			}
+		}
+
 
 		public Color ColorSelection
 		{
@@ -757,7 +769,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			//	Dessine une valeur numérique dans une cellule.
 			//	Le format est "$${_graphic_}$$;row".
-			this.graphEngine.PaintGraph (graphics, rect, this.cube, text);
+			this.graphEngine.Cube    = this.cube;
+			this.graphEngine.Options = this.graphOptions;
+			this.graphEngine.PaintRow (graphics, rect, text);
 		}
 
 
@@ -882,6 +896,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly GraphEngine		graphEngine;
 
 		private Cube						cube;
+		private GraphOptions				graphOptions;
 		private Color						colorSelection = UIBuilder.SelectionColor;
 		private double						lineHeight = 14;
 		private double						relativeWidth = 0;

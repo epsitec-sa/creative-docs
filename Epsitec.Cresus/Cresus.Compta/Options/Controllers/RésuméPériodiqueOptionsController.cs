@@ -98,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.graphicsCumuléButton = new CheckButton
+			this.stackedGraphButton = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Graphiques cumulés",
@@ -107,11 +107,20 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.graphicsEmpiléButton = new CheckButton
+			this.sideBySideGraphButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Graphiques empilés",
-				PreferredWidth = 130,
+				FormattedText  = "Graphiques côte à côte",
+				PreferredWidth = 150,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			var graphButton = new Button
+			{
+				Parent         = frame,
+				FormattedText  = "G",
+				PreferredWidth = 20,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
@@ -143,34 +152,39 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 
-			this.graphicsCumuléButton.ActiveStateChanged += delegate
+			this.stackedGraphButton.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HasGraphicsCumulé = (this.graphicsCumuléButton.ActiveState == ActiveState.Yes);
+					this.Options.HasStackedGraph = (this.stackedGraphButton.ActiveState == ActiveState.Yes);
 
-					if (this.Options.HasGraphicsCumulé)
+					if (this.Options.HasStackedGraph)
 					{
-						this.Options.HasGraphicsEmpilé = false;
+						this.Options.HasSideBySideGraph = false;
 					}
 
 					this.OptionsChanged ();
 				}
 			};
 
-			this.graphicsEmpiléButton.ActiveStateChanged += delegate
+			this.sideBySideGraphButton.ActiveStateChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HasGraphicsEmpilé = (this.graphicsEmpiléButton.ActiveState == ActiveState.Yes);
+					this.Options.HasSideBySideGraph = (this.sideBySideGraphButton.ActiveState == ActiveState.Yes);
 
-					if (this.Options.HasGraphicsEmpilé)
+					if (this.Options.HasSideBySideGraph)
 					{
-						this.Options.HasGraphicsCumulé = false;
+						this.Options.HasStackedGraph = false;
 					}
 
 					this.OptionsChanged ();
 				}
+			};
+
+			graphButton.Clicked += delegate
+			{
+				this.Graph ();
 			};
 		}
 
@@ -191,10 +205,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState          = this.Options.Cumul             ? ActiveState.Yes : ActiveState.No;
-				this.nullButton.ActiveState           = this.Options.HideZero          ? ActiveState.Yes : ActiveState.No;
-				this.graphicsCumuléButton.ActiveState = this.Options.HasGraphicsCumulé ? ActiveState.Yes : ActiveState.No;
-				this.graphicsEmpiléButton.ActiveState = this.Options.HasGraphicsEmpilé ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState           = this.Options.Cumul              ? ActiveState.Yes : ActiveState.No;
+				this.nullButton.ActiveState            = this.Options.HideZero           ? ActiveState.Yes : ActiveState.No;
+				this.stackedGraphButton.ActiveState    = this.Options.HasStackedGraph    ? ActiveState.Yes : ActiveState.No;
+				this.sideBySideGraphButton.ActiveState = this.Options.HasSideBySideGraph ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -238,7 +252,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
 		private CheckButton			nullButton;
-		private CheckButton			graphicsCumuléButton;
-		private CheckButton			graphicsEmpiléButton;
+		private CheckButton			stackedGraphButton;
+		private CheckButton			sideBySideGraphButton;
 	}
 }

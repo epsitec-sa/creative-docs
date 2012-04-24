@@ -57,6 +57,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
+		public GraphOptions GraphOptions
+		{
+			get
+			{
+				return this.graphOptions;
+			}
+			set
+			{
+				this.graphOptions = value;
+			}
+		}
+
 
 		public int Columns
 		{
@@ -97,7 +109,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 				for (int i=0; i<this.columns.Length; i++)
 				{
 					this.columns[i] = new StringList(this);
-					this.columns[i].Cube = this.cube;
+					this.columns[i].Cube         = this.cube;
+					this.columns[i].GraphOptions = this.graphOptions;
 					this.columns[i].DraggingCellSelectionChanged += this.HandleDraggingCellSelectionChanged;
 					this.columns[i].FinalCellSelectionChanged    += this.HandleFinalCellSelectionChanged;
 					this.columns[i].DoubleClicked                += this.HandleDoubleClicked;
@@ -1309,6 +1322,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public static readonly string SpecialContentRightAlignment = StringArray.SpecialContentStart + "right"   + StringArray.SpecialContentEnd;
 
 		private Cube						cube;
+		private GraphOptions				graphOptions;
 		private StringList[]				columns;
 		private VScroller					scroller;
 		private int							totalRows;

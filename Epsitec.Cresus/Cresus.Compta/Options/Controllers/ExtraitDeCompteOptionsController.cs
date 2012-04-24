@@ -63,6 +63,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins        = new Margins (10, 0, 0, 0),
 			};
 
+			var graphButton = new Button
+			{
+				Parent         = frame,
+				FormattedText  = "G",
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
 			this.UpdateWidgets ();
 
 			//	Connexion des événements.
@@ -73,6 +82,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
+			};
+
+			graphButton.Clicked += delegate
+			{
+				this.Graph ();
 			};
 		}
 

@@ -207,7 +207,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.cube.Mode = GraphicMode.Empilé;
+			this.graphOptions.Mode = GraphMode.SideBySide;
 
 			this.cube.SetTitle (0, 0, this.Permanents.NuméroCompte);
 

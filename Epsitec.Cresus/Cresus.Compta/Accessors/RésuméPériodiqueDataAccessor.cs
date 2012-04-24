@@ -139,14 +139,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected override void UpdateAfterFilterUpdated()
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!this.Options.HasGraphicsCumulé && !this.Options.HasGraphicsEmpilé)
+			if (!this.Options.HasStackedGraph && !this.Options.HasSideBySideGraph)
 			{
 				return;
 			}
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.cube.Mode = this.Options.HasGraphicsCumulé ? GraphicMode.Cumulé : GraphicMode.Empilé;
+			this.graphOptions.Mode = this.Options.HasStackedGraph ? GraphMode.Stacked : GraphMode.SideBySide;
 
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{

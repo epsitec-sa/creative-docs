@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.cube.Mode = GraphicMode.Empilé;
+			this.graphOptions.Mode = GraphMode.SideBySide;
 
 			//	Spécifie les légendes de l'axe X.
 			int x = 0;

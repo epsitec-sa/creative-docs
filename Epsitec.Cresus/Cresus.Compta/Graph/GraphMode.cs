@@ -11,9 +11,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Graph
 {
-	public enum GraphicMode
+	public enum GraphMode
 	{
-		Cumulé,
-		Empilé,
+		SideBySide,
+		Stacked,
+		Lines,
+		Pie,
+		Array,
 	}
 }

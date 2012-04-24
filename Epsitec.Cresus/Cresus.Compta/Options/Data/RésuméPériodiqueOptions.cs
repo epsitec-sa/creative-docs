@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.NumberOfMonths    = 3;  // périodicité trimestrielle
 			this.Cumul             = false;
 			this.HideZero          = true;
-			this.HasGraphicsCumulé = true;
-			this.HasGraphicsEmpilé = false;
+			this.HasStackedGraph = true;
+			this.HasSideBySideGraph = false;
 		}
 
 
@@ -48,13 +48,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
-		public bool HasGraphicsCumulé
+		public bool HasStackedGraph
 		{
 			get;
 			set;
 		}
 
-		public bool HasGraphicsEmpilé
+		public bool HasSideBySideGraph
 		{
 			get;
 			set;
@@ -80,11 +80,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as RésuméPériodiqueOptions;
-			d.NumberOfMonths    = this.NumberOfMonths;
-			d.Cumul             = this.Cumul;
-			d.HideZero          = this.HideZero;
-			d.HasGraphicsCumulé = this.HasGraphicsCumulé;
-			d.HasGraphicsEmpilé = this.HasGraphicsEmpilé;
+			d.NumberOfMonths     = this.NumberOfMonths;
+			d.Cumul              = this.Cumul;
+			d.HideZero           = this.HideZero;
+			d.HasStackedGraph    = this.HasStackedGraph;
+			d.HasSideBySideGraph = this.HasSideBySideGraph;
 
 			base.CopyTo (dst);
 		}
@@ -98,11 +98,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméPériodiqueOptions;
 
-			return this.NumberOfMonths    == o.NumberOfMonths    &&
-				   this.Cumul             == o.Cumul             &&
-				   this.HideZero          == o.HideZero          &&
-				   this.HasGraphicsCumulé == o.HasGraphicsCumulé &&
-				   this.HasGraphicsEmpilé == o.HasGraphicsEmpilé;
+			return this.NumberOfMonths     == o.NumberOfMonths    &&
+				   this.Cumul              == o.Cumul             &&
+				   this.HideZero           == o.HideZero          &&
+				   this.HasStackedGraph    == o.HasStackedGraph &&
+				   this.HasSideBySideGraph == o.HasSideBySideGraph;
 		}
 
 
@@ -124,14 +124,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
 				}
 
-				if (this.HasGraphicsCumulé)
+				if (this.HasStackedGraph)
 				{
 					this.AppendSummaryBuilder ("Graphique cumulé");
 				}
 
-				if (this.HasGraphicsEmpilé)
+				if (this.HasSideBySideGraph)
 				{
-					this.AppendSummaryBuilder ("Graphique empilé");
+					this.AppendSummaryBuilder ("Graphique côte à côte");
 				}
 
 				return this.StopSummaryBuilder ();

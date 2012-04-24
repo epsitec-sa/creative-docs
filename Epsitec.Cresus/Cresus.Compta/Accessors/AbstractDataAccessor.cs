@@ -45,6 +45,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchResults   = new List<SearchResult> ();
 
 			this.cube = new Cube ();
+			this.graphOptions = new GraphOptions ();
 		}
 
 
@@ -101,6 +102,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.cube;
+			}
+		}
+
+		public GraphOptions GraphOptions
+		{
+			get
+			{
+				return this.graphOptions;
 			}
 		}
 
@@ -630,5 +639,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected Date?									lastBeginDate;
 		protected Date?									lastEndDate;
 		protected Cube									cube;
+		protected GraphOptions							graphOptions;
 	}
 }

@@ -20,8 +20,8 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public Cube()
 		{
-			this.values = new Dictionary<string, decimal?> ();
-			this.titles = new List<Dictionary<int,FormattedText>>();
+			this.values    = new Dictionary<string, decimal?> ();
+			this.titles    = new List<Dictionary<int,FormattedText>>();
 			this.maxCoords = new List<int> ();
 		}
 
@@ -87,13 +87,6 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			System.Diagnostics.Debug.Assert (cube.GetCount (0) == 4);
 			System.Diagnostics.Debug.Assert (cube.GetCount (1) == 3);
-		}
-
-
-		public GraphicMode Mode
-		{
-			get;
-			set;
 		}
 
 
