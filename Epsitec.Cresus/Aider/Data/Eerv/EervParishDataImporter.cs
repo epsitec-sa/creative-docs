@@ -36,21 +36,45 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static void Import(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			// TODO activity data
-
-			EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, eervParishData);
+			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, eervParishData);
+			
 			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervParishData);
-			EervParishDataImporter.ImportEervGroups (businessContextManager, eervMainData, eervParishData);
+			
+			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (businessContextManager, eervMainData, eervParishData);
+			
+			EervParishDataImporter.ImportEervActivities (businessContextManager, eervParishData, eervPersonMapping, eervGroupMapping);
 		}
 
 
-		private static void ImportEervPhysicalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
 		{
 			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
-
 			var newEntities = EervParishDataImporter.ProcessMatches (businessContextManager, eervParishData.Id.Name, matches);
 
-			EervParishDataImporter.ProcessHouseholdMatches (businessContextManager, matches, newEntities, eervParishData.Households);
+			EervParishDataImporter.ProcessHouseholdMatches(businessContextManager, matches, newEntities, eervParishData.Households);
+
+			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
+		}
+
+
+		private static Dictionary<EervPerson, EntityKey> BuildEervPersonMapping(Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matchData, Dictionary<EervPerson, EntityKey> newEntities)
+		{
+			var mapping = new Dictionary<EervPerson, EntityKey> ();
+
+			foreach (var match in matchData)
+			{
+				if (match.Value.Any ())
+				{
+					mapping[match.Key] = match.Value.First ().Item1;
+				}
+			}
+
+			foreach (var newEntity in newEntities)
+			{
+				mapping[newEntity.Key] = newEntity.Value;
+			}
+
+			return mapping;
 		}
 
 
@@ -132,14 +156,12 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (match.Value.Any ())
 				{
-					foreach (var m in match.Value)
-					{
-						var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
-						var matchData = m.Item2;
+					var m = match.Value.First ();
+					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
+					var matchData = m.Item2;
 
-						EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
-						EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
-					}
+					EervParishDataImporter.CombineAiderPersonWithEervPerson (businessContext, eervPerson, aiderPerson);
+					EervParishDataImporter.AddMatchComment (eervPerson, aiderPerson, matchData, parishName);
 				}
 				else
 				{
@@ -933,16 +955,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervGroups(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			businessContextManager.Execute (b =>
+			return businessContextManager.Execute (b =>
 			{
-				EervParishDataImporter.ImportEervGroups (b, eervMainData, eervParishData);
+				return EervParishDataImporter.ImportEervGroups (b, eervMainData, eervParishData);
 			});
 		}
 
 
-		private static void ImportEervGroups(BusinessContext businessContext, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContext businessContext, EervMainData eervMainData, EervParishData eervParishData)
 		{
 			var eervGroupDefinitions = eervMainData.GroupDefinitions;
 			var eervGroups = eervParishData.Groups;
@@ -957,6 +979,8 @@ namespace Epsitec.Aider.Data.Eerv
 			// We sort the groups so that they appear in the right order, that is, the parent before
 			// their children.
 			var sortedEervGroups = eervGroups.OrderBy (g => g.Id);
+
+			var groupMapping = new Dictionary<EervGroup, AiderGroupEntity> ();
 
 			foreach (var eervGroup in sortedEervGroups)
 			{
@@ -973,7 +997,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				if (aiderIdMapping.TryGetValue (eervGroup.Id, out aiderGroup))
 				{
-					// The group already exists. For now, we don't need to do anything about it.
+					groupMapping[eervGroup] = aiderGroup;
 				}
 				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
 				{
@@ -984,6 +1008,8 @@ namespace Epsitec.Aider.Data.Eerv
 					aiderSubGroupMapping[newAiderGroup] = new List<AiderGroupEntity> ();
 
 					aiderIdMapping[eervGroup.Id] = newAiderGroup;
+
+					groupMapping[eervGroup] = newAiderGroup;
 				}
 				else
 				{
@@ -992,6 +1018,12 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			businessContext.SaveChanges ();
+
+			return groupMapping.ToDictionary
+			(
+				g => g.Key,
+				g => businessContext.DataContext.GetNormalizedEntityKey (g.Value).Value
+			);
 		}
 
 
@@ -1129,6 +1161,55 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			return mapping;
+		}
+
+
+		private static void ImportEervActivities(BusinessContextManager businessContextManager, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		{
+			businessContextManager.Execute (b =>
+			{
+				EervParishDataImporter.ImportEervActivities (b, eervParishData, eervPersonToKeys, eervGroupToKeys);
+			});
+		}
+
+
+		private static void ImportEervActivities(BusinessContext businessContext, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		{
+			// TODO Test this method to check if it really works.
+
+			var dataContext = businessContext.DataContext;
+
+			foreach (var eervActivity in eervParishData.Activities)
+			{			
+				if (eervActivity.Person != null)
+				{
+					var eervPerson = eervActivity.Person;
+					var eervGroup = eervActivity.Group;
+
+					var aiderPersonKey = eervPersonToKeys[eervPerson];
+					var aiderGroupKey = eervGroupToKeys[eervGroup];
+
+					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (aiderPersonKey);
+					var aiderGroup = (AiderGroupEntity) dataContext.ResolveEntity (aiderGroupKey);
+
+					var startDate = eervActivity.StartDate;
+					var endDate = eervActivity.EndDate;
+					var remarks = eervActivity.Remarks;
+					
+					aiderGroup.AddParticipant(businessContext, aiderPerson, startDate, endDate, remarks);
+				}
+				else if (eervActivity.LegalPerson != null)
+				{
+					// For now we don't consider the activities linked to legal persons as we dont have
+					// a way to store them in the database.
+
+					Debug.WriteLine ("WARNING: activity with legal persons are not considered yet.");
+				}
+				else
+				{
+					throw new NotImplementedException ();
+				}
+			}
 		}
 
 

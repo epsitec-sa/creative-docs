@@ -56,5 +56,27 @@ namespace Epsitec.Aider.Entities
 
 			return businessContext.DataContext.GetByExample(example).Select(r => r.Group2);
 		}
+
+		public AiderGroupParticipantEntity AddParticipant(BusinessContext businessContext, AiderPersonEntity aiderPerson, Date? startDate, Date? endDate, string comment)
+		{
+			var aiderGroupParticipant = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
+
+			aiderGroupParticipant.Group = this;
+			aiderGroupParticipant.Person = aiderPerson;
+
+			aiderGroupParticipant.StartDate = startDate;
+			aiderGroupParticipant.EndDate = endDate;
+
+			if (!string.IsNullOrWhiteSpace (comment))
+			{
+				var aiderComment = businessContext.CreateEntity<AiderCommentEntity> ();
+
+				aiderComment.Text = TextFormatter.FormatText (comment);
+
+				aiderGroupParticipant.Comment = aiderComment;
+			}
+
+			return aiderGroupParticipant;
+		}
 	}
 }
