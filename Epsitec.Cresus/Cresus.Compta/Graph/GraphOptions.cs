@@ -17,12 +17,19 @@ namespace Epsitec.Cresus.Compta.Graph
 		public GraphOptions()
 		{
 			this.Mode               = GraphMode.SideBySide;
+			this.Style              = GraphStyle.Rainbow;
 			this.PrimaryDimension   = 1;
 			this.SecondaryDimension = 0;
 		}
 
 
 		public GraphMode Mode
+		{
+			get;
+			set;
+		}
+
+		public GraphStyle Style
 		{
 			get;
 			set;

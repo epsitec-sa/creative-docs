@@ -78,10 +78,29 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent         = frame,
 				Text           = "Axes",
-				PreferredWidth = 50,
+				PreferredWidth = 60,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (10, 0, 0, 0),
 			};
+
+			var style = new TextFieldCombo
+			{
+				Parent         = frame,
+				IsReadOnly     = true,
+				PreferredWidth = 150,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 0, 0, 0),
+			};
+
+			style.Items.Add ("Arc-en-ciel");
+			style.Items.Add ("Arc-en-ciel pastel");
+			style.Items.Add ("Arc-en-ciel foncé");
+			style.Items.Add ("Gris");
+			style.Items.Add ("Noir et blanc");
+			style.Items.Add ("Rouge");
+			style.Items.Add ("Vert");
+			style.Items.Add ("Bleu");
+			style.Items.Add ("Feu");
 
 			b1.Clicked += delegate
 			{
@@ -126,6 +145,12 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.options.SecondaryDimension = 0;
 				}
 
+				optionsChangedAction ();
+			};
+
+			style.SelectedItemChanged += delegate
+			{
+				options.Style = (GraphStyle) style.SelectedItemIndex;
 				optionsChangedAction ();
 			};
 		}

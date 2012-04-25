@@ -916,7 +916,34 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return Color.FromBrightness (0.80);
+				if (this.options.Style == GraphStyle.BlackAndWhite)
+				{
+					return Color.FromBrightness (1.00);
+				}
+				else if (this.options.Style == GraphStyle.LightRainbow)
+				{
+					return Color.FromBrightness (0.90);
+				}
+				else if (this.options.Style == GraphStyle.DarkRainbow)
+				{
+					return Color.FromBrightness (0.70);
+				}
+				else if (this.options.Style == GraphStyle.Red)
+				{
+					return Color.FromHexa ("e5d0d0");
+				}
+				else if (this.options.Style == GraphStyle.Green)
+				{
+					return Color.FromHexa ("d0e5d0");
+				}
+				else if (this.options.Style == GraphStyle.Blue)
+				{
+					return Color.FromHexa ("d0e2e5");
+				}
+				else
+				{
+					return Color.FromBrightness (0.80);
+				}
 			}
 		}
 
@@ -924,7 +951,22 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return Color.FromBrightness (0.90);
+				if (this.options.Style == GraphStyle.BlackAndWhite)
+				{
+					return Color.FromBrightness (1.00);
+				}
+				else if (this.options.Style == GraphStyle.LightRainbow)
+				{
+					return Color.FromBrightness (1.00);
+				}
+				else if (this.options.Style == GraphStyle.DarkRainbow)
+				{
+					return Color.FromBrightness (0.90);
+				}
+				else
+				{
+					return Color.FromBrightness (0.90);
+				}
 			}
 		}
 
@@ -932,8 +974,23 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return Color.FromAlphaColor (0.9, Color.FromName ("White"));
-				//?return Color.FromBrightness (0.98);
+				if (this.options.Style == GraphStyle.BlackAndWhite)
+				{
+					return Color.FromBrightness (1.00);
+				}
+				else if (this.options.Style == GraphStyle.LightRainbow)
+				{
+					return Color.FromAlphaColor (0.8, Color.FromName ("White"));
+				}
+				else if (this.options.Style == GraphStyle.DarkRainbow)
+				{
+					return Color.FromAlphaColor (0.95, Color.FromName ("White"));
+				}
+				else
+				{
+					return Color.FromAlphaColor (0.9, Color.FromName ("White"));
+					//?return Color.FromBrightness (0.98);
+				}
 			}
 		}
 
@@ -941,22 +998,100 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-				return adorner.ColorTextFieldBorder (true);
+				if (this.options.Style == GraphStyle.Rainbow)
+				{
+					IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+					return adorner.ColorTextFieldBorder (true);
+				}
+				else if (this.options.Style == GraphStyle.BlackAndWhite)
+				{
+					return Color.FromBrightness (0.0);
+				}
+				else if (this.options.Style == GraphStyle.DarkRainbow)
+				{
+					return Color.FromBrightness (0.4);
+				}
+				else
+				{
+					return Color.FromBrightness (0.6);
+				}
 			}
 		}
 
 		private Color GetIndexedColor(int index, int total)
 		{
-			//	Retourne une couleur de l'arc-en-ciel.
-			index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
-			//?return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 0.9);
-			return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 1.0);
+			switch (this.options.Style)
+			{
+				//	Retourne une couleur de l'arc-en-ciel.
+				case GraphStyle.Rainbow:
+					{
+						index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
+						return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 1.0);
+					}
+
+				case GraphStyle.LightRainbow:
+					{
+						index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
+						return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 0.6, 1.0);
+					}
+
+				case GraphStyle.DarkRainbow:
+					{
+						index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
+						return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 0.8);
+					}
+
+				case GraphStyle.Grey:
+					{
+						index *= System.Math.Max (GraphEngine.grey.Length/total, 1);
+						return Color.FromBrightness (GraphEngine.grey[index%GraphEngine.grey.Length]);
+					}
+
+				case GraphStyle.BlackAndWhite:
+					{
+						index *= System.Math.Max (GraphEngine.blackAndWhite.Length/total, 1);
+						return Color.FromBrightness (GraphEngine.blackAndWhite[index%GraphEngine.blackAndWhite.Length]);
+					}
+
+				case GraphStyle.Red:
+					{
+						index *= System.Math.Max (GraphEngine.red.Length/total, 1);
+						return Color.FromHexa (GraphEngine.red[index%GraphEngine.red.Length]);
+					}
+
+				case GraphStyle.Green:
+					{
+						index *= System.Math.Max (GraphEngine.green.Length/total, 1);
+						return Color.FromHexa (GraphEngine.green[index%GraphEngine.green.Length]);
+					}
+
+				case GraphStyle.Blue:
+					{
+						index *= System.Math.Max (GraphEngine.blue.Length/total, 1);
+						return Color.FromHexa (GraphEngine.blue[index%GraphEngine.blue.Length]);
+					}
+
+				case GraphStyle.Fire:
+					{
+						index *= System.Math.Max (GraphEngine.fire.Length/total, 1);
+						return Color.FromHexa (GraphEngine.fire[index%GraphEngine.fire.Length]);
+					}
+
+				default:
+					return Color.FromBrightness (0.5);
+			}
 		}
 
 		//	La difficulté consiste a avoir un maximun de couleurs, tout en garantissant
 		//	qu'elles sont visuellement identifiables les unes par rapport aux autres.
-		private static int[] rainbow = { 0, 40, 60, 90, 190, 210, 240, 270, 290 };
+		private static int[] rainbow          = { 0, 40, 60, 90, 190, 210, 240, 270, 290 };
+		private static double[] grey          = { 0.7, 0.5, 0.9, 0.4, 1.0 };
+		private static double[] blackAndWhite = { 0.7, 1.0, 0.0 };
+		private static string[] red           = { "ff0000", "ff8d8d", "a80000", "ffe1e1" };
+		private static string[] green         = { "00ff00", "b7ffb7", "00c600", "007000" };
+		private static string[] blue          = { "00ccff", "b1efff", "00a0c8", "0060ff", "7fafff", "003fa6" };
+		private static string[] fire          = { "ff9e9e", "ff0000", "ad0000", "ffe9a6", "ffc000", "e3ab00", "ffffed", "ffff00", "e5e500" };
+
 
 
 		private Cube			cube;
