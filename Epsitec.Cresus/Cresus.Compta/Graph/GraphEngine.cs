@@ -98,6 +98,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 
 				case GraphMode.Stacked:
+					this.InitStacked (graphics, frameRect, nx, dx, ny);
 					break;
 
 				case GraphMode.Lines:
@@ -127,6 +128,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 
 				case GraphMode.Stacked:
+					this.PaintStacked (graphics, frameRect, nx, dx, ny);
 					break;
 
 				case GraphMode.Lines:
@@ -163,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.maxValue = System.Math.Max (this.maxValue, 0);
 
 			this.drawBottom = frameRect.Bottom+0.5;
-			this.drawHeight = frameRect.Height-2;
+			this.drawHeight = frameRect.Height;
 		}
 
 		private void PaintSideBySide(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
@@ -171,7 +173,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, frameRect.Height);
-				rect.Deflate (2, 2, 2, 0);
+				rect.Deflate (2, 2, 0, 0);
 
 				double zero = this.ConvValueToY (0);
 				int barWidth = (int) rect.Width / ny;
@@ -199,6 +201,96 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.AddRectangle (barRect);
 								graphics.RenderSolid (this.BorderColor);
 							}
+						}
+					}
+				}
+			}
+		}
+
+
+		private void InitStacked (Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
+		{
+			this.minValue = 0;
+			this.maxValue = 0;
+
+			for (int x = 0; x < nx; x++)
+			{
+				decimal positivSum = 0;
+				decimal negativSum = 0;
+
+				for (int y = 0; y < ny; y++)
+				{
+					var value = this.GetValue (x, y).GetValueOrDefault ();
+
+					if (value >= 0)
+					{
+						positivSum += value;
+						this.maxValue = System.Math.Max (this.maxValue, positivSum);
+					}
+					else
+					{
+						negativSum += value;
+						this.minValue = System.Math.Min (this.minValue, negativSum);
+					}
+				}
+			}
+
+			this.drawBottom = frameRect.Bottom+0.5;
+			this.drawHeight = frameRect.Height;
+		}
+
+		private void PaintStacked(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
+		{
+			for (int x = 0; x < nx; x++)
+			{
+				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, frameRect.Height);
+				int margin = (int) (rect.Width*0.25);
+
+				if (margin == 1)
+				{
+					margin = 0;
+				}
+
+				rect.Deflate (margin, margin, 0, 0);
+
+				for (int pass = 0; pass < 2; pass++)
+				{
+					decimal lastPositiv = 0;
+					decimal lastNegativ = 0;
+
+					for (int y = 0; y < ny; y++)
+					{
+						var value = this.GetValue (x, y).GetValueOrDefault ();
+						decimal v1, v2;
+
+						if (value >= 0)
+						{
+							v1 = lastPositiv;
+							v2 = lastPositiv + value;
+
+							lastPositiv += value;
+						}
+						else
+						{
+							v1 = lastNegativ + value;
+							v2 = lastNegativ;
+
+							lastNegativ += value;
+						}
+
+						double h1 = this.ConvValueToY (v1);
+						double h2 = this.ConvValueToY (v2);
+						var barRect = new Rectangle (rect.Left, h1, rect.Width, h2-h1);
+
+						if (pass == 0)
+						{
+							graphics.AddFilledRectangle (barRect);
+							graphics.RenderSolid (this.GetIndexedColor (y, ny));
+						}
+						else
+						{
+							graphics.AddRectangle (barRect);
+							graphics.RenderSolid (this.BorderColor);
 						}
 					}
 				}
@@ -380,8 +472,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				nx--;
 			}
 
-			int w = (int) (this.HasHorizontalLabels ? nx*dx : frameRect.Width);
-			int h = (int) (this.HasVerticalLabels   ? ny*dy : frameRect.Height);
+			int w = (int) (this.HasHorizontalLabels             ? nx*dx : frameRect.Width);
+			int h = (int) (this.options.Mode == GraphMode.Array ? ny*dy : frameRect.Height);
 
 			var rect = new Rectangle (frameRect.Left, frameRect.Bottom, w, h);
 
@@ -450,7 +542,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (labelsRect.Left+dx*x, labelsRect.Bottom, dx, labelsRect.Height);
-				this.PaintText (graphics, rect, this.cube.GetTitle (this.options.PrimaryDimension, x), ContentAlignment.MiddleCenter);
+				this.PaintText (graphics, rect, this.cube.GetShortTitle (this.options.PrimaryDimension, x), ContentAlignment.MiddleCenter);
 			}
 		}
 
@@ -473,7 +565,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (labelsRect.Left, labelsRect.Bottom+dy*y, labelsRect.Width-5, dy);
-				this.PaintText (graphics, rect, this.cube.GetTitle (this.options.SecondaryDimension, y), ContentAlignment.MiddleRight);
+				this.PaintText (graphics, rect, this.cube.GetShortTitle (this.options.SecondaryDimension, y), ContentAlignment.MiddleRight);
 			}
 		}
 
@@ -481,6 +573,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			//	Dessine les unités de l'axe vertical.
 			decimal step = 1;
+			decimal bigStep = 1;
 			var y1 = this.ConvValueToY (0);
 
 			decimal[] steps =
@@ -494,12 +587,15 @@ namespace Epsitec.Cresus.Compta.Graph
 				1000000, 2000000, 5000000,
 				10000000, 20000000, 50000000,
 				100000000, 200000000, 500000000,
+				1000000000,
 			};
 
 			//	On cherche le plus petit step suffisamment espacé.
-			for (int i = 0; i < steps.Length; i++)
+			for (int i = 0; i < steps.Length-1; i++)
 			{
-				step = steps[i];
+				step    = steps[i];
+				bigStep = steps[i+1];
+
 				var y2 = this.ConvValueToY (step);
 
 				if (y2-y1 > this.fontSize*3)  // assez espacés ?
@@ -521,7 +617,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				if (y >= labelsRect.Bottom)
 				{
-					this.PaintUnit (graphics, labelsRect, y, value);
+					this.PaintUnit (graphics, labelsRect, y, value, bigStep);
 				}
 
 				value += step;
@@ -540,25 +636,28 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				if (y <= labelsRect.Top)
 				{
-					this.PaintUnit (graphics, labelsRect, y, value);
+					this.PaintUnit (graphics, labelsRect, y, value, bigStep);
 				}
 
 				value -= step;
 			}
 		}
 
-		private void PaintUnit(Graphics graphics, Rectangle labelsRect, double y, decimal value)
+		private void PaintUnit(Graphics graphics, Rectangle labelsRect, double y, decimal value, decimal bigStep)
 		{
 			//	Dessine une unité composée d'un montant et d'un trait horizontal.
 			y = System.Math.Floor (y) + 0.5;
 			int h = (int) (this.fontSize/0.6);
 
-			var rect = new Rectangle (labelsRect.Left, y-h/2+2, labelsRect.Width-10, h);
+			var rect = new Rectangle (labelsRect.Left, y-h/2+1, labelsRect.Width-10, h);
 			var unit = Converters.MontantToString (value, 0);
 			this.PaintText (graphics, rect, unit, ContentAlignment.MiddleRight);
 
+			var div = System.Math.Abs (value / bigStep);
+			bool bold = (div == System.Math.Truncate (div));
+
 			graphics.AddLine (labelsRect.Right-5, y, this.drawRight, y);
-			graphics.RenderSolid (this.BorderColor);
+			graphics.RenderSolid (bold ? this.BorderColor : Color.FromAlphaColor (0.2, this.BorderColor));
 		}
 
 		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment)
@@ -596,7 +695,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				for (int y = 0; y < ny; y++)
 				{
-					textLayout.FormattedText = this.cube.GetTitle (this.options.SecondaryDimension, y);
+					textLayout.FormattedText = this.cube.GetShortTitle (this.options.SecondaryDimension, y);
 					double width = textLayout.GetSingleLineSize ().Width;
 					max = System.Math.Max (max, (int) width);
 				}
@@ -605,7 +704,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 			else
 			{
-				return (int) (this.fontSize*7);  // place fixe ok jusqu'à 1'000'000
+				return (int) (this.fontSize*7);  // place fixe ok jusqu'à 1'000'000 environ
 			}
 		}
 
@@ -635,14 +734,24 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				for (int yy = 0; yy < ny; yy++)
 				{
-					decimal sum = 0;
+					decimal positivSum = 0;
+					decimal negativSum = 0;
 
 					for (int xx = 0; xx < nx; xx++)
 					{
-						sum += System.Math.Max (this.cube.GetValue (xx, yy).GetValueOrDefault (), 0);
-					}
+						var value = this.cube.GetValue (xx, yy).GetValueOrDefault ();
 
-					finalMax = System.Math.Max (finalMax, sum);
+						if (value >= 0)
+						{
+							positivSum += value;
+							finalMax = System.Math.Max (finalMax, positivSum);
+						}
+						else
+						{
+							negativSum += value;
+							finalMin = System.Math.Min (finalMin, negativSum);
+						}
+					}
 				}
 			}
 			else
@@ -665,8 +774,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintStackedRow(Graphics graphics, Rectangle rect, decimal min, decimal max, int row)
 		{
-			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres cumulées.
-			if (max == 0)
+			//	Dessine le graphique avec plusieurs barres cumulées.
+			if (max-min == 0)
 			{
 				return;
 			}
@@ -685,34 +794,48 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (Color.FromAlphaColor (0.2, borderColor));
 
+			decimal lastPositiv = 0;
+			decimal lastNegativ = 0;
+
 			int nx = this.cube.GetCount (0);
-			var cumuls = new List<decimal> ();
-			decimal sum = 0;
 			for (int i = 0; i < nx; i++)
 			{
-				sum += this.cube.GetValue (i, row).GetValueOrDefault ();
-				cumuls.Add (sum);
-			}
+				var value = this.cube.GetValue (i, row).GetValueOrDefault ();
+				decimal v1, v2;
 
-			for (int i = cumuls.Count-1; i >= 0; i--)
-			{
-				var v1 = (i == 0) ? 0 : cumuls[i-1];
-				var v2 = cumuls[i];
+				if (value >= 0)
+				{
+					v1 = lastPositiv;
+					v2 = lastPositiv + value;
 
-				double x1 = System.Math.Floor (rect.Width * (double) v1 / (double) max);
-				double x2 = System.Math.Floor (rect.Width * (double) v2 / (double) max);
+					lastPositiv += value;
+				}
+				else
+				{
+					v1 = lastNegativ + value;
+					v2 = lastNegativ;
+
+					lastNegativ += value;
+				}
+
+				double x1 = System.Math.Floor (rect.Width * (double) (v1-min) / (double) (max-min));
+				double x2 = System.Math.Floor (rect.Width * (double) (v2-min) / (double) (max-min));
 				double dx = x2-x1;
 
 				if (dx > 0)
 				{
 					var r = new Rectangle (rect.Left+x1, rect.Bottom, dx, rect.Height);
 					graphics.AddFilledRectangle (r);
-					graphics.RenderSolid (this.GetIndexedColor (i, cumuls.Count));
+					graphics.RenderSolid (this.GetIndexedColor (i, nx));
 
 					graphics.AddLine (rect.Left+x2-0.5, rect.Bottom+0.5, rect.Left+x2-0.5, rect.Top-0.5);
 					graphics.RenderSolid (borderColor);
 				}
 			}
+
+			double zero = System.Math.Floor (rect.Width * (double) (-min) / (double) (max-min));
+			graphics.AddLine (rect.Left+zero-0.5, rect.Bottom+0.5, rect.Left+zero-0.5, rect.Top-0.5);
+			graphics.RenderSolid (borderColor);
 
 			rect.Inflate (0.5);
 
@@ -722,7 +845,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintSideBySideRow(Graphics graphics, Rectangle rect, decimal min, decimal max, int row)
 		{
-			//	Dessine le graphique en mode "résumé périodique", avec plusieurs barres côte à côte.
+			//	Dessine le graphique avec plusieurs barres côte à côte.
 			min = System.Math.Min (min, 0);
 			max = System.Math.Max (max, 0);
 
@@ -809,7 +932,8 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			get
 			{
-				return Color.FromBrightness (0.98);
+				return Color.FromAlphaColor (0.9, Color.FromName ("White"));
+				//?return Color.FromBrightness (0.98);
 			}
 		}
 
@@ -826,7 +950,8 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			//	Retourne une couleur de l'arc-en-ciel.
 			index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
-			return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1, 1);
+			//?return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 0.9);
+			return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 1.0);
 		}
 
 		//	La difficulté consiste a avoir un maximun de couleurs, tout en garantissant

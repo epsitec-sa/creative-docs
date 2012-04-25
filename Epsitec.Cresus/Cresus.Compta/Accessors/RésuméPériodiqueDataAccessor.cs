@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{
-				this.cube.SetTitle (0, index, Dates.GetMonthShortDescription (dateDébut, dateFin));
+				this.cube.SetShortTitle (0, index, Dates.GetMonthShortDescription (dateDébut, dateFin));
 			});
 
 			int y = 0;
@@ -158,7 +158,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				var data = d as RésuméPériodiqueData;
 
-				this.cube.SetTitle (1, y, data.Numéro);
+				this.cube.SetShortTitle (1, y, data.Numéro);
+				this.cube.SetFullTitle (1, y, FormattedText.Concat (data.Numéro, " ", data.Titre));
 
 				decimal last = 0;
 				for (int i = 0; i < this.columnCount; i++)

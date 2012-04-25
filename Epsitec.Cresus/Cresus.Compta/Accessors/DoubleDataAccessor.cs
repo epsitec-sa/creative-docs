@@ -188,38 +188,38 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			//	Spécifie les légendes de l'axe X.
 			int x = 0;
-			this.cube.SetTitle (0, x++, "Solde");
+			this.cube.SetShortTitle (0, x++, "Solde");
 
 			if (this.Options.ComparisonEnable)
 			{
 				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePénultième) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Période pénultième");
+					this.cube.SetShortTitle (0, x++, "Période pénultième");
 				}
 
 				if ((this.Options.ComparisonShowed & ComparisonShowed.PériodePrécédente) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Période précédente");
+					this.cube.SetShortTitle (0, x++, "Période précédente");
 				}
 
 				if ((this.Options.ComparisonShowed & ComparisonShowed.Budget) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Budget");
+					this.cube.SetShortTitle (0, x++, "Budget");
 				}
 
 				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetProrata) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Budget prorata");
+					this.cube.SetShortTitle (0, x++, "Budget prorata");
 				}
 
 				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFutur) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Budget futur");
+					this.cube.SetShortTitle (0, x++, "Budget futur");
 				}
 
 				if ((this.Options.ComparisonShowed & ComparisonShowed.BudgetFuturProrata) != 0)
 				{
-					this.cube.SetTitle (0, x++, "Budget futur prorata");
+					this.cube.SetShortTitle (0, x++, "Budget futur prorata");
 				}
 			}
 
@@ -229,7 +229,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var data = d as DoubleData;
 
 				//	Spécifie la légende de l'axe Y.
-				this.cube.SetTitle (1, y, data.Numéro);
+				this.cube.SetShortTitle (1, y, data.Numéro);
+				this.cube.SetFullTitle (1, y, FormattedText.Concat (data.Numéro, " ", data.Titre));
 
 				x = 0;
 				this.cube.SetValue (x++, y, data.Solde);

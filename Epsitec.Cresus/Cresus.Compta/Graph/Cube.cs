@@ -20,9 +20,10 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public Cube()
 		{
-			this.values    = new Dictionary<string, decimal?> ();
-			this.titles    = new List<Dictionary<int,FormattedText>>();
-			this.maxCoords = new List<int> ();
+			this.values      = new Dictionary<string, decimal?> ();
+			this.shortTitles = new List<Dictionary<int, FormattedText>> ();
+			this.fullTitles  = new List<Dictionary<int, FormattedText>> ();
+			this.maxCoords   = new List<int> ();
 		}
 
 
@@ -47,14 +48,14 @@ namespace Epsitec.Cresus.Compta.Graph
 			cube.SetValue (2, 2, 1002.0m);
 			cube.SetValue (3, 2, 1003.0m);
 
-			cube.SetTitle (0, 0, "X0");
-			cube.SetTitle (0, 1, "X1");
-			cube.SetTitle (0, 2, "X2");
-			cube.SetTitle (0, 3, "X3");
+			cube.SetShortTitle (0, 0, "X0");
+			cube.SetShortTitle (0, 1, "X1");
+			cube.SetShortTitle (0, 2, "X2");
+			cube.SetShortTitle (0, 3, "X3");
 
-			cube.SetTitle (1, 0, "Y0");
-			cube.SetTitle (1, 1, "Y1");
-			cube.SetTitle (1, 2, "Y2");
+			cube.SetShortTitle (1, 0, "Y0");
+			cube.SetShortTitle (1, 1, "Y1");
+			cube.SetShortTitle (1, 2, "Y2");
 
 			System.Diagnostics.Debug.Assert (cube.Dimensions == 2);
 			System.Diagnostics.Debug.Assert (cube.GetCount (0) == 4);
@@ -80,10 +81,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			cube.GetMinMax (3, 1, out min, out max);
 			System.Diagnostics.Debug.Assert (min == 103.0m && max == 103.0m);
 
-			System.Diagnostics.Debug.Assert (cube.GetTitle (0, 1) == "X1");
-			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 1) == "Y1");
-			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 2) == "Y2");
-			System.Diagnostics.Debug.Assert (cube.GetTitle (1, 3) == FormattedText.Null);
+			System.Diagnostics.Debug.Assert (cube.GetShortTitle (0, 1) == "X1");
+			System.Diagnostics.Debug.Assert (cube.GetShortTitle (1, 1) == "Y1");
+			System.Diagnostics.Debug.Assert (cube.GetShortTitle (1, 2) == "Y2");
+			System.Diagnostics.Debug.Assert (cube.GetShortTitle (1, 3) == FormattedText.Null);
 
 			System.Diagnostics.Debug.Assert (cube.GetCount (0) == 4);
 			System.Diagnostics.Debug.Assert (cube.GetCount (1) == 3);
@@ -105,12 +106,14 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.dimensions = value;
 
 					this.maxCoords.Clear ();
-					this.titles.Clear ();
+					this.shortTitles.Clear ();
+					this.fullTitles.Clear ();
 
 					for (int i = 0; i < this.dimensions; i++)
 					{
 						this.maxCoords.Add (-1);
-						this.titles.Add (new Dictionary<int, FormattedText> ());
+						this.shortTitles.Add (new Dictionary<int, FormattedText> ());
+						this.fullTitles.Add (new Dictionary<int, FormattedText> ());
 					}
 				}
 			}
@@ -125,17 +128,32 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int i = 0; i < this.dimensions; i++)
 			{
 				this.maxCoords[i] = -1;
-				this.titles[i].Clear ();
+				this.shortTitles[i].Clear ();
+				this.fullTitles[i].Clear ();
 			}
 		}
 
 
 		public FormattedText GetTitle(int dimension, int coordIndex)
 		{
+			//	Retourne un titre, le complet s'il existe, sinon le court.
+			var title = this.GetFullTitle (dimension, coordIndex);
+
+			if (title.IsNullOrEmpty)
+			{
+				title = this.GetShortTitle (dimension, coordIndex);
+			}
+
+			return title;
+		}
+
+
+		public FormattedText GetShortTitle(int dimension, int coordIndex)
+		{
 			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
 
 			FormattedText title;
-			if (this.titles[dimension].TryGetValue (coordIndex, out title))
+			if (this.shortTitles[dimension].TryGetValue (coordIndex, out title))
 			{
 				return title;
 			}
@@ -145,11 +163,34 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		public void SetTitle(int dimension, int coordIndex, FormattedText title)
+		public void SetShortTitle(int dimension, int coordIndex, FormattedText title)
 		{
 			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
 			this.maxCoords[dimension] = System.Math.Max (this.maxCoords[dimension], coordIndex);
-			this.titles[dimension][coordIndex] = title;
+			this.shortTitles[dimension][coordIndex] = title;
+		}
+
+
+		public FormattedText GetFullTitle(int dimension, int coordIndex)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+
+			FormattedText title;
+			if (this.fullTitles[dimension].TryGetValue (coordIndex, out title))
+			{
+				return title;
+			}
+			else
+			{
+				return FormattedText.Null;
+			}
+		}
+
+		public void SetFullTitle(int dimension, int coordIndex, FormattedText title)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+			this.maxCoords[dimension] = System.Math.Max (this.maxCoords[dimension], coordIndex);
+			this.fullTitles[dimension][coordIndex] = title;
 		}
 
 
@@ -385,7 +426,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private readonly Dictionary<string, decimal?>			values;
 		private readonly List<int>								maxCoords;
-		private readonly List<Dictionary<int, FormattedText>>	titles;
+		private readonly List<Dictionary<int, FormattedText>>	shortTitles;
+		private readonly List<Dictionary<int, FormattedText>>	fullTitles;
 
 		private int												dimensions;
 	}

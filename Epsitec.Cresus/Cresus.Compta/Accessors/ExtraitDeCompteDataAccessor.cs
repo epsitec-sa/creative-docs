@@ -209,14 +209,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.cube.Clear ();
 			this.graphOptions.Mode = GraphMode.SideBySide;
 
-			this.cube.SetTitle (0, 0, this.Permanents.NuméroCompte);
+			this.cube.SetShortTitle (0, 0, this.Permanents.NuméroCompte);
 
 			int y = 0;
 			foreach (var d in this.readonlyData)
 			{
 				var data = d as ExtraitDeCompteData;
 
-				this.cube.SetTitle (1, y, data.Pièce);
+				this.cube.SetShortTitle (1, y, data.Pièce);
 				this.cube.SetValue (0, y, data.Solde);
 
 				y++;
