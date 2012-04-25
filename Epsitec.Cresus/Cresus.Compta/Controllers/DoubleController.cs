@@ -30,6 +30,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public override bool HasGraph
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override bool HasShowSearchPanel
 		{
 			get

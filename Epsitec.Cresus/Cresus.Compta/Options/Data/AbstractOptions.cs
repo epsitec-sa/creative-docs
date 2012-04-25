@@ -33,6 +33,12 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
+		public bool ViewGraph
+		{
+			get;
+			set;
+		}
+
 		public bool Specialist
 		{
 			get;

@@ -48,6 +48,11 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintFull(Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
+			if (this.cube.Dimensions == 0)
+			{
+				return;
+			}
+
 			int nx = this.cube.GetCount (this.options.PrimaryDimension);
 			int ny = this.cube.GetCount (this.options.SecondaryDimension);
 
@@ -914,6 +919,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackExtColor
 		{
+			//	Couleur du cadre extérieut contenant les légendes des axes.
 			get
 			{
 				if (this.options.Style == GraphStyle.BlackAndWhite)
@@ -949,6 +955,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackIntColor
 		{
+			//	Couleur du fond du graphe.
 			get
 			{
 				if (this.options.Style == GraphStyle.BlackAndWhite)
@@ -972,6 +979,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackLegendsColor
 		{
+			//	Couleur du fond de la légende.
 			get
 			{
 				if (this.options.Style == GraphStyle.BlackAndWhite)
@@ -996,6 +1004,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BorderColor
 		{
+			//	Couleur des bordures, axes, traits de séparation, etc.
 			get
 			{
 				if (this.options.Style == GraphStyle.Rainbow)
@@ -1020,11 +1029,12 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color GetIndexedColor(int index, int total)
 		{
+			//	Couleur d'un élément numéroté du graphe.
 			switch (this.options.Style)
 			{
-				//	Retourne une couleur de l'arc-en-ciel.
 				case GraphStyle.Rainbow:
 					{
+						//	Retourne une couleur de l'arc-en-ciel.
 						index *= System.Math.Max (GraphEngine.rainbow.Length/total, 1);
 						return Color.FromHsv (GraphEngine.rainbow[index%GraphEngine.rainbow.Length], 1.0, 1.0);
 					}

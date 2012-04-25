@@ -33,14 +33,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.rightClick = rightClick;
 
+			this.mainFrame = new FrameBox
+			{
+				Parent = parent,
+				Dock   = DockStyle.Fill,
+			};
+
 			//	Crée l'en-tête en dessus du tableau.
 			this.headerController = new HeaderController (this.controller);
-			this.headerController.CreateUI (parent);
+			this.headerController.CreateUI (this.mainFrame);
 
 			//	Crée le tableau.
 			this.array = new StringArray
 			{
-				Parent            = parent,
+				Parent            = this.mainFrame,
 				Dock              = DockStyle.Fill,
 				TabNavigationMode = TabNavigationMode.ActivateOnTab,
 				Margins           = new Margins (0, 0, 0, 1),
@@ -76,6 +82,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			return this.array;
+		}
+
+		public bool Show
+		{
+			get
+			{
+				return this.mainFrame.Visibility;
+			}
+			set
+			{
+				this.mainFrame.Visibility = value;
+			}
 		}
 
 		private void HandleArraySelectionClicked(object sender, MessageEventArgs e)
@@ -387,6 +405,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly List<ColumnMapper>		columnMappers;
 		private readonly SafeCounter			ignoreChanges;
 
+		private FrameBox						mainFrame;
 		private System.Action<Point>			rightClick;
 		private List<ColumnMapper>				columnMappersShowed;
 		private HeaderController				headerController;

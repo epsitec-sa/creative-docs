@@ -34,6 +34,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				Text           = "Côte à côte",
 				PreferredWidth = 80,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 1, 0, 0),
 			};
@@ -43,6 +44,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				Text           = "Cumulé",
 				PreferredWidth = 80,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 1, 0, 0),
 			};
@@ -52,6 +54,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				Text           = "Lignes",
 				PreferredWidth = 80,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 1, 0, 0),
 			};
@@ -61,6 +64,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				Text           = "Camembert",
 				PreferredWidth = 80,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 1, 0, 0),
 			};
@@ -70,6 +74,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				Text           = "Tableau",
 				PreferredWidth = 80,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 1, 0, 0),
 			};
@@ -88,6 +93,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = frame,
 				IsReadOnly     = true,
 				PreferredWidth = 150,
+				PreferredHeight = 20,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (10, 0, 0, 0),
 			};

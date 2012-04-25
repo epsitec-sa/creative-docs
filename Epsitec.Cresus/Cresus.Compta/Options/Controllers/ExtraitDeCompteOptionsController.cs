@@ -60,17 +60,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Text           = "Graphique du solde",
 				PreferredWidth = 120,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 0, 0, 0),
+				Margins        = new Margins (0, 0, 0, 0),
 			};
 
-			var graphButton = new Button
-			{
-				Parent         = frame,
-				FormattedText  = "G",
-				PreferredWidth = 20,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
+			this.CreateGraphUI (frame);
 
 			this.UpdateWidgets ();
 
@@ -83,11 +76,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.OptionsChanged ();
 				}
 			};
-
-			graphButton.Clicked += delegate
-			{
-				this.Graph ();
-			};
 		}
 
 		protected override void OptionsChanged()
@@ -98,6 +86,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
+			this.UpdateGraph ();
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;

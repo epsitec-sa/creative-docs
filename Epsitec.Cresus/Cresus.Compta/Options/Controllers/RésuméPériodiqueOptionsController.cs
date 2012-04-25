@@ -93,7 +93,16 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = frame,
 				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 230,
+				PreferredWidth = 200,
+				Dock           = DockStyle.Left,
+				TabIndex       = ++this.tabIndex,
+			};
+
+			new StaticText
+			{
+				Parent         = frame,
+				FormattedText  = "Graphiques",
+				PreferredWidth = 65,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
@@ -101,8 +110,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.stackedGraphButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Graphiques cumulés",
-				PreferredWidth = 130,
+				FormattedText  = "Cumulés",
+				PreferredWidth = 70,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
@@ -110,20 +119,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.sideBySideGraphButton = new CheckButton
 			{
 				Parent         = frame,
-				FormattedText  = "Graphiques côte à côte",
-				PreferredWidth = 150,
+				FormattedText  = "Côte à côte",
+				PreferredWidth = 90,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
 
-			var graphButton = new Button
-			{
-				Parent         = frame,
-				FormattedText  = "G",
-				PreferredWidth = 20,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
+			this.CreateGraphUI (frame);
 
 			this.monthsField.SelectedItemChanged += delegate
 			{
@@ -181,11 +183,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.OptionsChanged ();
 				}
 			};
-
-			graphButton.Clicked += delegate
-			{
-				this.Graph ();
-			};
 		}
 
 
@@ -202,6 +199,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
+			this.UpdateGraph ();
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);

@@ -19,6 +19,7 @@ using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.ViewSettings.Data;
 using Epsitec.Cresus.Compta.ViewSettings.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -97,6 +98,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.arrayController;
+			}
+		}
+
+		public GraphController GraphController
+		{
+			get
+			{
+				return this.graphController;
 			}
 		}
 
@@ -204,6 +213,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				this.CreateArray (this.frameBox);
+				this.CreateGraph (this.frameBox);
 				this.CreateEditor (this.frameBox);
 			}
 
@@ -288,6 +298,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return true;
+			}
+		}
+
+		public virtual bool HasGraph
+		{
+			get
+			{
+				return false;
 			}
 		}
 
@@ -1085,6 +1103,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		#region Graph
+		protected void CreateGraph(FrameBox parent)
+		{
+			if (this.HasGraph)
+			{
+				this.graphController = new GraphController (this);
+				this.graphController.CreateUI (parent);
+
+				this.UpdateArray ();
+			}
+		}
+		#endregion
+
+
 		protected virtual void CreateEditor(FrameBox parent)
 		{
 		}
@@ -1181,7 +1213,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected readonly ComptaApplication							app;
+		protected readonly ComptaApplication					app;
 		protected readonly BusinessContext						businessContext;
 		protected readonly ComptaEntity							compta;
 		protected readonly ComptaPériodeEntity					période;
@@ -1202,6 +1234,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;
+		protected GraphController								graphController;
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;

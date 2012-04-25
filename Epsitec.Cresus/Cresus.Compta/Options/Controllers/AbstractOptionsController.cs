@@ -310,6 +310,51 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#endregion
 
 
+		#region Graph
+		protected FrameBox CreateGraphUI(FrameBox parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 40,
+				Dock           = DockStyle.Right,
+			};
+
+			this.viewArrayButton = this.CreateButton (frame, "View.Array", "Montre la liste");
+			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphe");
+
+			this.viewArrayButton.Clicked += delegate
+			{
+				this.options.ViewGraph = false;
+				this.ShowHideControllers ();
+				this.UpdateGraph ();
+			};
+
+			this.viewGraphButton.Clicked += delegate
+			{
+				this.options.ViewGraph = true;
+				this.ShowHideControllers ();
+				this.UpdateGraph ();
+			};
+
+			return frame;
+		}
+
+		private void ShowHideControllers()
+		{
+			this.controller.ArrayController.Show = !this.options.ViewGraph;
+			this.controller.GraphController.Show =  this.options.ViewGraph;
+		}
+
+		protected void UpdateGraph()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;
+				this.viewGraphButton.ActiveState = this.options.ViewGraph ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
 		protected void Graph()
 		{
 			var secondaryWindow = new Window ();
@@ -362,6 +407,27 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				secondaryWindow.Close ();
 			};
 		}
+		#endregion
+
+
+		private BackIconButton CreateButton(FrameBox parent, string icon, string description)
+		{
+			var button = new BackIconButton
+			{
+				Parent            = parent,
+				IconUri           = UIBuilder.GetResourceIconUri (icon),
+				PreferredIconSize = new Size (20, 20),
+				PreferredSize     = new Size (20, 20),
+				Dock              = DockStyle.Left,
+				AutoToggle        = false,
+				AutoFocus         = false,
+				Margins           = new Margins (2, 0, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (button, description);
+
+			return button;
+		}
 
 
 		protected readonly AbstractController					controller;
@@ -383,6 +449,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected GlyphButton									buttonComparisonShowed;
 		protected StaticText									labelComparisonDisplayMode;
 		protected TextFieldCombo								fieldComparisonDisplayMode;
+
+		protected BackIconButton								viewArrayButton;
+		protected BackIconButton								viewGraphButton;
 
 		protected LevelController								levelController;
 

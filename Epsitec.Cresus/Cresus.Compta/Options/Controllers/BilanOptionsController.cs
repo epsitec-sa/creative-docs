@@ -73,14 +73,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			var graphButton = new Button
-			{
-				Parent         = frame,
-				FormattedText  = "G",
-				PreferredWidth = 20,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
+			this.CreateGraphUI (frame);
 
 			this.zeroButton.ActiveStateChanged += delegate
 			{
@@ -99,11 +92,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					this.OptionsChanged ();
 				}
 			};
-
-			graphButton.Clicked += delegate
-			{
-				this.Graph ();
-			};
 		}
 
 		protected override void OptionsChanged()
@@ -115,6 +103,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateComparison ();
+			this.UpdateGraph ();
 
 			using (this.ignoreChanges.Enter ())
 			{

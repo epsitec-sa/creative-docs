@@ -93,6 +93,7 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Graph\GraphController.cs" />
     <Compile Include="Graph\GraphStyle.cs" />
     <Compile Include="Graph\OptionsController.cs" />
     <Compile Include="Graph\GraphOptions.cs" />
@@ -372,6 +373,8 @@
     <EmbeddedResource Include="Images\Multi.Split.icon" />
     <EmbeddedResource Include="Images\Présentation.DifférencesChange.icon" />
     <EmbeddedResource Include="Images\Présentation.Monnaies.icon" />
+    <EmbeddedResource Include="Images\View.Array.icon" />
+    <EmbeddedResource Include="Images\View.Graph.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
