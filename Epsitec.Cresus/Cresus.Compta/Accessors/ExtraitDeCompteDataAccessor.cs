@@ -212,6 +212,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.cube.Dimensions = 2;
+			this.cube.SetDimensionTitle (0, "Comptes");
+			this.cube.SetDimensionTitle (1, "Pièces");
 			this.cube.Clear ();
 
 			this.cube.SetShortTitle (0, 0, this.Permanents.NuméroCompte);

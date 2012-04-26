@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent          = this.mainFrame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (10),
+				Margins         = new Margins (0, 0, 0, 5),
 			};
 
 			new Separator
@@ -61,8 +61,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock    = DockStyle.Fill,
 			};
 
-			var controller = new OptionsController (this.controller.DataAccessor.GraphOptions);
-			controller.CreateUI (toolbar, () => this.graphWidget.Invalidate ());
+			this.graphOptionsController = new GraphOptionsController (this.controller.DataAccessor.Cube, this.controller.DataAccessor.GraphOptions);
+			this.graphOptionsController.CreateUI (toolbar, () => this.graphWidget.Invalidate ());
 		}
 
 		public bool Show
@@ -82,10 +82,16 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.graphWidget.Invalidate ();
 		}
 
+		public void UpdateController()
+		{
+			this.graphOptionsController.Update ();
+		}
+
 
 		private readonly AbstractController		controller;
 
 		private FrameBox						mainFrame;
 		private GraphWidget						graphWidget;
+		private GraphOptionsController			graphOptionsController;
 	}
 }

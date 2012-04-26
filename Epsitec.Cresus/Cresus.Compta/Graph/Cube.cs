@@ -20,10 +20,11 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public Cube()
 		{
-			this.values      = new Dictionary<string, decimal?> ();
-			this.shortTitles = new List<Dictionary<int, FormattedText>> ();
-			this.fullTitles  = new List<Dictionary<int, FormattedText>> ();
-			this.maxCoords   = new List<int> ();
+			this.values          = new Dictionary<string, decimal?> ();
+			this.shortTitles     = new List<Dictionary<int, FormattedText>> ();
+			this.fullTitles      = new List<Dictionary<int, FormattedText>> ();
+			this.maxCoords       = new List<int> ();
+			this.dimensionTitles = new List<FormattedText> ();
 		}
 
 
@@ -108,12 +109,14 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.maxCoords.Clear ();
 					this.shortTitles.Clear ();
 					this.fullTitles.Clear ();
+					this.dimensionTitles.Clear ();
 
 					for (int i = 0; i < this.dimensions; i++)
 					{
 						this.maxCoords.Add (-1);
 						this.shortTitles.Add (new Dictionary<int, FormattedText> ());
 						this.fullTitles.Add (new Dictionary<int, FormattedText> ());
+						this.dimensionTitles.Add (FormattedText.Empty);
 					}
 				}
 			}
@@ -131,6 +134,26 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.shortTitles[i].Clear ();
 				this.fullTitles[i].Clear ();
 			}
+		}
+
+		public bool IsEmpty
+		{
+			get
+			{
+				return this.values.Count == 0;
+			}
+		}
+
+		public FormattedText GetDimensionTitle(int dimension)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+			return this.dimensionTitles[dimension];
+		}
+
+		public void SetDimensionTitle(int dimension, FormattedText title)
+		{
+			System.Diagnostics.Debug.Assert (dimension >= 0 && dimension < this.dimensions);
+			this.dimensionTitles[dimension] = title;
 		}
 
 
@@ -428,6 +451,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private readonly List<int>								maxCoords;
 		private readonly List<Dictionary<int, FormattedText>>	shortTitles;
 		private readonly List<Dictionary<int, FormattedText>>	fullTitles;
+		private readonly List<FormattedText>					dimensionTitles;
 
 		private int												dimensions;
 	}

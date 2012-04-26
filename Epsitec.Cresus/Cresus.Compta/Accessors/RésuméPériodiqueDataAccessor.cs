@@ -151,6 +151,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.cube.Dimensions = 2;
+			this.cube.SetDimensionTitle (0, "Périodes");
+			this.cube.SetDimensionTitle (1, "Comptes");
 			this.cube.Clear ();
 			this.arrayGraphOptions.Mode = this.Options.HasSideBySideGraph ? GraphMode.SideBySide : GraphMode.Stacked;
 

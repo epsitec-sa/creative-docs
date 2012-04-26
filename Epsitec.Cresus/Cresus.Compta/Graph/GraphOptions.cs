@@ -20,6 +20,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.style              = GraphStyle.Rainbow;
 			this.primaryDimension   = 1;
 			this.secondaryDimension = 0;
+			this.startAtZero        = false;
+			this.hasLegend          = true;
 		}
 
 
@@ -71,10 +73,36 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		public bool StartAtZero
+		{
+			get
+			{
+				return this.startAtZero;
+			}
+			set
+			{
+				this.startAtZero = value;
+			}
+		}
+
+		public bool HasLegend
+		{
+			get
+			{
+				return this.hasLegend;
+			}
+			set
+			{
+				this.hasLegend = value;
+			}
+		}
+
 
 		private GraphMode			mode;
 		private GraphStyle			style;
 		private int					primaryDimension;
 		private int					secondaryDimension;
+		private bool				startAtZero;
+		private bool				hasLegend;
 	}
 }

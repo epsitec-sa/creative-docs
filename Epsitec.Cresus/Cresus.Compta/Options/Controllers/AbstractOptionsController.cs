@@ -354,6 +354,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected void UpdateGraph()
 		{
+			if (this.options.ViewGraph && this.controller.GraphController != null)
+			{
+				this.controller.GraphController.UpdateController ();
+			}
+
 			using (this.ignoreChanges.Enter ())
 			{
 				this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;

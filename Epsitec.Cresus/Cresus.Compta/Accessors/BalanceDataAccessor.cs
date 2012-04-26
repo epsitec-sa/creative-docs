@@ -186,6 +186,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.cube.Dimensions = 2;
+			this.cube.SetDimensionTitle (0, "Types de montants");
+			this.cube.SetDimensionTitle (1, "Comptes");
 			this.cube.Clear ();
 
 			//	Spécifie les légendes de l'axe X.

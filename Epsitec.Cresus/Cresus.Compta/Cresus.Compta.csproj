@@ -95,7 +95,7 @@
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
     <Compile Include="Graph\GraphController.cs" />
     <Compile Include="Graph\GraphStyle.cs" />
-    <Compile Include="Graph\OptionsController.cs" />
+    <Compile Include="Graph\GraphOptionsController.cs" />
     <Compile Include="Graph\GraphOptions.cs" />
     <Compile Include="Graph\Cube.cs" />
     <Compile Include="Graph\GraphMode.cs" />
@@ -375,6 +375,12 @@
     <EmbeddedResource Include="Images\Présentation.Monnaies.icon" />
     <EmbeddedResource Include="Images\View.Array.icon" />
     <EmbeddedResource Include="Images\View.Graph.icon" />
+    <EmbeddedResource Include="Images\Graph.Array.icon" />
+    <EmbeddedResource Include="Images\Graph.Lines.icon" />
+    <EmbeddedResource Include="Images\Graph.Pie.icon" />
+    <EmbeddedResource Include="Images\Graph.SideBySide.icon" />
+    <EmbeddedResource Include="Images\Graph.Stacked.icon" />
+    <EmbeddedResource Include="Images\Graph.Dimensions.Swap.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

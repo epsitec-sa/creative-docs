@@ -872,7 +872,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.arrayController = new ArrayController (this);
 				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged, this.ArrayRightClick);
-				this.arrayController.Show = !this.dataAccessor.Options.ViewGraph;
+				this.arrayController.Show = this.dataAccessor.Options == null || !this.dataAccessor.Options.ViewGraph;
 
 				this.UpdateArray ();
 			}
@@ -1134,6 +1134,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.graphController != null)
 			{
 				this.graphController.Update ();
+			}
+		}
+
+		protected void UpdateGraphController()
+		{
+			if (this.graphController != null)
+			{
+				this.graphController.UpdateController ();
 			}
 		}
 		#endregion

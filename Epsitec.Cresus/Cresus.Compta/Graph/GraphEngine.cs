@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintFull(Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
-			if (this.cube.Dimensions == 0)
+			if (this.cube.Dimensions == 0 || this.cube.IsEmpty)
 			{
 				return;
 			}
@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
-			if (this.options.Mode != GraphMode.Array)
+			if (this.options.Mode != GraphMode.Array && this.options.HasLegend)
 			{
 				var size = this.GetLegendsSize (this.options.SecondaryDimension);
 				var legendsRect = new Rectangle (rect.Right-size.Width-10, rect.Top-size.Height-10, size.Width, size.Height);
@@ -166,8 +166,11 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.cube.GetMinMax (null, null, out this.minValue, out this.maxValue);
 
-			this.minValue = System.Math.Min (this.minValue, 0);
-			this.maxValue = System.Math.Max (this.maxValue, 0);
+			if (this.options.StartAtZero)
+			{
+				this.minValue = System.Math.Min (this.minValue, 0);
+				this.maxValue = System.Math.Max (this.maxValue, 0);
+			}
 
 			this.drawBottom = frameRect.Bottom+0.5;
 			this.drawHeight = frameRect.Height;
@@ -192,8 +195,8 @@ namespace Epsitec.Cresus.Compta.Graph
 						if (value.HasValue)
 						{
 							double h = this.ConvValueToY (value.Value);
-							double h1 = System.Math.Min (h, zero);
-							double h2 = System.Math.Max (h, zero);
+							double h1 = System.Math.Max (System.Math.Min (h, zero), this.drawBottom);
+							double h2 = System.Math.Max (System.Math.Max (h, zero), this.drawBottom);
 							var barRect = new Rectangle (rect.Left+barWidth*y, h1, barWidth, h2-h1);
 
 							if (pass == 0)
@@ -307,6 +310,12 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.cube.GetMinMax (null, null, out this.minValue, out this.maxValue);
 
+			if (this.options.StartAtZero)
+			{
+				this.minValue = System.Math.Min (this.minValue, 0);
+				this.maxValue = System.Math.Max (this.maxValue, 0);
+			}
+
 			this.drawBottom = frameRect.Bottom+7;
 			this.drawHeight = frameRect.Height-7*2;
 		}
@@ -388,7 +397,16 @@ namespace Epsitec.Cresus.Compta.Graph
 		private double ConvValueToY(decimal value)
 		{
 			//	Conversion d'un montant en coordonnée Y, selon le type du graphe.
-			return this.drawBottom + System.Math.Floor (this.drawHeight * (double) (value-this.minValue) / (double) (this.maxValue-this.minValue));
+			if (this.minValue == decimal.MaxValue ||
+				this.maxValue == decimal.MinValue ||
+				this.minValue == this.maxValue)
+			{
+				return this.drawBottom;
+			}
+			else
+			{
+				return this.drawBottom + System.Math.Floor (this.drawHeight * (double) (value-this.minValue) / (double) (this.maxValue-this.minValue));
+			}
 		}
 
 		private decimal? GetValue(int x, int y)
@@ -560,7 +578,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 			else
 			{
-				this.PaintVerticalLabelsUnits (graphics, labelsRect, ny, dy);
+				this.PaintVerticalLabelsUnits (graphics, labelsRect, ny);
 			}
 		}
 
@@ -574,11 +592,12 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		private void PaintVerticalLabelsUnits(Graphics graphics, Rectangle labelsRect, int ny, int dy)
+		private void PaintVerticalLabelsUnits(Graphics graphics, Rectangle labelsRect, int ny)
 		{
 			//	Dessine les unités de l'axe vertical.
 			decimal step = 1;
 			decimal bigStep = 1;
+
 			var y1 = this.ConvValueToY (0);
 
 			decimal[] steps =
@@ -596,6 +615,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			};
 
 			//	On cherche le plus petit step suffisamment espacé.
+			bool found = false;
 			for (int i = 0; i < steps.Length-1; i++)
 			{
 				step    = steps[i];
@@ -605,8 +625,14 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				if (y2-y1 > this.fontSize*3)  // assez espacés ?
 				{
+					found = true;
 					break;
 				}
+			}
+
+			if (!found)
+			{
+				return;
 			}
 
 			//	Dessine les unité positives, y compris le zéro.
