@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -54,11 +54,14 @@ namespace Epsitec.Cresus.Core.Library
 			//	any work on the command handlers.
 
 			TypeRosetta.InitializeResources ();
-			
-			this.CreateCommandHandlers ();
-			this.RegisterCommandHandlers ();
-			this.SetupDefaultCommandStates ();
-			
+
+			if (this.Host.Policy.RequiresCoreCommandHandlers)
+			{
+				this.CreateCommandHandlers ();
+				this.RegisterCommandHandlers ();
+				this.SetupDefaultCommandStates ();
+			}
+
 			base.ExecuteSetupPhase ();
 		}
 

@@ -61,6 +61,7 @@
     <Compile Include="Factories\ICoreAppComponentFactory.cs" />
     <Compile Include="Library\CoreApp.cs" />
     <Compile Include="Library\CoreAppComponent.cs" />
+    <Compile Include="Library\CoreAppPolicy.cs" />
     <Compile Include="Library\CoreComponent.cs" />
     <Compile Include="Library\CoreContext.cs" />
     <Compile Include="Library\CoreDatabaseType.cs" />

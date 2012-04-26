@@ -20,6 +20,7 @@ namespace Epsitec.Cresus.Core.Library
 
 			this.components = new CoreComponentHostImplementation<CoreAppComponent> ();
 			this.manualComponents = new CoreComponentHostImplementation<ICoreManualComponent> ();
+			this.policy = this.CreateDefaultPolicy ();
 			
 			Factories.CoreAppComponentFactory.RegisterComponents (this);
 		}
@@ -38,6 +39,14 @@ namespace Epsitec.Cresus.Core.Library
 			get
 			{
 				return this.FindComponent<SettingsManager> ();
+			}
+		}
+
+		public CoreAppPolicy					Policy
+		{
+			get
+			{
+				return this.policy;
 			}
 		}
 
@@ -228,10 +237,19 @@ namespace Epsitec.Cresus.Core.Library
 			base.Dispose (disposing);
 		}
 
+		protected virtual CoreAppPolicy CreateDefaultPolicy()
+		{
+			return new CoreAppPolicy ()
+			{
+				RequiresCoreCommandHandlers = true,
+			};
+		}
+
 		[System.ThreadStatic]
 		protected static CoreApp				current;
 
 		private readonly CoreComponentHostImplementation<CoreAppComponent> components;
 		private readonly CoreComponentHostImplementation<ICoreManualComponent> manualComponents;
+		private readonly CoreAppPolicy			policy;
 	}
 }

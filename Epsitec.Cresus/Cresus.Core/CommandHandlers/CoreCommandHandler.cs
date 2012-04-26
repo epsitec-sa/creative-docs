@@ -23,13 +23,22 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		}
 
 
-		public DataViewOrchestrator Orchestrator
+		public DataViewOrchestrator				Orchestrator
 		{
 			get
 			{
 				return this.commandDispatcher.Host.FindActiveComponent<DataViewOrchestrator> ();
 			}
 		}
+
+		public bool								HasNoOrchestrator
+		{
+			get
+			{
+				return this.Orchestrator == null;
+			}
+		}
+
 
 		[Command (ApplicationCommands.Id.Quit)]
 		public void ProcessQuit(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -41,6 +50,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Library.Res.CommandIds.Edition.SaveRecord)]
 		public void ProcessEditionSaveRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 			var navigator    = orchestrator.Navigator;
 
@@ -56,6 +70,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Library.Res.CommandIds.Edition.DiscardRecord)]
 		public void ProcessEditionDiscardRecord(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 			var navigator    = orchestrator.Navigator;
 
@@ -70,6 +89,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.Print)]
 		public void ProcessEditionPrint(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
@@ -79,6 +103,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.Edition.Preview)]
 		public void ProcessEditionPreview(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 			var mainViewController = orchestrator.MainViewController;
 
@@ -88,6 +117,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.File.ImportV11)]
 		public void ProcessFileImportV11(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var v11 = new V11.ImportFile ();
 			v11.Import (this.application);
 		}
@@ -95,6 +129,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 		[Command (Res.CommandIds.File.ExportAccountingEntries)]
 		public void ProcessFileExportAccountingEntries(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 			var businessContext = orchestrator.DefaultBusinessContext;
 
@@ -176,6 +215,11 @@ namespace Epsitec.Cresus.Core.CommandHandlers
 
 		void ICommandHandler.UpdateCommandStates(object sender)
 		{
+			if (this.HasNoOrchestrator)
+			{
+				return;
+			}
+
 			var orchestrator = this.Orchestrator;
 
 			if (this.initialized == false)
