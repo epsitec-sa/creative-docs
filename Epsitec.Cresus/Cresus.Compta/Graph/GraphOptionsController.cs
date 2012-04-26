@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void CreateUI(Widget parent, System.Action optionsChangedAction)
 		{
+			this.optionsChangedAction = optionsChangedAction;
+
 			var frame = new FrameBox
 			{
 				Parent          = parent,
@@ -85,8 +87,21 @@ namespace Epsitec.Cresus.Compta.Graph
 					IsReadOnly      = true,
 					PreferredWidth  = 120,
 					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
 					Dock            = DockStyle.Left,
 				};
+
+				new StaticText
+				{
+					Parent         = topFrame,
+					FormattedText  = "A exclure",
+					PreferredWidth = 50,
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (10, 0, 0, 0),
+				};
+
+				this.primaryFilterFrame = UIBuilder.CreatePseudoCombo (topFrame, out this.primaryFilterField, out this.primaryFilterButton);
+				this.primaryFilterFrame.PreferredWidth = 80;
 
 				this.swapButton = new IconButton
 				{
@@ -116,8 +131,21 @@ namespace Epsitec.Cresus.Compta.Graph
 					IsReadOnly      = true,
 					PreferredWidth  = 120,
 					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
 					Dock            = DockStyle.Left,
 				};
+
+				new StaticText
+				{
+					Parent         = bottomFrame,
+					FormattedText  = "A exclure",
+					PreferredWidth = 50,
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (10, 0, 0, 0),
+				};
+
+				this.secondaryFilterFrame = UIBuilder.CreatePseudoCombo (bottomFrame, out this.secondaryFilterField, out this.secondaryFilterButton);
+				this.secondaryFilterFrame.PreferredWidth = 80;
 
 				new StaticText
 				{
@@ -133,7 +161,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent         = topFrame,
 				FormattedText  = "Légendes",
-				PreferredWidth = 80,
+				PreferredWidth = 70,
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (20, 0, 0, 0),
@@ -143,9 +171,9 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent         = topFrame,
 				FormattedText  = "Style",
-				PreferredWidth = 35,
+				PreferredWidth = 30,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (20, 0, 0, 0),
+				Margins        = new Margins (10, 0, 0, 0),
 			};
 
 			this.styleCombo = new TextFieldCombo
@@ -154,6 +182,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				IsReadOnly      = true,
 				PreferredWidth  = 110,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
 			};
 
@@ -161,7 +190,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent         = bottomFrame,
 				FormattedText  = "Zéro inclu",
-				PreferredWidth = 80,
+				PreferredWidth = 70,
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (20, 0, 0, 0),
@@ -173,69 +202,79 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				this.options.Mode = GraphMode.SideBySide;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.stackedModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Stacked;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.linesModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Lines;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.pieModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Pie;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.arrayModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Array;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.legendButton.Clicked += delegate
 			{
 				this.options.HasLegend = !this.options.HasLegend;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.startAtZeroButton.Clicked += delegate
 			{
 				this.options.StartAtZero = !this.options.StartAtZero;
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.swapButton.Clicked += delegate
 			{
-				var d1 = options.PrimaryDimension;
-				var d2 = options.SecondaryDimension;
+				var d1 = this.options.PrimaryDimension;
+				var d2 = this.options.SecondaryDimension;
 
-				options.PrimaryDimension   = d2;
-				options.SecondaryDimension = d1;
+				this.options.PrimaryDimension   = d2;
+				this.options.SecondaryDimension = d1;
+
+				var t = new List<FormattedText>();
+				t.AddRange (this.options.PrimaryFilter);
+				this.options.PrimaryFilter.Clear ();
+				this.options.PrimaryFilter.AddRange (this.options.SecondaryFilter);
+				this.options.SecondaryFilter.Clear ();
+				this.options.SecondaryFilter.AddRange (t);
 
 				this.UpdateWidgets ();
-				optionsChangedAction ();
+				this.optionsChangedAction ();
 			};
 
 			this.primaryDimensionCombo.TextChanged += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					options.PrimaryDimension = this.TextToDimension (this.primaryDimensionCombo.FormattedText);
-					optionsChangedAction ();
+					this.options.PrimaryDimension = this.TextToDimension (this.primaryDimensionCombo.FormattedText);
+					this.options.PrimaryFilter.Clear ();
+
+					this.UpdateWidgets ();
+					this.optionsChangedAction ();
 				}
 			};
 
@@ -243,9 +282,32 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					options.SecondaryDimension = this.TextToDimension (this.secondaryDimensionCombo.FormattedText);
-					optionsChangedAction ();
+					this.options.SecondaryDimension = this.TextToDimension (this.secondaryDimensionCombo.FormattedText);
+					this.options.SecondaryFilter.Clear ();
+
+					this.UpdateWidgets ();
+					this.optionsChangedAction ();
 				}
+			};
+
+			this.primaryFilterField.Clicked += delegate
+			{
+				this.ShowFilterMenu (this.primaryFilterFrame, this.options.PrimaryDimension, this.options.PrimaryFilter);
+			};
+
+			this.primaryFilterButton.Clicked += delegate
+			{
+				this.ShowFilterMenu (this.primaryFilterFrame, this.options.PrimaryDimension, this.options.PrimaryFilter);
+			};
+
+			this.secondaryFilterField.Clicked += delegate
+			{
+				this.ShowFilterMenu (this.secondaryFilterFrame, this.options.SecondaryDimension, this.options.SecondaryFilter);
+			};
+
+			this.secondaryFilterButton.Clicked += delegate
+			{
+				this.ShowFilterMenu (this.secondaryFilterFrame, this.options.SecondaryDimension, this.options.SecondaryFilter);
 			};
 
 			this.styleCombo.TextChanged += delegate
@@ -253,7 +315,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				if (this.ignoreChanges.IsZero)
 				{
 					options.Style = GraphOptionsController.TextToStyle (this.styleCombo.FormattedText);
-					optionsChangedAction ();
+					this.optionsChangedAction ();
 				}
 			};
 		}
@@ -281,6 +343,9 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				this.primaryDimensionCombo.FormattedText   = this.DimensionToText (this.options.PrimaryDimension);
 				this.secondaryDimensionCombo.FormattedText = this.DimensionToText (this.options.SecondaryDimension);
+
+				this.primaryFilterField.FormattedText   = GraphOptionsController.GetFilterSummary (this.options.PrimaryFilter);
+				this.secondaryFilterField.FormattedText = GraphOptionsController.GetFilterSummary (this.options.SecondaryFilter);
 
 				this.styleCombo.FormattedText = GraphOptionsController.StyleToText (this.options.Style);
 			}
@@ -415,10 +480,125 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		private static FormattedText GetFilterSummary(List<FormattedText> filter)
+		{
+			if (filter.Count == 0)
+			{
+				return "Rien";
+			}
+			else if (filter.Count == 1)
+			{
+				return "1 élément";
+			}
+			else
+			{
+				return string.Format ("{0} éléments", filter.Count.ToString ());
+			}
+		}
+
+
+		private void ShowFilterMenu(Widget parentButton, int dimension, List<FormattedText> filter)
+		{
+			//	Affiche le menu permettant de choisir le filtre.
+			var menu = new VMenu ();
+
+			this.AddClearFilterToMenu (menu, dimension, filter);
+			this.AddAllFilterToMenu (menu, dimension, filter);
+
+			menu.Items.Add (new MenuSeparator ());
+
+			int n = this.cube.GetCount (dimension);
+			for (int i = 0; i < n; i++)
+			{
+				this.AddFilterToMenu (menu, dimension, filter, i);
+			}
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddClearFilterToMenu(VMenu menu, int dimension, List<FormattedText> filter)
+		{
+			if (filter.Count != 0)
+			{
+				var item = new MenuItem ()
+				{
+					FormattedText = "Ne rien exclure",
+				};
+
+				item.Clicked += delegate
+				{
+					filter.Clear ();
+
+					this.UpdateWidgets ();
+					this.optionsChangedAction ();
+				};
+
+				menu.Items.Add (item);
+			}
+		}
+
+		private void AddAllFilterToMenu(VMenu menu, int dimension, List<FormattedText> filter)
+		{
+			var item = new MenuItem ()
+			{
+				FormattedText = "Tout exclure",
+			};
+
+			item.Clicked += delegate
+			{
+				filter.Clear ();
+
+				int n = this.cube.GetCount (dimension);
+				for (int i = 0; i < n; i++)
+				{
+					filter.Add (this.cube.GetTitle (dimension, i));
+				}
+
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void AddFilterToMenu(VMenu menu, int dimension, List<FormattedText> filter, int index)
+		{
+			var title = this.cube.GetTitle (dimension, index);
+			bool selected = filter.Contains (title);
+
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetCheckStateIconUri (selected),
+				FormattedText = title,
+			};
+
+			item.Clicked += delegate
+			{
+				if (filter.Contains (title))
+				{
+					filter.Remove (title);
+				}
+				else
+				{
+					filter.Add (title);
+				}
+
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			menu.Items.Add (item);
+		}
+
+
 		private readonly Cube					cube;
 		private readonly GraphOptions			options;
 		private readonly SafeCounter			ignoreChanges;
 
+		private System.Action					optionsChangedAction;
 		private BackIconButton					sideBySideModeButton;
 		private BackIconButton					stackedModeButton;
 		private BackIconButton					linesModeButton;
@@ -426,6 +606,12 @@ namespace Epsitec.Cresus.Compta.Graph
 		private BackIconButton					arrayModeButton;
 		private TextFieldCombo					primaryDimensionCombo;
 		private TextFieldCombo					secondaryDimensionCombo;
+		private FrameBox						primaryFilterFrame;
+		private StaticText						primaryFilterField;
+		private GlyphButton						primaryFilterButton;
+		private FrameBox						secondaryFilterFrame;
+		private StaticText						secondaryFilterField;
+		private GlyphButton						secondaryFilterButton;
 		private IconButton						swapButton;
 		private TextFieldCombo					styleCombo;
 		private CheckButton						legendButton;

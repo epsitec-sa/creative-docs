@@ -4,6 +4,7 @@
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta;
@@ -18,10 +19,12 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.mode               = GraphMode.SideBySide;
 			this.style              = GraphStyle.Rainbow;
-			this.primaryDimension   = 1;
-			this.secondaryDimension = 0;
 			this.startAtZero        = false;
 			this.hasLegend          = true;
+			this.primaryDimension   = 1;
+			this.secondaryDimension = 0;
+			this.primaryFilter      = new List<FormattedText> ();
+			this.secondaryFilter    = new List<FormattedText> ();
 		}
 
 
@@ -49,30 +52,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		public int PrimaryDimension
-		{
-			get
-			{
-				return this.primaryDimension;
-			}
-			set
-			{
-				this.primaryDimension = value;
-			}
-		}
-
-		public int SecondaryDimension
-		{
-			get
-			{
-				return this.secondaryDimension;
-			}
-			set
-			{
-				this.secondaryDimension = value;
-			}
-		}
-
 		public bool StartAtZero
 		{
 			get
@@ -97,12 +76,54 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		public int PrimaryDimension
+		{
+			get
+			{
+				return this.primaryDimension;
+			}
+			set
+			{
+				this.primaryDimension = value;
+			}
+		}
 
-		private GraphMode			mode;
-		private GraphStyle			style;
-		private int					primaryDimension;
-		private int					secondaryDimension;
-		private bool				startAtZero;
-		private bool				hasLegend;
+		public int SecondaryDimension
+		{
+			get
+			{
+				return this.secondaryDimension;
+			}
+			set
+			{
+				this.secondaryDimension = value;
+			}
+		}
+
+		public List<FormattedText> PrimaryFilter
+		{
+			get
+			{
+				return this.primaryFilter;
+			}
+		}
+
+		public List<FormattedText> SecondaryFilter
+		{
+			get
+			{
+				return this.secondaryFilter;
+			}
+		}
+
+
+		private GraphMode				mode;
+		private GraphStyle				style;
+		private bool					startAtZero;
+		private bool					hasLegend;
+		private int						primaryDimension;
+		private int						secondaryDimension;
+		private List<FormattedText>		primaryFilter;
+		private List<FormattedText>		secondaryFilter;
 	}
 }
