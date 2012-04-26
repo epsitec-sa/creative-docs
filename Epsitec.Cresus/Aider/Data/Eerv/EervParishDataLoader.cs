@@ -313,7 +313,7 @@ namespace Epsitec.Aider.Data.Eerv
 		private static Tuple<Tuple<EervGroup, List<string>>, string> GetEervGroup(Dictionary<GroupHeader, string> group)
 		{
 			var id = EervParishDataLoader.PadGroupId (group[GroupHeader.Id]);
-			var name = group[GroupHeader.Name];
+			var name = group[GroupHeader.Name] ?? "";
 
 			var superGroupIds = new List<string> ();
 			var superGroupId = EervParishDataLoader.PadGroupId (group[GroupHeader.SuperGroupId]);
