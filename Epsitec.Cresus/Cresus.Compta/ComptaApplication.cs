@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Daniel ROUX
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
@@ -40,6 +41,20 @@ namespace Epsitec.Cresus.Compta
 		public override bool StartupLogin()
 		{
 			return true;
+		}
+
+		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
+		{
+			base.ExecuteQuit (dispatcher, e);
+		}
+
+		protected override CoreAppPolicy CreateDefaultPolicy()
+		{
+			var policy = base.CreateDefaultPolicy ();
+
+			policy.RequiresCoreCommandHandlers = false;
+
+			return policy;
 		}
 
 		protected override void CreateManualComponents(IList<System.Action> initializers)
