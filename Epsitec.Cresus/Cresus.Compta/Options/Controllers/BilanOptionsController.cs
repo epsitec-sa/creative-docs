@@ -55,6 +55,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
+			this.CreateGraphUI (frame);
+
 			this.zeroButton = new CheckButton
 			{
 				Parent         = frame,
@@ -72,8 +74,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock           = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,
 			};
-
-			this.CreateGraphUI (frame);
 
 			this.zeroButton.ActiveStateChanged += delegate
 			{
@@ -102,8 +102,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateComparison ();
 			this.UpdateGraph ();
+			this.UpdateComparison ();
 
 			using (this.ignoreChanges.Enter ())
 			{

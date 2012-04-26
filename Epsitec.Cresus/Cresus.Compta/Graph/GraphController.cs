@@ -53,17 +53,15 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock            = DockStyle.Fill,
 			};
 
-			var options = new GraphOptions ();
-			var controller = new OptionsController (options);
-
 			this.graphWidget = new GraphWidget
 			{
 				Parent  = frame,
 				Cube    = this.controller.DataAccessor.Cube,
-				Options = options,
+				Options = this.controller.DataAccessor.GraphOptions,
 				Dock    = DockStyle.Fill,
 			};
 
+			var controller = new OptionsController (this.controller.DataAccessor.GraphOptions);
 			controller.CreateUI (toolbar, () => this.graphWidget.Invalidate ());
 		}
 
@@ -77,6 +75,11 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				this.mainFrame.Visibility = value;
 			}
+		}
+
+		public void Update()
+		{
+			this.graphWidget.Invalidate ();
 		}
 
 

@@ -7,6 +7,7 @@ using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -24,6 +25,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.options    = this.mainWindowController.GetSettingsOptions<BilanOptions> ("Présentation.Bilan.Options", this.compta);
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Filter");
+
+			this.arrayGraphOptions = new GraphOptions ();
+
+			var defaultOptions = new GraphOptions ();
+			defaultOptions.Mode = GraphMode.SideBySide;
+			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.Bilan.Graph", defaultOptions);
 
 			this.UpdateAfterOptionsChanged ();
 		}

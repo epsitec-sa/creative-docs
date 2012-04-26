@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				TabNavigationMode = TabNavigationMode.ActivateOnTab,
 				Margins           = new Margins (0, 0, 0, 1),
 				Cube              = this.controller.DataAccessor.Cube,
-				GraphOptions      = this.controller.DataAccessor.GraphOptions,
+				GraphOptions      = this.controller.DataAccessor.ArrayGraphOptions,
 			};
 
 			this.array.UpdateCellContent += delegate

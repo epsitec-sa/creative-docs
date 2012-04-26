@@ -54,6 +54,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex = ++this.tabIndex,
 			};
 
+			this.CreateGraphUI (frame);
+
 			this.graphicsButton = new CheckButton
 			{
 				Parent         = frame,
@@ -62,8 +64,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 0, 0, 0),
 			};
-
-			this.CreateGraphUI (frame);
 
 			this.UpdateWidgets ();
 

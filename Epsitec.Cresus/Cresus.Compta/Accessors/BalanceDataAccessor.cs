@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Filter");
 			//?this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter", this.FilterInitialize);
 
+			this.arrayGraphOptions = new GraphOptions ();
+
+			var defaultOptions = new GraphOptions ();
+			defaultOptions.Mode = GraphMode.SideBySide;
+			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.Balance.Graph", defaultOptions);
+
 			this.UpdateAfterOptionsChanged ();
 		}
 
@@ -171,17 +177,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected override void UpdateAfterFilterUpdated()
+		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!this.Options.HasGraphics)
+			if (!force && !this.Options.HasGraphics && !this.controller.HasVisibleGraph)
 			{
 				return;
 			}
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.graphOptions.Mode = GraphMode.SideBySide;
 
 			//	Spécifie les légendes de l'axe X.
 			int x = 0;

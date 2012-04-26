@@ -30,6 +30,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
 
+			this.arrayGraphOptions = new GraphOptions ();
+
+			var defaultOptions = new GraphOptions ();
+			defaultOptions.Mode = GraphMode.Lines;
+			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.ExtraitDeCompte.Graph", defaultOptions);
+
 			this.UpdateAfterOptionsChanged ();
 		}
 
@@ -197,17 +203,16 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected override void UpdateAfterFilterUpdated()
+		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!this.Options.HasGraphics)
+			if (!force && !this.Options.HasGraphics && !this.controller.HasVisibleGraph)
 			{
 				return;
 			}
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.graphOptions.Mode = GraphMode.SideBySide;
 
 			this.cube.SetShortTitle (0, 0, this.Permanents.NuméroCompte);
 

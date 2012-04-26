@@ -55,6 +55,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
+			this.CreateGraphUI (frame);
+
 			new StaticText
 			{
 				Parent         = frame,
@@ -124,8 +126,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
-
-			this.CreateGraphUI (frame);
 
 			this.monthsField.SelectedItemChanged += delegate
 			{

@@ -317,11 +317,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = parent,
 				PreferredWidth = 40,
-				Dock           = DockStyle.Right,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 20, 0, 0),
 			};
 
-			this.viewArrayButton = this.CreateButton (frame, "View.Array", "Montre la liste");
-			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphe");
+			this.viewArrayButton = this.CreateButton (frame, "View.Array", "Montre le tableau");
+			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphique");
 
 			this.viewArrayButton.Clicked += delegate
 			{
@@ -342,6 +343,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private void ShowHideControllers()
 		{
+			if (this.options.ViewGraph)
+			{
+				this.controller.DataAccessor.UpdateGraphData (force: true);
+			}
+
 			this.controller.ArrayController.Show = !this.options.ViewGraph;
 			this.controller.GraphController.Show =  this.options.ViewGraph;
 		}
@@ -353,59 +359,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;
 				this.viewGraphButton.ActiveState = this.options.ViewGraph ? ActiveState.Yes : ActiveState.No;
 			}
-		}
-
-		protected void Graph()
-		{
-			var secondaryWindow = new Window ();
-
-			secondaryWindow.WindowBounds = new Rectangle (this.controller.MainWindowController.Window.WindowBounds.Left+50, this.controller.MainWindowController.Window.WindowBounds.Top-600-80, 800, 600);
-			secondaryWindow.Root.MinSize = new Size (100, 100);
-			secondaryWindow.Root.BackColor = Color.FromName ("White");
-			secondaryWindow.Text = "Graphique";
-
-			var toolbar = new FrameBox
-			{
-				Parent          = secondaryWindow.Root,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (10),
-			};
-
-			new Separator
-			{
-				Parent           = secondaryWindow.Root,
-				PreferredHeight  = 1,
-				IsHorizontalLine = true,
-				Dock             = DockStyle.Top,
-			};
-
-			var frame = new FrameBox
-			{
-				Parent          = secondaryWindow.Root,
-				Dock            = DockStyle.Fill,
-			};
-
-			var options = new Graph.GraphOptions ();
-			var controller = new OptionsController (options);
-
-			var graph = new GraphWidget
-			{
-				Parent  = frame,
-				Cube    = this.controller.DataAccessor.Cube,
-				Options = options,
-				Dock    = DockStyle.Fill,
-			};
-
-			controller.CreateUI (toolbar, () => graph.Invalidate ());
-
-			secondaryWindow.Show ();
-			secondaryWindow.MakeActive ();
-
-			secondaryWindow.WindowCloseClicked += delegate
-			{
-				secondaryWindow.Close ();
-			};
 		}
 		#endregion
 
@@ -421,7 +374,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock              = DockStyle.Left,
 				AutoToggle        = false,
 				AutoFocus         = false,
-				Margins           = new Margins (2, 0, 0, 0),
+				Margins           = new Margins (0, 2, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (button, description);

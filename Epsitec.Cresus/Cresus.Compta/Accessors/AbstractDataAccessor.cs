@@ -45,7 +45,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchResults   = new List<SearchResult> ();
 
 			this.cube = new Cube ();
-			this.graphOptions = new GraphOptions ();
 		}
 
 
@@ -102,6 +101,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.cube;
+			}
+		}
+
+		public GraphOptions ArrayGraphOptions
+		{
+			get
+			{
+				return this.arrayGraphOptions;
 			}
 		}
 
@@ -249,10 +256,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				}
 			}
 
-			this.UpdateAfterFilterUpdated ();
+			this.UpdateGraphData (force: false);
 		}
 
-		protected virtual void UpdateAfterFilterUpdated()
+		public virtual void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
 		}
@@ -639,6 +646,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected Date?									lastBeginDate;
 		protected Date?									lastEndDate;
 		protected Cube									cube;
+		protected GraphOptions							arrayGraphOptions;
 		protected GraphOptions							graphOptions;
 	}
 }

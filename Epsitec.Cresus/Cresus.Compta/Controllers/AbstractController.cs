@@ -109,6 +109,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public bool HasVisibleGraph
+		{
+			get
+			{
+				return this.graphController != null && this.graphController.Show;
+			}
+		}
+
 		public BusinessContext BusinessContext
 		{
 			get
@@ -864,6 +872,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.arrayController = new ArrayController (this);
 				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged, this.ArrayRightClick);
+				this.arrayController.Show = !this.dataAccessor.Options.ViewGraph;
 
 				this.UpdateArray ();
 			}
@@ -875,6 +884,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.arrayController.UpdateColumnsHeader (this.ArrayLineHeight);
 			}
+
+			this.UpdateGraph ();
 		}
 
 		protected virtual int ArrayLineHeight
@@ -1057,6 +1068,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.arrayController.UpdateArrayContent (this.dataAccessor.Count, this.GetSearchArrayText, this.GetArrayBottomSeparator);
 			}
+
+			this.UpdateGraph ();
 		}
 
 		private FormattedText GetSearchArrayText(int row, ColumnType columnType)
@@ -1110,8 +1123,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.graphController = new GraphController (this);
 				this.graphController.CreateUI (parent);
+				this.graphController.Show = this.dataAccessor.Options.ViewGraph;
 
-				this.UpdateArray ();
+				this.UpdateGraph ();
+			}
+		}
+
+		protected void UpdateGraph()
+		{
+			if (this.graphController != null)
+			{
+				this.graphController.Update ();
 			}
 		}
 		#endregion

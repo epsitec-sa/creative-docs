@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Search");
 			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Filter");
 
+			this.arrayGraphOptions = new GraphOptions ();
+
+			var defaultOptions = new GraphOptions ();
+			defaultOptions.Mode = GraphMode.Stacked;
+			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.RésuméPériodique.Graph", defaultOptions);
+
 			this.UpdateAfterOptionsChanged ();
 		}
 
@@ -136,17 +142,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		protected override void UpdateAfterFilterUpdated()
+		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!this.Options.HasStackedGraph && !this.Options.HasSideBySideGraph)
+			if (!force && !this.Options.HasStackedGraph && !this.Options.HasSideBySideGraph && !this.controller.HasVisibleGraph)
 			{
 				return;
 			}
 
 			this.cube.Dimensions = 2;
 			this.cube.Clear ();
-			this.graphOptions.Mode = this.Options.HasStackedGraph ? GraphMode.Stacked : GraphMode.SideBySide;
+			this.arrayGraphOptions.Mode = this.Options.HasSideBySideGraph ? GraphMode.SideBySide : GraphMode.Stacked;
 
 			RésuméPériodiqueDataAccessor.ColumnsProcess (this.période, this.Options, (index, dateDébut, dateFin) =>
 			{

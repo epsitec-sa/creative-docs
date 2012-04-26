@@ -16,35 +16,65 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphOptions()
 		{
-			this.Mode               = GraphMode.SideBySide;
-			this.Style              = GraphStyle.Rainbow;
-			this.PrimaryDimension   = 1;
-			this.SecondaryDimension = 0;
+			this.mode               = GraphMode.SideBySide;
+			this.style              = GraphStyle.Rainbow;
+			this.primaryDimension   = 1;
+			this.secondaryDimension = 0;
 		}
 
 
 		public GraphMode Mode
 		{
-			get;
-			set;
+			get
+			{
+				return this.mode;
+			}
+			set
+			{
+				this.mode = value;
+			}
 		}
 
 		public GraphStyle Style
 		{
-			get;
-			set;
+			get
+			{
+				return this.style;
+			}
+			set
+			{
+				this.style = value;
+			}
 		}
 
 		public int PrimaryDimension
 		{
-			get;
-			set;
+			get
+			{
+				return this.primaryDimension;
+			}
+			set
+			{
+				this.primaryDimension = value;
+			}
 		}
 
 		public int SecondaryDimension
 		{
-			get;
-			set;
+			get
+			{
+				return this.secondaryDimension;
+			}
+			set
+			{
+				this.secondaryDimension = value;
+			}
 		}
+
+
+		private GraphMode			mode;
+		private GraphStyle			style;
+		private int					primaryDimension;
+		private int					secondaryDimension;
 	}
 }
