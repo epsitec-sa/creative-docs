@@ -40,7 +40,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		public static IEnumerable<Dictionary<GroupDefinitionHeader, string>> ReadGroupDefinitions(FileInfo input)
 		{
-			return EervDataReader.GetRecords (input, EervDataReader.groupDefinitionHeaders);
+			return EervDataReader.GetRecords (input, EervDataReader.groupDefinitionHeaders, 3);
 		}
 
 
@@ -50,11 +50,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<Dictionary<T, string>> GetRecords<T>(FileInfo input, Dictionary<T, string> stringMapping)
+		private static IEnumerable<Dictionary<T, string>> GetRecords<T>(FileInfo input, Dictionary<T, string> stringMapping, int nbToSkip = 0)
 		{
 			Dictionary<T, int?> indexMapping = null;
 
-			foreach (var line in EervDataReader.GetLines(input))
+			foreach (var line in EervDataReader.GetLines (input).Skip (nbToSkip))
 			{
 				if (indexMapping == null)
 				{
@@ -62,7 +62,7 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else
 				{
-					yield return EervDataReader.GetRecord(line, indexMapping);
+					yield return EervDataReader.GetRecord (line, indexMapping);
 				}
 			}
 		}
@@ -224,11 +224,11 @@ namespace Epsitec.Aider.Data.Eerv
 		private static readonly Dictionary<GroupDefinitionHeader, string> groupDefinitionHeaders = new Dictionary<GroupDefinitionHeader, string> ()
 		{
 			{ GroupDefinitionHeader.Id, "Id" },
-			{ GroupDefinitionHeader.NameLevel1, "Level1" },
-			{ GroupDefinitionHeader.NameLevel2, "Level2" },
-			{ GroupDefinitionHeader.NameLevel3, "Level3" },
-			{ GroupDefinitionHeader.NameLevel4, "Level4" },
-			{ GroupDefinitionHeader.NameLevel5, "Level5" },
+			{ GroupDefinitionHeader.NameLevel1, "Superstructures groupes A" },
+			{ GroupDefinitionHeader.NameLevel2, "Superstructures groupes B" },
+			{ GroupDefinitionHeader.NameLevel3, "Superstructures groupes C" },
+			{ GroupDefinitionHeader.NameLevel4, "Groupes" },
+			{ GroupDefinitionHeader.NameLevel5, "Sous-Groupes A" },
 		};
 
 
