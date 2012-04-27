@@ -158,81 +158,22 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void AssignPersonsToParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
 		{
-			// TODO This method could be significantly improved performance wise if we could have a
-			// way to return only a subset of entities from a request to the DataContext. Because
-			// now we have to rely on the set of persons that have already processed and we have to
-			// load all persons in memory at each batch, which is useless and horribly slow.
-
-			var processedPersons = new HashSet<EntityKey> ();
-
-			var batchSize = 5000;
-			var finished = false;
-
-			var batchIndex = 0;
-
-			do
-			{
-				var processed = EervMainDataImporter.AssignPersonsToParishes (businessContextManager, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
-
-				 if (processed.Any ())
-				 {
-					 processedPersons.AddRange (processed);
-				 }
-				 else
-				 {
-					 finished = true;
-				 }
-
-				var t = DateTime.Now;
-				var lowerBound = batchIndex * batchSize;
-				var upperBound = (batchIndex + 1) * batchSize;
-
-				Debug.WriteLine (string.Format ("[{0}]\tAssigned person batch ({1}-{2}) to parish", t, lowerBound, upperBound));
-
-				batchIndex++;
-			}
-			while (!finished);
+			AiderEnumerator.Execute
+			(
+				businessContextManager,
+				(b, p) => EervMainDataImporter.AssignPersonsToParishes (b, parishRepository, parishNamesToEntityKeys, p)
+			);
 		}
 
 
-		private static HashSet<EntityKey> AssignPersonsToParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, HashSet<EntityKey> processedPersons, int batchSize)
+		private static void AssignPersonsToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, IEnumerable<AiderPersonEntity> persons)
 		{
-			Func<BusinessContext, HashSet<EntityKey>> function = b =>
+			foreach (var person in persons)
 			{
-				return EervMainDataImporter.AssignPersonsToParishes (b, parishRepository, parishNamesToEntityKeys, processedPersons, batchSize);
-			};
-
-			return businessContextManager.Execute (function);
-		}
-
-
-		private static HashSet<EntityKey> AssignPersonsToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, HashSet<EntityKey> processedPersons, int batchSize)
-		{
-			var processed = new HashSet<EntityKey> ();
-			var persons = businessContext.GetAllEntities<AiderPersonEntity> ().ToList ();
-
-			businessContext.GetAllEntities<AiderHouseholdEntity> ();
-			businessContext.GetAllEntities<AiderAddressEntity> ();
-			businessContext.GetAllEntities<AiderTownEntity> ();
-
-			for (int i = 0; i < persons.Count && processed.Count < batchSize; i++)
-			{
-				var person = persons[i];
-				var personEntityKey = businessContext.DataContext.GetNormalizedEntityKey (person).Value;
-
-				var alreadyProcessed = processedPersons.Contains (personEntityKey);
-
-				if (!alreadyProcessed)
-				{
-					EervMainDataImporter.AssignPersonToParish (businessContext, parishRepository, parishNamesToEntityKeys, person);
-
-					processed.Add (personEntityKey);
-				}
+				EervMainDataImporter.AssignPersonToParish (businessContext, parishRepository, parishNamesToEntityKeys, person);
 			}
-
+			
 			businessContext.SaveChanges ();
-
-			return processed;
 		}
 
 
@@ -275,15 +216,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static AiderGroupParticipantEntity AssignPersonToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
+		private static void AssignPersonToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
 		{
-			var participant = businessContext.CreateEntity<AiderGroupParticipantEntity> ();
-
-			participant.Person = person;
-			participant.StartDate = Date.Today;
-			participant.Group = parishGroup;
-
-			return participant;
+			parishGroup.AddParticipant (businessContext, person, Date.Today, null, null);
 		}
 
 
