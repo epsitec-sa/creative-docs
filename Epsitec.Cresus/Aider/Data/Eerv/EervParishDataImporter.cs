@@ -12,6 +12,8 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.TwixClip;
 
@@ -22,8 +24,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Loader;
-using Epsitec.Cresus.DataLayer.Expressions;
 
 
 namespace Epsitec.Aider.Data.Eerv
@@ -37,11 +37,11 @@ namespace Epsitec.Aider.Data.Eerv
 		public static void Import(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
 			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, eervParishData);
-			
+
 			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervParishData);
-			
+
 			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (businessContextManager, eervMainData, eervParishData);
-			
+
 			EervParishDataImporter.ImportEervActivities (businessContextManager, eervParishData, eervPersonMapping, eervGroupMapping);
 		}
 
@@ -51,7 +51,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
 			var newEntities = EervParishDataImporter.ProcessMatches (businessContextManager, eervParishData.Id.Name, matches);
 
-			EervParishDataImporter.ProcessHouseholdMatches(businessContextManager, matches, newEntities, eervParishData.Households);
+			EervParishDataImporter.ProcessHouseholdMatches (businessContextManager, matches, newEntities, eervParishData.Households);
 
 			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 		}
@@ -80,8 +80,8 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContextManager businessContextManager, EervParishData eervParishData)
 		{
-			var normalizedAiderPersons = EervParishDataImporter.GetNormalizedPersons (businessContextManager);
-			var normalizedEervPersons = EervParishDataImporter.GetNormalizedPersons (eervParishData);
+			var normalizedAiderPersons = Normalizer.Normalize (businessContextManager);
+			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
 
 			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
 
@@ -92,44 +92,6 @@ namespace Epsitec.Aider.Data.Eerv
 					.Select (t => Tuple.Create (normalizedAiderPersons[t.Item1], t.Item2))
 					.ToList ()
 			);
-		}
-
-
-		private static Dictionary<NormalizedPerson, EntityKey> GetNormalizedPersons(BusinessContextManager businessContextManager)
-		{
-			Func<BusinessContext, Dictionary<NormalizedPerson, EntityKey>> function = b =>
-			{
-				return EervParishDataImporter.GetNormalizedPersons (b);
-			};
-
-			return businessContextManager.Execute (function);
-		}
-
-
-		private static Dictionary<NormalizedPerson, EntityKey> GetNormalizedPersons(BusinessContext businessContext)
-		{
-			var aiderHouseholds = businessContext.GetAllEntities<AiderHouseholdEntity> ();
-			var aiderPersons = businessContext.GetAllEntities<AiderPersonEntity> ();
-
-			businessContext.GetAllEntities<eCH_PersonEntity> ();
-			businessContext.GetAllEntities<AiderAddressEntity> ();
-			businessContext.GetAllEntities<AiderTownEntity> ();
-
-			var normalizedAiderData = Normalizer.Normalize (aiderHouseholds, aiderPersons);
-
-			var dataContext = businessContext.DataContext;
-
-			return normalizedAiderData.Item2.ToDictionary
-			(
-				kvp => kvp.Key,
-				kvp => dataContext.GetNormalizedEntityKey (kvp.Value).Value
-			);
-		}
-
-
-		private static Dictionary<NormalizedPerson, EervPerson> GetNormalizedPersons(EervParishData eervParishData)
-		{
-			return Normalizer.Normalize (eervParishData.Households).Item2;
 		}
 
 
