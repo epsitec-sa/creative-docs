@@ -769,9 +769,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			//	Dessine une valeur numérique dans une cellule.
 			//	Le format est "$${_graphic_}$$;row".
-			this.graphEngine.Cube    = this.cube;
-			this.graphEngine.Options = this.graphOptions;
-			this.graphEngine.PaintRow (graphics, rect, text);
+			this.graphEngine.PaintRow (this.cube, this.graphOptions, graphics, rect, text);
 		}
 
 

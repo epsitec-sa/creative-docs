@@ -92,6 +92,104 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		public void FilteredCopy(Cube src, int dimension1, int dimension2, List<FormattedText> filter1, List<FormattedText> filter2, int[] constants)
+		{
+			//	Copie un cube de dimensions quelconques dans un cube à 2 dimensions, en filtrant les valeurs.
+			//	Le cube ainsi obtenu est "prêt à l'emploi" pour le dessin.
+			this.Clear ();
+
+			var indexes1 = Cube.GetFilterIndexes (src.GetCount (dimension1), src.shortTitles[dimension1], filter1);
+			var indexes2 = Cube.GetFilterIndexes (src.GetCount (dimension2), src.shortTitles[dimension2], filter2);
+
+			this.Dimensions = 2;
+
+			for (int i = 0; i < indexes1.Count; i++)
+			{
+				this.SetShortTitle (0, i, src.GetShortTitle (dimension1, indexes1[i]));
+				this.SetFullTitle  (0, i, src.GetFullTitle  (dimension1, indexes1[i]));
+			}
+
+			for (int i = 0; i < indexes2.Count; i++)
+			{
+				this.SetShortTitle (1, i, src.GetShortTitle (dimension2, indexes2[i]));
+				this.SetFullTitle  (1, i, src.GetFullTitle  (dimension2, indexes2[i]));
+			}
+
+			int nx = src.GetCount (dimension1);
+			for (int x = 0; x < nx; x++)
+			{
+				int ny = src.GetCount (dimension2);
+				for (int y = 0; y < ny; y++)
+				{
+					var key = src.GetFilterKey (dimension1, dimension2, indexes1, indexes2, constants, x, y);
+					if (key != null)
+					{
+						var value = src.GetValue (key);
+						this.SetValue (x, y, value);
+					}
+				}
+			}
+		}
+
+		private static List<int> GetFilterIndexes(int n, Dictionary<int, FormattedText> titles, List<FormattedText> filter)
+		{
+			var indexes = new List<int> ();
+
+			for (int i = 0; i < n; i++)
+			{
+				FormattedText title;
+				if (titles.TryGetValue (i, out title))
+				{
+					if (!filter.Contains (title))
+					{
+						indexes.Add (i);
+					}
+				}
+				else
+				{
+					indexes.Add (i);
+				}
+			}
+
+			return indexes;
+		}
+
+		private int[] GetFilterKey(int dimension1, int dimension2, List<int> indexes1, List<int> indexes2, int[] constants, int x, int y)
+		{
+			if (x >= indexes1.Count || y >= indexes2.Count)
+			{
+				return null;
+			}
+
+			var key = new List<int> ();
+
+			for (int d = 0; d < this.dimensions; d++)
+			{
+				if (d == dimension1)
+				{
+					key.Add (indexes1[x]);
+				}
+				else if (d == dimension2)
+				{
+					key.Add (indexes2[y]);
+				}
+				else
+				{
+					if (constants == null || d >= constants.Length)
+					{
+						key.Add (0);
+					}
+					else
+					{
+						key.Add (constants[d]);
+					}
+				}
+			}
+
+			return key.ToArray ();
+		}
+
+
 		public int Dimensions
 		{
 			get

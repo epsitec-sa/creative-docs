@@ -100,6 +100,14 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		public bool HasFilter
+		{
+			get
+			{
+				return this.primaryFilter.Count != 0 || this.secondaryFilter.Count != 0;
+			}
+		}
+
 		public List<FormattedText> PrimaryFilter
 		{
 			get

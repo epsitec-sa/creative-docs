@@ -94,8 +94,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				new StaticText
 				{
 					Parent         = topFrame,
-					FormattedText  = "A exclure",
-					PreferredWidth = 50,
+					FormattedText  = "Montrer",
+					PreferredWidth = 45,
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (10, 0, 0, 0),
 				};
@@ -138,8 +138,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				new StaticText
 				{
 					Parent         = bottomFrame,
-					FormattedText  = "A exclure",
-					PreferredWidth = 50,
+					FormattedText  = "Montrer",
+					PreferredWidth = 45,
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (10, 0, 0, 0),
 				};
@@ -344,8 +344,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.primaryDimensionCombo.FormattedText   = this.DimensionToText (this.options.PrimaryDimension);
 				this.secondaryDimensionCombo.FormattedText = this.DimensionToText (this.options.SecondaryDimension);
 
-				this.primaryFilterField.FormattedText   = GraphOptionsController.GetFilterSummary (this.options.PrimaryFilter);
-				this.secondaryFilterField.FormattedText = GraphOptionsController.GetFilterSummary (this.options.SecondaryFilter);
+				if (this.cube.Dimensions != 0)
+				{
+					this.primaryFilterField.FormattedText   = GraphOptionsController.GetFilterSummary (this.options.PrimaryFilter,   this.cube.GetCount (this.options.PrimaryDimension));
+					this.secondaryFilterField.FormattedText = GraphOptionsController.GetFilterSummary (this.options.SecondaryFilter, this.cube.GetCount (this.options.SecondaryDimension));
+				}
 
 				this.styleCombo.FormattedText = GraphOptionsController.StyleToText (this.options.Style);
 			}
@@ -480,19 +483,27 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private static FormattedText GetFilterSummary(List<FormattedText> filter)
+		private static FormattedText GetFilterSummary(List<FormattedText> filter, int count)
 		{
 			if (filter.Count == 0)
 			{
-				return "Rien";
-			}
-			else if (filter.Count == 1)
-			{
-				return "1 élément";
+				return "Tout";
 			}
 			else
 			{
-				return string.Format ("{0} éléments", filter.Count.ToString ());
+				int n = System.Math.Max (count-filter.Count, 0);
+				if (n == 0)
+				{
+					return "Rien";
+				}
+				else if (n == 1)
+				{
+					return "1 élément";
+				}
+				else
+				{
+					return string.Format ("{0} éléments", n.ToString ());
+				}
 			}
 		}
 
@@ -525,7 +536,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				var item = new MenuItem ()
 				{
-					FormattedText = "Ne rien exclure",
+					FormattedText = "Tout montrer",
 				};
 
 				item.Clicked += delegate
@@ -544,7 +555,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			var item = new MenuItem ()
 			{
-				FormattedText = "Tout exclure",
+				FormattedText = "Tout cacher",
 			};
 
 			item.Clicked += delegate
@@ -554,7 +565,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				int n = this.cube.GetCount (dimension);
 				for (int i = 0; i < n; i++)
 				{
-					filter.Add (this.cube.GetTitle (dimension, i));
+					filter.Add (this.cube.GetShortTitle (dimension, i));
 				}
 
 				this.UpdateWidgets ();
@@ -566,24 +577,24 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void AddFilterToMenu(VMenu menu, int dimension, List<FormattedText> filter, int index)
 		{
-			var title = this.cube.GetTitle (dimension, index);
-			bool selected = filter.Contains (title);
+			var shortTitle = this.cube.GetShortTitle (dimension, index);
+			bool selected = !filter.Contains (shortTitle);
 
 			var item = new MenuItem ()
 			{
 				IconUri       = UIBuilder.GetCheckStateIconUri (selected),
-				FormattedText = title,
+				FormattedText = this.cube.GetTitle (dimension, index),
 			};
 
 			item.Clicked += delegate
 			{
-				if (filter.Contains (title))
+				if (filter.Contains (shortTitle))
 				{
-					filter.Remove (title);
+					filter.Remove (shortTitle);
 				}
 				else
 				{
-					filter.Add (title);
+					filter.Add (shortTitle);
 				}
 
 				this.UpdateWidgets ();

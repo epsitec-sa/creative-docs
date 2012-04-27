@@ -20,41 +20,21 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public Cube Cube
-		{
-			get
-			{
-				return this.cube;
-			}
-			set
-			{
-				this.cube = value;
-			}
-		}
-
-		public GraphOptions Options
-		{
-			get
-			{
-				return this.options;
-			}
-			set
-			{
-				this.options = value;
-			}
-		}
-
-
-		public void PaintFull(Graphics graphics, Rectangle rect)
+		public void PaintFull(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
+			this.options = options;
+
+			this.cube = new Cube ();
+			this.cube.FilteredCopy (cube, this.options.PrimaryDimension, this.options.SecondaryDimension, this.options.PrimaryFilter, this.options.SecondaryFilter, null);
+
 			if (this.cube.Dimensions == 0 || this.cube.IsEmpty)
 			{
 				return;
 			}
 
-			int nx = this.cube.GetCount (this.options.PrimaryDimension);
-			int ny = this.cube.GetCount (this.options.SecondaryDimension);
+			int nx = this.cube.GetCount (0);
+			int ny = this.cube.GetCount (1);
 
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackExtColor);
@@ -72,8 +52,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.fontSize = 10.0;
 			}
 
-			int labelDx;
-			int labelDy = this.GetHorizontalLabelsHeight (rect);
+			int labelDx, labelDy;
 
 			if (this.HasVerticalLabels)
 			{
@@ -82,6 +61,15 @@ namespace Epsitec.Cresus.Compta.Graph
 			else
 			{
 				labelDx = 0;
+			}
+
+			if (this.HasHorizontalLabels)
+			{
+				labelDy = this.GetHorizontalLabelsHeight (rect);
+			}
+			else
+			{
+				labelDy = 0;
 			}
 
 			int dx = ((int) rect.Width  - labelDx) / nx;
@@ -140,6 +128,10 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.PaintLines (graphics, frameRect, nx, dx, ny);
 					break;
 
+				case GraphMode.Pie:
+					this.PaintPie (graphics, frameRect, nx, ny);
+					break;
+
 				case GraphMode.Array:
 					this.PaintArray (graphics, frameRect, nx, dx, ny, dy);
 					break;
@@ -147,9 +139,9 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			if (this.options.Mode != GraphMode.Array && this.options.HasLegend)
 			{
-				var size = this.GetLegendsSize (this.options.SecondaryDimension);
+				var size = this.GetLegendsSize (1);
 				var legendsRect = new Rectangle (rect.Right-size.Width-10, rect.Top-size.Height-10, size.Width, size.Height);
-				this.PaintLegends (graphics, legendsRect, this.options.SecondaryDimension);
+				this.PaintLegends (graphics, legendsRect, 1);
 			}
 		}
 
@@ -190,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				{
 					for (int y = 0; y < ny; y++)
 					{
-						decimal? value = this.GetValue (x, y);
+						decimal? value = this.cube.GetValue (x, y);
 
 						if (value.HasValue)
 						{
@@ -228,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				for (int y = 0; y < ny; y++)
 				{
-					var value = this.GetValue (x, y).GetValueOrDefault ();
+					var value = this.cube.GetValue (x, y).GetValueOrDefault ();
 
 					if (value >= 0)
 					{
@@ -268,7 +260,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 					for (int y = 0; y < ny; y++)
 					{
-						var value = this.GetValue (x, y).GetValueOrDefault ();
+						var value = this.cube.GetValue (x, y).GetValueOrDefault ();
 						decimal v1, v2;
 
 						if (value >= 0)
@@ -333,7 +325,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 					for (int x = 0; x < nx; x++)
 					{
-						decimal? value = this.GetValue (x, y);
+						decimal? value = this.cube.GetValue (x, y);
 
 						if (value.HasValue)
 						{
@@ -375,13 +367,135 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		private void PaintPie(Graphics graphics, Rectangle frameRect, int nx, int ny)
+		{
+			int max = int.MinValue;
+			int tx = 0;
+			int ty = 0;
+			int titleHeight = 14;
+
+			for (int x = 1; x <= nx; x++)
+			{
+				for (int y = 1; y <= nx; y++)
+				{
+					if (x*y >= nx)
+					{
+						int size = this.GetPieSize (frameRect, x, y, titleHeight);
+						if (max < size)
+						{
+							max = size;
+							tx = x;
+							ty = y;
+						}
+					}
+				}
+			}
+
+			if (tx == 0 || ty == 0)
+			{
+				return;
+			}
+
+			//?int ox = (int) (frameRect.Width - tx*max) / 2;
+			int ox = 0;  // à gauche pour laisser la place pour la légende
+			int oy = (int) (frameRect.Height - ty*titleHeight - ty*max) / 2;
+
+			for (int x = 0; x < tx; x++)
+			{
+				for (int y = 0; y < ty; y++)
+				{
+					int i = x + y*tx;
+					if (i < nx)
+					{
+						var square = new Rectangle (frameRect.Left+ox+x*max, frameRect.Top-oy-y*(max+titleHeight)-max, max, max);
+						this.PaintOnePie (graphics, square, i, ny, titleHeight);
+					}
+				}
+			}
+		}
+
+		private int GetPieSize(Rectangle rect, int tx, int ty, int titleHeight)
+		{
+			int dx = (int) (rect.Width / tx);
+			int dy = (int) ((rect.Height - titleHeight*ty) / ty);
+			return System.Math.Min (dx, dy);
+		}
+
+		private void PaintOnePie(Graphics graphics, Rectangle square, int i, int ny, int titleHeight)
+		{
+			square.Deflate (5);
+			var center = square.Center;
+			var radius = square.Width/2;
+
+			decimal sum = 0;
+			for (int y = 0; y < ny; y++)
+			{
+				sum += this.cube.GetValue (i, y).GetValueOrDefault ();
+			}
+
+			if (sum == 0)
+			{
+				graphics.AddCircle (center, radius);
+				graphics.RenderSolid (this.BorderColor);
+			}
+			else
+			{
+				for (int pass = 0; pass < 2; pass++)
+				{
+					decimal a1 = 0;
+
+					for (int y = 0; y < ny; y++)
+					{
+						decimal a2 = a1 + this.cube.GetValue (i, y).GetValueOrDefault () * 360.0m / sum;
+
+						if (a2 > a1)
+						{
+							Path path = new Path ();
+
+							path.MoveTo (center);
+							path.ArcToDeg (center, radius, radius, (double) a1, (double) a2, true);
+							path.LineTo (center);
+							path.Close ();
+
+							if (pass == 0)
+							{
+								graphics.Color = this.GetIndexedColor (y, ny);
+								graphics.PaintSurface (path);
+							}
+							else
+							{
+								graphics.Color = this.BorderColor;
+								graphics.PaintOutline (path);
+
+								if (a2-a1 > 20)
+								{
+									var p = Transform.RotatePointDeg (center, (double) (a1+a2)/2, new Point (center.X+radius*0.5, center.Y));
+									var rect = new Rectangle (p.X-20, p.Y-10, 40, 20);
+									var text = Converters.PercentToString ((a2-a1)/360.0m);
+									this.PaintText (graphics, rect, text, ContentAlignment.MiddleCenter);
+								}
+							}
+						}
+
+						a1 = a2;
+					}
+				}
+			}
+
+			//	Dessine le nom du cammembert.
+			var box = new Rectangle (square.Left, square.Bottom-titleHeight, square.Width, titleHeight);
+			var title = this.cube.GetTitle (0, i);
+			this.PaintText (graphics, box, title, ContentAlignment.MiddleCenter);
+		}
+
+
 		private void PaintArray(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
 			for (int x = 0; x < nx; x++)
 			{
 				for (int y = 0; y < ny; y++)
 				{
-					decimal value = this.GetValue (x, y).GetValueOrDefault ();
+					decimal value = this.cube.GetValue (x, y).GetValueOrDefault ();
 
 					if (value != 0)
 					{
@@ -406,18 +520,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			else
 			{
 				return this.drawBottom + System.Math.Floor (this.drawHeight * (double) (value-this.minValue) / (double) (this.maxValue-this.minValue));
-			}
-		}
-
-		private decimal? GetValue(int x, int y)
-		{
-			if (this.options.PrimaryDimension == 0)
-			{
-				return this.cube.GetValue (x, y);
-			}
-			else
-			{
-				return this.cube.GetValue (y, x);
 			}
 		}
 
@@ -489,6 +591,11 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintGrid(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
 			//	Dessine la grille de fond.
+			if (this.options.Mode == GraphMode.Pie)
+			{
+				return;
+			}
+
 			if (this.options.Mode == GraphMode.Lines)
 			{
 				frameRect.Offset (dx/2, 0);
@@ -565,7 +672,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (labelsRect.Left+dx*x, labelsRect.Bottom, dx, labelsRect.Height);
-				this.PaintText (graphics, rect, this.cube.GetShortTitle (this.options.PrimaryDimension, x), ContentAlignment.MiddleCenter);
+				this.PaintText (graphics, rect, this.cube.GetShortTitle (0, x), ContentAlignment.MiddleCenter);
 			}
 		}
 
@@ -588,7 +695,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int y = 0; y < ny; y++)
 			{
 				var rect = new Rectangle (labelsRect.Left, labelsRect.Bottom+dy*y, labelsRect.Width-5, dy);
-				this.PaintText (graphics, rect, this.cube.GetShortTitle (this.options.SecondaryDimension, y), ContentAlignment.MiddleRight);
+				this.PaintText (graphics, rect, this.cube.GetShortTitle (1, y), ContentAlignment.MiddleRight);
 			}
 		}
 
@@ -699,6 +806,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				FormattedText   = text,
 				LayoutSize      = labelRect.Size,
 				Alignment       = alignment,
+				BreakMode        = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				DefaultFontSize = this.fontSize,
 			};
 
@@ -726,7 +834,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				for (int y = 0; y < ny; y++)
 				{
-					textLayout.FormattedText = this.cube.GetShortTitle (this.options.SecondaryDimension, y);
+					textLayout.FormattedText = this.cube.GetShortTitle (1, y);
 					double width = textLayout.GetSingleLineSize ().Width;
 					max = System.Math.Max (max, (int) width);
 				}
@@ -741,10 +849,13 @@ namespace Epsitec.Cresus.Compta.Graph
 
 
 
-		public void PaintRow(Graphics graphics, Rectangle rect, string text)
+		public void PaintRow(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect, string text)
 		{
 			//	Dessine une cellule correspondant à une ligne, d'après le texte contenu dans StringList.
 			//	Le texte est au format "$${_graphic_}$$;row".
+			this.cube = cube;
+			this.options = options;
+
 			var words = text.Split (';');
 			var row = int.Parse (words[1]);
 
@@ -945,9 +1056,14 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Color BackExtColor
 		{
-			//	Couleur du cadre extérieut contenant les légendes des axes.
+			//	Couleur du cadre extérieur contenant les légendes des axes.
 			get
 			{
+				if (this.options.Mode == GraphMode.Pie)
+				{
+					return this.BackIntColor;
+				}
+
 				if (this.options.Style == GraphStyle.BlackAndWhite)
 				{
 					return Color.FromBrightness (1.00);

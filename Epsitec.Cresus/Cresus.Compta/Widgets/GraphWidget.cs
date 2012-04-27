@@ -51,10 +51,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			if (this.cube != null && this.options != null)
 			{
 				Rectangle rect = this.Client.Bounds;
-
-				this.engine.Cube    = this.cube;
-				this.engine.Options = this.options;
-				this.engine.PaintFull (graphics, rect);
+				this.engine.PaintFull (this.cube, this.options, graphics, rect);
 			}
 		}
 
