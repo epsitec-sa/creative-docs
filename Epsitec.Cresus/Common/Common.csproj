@@ -151,6 +151,7 @@
     <Compile Include="BigList\Renderers\StringRenderer`1.cs" />
     <Compile Include="BigList\ScrollMode.cs" />
     <Compile Include="BigList\ScrollUnit.cs" />
+    <Compile Include="BigList\Widgets\ItemScrollList.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\AssertFailedException.cs" />
     <Compile Include="Debugging\DebugOutputTraceListener.cs" />
@@ -1126,6 +1127,7 @@
     <Compile Include="Widgets\AbstractScroller.cs" />
     <Compile Include="Widgets\AbstractSlider.cs" />
     <Compile Include="Widgets\AbstractSplitter.cs" />
+    <Compile Include="Widgets\AbstractSplitView.cs" />
     <Compile Include="Widgets\AbstractTextField.CommandController.cs" />
     <Compile Include="Widgets\AbstractTextField.cs" />
     <Compile Include="Widgets\AbstractToolBar.cs" />
@@ -1217,6 +1219,7 @@
     <Compile Include="Widgets\ConfirmationButton.cs" />
     <Compile Include="Widgets\ConfirmationStaticText.cs" />
     <Compile Include="Widgets\ContainerLayoutMode.cs" />
+    <Compile Include="Widgets\VSplitView.DragProcessor.cs" />
     <Compile Include="Widgets\FrameState.cs" />
     <Compile Include="Widgets\IconButtonWithText.cs" />
     <Compile Include="Widgets\DefocusAction.cs" />
@@ -1408,6 +1411,7 @@
     <Compile Include="Widgets\VScroller.cs" />
     <Compile Include="Widgets\VSlider.cs" />
     <Compile Include="Widgets\VSplitter.cs" />
+    <Compile Include="Widgets\VSplitView.cs" />
     <Compile Include="Widgets\VToolBar.cs" />
     <Compile Include="Widgets\Widget.cs" />
     <Compile Include="Widgets\WidgetChildFindMode.cs" />
