@@ -392,6 +392,14 @@ namespace Epsitec.Cresus.Core
 		}
 
 
+		public void ResetIndexes()
+		{
+			var entityTypeIds = Infrastructure.GetManagedEntityIds ();
+
+			this.DataInfrastructure.ResetIndexes (entityTypeIds);
+		}
+
+
 		#region IDisposable Members
 
 
