@@ -963,7 +963,11 @@ namespace Epsitec.Aider.Data.Eerv
 				}
 				else if (aiderIdMapping.TryGetValue (EervGroupDefinition.GetParentId (eervGroup.Id), out aiderGroup))
 				{
-					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, eervGroup.Name);
+					// HACK This is a hack for group names greater than 200 chars that will throw an
+					// exception later. This need to be corrected.
+					var name = eervGroup.Name.Substring (0, Math.Min (200, eervGroup.Name.Length));
+
+					var newAiderGroup = AiderGroupEntity.Create (businessContext, null, name);
 					AiderGroupRelationshipEntity.Create (businessContext, aiderGroup, newAiderGroup, GroupRelationshipType.Inclusion);
 
 					aiderSubGroupMapping[aiderGroup].Add (newAiderGroup);
