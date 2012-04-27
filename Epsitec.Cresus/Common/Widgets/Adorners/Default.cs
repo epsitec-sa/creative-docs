@@ -1,4 +1,8 @@
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+
 using Epsitec.Common.Drawing;
+
 namespace Epsitec.Common.Widgets.Adorners
 {
 	/// <summary>

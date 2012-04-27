@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemStateDetails</c> enumeration defines the level of detail required when
+	/// fetching an item's state.
+	/// </summary>
 	[System.Flags]
 	public enum ItemStateDetails
 	{

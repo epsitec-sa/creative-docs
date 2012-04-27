@@ -7,8 +7,14 @@ using Epsitec.Common.Widgets.Layouts;
 
 using System.Collections.Generic;
 
+[assembly: DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.LayoutMeasure))]
+
 namespace Epsitec.Common.Widgets.Layouts
 {
+	/// <summary>
+	/// The <c>LayoutMeasure</c> class is used to represent the result of a measure in
+	/// the layout engine.
+	/// </summary>
 	public class LayoutMeasure : DependencyObject
 	{
 		internal LayoutMeasure(int passId)

@@ -6,6 +6,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets.Layouts
 {
+	/// <summary>
+	/// The <c>ColumnLayoutList</c> class is a specialized list of <see cref="ColumnLayoutInfo"/>
+	/// records. It is responsible for the global layout of the individual columns, based on the
+	/// available size.
+	/// </summary>
 	public sealed class ColumnLayoutList : List<ColumnLayoutInfo>
 	{
 		public ColumnLayoutList()
@@ -23,7 +28,6 @@ namespace Epsitec.Common.Widgets.Layouts
 			this.AddRange (collection.Select (x => new ColumnLayoutInfo (x)));
 		}
 
-		
 		public double Fit(double availableSpace)
 		{
 			this.ResetMeasures ();
@@ -124,6 +128,6 @@ namespace Epsitec.Common.Widgets.Layouts
 		}
 
 		
-		private int passId;
+		private int								passId;
 	}
 }

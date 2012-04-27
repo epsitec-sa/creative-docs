@@ -3,10 +3,11 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets.Layouts;
 
 using System.Collections.Generic;
 
-[assembly: Epsitec.Common.Types.DependencyClass (typeof (Epsitec.Common.Widgets.Layouts.ColumnDefinition))]
+[assembly: Epsitec.Common.Types.DependencyClass (typeof (ColumnDefinition))]
 
 namespace Epsitec.Common.Widgets.Layouts
 {

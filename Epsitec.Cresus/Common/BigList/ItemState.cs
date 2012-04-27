@@ -8,6 +8,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemState</c> class maintains the state of an item manipulated in a
+	/// big list.
+	/// </summary>
 	public class ItemState : System.IEquatable<ItemState>
 	{
 		public ItemState()

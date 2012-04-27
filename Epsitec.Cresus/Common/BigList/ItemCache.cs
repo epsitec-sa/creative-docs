@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemCache</c> class is an abstract base for <see cref="ItemCache&lt;TData, TState&gt;"/>.
+	/// The state is stored in a very compact representation if this is possible.
+	/// </summary>
 	public abstract class ItemCache
 	{
 		public ItemCache(int capacity, ItemListFeatures features)
@@ -15,8 +19,6 @@ namespace Epsitec.Common.BigList
 			this.states   = new IndexedArray<ushort> (this.capacity);
 		}
 
-
-		public abstract int GetExtraStateCount();
 
 		public int								BasicStateCount
 		{
@@ -34,8 +36,10 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		
+
 		public abstract void Reset();
+
+		public abstract int GetExtraStateCount();
 		
 		public abstract ItemHeight GetItemHeight(int index);
 

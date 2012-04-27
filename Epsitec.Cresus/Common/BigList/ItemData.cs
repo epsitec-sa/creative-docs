@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemData</c> class is an abstract base class for <see cref="ItemData&lt;T&gt;"/>.
+	/// It is used to cache data which is displayed in a big list, and store its state.
+	/// </summary>
 	public abstract class ItemData
 	{
 		protected ItemData(ItemState state)

@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -275,7 +275,7 @@ namespace Epsitec.Common.Widgets
 			var primaryDispatchers = childDispatchers.Where (x => (x != null) && (x.Level == CommandDispatcherLevel.Primary)).ToList ();
 
 			if (primaryDispatchers.Count > 0)
-            {
+			{
 				this.dispatchers.AddRange (primaryDispatchers.Select (x => new Weak<CommandDispatcher> (x)));
 			}
 		}

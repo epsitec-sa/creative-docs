@@ -6,6 +6,13 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemCache</c> class maintains a collection of <see cref="ItemData&lt;TData&gt;"/>
+	/// items. It fetches the data from a data provider and converts a raw data item into an
+	/// item data record using a data mapper.
+	/// </summary>
+	/// <typeparam name="TData">The type of the raw data item.</typeparam>
+	/// <typeparam name="TState">The type of the item state.</typeparam>
 	public class ItemCache<TData, TState> : ItemCache
 		where TState : ItemState, new ()
 	{
