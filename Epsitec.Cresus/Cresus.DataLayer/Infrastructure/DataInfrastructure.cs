@@ -195,6 +195,29 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 		}
 
 
+		/// <summary>
+		/// Resets all index data related to the given sequence of entity type ids.
+		/// </summary>
+		/// <remarks>
+		/// A call to this method will ensure for instance that the index selectivity is up to date
+		/// with respect to the data present in the table and might therefore give a huge boost in
+		/// performance. This method should therefore be called if large changes to the data have
+		/// been made recently or have been accumulated over time.
+		/// </remarks>
+		public void ResetIndexes(IEnumerable<Druid> entityTypeIds)
+		{
+			foreach (var entityTypeId in entityTypeIds)
+			{
+				var dbTable = this.EntityEngine.EntitySchemaEngine.GetEntityTable (entityTypeId);
+
+				foreach (var dbIndex in dbTable.Indexes)
+				{
+					this.DbInfrastructure.ResetIndex (dbTable, dbIndex);
+				}
+			}
+		}
+
+
 		public System.DateTime GetDatabaseTime()
 		{
 			return this.dbInfrastructure.GetDatabaseTime ();
