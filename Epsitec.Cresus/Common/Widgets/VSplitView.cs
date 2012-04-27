@@ -92,6 +92,22 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+
+		public override AbstractScroller		Scroller1
+		{
+			get
+			{
+				return this.scroller1;
+			}
+		}
+
+		public override AbstractScroller		Scroller2
+		{
+			get
+			{
+				return this.scroller2;
+			}
+		}
 		
 		protected override void UpdateRatio()
 		{

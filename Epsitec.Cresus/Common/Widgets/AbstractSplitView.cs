@@ -36,6 +36,16 @@ namespace Epsitec.Common.Widgets
 			get;
 		}
 
+		public abstract AbstractScroller		Scroller1
+		{
+			get;
+		}
+
+		public abstract AbstractScroller		Scroller2
+		{
+			get;
+		}
+		
 		
 		protected override void UpdateClientGeometry()
 		{
