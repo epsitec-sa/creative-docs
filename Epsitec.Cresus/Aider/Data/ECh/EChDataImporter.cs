@@ -1,13 +1,18 @@
 ﻿using Epsitec.Aider.Entities;
 using Epsitec.Aider.Enumerations;
 using Epsitec.Aider.Tools;
+using Epsitec.Aider.Data.Eerv;
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.DataLayer.Context;
+
+using Epsitec.Data.Platform;
 
 using System;
 
@@ -16,8 +21,6 @@ using System.Collections.Generic;
 using System.Diagnostics;
 
 using System.Linq;
-using Epsitec.Data.Platform;
-using Epsitec.Common.Support;
 
 
 
@@ -31,6 +34,8 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static void Import(BusinessContextManager businessContextManager, IList<EChReportedPerson> eChReportedPersons)
 		{
+			AiderEnumerator.ExecuteUglyHack ();
+
 			var townDataToEntityKey = EChDataImporter.ImportTowns (businessContextManager, eChReportedPersons);
 
 			EChDataImporter.ImportPersons (businessContextManager, eChReportedPersons, townDataToEntityKey);
