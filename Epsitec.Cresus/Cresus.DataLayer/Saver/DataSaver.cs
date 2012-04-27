@@ -214,7 +214,9 @@ namespace Epsitec.Cresus.DataLayer.Saver
 		/// <returns>The sequence of <see cref="DbTable"/> that will be affected.</returns>
 		private IEnumerable<DbTable> GetAffectedTables(IEnumerable<AbstractPersistenceJob> jobs)
 		{
-			return jobs.SelectMany (j => j.GetAffectedTables (this.JobTableComputer));
+			return jobs
+				.SelectMany (j => j.GetAffectedTables (this.JobTableComputer))
+				.Distinct ();
 		}
 
 
