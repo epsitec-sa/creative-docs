@@ -34,7 +34,7 @@ namespace Epsitec.Aider.Tools
 
 		public T Execute<T>(Func<BusinessContext, T> function)
 		{
-			using (BusinessContext businessContext = new BusinessContext(this.coreData))
+			using (var businessContext = this.Create ())
 			{
 				try
 				{
@@ -42,17 +42,29 @@ namespace Epsitec.Aider.Tools
 				}
 				finally
 				{
-					// NOTE Here we need to call this, because there is somewhere something that
-					// registers a callback with a reference to the business context that we
-					// have disposed. If we don't execute that callback, the pointer stays there
-					// and the garbage collector can't reclaim the memory and we have a memory
-					// leak. I think that this is a hack because that callback is related to user
-					// interface stuff and we should be able to get a business context without being
-					// related to a user interface.
-				
-					Dispatcher.ExecutePending ();
+					this.Cleanup (businessContext);
 				}
 			}
+		}
+
+
+		public BusinessContext Create()
+		{
+			return new BusinessContext (this.coreData);
+		}
+
+
+		public void Cleanup(BusinessContext businessContext)
+		{
+			// NOTE Here we need to call this, because there is somewhere something that
+			// registers a callback with a reference to the business context that we
+			// have disposed. If we don't execute that callback, the pointer stays there
+			// and the garbage collector can't reclaim the memory and we have a memory
+			// leak. I think that this is a hack because that callback is related to user
+			// interface stuff and we should be able to get a business context without being
+			// related to a user interface.
+
+			Dispatcher.ExecutePending ();
 		}
 
 
