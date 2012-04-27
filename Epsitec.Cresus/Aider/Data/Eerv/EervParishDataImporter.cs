@@ -1091,7 +1091,7 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			return eervId.IsParish
 				? "Paroisse de " + eervId.Name
-				: "Région R" + StringUtils.GetDigits (eervId.Name);
+				: "Région " + StringUtils.GetDigits (eervId.Name);
 		}
 
 
