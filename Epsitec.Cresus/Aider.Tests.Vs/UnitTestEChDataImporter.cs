@@ -47,11 +47,11 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
-				var businessContextManager = new BusinessContextManager (app.Data);
+				var coreDataManager = new CoreDataManager (app.Data);
 				
 				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (inputFile);
-				EChDataImporter.Import (businessContextManager, eChReportedPersons);
+				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 
 				Services.ShutDown ();
 			}
@@ -74,12 +74,12 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
-				var businessContextManager = new BusinessContextManager (app.Data);
+				var coreDataManager = new CoreDataManager (app.Data);
 				
 				var inputFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (inputFile, 50).ToList ();
 				
-				EChDataImporter.Import (businessContextManager, eChReportedPersons);
+				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 
 				this.AddStuffToDatabase (app.Data);
 

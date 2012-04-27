@@ -32,24 +32,26 @@ namespace Epsitec.Aider.Data.ECh
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, IList<EChReportedPerson> eChReportedPersons)
+		public static void Import(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons)
 		{
 			AiderEnumerator.ExecuteUglyHack ();
 
-			var townDataToEntityKey = EChDataImporter.ImportTowns (businessContextManager, eChReportedPersons);
+			var townDataToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
-			EChDataImporter.ImportPersons (businessContextManager, eChReportedPersons, townDataToEntityKey);
+			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, townDataToEntityKey);
+
+			coreDataManager.CoreData.ResetIndexes ();
 		}
 
 
-		private static Dictionary<Tuple<int, string>, EntityKey> ImportTowns(BusinessContextManager businessContextManager, IEnumerable<EChReportedPerson> echReportedPersons)
+		private static Dictionary<Tuple<int, string>, EntityKey> ImportTowns(CoreDataManager coreDataManager, IEnumerable<EChReportedPerson> echReportedPersons)
 		{
 			Func<BusinessContext, Dictionary<Tuple<int, string>, EntityKey>> function = b =>
 			{
 				return EChDataImporter.ImportTowns (b, echReportedPersons);
 			};
 
-			return businessContextManager.Execute (function);
+			return coreDataManager.Execute (function);
 		}
 
 
@@ -95,7 +97,7 @@ namespace Epsitec.Aider.Data.ECh
 		}
 
 
-		private static void ImportPersons(BusinessContextManager businessContextManager, IList<EChReportedPerson> eChReportedPersons, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
+		private static void ImportPersons(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons, Dictionary<Tuple<int, string>, EntityKey> townDataToEntityKey)
 		{
 			int batchSize = 1000;
 			int nbBatches = 0;
@@ -112,7 +114,7 @@ namespace Epsitec.Aider.Data.ECh
 					EChDataImporter.ImportBatch (b, batch, eChPersonIdToEntityKey, townDataToEntityKey);
 				};
 
-				businessContextManager.Execute (action);
+				coreDataManager.Execute (action);
 
 				nbBatches++;
 

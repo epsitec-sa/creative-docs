@@ -179,7 +179,7 @@
     <Compile Include="Rules\AiderPersonBusinessRules.cs" />
     <Compile Include="Enumerations\UserRole.cs" />
     <Compile Include="Enumerations\ValidationState.cs" />
-    <Compile Include="Tools\BusinessContextManager.cs" />
+    <Compile Include="Tools\CoreDataManager.cs" />
     <Compile Include="Tools\IsoCountryNames.cs" />
     <Compile Include="Tools\ParishLocator.cs" />
   </ItemGroup>

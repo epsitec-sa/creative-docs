@@ -1,21 +1,31 @@
 ﻿using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Library;
 
 using System;
+
+using System.Linq;
 
 
 namespace Epsitec.Aider.Tools
 {
 	
 	
-	internal sealed class BusinessContextManager
+	internal sealed class CoreDataManager
 	{
 
 
-		public BusinessContextManager(CoreData coreData)
+		public CoreDataManager(CoreData coreData)
 		{
-			this.coreData = coreData;
+			this.CoreData = coreData;
+		}
+
+
+		public CoreData CoreData
+		{
+			get;
+			private set;
 		}
 
 
@@ -50,7 +60,7 @@ namespace Epsitec.Aider.Tools
 
 		public BusinessContext Create()
 		{
-			return new BusinessContext (this.coreData);
+			return new BusinessContext (this.CoreData);
 		}
 
 
@@ -66,9 +76,6 @@ namespace Epsitec.Aider.Tools
 
 			Dispatcher.ExecutePending ();
 		}
-
-
-		private readonly CoreData coreData;
 
 
 	}

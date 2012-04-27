@@ -105,14 +105,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static Dictionary<NormalizedPerson, EntityKey> Normalize(BusinessContextManager businessContextManager)
+		public static Dictionary<NormalizedPerson, EntityKey> Normalize(CoreDataManager coreDataManager)
 		{
 			var keyToHouseholds = new Dictionary<EntityKey, NormalizedHousehold> ();
 			var personToKeys = new Dictionary<NormalizedPerson, EntityKey> ();
 
 			AiderEnumerator.Execute
 			(
-				businessContextManager,
+				coreDataManager,
 				(b, p) => Normalizer.Normalize (b, p, personToKeys, keyToHouseholds)
 			);
 

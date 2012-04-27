@@ -34,24 +34,26 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
+		public static void Import(CoreDataManager coreDataManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (businessContextManager, eervParishData);
+			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreDataManager, eervParishData);
 
-			EervParishDataImporter.ImportEervLegalPersons (businessContextManager, eervParishData);
+			EervParishDataImporter.ImportEervLegalPersons (coreDataManager, eervParishData);
 
-			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (businessContextManager, eervMainData, eervParishData);
+			var eervGroupMapping = EervParishDataImporter.ImportEervGroups (coreDataManager, eervMainData, eervParishData);
 
-			EervParishDataImporter.ImportEervActivities (businessContextManager, eervParishData, eervPersonMapping, eervGroupMapping);
+			EervParishDataImporter.ImportEervActivities (coreDataManager, eervParishData, eervPersonMapping, eervGroupMapping);
+
+			coreDataManager.CoreData.ResetIndexes ();
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreDataManager coreDataManager, EervParishData eervParishData)
 		{
-			var matches = EervParishDataImporter.FindMatches (businessContextManager, eervParishData);
-			var newEntities = EervParishDataImporter.ProcessMatches (businessContextManager, eervParishData.Id.Name, matches);
+			var matches = EervParishDataImporter.FindMatches (coreDataManager, eervParishData);
+			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
 
-			EervParishDataImporter.ProcessHouseholdMatches (businessContextManager, matches, newEntities, eervParishData.Households);
+			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
 
 			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 		}
@@ -78,9 +80,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(BusinessContextManager businessContextManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(CoreDataManager coreDataManager, EervParishData eervParishData)
 		{
-			var normalizedAiderPersons = Normalizer.Normalize (businessContextManager);
+			var normalizedAiderPersons = Normalizer.Normalize (coreDataManager);
 			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
 
 			var matches = EervParishDataMatcher.FindMatches (normalizedEervPersons.Keys, normalizedAiderPersons.Keys);
@@ -95,14 +97,14 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(BusinessContextManager businessContextManager, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreDataManager coreDataManager, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
 		{
 			Func<BusinessContext, Dictionary<EervPerson, EntityKey>> function = b =>
 			{
 				return EervParishDataImporter.ProcessMatches (b, parishName, matches);
 			};
 
-			return businessContextManager.Execute (function);
+			return coreDataManager.Execute (function);
 		}
 
 
@@ -448,7 +450,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches(BusinessContextManager businessContextManager, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			Action<BusinessContext> action = b =>
 			{
@@ -457,7 +459,7 @@ namespace Epsitec.Aider.Data.Eerv
 				b.SaveChanges ();
 			};
 
-			businessContextManager.Execute (action);
+			coreDataManager.Execute (action);
 		}
 
 
@@ -831,9 +833,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervLegalPersons(BusinessContextManager businessContextManager, EervParishData eervParishData)
+		private static void ImportEervLegalPersons(CoreDataManager coreDataManager, EervParishData eervParishData)
 		{
-			businessContextManager.Execute (b =>
+			coreDataManager.Execute (b =>
 			{
 				EervParishDataImporter.ImportEervLegalPersons (b, eervParishData);
 			});
@@ -917,9 +919,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(BusinessContextManager businessContextManager, EervMainData eervMainData, EervParishData eervParishData)
+		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreDataManager coreDataManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			return businessContextManager.Execute (b =>
+			return coreDataManager.Execute (b =>
 			{
 				return EervParishDataImporter.ImportEervGroups (b, eervMainData, eervParishData);
 			});
@@ -1130,9 +1132,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ImportEervActivities(BusinessContextManager businessContextManager, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
+		private static void ImportEervActivities(CoreDataManager coreDataManager, EervParishData eervParishData, Dictionary<EervPerson, EntityKey> eervPersonToKeys, Dictionary<EervGroup, EntityKey> eervGroupToKeys)
 		{
-			businessContextManager.Execute (b =>
+			coreDataManager.Execute (b =>
 			{
 				EervParishDataImporter.ImportEervActivities (b, eervParishData, eervPersonToKeys, eervGroupToKeys);
 			});
@@ -1146,7 +1148,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var dataContext = businessContext.DataContext;
 
 			foreach (var eervActivity in eervParishData.Activities)
-			{			
+			{
 				if (eervActivity.Person != null)
 				{
 					var eervPerson = eervActivity.Person;
@@ -1161,8 +1163,8 @@ namespace Epsitec.Aider.Data.Eerv
 					var startDate = eervActivity.StartDate;
 					var endDate = eervActivity.EndDate;
 					var remarks = eervActivity.Remarks;
-					
-					aiderGroup.AddParticipant(businessContext, aiderPerson, startDate, endDate, remarks);
+
+					aiderGroup.AddParticipant (businessContext, aiderPerson, startDate, endDate, remarks);
 				}
 				else if (eervActivity.LegalPerson != null)
 				{

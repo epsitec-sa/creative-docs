@@ -63,7 +63,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public static void Execute(BusinessContextManager businessContextManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
+		public static void Execute(CoreDataManager coreDataManager, Action<BusinessContext, IEnumerable<AiderPersonEntity>> action)
 		{
 			foreach (var batchBounds in AiderEnumerator.GetPersonBatchBounds ())
 			{
@@ -72,7 +72,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				bool done = false;
 
-				businessContextManager.Execute (b =>
+				coreDataManager.Execute (b =>
 				{
 					var batch = AiderEnumerator.GetPersonBatch (b, lowerBound, upperBound);
 

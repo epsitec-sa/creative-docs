@@ -39,17 +39,17 @@ namespace Aider.Tests.Vs
 			{
 				app.SetupApplication ();
 
-				var businessContextManager = new BusinessContextManager (app.Data);
+				var coreDataManager = new CoreDataManager (app.Data);
 
 				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2011-11-29.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
-				EChDataImporter.Import (businessContextManager, eChReportedPersons);
+				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 
 				var eervGroupDefinitionFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Main\Groupe definition.xlsx");
 				var eervMainData = EervMainDataLoader.LoadEervData (eervGroupDefinitionFile);
 				var parishRepository = ParishAddressRepository.Current;
 
-				EervMainDataImporter.Import (businessContextManager, eervMainData, parishRepository);
+				EervMainDataImporter.Import (coreDataManager, eervMainData, parishRepository);
 
 				var eervPersonsFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Personnes.xlsx");
 				var eervGroupFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\EERV Morges\Groupes.xlsx");
@@ -60,7 +60,7 @@ namespace Aider.Tests.Vs
 
 				foreach (var eervParishDatum in eervParishData)
 				{
-					EervParishDataImporter.Import (businessContextManager, eervMainData, eervParishDatum);
+					EervParishDataImporter.Import (coreDataManager, eervMainData, eervParishDatum);
 				}
 
 				Services.ShutDown ();

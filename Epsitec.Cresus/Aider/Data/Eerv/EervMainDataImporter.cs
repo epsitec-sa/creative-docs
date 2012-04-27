@@ -26,21 +26,23 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(BusinessContextManager businessContextManager, EervMainData eervData, ParishAddressRepository parishRepository)
+		public static void Import(CoreDataManager coreDataManager, EervMainData eervData, ParishAddressRepository parishRepository)
 		{
-			EervMainDataImporter.ImportGroupDefinitions (businessContextManager, eervData);
+			EervMainDataImporter.ImportGroupDefinitions (coreDataManager, eervData);
 
-			var result = EervMainDataImporter.ImportRegionsAndParishes (businessContextManager, parishRepository);
+			var result = EervMainDataImporter.ImportRegionsAndParishes (coreDataManager, parishRepository);
 
 			var parishNamesToEntityKeys = result.Item2;
 
-			EervMainDataImporter.AssignPersonsToParishes (businessContextManager, parishRepository, parishNamesToEntityKeys);
+			EervMainDataImporter.AssignPersonsToParishes (coreDataManager, parishRepository, parishNamesToEntityKeys);
+
+			coreDataManager.CoreData.ResetIndexes ();
 		}
 
 
-		private static void ImportGroupDefinitions(BusinessContextManager businessContextManager, EervMainData eervData)
+		private static void ImportGroupDefinitions(CoreDataManager coreDataManager, EervMainData eervData)
 		{
-			businessContextManager.Execute (b => EervMainDataImporter.ImportGroupDefinitions (b, eervData));
+			coreDataManager.Execute (b => EervMainDataImporter.ImportGroupDefinitions (b, eervData));
 		}
 
 
@@ -77,9 +79,9 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository)
+		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
 		{
-			return businessContextManager.Execute(b =>
+			return coreDataManager.Execute(b =>
 			{
 				return EervMainDataImporter.ImportRegionsAndParishes(b, parishRepository);
 			});
@@ -156,11 +158,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignPersonsToParishes(BusinessContextManager businessContextManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
+		private static void AssignPersonsToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
 		{
 			AiderEnumerator.Execute
 			(
-				businessContextManager,
+				coreDataManager,
 				(b, p) => EervMainDataImporter.AssignPersonsToParishes (b, parishRepository, parishNamesToEntityKeys, p)
 			);
 		}
