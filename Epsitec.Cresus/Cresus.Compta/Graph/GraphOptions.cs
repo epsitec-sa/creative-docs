@@ -19,7 +19,8 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.mode               = GraphMode.SideBySide;
 			this.style              = GraphStyle.Rainbow;
-			this.startAtZero        = false;
+			this.startAtZero        = true;
+			this.explodedPie        = true;
 			this.hasLegend          = true;
 			this.primaryDimension   = 1;
 			this.secondaryDimension = 0;
@@ -61,6 +62,18 @@ namespace Epsitec.Cresus.Compta.Graph
 			set
 			{
 				this.startAtZero = value;
+			}
+		}
+
+		public bool ExplodedPie
+		{
+			get
+			{
+				return this.explodedPie;
+			}
+			set
+			{
+				this.explodedPie = value;
 			}
 		}
 
@@ -128,6 +141,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private GraphMode				mode;
 		private GraphStyle				style;
 		private bool					startAtZero;
+		private bool					explodedPie;
 		private bool					hasLegend;
 		private int						primaryDimension;
 		private int						secondaryDimension;

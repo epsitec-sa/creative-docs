@@ -372,8 +372,9 @@ namespace Epsitec.Cresus.Compta.Graph
 			int max = int.MinValue;
 			int tx = 0;
 			int ty = 0;
-			int titleHeight = 14;
+			int titleHeight = 16;
 
+			//	On cherche la disposition tx/ty générant une surface maximale pour chaque cammembert.
 			for (int x = 1; x <= nx; x++)
 			{
 				for (int y = 1; y <= nx; y++)
@@ -423,7 +424,11 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintOnePie(Graphics graphics, Rectangle square, int i, int ny, int titleHeight)
 		{
-			square.Deflate (5);
+			square.Offset (0, -titleHeight);
+
+			double offset = this.options.ExplodedPie ? square.Width*0.03 : 0;
+
+			square.Deflate (5+offset);
 			var center = square.Center;
 			var radius = square.Width/2;
 
@@ -448,13 +453,35 @@ namespace Epsitec.Cresus.Compta.Graph
 					{
 						decimal a2 = a1 + this.cube.GetValue (i, y).GetValueOrDefault () * 360.0m / sum;
 
-						if (a2 > a1)
+						if (a2-a1 == 360)  // une seule tranche ?
 						{
+							if (pass == 0)
+							{
+								graphics.AddFilledCircle (center, radius);
+								graphics.RenderSolid (this.GetIndexedColor (y, ny));
+							}
+							else
+							{
+								graphics.AddCircle (center, radius);
+								graphics.RenderSolid (this.BorderColor);
+
+								this.PaintPiePercent (graphics, center, (a2-a1)/360.0m, this.GetIndexedColor (y, ny));
+							}
+						}
+						else if (a2 > a1)
+						{
+							var c = center;
+
+							if (this.options.ExplodedPie)
+							{
+								c = Transform.RotatePointDeg (center, (double) this.GetPieAngle ((a1+a2)/2), new Point (center.X+offset, center.Y));
+							}
+
 							Path path = new Path ();
 
-							path.MoveTo (center);
-							path.ArcToDeg (center, radius, radius, (double) a1, (double) a2, true);
-							path.LineTo (center);
+							path.MoveTo (c);
+							path.ArcToDeg (c, radius, radius, (double) this.GetPieAngle(a1), (double) this.GetPieAngle(a2), false);
+							path.LineTo (c);
 							path.Close ();
 
 							if (pass == 0)
@@ -467,12 +494,10 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.Color = this.BorderColor;
 								graphics.PaintOutline (path);
 
-								if (a2-a1 > 20)
+								if (a2-a1 >= 20)  // plus de 20 degrés ?
 								{
-									var p = Transform.RotatePointDeg (center, (double) (a1+a2)/2, new Point (center.X+radius*0.5, center.Y));
-									var rect = new Rectangle (p.X-20, p.Y-10, 40, 20);
-									var text = Converters.PercentToString ((a2-a1)/360.0m);
-									this.PaintText (graphics, rect, text, ContentAlignment.MiddleCenter);
+									var p = Transform.RotatePointDeg (center, (double) this.GetPieAngle((a1+a2)/2), new Point (center.X+offset+radius*0.5, center.Y));
+									this.PaintPiePercent (graphics, p, (a2-a1)/360.0m, this.GetIndexedColor (y, ny));
 								}
 							}
 						}
@@ -483,9 +508,35 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 
 			//	Dessine le nom du cammembert.
-			var box = new Rectangle (square.Left, square.Bottom-titleHeight, square.Width, titleHeight);
+			square.Inflate (offset);
+
+			var box = new Rectangle (square.Left, square.Top, square.Width, titleHeight);
 			var title = this.cube.GetTitle (0, i);
-			this.PaintText (graphics, box, title, ContentAlignment.MiddleCenter);
+			this.PaintText (graphics, box, title, ContentAlignment.TopCenter);
+		}
+
+		private void PaintPiePercent(Graphics graphics, Point center, decimal percent, Color backColor)
+		{
+			//	Dessine le chiffre du %.
+			var rect = new Rectangle (center.X-20, center.Y-10, 40, 20);
+			var text = Converters.PercentToString (percent);
+			var color = backColor.GetBrightness () < 0.25 ? Color.FromName ("White") : Color.FromName ("Black");
+
+			this.PaintText (graphics, rect, text, ContentAlignment.MiddleCenter, color);
+		}
+
+		private decimal GetPieAngle(decimal angle)
+		{
+			//	In:  0 -> à droite, ccw
+			//	Out: 0 -> en haut, cw
+			angle = 90-angle;
+
+			if (angle < 0)
+			{
+				angle += 360;
+			}
+
+			return angle;
 		}
 
 
@@ -800,6 +851,11 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment)
 		{
+			this.PaintText (graphics, labelRect, text, alignment, Color.FromName ("Black"));
+		}
+
+		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment, Color color)
+		{
 			//	Dessine un texte quelconque dans un rectangle.
 			var textLayout = new TextLayout
 			{
@@ -810,7 +866,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				DefaultFontSize = this.fontSize,
 			};
 
-			textLayout.Paint (labelRect.BottomLeft, graphics, labelRect, Color.FromName ("Black"), GlyphPaintStyle.Normal);
+			textLayout.Paint (labelRect.BottomLeft, graphics, labelRect, color, GlyphPaintStyle.Normal);
 		}
 
 		private int GetHorizontalLabelsHeight(Rectangle rect)
