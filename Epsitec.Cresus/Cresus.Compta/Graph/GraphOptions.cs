@@ -17,6 +17,14 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphOptions()
 		{
+			this.primaryFilter   = new List<FormattedText> ();
+			this.secondaryFilter = new List<FormattedText> ();
+
+			this.Clear ();
+		}
+
+		public void Clear()
+		{
 			this.mode               = GraphMode.SideBySide;
 			this.style              = GraphStyle.Rainbow;
 			this.startAtZero        = true;
@@ -26,8 +34,9 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.thresholdValue     = 0.05m;  // 5%
 			this.primaryDimension   = 1;
 			this.secondaryDimension = 0;
-			this.primaryFilter      = new List<FormattedText> ();
-			this.secondaryFilter    = new List<FormattedText> ();
+
+			this.primaryFilter.Clear ();
+			this.secondaryFilter.Clear ();
 		}
 
 
@@ -164,16 +173,17 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private GraphMode				mode;
-		private GraphStyle				style;
-		private bool					startAtZero;
-		private bool					explodedPie;
-		private bool					hasThreshold;
-		private decimal					thresholdValue;
-		private bool					hasLegend;
-		private int						primaryDimension;
-		private int						secondaryDimension;
-		private List<FormattedText>		primaryFilter;
-		private List<FormattedText>		secondaryFilter;
+		private readonly List<FormattedText>	primaryFilter;
+		private readonly List<FormattedText>	secondaryFilter;
+
+		private GraphMode						mode;
+		private GraphStyle						style;
+		private bool							startAtZero;
+		private bool							explodedPie;
+		private bool							hasThreshold;
+		private decimal							thresholdValue;
+		private bool							hasLegend;
+		private int								primaryDimension;
+		private int								secondaryDimension;
 	}
 }

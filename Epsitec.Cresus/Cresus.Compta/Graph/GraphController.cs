@@ -36,15 +36,6 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent          = this.mainFrame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 5),
-			};
-
-			new Separator
-			{
-				Parent           = this.mainFrame,
-				PreferredHeight  = 1,
-				IsHorizontalLine = true,
-				Dock             = DockStyle.Top,
 			};
 
 			var frame = new FrameBox
@@ -61,7 +52,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock    = DockStyle.Fill,
 			};
 
-			this.graphOptionsController = new GraphOptionsController (this.controller.DataAccessor.Cube, this.controller.DataAccessor.GraphOptions);
+			this.graphOptionsController = new GraphOptionsController (this.controller);
 			this.graphOptionsController.CreateUI (toolbar, () => this.graphWidget.Invalidate ());
 		}
 

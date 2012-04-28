@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta;
@@ -16,10 +17,11 @@ namespace Epsitec.Cresus.Compta.Graph
 {
 	public class GraphOptionsController
 	{
-		public GraphOptionsController(Cube cube, GraphOptions options)
+		public GraphOptionsController(AbstractController controller)
 		{
-			this.cube    = cube;
-			this.options = options;
+			this.controller = controller;
+			this.cube       = controller.DataAccessor.Cube;
+			this.options    = controller.DataAccessor.GraphOptions;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
@@ -29,16 +31,66 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.optionsChangedAction = optionsChangedAction;
 
-			var frame = new FrameBox
+			var toolbar = new FrameBox
 			{
-				Parent          = parent,
-				PreferredHeight = 40,
-				Dock            = DockStyle.Fill,
+				Parent        = parent,
+				DrawFullFrame = true,
+				BackColor     = Color.FromName ("White"),
+				Dock          = DockStyle.Fill,
 			};
 
-			var leftFrame = new FrameBox
+			var frame = new FrameBox
+			{
+				Parent         = toolbar,
+				Dock           = DockStyle.Fill,
+			};
+
+			var levelFrame = new FrameBox
+			{
+				Parent         = toolbar,
+				DrawFullFrame  = true,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Right,
+				Padding        = new Margins (5),
+			};
+
+			this.beginnerFrame = new FrameBox
+			{
+				Parent  = frame,
+				Dock    = DockStyle.Top,
+				Padding = new Margins (5),
+			};
+
+			this.separator = new Separator
 			{
 				Parent          = frame,
+				PreferredHeight = 1,
+				Dock            = DockStyle.Top,
+				Visibility      = false,
+			};
+
+			this.specialistFrame = new FrameBox
+			{
+				Parent     = frame,
+				Dock       = DockStyle.Top,
+				Padding    = new Margins (5),
+				Visibility = false,
+			};
+
+			this.levelController = new LevelController (this.controller);
+			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
+			this.levelController.Specialist = false;
+
+			this.CreateBeginnerUI (beginnerFrame);
+			this.CreateSpecialistUI (specialistFrame);
+			this.Update ();
+		}
+
+		private void CreateBeginnerUI(Widget parent)
+		{
+			var leftFrame = new FrameBox
+			{
+				Parent          = parent,
 				PreferredHeight = 40,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
@@ -46,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			var rightFrame = new FrameBox
 			{
-				Parent          = frame,
+				Parent          = parent,
 				PreferredHeight = 40,
 				Dock            = DockStyle.Fill,
 			};
@@ -157,47 +209,6 @@ namespace Epsitec.Cresus.Compta.Graph
 				};
 			}
 
-			this.startAtZeroButton = new CheckButton
-			{
-				Parent         = topFrame,
-				FormattedText  = "Zéro inclu",
-				PreferredWidth = 70,
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (20, 0, 0, 0),
-			};
-
-			this.hasThresholdButton = new CheckButton
-			{
-				Parent         = topFrame,
-				FormattedText  = "Seuil",
-				PreferredWidth = 50,
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 0, 0, 0),
-			};
-
-			this.thresholdValueField = new TextFieldEx
-			{
-				Parent                       = topFrame,
-				PreferredWidth               = 80,
-				AutoToggle                   = false,
-				Dock                         = DockStyle.Left,
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-			};
-
-			this.legendButton = new CheckButton
-			{
-				Parent         = bottomFrame,
-				FormattedText  = "Légendes",
-				PreferredWidth = 70,
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (20, 0, 0, 0),
-			};
-
 			new StaticText
 			{
 				Parent         = bottomFrame,
@@ -217,8 +228,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock            = DockStyle.Left,
 			};
 
-			this.Update ();
-
+			//	Connexion des événements.
 			this.sideBySideModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.SideBySide;
@@ -254,41 +264,6 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.optionsChangedAction ();
 			};
 
-			this.legendButton.Clicked += delegate
-			{
-				this.options.HasLegend = !this.options.HasLegend;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
-			};
-
-			this.startAtZeroButton.Clicked += delegate
-			{
-				this.options.StartAtZero = !this.options.StartAtZero;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
-			};
-
-			this.hasThresholdButton.Clicked += delegate
-			{
-				this.options.HasThreshold = !this.options.HasThreshold;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
-			};
-
-			this.thresholdValueField.EditionAccepted += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					var value = Converters.ParsePercent (this.thresholdValueField.Text);
-					if (value.HasValue)
-					{
-						this.options.ThresholdValue = value.Value;
-						this.UpdateWidgets ();
-						this.optionsChangedAction ();
-					}
-				}
-			};
-
 			this.swapButton.Clicked += delegate
 			{
 				var d1 = this.options.PrimaryDimension;
@@ -297,7 +272,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.options.PrimaryDimension   = d2;
 				this.options.SecondaryDimension = d1;
 
-				var t = new List<FormattedText>();
+				var t = new List<FormattedText> ();
 				t.AddRange (this.options.PrimaryFilter);
 				this.options.PrimaryFilter.Clear ();
 				this.options.PrimaryFilter.AddRange (this.options.SecondaryFilter);
@@ -362,6 +337,117 @@ namespace Epsitec.Cresus.Compta.Graph
 			};
 		}
 
+		private void CreateSpecialistUI(Widget parent)
+		{
+			this.hasThresholdButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Seuil",
+				PreferredWidth = 50,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+			};
+
+			this.thresholdValueField = new TextFieldEx
+			{
+				Parent                       = parent,
+				PreferredWidth               = 70,
+				AutoToggle                   = false,
+				Dock                         = DockStyle.Left,
+				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+				Margins                      = new Margins (0, 10, 0, 0),
+			};
+
+			this.startAtZeroButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Zéro inclu",
+				PreferredWidth = 80,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+			};
+
+			this.explodedPieButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Secteurs éclatés",
+				PreferredWidth = 110,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+			};
+
+			this.legendButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Légendes",
+				PreferredWidth = 70,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+			};
+
+			//	Connexion des événements.
+			this.legendButton.Clicked += delegate
+			{
+				this.options.HasLegend = !this.options.HasLegend;
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			this.startAtZeroButton.Clicked += delegate
+			{
+				this.options.StartAtZero = !this.options.StartAtZero;
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			this.explodedPieButton.Clicked += delegate
+			{
+				this.options.ExplodedPie = !this.options.ExplodedPie;
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			this.hasThresholdButton.Clicked += delegate
+			{
+				this.options.HasThreshold = !this.options.HasThreshold;
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			this.thresholdValueField.EditionAccepted += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					var value = Converters.ParsePercent (this.thresholdValueField.Text);
+					if (value.HasValue)
+					{
+						this.options.ThresholdValue = value.Value;
+						this.UpdateWidgets ();
+						this.optionsChangedAction ();
+					}
+				}
+			};
+		}
+
+
+		private void ClearAction()
+		{
+			this.options.Clear ();
+			this.UpdateWidgets ();
+			this.optionsChangedAction ();
+		}
+
+		private void LevelChangedAction()
+		{
+			this.isSpecialist = this.levelController.Specialist;
+
+			this.specialistFrame.Visibility = this.levelController.Specialist;
+			this.separator.Visibility = this.levelController.Specialist;
+		}
+
+	
 		public void Update()
 		{
 			this.InitComboDimension (this.primaryDimensionCombo);
@@ -374,6 +460,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			using (this.ignoreChanges.Enter())
 			{
+				this.startAtZeroButton.Visibility = this.options.Mode == GraphMode.SideBySide || this.options.Mode == GraphMode.Lines;
+				this.explodedPieButton.Visibility = this.options.Mode == GraphMode.Pie;
+				this.legendButton.Visibility      = this.options.Mode != GraphMode.Array;
+
 				this.sideBySideModeButton.ActiveState = (this.options.Mode == GraphMode.SideBySide) ? ActiveState.Yes : ActiveState.No;
 				this.stackedModeButton.ActiveState    = (this.options.Mode == GraphMode.Stacked   ) ? ActiveState.Yes : ActiveState.No;
 				this.linesModeButton.ActiveState      = (this.options.Mode == GraphMode.Lines     ) ? ActiveState.Yes : ActiveState.No;
@@ -382,6 +472,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				this.legendButton.ActiveState       = this.options.HasLegend    ? ActiveState.Yes : ActiveState.No;
 				this.startAtZeroButton.ActiveState  = this.options.StartAtZero  ? ActiveState.Yes : ActiveState.No;
+				this.explodedPieButton.ActiveState  = this.options.ExplodedPie  ? ActiveState.Yes : ActiveState.No;
 				this.hasThresholdButton.ActiveState = this.options.HasThreshold ? ActiveState.Yes : ActiveState.No;
 
 				this.thresholdValueField.Enable = this.options.HasThreshold;
@@ -651,11 +742,19 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		private readonly AbstractController		controller;
 		private readonly Cube					cube;
 		private readonly GraphOptions			options;
 		private readonly SafeCounter			ignoreChanges;
 
+		private bool							isSpecialist;
+
+		private FrameBox						beginnerFrame;
+		private Separator						separator;
+		private FrameBox						specialistFrame;
+
 		private System.Action					optionsChangedAction;
+		private LevelController					levelController;
 		private BackIconButton					sideBySideModeButton;
 		private BackIconButton					stackedModeButton;
 		private BackIconButton					linesModeButton;
@@ -673,6 +772,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private TextFieldCombo					styleCombo;
 		private CheckButton						legendButton;
 		private CheckButton						startAtZeroButton;
+		private CheckButton						explodedPieButton;
 		private CheckButton						hasThresholdButton;
 		private TextFieldEx						thresholdValueField;
 	}

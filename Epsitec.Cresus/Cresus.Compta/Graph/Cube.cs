@@ -219,12 +219,12 @@ namespace Epsitec.Cresus.Compta.Graph
 						{
 							used.Add (y);
 						}
-						else
+					}
+					else
+					{
+						if (value != 0)
 						{
-							if (value != 0)
-							{
-								hasOther = true;
-							}
+							hasOther = true;
 						}
 					}
 				}
