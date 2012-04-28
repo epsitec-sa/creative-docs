@@ -157,9 +157,40 @@ namespace Epsitec.Cresus.Compta.Graph
 				};
 			}
 
-			this.legendButton = new CheckButton
+			this.startAtZeroButton = new CheckButton
 			{
 				Parent         = topFrame,
+				FormattedText  = "Zéro inclu",
+				PreferredWidth = 70,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (20, 0, 0, 0),
+			};
+
+			this.hasThresholdButton = new CheckButton
+			{
+				Parent         = topFrame,
+				FormattedText  = "Seuil",
+				PreferredWidth = 50,
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 0, 0, 0),
+			};
+
+			this.thresholdValueField = new TextFieldEx
+			{
+				Parent                       = topFrame,
+				PreferredWidth               = 80,
+				AutoToggle                   = false,
+				Dock                         = DockStyle.Left,
+				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+			};
+
+			this.legendButton = new CheckButton
+			{
+				Parent         = bottomFrame,
 				FormattedText  = "Légendes",
 				PreferredWidth = 70,
 				AutoToggle     = false,
@@ -169,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			new StaticText
 			{
-				Parent         = topFrame,
+				Parent         = bottomFrame,
 				FormattedText  = "Style",
 				PreferredWidth = 30,
 				Dock           = DockStyle.Left,
@@ -178,22 +209,12 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.styleCombo = new TextFieldCombo
 			{
-				Parent          = topFrame,
+				Parent          = bottomFrame,
 				IsReadOnly      = true,
 				PreferredWidth  = 110,
 				PreferredHeight = 20,
 				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
-			};
-
-			this.startAtZeroButton = new CheckButton
-			{
-				Parent         = bottomFrame,
-				FormattedText  = "Zéro inclu",
-				PreferredWidth = 70,
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (20, 0, 0, 0),
 			};
 
 			this.Update ();
@@ -245,6 +266,27 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.options.StartAtZero = !this.options.StartAtZero;
 				this.UpdateWidgets ();
 				this.optionsChangedAction ();
+			};
+
+			this.hasThresholdButton.Clicked += delegate
+			{
+				this.options.HasThreshold = !this.options.HasThreshold;
+				this.UpdateWidgets ();
+				this.optionsChangedAction ();
+			};
+
+			this.thresholdValueField.EditionAccepted += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					var value = Converters.ParsePercent (this.thresholdValueField.Text);
+					if (value.HasValue)
+					{
+						this.options.ThresholdValue = value.Value;
+						this.UpdateWidgets ();
+						this.optionsChangedAction ();
+					}
+				}
 			};
 
 			this.swapButton.Clicked += delegate
@@ -338,8 +380,12 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.pieModeButton.ActiveState        = (this.options.Mode == GraphMode.Pie       ) ? ActiveState.Yes : ActiveState.No;
 				this.arrayModeButton.ActiveState      = (this.options.Mode == GraphMode.Array     ) ? ActiveState.Yes : ActiveState.No;
 
-				this.legendButton.ActiveState      = this.options.HasLegend   ? ActiveState.Yes : ActiveState.No;
-				this.startAtZeroButton.ActiveState = this.options.StartAtZero ? ActiveState.Yes : ActiveState.No;
+				this.legendButton.ActiveState       = this.options.HasLegend    ? ActiveState.Yes : ActiveState.No;
+				this.startAtZeroButton.ActiveState  = this.options.StartAtZero  ? ActiveState.Yes : ActiveState.No;
+				this.hasThresholdButton.ActiveState = this.options.HasThreshold ? ActiveState.Yes : ActiveState.No;
+
+				this.thresholdValueField.Enable = this.options.HasThreshold;
+				this.thresholdValueField.Text = Converters.PercentToString (this.options.ThresholdValue);
 
 				this.primaryDimensionCombo.FormattedText   = this.DimensionToText (this.options.PrimaryDimension);
 				this.secondaryDimensionCombo.FormattedText = this.DimensionToText (this.options.SecondaryDimension);
@@ -627,5 +673,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private TextFieldCombo					styleCombo;
 		private CheckButton						legendButton;
 		private CheckButton						startAtZeroButton;
+		private CheckButton						hasThresholdButton;
+		private TextFieldEx						thresholdValueField;
 	}
 }

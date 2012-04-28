@@ -190,6 +190,97 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		public void ThresholdCopy(Cube src, decimal threshold)
+		{
+			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
+			this.Clear ();
+			this.Dimensions = 2;
+
+			int nx = src.GetCount (0);
+			int ny = src.GetCount (1);
+
+			var used = new List<int> ();
+			bool hasOther = false;
+			for (int x = 0; x < nx; x++)
+			{
+				decimal sum = 0;
+				for (int y = 0; y < ny; y++)
+				{
+					sum += System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+				}
+
+				for (int y = 0; y < ny; y++)
+				{
+					var value = System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+
+					if (sum != 0 && value/sum >= threshold)
+					{
+						if (!used.Contains (y))
+						{
+							used.Add (y);
+						}
+						else
+						{
+							if (value != 0)
+							{
+								hasOther = true;
+							}
+						}
+					}
+				}
+			}
+			used.Sort ();
+
+			for (int x = 0; x < nx; x++)
+			{
+				decimal sum = 0;
+				for (int y = 0; y < ny; y++)
+				{
+					sum += System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+				}
+
+				decimal others = 0;
+				for (int y = 0; y < ny; y++)
+				{
+					var value = System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+
+					if (sum != 0 && value/sum >= threshold)
+					{
+						int u = used.IndexOf (y);
+						this.SetValue (x, u, value);
+					}
+					else
+					{
+						others += value;
+					}
+				}
+
+				if (hasOther)
+				{
+					this.SetValue (x, used.Count, others);
+				}
+			}
+
+			for (int x = 0; x < nx; x++)
+			{
+				this.SetShortTitle (0, x, src.GetShortTitle (0, x));
+				this.SetFullTitle  (0, x, src.GetFullTitle  (0, x));
+			}
+
+			for (int u = 0; u < used.Count; u++)
+			{
+				int y = used[u];
+				this.SetShortTitle (1, u, src.GetShortTitle (1, y));
+				this.SetFullTitle  (1, u, src.GetFullTitle  (1, y));
+			}
+
+			if (hasOther)
+			{
+				this.SetShortTitle (1, used.Count, "Autres");
+			}
+		}
+
+
 		public int Dimensions
 		{
 			get

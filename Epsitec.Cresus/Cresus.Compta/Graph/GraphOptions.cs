@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.startAtZero        = true;
 			this.explodedPie        = true;
 			this.hasLegend          = true;
+			this.hasThreshold       = false;
+			this.thresholdValue     = 0.05m;  // 5%
 			this.primaryDimension   = 1;
 			this.secondaryDimension = 0;
 			this.primaryFilter      = new List<FormattedText> ();
@@ -74,6 +76,30 @@ namespace Epsitec.Cresus.Compta.Graph
 			set
 			{
 				this.explodedPie = value;
+			}
+		}
+
+		public bool HasThreshold
+		{
+			get
+			{
+				return this.hasThreshold;
+			}
+			set
+			{
+				this.hasThreshold = value;
+			}
+		}
+
+		public decimal ThresholdValue
+		{
+			get
+			{
+				return this.thresholdValue;
+			}
+			set
+			{
+				this.thresholdValue = value;
 			}
 		}
 
@@ -142,6 +168,8 @@ namespace Epsitec.Cresus.Compta.Graph
 		private GraphStyle				style;
 		private bool					startAtZero;
 		private bool					explodedPie;
+		private bool					hasThreshold;
+		private decimal					thresholdValue;
 		private bool					hasLegend;
 		private int						primaryDimension;
 		private int						secondaryDimension;
