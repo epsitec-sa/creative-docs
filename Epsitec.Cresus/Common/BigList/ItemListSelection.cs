@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
@@ -27,6 +28,54 @@ namespace Epsitec.Common.BigList
 		
 		public bool Select(int index, ItemSelection selection)
 		{
+			ItemListSelectionEventArgs e = new ItemListSelectionEventArgs ();
+
+			if (this.Select (index, selection, e))
+			{
+				if (e.Count > 0)
+				{
+					this.OnSelectionChanged (e);
+				}
+
+				return true;
+			}
+
+			return false;
+		}
+
+		public bool IsSelected(int index)
+		{
+			if (index < 0)
+			{
+				return false;
+			}
+			else
+			{
+				return this.cache.GetItemState (index, ItemStateDetails.Flags).Selected;
+			}
+		}
+
+		
+		public IEnumerable<int> GetSelectedIndexes()
+		{
+			var flags = ItemStateDetails.Flags | ItemStateDetails.IgnoreNull;
+			int count = this.cache.ItemCount;
+
+			for (int index = 0; index < count; index++)
+			{
+				var state = this.cache.GetItemState (index, flags);
+
+				if ((state != null) &&
+					(state.Selected))
+				{
+					yield return index;
+				}
+			}
+		}
+
+
+		private bool Select(int index, ItemSelection selection, ItemListSelectionEventArgs e)
+		{
 			if (selection == ItemSelection.Toggle)
 			{
 				selection = this.IsSelected (index) ? ItemSelection.Deselect : ItemSelection.Select;
@@ -42,7 +91,7 @@ namespace Epsitec.Common.BigList
 
 					case ItemSelectionMode.Multiple:
 					case ItemSelectionMode.ZeroOrOne:
-						return this.DeselectOne (index);
+						return this.DeselectOne (index, e);
 
 					case ItemSelectionMode.OneOrMore:
 						if (this.selectedItemCount < 2)
@@ -51,7 +100,7 @@ namespace Epsitec.Common.BigList
 						}
 						else
 						{
-							return this.DeselectOne (index);
+							return this.DeselectOne (index, e);
 						}
 				}
 			}
@@ -62,11 +111,11 @@ namespace Epsitec.Common.BigList
 				{
 					case ItemSelectionMode.ZeroOrOne:
 					case ItemSelectionMode.ExactlyOne:
-						if (this.SelectOne (index))
+						if (this.SelectOne (index, e))
 						{
 							if (this.selectedItemCount > 1)
 							{
-								this.DeselectAllButOne (index);
+								this.DeselectAllButOne (index, e);
 							}
 							return true;
 						}
@@ -74,7 +123,7 @@ namespace Epsitec.Common.BigList
 
 					case ItemSelectionMode.OneOrMore:
 					case ItemSelectionMode.Multiple:
-						return this.SelectOne (index);
+						return this.SelectOne (index, e);
 
 					case ItemSelectionMode.None:
 						return false;
@@ -84,20 +133,7 @@ namespace Epsitec.Common.BigList
 			throw new System.InvalidOperationException (string.Format ("Select does not understand {0}", selection.GetQualifiedName ()));
 		}
 
-		public bool IsSelected(int index)
-		{
-			if (index < 0)
-			{
-				return false;
-			}
-			else
-			{
-				return this.cache.GetItemState (index, ItemStateDetails.Flags).Selected;
-			}
-		}
-
-
-		private bool DeselectAllButOne(int index)
+		private bool DeselectAllButOne(int index, ItemListSelectionEventArgs e)
 		{
 			int changes = 0;
 			int count   = this.cache.ItemCount;
@@ -111,6 +147,7 @@ namespace Epsitec.Common.BigList
 
 				if (this.ChangeFlagState (i, x => x.Select (ItemSelection.Deselect), ItemStateDetails.IgnoreNull))
 				{
+					e.Add (i, false);
 					this.selectedItemCount--;
 					changes++;
 				}
@@ -119,10 +156,11 @@ namespace Epsitec.Common.BigList
 			return changes > 0;
 		}
 
-		private bool SelectOne(int index)
+		private bool SelectOne(int index, ItemListSelectionEventArgs e)
 		{
 			if (this.ChangeFlagState (index, x => x.Select (ItemSelection.Select)))
 			{
+				e.Add (index, true);
 				this.selectedItemCount++;
 				return true;
 			}
@@ -132,10 +170,11 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		private bool DeselectOne(int index)
+		private bool DeselectOne(int index, ItemListSelectionEventArgs e)
 		{
 			if (this.ChangeFlagState (index, x => x.Select (ItemSelection.Deselect)))
 			{
+				e.Add (index, false);
 				this.selectedItemCount--;
 				return true;
 			}
@@ -169,6 +208,15 @@ namespace Epsitec.Common.BigList
 
 			return true;
 		}
+
+		private void OnSelectionChanged(ItemListSelectionEventArgs e)
+		{
+			var handler = this.SelectionChanged;
+			handler.Raise (this, e);
+		}
+
+
+		public event EventHandler<ItemListSelectionEventArgs> SelectionChanged;
 
 		
 		private readonly ItemCache				cache;

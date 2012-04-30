@@ -40,6 +40,22 @@ namespace Epsitec.Common.BigList.Widgets
 			}
 		}
 
+		public ItemListSelection				Selection
+		{
+			get
+			{
+				if (this.itemLists == null)
+				{
+					return null;
+				}
+				else
+				{
+					return this.itemLists.Selection;
+				}
+			}
+		}
+
+		
 
 		public ItemData<T> GetItemData<T>(int index)
 		{
@@ -81,6 +97,12 @@ namespace Epsitec.Common.BigList.Widgets
 				selection = new ItemListSelection (this.itemCache);
 			}
 
+			if (this.itemLists != null)
+			{
+				this.DetachItemListEventHandlers ();
+				this.itemLists = null;
+			}
+
 			this.itemLists = new ItemListCollection<TData, TState> (cache, marks, selection);
 
 			this.AttachItemListEventHandlers ();
@@ -111,6 +133,14 @@ namespace Epsitec.Common.BigList.Widgets
 		{
 			this.itemLists.ActiveIndexChanged += this.HandleItemListsActiveIndexChanged;
 			this.itemLists.FocusedIndexChanged += this.HandleItemListsFocusedIndexChanged;
+			this.itemLists.Selection.SelectionChanged += this.HandleItemListsSelectionChanged;
+		}
+		
+		private void DetachItemListEventHandlers()
+		{
+			this.itemLists.ActiveIndexChanged -= this.HandleItemListsActiveIndexChanged;
+			this.itemLists.FocusedIndexChanged -= this.HandleItemListsFocusedIndexChanged;
+			this.itemLists.Selection.SelectionChanged -= this.HandleItemListsSelectionChanged;
 		}
 
 		private void HandleItemListsActiveIndexChanged(object sender, ItemListIndexEventArgs e)
@@ -124,6 +154,12 @@ namespace Epsitec.Common.BigList.Widgets
 			this.Invalidate ();
 		}
 
+		private void HandleItemListsSelectionChanged(object sender, ItemListSelectionEventArgs e)
+		{
+			this.OnSelectionChanged (e);
+			this.Invalidate ();
+		}
+
 
 		private void OnActiveIndexChanged(ItemListIndexEventArgs e)
 		{
@@ -131,7 +167,17 @@ namespace Epsitec.Common.BigList.Widgets
 			handler.Raise (this, e);
 		}
 
+		private void OnSelectionChanged(ItemListSelectionEventArgs e)
+		{
+			System.Diagnostics.Debug.WriteLine ("Selection: {0}", e);
+
+			var handler = this.SelectionChanged;
+			handler.Raise (this, e);
+		}
+		
 		public EventHandler<ItemListIndexEventArgs> ActiveIndexChanged;
+
+		public EventHandler<ItemListSelectionEventArgs> SelectionChanged;
 
 
 		private readonly VSplitView				splitView;

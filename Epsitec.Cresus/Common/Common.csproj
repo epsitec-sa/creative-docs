@@ -110,6 +110,8 @@
     <Compile Include="BigList\ItemListMarkAttachment.cs" />
     <Compile Include="BigList\ItemListMarkOffset.cs" />
     <Compile Include="BigList\ItemListSelection.cs" />
+    <Compile Include="BigList\ItemListSelectionEventArgs.cs" />
+    <Compile Include="BigList\ItemListSelectionInfo.cs" />
     <Compile Include="BigList\ItemSortOrder.cs" />
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />
