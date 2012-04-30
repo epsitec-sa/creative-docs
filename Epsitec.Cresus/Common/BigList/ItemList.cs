@@ -8,14 +8,53 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public abstract class ItemList
+	public interface IItemList
 	{
-		protected ItemList()
+		ItemListFeatures Features
 		{
-			this.marks = new List<ItemListMark> ();
+			get;
+		}
+
+		IList<ItemListMark> Marks
+		{
+			get;
+		}
+
+		int Count
+		{
+			get;
+		}
+
+		int ActiveIndex
+		{
+			get;
+			set;
+		}
+
+		int FocusedIndex
+		{
+			get;
+			set;
+		}
+
+		int SelectedItemCount
+		{
+			get;
+		}
+
+		ItemCache Cache
+		{
+			get;
+		}
+	}
+
+	public abstract class ItemList : IItemList
+	{
+		protected ItemList(List<ItemListMark> marks = null, ItemListFeatures features = null)
+		{
 			this.visibleRows = new List<ItemListRow> ();
-			
-			this.features = new ItemListFeatures ()
+			this.marks       = marks ?? new List<ItemListMark> ();
+			this.features    = features ?? new ItemListFeatures ()
 			{
 				SelectionMode = ItemSelectionMode.ExactlyOne,
 			};
@@ -81,7 +120,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleIndex
+		public int								VisibleIndex
 		{
 			get
 			{
@@ -104,7 +143,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleOffset
+		public int								VisibleOffset
 		{
 			get
 			{
@@ -112,7 +151,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleHeight
+		public int								VisibleHeight
 		{
 			get
 			{
@@ -128,7 +167,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int VisibleCount
+		public int								VisibleCount
 		{
 			get
 			{
@@ -136,20 +175,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int SelectedItemCount
-		{
-			get
-			{
-				return this.selectedItemCount;
-			}
-		}
-
-		public abstract ItemCache Cache
-		{
-			get;
-		}
-
-		public IList<ItemListRow> VisibleRows
+		public IList<ItemListRow>				VisibleRows
 		{
 			get
 			{
@@ -157,8 +183,21 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int								SelectedItemCount
+		{
+			get
+			{
+				return this.selectedItemCount;
+			}
+		}
 
-		public bool SetVisibleIndex(int index)
+		public abstract ItemCache				Cache
+		{
+			get;
+		}
+
+
+		private bool SetVisibleIndex(int index)
 		{
 			var oldVisibleIndex  = this.visibleIndex;
 			var oldVisibleOffset = this.visibleOffset;
@@ -169,7 +208,7 @@ namespace Epsitec.Common.BigList
 				|| oldVisibleOffset != this.visibleOffset;
 		}
 
-		public bool SetActiveIndex(int index)
+		private bool SetActiveIndex(int index)
 		{
 			if ((index < 0) ||
 				(index >= this.Count))
@@ -184,7 +223,7 @@ namespace Epsitec.Common.BigList
 			return oldActiveIndex != this.activeIndex;
 		}
 
-		public bool ClearActiveIndex()
+		private bool ClearActiveIndex()
 		{
 			if (this.activeIndex == -1)
 			{
@@ -195,7 +234,7 @@ namespace Epsitec.Common.BigList
 			return true;
 		}
 
-		public bool SetFocusedIndex(int index)
+		private bool SetFocusedIndex(int index)
 		{
 			if ((index < 0) ||
 				(index >= this.Count))
@@ -210,7 +249,7 @@ namespace Epsitec.Common.BigList
 			return oldFocusedIndex != this.focusedIndex;
 		}
 
-		public bool ClearFocusedIndex()
+		private bool ClearFocusedIndex()
 		{
 			if (this.focusedIndex == -1)
 			{

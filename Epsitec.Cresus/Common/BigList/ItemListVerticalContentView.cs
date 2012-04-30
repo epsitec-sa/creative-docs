@@ -85,7 +85,7 @@ namespace Epsitec.Common.BigList
 			
 			var oldIndex = this.ActiveIndex;
 
-			this.ItemList.SetActiveIndex (index);
+			this.ItemList.ActiveIndex = index;
 
 			var newIndex = this.ActiveIndex;
 
@@ -99,20 +99,29 @@ namespace Epsitec.Common.BigList
 
 		public void FocusRow(int index)
 		{
-			if (this.ItemList.SetFocusedIndex (index))
+			if ((index < 0) ||
+				(index >= this.ItemList.Count))
 			{
-				this.ItemList.SetVisibleIndex (index);
+				return;
+			}
+			
+			if (this.ItemList.FocusedIndex != index)
+			{
+				this.ItemList.VisibleIndex = index;
 				this.Invalidate ();
 			}
 		}
 
 		public void SelectRow(int index, ItemSelection selection)
 		{
-			if (this.ItemList.SetFocusedIndex (index))
+			if ((index < 0) ||
+				(index >= this.ItemList.Count))
 			{
-				this.Invalidate ();
+				return;
 			}
 
+			this.FocusRow (index);
+			
 			if (this.ItemList.Select (index, selection))
 			{
 				this.OnSelectionChanged ();

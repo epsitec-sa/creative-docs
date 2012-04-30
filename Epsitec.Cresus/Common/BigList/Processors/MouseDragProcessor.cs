@@ -46,7 +46,7 @@ namespace Epsitec.Common.BigList.Processors
 		}
 
 		
-		protected override bool Process(Widgets.Message message, Point pos)
+		protected override bool Process(Message message, Point pos)
 		{
 			switch (message.MessageType)
 			{

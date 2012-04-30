@@ -8,6 +8,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Collections;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Layouts;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -218,7 +219,7 @@ namespace Epsitec.Common.BigList
 				{
 					var column = this.view.Columns.GetColumn (originalFrame.Index);
 
-					column.Layout.Definition.Width = new Widgets.Layouts.GridLength (currentFrame.Bounds.Width, Widgets.Layouts.GridUnitType.Absolute);
+					column.Layout.Definition.Width = new GridLength (currentFrame.Bounds.Width, GridUnitType.Absolute);
 					
 					this.view.RefreshColumnLayout ();
 				}

@@ -9,11 +9,16 @@ namespace Epsitec.Common.BigList
 	public class ItemList<TData, TState> : ItemList
 		where TState : ItemState, new ()
 	{
+		public ItemList(ItemCache<TData, TState> cache, List<ItemListMark> marks, ItemListFeatures features)
+			: base (marks, features)
+		{
+			this.cache = cache;
+			this.cache.Reset ();
+		}
+
 		public ItemList(IItemDataProvider<TData> provider, IItemDataMapper<TData> mapper)
 		{
-			int capacity = provider == null ? 100 : provider.Count;
-
-			this.cache = new ItemCache<TData, TState> (capacity, this.features)
+			this.cache = new ItemCache<TData, TState> (provider == null ? 100 : provider.Count, this.features)
 			{
 				DataProvider = provider,
 				DataMapper   = mapper,
