@@ -159,6 +159,7 @@
     <Compile Include="BigList\Renderers\StringRenderer`1.cs" />
     <Compile Include="BigList\ScrollMode.cs" />
     <Compile Include="BigList\ScrollUnit.cs" />
+    <Compile Include="BigList\Widgets\ItemScrollList.ContentView.cs" />
     <Compile Include="BigList\Widgets\ItemScrollList.cs" />
     <Compile Include="Debugging\Assert.cs" />
     <Compile Include="Debugging\AssertFailedException.cs" />

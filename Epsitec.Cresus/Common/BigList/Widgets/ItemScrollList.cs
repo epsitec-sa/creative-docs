@@ -12,7 +12,12 @@ using Epsitec.Common.Support;
 
 namespace Epsitec.Common.BigList.Widgets
 {
-	public class ItemScrollList : Widget
+	/// <summary>
+	/// The <c>ItemScrollList</c> displays items based on an item list content view. The
+	/// scroll list can be split in two, thanks to a <see cref="VSplitView"/>. If manages
+	/// one or two vertical scrollers.
+	/// </summary>
+	public partial class ItemScrollList : Widget
 	{
 		public ItemScrollList()
 		{
@@ -113,6 +118,7 @@ namespace Epsitec.Common.BigList.Widgets
 			this.itemCache.Reset ();
 		}
 
+		
 		protected override void UpdateClientGeometry()
 		{
 			base.UpdateClientGeometry ();
@@ -120,64 +126,6 @@ namespace Epsitec.Common.BigList.Widgets
 			this.contentViews.ForEach (x => x.UpdateScroller ());
 		}
 
-		class ContentView
-		{
-			public ContentView(ItemScrollList host, IItemDataRenderer itemRenderer, IItemMarkRenderer markRenderer, Widget frame, AbstractScroller scroller)
-			{
-				this.host = host;
-				this.scroller = scroller;
-				this.view = new ItemListVerticalContentView ()
-				{
-					Parent       = frame,
-					Dock         = DockStyle.Fill,
-					ItemList     = this.host.itemLists.Create (),
-					ItemRenderer = itemRenderer,
-					MarkRenderer = markRenderer,
-				};
-
-				this.host.itemCache.ResetFired += this.HandleItemCacheResetFired;
-				this.view.ItemList.VisibleContentChanged += this.HandleVisibleContentChanged;
-				this.scroller.ValueChanged += this.HandleScrollerValueChanged;
-
-				this.UpdateScroller ();
-			}
-
-			private void HandleItemCacheResetFired(object sender)
-			{
-				this.UpdateScroller ();
-			}
-
-			private void HandleScrollerValueChanged(object sender)
-			{
-				this.view.ItemList.VisibleIndex = (int) this.scroller.Value;
-				this.view.Invalidate ();
-			}
-
-			private void HandleVisibleContentChanged(object sender)
-			{
-				this.UpdateScroller ();
-			}
-
-			
-			public void UpdateScroller()
-			{
-				decimal index   = this.view.ItemList.VisibleIndex;
-				decimal visible = this.view.ItemList.VisibleCount;
-				decimal total   = this.host.itemCache.ItemCount;
-
-				this.scroller.MinValue          = 0;
-				this.scroller.MaxValue          = total - 1;
-				this.scroller.Resolution        = 1;
-				this.scroller.VisibleRangeRatio = total == 0 ? 1 : visible / total;
-				this.scroller.Value				= index;
-			}
-
-			private readonly ItemScrollList host;
-			private readonly AbstractScroller	scroller;
-			private readonly ItemListVerticalContentView view;
-
-		}
-		
 		private void AttachItemListEventHandlers()
 		{
 			this.itemLists.ActiveIndexChanged  += this.HandleItemListsActiveIndexChanged;
@@ -226,6 +174,7 @@ namespace Epsitec.Common.BigList.Widgets
 			var handler = this.SelectionChanged;
 			handler.Raise (this, e);
 		}
+		
 		
 		public EventHandler<ItemListIndexEventArgs> ActiveIndexChanged;
 

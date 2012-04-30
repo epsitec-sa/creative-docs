@@ -95,6 +95,21 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		public void SyncVisibleIndex(int index)
+		{
+			if ((this.visibleRows.Count > 0) &&
+				(this.visibleRows[0].Index == index))
+			{
+				return;
+			}
+
+			this.visibleRows.Clear ();
+			this.visibleIndex = this.Count;
+
+			this.SetVisibleIndex (index);
+			this.OnVisibleContentChanged ();
+		}
+
 		public void MoveVisibleContent(int distance)
 		{
 			List<ItemListRow> rows;
@@ -475,7 +490,7 @@ namespace Epsitec.Common.BigList
 
 				//	...and fill the list with as many items as possible.
 
-				while ((total < this.visibleHeight) && (index < count))
+				while ((offset < this.visibleHeight) && (index < count))
 				{
 					var height = this.GetItemHeight (index);
 					var localH = height.TotalHeight;
