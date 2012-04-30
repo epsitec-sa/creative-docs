@@ -3,6 +3,10 @@
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>SplitViewFrameVisibilityEventArgs</c> class provides the old and new value for the
+	/// <see cref="AbstractSplitView.FrameVisibility"/> property.
+	/// </summary>
 	public class SplitViewFrameVisibilityEventArgs : Epsitec.Common.Support.EventArgs
 	{
 		public SplitViewFrameVisibilityEventArgs(SplitViewFrameVisibility oldValue, SplitViewFrameVisibility newValue)
@@ -11,7 +15,8 @@ namespace Epsitec.Common.Widgets
 			this.newValue = newValue;
 		}
 
-		public SplitViewFrameVisibility OldValue
+		
+		public SplitViewFrameVisibility			OldValue
 		{
 			get
 			{
@@ -19,7 +24,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public SplitViewFrameVisibility NewValue
+		public SplitViewFrameVisibility			NewValue
 		{
 			get
 			{
@@ -27,6 +32,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		private readonly SplitViewFrameVisibility oldValue;
 		private readonly SplitViewFrameVisibility newValue;
 	}

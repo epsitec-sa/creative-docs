@@ -4,6 +4,10 @@
 using Epsitec.Common.Support;
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>AbstractSplitView</c> class is the base class for the split views (see
+	/// <see cref="VSplitView"/>).
+	/// </summary>
 	public abstract class AbstractSplitView : Widget
 	{
 		protected AbstractSplitView()
@@ -36,6 +40,18 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public int								CollapseThreshold
+		{
+			get
+			{
+				return this.collapseThreshold;
+			}
+			set
+			{
+				this.collapseThreshold = value;
+			}
+		}
+		
 		public abstract Widget					Frame1
 		{
 			get;
@@ -113,6 +129,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		private int								collapseThreshold = 28;
 		private double							ratio;
 	}
 }

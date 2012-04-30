@@ -11,17 +11,21 @@ namespace Epsitec.Common.Widgets
 {
 	public partial class VSplitView
 	{
-		class DragProcessor
+		/// <summary>
+		/// The <c>DragProcess</c> class is used to manage the dragging of the splitter.
+		/// </summary>
+		private sealed class DragProcessor
 		{
 			public DragProcessor(VSplitView view, Widget source, MessageEventArgs e)
 			{
-				this.view = view;
+				this.view   = view;
 				this.source = source;
 
 				this.originalY = this.source.MapClientToRoot (e.Point).Y;
 				this.originalH = this.Offset;
 				
 				this.source.PreProcessing += this.HandleSourcePreProcessing;
+				
 				this.view.separator.Visibility = true;
 				
 				e.Message.Captured = true;
@@ -70,24 +74,16 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source.PreProcessing -= this.HandleSourcePreProcessing;
 
-				double hMin = this.view.collapseHeight;
-				double hMax = this.view.Client.Height - this.view.collapseHeight;
+				double hMin = this.view.CollapseThreshold;
+				double hMax = this.view.Client.Height - hMin;
 
 				if (this.Offset < hMin)
 				{
-					this.Offset = 0;
-					this.view.dragButton.Visibility = true;
-					this.view.dragButton.Parent = this.view.scroller2.Parent;
-					this.view.dragButton.Dock = DockStyle.Top;
-					this.view.separator.Visibility = false;
+					this.CollapseFrame1 ();
 				}
 				else if (this.Offset > hMax)
 				{
-					this.Offset = this.view.Client.Height;
-					this.view.dragButton.Visibility = true;
-					this.view.dragButton.Parent = this.view.scroller1.Parent;
-					this.view.dragButton.Dock = DockStyle.Bottom;
-					this.view.separator.Visibility = false;
+					this.CollapseFrame2 ();
 				}
 				else
 				{
@@ -96,6 +92,29 @@ namespace Epsitec.Common.Widgets
 			}
 
 
+			private void CollapseFrame1()
+			{
+				this.Offset = 0;
+				
+				this.view.dragButton.Visibility = true;
+				this.view.dragButton.Parent     = this.view.scroller2.Parent;
+				this.view.dragButton.Dock       = DockStyle.Top;
+			
+				this.view.separator.Visibility  = false;
+			}
+			
+			private void CollapseFrame2()
+			{
+				this.Offset = this.view.Client.Height;
+				
+				this.view.dragButton.Visibility = true;
+				this.view.dragButton.Parent     = this.view.scroller1.Parent;
+				this.view.dragButton.Dock       = DockStyle.Bottom;
+				
+				this.view.separator.Visibility  = false;
+			}
+			
+			
 			private readonly VSplitView			view;
 			private readonly Widget				source;
 			private readonly double				originalY;

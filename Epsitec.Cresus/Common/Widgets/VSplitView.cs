@@ -155,8 +155,6 @@ namespace Epsitec.Common.Widgets
 
 
 
-		private int								collapseHeight = 28;
-		
 		private readonly Widget					frame1Container;
 		private readonly Widget					frame1;
 		private readonly VScroller				scroller1;
