@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		public override void UpdateContent()
 		{
+			base.UpdateContent ();
+
 			if (this.showPanel)
 			{
 				this.UpdateWidgets ();
@@ -100,7 +102,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			new StaticText
+			this.graphLabel = new StaticText
 			{
 				Parent         = frame,
 				FormattedText  = "Graphiques",
@@ -203,6 +205,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			using (this.ignoreChanges.Enter ())
 			{
+				this.cumulButton.Visibility           = !this.options.ViewGraph;
+				this.nullButton.Visibility            = !this.options.ViewGraph;
+				this.graphLabel.Visibility            = !this.options.ViewGraph;
+				this.stackedGraphButton.Visibility    = !this.options.ViewGraph;
+				this.sideBySideGraphButton.Visibility = !this.options.ViewGraph;
+
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
 				this.cumulButton.ActiveState           = this.Options.Cumul              ? ActiveState.Yes : ActiveState.No;
 				this.nullButton.ActiveState            = this.Options.HideZero           ? ActiveState.Yes : ActiveState.No;
@@ -251,6 +259,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
 		private CheckButton			nullButton;
+		private StaticText			graphLabel;
 		private CheckButton			stackedGraphButton;
 		private CheckButton			sideBySideGraphButton;
 	}

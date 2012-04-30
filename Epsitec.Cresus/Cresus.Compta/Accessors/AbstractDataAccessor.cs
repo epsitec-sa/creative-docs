@@ -112,14 +112,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public GraphOptions GraphOptions
-		{
-			get
-			{
-				return this.graphOptions;
-			}
-		}
-
 		public virtual void UpdateAfterOptionsChanged()
 		{
 		}
@@ -647,6 +639,5 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected Date?									lastEndDate;
 		protected Cube									cube;
 		protected GraphOptions							arrayGraphOptions;
-		protected GraphOptions							graphOptions;
 	}
 }

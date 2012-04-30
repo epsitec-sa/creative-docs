@@ -21,21 +21,21 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.controller = controller;
 			this.cube       = controller.DataAccessor.Cube;
-			this.options    = controller.DataAccessor.GraphOptions;
+			this.options    = controller.DataAccessor.Options.GraphOptions;
 
 			this.ignoreChanges = new SafeCounter ();
 		}
 
 
-		public void CreateUI(Widget parent, System.Action optionsChangedAction)
+		public void CreateUI(Widget parent, System.Action optionsChangedAction, System.Action levelChangedAction)
 		{
 			this.optionsChangedAction = optionsChangedAction;
+			this.levelChangedAction = levelChangedAction;
 
 			var toolbar = new FrameBox
 			{
 				Parent        = parent,
 				DrawFullFrame = true,
-				BackColor     = Color.FromName ("White"),
 				Dock          = DockStyle.Fill,
 			};
 
@@ -73,7 +73,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent     = frame,
 				Dock       = DockStyle.Top,
-				Padding    = new Margins (5),
 				Visibility = false,
 			};
 
@@ -118,11 +117,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock            = DockStyle.Top,
 			};
 
-			this.sideBySideModeButton = this.CreateButton (leftFrame, "Graph.SideBySide");
-			this.stackedModeButton    = this.CreateButton (leftFrame, "Graph.Stacked");
-			this.linesModeButton      = this.CreateButton (leftFrame, "Graph.Lines");
-			this.pieModeButton        = this.CreateButton (leftFrame, "Graph.Pie");
-			this.arrayModeButton      = this.CreateButton (leftFrame, "Graph.Array");
+			this.sideBySideModeButton = this.CreateButton (leftFrame, "Graph.SideBySide", "Histogramme côte à côte");
+			this.stackedModeButton    = this.CreateButton (leftFrame, "Graph.Stacked",    "Histogramme empilé");
+			this.linesModeButton      = this.CreateButton (leftFrame, "Graph.Lines",      "Courbes");
+			this.pieModeButton        = this.CreateButton (leftFrame, "Graph.Pie",        "Secteurs");
+			this.arrayModeButton      = this.CreateButton (leftFrame, "Graph.Array",      "Données brutes");
 
 			{
 				new StaticText
@@ -232,36 +231,31 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.sideBySideModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.SideBySide;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.stackedModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Stacked;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.linesModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Lines;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.pieModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Pie;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.arrayModeButton.Clicked += delegate
 			{
 				this.options.Mode = GraphMode.Array;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.swapButton.Clicked += delegate
@@ -279,8 +273,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.options.SecondaryFilter.Clear ();
 				this.options.SecondaryFilter.AddRange (t);
 
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.primaryDimensionCombo.TextChanged += delegate
@@ -290,8 +283,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.options.PrimaryDimension = this.TextToDimension (this.primaryDimensionCombo.FormattedText);
 					this.options.PrimaryFilter.Clear ();
 
-					this.UpdateWidgets ();
-					this.optionsChangedAction ();
+					this.OptionsChanged ();
 				}
 			};
 
@@ -302,8 +294,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.options.SecondaryDimension = this.TextToDimension (this.secondaryDimensionCombo.FormattedText);
 					this.options.SecondaryFilter.Clear ();
 
-					this.UpdateWidgets ();
-					this.optionsChangedAction ();
+					this.OptionsChanged ();
 				}
 			};
 
@@ -332,88 +323,306 @@ namespace Epsitec.Cresus.Compta.Graph
 				if (this.ignoreChanges.IsZero)
 				{
 					options.Style = GraphOptionsController.TextToStyle (this.styleCombo.FormattedText);
-					this.optionsChangedAction ();
+					this.OptionsChanged ();
 				}
 			};
 		}
 
 		private void CreateSpecialistUI(Widget parent)
 		{
-			this.hasThresholdButton = new CheckButton
+			var leftFrame = new FrameBox
 			{
 				Parent         = parent,
-				FormattedText  = "Seuil",
-				PreferredWidth = 50,
-				AutoToggle     = false,
+				PreferredWidth = 200,
 				Dock           = DockStyle.Left,
+				Padding        = new Margins (5),
 			};
 
-			this.thresholdValueField = new TextFieldEx
+			new Separator
 			{
-				Parent                       = parent,
-				PreferredWidth               = 70,
-				AutoToggle                   = false,
-				Dock                         = DockStyle.Left,
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-				Margins                      = new Margins (0, 10, 0, 0),
+				Parent         = parent,
+				PreferredWidth = 1,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 10, 0, 0),
 			};
+
+			var middleFrame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 200,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (5),
+			};
+
+			new Separator
+			{
+				Parent         = parent,
+				PreferredWidth = 1,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 10, 0, 0),
+			};
+
+			var rightFrame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 200,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (5),
+			};
+
+			new Separator
+			{
+				Parent         = parent,
+				PreferredWidth = 1,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 10, 0, 0),
+			};
+
+			//	Partie gauche.
+			{
+				var line = new FrameBox
+				{
+					Parent          = leftFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				this.hasThresholdButton = new CheckButton
+				{
+					Parent         = line,
+					FormattedText  = "Seuil",
+					PreferredWidth = 50,
+					AutoToggle     = false,
+					Dock           = DockStyle.Left,
+				};
+
+				this.thresholdValueField = new TextFieldEx
+				{
+					Parent                       = line,
+					PreferredWidth               = 70,
+					AutoToggle                   = false,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+				};
+
+				this.thresholdAddButton = new GlyphButton
+				{
+					Parent          = line,
+					GlyphShape      = GlyphShape.Plus,
+					ButtonStyle     = ButtonStyle.ToolItem,
+					PreferredWidth  = 20,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins        = new Margins (1, 0, 0, 0),
+				};
+
+				this.thresholdSubButton = new GlyphButton
+				{
+					Parent          = line,
+					GlyphShape      = GlyphShape.Minus,
+					ButtonStyle     = ButtonStyle.ToolItem,
+					PreferredWidth  = 20,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins        = new Margins (-1, 0, 0, 0),
+				};
+			}
 
 			this.startAtZeroButton = new CheckButton
 			{
-				Parent         = parent,
+				Parent         = leftFrame,
 				FormattedText  = "Zéro inclu",
 				PreferredWidth = 80,
 				AutoToggle     = false,
-				Dock           = DockStyle.Left,
+				Dock           = DockStyle.Top,
+				Margins        = new Margins (0, 0, 5, 0),
 			};
 
-			this.explodedPieButton = new CheckButton
-			{
-				Parent         = parent,
-				FormattedText  = "Secteurs éclatés",
-				PreferredWidth = 110,
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-			};
-
+			//	Partie centrale.
 			this.legendButton = new CheckButton
 			{
-				Parent         = parent,
+				Parent         = middleFrame,
 				FormattedText  = "Légendes",
-				PreferredWidth = 70,
+				PreferredWidth = 80,
 				AutoToggle     = false,
-				Dock           = DockStyle.Left,
+				Dock           = DockStyle.Top,
+				Margins        = new Margins (0, 0, 0, 5),
 			};
 
+			this.piePercentsButton = new CheckButton
+			{
+				Parent         = middleFrame,
+				FormattedText  = "Pourcentages",
+				PreferredWidth = 90,
+				AutoToggle     = false,
+				Dock           = DockStyle.Top,
+			};
+
+			this.pieValuesButton = new CheckButton
+			{
+				Parent         = middleFrame,
+				FormattedText  = "Montants",
+				PreferredWidth = 80,
+				AutoToggle     = false,
+				Dock           = DockStyle.Top,
+			};
+
+			this.linesButton = new CheckButton
+			{
+				Parent         = middleFrame,
+				FormattedText  = "Traits",
+				PreferredWidth = 60,
+				AutoToggle     = false,
+				Dock           = DockStyle.Top,
+			};
+
+			{
+				var line = new FrameBox
+				{
+					Parent          = middleFrame,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Top,
+				};
+
+				this.pointLabel = new StaticText
+				{
+					Parent         = line,
+					FormattedText  = "Points",
+					PreferredWidth = 40,
+					Dock           = DockStyle.Left,
+				};
+
+				this.pointCombo = new TextFieldCombo
+				{
+					Parent          = line,
+					IsReadOnly      = true,
+					PreferredWidth  = 110,
+					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
+					Dock            = DockStyle.Left,
+				};
+			}
+
+			//	Partie gauche.
+			this.fontSizeController = new SliderController ();
+			this.fontSizeController.CreateUI (rightFrame, 4.0, 30.0, 1.0, 10.0, "Taille police", delegate
+			{
+				this.options.FontSize = this.fontSizeController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.borderThicknessController = new SliderController ();
+			this.borderThicknessController.CreateUI (rightFrame, 0.0, 3.0, 0.5, 1.0, "Contours", delegate
+			{
+				this.options.BorderThickness = this.borderThicknessController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.barThicknessController = new SliderController ();
+			this.barThicknessController.CreateUI (rightFrame, 0.1, 1.0, 0.1, 0.8, "Barres", delegate
+			{
+				this.options.BarThickness = this.barThicknessController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.lineAlphaController = new SliderController ();
+			this.lineAlphaController.CreateUI (rightFrame, 0.1, 1.0, 0.1, 1.0, "Opacité", delegate
+			{
+				this.options.LineAlpha = this.lineAlphaController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.lineWidthController = new SliderController ();
+			this.lineWidthController.CreateUI (rightFrame, 1.0, 20.0, 1.0, 2.0, "Taille traits", delegate
+			{
+				this.options.LineWidth = this.lineWidthController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.pointWidthController = new SliderController ();
+			this.pointWidthController.CreateUI (rightFrame, 1.0, 20.0, 1.0, 4.0, "Taille points", delegate
+			{
+				this.options.PointWidth = this.pointWidthController.Value;
+				this.OptionsChanged ();
+			});
+
+			this.explodedPieFactorController = new SliderController ();
+			this.explodedPieFactorController.CreateUI (rightFrame, 0.0, 4.0, 0.5, 1.0, "Eloignement", delegate
+			{
+				this.options.ExplodedPieFactor = this.explodedPieFactorController.Value;
+				this.OptionsChanged ();
+			});
+
 			//	Connexion des événements.
+			this.piePercentsButton.Clicked += delegate
+			{
+				this.options.PiePercents = !this.options.PiePercents;
+
+				if (this.options.PiePercents)
+				{
+					this.options.PieValues = false;
+				}
+
+				this.OptionsChanged ();
+			};
+
+			this.pieValuesButton.Clicked += delegate
+			{
+				this.options.PieValues = !this.options.PieValues;
+
+				if (this.options.PieValues)
+				{
+					this.options.PiePercents = false;
+				}
+
+				this.OptionsChanged ();
+			};
+
+			this.linesButton.Clicked += delegate
+			{
+				this.options.HasLines = !this.options.HasLines;
+
+				if (!this.options.HasLines && this.options.GraphPoints == GraphPoint.None)
+				{
+					this.options.GraphPoints = GraphPoint.Circle;
+				}
+
+				this.OptionsChanged ();
+			};
+
+			this.pointCombo.TextChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					options.GraphPoints = GraphOptionsController.TextToPoint (this.pointCombo.FormattedText);
+
+					if (this.options.GraphPoints == GraphPoint.None)
+					{
+						this.options.HasLines = true;
+					}
+
+					this.OptionsChanged ();
+				}
+			};
+
 			this.legendButton.Clicked += delegate
 			{
 				this.options.HasLegend = !this.options.HasLegend;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.startAtZeroButton.Clicked += delegate
 			{
 				this.options.StartAtZero = !this.options.StartAtZero;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
-			};
-
-			this.explodedPieButton.Clicked += delegate
-			{
-				this.options.ExplodedPie = !this.options.ExplodedPie;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.hasThresholdButton.Clicked += delegate
 			{
 				this.options.HasThreshold = !this.options.HasThreshold;
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			this.thresholdValueField.EditionAccepted += delegate
@@ -424,27 +633,56 @@ namespace Epsitec.Cresus.Compta.Graph
 					if (value.HasValue)
 					{
 						this.options.ThresholdValue = value.Value;
-						this.UpdateWidgets ();
-						this.optionsChangedAction ();
+						this.OptionsChanged ();
 					}
 				}
+			};
+
+			this.thresholdAddButton.Clicked += delegate
+			{
+				this.options.ThresholdValue = System.Math.Min (this.options.ThresholdValue+0.01m, 1.0m);
+				this.OptionsChanged ();
+			};
+
+			this.thresholdSubButton.Clicked += delegate
+			{
+				this.options.ThresholdValue = System.Math.Max (this.options.ThresholdValue-0.01m, 0.0m);
+				this.OptionsChanged ();
 			};
 		}
 
 
-		private void ClearAction()
+		private void OptionsChanged()
 		{
-			this.options.Clear ();
 			this.UpdateWidgets ();
 			this.optionsChangedAction ();
 		}
 
+
+		public bool Specialist
+		{
+			get
+			{
+				return this.levelController.Specialist;
+			}
+			set
+			{
+				this.levelController.Specialist = value;
+				this.LevelChangedAction ();
+			}
+		}
+
+		private void ClearAction()
+		{
+			this.options.Clear ();
+			this.OptionsChanged ();
+		}
+
 		private void LevelChangedAction()
 		{
-			this.isSpecialist = this.levelController.Specialist;
-
 			this.specialistFrame.Visibility = this.levelController.Specialist;
 			this.separator.Visibility = this.levelController.Specialist;
+			this.levelChangedAction ();
 		}
 
 	
@@ -452,6 +690,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.InitComboDimension (this.primaryDimensionCombo);
 			this.InitComboDimension (this.secondaryDimensionCombo);
+			this.InitComboPoint (this.pointCombo);
 			this.InitComboStyle (this.styleCombo);
 			this.UpdateWidgets ();
 		}
@@ -460,9 +699,19 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			using (this.ignoreChanges.Enter())
 			{
-				this.startAtZeroButton.Visibility = this.options.Mode == GraphMode.SideBySide || this.options.Mode == GraphMode.Lines;
-				this.explodedPieButton.Visibility = this.options.Mode == GraphMode.Pie;
-				this.legendButton.Visibility      = this.options.Mode != GraphMode.Array;
+				this.startAtZeroButton.Visibility           = this.options.Mode == GraphMode.SideBySide || this.options.Mode == GraphMode.Lines;
+				this.linesButton.Visibility                 = this.options.Mode == GraphMode.Lines;
+				this.pointLabel.Visibility                  = this.options.Mode == GraphMode.Lines;
+				this.pointCombo.Visibility                  = this.options.Mode == GraphMode.Lines;
+				this.legendButton.Visibility                = this.options.Mode != GraphMode.Array;
+				this.borderThicknessController.Visibility   = this.options.Mode != GraphMode.Array;
+				this.barThicknessController.Visibility      = this.options.Mode == GraphMode.SideBySide || this.options.Mode == GraphMode.Stacked;
+				this.lineAlphaController.Visibility         = this.options.Mode == GraphMode.Lines;
+				this.lineWidthController.Visibility         = this.options.Mode == GraphMode.Lines && this.options.HasLines;
+				this.pointWidthController.Visibility        = this.options.Mode == GraphMode.Lines && this.options.GraphPoints != GraphPoint.None;
+				this.piePercentsButton.Visibility           = this.options.Mode == GraphMode.Pie;
+				this.pieValuesButton.Visibility             = this.options.Mode == GraphMode.Pie;
+				this.explodedPieFactorController.Visibility = this.options.Mode == GraphMode.Pie;
 
 				this.sideBySideModeButton.ActiveState = (this.options.Mode == GraphMode.SideBySide) ? ActiveState.Yes : ActiveState.No;
 				this.stackedModeButton.ActiveState    = (this.options.Mode == GraphMode.Stacked   ) ? ActiveState.Yes : ActiveState.No;
@@ -470,16 +719,28 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.pieModeButton.ActiveState        = (this.options.Mode == GraphMode.Pie       ) ? ActiveState.Yes : ActiveState.No;
 				this.arrayModeButton.ActiveState      = (this.options.Mode == GraphMode.Array     ) ? ActiveState.Yes : ActiveState.No;
 
+				this.linesButton.ActiveState        = this.options.HasLines     ? ActiveState.Yes : ActiveState.No;
+				this.piePercentsButton.ActiveState  = this.options.PiePercents  ? ActiveState.Yes : ActiveState.No;
+				this.pieValuesButton.ActiveState    = this.options.PieValues    ? ActiveState.Yes : ActiveState.No;
 				this.legendButton.ActiveState       = this.options.HasLegend    ? ActiveState.Yes : ActiveState.No;
 				this.startAtZeroButton.ActiveState  = this.options.StartAtZero  ? ActiveState.Yes : ActiveState.No;
-				this.explodedPieButton.ActiveState  = this.options.ExplodedPie  ? ActiveState.Yes : ActiveState.No;
 				this.hasThresholdButton.ActiveState = this.options.HasThreshold ? ActiveState.Yes : ActiveState.No;
 
+				this.thresholdAddButton.Enable = this.options.HasThreshold;
+				this.thresholdSubButton.Enable = this.options.HasThreshold;
 				this.thresholdValueField.Enable = this.options.HasThreshold;
 				this.thresholdValueField.Text = Converters.PercentToString (this.options.ThresholdValue);
 
 				this.primaryDimensionCombo.FormattedText   = this.DimensionToText (this.options.PrimaryDimension);
 				this.secondaryDimensionCombo.FormattedText = this.DimensionToText (this.options.SecondaryDimension);
+
+				this.fontSizeController.Value          = this.options.FontSize;
+				this.borderThicknessController.Value   = this.options.BorderThickness;
+				this.barThicknessController.Value      = this.options.BarThickness;
+				this.lineAlphaController.Value         = this.options.LineAlpha;
+				this.lineWidthController.Value         = this.options.LineWidth;
+				this.pointWidthController.Value        = this.options.PointWidth;
+				this.explodedPieFactorController.Value = this.options.ExplodedPieFactor;
 
 				if (this.cube.Dimensions != 0)
 				{
@@ -487,13 +748,14 @@ namespace Epsitec.Cresus.Compta.Graph
 					this.secondaryFilterField.FormattedText = GraphOptionsController.GetFilterSummary (this.options.SecondaryFilter, this.cube.GetCount (this.options.SecondaryDimension));
 				}
 
+				this.pointCombo.FormattedText = GraphOptionsController.PointToText (this.options.GraphPoints);
 				this.styleCombo.FormattedText = GraphOptionsController.StyleToText (this.options.Style);
 			}
 		}
 
-		private BackIconButton CreateButton(Widget parent, string icon)
+		private BackIconButton CreateButton(Widget parent, string icon, FormattedText description)
 		{
-			return new BackIconButton
+			var button = new BackIconButton
 			{
 				Parent              = parent,
 				IconUri             = UIBuilder.GetResourceIconUri (icon),
@@ -505,6 +767,10 @@ namespace Epsitec.Cresus.Compta.Graph
 				HorizontalAlignment = HorizontalAlignment.Center,
 				AutoFocus           = false,
 			};
+
+			ToolTip.Default.SetToolTip (button, description);
+
+			return button;
 		}
 
 
@@ -620,6 +886,78 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		private void InitComboPoint(TextFieldCombo combo)
+		{
+			combo.Items.Clear ();
+
+			foreach (var point in GraphOptionsController.Points)
+			{
+				combo.Items.Add (GraphOptionsController.PointToText (point));
+			}
+		}
+
+		private static GraphPoint TextToPoint(FormattedText text)
+		{
+			foreach (var point in GraphOptionsController.Points)
+			{
+				if (text == GraphOptionsController.PointToText (point))
+				{
+					return point;
+				}
+			}
+
+			return GraphPoint.None;
+		}
+
+		private static FormattedText PointToText(GraphPoint point)
+		{
+			switch (point)
+			{
+				case GraphPoint.None:
+					return "Aucun";
+
+				case GraphPoint.Mix:
+					return "Mélangés";
+
+				case GraphPoint.Circle:
+					return "Cercles";
+
+				case GraphPoint.Square:
+					return "Carrés";
+
+				case GraphPoint.TriangleUp:
+					return "Triangles haut";
+
+				case GraphPoint.Diamond:
+					return "Losanges";
+
+				case GraphPoint.TriangleDown:
+					return "Triangles bas";
+
+				case GraphPoint.Cross:
+					return "Croix";
+
+				default:
+					return "?";
+			}
+		}
+
+		private static IEnumerable<GraphPoint> Points
+		{
+			get
+			{
+				yield return GraphPoint.None;
+				yield return GraphPoint.Mix;
+				yield return GraphPoint.Circle;
+				yield return GraphPoint.Square;
+				yield return GraphPoint.Diamond;
+				yield return GraphPoint.TriangleUp;
+				yield return GraphPoint.TriangleDown;
+				yield return GraphPoint.Cross;
+			}
+		}
+
+
 		private static FormattedText GetFilterSummary(List<FormattedText> filter, int count)
 		{
 			if (filter.Count == 0)
@@ -679,9 +1017,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				item.Clicked += delegate
 				{
 					filter.Clear ();
-
-					this.UpdateWidgets ();
-					this.optionsChangedAction ();
+					this.OptionsChanged ();
 				};
 
 				menu.Items.Add (item);
@@ -705,8 +1041,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					filter.Add (this.cube.GetShortTitle (dimension, i));
 				}
 
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			menu.Items.Add (item);
@@ -734,8 +1069,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					filter.Add (shortTitle);
 				}
 
-				this.UpdateWidgets ();
-				this.optionsChangedAction ();
+				this.OptionsChanged ();
 			};
 
 			menu.Items.Add (item);
@@ -747,13 +1081,12 @@ namespace Epsitec.Cresus.Compta.Graph
 		private readonly GraphOptions			options;
 		private readonly SafeCounter			ignoreChanges;
 
-		private bool							isSpecialist;
-
 		private FrameBox						beginnerFrame;
 		private Separator						separator;
 		private FrameBox						specialistFrame;
 
 		private System.Action					optionsChangedAction;
+		private System.Action					levelChangedAction;
 		private LevelController					levelController;
 		private BackIconButton					sideBySideModeButton;
 		private BackIconButton					stackedModeButton;
@@ -769,11 +1102,24 @@ namespace Epsitec.Cresus.Compta.Graph
 		private StaticText						secondaryFilterField;
 		private GlyphButton						secondaryFilterButton;
 		private IconButton						swapButton;
+		private StaticText						pointLabel;
+		private TextFieldCombo					pointCombo;
 		private TextFieldCombo					styleCombo;
+		private CheckButton						linesButton;
 		private CheckButton						legendButton;
 		private CheckButton						startAtZeroButton;
-		private CheckButton						explodedPieButton;
 		private CheckButton						hasThresholdButton;
+		private CheckButton						piePercentsButton;
+		private CheckButton						pieValuesButton;
 		private TextFieldEx						thresholdValueField;
+		private GlyphButton						thresholdAddButton;
+		private GlyphButton						thresholdSubButton;
+		private SliderController				fontSizeController;
+		private SliderController				borderThicknessController;
+		private SliderController				barThicknessController;
+		private SliderController				lineAlphaController;
+		private SliderController				lineWidthController;
+		private SliderController				pointWidthController;
+		private SliderController				explodedPieFactorController;
 	}
 }

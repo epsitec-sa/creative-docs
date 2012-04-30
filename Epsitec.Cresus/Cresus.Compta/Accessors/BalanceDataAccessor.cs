@@ -30,10 +30,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.arrayGraphOptions = new GraphOptions ();
 
-			var defaultOptions = new GraphOptions ();
-			defaultOptions.Mode = GraphMode.SideBySide;
-			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.Balance.Graph", defaultOptions);
-
 			this.UpdateAfterOptionsChanged ();
 		}
 
@@ -180,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!force && !this.Options.HasGraphics && !this.controller.HasVisibleGraph)
+			if (!force && !this.Options.HasGraphics && !this.options.ViewGraph)
 			{
 				return;
 			}

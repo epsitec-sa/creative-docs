@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -22,14 +23,27 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public virtual void SetComptaEntity(ComptaEntity compta)
 		{
 			this.compta = compta;
+
+			this.graphOptions = new GraphOptions ();
 		}
 
 
 		public virtual void Clear()
 		{
+			this.ViewGraph             = false;
 			this.ComparisonEnable      = false;
 			this.ComparisonShowed      = ComparisonShowed.None;
 			this.ComparisonDisplayMode = ComparisonDisplayMode.Montant;
+			this.graphOptions.Clear ();
+		}
+
+
+		public GraphOptions GraphOptions
+		{
+			get
+			{
+				return this.graphOptions;
+			}
 		}
 
 
@@ -40,6 +54,12 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 		public bool Specialist
+		{
+			get;
+			set;
+		}
+
+		public bool GraphSpecialist
 		{
 			get;
 			set;
@@ -140,16 +160,21 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public virtual void CopyTo(AbstractOptions dst)
 		{
+			dst.ViewGraph             = this.ViewGraph;
 			dst.ComparisonEnable      = this.ComparisonEnable;
 			dst.ComparisonShowed      = this.ComparisonShowed;
 			dst.ComparisonDisplayMode = this.ComparisonDisplayMode;
+
+			this.graphOptions.CopyTo (dst.graphOptions);
 		}
 
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			return this.ComparisonEnable      == other.ComparisonEnable     &&
-				   this.ComparisonShowed      == other.ComparisonShowed     &&
-				   this.ComparisonDisplayMode == other.ComparisonDisplayMode;
+			return this.ViewGraph             == other.ViewGraph             &&
+				   this.ComparisonEnable      == other.ComparisonEnable      &&
+				   this.ComparisonShowed      == other.ComparisonShowed      &&
+				   this.ComparisonDisplayMode == other.ComparisonDisplayMode &&
+				   this.graphOptions.CompareTo (other.graphOptions);
 		}
 
 
@@ -219,5 +244,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		protected AbstractOptions					emptyOptions;
 		protected System.Text.StringBuilder			summaryBuilder;
 		protected bool								firstSummary;
+		protected GraphOptions						graphOptions;
 	}
 }

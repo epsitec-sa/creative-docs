@@ -41,7 +41,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.controllers = new List<AbstractController> ();
 			this.settingsData = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
-			this.settingsGraphOptions = new Dictionary<string, GraphOptions> ();
 			this.defaultSettingsList = new SettingsList ();
 			this.navigatorEngine = new NavigatorEngine ();
 			this.piècesGenerator = new PiècesGenerator (this);
@@ -1685,18 +1684,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return data;
 		}
-
-		public GraphOptions GetSettingsGraphOptions(string key, GraphOptions defaultOptions)
-		{
-			GraphOptions options;
-			if (this.settingsGraphOptions.TryGetValue (key, out options))
-			{
-				return options;
-			}
-
-			this.settingsGraphOptions.Add (key, defaultOptions);
-			return defaultOptions;
-		}
 		#endregion
 
 
@@ -1704,7 +1691,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly List<AbstractController>			controllers;
 		private readonly Dictionary<string, ISettingsData>	settingsData;
 		private readonly SettingsList						settingsList;
-		private readonly Dictionary<string, GraphOptions>	settingsGraphOptions;
 		private readonly SettingsList						defaultSettingsList;
 		private readonly NavigatorEngine					navigatorEngine;
 		private readonly PiècesGenerator					piècesGenerator;

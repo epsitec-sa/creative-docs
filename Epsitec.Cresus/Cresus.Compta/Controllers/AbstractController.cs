@@ -109,14 +109,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool HasVisibleGraph
-		{
-			get
-			{
-				return this.graphController != null && this.graphController.Show;
-			}
-		}
-
 		public BusinessContext BusinessContext
 		{
 			get
@@ -1134,14 +1126,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.graphController != null)
 			{
 				this.graphController.Update ();
-			}
-		}
-
-		protected void UpdateGraphController()
-		{
-			if (this.graphController != null)
-			{
-				this.graphController.UpdateController ();
 			}
 		}
 		#endregion

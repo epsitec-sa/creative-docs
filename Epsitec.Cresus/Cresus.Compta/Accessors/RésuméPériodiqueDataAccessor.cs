@@ -30,10 +30,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.arrayGraphOptions = new GraphOptions ();
 
-			var defaultOptions = new GraphOptions ();
-			defaultOptions.Mode = GraphMode.Stacked;
-			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.RésuméPériodique.Graph", defaultOptions);
-
 			this.UpdateAfterOptionsChanged ();
 		}
 
@@ -145,7 +141,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!force && !this.Options.HasStackedGraph && !this.Options.HasSideBySideGraph && !this.controller.HasVisibleGraph)
+			if (!force && !this.Options.HasStackedGraph && !this.Options.HasSideBySideGraph && !this.options.ViewGraph)
 			{
 				return;
 			}

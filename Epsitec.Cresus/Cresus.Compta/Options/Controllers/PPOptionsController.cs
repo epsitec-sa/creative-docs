@@ -28,6 +28,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		public override void UpdateContent()
 		{
+			base.UpdateContent ();
+
 			if (this.showPanel)
 			{
 				this.UpdateWidgets ();
@@ -107,6 +109,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			using (this.ignoreChanges.Enter ())
 			{
+				this.zeroButton.Visibility     = !this.options.ViewGraph;
+				this.graphicsButton.Visibility = !this.options.ViewGraph;
+
 				this.zeroButton.ActiveState     = this.Options.HideZero    ? ActiveState.Yes : ActiveState.No;
 				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
 			}

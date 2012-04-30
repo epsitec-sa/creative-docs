@@ -6,6 +6,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -26,6 +27,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.HideZero          = true;
 			this.HasStackedGraph = true;
 			this.HasSideBySideGraph = false;
+
+			this.graphOptions.Mode = GraphMode.Stacked;
 		}
 
 

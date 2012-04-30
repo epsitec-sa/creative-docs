@@ -23,6 +23,11 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintFull(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
+			if (cube.Dimensions == 0 || cube.IsEmpty)
+			{
+				return;
+			}
+
 			this.options = options;
 
 			this.cube = new Cube ();
@@ -48,16 +53,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			rect.Deflate (10);
 
-			if (this.options.Mode == GraphMode.Array)
-			{
-				int dxHope = (int) (rect.Width  / (nx+1));
-				int dyHope = (int) (rect.Height / (ny+1));
-				this.fontSize = System.Math.Min (dxHope * 0.2, dyHope * 0.6);
-			}
-			else
-			{
-				this.fontSize = 10.0;
-			}
+			this.fontSize = this.options.FontSize;
 
 			int labelDx, labelDy;
 
@@ -180,7 +176,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, frameRect.Height);
-				rect.Deflate (2, 2, 0, 0);
+				int margin = System.Math.Min ((int) (rect.Width*0.5*(1-this.options.BarThickness)), (int) (rect.Width*0.5-1));
+				rect.Deflate (margin, 0);
 
 				double zero = this.ConvValueToY (0);
 				int barWidth = (int) rect.Width / ny;
@@ -205,8 +202,10 @@ namespace Epsitec.Cresus.Compta.Graph
 							}
 							else
 							{
+								graphics.LineWidth = this.options.BorderThickness;
 								graphics.AddRectangle (barRect);
 								graphics.RenderSolid (this.BorderColor);
+								graphics.LineWidth = 1;
 							}
 						}
 					}
@@ -251,14 +250,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			for (int x = 0; x < nx; x++)
 			{
 				var rect = new Rectangle (frameRect.Left+x*dx+0.5, frameRect.Bottom+0.5, dx, frameRect.Height);
-				int margin = (int) (rect.Width*0.25);
-
-				if (margin == 1)
-				{
-					margin = 0;
-				}
-
-				rect.Deflate (margin, margin, 0, 0);
+				int margin = System.Math.Min ((int) (rect.Width*0.5*(1-this.options.BarThickness)), (int) (rect.Width*0.5-1));
+				rect.Deflate (margin, 0);
 
 				for (int pass = 0; pass < 2; pass++)
 				{
@@ -296,8 +289,10 @@ namespace Epsitec.Cresus.Compta.Graph
 						}
 						else
 						{
+							graphics.LineWidth = this.options.BorderThickness;
 							graphics.AddRectangle (barRect);
 							graphics.RenderSolid (this.BorderColor);
+							graphics.LineWidth = 1;
 						}
 					}
 				}
@@ -315,14 +310,15 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.maxValue = System.Math.Max (this.maxValue, 0);
 			}
 
-			this.drawBottom = frameRect.Bottom+7;
-			this.drawHeight = frameRect.Height-7*2;
+			var margin = LinesVerticalMargin;
+			this.drawBottom = frameRect.Bottom+margin;
+			this.drawHeight = frameRect.Height-margin*2;
 		}
 		
 		private void PaintLines(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny)
 		{
 			var rect = frameRect;
-			rect.Deflate (0, 7);
+			rect.Deflate (0, this.LinesVerticalMargin);
 
 			for (int y = 0; y < ny; y++)
 			{
@@ -338,32 +334,31 @@ namespace Epsitec.Cresus.Compta.Graph
 						{
 							double h = this.ConvValueToY (value.Value);
 							var pos = new Point (rect.Left+dx*x+dx*0.5, h);
+							var color = Color.FromAlphaColor (this.options.LineAlpha, this.GetIndexedColor (y, ny));
 
 							if (pass == 0)
 							{
-								if (!last.IsZero)
+								if (!last.IsZero && this.options.HasLines)
 								{
-									graphics.LineWidth = 2+2;
+									graphics.LineCap = CapStyle.Round;
+									graphics.LineWidth = this.options.LineWidth+this.options.BorderThickness*2;
 									graphics.AddLine (last, pos);
-									graphics.RenderSolid (this.BorderColor);
+									graphics.RenderSolid (Color.FromAlphaColor (this.options.LineAlpha, this.BorderColor));
 
-									graphics.LineWidth = 2;
+									graphics.LineWidth = this.options.LineWidth;
 									graphics.AddLine (last, pos);
-									graphics.RenderSolid (this.GetIndexedColor (y, ny));
+									graphics.RenderSolid (color);
 
+									graphics.LineCap = CapStyle.Square;
 									graphics.LineWidth = 1;
 								}
 							}
 							else
 							{
-								graphics.AddFilledCircle (pos, 4);
-								graphics.RenderSolid (this.BorderColor);
-
-								graphics.AddFilledCircle (pos, 3);
-								graphics.RenderSolid (this.GetIndexedColor (y, ny));
-
-								graphics.AddFilledCircle (pos, 2);
-								graphics.RenderSolid (Color.FromName ("White"));
+								if (this.options.GraphPoints != GraphPoint.None)
+								{
+									this.PaintPoint (graphics, pos, this.GetGraphPoint (y, ny), color);
+								}
 							}
 
 							last = pos;
@@ -373,13 +368,109 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		private double LinesVerticalMargin
+		{
+			get
+			{
+				double margin = 0;
+
+				if (this.options.HasLines)
+				{
+					margin = System.Math.Max (margin, this.options.LineWidth);
+				}
+
+				if (this.options.GraphPoints != GraphPoint.None)
+				{
+					margin = System.Math.Max (margin, this.options.PointWidth);
+				}
+
+				return System.Math.Floor (margin*0.5);
+			}
+		}
+
+		private void PaintPoint(Graphics graphics, Point pos, GraphPoint type, Color color)
+		{
+			graphics.Align (ref pos);
+
+			double r1 = System.Math.Floor ((this.options.PointWidth+this.options.BorderThickness+1)*0.5);
+			double r2 = System.Math.Floor (r1*0.8);
+			double r3 = System.Math.Floor (r1*0.5);
+
+			var path = this.GetPointPath (pos, type, r1, r2, r3);
+			graphics.Color = Color.FromAlphaColor (this.options.LineAlpha, this.BorderColor);
+			graphics.PaintSurface (path);
+
+			r1 -= this.options.BorderThickness;
+			r2 -= this.options.BorderThickness;
+			r3 -= this.options.BorderThickness;
+
+			path = this.GetPointPath (pos, type, r1, r2, r3);
+			graphics.Color = this.options.HasLines ? Color.FromName ("White") : color;
+			graphics.PaintSurface (path);
+		}
+
+		private Path GetPointPath(Point pos, GraphPoint type, double r1, double r2, double r3)
+		{
+			var rect = new Rectangle (pos.X-r1, pos.Y-r1, r1*2, r1*2);
+			var path = new Path ();
+
+			if (type == GraphPoint.Square)
+			{
+				path.AppendRectangle (new Rectangle (pos.X-r2, pos.Y-r2, r2*2, r2*2));
+			}
+			else if (type == GraphPoint.TriangleUp)
+			{
+				path.MoveTo (rect.Center.X, rect.Top);
+				path.LineTo (rect.BottomLeft);
+				path.LineTo (rect.BottomRight);
+				path.Close ();
+			}
+			else if (type == GraphPoint.TriangleDown)
+			{
+				path.MoveTo (rect.Center.X, rect.Bottom);
+				path.LineTo (rect.TopLeft);
+				path.LineTo (rect.TopRight);
+				path.Close ();
+			}
+			else if (type == GraphPoint.Diamond)
+			{
+				path.MoveTo (rect.Center.X, rect.Top);
+				path.LineTo (rect.Right, rect.Center.Y);
+				path.LineTo (rect.Center.X, rect.Bottom);
+				path.LineTo (rect.Left, rect.Center.Y);
+				path.Close ();
+			}
+			else if (type == GraphPoint.Cross)
+			{
+				path.MoveTo (pos.X-r3, pos.Y+r1);
+				path.LineTo (pos.X+r3, pos.Y+r1);
+				path.LineTo (pos.X+r3, pos.Y+r3);
+				path.LineTo (pos.X+r1, pos.Y+r3);
+				path.LineTo (pos.X+r1, pos.Y-r3);
+				path.LineTo (pos.X+r3, pos.Y-r3);
+				path.LineTo (pos.X+r3, pos.Y-r1);
+				path.LineTo (pos.X-r3, pos.Y-r1);
+				path.LineTo (pos.X-r3, pos.Y-r3);
+				path.LineTo (pos.X-r1, pos.Y-r3);
+				path.LineTo (pos.X-r1, pos.Y+r3);
+				path.LineTo (pos.X-r3, pos.Y+r3);
+				path.Close ();
+			}
+			else  // cercle ?
+			{
+				path.AppendCircle (pos, r1);
+			}
+
+			return path;
+		}
+
 
 		private void PaintPie(Graphics graphics, Rectangle frameRect, int nx, int ny)
 		{
 			int max = int.MinValue;
 			int tx = 0;
 			int ty = 0;
-			int titleHeight = 16;
+			int titleHeight = (int) (this.fontSize*1.6);
 
 			//	On cherche la disposition tx/ty générant une surface maximale pour chaque cammembert.
 			for (int x = 1; x <= nx; x++)
@@ -433,7 +524,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			square.Offset (0, -titleHeight);
 
-			double offset = this.options.ExplodedPie ? square.Width*0.03 : 0;
+			double offset = this.options.ExplodedPieFactor * square.Width * 0.03;
 
 			square.Deflate (5+offset);
 			var center = square.Center;
@@ -447,8 +538,10 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			if (sum == 0)
 			{
+				graphics.LineWidth = this.options.BorderThickness;
 				graphics.AddCircle (center, radius);
 				graphics.RenderSolid (this.BorderColor);
+				graphics.LineWidth = 1;
 			}
 			else
 			{
@@ -458,7 +551,8 @@ namespace Epsitec.Cresus.Compta.Graph
 
 					for (int y = 0; y < ny; y++)
 					{
-						decimal a2 = a1 + this.cube.GetValue (i, y).GetValueOrDefault () * 360.0m / sum;
+						decimal value = this.cube.GetValue (i, y).GetValueOrDefault ();
+						decimal a2 = a1 + value * 360.0m / sum;
 
 						if (a2-a1 == 360)  // une seule tranche ?
 						{
@@ -469,17 +563,19 @@ namespace Epsitec.Cresus.Compta.Graph
 							}
 							else
 							{
+								graphics.LineWidth = this.options.BorderThickness;
 								graphics.AddCircle (center, radius);
 								graphics.RenderSolid (this.BorderColor);
+								graphics.LineWidth = 1;
 
-								this.PaintPiePercent (graphics, center, (a2-a1)/360.0m, this.GetIndexedColor (y, ny));
+								this.PaintPiePercent (graphics, center, (a2-a1)/360.0m, value, this.GetIndexedColor (y, ny));
 							}
 						}
 						else if (a2 > a1)
 						{
 							var c = center;
 
-							if (this.options.ExplodedPie)
+							if (offset != 0)
 							{
 								c = Transform.RotatePointDeg (center, (double) this.GetPieAngle ((a1+a2)/2), new Point (center.X+offset, center.Y));
 							}
@@ -498,13 +594,17 @@ namespace Epsitec.Cresus.Compta.Graph
 							}
 							else
 							{
+								graphics.LineJoin = JoinStyle.Round;
+								graphics.LineWidth = this.options.BorderThickness;
 								graphics.Color = this.BorderColor;
 								graphics.PaintOutline (path);
+								graphics.LineWidth = 1;
+								graphics.LineJoin = JoinStyle.Miter;
 
 								if (a2-a1 >= 20)  // plus de 20 degrés ?
 								{
 									var p = Transform.RotatePointDeg (center, (double) this.GetPieAngle((a1+a2)/2), new Point (center.X+offset+radius*0.5, center.Y));
-									this.PaintPiePercent (graphics, p, (a2-a1)/360.0m, this.GetIndexedColor (y, ny));
+									this.PaintPiePercent (graphics, p, (a2-a1)/360.0m, value, this.GetIndexedColor (y, ny));
 								}
 							}
 						}
@@ -522,14 +622,28 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.PaintText (graphics, box, title, ContentAlignment.TopCenter);
 		}
 
-		private void PaintPiePercent(Graphics graphics, Point center, decimal percent, Color backColor)
+		private void PaintPiePercent(Graphics graphics, Point center, decimal percent, decimal value, Color backColor)
 		{
 			//	Dessine le chiffre du %.
-			var rect = new Rectangle (center.X-20, center.Y-10, 40, 20);
-			var text = Converters.PercentToString (percent);
-			var color = backColor.GetBrightness () < 0.25 ? Color.FromName ("White") : Color.FromName ("Black");
+			FormattedText text = null;
 
-			this.PaintText (graphics, rect, text, ContentAlignment.MiddleCenter, color);
+			if (this.options.PiePercents)
+			{
+				text = Converters.PercentToString (percent);
+			}
+
+			if (this.options.PieValues)
+			{
+				text = Converters.MontantToString (value, 0);
+			}
+
+			if (!text.IsNullOrEmpty)
+			{
+				var rect = new Rectangle (center.X-200, center.Y-100, 400, 200);
+				var color = backColor.GetBrightness () < 0.25 ? Color.FromName ("White") : Color.FromName ("Black");
+
+				this.PaintText (graphics, rect, text, ContentAlignment.MiddleCenter, color);
+			}
 		}
 
 		private decimal GetPieAngle(decimal angle)
@@ -637,9 +751,13 @@ namespace Epsitec.Cresus.Compta.Graph
 			var sampleRect = new Rectangle (rect.Left, rect.Bottom, rect.Height, rect.Height);
 			graphics.AddFilledRectangle (sampleRect);
 			graphics.RenderSolid (color);
-			sampleRect.Deflate (0.5);
-			graphics.AddRectangle (sampleRect);
-			graphics.RenderSolid (this.BorderColor);
+
+			if (this.options.BorderThickness > 0)
+			{
+				sampleRect.Deflate (0.5);
+				graphics.AddRectangle (sampleRect);
+				graphics.RenderSolid (this.BorderColor);
+			}
 
 			var textRect = new Rectangle (rect.Left+rect.Height+5, rect.Bottom, rect.Width-rect.Height-5, rect.Height);
 			this.PaintText (graphics, textRect, text, ContentAlignment.MiddleLeft);
@@ -1116,6 +1234,21 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (borderColor);
 		}
 
+
+		private GraphPoint GetGraphPoint(int index, int total)
+		{
+			if (this.options.GraphPoints == GraphPoint.Mix)
+			{
+				index *= System.Math.Max (GraphEngine.graphPoints.Length/total, 1);
+				return GraphEngine.graphPoints[index%GraphEngine.graphPoints.Length];
+			}
+			else
+			{
+				return this.options.GraphPoints;
+			}
+		}
+
+		private static GraphPoint[] graphPoints = { GraphPoint.Circle, GraphPoint.Square, GraphPoint.TriangleUp, GraphPoint.Diamond, GraphPoint.TriangleDown, GraphPoint.Cross };
 
 		private Color BackExtColor
 		{

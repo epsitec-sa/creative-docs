@@ -29,6 +29,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		public override void UpdateContent()
 		{
+			base.UpdateContent ();
+
 			if (this.showPanel)
 			{
 				this.UpdateWidgets ();

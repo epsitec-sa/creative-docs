@@ -7,6 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.SetComptaEntity (compta);
 
 			this.Clear ();
+
 		}
 
 
@@ -30,7 +32,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.HasGraphics                  = true;
+			this.HasGraphics = true;
+
+			this.graphOptions.Mode = GraphMode.Lines;
+			this.graphOptions.HasLegend = false;
 		}
 
 

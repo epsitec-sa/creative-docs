@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			set
 			{
 				this.showPanel = value;
-				this.toolbar.Visibility = this.showPanel;
+				this.container.Visibility = this.showPanel;
 
 				if (this.showPanel)
 				{
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.optionsChanged = optionsChanged;
 
-			this.toolbar = new FrameBox
+			this.container = new FrameBox
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
@@ -83,6 +83,25 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, 5),
+			};
+
+			this.toolbar = new FrameBox
+			{
+				Parent              = this.container,
+				DrawFullFrame       = true,
+				BackColor           = UIBuilder.OptionsBackColor,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock                = DockStyle.Top,
+			};
+
+			this.graphbar = new FrameBox
+			{
+				Parent              = this.container,
+				DrawFullFrame       = true,
+				BackColor           = UIBuilder.OptionsBackColor,
+				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
+				Dock                = DockStyle.Top,
+				Margins             = new Margins (0, 0, -1, 0),
 			};
 
 			//	Crée les frames gauche, centrale et droite.
@@ -107,6 +126,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.levelController = new LevelController (this.controller);
 			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.options.Specialist;
+
+			this.graphOptionsController = new GraphOptionsController (this.controller);
+			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged, this.GraphLevelChangedAction);
+			this.graphOptionsController.Specialist = this.options.GraphSpecialist;
 		}
 
 		protected virtual void OptionsChanged()
@@ -130,6 +153,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			}
 		}
 
+		protected virtual void GraphLevelChangedAction()
+		{
+			this.options.GraphSpecialist = this.graphOptionsController.Specialist;
+
+			this.graphbar.Visibility =  this.options.ViewGraph;
+		}
+
 		protected virtual void UpdateWidgets()
 		{
 			this.levelController.ClearEnable = !this.options.IsEmpty;
@@ -138,6 +168,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		public virtual void UpdateContent()
 		{
+			this.ShowArrayOrGraph ();
 		}
 
 
@@ -348,21 +379,35 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.controller.DataAccessor.UpdateGraphData (force: true);
 			}
 
-			this.controller.ArrayController.Show = !this.options.ViewGraph;
-			this.controller.GraphController.Show =  this.options.ViewGraph;
+			this.ShowArrayOrGraph ();
+			this.UpdateWidgets ();
 		}
 
 		protected void UpdateGraph()
 		{
-			if (this.options.ViewGraph && this.controller.GraphController != null)
-			{
-				this.controller.GraphController.UpdateController ();
-			}
+			this.graphbar.Visibility =  this.options.ViewGraph;
+
+			this.graphOptionsController.Update ();
 
 			using (this.ignoreChanges.Enter ())
 			{
 				this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;
 				this.viewGraphButton.ActiveState = this.options.ViewGraph ? ActiveState.Yes : ActiveState.No;
+			}
+		}
+
+		private void ShowArrayOrGraph()
+		{
+			this.graphbar.Visibility =  this.options.ViewGraph;
+
+			if (this.controller.ArrayController != null)
+			{
+				this.controller.ArrayController.Show = !this.options.ViewGraph;
+			}
+
+			if (this.controller.GraphController != null)
+			{
+				this.controller.GraphController.Show = this.options.ViewGraph;
 			}
 		}
 		#endregion
@@ -397,7 +442,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected System.Action									optionsChanged;
 
 		protected int											tabIndex;
+		protected FrameBox										container;
 		protected FrameBox										toolbar;
+		protected FrameBox										graphbar;
 		protected FrameBox										mainFrame;
 		protected FrameBox										comparisonFrame;
 
@@ -412,6 +459,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected BackIconButton								viewGraphButton;
 
 		protected LevelController								levelController;
+		protected GraphOptionsController						graphOptionsController;
 
 		protected bool											showPanel;
 	}

@@ -93,6 +93,8 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Graph\GraphPoint.cs" />
+    <Compile Include="Graph\SliderController.cs" />
     <Compile Include="Graph\GraphController.cs" />
     <Compile Include="Graph\GraphStyle.cs" />
     <Compile Include="Graph\GraphOptionsController.cs" />

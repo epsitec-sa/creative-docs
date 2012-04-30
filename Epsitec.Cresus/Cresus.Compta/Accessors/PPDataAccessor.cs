@@ -28,10 +28,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.arrayGraphOptions = new GraphOptions ();
 
-			var defaultOptions = new GraphOptions ();
-			defaultOptions.Mode = GraphMode.SideBySide;
-			this.graphOptions = this.mainWindowController.GetSettingsGraphOptions ("Présentation.PP.Graph", defaultOptions);
-
 			this.UpdateAfterOptionsChanged ();
 		}
 
