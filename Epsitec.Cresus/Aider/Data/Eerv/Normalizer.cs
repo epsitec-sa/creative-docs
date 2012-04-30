@@ -152,12 +152,14 @@ namespace Epsitec.Aider.Data.Eerv
 					keyToHouseholds[householdKey] = normalizedHousehold;
 				}
 
+				normalizedPerson.Households.Add (normalizedHousehold);
+
 				bool isChild = true;
 
 				if (household.Head1 == person)
 				{
 					normalizedHousehold.Head1 = normalizedPerson;
-
+					
 					isChild = false;
 				}
 
@@ -197,6 +199,7 @@ namespace Epsitec.Aider.Data.Eerv
 				DateOfBirth = eChPerson.PersonDateOfBirth,
 				Sex = eChPerson.PersonSex,
 				Origins = Normalizer.NormalizeText (eChPerson.Origins),
+				Households = new List<NormalizedHousehold> (),
 			};
 		}
 
