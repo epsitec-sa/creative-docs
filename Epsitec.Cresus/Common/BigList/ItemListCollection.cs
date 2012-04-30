@@ -33,8 +33,24 @@ namespace Epsitec.Common.BigList
 
 		#endregion
 
+		public IItemList						this[int index]
+		{
+			get
+			{
+				return this.list[index];
+			}
+		}
+
+		public int								Count
+		{
+			get
+			{
+				return this.list.Count;
+			}
+		}
+
 		
-		public abstract IItemList Create();
+		public abstract ItemList Create();
 
 		public override void Reset()
 		{

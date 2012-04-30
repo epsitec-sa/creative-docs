@@ -77,26 +77,6 @@ namespace Epsitec.Cresus.DebugViewer
 			this.mainController.DefineFolderAccessor (this.folderAccessor);
 
 			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
-
-
-			this.CreateTestWindow ();
-		}
-
-		private void CreateTestWindow()
-		{
-			var window = new Window ()
-			{
-				Text = "Test de BigList.ItemScrollList",
-				ClientSize = new Size (640, 480),
-			};
-			var scrollList = new Epsitec.Common.BigList.Widgets.ItemScrollList ()
-			{
-				Parent = window.Root,
-				Dock = DockStyle.Fill,
-				Margins = new Margins (2, 2, 2, 2),
-			};
-			
-			window.Show ();
 		}
 
 		private BusinessContext					businessContext;

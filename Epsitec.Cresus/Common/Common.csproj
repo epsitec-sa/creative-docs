@@ -105,6 +105,7 @@
     <Compile Include="BigList\ItemListColumnCollection.cs" />
     <Compile Include="BigList\ItemListFeatures.cs" />
     <Compile Include="BigList\ItemListColumnHeaderView.cs" />
+    <Compile Include="BigList\ItemListIndexEventArgs.cs" />
     <Compile Include="BigList\ItemListMark.cs" />
     <Compile Include="BigList\ItemListMarkAttachment.cs" />
     <Compile Include="BigList\ItemListMarkOffset.cs" />

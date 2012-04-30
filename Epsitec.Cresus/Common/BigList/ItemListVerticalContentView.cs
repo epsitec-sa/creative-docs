@@ -107,6 +107,7 @@ namespace Epsitec.Common.BigList
 			
 			if (this.ItemList.FocusedIndex != index)
 			{
+				this.ItemList.FocusedIndex = index;
 				this.ItemList.VisibleIndex = index;
 				this.Invalidate ();
 			}

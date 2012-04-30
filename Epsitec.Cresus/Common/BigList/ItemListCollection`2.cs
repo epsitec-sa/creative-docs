@@ -9,22 +9,36 @@ namespace Epsitec.Common.BigList
 	public class ItemListCollection<TData, TState> : ItemListCollection
 			where TState : ItemState, new ()
 	{
-		public ItemListCollection(ItemCache<TData, TState> cache, IList<ItemListMark> marks)
-			: base (cache, marks, new ItemListSelection (cache))
+		public ItemListCollection(ItemCache<TData, TState> cache, IList<ItemListMark> marks, ItemListSelection selection)
+			: base (cache, marks, selection)
 		{
 		}
 
-		public override IItemList Create()
+		public override ItemList Create()
 		{
 			var cache = this.Cache as ItemCache<TData, TState>;
-			var itemList = new ItemList<TData, TState> (cache, this.Marks);
+			var itemList = new ItemList<TData, TState> (cache, this.Marks, this.Selection);
 
 			itemList.ActiveIndex = this.ActiveIndex;
 			itemList.FocusedIndex = this.FocusedIndex;
 
+			itemList.ActiveIndexChanged  += this.HandleItemListActiveIndexChanged;
+			itemList.FocusedIndexChanged += this.HandleItemListFocusedIndexChanged;
+
 			this.Add (itemList);
 
 			return itemList;
+		}
+
+
+		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			this.ActiveIndex = e.NewIndex;
+		}
+
+		private void HandleItemListFocusedIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			this.FocusedIndex = e.NewIndex;
 		}
 	}
 }

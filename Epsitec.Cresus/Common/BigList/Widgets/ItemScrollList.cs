@@ -8,6 +8,7 @@ using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.BigList.Widgets
 {
@@ -19,6 +20,7 @@ namespace Epsitec.Common.BigList.Widgets
 			{
 				Parent = this,
 				Dock = DockStyle.Top,
+				PreferredHeight = 24,
 			};
 
 			this.splitView = new VSplitView ()
@@ -27,14 +29,115 @@ namespace Epsitec.Common.BigList.Widgets
 				Dock = DockStyle.Fill,
 			};
 
-			this.listViews = new List<ItemListVerticalContentView> ();
 		}
 
 
+		public ItemListColumnHeaderView			Header
+		{
+			get
+			{
+				return this.headerView;
+			}
+		}
+
+
+		public ItemData<T> GetItemData<T>(int index)
+		{
+			var data = this.itemCache.GetItemData (index) as ItemData<T>;
+
+			return data;
+		}
+
+
+		public void SetupItemList<TData, TState>(IItemDataProvider<TData> provider,
+			/**/								 IItemDataMapper<TData> mapper,
+			/**/								 IItemDataRenderer itemRenderer,
+			/**/								 IItemMarkRenderer markRenderer = null,
+			/**/								 ItemListFeatures features = null,
+			/**/								 ItemListSelection selection = null,
+			/**/								 IList<ItemListMark> marks = null)
+			where TState : ItemState, new ()
+		{
+			if (features == null)
+			{
+				features = new ItemListFeatures ()
+				{
+					SelectionMode = ItemSelectionMode.ExactlyOne,
+				};
+			}
+
+			int capacity = provider == null ? 100 : provider.Count;
+			var cache   = new ItemCache<TData, TState> (capacity, features)
+			{
+				DataProvider = provider,
+				DataMapper   = mapper,
+			};
+
+			this.itemCache = cache;
+			this.itemCache.Reset ();
+			
+			if (selection == null)
+			{
+				selection = new ItemListSelection (this.itemCache);
+			}
+
+			this.itemLists = new ItemListCollection<TData, TState> (cache, marks, selection);
+
+			this.AttachItemListEventHandlers ();
+			
+			var list1 = this.itemLists.Create ();
+			var list2 = this.itemLists.Create ();
+
+			var view1 = new ItemListVerticalContentView ()
+			{
+				Parent   = this.splitView.Frame1,
+				Dock = DockStyle.Fill,
+				ItemList = list1,
+				ItemRenderer = itemRenderer,
+				MarkRenderer = markRenderer,
+			};
+
+			var view2 = new ItemListVerticalContentView ()
+			{
+				Parent   = this.splitView.Frame2,
+				Dock = DockStyle.Fill,
+				ItemList = list2,
+				ItemRenderer = itemRenderer,
+				MarkRenderer = markRenderer,
+			};
+		}
+
+		private void AttachItemListEventHandlers()
+		{
+			this.itemLists.ActiveIndexChanged += this.HandleItemListsActiveIndexChanged;
+			this.itemLists.FocusedIndexChanged += this.HandleItemListsFocusedIndexChanged;
+		}
+
+		private void HandleItemListsActiveIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			this.OnActiveIndexChanged (e);
+			this.Invalidate ();
+		}
+
+		private void HandleItemListsFocusedIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			this.Invalidate ();
+		}
+
+
+		private void OnActiveIndexChanged(ItemListIndexEventArgs e)
+		{
+			var handler = this.ActiveIndexChanged;
+			handler.Raise (this, e);
+		}
+
+		public EventHandler<ItemListIndexEventArgs> ActiveIndexChanged;
 
 
 		private readonly VSplitView				splitView;
 		private readonly ItemListColumnHeaderView headerView;
-		private readonly List<ItemListVerticalContentView> listViews;
+		
+		private ItemListCollection				itemLists;
+		private ItemCache						itemCache;
 	}
 }

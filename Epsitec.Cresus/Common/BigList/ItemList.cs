@@ -10,7 +10,7 @@ namespace Epsitec.Common.BigList
 {
 	public abstract class ItemList : AbstractItemList
 	{
-		protected ItemList(ItemCache cache, IList<ItemListMark> marks = null, ItemListSelection selection = null)
+		protected ItemList(ItemCache cache, IList<ItemListMark> marks, ItemListSelection selection)
 			: base (cache, marks ?? new List<ItemListMark> (), selection ?? new ItemListSelection (cache))
 		{
 			this.visibleRows = new List<ItemListRow> ();

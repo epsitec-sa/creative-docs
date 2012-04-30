@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		{
 			this.historyAccessor = accessor;
 			
-			this.historyData = new ItemList<Data.LogRecord> (this.historyAccessor, this.historyAccessor);
+			this.historyData = new ItemList<Data.LogRecord> (this.historyAccessor, this.historyAccessor, selection: null);
 			this.historyList.ItemList = this.historyData;
 			this.historyData.Marks.Add (new ItemListMark
 			{
@@ -122,8 +122,15 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		{
 			this.folderAccessor = accessor;
 
+#if false
 			this.folderData = new ItemList<Data.LogFolderRecord> (this.folderAccessor, this.folderAccessor);
 			this.folderList.ItemList = this.folderData;
+#else
+
+			var renderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x));
+
+			this.folderScrollList.SetupItemList<Data.LogFolderRecord, ItemState> (this.folderAccessor, this.folderAccessor, renderer);
+#endif
 
 			this.RefreshContents ();
 		}
@@ -202,14 +209,38 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		}
 		private void CreateUIListForFolderItems(FrameBox left)
 		{
-			var header = new ItemListColumnHeaderView ()
+			ItemListColumnHeaderView header;
+
+#if false
+			this.folderList = new ItemListVerticalContentView ()
+			{
+				Parent = left,
+				Dock = DockStyle.Fill,
+				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x)),
+			};
+
+			this.folderList.ActiveIndexChanged += this.HandleFolderListActiveIndexChanged;
+
+			header = new ItemListColumnHeaderView ()
 			{
 				Parent = left,
 				Dock = DockStyle.Top,
 				PreferredHeight = 24,
 				BackColor = Color.FromBrightness (1.0),
 			};
+#else
+			this.folderScrollList = new Common.BigList.Widgets.ItemScrollList ()
+			{
+				Parent = left,
+				Dock = DockStyle.Fill,
+			};
 
+			this.folderScrollList.ActiveIndexChanged += this.HandleFolderScrollListActiveIndexChanged;
+
+			header = this.folderScrollList.Header;
+			header.BackColor = Color.FromBrightness (1.0);
+#endif
+			
 			var col1 = new ItemListColumn ();
 			var col2 = new ItemListColumn ();
 			var col3 = new ItemListColumn ();
@@ -241,15 +272,6 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			header.Columns.Add (col1);
 			header.Columns.Add (col2);
 			header.Columns.Add (col3);
-
-			this.folderList = new ItemListVerticalContentView ()
-			{
-				Parent = left,
-				Dock = DockStyle.Fill,
-				ItemRenderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x)),
-			};
-
-			this.folderList.ActiveIndexChanged += this.HandleFolderListActiveIndexChanged;
 		}
 		
 		private void CreateUIListForHistoryItems(FrameBox left)
@@ -308,7 +330,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			this.historyList.ActiveIndexChanged += this.HandleHistoryListActiveIndexChanged;
 		}
 
-		
+
 		private void HandleFolderListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			var index = (int) e.NewValue;
@@ -319,10 +341,24 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 			}
 
 			var item = this.folderList.ItemList.Cache.GetItemData (index).GetData<Data.LogFolderRecord> ();
-			
+
 			this.DefineHistoryAccessor (new LogDataAccessor (item.Path));
 		}
-		
+
+		private void HandleFolderScrollListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			var index = e.NewIndex;
+
+			if (index < 0)
+			{
+				return;
+			}
+
+			var item = this.folderScrollList.GetItemData<Data.LogFolderRecord> (index).Data;
+
+			this.DefineHistoryAccessor (new LogDataAccessor (item.Path));
+		}
+
 		private void HandleHistoryListActiveIndexChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			var index = (int) e.NewValue;
@@ -364,8 +400,12 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 
 			if (this.folderAccessor != null)
 			{
+#if false
 				this.folderData.Reset ();
 				this.folderList.Invalidate ();
+#else		
+				this.folderScrollList.Invalidate ();
+#endif
 			}
 
 			if (this.historyAccessor != null)
@@ -383,6 +423,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 		private ItemListVerticalContentView		historyList;
 		private ItemList						historyData;
 		private ItemListVerticalContentView		folderList;
+		private Epsitec.Common.BigList.Widgets.ItemScrollList folderScrollList;
 		private ItemList						folderData;
 		private StaticImage						mainImage;
 		private LogDataAccessor					historyAccessor;
