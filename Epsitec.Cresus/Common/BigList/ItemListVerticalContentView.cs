@@ -122,7 +122,7 @@ namespace Epsitec.Common.BigList
 
 			this.FocusRow (index);
 			
-			if (this.ItemList.Select (index, selection))
+			if (this.ItemList.Selection.Select (index, selection))
 			{
 				this.OnSelectionChanged ();
 				this.Invalidate ();
@@ -231,7 +231,7 @@ namespace Epsitec.Common.BigList
 
 		protected virtual void OnSelectionChanged()
 		{
-			this.GetUserEventHandler (ItemListVerticalContentView.SelectionChangedEvent).Raise (this);
+			this.GetUserEventHandler (EventNames.SelectionChanged).Raise (this);
 		}
 
 
@@ -470,17 +470,20 @@ namespace Epsitec.Common.BigList
 		{
 			add
 			{
-				this.AddUserEventHandler (ItemListVerticalContentView.SelectionChangedEvent, value);
+				this.AddUserEventHandler (EventNames.SelectionChanged, value);
 			}
 			remove
 			{
-				this.RemoveUserEventHandler (ItemListVerticalContentView.SelectionChangedEvent, value);
+				this.RemoveUserEventHandler (EventNames.SelectionChanged, value);
 			}
 		}
 
-		#region Strings
+		#region EventNames Class
 
-		private const string					SelectionChangedEvent = "SelectionChanged";
+		private static class EventNames
+		{
+			public const string					SelectionChanged = "SelectionChanged";
+		}
 
 		#endregion
 

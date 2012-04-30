@@ -1,6 +1,10 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
+
 using Epsitec.Cresus.Core;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Business;
@@ -73,6 +77,26 @@ namespace Epsitec.Cresus.DebugViewer
 			this.mainController.DefineFolderAccessor (this.folderAccessor);
 
 			window.Root.BackColor = Common.Drawing.Color.FromName ("White");
+
+
+			this.CreateTestWindow ();
+		}
+
+		private void CreateTestWindow()
+		{
+			var window = new Window ()
+			{
+				Text = "Test de BigList.ItemScrollList",
+				ClientSize = new Size (640, 480),
+			};
+			var scrollList = new Epsitec.Common.BigList.Widgets.ItemScrollList ()
+			{
+				Parent = window.Root,
+				Dock = DockStyle.Fill,
+				Margins = new Margins (2, 2, 2, 2),
+			};
+			
+			window.Show ();
 		}
 
 		private BusinessContext					businessContext;

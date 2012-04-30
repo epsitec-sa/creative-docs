@@ -129,7 +129,7 @@ namespace Epsitec.Common.BigList
 
 			public bool IsSelected(int index)
 			{
-				return this.view.ItemList.IsSelected (index);
+				return this.view.ItemList.Selection.IsSelected (index);
 			}
 
 			public void Select(int index, ItemSelection selection)

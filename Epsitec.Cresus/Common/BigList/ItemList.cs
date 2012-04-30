@@ -8,117 +8,14 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public interface IItemList
+	public abstract class ItemList : AbstractItemList
 	{
-		ItemListFeatures Features
-		{
-			get;
-		}
-
-		IList<ItemListMark> Marks
-		{
-			get;
-		}
-
-		int Count
-		{
-			get;
-		}
-
-		int ActiveIndex
-		{
-			get;
-			set;
-		}
-
-		int FocusedIndex
-		{
-			get;
-			set;
-		}
-
-		int SelectedItemCount
-		{
-			get;
-		}
-
-		ItemCache Cache
-		{
-			get;
-		}
-	}
-
-	public abstract class ItemList : IItemList
-	{
-		protected ItemList(List<ItemListMark> marks = null, ItemListFeatures features = null)
+		protected ItemList(ItemCache cache, IList<ItemListMark> marks = null, ItemListSelection selection = null)
+			: base (cache, marks ?? new List<ItemListMark> (), selection ?? new ItemListSelection (cache))
 		{
 			this.visibleRows = new List<ItemListRow> ();
-			this.marks       = marks ?? new List<ItemListMark> ();
-			this.features    = features ?? new ItemListFeatures ()
-			{
-				SelectionMode = ItemSelectionMode.ExactlyOne,
-			};
 		}
 
-
-		public ItemListFeatures					Features
-		{
-			get
-			{
-				return this.features;
-			}
-		}
-
-		public IList<ItemListMark>				Marks
-		{
-			get
-			{
-				return this.marks;
-			}
-		}
-
-		public abstract int						Count
-		{
-			get;
-		}
-
-		public int								ActiveIndex
-		{
-			get
-			{
-				return this.activeIndex;
-			}
-			set
-			{
-				if (value == -1)
-				{
-					this.ClearActiveIndex ();
-				}
-				else
-				{
-					this.SetActiveIndex (value);
-				}
-			}
-		}
-
-		public int								FocusedIndex
-		{
-			get
-			{
-				return this.focusedIndex;
-			}
-			set
-			{
-				if (value == -1)
-				{
-					this.ClearFocusedIndex ();
-				}
-				else
-				{
-					this.SetFocusedIndex (value);
-				}
-			}
-		}
 
 		public int								VisibleIndex
 		{
@@ -183,84 +80,8 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								SelectedItemCount
-		{
-			get
-			{
-				return this.selectedItemCount;
-			}
-		}
 
-		public abstract ItemCache				Cache
-		{
-			get;
-		}
-
-
-		private bool SetVisibleIndex(int index)
-		{
-			var oldVisibleIndex  = this.visibleIndex;
-			var oldVisibleOffset = this.visibleOffset;
-			
-			this.InternalSetVisibleIndex (index);
-
-			return oldVisibleIndex  != this.visibleIndex
-				|| oldVisibleOffset != this.visibleOffset;
-		}
-
-		private bool SetActiveIndex(int index)
-		{
-			if ((index < 0) ||
-				(index >= this.Count))
-			{
-				return false;
-			}
-
-			var oldActiveIndex = this.activeIndex;
-			
-			this.activeIndex = index;
-
-			return oldActiveIndex != this.activeIndex;
-		}
-
-		private bool ClearActiveIndex()
-		{
-			if (this.activeIndex == -1)
-			{
-				return false;
-			}
-
-			this.activeIndex = -1;
-			return true;
-		}
-
-		private bool SetFocusedIndex(int index)
-		{
-			if ((index < 0) ||
-				(index >= this.Count))
-			{
-				return false;
-			}
-
-			var oldFocusedIndex = this.focusedIndex;
-
-			this.focusedIndex = index;
-
-			return oldFocusedIndex != this.focusedIndex;
-		}
-
-		private bool ClearFocusedIndex()
-		{
-			if (this.focusedIndex == -1)
-			{
-				return false;
-			}
-
-			this.focusedIndex = -1;
-			return true;
-		}
-
-		public void Reset()
+		public override void Reset()
 		{
 			this.ResetCache ();
 
@@ -270,82 +91,6 @@ namespace Epsitec.Common.BigList
 			this.SetVisibleIndex (0);
 		}
 
-		public bool Select(int index, ItemSelection selection)
-		{
-			if ((index < 0) ||
-				(index >= this.Count))
-			{
-				return false;
-			}
-
-			if (selection == ItemSelection.Toggle)
-			{
-				selection = this.IsSelected (index) ? ItemSelection.Deselect : ItemSelection.Select;
-			}
-			
-			if (selection == ItemSelection.Deselect)
-			{
-				switch (this.features.SelectionMode)
-				{
-					case ItemSelectionMode.ExactlyOne:
-					case ItemSelectionMode.None:
-						return false;
-
-					case ItemSelectionMode.Multiple:
-					case ItemSelectionMode.ZeroOrOne:
-						return this.DeselectOne (index);
-
-					case ItemSelectionMode.OneOrMore:
-						if (this.selectedItemCount < 2)
-						{
-							return false;
-						}
-						else
-						{
-							return this.DeselectOne (index);
-						}
-				}
-			}
-
-			if (selection == ItemSelection.Select)
-			{
-				switch (this.features.SelectionMode)
-				{
-					case ItemSelectionMode.ZeroOrOne:
-					case ItemSelectionMode.ExactlyOne:
-						if (this.SelectOne (index))
-						{
-							if (this.selectedItemCount > 1)
-							{
-								this.DeselectAllButOne (index);
-							}
-							return true;
-						}
-						return false;
-
-					case ItemSelectionMode.OneOrMore:
-					case ItemSelectionMode.Multiple:
-						return this.SelectOne (index);
-
-					case ItemSelectionMode.None:
-						return false;
-				}
-			}
-
-			throw new System.InvalidOperationException (string.Format ("Select does not understand {0}", selection.GetQualifiedName ()));
-		}
-
-		public bool IsSelected(int index)
-		{
-			if (index < 0)
-			{
-				return false;
-			}
-			else
-			{
-				return this.Cache.GetItemState (index, ItemStateDetails.Flags).Selected;
-			}
-		}
 
 		public void MoveVisibleContent(int distance)
 		{
@@ -490,7 +235,35 @@ namespace Epsitec.Common.BigList
 			return new ItemListMarkOffset (offset);
 		}
 
-		
+
+
+
+		public static ItemCache<TData, TState> CreateCache<TData, TState>(IItemDataProvider<TData> provider,
+			/**/														  IItemDataMapper<TData> mapper,
+			/**/														  ItemListFeatures features)
+			where TState : ItemState, new ()
+		{
+			if (features == null)
+			{
+				features = new ItemListFeatures ()
+				{
+					SelectionMode = ItemSelectionMode.ExactlyOne,
+				};
+			}
+
+			int capacity = provider == null ? 100 : provider.Count;
+
+			var cache = new ItemCache<TData, TState> (capacity, features)
+			{
+				DataProvider = provider,
+				DataMapper   = mapper,
+			};
+
+			cache.Reset ();
+
+			return cache;
+		}
+
 		
 		protected void ResetCache()
 		{
@@ -498,53 +271,17 @@ namespace Epsitec.Common.BigList
 		}
 
 
-
-		private bool DeselectAllButOne(int index)
+		private bool SetVisibleIndex(int index)
 		{
-			int changes = 0;
+			var oldVisibleIndex  = this.visibleIndex;
+			var oldVisibleOffset = this.visibleOffset;
+			
+			this.InternalSetVisibleIndex (index);
 
-			for (int i = 0; i < this.Count; i++)
-			{
-				if (i == index)
-				{
-					continue;
-				}
-
-				if (this.ChangeFlagState (i, x => x.Select (ItemSelection.Deselect), ItemStateDetails.IgnoreNull))
-				{
-					this.selectedItemCount--;
-					changes++;
-				}
-			}
-
-			return changes > 0;
+			return oldVisibleIndex  != this.visibleIndex
+				|| oldVisibleOffset != this.visibleOffset;
 		}
 
-		private bool SelectOne(int index)
-		{
-			if (this.ChangeFlagState (index, x => x.Select (ItemSelection.Select)))
-			{
-				this.selectedItemCount++;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-
-		private bool DeselectOne(int index)
-		{
-			if (this.ChangeFlagState (index, x => x.Select (ItemSelection.Deselect)))
-			{
-				this.selectedItemCount--;
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
 
 		private void InternalSetVisibleIndex(int index)
 		{
@@ -601,31 +338,6 @@ namespace Epsitec.Common.BigList
 		private bool GetFlagState(int index, System.Predicate<ItemState> predicate)
 		{
 			return predicate (this.Cache.GetItemState (index, ItemStateDetails.Flags));
-		}
-
-		private bool ChangeFlagState(int index, System.Action<ItemState> action, ItemStateDetails flags = ItemStateDetails.None)
-		{
-			flags &= ItemStateDetails.FlagMask;
-
-			var state = this.Cache.GetItemState (index, ItemStateDetails.Flags | flags);
-
-			if (state == null)
-			{
-				return false;
-			}
-			
-			var copy  = state.Clone ();
-
-			action (copy);
-
-			if (state.Equals (copy))
-			{
-				return false;
-			}
-
-			this.Cache.SetItemState (index, copy, ItemStateDetails.Flags);
-
-			return true;
 		}
 
 		private List<ItemListRow> GetVisibleRowsStartingWith(int index, int startOffset = 0)
@@ -785,15 +497,9 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		protected readonly ItemListFeatures		features;
-
 		private List<ItemListRow>				visibleRows;
-		private readonly List<ItemListMark>		marks;
-		private int								activeIndex;
-		private int								focusedIndex;
 		private int								visibleIndex;
 		private int								visibleOffset;
 		private int								visibleHeight;
-		private int								selectedItemCount;
 	}
 }

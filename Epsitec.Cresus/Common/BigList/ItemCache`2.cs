@@ -37,7 +37,12 @@ namespace Epsitec.Common.BigList
 			set;
 		}
 
-
+		
+		public override IItemDataProvider GetDataProvider()
+		{
+			return this.DataProvider;
+		}
+		
 		public override int GetExtraStateCount()
 		{
 			return this.extraStates.Count;

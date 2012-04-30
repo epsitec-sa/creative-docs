@@ -94,6 +94,10 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="BigList\AbstractItemList.cs" />
+    <Compile Include="BigList\IItemList.cs" />
+    <Compile Include="BigList\ItemListCollection.cs" />
+    <Compile Include="BigList\ItemListCollection`2.cs" />
     <Compile Include="BigList\ItemListColumnHeaderView.ViewEventProcessor.cs" />
     <Compile Include="BigList\ItemListColumn.cs" />
     <Compile Include="BigList\IItemMarkRenderer.cs" />
@@ -104,6 +108,7 @@
     <Compile Include="BigList\ItemListMark.cs" />
     <Compile Include="BigList\ItemListMarkAttachment.cs" />
     <Compile Include="BigList\ItemListMarkOffset.cs" />
+    <Compile Include="BigList\ItemListSelection.cs" />
     <Compile Include="BigList\ItemSortOrder.cs" />
     <Compile Include="BigList\Processors\EventProcessor.cs" />
     <Compile Include="BigList\Processors\EventProcessorPolicy.cs" />

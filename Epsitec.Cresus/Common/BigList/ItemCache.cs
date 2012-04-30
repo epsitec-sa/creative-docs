@@ -36,6 +36,23 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int								ItemCount
+		{
+			get
+			{
+				var provider = this.GetDataProvider ();
+
+				if (provider == null)
+				{
+					return 0;
+				}
+				else
+				{
+					return provider.Count;
+				}
+			}
+		}
+
 
 		public abstract void Reset();
 
@@ -48,6 +65,8 @@ namespace Epsitec.Common.BigList
 		public abstract ItemState GetItemState(int index, ItemStateDetails details);
 		
 		public abstract void SetItemState(int index, ItemState state, ItemStateDetails details);
+
+		public abstract IItemDataProvider GetDataProvider();
 
 		
 		protected static readonly int			DefaultExtraCapacity = 1000;
