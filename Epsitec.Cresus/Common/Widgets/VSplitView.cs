@@ -9,6 +9,10 @@ using Epsitec.Common.Widgets;
 
 namespace Epsitec.Common.Widgets
 {
+	/// <summary>
+	/// The <c>VSplitView</c> class implements a vertical split view: the splitter can be
+	/// moved vertically to display the first frame, which is usually hidden.
+	/// </summary>
 	public partial class VSplitView : AbstractSplitView
 	{
 		public VSplitView()
@@ -42,11 +46,9 @@ namespace Epsitec.Common.Widgets
 			this.scroller1 = new VScroller (this.frame1Container)
 			{
 				Dock = DockStyle.Right,
+				IsInverted = true,
 				MinHeight = 0,
 			};
-
-			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.separator, true);
-			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.scroller1, true);
 
 			this.frame2 = new Widget (this.frame2Container)
 			{
@@ -68,8 +70,13 @@ namespace Epsitec.Common.Widgets
 			this.scroller2 = new VScroller (scrollerContainer)
 			{
 				Dock = DockStyle.Fill,
+				IsInverted = true,
+				MinHeight = 0,
 			};
 
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.separator, true);
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.scroller1, true);
+			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.scroller2, true);
 
 			this.dragButton.Pressed += this.HandleDragButtonPressed;
 			this.separator.Pressed  += this.HandleDragButtonPressed;
@@ -89,6 +96,16 @@ namespace Epsitec.Common.Widgets
 			get
 			{
 				return this.frame2;
+			}
+		}
+
+		public override SplitViewFrameVisibility FrameVisibility
+		{
+			get
+			{
+				return new SplitViewFrameVisibility (
+					frame1: this.Frame1.PreferredHeight > 0,
+					frame2: this.Frame2.PreferredHeight > 0);
 			}
 		}
 
@@ -127,7 +144,7 @@ namespace Epsitec.Common.Widgets
 		private readonly Widget					separator;
 		private readonly Widget					frame2Container;
 		private readonly Widget					frame2;
-		private readonly GlyphButton			dragButton;
 		private readonly VScroller				scroller2;
+		private readonly GlyphButton			dragButton;
 	}
 }

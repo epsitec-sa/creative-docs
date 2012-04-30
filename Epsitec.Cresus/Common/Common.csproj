@@ -1219,6 +1219,8 @@
     <Compile Include="Widgets\ConfirmationButton.cs" />
     <Compile Include="Widgets\ConfirmationStaticText.cs" />
     <Compile Include="Widgets\ContainerLayoutMode.cs" />
+    <Compile Include="Widgets\SplitViewFrameVisibility.cs" />
+    <Compile Include="Widgets\SplitViewFrameVisibilityEventArgs.cs" />
     <Compile Include="Widgets\VSplitView.DragProcessor.cs" />
     <Compile Include="Widgets\FrameState.cs" />
     <Compile Include="Widgets\IconButtonWithText.cs" />
