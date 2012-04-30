@@ -38,14 +38,30 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Fill,
 			};
 
+			var scrollerContainer1 = new Widget (this.frame1Container)
+			{
+				Dock = DockStyle.Right,
+				PreferredWidth = AbstractScroller.DefaultBreadth,
+				MinHeight = 0,
+				PreferredHeight = 0,
+			};
+
+			var scrollerContainer2 = new Widget (this.frame2Container)
+			{
+				Dock = DockStyle.Right,
+				PreferredWidth = AbstractScroller.DefaultBreadth,
+				MinHeight = 0,
+				PreferredHeight = 0,
+			};
+			
 			this.frame1 = new Widget (this.frame1Container)
 			{
 				Dock = DockStyle.Fill,
 			};
 
-			this.scroller1 = new VScroller (this.frame1Container)
+			this.scroller1 = new VScroller (scrollerContainer1)
 			{
-				Dock = DockStyle.Right,
+				Dock = DockStyle.Fill,
 				IsInverted = true,
 				MinHeight = 0,
 			};
@@ -55,19 +71,13 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Fill,
 			};
 
-			var scrollerContainer = new Widget (this.frame2Container)
-			{
-				Dock = DockStyle.Right,
-				PreferredWidth = AbstractScroller.DefaultBreadth,
-			};
-
-			this.dragButton = new GlyphButton (scrollerContainer)
+			this.dragButton = new GlyphButton (scrollerContainer2)
 			{
 				Dock = DockStyle.Top,
 				PreferredHeight = AbstractScroller.DefaultBreadth,
 			};
 
-			this.scroller2 = new VScroller (scrollerContainer)
+			this.scroller2 = new VScroller (scrollerContainer2)
 			{
 				Dock = DockStyle.Fill,
 				IsInverted = true,
@@ -125,10 +135,16 @@ namespace Epsitec.Common.Widgets
 				return this.scroller2;
 			}
 		}
-		
+
 		protected override void UpdateRatio()
 		{
-			this.frame1Container.PreferredHeight = System.Math.Max (0, System.Math.Floor (this.Client.Height * this.Ratio));
+			double ratio = this.Ratio;
+
+			System.Diagnostics.Debug.Assert (ratio >= 0);
+			System.Diagnostics.Debug.Assert (ratio <= 1);
+
+			this.frame1Container.PreferredHeight = System.Math.Floor (this.Client.Height * ratio);
+			this.frame2Container.PreferredHeight = System.Math.Ceiling (this.Client.Height * (1-ratio));
 		}
 		
 		
@@ -137,6 +153,9 @@ namespace Epsitec.Common.Widgets
 			var host = new DragProcessor (this, sender as Widget, e);
 		}
 
+
+
+		private int								collapseHeight = 28;
 		
 		private readonly Widget					frame1Container;
 		private readonly Widget					frame1;

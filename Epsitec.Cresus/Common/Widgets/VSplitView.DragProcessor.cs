@@ -22,6 +22,7 @@ namespace Epsitec.Common.Widgets
 				this.originalH = this.Offset;
 				
 				this.source.PreProcessing += this.HandleSourcePreProcessing;
+				this.view.separator.Visibility = true;
 				
 				e.Message.Captured = true;
 			}
@@ -69,10 +70,24 @@ namespace Epsitec.Common.Widgets
 			{
 				this.source.PreProcessing -= this.HandleSourcePreProcessing;
 
-				if (this.Offset < 20)
+				double hMin = this.view.collapseHeight;
+				double hMax = this.view.Client.Height - this.view.collapseHeight;
+
+				if (this.Offset < hMin)
 				{
 					this.Offset = 0;
 					this.view.dragButton.Visibility = true;
+					this.view.dragButton.Parent = this.view.scroller2.Parent;
+					this.view.dragButton.Dock = DockStyle.Top;
+					this.view.separator.Visibility = false;
+				}
+				else if (this.Offset > hMax)
+				{
+					this.Offset = this.view.Client.Height;
+					this.view.dragButton.Visibility = true;
+					this.view.dragButton.Parent = this.view.scroller1.Parent;
+					this.view.dragButton.Dock = DockStyle.Bottom;
+					this.view.separator.Visibility = false;
 				}
 				else
 				{
