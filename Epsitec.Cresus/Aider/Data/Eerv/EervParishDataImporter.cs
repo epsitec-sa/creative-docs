@@ -452,80 +452,66 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			Action<BusinessContext> action = b =>
+			coreDataManager.Execute(b =>
 			{
-				EervParishDataImporter.ProcessHouseholdMatches (b, matches, newEntities, eervHouseholds);
-
-				b.SaveChanges ();
-			};
-
-			coreDataManager.Execute (action);
+				EervParishDataImporter.ProcessHouseholdMatches(b, matches, newEntities, eervHouseholds);
+			});
 		}
 
 
 		private static void ProcessHouseholdMatches(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			var aiderPersons = businessContext.GetAllEntities<AiderPersonEntity> ();
-			businessContext.GetAllEntities<AiderHouseholdEntity> ();
-			businessContext.GetAllEntities<AiderAddressEntity> ();
-			businessContext.GetAllEntities<AiderTownEntity> ();
+			var aiderPersonKeys = matches.Values
+				.Where (v => v.Any ())
+				.Select (v => v.First ().Item1)
+				.Concat (newEntities.Values);
 
-			EervParishDataImporter.ProcessHouseholdMatches (aiderPersons, eervHouseholds, businessContext, matches, newEntities);
-		}
-
-
-		private static void ProcessHouseholdMatches(IEnumerable<AiderPersonEntity> aiderPersons, IEnumerable<EervHousehold> eervHouseholds, BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities)
-		{
-			var aiderHouseholdToPersons = EervParishDataImporter.GetAiderHouseoldToPersons (aiderPersons);
+			var aiderHouseholdToAiderPersons = EervParishDataImporter.GetAiderHouseholdToAiderPersons (businessContext, aiderPersonKeys);
 
 			foreach (var eervHousehold in eervHouseholds)
 			{
-				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderHouseholdToPersons);
+				EervParishDataImporter.ProcessHouseholdMatch (businessContext, matches, newEntities, eervHousehold, aiderHouseholdToAiderPersons);
 			}
+
+			businessContext.SaveChanges ();
 		}
 
 
-		private static Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> GetAiderHouseoldToPersons(IEnumerable<AiderPersonEntity> aiderPersons)
+		private static Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> GetAiderHouseholdToAiderPersons(BusinessContext businessContext, IEnumerable<EntityKey> aiderPersonKeys)
 		{
-			var aiderHouseholdToPersons = new Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> ();
+			var dataContext = businessContext.DataContext;
 
-			foreach (var aiderPerson in aiderPersons)
-			{
-				foreach (var aiderHousehold in aiderPerson.GetHouseholds ())
-				{
-					List<AiderPersonEntity> aiderMembers;
+			var aiderPersons = aiderPersonKeys
+				.Select (pk => (AiderPersonEntity) dataContext.ResolveEntity (pk));
 
-					if (!aiderHouseholdToPersons.TryGetValue (aiderHousehold, out aiderMembers))
-					{
-						aiderMembers = new List<AiderPersonEntity> ();
+			var aiderHouseholds = aiderPersons
+				.SelectMany (p => p.GetHouseholds ())
+				.Distinct ();
 
-						aiderHouseholdToPersons[aiderHousehold] = aiderMembers;
-					}
-
-					aiderMembers.Add (aiderPerson);
-				}
-			}
-
-			return aiderHouseholdToPersons;
+			return aiderHouseholds.ToDictionary
+			(
+				h => h,
+				h => h.GetMembers (businessContext).ToList ()
+			);
 		}
 
 
-		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToAiderPersons)
+		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToPersons)
 		{
 			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons (businessContext, matches, newEntities, eervHousehold);
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (eervToAiderPersons.Values);
 
 			if (aiderHouseholds.Count == 0)
 			{
-				EervParishDataImporter.CreateHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholdToAiderPersons);
+				EervParishDataImporter.CreateHousehold (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholdToPersons);
 			}
 			else if (aiderHouseholds.Count == 1)
 			{
-				EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, aiderHouseholds.Single (), aiderHouseholdToAiderPersons);
+				EervParishDataImporter.ExpandHousehold (eervHousehold, eervToAiderPersons, aiderHouseholds.Single (), aiderHouseholdToPersons);
 			}
 			else
 			{
-				EervParishDataImporter.CombineHouseholds (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholds, aiderHouseholdToAiderPersons);
+				EervParishDataImporter.CombineHouseholds (businessContext, eervHousehold, eervToAiderPersons, aiderHouseholds, aiderHouseholdToPersons);
 			}
 		}
 
@@ -575,6 +561,7 @@ namespace Epsitec.Aider.Data.Eerv
 			if (!aiderHouseholdToAiderPersons.TryGetValue (aiderHousehold, out aiderPersons))
 			{
 				aiderPersons = new List<AiderPersonEntity> ();
+				aiderHouseholdToAiderPersons[aiderHousehold] = aiderPersons;
 			}
 
 			var personsToAdd = eervToAiderPersons.Values.Except (aiderPersons).ToList ();
