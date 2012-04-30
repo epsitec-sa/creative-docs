@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,6 +70,16 @@ namespace Epsitec.Common.BigList
 
 		public abstract IItemDataProvider GetDataProvider();
 
+
+
+		protected void OnResetFired()
+		{
+			var handler = this.ResetFired;
+			handler.Raise (this);
+		}
+
+		
+		public event EventHandler				ResetFired;
 		
 		protected static readonly int			DefaultExtraCapacity = 1000;
 		protected static readonly int			DefaultDataCapacity  = 1000;

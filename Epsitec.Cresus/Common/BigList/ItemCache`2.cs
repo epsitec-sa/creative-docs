@@ -61,6 +61,8 @@ namespace Epsitec.Common.BigList
 			this.states.AddRange (array);
 
 			this.exclusion.ExitWriteLock ();
+
+			this.OnResetFired ();
 		}
 
 		/// <summary>

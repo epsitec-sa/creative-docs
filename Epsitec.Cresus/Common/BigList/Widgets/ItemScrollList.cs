@@ -29,6 +29,7 @@ namespace Epsitec.Common.BigList.Widgets
 				Dock = DockStyle.Fill,
 			};
 
+			this.contentViews = new List<ContentView> ();
 		}
 
 
@@ -90,7 +91,6 @@ namespace Epsitec.Common.BigList.Widgets
 			};
 
 			this.itemCache = cache;
-			this.itemCache.Reset ();
 			
 			if (selection == null)
 			{
@@ -106,43 +106,95 @@ namespace Epsitec.Common.BigList.Widgets
 			this.itemLists = new ItemListCollection<TData, TState> (cache, marks, selection);
 
 			this.AttachItemListEventHandlers ();
+
+			this.contentViews.Add (new ContentView (this, itemRenderer, markRenderer, this.splitView.Frame1, this.splitView.Scroller1));
+			this.contentViews.Add (new ContentView (this, itemRenderer, markRenderer, this.splitView.Frame2, this.splitView.Scroller2));
 			
-			var list1 = this.itemLists.Create ();
-			var list2 = this.itemLists.Create ();
-
-			var view1 = new ItemListVerticalContentView ()
-			{
-				Parent   = this.splitView.Frame1,
-				Dock = DockStyle.Fill,
-				ItemList = list1,
-				ItemRenderer = itemRenderer,
-				MarkRenderer = markRenderer,
-			};
-
-			var view2 = new ItemListVerticalContentView ()
-			{
-				Parent   = this.splitView.Frame2,
-				Dock = DockStyle.Fill,
-				ItemList = list2,
-				ItemRenderer = itemRenderer,
-				MarkRenderer = markRenderer,
-			};
+			this.itemCache.Reset ();
 		}
 
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+
+			this.contentViews.ForEach (x => x.UpdateScroller ());
+		}
+
+		class ContentView
+		{
+			public ContentView(ItemScrollList host, IItemDataRenderer itemRenderer, IItemMarkRenderer markRenderer, Widget frame, AbstractScroller scroller)
+			{
+				this.host = host;
+				this.scroller = scroller;
+				this.view = new ItemListVerticalContentView ()
+				{
+					Parent       = frame,
+					Dock         = DockStyle.Fill,
+					ItemList     = this.host.itemLists.Create (),
+					ItemRenderer = itemRenderer,
+					MarkRenderer = markRenderer,
+				};
+
+				this.host.itemCache.ResetFired += this.HandleItemCacheResetFired;
+				this.view.ItemList.VisibleContentChanged += this.HandleVisibleContentChanged;
+				this.scroller.ValueChanged += this.HandleScrollerValueChanged;
+
+				this.UpdateScroller ();
+			}
+
+			private void HandleItemCacheResetFired(object sender)
+			{
+				this.UpdateScroller ();
+			}
+
+			private void HandleScrollerValueChanged(object sender)
+			{
+				this.view.ItemList.VisibleIndex = (int) this.scroller.Value;
+				this.view.Invalidate ();
+			}
+
+			private void HandleVisibleContentChanged(object sender)
+			{
+				this.UpdateScroller ();
+			}
+
+			
+			public void UpdateScroller()
+			{
+				decimal index   = this.view.ItemList.VisibleIndex;
+				decimal visible = this.view.ItemList.VisibleCount;
+				decimal total   = this.host.itemCache.ItemCount;
+
+				this.scroller.MinValue          = 0;
+				this.scroller.MaxValue          = total - 1;
+				this.scroller.Resolution        = 1;
+				this.scroller.VisibleRangeRatio = total == 0 ? 1 : visible / total;
+				this.scroller.Value				= index;
+			}
+
+			private readonly ItemScrollList host;
+			private readonly AbstractScroller	scroller;
+			private readonly ItemListVerticalContentView view;
+
+		}
+		
 		private void AttachItemListEventHandlers()
 		{
-			this.itemLists.ActiveIndexChanged += this.HandleItemListsActiveIndexChanged;
+			this.itemLists.ActiveIndexChanged  += this.HandleItemListsActiveIndexChanged;
 			this.itemLists.FocusedIndexChanged += this.HandleItemListsFocusedIndexChanged;
+			
 			this.itemLists.Selection.SelectionChanged += this.HandleItemListsSelectionChanged;
 		}
 		
 		private void DetachItemListEventHandlers()
 		{
-			this.itemLists.ActiveIndexChanged -= this.HandleItemListsActiveIndexChanged;
+			this.itemLists.ActiveIndexChanged  -= this.HandleItemListsActiveIndexChanged;
 			this.itemLists.FocusedIndexChanged -= this.HandleItemListsFocusedIndexChanged;
+			
 			this.itemLists.Selection.SelectionChanged -= this.HandleItemListsSelectionChanged;
 		}
 
+		
 		private void HandleItemListsActiveIndexChanged(object sender, ItemListIndexEventArgs e)
 		{
 			this.OnActiveIndexChanged (e);
@@ -182,6 +234,7 @@ namespace Epsitec.Common.BigList.Widgets
 
 		private readonly VSplitView				splitView;
 		private readonly ItemListColumnHeaderView headerView;
+		private readonly List<ContentView>		contentViews;
 		
 		private ItemListCollection				itemLists;
 		private ItemCache						itemCache;

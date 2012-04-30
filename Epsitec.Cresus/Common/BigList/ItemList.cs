@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Common.Support;
 
 namespace Epsitec.Common.BigList
 {
@@ -36,6 +37,7 @@ namespace Epsitec.Common.BigList
 				if (this.visibleIndex != value)
 				{
 					this.SetVisibleIndex (value);
+					this.OnVisibleContentChanged ();
 				}
 			}
 		}
@@ -60,6 +62,7 @@ namespace Epsitec.Common.BigList
 				{
 					this.visibleHeight = value;
 					this.MoveVisibleContent (0);
+					this.OnVisibleContentChanged ();
 				}
 			}
 		}
@@ -491,11 +494,20 @@ namespace Epsitec.Common.BigList
 		}
 
 
+        private void OnVisibleContentChanged()
+		{
+			var handler = this.VisibleContentChanged;
+			handler.Raise (this);
+		}
+
+		
 		private static IEnumerable<ItemListRow> ShiftRows(IEnumerable<ItemListRow> rows, int offset)
 		{
 			return rows.Select (x => new ItemListRow (x.Index, x.Offset + offset, x.Height, x.IsLast));
 		}
 
+
+		public event EventHandler				VisibleContentChanged;
 
 		private List<ItemListRow>				visibleRows;
 		private int								visibleIndex;
