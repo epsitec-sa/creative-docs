@@ -11,8 +11,6 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using Epsitec.Data.Platform;
 
-using System;
-
 using System.Collections.Generic;
 
 using System.Linq;
@@ -204,12 +202,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static NormalizedAddress Normalize(AiderAddressEntity address)
 		{
+			var town = address.Town;
+
 			return new NormalizedAddress ()
 			{
 				Street = Normalizer.NormalizeStreetName (address.Street),
 				HouseNumber = address.HouseNumber,
-				ZipCode = address.Town.SwissZipCode.Value,
-				Town = Normalizer.NormalizeText (address.Town.Name),
+				ZipCode = town.SwissZipCode ?? 0,
+				Town = Normalizer.NormalizeText (town.Name),
 			};
 		}
 

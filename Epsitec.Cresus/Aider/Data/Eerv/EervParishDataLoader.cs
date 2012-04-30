@@ -71,8 +71,6 @@ namespace Epsitec.Aider.Data.Eerv
 				EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
 				EervParishDataLoader.AssignActivitiesToPersonsAndGroups (activities, idToPersons, idToLegalPersons, idToGroups);
 
-				EervParishDataLoader.FilterHouseholdsAndPersons (households, rawPersons);
-
 				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
 				yield return new EervParishData (id, households, rawPersons, legalPersons, rawGroups, rawActivities);
@@ -135,27 +133,6 @@ namespace Epsitec.Aider.Data.Eerv
 			}
 
 			return parishData;
-		}
-
-
-		private static void FilterHouseholdsAndPersons(List<EervHousehold> households, List<EervPerson> persons)
-		{
-			foreach (var household in households.ToList ())
-			{
-				if (household.Address.Town == null)
-				{
-					EervParishDataLoader.Warn ("household " + household.Id + " is discarded because it has no town in its address");
-
-					households.Remove (household);
-
-					foreach (var member in household.Members)
-					{
-						EervParishDataLoader.Warn ("person " + member.Id + " is discarded because its household is");
-
-						persons.Remove (member);
-					}
-				}
-			}
 		}
 
 

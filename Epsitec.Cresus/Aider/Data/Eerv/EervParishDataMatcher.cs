@@ -752,8 +752,12 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			var sameTown = a.Town == b.Town;
 			var sameZipCode = a.ZipCode == b.ZipCode;
+			var isEmpty = a.Town.IsNullOrWhiteSpace ()
+				 || b.Town.IsNullOrWhiteSpace ()
+				 || a.ZipCode == 0
+				 || b.ZipCode == 0;
 
-			if (!sameTown && !sameZipCode)
+			if (!sameTown || !sameZipCode || isEmpty)
 			{
 				return AddressMatch.None;
 			}
