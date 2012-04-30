@@ -84,7 +84,6 @@ namespace Epsitec.Aider.Data.Eerv
 				Lastnames = Normalizer.NormalizeComposedName (person.Lastname),
 				DateOfBirth = person.DateOfBirth,
 				Sex = person.Sex,
-				Origins = Normalizer.NormalizeText (person.Origins),
 			};
 
 			normalizedPersons[normalizedPerson] = person;
@@ -198,7 +197,6 @@ namespace Epsitec.Aider.Data.Eerv
 				Lastnames = Normalizer.NormalizeComposedName (eChPerson.PersonOfficialName),
 				DateOfBirth = eChPerson.PersonDateOfBirth,
 				Sex = eChPerson.PersonSex,
-				Origins = Normalizer.NormalizeText (eChPerson.Origins),
 				Households = new List<NormalizedHousehold> (),
 			};
 		}

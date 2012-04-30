@@ -56,21 +56,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		public Date? DateOfDeath
-		{
-			get;
-			set;
-		}
-
-
 		public PersonSex Sex
-		{
-			get;
-			set;
-		}
-
-
-		public string Origins
 		{
 			get;
 			set;
@@ -98,9 +84,7 @@ namespace Epsitec.Aider.Data.Eerv
 			return this.Firstnames.Join (" ")
 				+ " " + this.Lastnames.Join (" ")
 				+ "(" + this.DateOfBirth 
-				+ "-" + this.DateOfDeath 
 				+ ", " + this.Sex
-				+ ", " + this.Origins
 				+ ", " + string.Join (" | ", this.Addresses)
 				+ ")";
 		}
