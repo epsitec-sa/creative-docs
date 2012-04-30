@@ -4,6 +4,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core;
+using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
@@ -58,8 +59,37 @@ namespace Epsitec.Aider.Entities
 
 		partial void GetMembers(ref IList<AiderPersonEntity> value)
 		{
-			var members = new HashSet<AiderPersonEntity> ();
+			// TODO Obtain the DataContext.
 
+			BusinessContext businessContext = null;
+
+			if (businessContext == null)
+			{
+				// TMP stuff to have something in the collection.
+
+				value = new List<AiderPersonEntity> ();
+
+				if (this.Head1.UnwrapNullEntity () != null)
+				{
+					value.Add (this.Head1);
+				}
+
+				if (this.Head2.UnwrapNullEntity () != null)
+				{
+					value.Add (this.Head2);
+				}
+
+				value = value.AsReadOnlyCollection ();
+			}
+			else
+			{
+				value = this.GetMembers (businessContext).AsReadOnlyCollection ();
+			}
+		}
+
+
+		public IEnumerable<AiderPersonEntity> GetMembers(BusinessContext businessContext)
+		{
 			var example1 = new AiderPersonEntity ()
 			{
 				Household1 = this,
@@ -70,39 +100,14 @@ namespace Epsitec.Aider.Entities
 				Household2 = this,
 			};
 
-			// TODO Obtain the DataContext.
+			DataContext dataContext = businessContext.DataContext;
 
-			DataContext dataContext = null;
+			var members = new HashSet<AiderPersonEntity> ();
 
-			members.AddRange (this.GetMembers (dataContext, example1));
-			members.AddRange (this.GetMembers (dataContext, example2));
+			members.AddRange (dataContext.GetByExample (example1));
+			members.AddRange (dataContext.GetByExample (example2));
 
-			value = members.AsReadOnlyCollection ();
-		}
-
-
-		private IEnumerable<AiderPersonEntity> GetMembers(DataContext dataContext, AiderPersonEntity example)
-		{
-			if (dataContext == null)
-			{
-				// TMP stuff to have something in the collection.
-
-				List<AiderPersonEntity> result = new List<AiderPersonEntity> ();
-
-				if (this.Head1.UnwrapNullEntity () != null)
-				{
-					result.Add (this.Head1);
-				}
-
-				if (this.Head2.UnwrapNullEntity () != null)
-				{
-					result.Add (this.Head2);
-				}
-
-				return result;
-			}
-
-			return dataContext.GetByExample (example);
+			return members;
 		}
 
 
