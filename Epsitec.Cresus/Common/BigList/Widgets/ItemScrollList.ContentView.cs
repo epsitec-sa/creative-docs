@@ -30,7 +30,7 @@ namespace Epsitec.Common.BigList.Widgets
 				};
 				this.counter = new SafeCounter ();
 				this.host.itemCache.ResetFired += this.HandleItemCacheResetFired;
-				this.view.ItemList.VisibleContentChanged += this.HandleVisibleContentChanged;
+				this.view.ItemList.VisibleFrame.VisibleContentChanged += this.HandleVisibleContentChanged;
 				this.scroller.ValueChanged += this.HandleScrollerValueChanged;
 
 				this.UpdateScroller ();
@@ -39,8 +39,8 @@ namespace Epsitec.Common.BigList.Widgets
 			
 			public void UpdateScroller()
 			{
-				decimal index   = this.view.ItemList.GetFirstFullyVisibleIndex ();
-				decimal visible = this.view.ItemList.VisibleCount;
+				decimal index   = this.view.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
+				decimal visible = this.view.ItemList.VisibleFrame.VisibleCount;
 				decimal total   = this.host.itemCache.ItemCount;
 
 				using (this.counter.Enter ())
@@ -65,7 +65,7 @@ namespace Epsitec.Common.BigList.Widgets
 			{
 				if (this.counter.IsZero)
 				{
-					this.view.ItemList.SyncVisibleIndex ((int) this.scroller.Value);
+					this.view.ItemList.VisibleFrame.SyncVisibleIndex ((int) this.scroller.Value);
 					this.view.Invalidate ();
 				}
 			}

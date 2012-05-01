@@ -95,6 +95,7 @@
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
     <Compile Include="BigList\AbstractItemList.cs" />
+    <Compile Include="BigList\ItemListVisibleFrame.cs" />
     <Compile Include="BigList\IItemList.cs" />
     <Compile Include="BigList\ItemListCollection.cs" />
     <Compile Include="BigList\ItemListCollection`2.cs" />

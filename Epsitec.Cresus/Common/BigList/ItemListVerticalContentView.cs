@@ -108,7 +108,7 @@ namespace Epsitec.Common.BigList
 			if (this.ItemList.FocusedIndex != index)
 			{
 				this.ItemList.FocusedIndex = index;
-				this.ItemList.VisibleIndex = index;
+				this.ItemList.VisibleFrame.VisibleIndex = index;
 				this.Invalidate ();
 			}
 		}
@@ -250,23 +250,23 @@ namespace Epsitec.Common.BigList
 					if (amplitude > 0)
 					{
 						//	Page Up
-						index = this.ItemList.GetFirstFullyVisibleIndex ();
+						index = this.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
 
 						if (this.ItemList.ActiveIndex == index)
 						{
 							this.ScrollVisible (amplitude, scrollUnit);
-							index = this.ItemList.GetFirstFullyVisibleIndex ();
+							index = this.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
 						}
 					}
 					if (amplitude < 0)
 					{
 						//	Page Down
-						index = this.ItemList.GetLastFullyVisibleIndex ();
+						index = this.ItemList.VisibleFrame.GetLastFullyVisibleIndex ();
 
 						if (this.ItemList.ActiveIndex == index)
 						{
 							this.ScrollVisible (amplitude, scrollUnit);
-							index = this.ItemList.GetLastFullyVisibleIndex ();
+							index = this.ItemList.VisibleFrame.GetLastFullyVisibleIndex ();
 						}
 					}
 					break;
@@ -306,23 +306,23 @@ namespace Epsitec.Common.BigList
 					if (amplitude > 0)
 					{
 						//	Page Up
-						index = this.ItemList.GetFirstFullyVisibleIndex ();
+						index = this.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
 						
 						if (this.ItemList.FocusedIndex == index)
 						{
 							this.ScrollVisible (amplitude, scrollUnit);
-							index = this.ItemList.GetFirstFullyVisibleIndex ();
+							index = this.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
 						}
 					}
 					if (amplitude < 0)
 					{
 						//	Page Down
-						index = this.ItemList.GetLastFullyVisibleIndex ();
+						index = this.ItemList.VisibleFrame.GetLastFullyVisibleIndex ();
 
 						if (this.ItemList.FocusedIndex == index)
 						{
 							this.ScrollVisible (amplitude, scrollUnit);
-							index = this.ItemList.GetLastFullyVisibleIndex ();
+							index = this.ItemList.VisibleFrame.GetLastFullyVisibleIndex ();
 						}
 					}
 					break;
@@ -356,7 +356,7 @@ namespace Epsitec.Common.BigList
 					break;
 
 				case ScrollUnit.Page:
-					amplitude *= this.ItemList.VisibleHeight;
+					amplitude *= this.ItemList.VisibleFrame.VisibleHeight;
 					break;
 
 				case ScrollUnit.Document:
@@ -374,7 +374,7 @@ namespace Epsitec.Common.BigList
 					break;
 			}
 
-			this.ItemList.MoveVisibleContent ((int) (amplitude));
+			this.ItemList.VisibleFrame.MoveVisibleContent ((int) (amplitude));
 			this.Invalidate ();
 		}
 
@@ -393,7 +393,7 @@ namespace Epsitec.Common.BigList
 				return;
 			}
 
-			foreach (var row in this.list.VisibleRows)
+			foreach (var row in this.list.VisibleFrame.VisibleRows)
 			{
 				var bounds = this.GetRowBounds (row);
 
@@ -448,7 +448,7 @@ namespace Epsitec.Common.BigList
 			if ((this.IsActualGeometryValid) &&
 				(this.list != null))
 			{
-				this.list.VisibleHeight = (int) System.Math.Floor (this.Client.Height);
+				this.list.VisibleFrame.VisibleHeight = (int) System.Math.Floor (this.Client.Height);
 			}
 		}
 

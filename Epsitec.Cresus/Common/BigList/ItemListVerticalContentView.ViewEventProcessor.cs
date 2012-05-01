@@ -118,7 +118,7 @@ namespace Epsitec.Common.BigList
 
 			public int Detect(Point pos)
 			{
-				var row = this.view.ItemList.VisibleRows.FirstOrDefault (x => this.view.GetRowBounds (x).Contains (pos));
+				var row = this.view.ItemList.VisibleFrame.VisibleRows.FirstOrDefault (x => this.view.GetRowBounds (x).Contains (pos));
 
 				return row == null ? -1 : row.Index;
 			}
