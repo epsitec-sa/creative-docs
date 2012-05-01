@@ -1,6 +1,8 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.BigList;
+using Epsitec.Common.BigList.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
@@ -20,6 +22,7 @@ using Epsitec.Cresus.DataLayer.Context;
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Cresus.Core.Data.Extraction;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -152,18 +155,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		
 		private void CreateUIScrollList(FrameBox frame)
 		{
-			var listFrame = new FrameBox
+			this.scrollList = new ItemScrollList ()
 			{
-				Parent = frame,
-				Dock = DockStyle.Fill,
-			};
-
-			this.scrollList = new ScrollList ()
-			{
-				Parent = listFrame,
-				Anchor = AnchorStyles.All,
-				ScrollListStyle = ScrollListStyle.Standard,
-				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
+				Parent  = frame,
+				Anchor  = AnchorStyles.All,
+				Margins = Margins.Zero,
 			};
 		}
 		
@@ -286,7 +282,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private string							dataSetName;
 
 		private FrameBox						settingsPanel;
-		private ScrollList						scrollList;
+		private ItemScrollList					scrollList;
 		private BrowserScrollListController		scrollListController;
 	}
 }

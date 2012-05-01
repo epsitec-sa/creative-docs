@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2010-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
@@ -17,8 +19,6 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-	
-	
 	/// <summary>
 	/// A <c>Request</c> object represent a high level query that can be executed against the database
 	/// via a <see cref="DataContext"/> and <see cref="DataLoader"/>.
@@ -39,14 +39,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public sealed class Request
 	{
-
-
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
 		public Request()
 		{
-			this.localConstraints = new Dictionary<AbstractEntity, List<Expression>> ();
+			this.localConstraints = new RequestEntityConstraints ();
 
 			this.RootEntity = null;
 			this.RequestedEntity = null;
@@ -56,29 +54,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is at the root of the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RootEntity
+		public AbstractEntity					RootEntity
 		{
 			internal get;
 			set;
 		}
-
 
 		/// <summary>
 		/// The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> which is at the root of the
 		/// <c>Request</c>.
 		/// </summary>
-		public DbKey? RootEntityKey
+		public DbKey?							RootEntityKey
 		{
 			internal get;
 			set;
 		}
 
-
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RequestedEntity
+		public AbstractEntity					RequestedEntity
 		{
 			internal get
 			{
@@ -90,11 +86,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		/// <summary>
 		/// Defines the minimum log id that the entities should have to be returned by the request.
 		/// </summary>
-		internal long? RequestedEntityMinimumLogId
+		internal long?							RequestedEntityMinimumLogId
 		{
 			get;
 			set;
@@ -164,16 +159,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		/// <param name="entity">The <see cref="AbstractEntity"/> whose constraints to retrieve.</param>
 		/// <returns>The <see cref="IList"/> of constraints.</returns>
-		private List<Expression> GetWritableLocalConstraints(AbstractEntity entity)
+		private RequestConstraintList GetWritableLocalConstraints(AbstractEntity entity)
 		{
 			if (!this.IsLocalyConstrained (entity))
 			{
-				this.localConstraints[entity] = new List<Expression> ();
+				this.localConstraints[entity] = new RequestConstraintList ();
 			}
 
 			return this.localConstraints[entity];
 		}
-
 
 		/// <summary>
 		/// Checks that a constraint is valid for a given <see cref="AbstractEntity"/>, which means
@@ -186,7 +180,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			return constraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
 		}
-
 
 		/// <summary>
 		/// Checks that a field is valid for an <see cref="AbstractEntity"/>, which means that it
@@ -202,20 +195,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return field != null && field.Relation == FieldRelation.None;
 		}
 
+		
+		private readonly RequestEntityConstraints localConstraints;
 
-		/// <summary>
-		/// The local constraints associated with their <see cref="AbstractEntity"/>.
-		/// </summary>
-		private readonly Dictionary<AbstractEntity, List<Expression>> localConstraints;
-
-
-		/// <summary>
-		/// The backing variable for the property <see cref="RequestedEntity"/>.
-		/// </summary>
-		private AbstractEntity requestedEntity;
-
-
+		private AbstractEntity					requestedEntity;
 	}
-
-
 }

@@ -163,6 +163,8 @@
     <Compile Include="Infrastructure\LockState.cs" />
     <Compile Include="Infrastructure\UidGenerator.cs" />
     <Compile Include="Infrastructure\UidSlot.cs" />
+    <Compile Include="Loader\RequestConstraintList.cs" />
+    <Compile Include="Loader\RequestEntityConstraints.cs" />
     <Compile Include="Loader\SqlContainer.cs" />
     <Compile Include="Proxies\KeyedCollectionFieldProxy.cs" />
     <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
