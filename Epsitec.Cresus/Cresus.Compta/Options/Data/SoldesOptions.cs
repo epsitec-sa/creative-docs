@@ -155,20 +155,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public static string ResolutionToDescription(int resolution)
 		{
-			switch (resolution)
-			{
-				case 1:
-					return "Journalier";
-
-				case 7:
-					return "Hebdomadaire";
-
-				case 30:
-					return "Mensuel";
-
-				default:
-					return string.Format ("Par {0} jours", resolution.ToString ());
-			}
+			return string.Format ("{0} jour{1}", resolution.ToString (), (resolution <= 1) ? "" : "s");
 		}
 
 

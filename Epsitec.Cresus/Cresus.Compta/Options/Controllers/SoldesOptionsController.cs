@@ -88,8 +88,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.resolutionField = new TextFieldCombo
 			{
 				Parent          = line1,
-				PreferredWidth  = 100,
+				PreferredWidth  = 70,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,

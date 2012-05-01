@@ -91,6 +91,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Parent          = this.frame,
 				PreferredWidth  = 70,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
 				TabIndex        = 1,
 			};
