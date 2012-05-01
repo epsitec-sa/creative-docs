@@ -159,7 +159,7 @@ namespace Epsitec.Aider
 
 					foreach (var eervParishDatum in eervParishData)
 					{
-						EervParishDataImporter.Import (coreDataManager, eervMainData, eervParishDatum);
+						EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
 					}
 				}
 				Services.ShutDown ();

@@ -60,7 +60,7 @@ namespace Aider.Tests.Vs
 
 				foreach (var eervParishDatum in eervParishData)
 				{
-					EervParishDataImporter.Import (coreDataManager, eervMainData, eervParishDatum);
+					EervParishDataImporter.Import (coreDataManager, parishRepository, eervMainData, eervParishDatum);
 				}
 
 				Services.ShutDown ();

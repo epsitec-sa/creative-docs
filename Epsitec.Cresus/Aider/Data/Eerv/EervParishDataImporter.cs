@@ -12,8 +12,6 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Loader;
 
 using Epsitec.TwixClip;
 
@@ -34,9 +32,9 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static void Import(CoreDataManager coreDataManager, EervMainData eervMainData, EervParishData eervParishData)
+		public static void Import(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervMainData eervMainData, EervParishData eervParishData)
 		{
-			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreDataManager, eervParishData);
+			var eervPersonMapping = EervParishDataImporter.ImportEervPhysicalPersons (coreDataManager, parishRepository, eervParishData);
 
 			EervParishDataImporter.ImportEervLegalPersons (coreDataManager, eervParishData);
 
@@ -48,12 +46,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreDataManager coreDataManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, EntityKey> ImportEervPhysicalPersons(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervParishData eervParishData)
 		{
 			var matches = EervParishDataImporter.FindMatches (coreDataManager, eervParishData);
 			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
 
 			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
+			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, newEntities.Values);
 
 			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 		}
@@ -906,6 +905,24 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
+		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		{
+			coreDataManager.Execute (b =>
+				EervParishDataImporter.AssignToParishes (b, parishRepository, aiderPersonKeys)
+			);
+		}
+
+
+		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		{
+			var aiderPersons = aiderPersonKeys
+				.Select (k => (AiderPersonEntity) businessContext.DataContext.ResolveEntity (k))
+				.ToList ();
+
+			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
+		}
+
+
 		private static Dictionary<EervGroup, EntityKey> ImportEervGroups(CoreDataManager coreDataManager, EervMainData eervMainData, EervParishData eervParishData)
 		{
 			return coreDataManager.Execute (b =>
@@ -1047,44 +1064,18 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity FindRootAiderGroup(BusinessContext businessContext, EervId eervId)
 		{
-			// Here I don't use a simple request by example, because the parish names that are in
-			// the database have their multiple parts separated by " – " such as in "Saint-François
-			// – Saint-Jacques". The name that we might get in the file is likely to be "Saint-
-			// François-Saint-Jacques". We have two problems here, the spaces around the "–" and the
-			// fact that "–" is not "-". Look closer if you don't trust me. Yeah, you can bet I lost
-			// a lot of time on this one :-P Anyway, in this case, there is no way we can know that
-			// we would have to convert the second "-" separating the parish names but not the first
-			// and the third one that are part of the parish names. So it's easier to use a request
-			// with like and that's what we do here.
-
-			var example = new AiderGroupEntity ();
-
-			Request request = new Request ()
+			if (eervId.IsParish)
 			{
-				RootEntity = example,
-				RequestedEntity = example,
-			};
+				var parishName = eervId.Name;
 
-			var rootGroupNamePattern = EervParishDataImporter.GetRootGroupName (eervId)
-				.Replace ("-", "%");
-
-			request.AddLocalConstraint (example,
-				new ComparisonFieldValue (
-					new Field (new Druid ("[LVAA4]")),
-					BinaryComparator.IsLike,
-					new Constant (rootGroupNamePattern)
-				)
-			);
-
-			return businessContext.DataContext.GetByRequest<AiderGroupEntity> (request).FirstOrDefault ();
-		}
-
-
-		private static string GetRootGroupName(EervId eervId)
-		{
-			return eervId.IsParish
-				? "Paroisse de " + eervId.Name
-				: "Région " + StringUtils.GetDigits (eervId.Name);
+				return AiderGroupEntity.FindParishGroup(businessContext, parishName);
+			}
+			else
+			{
+				var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
+				
+				return AiderGroupEntity.FindRegionGroup(businessContext, regionNumber);
+			}
 		}
 
 

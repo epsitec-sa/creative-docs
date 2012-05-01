@@ -30,11 +30,9 @@ namespace Epsitec.Aider.Data.Eerv
 		{
 			EervMainDataImporter.ImportGroupDefinitions (coreDataManager, eervData);
 
-			var result = EervMainDataImporter.ImportRegionsAndParishes (coreDataManager, parishRepository);
+			EervMainDataImporter.ImportRegionsAndParishes (coreDataManager, parishRepository);
 
-			var parishNamesToEntityKeys = result.Item2;
-
-			EervMainDataImporter.AssignPersonsToParishes (coreDataManager, parishRepository, parishNamesToEntityKeys);
+			EervMainDataImporter.AssignPersonsToParishes (coreDataManager, parishRepository);
 
 			coreDataManager.CoreData.ResetIndexes ();
 		}
@@ -79,33 +77,23 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
+		private static void ImportRegionsAndParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
 		{
-			return coreDataManager.Execute(b =>
+			coreDataManager.Execute(b =>
 			{
-				return EervMainDataImporter.ImportRegionsAndParishes(b, parishRepository);
+				EervMainDataImporter.ImportRegionsAndParishes(b, parishRepository);
 			});
 		}
 
 
-		private static Tuple<Dictionary<int, EntityKey>, Dictionary<string, EntityKey>> ImportRegionsAndParishes(BusinessContext businessContext, ParishAddressRepository parishRepository)
+		private static void ImportRegionsAndParishes(BusinessContext businessContext, ParishAddressRepository parishRepository)
 		{
-			Dictionary<int, EntityKey> regionNumbersToEntityKeys;
-			Dictionary<string, EntityKey> parishNamesToEntityKeys;
-
 			var regions = EervMainDataImporter.GetRegions (parishRepository);
 
 			var regionGroups = EervMainDataImporter.CreateRegionGroups (businessContext, regions);
 			var parishGroups = EervMainDataImporter.CreateParishGroups (businessContext, regionGroups, regions);
 
 			businessContext.SaveChanges ();
-
-			var dataContext = businessContext.DataContext;
-
-			regionNumbersToEntityKeys = regionGroups.ToDictionary (r => r.Key, r => dataContext.GetNormalizedEntityKey (r.Value).Value);
-			parishNamesToEntityKeys = parishGroups.ToDictionary (p => p.Key, p => dataContext.GetNormalizedEntityKey (p.Value).Value);
-
-			return Tuple.Create (regionNumbersToEntityKeys, parishNamesToEntityKeys);
 		}
 
 
@@ -158,69 +146,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignPersonsToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys)
+		private static void AssignPersonsToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository)
 		{
 			AiderEnumerator.Execute
 			(
 				coreDataManager,
-				(b, p) => EervMainDataImporter.AssignPersonsToParishes (b, parishRepository, parishNamesToEntityKeys, p)
+				(b, p) => ParishAssigner.AssignToParishes (parishRepository, b, p)
 			);
-		}
-
-
-		private static void AssignPersonsToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, IEnumerable<AiderPersonEntity> persons)
-		{
-			foreach (var person in persons)
-			{
-				EervMainDataImporter.AssignPersonToParish (businessContext, parishRepository, parishNamesToEntityKeys, person);
-			}
-			
-			businessContext.SaveChanges ();
-		}
-
-
-		private static void AssignPersonToParish(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderPersonEntity person)
-		{
-			var address = person.GetHouseholds ().First ().Address;
-			var parishGroup = EervMainDataImporter.FindParishGroup (businessContext, parishRepository, parishNamesToEntityKeys, address);
-
-			if (parishGroup == null)
-			{
-				var nameText = person.DisplayName;
-				var addressText = address.GetSummary ().ToSimpleText ().Replace ("\n", "; ");
-
-				Debug.WriteLine ("WARNING: parish not found for " + nameText + " at address " + addressText);
-			}
-			else
-			{
-				EervMainDataImporter.AssignPersonToParish (businessContext, person, parishGroup);
-			}
-		}
-
-
-		private static AiderGroupEntity FindParishGroup(BusinessContext businessContext, ParishAddressRepository parishRepository, Dictionary<string, EntityKey> parishNamesToEntityKeys, AiderAddressEntity address)
-		{
-			var parishName = ParishLocator.FindParishName (parishRepository, address);
-
-			AiderGroupEntity parishGroup;
-
-			if (parishName == null)
-			{
-				parishGroup = null;
-			}
-			else
-			{
-				var parishEntityKey = parishNamesToEntityKeys[parishName];
-				parishGroup = (AiderGroupEntity) businessContext.DataContext.ResolveEntity (parishEntityKey);
-			}
-
-			return parishGroup;
-		}
-
-
-		private static void AssignPersonToParish(BusinessContext businessContext, AiderPersonEntity person, AiderGroupEntity parishGroup)
-		{
-			parishGroup.AddParticipant (businessContext, person, Date.Today, null, null);
 		}
 
 
