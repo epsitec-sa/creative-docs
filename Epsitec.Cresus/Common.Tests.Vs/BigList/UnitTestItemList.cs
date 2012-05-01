@@ -31,105 +31,105 @@ namespace Epsitec.Common.Tests.Vs.BigList
 		public void TestVisibleIndexAndVisibleOffset1()
 		{
 			this.itemList1.Reset ();
-			this.itemList1.VisibleHeight = 60;
+			this.itemList1.VisibleFrame.VisibleHeight = 60;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (30, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (30, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 2;
+			this.itemList1.VisibleFrame.VisibleIndex = 2;
 
-			Assert.AreEqual (2, this.itemList1.VisibleIndex);
-			Assert.AreEqual (40, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (40, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (10, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (10, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 0;
+			this.itemList1.VisibleFrame.VisibleIndex = 0;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 		}
 
 		[TestMethod]
 		public void TestVisibleIndexAndVisibleOffset2()
 		{
 			this.itemList1.Reset ();
-			this.itemList1.VisibleHeight = 100;
+			this.itemList1.VisibleFrame.VisibleHeight = 100;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (60, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (60, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 2;
+			this.itemList1.VisibleFrame.VisibleIndex = 2;
 
-			Assert.AreEqual (2, this.itemList1.VisibleIndex);
-			Assert.AreEqual (80, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (80, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (50, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (50, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 0;
+			this.itemList1.VisibleFrame.VisibleIndex = 0;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (3, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (3, this.itemList1.VisibleFrame.VisibleCount);
 		}
 
 		[TestMethod]
 		public void TestVisibleIndexAndVisibleOffset3()
 		{
 			this.itemList1.Reset ();
-			this.itemList1.VisibleHeight = 30;
+			this.itemList1.VisibleFrame.VisibleHeight = 30;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 2;
+			this.itemList1.VisibleFrame.VisibleIndex = 2;
 
-			Assert.AreEqual (2, this.itemList1.VisibleIndex);
-			Assert.AreEqual (10, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (10, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 1;
+			this.itemList1.VisibleFrame.VisibleIndex = 1;
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.VisibleIndex = 0;
+			this.itemList1.VisibleFrame.VisibleIndex = 0;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 		}
 
 		[TestMethod]
@@ -143,64 +143,64 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			};
 
 			this.itemList1.Reset ();
-			this.itemList1.VisibleHeight = 40;
+			this.itemList1.VisibleFrame.VisibleHeight = 40;
 			this.itemList1.Marks.Clear ();
 			this.itemList1.Marks.Add (mark);
 
 			//	3 elements: 60 / 30 / 20
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsAfter);
 
-			this.itemList1.MoveVisibleContent (-20);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-20);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-20, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
 			Assert.AreEqual (40, this.itemList1.GetOffset (mark).Offset);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-30, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-30, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
 			Assert.AreEqual (30, this.itemList1.GetOffset (mark).Offset);
 
-			this.itemList1.MoveVisibleContent (-30);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-30);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
 			Assert.AreEqual (0, this.itemList1.GetOffset (mark).Offset);
 
-			this.itemList1.MoveVisibleContent (-1);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-1);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-1, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-1, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
 			Assert.AreEqual (-1, this.itemList1.GetOffset (mark).Offset);
 
-			this.itemList1.MoveVisibleContent (-1);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-1);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-2, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-2, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsVisible);
 			Assert.IsTrue (this.itemList1.GetOffset (mark).IsBefore);
 			Assert.IsFalse (this.itemList1.GetOffset (mark).IsAfter);
@@ -210,83 +210,83 @@ namespace Epsitec.Common.Tests.Vs.BigList
 		public void TestMoveVisibleContent()
 		{
 			this.itemList1.Reset ();
-			this.itemList1.VisibleHeight = 30;
+			this.itemList1.VisibleFrame.VisibleHeight = 30;
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (10);		//	cannot move further down !
+			this.itemList1.VisibleFrame.MoveVisibleContent (10);		//	cannot move further down !
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-10, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-10, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-20, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-30, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-30, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-40, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-40, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-50, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-50, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-10, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-10, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-20, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (-10);	//	cannot move further up !
+			this.itemList1.VisibleFrame.MoveVisibleContent (-10);	//	cannot move further up !
 
-			Assert.AreEqual (1, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-20, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-20, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (30);
+			this.itemList1.VisibleFrame.MoveVisibleContent (30);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (-50, this.itemList1.VisibleOffset);
-			Assert.AreEqual (2, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (-50, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (2, this.itemList1.VisibleFrame.VisibleCount);
 
-			this.itemList1.MoveVisibleContent (1000);
+			this.itemList1.VisibleFrame.MoveVisibleContent (1000);
 
-			Assert.AreEqual (0, this.itemList1.VisibleIndex);
-			Assert.AreEqual (0, this.itemList1.VisibleOffset);
-			Assert.AreEqual (1, this.itemList1.VisibleCount);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, this.itemList1.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (1, this.itemList1.VisibleFrame.VisibleCount);
 		}
 
 		[TestMethod]
@@ -299,35 +299,35 @@ namespace Epsitec.Common.Tests.Vs.BigList
 			long memory1 = System.GC.GetTotalMemory (true);
 
 			list.Reset ();
-			list.VisibleHeight = 100;
+			list.VisibleFrame.VisibleHeight = 100;
 
-			Assert.AreEqual (10, list.VisibleCount);
+			Assert.AreEqual (10, list.VisibleFrame.VisibleCount);
 
-			list.VisibleIndex = 1000;
+			list.VisibleFrame.VisibleIndex = 1000;
 
-			Assert.AreEqual (1000, list.VisibleIndex);
-			Assert.AreEqual (90, list.VisibleOffset);
-			Assert.AreEqual (10, list.VisibleCount);
+			Assert.AreEqual (1000, list.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleFrame.VisibleCount);
 
-			list.VisibleIndex = 100*1000;
+			list.VisibleFrame.VisibleIndex = 100*1000;
 
-			Assert.AreEqual (100*1000, list.VisibleIndex);
-			Assert.AreEqual (90, list.VisibleOffset);
-			Assert.AreEqual (10, list.VisibleCount);
+			Assert.AreEqual (100*1000, list.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleFrame.VisibleCount);
 
-			list.VisibleIndex = 1000;
+			list.VisibleFrame.VisibleIndex = 1000;
 
-			Assert.AreEqual (1000, list.VisibleIndex);
-			Assert.AreEqual (0, list.VisibleOffset);
-			Assert.AreEqual (10, list.VisibleCount);
+			Assert.AreEqual (1000, list.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (0, list.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleFrame.VisibleCount);
 
-			list.VisibleIndex = 1000*1000;		//	overflow (items 0..999999)
+			list.VisibleFrame.VisibleIndex = 1000*1000;		//	overflow (items 0..999999)
 
 			long memory2 = System.GC.GetTotalMemory (true);
 
-			Assert.AreEqual (999999, list.VisibleIndex);
-			Assert.AreEqual (90, list.VisibleOffset);
-			Assert.AreEqual (10, list.VisibleCount);
+			Assert.AreEqual (999999, list.VisibleFrame.VisibleIndex);
+			Assert.AreEqual (90, list.VisibleFrame.VisibleOffset);
+			Assert.AreEqual (10, list.VisibleFrame.VisibleCount);
 
 			System.Diagnostics.Debug.WriteLine ("Before: {0:###,###,###}\n" +
 												"After:  {1:###,###,###}\tdelta={2}\n" +

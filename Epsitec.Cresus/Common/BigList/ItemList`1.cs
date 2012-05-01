@@ -8,7 +8,7 @@ namespace Epsitec.Common.BigList
 {
 	public class ItemList<TData> : ItemList<TData, ItemState>
 	{
-		public ItemList(IItemDataProvider<TData> provider, IItemDataMapper<TData> mapper, ItemListSelection selection)
+		public ItemList(IItemDataProvider<TData> provider, IItemDataMapper<TData> mapper, ItemListSelection selection = null)
 			: base (provider, mapper, selection)
 		{
 		}
