@@ -220,4 +220,6 @@
   <data name="Fld.ComptaMonnaie.Décimales" id="K38">&lt;s:data id="_0" f:Name="Décimales" /&gt;</data>
   <data name="Fld.ComptaMonnaie.Arrondi" id="K48">&lt;s:data id="_0" f:Name="Arrondi" /&gt;</data>
   <data name="Fld.ComptaEcriture.Monnaie" id="K58">&lt;s:data id="_0" f:Name="Monnaie" /&gt;</data>
+  <data name="Cmd.Présentation.Soldes" id="K68">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="Présentation.Soldes" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Présentation.Soldes.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Soldes'}}" /&gt;</data>
+  <data name="Cmd.NouvellePrésentation.Soldes" id="K78">&lt;s:type id="_1" s:name="Epsitec.Common.Widgets.Command" /&gt;&lt;s:type id="_2" s:name="Epsitec.Common.Widgets.Shortcut" /&gt;&lt;s:data id="_0" f:Name="NouvellePrésentation.Soldes" f:Icon="manifest:Epsitec.Cresus.Compta.Images.Présentation.Soldes.icon" f:_1.Statefull="False" f:_1.DefaultParameter="{Null}" f:Labels="{Collection {Text 'Soldes'}}" /&gt;</data>
 </bundle>

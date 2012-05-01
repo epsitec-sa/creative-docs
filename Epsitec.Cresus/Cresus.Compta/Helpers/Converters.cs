@@ -1105,6 +1105,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.DifférencesChange;
 				yield return Res.Commands.Présentation.Monnaies;
 				yield return Res.Commands.Présentation.RésuméPériodique;
+				yield return Res.Commands.Présentation.Soldes;
 				yield return Res.Commands.Présentation.RésuméTVA;
 				yield return Res.Commands.Présentation.DécompteTVA;
 

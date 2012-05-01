@@ -188,6 +188,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 91));
 				//	designer:cap/OVKS2
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 92));
+				//	designer:cap/OVK78
+				public static readonly global::Epsitec.Common.Widgets.Command Soldes = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 263));
 			}
 			
 			public static class Panel
@@ -268,6 +270,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméTVA = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 53));
 				//	designer:cap/OVKS5
 				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
+				//	designer:cap/OVK68
+				public static readonly global::Epsitec.Common.Widgets.Command Soldes = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 262));
 				//	designer:cap/OVK55
 				public static readonly global::Epsitec.Common.Widgets.Command Utilisateurs = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 165));
 			}
@@ -465,6 +469,8 @@ namespace Epsitec.Cresus.Compta
 				public const long RésuméPériodique = 0x3F80001400005BL;
 				//	designer:cap/OVKS2
 				public const long RésuméTVA = 0x3F80001400005CL;
+				//	designer:cap/OVK78
+				public const long Soldes = 0x3F800014000107L;
 			}
 			
 			public static class Panel
@@ -545,6 +551,8 @@ namespace Epsitec.Cresus.Compta
 				public const long RésuméTVA = 0x3F800014000035L;
 				//	designer:cap/OVKS5
 				public const long Save = 0x3F8000140000BCL;
+				//	designer:cap/OVK68
+				public const long Soldes = 0x3F800014000106L;
 				//	designer:cap/OVK55
 				public const long Utilisateurs = 0x3F8000140000A5L;
 			}

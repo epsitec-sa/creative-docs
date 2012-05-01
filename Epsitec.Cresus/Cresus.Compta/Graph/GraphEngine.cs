@@ -533,7 +533,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			decimal sum = 0;
 			for (int y = 0; y < ny; y++)
 			{
-				sum += this.cube.GetValue (i, y).GetValueOrDefault ();
+				sum += System.Math.Abs (this.cube.GetValue (i, y).GetValueOrDefault ());
 			}
 
 			if (sum == 0)
@@ -551,7 +551,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 					for (int y = 0; y < ny; y++)
 					{
-						decimal value = this.cube.GetValue (i, y).GetValueOrDefault ();
+						decimal value = System.Math.Abs (this.cube.GetValue (i, y).GetValueOrDefault ());
 						decimal a2 = a1 + value * 360.0m / sum;
 
 						if (a2-a1 == 360)  // une seule tranche ?
@@ -1239,7 +1239,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			if (this.options.GraphPoints == GraphPoint.Mix)
 			{
-				index *= System.Math.Max (GraphEngine.graphPoints.Length/total, 1);
+				//?index *= System.Math.Max (GraphEngine.graphPoints.Length/total, 1);
 				return GraphEngine.graphPoints[index%GraphEngine.graphPoints.Length];
 			}
 			else

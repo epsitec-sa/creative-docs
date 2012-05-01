@@ -559,6 +559,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				controller = new RésuméPériodiqueController (this.app, this.businessContext, this);
 			}
 
+			if (command.Name.EndsWith ("Présentation.Soldes"))
+			{
+				controller = new SoldesController (this.app, this.businessContext, this);
+			}
+
 			if (command.Name.EndsWith ("Présentation.PiècesGenerator"))
 			{
 				controller = new PiècesGeneratorController (this.app, this.businessContext, this);
@@ -1192,6 +1197,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DifférencesChange)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Monnaies)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.Soldes)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.CodesTVA)]
@@ -1226,6 +1232,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Exploitation)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.DifférencesChange)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.RésuméPériodique)]
+		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.Soldes)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.RésuméTVA)]
 		[Command (Cresus.Compta.Res.CommandIds.NouvellePrésentation.DécompteTVA)]
 		private void ProcessShowNouvellePrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
@@ -1583,6 +1590,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Budgets,           Res.CommandIds.NouvellePrésentation.Budgets);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.DifférencesChange, Res.CommandIds.NouvellePrésentation.DifférencesChange);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméPériodique,  Res.CommandIds.NouvellePrésentation.RésuméPériodique);
+			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.Soldes,            Res.CommandIds.NouvellePrésentation.Soldes);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.RésuméTVA,         Res.CommandIds.NouvellePrésentation.RésuméTVA);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.DécompteTVA,       Res.CommandIds.NouvellePrésentation.DécompteTVA);
 			this.AddNewWindowToMenu (menu, Res.Commands.Présentation.PlanComptable,     Res.CommandIds.NouvellePrésentation.PlanComptable);

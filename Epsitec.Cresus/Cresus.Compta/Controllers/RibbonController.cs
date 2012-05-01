@@ -86,6 +86,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Journal, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				UIBuilder.CreateButton (section, Res.Commands.Présentation.Extrait, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
+				UIBuilder.CreateButton (section, Res.Commands.Présentation.Soldes, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 				//?section.Children.Add (this.CreateGap ());
 
 				Widget topSection, bottomSection;

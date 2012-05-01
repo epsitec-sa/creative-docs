@@ -72,6 +72,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static int NumberOfDays(Date d1, Date d2)
+		{
+			return (int) (d1.Ticks/Time.TicksPerDay - d2.Ticks/Time.TicksPerDay);
+		}
+
 		public static Date AddDays(Date date, int numberOfDays)
 		{
 			return new Date (date.Ticks + Time.TicksPerDay*numberOfDays);

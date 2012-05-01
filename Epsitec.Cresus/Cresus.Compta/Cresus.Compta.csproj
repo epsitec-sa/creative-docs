@@ -56,6 +56,8 @@
     <Compile Include="Accessors\BudgetsManager.cs" />
     <Compile Include="Accessors\CodesTVAEditionLine.cs" />
     <Compile Include="Accessors\CodesTVADataAccessor.cs" />
+    <Compile Include="Accessors\SoldesDataAccessor.cs" />
+    <Compile Include="Accessors\SoldesData.cs" />
     <Compile Include="Accessors\RésuméPériodiqueDataAccessor.cs" />
     <Compile Include="Accessors\RésuméPériodiqueData.cs" />
     <Compile Include="Accessors\MonnaiesDataAccessor.cs" />
@@ -74,6 +76,7 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\SoldesController.cs" />
     <Compile Include="Controllers\RésuméPériodiqueController.cs" />
     <Compile Include="Controllers\MonnaiesEditorController.cs" />
     <Compile Include="Controllers\MonnaiesController.cs" />
@@ -103,8 +106,12 @@
     <Compile Include="Graph\GraphMode.cs" />
     <Compile Include="Graph\GraphEngine.cs" />
     <Compile Include="Helpers\Currencies.cs" />
+    <Compile Include="Options\Controllers\SoldesColumnController.cs" />
+    <Compile Include="Options\Controllers\SoldesOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméTVAOptionsController.cs" />
+    <Compile Include="Options\Data\SoldesColumn.cs" />
+    <Compile Include="Options\Data\SoldesOptions.cs" />
     <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
     <Compile Include="TypeEcriture.cs" />
@@ -383,6 +390,7 @@
     <EmbeddedResource Include="Images\Graph.SideBySide.icon" />
     <EmbeddedResource Include="Images\Graph.Stacked.icon" />
     <EmbeddedResource Include="Images\Graph.Dimensions.Swap.icon" />
+    <EmbeddedResource Include="Images\Présentation.Soldes.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
