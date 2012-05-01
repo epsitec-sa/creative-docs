@@ -121,6 +121,16 @@ namespace Epsitec.Common.BigList.Widgets
 			return this.itemCache.GetItemData (index).GetData<TData> ();
 		}
 
+		public void SetupItemList<TData>(IItemDataProvider<TData> provider,
+			/**/						 IItemDataMapper<TData> mapper,
+			/**/						 IItemDataRenderer itemRenderer,
+			/**/						 IItemMarkRenderer markRenderer = null,
+			/**/						 ItemListFeatures features = null,
+			/**/						 ItemListSelection selection = null,
+			/**/						 IList<ItemListMark> marks = null)
+		{
+			this.SetupItemList<TData, ItemState> (provider, mapper, itemRenderer, markRenderer, features, selection, marks);
+		}
 
 		public void SetupItemList<TData, TState>(IItemDataProvider<TData> provider,
 			/**/								 IItemDataMapper<TData> mapper,
