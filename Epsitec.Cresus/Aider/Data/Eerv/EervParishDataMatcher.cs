@@ -86,10 +86,10 @@ namespace Epsitec.Aider.Data.Eerv
 	{
 
 
-		public static IEnumerable<Tuple<NormalizedPerson, List<Tuple<NormalizedPerson, MatchData>>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons)
+		public static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> FindMatches(IEnumerable<NormalizedPerson> eervPersons, IEnumerable<NormalizedPerson> aiderPersons)
 		{
 			var todo = new HashSet<NormalizedPerson> (eervPersons);
-			var done = new Dictionary<NormalizedPerson, List<NormalizedPerson>> ();
+			var done = new Dictionary<NormalizedPerson, NormalizedPerson> ();
 			var matched = new HashSet<NormalizedPerson> ();
 
 			EervParishDataMatcher.FindMatchesWithFuzzyMethod(aiderPersons, todo, done, matched);
@@ -102,21 +102,24 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static IEnumerable<Tuple<NormalizedPerson, List<Tuple<NormalizedPerson, MatchData>>>> GetResultsWithMatchData(Dictionary<NormalizedPerson, List<NormalizedPerson>> matches)
+		private static IEnumerable<Tuple<NormalizedPerson, Tuple<NormalizedPerson, MatchData>>> GetResultsWithMatchData(Dictionary<NormalizedPerson, NormalizedPerson> matches)
 		{
-			return from match in matches
-				   let eervPerson = match.Key
-				   let aiderPersons = match.Value
-				   let aiderPersonsWithMatchData = EervParishDataMatcher.GetResultsWithMatchData (eervPerson, aiderPersons)
-				   select Tuple.Create (eervPerson, aiderPersonsWithMatchData.ToList ());
-		}
+			foreach (var match in matches)
+			{
+				var eervPerson = match.Key;
+				var aiderPerson = match.Value;
 
+				Tuple<NormalizedPerson, MatchData> tuple = null;
 
-		private static IEnumerable<Tuple<NormalizedPerson, MatchData>> GetResultsWithMatchData(NormalizedPerson eervPerson, List<NormalizedPerson> aiderPersons)
-		{
-			return from aiderPerson in aiderPersons
-				   let matchData = EervParishDataMatcher.GetMatchData (eervPerson, aiderPerson)
-				   select Tuple.Create (aiderPerson, matchData);
+				if (aiderPerson != null)
+				{
+					var matchData = EervParishDataMatcher.GetMatchData (eervPerson, aiderPerson);
+
+					tuple = Tuple.Create (aiderPerson, matchData);
+				}
+
+				yield return Tuple.Create (eervPerson, tuple);
+			}
 		}
   
 
@@ -146,25 +149,13 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void Warn(Dictionary<NormalizedPerson, List<NormalizedPerson>> done)
+		private static void Warn(Dictionary<NormalizedPerson, NormalizedPerson> done)
 		{
 			var sb = new StringBuilder ();
 
-			foreach (var match in done.Where (m => m.Value.Count > 1))
-			{
-				sb.AppendLine ("======================================================================");
-				sb.AppendLine ("WARNING: multiple matches for person:");
-				sb.AppendLine (match.Key.ToString ());
-				sb.AppendLine ("----------------------------------------------------------------------");
-
-				foreach (var p in match.Value)
-				{
-					sb.AppendLine (p.ToString ());
-				}
-			}
-
 			var reversedDone = done
-				.SelectMany (m => m.Value.Select (p => Tuple.Create (p, m.Key)))
+				.Select (m => Tuple.Create (m.Value, m.Key))
+				.Where (t => t.Item1 != null)
 				.GroupBy (t => t.Item1)
 				.ToDictionary (g => g.Key, g => g.Select (t => t.Item2).ToList ());
 
@@ -185,7 +176,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
   
-		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, List<NormalizedPerson>> done, HashSet<NormalizedPerson> matched)
+		private static void FindMatchesWithFuzzyMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
 			var namesToAiderPersons = EervParishDataMatcher.GroupPersonsByNames(aiderPersons);
   			
@@ -226,7 +217,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void FindMatchesWithSplitMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, List<NormalizedPerson>> done, HashSet<NormalizedPerson> matched)
+		private static void FindMatchesWithSplitMethod(IEnumerable<NormalizedPerson> aiderPersons, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
 			var splitNamesToAiderPersons = EervParishDataMatcher.GroupPersonsBySplitNames (aiderPersons);
 
@@ -238,16 +229,16 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignMatches(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> matches, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, List<NormalizedPerson>> done, HashSet<NormalizedPerson> matched)
+		private static void AssignMatches(IEnumerable<Tuple<NormalizedPerson, List<NormalizedPerson>>> matches, HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done, HashSet<NormalizedPerson> matched)
 		{
 			foreach (var match in matches)
 			{
 				var eervPerson = match.Item1;
-				var matchingAiderPersons = match.Item2;
+				var matchingAiderPerson = match.Item2.FirstOrDefault ();
 
-				done.Add (eervPerson, matchingAiderPersons);
+				done.Add (eervPerson, matchingAiderPerson);
 				todo.Remove (eervPerson);
-				matched.AddRange (matchingAiderPersons);
+				matched.Add (matchingAiderPerson);
 			}
 		}
 
@@ -335,11 +326,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignUnmatchedPersons(HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, List<NormalizedPerson>> done)
+		private static void AssignUnmatchedPersons(HashSet<NormalizedPerson> todo, Dictionary<NormalizedPerson, NormalizedPerson> done)
 		{
 			foreach (var person in todo)
 			{
-				done.Add (person, new List<NormalizedPerson> ());
+				done.Add (person, null);
 			}
 		}
 

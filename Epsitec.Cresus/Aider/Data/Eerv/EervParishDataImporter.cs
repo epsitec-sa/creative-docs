@@ -58,15 +58,15 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> BuildEervPersonMapping(Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matchData, Dictionary<EervPerson, EntityKey> newEntities)
+		private static Dictionary<EervPerson, EntityKey> BuildEervPersonMapping(Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matchData, Dictionary<EervPerson, EntityKey> newEntities)
 		{
 			var mapping = new Dictionary<EervPerson, EntityKey> ();
 
 			foreach (var match in matchData)
 			{
-				if (match.Value.Any ())
+				if (match.Value != null)
 				{
-					mapping[match.Key] = match.Value.First ().Item1;
+					mapping[match.Key] = match.Value.Item1;
 				}
 			}
 
@@ -79,7 +79,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> FindMatches(CoreDataManager coreDataManager, EervParishData eervParishData)
+		private static Dictionary<EervPerson, Tuple<EntityKey, MatchData>> FindMatches(CoreDataManager coreDataManager, EervParishData eervParishData)
 		{
 			var normalizedAiderPersons = Normalizer.Normalize (coreDataManager);
 			var normalizedEervPersons = Normalizer.Normalize (eervParishData.Households);
@@ -89,14 +89,14 @@ namespace Epsitec.Aider.Data.Eerv
 			return matches.ToDictionary
 			(
 				m => normalizedEervPersons[m.Item1],
-				m => m.Item2
-					.Select (t => Tuple.Create (normalizedAiderPersons[t.Item1], t.Item2))
-					.ToList ()
+				m => m.Item2 == null
+					? null
+					: Tuple.Create (normalizedAiderPersons[m.Item2.Item1], m.Item2.Item2)
 			);
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreDataManager coreDataManager, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatches(CoreDataManager coreDataManager, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
 			Func<BusinessContext, Dictionary<EervPerson, EntityKey>> function = b =>
 			{
@@ -107,7 +107,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, EntityKey> ProcessMatches(BusinessContext businessContext, string parishName, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches)
+		private static Dictionary<EervPerson, EntityKey> ProcessMatches(BusinessContext businessContext, string parishName, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches)
 		{
 			var newEntities = new Dictionary<EervPerson, AiderPersonEntity> ();
 
@@ -117,9 +117,9 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var eervPerson = match.Key;
 
-				if (match.Value.Any ())
+				if (match.Value != null)
 				{
-					var m = match.Value.First ();
+					var m = match.Value;
 					var aiderPerson = (AiderPersonEntity) dataContext.ResolveEntity (m.Item1);
 					var matchData = m.Item2;
 
@@ -449,7 +449,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			coreDataManager.Execute(b =>
 			{
@@ -458,11 +458,11 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatches(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
+		private static void ProcessHouseholdMatches(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
 			var aiderPersonKeys = matches.Values
-				.Where (v => v.Any ())
-				.Select (v => v.First ().Item1)
+				.Where (v => v != null)
+				.Select (v => v.Item1)
 				.Concat (newEntities.Values);
 
 			var aiderHouseholdToAiderPersons = EervParishDataImporter.GetAiderHouseholdToAiderPersons (businessContext, aiderPersonKeys);
@@ -495,7 +495,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToPersons)
+		private static void ProcessHouseholdMatch(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold, Dictionary<AiderHouseholdEntity, List<AiderPersonEntity>> aiderHouseholdToPersons)
 		{
 			var eervToAiderPersons = EervParishDataImporter.GetEervToAiderPersons (businessContext, matches, newEntities, eervHousehold);
 			var aiderHouseholds = EervParishDataImporter.GetAiderHouseholds (eervToAiderPersons.Values);
@@ -521,7 +521,7 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons(BusinessContext businessContext, Dictionary<EervPerson, List<Tuple<EntityKey, MatchData>>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold)
+		private static Dictionary<EervPerson, AiderPersonEntity> GetEervToAiderPersons(BusinessContext businessContext, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, EervHousehold eervHousehold)
 		{
 			var eervToAiderPersons = new Dictionary<EervPerson, AiderPersonEntity> ();
 
@@ -529,8 +529,8 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var match = matches[eervPerson];
 
-				var entityKey = match.Count > 0
-					? match[0].Item1
+				var entityKey = match != null
+					? match.Item1
 					: newEntities[eervPerson];
 
 				var aiderPerson = businessContext.DataContext.ResolveEntity (entityKey);
