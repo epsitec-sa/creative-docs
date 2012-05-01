@@ -57,7 +57,6 @@ namespace Epsitec.Aider.Data.Eerv
 				var groups = EervParishDataLoader.GetParishData (groupedGroups, parishId);
 
 				var rawPersons = persons.Select (t => t.Item1).ToList ();
-				var rawActivities = activities.Select (t => t.Item1).ToList ();
 				var rawGroups = groups.Select (t => t.Item1).ToList ();
 				
 				var idToHouseholds = households.ToDictionary (h => h.Id);
@@ -65,11 +64,15 @@ namespace Epsitec.Aider.Data.Eerv
 				var idToLegalPersons = legalPersons.ToDictionary (p => p.Id);
 				var idToGroups = rawGroups.ToDictionary (g => g.Id);
 
-				activities = EervParishDataLoader.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups).ToList ();
+				var filteredActivities = EervParishDataLoader
+					.FilterActivities (activities, idToPersons, idToLegalPersons, idToGroups)
+					.ToList ();
+
+				var rawActivities = filteredActivities.Select (t => t.Item1).ToList ();
 
 				EervParishDataLoader.AssignPersonsToHouseholds (persons, idToHouseholds);
 				EervParishDataLoader.AssignSuperGroups (groups, idToGroups);
-				EervParishDataLoader.AssignActivitiesToPersonsAndGroups (activities, idToPersons, idToLegalPersons, idToGroups);
+				EervParishDataLoader.AssignActivitiesToPersonsAndGroups (filteredActivities, idToPersons, idToLegalPersons, idToGroups);
 
 				EervParishDataLoader.FreezeData (rawActivities, rawGroups, legalPersons, rawPersons, households);
 
