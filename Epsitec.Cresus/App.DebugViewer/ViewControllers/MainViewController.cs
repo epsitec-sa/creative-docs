@@ -354,7 +354,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 				return;
 			}
 
-			var item = this.folderScrollList.GetItemData<Data.LogFolderRecord> (index).Data;
+			var item = this.folderScrollList.GetItemData<Data.LogFolderRecord> (index);
 
 			this.DefineHistoryAccessor (new LogDataAccessor (item.Path));
 		}

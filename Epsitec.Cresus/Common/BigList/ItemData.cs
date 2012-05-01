@@ -17,6 +17,13 @@ namespace Epsitec.Common.BigList
 			this.state = state;
 		}
 
+		/// <summary>
+		/// Gets the data stored in this instance.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">When the <typeparamref name="TData"/> does
+		/// not match the real data type.</exception>
+		/// <typeparam name="TData">The type of the data.</typeparam>
+		/// <returns>The native data.</returns>
 		public abstract TData GetData<TData>();
 
 		public TState CreateState<TState>()

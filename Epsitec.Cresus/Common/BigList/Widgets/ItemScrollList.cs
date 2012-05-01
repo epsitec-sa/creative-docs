@@ -37,7 +37,51 @@ namespace Epsitec.Common.BigList.Widgets
 			this.contentViews = new List<ContentView> ();
 		}
 
+		
+		public int								ActiveIndex
+		{
+			get
+			{
+				if (this.itemLists == null)
+				{
+					return -1;
+				}
+				else
+				{
+					return this.itemLists.ActiveIndex;
+				}
+			}
+			set
+			{
+				if (this.itemLists == null)
+				{
+					if (value == -1)
+					{
+						return;
+					}
 
+					throw new System.IndexOutOfRangeException ();
+				}
+
+				this.itemLists.ActiveIndex = value;
+			}
+		}
+		
+		public ItemListFeatures					Features
+		{
+			get
+			{
+				if (this.itemLists == null)
+				{
+					return null;
+				}
+				else
+				{
+					return this.itemLists.Features;
+				}
+			}
+		}
+		
 		public ItemListColumnHeaderView			Header
 		{
 			get
@@ -61,13 +105,20 @@ namespace Epsitec.Common.BigList.Widgets
 			}
 		}
 
-		
 
-		public ItemData<T> GetItemData<T>(int index)
+		/// <summary>
+		/// Gets the item data for the specified index. If the index is not valid or if the
+		/// data cannot be retrieved from the <see cref="IItemDataProvider"/>, then this
+		/// method returns simply <c>null</c>.
+		/// </summary>
+		/// <exception cref="System.ArgumentException">When the <typeparamref name="TData"/> does
+		/// not match the real data type.</exception>
+		/// <typeparam name="TData">The expected data type.</typeparam>
+		/// <param name="index">The index.</param>
+		/// <returns>The item data or <c>null</c>.</returns>
+		public TData GetItemData<TData>(int index)
 		{
-			var data = this.itemCache.GetItemData (index) as ItemData<T>;
-
-			return data;
+			return this.itemCache.GetItemData (index).GetData<TData> ();
 		}
 
 

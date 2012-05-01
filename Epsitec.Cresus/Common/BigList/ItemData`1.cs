@@ -6,6 +6,10 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
+	/// <summary>
+	/// The <c>ItemData&lt;T&gt;</c> generic class stores a data item of type <typeparamref name="T"/>.
+	/// </summary>
+	/// <typeparam name="T">The native data type.</typeparam>
 	public class ItemData<T> : ItemData
 	{
 		public ItemData(T data, ItemState state)
@@ -15,7 +19,7 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		public T Data
+		public T								Data
 		{
 			get
 			{
@@ -24,6 +28,15 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		/// <summary>
+		/// Gets the data stored in this instance.
+		/// </summary>
+		/// <typeparam name="TData">The type of the data.</typeparam>
+		/// <returns>
+		/// The native data.
+		/// </returns>
+		/// <exception cref="System.ArgumentException">When the <typeparamref name="TData"/> does
+		/// not match the real data type.</exception>
 		public override TData GetData<TData>()
 		{
 			if (typeof (TData) == typeof (T))
