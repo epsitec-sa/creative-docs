@@ -52,7 +52,7 @@ namespace Epsitec.Aider.Data.Eerv
 			var newEntities = EervParishDataImporter.ProcessMatches (coreDataManager, eervParishData.Id.Name, matches);
 
 			EervParishDataImporter.ProcessHouseholdMatches (coreDataManager, matches, newEntities, eervParishData.Households);
-			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, newEntities.Values);
+			EervParishDataImporter.AssignToParishes (coreDataManager, parishRepository, eervParishData.Id, newEntities.Values);
 
 			return EervParishDataImporter.BuildEervPersonMapping (matches, newEntities);
 		}
@@ -451,9 +451,9 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static void ProcessHouseholdMatches(CoreDataManager coreDataManager, Dictionary<EervPerson, Tuple<EntityKey, MatchData>> matches, Dictionary<EervPerson, EntityKey> newEntities, IEnumerable<EervHousehold> eervHouseholds)
 		{
-			coreDataManager.Execute(b =>
+			coreDataManager.Execute (b =>
 			{
-				EervParishDataImporter.ProcessHouseholdMatches(b, matches, newEntities, eervHouseholds);
+				EervParishDataImporter.ProcessHouseholdMatches (b, matches, newEntities, eervHouseholds);
 			});
 		}
 
@@ -905,21 +905,40 @@ namespace Epsitec.Aider.Data.Eerv
 		}
 
 
-		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes(CoreDataManager coreDataManager, ParishAddressRepository parishRepository, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
 		{
 			coreDataManager.Execute (b =>
-				EervParishDataImporter.AssignToParishes (b, parishRepository, aiderPersonKeys)
+				EervParishDataImporter.AssignToParishes (b, parishRepository, parishId, aiderPersonKeys)
 			);
 		}
 
 
-		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, IEnumerable<EntityKey> aiderPersonKeys)
+		private static void AssignToParishes(BusinessContext businessContext, ParishAddressRepository parishRepository, EervId parishId, IEnumerable<EntityKey> aiderPersonKeys)
 		{
 			var aiderPersons = aiderPersonKeys
 				.Select (k => (AiderPersonEntity) businessContext.DataContext.ResolveEntity (k))
 				.ToList ();
 
 			ParishAssigner.AssignToParishes (parishRepository, businessContext, aiderPersons);
+			EervParishDataImporter.AssignPersonInImportationGroup (businessContext, parishId, aiderPersons);
+		}
+
+
+		private static void AssignPersonInImportationGroup(BusinessContext businessContext, EervId parishId, List<AiderPersonEntity> aiderPersons)
+		{
+			var parishGroup = EervParishDataImporter.FindRootAiderGroup (businessContext, parishId);
+			var importedGroup = businessContext.CreateAndRegisterEntity<AiderGroupEntity> ();
+
+			importedGroup.Name = "Personnes importées";
+
+			AiderGroupRelationshipEntity.Create (businessContext, parishGroup, importedGroup, GroupRelationshipType.Inclusion);
+
+			foreach (var aiderPerson in aiderPersons)
+			{
+				importedGroup.AddParticipant (businessContext, aiderPerson, null, null, null);
+			}
+
+			businessContext.SaveChanges ();
 		}
 
 
@@ -1059,8 +1078,8 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				result = result
 					.Children
-					.Where(g => g.Name == aiderGroup.Name)
-					.FirstOrDefault();
+					.Where (g => g.Name == aiderGroup.Name)
+					.FirstOrDefault ();
 
 				if (result == null)
 				{
@@ -1078,13 +1097,13 @@ namespace Epsitec.Aider.Data.Eerv
 			{
 				var parishName = eervId.Name;
 
-				return AiderGroupEntity.FindParishGroup(businessContext, parishName);
+				return AiderGroupEntity.FindParishGroup (businessContext, parishName);
 			}
 			else
 			{
 				var regionNumber = int.Parse (StringUtils.GetDigits (eervId.Name));
-				
-				return AiderGroupEntity.FindRegionGroup(businessContext, regionNumber);
+
+				return AiderGroupEntity.FindRegionGroup (businessContext, regionNumber);
 			}
 		}
 
