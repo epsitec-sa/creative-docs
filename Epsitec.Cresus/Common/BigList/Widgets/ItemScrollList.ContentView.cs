@@ -14,7 +14,11 @@ namespace Epsitec.Common.BigList.Widgets
 {
 	public partial class ItemScrollList
 	{
-		class ContentView
+		/// <summary>
+		/// The <c>ContentView</c> class wraps an item list's content view and its associated scroller
+		/// into a coherent ensemble.
+		/// </summary>
+		class ContentView : System.IDisposable
 		{
 			public ContentView(ItemScrollList host, IItemDataRenderer itemRenderer, IItemMarkRenderer markRenderer, Widget frame, AbstractScroller scroller)
 			{
@@ -28,11 +32,9 @@ namespace Epsitec.Common.BigList.Widgets
 					ItemRenderer = itemRenderer,
 					MarkRenderer = markRenderer,
 				};
+				
 				this.counter = new SafeCounter ();
-				this.host.itemCache.ResetFired += this.HandleItemCacheResetFired;
-				this.view.ItemList.VisibleFrame.VisibleContentChanged += this.HandleVisibleContentChanged;
-				this.scroller.ValueChanged += this.HandleScrollerValueChanged;
-
+				this.AttachEventHandlers ();
 				this.UpdateScroller ();
 			}
 
@@ -55,6 +57,32 @@ namespace Epsitec.Common.BigList.Widgets
 				}
 			}
 
+			#region IDisposable Members
+
+			public void Dispose()
+			{
+				this.DetachEventHandlers ();
+
+				this.view.Dispose ();
+			}
+
+			#endregion
+
+
+			private void AttachEventHandlers()
+			{
+				this.host.itemCache.ResetFired += this.HandleItemCacheResetFired;
+				this.view.ItemList.VisibleFrame.VisibleContentChanged += this.HandleVisibleContentChanged;
+				this.scroller.ValueChanged += this.HandleScrollerValueChanged;
+			}
+			
+			private void DetachEventHandlers()
+			{
+				this.host.itemCache.ResetFired -= this.HandleItemCacheResetFired;
+				this.view.ItemList.VisibleFrame.VisibleContentChanged -= this.HandleVisibleContentChanged;
+				this.scroller.ValueChanged -= this.HandleScrollerValueChanged;
+			}
+			
 			
 			private void HandleItemCacheResetFired(object sender)
 			{

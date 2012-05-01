@@ -141,6 +141,8 @@ namespace Epsitec.Common.BigList.Widgets
 			/**/								 IList<ItemListMark> marks = null)
 			where TState : ItemState, new ()
 		{
+			this.ClearItemList ();
+
 			if (features == null)
 			{
 				features = new ItemListFeatures ()
@@ -163,12 +165,6 @@ namespace Epsitec.Common.BigList.Widgets
 				selection = new ItemListSelection (this.itemCache);
 			}
 
-			if (this.itemLists != null)
-			{
-				this.DetachItemListEventHandlers ();
-				this.itemLists = null;
-			}
-
 			this.itemLists = new ItemListCollection<TData, TState> (cache, marks, selection);
 
 			this.AttachItemListEventHandlers ();
@@ -179,6 +175,15 @@ namespace Epsitec.Common.BigList.Widgets
 			this.itemCache.Reset ();
 		}
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.ClearItemList ();
+			}
+
+			base.Dispose (disposing);
+		}
 		
 		protected override void UpdateClientGeometry()
 		{
@@ -187,6 +192,21 @@ namespace Epsitec.Common.BigList.Widgets
 			this.contentViews.ForEach (x => x.UpdateScroller ());
 		}
 
+		private void ClearItemList()
+		{
+			if (this.itemLists != null)
+			{
+				this.DetachItemListEventHandlers ();
+				this.itemLists = null;
+			}
+
+			if (this.contentViews.Count > 0)
+			{
+				this.contentViews.ForEach (x => x.Dispose ());
+				this.contentViews.Clear ();
+			}
+		}
+		
 		private void AttachItemListEventHandlers()
 		{
 			this.itemLists.ActiveIndexChanged  += this.HandleItemListsActiveIndexChanged;
