@@ -1001,9 +1001,21 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static Dictionary<string, AiderGroupEntity> BuildAiderIdMapping(AiderGroupEntity rootAiderGroup, Dictionary<AiderGroupEntity, IList<AiderGroupEntity>> subGroupMapping, EervGroupDefinition rootEervGroupDefinition)
 		{
-			return EervParishDataImporter.GetGroupChains (rootAiderGroup, subGroupMapping)
-				.Select (c => Tuple.Create (c, EervParishDataImporter.FindEervGroupDefinition (c, rootEervGroupDefinition)))
-				.ToDictionary (t => t.Item2.Id, t => t.Item1.Last ());
+			var result = new Dictionary<string, AiderGroupEntity> ();
+
+			var groupChains = EervParishDataImporter.GetGroupChains (rootAiderGroup, subGroupMapping);
+
+			foreach (var groupChain in groupChains)
+			{
+				var eervGroupDefinition = EervParishDataImporter.FindEervGroupDefinition (groupChain, rootEervGroupDefinition);
+
+				if (eervGroupDefinition != null)
+				{
+					result[eervGroupDefinition.Id] = groupChain.Last ();
+				}
+			}
+
+			return result;
 		}
 
 
@@ -1045,17 +1057,15 @@ namespace Epsitec.Aider.Data.Eerv
 			// first element in the chain.
 			foreach (var aiderGroup in aiderGroupChain.Skip (1))
 			{
-				var nextResult = result
+				result = result
 					.Children
-					.Where (g => g.Name == aiderGroup.Name)
-					.FirstOrDefault ();
+					.Where(g => g.Name == aiderGroup.Name)
+					.FirstOrDefault();
 
-				if (nextResult == null)
+				if (result == null)
 				{
-					throw new Exception ("Group definition not found");
+					break;
 				}
-
-				result = nextResult;
 			}
 
 			return result;
