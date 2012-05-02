@@ -17,39 +17,51 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphEngine()
 		{
+			this.surfaces = new List<GraphSurface> ();
+		}
+
+
+		public GraphSurface Detect(Point pos)
+		{
+			for (int i = this.surfaces.Count-1; i >= 0; i--)
+			{
+				var surface = this.surfaces[i];
+
+				if (surface.Contains (pos))
+				{
+					return surface;
+				}
+			}
+
+			return null;
+		}
+
+		public string GetTooltip(GraphSurface surface)
+		{
+			if (surface != null && surface.X >= 0 && surface.Y >= 0)
+			{
+				var value = this.cube.GetValue (surface.X, surface.Y);
+				if (value.HasValue)
+				{
+					var xx = this.cube.GetTitle (0, surface.X);
+					var yy = this.cube.GetTitle (1, surface.Y);
+					var vv = Converters.MontantToString (value.Value, null);
+
+					return string.Format ("{0} ; {1} = {2}", xx, yy, vv);
+				}
+			}
+
+			return null;  // pas de tooltip
 		}
 
 
 		public void PaintFull(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
-			if (cube.Dimensions == 0 || cube.IsEmpty)
-			{
-				return;
-			}
-
+			this.cube    = cube;
 			this.options = options;
 
-#if false
-			this.cube = new Cube ();
-			this.cube.FilteredCopy (cube, this.options.PrimaryDimension, this.options.SecondaryDimension, this.options.PrimaryFilter, this.options.SecondaryFilter, null);
-
-			if (this.options.HasThreshold0)
-			{
-				var pc = new Cube ();
-				pc.ThresholdCopy0 (this.cube, this.options.ThresholdValue0);
-				this.cube = pc;
-			}
-
-			if (this.options.HasThreshold1)
-			{
-				var pc = new Cube ();
-				pc.ThresholdCopy1 (this.cube, this.options.ThresholdValue1);
-				this.cube = pc;
-			}
-#else
-			this.cube = cube;
-#endif
+			this.surfaces.Clear ();
 
 			if (this.cube.Dimensions == 0 || this.cube.IsEmpty)
 			{
@@ -214,6 +226,8 @@ namespace Epsitec.Cresus.Compta.Graph
 						graphics.AddRectangle (barRect);
 						graphics.RenderSolid (this.BorderColor);
 						graphics.LineWidth = 1;
+
+						this.surfaces.Add (new GraphSurface (x, y, barRect));
 					}
 				}
 			}
@@ -292,6 +306,8 @@ namespace Epsitec.Cresus.Compta.Graph
 						{
 							graphics.AddFilledRectangle (barRect);
 							graphics.RenderSolid (this.GetIndexedColor (y, ny));
+
+							this.surfaces.Add (new GraphSurface (x, y, barRect));
 						}
 						else
 						{
@@ -564,8 +580,13 @@ namespace Epsitec.Cresus.Compta.Graph
 						{
 							if (pass == 0)
 							{
-								graphics.AddFilledCircle (center, radius);
-								graphics.RenderSolid (this.GetIndexedColor (y, ny));
+								Path path = new Path ();
+								path.AppendCircle (center, radius);
+
+								graphics.Color = this.GetIndexedColor (y, ny);
+								graphics.PaintSurface (path);
+
+								this.surfaces.Add (new GraphSurface (i, y, path));
 							}
 							else
 							{
@@ -597,6 +618,8 @@ namespace Epsitec.Cresus.Compta.Graph
 							{
 								graphics.Color = this.GetIndexedColor (y, ny);
 								graphics.PaintSurface (path);
+
+								this.surfaces.Add (new GraphSurface (i, y, path));
 							}
 							else
 							{
@@ -734,6 +757,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			rect.Inflate (2);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackLegendsColor);
+			this.surfaces.Add (new GraphSurface (-1, -1, rect));
 			rect.Deflate (2);
 
 			for (int y = 0; y < n; y++)
@@ -1448,13 +1472,15 @@ namespace Epsitec.Cresus.Compta.Graph
 
 
 
-		private Cube			cube;
-		private GraphOptions	options;
-		private double			fontSize;
-		private decimal			minValue;
-		private decimal			maxValue;
-		private double			drawBottom;
-		private double			drawHeight;
-		private double			drawRight;
+		private readonly List<GraphSurface>		surfaces;
+
+		private Cube							cube;
+		private GraphOptions					options;
+		private double							fontSize;
+		private decimal							minValue;
+		private decimal							maxValue;
+		private double							drawBottom;
+		private double							drawHeight;
+		private double							drawRight;
 	}
 }

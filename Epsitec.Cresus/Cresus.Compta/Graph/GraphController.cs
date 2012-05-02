@@ -37,6 +37,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				Options = this.controller.DataAccessor.Options.GraphOptions,
 				Dock    = DockStyle.Fill,
 			};
+
+			ToolTip.Default.RegisterDynamicToolTipHost (this.graphWidget);  // pour voir les tooltips dynamiques
 		}
 
 		public bool Show
