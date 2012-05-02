@@ -129,7 +129,7 @@ namespace Epsitec.Cresus.DebugViewer.ViewControllers
 
 			var renderer = new Epsitec.Common.BigList.Renderers.StringRenderer<Data.LogFolderRecord> (x => this.folderAccessor.GetMessage (x));
 
-			this.folderScrollList.SetupItemList<Data.LogFolderRecord> (this.folderAccessor, this.folderAccessor, renderer);
+			this.folderScrollList.SetUpItemList<Data.LogFolderRecord> (this.folderAccessor, this.folderAccessor, renderer);
 #endif
 
 			this.RefreshContents ();

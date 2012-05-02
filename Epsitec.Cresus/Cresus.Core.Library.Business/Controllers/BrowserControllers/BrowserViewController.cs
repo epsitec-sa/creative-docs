@@ -155,18 +155,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		
 		private void CreateUIScrollList(FrameBox frame)
 		{
-			var listFrame = new FrameBox
+			this.scrollList = new ItemScrollList ()
 			{
-				Parent = frame,
-				Dock = DockStyle.Fill,
-			};
-
-			this.scrollList = new ScrollList ()
-			{
-				Parent = listFrame,
-				Anchor = AnchorStyles.All,
-				ScrollListStyle = ScrollListStyle.Standard,
-				Margins = new Common.Drawing.Margins (-1, -1, -1, -1),
+				Parent  = frame,
+				Anchor  = AnchorStyles.All,
+				Margins = Margins.Zero,
 			};
 		}
 		
@@ -289,7 +282,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private string							dataSetName;
 
 		private FrameBox						settingsPanel;
-		private ScrollList						scrollList;
+		private ItemScrollList					scrollList;
 		private BrowserScrollListController		scrollListController;
 	}
 }

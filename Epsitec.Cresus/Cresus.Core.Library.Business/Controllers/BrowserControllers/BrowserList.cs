@@ -1,9 +1,10 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.BigList;
+using Epsitec.Common.BigList.Widgets;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
-using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Core.Entities;
 using Epsitec.Cresus.DataLayer.Context;
@@ -15,7 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	/// <summary>
 	/// The <c>BrowserList</c> class stores the collection of items, which are then
-	/// presented to the user, usually in a <see cref="ScrollList"/>, as managed by
+	/// presented to the user, usually in a <see cref="ItemScrollList"/>, as managed by
 	/// <see cref="BrowserScrollListController"/>.
 	/// </summary>
 	public sealed class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
@@ -32,6 +33,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			get
 			{
 				return this.list.Count;
+			}
+		}
+
+		public BrowserListItem					this[int index]
+		{
+			get
+			{
+				return this.list[index];
 			}
 		}
 

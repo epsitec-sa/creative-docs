@@ -1,6 +1,8 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.BigList;
+using Epsitec.Common.BigList.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Widgets;
@@ -19,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserScrollListController : System.IDisposable
 	{
-		public BrowserScrollListController(CoreData data, ScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
+		public BrowserScrollListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
 		{
 			this.data        = data;
 			this.scrollList  = scrollList;
@@ -27,13 +29,32 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 			this.collection  = new BrowserList (this.dataContext);
 			this.filter      = filter;
+			this.suspendUpdates = new SafeCounter ();
 
-			this.scrollList.Items.ValueConverter = this.collection.ConvertBrowserListItemToString;
+			this.SetUpItemList ();
 
-			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
+//#			this.scrollList.Items.ValueConverter = this.collection.ConvertBrowserListItemToString;
+
+//#			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
 			this.dataContext.EntityChanged      += this.HandleDataContextEntityChanged;
 
 			this.SetContentsBasedOnDataSet ();
+		}
+
+		private void SetUpItemList()
+		{
+			this.itemProvider = new BrowserListItemProvider (this.collection);
+			this.itemMapper   = new BrowserListItemMapper ();
+			this.itemRenderer = new BrowserListItemRenderer (this.collection);
+			
+			this.scrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
+
+			this.scrollList.ActiveIndexChanged += this.HandleItemListActiveIndexChanged;
+		}
+
+		private void TearDownItemList()
+		{
+			this.scrollList.ActiveIndexChanged -= this.HandleItemListActiveIndexChanged;
 		}
 
 		
@@ -87,7 +108,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				return this.scrollList.SelectedItemIndex;
+				return this.scrollList.ActiveIndex;
+//#				return this.scrollList.SelectedItemIndex;
 			}
 			set
 			{
@@ -118,10 +140,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return;
 			}
 
-			this.suspendUpdates++;
-			this.collection.RemoveAt (index);
-			this.scrollList.Items.RemoveAt (index);
-			this.suspendUpdates--;
+			using (this.suspendUpdates.Enter ())
+			{
+				this.collection.RemoveAt (index);
+				//	TODO: process removal in scroll list
+//#				this.scrollList.Items.RemoveAt (index);
+			}
 		}
 
 		public void Delete(AbstractEntity entity)
@@ -165,9 +189,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void Dispose()
 		{
-			this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
+			this.TearDownItemList ();
+//#			this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
 			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-			this.scrollList.Items.ValueConverter   = null;
+//#			this.scrollList.Items.ValueConverter   = null;
 
 			this.collection.Dispose ();
 			this.data.DisposeDataContext (this.dataContext);
@@ -194,12 +219,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if (index < 0)
 			{
 				this.SelectedEntityKey = null;
-				this.scrollList.SelectedItemIndex = -1;
+//#				this.scrollList.SelectedItemIndex = -1;
+				this.scrollList.ActiveIndex = -1;
 			}
 			else
 			{
 				this.SelectedEntityKey = this.collection.GetEntityKey (index);
-				this.scrollList.SelectedItemIndex = index;
+//#				this.scrollList.SelectedItemIndex = index;
+				this.scrollList.ActiveIndex = index;
 			}
 		}
 
@@ -216,12 +243,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.collectionGetter    = collectionGetter;
 			this.collectionEntityId  = entityId;
 
-			this.SetupContentExtractor ();
+			this.SetUpContentExtractor ();
 			
 			this.UpdateCollection ();
 		}
 
-		private void SetupContentExtractor()
+		private void SetUpContentExtractor()
 		{
 			if (EntityInfo<CustomerEntity>.GetTypeId () == this.collectionEntityId)
 			{
@@ -243,9 +270,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.extractedCollection = null;
 		}
 
+		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
+		{
+			if (this.suspendUpdates.IsZero)
+			{
+				this.OnSelectedItemChange ();
+			}
+		}
+		
 		private void HandleScrollListSelectedItemChanged(object sender)
 		{
-			if (this.suspendUpdates == 0)
+			if (this.suspendUpdates.IsZero)
 			{
 				this.OnSelectedItemChange ();
 			}
@@ -305,11 +340,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				int oldActive = reset ? 0 : this.collection.IndexOf (this.activeEntityKey);
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
-				this.suspendUpdates++;
-				this.scrollList.Items.Clear ();
-				this.scrollList.Items.AddRange (this.collection);
-				this.scrollList.SelectedItemIndex = newActive;
-				this.suspendUpdates--;
+				using (this.suspendUpdates.Enter ())
+				{
+//#					this.scrollList.Items.Clear ();
+//#					this.scrollList.Items.AddRange (this.collection);
+//#					this.scrollList.SelectedItemIndex = newActive;
+
+					this.scrollList.RefreshContents ();
+					this.scrollList.ActiveIndex = newActive;
+				}
 
 				this.OnSelectedItemChange ();
 			}
@@ -317,7 +356,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void OnSelectedItemChange()
 		{
-			int active    = this.scrollList.SelectedItemIndex;
+//#			int active    = this.scrollList.SelectedItemIndex;
+			int active    = this.scrollList.ActiveIndex;
 			var entityKey = this.collection.GetEntityKey (active);
 
 			this.SelectedEntityKey = entityKey;
@@ -338,10 +378,15 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				SelectedItemChange;
 
 		private readonly CoreData				data;
-		private readonly ScrollList				scrollList;
+		private readonly ItemScrollList			scrollList;
 		private readonly BrowserList			collection;
 		private readonly System.Type			dataSetType;
 		private readonly DataContext			dataContext;
+		private readonly SafeCounter			suspendUpdates;
+
+		private BrowserListItemProvider			itemProvider;
+		private BrowserListItemMapper			itemMapper;
+		private BrowserListItemRenderer			itemRenderer;
 
 		private System.Predicate<AbstractEntity> filter;
 		private EntityDataExtractor             extractor;
@@ -351,7 +396,5 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private Druid							collectionEntityId;
 		
 		private EntityKey?						activeEntityKey;
-
-		private int								suspendUpdates;
 	}
 }
