@@ -48,12 +48,12 @@ namespace Epsitec.Common.BigList.Widgets
 				using (this.counter.Enter ())
 				{
 					this.scroller.SmallChange       = 4;
-					this.scroller.LargeChange	    = visible - 1;
+					this.scroller.LargeChange	    = visible < 1 ? 0 : visible - 1;
 					this.scroller.MinValue          = 0;
-					this.scroller.MaxValue          = total - 1;
+					this.scroller.MaxValue          = total < 1 ? 0 : total - 1;
 					this.scroller.Resolution        = 1;
-					this.scroller.VisibleRangeRatio = total == 0 ? 1 : visible / total;
-					this.scroller.Value				= index;
+					this.scroller.VisibleRangeRatio = total == 0 ? 0 : visible / total;
+					this.scroller.Value				= index < 0 ? 0 : index;
 				}
 			}
 

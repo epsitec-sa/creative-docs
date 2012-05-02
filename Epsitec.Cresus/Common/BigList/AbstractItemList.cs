@@ -16,9 +16,12 @@ namespace Epsitec.Common.BigList
 	{
 		protected AbstractItemList(ItemCache cache, IList<ItemListMark> marks, ItemListSelection selection)
 		{
-			this.cache = cache;
-			this.marks = marks;
+			this.cache     = cache;
+			this.marks     = marks;
 			this.selection = selection;
+
+			this.activeIndex  = -1;
+			this.focusedIndex = -1;
 		}
 
 

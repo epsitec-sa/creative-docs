@@ -121,7 +121,7 @@ namespace Epsitec.Common.BigList.Widgets
 			return this.itemCache.GetItemData (index).GetData<TData> ();
 		}
 
-		public void SetupItemList<TData>(IItemDataProvider<TData> provider,
+		public void SetUpItemList<TData>(IItemDataProvider<TData> provider,
 			/**/						 IItemDataMapper<TData> mapper,
 			/**/						 IItemDataRenderer itemRenderer,
 			/**/						 IItemMarkRenderer markRenderer = null,
@@ -129,10 +129,10 @@ namespace Epsitec.Common.BigList.Widgets
 			/**/						 ItemListSelection selection = null,
 			/**/						 IList<ItemListMark> marks = null)
 		{
-			this.SetupItemList<TData, ItemState> (provider, mapper, itemRenderer, markRenderer, features, selection, marks);
+			this.SetUpItemList<TData, ItemState> (provider, mapper, itemRenderer, markRenderer, features, selection, marks);
 		}
 
-		public void SetupItemList<TData, TState>(IItemDataProvider<TData> provider,
+		public void SetUpItemList<TData, TState>(IItemDataProvider<TData> provider,
 			/**/								 IItemDataMapper<TData> mapper,
 			/**/								 IItemDataRenderer itemRenderer,
 			/**/								 IItemMarkRenderer markRenderer = null,
@@ -175,6 +175,13 @@ namespace Epsitec.Common.BigList.Widgets
 			this.itemCache.Reset ();
 		}
 
+
+		public void RefreshContents()
+		{
+			this.itemLists.Reset ();
+			this.Invalidate ();
+		}
+		
 		protected override void Dispose(bool disposing)
 		{
 			if (disposing)
