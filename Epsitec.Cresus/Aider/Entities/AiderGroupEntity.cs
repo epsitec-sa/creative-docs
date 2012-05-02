@@ -107,7 +107,8 @@ namespace Epsitec.Aider.Entities
 				RequestedEntity = example,
 			};
 
-			var rootGroupNamePattern = "Paroisse de " + parishName.Replace ("-", "%");
+			var rootGroupName = AiderGroupEntity.GetParishGroupName(parishName);
+			var rootGroupNamePattern = rootGroupName.Replace("-", "%");
 
 			request.AddLocalConstraint (example,
 				new ComparisonFieldValue (
@@ -130,10 +131,22 @@ namespace Epsitec.Aider.Entities
 
 			var example = new AiderGroupEntity ()
 			{
-				Name = "Région de " + regionNumber,
+				Name = AiderGroupEntity.GetRegionGroupName (regionNumber),
 			};
 
 			return businessContext.DataContext.GetByExample (example).FirstOrDefault ();
+		}
+
+
+		public static string GetRegionGroupName(int regionNumber)
+		{
+			return "Région " + InvariantConverter.ToString (regionNumber);
+		}
+
+
+		public static string GetParishGroupName(string parishName)
+		{
+			return "Paroisse de " + parishName;
 		}
 
 

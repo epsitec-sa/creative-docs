@@ -58,5 +58,17 @@ namespace Epsitec.Aider.Entities
 				.GetByExample<AiderGroupDefEntity> (example)
 				.FirstOrDefault ();
 		}
+
+
+		public static string GetRegionGroupDefName()
+		{
+			return "Régions";
+		}
+
+
+		public static string GetParishGroupDefName()
+		{
+			return "Paroisses";
+		}
 	}
 }

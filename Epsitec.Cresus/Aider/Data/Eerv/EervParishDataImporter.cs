@@ -1111,8 +1111,8 @@ namespace Epsitec.Aider.Data.Eerv
 		private static EervGroupDefinition FindRootEervGroupDefinition(EervId eervId, IEnumerable<EervGroupDefinition> groupDefinitions)
 		{
 			var groupName = eervId.IsParish
-				? "Paroisses"
-				: "Régions";
+				? AiderGroupDefEntity.GetParishGroupDefName ()
+				: AiderGroupDefEntity.GetRegionGroupDefName ();
 
 			return groupDefinitions.Where (g => g.Name == groupName).Single ();
 		}

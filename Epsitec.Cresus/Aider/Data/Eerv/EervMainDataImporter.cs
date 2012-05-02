@@ -7,13 +7,7 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Context;
-
-using System;
-
 using System.Collections.Generic;
-
-using System.Diagnostics;
 
 using System.Linq;
 
@@ -128,7 +122,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateRegionGroup(BusinessContext businessContext, AiderGroupDefEntity regionGroupDefinition, int regionCode)
 		{
-			var name = "Région " + InvariantConverter.ToString (regionCode);
+			var name = AiderGroupEntity.GetRegionGroupName (regionCode);
 
 			return regionGroupDefinition.Instantiate (businessContext, name);
 		}
@@ -136,7 +130,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 		private static AiderGroupEntity CreateParishGroup(BusinessContext businessContext, Dictionary<int, AiderGroupEntity> regionGroups, AiderGroupDefEntity parishGroupDefinition, ParishAddressInformation parish)
 		{
-			var name = "Paroisse de " + parish.ParishName;
+			var name = AiderGroupEntity.GetParishGroupName (parish.ParishName);
 
 			var parishGroup = parishGroupDefinition.Instantiate (businessContext, name);
 			
