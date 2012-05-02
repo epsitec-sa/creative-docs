@@ -32,10 +32,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateAfterOptionsChanged ();
 		}
 
-		public override void UpdateAfterOptionsChanged()
-		{
-		}
-
 
 		public override int AllCount
 		{

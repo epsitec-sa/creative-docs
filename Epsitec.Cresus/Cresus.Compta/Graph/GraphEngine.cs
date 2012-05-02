@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.options = options;
 
+#if false
 			this.cube = new Cube ();
 			this.cube.FilteredCopy (cube, this.options.PrimaryDimension, this.options.SecondaryDimension, this.options.PrimaryFilter, this.options.SecondaryFilter, null);
 
@@ -46,6 +47,9 @@ namespace Epsitec.Cresus.Compta.Graph
 				pc.ThresholdCopy1 (this.cube, this.options.ThresholdValue1);
 				this.cube = pc;
 			}
+#else
+			this.cube = cube;
+#endif
 
 			if (this.cube.Dimensions == 0 || this.cube.IsEmpty)
 			{

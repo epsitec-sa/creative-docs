@@ -69,6 +69,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Date? dateDébut, dateFin;
 			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
 			this.soldesJournalManager.Initialize (this.période.Journal, dateDébut, dateFin);
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 

@@ -33,6 +33,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateAfterOptionsChanged()
 		{
 			this.UpdateReadonlyAllData ();
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 		private void UpdateReadonlyAllData()
@@ -271,6 +273,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				y++;
 			}
+
+			this.UpdateGraphDataToDraw ();
 		}
 
 

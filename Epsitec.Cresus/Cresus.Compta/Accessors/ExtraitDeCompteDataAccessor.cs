@@ -145,6 +145,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			this.UpdateSoldes ();
 			this.UpdateFilter ();
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 		private void UpdateSoldes()
@@ -224,6 +226,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				y++;
 			}
+
+			this.UpdateGraphDataToDraw ();
 		}
 
 

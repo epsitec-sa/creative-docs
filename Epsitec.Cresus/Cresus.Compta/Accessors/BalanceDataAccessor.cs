@@ -146,6 +146,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.UpdateFilter ();
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 		private void UpdateTypo()
@@ -282,6 +284,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				y++;
 			}
+
+			this.UpdateGraphDataToDraw ();
 		}
 
 

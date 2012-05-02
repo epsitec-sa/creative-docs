@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
@@ -13,24 +14,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 {
 	public class GraphWidget : Widget
 	{
-		public GraphWidget()
+		public GraphWidget(AbstractController controller)
 		{
+			this.controller = controller;
 			this.engine = new GraphEngine ();
 		}
 
-
-		public Cube Cube
-		{
-			get
-			{
-				return this.cube;
-			}
-			set
-			{
-				this.cube = value;
-				this.Invalidate ();
-			}
-		}
 
 		public GraphOptions Options
 		{
@@ -48,17 +37,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			if (this.cube != null && this.options != null)
+			var cube = this.controller.DataAccessor.CubeToDraw;
+
+			if (cube != null && this.options != null)
 			{
 				Rectangle rect = this.Client.Bounds;
-				this.engine.PaintFull (this.cube, this.options, graphics, rect);
+				this.engine.PaintFull (cube, this.options, graphics, rect);
 			}
 		}
 
 
-		private readonly GraphEngine	engine;
+		private readonly AbstractController		controller;
+		private readonly GraphEngine			engine;
 
-		private Cube					cube;
-		private GraphOptions			options;
+		private GraphOptions					options;
 	}
 }

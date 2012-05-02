@@ -72,6 +72,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.soldesJournalManager.Initialize (this.journal);
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 

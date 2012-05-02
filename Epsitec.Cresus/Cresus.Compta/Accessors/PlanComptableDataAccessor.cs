@@ -56,6 +56,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 				}
 			}
+
+			base.UpdateAfterOptionsChanged ();
 		}
 
 

@@ -104,6 +104,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public Cube CubeToDraw
+		{
+			get
+			{
+				return this.cubeToDraw;
+			}
+		}
+
 		public GraphOptions ArrayGraphOptions
 		{
 			get
@@ -114,6 +122,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public virtual void UpdateAfterOptionsChanged()
 		{
+			this.UpdateGraphDataToDraw ();
 		}
 
 
@@ -254,6 +263,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public virtual void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
+		}
+
+		protected void UpdateGraphDataToDraw()
+		{
+			//	Génère le cube final, prêt à être dessiné, en fonction des options (filtres, seuils, etc.).
+			if (this.cube != null && this.cube.Dimensions != 0)
+			{
+				var options = this.options.GraphOptions;
+
+				this.cubeToDraw = new Cube ();
+				this.cubeToDraw.FilteredCopy (this.cube, options.PrimaryDimension, options.SecondaryDimension, options.PrimaryFilter, options.SecondaryFilter, null);
+
+				if (options.HasThreshold0)
+				{
+					var pc = new Cube ();
+					pc.ThresholdCopy0 (this.cubeToDraw, options.ThresholdValue0);
+					this.cubeToDraw = pc;
+				}
+
+				if (options.HasThreshold1)
+				{
+					var pc = new Cube ();
+					pc.ThresholdCopy1 (this.cubeToDraw, options.ThresholdValue1);
+					this.cubeToDraw = pc;
+				}
+			}
 		}
 
 		protected bool FilterLine(int row)
@@ -638,6 +673,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected Date?									lastBeginDate;
 		protected Date?									lastEndDate;
 		protected Cube									cube;
+		protected Cube									cubeToDraw;
 		protected GraphOptions							arrayGraphOptions;
 	}
 }

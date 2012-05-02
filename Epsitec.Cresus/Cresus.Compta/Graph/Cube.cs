@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void ThresholdCopy0(Cube src, decimal threshold)
 		{
-			//	Filtre toutes les valeurs inférieures à un seuil, selon l'axe principal.
+			//	Filtre toutes les valeurs inférieures à un seuil (en %), selon l'axe principal.
 			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
 			this.Clear ();
 			this.Dimensions = 2;
@@ -294,7 +294,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void ThresholdCopy1(Cube src, decimal threshold)
 		{
-			//	Filtre toutes les valeurs inférieures à un seuil, selon l'axe secondaire.
+			//	Filtre toutes les valeurs inférieures à un seuil (en %), selon l'axe secondaire.
 			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
 			this.Clear ();
 			this.Dimensions = 2;

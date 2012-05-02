@@ -31,10 +31,9 @@ namespace Epsitec.Cresus.Compta.Graph
 				Visibility = false,
 			};
 
-			this.graphWidget = new GraphWidget
+			this.graphWidget = new GraphWidget (this.controller)
 			{
 				Parent  = this.mainFrame,
-				Cube    = this.controller.DataAccessor.Cube,
 				Options = this.controller.DataAccessor.Options.GraphOptions,
 				Dock    = DockStyle.Fill,
 			};
