@@ -27,10 +27,9 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public void CreateUI(Widget parent, System.Action optionsChangedAction, System.Action levelChangedAction)
+		public void CreateUI(Widget parent, System.Action optionsChangedAction)
 		{
 			this.optionsChangedAction = optionsChangedAction;
-			this.levelChangedAction = levelChangedAction;
 
 			var toolbar = new FrameBox
 			{
@@ -39,53 +38,34 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock          = DockStyle.Fill,
 			};
 
-			var frame = new FrameBox
+			this.commonFrame = new FrameBox
 			{
-				Parent         = toolbar,
-				Dock           = DockStyle.Fill,
-			};
-
-			var levelFrame = new FrameBox
-			{
-				Parent         = toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Right,
-				Padding        = new Margins (5),
-			};
-
-			this.beginnerFrame = new FrameBox
-			{
-				Parent  = frame,
+				Parent  = toolbar,
 				Dock    = DockStyle.Top,
 				Padding = new Margins (5),
 			};
 
 			this.separator = new Separator
 			{
-				Parent          = frame,
+				Parent          = toolbar,
 				PreferredHeight = 1,
 				Dock            = DockStyle.Top,
 				Visibility      = false,
 			};
 
-			this.specialistFrame = new FrameBox
+			this.detailedFrame = new FrameBox
 			{
-				Parent     = frame,
+				Parent     = toolbar,
 				Dock       = DockStyle.Top,
 				Visibility = false,
 			};
 
-			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
-			this.levelController.Specialist = false;
-
-			this.CreateBeginnerUI (beginnerFrame);
-			this.CreateSpecialistUI (specialistFrame);
+			this.CreateCommonUI (commonFrame);
+			this.CreateDetailedUI (detailedFrame);
 			this.Update ();
 		}
 
-		private void CreateBeginnerUI(Widget parent)
+		private void CreateCommonUI(Widget parent)
 		{
 			var leftFrame = new FrameBox
 			{
@@ -117,11 +97,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock            = DockStyle.Top,
 			};
 
-			this.sideBySideModeButton = this.CreateButton (leftFrame, "Graph.SideBySide", "Histogramme côte à côte");
-			this.stackedModeButton    = this.CreateButton (leftFrame, "Graph.Stacked",    "Histogramme empilé");
-			this.linesModeButton      = this.CreateButton (leftFrame, "Graph.Lines",      "Courbes");
-			this.pieModeButton        = this.CreateButton (leftFrame, "Graph.Pie",        "Secteurs");
-			this.arrayModeButton      = this.CreateButton (leftFrame, "Graph.Array",      "Données brutes");
+			this.sideBySideModeButton = this.CreateButton (leftFrame, "Graph.SideBySide", GraphOptions.GetDescription (GraphMode.SideBySide));
+			this.stackedModeButton    = this.CreateButton (leftFrame, "Graph.Stacked",    GraphOptions.GetDescription (GraphMode.Stacked));
+			this.linesModeButton      = this.CreateButton (leftFrame, "Graph.Lines",      GraphOptions.GetDescription (GraphMode.Lines));
+			this.pieModeButton        = this.CreateButton (leftFrame, "Graph.Pie",        GraphOptions.GetDescription (GraphMode.Pie));
+			this.arrayModeButton      = this.CreateButton (leftFrame, "Graph.Array",      GraphOptions.GetDescription (GraphMode.Array));
 
 			{
 				new StaticText
@@ -328,7 +308,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			};
 		}
 
-		private void CreateSpecialistUI(Widget parent)
+		private void CreateDetailedUI(Widget parent)
 		{
 			var leftFrame = new FrameBox
 			{
@@ -527,6 +507,13 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.OptionsChanged ();
 			});
 
+			this.barOverlapController = new SliderController ();
+			this.barOverlapController.CreateUI (rightFrame, 0.0, 1.0, 0.1, 0.0, "Chevauchement", delegate
+			{
+				this.options.BarOverlap = this.barOverlapController.Value;
+				this.OptionsChanged ();
+			});
+
 			this.lineAlphaController = new SliderController ();
 			this.lineAlphaController.CreateUI (rightFrame, 0.1, 1.0, 0.1, 1.0, "Opacité", delegate
 			{
@@ -659,16 +646,16 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public bool Specialist
+		public bool Detailed
 		{
 			get
 			{
-				return this.levelController.Specialist;
+				return this.detailedFrame.Visibility;
 			}
 			set
 			{
-				this.levelController.Specialist = value;
-				this.LevelChangedAction ();
+				this.detailedFrame.Visibility = value;
+				this.separator.Visibility = value;
 			}
 		}
 
@@ -676,13 +663,6 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.options.Clear ();
 			this.OptionsChanged ();
-		}
-
-		private void LevelChangedAction()
-		{
-			this.specialistFrame.Visibility = this.levelController.Specialist;
-			this.separator.Visibility = this.levelController.Specialist;
-			this.levelChangedAction ();
 		}
 
 	
@@ -706,6 +686,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.legendButton.Visibility                = this.options.Mode != GraphMode.Array;
 				this.borderThicknessController.Visibility   = this.options.Mode != GraphMode.Array;
 				this.barThicknessController.Visibility      = this.options.Mode == GraphMode.SideBySide || this.options.Mode == GraphMode.Stacked;
+				this.barOverlapController.Visibility        = this.options.Mode == GraphMode.SideBySide;
 				this.lineAlphaController.Visibility         = this.options.Mode == GraphMode.Lines;
 				this.lineWidthController.Visibility         = this.options.Mode == GraphMode.Lines && this.options.HasLines;
 				this.pointWidthController.Visibility        = this.options.Mode == GraphMode.Lines && this.options.GraphPoints != GraphPoint.None;
@@ -737,6 +718,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.fontSizeController.Value          = this.options.FontSize;
 				this.borderThicknessController.Value   = this.options.BorderThickness;
 				this.barThicknessController.Value      = this.options.BarThickness;
+				this.barOverlapController.Value        = this.options.BarOverlap;
 				this.lineAlphaController.Value         = this.options.LineAlpha;
 				this.lineWidthController.Value         = this.options.LineWidth;
 				this.pointWidthController.Value        = this.options.PointWidth;
@@ -1081,13 +1063,11 @@ namespace Epsitec.Cresus.Compta.Graph
 		private readonly GraphOptions			options;
 		private readonly SafeCounter			ignoreChanges;
 
-		private FrameBox						beginnerFrame;
+		private FrameBox						commonFrame;
 		private Separator						separator;
-		private FrameBox						specialistFrame;
+		private FrameBox						detailedFrame;
 
 		private System.Action					optionsChangedAction;
-		private System.Action					levelChangedAction;
-		private LevelController					levelController;
 		private BackIconButton					sideBySideModeButton;
 		private BackIconButton					stackedModeButton;
 		private BackIconButton					linesModeButton;
@@ -1117,6 +1097,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private SliderController				fontSizeController;
 		private SliderController				borderThicknessController;
 		private SliderController				barThicknessController;
+		private SliderController				barOverlapController;
 		private SliderController				lineAlphaController;
 		private SliderController				lineWidthController;
 		private SliderController				pointWidthController;

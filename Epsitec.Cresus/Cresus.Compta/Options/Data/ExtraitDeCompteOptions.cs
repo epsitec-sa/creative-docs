@@ -90,9 +90,16 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				this.StartSummaryBuilder ();
 
-				if (this.HasGraphics)
+				if (this.ViewGraph)
 				{
-					this.AppendSummaryBuilder ("Graphique du solde");
+					this.AppendSummaryBuilder (this.graphOptions.Summary);
+				}
+				else
+				{
+					if (this.HasGraphics)
+					{
+						this.AppendSummaryBuilder ("Graphique du solde");
+					}
 				}
 
 				return this.StopSummaryBuilder ();

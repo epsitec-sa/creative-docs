@@ -105,6 +105,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			d.HasStackedGraph    = this.HasStackedGraph;
 			d.HasSideBySideGraph = this.HasSideBySideGraph;
 
+			d.soldesColumns.Clear ();
+			foreach (var c in this.soldesColumns)
+			{
+				var cc = new SoldesColumn ();
+				c.CopyTo (cc);
+				d.soldesColumns.Add (cc);
+			}
+
 			base.CopyTo (dst);
 		}
 
@@ -116,6 +124,21 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 
 			var o = other as SoldesOptions;
+
+			{
+				if (this.soldesColumns.Count != o.soldesColumns.Count)
+				{
+					return false;
+				}
+
+				for (int i = 0; i < this.soldesColumns.Count; i++)
+				{
+					if (!this.soldesColumns[i].Compare (o.soldesColumns[i]))
+					{
+						return false;
+					}
+				}
+			}
 
 			return this.Resolution         == o.Resolution        &&
 				   this.Count              == o.Count             &&
@@ -132,21 +155,33 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				this.StartSummaryBuilder ();
 
 				this.AppendSummaryBuilder (SoldesOptions.ResolutionToDescription (this.Resolution));
-				this.AppendSummaryBuilder (SoldesOptions.ResolutionToDescription (this.Resolution));
+				this.AppendSummaryBuilder (string.Format ("{0}×", this.Count.ToString ()));
 
 				if (this.Cumul)
 				{
 					this.AppendSummaryBuilder ("Chiffres cumulés");
 				}
 
-				if (this.HasStackedGraph)
+				if (this.ViewGraph)
 				{
-					this.AppendSummaryBuilder ("Graphique cumulé");
+					this.AppendSummaryBuilder (this.graphOptions.Summary);
+				}
+				else
+				{
+					if (this.HasStackedGraph)
+					{
+						this.AppendSummaryBuilder ("Graphique cumulé");
+					}
+
+					if (this.HasSideBySideGraph)
+					{
+						this.AppendSummaryBuilder ("Graphique côte à côte");
+					}
 				}
 
-				if (this.HasSideBySideGraph)
+				foreach (var c in this.soldesColumns)
 				{
-					this.AppendSummaryBuilder ("Graphique côte à côte");
+					this.AppendSummaryBuilder (c.Description);
 				}
 
 				return this.StopSummaryBuilder ();

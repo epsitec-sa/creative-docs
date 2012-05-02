@@ -128,8 +128,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.levelController.Specialist = this.options.Specialist;
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);
-			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged, this.GraphLevelChangedAction);
-			this.graphOptionsController.Specialist = this.options.GraphSpecialist;
+			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged);
+
+			this.UpdateGraphWidgets ();
 		}
 
 		protected virtual void OptionsChanged()
@@ -151,13 +152,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				this.comparisonFrame.Visibility = this.levelController.Specialist;
 			}
-		}
-
-		protected virtual void GraphLevelChangedAction()
-		{
-			this.options.GraphSpecialist = this.graphOptionsController.Specialist;
-
-			this.graphbar.Visibility =  this.options.ViewGraph;
 		}
 
 		protected virtual void UpdateWidgets()
@@ -354,19 +348,85 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.viewArrayButton = this.CreateButton (frame, "View.Array", "Montre le tableau");
 			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphique");
+			this.viewGraphButton.Margins = new Margins (2, 0, 0, 0);
+
+			var showFrame = new FrameBox
+			{
+				Parent          = frame,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (-1, 2, 0, 0),
+			};
+
+			this.showCommonGraphButton = new BackIconButton
+			{
+				Parent          = showFrame,
+				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Common"),
+				BackColor       = UIBuilder.SelectionColor,
+				PreferredWidth  = 20,
+				PreferredHeight = 10,
+				AutoToggle      = false,
+				AutoFocus       = false,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 0, 0),
+			};
+
+			this.showDetailedGraphButton = new BackIconButton
+			{
+				Parent          = showFrame,
+				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Detailed"),
+				BackColor       = UIBuilder.SelectionColor,
+				PreferredWidth  = 20,
+				AutoToggle      = false,
+				AutoFocus       = false,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (0, 0, -1, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.showCommonGraphButton,   "Montre les options graphiques principales");
+			ToolTip.Default.SetToolTip (this.showDetailedGraphButton, "Montre les options graphiques détaillés");
 
 			this.viewArrayButton.Clicked += delegate
 			{
 				this.options.ViewGraph = false;
 				this.ShowHideControllers ();
-				this.UpdateGraph ();
+				this.UpdateGraphWidgets ();
 			};
 
 			this.viewGraphButton.Clicked += delegate
 			{
 				this.options.ViewGraph = true;
 				this.ShowHideControllers ();
-				this.UpdateGraph ();
+				this.UpdateGraphWidgets ();
+			};
+
+			this.showCommonGraphButton.Clicked += delegate
+			{
+				if (this.options.GraphShowLevel == 0)
+				{
+					this.options.GraphShowLevel = 1;
+				}
+				else
+				{
+					this.options.GraphShowLevel = 0;
+				}
+
+				this.UpdateGraphWidgets ();
+			};
+
+			this.showDetailedGraphButton.Clicked += delegate
+			{
+				if (this.options.GraphShowLevel == 2)
+				{
+					this.options.GraphShowLevel = 1;
+				}
+				else
+				{
+					this.options.GraphShowLevel = 2;
+				}
+
+				this.UpdateGraphWidgets ();
 			};
 
 			return frame;
@@ -383,16 +443,38 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.UpdateWidgets ();
 		}
 
-		protected void UpdateGraph()
+		protected void UpdateGraphWidgets()
 		{
-			this.graphbar.Visibility =  this.options.ViewGraph;
+			if (this.options.ViewGraph && this.options.GraphShowLevel == 1)
+			{
+				this.graphbar.Visibility = true;
+				this.graphOptionsController.Detailed = false;
+			}
+			else if (this.options.ViewGraph && this.options.GraphShowLevel == 2)
+			{
+				this.graphbar.Visibility = true;
+				this.graphOptionsController.Detailed = true;
+			}
+			else
+			{
+				this.graphbar.Visibility = false;
+			}
 
 			this.graphOptionsController.Update ();
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;
-				this.viewGraphButton.ActiveState = this.options.ViewGraph ? ActiveState.Yes : ActiveState.No;
+				if (this.viewArrayButton != null)
+				{
+					this.viewArrayButton.ActiveState = this.options.ViewGraph ? ActiveState.No  : ActiveState.Yes;
+					this.viewGraphButton.ActiveState = this.options.ViewGraph ? ActiveState.Yes : ActiveState.No;
+
+					this.showCommonGraphButton.Visibility   = this.options.ViewGraph;
+					this.showDetailedGraphButton.Visibility = this.options.ViewGraph;
+
+					this.showCommonGraphButton.ActiveState   = this.options.GraphShowLevel >= 1 ? ActiveState.Yes : ActiveState.No;
+					this.showDetailedGraphButton.ActiveState = this.options.GraphShowLevel >= 2 ? ActiveState.Yes : ActiveState.No;
+				}
 			}
 		}
 
@@ -424,7 +506,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock              = DockStyle.Left,
 				AutoToggle        = false,
 				AutoFocus         = false,
-				Margins           = new Margins (0, 2, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (button, description);
@@ -457,6 +538,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected BackIconButton								viewArrayButton;
 		protected BackIconButton								viewGraphButton;
+		protected BackIconButton								showCommonGraphButton;
+		protected BackIconButton								showDetailedGraphButton;
 
 		protected LevelController								levelController;
 		protected GraphOptionsController						graphOptionsController;

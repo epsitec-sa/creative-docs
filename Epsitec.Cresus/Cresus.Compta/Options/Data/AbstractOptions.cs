@@ -59,8 +59,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			set;
 		}
 
-		public bool GraphSpecialist
+		public int GraphShowLevel
 		{
+			//	0 = options graphiques cachées
+			//	1 = options graphiques communes
+			//	2 = options graphiques détaillées
 			get;
 			set;
 		}

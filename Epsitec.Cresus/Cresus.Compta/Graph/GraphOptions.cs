@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.fontSize           = 10.0;
 			this.borderThickness    = 1.0;
 			this.barThickness       = 0.8;
+			this.barOverlap         = 0.0;
 			this.lineAlpha          = 1.0;
 			this.lineWidth          = 2.0;
 			this.pointWidth         = 4.0;
@@ -183,6 +184,18 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
+		public double BarOverlap
+		{
+			get
+			{
+				return this.barOverlap;
+			}
+			set
+			{
+				this.barOverlap = value;
+			}
+		}
+
 		public double LineAlpha
 		{
 			get
@@ -310,6 +323,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			dst.FontSize           = this.FontSize;
 			dst.BorderThickness    = this.BorderThickness;
 			dst.BarThickness       = this.BarThickness;
+			dst.BarOverlap         = this.BarOverlap;
 			dst.lineAlpha          = this.lineAlpha;
 			dst.LineWidth          = this.LineWidth;
 			dst.PointWidth         = this.PointWidth;
@@ -339,6 +353,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				   this.FontSize           == other.FontSize           &&
 				   this.BorderThickness    == other.BorderThickness    &&
 				   this.BarThickness       == other.BarThickness       &&
+				   this.BarOverlap         == other.BarOverlap         &&
 				   this.lineAlpha          == other.lineAlpha          &&
 				   this.LineWidth          == other.LineWidth          &&
 				   this.PointWidth         == other.PointWidth         &&
@@ -370,6 +385,39 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		public FormattedText Summary
+		{
+			get
+			{
+				return GraphOptions.GetDescription (this.mode);
+			}
+		}
+
+		public static FormattedText GetDescription(GraphMode mode)
+		{
+			switch (mode)
+			{
+				case GraphMode.Stacked:
+					return "Histogramme empilé";
+
+				case GraphMode.SideBySide:
+					return "Histogramme côte à côte";
+
+				case GraphMode.Lines:
+					return "Courbes";
+
+				case GraphMode.Pie:
+					return "Secteurs";
+
+				case GraphMode.Array:
+					return "Données brutes";
+
+				default:
+					return "?";
+			}
+		}
+
+
 		private readonly List<FormattedText>	primaryFilter;
 		private readonly List<FormattedText>	secondaryFilter;
 
@@ -384,6 +432,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private double							fontSize;
 		private double							borderThickness;
 		private double							barThickness;
+		private double							barOverlap;
 		private double							lineAlpha;
 		private double							lineWidth;
 		private double							pointWidth;

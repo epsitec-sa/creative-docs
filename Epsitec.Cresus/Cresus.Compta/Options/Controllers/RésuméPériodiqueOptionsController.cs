@@ -151,7 +151,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HideZero = (this.nullButton.ActiveState == ActiveState.Yes);
+					this.Options.ZeroDisplayedInWhite = (this.nullButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
@@ -201,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateGraph ();
+			this.UpdateGraphWidgets ();
 
 			using (this.ignoreChanges.Enter ())
 			{
@@ -212,10 +212,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.sideBySideGraphButton.Visibility = !this.options.ViewGraph;
 
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState           = this.Options.Cumul              ? ActiveState.Yes : ActiveState.No;
-				this.nullButton.ActiveState            = this.Options.HideZero           ? ActiveState.Yes : ActiveState.No;
-				this.stackedGraphButton.ActiveState    = this.Options.HasStackedGraph    ? ActiveState.Yes : ActiveState.No;
-				this.sideBySideGraphButton.ActiveState = this.Options.HasSideBySideGraph ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState           = this.Options.Cumul                ? ActiveState.Yes : ActiveState.No;
+				this.nullButton.ActiveState            = this.Options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
+				this.stackedGraphButton.ActiveState    = this.Options.HasStackedGraph      ? ActiveState.Yes : ActiveState.No;
+				this.sideBySideGraphButton.ActiveState = this.Options.HasSideBySideGraph   ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();

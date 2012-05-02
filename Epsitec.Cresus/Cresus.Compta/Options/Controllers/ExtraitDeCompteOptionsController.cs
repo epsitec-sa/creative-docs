@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateGraph ();
+			this.UpdateGraphWidgets ();
 
 			using (this.ignoreChanges.Enter ())
 			{

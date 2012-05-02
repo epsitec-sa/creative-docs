@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HideZero = !this.Options.HideZero;
+					this.Options.ZeroDisplayedInWhite = !this.Options.ZeroDisplayedInWhite;
 					this.OptionsChanged ();
 				}
 			};
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected override void UpdateWidgets()
 		{
-			this.UpdateGraph ();
+			this.UpdateGraphWidgets ();
 			this.UpdateComparison ();
 
 			using (this.ignoreChanges.Enter ())
@@ -112,8 +112,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.zeroButton.Visibility     = !this.options.ViewGraph;
 				this.graphicsButton.Visibility = !this.options.ViewGraph;
 
-				this.zeroButton.ActiveState     = this.Options.HideZero    ? ActiveState.Yes : ActiveState.No;
-				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+				this.zeroButton.ActiveState     = this.Options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
+				this.graphicsButton.ActiveState = this.Options.HasGraphics          ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();

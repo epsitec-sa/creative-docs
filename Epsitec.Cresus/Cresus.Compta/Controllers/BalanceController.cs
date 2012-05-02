@@ -142,7 +142,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					 columnType == ColumnType.Budget      )
 			{
 				var value = Converters.ParseMontant (text);
-				if (!data.NeverFiltered && options.HideZero && value.HasValue && value.Value == 0)
+				if (!data.NeverFiltered && options.ZeroDisplayedInWhite && value.HasValue && value.Value == 0)
 				{
 					text = FormattedText.Empty;
 				}

@@ -570,7 +570,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var o = options as DoubleOptions;
 
-			o.HideZero              = true;
+			o.ZeroDisplayedInWhite  = true;
 			o.HasGraphics           = (showed != ComparisonShowed.None);
 			o.ComparisonEnable      = (showed != ComparisonShowed.None);
 			o.ComparisonShowed      = showed;

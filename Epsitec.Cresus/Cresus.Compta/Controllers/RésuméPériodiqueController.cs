@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					 columnType <= ColumnType.Solde12)
 			{
 				var value = Converters.ParseMontant (text);
-				if (!data.NeverFiltered && options.HideZero && value.GetValueOrDefault () == 0)
+				if (!data.NeverFiltered && options.ZeroDisplayedInWhite && value.GetValueOrDefault () == 0)
 				{
 					text = FormattedText.Empty;
 				}

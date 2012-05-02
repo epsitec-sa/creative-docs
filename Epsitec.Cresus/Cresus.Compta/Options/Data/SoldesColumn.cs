@@ -39,5 +39,18 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				return FormattedText.Concat (this.NuméroCompte, " — ", Converters.DateToString (this.DateDébut));
 			}
 		}
+
+
+		public void CopyTo(SoldesColumn dst)
+		{
+			dst.NuméroCompte = this.NuméroCompte;
+			dst.DateDébut    = this.DateDébut;
+		}
+
+		public bool Compare(SoldesColumn other)
+		{
+			return this.NuméroCompte == other.NuméroCompte &&
+				   this.DateDébut    == other.DateDébut;
+		}
 	}
 }

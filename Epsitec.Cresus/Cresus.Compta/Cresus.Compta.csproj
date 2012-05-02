@@ -391,6 +391,8 @@
     <EmbeddedResource Include="Images\Graph.Stacked.icon" />
     <EmbeddedResource Include="Images\Graph.Dimensions.Swap.icon" />
     <EmbeddedResource Include="Images\Présentation.Soldes.icon" />
+    <EmbeddedResource Include="Images\View.Graph.Common.icon" />
+    <EmbeddedResource Include="Images\View.Graph.Detailed.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

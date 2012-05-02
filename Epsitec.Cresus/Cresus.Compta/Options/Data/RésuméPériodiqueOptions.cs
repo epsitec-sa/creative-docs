@@ -22,11 +22,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.NumberOfMonths    = 3;  // périodicité trimestrielle
-			this.Cumul             = false;
-			this.HideZero          = true;
-			this.HasStackedGraph = true;
-			this.HasSideBySideGraph = false;
+			this.NumberOfMonths       = 3;  // périodicité trimestrielle
+			this.Cumul                = false;
+			this.ZeroDisplayedInWhite = true;
+			this.HasStackedGraph      = true;
+			this.HasSideBySideGraph   = false;
 
 			this.graphOptions.Mode = GraphMode.Stacked;
 		}
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			get;
 		}
 
-		public bool HideZero
+		public bool ZeroDisplayedInWhite
 		{
 			//	Affiche en blanc les montants nuls ?
 			get;
@@ -83,11 +83,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public override void CopyTo(AbstractOptions dst)
 		{
 			var d = dst as RésuméPériodiqueOptions;
-			d.NumberOfMonths     = this.NumberOfMonths;
-			d.Cumul              = this.Cumul;
-			d.HideZero           = this.HideZero;
-			d.HasStackedGraph    = this.HasStackedGraph;
-			d.HasSideBySideGraph = this.HasSideBySideGraph;
+			d.NumberOfMonths       = this.NumberOfMonths;
+			d.Cumul                = this.Cumul;
+			d.ZeroDisplayedInWhite = this.ZeroDisplayedInWhite;
+			d.HasStackedGraph      = this.HasStackedGraph;
+			d.HasSideBySideGraph   = this.HasSideBySideGraph;
 
 			base.CopyTo (dst);
 		}
@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméPériodiqueOptions;
 
-			return this.NumberOfMonths     == o.NumberOfMonths    &&
-				   this.Cumul              == o.Cumul             &&
-				   this.HideZero           == o.HideZero          &&
-				   this.HasStackedGraph    == o.HasStackedGraph &&
-				   this.HasSideBySideGraph == o.HasSideBySideGraph;
+			return this.NumberOfMonths       == o.NumberOfMonths       &&
+				   this.Cumul                == o.Cumul                &&
+				   this.ZeroDisplayedInWhite == o.ZeroDisplayedInWhite &&
+				   this.HasStackedGraph      == o.HasStackedGraph      &&
+				   this.HasSideBySideGraph   == o.HasSideBySideGraph;
 		}
 
 
@@ -117,24 +117,31 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 				this.AppendSummaryBuilder (RésuméPériodiqueOptions.MonthsToDescription (this.NumberOfMonths));
 
-				if (this.Cumul)
+				if (this.ViewGraph)
 				{
-					this.AppendSummaryBuilder ("Chiffres cumulés");
+					this.AppendSummaryBuilder (this.graphOptions.Summary);
 				}
-
-				if (this.HideZero)
+				else
 				{
-					this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
-				}
+					if (this.Cumul)
+					{
+						this.AppendSummaryBuilder ("Chiffres cumulés");
+					}
 
-				if (this.HasStackedGraph)
-				{
-					this.AppendSummaryBuilder ("Graphique cumulé");
-				}
+					if (this.ZeroDisplayedInWhite)
+					{
+						this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
+					}
 
-				if (this.HasSideBySideGraph)
-				{
-					this.AppendSummaryBuilder ("Graphique côte à côte");
+					if (this.HasStackedGraph)
+					{
+						this.AppendSummaryBuilder ("Graphique cumulé");
+					}
+
+					if (this.HasSideBySideGraph)
+					{
+						this.AppendSummaryBuilder ("Graphique côte à côte");
+					}
 				}
 
 				return this.StopSummaryBuilder ();

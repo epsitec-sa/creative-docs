@@ -180,34 +180,29 @@ namespace Epsitec.Cresus.Compta.Graph
 				rect.Deflate (margin, 0);
 
 				double zero = this.ConvValueToY (0);
-				int barWidth = (int) rect.Width / ny;
 
-				for (int pass = 0; pass < 2; pass++)
+				int overlap = (int) (rect.Width / ny * this.options.BarOverlap);
+				int barShift = (int) ((rect.Width-overlap) / ny);
+				int barWidth = barShift + overlap;
+
+				for (int y = 0; y < ny; y++)
 				{
-					for (int y = 0; y < ny; y++)
+					decimal? value = this.cube.GetValue (x, y);
+
+					if (value.HasValue)
 					{
-						decimal? value = this.cube.GetValue (x, y);
+						double h = this.ConvValueToY (value.Value);
+						double h1 = System.Math.Max (System.Math.Min (h, zero), this.drawBottom);
+						double h2 = System.Math.Max (System.Math.Max (h, zero), this.drawBottom);
+						var barRect = new Rectangle (rect.Left+barShift*y, h1, barWidth, h2-h1);
 
-						if (value.HasValue)
-						{
-							double h = this.ConvValueToY (value.Value);
-							double h1 = System.Math.Max (System.Math.Min (h, zero), this.drawBottom);
-							double h2 = System.Math.Max (System.Math.Max (h, zero), this.drawBottom);
-							var barRect = new Rectangle (rect.Left+barWidth*y, h1, barWidth, h2-h1);
+						graphics.AddFilledRectangle (barRect);
+						graphics.RenderSolid (this.GetIndexedColor (y, ny));
 
-							if (pass == 0)
-							{
-								graphics.AddFilledRectangle (barRect);
-								graphics.RenderSolid (this.GetIndexedColor (y, ny));
-							}
-							else
-							{
-								graphics.LineWidth = this.options.BorderThickness;
-								graphics.AddRectangle (barRect);
-								graphics.RenderSolid (this.BorderColor);
-								graphics.LineWidth = 1;
-							}
-						}
+						graphics.LineWidth = this.options.BorderThickness;
+						graphics.AddRectangle (barRect);
+						graphics.RenderSolid (this.BorderColor);
+						graphics.LineWidth = 1;
 					}
 				}
 			}
