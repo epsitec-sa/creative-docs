@@ -129,6 +129,9 @@ namespace Epsitec.Cresus.Compta.Graph
 					}
 				}
 			}
+
+			this.SetDimensionTitle (0, src.GetDimensionTitle (dimension1));
+			this.SetDimensionTitle (1, src.GetDimensionTitle (dimension2));
 		}
 
 		private static List<int> GetFilterIndexes(int n, Dictionary<int, FormattedText> titles, List<FormattedText> filter)
@@ -190,8 +193,108 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		public void ThresholdCopy(Cube src, decimal threshold)
+		public void ThresholdCopy0(Cube src, decimal threshold)
 		{
+			//	Filtre toutes les valeurs inférieures à un seuil, selon l'axe principal.
+			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
+			this.Clear ();
+			this.Dimensions = 2;
+
+			int nx = src.GetCount (0);
+			int ny = src.GetCount (1);
+
+			decimal max = 0;
+			for (int x = 0; x < nx; x++)
+			{
+				decimal sum = 0;
+				for (int y = 0; y < ny; y++)
+				{
+					sum += System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+				}
+
+				max = System.Math.Max (max, sum);
+			}
+
+			var other = new List<decimal> ();
+			for (int y = 0; y < ny; y++)
+			{
+				other.Add (0);
+			}
+
+			var used = new List<int> ();
+			for (int x = 0; x < nx; x++)
+			{
+				decimal sum = 0;
+				for (int y = 0; y < ny; y++)
+				{
+					sum += System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+				}
+
+				if (max != 0 && sum/max >= threshold)
+				{
+					used.Add (x);
+					var u = used.Count-1;
+
+					for (int y = 0; y < ny; y++)
+					{
+						this.SetValue (u, y, src.GetValue (x, y));
+					}
+				}
+				else
+				{
+					for (int y = 0; y < ny; y++)
+					{
+						other[y] += src.GetValue (x, y).GetValueOrDefault ();
+					}
+				}
+			}
+
+			bool hasOther = false;
+			for (int y = 0; y < ny; y++)
+			{
+				if (other[y] != 0)
+				{
+					hasOther = true;
+					break;
+				}
+			}
+
+			if (hasOther)
+			{
+				for (int y = 0; y < ny; y++)
+				{
+					this.SetValue (used.Count, y, other[y]);
+				}
+			}
+
+			for (int y = 0; y < ny; y++)
+			{
+				this.SetShortTitle (1, y, src.GetShortTitle (1, y));
+				this.SetFullTitle  (1, y, src.GetFullTitle  (1, y));
+			}
+
+			for (int u = 0; u < used.Count; u++)
+			{
+				int x = used[u];
+				this.SetShortTitle (0, u, src.GetShortTitle (0, x));
+				this.SetFullTitle  (0, u, src.GetFullTitle  (0, x));
+			}
+
+			for (int d = 0; d < src.dimensions; d++)
+			{
+				this.SetDimensionTitle (d, src.GetDimensionTitle (d));
+			}
+
+			if (hasOther)
+			{
+				this.SetShortTitle (0, used.Count, FormattedText.Concat(this.GetDimensionTitle (0), "...").ApplyItalic ());
+			}
+
+		}
+
+		public void ThresholdCopy1(Cube src, decimal threshold)
+		{
+			//	Filtre toutes les valeurs inférieures à un seuil, selon l'axe secondaire.
 			System.Diagnostics.Debug.Assert (src.Dimensions == 2);
 			this.Clear ();
 			this.Dimensions = 2;
@@ -211,9 +314,9 @@ namespace Epsitec.Cresus.Compta.Graph
 
 				for (int y = 0; y < ny; y++)
 				{
-					var value = System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+					var value = src.GetValue (x, y).GetValueOrDefault ();
 
-					if (sum != 0 && value/sum >= threshold)
+					if (sum != 0 && System.Math.Abs (value/sum) >= threshold)
 					{
 						if (!used.Contains (y))
 						{
@@ -242,9 +345,9 @@ namespace Epsitec.Cresus.Compta.Graph
 				decimal others = 0;
 				for (int y = 0; y < ny; y++)
 				{
-					var value = System.Math.Abs (src.GetValue (x, y).GetValueOrDefault ());
+					var value = src.GetValue (x, y).GetValueOrDefault ();
 
-					if (sum != 0 && value/sum >= threshold)
+					if (sum != 0 && System.Math.Abs (value/sum) >= threshold)
 					{
 						int u = used.IndexOf (y);
 						this.SetValue (x, u, value);
@@ -274,9 +377,14 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.SetFullTitle  (1, u, src.GetFullTitle  (1, y));
 			}
 
+			for (int d = 0; d < src.dimensions; d++)
+			{
+				this.SetDimensionTitle (d, src.GetDimensionTitle (d));
+			}
+
 			if (hasOther)
 			{
-				this.SetShortTitle (1, used.Count, "Autres");
+				this.SetShortTitle (1, used.Count, FormattedText.Concat (this.GetDimensionTitle (1), "...").ApplyItalic ());
 			}
 		}
 

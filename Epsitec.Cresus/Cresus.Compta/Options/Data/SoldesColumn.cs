@@ -36,7 +36,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			get
 			{
-				return FormattedText.Concat (this.NuméroCompte, " — ", Converters.DateToString (this.DateDébut));
+				if (this.NuméroCompte.IsNullOrEmpty)
+				{
+					return FormattedText.Concat ("Vide").ApplyItalic ();
+				}
+				else
+				{
+					return FormattedText.Concat (this.NuméroCompte, " — ", Converters.DateToString (this.DateDébut));
+				}
 			}
 		}
 

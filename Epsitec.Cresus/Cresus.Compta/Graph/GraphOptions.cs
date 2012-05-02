@@ -31,8 +31,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.graphPoints        = GraphPoint.Circle;
 			this.hasLines           = true;
 			this.hasLegend          = true;
-			this.hasThreshold       = false;
-			this.thresholdValue     = 0.05m;  // 5%
+			this.hasThreshold0      = false;
+			this.hasThreshold1      = false;
+			this.thresholdValue0    = 0.05m;  // 5%
+			this.thresholdValue1    = 0.05m;  // 5%
 			this.fontSize           = 10.0;
 			this.borderThickness    = 1.0;
 			this.barThickness       = 0.8;
@@ -87,27 +89,51 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		public bool HasThreshold
+		public bool HasThreshold0
 		{
 			get
 			{
-				return this.hasThreshold;
+				return this.hasThreshold0;
 			}
 			set
 			{
-				this.hasThreshold = value;
+				this.hasThreshold0 = value;
 			}
 		}
 
-		public decimal ThresholdValue
+		public bool HasThreshold1
 		{
 			get
 			{
-				return this.thresholdValue;
+				return this.hasThreshold1;
 			}
 			set
 			{
-				this.thresholdValue = value;
+				this.hasThreshold1 = value;
+			}
+		}
+
+		public decimal ThresholdValue0
+		{
+			get
+			{
+				return this.thresholdValue0;
+			}
+			set
+			{
+				this.thresholdValue0 = value;
+			}
+		}
+
+		public decimal ThresholdValue1
+		{
+			get
+			{
+				return this.thresholdValue1;
+			}
+			set
+			{
+				this.thresholdValue1 = value;
 			}
 		}
 
@@ -315,8 +341,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			dst.Mode               = this.Mode;
 			dst.Style              = this.Style;
 			dst.StartAtZero        = this.StartAtZero;
-			dst.HasThreshold       = this.HasThreshold;
-			dst.ThresholdValue     = this.ThresholdValue;
+			dst.HasThreshold0      = this.HasThreshold0;
+			dst.HasThreshold1      = this.HasThreshold1;
+			dst.ThresholdValue0    = this.ThresholdValue0;
+			dst.ThresholdValue1    = this.ThresholdValue1;
 			dst.GraphPoints        = this.GraphPoints;
 			dst.HasLines           = this.HasLines;
 			dst.HasLegend          = this.HasLegend;
@@ -345,8 +373,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			return this.Mode               == other.Mode               &&
 				   this.Style              == other.Style              &&
 				   this.StartAtZero        == other.StartAtZero        &&
-				   this.HasThreshold       == other.HasThreshold       &&
-				   this.ThresholdValue     == other.ThresholdValue     &&
+				   this.HasThreshold0      == other.HasThreshold0      &&
+				   this.HasThreshold1      == other.HasThreshold1      &&
+				   this.ThresholdValue0    == other.ThresholdValue0    &&
+				   this.ThresholdValue1    == other.ThresholdValue1    &&
 				   this.GraphPoints        == other.GraphPoints        &&
 				   this.HasLines           == other.HasLines           &&
 				   this.HasLegend          == other.HasLegend          &&
@@ -424,8 +454,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		private GraphMode						mode;
 		private GraphStyle						style;
 		private bool							startAtZero;
-		private bool							hasThreshold;
-		private decimal							thresholdValue;
+		private bool							hasThreshold0;
+		private bool							hasThreshold1;
+		private decimal							thresholdValue0;
+		private decimal							thresholdValue1;
 		private GraphPoint						graphPoints;
 		private bool							hasLines;
 		private bool							hasLegend;

@@ -33,10 +33,17 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.cube = new Cube ();
 			this.cube.FilteredCopy (cube, this.options.PrimaryDimension, this.options.SecondaryDimension, this.options.PrimaryFilter, this.options.SecondaryFilter, null);
 
-			if (this.options.HasThreshold)
+			if (this.options.HasThreshold0)
 			{
 				var pc = new Cube ();
-				pc.ThresholdCopy (this.cube, this.options.ThresholdValue);
+				pc.ThresholdCopy0 (this.cube, this.options.ThresholdValue0);
+				this.cube = pc;
+			}
+
+			if (this.options.HasThreshold1)
+			{
+				var pc = new Cube ();
+				pc.ThresholdCopy1 (this.cube, this.options.ThresholdValue1);
 				this.cube = pc;
 			}
 

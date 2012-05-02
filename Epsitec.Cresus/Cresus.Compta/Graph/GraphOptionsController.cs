@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Parent  = toolbar,
 				Dock    = DockStyle.Top,
-				Padding = new Margins (5),
 			};
 
 			this.separator = new Separator
@@ -72,19 +71,35 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent          = parent,
 				PreferredHeight = 40,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
+				Padding         = new Margins (5),
+			};
+
+			new Separator
+			{
+				Parent         = parent,
+				PreferredWidth = 1,
+				Dock           = DockStyle.Left,
+			};
+
+			var middleFrame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 40,
+				Dock            = DockStyle.Left,
+				Padding         = new Margins (5),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 40,
-				Dock            = DockStyle.Fill,
+				Dock            = DockStyle.Left,
+				Padding         = new Margins (5),
 			};
 
 			var topFrame = new FrameBox
 			{
-				Parent          = rightFrame,
+				Parent          = middleFrame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 1),
@@ -92,7 +107,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			var bottomFrame = new FrameBox
 			{
-				Parent          = rightFrame,
+				Parent          = middleFrame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
@@ -103,6 +118,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			this.pieModeButton        = this.CreateButton (leftFrame, "Graph.Pie",        GraphOptions.GetDescription (GraphMode.Pie));
 			this.arrayModeButton      = this.CreateButton (leftFrame, "Graph.Array",      GraphOptions.GetDescription (GraphMode.Array));
 
+			//	Partie centrale.
 			{
 				new StaticText
 				{
@@ -134,17 +150,49 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.primaryFilterFrame = UIBuilder.CreatePseudoCombo (topFrame, out this.primaryFilterField, out this.primaryFilterButton);
 				this.primaryFilterFrame.PreferredWidth = 80;
 
-				this.swapButton = new IconButton
+				this.hasThresholdButton0 = new CheckButton
+				{
+					Parent         = topFrame,
+					FormattedText  = "Seuil",
+					PreferredWidth = 50,
+					AutoToggle     = false,
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (10, 0, 0, 0),
+				};
+
+				this.thresholdValueField0 = new TextFieldEx
+				{
+					Parent                       = topFrame,
+					PreferredWidth               = 70,
+					PreferredHeight              = 20,
+					AutoToggle                   = false,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+				};
+
+				this.thresholdAddButton0 = new GlyphButton
 				{
 					Parent          = topFrame,
-					IconUri         = UIBuilder.GetResourceIconUri ("Graph.Dimensions.Swap"),
+					GlyphShape      = GlyphShape.Plus,
+					ButtonStyle     = ButtonStyle.ToolItem,
 					PreferredWidth  = 20,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
-					Margins         = new Margins (1, 0, 0, 0),
+					Margins        = new Margins (1, 0, 0, 0),
 				};
 
-				ToolTip.Default.SetToolTip (this.swapButton, "Permute les axes");
+				this.thresholdSubButton0 = new GlyphButton
+				{
+					Parent          = topFrame,
+					GlyphShape      = GlyphShape.Minus,
+					ButtonStyle     = ButtonStyle.ToolItem,
+					PreferredWidth  = 20,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins        = new Margins (-1, 0, 0, 0),
+				};
 			}
 
 			{
@@ -178,34 +226,62 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.secondaryFilterFrame = UIBuilder.CreatePseudoCombo (bottomFrame, out this.secondaryFilterField, out this.secondaryFilterButton);
 				this.secondaryFilterFrame.PreferredWidth = 80;
 
-				new StaticText
+				this.hasThresholdButton1 = new CheckButton
+				{
+					Parent         = bottomFrame,
+					FormattedText  = "Seuil",
+					PreferredWidth = 50,
+					AutoToggle     = false,
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (10, 0, 0, 0),
+				};
+
+				this.thresholdValueField1 = new TextFieldEx
+				{
+					Parent                       = bottomFrame,
+					PreferredWidth               = 70,
+					PreferredHeight              = 20,
+					AutoToggle                   = false,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+				};
+
+				this.thresholdAddButton1 = new GlyphButton
 				{
 					Parent          = bottomFrame,
+					GlyphShape      = GlyphShape.Plus,
+					ButtonStyle     = ButtonStyle.ToolItem,
 					PreferredWidth  = 20,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
-					Margins         = new Margins (1, 0, 0, 0),
+					Margins        = new Margins (1, 0, 0, 0),
+				};
+
+				this.thresholdSubButton1 = new GlyphButton
+				{
+					Parent          = bottomFrame,
+					GlyphShape      = GlyphShape.Minus,
+					ButtonStyle     = ButtonStyle.ToolItem,
+					PreferredWidth  = 20,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Margins        = new Margins (-1, 0, 0, 0),
 				};
 			}
 
-			new StaticText
+			//	Partie droite.
+			this.swapButton = new IconButton
 			{
-				Parent         = bottomFrame,
-				FormattedText  = "Style",
-				PreferredWidth = 30,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 0, 0, 0),
-			};
-
-			this.styleCombo = new TextFieldCombo
-			{
-				Parent          = bottomFrame,
-				IsReadOnly      = true,
-				PreferredWidth  = 110,
-				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				Parent          = rightFrame,
+				IconUri         = UIBuilder.GetResourceIconUri ("Graph.Dimensions.Swap"),
+				PreferredWidth  = 40,
+				PreferredHeight = 40,
 				Dock            = DockStyle.Left,
 			};
+
+			ToolTip.Default.SetToolTip (this.swapButton, "Permute les axes");
 
 			//	Connexion des événements.
 			this.sideBySideModeButton.Clicked += delegate
@@ -240,11 +316,17 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.swapButton.Clicked += delegate
 			{
-				var d1 = this.options.PrimaryDimension;
-				var d2 = this.options.SecondaryDimension;
+				var d                           = this.options.PrimaryDimension;
+				this.options.PrimaryDimension   = this.options.SecondaryDimension;
+				this.options.SecondaryDimension = d;
 
-				this.options.PrimaryDimension   = d2;
-				this.options.SecondaryDimension = d1;
+				var h                      = this.options.HasThreshold0;
+				this.options.HasThreshold0 = this.options.HasThreshold1;
+				this.options.HasThreshold1 = h;
+
+				var v                        = this.options.ThresholdValue0;
+				this.options.ThresholdValue0 = this.options.ThresholdValue1;
+				this.options.ThresholdValue1 = v;
 
 				var t = new List<FormattedText> ();
 				t.AddRange (this.options.PrimaryFilter);
@@ -297,15 +379,6 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				this.ShowFilterMenu (this.secondaryFilterFrame, this.options.SecondaryDimension, this.options.SecondaryFilter);
 			};
-
-			this.styleCombo.TextChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					options.Style = GraphOptionsController.TextToStyle (this.styleCombo.FormattedText);
-					this.OptionsChanged ();
-				}
-			};
 		}
 
 		private void CreateDetailedUI(Widget parent)
@@ -313,7 +386,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			var leftFrame = new FrameBox
 			{
 				Parent         = parent,
-				PreferredWidth = 200,
+				PreferredWidth = 210,
 				Dock           = DockStyle.Left,
 				Padding        = new Margins (5),
 			};
@@ -323,13 +396,12 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = parent,
 				PreferredWidth = 1,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 10, 0, 0),
 			};
 
 			var middleFrame = new FrameBox
 			{
 				Parent         = parent,
-				PreferredWidth = 200,
+				PreferredWidth = 210,
 				Dock           = DockStyle.Left,
 				Padding        = new Margins (5),
 			};
@@ -339,13 +411,12 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = parent,
 				PreferredWidth = 1,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 10, 0, 0),
 			};
 
 			var rightFrame = new FrameBox
 			{
 				Parent         = parent,
-				PreferredWidth = 200,
+				PreferredWidth = 210,
 				Dock           = DockStyle.Left,
 				Padding        = new Margins (5),
 			};
@@ -355,7 +426,6 @@ namespace Epsitec.Cresus.Compta.Graph
 				Parent         = parent,
 				PreferredWidth = 1,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 10, 0, 0),
 			};
 
 			//	Partie gauche.
@@ -367,53 +437,29 @@ namespace Epsitec.Cresus.Compta.Graph
 					Dock            = DockStyle.Top,
 				};
 
-				this.hasThresholdButton = new CheckButton
+				new StaticText
 				{
 					Parent         = line,
-					FormattedText  = "Seuil",
-					PreferredWidth = 50,
-					AutoToggle     = false,
+					FormattedText  = "Style",
+					PreferredWidth = 30,
 					Dock           = DockStyle.Left,
 				};
 
-				this.thresholdValueField = new TextFieldEx
-				{
-					Parent                       = line,
-					PreferredWidth               = 70,
-					AutoToggle                   = false,
-					Dock                         = DockStyle.Left,
-					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-					SwallowEscapeOnRejectEdition = true,
-					SwallowReturnOnAcceptEdition = true,
-				};
-
-				this.thresholdAddButton = new GlyphButton
+				this.styleCombo = new TextFieldCombo
 				{
 					Parent          = line,
-					GlyphShape      = GlyphShape.Plus,
-					ButtonStyle     = ButtonStyle.ToolItem,
-					PreferredWidth  = 20,
+					IsReadOnly      = true,
+					PreferredWidth  = 110,
 					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
 					Dock            = DockStyle.Left,
-					Margins        = new Margins (1, 0, 0, 0),
-				};
-
-				this.thresholdSubButton = new GlyphButton
-				{
-					Parent          = line,
-					GlyphShape      = GlyphShape.Minus,
-					ButtonStyle     = ButtonStyle.ToolItem,
-					PreferredWidth  = 20,
-					PreferredHeight = 20,
-					Dock            = DockStyle.Left,
-					Margins        = new Margins (-1, 0, 0, 0),
 				};
 			}
 
-			this.startAtZeroButton = new CheckButton
+			this.legendButton = new CheckButton
 			{
 				Parent         = leftFrame,
-				FormattedText  = "Zéro inclu",
+				FormattedText  = "Légendes",
 				PreferredWidth = 80,
 				AutoToggle     = false,
 				Dock           = DockStyle.Top,
@@ -421,10 +467,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			};
 
 			//	Partie centrale.
-			this.legendButton = new CheckButton
+			this.startAtZeroButton = new CheckButton
 			{
 				Parent         = middleFrame,
-				FormattedText  = "Légendes",
+				FormattedText  = "Zéro inclu",
 				PreferredWidth = 80,
 				AutoToggle     = false,
 				Dock           = DockStyle.Top,
@@ -485,7 +531,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				};
 			}
 
-			//	Partie gauche.
+			//	Partie droite.
 			this.fontSizeController = new SliderController ();
 			this.fontSizeController.CreateUI (rightFrame, 4.0, 30.0, 1.0, 10.0, "Taille police", delegate
 			{
@@ -543,6 +589,15 @@ namespace Epsitec.Cresus.Compta.Graph
 			});
 
 			//	Connexion des événements.
+			this.styleCombo.TextChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero)
+				{
+					options.Style = GraphOptionsController.TextToStyle (this.styleCombo.FormattedText);
+					this.OptionsChanged ();
+				}
+			};
+
 			this.piePercentsButton.Clicked += delegate
 			{
 				this.options.PiePercents = !this.options.PiePercents;
@@ -606,34 +661,65 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.OptionsChanged ();
 			};
 
-			this.hasThresholdButton.Clicked += delegate
+			this.hasThresholdButton0.Clicked += delegate
 			{
-				this.options.HasThreshold = !this.options.HasThreshold;
+				this.options.HasThreshold0 = !this.options.HasThreshold0;
 				this.OptionsChanged ();
 			};
 
-			this.thresholdValueField.EditionAccepted += delegate
+			this.hasThresholdButton1.Clicked += delegate
+			{
+				this.options.HasThreshold1 = !this.options.HasThreshold1;
+				this.OptionsChanged ();
+			};
+
+			this.thresholdValueField0.EditionAccepted += delegate
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					var value = Converters.ParsePercent (this.thresholdValueField.Text);
+					var value = Converters.ParsePercent (this.thresholdValueField0.Text);
 					if (value.HasValue)
 					{
-						this.options.ThresholdValue = value.Value;
+						this.options.ThresholdValue0 = value.Value;
 						this.OptionsChanged ();
 					}
 				}
 			};
 
-			this.thresholdAddButton.Clicked += delegate
+			this.thresholdValueField1.EditionAccepted += delegate
 			{
-				this.options.ThresholdValue = System.Math.Min (this.options.ThresholdValue+0.01m, 1.0m);
+				if (this.ignoreChanges.IsZero)
+				{
+					var value = Converters.ParsePercent (this.thresholdValueField1.Text);
+					if (value.HasValue)
+					{
+						this.options.ThresholdValue1 = value.Value;
+						this.OptionsChanged ();
+					}
+				}
+			};
+
+			this.thresholdAddButton0.Clicked += delegate
+			{
+				this.options.ThresholdValue0 = System.Math.Min (this.options.ThresholdValue0+0.01m, 1.0m);
 				this.OptionsChanged ();
 			};
 
-			this.thresholdSubButton.Clicked += delegate
+			this.thresholdAddButton1.Clicked += delegate
 			{
-				this.options.ThresholdValue = System.Math.Max (this.options.ThresholdValue-0.01m, 0.0m);
+				this.options.ThresholdValue1 = System.Math.Min (this.options.ThresholdValue1+0.01m, 1.0m);
+				this.OptionsChanged ();
+			};
+
+			this.thresholdSubButton0.Clicked += delegate
+			{
+				this.options.ThresholdValue0 = System.Math.Max (this.options.ThresholdValue0-0.01m, 0.0m);
+				this.OptionsChanged ();
+			};
+
+			this.thresholdSubButton1.Clicked += delegate
+			{
+				this.options.ThresholdValue1 = System.Math.Max (this.options.ThresholdValue1-0.01m, 0.0m);
 				this.OptionsChanged ();
 			};
 		}
@@ -700,17 +786,23 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.pieModeButton.ActiveState        = (this.options.Mode == GraphMode.Pie       ) ? ActiveState.Yes : ActiveState.No;
 				this.arrayModeButton.ActiveState      = (this.options.Mode == GraphMode.Array     ) ? ActiveState.Yes : ActiveState.No;
 
-				this.linesButton.ActiveState        = this.options.HasLines     ? ActiveState.Yes : ActiveState.No;
-				this.piePercentsButton.ActiveState  = this.options.PiePercents  ? ActiveState.Yes : ActiveState.No;
-				this.pieValuesButton.ActiveState    = this.options.PieValues    ? ActiveState.Yes : ActiveState.No;
-				this.legendButton.ActiveState       = this.options.HasLegend    ? ActiveState.Yes : ActiveState.No;
-				this.startAtZeroButton.ActiveState  = this.options.StartAtZero  ? ActiveState.Yes : ActiveState.No;
-				this.hasThresholdButton.ActiveState = this.options.HasThreshold ? ActiveState.Yes : ActiveState.No;
+				this.linesButton.ActiveState         = this.options.HasLines      ? ActiveState.Yes : ActiveState.No;
+				this.piePercentsButton.ActiveState   = this.options.PiePercents   ? ActiveState.Yes : ActiveState.No;
+				this.pieValuesButton.ActiveState     = this.options.PieValues     ? ActiveState.Yes : ActiveState.No;
+				this.legendButton.ActiveState        = this.options.HasLegend     ? ActiveState.Yes : ActiveState.No;
+				this.startAtZeroButton.ActiveState   = this.options.StartAtZero   ? ActiveState.Yes : ActiveState.No;
+				this.hasThresholdButton0.ActiveState = this.options.HasThreshold0 ? ActiveState.Yes : ActiveState.No;
+				this.hasThresholdButton1.ActiveState = this.options.HasThreshold1 ? ActiveState.Yes : ActiveState.No;
 
-				this.thresholdAddButton.Enable = this.options.HasThreshold;
-				this.thresholdSubButton.Enable = this.options.HasThreshold;
-				this.thresholdValueField.Enable = this.options.HasThreshold;
-				this.thresholdValueField.Text = Converters.PercentToString (this.options.ThresholdValue);
+				this.thresholdAddButton0.Enable  = this.options.HasThreshold0;
+				this.thresholdSubButton0.Enable  = this.options.HasThreshold0;
+				this.thresholdValueField0.Enable = this.options.HasThreshold0;
+				this.thresholdValueField0.Text = Converters.PercentToString (this.options.ThresholdValue0);
+
+				this.thresholdAddButton1.Enable  = this.options.HasThreshold1;
+				this.thresholdSubButton1.Enable  = this.options.HasThreshold1;
+				this.thresholdValueField1.Enable = this.options.HasThreshold1;
+				this.thresholdValueField1.Text = Converters.PercentToString (this.options.ThresholdValue1);
 
 				this.primaryDimensionCombo.FormattedText   = this.DimensionToText (this.options.PrimaryDimension);
 				this.secondaryDimensionCombo.FormattedText = this.DimensionToText (this.options.SecondaryDimension);
@@ -1088,12 +1180,16 @@ namespace Epsitec.Cresus.Compta.Graph
 		private CheckButton						linesButton;
 		private CheckButton						legendButton;
 		private CheckButton						startAtZeroButton;
-		private CheckButton						hasThresholdButton;
 		private CheckButton						piePercentsButton;
 		private CheckButton						pieValuesButton;
-		private TextFieldEx						thresholdValueField;
-		private GlyphButton						thresholdAddButton;
-		private GlyphButton						thresholdSubButton;
+		private CheckButton						hasThresholdButton0;
+		private TextFieldEx						thresholdValueField0;
+		private GlyphButton						thresholdAddButton0;
+		private GlyphButton						thresholdSubButton0;
+		private CheckButton						hasThresholdButton1;
+		private TextFieldEx						thresholdValueField1;
+		private GlyphButton						thresholdAddButton1;
+		private GlyphButton						thresholdSubButton1;
 		private SliderController				fontSizeController;
 		private SliderController				borderThicknessController;
 		private SliderController				barThicknessController;
