@@ -626,6 +626,11 @@ namespace Epsitec.Cresus.Database
 			return SqlField.CreateAggregate (new SqlAggregate (aggregateFunction, field));
 		}
 
+		public static SqlField CreateAggregate(SqlAggregateFunction aggregateFunction, SqlSelectPredicate predicate, SqlField field)
+		{
+			return SqlField.CreateAggregate (new SqlAggregate (aggregateFunction, predicate, field));
+		}
+
 		public static SqlField CreateVariable()
 		{
 			return new SqlField (SqlFieldType.Variable);

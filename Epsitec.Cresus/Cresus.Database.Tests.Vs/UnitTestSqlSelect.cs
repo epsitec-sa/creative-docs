@@ -450,6 +450,70 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void SqlSelectAggregateDistinct()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlField sqlField = SqlField.CreateAggregate
+				(
+					SqlAggregateFunction.Count,
+					SqlSelectPredicate.Distinct,
+					SqlField.CreateName ("JOB_TITLE")
+				);
+				SqlSelect sqlSelect = new SqlSelect ();
+				sqlSelect.Fields.Add (sqlField);
+				sqlSelect.Tables.Add (SqlField.CreateName ("JOB"));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				object result;
+
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+				Assert.AreEqual (14, (int) result);	
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectAggregateAll()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlField sqlField = SqlField.CreateAggregate
+				(
+					SqlAggregateFunction.Count,
+					SqlSelectPredicate.All,
+					SqlField.CreateName ("JOB_TITLE")
+				);
+				SqlSelect sqlSelect = new SqlSelect ();
+				sqlSelect.Fields.Add (sqlField);
+				sqlSelect.Tables.Add (SqlField.CreateName ("JOB"));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				object result;
+
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+				Assert.AreEqual (31, (int) result);
+			}
+		}
+
+
+		[TestMethod]
 		[Ignore]
 		public void SqlSelectIntersectTest()
 		{

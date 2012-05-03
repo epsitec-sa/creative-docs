@@ -15,6 +15,17 @@ namespace Epsitec.Cresus.Database
 		/// <param name="type">The type.</param>
 		/// <param name="field">The field.</param>
 		public SqlAggregate(SqlAggregateFunction type, SqlField field)
+			: this (type, SqlSelectPredicate.All, field)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance.
+		/// </summary>
+		/// <param name="type">The aggregate function.</param>
+		/// <param name="predicate">The predicate used to customize the aggregate</param>
+		/// <param name="field">The field.</param>
+		public SqlAggregate(SqlAggregateFunction type, SqlSelectPredicate predicate, SqlField field)
 		{
 			switch (field.FieldType)
 			{
@@ -30,8 +41,9 @@ namespace Epsitec.Cresus.Database
 					throw new System.NotSupportedException ("SqlField type not supported");
 			}
 
-			this.function  = type;
+			this.function = type;
 			this.field = field;
+			this.predicate = predicate;
 		}
 
 		/// <summary>
@@ -59,6 +71,17 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets the predicate used to modify the aggregate function.
+		/// </summary>
+		public SqlSelectPredicate Predicate
+		{
+			get
+			{
+				return this.predicate;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this aggregate is empty.
 		/// </summary>
 		/// <value><c>true</c> if this aggregate is empty; otherwise, <c>false</c>.</value>
@@ -72,7 +95,8 @@ namespace Epsitec.Cresus.Database
 		
 		public static readonly SqlAggregate		Empty;
 
-		private SqlAggregateFunction			function;
-		private SqlField						field;
+		private readonly SqlAggregateFunction	function;
+		private readonly SqlField				field;
+		private readonly SqlSelectPredicate		predicate;
 	}
 }

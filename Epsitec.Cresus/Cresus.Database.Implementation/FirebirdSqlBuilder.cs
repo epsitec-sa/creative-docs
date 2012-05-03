@@ -1136,27 +1136,44 @@ namespace Epsitec.Cresus.Database.Implementation
 			switch (sqlAggregate.Function)
 			{
 				case SqlAggregateFunction.Count:
-					this.Append ("COUNT(");
+					this.Append ("COUNT");
 					break;
 				
 				case SqlAggregateFunction.Max:
-					this.Append ("MAX(");
+					this.Append ("MAX");
 					break;
 				
 				case SqlAggregateFunction.Min:
-					this.Append ("MIN(");
+					this.Append ("MIN");
 					break;
 				
 				case SqlAggregateFunction.Sum:
-					this.Append ("SUM(");
+					this.Append ("SUM");
 					break;
 				
 				case SqlAggregateFunction.Average:
-					this.Append ("AVG(");
+					this.Append ("AVG");
 					break;
 				
 				default:
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Aggregate {0} not supported", sqlAggregate.Function));
+			}
+
+			this.Append ("(");
+
+			switch (sqlAggregate.Predicate)
+			{
+				case SqlSelectPredicate.Distinct:
+					this.Append ("DISTINCT ");
+					break;
+
+				case SqlSelectPredicate.All:
+					// ALL is implicitely used when distinct is not used, so we don't need to add
+					// anything to the query text in this case.
+					break;
+
+				default:
+					throw new System.NotImplementedException();
 			}
 			
 			this.Append (sqlAggregate.Field);
