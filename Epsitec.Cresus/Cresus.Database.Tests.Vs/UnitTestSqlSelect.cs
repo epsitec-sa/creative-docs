@@ -16,6 +16,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 	[TestClass]
+	[DeploymentItem ("Resources\\", "Resources\\")]
 	public sealed class UnitTestSqlSelect
 	{
 
