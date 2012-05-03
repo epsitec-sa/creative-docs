@@ -487,9 +487,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.controller.ArrayController.Show = !this.options.ViewGraph;
 			}
 
-			if (this.controller.GraphController != null)
+			if (this.controller.GraphWidget != null)
 			{
-				this.controller.GraphController.Show = this.options.ViewGraph;
+				this.controller.GraphWidget.Visibility = this.options.ViewGraph;
 			}
 		}
 		#endregion

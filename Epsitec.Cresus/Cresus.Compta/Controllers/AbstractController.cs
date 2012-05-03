@@ -101,11 +101,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public GraphController GraphController
+		public GraphWidget GraphWidget
 		{
 			get
 			{
-				return this.graphController;
+				return this.graphWidget;
 			}
 		}
 
@@ -1113,9 +1113,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.HasGraph)
 			{
-				this.graphController = new GraphController (this);
-				this.graphController.CreateUI (parent);
-				this.graphController.Show = this.dataAccessor.Options.ViewGraph;
+				this.graphWidget = new GraphWidget (this)
+				{
+					Parent  = parent,
+					Options = this.dataAccessor.Options.GraphOptions,
+					Dock    = DockStyle.Fill,
+				};
+
+				ToolTip.Default.RegisterDynamicToolTipHost (this.graphWidget);  // pour voir les tooltips dynamiques
 
 				this.UpdateGraph ();
 			}
@@ -1123,9 +1128,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void UpdateGraph()
 		{
-			if (this.graphController != null)
+			if (this.graphWidget != null)
 			{
-				this.graphController.Update ();
+				this.graphWidget.Invalidate ();
 			}
 		}
 		#endregion
@@ -1248,7 +1253,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;
 		protected ArrayController								arrayController;
-		protected GraphController								graphController;
+		protected GraphWidget									graphWidget;
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;
