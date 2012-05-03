@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 
 		[TestMethod]
-		public void BuildSqlSelect()
+		public void BuildSqlSelect1()
 		{
 			List<SqlField> tables = this.GetTableSamples ();
 			List<SqlField> fields = this.GetFieldSamples ();
@@ -92,6 +92,28 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			CollectionAssert.AreEqual (joins, sqlSelect.Joins.Select (j => j.AsJoin).ToList ());
 			CollectionAssert.AreEqual (conditions, sqlSelect.Conditions.Select (f => f.AsFunction).ToList ());
 			CollectionAssert.AreEqual (orderBys, sqlSelect.OrderBy);
+			Assert.AreEqual (SqlSelectPredicate.All, sqlSelect.Predicate);
+		}
+
+
+		[TestMethod]
+		public void BuildSqlSelect2()
+		{
+			List<SqlField> tables = this.GetTableSamples ();
+			List<SqlField> fields = this.GetFieldSamples ();
+			List<SqlJoin> joins = this.GetJoinSamples ();
+			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
+
+			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions, orderBys);
+			SqlSelect sqlSelect = sqlContainer.BuildSqlSelect (SqlSelectPredicate.Distinct);
+
+			CollectionAssert.AreEqual (tables, sqlSelect.Tables);
+			CollectionAssert.AreEqual (fields, sqlSelect.Fields);
+			CollectionAssert.AreEqual (joins, sqlSelect.Joins.Select (j => j.AsJoin).ToList ());
+			CollectionAssert.AreEqual (conditions, sqlSelect.Conditions.Select (f => f.AsFunction).ToList ());
+			CollectionAssert.AreEqual (orderBys, sqlSelect.OrderBy);
+			Assert.AreEqual (SqlSelectPredicate.Distinct, sqlSelect.Predicate);
 		}
 
 

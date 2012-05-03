@@ -104,8 +104,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// Builds the <see cref="SqlSelect"/> that is the query that corresponds to this instance.
 		/// </summary>
+		/// <param name="predicate">The sql predicate that will be used.</param>
 		/// <returns>The <see cref="SqlSelect"/>.</returns>
-		public SqlSelect BuildSqlSelect()
+		public SqlSelect BuildSqlSelect(SqlSelectPredicate predicate = SqlSelectPredicate.All)
 		{
 			SqlSelect sqlSelect = new SqlSelect ();
 
@@ -114,6 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			sqlSelect.Joins.AddRange (this.SqlJoins.Select (j => SqlField.CreateJoin (j)));
 			sqlSelect.Conditions.AddRange (this.SqlConditions.Select (c => SqlField.CreateFunction (c)));
 			sqlSelect.OrderBy.AddRange (this.SqlOrderBys);
+			sqlSelect.Predicate = predicate;
 
 			return sqlSelect;
 		}
