@@ -546,7 +546,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		private void ExecuteRandomNonMutatingOperation(DataContext dataContext)
 		{
-			switch (this.Dice.Next (0, 14))
+			switch (this.Dice.Next (0, 15))
 			{
 				case 0:
 					bool readOnly = dataContext.IsReadOnly;
@@ -602,6 +602,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				case 13:
 					dataContext.IsPersistent (dataContext.GetEntities ().GetRandomElement ());
+					break;
+
+				case 14:
+					dataContext.GetCount (new NaturalPersonEntity ()
+					{
+						Lastname = "firstname" + this.Dice.Next (0, 100)
+					});
 					break;
 
 				default:
@@ -874,7 +881,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		private readonly int nbThreads = 100;
 
 
-		private readonly TimeSpan duration = TimeSpan.FromSeconds (60);
+		private readonly TimeSpan duration = TimeSpan.FromSeconds (10);
 
 
 		private Random Dice

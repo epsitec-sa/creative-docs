@@ -3,7 +3,6 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -75,6 +74,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#region REQUEST ENTRY POINT
+
+
+		public int GetCount(Request request)
+		{
+			int count = 0;
+
+			var sqlSelect = this.CreateSqlSelectForCount (request);
+
+			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			{
+				transaction.SqlBuilder.SelectData (sqlSelect);
+				
+				count = (int) this.DbInfrastructure.ExecuteScalar(transaction);			
+
+				transaction.Commit ();
+			}
+
+			return count;
+		}
 
 
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
@@ -330,22 +348,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect CreateSqlSelectForSingleValue(Request request, Druid fieldId)
 		{
-			AbstractEntity entity = request.RootEntity;
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+			var result = this.BuildSqlContainerForConditions (request);
 
-			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
-
-			SqlContainer sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
-
-			AbstractEntity requestedEntity = request.RequestedEntity;
-
-			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
-
-			if (requestedAlias == null)
-			{
-				throw new System.Exception ("Requested entity not found.");
-			}
+			SqlContainer sqlContainerForConditions = result.Item1;
+			AbstractEntity requestedEntity = result.Item2;
+			AliasNode requestedAlias = result.Item3;
 
 			SqlField sqlFieldForSingleValue = this.BuildSqlFieldForValueField(requestedAlias, requestedEntity, fieldId);
 
@@ -426,24 +433,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private SqlSelect CreateSqlSelectForCount(Request request)
+		{
+			var result = this.BuildSqlContainerForConditions (request);
+
+			SqlContainer sqlContainerForConditions = result.Item1;
+			AbstractEntity requestedEntity = result.Item2;
+			AliasNode requestedAlias = result.Item3;
+
+			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity);
+
+			return sqlContainerForConditions.Plus (sqlContainerForCount).BuildSqlSelect ();
+		}
+
+
 		private SqlSelect CreateSqlSelectForValueAndReferenceData(Request request)
 		{
-			AbstractEntity entity = request.RootEntity;
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+			var result = this.BuildSqlContainerForConditions (request);
 
-			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
-
-			SqlContainer sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
-
-			AbstractEntity requestedEntity = request.RequestedEntity;
-
-			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
-
-			if (requestedAlias == null)
-			{
-				throw new System.Exception ("Requested entity not found.");
-			}
+			SqlContainer sqlContainerForConditions = result.Item1;
+			AbstractEntity requestedEntity = result.Item2;
+			AliasNode requestedAlias = result.Item3;
 
 			SqlContainer sqlContainerForValuesAndReferences = this.BuildSqlContainerForValuesAndReferences (requestedAlias, requestedEntity);
 
@@ -503,13 +513,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect CreateSqlSelectForCollectionData(Request request, Druid fieldId)
 		{
+			var result = this.BuildSqlContainerForConditions (request);
+
+			SqlContainer sqlContainerForConditions = result.Item1;
+			AbstractEntity requestedEntity = result.Item2;
+			AliasNode requestedAlias = result.Item3;
+
+			SqlContainer sqlContainerForCollection = this.BuildSqlContainerForCollection (requestedAlias, requestedEntity, fieldId);
+
+			return sqlContainerForConditions.Plus (sqlContainerForCollection).BuildSqlSelect ();
+		}
+
+
+		private System.Tuple<SqlContainer, AbstractEntity, AliasNode> BuildSqlContainerForConditions(Request request)
+		{
 			AbstractEntity entity = request.RootEntity;
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
 
 			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
 
-			SqlContainer  sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
 
 			AbstractEntity requestedEntity = request.RequestedEntity;
 
@@ -520,9 +544,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				throw new System.Exception ("Requested entity not found.");
 			}
 
-			SqlContainer sqlContainerForCollection = this.BuildSqlContainerForCollection (requestedAlias, requestedEntity, fieldId);
-
-			return sqlContainerForConditions.Plus (sqlContainerForCollection).BuildSqlSelect ();
+			return System.Tuple.Create (sqlContainerForConditions, requestedEntity, requestedAlias);
 		}
 
 
@@ -1068,6 +1090,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return sqlContainerForRelationJoin
 				.PlusSqlFields (sqlFieldForTargetId, sqlFieldForSourceId)
 				.PlusSqlOrderBys (sqlFieldForRank);
+		}
+
+
+		#endregion
+
+
+		#region COUNT QUERY GENERATION
+
+
+		private SqlContainer BuildSqlContainerForCount(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			SqlField sqlField = this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName);
+			SqlField sqlAggregateField = SqlField.CreateAggregate (SqlAggregateFunction.Count, SqlSelectPredicate.Distinct, sqlField);
+
+			return SqlContainer.CreateSqlFields (sqlAggregateField);
 		}
 
 

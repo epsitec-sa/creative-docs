@@ -1070,13 +1070,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
 			where TEntity : AbstractEntity
 		{
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (example);
+			Request request = Request.Create (example);
 
-			using (this.LockWrite ())
-			{
-				return this.DataLoader.GetByExample<TEntity> (example);
-			}
+			return this.GetByRequest<TEntity> (request);
 		}
 
 		public IEnumerable<AbstractEntity> GetByRequest(System.Type entityType, Request request)
@@ -1114,15 +1110,37 @@ namespace Epsitec.Cresus.DataLayer.Context
 			where TEntity : AbstractEntity
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertEntityIsNotForeign (request.RequestedEntity);
+			this.AssertRequestIsValid (request);
 
-			if (request.RequestedEntity != request.RootEntity)
-			{
-				this.AssertEntityIsNotForeign (request.RootEntity);
-			}
 			using (this.LockWrite ())
 			{
 				return this.DataLoader.GetByRequest<TEntity> (request);
+			}
+		}
+
+
+		/// <summary>
+		/// Queries the database for the number of entities which match the given example.
+		/// </summary>
+		public int GetCount(AbstractEntity example)
+		{
+			var request = Request.Create (example);
+
+			return this.GetCount (request);
+		}
+
+
+		/// <summary>
+		/// Queries the database for the number of entities which match the given request.
+		/// </summary>
+		public int GetCount(Request request)
+		{
+			this.AssertDataContextIsNotDisposed ();
+			this.AssertRequestIsValid (request);
+
+			using (this.LockRead ())
+			{
+				return this.DataLoader.GetCount (request);
 			}
 		}
 
@@ -1522,6 +1540,23 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (this.IsDisposed)
 			{
 				throw new System.ObjectDisposedException ("DataContext #" + this.UniqueId);
+			}
+		}
+
+
+		/// <summary>
+		/// Checks that the given request is valid.
+		/// </summary>
+		/// <param name="request">The request to check.</param>
+		private void AssertRequestIsValid(Request request)
+		{
+			request.ThrowIfNull ("request");
+
+			this.AssertEntityIsNotForeign (request.RequestedEntity);
+
+			if (request.RequestedEntity != request.RootEntity)
+			{
+				this.AssertEntityIsNotForeign (request.RootEntity);
 			}
 		}
 

@@ -195,7 +195,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return field != null && field.Relation == FieldRelation.None;
 		}
 
-		
+		public static Request Create(AbstractEntity example)
+		{
+			return new Request ()
+			{
+				RootEntity = example,
+				RequestedEntity = example,
+			};
+		}
+	
 		private readonly RequestEntityConstraints localConstraints;
 
 		private AbstractEntity					requestedEntity;

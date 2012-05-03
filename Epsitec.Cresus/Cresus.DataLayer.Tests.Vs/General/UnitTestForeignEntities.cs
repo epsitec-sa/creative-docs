@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetByExample1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -254,6 +254,145 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					ExceptionAssert.Throw<System.ArgumentException>
 					(
 						() => dataContext2.GetByExample (person1)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					AbstractContactEntity contact = new AbstractContactEntity ()
+					{
+						NaturalPerson = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001))),
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (contact)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity	person1 = dataContext1.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (person1)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount3()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					NaturalPersonEntity person = new NaturalPersonEntity ();
+
+					person.Contacts.Add (dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001))));
+
+					Request request = new Request ()
+					{
+						RootEntity = person,
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (request)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount4()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					Request request = new Request ()
+					{
+						RootEntity = new NaturalPersonEntity
+						{
+							Gender = dataContext1.ResolveEntity<PersonGenderEntity> (new DbKey (new DbId (1000000001)))
+						},
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (request)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount5()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+
+					Request request = new Request ()
+					{
+						RequestedEntity = contact1,
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (request)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetCount6()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DataContext dataContext1 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				using (DataContext dataContext2 = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+				{
+					AbstractContactEntity contact1 = dataContext1.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
+					Request request = new Request ()
+					{
+						RootEntity = contact1,
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => dataContext2.GetCount (request)
 					);
 				}
 			}

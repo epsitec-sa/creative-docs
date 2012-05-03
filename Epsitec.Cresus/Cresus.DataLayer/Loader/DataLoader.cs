@@ -109,28 +109,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		/// <summary>
 		/// Gets the sequence of <see cref="AbstractEntity"/> of type <typeparamref name="T"/> which
-		/// corresponds to the given example.
-		/// </summary>
-		/// <typeparam name="T">The type of the <see cref="AbstractEntity"/> to retrieve.</typeparam>
-		/// <param name="example">The example describing the <see cref="AbstractEntity"/> to retrieve.</param>
-		/// <returns>The <see cref="AbstractEntity"/> which corresponds to the example.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="example"/> is <c>null</c>.</exception>
-		public IEnumerable<T> GetByExample<T>(T example) where T : AbstractEntity
-		{
-			example.ThrowIfNull ("example");
-
-			Request request = new Request ()
-			{
-				RootEntity = example,
-				RequestedEntity = example,
-			};
-
-			return this.GetByRequest<T> (request);
-		}
-
-
-		/// <summary>
-		/// Gets the sequence of <see cref="AbstractEntity"/> of type <typeparamref name="T"/> which
 		/// corresponds to the given request.
 		/// </summary>
 		/// <typeparam name="T">The type of the <see cref="AbstractEntity"/> to retrieve.</typeparam>
@@ -141,12 +119,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <exception cref="System.ArgumentNullException">If request.RequestedEntity is <c>null</c>.</exception>
 		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
 		{
-			request.ThrowIfNull ("request");
-			request.RootEntity.ThrowIfNull ("request.RootEntity");
-			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
-
-			this.CheckForCycles (request.RootEntity);
-			this.CheckForForeignEntities (request.RootEntity);
+			this.CheckRequest (request);
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
@@ -164,6 +137,22 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.AssignModificationEntryIds (latestEntityModificationEntry, entities);
 
 			return entities;
+		}
+
+
+		/// <summary>
+		/// Gets the number of entities which correspond to the given request in the database.
+		/// </summary>
+		/// <param name="request">The request defining which entities to count.</param>
+		/// <returns>The number of entities that match the given request.</returns>
+		/// <exception cref="System.ArgumentNullException">If <paramref name="request"/> is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If request.RootEntity is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentNullException">If request.RequestedEntity is <c>null</c>.</exception>
+		public int GetCount(Request request)
+		{
+			this.CheckRequest (request);
+
+			return this.LoaderQueryGenerator.GetCount (request);
 		}
 
 
@@ -369,6 +358,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				this.DataContext.DefineEntityModificationEntryId (entity, entryId);
 			}
+		}
+
+
+		private void CheckRequest(Request request)
+		{
+			request.ThrowIfNull ("request");
+			request.RootEntity.ThrowIfNull ("request.RootEntity");
+			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
+
+			this.CheckForCycles (request.RootEntity);
+			this.CheckForForeignEntities (request.RootEntity);
 		}
 
 
