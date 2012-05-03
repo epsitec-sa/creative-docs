@@ -269,7 +269,7 @@
     <Compile Include="TypeDeCompte.cs" />
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
-    <Compile Include="Widgets\GraphWidget.cs" />
+    <Compile Include="Graph\GraphWidget.cs" />
     <Compile Include="Widgets\CustomFrameBox.cs" />
     <Compile Include="Widgets\TabCatcherFrameBox.cs" />
     <Compile Include="Widgets\StringArray.cs" />

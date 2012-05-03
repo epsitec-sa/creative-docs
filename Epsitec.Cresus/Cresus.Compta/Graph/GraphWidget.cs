@@ -5,12 +5,11 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Compta.Controllers;
-using Epsitec.Cresus.Compta.Graph;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Compta.Widgets
+namespace Epsitec.Cresus.Compta.Graph
 {
 	public class GraphWidget : Widget, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{

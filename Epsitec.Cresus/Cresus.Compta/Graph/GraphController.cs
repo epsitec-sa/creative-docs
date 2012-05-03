@@ -7,7 +7,6 @@ using Epsitec.Common.Drawing;
 
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
-using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta;
 
 using System.Collections.Generic;
