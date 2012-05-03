@@ -26,6 +26,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.ComparisonShowed     = ComparisonShowed.Budget;
 
 			this.graphOptions.Mode = GraphMode.SideBySide;
+			this.graphOptions.TitleText = "Balance de vérification";
 		}
 
 

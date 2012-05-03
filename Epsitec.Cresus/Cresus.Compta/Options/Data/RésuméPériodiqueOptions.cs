@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.HasSideBySideGraph   = false;
 
 			this.graphOptions.Mode = GraphMode.Stacked;
+			this.graphOptions.TitleText = "Résumé périodique";
 		}
 
 

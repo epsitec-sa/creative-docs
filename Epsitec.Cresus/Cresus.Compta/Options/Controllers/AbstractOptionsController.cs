@@ -350,38 +350,30 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphique");
 			this.viewGraphButton.Margins = new Margins (2, 0, 0, 0);
 
-			var showFrame = new FrameBox
-			{
-				Parent          = frame,
-				PreferredWidth  = 20,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (-1, 2, 0, 0),
-			};
-
 			this.showCommonGraphButton = new BackIconButton
 			{
-				Parent          = showFrame,
+				Parent          = frame,
 				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Common"),
 				BackColor       = UIBuilder.SelectionColor,
 				PreferredWidth  = 20,
-				PreferredHeight = 10,
+				PreferredHeight = 20,
 				AutoToggle      = false,
 				AutoFocus       = false,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (-1, 0, 0, 0),
 			};
 
 			this.showDetailedGraphButton = new BackIconButton
 			{
-				Parent          = showFrame,
+				Parent          = frame,
 				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Detailed"),
 				BackColor       = UIBuilder.SelectionColor,
 				PreferredWidth  = 20,
+				PreferredHeight = 20,
 				AutoToggle      = false,
 				AutoFocus       = false,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 0, -1, 0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (-1, 0, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (this.showCommonGraphButton,   "Montre les options graphiques principales");

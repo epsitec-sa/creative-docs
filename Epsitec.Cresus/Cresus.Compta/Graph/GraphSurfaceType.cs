@@ -6,16 +6,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Graph
 {
-	public enum GraphStyle
+	public enum GraphSurfaceType
 	{
-		Rainbow,
-		LightRainbow,
-		DarkRainbow,
-		Grey,
-		BlackAndWhite,
-		Red,
-		Green,
-		Blue,
-		Fire,
+		Empty,
+		Margins,
+		Title,
+		Legend,
+		Graph,
 	}
 }

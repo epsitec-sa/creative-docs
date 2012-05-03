@@ -27,10 +27,16 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			this.mode               = GraphMode.SideBySide;
 			this.style              = GraphStyle.Rainbow;
+			this.marginsAbs         = new Margins (10, 10, 30, 10);
+			this.titleText          = "Titre";
+			this.titlePositionRel   = new Point (0.5, 1.0);
+			this.titleSizeAbs       = new Size (400, 30);
 			this.startAtZero        = true;
 			this.graphPoints        = GraphPoint.Circle;
 			this.hasLines           = true;
 			this.hasLegend          = true;
+			this.legendPositionRel  = new Point (0.99, 0.98);  // en haut à droite
+			this.legendColumns      = 1;
 			this.hasThreshold0      = false;
 			this.hasThreshold1      = false;
 			this.thresholdValue0    = 0.05m;  // 5%
@@ -74,6 +80,54 @@ namespace Epsitec.Cresus.Compta.Graph
 			set
 			{
 				this.style = value;
+			}
+		}
+
+		public Margins MarginsAbs
+		{
+			get
+			{
+				return this.marginsAbs;
+			}
+			set
+			{
+				this.marginsAbs = value;
+			}
+		}
+
+		public FormattedText TitleText
+		{
+			get
+			{
+				return this.titleText;
+			}
+			set
+			{
+				this.titleText = value;
+			}
+		}
+
+		public Point TitlePositionRel
+		{
+			get
+			{
+				return this.titlePositionRel;
+			}
+			set
+			{
+				this.titlePositionRel = value;
+			}
+		}
+
+		public Size TitleSizeAbs
+		{
+			get
+			{
+				return this.titleSizeAbs;
+			}
+			set
+			{
+				this.titleSizeAbs = value;
 			}
 		}
 
@@ -171,6 +225,36 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				this.hasLegend = value;
 			}
+		}
+
+		public Point LegendPositionRel
+		{
+			get
+			{
+				return this.legendPositionRel;
+			}
+			set
+			{
+				this.legendPositionRel = value;
+			}
+		}
+
+		public int LegendColumns
+		{
+			get
+			{
+				return this.legendColumns;
+			}
+			set
+			{
+				this.legendColumns = value;
+			}
+		}
+
+		public Point TempDraggedColumnPos
+		{
+			get;
+			set;
 		}
 
 
@@ -340,6 +424,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			dst.Mode               = this.Mode;
 			dst.Style              = this.Style;
+			dst.MarginsAbs         = this.MarginsAbs;
+			dst.TitleText          = this.TitleText;
+			dst.TitlePositionRel   = this.TitlePositionRel;
+			dst.TitleSizeAbs       = this.TitleSizeAbs;
 			dst.StartAtZero        = this.StartAtZero;
 			dst.HasThreshold0      = this.HasThreshold0;
 			dst.HasThreshold1      = this.HasThreshold1;
@@ -348,6 +436,8 @@ namespace Epsitec.Cresus.Compta.Graph
 			dst.GraphPoints        = this.GraphPoints;
 			dst.HasLines           = this.HasLines;
 			dst.HasLegend          = this.HasLegend;
+			dst.LegendPositionRel  = this.LegendPositionRel;
+			dst.LegendColumns      = this.LegendColumns;
 			dst.FontSize           = this.FontSize;
 			dst.BorderThickness    = this.BorderThickness;
 			dst.BarThickness       = this.BarThickness;
@@ -372,6 +462,10 @@ namespace Epsitec.Cresus.Compta.Graph
 		{
 			return this.Mode               == other.Mode               &&
 				   this.Style              == other.Style              &&
+				   this.MarginsAbs         == other.MarginsAbs         &&
+				   this.TitleText          == other.TitleText          &&
+				   this.TitlePositionRel   == other.TitlePositionRel   &&
+				   this.TitleSizeAbs       == other.TitleSizeAbs       &&
 				   this.StartAtZero        == other.StartAtZero        &&
 				   this.HasThreshold0      == other.HasThreshold0      &&
 				   this.HasThreshold1      == other.HasThreshold1      &&
@@ -380,6 +474,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				   this.GraphPoints        == other.GraphPoints        &&
 				   this.HasLines           == other.HasLines           &&
 				   this.HasLegend          == other.HasLegend          &&
+				   this.LegendPositionRel  == other.LegendPositionRel  &&
+				   this.LegendColumns      == other.LegendColumns      &&
 				   this.FontSize           == other.FontSize           &&
 				   this.BorderThickness    == other.BorderThickness    &&
 				   this.BarThickness       == other.BarThickness       &&
@@ -453,6 +549,10 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private GraphMode						mode;
 		private GraphStyle						style;
+		private Margins							marginsAbs;
+		private FormattedText					titleText;
+		private Point							titlePositionRel;
+		private Size							titleSizeAbs;
 		private bool							startAtZero;
 		private bool							hasThreshold0;
 		private bool							hasThreshold1;
@@ -461,6 +561,8 @@ namespace Epsitec.Cresus.Compta.Graph
 		private GraphPoint						graphPoints;
 		private bool							hasLines;
 		private bool							hasLegend;
+		private Point							legendPositionRel;
+		private int								legendColumns;
 		private double							fontSize;
 		private double							borderThickness;
 		private double							barThickness;

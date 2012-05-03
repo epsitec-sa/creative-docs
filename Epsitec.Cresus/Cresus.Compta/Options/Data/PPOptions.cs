@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.Clear ();
 
 			this.ComparisonShowed = ComparisonShowed.Budget;
+
+			this.graphOptions.TitleText = "Pertes et Profits";
 		}
 
 

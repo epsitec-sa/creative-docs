@@ -165,7 +165,6 @@ namespace Epsitec.Cresus.Compta.Graph
 					Parent                       = topFrame,
 					PreferredWidth               = 70,
 					PreferredHeight              = 20,
-					AutoToggle                   = false,
 					Dock                         = DockStyle.Left,
 					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
 					SwallowEscapeOnRejectEdition = true,
@@ -241,7 +240,6 @@ namespace Epsitec.Cresus.Compta.Graph
 					Parent                       = bottomFrame,
 					PreferredWidth               = 70,
 					PreferredHeight              = 20,
-					AutoToggle                   = false,
 					Dock                         = DockStyle.Left,
 					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
 					SwallowEscapeOnRejectEdition = true,
@@ -383,7 +381,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void CreateDetailedUI(Widget parent)
 		{
-			var leftFrame = new FrameBox
+			var frame1 = new FrameBox
 			{
 				Parent         = parent,
 				PreferredWidth = 210,
@@ -398,7 +396,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock           = DockStyle.Left,
 			};
 
-			var middleFrame = new FrameBox
+			var frame2 = new FrameBox
 			{
 				Parent         = parent,
 				PreferredWidth = 210,
@@ -413,7 +411,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock           = DockStyle.Left,
 			};
 
-			var rightFrame = new FrameBox
+			var frame3 = new FrameBox
 			{
 				Parent         = parent,
 				PreferredWidth = 210,
@@ -428,11 +426,18 @@ namespace Epsitec.Cresus.Compta.Graph
 				Dock           = DockStyle.Left,
 			};
 
-			//	Partie gauche.
+			var frame4 = new FrameBox
+			{
+				Parent         = parent,
+				Dock           = DockStyle.Fill,
+				Padding        = new Margins (5),
+			};
+
+			//	Colonne 1.
 			{
 				var line = new FrameBox
 				{
-					Parent          = leftFrame,
+					Parent          = frame1,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Top,
 				};
@@ -458,7 +463,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.legendButton = new CheckButton
 			{
-				Parent         = leftFrame,
+				Parent         = frame1,
 				FormattedText  = "Légendes",
 				PreferredWidth = 80,
 				AutoToggle     = false,
@@ -466,10 +471,10 @@ namespace Epsitec.Cresus.Compta.Graph
 				Margins        = new Margins (0, 0, 5, 0),
 			};
 
-			//	Partie centrale.
+			//	Colonne 2.
 			this.startAtZeroButton = new CheckButton
 			{
-				Parent         = middleFrame,
+				Parent         = frame2,
 				FormattedText  = "Zéro inclu",
 				PreferredWidth = 80,
 				AutoToggle     = false,
@@ -479,7 +484,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.piePercentsButton = new CheckButton
 			{
-				Parent         = middleFrame,
+				Parent         = frame2,
 				FormattedText  = "Pourcentages",
 				PreferredWidth = 90,
 				AutoToggle     = false,
@@ -488,7 +493,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.pieValuesButton = new CheckButton
 			{
-				Parent         = middleFrame,
+				Parent         = frame2,
 				FormattedText  = "Montants",
 				PreferredWidth = 80,
 				AutoToggle     = false,
@@ -497,7 +502,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			this.linesButton = new CheckButton
 			{
-				Parent         = middleFrame,
+				Parent         = frame2,
 				FormattedText  = "Traits",
 				PreferredWidth = 60,
 				AutoToggle     = false,
@@ -507,7 +512,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				var line = new FrameBox
 				{
-					Parent          = middleFrame,
+					Parent          = frame2,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Top,
 				};
@@ -531,62 +536,81 @@ namespace Epsitec.Cresus.Compta.Graph
 				};
 			}
 
-			//	Partie droite.
+			//	Colonne 3.
 			this.fontSizeController = new SliderController ();
-			this.fontSizeController.CreateUI (rightFrame, 4.0, 30.0, 1.0, 10.0, "Taille police", delegate
+			this.fontSizeController.CreateUI (frame3, 4.0, 30.0, 1.0, 10.0, "Taille police", delegate
 			{
 				this.options.FontSize = this.fontSizeController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.borderThicknessController = new SliderController ();
-			this.borderThicknessController.CreateUI (rightFrame, 0.0, 3.0, 0.5, 1.0, "Contours", delegate
+			this.borderThicknessController.CreateUI (frame3, 0.0, 3.0, 0.5, 1.0, "Contours", delegate
 			{
 				this.options.BorderThickness = this.borderThicknessController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.barThicknessController = new SliderController ();
-			this.barThicknessController.CreateUI (rightFrame, 0.1, 1.0, 0.1, 0.8, "Barres", delegate
+			this.barThicknessController.CreateUI (frame3, 0.1, 1.0, 0.1, 0.8, "Barres", delegate
 			{
 				this.options.BarThickness = this.barThicknessController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.barOverlapController = new SliderController ();
-			this.barOverlapController.CreateUI (rightFrame, 0.0, 1.0, 0.1, 0.0, "Chevauchement", delegate
+			this.barOverlapController.CreateUI (frame3, 0.0, 1.0, 0.1, 0.0, "Chevauchement", delegate
 			{
 				this.options.BarOverlap = this.barOverlapController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.lineAlphaController = new SliderController ();
-			this.lineAlphaController.CreateUI (rightFrame, 0.1, 1.0, 0.1, 1.0, "Opacité", delegate
+			this.lineAlphaController.CreateUI (frame3, 0.1, 1.0, 0.1, 1.0, "Opacité", delegate
 			{
 				this.options.LineAlpha = this.lineAlphaController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.lineWidthController = new SliderController ();
-			this.lineWidthController.CreateUI (rightFrame, 1.0, 20.0, 1.0, 2.0, "Taille traits", delegate
+			this.lineWidthController.CreateUI (frame3, 1.0, 20.0, 1.0, 2.0, "Taille traits", delegate
 			{
 				this.options.LineWidth = this.lineWidthController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.pointWidthController = new SliderController ();
-			this.pointWidthController.CreateUI (rightFrame, 1.0, 20.0, 1.0, 4.0, "Taille points", delegate
+			this.pointWidthController.CreateUI (frame3, 1.0, 20.0, 1.0, 4.0, "Taille points", delegate
 			{
 				this.options.PointWidth = this.pointWidthController.Value;
 				this.OptionsChanged ();
 			});
 
 			this.explodedPieFactorController = new SliderController ();
-			this.explodedPieFactorController.CreateUI (rightFrame, 0.0, 4.0, 0.5, 1.0, "Eloignement", delegate
+			this.explodedPieFactorController.CreateUI (frame3, 0.0, 4.0, 0.5, 1.0, "Eloignement", delegate
 			{
 				this.options.ExplodedPieFactor = this.explodedPieFactorController.Value;
 				this.OptionsChanged ();
 			});
+
+			//	Colonne 4.
+			new StaticText
+			{
+				Parent        = frame4,
+				FormattedText = "Titre",
+				Dock          = DockStyle.Top,
+				Margins       = new Margins (0, 0, 0, 2),
+			};
+
+			this.titleField = new TextFieldMultiEx
+			{
+				Parent                       = frame4,
+				MinHeight                    = 20,
+				Dock                         = DockStyle.Fill,
+				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
+			};
 
 			//	Connexion des événements.
 			this.styleCombo.TextChanged += delegate
@@ -722,6 +746,12 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.options.ThresholdValue1 = System.Math.Max (this.options.ThresholdValue1-0.01m, 0.0m);
 				this.OptionsChanged ();
 			};
+
+			this.titleField.EditionAccepted += delegate
+			{
+				this.options.TitleText = this.titleField.FormattedText;
+				this.OptionsChanged ();
+			};
 		}
 
 
@@ -815,6 +845,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.lineWidthController.Value         = this.options.LineWidth;
 				this.pointWidthController.Value        = this.options.PointWidth;
 				this.explodedPieFactorController.Value = this.options.ExplodedPieFactor;
+
+				this.titleField.FormattedText = this.options.TitleText;
 
 				if (this.cube.Dimensions != 0)
 				{
@@ -1198,5 +1230,6 @@ namespace Epsitec.Cresus.Compta.Graph
 		private SliderController				lineWidthController;
 		private SliderController				pointWidthController;
 		private SliderController				explodedPieFactorController;
+		private TextFieldMultiEx				titleField;
 	}
 }

@@ -10,6 +10,7 @@ using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Graph
 {
@@ -18,33 +19,107 @@ namespace Epsitec.Cresus.Compta.Graph
 		public GraphEngine()
 		{
 			this.surfaces = new List<GraphSurface> ();
+
+			this.hilitedSurfaceId = GraphSurfaceId.Empty;
+			this.selectedSurfaceId = GraphSurfaceId.Empty;
 		}
 
 
-		public GraphSurface Detect(Point pos)
+		public GraphOptions Options
 		{
-			for (int i = this.surfaces.Count-1; i >= 0; i--)
+			get
+			{
+				return this.options;
+			}
+		}
+
+		public Rectangle FullRect
+		{
+			get
+			{
+				return this.fullRect;
+			}
+		}
+
+
+		public GraphSurfaceId HilitedSurfaceId
+		{
+			get
+			{
+				return this.hilitedSurfaceId;
+			}
+			set
+			{
+				this.hilitedSurfaceId = value;
+			}
+		}
+
+		public GraphSurfaceId SelectedSurfaceId
+		{
+			get
+			{
+				return this.selectedSurfaceId;
+			}
+			set
+			{
+				this.selectedSurfaceId = value;
+			}
+		}
+
+
+		public void SetHandle(int rank, Point pos)
+		{
+			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
+			{
+				var surface = this.GetSurface (this.selectedSurfaceId);
+				if (surface != null)
+				{
+					surface.SetHandle (rank, pos);
+				}
+			}
+		}
+
+		public int DetectHandle(Point pos)
+		{
+			//	Retourne la poignée visée par une position.
+			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
+			{
+				var surface = this.GetSurface (this.selectedSurfaceId);
+				if (surface != null)
+				{
+					return surface.DetectHandle (pos);
+				}
+			}
+
+			return -1;
+		}
+
+		public GraphSurfaceId DetectSurface(Point pos)
+		{
+			//	Retourne la surface visée par une position.
+			for (int i = this.surfaces.Count-1; i >= 0; i--)  // du dernier (avant-plan) au premier (arrière-plan)
 			{
 				var surface = this.surfaces[i];
 
 				if (surface.Contains (pos))
 				{
-					return surface;
+					return surface.Id;
 				}
 			}
 
-			return null;
+			return GraphSurfaceId.Empty;
 		}
 
-		public string GetTooltip(GraphSurface surface)
+		public string GetTooltip(GraphSurfaceId surface)
 		{
-			if (surface != null && surface.X >= 0 && surface.Y >= 0)
+			//	Retourne le texte du tooltip à utiliser pour une surface donnée.
+			if (surface != null && surface.CubeX >= 0 && surface.CubeY >= 0)
 			{
-				var value = this.cube.GetValue (surface.X, surface.Y);
+				var value = this.cube.GetValue (surface.CubeX, surface.CubeY);
 				if (value.HasValue)
 				{
-					var xx = this.cube.GetTitle (0, surface.X);
-					var yy = this.cube.GetTitle (1, surface.Y);
+					var xx = this.cube.GetTitle (0, surface.CubeX);
+					var yy = this.cube.GetTitle (1, surface.CubeY);
 					var vv = Converters.MontantToString (value.Value, null);
 
 					return string.Format ("{0} ; {1} = {2}", xx, yy, vv);
@@ -58,8 +133,9 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintFull(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect)
 		{
 			//	Dessine un graphique complet.
-			this.cube    = cube;
-			this.options = options;
+			this.cube     = cube;
+			this.options  = options;
+			this.fullRect = rect;
 
 			this.surfaces.Clear ();
 
@@ -68,21 +144,22 @@ namespace Epsitec.Cresus.Compta.Graph
 				return;
 			}
 
-			int nx = this.cube.GetCount (0);
-			int ny = this.cube.GetCount (1);
-
-			graphics.AddFilledRectangle (rect);
+			graphics.AddFilledRectangle (this.fullRect);
 			graphics.RenderSolid (this.BackExtColor);
 
-			rect.Deflate (10);
+			var drawingRect = this.DrawingRect;
+			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Margins), drawingRect));
 
 			this.fontSize = this.options.FontSize;
+
+			int nx = this.cube.GetCount (0);
+			int ny = this.cube.GetCount (1);
 
 			int labelDx, labelDy;
 
 			if (this.HasVerticalLabels)
 			{
-				labelDx = this.GetVerticalLabelsWidth (rect, ny);
+				labelDx = this.GetVerticalLabelsWidth (drawingRect, ny);
 			}
 			else
 			{
@@ -91,23 +168,23 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			if (this.HasHorizontalLabels)
 			{
-				labelDy = this.GetHorizontalLabelsHeight (rect);
+				labelDy = this.GetHorizontalLabelsHeight (drawingRect);
 			}
 			else
 			{
 				labelDy = 0;
 			}
 
-			int dx = ((int) rect.Width  - labelDx) / nx;
-			int dy = ((int) rect.Height - labelDy) / ny;
+			int dx = ((int) drawingRect.Width  - labelDx) / nx;
+			int dy = ((int) drawingRect.Height - labelDy) / ny;
 
 			if (dx <= 5 || dy <= 5)
 			{
-				this.PaintError (graphics, rect);
+				this.PaintError (graphics, drawingRect);
 				return;
 			}
 
-			var frameRect = new Rectangle (rect.Left+labelDx, rect.Bottom+labelDy, rect.Width-labelDx, rect.Height-labelDy);
+			var frameRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom+labelDy, drawingRect.Width-labelDx, drawingRect.Height-labelDy);
 			this.PaintGrid (graphics, frameRect, nx, dx, ny, dy);
 
 			switch (this.options.Mode)
@@ -130,13 +207,13 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			if (this.HasHorizontalLabels)
 			{
-				var labelsRect = new Rectangle (rect.Left+labelDx, rect.Bottom, rect.Width-labelDx, labelDy);
+				var labelsRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom, drawingRect.Width-labelDx, labelDy);
 				this.PaintHorizontalLabels (graphics, labelsRect, nx, dx);
 			}
 
 			if (this.HasVerticalLabels)
 			{
-				var labelsRect = new Rectangle (rect.Left, rect.Bottom+labelDy, labelDx, rect.Height-labelDy);
+				var labelsRect = new Rectangle (drawingRect.Left, drawingRect.Bottom+labelDy, labelDx, drawingRect.Height-labelDy);
 				this.PaintVerticalLabels (graphics, labelsRect, ny, dy);
 			}
 
@@ -163,11 +240,48 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
+			this.PaintTitle (graphics);
+
 			if (this.options.Mode != GraphMode.Array && this.options.HasLegend)
 			{
-				var size = this.GetLegendsSize (1);
-				var legendsRect = new Rectangle (rect.Right-size.Width-10, rect.Top-size.Height-10, size.Width, size.Height);
-				this.PaintLegends (graphics, legendsRect, 1);
+				this.PaintLegends (graphics, this.LegendsRect);
+			}
+
+			var surface = this.GetSurface (this.hilitedSurfaceId);
+			if (surface != null)
+			{
+				surface.PaintHilited (graphics);
+			}
+
+			surface = this.GetSurface (this.selectedSurfaceId);
+			if (surface != null)
+			{
+				surface.PaintSelected (graphics);
+			}
+		}
+
+		public Rectangle DrawingRect
+		{
+			get
+			{
+				var x1 = System.Math.Floor (this.fullRect.Left   + this.options.MarginsAbs.Left);
+				var x2 = System.Math.Floor (this.fullRect.Right  - this.options.MarginsAbs.Right);
+				var y1 = System.Math.Floor (this.fullRect.Bottom + this.options.MarginsAbs.Bottom);
+				var y2 = System.Math.Floor (this.fullRect.Top    - this.options.MarginsAbs.Top);
+
+				return new Rectangle (x1, y1, x2-x1, y2-y1);
+			}
+		}
+
+		private GraphSurface GetSurface(GraphSurfaceId id)
+		{
+			if (id.IsEmpty)
+			{
+				return null;
+			}
+			else
+			{
+				return this.surfaces.Where (x => x.Id == id).FirstOrDefault ();
 			}
 		}
 
@@ -227,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Graph
 						graphics.RenderSolid (this.BorderColor);
 						graphics.LineWidth = 1;
 
-						this.surfaces.Add (new GraphSurface (x, y, barRect));
+						this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), barRect));
 					}
 				}
 			}
@@ -307,7 +421,7 @@ namespace Epsitec.Cresus.Compta.Graph
 							graphics.AddFilledRectangle (barRect);
 							graphics.RenderSolid (this.GetIndexedColor (y, ny));
 
-							this.surfaces.Add (new GraphSurface (x, y, barRect));
+							this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), barRect));
 						}
 						else
 						{
@@ -374,6 +488,10 @@ namespace Epsitec.Cresus.Compta.Graph
 									graphics.LineCap = CapStyle.Square;
 									graphics.LineWidth = 1;
 								}
+
+								var d = System.Math.Max (this.options.PointWidth, 6) + 2;
+								var pointRect = new Rectangle (pos.X-d/2, pos.Y-d/2, d, d);
+								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), pointRect));
 							}
 							else
 							{
@@ -586,7 +704,7 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.Color = this.GetIndexedColor (y, ny);
 								graphics.PaintSurface (path);
 
-								this.surfaces.Add (new GraphSurface (i, y, path));
+								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, i, y), path));
 							}
 							else
 							{
@@ -619,7 +737,7 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.Color = this.GetIndexedColor (y, ny);
 								graphics.PaintSurface (path);
 
-								this.surfaces.Add (new GraphSurface (i, y, path));
+								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, i, y), path));
 							}
 							else
 							{
@@ -725,47 +843,122 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
-		private Size GetLegendsSize(int dimension)
+		public Rectangle TitleRect
 		{
-			//	Retourne la taille nécessaire pour la légende.
-			var textLayout = new TextLayout
+			get
 			{
-				LayoutSize      = new Size (1000, 100),
-				DefaultFontSize = this.fontSize,
-			};
+				var w = this.options.TitleSizeAbs.Width;
+				var h = this.options.TitleSizeAbs.Height;
+				var x = System.Math.Floor (System.Math.Max ((this.fullRect.Width-w)*this.options.TitlePositionRel.X, 0));
+				var y = System.Math.Floor (System.Math.Max ((this.fullRect.Height-h)*this.options.TitlePositionRel.Y, 0));
 
-			int n = this.cube.GetCount (dimension);
-			int dy = (int) (this.fontSize / 0.7);
-			int max = 0;
-
-			for (int i = 0; i < n; i++)
-			{
-				textLayout.FormattedText = this.cube.GetTitle (dimension, i);
-				double width = textLayout.GetSingleLineSize ().Width;
-				max = System.Math.Max (max, (int) width);
+				return new Rectangle (x, y, w, h);
 			}
+			set
+			{
+				var rect = Rectangles.MoveInside (value, this.fullRect);
+				this.options.TitleSizeAbs = rect.Size;
 
-			return new Size (max+dy+10, n*dy);
+				var x = rect.Left   / (this.fullRect.Width -rect.Size.Width);
+				var y = rect.Bottom / (this.fullRect.Height-rect.Size.Height);
+				this.options.TitlePositionRel = new Point (x, y);
+			}
 		}
 
-		private void PaintLegends(Graphics graphics, Rectangle rect, int dimension)
+		private void PaintTitle(Graphics graphics)
+		{
+			var rect = this.TitleRect;
+			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Title), rect));
+			this.PaintText (graphics, rect, this.options.TitleText, ContentAlignment.MiddleCenter, TextBreakMode.Hyphenate, 1.5);
+		}
+
+
+		public Rectangle LegendsRect
+		{
+			//	Retourne le rectangle occupé par la légende.
+			get
+			{
+				var size = this.LegendsSize;
+
+				var x = System.Math.Floor (System.Math.Max ((this.fullRect.Width-size.Width)*this.options.LegendPositionRel.X, 0));
+				var y = System.Math.Floor (System.Math.Max ((this.fullRect.Height-size.Height)*this.options.LegendPositionRel.Y, 0));
+
+				return new Rectangle (x, y, size.Width, size.Height);
+			}
+		}
+
+		private Size LegendsSize
+		{
+			//	Retourne la taille nécessaire pour la légende.
+			get
+			{
+				int c = this.options.LegendColumns;
+				int n = (this.cube.GetCount (1)+c-1)/c;
+				int h = (int) (this.fontSize / 0.7);
+				int w = this.LegendsColumnWidth;
+
+				return new Size ((w+h)*c, n*h);
+			}
+		}
+
+		public int LegendsColumnWidth
+		{
+			//	Retourne la largeur pour une colonne.
+			get
+			{
+				var textLayout = new TextLayout
+				{
+					LayoutSize      = new Size (1000, 100),
+					DefaultFontSize = this.fontSize,
+				};
+
+				int max = 0;
+				int n = this.cube.GetCount (1);
+
+				for (int i = 0; i < n; i++)
+				{
+					textLayout.FormattedText = this.cube.GetTitle (1, i);
+					double width = textLayout.GetSingleLineSize ().Width;
+					max = System.Math.Max (max, (int) width);
+				}
+
+				return max + 10;
+			}
+		}
+
+		private void PaintLegends(Graphics graphics, Rectangle rect)
 		{
 			//	Dessine la légende complète.
-			int n = this.cube.GetCount (dimension);
+			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Legend), rect));
+
+			int total = this.cube.GetCount (1);
+			int nc = this.options.LegendColumns;
+			int n = (total+nc-1)/nc;
 			int dy = (int) (this.fontSize / 0.7);
+			int columnWidth = (int) (rect.Width / nc);
 
 			rect.Inflate (2);
 			graphics.AddFilledRectangle (rect);
 			graphics.RenderSolid (this.BackLegendsColor);
-			this.surfaces.Add (new GraphSurface (-1, -1, rect));
 			rect.Deflate (2);
 
-			for (int y = 0; y < n; y++)
+			int index = 0;
+			for (int c = 0; c < nc; c++)
 			{
-				var lineRect = new Rectangle (rect.Left, rect.Top-(y+1)*dy, rect.Width, dy);
-				var text = this.cube.GetTitle (dimension, y);
+				for (int y = 0; y < n; y++)
+				{
+					if (index >= total)
+					{
+						break;
+					}
 
-				this.PaintLegend (graphics, lineRect, this.GetIndexedColor (y, n), text);
+					var lineRect = new Rectangle (rect.Left+columnWidth*c, rect.Top-(y+1)*dy, columnWidth, dy);
+					var text = this.cube.GetTitle (1, index);
+
+					this.PaintLegend (graphics, lineRect, this.GetIndexedColor (index, total), text);
+
+					index++;
+				}
 			}
 
 			rect.Inflate (2.5);
@@ -1004,12 +1197,12 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (bold ? this.BorderColor : Color.FromAlphaColor (0.2, this.BorderColor));
 		}
 
-		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment)
+		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment, TextBreakMode breakMode = TextBreakMode.Ellipsis|TextBreakMode.Split|TextBreakMode.SingleLine, double fontFactor = 1)
 		{
-			this.PaintText (graphics, labelRect, text, alignment, Color.FromName ("Black"));
+			this.PaintText (graphics, labelRect, text, alignment, Color.FromName ("Black"), breakMode, fontFactor);
 		}
 
-		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment, Color color)
+		private void PaintText(Graphics graphics, Rectangle labelRect, FormattedText text, ContentAlignment alignment, Color color, TextBreakMode breakMode = TextBreakMode.Ellipsis|TextBreakMode.Split|TextBreakMode.SingleLine, double fontFactor = 1)
 		{
 			//	Dessine un texte quelconque dans un rectangle.
 			var textLayout = new TextLayout
@@ -1017,8 +1210,8 @@ namespace Epsitec.Cresus.Compta.Graph
 				FormattedText   = text,
 				LayoutSize      = labelRect.Size,
 				Alignment       = alignment,
-				BreakMode        = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				DefaultFontSize = this.fontSize,
+				BreakMode       = breakMode,
+				DefaultFontSize = this.fontSize * fontFactor,
 			};
 
 			textLayout.Paint (labelRect.BottomLeft, graphics, labelRect, color, GlyphPaintStyle.Normal);
@@ -1476,11 +1669,14 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private Cube							cube;
 		private GraphOptions					options;
+		private Rectangle						fullRect;
 		private double							fontSize;
 		private decimal							minValue;
 		private decimal							maxValue;
 		private double							drawBottom;
 		private double							drawHeight;
 		private double							drawRight;
+		private GraphSurfaceId					hilitedSurfaceId;
+		private GraphSurfaceId					selectedSurfaceId;
 	}
 }

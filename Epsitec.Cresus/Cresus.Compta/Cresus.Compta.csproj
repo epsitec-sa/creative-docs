@@ -96,6 +96,8 @@
     <Compile Include="Dialogs\DébitCréditDialog.cs" />
     <Compile Include="Fields\Controllers\FixedTextController.cs" />
     <Compile Include="Fields\Controllers\StaticTextController.cs" />
+    <Compile Include="Graph\GraphSurfaceId.cs" />
+    <Compile Include="Graph\GraphSurfaceType.cs" />
     <Compile Include="Graph\GraphSurface.cs" />
     <Compile Include="Graph\GraphPoint.cs" />
     <Compile Include="Graph\SliderController.cs" />
@@ -105,6 +107,7 @@
     <Compile Include="Graph\Cube.cs" />
     <Compile Include="Graph\GraphMode.cs" />
     <Compile Include="Graph\GraphEngine.cs" />
+    <Compile Include="Helpers\Rectangles.cs" />
     <Compile Include="Helpers\Currencies.cs" />
     <Compile Include="Options\Controllers\SoldesColumnController.cs" />
     <Compile Include="Options\Controllers\SoldesOptionsController.cs" />

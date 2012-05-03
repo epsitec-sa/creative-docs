@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.Clear ();
 
 			this.ComparisonShowed = ComparisonShowed.PériodePrécédente;
+
+			this.graphOptions.TitleText = "Bilan intermédiaire";
 		}
 
 

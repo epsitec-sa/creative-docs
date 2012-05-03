@@ -38,6 +38,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.soldesColumns.Add (new SoldesColumn ());
 
 			this.graphOptions.Mode = GraphMode.Lines;
+			this.graphOptions.TitleText = "Soldes";
 		}
 
 

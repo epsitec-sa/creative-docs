@@ -36,6 +36,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			this.graphOptions.Mode = GraphMode.Lines;
 			this.graphOptions.HasLegend = false;
+			this.graphOptions.TitleText = "Extrait de compte";
 		}
 
 

@@ -5,6 +5,7 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -44,18 +45,32 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			if (message.MessageType == MessageType.MouseMove)
+			switch (message.MessageType)
 			{
-				var surface = this.engine.Detect (pos);
+				case MessageType.MouseMove:
+					this.ProcessMouseMove (message, pos);
+					message.Captured = true;
+					message.Consumer = this;
+					break;
 
-				if (this.hilitedSurface != surface)
-				{
-					this.hilitedSurface = surface;
-					this.Invalidate ();
-				}
+				case MessageType.MouseDown:
+					this.ProcessMouseDown (message, pos);
+					message.Captured = true;
+					message.Consumer = this;
+					break;
+
+				case MessageType.MouseUp:
+					this.ProcessMouseUp (message, pos);
+					message.Captured = true;
+					message.Consumer = this;
+					break;
 			}
 
 			base.ProcessMessage (message, pos);
+		}
+
+		protected override void UpdateClientGeometry()
+		{
 		}
 		
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -66,41 +81,115 @@ namespace Epsitec.Cresus.Compta.Graph
 			{
 				Rectangle rect = this.Client.Bounds;
 				this.engine.PaintFull (cube, this.options, graphics, rect);
-
-				if (this.hilitedSurface != null)
-				{
-					this.PaintHilitedSurface (graphics, this.hilitedSurface);
-				}
 			}
 		}
 
-		private void PaintHilitedSurface(Graphics graphics, GraphSurface surface)
+
+		private void ProcessMouseDown(Message message, Point pos)
 		{
-			if (!surface.Rect.IsSurfaceZero)
+			this.isMouseDown = true;
+
+			this.selectedHandle = this.engine.DetectHandle (pos);
+			if (this.selectedHandle != -1)
 			{
-				graphics.AddFilledRectangle (surface.Rect);
-				graphics.RenderSolid (Color.FromAlphaColor (0.5, Color.FromName ("White")));
-
-				graphics.LineWidth = 3;
-				graphics.AddRectangle (surface.Rect);
-				graphics.RenderSolid (Color.FromName ("White"));
-				graphics.LineWidth = 1;
-
-				graphics.AddRectangle (surface.Rect);
-				graphics.RenderSolid (Color.FromName ("Black"));
+				return;
 			}
-			else if (surface.Path != null)
+			
+			this.engine.SelectedSurfaceId = this.engine.DetectSurface (pos);
+
+			if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Legend)
 			{
-				graphics.Color = Color.FromAlphaColor (0.5, Color.FromName ("White"));
-				graphics.PaintSurface (surface.Path);
+				var lr = this.engine.LegendsRect;
+				this.dragSize = lr.Size;
+				this.dragOffset = pos - lr.BottomLeft;
+			}
 
-				graphics.LineWidth = 3;
-				graphics.Color = Color.FromName ("White");
-				graphics.PaintOutline (surface.Path);
-				graphics.LineWidth = 1;
+			if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Margins)
+			{
+				var dr = this.engine.DrawingRect;
+				this.dragSize = dr.Size;
+				this.dragOffset = pos - dr.BottomLeft;
+			}
 
-				graphics.Color = Color.FromName ("Black");
-				graphics.PaintOutline (surface.Path);
+			if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Title)
+			{
+				var tr = this.engine.TitleRect;
+				this.dragSize = tr.Size;
+				this.dragOffset = pos - tr.BottomLeft;
+			}
+		}
+
+		private void ProcessMouseUp(Message message, Point pos)
+		{
+			this.isMouseDown = false;
+			this.engine.HilitedSurfaceId = GraphSurfaceId.Empty;
+			this.engine.Options.TempDraggedColumnPos = Point.Zero;
+			this.Invalidate ();
+		}
+
+		private void ProcessMouseMove(Message message, Point pos)
+		{
+			if (this.isMouseDown)
+			{
+				if (this.selectedHandle != -1)
+				{
+					if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Legend)
+					{
+						this.engine.Options.TempDraggedColumnPos = pos;
+					}
+
+					this.engine.SetHandle (this.selectedHandle, pos);
+					this.Invalidate ();
+				}
+				else if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Legend)
+				{
+					var x = (pos.X - this.dragOffset.X) / (this.Client.Bounds.Width  - this.dragSize.Width);
+					var y = (pos.Y - this.dragOffset.Y) / (this.Client.Bounds.Height - this.dragSize.Height);
+
+					x = System.Math.Max (x, 0.0);
+					x = System.Math.Min (x, 1.0);
+					y = System.Math.Max (y, 0.0);
+					y = System.Math.Min (y, 1.0);
+
+					this.options.LegendPositionRel = new Point (x, y);
+					this.Invalidate ();
+				}
+				else if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Margins)
+				{
+					var fullRect = this.engine.FullRect;
+					var drawingRect = new Rectangle (pos.X-this.dragOffset.X, pos.Y-this.dragOffset.Y, this.dragSize.Width, this.dragSize.Height);
+
+					drawingRect = Rectangles.MoveInside (drawingRect, fullRect);
+
+					var left   = drawingRect.Left - fullRect.Left;
+					var right  = fullRect.Right - drawingRect.Right;
+					var bottom = drawingRect.Bottom - fullRect.Bottom;
+					var top    = fullRect.Top - drawingRect.Top;
+
+					this.options.MarginsAbs = new Margins (left, right, top, bottom);
+					this.Invalidate ();
+				}
+				else if (this.engine.SelectedSurfaceId.Type == GraphSurfaceType.Title)
+				{
+					this.engine.TitleRect = new Rectangle (pos.X-this.dragOffset.X, pos.Y-this.dragOffset.Y, this.dragSize.Width, this.dragSize.Height);
+					this.Invalidate ();
+				}
+			}
+			else
+			{
+				var hilite = GraphSurfaceId.Empty;
+
+				var rank = this.engine.DetectHandle (pos);
+				if (rank == -1)
+				{
+					hilite = this.engine.DetectSurface (pos);
+				}
+
+				if (this.engine.HilitedSurfaceId != hilite)
+				{
+					this.engine.HilitedSurfaceId = hilite;
+					this.Invalidate ();
+				}
 			}
 		}
 
@@ -109,15 +198,18 @@ namespace Epsitec.Cresus.Compta.Graph
 		public object GetToolTipCaption(Point pos)
 		{
 			//	Donne l'objet (string ou widget) pour le tooltip en fonction de la position.
-			return this.engine.GetTooltip (this.hilitedSurface);
+			return this.engine.GetTooltip (this.engine.HilitedSurfaceId);
 		}
 		#endregion
 
-	
+
 		private readonly AbstractController		controller;
 		private readonly GraphEngine			engine;
 
 		private GraphOptions					options;
-		private GraphSurface					hilitedSurface;
+		private bool							isMouseDown;
+		private int								selectedHandle;
+		private Size							dragSize;
+		private Point							dragOffset;
 	}
 }

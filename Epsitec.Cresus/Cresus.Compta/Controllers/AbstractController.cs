@@ -1115,9 +1115,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.graphWidget = new GraphWidget (this)
 				{
-					Parent  = parent,
-					Options = this.dataAccessor.Options.GraphOptions,
-					Dock    = DockStyle.Fill,
+					Parent     = parent,
+					Options    = this.dataAccessor.Options.GraphOptions,
+					Dock       = DockStyle.Fill,
+					Visibility = false,
 				};
 
 				ToolTip.Default.RegisterDynamicToolTipHost (this.graphWidget);  // pour voir les tooltips dynamiques
