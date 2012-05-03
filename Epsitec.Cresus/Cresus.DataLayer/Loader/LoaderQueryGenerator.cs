@@ -457,7 +457,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			SqlContainer sqlContainerForValuesAndReferences = this.BuildSqlContainerForValuesAndReferences (requestedAlias, requestedEntity);
 
-			return sqlContainerForConditions.Plus (sqlContainerForValuesAndReferences).BuildSqlSelect ();
+			return sqlContainerForConditions
+				.Plus(sqlContainerForValuesAndReferences)
+				.BuildSqlSelect(SqlSelectPredicate.Distinct);
 		}
 
 
