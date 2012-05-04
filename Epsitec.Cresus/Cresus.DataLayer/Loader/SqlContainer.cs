@@ -105,8 +105,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// Builds the <see cref="SqlSelect"/> that is the query that corresponds to this instance.
 		/// </summary>
 		/// <param name="predicate">The sql predicate that will be used.</param>
+		/// <param name="skip">The number of resulting rows to skip.</param>
+		/// <param name="take">The number of resulting rows to retrieve.</param>
 		/// <returns>The <see cref="SqlSelect"/>.</returns>
-		public SqlSelect BuildSqlSelect(SqlSelectPredicate predicate = SqlSelectPredicate.All)
+		public SqlSelect BuildSqlSelect(SqlSelectPredicate predicate = SqlSelectPredicate.All, int? skip = null, int? take = null)
 		{
 			SqlSelect sqlSelect = new SqlSelect ();
 
@@ -116,7 +118,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			sqlSelect.Conditions.AddRange (this.SqlConditions.Select (c => SqlField.CreateFunction (c)));
 			sqlSelect.OrderBy.AddRange (this.SqlOrderBys);
 			sqlSelect.Predicate = predicate;
-
+			sqlSelect.Skip = skip;
+			sqlSelect.Take = take;
 			return sqlSelect;
 		}
 

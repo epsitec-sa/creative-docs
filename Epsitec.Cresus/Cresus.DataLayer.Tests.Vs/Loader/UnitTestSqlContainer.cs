@@ -118,6 +118,38 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 
 		[TestMethod]
+		public void BuildSqlSelect3()
+		{
+			List<SqlField> tables = this.GetTableSamples ();
+			List<SqlField> fields = this.GetFieldSamples ();
+			List<SqlJoin> joins = this.GetJoinSamples ();
+			List<SqlFunction> conditions = this.GetConditionSamples ();
+			List<SqlField> orderBys = this.GetOrderBySamples ();
+
+			SqlContainer sqlContainer = new SqlContainer (tables, fields, joins, conditions, orderBys);
+
+			var data = Enumerable.Range (0, 10).Cast<int?> ().Concat (new List<int?> () { null });
+
+			foreach (var skip in data)
+			{
+				foreach (var take in data)
+				{
+					SqlSelect sqlSelect = sqlContainer.BuildSqlSelect (SqlSelectPredicate.Distinct, skip, take);
+
+					CollectionAssert.AreEqual (tables, sqlSelect.Tables);
+					CollectionAssert.AreEqual (fields, sqlSelect.Fields);
+					CollectionAssert.AreEqual (joins, sqlSelect.Joins.Select (j => j.AsJoin).ToList ());
+					CollectionAssert.AreEqual (conditions, sqlSelect.Conditions.Select (f => f.AsFunction).ToList ());
+					CollectionAssert.AreEqual (orderBys, sqlSelect.OrderBy);
+					Assert.AreEqual (SqlSelectPredicate.Distinct, sqlSelect.Predicate);
+					Assert.AreEqual (skip, sqlSelect.Skip);
+					Assert.AreEqual (take, sqlSelect.Take);
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void CreateSqlTablesArgumentCheck()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
