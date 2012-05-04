@@ -339,6 +339,42 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		}
 
 
+		[TestMethod]
+		public void RequestedTakeTest()
+		{
+			Request request = new Request ();
+
+			for (int i = 0; i < 10; i++)
+			{
+				Assert.IsNull (request.Take);
+
+				request.Take = i;
+
+				Assert.AreEqual (i, request.Take);
+
+				request.Take = null;
+			}
+		}
+
+
+		[TestMethod]
+		public void RequestedSkipTest()
+		{
+			Request request = new Request ();
+
+			for (int i = 0; i < 10; i++)
+			{
+				Assert.IsNull (request.Skip);
+
+				request.Skip = i;
+
+				Assert.AreEqual (i, request.Skip);
+
+				request.Skip = null;
+			}
+		}
+
+
 	}
 
 

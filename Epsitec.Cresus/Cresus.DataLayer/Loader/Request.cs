@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is at the root of the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity					RootEntity
+		public AbstractEntity RootEntity
 		{
 			internal get;
 			set;
@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> which is at the root of the
 		/// <c>Request</c>.
 		/// </summary>
-		public DbKey?							RootEntityKey
+		public DbKey? RootEntityKey
 		{
 			internal get;
 			set;
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity					RequestedEntity
+		public AbstractEntity RequestedEntity
 		{
 			internal get
 			{
@@ -97,9 +97,29 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
+		/// The number of entities that the request must skip from the result.
+		/// </summary>
+		public int? Skip
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
+		/// The number of entities that the request must take from the result.
+		/// </summary>
+		public int? Take
+		{
+			get;
+			set;
+		}
+
+
+		/// <summary>
 		/// Defines the minimum log id that the entities should have to be returned by the request.
 		/// </summary>
-		internal long?							RequestedEntityMinimumLogId
+		internal long? RequestedEntityMinimumLogId
 		{
 			get;
 			set;
