@@ -178,6 +178,22 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		public static SqlSortOrder ToSqlSortOrder(SortOrder sortOrder)
+		{
+			switch (sortOrder)
+			{
+				case SortOrder.Ascending:
+					return SqlSortOrder.Ascending;
+
+				case SortOrder.Descending:
+					return SqlSortOrder.Descending;
+
+				default:
+					throw new System.NotSupportedException ("Conversion of '" + sortOrder + "' is not supported");
+			}
+		}
+
+
 		/// <summary>
 		/// Converts a <see cref="Type"/> to the corresponding <see cref="DbNumDef"/>.
 		/// </summary>

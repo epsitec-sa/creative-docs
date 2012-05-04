@@ -11,7 +11,6 @@ using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
@@ -37,7 +36,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 			TestHelper.Initialize ();
 
 			DatabaseCreator2.ResetPopulatedTestDatabase ();
-			
+
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1512,6 +1511,191 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData2 (vd)));
 				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData3 (vd)));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetSortedObjects1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddSortClause (example,
+					new SortClause (
+						new Field (new Druid ("[J1AL1]")),
+						SortOrder.Ascending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 3);
+
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[2]));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetSortedObjects2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddSortClause (example,
+					new SortClause (
+						new Field (new Druid ("[J1AL1]")),
+						SortOrder.Descending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 3);
+
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[2]));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetSortedObjects3()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					PreferredLanguage = new LanguageEntity (),
+				};
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddSortClause (example.PreferredLanguage,
+					new SortClause (
+						new Field (new Druid ("[J1AU]")),
+						SortOrder.Descending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 2);
+
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[1]));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetSortedObjects4()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					PreferredLanguage = new LanguageEntity (),
+				};
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddSortClause (example,
+					new SortClause (
+						new Field (new Druid ("[J1AL1]")),
+						SortOrder.Ascending
+					)
+				);
+
+				request.AddSortClause (example.PreferredLanguage,
+					new SortClause (
+						new Field (new Druid ("[J1AU]")),
+						SortOrder.Descending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 2);
+
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[1]));
+			}
+		}
+
+
+		[TestMethod]
+		public void GetSortedObjects5()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+
+				request.AddLocalConstraint (example,
+					new UnaryOperation (
+						UnaryOperator.Not,
+						new ComparisonFieldValue (
+							new Field (new Druid ("[J1AL1]")),
+							BinaryComparator.IsEqual,
+							new Constant ("Hans")
+						)
+					)
+				);
+
+				request.AddSortClause (example,
+					new SortClause (
+						new Field (new Druid ("[J1AO1]")),
+						SortOrder.Descending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 2);
+
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[1]));
 			}
 		}
 

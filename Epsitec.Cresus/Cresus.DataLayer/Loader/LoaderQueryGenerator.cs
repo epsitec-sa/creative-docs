@@ -16,6 +16,8 @@ using Epsitec.Cresus.DataLayer.Serialization;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
+using System;
+
 using System.Data;
 
 using System.Linq;
@@ -34,13 +36,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private DataContext						DataContext
+		private DataContext DataContext
 		{
 			get;
 			set;
 		}
 
-		private DbInfrastructure				DbInfrastructure
+		private DbInfrastructure DbInfrastructure
 		{
 			get
 			{
@@ -48,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-		private EntityTypeEngine				TypeEngine
+		private EntityTypeEngine TypeEngine
 		{
 			get
 			{
@@ -56,7 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-		private EntitySchemaEngine				SchemaEngine
+		private EntitySchemaEngine SchemaEngine
 		{
 			get
 			{
@@ -64,7 +66,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-		private DataConverter					DataConverter
+		private DataConverter DataConverter
 		{
 			get
 			{
@@ -97,14 +99,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
 		{
-			Dictionary<DbKey, System.Tuple<Druid, long, ValueData, ReferenceData>> valuesAndReferencesData;
+			List<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData;
 			Dictionary<DbKey, CollectionData> collectionsData;
 
 			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				valuesAndReferencesData = this.GetValueAndReferenceData (transaction, request);
+				valuesAndReferencesData = this.GetValueAndReferenceData (transaction, request).ToList ();
 
-				if (valuesAndReferencesData.Any ())
+				if (valuesAndReferencesData.Count > 0)
 				{
 					collectionsData = this.GetCollectionData (transaction, request);
 				}
@@ -120,17 +122,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private IEnumerable<EntityData> GetEntitiesData(Request request, Dictionary<DbKey, System.Tuple<Druid, long, ValueData, ReferenceData>> valuesAndReferencesData, Dictionary<DbKey, CollectionData> collectionsData)
+		private IEnumerable<EntityData> GetEntitiesData(Request request, List<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData, Dictionary<DbKey, CollectionData> collectionsData)
 		{
-			foreach (DbKey rowKey in valuesAndReferencesData.Keys)
+			foreach (var valueAndReferenceData in valuesAndReferencesData)
 			{
-				var tuple = valuesAndReferencesData[rowKey];
-
 				Druid loadedEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
-				Druid leafEntityId = tuple.Item1;
-				long logId = tuple.Item2;
-				ValueData entityValueData = tuple.Item3;
-				ReferenceData entityReferenceData = tuple.Item4;
+
+				DbKey rowKey = valueAndReferenceData.Item1;
+				Druid leafEntityId = valueAndReferenceData.Item2;
+				long logId = valueAndReferenceData.Item3;
+				ValueData entityValueData = valueAndReferenceData.Item4;
+				ReferenceData entityReferenceData = valueAndReferenceData.Item5;
 				CollectionData entityCollectionData = collectionsData.ContainsKey (rowKey) ? collectionsData[rowKey] : new CollectionData ();
 
 				yield return new EntityData (rowKey, leafEntityId, loadedEntityId, logId, entityValueData, entityReferenceData, entityCollectionData);
@@ -348,11 +350,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect CreateSqlSelectForSingleValue(Request request, Druid fieldId)
 		{
-			var result = this.BuildSqlContainerForConditions (request);
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
 
-			SqlContainer sqlContainerForConditions = result.Item1;
-			AbstractEntity requestedEntity = result.Item2;
-			AliasNode requestedAlias = result.Item3;
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
 			SqlField sqlFieldForSingleValue = this.BuildSqlFieldForValueField(requestedAlias, requestedEntity, fieldId);
 
@@ -365,10 +367,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region GET VALUE AND REFERENCE DATA
 		
 
-		private Dictionary<DbKey, System.Tuple<Druid, long, ValueData, ReferenceData>> GetValueAndReferenceData(DbTransaction transaction, Request request)
+		private IEnumerable<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> GetValueAndReferenceData(DbTransaction transaction, Request request)
 		{
-			var valueData = new Dictionary<DbKey, System.Tuple<Druid, long, ValueData, ReferenceData>> ();
-
 			Druid leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
 
 			var valueFields = this.TypeEngine.GetValueFields(leafEntityId)
@@ -426,20 +426,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					}
 				}
 
-				valueData[entityKey] = System.Tuple.Create (realEntityId, logId, entityValueData, entityReferenceData);
+				yield return Tuple.Create(entityKey, realEntityId, logId, entityValueData, entityReferenceData);
 			}
-
-			return valueData;
 		}
 
 
 		private SqlSelect CreateSqlSelectForCount(Request request)
 		{
-			var result = this.BuildSqlContainerForConditions (request);
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
 
-			SqlContainer sqlContainerForConditions = result.Item1;
-			AbstractEntity requestedEntity = result.Item2;
-			AliasNode requestedAlias = result.Item3;
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
 			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity);
 
@@ -449,17 +447,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect CreateSqlSelectForValueAndReferenceData(Request request)
 		{
-			var result = this.BuildSqlContainerForConditions (request);
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
 
-			SqlContainer sqlContainerForConditions = result.Item1;
-			AbstractEntity requestedEntity = result.Item2;
-			AliasNode requestedAlias = result.Item3;
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
 			SqlContainer sqlContainerForValuesAndReferences = this.BuildSqlContainerForValuesAndReferences (requestedAlias, requestedEntity);
 
+			SqlContainer sqlContainerForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
+
 			return sqlContainerForConditions
-				.Plus(sqlContainerForValuesAndReferences)
-				.BuildSqlSelect(SqlSelectPredicate.Distinct);
+				.Plus (sqlContainerForValuesAndReferences)
+				.Plus (sqlContainerForOrderBy)
+				.BuildSqlSelect (SqlSelectPredicate.Distinct);
 		}
 
 
@@ -515,11 +516,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlSelect CreateSqlSelectForCollectionData(Request request, Druid fieldId)
 		{
-			var result = this.BuildSqlContainerForConditions (request);
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
 
-			SqlContainer sqlContainerForConditions = result.Item1;
-			AbstractEntity requestedEntity = result.Item2;
-			AliasNode requestedAlias = result.Item3;
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
 			SqlContainer sqlContainerForCollection = this.BuildSqlContainerForCollection (requestedAlias, requestedEntity, fieldId);
 
@@ -527,26 +528,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private System.Tuple<SqlContainer, AbstractEntity, AliasNode> BuildSqlContainerForConditions(Request request)
+		private SqlContainer BuildSqlContainerForConditions(Request request, AliasNode rootEntityAlias)
 		{
 			AbstractEntity entity = request.RootEntity;
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
 
-			AliasNode rootEntityAlias = new AliasNode (rootEntityId.ToResourceId ());
-
-			SqlContainer sqlContainerForConditions = this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
-
-			AbstractEntity requestedEntity = request.RequestedEntity;
-
-			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootEntityAlias);
-
-			if (requestedAlias == null)
-			{
-				throw new System.Exception ("Requested entity not found.");
-			}
-
-			return System.Tuple.Create (sqlContainerForConditions, requestedEntity, requestedAlias);
+			return this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
 		}
 
 
@@ -1115,6 +1101,35 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		#endregion
 
+
+		#region ORDER BY GENERATION
+
+
+		private SqlContainer BuildSqlContainerForOrderBy(Request request, AliasNode rootEntityAlias)
+		{
+			var sqlFields = new List<SqlField> ();
+
+			foreach (var sortClause in request.GetSortClauses ())
+			{
+				var sortEntity = sortClause.Item1;
+				var sortField = sortClause.Item2;
+
+				var sortRootAlias = this.RetreiveRequestedEntityAliasRec (request.RootEntity, sortEntity, rootEntityAlias);
+
+				var sqlField = this.BuildSqlFieldForValueField (sortRootAlias, sortEntity, sortField.Field.FieldId);
+
+				sqlField.SortOrder = EnumConverter.ToSqlSortOrder (sortField.SortOrder);
+
+				sqlFields.Add (sqlField);
+			}
+
+			return SqlContainer.CreateSqlOrderBys (sqlFields.ToArray ());
+		}
+
+
+		#endregion
+
+
 		#region MISC
 
 
@@ -1145,6 +1160,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region ALIAS
 
 
+		private AliasNode CreateRootEntityAlias(Request request)
+		{
+			AbstractEntity entity = request.RootEntity;
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			return new AliasNode (rootEntityId.ToResourceId ());
+		}
+
+
 		private AliasNode GetLocalEntityAlias(AliasNode rootEntityAlias, Druid localEntityId)
 		{
 			string name = localEntityId.ToResourceId ();
@@ -1165,7 +1190,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			AbstractEntity rootEntity = request.RootEntity;
 			AbstractEntity requestedEntity = request.RequestedEntity;
 
-			return this.RetreiveRequestedEntityAliasRec (rootEntity, requestedEntity, rootEntityAlias);
+			var alias = this.RetreiveRequestedEntityAliasRec (rootEntity, requestedEntity, rootEntityAlias);
+
+			if (alias == null)
+			{
+				throw new System.Exception ("Requested entity not found.");
+			}
+
+			return alias;
 		}
 
 

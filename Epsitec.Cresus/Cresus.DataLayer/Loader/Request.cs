@@ -14,11 +14,15 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using System.Collections;
 using System.Collections.Generic;
 
+using System;
+
 using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
+	
+	
 	/// <summary>
 	/// A <c>Request</c> object represent a high level query that can be executed against the database
 	/// via a <see cref="DataContext"/> and <see cref="DataLoader"/>.
@@ -39,12 +43,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public sealed class Request
 	{
+		
+		
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
 		public Request()
 		{
 			this.localConstraints = new RequestEntityConstraints ();
+			this.sortClauses = new List<Tuple<AbstractEntity, SortClause>> ();
 
 			this.RootEntity = null;
 			this.RequestedEntity = null;
@@ -60,6 +67,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			set;
 		}
 
+
 		/// <summary>
 		/// The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> which is at the root of the
 		/// <c>Request</c>.
@@ -69,6 +77,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			internal get;
 			set;
 		}
+
 
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
@@ -85,6 +94,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				this.requestedEntity = value;
 			}
 		}
+
 
 		/// <summary>
 		/// Defines the minimum log id that the entities should have to be returned by the request.
@@ -112,10 +122,39 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			if (!this.IsLocalConstraintValid (entity, constraint))
 			{
-				throw new System.ArgumentException ("A field in 'expression' is not a field or 'entity'.");
+				throw new System.ArgumentException ("A field in 'expression' is not a field of 'entity'.");
 			}
 
 			this.GetWritableLocalConstraints (entity).Add (constraint);
+		}
+
+
+		/// <summary>
+		/// Adds a sort clause to the current request. It will be added after the ones that have
+		/// already been added, so it will be considered after those ones when sorting the result.
+		/// </summary>
+		public void AddSortClause(AbstractEntity entity, SortClause sortClause)
+		{
+			entity.ThrowIfNull ("entity");
+			sortClause.ThrowIfNull ("sortClause");
+
+			if (!this.IsEntityValueField (entity, sortClause.Field.FieldId.ToResourceId ()))
+			{
+				throw new ArgumentException ("The field in the sort clause is not a value field of entity.");
+			}
+
+			var clause = Tuple.Create (entity, sortClause);
+
+			this.sortClauses.Add (clause);
+		}
+
+
+		/// <summary>
+		/// Gets the sort clauses that are part of this request.
+		/// </summary>
+		internal IEnumerable<Tuple<AbstractEntity, SortClause>> GetSortClauses()
+		{
+			return this.sortClauses;
 		}
 
 
@@ -138,6 +177,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				return new Expression[0];
 			}
 		}
+
 
 		/// <summary>
 		/// Tells whether there are constraints associated with an <see cref="AbstractEntity"/>.
@@ -169,6 +209,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return this.localConstraints[entity];
 		}
 
+
 		/// <summary>
 		/// Checks that a constraint is valid for a given <see cref="AbstractEntity"/>, which means
 		/// that it targets only value fields which exists in <see cref="AbstractEntity"/>.
@@ -180,6 +221,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			return constraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
 		}
+
 
 		/// <summary>
 		/// Checks that a field is valid for an <see cref="AbstractEntity"/>, which means that it
@@ -195,6 +237,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return field != null && field.Relation == FieldRelation.None;
 		}
 
+
 		public static Request Create(AbstractEntity example)
 		{
 			return new Request ()
@@ -203,9 +246,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				RequestedEntity = example,
 			};
 		}
+
 	
 		private readonly RequestEntityConstraints localConstraints;
 
-		private AbstractEntity					requestedEntity;
+
+		private readonly List<Tuple<AbstractEntity, SortClause>> sortClauses;
+
+
+		private AbstractEntity requestedEntity;
+
+
 	}
+
+
 }
