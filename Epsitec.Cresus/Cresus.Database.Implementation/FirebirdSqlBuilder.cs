@@ -7,6 +7,8 @@ using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
 
+using System.Globalization;
+
 using System.Linq;
 
 namespace Epsitec.Cresus.Database.Implementation
@@ -1643,20 +1645,50 @@ namespace Epsitec.Cresus.Database.Implementation
 			{
 				switch (sqlQuery.SetOp)
 				{
-					case SqlSelectSetOp.Union:		this.Append (" UNION ");		break;
-					case SqlSelectSetOp.Except:		this.Append (" EXCEPT ");		break;
-					case SqlSelectSetOp.Intersect:	this.Append (" INTERSECT ");	break;
-					
+					case SqlSelectSetOp.Union:
+						this.Append (" UNION ");
+						break;
+					case SqlSelectSetOp.Except:
+						this.Append (" EXCEPT ");
+						break;
+					case SqlSelectSetOp.Intersect:
+						this.Append (" INTERSECT ");
+						break;
+
 					default:
 						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid union {0} of 2 SELECT", sqlQuery.SetOp));
 				}
 
 				if (sqlQuery.SetQuery.Predicate == SqlSelectPredicate.All)
 				{
-					this.Append ( "ALL ");
+					this.Append ("ALL ");
 				}
 
 				this.Append (sqlQuery.SetQuery);
+			}
+
+			var skip = sqlQuery.Skip;
+			var take = sqlQuery.Take;
+
+			if (skip.HasValue)
+			{
+				// The one based inclusive index of the first row to return.
+				int m = skip.Value + 1;
+
+				// The one based inclusive index of the last row to return.
+				int n = take.HasValue
+					? n = m + take.Value - 1
+					: int.MaxValue;
+
+				this.Append (" ROWS ");
+				this.Append (m.ToString (CultureInfo.InvariantCulture));
+				this.Append (" TO ");
+				this.Append (n.ToString (CultureInfo.InvariantCulture));
+			}
+			else if (take.HasValue)
+			{
+				this.Append (" ROWS ");
+				this.Append (take.Value.ToString (CultureInfo.InvariantCulture));
 			}
 		}
 		

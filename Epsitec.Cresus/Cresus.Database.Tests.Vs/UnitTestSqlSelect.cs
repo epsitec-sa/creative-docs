@@ -6,6 +6,8 @@ using Epsitec.Cresus.Database.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System.Collections.Generic;
+
 using System.Data;
 
 using System.Linq;
@@ -509,6 +511,97 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
 
 				Assert.AreEqual (31, (int) result);
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectTakeSkip()
+		{
+			var tableData = new List<string> ()
+			{
+				"Accountant",
+				"Administrative Assistant",
+				"Administrative Assistant",
+				"Administrative Assistant",
+				"Chief Executive Officer",
+				"Chief Financial Officer",
+				"Director",
+				"Engineer",
+				"Engineer",
+				"Engineer",
+				"Engineer",
+				"Engineer",
+				"Engineer",
+				"Financial Analyst",
+				"Manager",
+				"Manager",
+				"Marketing Analyst",
+				"Marketing Analyst",
+				"Public Relations Rep.",
+				"Sales Co-ordinator",
+				"Sales Co-ordinator",
+				"Sales Representative",
+				"Sales Representative",
+				"Sales Representative",
+				"Sales Representative",
+				"Sales Representative",
+				"Sales Representative",
+				"Sales Representative",
+				"Technical Writer",
+				"Technical Writer",
+				"Vice President",
+			};
+
+			var data =Enumerable.Range (0, 32).Cast<int?> ().Concat (new List<int?> { null });
+
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				foreach (var skip in data)
+				{
+					foreach (var take in data)
+					{
+						SqlSelect sqlSelect = new SqlSelect ();
+						sqlSelect.Fields.Add (SqlField.CreateName ("JOB_TITLE"));
+						sqlSelect.Tables.Add (SqlField.CreateName ("JOB"));
+						sqlSelect.OrderBy.Add (SqlField.CreateName ("JOB_TITLE"), SqlSortOrder.Ascending);
+
+						sqlSelect.Skip = skip;
+						sqlSelect.Take = take;
+
+						sqlBuilder.SelectData (sqlSelect);
+
+						using (var transaction = dbAbstraction.BeginReadOnlyTransaction ())
+						{
+							using (IDbCommand command = sqlBuilder.CreateCommand (transaction))
+							{
+								DataSet result;
+
+								sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out result);
+
+								var nbSkip = skip.HasValue
+							    ? System.Math.Min (skip.Value, 31)
+							    : 0;
+
+								var nbTake = take.HasValue
+							    ? System.Math.Min (take.Value, 31)
+							    : 31;
+
+								var expected = tableData.Skip (nbSkip).Take (nbTake).ToList ();
+								var actual = result.Tables[0].Rows.Cast<DataRow> ().Select (r => r[0]).ToList ();
+
+								CollectionAssert.AreEquivalent (expected, actual);
+							}
+
+							transaction.Commit ();
+						}
+
+						sqlBuilder.Clear ();
+					}
+				}
 			}
 		}
 

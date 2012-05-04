@@ -15,7 +15,6 @@ namespace Epsitec.Cresus.Database
 		{
 		}
 
-
 		/// <summary>
 		/// Gets or sets the SELECT predicate.
 		/// </summary>
@@ -29,6 +28,46 @@ namespace Epsitec.Cresus.Database
 			set
 			{
 				this.predicate = value;
+			}
+		}
+
+		/// <summary>
+		/// The number of rows to remove from the result of the query.
+		/// </summary>
+		public int? Skip
+		{
+			get
+			{
+				return this.skip;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new System.ArgumentException ();
+				}
+
+				this.skip = value;
+			}
+		}
+
+		/// <summary>
+		/// The number of rows retrieve from the result of the query.
+		/// </summary>
+		public int? Take
+		{
+			get
+			{
+				return this.take;
+			}
+			set
+			{
+				if (value < 0)
+				{
+					throw new System.ArgumentException ();
+				}
+				
+				this.take = value;
 			}
 		}
 
@@ -138,14 +177,17 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		private Collections.SqlFieldList			fields	= new Collections.SqlFieldList ();
-		private Collections.SqlFieldList			tables	= new Collections.SqlFieldList ();
-		private Collections.SqlFieldList			wheres	= new Collections.SqlFieldList ();
-		private Collections.SqlFieldList			joins	= new Collections.SqlFieldList ();
-		private Collections.SqlFieldList			orderBy = new Collections.SqlFieldList ();
+		private readonly Collections.SqlFieldList	fields	= new Collections.SqlFieldList ();
+		private readonly Collections.SqlFieldList	tables	= new Collections.SqlFieldList ();
+		private readonly Collections.SqlFieldList	wheres	= new Collections.SqlFieldList ();
+		private readonly Collections.SqlFieldList	joins	= new Collections.SqlFieldList ();
+		private readonly Collections.SqlFieldList	orderBy = new Collections.SqlFieldList ();
 
-		private SqlSelectPredicate				predicate;
-		private SqlSelectSetOp					setOp;
-		private SqlSelect						setQuery;
+		private SqlSelectPredicate					predicate;
+		private SqlSelectSetOp						setOp;
+		private SqlSelect							setQuery;
+
+		private int?								skip;
+		private int?								take;
 	}
 }
