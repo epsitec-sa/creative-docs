@@ -10,14 +10,13 @@ using Epsitec.Common.Widgets.Behaviors;
 
 namespace Epsitec.Common.Widgets
 {
-	public class SearchBox : AbstractTextField
+	public class SearchBox : AbstractTextField, ISearchBox
 	{
 		public SearchBox()
 		{
+			this.searchPolicy   = new SearchBoxPolicy ();
 			this.searchBehavior = new SearchBehavior (this);
 			this.searchBehavior.CreateButtons ();
-
-			this.searchBehavior.SearchClicked += this.HandleSearchClicked;
 
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.Always;
@@ -31,6 +30,24 @@ namespace Epsitec.Common.Widgets
 			this.SetEmbedder (embedder);
 		}
 
+
+		#region ISearchBox Members
+
+		public SearchBoxPolicy					Policy
+		{
+			get
+			{
+				return this.searchPolicy;
+			}
+		}
+
+
+		void ISearchBox.NotifySearchClicked()
+		{
+			this.OnSearchClicked ();
+		}
+
+		#endregion
 
 		protected override bool					CanStartEdition
 		{
@@ -96,13 +113,9 @@ namespace Epsitec.Common.Widgets
 			this.OnSearchClicked ();
 		}
 
-		private void HandleSearchClicked(object sender)
-		{
-			this.OnSearchClicked ();
-		}
-
 		public event EventHandler				SearchClicked;
 
 		private readonly SearchBehavior			searchBehavior;
+		private readonly SearchBoxPolicy		searchPolicy;
 	}
 }

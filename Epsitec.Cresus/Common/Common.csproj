@@ -1180,6 +1180,8 @@
     <Compile Include="Widgets\Behaviors\DragBehavior.cs" />
     <Compile Include="Widgets\Behaviors\IDragBehaviorHost.cs" />
     <Compile Include="Widgets\Behaviors\MenuBehavior.cs" />
+    <Compile Include="Widgets\ISearchBox.cs" />
+    <Compile Include="Widgets\SearchBoxPolicy.cs" />
     <Compile Include="Widgets\Behaviors\SelectItemBehavior.cs" />
     <Compile Include="Widgets\Button.cs" />
     <Compile Include="Widgets\ButtonClass.cs" />
@@ -1230,6 +1232,7 @@
     <Compile Include="Widgets\ConfirmationButton.cs" />
     <Compile Include="Widgets\ConfirmationStaticText.cs" />
     <Compile Include="Widgets\ContainerLayoutMode.cs" />
+    <Compile Include="Widgets\OptionTab.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibility.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibilityEventArgs.cs" />
     <Compile Include="Widgets\VSplitView.DragProcessor.cs" />

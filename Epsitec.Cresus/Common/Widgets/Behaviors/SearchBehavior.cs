@@ -11,9 +11,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 	/// </summary>
 	public sealed class SearchBehavior
 	{
-		public SearchBehavior(Widget host)
+		public SearchBehavior(ISearchBox host)
 		{
-			this.host = host;
+			this.host = host as Widget;
+			this.hostSearchBox = host;
+			this.hostPolicy = this.hostSearchBox == null ? null : this.hostSearchBox.Policy;
 
 			this.isSearchEnabled = true;
 			this.isVisible       = true;
@@ -71,21 +73,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		public void SetVisible(bool visible)
 		{
-			this.isVisible = visible;
-			
-			if (this.buttonSearch != null)
+			if (this.isVisible != visible)
 			{
-				this.buttonSearch.Visibility = (this.isVisible);
+				this.isVisible = visible;
+				this.UpdateButtonEnableAndVisibility ();
 			}
 		}
 
 		public void SetSearchEnabled(bool enableSearch)
 		{
-			this.isSearchEnabled = enableSearch;
-
-			if (this.buttonSearch != null)
+			if (this.isSearchEnabled != enableSearch)
 			{
-				this.buttonSearch.Enable = this.isSearchEnabled;
+				this.isSearchEnabled = enableSearch;
+				this.UpdateButtonEnableAndVisibility ();
 			}
 		}
 		
@@ -113,27 +113,31 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.buttonSearch.Clicked    += this.HandleButtonSearchClicked;
 			this.buttonSearch.ButtonStyle = ButtonStyle.ExListRight;
 
-			this.SetVisible (this.isVisible);
-			this.SetSearchEnabled (this.isSearchEnabled);
+			this.UpdateButtonEnableAndVisibility ();
 		}
 
+
+		private void UpdateButtonEnableAndVisibility()
+		{
+			if (this.buttonSearch != null)
+			{
+				this.buttonSearch.Enable = this.isSearchEnabled;
+				this.buttonSearch.Visibility = this.isVisible;
+			}
+		}
 
 		private void HandleButtonSearchClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.buttonSearch);
-			this.OnSearchClicked ();
+			this.hostSearchBox.NotifySearchClicked ();
 		}
 
-		private void OnSearchClicked()
-		{
-			this.SearchClicked.Raise (this);
-		}
-
-
-		public event Support.EventHandler		SearchClicked;
 
 
 		private readonly Widget					host;
+		private readonly ISearchBox				hostSearchBox;
+		private readonly SearchBoxPolicy		hostPolicy;
+
 		private GlyphButton						buttonSearch;
 		private bool							isVisible;
 		private bool							isSearchEnabled;
