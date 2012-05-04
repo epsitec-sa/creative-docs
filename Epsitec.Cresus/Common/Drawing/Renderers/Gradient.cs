@@ -1,8 +1,12 @@
-//	Copyright © 2003-2009, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Drawing.Renderers
 {
+	/// <summary>
+	/// The <c>Gradient</c> class implements a renderer which can paint various styles
+	/// of gradients, as defined by the <see cref="GradientFill"/> enumeration.
+	/// </summary>
 	public sealed class Gradient : IRenderer, System.IDisposable
 	{
 		public Gradient(Graphics graphics)
@@ -170,7 +174,8 @@ namespace Epsitec.Common.Drawing.Renderers
 			this.AssertAttached ();
 			AntiGrain.Renderer.Gradient.Range (this.handle, r1, r2);
 		}
-
+		
+		
 		#region IDisposable Members
 
 		public void Dispose()

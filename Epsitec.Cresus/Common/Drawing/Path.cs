@@ -134,6 +134,18 @@ namespace Epsitec.Common.Drawing
 		{
 			this.CurveTo (c1.X, c1.Y, c2.X, c2.Y, p.X, p.Y);
 		}
+
+		public void CurveToRelative(double xC1, double yC1, double xC2, double yC2, double x, double y)
+		{
+			if (this.hasCurrentPoint == false)
+			{
+				throw new System.InvalidOperationException ("No current point defined: cannot use relative coordinates");
+			}
+
+			this.CurveTo (this.currentPoint.X + xC1, this.currentPoint.Y + yC1,
+				/**/      this.currentPoint.X + xC1 + xC2, this.currentPoint.Y + yC2 + yC2,
+				/**/      this.currentPoint.X + xC1 + xC2 + x, this.currentPoint.Y + yC2 + yC2 + y);
+		}
 		
 		public void CurveTo(double xC1, double yC1, double xC2, double yC2, double x, double y)
 		{
@@ -158,6 +170,17 @@ namespace Epsitec.Common.Drawing
 			this.hasCurrentPoint = true;
 			this.currentPoint = new Point (x, y);
 			AntiGrain.Path.Curve3 (this.aggPath, xC, yC, x, y);
+		}
+
+		public void CurveToRelative(double xC, double yC, double x, double y)
+		{
+			if (this.hasCurrentPoint == false)
+			{
+				throw new System.InvalidOperationException ("No current point defined: cannot use relative coordinates");
+			}
+
+			this.CurveTo (this.currentPoint.X + xC, this.currentPoint.Y + yC,
+				/**/      this.currentPoint.X + xC + x, this.currentPoint.Y + yC + y);
 		}
 
 		public void ArcTo(double xC, double yC, double x, double y)

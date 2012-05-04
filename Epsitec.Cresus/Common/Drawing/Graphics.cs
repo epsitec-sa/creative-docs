@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -313,6 +313,26 @@ namespace Epsitec.Common.Drawing
 		{
 			this.rasterizer.Render (this.gradientRenderer);
 		}
+
+		public void RenderGradient(Rectangle rect, Color color1, Color color2, GradientFill fill)
+		{
+			this.GradientRenderer.Fill = fill;
+			this.GradientRenderer.SetColors (color1, color2);
+			this.GradientRenderer.SetParameters (-100, 100);
+
+			var ot = this.GradientRenderer.Transform;
+			var t = Drawing.Transform.Identity;
+			var center = rect.Center;
+			t = t.Scale (rect.Width/100/2, rect.Height/100/2);
+			t = t.Translate (center);
+
+			this.GradientRenderer.Transform = t;
+			this.RenderGradient ();
+			this.GradientRenderer.Transform = ot;
+		}
+		
+
+		
 		
 		public void ResetLineStyle()
 		{
@@ -833,7 +853,7 @@ namespace Epsitec.Common.Drawing
 				path.MoveTo (x1, y1);
 				path.LineTo (x2, y2);
 				
-				this.rasterizer.AddOutline (path, this.lineWidth, this.lineCap, this.lineJoin, this.lineMiterLimit);
+				this.AddPath (path);
 			}
 		}
 		
@@ -846,8 +866,8 @@ namespace Epsitec.Common.Drawing
 				path.LineTo (x+width, y+height);
 				path.LineTo (x, y+height);
 				path.Close ();
-				
-				this.rasterizer.AddOutline (path, this.lineWidth, this.lineCap, this.lineJoin, this.lineMiterLimit);
+
+				this.AddPath (path);
 			}
 		}
 		
@@ -855,10 +875,20 @@ namespace Epsitec.Common.Drawing
 		{
 			using (Path path = Path.CreateCircle (cx, cy, rx, ry))
 			{
-				this.rasterizer.AddOutline (path, this.lineWidth, this.lineCap, this.lineJoin, this.lineMiterLimit);
+				this.AddPath (path);
 			}
 		}
-		
+
+		public void AddPath(Path path)
+		{
+			this.rasterizer.AddOutline (path, this.lineWidth, this.lineCap, this.lineJoin, this.lineMiterLimit);
+		}
+
+		public void AddFilledPath(Path path)
+		{
+			this.rasterizer.AddSurface (path);
+		}
+
 		public double AddText(double x, double y, string text, Font font, double size)
 		{
 			return this.rasterizer.AddText (font, text, x, y, size);
@@ -873,8 +903,8 @@ namespace Epsitec.Common.Drawing
 				path.LineTo (x+width, y+height);
 				path.LineTo (x, y+height);
 				path.Close ();
-				
-				this.rasterizer.AddSurface (path);
+
+				this.AddFilledPath (path);
 			}
 		}
 		
@@ -882,7 +912,7 @@ namespace Epsitec.Common.Drawing
 		{
 			using (Path path = Path.CreateCircle (cx, cy, rx, ry))
 			{
-				this.rasterizer.AddSurface (path);
+				this.AddFilledPath (path);
 			}
 		}
 		
