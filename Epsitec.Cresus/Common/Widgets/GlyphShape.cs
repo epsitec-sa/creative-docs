@@ -36,6 +36,6 @@ namespace Epsitec.Common.Widgets
 		HorizontalMove,
 		VerticalMove,
 		Lock,
-		Search = Accept,						//	TODO: supprimer = Accept dès que DR aura dessiné le glyphe
+		Search
 	}
 }

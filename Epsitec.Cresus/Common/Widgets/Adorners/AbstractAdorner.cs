@@ -19,12 +19,15 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		protected static void PaintGlyphDefaultImplementation(Drawing.Rectangle rect, GlyphShape type, Drawing.Point center, Drawing.Path path)
+		protected static void GenerateGlyphShape(Drawing.Rectangle rect, GlyphShape type, Drawing.Point center, Drawing.Path path)
 		{
 			switch (type)
 			{
+				case GlyphShape.Search:
+					AbstractAdorner.GenerateGlyphShapeSearch (path, rect, center);
+					break;
 				case GlyphShape.Lock:
-					AbstractAdorner.DrawGlyphShapeLook (path, rect, center);
+					AbstractAdorner.GenerateGlyphShapeLock (path, rect, center);
 					break;
 				case GlyphShape.ArrowUp:
 					path.MoveTo (center.X + 0.0 * rect.Width, center.Y + 0.2 * rect.Height);
@@ -287,7 +290,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		}
 
 
-		protected static void DrawGlyphShapeLook(Drawing.Path path, Drawing.Rectangle rect, Drawing.Point center)
+		protected static void GenerateGlyphShapeLock(Drawing.Path path, Drawing.Rectangle rect, Drawing.Point center)
 		{
 			path.MoveTo (center.X-0.2*rect.Width, center.Y+0.1*rect.Height);
 			path.LineTo (center.X-0.2*rect.Width, center.Y+0.2*rect.Height);
@@ -306,6 +309,22 @@ namespace Epsitec.Common.Widgets.Adorners
 			path.CurveTo (center.X-0.07*rect.Width, center.Y+0.3*rect.Height, center.X-0.1*rect.Width, center.Y+0.27*rect.Height, center.X-0.1*rect.Width, center.Y+0.2*rect.Height);
 			path.LineTo (center.X-0.1*rect.Width, center.Y+0.1*rect.Height);
 			path.Close ();
+		}
+
+		protected static void GenerateGlyphShapeSearch(Drawing.Path path, Drawing.Rectangle rect, Drawing.Point center)
+		{
+			using (var wire = new Path ())
+			{
+				double radius = rect.Width * 0.20;
+
+				center = new Point (center.X, center.Y - rect.Width*0.025);
+				
+				wire.AppendCircle (center.X + 0.5*radius, center.Y + 0.5*radius, radius);
+				wire.MoveTo (center.X - 0.2*radius, center.Y - 0.2*radius);
+				wire.LineToRelative (-0.25 * rect.Width, -0.25 * rect.Width);
+
+				path.Append (wire, rect.Width * 0.10, CapStyle.Butt, JoinStyle.Miter, 5.0, 2.0);
+			}
 		}
 
 		protected static Drawing.Path GetMultilingualFrame(Drawing.Rectangle bounds, bool isMultilingual)

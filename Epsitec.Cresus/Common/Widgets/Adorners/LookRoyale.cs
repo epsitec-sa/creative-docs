@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 
 			Drawing.Path path = new Drawing.Path();
-			AbstractAdorner.PaintGlyphDefaultImplementation (rect, type, center, path);
+			AbstractAdorner.GenerateGlyphShape (rect, type, center, path);
 			path.Close();
 			graphics.Rasterizer.AddSurface(path);
 			path.Dispose();

@@ -143,7 +143,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			switch ( type )
 			{
 				case GlyphShape.Lock:
-					AbstractAdorner.DrawGlyphShapeLook (path, rect, center);
+					AbstractAdorner.GenerateGlyphShapeLock (path, rect, center);
 					break;
 
 				case GlyphShape.ArrowUp:

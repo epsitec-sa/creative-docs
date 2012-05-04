@@ -139,8 +139,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			Drawing.Path path = new Drawing.Path();
 			switch ( type )
 			{
-				case GlyphShape.Lock:
-					AbstractAdorner.DrawGlyphShapeLook (path, rect, center);
+				default:
+					AbstractAdorner.GenerateGlyphShape (rect, type, center, path);
 					break;
 
 				case GlyphShape.ArrowUp:

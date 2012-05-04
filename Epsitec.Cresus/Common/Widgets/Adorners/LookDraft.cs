@@ -99,6 +99,10 @@ namespace Epsitec.Common.Widgets.Adorners
 			bool enabled = ( (state&WidgetPaintState.Enabled) != 0 );
 			switch ( type )
 			{
+				case GlyphShape.Search:
+					//	TODO: ...
+					break;
+
 				case GlyphShape.Lock:
 					this.PaintImageButton(graphics, rInside, enabled?78:79);
 					break;
