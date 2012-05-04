@@ -16,7 +16,8 @@ namespace Epsitec.Common.Widgets
 		{
 			this.AutoCapture = true;
 			this.AutoFocus   = false;
-			this.Padding     = new Margins (6, 22, 6, 4);
+			this.Padding     = new Margins (6, 20, 6, 4);
+			this.BackColor   = Color.FromBrightness (0.92);
 		}
 
 		
@@ -72,21 +73,21 @@ namespace Epsitec.Common.Widgets
 			graphics.LineJoin = JoinStyle.MiterRound;
 			graphics.FillMode = Drawing.FillMode.NonZero;
 
-			graphics.AddFilledRectangle (rect);
-			graphics.RenderSolid (Color.FromBrightness (1));
-
 			using (var path = OptionTab.CreateOutlinePath (rect, 1.0, close: true))
 			{
 				path.Close ();
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromBrightness (0.92));
+				graphics.RenderSolid (this.BackColor);
 			}
 
 			using (var path = OptionTab.CreateOutlinePath (rect, 1.0, close: false))
 			{
+				var color1 = this.GetFrameColor ();
+				var color2 = Color.Mix (color1, Color.FromBrightness (0), 0.3);
+				
 				graphics.LineWidth = 1.0;
 				graphics.AddPath (path);
-				graphics.RenderGradient (rect, Color.FromBrightness (0.7), Color.FromBrightness (0.5), GradientFill.X);
+				graphics.RenderGradient (rect, color1, color2, GradientFill.X);
 			}
 		}
 		
@@ -109,6 +110,11 @@ namespace Epsitec.Common.Widgets
 					graphics.RenderSolid (Color.FromBrightness (0.16));
 				}
 			}
+		}
+
+		private Color GetFrameColor()
+		{
+			return Adorners.Factory.Active.ColorBorder;
 		}
 		
 		private Rectangle GetCloseGlyphBounds()

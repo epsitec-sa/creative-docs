@@ -16,7 +16,6 @@ namespace Epsitec.Common.Widgets
 		{
 			this.searchPolicy   = new SearchBoxPolicy ();
 			this.searchBehavior = new SearchBehavior (this);
-			this.searchBehavior.CreateButtons ();
 
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.Always;
@@ -47,6 +46,14 @@ namespace Epsitec.Common.Widgets
 			this.OnSearchClicked ();
 		}
 
+		void ISearchBox.NotifyShowNextClicked()
+		{
+		}
+
+		void ISearchBox.NotifyShowPrevClicked()
+		{
+		}
+
 		#endregion
 
 		protected override bool					CanStartEdition
@@ -57,6 +64,10 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		{
+			base.PaintBackgroundImplementation (graphics, clipRect);
+		}
 
 		protected override void UpdateButtonGeometry()
 		{

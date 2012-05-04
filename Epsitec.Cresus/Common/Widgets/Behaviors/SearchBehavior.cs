@@ -2,6 +2,11 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
+
+using System.Collections.Generic;
+using System.Linq;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -93,26 +98,58 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			AbstractTextField text = this.host as AbstractTextField;
 			
-			if ((text != null) &&
-				(this.buttonSearch != null))
+			if (text != null)
 			{
-				Drawing.Rectangle bounds = text.GetButtonBounds ();
+				this.CreateButtons ();
 
-				this.buttonSearch.SetManualBounds (bounds);
+				var sequence = new ButtonStyleSequence (ButtonStyle.ExListRight, ButtonStyle.ExListMiddle);
+				var bounds = text.GetButtonBounds ();
+
+				bounds = Rectangle.Offset (bounds, bounds.Width-1, 0);
+
+				foreach (var button in this.GetButtons ().Where (x => x.Visibility).Reverse ())
+				{
+					sequence.ApplyStyle (button);
+					
+					bounds = new Rectangle (bounds.Left + 1 - button.PreferredWidth, bounds.Bottom, button.PreferredWidth, bounds.Height);
+					
+					button.SetManualBounds (bounds);
+				}
 			}
 		}
 
-		public void CreateButtons()
+		private void CreateButtons()
 		{
-			System.Diagnostics.Debug.Assert (this.buttonSearch == null);
+			if (this.buttonSearch != null)
+			{
+				return;
+			}
 
-			this.buttonSearch = new GlyphButton (this.host);
+			this.buttonSearch = new GlyphButton (this.host)
+			{
+				Name = "Search",
+				GlyphShape = GlyphShape.Search,
+				PreferredWidth = 21,
+			};
 
-			this.buttonSearch.Name        = "Search";
-			this.buttonSearch.GlyphShape  = GlyphShape.Search;
-			this.buttonSearch.Clicked    += this.HandleButtonSearchClicked;
-			this.buttonSearch.ButtonStyle = ButtonStyle.ExListRight;
+			this.buttonShowNext = new GlyphButton (this.host)
+			{
+				Name = "Next",
+				GlyphShape = GlyphShape.ArrowDown,
+				PreferredWidth = 15,
+			};
 
+			this.buttonShowPrev = new GlyphButton (this.host)
+			{
+				Name = "Prev",
+				GlyphShape = GlyphShape.ArrowUp,
+				PreferredWidth = 15,
+			};
+
+			this.buttonSearch.Clicked   += this.HandleButtonSearchClicked;
+			this.buttonShowNext.Clicked += this.HandleButtonNextClicked;
+			this.buttonShowPrev.Clicked += this.HandleButtonPrevClicked;
+			
 			this.UpdateButtonEnableAndVisibility ();
 		}
 
@@ -122,14 +159,62 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (this.buttonSearch != null)
 			{
 				this.buttonSearch.Enable = this.isSearchEnabled;
-				this.buttonSearch.Visibility = this.isVisible;
+				this.buttonSearch.Visibility = this.isVisible && this.hostPolicy.DisplaySearchButton;
 			}
 		}
+
+		private IEnumerable<GlyphButton> GetButtons()
+		{
+			if (this.buttonShowPrev != null)
+			{
+				yield return this.buttonShowPrev;
+			}
+			if (this.buttonShowNext != null)
+			{
+				yield return this.buttonShowNext;
+			}
+			if (this.buttonSearch != null)
+			{
+				yield return this.buttonSearch;
+			}
+		}
+
+		private sealed class ButtonStyleSequence
+		{
+			public ButtonStyleSequence(ButtonStyle first, ButtonStyle next)
+			{
+				this.current = first;
+				this.next    = next;
+			}
+
+			public void ApplyStyle(GlyphButton button)
+			{
+				button.ButtonStyle = this.current;
+				this.current = this.next;
+			}
+
+			private ButtonStyle					current;
+			private readonly ButtonStyle		next;
+		}
+
+
 
 		private void HandleButtonSearchClicked(object sender, MessageEventArgs e)
 		{
 			System.Diagnostics.Debug.Assert (sender == this.buttonSearch);
 			this.hostSearchBox.NotifySearchClicked ();
+		}
+
+		private void HandleButtonNextClicked(object sender, MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.buttonShowNext);
+			this.hostSearchBox.NotifyShowNextClicked ();
+		}
+
+		private void HandleButtonPrevClicked(object sender, MessageEventArgs e)
+		{
+			System.Diagnostics.Debug.Assert (sender == this.buttonShowPrev);
+			this.hostSearchBox.NotifyShowPrevClicked ();
 		}
 
 
@@ -139,6 +224,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private readonly SearchBoxPolicy		hostPolicy;
 
 		private GlyphButton						buttonSearch;
+		private GlyphButton						buttonShowNext;
+		private GlyphButton						buttonShowPrev;
+		
 		private bool							isVisible;
 		private bool							isSearchEnabled;
 	}

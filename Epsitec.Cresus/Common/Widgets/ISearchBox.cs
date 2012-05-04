@@ -11,5 +11,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 		void NotifySearchClicked();
+		void NotifyShowNextClicked();
+		void NotifyShowPrevClicked();
 	}
 }
