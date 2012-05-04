@@ -364,8 +364,31 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		
 		#endregion
 
+
+		#region GET COUNT
+
+
+		private SqlSelect CreateSqlSelectForCount(Request request)
+		{
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
+
+			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity);
+
+			return sqlContainerForConditions
+				.Plus (sqlContainerForCount)
+				.BuildSqlSelect (skip: request.Skip, take: request.Take);
+		}
+
+
+		#endregion
+
+
 		#region GET VALUE AND REFERENCE DATA
-		
+
 
 		private IEnumerable<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> GetValueAndReferenceData(DbTransaction transaction, Request request)
 		{
@@ -431,20 +454,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlSelect CreateSqlSelectForCount(Request request)
-		{
-			var rootAlias = this.CreateRootEntityAlias (request);
-			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
-
-			AbstractEntity requestedEntity = request.RequestedEntity;
-			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
-
-			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity);
-
-			return sqlContainerForConditions.Plus (sqlContainerForCount).BuildSqlSelect ();
-		}
-
-
 		private SqlSelect CreateSqlSelectForValueAndReferenceData(Request request)
 		{
 			var rootAlias = this.CreateRootEntityAlias (request);
@@ -460,7 +469,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return sqlContainerForConditions
 				.Plus (sqlContainerForValuesAndReferences)
 				.Plus (sqlContainerForOrderBy)
-				.BuildSqlSelect (SqlSelectPredicate.Distinct);
+				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
 		}
 
 
@@ -522,27 +531,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			AbstractEntity requestedEntity = request.RequestedEntity;
 			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
-			SqlContainer sqlContainerForCollection = this.BuildSqlContainerForCollection (requestedAlias, requestedEntity, fieldId);
+			SqlContainer sqlContainerForCollectionSourceIds = this.BuildSqlContainerForCollectionSourceIds (requestedAlias, requestedEntity);
 
-			return sqlContainerForConditions.Plus (sqlContainerForCollection).BuildSqlSelect ();
+			SqlSelect sqlSelectForSourceIds = sqlContainerForConditions
+				.Plus (sqlContainerForCollectionSourceIds)
+				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
+
+			SqlContainer sqlContainerForCollectionData = this.BuildSqlContainerForCollection (requestedEntity, fieldId, sqlSelectForSourceIds);
+			
+			return sqlContainerForCollectionData.BuildSqlSelect();
 		}
+
+
+		#endregion
+
+
+		#region CONDITION GENERATION
 
 
 		private SqlContainer BuildSqlContainerForConditions(Request request, AliasNode rootEntityAlias)
 		{
 			AbstractEntity entity = request.RootEntity;
 
-			return this.BuildSqlContainerForRequest (request, rootEntityAlias, entity);
-		}
-
-
-		#endregion
-
-		#region CONDITION GENERATION
-
-
-		private SqlContainer BuildSqlContainerForRequest(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
-		{
 			SqlField sqlTableForRequestRootEntity = this.BuildTableForRootEntity (rootEntityAlias, entity);
 			SqlContainer sqlContainerForEntity = this.BuildSqlContainerForEntity (request, rootEntityAlias, entity);
 
@@ -947,10 +957,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlFunction BuildConditionForCollectionTargetId(AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId, long targetId)
 		{
+			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
+						
 			return new SqlFunction
 			(
 				SqlFunctionCode.CompareEqual,
-				this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName),
+				this.BuildSqlFieldForRelationColumn (relationAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName),
 				SqlField.CreateConstant (targetId, DbRawType.Int64)
 			);
 		}
@@ -1062,21 +1074,42 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region COLLECTION QUERY GENERATION
 
 
-		private SqlContainer BuildSqlContainerForCollection(AliasNode rootEntityAlias, AbstractEntity entity, Druid fieldId)
+		private SqlContainer BuildSqlContainerForCollectionSourceIds(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			var sqlField = this.BuildSqlFieldForEntityColumn(rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName);
+			return SqlContainer.CreateSqlFields(sqlField);
+		}
+
+
+		private SqlContainer BuildSqlContainerForCollection(AbstractEntity entity, Druid fieldId, SqlSelect sqlSelectForSourceIds)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid localEntityId = this.TypeEngine.GetLocalType (leafEntityId, fieldId).CaptionId;
 
-			SqlContainer sqlContainerForRelationJoin = this.BuildSqlContainerForJoinToCollectionTable (rootEntityAlias, localEntityId, fieldId, SqlJoinCode.Inner);
+			AliasNode relationAlias = new AliasNode ("relation_table");
 
-			SqlField sqlFieldForTargetId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
-			SqlField sqlFieldForSourceId = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnSourceIdName);
+			DbTable relationDbTable = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
+			SqlField sqlTable = SqlField.CreateAliasedName (relationDbTable.GetSqlName (), relationAlias.Alias);
 
-			SqlField sqlFieldForRank = this.BuildSqlFieldForRelationColumn (rootEntityAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnRankName);
+			SqlField sqlFieldForTargetId = this.BuildSqlFieldForRelationColumn (relationAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
+			SqlField sqlFieldForSourceId = this.BuildSqlFieldForRelationColumn (relationAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnSourceIdName);
+
+			SqlField sqlFieldForRank = this.BuildSqlFieldForRelationColumn (relationAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnRankName);
 			sqlFieldForRank.SortOrder = SqlSortOrder.Ascending;
 
-			return sqlContainerForRelationJoin
+			SqlFunction sqlFunctionForCondition = new SqlFunction
+			(
+				SqlFunctionCode.SetIn,
+				this.BuildSqlFieldForRelationColumn (relationAlias, localEntityId, fieldId, EntitySchemaBuilder.EntityFieldTableColumnSourceIdName),
+				SqlField.CreateSubQuery (sqlSelectForSourceIds)
+			);
+
+			return SqlContainer.CreateSqlTables (sqlTable)
 				.PlusSqlFields (sqlFieldForTargetId, sqlFieldForSourceId)
+				.PlusSqlConditions (sqlFunctionForCondition)
 				.PlusSqlOrderBys (sqlFieldForRank);
 		}
 
@@ -1144,10 +1177,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlField BuildSqlFieldForRelationColumn(AliasNode rootEntityAlias, Druid localEntityId, Druid fieldId, string columnName)
+		private SqlField BuildSqlFieldForRelationColumn(AliasNode relationAlias, Druid localEntityId, Druid fieldId, string columnName)
 		{
-			AliasNode relationAlias = rootEntityAlias.GetChildren (fieldId.ToResourceId ()).Last ();
-
 			DbTable dbTable = this.SchemaEngine.GetEntityFieldTable (localEntityId, fieldId);
 			DbColumn dbColumn = dbTable.Columns[columnName];
 

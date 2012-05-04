@@ -1701,6 +1701,53 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void GetObjectsWithSkipAndTake()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = example,
+				};
+
+				request.AddSortClause (example,
+					new SortClause (
+						new Field (new Druid ("[J1AL1]")),
+						SortOrder.Descending
+					)
+				);
+
+				var result1 = dataContext
+					.GetByRequest<NaturalPersonEntity> (request)
+					.ToList ();
+
+				var data = Enumerable.Range (0, 4).Cast<int?> ().Concat (new List<int?> () { null });
+
+				foreach (var skip in data)
+				{
+					foreach (var take in data)
+					{
+						request.Skip = skip;
+						request.Take = take;
+
+						var result2 = dataContext
+							.GetByRequest<NaturalPersonEntity> (request)
+							.ToList ();
+
+						var expected = result1.Skip (skip ?? 0).Take (take ?? 4).ToList ();
+
+						CollectionAssert.AreEqual (expected, result2);
+					}
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void QueryCycleDetectionTest1()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
