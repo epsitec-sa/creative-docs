@@ -703,8 +703,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 0, 4),
 			};
 
-			var toolbar = new PanelsToolbarController (this);
-			toolbar.CreateUI (frame);
+			this.panelsToolbarController = new PanelsToolbarController (this);
+			this.panelsToolbarController.CreateUI (frame);
 
 			this.userLabel = new StaticText
 			{
@@ -826,6 +826,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					return this.title + " / " + this.subtitle;
 				}
+			}
+		}
+
+		private void UpdatePanelsToolbar()
+		{
+			if (this.panelsToolbarController != null && this.dataAccessor != null)
+			{
+				this.panelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
+				this.panelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
 			}
 		}
 		#endregion
@@ -1062,6 +1071,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.UpdateGraph ();
+			this.UpdatePanelsToolbar ();
 		}
 
 		private FormattedText GetSearchArrayText(int row, ColumnType columnType)
@@ -1248,6 +1258,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractDataAccessor							dataAccessor;
 		protected ViewSettingsList								viewSettingsList;
 
+		protected PanelsToolbarController						panelsToolbarController;
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
 		protected AbstractPermanentsController					permanentsController;

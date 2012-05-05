@@ -61,22 +61,22 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 			}
 
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -227,7 +227,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -235,7 +235,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -243,7 +243,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
@@ -276,7 +276,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Premier trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Deuxième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -292,7 +292,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Troisième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Quatrième trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre

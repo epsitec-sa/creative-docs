@@ -396,6 +396,8 @@
     <EmbeddedResource Include="Images\Présentation.Soldes.icon" />
     <EmbeddedResource Include="Images\View.Graph.Common.icon" />
     <EmbeddedResource Include="Images\View.Graph.Detailed.icon" />
+    <EmbeddedResource Include="Images\Level.Close.icon" />
+    <EmbeddedResource Include="Images\Panel.Active.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

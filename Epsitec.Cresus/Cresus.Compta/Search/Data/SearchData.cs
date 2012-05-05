@@ -31,6 +31,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.nodesData.Clear ();
 			this.Adjust ();
 
+			this.Enable = true;
 			this.OrMode = false;
 		}
 
@@ -87,6 +88,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 		}
 
+		public bool Enable
+		{
+			get;
+			set;
+		}
+
 		public bool OrMode
 		{
 			//	false -> mode "and"
@@ -100,6 +107,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Indique si les données sont totalement vides.
 			get
 			{
+				if (this.Enable == false)
+				{
+					return true;
+				}
+
 				if (this.nodesData.Count > 1)
 				{
 					return false;
@@ -189,6 +201,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public void GetBeginnerDates(out Date? beginDate, out Date? endDate)
 		{
 			//	Retourne les dates à filtrer en mode débutant.
+			if (this.Enable == false)
+			{
+				beginDate = null;
+				endDate   = null;
+				return;
+			}
+
 			this.nodesData[0].GetBeginnerDates(out beginDate, out endDate);
 		}
 

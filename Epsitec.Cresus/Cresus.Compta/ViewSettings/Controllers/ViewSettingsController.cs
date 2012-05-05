@@ -84,6 +84,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Visibility          = false,
 			};
 
+			UIBuilder.CreateFixIcon (this.toolbar, "Panel.ViewSettings");
+
 			//	Crée les frames gauche, centrale et droite.
 			this.mainFrame = new FrameBox
 			{
@@ -106,7 +108,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			//	Remplissage de la frame gauche.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
 
 			this.UpdateCombo ();
 			this.UpdateList ();
@@ -186,9 +188,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Parent          = this.comptactFrame,
 				PreferredWidth  = ViewSettingsController.fieldWidth,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
-				Margins           = new Margins (0, 10, 0, 0),
+				Margins         = new Margins (0, 10, 0, 0),
 			};
 
 			this.compactUpdateButton = new IconButton

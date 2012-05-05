@@ -1241,6 +1241,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public void ClosePanelSearch()
+		{
+			this.showSearchPanel = false;
+			this.UpdatePanelCommands ();
+		}
+
+		public void ClosePanelFilter()
+		{
+			this.showFilterPanel = false;
+			this.UpdatePanelCommands ();
+		}
+
+		public void ClosePanelOptions()
+		{
+			this.showOptionsPanel = false;
+			this.UpdatePanelCommands ();
+		}
+
+		public void ClosePanelViewSettings()
+		{
+			this.showViewSettingsPanel = false;
+			this.UpdatePanelCommands ();
+		}
+
+
 		[Command (Res.CommandIds.Panel.Search)]
 		private void CommandPanelSearch()
 		{

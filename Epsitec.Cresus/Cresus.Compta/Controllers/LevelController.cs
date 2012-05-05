@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action clearAction, System.Action levelChangedAction)
+		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
 		{
 			var frame = new FrameBox
 			{
@@ -36,22 +36,38 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner",   "Simple");
 			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
 
+			this.beginnerButton  .Margins = new Margins (0, 1, 0, 0);
+			this.specialistButton.Margins = new Margins (1, 8, 0, 0);
+
 			this.buttonClear = new IconButton
 			{
 				Parent        = frame,
 				IconUri       = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				PreferredSize = new Size (20, 20),
 				Dock          = DockStyle.Left,
-				Margins       = new Margins (8, 0, 0, 0),
+			};
+
+			this.buttonClose = new IconButton
+			{
+				Parent        = frame,
+				IconUri       = UIBuilder.GetResourceIconUri ("Level.Close"),
+				PreferredSize = new Size (20, 20),
+				Dock          = DockStyle.Left,
 			};
 
 			ToolTip.Default.SetToolTip (this.buttonClear, clearText);
+			ToolTip.Default.SetToolTip (this.buttonClose, "Ferme le panneau");
 
 			this.UpdateButtons ();
 
 			this.buttonClear.Clicked += delegate
 			{
 				clearAction ();
+			};
+
+			this.buttonClose.Clicked += delegate
+			{
+				closeAction ();
 			};
 
 			this.beginnerButton.Clicked += delegate
@@ -122,8 +138,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent            = parent,
 				IconUri           = UIBuilder.GetResourceIconUri (icon),
-				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (20, 20),
+				PreferredIconSize = new Size (25, 20),
+				PreferredSize     = new Size (25, 20),
 				Dock              = DockStyle.Left,
 				AutoToggle        = false,
 				AutoFocus         = false,
@@ -139,6 +155,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private bool							specialist;
 		private IconButton						buttonClear;
+		private IconButton						buttonClose;
 		private BackIconButton					beginnerButton;
 		private BackIconButton					specialistButton;
 	}

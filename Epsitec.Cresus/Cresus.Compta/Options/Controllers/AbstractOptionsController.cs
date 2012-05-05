@@ -94,6 +94,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock                = DockStyle.Top,
 			};
 
+			UIBuilder.CreateFixIcon (this.toolbar, "Panel.Options");
+
 			this.graphbar = new FrameBox
 			{
 				Parent              = this.container,
@@ -124,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			//	Remplissage de la frame gauche.
 			//	Remplissage de la frame centrale.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
 			this.levelController.Specialist = this.options.Specialist;
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);

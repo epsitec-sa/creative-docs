@@ -60,6 +60,31 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
+			UIBuilder.CreateFixIcon (frame, this.isFilter ? "Panel.Filter" : "Panel.Search");
+
+			if (this.isFilter)
+			{
+				this.filterEnableButton = new CheckButton
+				{
+					Parent           = frame,
+					PreferredWidth   = 20,
+					PreferredHeight  = 20,
+					AutoToggle       = false,
+					Anchor           = AnchorStyles.TopLeft,
+					Margins          = new Margins (30, 0, 6, 0),
+				};
+
+				ToolTip.Default.SetToolTip (this.filterEnableButton, "Active ou désactive le filtre");
+
+				this.filterEnableButton.Clicked += delegate
+				{
+					this.data.Enable = !this.data.Enable;
+					this.UpdateButtons ();
+					this.SearchStartAction ();
+				};
+			}
+
+
 			this.middleFrame = new FrameBox
 			{
 				Parent              = frame,
@@ -723,8 +748,19 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void CreateLevelUI(FrameBox parent)
 		{
+			System.Action closeAction;
+
+			if (this.isFilter)
+			{
+				closeAction = this.controller.MainWindowController.ClosePanelFilter;
+			}
+			else
+			{
+				closeAction = this.controller.MainWindowController.ClosePanelSearch;
+			}
+
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (parent, isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, this.LevelChangedAction);
+			this.levelController.CreateUI (parent, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.data.Specialist;
 		}
 
@@ -857,6 +893,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			this.levelController.ClearEnable = !this.data.IsEmpty;
 
+			if (this.filterEnableButton != null)
+			{
+				this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
+			}
+
 			foreach (var controller in this.nodeControllers)
 			{
 				controller.UpdateButtons ();
@@ -929,6 +970,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private System.Action<int>						searchNextAction;
 
 		private FrameBox								middleFrame;
+		private CheckButton								filterEnableButton;
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
 		private StaticText								summaryLabel;

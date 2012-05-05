@@ -44,10 +44,38 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock           = DockStyle.Left,
 			};
 
-			this.CreateButton (toolbar, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
-			this.CreateButton (toolbar, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);
+			var searchButton = this.CreateButton (toolbar, Res.Commands.Panel.Search, -1, UIBuilder.SearchBackColor);
+			var filterButton = this.CreateButton (toolbar, Res.Commands.Panel.Filter, -1, UIBuilder.FilterBackColor);
+			                   this.CreateButton (toolbar, Res.Commands.Panel.Options, 0, UIBuilder.OptionsBackColor);
+
+			this.searchMarker = this.CreateMarker (searchButton);
+			this.filterMarker = this.CreateMarker (filterButton);
 		}
+
+		public bool SearchEnable
+		{
+			get
+			{
+				return this.searchMarker.Visibility;
+			}
+			set
+			{
+				this.searchMarker.Visibility = value;
+			}
+		}
+
+		public bool FilterEnable
+		{
+			get
+			{
+				return this.filterMarker.Visibility;
+			}
+			set
+			{
+				this.filterMarker.Visibility = value;
+			}
+		}
+
 
 		private IconButton CreateButton(Widget parent, Command command, double margin, Color backColor)
 		{
@@ -65,9 +93,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
+		private StaticText CreateMarker(Widget parent)
+		{
+			return new StaticText
+			{
+				Parent           = parent,
+				Text             = UIBuilder.GetTextIconUri("Panel.Active"),
+				ContentAlignment = ContentAlignment.BottomRight,
+				Anchor           = AnchorStyles.All,
+			};
+		}
+
 
 		private static readonly double			toolbarHeight = 24;
 
 		private readonly AbstractController		controller;
+
+		private StaticText						searchMarker;
+		private StaticText						filterMarker;
 	}
 }

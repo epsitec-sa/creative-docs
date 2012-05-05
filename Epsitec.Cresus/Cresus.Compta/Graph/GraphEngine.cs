@@ -18,7 +18,8 @@ namespace Epsitec.Cresus.Compta.Graph
 	{
 		public GraphEngine()
 		{
-			this.surfaces = new List<GraphSurface> ();
+			this.surfacesList = new List<GraphSurface> ();
+			this.surfacesDict = new Dictionary<GraphSurfaceId, GraphSurface> ();
 
 			this.hilitedSurfaceId = GraphSurfaceId.Empty;
 			this.selectedSurfaceId = GraphSurfaceId.Empty;
@@ -44,6 +45,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId HilitedSurfaceId
 		{
+			//	Identificateur de la surface survolée par la souris.
 			get
 			{
 				return this.hilitedSurfaceId;
@@ -56,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId SelectedSurfaceId
 		{
+			//	Identificateur de la surface sélectionnée.
 			get
 			{
 				return this.selectedSurfaceId;
@@ -69,6 +72,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void SetHandle(int rank, Point pos)
 		{
+			//	Modifie la position d'une poignée. Ceci est enregistré dans les options GraphOptions.
 			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
 			{
 				var surface = this.GetSurface (this.selectedSurfaceId);
@@ -81,7 +85,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public int DetectHandle(Point pos)
 		{
-			//	Retourne la poignée visée par une position.
+			//	Retourne la poignée visée par la souris.
 			if (this.selectedSurfaceId != GraphSurfaceId.Empty)
 			{
 				var surface = this.GetSurface (this.selectedSurfaceId);
@@ -96,10 +100,10 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public GraphSurfaceId DetectSurface(Point pos)
 		{
-			//	Retourne la surface visée par une position.
-			for (int i = this.surfaces.Count-1; i >= 0; i--)  // du dernier (avant-plan) au premier (arrière-plan)
+			//	Retourne la surface visée par la souris.
+			for (int i = this.surfacesList.Count-1; i >= 0; i--)  // du dernier (avant-plan) au premier (arrière-plan)
 			{
-				var surface = this.surfaces[i];
+				var surface = this.surfacesList[i];
 
 				if (surface.Contains (pos))
 				{
@@ -132,12 +136,13 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		public void PaintFull(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect)
 		{
-			//	Dessine un graphique complet.
+			//	Dessine un graphique complet et construit les informations sur les surfaces.
 			this.cube     = cube;
 			this.options  = options;
 			this.fullRect = rect;
 
-			this.surfaces.Clear ();
+			this.surfacesList.Clear ();
+			this.surfacesDict.Clear ();
 
 			if (this.cube.Dimensions == 0 || this.cube.IsEmpty)
 			{
@@ -148,7 +153,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.RenderSolid (this.BackExtColor);
 
 			var drawingRect = this.DrawingRect;
-			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Margins), drawingRect));
+			this.AddSurface (GraphSurfaceType.Margins, drawingRect);
 
 			this.fontSize = this.options.FontSize;
 
@@ -184,9 +189,11 @@ namespace Epsitec.Cresus.Compta.Graph
 				return;
 			}
 
+			//	Dessine la grille.
 			var frameRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom+labelDy, drawingRect.Width-labelDx, drawingRect.Height-labelDy);
 			this.PaintGrid (graphics, frameRect, nx, dx, ny, dy);
 
+			//	Initialisation des échelles.
 			switch (this.options.Mode)
 			{
 				case GraphMode.SideBySide:
@@ -205,6 +212,7 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
+			//	Dessine les légendes des axes.
 			if (this.HasHorizontalLabels)
 			{
 				var labelsRect = new Rectangle (drawingRect.Left+labelDx, drawingRect.Bottom, drawingRect.Width-labelDx, labelDy);
@@ -217,6 +225,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				this.PaintVerticalLabels (graphics, labelsRect, ny, dy);
 			}
 
+			//	Dessine le graphique.
 			switch (this.options.Mode)
 			{
 				case GraphMode.SideBySide:
@@ -240,13 +249,16 @@ namespace Epsitec.Cresus.Compta.Graph
 					break;
 			}
 
+			//	Dessine le titre.
 			this.PaintTitle (graphics);
 
+			//	Dessine la boîte des légendes.
 			if (this.options.Mode != GraphMode.Array && this.options.HasLegend)
 			{
 				this.PaintLegends (graphics, this.LegendsRect);
 			}
 
+			//	Dessine les surfaces mises en évidence.
 			var surface = this.GetSurface (this.hilitedSurfaceId);
 			if (surface != null)
 			{
@@ -270,18 +282,6 @@ namespace Epsitec.Cresus.Compta.Graph
 				var y2 = System.Math.Floor (this.fullRect.Top    - this.options.MarginsAbs.Top);
 
 				return new Rectangle (x1, y1, x2-x1, y2-y1);
-			}
-		}
-
-		private GraphSurface GetSurface(GraphSurfaceId id)
-		{
-			if (id.IsEmpty)
-			{
-				return null;
-			}
-			else
-			{
-				return this.surfaces.Where (x => x.Id == id).FirstOrDefault ();
 			}
 		}
 
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Graph
 						graphics.RenderSolid (this.BorderColor);
 						graphics.LineWidth = 1;
 
-						this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), barRect));
+						this.AddSurface (GraphSurfaceType.Graph, x, y, barRect);
 					}
 				}
 			}
@@ -421,7 +421,7 @@ namespace Epsitec.Cresus.Compta.Graph
 							graphics.AddFilledRectangle (barRect);
 							graphics.RenderSolid (this.GetIndexedColor (y, ny));
 
-							this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), barRect));
+							this.AddSurface (GraphSurfaceType.Graph, x, y, barRect);
 						}
 						else
 						{
@@ -491,7 +491,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 								var d = System.Math.Max (this.options.PointWidth, 6) + 2;
 								var pointRect = new Rectangle (pos.X-d/2, pos.Y-d/2, d, d);
-								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, x, y), pointRect));
+								this.AddSurface (GraphSurfaceType.Graph, x, y, pointRect);
 							}
 							else
 							{
@@ -704,7 +704,7 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.Color = this.GetIndexedColor (y, ny);
 								graphics.PaintSurface (path);
 
-								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, i, y), path));
+								this.AddSurface (GraphSurfaceType.Graph, i, y, path);
 							}
 							else
 							{
@@ -737,7 +737,7 @@ namespace Epsitec.Cresus.Compta.Graph
 								graphics.Color = this.GetIndexedColor (y, ny);
 								graphics.PaintSurface (path);
 
-								this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Graph, i, y), path));
+								this.AddSurface (GraphSurfaceType.Graph, i, y, path);
 							}
 							else
 							{
@@ -843,6 +843,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		}
 
 
+		#region Title
 		public Rectangle TitleRect
 		{
 			get
@@ -868,11 +869,13 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintTitle(Graphics graphics)
 		{
 			var rect = this.TitleRect;
-			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Title), rect));
+			this.AddSurface (GraphSurfaceType.Title, rect);
 			this.PaintText (graphics, rect, this.options.TitleText, ContentAlignment.MiddleCenter, TextBreakMode.Hyphenate, 1.5);
 		}
+		#endregion
 
 
+		#region Legends
 		public Rectangle LegendsRect
 		{
 			//	Retourne le rectangle occupé par la légende.
@@ -901,7 +904,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			}
 		}
 
-		public int LegendsColumnWidth
+		private int LegendsColumnWidth
 		{
 			//	Retourne la largeur pour une colonne.
 			get
@@ -929,7 +932,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		private void PaintLegends(Graphics graphics, Rectangle rect)
 		{
 			//	Dessine la légende complète.
-			this.surfaces.Add (new GraphSurface (this, new GraphSurfaceId (GraphSurfaceType.Legend), rect));
+			this.AddSurface (GraphSurfaceType.Legend, rect);
 
 			int total = this.cube.GetCount (1);
 			int nc = this.options.LegendColumns;
@@ -985,8 +988,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			var textRect = new Rectangle (rect.Left+rect.Height+5, rect.Bottom, rect.Width-rect.Height-5, rect.Height);
 			this.PaintText (graphics, textRect, text, ContentAlignment.MiddleLeft);
 		}
+		#endregion
 
 
+		#region Grid
 		private void PaintGrid(Graphics graphics, Rectangle frameRect, int nx, int dx, int ny, int dy)
 		{
 			//	Dessine la grille de fond.
@@ -1045,8 +1050,10 @@ namespace Epsitec.Cresus.Compta.Graph
 
 			graphics.RenderSolid (this.BorderColor);
 		}
+		#endregion
 
 
+		#region Axes
 		private bool HasHorizontalLabels
 		{
 			//	Y a-t-il un axe horizontal avec des noms ?
@@ -1250,9 +1257,60 @@ namespace Epsitec.Cresus.Compta.Graph
 				return (int) (this.fontSize*7);  // place fixe ok jusqu'à 1'000'000 environ
 			}
 		}
+		#endregion
 
 
+		#region Surfaces
+		private void AddSurface(GraphSurfaceType type, Rectangle rect)
+		{
+			var id = new GraphSurfaceId (type);
+			var surface = new GraphSurface (this, id, rect);
 
+			this.AddSurface (id, surface);
+		}
+
+		private void AddSurface(GraphSurfaceType type, int cubeX, int cubeY, Rectangle rect)
+		{
+			var id = new GraphSurfaceId (type, cubeX, cubeY);
+			var surface = new GraphSurface (this, id, rect);
+
+			this.AddSurface (id, surface);
+		}
+
+		private void AddSurface(GraphSurfaceType type, int cubeX, int cubeY, Path path)
+		{
+			var id = new GraphSurfaceId (type, cubeX, cubeY);
+			var surface = new GraphSurface (this, id, path);
+
+			this.AddSurface (id, surface);
+		}
+
+		private void AddSurface(GraphSurfaceId id, GraphSurface surface)
+		{
+			//	La liste permet de parcourir les surfaces dans l'ordre inverse du dessin, pour la détection.
+			//	Le dictionnaire permet de retrouver rapidement une surface d'après son id.
+			this.surfacesList.Add (surface);
+			this.surfacesDict.Add (id, surface);
+		}
+
+		private GraphSurface GetSurface(GraphSurfaceId id)
+		{
+			//	Retrouve rapidement une surface d'après son identificateur.
+			if (!id.IsEmpty)
+			{
+				GraphSurface surface;
+				if (this.surfacesDict.TryGetValue (id, out surface))
+				{
+					return surface;
+				}
+			}
+
+			return null;
+		}
+		#endregion
+
+
+		#region Direct array painting
 		public void PaintRow(Cube cube, GraphOptions options, Graphics graphics, Rectangle rect, string text)
 		{
 			//	Dessine une cellule correspondant à une ligne, d'après le texte contenu dans StringList.
@@ -1456,8 +1514,10 @@ namespace Epsitec.Cresus.Compta.Graph
 			graphics.AddRectangle (rect);
 			graphics.RenderSolid (borderColor);
 		}
+		#endregion
 
 
+		#region Resources
 		private GraphPoint GetGraphPoint(int index, int total)
 		{
 			if (this.options.GraphPoints == GraphPoint.Mix)
@@ -1662,21 +1722,22 @@ namespace Epsitec.Cresus.Compta.Graph
 		private static string[] green         = { "00ff00", "b7ffb7", "00c600", "007000" };
 		private static string[] blue          = { "00ccff", "b1efff", "00a0c8", "0060ff", "7fafff", "003fa6" };
 		private static string[] fire          = { "ff9e9e", "ff0000", "ad0000", "ffe9a6", "ffc000", "e3ab00", "ffffed", "ffff00", "e5e500" };
+		#endregion
 
 
+		private readonly List<GraphSurface>							surfacesList;
+		private readonly Dictionary<GraphSurfaceId, GraphSurface>	surfacesDict;
 
-		private readonly List<GraphSurface>		surfaces;
-
-		private Cube							cube;
-		private GraphOptions					options;
-		private Rectangle						fullRect;
-		private double							fontSize;
-		private decimal							minValue;
-		private decimal							maxValue;
-		private double							drawBottom;
-		private double							drawHeight;
-		private double							drawRight;
-		private GraphSurfaceId					hilitedSurfaceId;
-		private GraphSurfaceId					selectedSurfaceId;
+		private Cube												cube;
+		private GraphOptions										options;
+		private Rectangle											fullRect;
+		private double												fontSize;
+		private decimal												minValue;
+		private decimal												maxValue;
+		private double												drawBottom;
+		private double												drawHeight;
+		private double												drawRight;
+		private GraphSurfaceId										hilitedSurfaceId;
+		private GraphSurfaceId										selectedSurfaceId;
 	}
 }
