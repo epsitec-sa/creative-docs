@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
+		public FrameBox CreateUI(FrameBox parent, bool hasBeginnerSpecialist, string clearText, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
 		{
 			var frame = new FrameBox
 			{
@@ -33,19 +33,51 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner", "Simple");
-
-			this.arrowButton = new IconButton
+			if (hasBeginnerSpecialist)
 			{
-				Parent            = frame,
-				PreferredIconSize = new Size (10, 20),
-				PreferredSize     = new Size (10, 20),
-				Dock              = DockStyle.Left,
-				AutoToggle        = false,
-				AutoFocus         = false,
-			};
+				this.beginnerButton = this.CreateButton (frame, "Level.Beginner", "Simple");
 
-			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
+				this.arrowButton = new IconButton
+				{
+					Parent            = frame,
+					PreferredIconSize = new Size (10, 20),
+					PreferredSize     = new Size (10, 20),
+					Dock              = DockStyle.Left,
+					AutoToggle        = false,
+					AutoFocus         = false,
+				};
+
+				ToolTip.Default.SetToolTip (this.arrowButton, "Permute les modes simple et avancé");
+
+				this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
+
+				this.beginnerButton.Clicked += delegate
+				{
+					this.Specialist = false;
+					levelChangedAction ();
+				};
+
+				this.specialistButton.Clicked += delegate
+				{
+					this.Specialist = true;
+					levelChangedAction ();
+				};
+
+				this.arrowButton.Clicked += delegate
+				{
+					this.Specialist = !this.Specialist;
+					levelChangedAction ();
+				};
+			}
+			else
+			{
+				new FrameBox
+				{
+					Parent        = frame,
+					PreferredSize = new Size (20+10+20, 20),
+					Dock          = DockStyle.Left,
+				};
+			}
 
 			this.buttonClear = new IconButton
 			{
@@ -64,7 +96,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock          = DockStyle.Left,
 			};
 
-			ToolTip.Default.SetToolTip (this.arrowButton, "Permute les modes simple et avancé");
 			ToolTip.Default.SetToolTip (this.buttonClear, clearText);
 			ToolTip.Default.SetToolTip (this.buttonClose, "Ferme le panneau");
 
@@ -78,24 +109,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.buttonClose.Clicked += delegate
 			{
 				closeAction ();
-			};
-
-			this.beginnerButton.Clicked += delegate
-			{
-				this.Specialist = false;
-				levelChangedAction ();
-			};
-
-			this.specialistButton.Clicked += delegate
-			{
-				this.Specialist = true;
-				levelChangedAction ();
-			};
-
-			this.arrowButton.Clicked += delegate
-			{
-				this.Specialist = !this.Specialist;
-				levelChangedAction ();
 			};
 
 			return frame;
@@ -144,9 +157,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateButtons()
 		{
-			this.beginnerButton.ActiveState = this.specialist ? ActiveState.No : ActiveState.Yes;
-			this.arrowButton.IconUri = UIBuilder.GetResourceIconUri (this.specialist ? "Level.Specialist.Arrow" : "Level.Beginner.Arrow");
-			this.specialistButton.ActiveState = this.specialist ? ActiveState.Yes : ActiveState.No;
+			if (this.beginnerButton != null)
+			{
+				this.beginnerButton.ActiveState = this.specialist ? ActiveState.No : ActiveState.Yes;
+				this.arrowButton.IconUri = UIBuilder.GetResourceIconUri (this.specialist ? "Level.Specialist.Arrow" : "Level.Beginner.Arrow");
+				this.specialistButton.ActiveState = this.specialist ? ActiveState.Yes : ActiveState.No;
+			}
 		}
 
 		private BackIconButton CreateButton(FrameBox parent, string icon, string description)

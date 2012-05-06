@@ -34,6 +34,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.CreateJournalUI (this.mainFrame);
 		}
 
+		protected override bool HasBeginnerSpecialist
+		{
+			get
+			{
+				return false;
+			}
+		}
+
 		protected override void OptionsChanged()
 		{
 			this.UpdateWidgets ();

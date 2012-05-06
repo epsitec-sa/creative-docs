@@ -762,7 +762,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (parent, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
+			this.levelController.CreateUI (parent, true, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
 			this.levelController.Specialist = this.data.Specialist;
 		}
 

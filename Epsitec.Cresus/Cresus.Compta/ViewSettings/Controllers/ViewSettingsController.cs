@@ -108,7 +108,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			//	Remplissage de la frame gauche.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, true, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
 
 			this.UpdateCombo ();
 			this.UpdateList ();

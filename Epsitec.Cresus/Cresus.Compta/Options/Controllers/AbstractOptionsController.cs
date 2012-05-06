@@ -126,13 +126,21 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			//	Remplissage de la frame gauche.
 			//	Remplissage de la frame centrale.
 			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
+			this.levelController.CreateUI (levelFrame, this.HasBeginnerSpecialist, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
 			this.levelController.Specialist = this.options.Specialist;
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);
 			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged);
 
 			this.UpdateGraphWidgets ();
+		}
+
+		protected virtual bool HasBeginnerSpecialist
+		{
+			get
+			{
+				return false;
+			}
 		}
 
 		protected virtual void OptionsChanged()

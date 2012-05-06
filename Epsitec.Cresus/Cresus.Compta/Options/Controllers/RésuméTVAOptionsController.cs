@@ -249,6 +249,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
+		protected override bool HasBeginnerSpecialist
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		protected override void OptionsChanged()
 		{
 			this.UpdateWidgets ();
