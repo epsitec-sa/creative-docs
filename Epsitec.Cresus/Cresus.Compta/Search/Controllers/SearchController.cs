@@ -412,6 +412,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					IsReadOnly      = true,
 					PreferredWidth  = 50,
 					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
 					Dock            = DockStyle.Left,
 					TabIndex        = 1,
 				};
@@ -432,6 +433,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					IsReadOnly      = true,
 					PreferredWidth  = 50,
 					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
 					Dock            = DockStyle.Left,
 					TabIndex        = 2,
 				};

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
+#if false
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -43,6 +44,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth = 12,
 				Dock           = DockStyle.Left,
 			};
+#else
+			var toolbar = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
+				DrawFullFrame   = true,
+				BackColor       = UIBuilder.ViewSettingsBackColor,
+				Dock            = DockStyle.Left,
+				Padding         = new Margins (3),
+			};
+
+			new FrameBox
+			{
+				Parent        = toolbar,
+				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
+				DrawFullFrame = true,
+				BackColor     = RibbonController.GetBackgroundColor1 (),
+				Anchor        = AnchorStyles.TopLeft,
+			};
+
+			this.CreateButton (toolbar, Res.Commands.Panel.ViewSettings, 2, UIBuilder.ViewSettingsBackColor);
+#endif
 
 			var searchButton = this.CreateButton (toolbar, Res.Commands.Panel.Search, -1, UIBuilder.SearchBackColor);
 			var filterButton = this.CreateButton (toolbar, Res.Commands.Panel.Filter, -1, UIBuilder.FilterBackColor);
@@ -54,6 +77,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool SearchEnable
 		{
+			//	Indique si les recherches sont actives. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
 			get
 			{
 				return this.searchMarker.Visibility;
@@ -66,6 +90,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool FilterEnable
 		{
+			//	Indique si le fitlre est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
 			get
 			{
 				return this.filterMarker.Visibility;
@@ -77,7 +102,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private IconButton CreateButton(Widget parent, Command command, double margin, Color backColor)
+		private IconButton CreateButton(Widget parent, Command command, double rightMargin, Color backColor)
 		{
 			return new BackIconButton
 			{
@@ -89,12 +114,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock              = DockStyle.Left,
 				Name              = command.Name,
 				AutoFocus         = false,
-				Margins           = new Margins (0, margin, 0, 0),
+				Margins           = new Margins (0, rightMargin, 0, 0),
 			};
 		}
 
 		private StaticText CreateMarker(Widget parent)
 		{
+			//	Crée le petit 'vu' vert en surimpression d'un bouton. Par chance, le widget StaticText ne capture
+			//	pas les événements souris !
 			return new StaticText
 			{
 				Parent           = parent,

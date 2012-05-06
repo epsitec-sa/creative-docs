@@ -139,14 +139,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			switch (column)
 			{
 				case ColumnType.Date:
-					if (écriture.MultiId != 0 && !écriture.TotalAutomatique)
-					{
-						return FormattedText.Empty;
-					}
-					else
-					{
-						return Converters.DateToString (écriture.Date);
-					}
+					return Converters.DateToString (écriture.Date);
 
 				case ColumnType.Débit:
 					return JournalDataAccessor.GetNuméro (écriture.Débit);

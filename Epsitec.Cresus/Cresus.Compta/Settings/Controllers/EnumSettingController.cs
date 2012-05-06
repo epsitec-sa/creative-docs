@@ -40,10 +40,10 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			{
 				Parent          = frame,
 				IsReadOnly      = true,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				FormattedText   = VerboseSettings.GetDescription (this.Data.Value),
 				PreferredWidth  = 100,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 0, 0, 2),
 				TabIndex        = ++this.tabIndex,

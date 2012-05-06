@@ -179,9 +179,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent          = frameBox,
 				IsReadOnly      = true,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				PreferredWidth  = 130,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Right,
 				Margins         = new Margins (1, 0, 0, 0),
 				TabIndex        = 3,

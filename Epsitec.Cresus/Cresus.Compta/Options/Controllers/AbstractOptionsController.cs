@@ -209,6 +209,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				IsReadOnly      = true,
 				PreferredWidth  = 150,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 20, 0, 0),
 				TabIndex        = ++this.tabIndex,

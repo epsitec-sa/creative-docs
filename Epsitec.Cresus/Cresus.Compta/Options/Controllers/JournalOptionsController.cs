@@ -9,6 +9,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -84,6 +85,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Parent          = frame,
 				PreferredWidth  = JournalOptionsController.JournauxWidth,
 				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
 				TabIndex        = ++this.tabIndex,

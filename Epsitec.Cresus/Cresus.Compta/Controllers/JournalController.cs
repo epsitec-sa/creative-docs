@@ -112,7 +112,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{
 			//	Retourne le texte contenu dans une cellule.
-			return this.dataAccessor.GetText (row, columnType);
+			var text = this.dataAccessor.GetText (row, columnType);
+			var écriture = this.dataAccessor.GetEditionEntity (row) as ComptaEcritureEntity;
+
+			if (columnType == ColumnType.Date && écriture.MultiId != 0 && !écriture.TotalAutomatique)
+			{
+				text = FormattedText.Empty;
+			}
+
+			return text;
 		}
 
 
