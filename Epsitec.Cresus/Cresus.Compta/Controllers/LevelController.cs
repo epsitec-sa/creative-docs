@@ -33,11 +33,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner",   "Simple");
-			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
+			this.beginnerButton   = this.CreateButton (frame, "Level.Beginner", "Simple");
 
-			this.beginnerButton  .Margins = new Margins (0, 1, 0, 0);
-			this.specialistButton.Margins = new Margins (1, 8, 0, 0);
+			this.arrowButton = new IconButton
+			{
+				Parent            = frame,
+				PreferredIconSize = new Size (10, 20),
+				PreferredSize     = new Size (10, 20),
+				Dock              = DockStyle.Left,
+				AutoToggle        = false,
+				AutoFocus         = false,
+			};
+
+			this.specialistButton = this.CreateButton (frame, "Level.Specialist", "Avancé");
 
 			this.buttonClear = new IconButton
 			{
@@ -45,6 +53,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				IconUri       = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				PreferredSize = new Size (20, 20),
 				Dock          = DockStyle.Left,
+				Margins       = new Margins (8, 0, 0, 0),
 			};
 
 			this.buttonClose = new IconButton
@@ -55,6 +64,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock          = DockStyle.Left,
 			};
 
+			ToolTip.Default.SetToolTip (this.arrowButton, "Permute les modes simple et avancé");
 			ToolTip.Default.SetToolTip (this.buttonClear, clearText);
 			ToolTip.Default.SetToolTip (this.buttonClose, "Ferme le panneau");
 
@@ -79,6 +89,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.specialistButton.Clicked += delegate
 			{
 				this.Specialist = true;
+				levelChangedAction ();
+			};
+
+			this.arrowButton.Clicked += delegate
+			{
+				this.Specialist = !this.Specialist;
 				levelChangedAction ();
 			};
 
@@ -128,7 +144,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateButtons()
 		{
-			this.beginnerButton.ActiveState   = this.specialist ? ActiveState.No  : ActiveState.Yes;
+			this.beginnerButton.ActiveState = this.specialist ? ActiveState.No : ActiveState.Yes;
+			this.arrowButton.IconUri = UIBuilder.GetResourceIconUri (this.specialist ? "Level.Specialist.Arrow" : "Level.Beginner.Arrow");
 			this.specialistButton.ActiveState = this.specialist ? ActiveState.Yes : ActiveState.No;
 		}
 
@@ -138,8 +155,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent            = parent,
 				IconUri           = UIBuilder.GetResourceIconUri (icon),
-				PreferredIconSize = new Size (25, 20),
-				PreferredSize     = new Size (25, 20),
+				PreferredIconSize = new Size (20, 20),
+				PreferredSize     = new Size (20, 20),
 				Dock              = DockStyle.Left,
 				AutoToggle        = false,
 				AutoFocus         = false,
@@ -157,6 +174,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private IconButton						buttonClear;
 		private IconButton						buttonClose;
 		private BackIconButton					beginnerButton;
+		private IconButton                      arrowButton;
 		private BackIconButton					specialistButton;
 	}
 }

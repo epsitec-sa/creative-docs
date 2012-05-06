@@ -398,6 +398,8 @@
     <EmbeddedResource Include="Images\View.Graph.Detailed.icon" />
     <EmbeddedResource Include="Images\Level.Close.icon" />
     <EmbeddedResource Include="Images\Panel.Active.icon" />
+    <EmbeddedResource Include="Images\Level.Beginner.Arrow.icon" />
+    <EmbeddedResource Include="Images\Level.Specialist.Arrow.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
