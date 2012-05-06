@@ -727,6 +727,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (10, 0, 0, 0),
 			};
 
+			this.titleLabel.HypertextClicked += delegate
+			{
+				this.dataAccessor.FilterData.Enable = !this.dataAccessor.FilterData.Enable;
+				this.FilterStartAction ();
+			};
+
 			new GlyphButton
 			{
 				Parent           = frame,
@@ -805,7 +811,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected void SetTitle(FormattedText title)
 		{
 			this.title = title;
-			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
+
+			title = title.ApplyBold ().ApplyFontSize (13.0);
+
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && this.dataAccessor.FilterData.IsDefined)
+			{
+				FormattedText ht = this.dataAccessor.FilterData.IsEmpty ? "active le filtre" : "désactive le filtre";
+				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
+			}
+
+			this.titleLabel.FormattedText = title;
 		}
 
 		protected void SetSubtitle(FormattedText subtitle)
@@ -833,8 +848,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.panelsToolbarController != null && this.dataAccessor != null)
 			{
-				this.panelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
-				this.panelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
+				if (this.dataAccessor.SearchData != null)
+				{
+					this.panelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
+				}
+
+				if (this.dataAccessor.FilterData != null)
+				{
+					this.panelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
+					this.SetTitle (this.title);
+				}
 			}
 		}
 		#endregion

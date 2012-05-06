@@ -112,20 +112,29 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					return true;
 				}
 
+				return !this.IsDefined;
+			}
+		}
+
+		public bool IsDefined
+		{
+			//	Indique si les données sont définies.
+			get
+			{
 				if (this.nodesData.Count > 1)
 				{
-					return false;
+					return true;
 				}
-				
+
 				foreach (var node in this.nodesData)
 				{
 					if (!node.IsEmpty)
 					{
-						return false;
+						return true;
 					}
 				}
 
-				return true;
+				return false;
 			}
 		}
 
