@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -103,6 +103,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 		
+
 		#region IEquatable<EntityKey> Members
 		
 		/// <summary>
@@ -116,6 +117,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 		
 		#endregion
+
 
 		/// <summary>
 		/// Tells whether this <see cref="EntityKey"/> is equal to another object.
@@ -147,6 +149,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		{
 			return string.Concat (this.entityId.ToString (), "/", this.rowKey.Id.ToString ());
 		}
+
 
 		/// <summary>
 		/// Parses the value into an <see cref="EntityKey"/>.
@@ -195,6 +198,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return !a.Equals (b);
 		}
 		
+
 		/// <summary>
 		/// Gets the normalized version of this instance. Normalized means that if this instance
 		/// targets a sub type of an <see cref="AbstractEntity"/>, the normalized version targets

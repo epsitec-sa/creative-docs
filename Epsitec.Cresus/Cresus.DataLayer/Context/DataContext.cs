@@ -165,7 +165,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <summary>
 		/// Gets the unique id of the current instance.
 		/// </summary>
-		public long UniqueId
+		public long								UniqueId
 		{
 			get
 			{
@@ -173,40 +173,36 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
 		/// <summary>
 		/// Gets or sets the name of the <c>DataContext</c>. This is useful when
 		/// debugging.
 		/// </summary>
 		/// <value>The name of the <c>DataContext</c>.</value>
-		public string Name
+		public string							Name
 		{
 			get;
 			set;
 		}
-				
 
 		/// <summary>
 		/// Gets the <see cref="EntityContext"/> associated with this instance.
 		/// </summary>
-		internal EntityContext EntityContext
+		internal EntityContext					EntityContext
 		{
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="DataInfrastructure"/> associated with this instance.
 		/// </summary>
-		internal DataInfrastructure DataInfrastructure
+		internal DataInfrastructure				DataInfrastructure
 		{
 			get;
 			private set;
 		}
 
-
-		public DataContextPool DataContextPool
+		public DataContextPool					DataContextPool
 		{
 			get
 			{
@@ -214,8 +210,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
-		private DbInfrastructure DbInfrastructure
+		private DbInfrastructure				DbInfrastructure
 		{
 			get
 			{
@@ -223,8 +218,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
-		private EntityTypeEngine TypeEngine
+		private EntityTypeEngine				TypeEngine
 		{
 			get
 			{
@@ -232,53 +226,48 @@ namespace Epsitec.Cresus.DataLayer.Context
 			}
 		}
 
-
 		/// <summary>
 		/// Gets the <see cref="DataLoader"/> associated with this instance.
 		/// </summary>
-		internal DataLoader DataLoader
+		internal DataLoader						DataLoader
 		{
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="DataSaver"/> associated with this instance.
 		/// </summary>
-		internal DataSaver DataSaver
+		internal DataSaver						DataSaver
 		{
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="SerializationManager"/> associated with this instance.
 		/// </summary>
-		internal EntitySerializationManager SerializationManager
+		internal EntitySerializationManager		SerializationManager
 		{
 			get;
 			private set;
 		}
-
 
 		/// <summary>
 		/// Gets the <see cref="DataConverter"/> associated with this instance.
 		/// </summary>
-		internal DataConverter DataConverter
+		internal DataConverter					DataConverter
 		{
 			get;
 			private set;
 		}
-		
 
 		/// <summary>
 		/// Gets or sets the value that tells if the <see cref="AbstractEntity"/> created by this
 		/// <see cref="DataContext"/> can be null virtualized with the
 		/// <see cref="EntityNullReferenceVirtualizer"/>.
 		/// </summary>
-		public bool EnableNullVirtualization
+		public bool								EnableNullVirtualization
 		{
 			get;
 			private set;
