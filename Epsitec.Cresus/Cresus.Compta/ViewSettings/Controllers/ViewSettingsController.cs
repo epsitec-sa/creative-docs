@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 					if (this.showPanel)
 					{
-						if (this.levelController.Specialist)
+						if (this.topPanelLeftController.Specialist)
 						{
 							this.extendedListViewSettings.Focus ();
 						}
@@ -84,7 +84,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Visibility          = false,
 			};
 
-			UIBuilder.CreateFixIcon (this.toolbar, "Panel.ViewSettings");
+			var topPanelLeftFrame = new FrameBox
+			{
+				Parent         = this.toolbar,
+				DrawFullFrame  = true,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (5),
+			};
 
 			//	Crée les frames gauche, centrale et droite.
 			this.mainFrame = new FrameBox
@@ -94,7 +101,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Padding        = new Margins (5),
 			};
 
-			var levelFrame = new FrameBox
+			var topPanelRightFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
 				DrawFullFrame  = true,
@@ -107,8 +114,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.CreateExtendedViewSettingsUI (this.mainFrame);
 
 			//	Remplissage de la frame gauche.
-			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, true, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
+			this.topPanelLeftController = new TopPanelLeftController (this.controller);
+			this.topPanelLeftController.CreateUI (topPanelLeftFrame, true, "Panel.ViewSettings", this.LevelChangedAction);
+
+			//	Remplissage de la frame droite.
+			this.topPanelRightController = new TopPanelRightController (this.controller);
+			this.topPanelRightController.CreateUI (topPanelRightFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
 
 			this.UpdateCombo ();
 			this.UpdateList ();
@@ -141,10 +152,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void UpdateLevel()
 		{
-			this.comptactFrame.Visibility = !this.levelController.Specialist;
-			this.extendedFrame.Visibility =  this.levelController.Specialist;
+			this.comptactFrame.Visibility = !this.topPanelLeftController.Specialist;
+			this.extendedFrame.Visibility =  this.topPanelLeftController.Specialist;
 
-			this.levelController.Specialist = this.levelController.Specialist;
+			this.topPanelLeftController.Specialist = this.topPanelLeftController.Specialist;
 		}
 
 		private void UpdateWidgets()
@@ -782,7 +793,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			int count = this.viewSettingsList.List.Count;
 			bool eq = this.CompareTo (this.viewSettingsList.Selected);
 
-			this.levelController.ClearEnable = sel != 0 || !eq;
+			this.topPanelRightController.ClearEnable = sel != 0 || !eq;
 
 			this.compactUseButton.Enable    = (sel != -1 && !eq);
 			this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
@@ -1263,7 +1274,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private FrameBox								mainFrame;
 		private FrameBox								toolbar;
-		private LevelController							levelController;
+		private TopPanelLeftController					topPanelLeftController;
+		private TopPanelRightController					topPanelRightController;
 		private bool									showPanel;
 
 		private FrameBox								comptactFrame;

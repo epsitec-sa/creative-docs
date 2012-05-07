@@ -58,13 +58,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			get
 			{
-				return this.levelController.Specialist;
+				return this.topPanelLeftController.Specialist;
 			}
 			set
 			{
-				if (this.levelController.Specialist != value)
+				if (this.topPanelLeftController.Specialist != value)
 				{
-					this.levelController.Specialist = value;
+					this.topPanelLeftController.Specialist = value;
 					this.LevelChangedAction ();
 				}
 			}
@@ -94,8 +94,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock                = DockStyle.Top,
 			};
 
-			UIBuilder.CreateFixIcon (this.toolbar, "Panel.Options");
-
 			this.graphbar = new FrameBox
 			{
 				Parent              = this.container,
@@ -107,6 +105,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			//	Crée les frames gauche, centrale et droite.
+			var topPanelLeftFrame = new FrameBox
+			{
+				Parent         = this.toolbar,
+				DrawFullFrame  = true,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (5),
+			};
+
 			this.mainFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
@@ -114,7 +121,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Padding        = new Margins (5),
 			};
 
-			var levelFrame = new FrameBox
+			var topPanelRightFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
 				DrawFullFrame  = true,
@@ -124,10 +131,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			//	Remplissage de la frame gauche.
-			//	Remplissage de la frame centrale.
-			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (levelFrame, this.HasBeginnerSpecialist, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
-			this.levelController.Specialist = this.options.Specialist;
+			this.topPanelLeftController = new TopPanelLeftController (this.controller);
+			this.topPanelLeftController.CreateUI (topPanelLeftFrame, this.HasBeginnerSpecialist, "Panel.Options", this.LevelChangedAction);
+			this.topPanelLeftController.Specialist = this.options.Specialist;
+
+			//	Remplissage de la frame droite.
+			this.topPanelRightController = new TopPanelRightController (this.controller);
+			this.topPanelRightController.CreateUI (topPanelRightFrame, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);
 			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged);
@@ -156,17 +166,17 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		protected virtual void LevelChangedAction()
 		{
-			this.options.Specialist = this.levelController.Specialist;
+			this.options.Specialist = this.topPanelLeftController.Specialist;
 
 			if (this.comparisonFrame != null)
 			{
-				this.comparisonFrame.Visibility = this.levelController.Specialist;
+				this.comparisonFrame.Visibility = this.topPanelLeftController.Specialist;
 			}
 		}
 
 		protected virtual void UpdateWidgets()
 		{
-			this.levelController.ClearEnable = !this.options.IsEmpty;
+			this.topPanelRightController.ClearEnable = !this.options.IsEmpty;
 		}
 
 
@@ -262,7 +272,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.comparisonFrame.Visibility = this.levelController.Specialist;
+				this.comparisonFrame.Visibility = this.topPanelLeftController.Specialist;
 
 				bool enable = this.options.ComparisonEnable;
 
@@ -544,7 +554,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected BackIconButton								showCommonGraphButton;
 		protected BackIconButton								showDetailedGraphButton;
 
-		protected LevelController								levelController;
+		protected TopPanelLeftController						topPanelLeftController;
+		protected TopPanelRightController						topPanelRightController;
 		protected GraphOptionsController						graphOptionsController;
 
 		protected bool											showPanel;

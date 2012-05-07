@@ -267,12 +267,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.LevelChangedAction ();
 
-			this.différenceFrame.Visibility = this.levelController.Specialist;
+			this.différenceFrame.Visibility = this.topPanelLeftController.Specialist;
 		}
 
 		protected override void UpdateWidgets()
 		{
-			this.différenceFrame.Visibility = this.levelController.Specialist;
+			this.différenceFrame.Visibility = this.topPanelLeftController.Specialist;
 			this.différenceFrame.Enable = this.Options.MontreEcritures;
 
 			using (this.ignoreChanges.Enter ())

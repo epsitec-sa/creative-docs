@@ -19,30 +19,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
-		public static void CreateFixIcon(Widget parent, string icon)
-		{
-			//	Crée le petit panneau de gauche contenant une icône fixe.
-			var frame = new FrameBox
-			{
-				Parent         = parent,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, -1, 0, 0),
-			};
-
-			new StaticText
-			{
-				Parent           = frame,
-				Text             = UIBuilder.GetTextIconUri (icon),
-				ContentAlignment = ContentAlignment.TopRight,
-				PreferredSize    = new Size (20, 20),
-				Dock             = DockStyle.Top,
-				Margins          = new Margins (2, 2, 5, 0),  // marges subtiles pour centrer l'icône
-			};
-		}
-
-
 		public static FrameBox CreateMiniToolbar(Widget parent)
 		{
 			var toolbar = new FrameBox

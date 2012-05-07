@@ -15,15 +15,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 	/// <summary>
 	/// Ce contrôleur permet de choisir le niveau débutant/spécialiste.
 	/// </summary>
-	public class LevelController
+	public class TopPanelLeftController
 	{
-		public LevelController(AbstractController controller)
+		public TopPanelLeftController(AbstractController controller)
 		{
 			this.controller = controller;
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, bool hasBeginnerSpecialist, string clearText, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
+		public FrameBox CreateUI(FrameBox parent, bool hasBeginnerSpecialist, string icon, System.Action levelChangedAction)
 		{
 			var frame = new FrameBox
 			{
@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
+#if false
 			if (hasBeginnerSpecialist)
 			{
 				this.beginnerButton = this.CreateButton (frame, "Level.Beginner", "Simple");
@@ -78,52 +79,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock          = DockStyle.Left,
 				};
 			}
+#endif
 
-			this.buttonClear = new IconButton
+			this.levelButton = new IconButton
 			{
 				Parent        = frame,
-				IconUri       = UIBuilder.GetResourceIconUri ("Level.Clear"),
+				IconUri       = UIBuilder.GetResourceIconUri (icon),
 				PreferredSize = new Size (20, 20),
 				Dock          = DockStyle.Left,
-				Margins       = new Margins (8, 0, 0, 0),
+				Enable        = hasBeginnerSpecialist,
+				AutoFocus     = false,
 			};
 
-			this.buttonClose = new IconButton
+			if (hasBeginnerSpecialist)
 			{
-				Parent        = frame,
-				IconUri       = UIBuilder.GetResourceIconUri ("Level.Close"),
-				PreferredSize = new Size (20, 20),
-				Dock          = DockStyle.Left,
-			};
+				ToolTip.Default.SetToolTip (this.levelButton, "Mode simple ou avancé");
 
-			ToolTip.Default.SetToolTip (this.buttonClear, clearText);
-			ToolTip.Default.SetToolTip (this.buttonClose, "Ferme le panneau");
+				this.levelMarker = this.CreateMarker (this.levelButton);
+
+				this.levelButton.Clicked += delegate
+				{
+					this.Specialist = !this.Specialist;
+					levelChangedAction ();
+				};
+			}
 
 			this.UpdateButtons ();
 
-			this.buttonClear.Clicked += delegate
-			{
-				clearAction ();
-			};
-
-			this.buttonClose.Clicked += delegate
-			{
-				closeAction ();
-			};
-
 			return frame;
-		}
-
-		public bool ClearEnable
-		{
-			get
-			{
-				return this.buttonClear.Enable;
-			}
-			set
-			{
-				this.buttonClear.Enable = value;
-			}
 		}
 
 		public bool Beginner
@@ -163,6 +146,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.arrowButton.IconUri = UIBuilder.GetResourceIconUri (this.specialist ? "Level.Specialist.Arrow" : "Level.Beginner.Arrow");
 				this.specialistButton.ActiveState = this.specialist ? ActiveState.Yes : ActiveState.No;
 			}
+
+			if (this.levelMarker != null)
+			{
+				this.levelMarker.Visibility = this.specialist;
+			}
 		}
 
 		private BackIconButton CreateButton(FrameBox parent, string icon, string description)
@@ -183,14 +171,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return button;
 		}
 
+		private StaticText CreateMarker(Widget parent)
+		{
+			//	Crée le petit 'vu' vert en surimpression d'un bouton. Par chance, le widget StaticText ne capture
+			//	pas les événements souris !
+			return new StaticText
+			{
+				Parent           = parent,
+				Text             = UIBuilder.GetTextIconUri ("Panel.Specialist"),
+				ContentAlignment = ContentAlignment.BottomRight,
+				Anchor           = AnchorStyles.All,
+			};
+		}
+
 
 		private readonly AbstractController		controller;
 
 		private bool							specialist;
-		private IconButton						buttonClear;
-		private IconButton						buttonClose;
 		private BackIconButton					beginnerButton;
 		private IconButton                      arrowButton;
 		private BackIconButton					specialistButton;
+		private IconButton						levelButton;
+		private StaticText						levelMarker;
 	}
 }

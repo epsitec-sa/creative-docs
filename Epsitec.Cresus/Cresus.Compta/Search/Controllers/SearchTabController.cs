@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.titleFrame = new FrameBox
 			{
 				Parent           = parent,
-				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+				PreferredWidth   = UIBuilder.LeftLabelWidth+1-10,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Top,
 				Margins          = new Margins (0, 10, 0, 0),

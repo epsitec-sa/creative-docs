@@ -76,6 +76,7 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\TopPanelLeftController.cs" />
     <Compile Include="Controllers\SoldesController.cs" />
     <Compile Include="Controllers\RésuméPériodiqueController.cs" />
     <Compile Include="Controllers\MonnaiesEditorController.cs" />
@@ -218,7 +219,7 @@
     <Compile Include="Controllers\PériodeEditorController.cs" />
     <Compile Include="Controllers\PériodesController.cs" />
     <Compile Include="Controllers\DoubleController.cs" />
-    <Compile Include="Controllers\LevelController.cs" />
+    <Compile Include="Controllers\TopPanelRightController.cs" />
     <Compile Include="Controllers\PanelsToolbarController.cs" />
     <Compile Include="Search\Controllers\TopFilterController.cs" />
     <Compile Include="Options\Controllers\JournalOptionsController.cs" />
@@ -400,6 +401,7 @@
     <EmbeddedResource Include="Images\Panel.Active.icon" />
     <EmbeddedResource Include="Images\Level.Beginner.Arrow.icon" />
     <EmbeddedResource Include="Images\Level.Specialist.Arrow.icon" />
+    <EmbeddedResource Include="Images\Panel.Specialist.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

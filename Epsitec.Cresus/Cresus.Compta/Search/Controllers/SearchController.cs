@@ -60,30 +60,15 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			UIBuilder.CreateFixIcon (frame, this.isFilter ? "Panel.Filter" : "Panel.Search");
-
-			if (this.isFilter)
+			var topPanelLeftFrame = new FrameBox
 			{
-				this.filterEnableButton = new CheckButton
-				{
-					Parent           = frame,
-					PreferredWidth   = 20,
-					PreferredHeight  = 20,
-					AutoToggle       = false,
-					Anchor           = AnchorStyles.TopLeft,
-					Margins          = new Margins (30, 0, 6, 0),
-				};
-
-				ToolTip.Default.SetToolTip (this.filterEnableButton, "Active ou désactive le filtre");
-
-				this.filterEnableButton.Clicked += delegate
-				{
-					this.data.Enable = !this.data.Enable;
-					this.UpdateButtons ();
-					this.SearchStartAction ();
-				};
-			}
-
+				Parent          = frame,
+				DrawFullFrame   = true,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Padding         = new Margins (5, 5, 5, 5),
+			};
 
 			this.middleFrame = new FrameBox
 			{
@@ -91,10 +76,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				PreferredHeight     = 20,
 				Dock                = DockStyle.Fill,
-				Padding             = new Margins (0, 0, 0, 0),
+				Padding             = new Margins (-1, 0, 0, 0),
 			};
 
-			var levelFrame = new FrameBox
+			var topPanelRightFrame = new FrameBox
 			{
 				Parent          = frame,
 				DrawFullFrame   = true,
@@ -112,9 +97,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Padding         = new Margins (5, 0, 5, 5),
 			};
 
-			this.CreateRightUI  (rightFrame);
+			this.CreateTopPanelLeftUI (topPanelLeftFrame);
+			this.CreateRightUI (rightFrame);
 			this.CreateMiddleUI ();
-			this.CreateLevelUI (levelFrame);
+			this.CreateTopPanelRightUI (topPanelRightFrame);
 
 			this.UpdateButtons ();
 
@@ -133,7 +119,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				if (this.data.Specialist != value)
 				{
 					this.data.Specialist = value;
-					this.levelController.Specialist = value;
+					this.topPanelLeftController.Specialist = value;
 					this.data.BeginnerAdjust (this.isFilter);
 
 					this.CreateMiddleUI ();
@@ -174,6 +160,28 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.CreateMiddleBeginnerUI ();
 			}
+
+			if (this.isFilter)
+			{
+				this.filterEnableButton = new CheckButton
+				{
+					Parent           = this.middleFrame,
+					PreferredWidth   = 20,
+					PreferredHeight  = 20,
+					AutoToggle       = false,
+					Anchor           = AnchorStyles.TopLeft,
+					Margins          = new Margins (9, 0, 6, 0),
+				};
+
+				ToolTip.Default.SetToolTip (this.filterEnableButton, "Active ou désactive le filtre");
+
+				this.filterEnableButton.Clicked += delegate
+				{
+					this.data.Enable = !this.data.Enable;
+					this.UpdateButtons ();
+					this.SearchStartAction ();
+				};
+			}
 		}
 
 		private void CreateMiddleBeginnerUI()
@@ -200,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Text             = this.isFilter ? "Filtrer" : "Rechercher",
 					TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 					ContentAlignment = ContentAlignment.MiddleRight,
-					PreferredWidth   = UIBuilder.LeftLabelWidth-10,
+					PreferredWidth   = UIBuilder.LeftLabelWidth+1-10,
 					PreferredHeight  = 20,
 					Dock             = DockStyle.Top,
 					Margins          = new Margins (0, 10, 0, 0),
@@ -750,7 +758,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void CreateLevelUI(FrameBox parent)
+		private void CreateTopPanelLeftUI(FrameBox parent)
 		{
 			System.Action closeAction;
 
@@ -763,9 +771,26 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				closeAction = this.controller.MainWindowController.ClosePanelSearch;
 			}
 
-			this.levelController = new LevelController (this.controller);
-			this.levelController.CreateUI (parent, true, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
-			this.levelController.Specialist = this.data.Specialist;
+			this.topPanelLeftController = new TopPanelLeftController (this.controller);
+			this.topPanelLeftController.CreateUI (parent, true, this.isFilter ? "Panel.Filter" : "Panel.Search", this.LevelChangedAction);
+			this.topPanelLeftController.Specialist = this.data.Specialist;
+		}
+
+		private void CreateTopPanelRightUI(FrameBox parent)
+		{
+			System.Action closeAction;
+
+			if (this.isFilter)
+			{
+				closeAction = this.controller.MainWindowController.ClosePanelFilter;
+			}
+			else
+			{
+				closeAction = this.controller.MainWindowController.ClosePanelSearch;
+			}
+
+			this.topPanelRightController = new TopPanelRightController (this.controller);
+			this.topPanelRightController.CreateUI (parent, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
 		}
 
 		private void ClearAction()
@@ -776,7 +801,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void LevelChangedAction()
 		{
-			this.data.Specialist = this.levelController.Specialist;
+			this.data.Specialist = this.topPanelLeftController.Specialist;
 			this.data.BeginnerAdjust (this.isFilter);
 
 			this.CreateMiddleUI ();
@@ -895,7 +920,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
-			this.levelController.ClearEnable = !this.data.IsEmpty;
+			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
 
 			if (this.filterEnableButton != null)
 			{
@@ -990,6 +1015,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private TextFieldCombo							beginnerToProfondeurField;
 		private DateFieldController						beginnerBeginDateController;
 		private DateFieldController						beginnerEndDateController;
-		private LevelController							levelController;
+		private TopPanelLeftController					topPanelLeftController;
+		private TopPanelRightController					topPanelRightController;
 	}
 }
