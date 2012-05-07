@@ -9,11 +9,12 @@ using System.Linq;
 
 namespace Epsitec.Common.BigList
 {
-	public class ItemListSelection
+	public class ItemListSelection : System.IDisposable
 	{
 		public ItemListSelection(ItemCache cache)
 		{
 			this.cache = cache;
+			this.cache.ResetFired += this.HandleCacheResetFired;
 		}
 
 
@@ -73,6 +74,22 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.Dispose (true);
+		}
+
+		#endregion
+
+		protected void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.cache.ResetFired -= this.HandleCacheResetFired;
+			}
+		}
 
 		private bool Select(int index, ItemSelection selection, ItemListSelectionEventArgs e)
 		{
@@ -213,6 +230,11 @@ namespace Epsitec.Common.BigList
 		{
 			var handler = this.SelectionChanged;
 			handler.Raise (this, e);
+		}
+
+		private void HandleCacheResetFired(object sender)
+		{
+			this.selectedItemCount = 0;
 		}
 
 
