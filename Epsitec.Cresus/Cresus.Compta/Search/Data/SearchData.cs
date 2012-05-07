@@ -116,7 +116,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 		}
 
-		public bool IsDefined
+		private bool IsDefined
 		{
 			//	Indique si les données sont définies.
 			get

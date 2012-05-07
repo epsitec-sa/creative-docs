@@ -729,8 +729,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.titleLabel.HypertextClicked += delegate
 			{
-				this.dataAccessor.FilterData.Enable = !this.dataAccessor.FilterData.Enable;
-				this.FilterStartAction ();
+				this.mainWindowController.OpenPanelFilter ();
+				//?this.dataAccessor.FilterData.Enable = !this.dataAccessor.FilterData.Enable;
+				//?this.FilterStartAction ();
 			};
 
 			new GlyphButton
@@ -814,9 +815,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			title = title.ApplyBold ().ApplyFontSize (13.0);
 
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && this.dataAccessor.FilterData.IsDefined)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty)
 			{
-				FormattedText ht = this.dataAccessor.FilterData.IsEmpty ? "active le filtre" : "désactive le filtre";
+				FormattedText ht = "filtre actif";
 				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
 			}
 

@@ -1253,6 +1253,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
+		public void OpenPanelFilter()
+		{
+			this.showFilterPanel = true;
+			this.UpdatePanelCommands ();
+		}
+
 		public void ClosePanelOptions()
 		{
 			this.showOptionsPanel = false;
