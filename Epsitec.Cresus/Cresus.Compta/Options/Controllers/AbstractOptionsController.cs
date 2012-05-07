@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				BackColor           = UIBuilder.OptionsBackColor,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 5),
+				Margins             = new Margins (0, 0, 0, -1),
 			};
 
 			this.toolbar = new FrameBox

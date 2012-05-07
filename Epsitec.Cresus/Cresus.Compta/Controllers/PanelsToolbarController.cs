@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-#if false
+#if true
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,

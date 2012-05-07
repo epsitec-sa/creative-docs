@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				BackColor           = UIBuilder.ViewSettingsBackColor,
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, 5),
+				Margins             = new Margins (0, 0, 0, -1),
 				Visibility          = false,
 			};
 
