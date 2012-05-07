@@ -105,10 +105,28 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public abstract void Reset();
+		public void Reset()
+		{
+			//	By first resetting the list, then resetting the cache, we make sure that in the
+			//	case of an ItemListCollection, the cache will be reset only once (looping will
+			//	be done only in the call to ResetList).
+
+			this.ResetList ();
+			this.Cache.Reset ();
+		}
+
+		/// <summary>
+		/// Resets the list active index, focused index and visible frame, if any. This does
+		/// not affect the item cache.
+		/// </summary>
+		void IItemList.ResetList()
+		{
+			this.ResetList ();
+		}
 
 		#endregion
 
+		protected abstract void ResetList();
 
 		protected virtual void SetActiveIndex(int index)
 		{

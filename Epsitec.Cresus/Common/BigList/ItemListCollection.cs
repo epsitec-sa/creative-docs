@@ -52,9 +52,10 @@ namespace Epsitec.Common.BigList
 		
 		public abstract ItemList Create();
 
-		public override void Reset()
+		
+		protected override void ResetList()
 		{
-			this.list.ForEach (x => x.Reset ());
+			this.list.ForEach (x => x.ResetList ());
 		}
 
 

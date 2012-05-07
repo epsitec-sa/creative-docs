@@ -84,6 +84,15 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		public void Reset()
+		{
+			this.visibleRows.Clear ();
+
+			this.visibleOffset = 0;
+			this.visibleIndex  = -1;
+		}
+
+
 		public void SyncVisibleIndex(int index)
 		{
 			if ((this.visibleRows.Count > 0) &&
@@ -136,6 +145,8 @@ namespace Epsitec.Common.BigList
 
 		public int GetFirstFullyVisibleIndex()
 		{
+			this.RefreshIfNeeded ();
+
 			var row = this.visibleRows.FirstOrDefault (x => x.Offset >= 0)
 				   ?? this.visibleRows.FirstOrDefault ();
 
@@ -151,6 +162,8 @@ namespace Epsitec.Common.BigList
 
 		public int GetLastFullyVisibleIndex()
 		{
+			this.RefreshIfNeeded ();
+
 			var row = this.visibleRows.LastOrDefault (x => (x.Offset + x.Height.TotalHeight) <= this.visibleHeight)
 				   ?? this.visibleRows.LastOrDefault ();
 
@@ -235,6 +248,15 @@ namespace Epsitec.Common.BigList
 		}
 
 
+		private void RefreshIfNeeded()
+		{
+			if (this.visibleIndex < 0)
+			{
+				this.visibleIndex = 0;
+				this.InternalSetVisibleIndex (0);
+			}
+		}
+
 		private void InternalSetVisibleIndex(int index)
 		{
 			if (this.visibleHeight == 0)
@@ -289,6 +311,8 @@ namespace Epsitec.Common.BigList
 
 		private List<ItemListRow> GetVisibleRowsStartingWith(int index, int startOffset = 0)
 		{
+			this.RefreshIfNeeded ();
+
 			var rows  = new List<ItemListRow> ();
 			int count = this.itemList.Count;
 
@@ -356,6 +380,8 @@ namespace Epsitec.Common.BigList
 
 		private List<ItemListRow> GetVisibleRowsEndingWith(int index)
 		{
+			this.RefreshIfNeeded ();
+
 			var rows  = new List<ItemListRow> ();
 			int count = this.itemList.Count;
 

@@ -27,14 +27,11 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		public override void Reset()
+		protected override void ResetList()
 		{
-			this.ResetCache ();
-
 			this.ClearActiveIndex ();
 			this.ClearFocusedIndex ();
-
-			this.visibleFrame.SetVisibleIndex (0);
+			this.ClearVisibleFrame ();
 		}
 
 		public ItemState GetItemState(int index)
@@ -99,7 +96,11 @@ namespace Epsitec.Common.BigList
 			this.Cache.Reset ();
 		}
 
+		private void ClearVisibleFrame()
+		{
+			this.visibleFrame.Reset ();
+		}
+		
 		private readonly ItemListVisibleFrame	visibleFrame;
-
 	}
 }

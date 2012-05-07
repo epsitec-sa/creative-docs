@@ -48,6 +48,10 @@ namespace Epsitec.Common.BigList
 			get;
 		}
 
-		void Reset();
+		/// <summary>
+		/// Resets the list active index, focused index and visible frame, if any. This does
+		/// not affect the item cache.
+		/// </summary>
+		void ResetList();
 	}
 }

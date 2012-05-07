@@ -45,6 +45,12 @@ namespace Epsitec.Common.BigList.Widgets
 				decimal visible = this.view.ItemList.VisibleFrame.VisibleCount;
 				decimal total   = this.host.itemCache.ItemCount;
 
+				if (total == 0)
+				{
+					index   = 0;
+					visible = 0;
+				}
+
 				using (this.counter.Enter ())
 				{
 					this.scroller.SmallChange       = 4;
