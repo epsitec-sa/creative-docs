@@ -128,7 +128,7 @@
     <Compile Include="Controllers\BrowserControllers\BrowserListItemMapper.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItemProvider.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItemRenderer.cs" />
-    <Compile Include="Controllers\BrowserControllers\BrowserScrollListController.cs" />
+    <Compile Include="Controllers\BrowserControllers\BrowserListController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\BusinessDocumentLinesController.CommandProcessors.cs" />
     <Compile Include="Controllers\BusinessDocumentControllers\LineRibbonController.cs" />

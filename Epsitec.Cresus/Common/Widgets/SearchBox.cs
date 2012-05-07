@@ -49,10 +49,12 @@ namespace Epsitec.Common.Widgets
 
 		void ISearchBox.NotifyShowNextClicked()
 		{
+			this.OnShowNextClicked ();
 		}
 
 		void ISearchBox.NotifyShowPrevClicked()
 		{
+			this.OnShowPrevClicked ();
 		}
 
 		#endregion
@@ -122,6 +124,16 @@ namespace Epsitec.Common.Widgets
 			this.SearchClicked.Raise (this);
 		}
 
+		protected void OnShowNextClicked()
+		{
+			this.ShowNextClicked.Raise (this);
+		}
+
+		protected void OnShowPrevClicked()
+		{
+			this.ShowPrevClicked.Raise (this);
+		}
+
 		protected override void OnEditionAccepted()
 		{
 			base.OnEditionAccepted ();
@@ -129,6 +141,8 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public event EventHandler				SearchClicked;
+		public event EventHandler				ShowNextClicked;
+		public event EventHandler				ShowPrevClicked;
 
 		private readonly SearchBehavior			searchBehavior;
 		private readonly SearchBoxPolicy		searchPolicy;

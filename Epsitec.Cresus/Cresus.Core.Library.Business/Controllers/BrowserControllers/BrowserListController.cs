@@ -19,9 +19,9 @@ using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserScrollListController : System.IDisposable
+	public class BrowserListController : System.IDisposable
 	{
-		public BrowserScrollListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
+		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
 		{
 			this.data        = data;
 			this.scrollList  = scrollList;

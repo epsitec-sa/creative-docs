@@ -42,8 +42,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var browserViewController = navigator.BrowserViewController;
 
 				browserViewController.SelectDataSet (this.dataSetName);
-				browserViewController.scrollListController.SelectedEntityKey = this.entityKey;
-				browserViewController.scrollListController.RefreshScrollList ();
+				browserViewController.browserListController.SelectedEntityKey = this.entityKey;
+				browserViewController.browserListController.RefreshScrollList ();
 				
 				return browserViewController.ReselectActiveEntity ();
 			}

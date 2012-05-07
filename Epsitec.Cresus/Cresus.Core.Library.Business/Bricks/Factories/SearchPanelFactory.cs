@@ -124,6 +124,6 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 		}
 
 		private SearchPicker					search;
-		private BrowserScrollListController		browser;
+		private BrowserListController		browser;
 	}
 }

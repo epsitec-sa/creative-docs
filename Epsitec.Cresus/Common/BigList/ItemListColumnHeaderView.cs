@@ -22,8 +22,6 @@ namespace Epsitec.Common.BigList
 		{
 			this.IsMasterView = true;
 			
-			this.columns = new ItemListColumnCollection ();
-			
 			this.policies  = new List<EventProcessorPolicy> ();
 			this.processor = new ViewEventProcessor (this);
 
@@ -33,6 +31,8 @@ namespace Epsitec.Common.BigList
 					AutoFollow = false,
 					SelectionPolicy = SelectionPolicy.OnMouseUp,
 				});
+
+			this.DefineColumnCollection (new ItemListColumnCollection ());
 		}
 
 
@@ -70,6 +70,7 @@ namespace Epsitec.Common.BigList
 			this.Columns.SpecifySort (column, column.GetActiveSortOrder (toggle: column.SortIndex == 0));
 		}
 
+		
 		protected override void ProcessMessage(Message message, Point pos)
 		{
 			if (this.processor.ProcessMessage (message, pos))
@@ -123,6 +124,24 @@ namespace Epsitec.Common.BigList
 
 			this.processor.PaintOverlay (graphics, clipRect);
 		}
+		
+		protected override void UpdateClientGeometry()
+		{
+			base.UpdateClientGeometry ();
+
+			this.RefreshColumnLayout ();
+		}
+
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DefineColumnCollection (null);
+			}
+
+			base.Dispose (disposing);
+		}
+
 
 		private Rectangle GetColumnBounds(ItemListColumn column)
 		{
@@ -157,14 +176,6 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		protected override void UpdateClientGeometry()
-		{
-			base.UpdateClientGeometry ();
-
-			this.RefreshColumnLayout ();
-		}
-
-
 		private void DefineColumnCollection(ItemListColumnCollection collection)
 		{
 			if (this.columns != null)
@@ -178,6 +189,22 @@ namespace Epsitec.Common.BigList
 			{
 				this.columns.CollectionChanged += this.HandleColumnsCollectionChanged;
 			}
+		}
+
+		private void RefreshColumnLayout()
+		{
+			if (this.columns.Count == 0)
+			{
+				this.Visibility = false;
+			}
+			else
+			{
+				this.Visibility = true;
+			}
+
+			double headerWidth = this.Client.Width;
+
+			this.columns.Layout (headerWidth);
 		}
 
 
@@ -206,16 +233,10 @@ namespace Epsitec.Common.BigList
 		}
 
 
-		private void RefreshColumnLayout()
-		{
-			double headerWidth = this.Client.Width;
-
-			this.columns.Layout (headerWidth);
-		}
-
 
 		private readonly List<EventProcessorPolicy>	policies;
-		private ItemListColumnCollection		columns;
 		private readonly ViewEventProcessor		processor;
+		
+		private ItemListColumnCollection		columns;
 	}
 }

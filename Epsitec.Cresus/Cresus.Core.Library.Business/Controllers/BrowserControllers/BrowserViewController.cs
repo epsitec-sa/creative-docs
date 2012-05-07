@@ -75,9 +75,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				this.Orchestrator.ClearActiveEntity ();
 
-				this.DisposeBrowserDataContext ();
+				this.DisposeBrowserListController ();
 				this.dataSetName = dataSetName;
-				this.CreateBrowserDataContext ();
+				this.CreateBrowserListController ();
 				this.OnDataSetSelected ();
 			}
 		}
@@ -88,9 +88,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// <param name="entity">The entity.</param>
 		public void SelectEntity(AbstractEntity entity)
 		{
-			if (this.scrollListController != null)
+			if (this.browserListController != null)
 			{
-				this.scrollListController.SelectedEntity = entity;
+				this.browserListController.SelectedEntity = entity;
 			}
 		}
 
@@ -112,14 +112,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// </summary>
 		public void DeleteActiveEntity()
 		{
-			var entity = this.scrollListController.SelectedEntity;
-			var active = this.scrollListController.SelectedIndex;
+			var entity = this.browserListController.SelectedEntity;
+			var active = this.browserListController.SelectedIndex;
 
 			if (entity != null)
 			{
 				this.Orchestrator.ClearActiveEntity ();
-				this.scrollListController.Delete (entity);
-				this.scrollListController.SelectedIndex = active;
+				this.browserListController.Delete (entity);
+				this.browserListController.SelectedIndex = active;
 			}
 		}
 		
@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			};
 
 			this.CreateUISettingsPanel (frame);
-			this.CreateUIScrollList (frame);
+			this.CreateUIItemScrollList (frame);
 		}
 
 
@@ -153,18 +153,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			};
 		}
 		
-		private void CreateUIScrollList(FrameBox frame)
+		private void CreateUIItemScrollList(FrameBox frame)
 		{
-			this.scrollList = new ItemScrollList ()
+			this.itemScrollList = new ItemScrollList ()
 			{
 				Parent  = frame,
-				Anchor  = AnchorStyles.All,
-				Margins = Margins.Zero,
+				Dock = DockStyle.Fill,
 			};
 		}
 		
 		
-		private void CreateBrowserDataContext()
+		private void CreateBrowserListController()
 		{
 			//	When switching to some other contents, the browser first has to ensure that the
 			//	UI no longer has an actively selected entity; clearing the active entity will
@@ -172,34 +171,34 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.scrollListController = new BrowserScrollListController (this.data, this.scrollList, this.DataSetEntityType);
+			this.browserListController = new BrowserListController (this.data, this.itemScrollList, this.DataSetEntityType);
 			
-			this.scrollListController.CurrentChanged  += this.HandleScrollListControllerCurrentChanged;
-			this.scrollListController.CurrentChanging += this.HandleScrollListControllerCurrentChanging;
+			this.browserListController.CurrentChanged  += this.HandleBrowserListControllerCurrentChanged;
+			this.browserListController.CurrentChanging += this.HandleBrowserListControllerCurrentChanging;
 			
 			this.SelectActiveEntity ();
 		}
 
-		private void DisposeBrowserDataContext()
+		private void DisposeBrowserListController()
 		{
-			if (this.scrollListController != null)
+			if (this.browserListController != null)
 			{
-				this.scrollListController.CurrentChanged  -= this.HandleScrollListControllerCurrentChanged;
-				this.scrollListController.CurrentChanging -= this.HandleScrollListControllerCurrentChanging;
+				this.browserListController.CurrentChanged  -= this.HandleBrowserListControllerCurrentChanged;
+				this.browserListController.CurrentChanging -= this.HandleBrowserListControllerCurrentChanging;
 				
-				this.scrollListController.Dispose ();
+				this.browserListController.Dispose ();
 				
-				this.scrollListController = null;
+				this.browserListController = null;
 			}
 		}
 
 		
-		private void HandleScrollListControllerCurrentChanged(object sender)
+		private void HandleBrowserListControllerCurrentChanged(object sender)
 		{
 			this.OnCurrentChanged ();
 		}
 
-		private void HandleScrollListControllerCurrentChanging(object sender, CurrentChangingEventArgs e)
+		private void HandleBrowserListControllerCurrentChanging(object sender, CurrentChangingEventArgs e)
 		{
 			this.OnCurrentChanging (e);
 		}
@@ -207,9 +206,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private bool SelectActiveEntity()
 		{
-			if (this.scrollListController.SelectedEntityKey.HasValue)
+			if (this.browserListController.SelectedEntityKey.HasValue)
 			{
-				var activeEntityKey       = this.scrollListController.SelectedEntityKey.Value;
+				var activeEntityKey       = this.browserListController.SelectedEntityKey.Value;
 				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 
 				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
@@ -225,9 +224,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private bool ReselectActiveEntity()
 		{
-			if (this.scrollListController.SelectedEntityKey.HasValue)
+			if (this.browserListController.SelectedEntityKey.HasValue)
 			{
-				var activeEntityKey       = this.scrollListController.SelectedEntityKey.Value;
+				var activeEntityKey       = this.browserListController.SelectedEntityKey.Value;
 				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
 				
 				this.Orchestrator.ResetActiveEntity (activeEntityKey, navigationPathElement);
@@ -282,7 +281,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private string							dataSetName;
 
 		private FrameBox						settingsPanel;
-		private ItemScrollList					scrollList;
-		private BrowserScrollListController		scrollListController;
+		private ItemScrollList					itemScrollList;
+		private BrowserListController			browserListController;
 	}
 }

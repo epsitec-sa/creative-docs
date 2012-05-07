@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// <summary>
 	/// The <c>BrowserList</c> class stores the collection of items, which are then
 	/// presented to the user, usually in a <see cref="ItemScrollList"/>, as managed by
-	/// <see cref="BrowserScrollListController"/>.
+	/// <see cref="BrowserListController"/>.
 	/// </summary>
 	public sealed class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
 	{
