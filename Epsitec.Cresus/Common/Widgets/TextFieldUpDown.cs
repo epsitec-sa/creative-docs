@@ -1,3 +1,6 @@
+//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
 using Epsitec.Common.Support;
 
 namespace Epsitec.Common.Widgets
@@ -349,7 +352,7 @@ namespace Epsitec.Common.Widgets
 		{
 			if (base.TextLayout != null)
 			{
-				this.realSize = this.InnerTextBounds.Size;
+				this.UpdateRealSize ();
 
 				base.TextLayout.Alignment  = this.ContentAlignment;
 				base.TextLayout.LayoutSize = this.GetTextLayoutSize ();

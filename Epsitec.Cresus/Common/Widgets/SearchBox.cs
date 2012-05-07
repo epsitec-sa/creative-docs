@@ -1,6 +1,7 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -64,7 +65,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 		}
@@ -73,7 +74,10 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.searchBehavior != null)
 			{
-				this.margins.Right = this.searchBehavior.DefaultWidth;
+				var current = this.margins;
+				var right   = this.searchBehavior.DefaultWidth;
+				
+				this.margins = new Margins (current.Left, right, current.Top, current.Bottom);
 				this.searchBehavior.UpdateButtonGeometry ();
 			}
 

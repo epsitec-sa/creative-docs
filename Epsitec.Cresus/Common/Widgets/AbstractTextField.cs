@@ -980,7 +980,8 @@ namespace Epsitec.Common.Widgets
 		{
 			if (this.TextLayout != null)
 			{
-				this.realSize = this.InnerTextBounds.Size;
+				this.UpdateRealSize ();
+
 				this.TextLayout.Alignment  = this.ContentAlignment;
 				this.TextLayout.LayoutSize = this.GetTextLayoutSize ();
 
@@ -2154,7 +2155,13 @@ namespace Epsitec.Common.Widgets
 		protected virtual void UpdateGeometry()
 		{
 			this.UpdateButtonGeometry ();
+			this.UpdateRealSize ();
 			this.OnCursorChanged (true);
+		}
+
+		protected void UpdateRealSize()
+		{
+			this.realSize = this.InnerTextBounds.Size;
 		}
 
 		protected virtual void UpdateButtonGeometry()

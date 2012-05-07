@@ -41,18 +41,18 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				if (this.IsVisible)
 				{
-					double height = this.host.ActualHeight;
+					this.CreateButtons ();
+					double width = 0;
 
-					if (this.host is TextFieldMultiEx)
+					foreach (var button in this.GetButtons ().Where (x => x.Visibility))
 					{
-						//	Si le widget est un TextFieldMultiEx, les boutons Accept/Reject seront en bas à droite.
-						//	Il ne faut donc pas tenir compte de la hauteur totale du widget !
-						height = System.Math.Min (height, TextFieldMultiEx.SingleLineDefaultHeight);
+						width += button.PreferredWidth - 1;
 					}
 
-					double width = System.Math.Floor ((height - 4) * 15.0 / 17.0);
-					
-					return width + width - 1;
+					if (width > 0)
+					{
+						return width + 1;
+					}
 				}
 				
 				return 0;
