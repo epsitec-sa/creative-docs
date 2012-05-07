@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			System.Predicate<AbstractEntity> filter = null;
 			this.data        = data;
-			this.scrollList  = scrollList;
+			this.itemScrollList  = scrollList;
 			this.dataSetType = dataSetType;
 			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 			this.collection  = new BrowserList (this.dataContext);
@@ -40,22 +40,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.dataContext.EntityChanged      += this.HandleDataContextEntityChanged;
 
 			this.SetContentsBasedOnDataSet ();
-		}
-
-		private void SetUpItemList()
-		{
-			this.itemProvider = new BrowserListItemProvider (this.collection);
-			this.itemMapper   = new BrowserListItemMapper ();
-			this.itemRenderer = new BrowserListItemRenderer (this.collection);
-			
-			this.scrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
-
-			this.scrollList.ActiveIndexChanged += this.HandleItemListActiveIndexChanged;
-		}
-
-		private void TearDownItemList()
-		{
-			this.scrollList.ActiveIndexChanged -= this.HandleItemListActiveIndexChanged;
 		}
 
 		
@@ -109,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				return this.scrollList.ActiveIndex;
+				return this.itemScrollList.ActiveIndex;
 //#				return this.scrollList.SelectedItemIndex;
 			}
 			set
@@ -210,6 +194,22 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		#endregion
 
 
+		private void SetUpItemList()
+		{
+			this.itemProvider = new BrowserListItemProvider (this.collection);
+			this.itemMapper   = new BrowserListItemMapper ();
+			this.itemRenderer = new BrowserListItemRenderer (this.collection);
+			
+			this.itemScrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
+
+			this.itemScrollList.ActiveIndexChanged += this.HandleItemListActiveIndexChanged;
+		}
+
+		private void TearDownItemList()
+		{
+			this.itemScrollList.ActiveIndexChanged -= this.HandleItemListActiveIndexChanged;
+		}
+
 		private void SetSelectedIndex(int index)
 		{
 			if (index >= this.collection.Count)
@@ -221,13 +221,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				this.SelectedEntityKey = null;
 //#				this.scrollList.SelectedItemIndex = -1;
-				this.scrollList.ActiveIndex = -1;
+				this.itemScrollList.ActiveIndex = -1;
 			}
 			else
 			{
 				this.SelectedEntityKey = this.collection.GetEntityKey (index);
 //#				this.scrollList.SelectedItemIndex = index;
-				this.scrollList.ActiveIndex = index;
+				this.itemScrollList.ActiveIndex = index;
 			}
 		}
 
@@ -338,7 +338,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void RefreshScrollList(bool reset = false)
 		{
-			if ((this.scrollList != null) &&
+			if ((this.itemScrollList != null) &&
 				(this.collection != null))
 			{
 				int newCount = this.collection == null ? 0 : this.collection.Count;
@@ -352,8 +352,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 //#					this.scrollList.Items.AddRange (this.collection);
 //#					this.scrollList.SelectedItemIndex = newActive;
 
-					this.scrollList.RefreshContents ();
-					this.scrollList.ActiveIndex = newActive;
+					this.itemScrollList.RefreshContents ();
+					this.itemScrollList.ActiveIndex = newActive;
 				}
 
 				this.OnSelectedItemChange ();
@@ -363,7 +363,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void OnSelectedItemChange()
 		{
 //#			int active    = this.scrollList.SelectedItemIndex;
-			int active    = this.scrollList.ActiveIndex;
+			int active    = this.itemScrollList.ActiveIndex;
 			var entityKey = this.collection.GetEntityKey (active);
 
 			this.SelectedEntityKey = entityKey;
@@ -384,7 +384,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public event EventHandler				SelectedItemChange;
 
 		private readonly CoreData				data;
-		private readonly ItemScrollList			scrollList;
+		private readonly ItemScrollList			itemScrollList;
 		private readonly BrowserList			collection;
 		private readonly System.Type			dataSetType;
 		private readonly DataContext			dataContext;
