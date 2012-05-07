@@ -95,18 +95,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			int fromProfondeur, toProfondeur;
 			this.filterData.GetBeginnerProfondeurs (out fromProfondeur, out toProfondeur);
 
-			bool soldesNuls = this.filterData.BeginnerSoldesNuls;
-
 			decimal total = 0;
 
 			foreach (var compte in this.compta.PlanComptable.Where (x => x.Catégorie == catégorie))
 			{
 				var solde = this.soldesJournalManager.GetSolde (compte).GetValueOrDefault ();
-
-				if (!soldesNuls && solde == 0)
-				{
-					continue;
-				}
 
 				var data = new DoubleData ();
 				this.readonlyAllData.Add (data);
@@ -116,39 +109,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 				data.Numéro = compte.Numéro;
 				data.Titre  = compte.Titre;
 				data.Niveau = compte.Niveau;
+				data.Solde  = solde;
 
-				if (this.HasSolde (compte, fromProfondeur, toProfondeur))
-				{
-					data.Solde = solde;
+				data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
+				data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
+				data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
+				data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
+				data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
+				data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
 
-					data.PériodePrécédente  = this.GetBudget (compte, ComparisonShowed.PériodePrécédente);
-					data.PériodePénultième  = this.GetBudget (compte, ComparisonShowed.PériodePénultième);
-					data.Budget             = this.GetBudget (compte, ComparisonShowed.Budget);
-					data.BudgetProrata      = this.GetBudget (compte, ComparisonShowed.BudgetProrata);
-					data.BudgetFutur        = this.GetBudget (compte, ComparisonShowed.BudgetFutur);
-					data.BudgetFuturProrata = this.GetBudget (compte, ComparisonShowed.BudgetFuturProrata);
-
-					total += solde;
-				}
+				total += solde;
 			}
 
 			return total;
-		}
-
-		private bool HasSolde(ComptaCompteEntity compte, int fromProfondeur, int toProfondeur)
-		{
-			//	Indique si le solde du compte doit figurer dans le tableau.
-			//	Si la profondeur n'est pas spécifiée, on accepte tous les comptes normaux.
-			//	Si la profondeur est spécifiée, on accepte les comptes qui ont exactement cette profondeur.
-			if (compte.Type == TypeDeCompte.Normal ||
-				compte.Type == TypeDeCompte.TVA    )
-			{
-				return true;
-			}
-			else
-			{
-				return (compte.Niveau+1 == toProfondeur);
-			}
 		}
 
 		private void UpdateTypo()

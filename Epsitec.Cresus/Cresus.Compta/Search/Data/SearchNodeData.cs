@@ -224,32 +224,24 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public bool BeginnerSoldesNuls
+		public bool BeginnerHideNuls
 		{
 			get
 			{
-				var data = this.BeginnerSoldesNulsData;
+				var data = this.BeginnerHideNulsData;
 
 				if (data != null && data.SearchText.Invert && data.SearchText.FromText == Converters.MontantToString (0, null))
 				{
-					return false;
+					return true;
 				}
 
-				return true;
+				return false;
 			}
 			set
 			{
-				var data = this.BeginnerSoldesNulsData;
+				var data = this.BeginnerHideNulsData;
 
-				if (value)  // affiche les comptes dont le solde est nul ?
-				{
-					if (data != null)
-					{
-						this.tabsData.Remove (data);
-						this.Adjust ();
-					}
-				}
-				else
+				if (value)  // cache les comptes dont le solde est nul ?
 				{
 					if (data == null)
 					{
@@ -265,10 +257,18 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 					this.BeginnerAdjust (true);
 				}
+				else
+				{
+					if (data != null)
+					{
+						this.tabsData.Remove (data);
+						this.Adjust ();
+					}
+				}
 			}
 		}
 
-		private SearchTabData BeginnerSoldesNulsData
+		private SearchTabData BeginnerHideNulsData
 		{
 			get
 			{
@@ -352,7 +352,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				//	1) Cherche les données effectives.
 				var dataCatégories = this.BeginnerCatégoriesData;
 				var dataProfondeur = this.BeginnerProfondeurData;
-				var dataSoldesNuls = this.BeginnerSoldesNulsData;
+				var dataHideNuls   = this.BeginnerHideNulsData;
 				var dataDates      = this.BeginnerDatesData;
 
 				//	2) Supprime toutes les données-
@@ -369,9 +369,9 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					this.tabsData.Add (dataProfondeur);
 				}
 
-				if (dataSoldesNuls != null)
+				if (dataHideNuls != null)
 				{
-					this.tabsData.Add (dataSoldesNuls);
+					this.tabsData.Add (dataHideNuls);
 				}
 
 				if (dataDates != null)

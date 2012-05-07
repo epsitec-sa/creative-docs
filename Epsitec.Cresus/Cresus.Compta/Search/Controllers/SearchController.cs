@@ -544,14 +544,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			var button = new CheckButton
 			{
 				Parent      = frame,
-				Text        = "Soldes nuls",
-				ActiveState = this.data.BeginnerSoldesNuls ? ActiveState.Yes : ActiveState.No,
+				Text        = "Cacher nuls",
+				ActiveState = this.data.BeginnerHideNuls ? ActiveState.Yes : ActiveState.No,
 				Dock        = DockStyle.Top,
 			};
 
+			ToolTip.Default.SetToolTip (button, "Cache les comptes dont le solde est nul");
+
 			button.ActiveStateChanged += delegate
 			{
-				this.data.BeginnerSoldesNuls = (button.ActiveState == ActiveState.Yes);
+				this.data.BeginnerHideNuls = (button.ActiveState == ActiveState.Yes);
 
 				this.SearchStartAction ();
 			};

@@ -194,15 +194,15 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public bool BeginnerSoldesNuls
+		public bool BeginnerHideNuls
 		{
 			get
 			{
-				return this.nodesData[0].BeginnerSoldesNuls;
+				return this.nodesData[0].BeginnerHideNuls;
 			}
 			set
 			{
-				this.nodesData[0].BeginnerSoldesNuls = value;
+				this.nodesData[0].BeginnerHideNuls = value;
 			}
 		}
 
