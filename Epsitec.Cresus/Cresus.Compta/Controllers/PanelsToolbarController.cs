@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-#if true
+#if false
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -44,7 +44,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				PreferredWidth = 12,
 				Dock           = DockStyle.Left,
 			};
-#else
+#endif
+#if false
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -65,6 +66,52 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateButton (toolbar, Res.Commands.Panel.ViewSettings, 2, UIBuilder.ViewSettingsBackColor);
+#endif
+#if true
+			var vsFrame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredWidth  = 20,
+				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
+				DrawFullFrame   = true,
+				BackColor       = UIBuilder.ViewSettingsBackColor,
+				Dock            = DockStyle.Left,
+				Padding         = new Margins (3),
+			};
+
+			new FrameBox
+			{
+				Parent        = vsFrame,
+				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
+				DrawFullFrame = true,
+				BackColor     = RibbonController.GetBackgroundColor1 (),
+				Anchor        = AnchorStyles.TopLeft,
+			};
+
+			this.CreateButton (vsFrame, Res.Commands.Panel.ViewSettings, 0, UIBuilder.ViewSettingsBackColor);
+
+			var toolbar = new FrameBox
+			{
+				Parent          = parent,
+				PreferredWidth  = 20*3,
+				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
+				DrawFullFrame   = true,
+				BackColor       = UIBuilder.ViewSettingsBackColor,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (12-2, 0, 0, 0),
+				Padding         = new Margins (3),
+			};
+
+			new FrameBox
+			{
+				Parent          = parent,
+				PreferredWidth  = 12,
+				PreferredHeight = 4,
+				DrawFrameEdges  = FrameEdges.Top | FrameEdges.Bottom,
+				BackColor       = UIBuilder.ViewSettingsBackColor,
+				Anchor          = AnchorStyles.BottomLeft,
+				Margins         = new Margins (PanelsToolbarController.toolbarHeight+5, 0, 0, 13),
+			};
 #endif
 
 			var searchButton = this.CreateButton (toolbar, Res.Commands.Panel.Search, -1, UIBuilder.SearchBackColor);
