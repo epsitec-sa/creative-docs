@@ -116,32 +116,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		public void Remove(AbstractEntity entity)
-		{
-			int index = this.collection.IndexOf (entity);
-
-			if (index < 0)
-			{
-				return;
-			}
-
-			using (this.suspendUpdates.Enter ())
-			{
-				this.collection.RemoveAt (index);
-				//	TODO: process removal in scroll list
-//#				this.scrollList.Items.RemoveAt (index);
-			}
-		}
-
 		public void Delete(AbstractEntity entity)
 		{
 			if (entity.IsNull ())
 			{
 				return;
 			}
-
-			this.Remove (entity);
-
+			
 			//	Archive or delete the entity, depending on the presence of an ILifetime
 			//	implementation :
 
@@ -157,16 +138,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 			this.dataContext.SaveChanges ();
-		}
-
-		public void InsertIntoCollection(AbstractEntity entity)
-		{
-			this.collection.Add (entity);
-
-			if (this.extractor != null)
-			{
-				this.extractor.Insert (entity);
-			}
 		}
 
 
@@ -348,11 +319,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				using (this.suspendUpdates.Enter ())
 				{
-//#					this.scrollList.Items.Clear ();
-//#					this.scrollList.Items.AddRange (this.collection);
-//#					this.scrollList.SelectedItemIndex = newActive;
-
 					this.itemScrollList.RefreshContents ();
+					this.itemScrollList.Selection.Select (newActive, ItemSelection.Select);
 					this.itemScrollList.ActiveIndex = newActive;
 				}
 

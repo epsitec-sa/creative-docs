@@ -162,7 +162,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				context.Dispose ();
 
-				this.browser.browserListController.InsertIntoCollection (browserEntity);
 				this.browser.browserListController.SelectedEntityKey = localEntityKey;
 				this.browser.browserListController.RefreshScrollList ();
 
