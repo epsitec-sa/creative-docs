@@ -41,11 +41,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		public FrameBox							SettingsPanel
+		public FrameBox							TopPanel
 		{
 			get
 			{
-				return this.settingsPanel;
+				return this.topPanel;
 			}
 		}
 
@@ -64,6 +64,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return DataSetGetter.GetRootEntityType (this.dataSetName);
 			}
 		}
+
 
 		/// <summary>
 		/// Selects the specified data set.
@@ -123,6 +124,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 		
+		
 		public override IEnumerable<CoreController> GetSubControllers()
 		{
 			yield break;
@@ -138,17 +140,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				Dock = DockStyle.Fill,
 			};
 
-			this.CreateUISettingsPanel (frame);
+			this.CreateUITopPanel (frame);
 			this.CreateUIItemScrollList (frame);
 		}
 
 
-		private void CreateUISettingsPanel(FrameBox frame)
+		private void CreateUITopPanel(FrameBox frame)
 		{
-			this.settingsPanel = new FrameBox
+			this.topPanel = new FrameBox
 			{
 				Parent = frame,
-				Dock = DockStyle.Top,
+				Dock   = DockStyle.Top,
+				Name   = "Top",
+				
 				PreferredHeight = 28,
 			};
 		}
@@ -157,8 +161,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.itemScrollList = new ItemScrollList ()
 			{
-				Parent  = frame,
-				Dock = DockStyle.Fill,
+				Parent = frame,
+				Dock   = DockStyle.Fill,
+				Name   = "Body",
 			};
 		}
 		
@@ -268,7 +273,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		#region INotifyCurrentChanged Members
 
-		public event EventHandler  CurrentChanged;
+		public event EventHandler				CurrentChanged;
 
 		public event EventHandler<CurrentChangingEventArgs>  CurrentChanging;
 
@@ -280,7 +285,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly CoreData				data;
 		private string							dataSetName;
 
-		private FrameBox						settingsPanel;
+		private FrameBox						topPanel;
 		private ItemScrollList					itemScrollList;
 		private BrowserListController			browserListController;
 	}

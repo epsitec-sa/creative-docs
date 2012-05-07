@@ -45,32 +45,32 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		internal FormattedText GetDisplayText(BrowserList list)
 		{
-			if (this.text == null)
+			if (this.cachedText == null)
 			{
 				this.GenerateDisplayText (list);
 			}
 
-			return this.text.Value;
+			return this.cachedText.Value;
 		}
 
 		internal void ClearCachedDisplayText()
 		{
-			this.text = null;
+			this.cachedText = null;
 		}
 
 
 		private void GenerateDisplayText(BrowserList list)
 		{
-			this.text = list.GenerateEntityDisplayText (this.entity);
+			this.cachedText = list.GenerateEntityDisplayText (this.entity);
 
-			if (this.text.Value.IsNullOrEmpty)
+			if (this.cachedText.Value.IsNullOrEmpty)
 			{
-				this.text = CollectionTemplate.DefaultEmptyText;
+				this.cachedText = CollectionTemplate.DefaultEmptyText;
 			}
 		}
 
 		
 		private readonly AbstractEntity			entity;
-		private FormattedText?					text;
+		private FormattedText?					cachedText;
 	}
 }

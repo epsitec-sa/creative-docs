@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Core.Controllers
 		private void UpdateBrowserSettingsPanel()
 		{
 			var expandedPanel = this.topPanel;
-			var compactPanel  = this.browserViewController.SettingsPanel;
+			var compactPanel  = this.browserViewController.TopPanel;
 
 			var mode = this.browserSettingsMode;
 

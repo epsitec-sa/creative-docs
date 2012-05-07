@@ -21,8 +21,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListController : System.IDisposable
 	{
-		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType, System.Predicate<AbstractEntity> filter = null)
+		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType/*, System.Predicate<AbstractEntity> filter = null*/)
 		{
+			System.Predicate<AbstractEntity> filter = null;
 			this.data        = data;
 			this.scrollList  = scrollList;
 			this.dataSetType = dataSetType;
@@ -232,16 +233,21 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetContentsBasedOnDataSet()
 		{
+			this.SetContents (this.GetContentGetter (), EntityInfo.GetTypeId (this.dataSetType));
+		}
+
+		private DataSetCollectionGetter GetContentGetter()
+		{
 			var component = this.data.GetComponent<DataSetGetter> ();
 			var getter    = component.ResolveDataSet (this.dataSetType);
-
-			this.SetContents (getter, EntityInfo.GetTypeId (this.dataSetType));
+			
+			return getter;
 		}
 
 		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
 		{
-			this.collectionGetter    = collectionGetter;
-			this.collectionEntityId  = entityId;
+			this.collectionGetter   = collectionGetter;
+			this.collectionEntityId = entityId;
 
 			this.SetUpContentExtractor ();
 			

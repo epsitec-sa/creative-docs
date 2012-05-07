@@ -156,20 +156,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return key.Value;
 		}
 
-		internal string ConvertBrowserListItemToString(object value)
-		{
-			BrowserListItem item = value as BrowserListItem;
-
-			if (item == null)
-			{
-				return "";
-			}
-			else
-			{
-				return item.GetDisplayText (this).ToString ();
-			}
-		}
-
 
 		#region IDisposable Members
 
