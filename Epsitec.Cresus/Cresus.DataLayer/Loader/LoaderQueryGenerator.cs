@@ -1050,7 +1050,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlField BuildSqlFieldForLogId(AliasNode rootEntityAlias, Druid rootEntityId)
 		{
-			DbTable dbTable = this.DbInfrastructure.ResolveDbTable (rootEntityId);
+			DbTable dbTable = this.SchemaEngine.GetEntityTable (rootEntityId);
 			DbColumn dbColumn = dbTable.Columns[EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName];
 
 			return SqlField.CreateAliasedName (rootEntityAlias.Alias, dbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName);
