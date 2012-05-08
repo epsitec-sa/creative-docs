@@ -27,9 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.itemScrollList = scrollList;
 			this.dataSetType    = dataSetType;
 			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
-			this.collection     = new BrowserList (this.dataContext);
+			this.collection     = new BrowserList ();
 			this.suspendUpdates = new SafeCounter ();
-			this.context        = new BrowserListContext ();
+			this.context        = new BrowserListContext (this.dataContext);
 
 			this.SetUpItemList ();
 			this.AttachEventHandlers ();
@@ -182,9 +182,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
-		private EntityKey GetEntityKey(int index)
+		private EntityKey? GetEntityKey(int index)
 		{
-			return this.itemCache.GetItemData (index).GetData<BrowserListItem> ().EntityKey;
+			if (index < 0)
+			{
+				return null;
+			}
+			else
+			{
+				return this.itemCache.GetItemData (index).GetData<BrowserListItem> ().EntityKey;
+			}
 		}
 
 		private void SetItemScrollListSelectedIndex(int index)
@@ -261,22 +268,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.UpdateCollection (reset: false);
 		}
 
-		private AbstractEntity[] GetCollectionEntities()
+		private BrowserListItem[] GetCollectionListItems()
 		{
 			if (this.collectionGetter == null)
 			{
-				return new AbstractEntity[0];
+				return new BrowserListItem[0];
 			}
 			else
 			{
-				if (this.filter == null)
-				{
-					return this.collectionGetter (this.dataContext).ToArray ();
-				}
-				else
-				{
-					return this.collectionGetter (this.dataContext).Where (x => this.filter (x)).ToArray ();
-				}
+				//	TODO: filter...
+
+				return this.collectionGetter (this.dataContext).Select (x => new BrowserListItem (x, this.context.GetEntityKey (x))).ToArray ();
 			}
 		}
 
@@ -287,16 +289,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				return;
 			}
 
-			if (this.extractedCollection != null)
-			{
-				this.extractor.Fill (this.GetCollectionEntities ());
-				this.collection.ClearAndAddRange (this.extractedCollection.Rows.Select (x => x.Entity));
-			}
-			else
-			{
-				this.collection.ClearAndAddRange (this.GetCollectionEntities ());
-			}
+			//	TODO: handle extracted collection
 
+//-				this.extractor.Fill (this.GetCollectionEntities ());
+			
+			this.collection.ClearAndAddRange (this.GetCollectionListItems ());
+
+			this.itemProvider.Reset ();
 			this.RefreshScrollList (reset);
 		}
 

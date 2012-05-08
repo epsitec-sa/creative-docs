@@ -8,14 +8,15 @@ using Epsitec.Cresus.Core.Controllers.DataAccessors;
 
 using System.Collections.Generic;
 using System.Linq;
+using Epsitec.Cresus.DataLayer.Context;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListContext
 	{
-		public BrowserListContext()
+		public BrowserListContext(DataContext dataContext)
 		{
-
+			this.dataContext = dataContext;
 		}
 
 		public FormattedText GetDisplayText(AbstractEntity entity)
@@ -38,5 +39,27 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				}
 			}
 		}
+
+
+		internal EntityKey GetEntityKey(AbstractEntity entity)
+		{
+			if (entity == null)
+			{
+				throw new System.ArgumentNullException ("entity");
+			}
+
+			var key = this.dataContext.GetNormalizedEntityKey (entity);
+
+			if (key == null)
+			{
+				throw new System.ArgumentException ("Cannot resolve entity");
+			}
+
+			return key.Value;
+		}
+
+
+
+		private readonly DataContext			dataContext;
 	}
 }

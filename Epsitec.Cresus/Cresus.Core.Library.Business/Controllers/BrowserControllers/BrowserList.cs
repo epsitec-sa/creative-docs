@@ -21,10 +21,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// </summary>
 	public sealed class BrowserList : IEnumerable<BrowserListItem>, System.IDisposable
 	{
-		public BrowserList(DataContext context)
+		public BrowserList()
 		{
 			this.list    = new List<BrowserListItem> ();
-			this.context = context;
 		}
 
 		
@@ -45,62 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		
-		public void ClearAndAddRange(IEnumerable<AbstractEntity> entities)
+		public void ClearAndAddRange(IEnumerable<BrowserListItem> items)
 		{
 			this.list.Clear ();
-			this.list.AddRange (entities.Select (x => new BrowserListItem (x, this.GetEntityKey (x))));
-		}
-
-		public void Add(AbstractEntity entity)
-		{
-			this.list.Add (new BrowserListItem (entity, this.GetEntityKey (entity)));
-		}
-
-		public AbstractEntity RemoveAt(int index)
-		{
-			if ((index < 0) ||
-				(index >= this.list.Count))
-			{
-				return null;
-			}
-			else
-			{
-				var entity = this.list[index].Entity;
-				this.list.RemoveAt (index);
-				return entity;
-			}
-		}
-
-		public void Invalidate()
-		{
-			this.list.ForEach (x => x.ClearCachedDisplayText ());
-		}
-
-		public AbstractEntity GetEntity(int index)
-		{
-			if ((index >= 0) &&
-				(index < this.list.Count))
-			{
-				var item = this.list[index];
-				return item.Entity;
-			}
-			else
-			{
-				return null;
-			}
-		}
-		
-		public EntityKey? GetEntityKey(int index)
-		{
-			if ((index >= 0) &&
-				(index < this.list.Count))
-			{
-				return this.list[index].EntityKey;
-			}
-			else
-			{
-				return null;
-			}
+			this.list.AddRange (items);
 		}
 
 		public int IndexOf(EntityKey? key)
@@ -113,46 +60,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			var rowKey = key.Value.RowKey;
 
 			return this.list.FindIndex (x => x.RowKey == rowKey);
-		}
-
-		public int IndexOf(AbstractEntity entity)
-		{
-			if (entity.IsNull ())
-			{
-				return -1;
-			}
-
-			return this.list.FindIndex (x => x.Entity == entity);
-		}
-
-		
-		internal FormattedText GenerateEntityDisplayText(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				return FormattedText.Empty;
-			}
-			else
-			{
-				return entity.GetCompactSummary ();
-			}
-		}
-
-		internal EntityKey GetEntityKey(AbstractEntity entity)
-		{
-			if (entity == null)
-			{
-				throw new System.ArgumentNullException ("entity");
-			}
-
-			var key = this.context.GetNormalizedEntityKey (entity);
-
-			if (key == null)
-			{
-				throw new System.ArgumentException ("Cannot resolve entity");
-			}
-
-			return key.Value;
 		}
 
 
@@ -185,6 +92,5 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		
 		
 		private readonly List<BrowserListItem>	list;
-		private readonly DataContext			context;
 	}
 }

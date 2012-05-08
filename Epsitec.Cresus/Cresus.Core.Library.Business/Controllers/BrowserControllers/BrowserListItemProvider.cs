@@ -3,6 +3,7 @@
 
 using Epsitec.Common.BigList;
 
+using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
@@ -15,6 +16,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public BrowserListItemProvider(BrowserList list)
 		{
 			this.list = list;
+			this.reverseMap = new Dictionary<DbKey, int> ();
 		}
 
 		#region IItemDataProvider<BrowserListItem> Members
@@ -29,6 +31,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 			value = this.list[index];
+			
+			this.reverseMap[value.RowKey] = index;
 
 			return true;
 		}
@@ -52,6 +56,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (entityKey.HasValue)
 			{
+				var rowKey = entityKey.Value.RowKey;
+				int index;
+
+				if (this.reverseMap.TryGetValue (rowKey, out index))
+				{
+					return index;
+				}
+
+				//	TODO: ask the database about this row
+
 				return this.list.IndexOf (entityKey);
 			}
 			else
@@ -60,6 +74,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public void Reset()
+		{
+			this.reverseMap.Clear ();
+		}
+
 		private readonly BrowserList			list;
+		private readonly Dictionary<DbKey, int>	reverseMap;
 	}
 }
