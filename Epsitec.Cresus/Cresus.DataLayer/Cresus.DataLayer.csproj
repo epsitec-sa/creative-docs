@@ -147,6 +147,7 @@
     <Compile Include="Context\EntityChangedEventArgs.cs" />
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
+    <Compile Include="Context\RequestView.cs" />
     <Compile Include="Expressions\SortClause.cs" />
     <Compile Include="Expressions\SortOrder.cs" />
     <Compile Include="ImportExport\ColumnDefinition.cs" />

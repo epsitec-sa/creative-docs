@@ -1134,6 +1134,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		public RequestView GetRequestView(Request request, System.Type entityType)
+		{
+			return new RequestView (this, request, entityType);
+		}
+
+
 		/// <summary>
 		/// Persists all the changes that have been made to the <see cref="AbstractEntity"/> managed
 		/// by this instance to the database.
