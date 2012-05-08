@@ -21,23 +21,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListController : System.IDisposable
 	{
-		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType/*, System.Predicate<AbstractEntity> filter = null*/)
+		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType)
 		{
-			System.Predicate<AbstractEntity> filter = null;
-			this.data        = data;
-			this.itemScrollList  = scrollList;
-			this.dataSetType = dataSetType;
-			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
-			this.collection  = new BrowserList (this.dataContext);
-			this.filter      = filter;
+			this.data           = data;
+			this.itemScrollList = scrollList;
+			this.dataSetType    = dataSetType;
+			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			this.collection     = new BrowserList (this.dataContext);
 			this.suspendUpdates = new SafeCounter ();
 
 			this.SetUpItemList ();
-
-//#			this.scrollList.Items.ValueConverter = this.collection.ConvertBrowserListItemToString;
-
-//#			this.scrollList.SelectedItemChanged += this.HandleScrollListSelectedItemChanged;
-			this.dataContext.EntityChanged      += this.HandleDataContextEntityChanged;
+			this.AttachEventHandlers ();
 
 			this.SetContentsBasedOnDataSet ();
 		}
@@ -48,14 +42,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			get
 			{
 				return this.dataContext;
-			}
-		}
-
-		public BrowserList						Collection
-		{
-			get
-			{
-				return this.collection;
 			}
 		}
 
@@ -142,10 +128,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void Dispose()
 		{
 			this.TearDownItemList ();
-//#			this.scrollList.SelectedItemChanged -= this.HandleScrollListSelectedItemChanged;
-			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
-//#			this.scrollList.Items.ValueConverter   = null;
-
+			this.DetachEventHandlers ();
 			this.collection.Dispose ();
 			this.data.DisposeDataContext (this.dataContext);
 		}
@@ -168,6 +151,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.itemRenderer = new BrowserListItemRenderer (this.collection);
 			
 			this.itemScrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
+			
+			this.itemCache = this.itemScrollList.ItemCache;
 
 			this.itemScrollList.ActiveIndexChanged += this.HandleItemListActiveIndexChanged;
 		}
@@ -179,23 +164,32 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetSelectedIndex(int index)
 		{
-			if (index >= this.collection.Count)
+			if (index >= this.itemProvider.Count)
 			{
-				index = this.collection.Count-1;
+				index = this.itemProvider.Count-1;
 			}
 
 			if (index < 0)
 			{
 				this.SelectedEntityKey = null;
-//#				this.scrollList.SelectedItemIndex = -1;
-				this.itemScrollList.ActiveIndex = -1;
+				this.SetItemScrollListSelectedIndex (-1);
 			}
 			else
 			{
-				this.SelectedEntityKey = this.collection.GetEntityKey (index);
-//#				this.scrollList.SelectedItemIndex = index;
-				this.itemScrollList.ActiveIndex = index;
+				this.SelectedEntityKey = this.GetEntityKey (index);
+				this.SetItemScrollListSelectedIndex (index);
 			}
+		}
+
+		private EntityKey GetEntityKey(int index)
+		{
+			return this.itemCache.GetItemData (index).GetData<BrowserListItem> ().EntityKey;
+		}
+
+		private void SetItemScrollListSelectedIndex(int index)
+		{
+			this.itemScrollList.Selection.Select (index, ItemSelection.Select);
+			this.itemScrollList.ActiveIndex = index;
 		}
 
 		private void SetContentsBasedOnDataSet()
@@ -243,6 +237,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.extractedCollection = null;
 		}
 
+		private void AttachEventHandlers()
+		{
+			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+		}
+
+		private void DetachEventHandlers()
+		{
+			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+		}
+
 		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
 		{
 			if (this.suspendUpdates.IsZero)
@@ -251,14 +255,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 		
-		private void HandleScrollListSelectedItemChanged(object sender)
-		{
-			if (this.suspendUpdates.IsZero)
-			{
-				this.OnSelectedItemChange ();
-			}
-		}
-
 		private void HandleDataContextEntityChanged(object sender, EntityChangedEventArgs e)
 		{
 			this.UpdateCollection (reset: false);
@@ -310,19 +306,18 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public void RefreshScrollList(bool reset = false)
 		{
-			if ((this.itemScrollList != null) &&
-				(this.collection != null))
+			if (this.itemScrollList != null)
 			{
-				int newCount = this.collection == null ? 0 : this.collection.Count;
+				int newCount = this.itemProvider.Count;
 
-				int oldActive = reset ? 0 : this.collection.IndexOf (this.activeEntityKey);
+				int oldActive = reset ? 0 : this.itemProvider.IndexOf (this.activeEntityKey);
 				int newActive = oldActive < newCount ? oldActive : newCount-1;
 
+				this.itemScrollList.RefreshContents ();
+				
 				using (this.suspendUpdates.Enter ())
 				{
-					this.itemScrollList.RefreshContents ();
-					this.itemScrollList.Selection.Select (newActive, ItemSelection.Select);
-					this.itemScrollList.ActiveIndex = newActive;
+					this.SetItemScrollListSelectedIndex (newActive);
 				}
 
 				this.OnSelectedItemChange ();
@@ -331,9 +326,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void OnSelectedItemChange()
 		{
-//#			int active    = this.scrollList.SelectedItemIndex;
 			int active    = this.itemScrollList.ActiveIndex;
-			var entityKey = this.collection.GetEntityKey (active);
+			var entityKey = this.GetEntityKey (active);
 
 			this.SelectedEntityKey = entityKey;
 			this.SelectedItemChange.Raise (this);
@@ -362,6 +356,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private BrowserListItemProvider			itemProvider;
 		private BrowserListItemMapper			itemMapper;
 		private BrowserListItemRenderer			itemRenderer;
+		private ItemCache						itemCache;
 
 		private System.Predicate<AbstractEntity> filter;
 		private EntityDataExtractor             extractor;

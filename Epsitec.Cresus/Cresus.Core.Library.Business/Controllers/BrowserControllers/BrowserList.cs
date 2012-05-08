@@ -48,12 +48,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void ClearAndAddRange(IEnumerable<AbstractEntity> entities)
 		{
 			this.list.Clear ();
-			this.list.AddRange (entities.Select (x => new BrowserListItem (x)));
+			this.list.AddRange (entities.Select (x => new BrowserListItem (x, this.GetEntityKey (x))));
 		}
 
 		public void Add(AbstractEntity entity)
 		{
-			this.list.Add (new BrowserListItem (entity));
+			this.list.Add (new BrowserListItem (entity, this.GetEntityKey (entity)));
 		}
 
 		public AbstractEntity RemoveAt(int index)

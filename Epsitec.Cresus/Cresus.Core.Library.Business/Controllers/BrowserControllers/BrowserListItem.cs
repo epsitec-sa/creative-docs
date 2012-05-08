@@ -18,9 +18,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	/// </summary>
 	public sealed class BrowserListItem
 	{
-		public BrowserListItem(AbstractEntity entity)
+		public BrowserListItem(AbstractEntity entity, EntityKey entityKey)
 		{
 			this.entity = entity;
+			this.entityKey = entityKey;
 		}
 
 
@@ -29,6 +30,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			get
 			{
 				return this.entity;
+			}
+		}
+
+		public EntityKey						EntityKey
+		{
+			get
+			{
+				return this.entityKey;
 			}
 		}
 
@@ -71,6 +80,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		
 		private readonly AbstractEntity			entity;
+		private readonly EntityKey				entityKey;
 		private FormattedText?					cachedText;
 	}
 }

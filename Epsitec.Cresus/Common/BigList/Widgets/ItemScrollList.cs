@@ -105,6 +105,14 @@ namespace Epsitec.Common.BigList.Widgets
 			}
 		}
 
+		public ItemCache						ItemCache
+		{
+			get
+			{
+				return this.itemCache;
+			}
+		}
+
 
 		/// <summary>
 		/// Gets the item data for the specified index. If the index is not valid or if the
@@ -120,6 +128,7 @@ namespace Epsitec.Common.BigList.Widgets
 		{
 			return this.itemCache.GetItemData (index).GetData<TData> ();
 		}
+
 
 		public void SetUpItemList<TData>(IItemDataProvider<TData> provider,
 			/**/						 IItemDataMapper<TData> mapper,
@@ -152,7 +161,8 @@ namespace Epsitec.Common.BigList.Widgets
 			}
 
 			int capacity = provider == null ? 100 : provider.Count;
-			var cache   = new ItemCache<TData, TState> (capacity, features)
+			
+			var cache = new ItemCache<TData, TState> (capacity, features)
 			{
 				DataProvider = provider,
 				DataMapper   = mapper,

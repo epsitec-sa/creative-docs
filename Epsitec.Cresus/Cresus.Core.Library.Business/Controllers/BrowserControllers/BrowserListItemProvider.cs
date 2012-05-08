@@ -3,6 +3,8 @@
 
 using Epsitec.Common.BigList;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,6 +46,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 		#endregion
+
+
+		public int IndexOf(EntityKey? entityKey)
+		{
+			if (entityKey.HasValue)
+			{
+				return this.list.IndexOf (entityKey);
+			}
+			else
+			{
+				return -1;
+			}
+		}
 
 		private readonly BrowserList			list;
 	}

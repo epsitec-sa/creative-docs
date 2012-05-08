@@ -92,6 +92,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.SelectEntity (this.data.FindEntityKey (entity));
 		}
 
+		/// <summary>
+		/// Selects the specified entity in the list.
+		/// </summary>
+		/// <param name="entityKey">The entity key.</param>
 		public void SelectEntity(EntityKey? entityKey)
 		{
 			if (this.browserListController != null)
