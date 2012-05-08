@@ -20,15 +20,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Retourne le numéro de la semaine, selon la définition suivante:
 			//	La semaine qui porte le numéro 01 est celle qui contient le premier jeudi de janvier (c.f. wikipedia).
 			//	Le numéro retourné est compris entre 0 et 53.
-			var nouvalAn = new Date (date.Year, 1, 1);
-			int n = 1 - (int) nouvalAn.DayOfWeek;
+			var nouvelAn = new Date (date.Year, 1, 1);
+			int n = 1 - (int) nouvelAn.DayOfWeek;
 
 			if (n < -3)
 			{
 				n += 7;  // 1..3
 			}
 
-			var lundiSemaineUn = Dates.AddDays (nouvalAn, n);
+			var lundiSemaineUn = Dates.AddDays (nouvelAn, n);
 			return Dates.NumberOfDays (date, lundiSemaineUn)/7 + 1;
 		}
 		
