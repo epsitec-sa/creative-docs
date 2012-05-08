@@ -301,7 +301,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected bool FilterLine(int row)
 		{
-			return this.filterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column));
+			if (!this.filterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
+			{
+				return false;
+			}
+
+			if (this.temporalData != null)
+			{
+				var date = Converters.ParseDate (this.GetText (row, ColumnType.Date, true));
+				if (!this.temporalData.Match (date))
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 

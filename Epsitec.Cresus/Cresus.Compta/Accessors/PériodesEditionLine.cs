@@ -73,16 +73,18 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.controller.MainWindowController.Période = période;
 			}
 
-			Date date;
+			Date? date;
 
-			if (PériodesDataAccessor.ParseDate (this.GetText (ColumnType.DateDébut), out date))
+			date = Converters.ParseDate (this.GetText (ColumnType.DateDébut));
+			if (date.HasValue)
 			{
-				période.DateDébut = date;
+				période.DateDébut = date.Value;
 			}
 
-			if (PériodesDataAccessor.ParseDate (this.GetText (ColumnType.DateFin), out date))
+			date = Converters.ParseDate (this.GetText (ColumnType.DateFin));
+			if (date.HasValue)
 			{
-				période.DateFin = date;
+				période.DateFin = date.Value;
 			}
 
 			période.Description = this.GetText (ColumnType.Titre);

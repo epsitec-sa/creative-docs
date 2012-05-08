@@ -63,41 +63,40 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public void InitDefaultDates(ComptaPériodeEntity période)
+		public void InitDefaultDates(Date? hope)
 		{
-			var now = Date.Today;
-
-			if (!Dates.DateInRange (now, période.DateDébut, période.DateFin))
+			//	Initialise les dates début/fin selon la durée en cours.
+			if (!hope.HasValue)
 			{
-				now = période.DateDébut;
+				hope = Date.Today;
 			}
 
 			switch (this.duration)
 			{
 				case TemporalDataDuration.Daily:
-					this.beginDate = now;
+					this.beginDate = hope.Value;
 					break;
 
 				case TemporalDataDuration.Weekly:
-					int dof = (int) now.DayOfWeek - 1;  // 0..6
-					System.Diagnostics.Debug.Assert (dof >= 0 && dof <= 6);
-					this.beginDate = Dates.AddDays (now, -dof);
+					int dow = (int) hope.Value.DayOfWeek - 1;  // 0..6
+					System.Diagnostics.Debug.Assert (dow >= 0 && dow <= 6);
+					this.beginDate = Dates.AddDays (hope.Value, -dow);
 					break;
 
 				case TemporalDataDuration.Monthly:
-					this.beginDate = new Date (now.Year, now.Month, 1);
+					this.beginDate = new Date (hope.Value.Year, hope.Value.Month, 1);
 					break;
 
 				case TemporalDataDuration.Quarterly:
-					this.beginDate = new Date (now.Year, (now.Month-1)/3+1, 1);
+					this.beginDate = new Date (hope.Value.Year, ((hope.Value.Month-1)/3)*3+1, 1);
 					break;
 
 				case TemporalDataDuration.Biannual:
-					this.beginDate = new Date (now.Year, (now.Month-1)/6+1, 1);
+					this.beginDate = new Date (hope.Value.Year, ((hope.Value.Month-1)/6)*6+1, 1);
 					break;
 
 				case TemporalDataDuration.Annual:
-					this.beginDate = new Date (now.Year, 1, 1);
+					this.beginDate = new Date (hope.Value.Year, 1, 1);
 					break;
 			}
 
@@ -106,6 +105,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public void Next(int step)
 		{
+			//	Passe à la période suivante/précédente.
 			this.beginDate = this.Next (this.beginDate, step);
 			this.InitEndDate ();
 		}
@@ -246,33 +246,26 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 			else
 			{
-				var builder = new System.Text.StringBuilder ();
+				return Dates.GetDescription (this.beginDate, this.endDate);
+			}
+		}
 
-				if (this.beginDate.HasValue && this.endDate.HasValue)
-				{
-					builder.Append ("Du ");
-					builder.Append (Converters.DateToString (this.beginDate));
-					builder.Append (" au ");
-					builder.Append (Converters.DateToString (this.endDate));
-				}
-				else if (this.beginDate.HasValue)
-				{
-					builder.Append ("Du ");
-					builder.Append (Converters.DateToString (this.beginDate));
-				}
-				else if (this.endDate.HasValue)
-				{
-					builder.Append ("Au ");
-					builder.Append (Converters.DateToString (this.endDate));
-				}
 
-				return builder.ToString ();
+		public bool Match(Date? date)
+		{
+			if (date.HasValue)
+			{
+				return Dates.DateInRange (date, this.beginDate, this.endDate);
+			}
+			else
+			{
+				return true;
 			}
 		}
 
 
 		private TemporalDataDuration		duration;
-		private Date?					beginDate;
-		private Date?					endDate;
+		private Date?						beginDate;
+		private Date?						endDate;
 	}
 }

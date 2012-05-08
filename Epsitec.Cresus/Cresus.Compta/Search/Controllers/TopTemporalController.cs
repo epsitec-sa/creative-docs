@@ -150,7 +150,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.staticDates = new StaticText
 			{
 				Parent          = this.mainFrame,
-				PreferredWidth  = 160,
+				PreferredWidth  = 180,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
@@ -164,7 +164,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (0, 10, 0, 0),
 				};
-
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
 				var initialDate = Converters.DateToString (this.data.BeginDate);
@@ -180,7 +179,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (10, 10, 0, 0),
 				};
-
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
 				var initialDate = Converters.DateToString (this.data.EndDate);
@@ -188,28 +186,67 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.endDateController.Box.Dock = DockStyle.Left;
 			}
 
+			this.editionInfo = new StaticText
+			{
+				Parent         = this.editionFrame,
+				TextBreakMode  = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredWidth = 60,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 0, 0, 0),
+			};
+
 			this.prevButton = new GlyphButton
 			{
 				Parent          = this.mainFrame,
-				GlyphShape      = GlyphShape.Minus,
-				ButtonStyle     = ButtonStyle.ToolItem,
+				GlyphShape      = GlyphShape.ArrowLeft,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
 				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 1, 0, 0),
 			};
+
+			this.nowButton = new Button
+			{
+				Parent          = this.mainFrame,
+				FormattedText   = "Auj.",
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 1, 0, 0),
+			};
+			this.nowButton.PreferredWidth = this.nowButton.GetBestFitSize ().Width;
 
 			this.nextButton = new GlyphButton
 			{
 				Parent          = this.mainFrame,
-				GlyphShape      = GlyphShape.Plus,
-				ButtonStyle     = ButtonStyle.ToolItem,
+				GlyphShape      = GlyphShape.ArrowRight,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
 				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 1, 0, 0),
+			};
+
+			this.menuButton = new GlyphButton
+			{
+				Parent          = this.mainFrame,
+				GlyphShape      = GlyphShape.Menu,
+				ButtonStyle     = ButtonStyle.Icon,
+				AutoFocus       = false,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 20, 0, 0),
 			};
 
 			ToolTip.Default.SetToolTip (this.prevButton, "Période précédente");
+			ToolTip.Default.SetToolTip (this.nowButton,  "Période incluant aujourd'hui");
 			ToolTip.Default.SetToolTip (this.nextButton, "Période suivante");
+			ToolTip.Default.SetToolTip (this.menuButton, "Choix d'une autre période...");
 
 			var durationLabel = new StaticText
 			{
@@ -217,9 +254,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				FormattedText   = "Durée",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (10, 10, 0, 0),
+				Margins         = new Margins (0, 10, 0, 0),
 			};
-
 			durationLabel.PreferredWidth = durationLabel.GetBestFitSize ().Width;
 
 			this.durationField = new TextFieldCombo
@@ -235,30 +271,53 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			TopTemporalController.InitTempoDataDurationCombo (this.durationField);
 
+			this.errorInfo = new StaticText
+			{
+				Parent         = this.mainFrame,
+				TextBreakMode  = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock           = DockStyle.Fill,
+				Margins        = new Margins (10, 0, 0, 0),
+			};
+
 			//	Connexion des événements.
 			this.durationField.SelectedItemChanged += delegate
 			{
 				this.data.Duration = TopTemporalController.TempoDataDurationToType (this.durationField.FormattedText);
-				this.InitDefaultDates ();
+				this.data.InitDefaultDates (this.data.BeginDate);
 				this.UpdateButtons ();
+				this.searchStartAction ();
 			};
 
 			this.prevButton.Clicked += delegate
 			{
 				this.data.Next (-1);
 				this.UpdateButtons ();
+				this.searchStartAction ();
 			};
 
 			this.nextButton.Clicked += delegate
 			{
 				this.data.Next (1);
 				this.UpdateButtons ();
+				this.searchStartAction ();
+			};
+
+			this.nowButton.Clicked += delegate
+			{
+				this.data.InitDefaultDates (Date.Today);
+				this.UpdateButtons ();
+				this.searchStartAction ();
+			};
+
+			this.menuButton.Clicked += delegate
+			{
+				this.ShowMenu (this.menuButton);
 			};
 		}
 
 		private void ValidateDate(EditionData data)
 		{
-			Validators.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
+			Validators.ValidateDate (data, emptyAccepted: true);
 		}
 
 		private void DateChanged(int line, ColumnType columnType)
@@ -266,6 +325,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.data.BeginDate = Converters.ParseDate (this.beginDateController.EditionData.Text);
 			this.data.EndDate   = Converters.ParseDate (this.endDateController.EditionData.Text);
 
+			this.UpdateInfos ();
 			this.searchStartAction ();
 		}
 
@@ -329,7 +389,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.editionFrame.Visibility =  this.EditionEnable;
 			this.staticDates.Visibility  = !this.EditionEnable;
 			this.prevButton.Visibility   = !this.EditionEnable;
+			this.nowButton.Visibility    = !this.EditionEnable;
 			this.nextButton.Visibility   = !this.EditionEnable;
+			this.menuButton.Visibility   = !this.EditionEnable;
 
 			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
 			this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
@@ -343,14 +405,64 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.endDateController.EditionDataToWidget ();
 			this.endDateController.Validate ();
 
-			this.staticDates.FormattedText = string.Format ("Du <b>{0}</b> au <b>{1}</b>", Converters.DateToString (this.data.BeginDate), Converters.DateToString (this.data.EndDate));
+			this.nowButton.Enable = !Dates.DateInRange (Date.Today, this.data.BeginDate, this.data.EndDate);
+
+			this.UpdateInfos ();
 		}
 
-
-		private void InitDefaultDates()
+		private void UpdateInfos()
 		{
-			this.data.InitDefaultDates (this.controller.MainWindowController.Période);
+			this.staticDates.FormattedText = FormattedText.Concat ("Période ", Dates.GetDescription (this.data.BeginDate, this.data.EndDate)).ApplyBold ();
+			this.editionInfo.FormattedText = this.NumberOfDays;
+			this.errorInfo.FormattedText = this.ErrorDescription;
 		}
+
+		private FormattedText NumberOfDays
+		{
+			get
+			{
+				if (this.data.BeginDate.HasValue && this.data.EndDate.HasValue)
+				{
+					int n = Dates.NumberOfDays (this.data.EndDate.Value, this.data.BeginDate.Value) + 1;
+
+					if (n <= 0)
+					{
+						return "(0 jour)";
+					}
+					else if (n == 1)
+					{
+						return "(1 jour)";
+					}
+					else
+					{
+						return string.Format ("({0} jours)", n.ToString ());
+					}
+				}
+				else
+				{
+					return FormattedText.Empty;
+				}
+			}
+		}
+
+		private FormattedText ErrorDescription
+		{
+			get
+			{
+				var période = this.controller.MainWindowController.Période;
+
+				if (Dates.DateInRange (this.data.BeginDate, période.DateDébut, période.DateFin) &&
+					Dates.DateInRange (this.data.EndDate,   période.DateDébut, période.DateFin))
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return FormattedText.Concat ("Attention, la période choisie déborde de la période comptable.").ApplyItalic ();
+				}
+			}
+		}
+
 
 		private bool EditionEnable
 		{
@@ -430,13 +542,163 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		private void ShowMenu(Widget parentButton)
+		{
+			//	Affiche le menu permettant de choisir la période.
+			var menu = new VMenu ();
+
+			var périodes = this.Périodes.ToArray ();
+
+			int first = 0;
+			int count = périodes.Length;
+			int max = 20;
+
+			if (count > max)  // menu trop long ?
+			{
+				int sel = -1;
+
+				for (int i = 0; i < périodes.Length; i++)
+				{
+					var période = périodes[i];
+					bool select = période.DateDébut == this.data.BeginDate;
+
+					if (select)
+					{
+						sel = i;
+						break;
+					}
+				}
+
+				if (sel == -1)
+				{
+					if (this.data.BeginDate > périodes.First ().DateDébut)
+					{
+						first = périodes.Length-max;
+					}
+				}
+				else
+				{
+					first = System.Math.Min (sel+max/2, périodes.Length-1);
+					first = System.Math.Max (first-max+1, 0);
+				}
+
+				count = System.Math.Min (périodes.Length - first, max);
+			}
+
+			for (int i = first; i < first+count; i++)
+			{
+				var période = périodes[i];
+				bool select = période.DateDébut == this.data.BeginDate;
+
+				var item = new MenuItem ()
+				{
+					IconUri       = UIBuilder.GetRadioStateIconUri (select),
+					FormattedText = this.GetPériodeDescription (période),
+					TabIndex      = i,
+				};
+
+				item.Clicked += delegate
+				{
+					this.data.BeginDate = périodes[item.TabIndex].DateDébut;
+					this.data.EndDate   = périodes[item.TabIndex].DateFin;
+					this.UpdateButtons ();
+					this.searchStartAction ();
+				};
+
+				menu.Items.Add (item);
+			}
+
+			if (menu.Items.Any ())
+			{
+				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+				menu.Host = parentButton.Window;
+				menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+			}
+		}
+
+
+		private FormattedText GetPériodeDescription(Période période)
+		{
+			var desc = Dates.GetDescription (période.DateDébut, période.DateFin);
+			var rank = FormattedText.Empty;
+
+			if (this.data.Duration == TemporalDataDuration.Monthly)
+			{
+				rank = période.DateDébut.Month.ToString ("00");  // 01..12
+			}
+			else if (this.data.Duration == TemporalDataDuration.Quarterly)
+			{
+				rank = ((période.DateDébut.Month-1)/3+1).ToString ("0");  // 1..4
+			}
+			else if (this.data.Duration == TemporalDataDuration.Biannual)
+			{
+				rank = ((période.DateDébut.Month-1)/6+1).ToString ("0");  // 1..2
+			}
+			else if (this.data.Duration == TemporalDataDuration.Weekly)
+			{
+				rank = Dates.GetWeekNumber (période.DateDébut).ToString ("00");  // 01..52
+			}
+
+			if (!rank.IsNullOrEmpty)
+			{
+				desc = FormattedText.Concat (rank.ApplyBold (), ": ", desc);
+			}
+
+			return desc;
+		}
+
+		private IEnumerable<Période> Périodes
+		{
+			get
+			{
+				var période = this.controller.MainWindowController.Période;
+
+				var temp = new TemporalData ();
+				this.data.CopyTo (temp);
+				temp.BeginDate = période.DateDébut;
+				temp.InitDefaultDates (temp.BeginDate);
+
+				do
+				{
+					yield return new Période (temp.BeginDate.Value, temp.EndDate.Value);
+
+					temp.BeginDate = Dates.AddDays (temp.EndDate.Value, 1);
+					temp.InitDefaultDates (temp.BeginDate);
+				}
+				while (temp.BeginDate <= période.DateFin);
+			}
+		}
+
+		private class Période
+		{
+			public Période(Date dateDébut, Date dateFin)
+			{
+				this.DateDébut = dateDébut;
+				this.DateFin   = dateFin;
+			}
+
+			public Date DateDébut
+			{
+				get;
+				private set;
+			}
+
+			public Date DateFin
+			{
+				get;
+				private set;
+			}
+		}
+
+
 		private static readonly double					toolbarHeight = 20;
 
 		private readonly AbstractController				controller;
 		private readonly ComptaEntity					compta;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
-		private readonly TemporalData						data;
+		private readonly TemporalData					data;
 
 		private System.Action							searchStartAction;
 		private TopPanelLeftController					topPanelLeftController;
@@ -447,10 +709,14 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private CheckButton								filterEnableButton;
 		private TextFieldCombo							durationField;
 		private GlyphButton								prevButton;
+		private Button									nowButton;
 		private GlyphButton								nextButton;
+		private GlyphButton								menuButton;
 		private DateFieldController						beginDateController;
 		private DateFieldController						endDateController;
 		private StaticText								staticDates;
+		private StaticText								editionInfo;
+		private StaticText								errorInfo;
 		private bool									showPanel;
 	}
 }

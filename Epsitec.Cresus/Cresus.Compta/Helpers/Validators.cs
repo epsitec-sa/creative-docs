@@ -78,28 +78,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
-		public static void ValidateDate(EditionData data, bool emptyAccepted)
-		{
-			//	Valide une date située dans n'importe quelle période.
-			data.ClearError ();
-
-			if (data.HasText)
-			{
-				Date date;
-				if (!PériodesDataAccessor.ParseDate (data.Text, out date))
-				{
-					data.Error = "La date est incorrecte";
-				}
-			}
-			else
-			{
-				if (!emptyAccepted)
-				{
-					data.Error = "Il manque la date";
-				}
-			}
-		}
-
 		public static void ValidateDate(ComptaPériodeEntity période, EditionData data, bool emptyAccepted)
 		{
 			//	Valide une date située dans une période donnée.
@@ -118,6 +96,33 @@ namespace Epsitec.Cresus.Compta.Helpers
 					var e = Converters.DateToString (période.DateFin);
 
 					data.Error = string.Format ("La date est incorrecte<br/>Elle devrait être comprise entre {0} et {1}", b, e);
+				}
+			}
+			else
+			{
+				if (!emptyAccepted)
+				{
+					data.Error = "Il manque la date";
+				}
+			}
+		}
+
+		public static void ValidateDate(EditionData data, bool emptyAccepted)
+		{
+			//	Valide une date située dans n'importe quelle période.
+			data.ClearError ();
+
+			if (data.HasText)
+			{
+				var date = Converters.ParseDate (data.Text);
+
+				if (date.HasValue)
+				{
+					data.Text = Converters.DateToString (date);
+				}
+				else
+				{
+					data.Error = "La date est incorrecte";
 				}
 			}
 			else

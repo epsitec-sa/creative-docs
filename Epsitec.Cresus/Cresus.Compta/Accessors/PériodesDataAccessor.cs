@@ -121,19 +121,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				var text = this.editionLine[0].GetText (ColumnType.DateDébut);
+				var date = Converters.ParseDate (text);
 
-				Date date;
-				PériodesDataAccessor.ParseDate (text, out date);
+				if (!date.HasValue)
+				{
+					return -1;
+				}
 
 				if (!this.justCreated && this.firstEditedRow != -1 && this.countEditedRow != 0)
 				{
-					if (this.HasCorrectOrder (this.firstEditedRow, date))
+					if (this.HasCorrectOrder (this.firstEditedRow, date.Value))
 					{
 						return -1;
 					}
 				}
 
-				return this.GetSortedRow (date);
+				return this.GetSortedRow (date.Value);
 			}
 		}
 
