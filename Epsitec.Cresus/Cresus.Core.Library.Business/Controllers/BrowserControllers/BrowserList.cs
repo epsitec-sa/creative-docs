@@ -95,8 +95,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			if ((index >= 0) &&
 				(index < this.list.Count))
 			{
-				var item = this.list[index];
-				return item.GetEntityKey (this);
+				return this.list[index].EntityKey;
 			}
 			else
 			{
@@ -113,7 +112,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			var rowKey = key.Value.RowKey;
 
-			return this.list.FindIndex (x => x.GetRowKey (this) == rowKey);
+			return this.list.FindIndex (x => x.RowKey == rowKey);
 		}
 
 		public int IndexOf(AbstractEntity entity)

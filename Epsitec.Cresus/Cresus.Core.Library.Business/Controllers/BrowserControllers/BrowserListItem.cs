@@ -41,22 +41,19 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public Epsitec.Cresus.Database.DbKey	RowKey
+		{
+			get
+			{
+				return this.entityKey.RowKey;
+			}
+		}
 		
-		internal EntityKey GetEntityKey(BrowserList list)
-		{
-			return list.GetEntityKey (this.entity);
-		}
-
-		internal Epsitec.Cresus.Database.DbKey GetRowKey(BrowserList list)
-		{
-			return this.GetEntityKey (list).RowKey;
-		}
-
-		internal FormattedText GetDisplayText(BrowserList list)
+		internal FormattedText GetDisplayText(BrowserListContext context)
 		{
 			if (this.cachedText == null)
 			{
-				this.GenerateDisplayText (list);
+				this.cachedText = context.GetDisplayText (this.Entity);
 			}
 
 			return this.cachedText.Value;
@@ -65,17 +62,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		internal void ClearCachedDisplayText()
 		{
 			this.cachedText = null;
-		}
-
-
-		private void GenerateDisplayText(BrowserList list)
-		{
-			this.cachedText = list.GenerateEntityDisplayText (this.entity);
-
-			if (this.cachedText.Value.IsNullOrEmpty)
-			{
-				this.cachedText = CollectionTemplate.DefaultEmptyText;
-			}
 		}
 
 		

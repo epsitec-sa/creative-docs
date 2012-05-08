@@ -12,8 +12,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListItemRenderer : StringRenderer<BrowserListItem>
 	{
-		public BrowserListItemRenderer(BrowserList list)
-			: base (x => x.GetDisplayText (list))
+		public BrowserListItemRenderer(BrowserListContext context)
+			: base (x => x.GetDisplayText (context))
 		{
 		}
 	}

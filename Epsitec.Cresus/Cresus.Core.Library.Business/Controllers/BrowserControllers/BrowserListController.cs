@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 			this.collection     = new BrowserList (this.dataContext);
 			this.suspendUpdates = new SafeCounter ();
+			this.context        = new BrowserListContext ();
 
 			this.SetUpItemList ();
 			this.AttachEventHandlers ();
@@ -148,7 +149,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.itemProvider = new BrowserListItemProvider (this.collection);
 			this.itemMapper   = new BrowserListItemMapper ();
-			this.itemRenderer = new BrowserListItemRenderer (this.collection);
+			this.itemRenderer = new BrowserListItemRenderer (this.context);
 			
 			this.itemScrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
 			
@@ -362,6 +363,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private EntityDataExtractor             extractor;
 		private EntityDataCollection			extractedCollection;
 
+		private BrowserListContext				context;
 		private DataSetCollectionGetter			collectionGetter;
 		private Druid							collectionEntityId;
 		
