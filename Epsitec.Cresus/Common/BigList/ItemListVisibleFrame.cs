@@ -75,6 +75,35 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
+		public int								FullyVisibleCount
+		{
+			get
+			{
+				var count = this.VisibleCount;
+
+				if (count > 1)
+				{
+					var last = this.visibleRows[count-1];
+					var end  = last.Offset + last.Height.TotalHeight;
+
+					if (end > this.visibleHeight)
+					{
+						count--;
+					}
+
+					var first = this.visibleRows[0];
+
+					if (first.Offset < 0)
+					{
+						count--;
+					}
+				}
+
+				return count;
+			}
+		}
+
+
 		public IList<ItemListRow>				VisibleRows
 		{
 			get

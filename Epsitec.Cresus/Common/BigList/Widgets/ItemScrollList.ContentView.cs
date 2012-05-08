@@ -22,8 +22,9 @@ namespace Epsitec.Common.BigList.Widgets
 		{
 			public ContentView(ItemScrollList host, IItemDataRenderer itemRenderer, IItemMarkRenderer markRenderer, Widget frame, AbstractScroller scroller)
 			{
-				this.host = host;
+				this.host     = host;
 				this.scroller = scroller;
+				
 				this.view = new ItemListVerticalContentView ()
 				{
 					Parent       = frame,
@@ -42,10 +43,10 @@ namespace Epsitec.Common.BigList.Widgets
 			public void UpdateScroller()
 			{
 				decimal index   = this.view.ItemList.VisibleFrame.GetFirstFullyVisibleIndex ();
-				decimal visible = this.view.ItemList.VisibleFrame.VisibleCount;
+				decimal visible = this.view.ItemList.VisibleFrame.FullyVisibleCount;
 				decimal total   = this.host.itemCache.ItemCount;
 
-				if (total == 0)
+				if (total <= 0)
 				{
 					index   = 0;
 					visible = 0;
@@ -53,12 +54,12 @@ namespace Epsitec.Common.BigList.Widgets
 
 				using (this.counter.Enter ())
 				{
-					this.scroller.SmallChange       = 4;
+					this.scroller.SmallChange       = 1;
 					this.scroller.LargeChange	    = visible < 1 ? 0 : visible - 1;
 					this.scroller.MinValue          = 0;
-					this.scroller.MaxValue          = total < 1 ? 0 : total - 1;
+					this.scroller.MaxValue          = total < visible ? 0 : total - visible;
 					this.scroller.Resolution        = 1;
-					this.scroller.VisibleRangeRatio = total == 0 ? 0 : visible / total;
+					this.scroller.VisibleRangeRatio = total == 0 ? 1.0M : visible / total;
 					this.scroller.Value				= index < 0 ? 0 : index;
 				}
 			}

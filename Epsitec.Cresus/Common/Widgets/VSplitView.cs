@@ -64,6 +64,7 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Fill,
 				IsInverted = true,
 				MinHeight = 0,
+				VisibleRangeRatio = 1.0M,
 			};
 
 			this.frame2 = new Widget (this.frame2Container)
@@ -82,6 +83,7 @@ namespace Epsitec.Common.Widgets
 				Dock = DockStyle.Fill,
 				IsInverted = true,
 				MinHeight = 0,
+				VisibleRangeRatio = 1.0M,
 			};
 
 			Epsitec.Common.Widgets.Layouts.LayoutEngine.SetIgnoreMeasure (this.separator, true);
