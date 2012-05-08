@@ -183,7 +183,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateViewSettings (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
-			this.CreateTopTempo (this.frameBox);
+			this.CreateTopTemporal (this.frameBox);
 			this.CreateOptions (this.frameBox);
 			this.CreatePermanents (this.frameBox);
 
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowTempoPanel
+		public virtual bool HasShowTemporalPanel
 		{
 			get
 			{
@@ -375,9 +375,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.topFilterController.ShowPanel = filter;
 			}
 
-			if (this.topTempoController != null)
+			if (this.topTemporalController != null)
 			{
-				this.topTempoController.ShowPanel = tempo;
+				this.topTemporalController.ShowPanel = tempo;
 			}
 
 			if (this.optionsController != null)
@@ -442,20 +442,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				if (this.topTempoController == null)
+				if (this.topTemporalController == null)
 				{
 					return false;
 				}
 				else
 				{
-					return this.topTempoController.Specialist;
+					return this.topTemporalController.Specialist;
 				}
 			}
 			set
 			{
-				if (this.topTempoController != null)
+				if (this.topTemporalController != null)
 				{
-					this.topTempoController.Specialist = value;
+					this.topTemporalController.Specialist = value;
 				}
 			}
 		}
@@ -531,9 +531,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.topFilterController.UpdateContent ();
 			}
 
-			if (this.topTempoController != null)
+			if (this.topTemporalController != null)
 			{
-				this.topTempoController.UpdateContent ();
+				this.topTemporalController.UpdateContent ();
 			}
 
 			if (this.optionsController != null)
@@ -693,24 +693,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
-		#region Tempo panel
-		private void CreateTopTempo(FrameBox parent)
+		#region Temporal panel
+		private void CreateTopTemporal(FrameBox parent)
 		{
-			if (this.dataAccessor != null && this.dataAccessor.TempoData != null)
+			if (this.dataAccessor != null && this.dataAccessor.TemporalData != null)
 			{
-				this.topTempoController = new TopTempoController (this);
-				this.topTempoController.CreateUI (parent, this.FilterStartAction);
-				this.topTempoController.ShowPanel = this.mainWindowController.ShowSearchPanel;
+				this.topTemporalController = new TopTemporalController (this);
+				this.topTemporalController.CreateUI (parent, this.FilterStartAction);
+				this.topTemporalController.ShowPanel = this.mainWindowController.ShowSearchPanel;
 
 				this.dataAccessor.UpdateFilter ();
 			}
 		}
 
-		public void TempoUpdateTopToolbar()
+		public void TemporalUpdateTopToolbar()
 		{
-			if (this.topTempoController != null)
+			if (this.topTemporalController != null)
 			{
-				this.topTempoController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
+				this.topTemporalController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
 			}
 		}
 		#endregion
@@ -731,7 +731,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
-			this.TempoUpdateTopToolbar ();
+			this.TemporalUpdateTopToolbar ();
 			this.UpdateViewSettings ();
 		}
 		#endregion
@@ -752,7 +752,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArrayContent ();
 			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
-			this.TempoUpdateTopToolbar ();
+			this.TemporalUpdateTopToolbar ();
 			this.UpdateViewSettings ();
 		}
 		#endregion
@@ -800,9 +800,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.mainWindowController.OpenPanelFilter ();
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.TempoData != null && !this.dataAccessor.TempoData.IsEmpty)
+				if (this.dataAccessor != null && this.dataAccessor.TemporalData != null && !this.dataAccessor.TemporalData.IsEmpty)
 				{
-					this.mainWindowController.OpenPanelTempo ();
+					this.mainWindowController.OpenPanelTemporal ();
 				}
 			};
 
@@ -887,8 +887,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			title = title.ApplyBold ().ApplyFontSize (13.0);
 
-			if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
-				(this.dataAccessor != null && this.dataAccessor.TempoData  != null && !this.dataAccessor.TempoData.IsEmpty))
+			if ((this.dataAccessor != null && this.dataAccessor.FilterData   != null && !this.dataAccessor.FilterData.IsEmpty) ||
+				(this.dataAccessor != null && this.dataAccessor.TemporalData != null && !this.dataAccessor.TemporalData.IsEmpty))
 			{
 				FormattedText ht = "filtre actif";
 				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
@@ -933,9 +933,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetTitle (this.title);
 				}
 
-				if (this.dataAccessor.TempoData != null)
+				if (this.dataAccessor.TemporalData != null)
 				{
-					this.panelsToolbarController.TempoEnable = !this.dataAccessor.TempoData.IsEmpty;
+					this.panelsToolbarController.TemporalEnable = !this.dataAccessor.TemporalData.IsEmpty;
 				}
 			}
 		}
@@ -1363,7 +1363,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected PanelsToolbarController						panelsToolbarController;
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
-		protected TopTempoController							topTempoController;
+		protected TopTemporalController							topTemporalController;
 		protected AbstractPermanentsController					permanentsController;
 		protected AbstractOptionsController						optionsController;
 		protected ViewSettingsController						viewSettingsController;

@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.showSearchPanel       = false;
 			this.showFilterPanel       = false;
-			this.showTempoPanel        = false;
+			this.showTemporalPanel     = false;
 			this.showOptionsPanel      = false;
 			this.showViewSettingsPanel = false;
 			this.showInfoPanel         = true;
@@ -700,15 +700,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool ShowTempoPanel
+		public bool ShowTemporalPanel
 		{
 			get
 			{
-				return this.showTempoPanel;
+				return this.showTemporalPanel;
 			}
 			set
 			{
-				this.showTempoPanel = value;
+				this.showTemporalPanel = value;
 				this.UpdatePanelCommands ();
 			}
 		}
@@ -887,9 +887,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Tempo);
-				cs.ActiveState = this.showTempoPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasShowTempoPanel;
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Temporal);
+				cs.ActiveState = this.showTemporalPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowTemporalPanel;
 			}
 
 			if (this.controller != null)
@@ -908,7 +908,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showTempoPanel, this.showOptionsPanel, this.showInfoPanel);
+				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showTemporalPanel, this.showOptionsPanel, this.showInfoPanel);
 			}
 		}
 
@@ -979,7 +979,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Search);
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
-						MainWindowController.AdaptTempoData (this.période, viewSettingsData.Tempo);
+						MainWindowController.AdaptTemporalData (this.période, viewSettingsData.Temporal);
 					}
 				}
 			}
@@ -1010,7 +1010,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private static void AdaptTempoData(ComptaPériodeEntity période, TempoData data)
+		private static void AdaptTemporalData(ComptaPériodeEntity période, TemporalData data)
 		{
 			//	Adapte un filtre temporel pour être dans une période donnée.
 			if (data.BeginDate.HasValue)
@@ -1295,15 +1295,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		public void ClosePanelTempo()
+		public void ClosePanelTemporal()
 		{
-			this.showTempoPanel = false;
+			this.showTemporalPanel = false;
 			this.UpdatePanelCommands ();
 		}
 
-		public void OpenPanelTempo()
+		public void OpenPanelTemporal()
 		{
-			this.showTempoPanel = true;
+			this.showTemporalPanel = true;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1334,10 +1334,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		[Command (Res.CommandIds.Panel.Tempo)]
-		private void CommandPanelTempo()
+		[Command (Res.CommandIds.Panel.Temporal)]
+		private void CommandPanelTemporal()
 		{
-			this.showTempoPanel = !this.showTempoPanel;
+			this.showTemporalPanel = !this.showTemporalPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1764,15 +1764,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
-		public TempoData GetSettingsTempoData(string key, System.Action<TempoData> initialize = null)
+		public TemporalData GetSettingsTemporalData(string key, System.Action<TemporalData> initialize = null)
 		{
 			ISettingsData result;
 			if (this.settingsData.TryGetValue (key, out result))
 			{
-				return result as TempoData;
+				return result as TemporalData;
 			}
 
-			var data = new TempoData ();
+			var data = new TemporalData ();
 
 			if (initialize != null)
 			{
@@ -1821,7 +1821,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool										dirty;
 		private bool										showSearchPanel;
 		private bool										showFilterPanel;
-		private bool										showTempoPanel;
+		private bool										showTemporalPanel;
 		private bool										showOptionsPanel;
 		private bool										showViewSettingsPanel;
 		private bool										showInfoPanel;

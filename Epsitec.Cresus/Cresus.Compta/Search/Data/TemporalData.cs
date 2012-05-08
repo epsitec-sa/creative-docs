@@ -14,9 +14,9 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
-	public class TempoData : ISettingsData
+	public class TemporalData : ISettingsData
 	{
-		public TempoData()
+		public TemporalData()
 		{
 			this.Clear ();
 		}
@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public void Clear()
 		{
 			//	Vide les données et prépare une unique ligne.
-			this.duration   = TempoDataDuration.Other;
+			this.duration   = TemporalDataDuration.Other;
 			this.beginDate = null;
 			this.endDate   = null;
 
@@ -74,29 +74,29 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 			switch (this.duration)
 			{
-				case TempoDataDuration.Daily:
+				case TemporalDataDuration.Daily:
 					this.beginDate = now;
 					break;
 
-				case TempoDataDuration.Weekly:
+				case TemporalDataDuration.Weekly:
 					int dof = (int) now.DayOfWeek - 1;  // 0..6
 					System.Diagnostics.Debug.Assert (dof >= 0 && dof <= 6);
 					this.beginDate = Dates.AddDays (now, -dof);
 					break;
 
-				case TempoDataDuration.Monthly:
+				case TemporalDataDuration.Monthly:
 					this.beginDate = new Date (now.Year, now.Month, 1);
 					break;
 
-				case TempoDataDuration.Quarterly:
+				case TemporalDataDuration.Quarterly:
 					this.beginDate = new Date (now.Year, (now.Month-1)/3+1, 1);
 					break;
 
-				case TempoDataDuration.Biannual:
+				case TemporalDataDuration.Biannual:
 					this.beginDate = new Date (now.Year, (now.Month-1)/6+1, 1);
 					break;
 
-				case TempoDataDuration.Annual:
+				case TemporalDataDuration.Annual:
 					this.beginDate = new Date (now.Year, 1, 1);
 					break;
 			}
@@ -116,27 +116,27 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				switch (this.duration)
 				{
-					case TempoDataDuration.Daily:
+					case TemporalDataDuration.Daily:
 						date = Dates.AddDays (date.Value, step);
 						break;
 
-					case TempoDataDuration.Weekly:
+					case TemporalDataDuration.Weekly:
 						date = Dates.AddDays (date.Value, step*7);
 						break;
 
-					case TempoDataDuration.Monthly:
+					case TemporalDataDuration.Monthly:
 						date = Dates.AddMonths (date.Value, step);
 						break;
 
-					case TempoDataDuration.Quarterly:
+					case TemporalDataDuration.Quarterly:
 						date = Dates.AddMonths (date.Value, step*3);
 						break;
 
-					case TempoDataDuration.Biannual:
+					case TemporalDataDuration.Biannual:
 						date = Dates.AddMonths (date.Value, step*6);
 						break;
 
-					case TempoDataDuration.Annual:
+					case TemporalDataDuration.Annual:
 						date = Dates.AddMonths (date.Value, step*12);
 						break;
 				}
@@ -151,27 +151,27 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				switch (this.duration)
 				{
-					case TempoDataDuration.Daily:
+					case TemporalDataDuration.Daily:
 						this.endDate = this.beginDate;
 						break;
 
-					case TempoDataDuration.Weekly:
+					case TemporalDataDuration.Weekly:
 						this.endDate = Dates.AddDays (this.beginDate.Value, 7-1);
 						break;
 
-					case TempoDataDuration.Monthly:
+					case TemporalDataDuration.Monthly:
 						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 1), -1);
 						break;
 
-					case TempoDataDuration.Quarterly:
+					case TemporalDataDuration.Quarterly:
 						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 3), -1);
 						break;
 
-					case TempoDataDuration.Biannual:
+					case TemporalDataDuration.Biannual:
 						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 6), -1);
 						break;
 
-					case TempoDataDuration.Annual:
+					case TemporalDataDuration.Annual:
 						this.endDate = new Date (this.beginDate.Value.Year, 12, 31);
 						break;
 				}
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public TempoDataDuration Duration
+		public TemporalDataDuration Duration
 		{
 			get
 			{
@@ -216,21 +216,21 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public bool CompareTo(TempoData other)
+		public bool CompareTo(TemporalData other)
 		{
 			return this.duration  == other.duration  &&
 				   this.beginDate == other.beginDate &&
 				   this.endDate   == other.endDate;
 		}
 
-		public TempoData CopyFrom()
+		public TemporalData CopyFrom()
 		{
-			var data = new TempoData ();
+			var data = new TemporalData ();
 			this.CopyTo (data);
 			return data;
 		}
 
-		public void CopyTo(TempoData dst)
+		public void CopyTo(TemporalData dst)
 		{
 			dst.duration  = this.duration;
 			dst.beginDate = this.beginDate;
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		private TempoDataDuration		duration;
+		private TemporalDataDuration		duration;
 		private Date?					beginDate;
 		private Date?					endDate;
 	}

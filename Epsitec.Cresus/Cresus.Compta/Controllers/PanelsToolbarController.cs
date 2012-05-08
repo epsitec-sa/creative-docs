@@ -114,14 +114,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 #endif
 
-			var searchButton = this.CreateButton (toolbar, Res.Commands.Panel.Search, -1, UIBuilder.SearchBackColor);
-			var filterButton = this.CreateButton (toolbar, Res.Commands.Panel.Filter, -1, UIBuilder.FilterBackColor);
-			var tempoButton  = this.CreateButton (toolbar, Res.Commands.Panel.Tempo,  -1, UIBuilder.TempoBackColor);
-			                   this.CreateButton (toolbar, Res.Commands.Panel.Options, 0, UIBuilder.OptionsBackColor);
+			var searchButton   = this.CreateButton (toolbar, Res.Commands.Panel.Search,   -1, UIBuilder.SearchBackColor);
+			var filterButton   = this.CreateButton (toolbar, Res.Commands.Panel.Filter,   -1, UIBuilder.FilterBackColor);
+			var temporalButton = this.CreateButton (toolbar, Res.Commands.Panel.Temporal, -1, UIBuilder.TemporalBackColor);
+			                     this.CreateButton (toolbar, Res.Commands.Panel.Options,   0, UIBuilder.OptionsBackColor);
 
-			this.searchMarker = this.CreateMarker (searchButton);
-			this.filterMarker = this.CreateMarker (filterButton);
-			this.tempoMarker  = this.CreateMarker (tempoButton);
+			this.searchMarker   = this.CreateMarker (searchButton);
+			this.filterMarker   = this.CreateMarker (filterButton);
+			this.temporalMarker = this.CreateMarker (temporalButton);
 		}
 
 		public bool SearchEnable
@@ -150,16 +150,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool TempoEnable
+		public bool TemporalEnable
 		{
 			//	Indique si le filtre temporel est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
 			get
 			{
-				return this.tempoMarker.Visibility;
+				return this.temporalMarker.Visibility;
 			}
 			set
 			{
-				this.tempoMarker.Visibility = value;
+				this.temporalMarker.Visibility = value;
 			}
 		}
 
@@ -201,6 +201,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private StaticText						searchMarker;
 		private StaticText						filterMarker;
-		private StaticText						tempoMarker;
+		private StaticText						temporalMarker;
 	}
 }

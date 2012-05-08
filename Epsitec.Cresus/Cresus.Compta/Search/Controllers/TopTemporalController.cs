@@ -22,16 +22,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 	/// <summary>
 	/// Ce contrôleur gère la barre d'outil supérieure de filtre pour la comptabilité.
 	/// </summary>
-	public class TopTempoController
+	public class TopTemporalController
 	{
-		public TopTempoController(AbstractController controller)
+		public TopTemporalController(AbstractController controller)
 		{
 			this.controller = controller;
 
 			this.compta          = this.controller.ComptaEntity;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
-			this.data            = this.controller.DataAccessor.TempoData;
+			this.data            = this.controller.DataAccessor.TemporalData;
 		}
 
 
@@ -76,9 +76,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = TopTempoController.toolbarHeight,
+				PreferredHeight = TopTemporalController.toolbarHeight,
 				DrawFullFrame   = true,
-				BackColor       = UIBuilder.TempoBackColor,
+				BackColor       = UIBuilder.TemporalBackColor,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, -1),
 				Visibility      = false,
@@ -115,12 +115,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			//	Remplissage de la frame gauche.
 			this.topPanelLeftController = new TopPanelLeftController (this.controller);
-			this.topPanelLeftController.CreateUI (topPanelLeftFrame, false, "Panel.Tempo", this.LevelChangedAction);
+			this.topPanelLeftController.CreateUI (topPanelLeftFrame, false, "Panel.Temporal", this.LevelChangedAction);
 			this.topPanelLeftController.Specialist = false;
 
 			//	Remplissage de la frame droite.
 			this.topPanelRightController = new TopPanelRightController (this.controller);
-			this.topPanelRightController.CreateUI (topPanelRightFrame, "Termine le filtre", this.ClearAction, this.controller.MainWindowController.ClosePanelTempo, this.LevelChangedAction);
+			this.topPanelRightController.CreateUI (topPanelRightFrame, "Termine le filtre", this.ClearAction, this.controller.MainWindowController.ClosePanelTemporal, this.LevelChangedAction);
 
 			this.UpdateButtons ();
 		}
@@ -233,12 +233,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			TopTempoController.InitTempoDataDurationCombo (this.durationField);
+			TopTemporalController.InitTempoDataDurationCombo (this.durationField);
 
 			//	Connexion des événements.
 			this.durationField.SelectedItemChanged += delegate
 			{
-				this.data.Duration = TopTempoController.TempoDataDurationToType (this.durationField.FormattedText);
+				this.data.Duration = TopTemporalController.TempoDataDurationToType (this.durationField.FormattedText);
 				this.InitDefaultDates ();
 				this.UpdateButtons ();
 			};
@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
 			this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
-			this.durationField.FormattedText = TopTempoController.TempoDataDurationToString (this.data.Duration);
+			this.durationField.FormattedText = TopTemporalController.TempoDataDurationToString (this.data.Duration);
 
 			this.beginDateController.EditionData.Text = Converters.DateToString (this.data.BeginDate);
 			this.beginDateController.EditionDataToWidget ();
@@ -356,7 +356,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			get
 			{
-				return this.data.Duration == TempoDataDuration.Other;
+				return this.data.Duration == TemporalDataDuration.Other;
 			}
 		}
 
@@ -365,49 +365,49 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			combo.Items.Clear ();
 
-			foreach (var type in TopTempoController.TempoDataDurations)
+			foreach (var type in TopTemporalController.TempoDataDurations)
 			{
-				combo.Items.Add (TopTempoController.TempoDataDurationToString (type));
+				combo.Items.Add (TopTemporalController.TempoDataDurationToString (type));
 			}
 		}
 
-		private static TempoDataDuration TempoDataDurationToType(FormattedText text)
+		private static TemporalDataDuration TempoDataDurationToType(FormattedText text)
 		{
-			foreach (var type in TopTempoController.TempoDataDurations)
+			foreach (var type in TopTemporalController.TempoDataDurations)
 			{
-				if (TopTempoController.TempoDataDurationToString (type) == text)
+				if (TopTemporalController.TempoDataDurationToString (type) == text)
 				{
 					return type;
 				}
 			}
 
-			return TempoDataDuration.Unknown;
+			return TemporalDataDuration.Unknown;
 		}
 
-		private static FormattedText TempoDataDurationToString(TempoDataDuration duration)
+		private static FormattedText TempoDataDurationToString(TemporalDataDuration duration)
 		{
 			//	Texte affiché après "Durée".
 			switch (duration)
 			{
-				case TempoDataDuration.Daily:
+				case TemporalDataDuration.Daily:
 					return "Journalière";
 
-				case TempoDataDuration.Weekly:
+				case TemporalDataDuration.Weekly:
 					return "Hebdomadaire";
 
-				case TempoDataDuration.Monthly:
+				case TemporalDataDuration.Monthly:
 					return "Mensuelle";
 
-				case TempoDataDuration.Quarterly:
+				case TemporalDataDuration.Quarterly:
 					return "Trimestrielle";
 
-				case TempoDataDuration.Biannual:
+				case TemporalDataDuration.Biannual:
 					return "Semestrielle";
 
-				case TempoDataDuration.Annual:
+				case TemporalDataDuration.Annual:
 					return "Annuelle";
 
-				case TempoDataDuration.Other:
+				case TemporalDataDuration.Other:
 					return "Quelconque";
 
 				default:
@@ -415,17 +415,17 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
-		private static IEnumerable<TempoDataDuration> TempoDataDurations
+		private static IEnumerable<TemporalDataDuration> TempoDataDurations
 		{
 			get
 			{
-				yield return TempoDataDuration.Other;
-				yield return TempoDataDuration.Daily;
-				yield return TempoDataDuration.Weekly;
-				yield return TempoDataDuration.Monthly;
-				yield return TempoDataDuration.Quarterly;
-				yield return TempoDataDuration.Biannual;
-				yield return TempoDataDuration.Annual;
+				yield return TemporalDataDuration.Other;
+				yield return TemporalDataDuration.Daily;
+				yield return TemporalDataDuration.Weekly;
+				yield return TemporalDataDuration.Monthly;
+				yield return TemporalDataDuration.Quarterly;
+				yield return TemporalDataDuration.Biannual;
+				yield return TemporalDataDuration.Annual;
 			}
 		}
 
@@ -436,7 +436,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					compta;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
-		private readonly TempoData						data;
+		private readonly TemporalData						data;
 
 		private System.Action							searchStartAction;
 		private TopPanelLeftController					topPanelLeftController;

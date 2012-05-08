@@ -88,11 +88,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public TempoData TempoData
+		public TemporalData TemporalData
 		{
 			get
 			{
-				return this.tempoData;
+				return this.temporalData;
 			}
 		}
 
@@ -667,7 +667,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected SearchData							searchData;
 		protected SearchData							filterData;
-		protected TempoData								tempoData;
+		protected TemporalData							temporalData;
 		protected AbstractOptions						options;
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;

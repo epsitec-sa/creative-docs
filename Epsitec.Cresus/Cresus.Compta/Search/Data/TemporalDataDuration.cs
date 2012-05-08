@@ -6,7 +6,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Search.Data
 {
-	public enum TempoDataDuration
+	public enum TemporalDataDuration
 	{
 		Unknown,
 		Daily,

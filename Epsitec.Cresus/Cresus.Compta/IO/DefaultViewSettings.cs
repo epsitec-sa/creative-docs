@@ -508,10 +508,10 @@ namespace Epsitec.Cresus.Compta.IO
 				Permanent   = true,
 				Search      = new SearchData (),
 				Filter      = new SearchData (),
-				Tempo       = new TempoData (),
+				Temporal       = new TemporalData (),
 				ShowSearch  = searchExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowFilter  = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
-				ShowTempo   = tempoExist   ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
+				ShowTemporal   = tempoExist   ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowOptions = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
 
