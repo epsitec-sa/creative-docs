@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void UpdatePanelsShowed(bool viewSettings, bool search, bool filter, bool tempo, bool options, bool info)
+		public void UpdatePanelsShowed(bool viewSettings, bool search, bool filter, bool temporal, bool options, bool info)
 		{
 			if (this.viewSettingsController != null)
 			{
@@ -377,7 +377,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.topTemporalController != null)
 			{
-				this.topTemporalController.ShowPanel = tempo;
+				this.topTemporalController.ShowPanel = temporal;
 			}
 
 			if (this.optionsController != null)
@@ -438,7 +438,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool TempoSpecialist
+		public bool TemporalSpecialist
 		{
 			get
 			{

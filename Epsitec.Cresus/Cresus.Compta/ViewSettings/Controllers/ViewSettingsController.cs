@@ -616,10 +616,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock           = DockStyle.Left,
 			};
 
-			this.extendedTempoIconSummary = new StaticText
+			this.extendedTemporalIconSummary = new StaticText
 			{
 				Parent         = line3,
-				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Tempo"),
+				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Temporal"),
 				PreferredWidth = 30,
 				Dock           = DockStyle.Left,
 			};
@@ -648,7 +648,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			this.extendedTempoSummary = new CheckButton
+			this.extendedTemporalSummary = new CheckButton
 			{
 				Parent          = line3,
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
@@ -695,12 +695,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 			};
 
-			this.extendedTempoSummary.ActiveStateChanged += delegate
+			this.extendedTemporalSummary.ActiveStateChanged += delegate
 			{
 				var viewSettings = this.viewSettingsList.Selected;
 				if (viewSettings != null && this.ignoreChanges.IsZero)
 				{
-					viewSettings.EnableTemporal = this.extendedTempoSummary.ActiveState == ActiveState.Yes;
+					viewSettings.EnableTemporal = this.extendedTemporalSummary.ActiveState == ActiveState.Yes;
 				}
 			};
 
@@ -851,25 +851,25 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					var compactSummary = FormattedText.Empty;
 
-					this.extendedSearchSummary .FormattedText = FormattedText.Empty;
-					this.extendedFilterSummary .FormattedText = FormattedText.Empty;
-					this.extendedTempoSummary  .FormattedText = FormattedText.Empty;
-					this.extendedOptionsSummary.FormattedText = FormattedText.Empty;
-					this.extendedShowPanelMode .FormattedText = FormattedText.Empty;
+					this.extendedSearchSummary  .FormattedText = FormattedText.Empty;
+					this.extendedFilterSummary  .FormattedText = FormattedText.Empty;
+					this.extendedTemporalSummary.FormattedText = FormattedText.Empty;
+					this.extendedOptionsSummary .FormattedText = FormattedText.Empty;
+					this.extendedShowPanelMode  .FormattedText = FormattedText.Empty;
 
-					this.extendedSearchSummary .ActiveState = ActiveState.No;
-					this.extendedFilterSummary .ActiveState = ActiveState.No;
-					this.extendedTempoSummary  .ActiveState = ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = ActiveState.No;
+					this.extendedSearchSummary  .ActiveState = ActiveState.No;
+					this.extendedFilterSummary  .ActiveState = ActiveState.No;
+					this.extendedTemporalSummary.ActiveState = ActiveState.No;
+					this.extendedOptionsSummary .ActiveState = ActiveState.No;
 				}
 				else
 				{
 					this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
 
-					this.extendedSearchSummary .FormattedText = viewSettings.GetSearchSummary  (this.controller.ColumnMappers);
-					this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
-					this.extendedTempoSummary  .FormattedText = viewSettings.GetTemporalSummary   (this.controller.ColumnMappers);
-					this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
+					this.extendedSearchSummary  .FormattedText = viewSettings.GetSearchSummary   (this.controller.ColumnMappers);
+					this.extendedFilterSummary  .FormattedText = viewSettings.GetFilterSummary   (this.controller.ColumnMappers);
+					this.extendedTemporalSummary.FormattedText = viewSettings.GetTemporalSummary (this.controller.ColumnMappers);
+					this.extendedOptionsSummary .FormattedText = viewSettings.GetOptionsSummary  (this.controller.ColumnMappers);
 
 					this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
 					if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
@@ -887,9 +887,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.extendedFilterSummary.FormattedText = "Vide";
 					}
 
-					if (this.extendedTempoSummary.FormattedText.IsNullOrEmpty)
+					if (this.extendedTemporalSummary.FormattedText.IsNullOrEmpty)
 					{
-						this.extendedTempoSummary.FormattedText = "Vide";
+						this.extendedTemporalSummary.FormattedText = "Vide";
 					}
 
 					if (this.extendedOptionsSummary.FormattedText.IsNullOrEmpty)
@@ -897,10 +897,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.extendedOptionsSummary.FormattedText = "Vide";
 					}
 
-					this.extendedSearchSummary.ActiveState  = viewSettings.EnableSearch  ? ActiveState.Yes : ActiveState.No;
-					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
-					this.extendedTempoSummary.ActiveState   = viewSettings.EnableTemporal   ? ActiveState.Yes : ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
+					this.extendedSearchSummary.ActiveState   = viewSettings.EnableSearch   ? ActiveState.Yes : ActiveState.No;
+					this.extendedFilterSummary.ActiveState   = viewSettings.EnableFilter   ? ActiveState.Yes : ActiveState.No;
+					this.extendedTemporalSummary.ActiveState = viewSettings.EnableTemporal ? ActiveState.Yes : ActiveState.No;
+					this.extendedOptionsSummary.ActiveState  = viewSettings.EnableOptions  ? ActiveState.Yes : ActiveState.No;
 
 					this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
 					this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
@@ -909,22 +909,22 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					ToolTip.Default.SetToolTip (this.comptactFrame, tooltipSummary);
 				}
 
-				this.extendedSearchSummary .Enable = (viewSettings != null && !this.IsReadonly);
-				this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
-				this.extendedTempoSummary  .Enable = (viewSettings != null && !this.IsReadonly);
-				this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedSearchSummary  .Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedFilterSummary  .Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedTemporalSummary.Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedOptionsSummary .Enable = (viewSettings != null && !this.IsReadonly);
 
 				this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
 
-				this.extendedSearchIconSummary .Visibility = this.controller.HasShowSearchPanel;
-				this.extendedFilterIconSummary .Visibility = this.controller.HasShowFilterPanel;
-				this.extendedTempoIconSummary  .Visibility = this.controller.HasShowTemporalPanel;
-				this.extendedOptionsIconSummary.Visibility = this.controller.HasShowOptionsPanel;
+				this.extendedSearchIconSummary  .Visibility = this.controller.HasShowSearchPanel;
+				this.extendedFilterIconSummary  .Visibility = this.controller.HasShowFilterPanel;
+				this.extendedTemporalIconSummary.Visibility = this.controller.HasShowTemporalPanel;
+				this.extendedOptionsIconSummary .Visibility = this.controller.HasShowOptionsPanel;
 
-				this.extendedSearchSummary .Visibility = this.controller.HasShowSearchPanel;
-				this.extendedFilterSummary .Visibility = this.controller.HasShowFilterPanel;
-				this.extendedTempoSummary  .Visibility = this.controller.HasShowTemporalPanel;
-				this.extendedOptionsSummary.Visibility = this.controller.HasShowOptionsPanel;
+				this.extendedSearchSummary  .Visibility = this.controller.HasShowSearchPanel;
+				this.extendedFilterSummary  .Visibility = this.controller.HasShowFilterPanel;
+				this.extendedTemporalSummary.Visibility = this.controller.HasShowTemporalPanel;
+				this.extendedOptionsSummary .Visibility = this.controller.HasShowOptionsPanel;
 
 				this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
 				this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
@@ -971,7 +971,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					summary = viewSettings.GetTemporalSummary (this.controller.ColumnMappers);
 					if (!summary.IsNullOrEmpty)
 					{
-						builder.Append (UIBuilder.GetTextIconUri ("Panel.Tempo"));
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Temporal"));
 						builder.Append ("  ");
 						builder.Append (summary);
 						builder.Append ("<br/>");
@@ -1074,10 +1074,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				var viewSettings = this.viewSettingsList.Selected;
 
-				return viewSettings.ShowSearch  == ShowPanelMode.Nop && 
-					   viewSettings.ShowFilter  == ShowPanelMode.Nop && 
-					   viewSettings.ShowTemporal   == ShowPanelMode.Nop && 
-					   viewSettings.ShowOptions == ShowPanelMode.Nop;
+				return viewSettings.ShowSearch   == ShowPanelMode.Nop && 
+					   viewSettings.ShowFilter   == ShowPanelMode.Nop && 
+					   viewSettings.ShowTemporal == ShowPanelMode.Nop && 
+					   viewSettings.ShowOptions  == ShowPanelMode.Nop;
 			}
 		}
 
@@ -1085,10 +1085,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			var viewSettings = this.viewSettingsList.Selected;
 
-			viewSettings.ShowSearch  = ShowPanelMode.Nop;
-			viewSettings.ShowFilter  = ShowPanelMode.Nop;
-			viewSettings.ShowTemporal   = ShowPanelMode.Nop;
-			viewSettings.ShowOptions = ShowPanelMode.Nop;
+			viewSettings.ShowSearch   = ShowPanelMode.Nop;
+			viewSettings.ShowFilter   = ShowPanelMode.Nop;
+			viewSettings.ShowTemporal = ShowPanelMode.Nop;
+			viewSettings.ShowOptions  = ShowPanelMode.Nop;
 		}
 
 		private void AddMenuPanelMode(VMenu menu, FormattedText text, System.Func<bool> getter, System.Action<bool> setter, bool check = false)
@@ -1281,7 +1281,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			if (viewSettings.ShowTemporal != ShowPanelMode.Nop && viewSettings.ShowTemporal != ShowPanelMode.DoesNotExist)
 			{
 				this.controller.MainWindowController.ShowTemporalPanel = (viewSettings.ShowTemporal != ShowPanelMode.Hide);
-				this.controller.TempoSpecialist = (viewSettings.ShowTemporal == ShowPanelMode.ShowSpecialist);
+				this.controller.TemporalSpecialist = (viewSettings.ShowTemporal == ShowPanelMode.ShowSpecialist);
 			}
 
 			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
@@ -1397,11 +1397,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private Button									extendedRemoveButton;
 		private StaticText								extendedSearchIconSummary;
 		private StaticText								extendedFilterIconSummary;
-		private StaticText								extendedTempoIconSummary;
+		private StaticText								extendedTemporalIconSummary;
 		private StaticText								extendedOptionsIconSummary;
 		private CheckButton								extendedSearchSummary;
 		private CheckButton								extendedFilterSummary;
-		private CheckButton								extendedTempoSummary;
+		private CheckButton								extendedTemporalSummary;
 		private CheckButton								extendedOptionsSummary;
 		private FrameBox								extendedShowPanelModeFrame;
 		private StaticText								extendedShowPanelModeLabel;

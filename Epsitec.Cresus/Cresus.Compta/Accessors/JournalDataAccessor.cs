@@ -27,10 +27,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.compta);
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
-			this.temporalData  = this.mainWindowController.GetSettingsTemporalData ("Présentation.Journal.Tempo");
+			this.options      = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.compta);
+			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Search");
+			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
+			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.Journal.Temporal");
 
 			this.UpdateAfterOptionsChanged ();
 		}
