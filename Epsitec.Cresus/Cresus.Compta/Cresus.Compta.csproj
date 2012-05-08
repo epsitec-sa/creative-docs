@@ -118,6 +118,9 @@
     <Compile Include="Options\Data\SoldesOptions.cs" />
     <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
+    <Compile Include="Search\Controllers\TopTempoController.cs" />
+    <Compile Include="Search\Data\TempoDataPeriod.cs" />
+    <Compile Include="Search\Data\TempoData.cs" />
     <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
     <Compile Include="Entities\ComptaCodeTVAEntity.cs" />
@@ -402,6 +405,7 @@
     <EmbeddedResource Include="Images\Level.Beginner.Arrow.icon" />
     <EmbeddedResource Include="Images\Level.Specialist.Arrow.icon" />
     <EmbeddedResource Include="Images\Panel.Specialist.icon" />
+    <EmbeddedResource Include="Images\Panel.Tempo.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

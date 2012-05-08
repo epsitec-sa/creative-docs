@@ -24,10 +24,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		{
 			this.ShowSearch  = ShowPanelMode.Nop;
 			this.ShowFilter  = ShowPanelMode.Nop;
+			this.ShowTempo   = ShowPanelMode.Nop;
 			this.ShowOptions = ShowPanelMode.Nop;
 
 			this.EnableSearch  = true;
 			this.EnableFilter  = true;
+			this.EnableTempo   = true;
 			this.EnableOptions = true;
 		}
 
@@ -65,6 +67,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			set;
 		}
 
+		public TempoData Tempo
+		{
+			get;
+			set;
+		}
+
 		public AbstractOptions Options
 		{
 			get;
@@ -79,6 +87,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 		public bool EnableFilter
+		{
+			get;
+			set;
+		}
+
+		public bool EnableTempo
 		{
 			get;
 			set;
@@ -103,6 +117,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			set;
 		}
 
+		public ShowPanelMode ShowTempo
+		{
+			get;
+			set;
+		}
+
 		public ShowPanelMode ShowOptions
 		{
 			get;
@@ -114,6 +134,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		{
 			var s = this.EnableSearch  ? this.GetSearchSummary  (columnMappers) : FormattedText.Empty;
 			var f = this.EnableFilter  ? this.GetFilterSummary  (columnMappers) : FormattedText.Empty;
+			var t = this.EnableTempo   ? this.GetTempoSummary   (columnMappers) : FormattedText.Empty;
 			var o = this.EnableOptions ? this.GetOptionsSummary (columnMappers) : FormattedText.Empty;
 
 			var list = new List<string> ();
@@ -126,6 +147,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			if (!f.IsNullOrEmpty)
 			{
 				list.Add ("Filtrer " + f);
+			}
+
+			if (!t.IsNullOrEmpty)
+			{
+				list.Add ("Filtrer " + t);
 			}
 
 			if (!o.IsNullOrEmpty)
@@ -160,6 +186,18 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 		}
 
+		public FormattedText GetTempoSummary(List<ColumnMapper> columnMappers)
+		{
+			if (this.Tempo == null)
+			{
+				return FormattedText.Empty;
+			}
+			else
+			{
+				return this.Tempo.GetSummary (columnMappers);
+			}
+		}
+
 		public FormattedText GetOptionsSummary(List<ColumnMapper> columnMappers)
 		{
 			if (this.Options == null)
@@ -180,24 +218,28 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			{
 				if ((this.ShowSearch  == ShowPanelMode.Nop || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
 					(this.ShowFilter  == ShowPanelMode.Nop || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+					(this.ShowTempo   == ShowPanelMode.Nop || this.ShowTempo   == ShowPanelMode.DoesNotExist) &&
 					(this.ShowOptions == ShowPanelMode.Nop || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
 					return FormattedText.Empty;
 				}
 				else if ((this.ShowSearch  == ShowPanelMode.Hide || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowFilter  == ShowPanelMode.Hide || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowTempo   == ShowPanelMode.Hide || this.ShowTempo   == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowOptions == ShowPanelMode.Hide || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
 					return "Tout cacher";
 				}
 				else if ((this.ShowSearch  == ShowPanelMode.ShowBeginner || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowFilter  == ShowPanelMode.ShowBeginner || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowTempo   == ShowPanelMode.ShowBeginner || this.ShowTempo   == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowOptions == ShowPanelMode.ShowBeginner || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
 					return "Tout montrer (simple)";
 				}
 				else if ((this.ShowSearch  == ShowPanelMode.ShowSpecialist || this.ShowSearch  == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowFilter  == ShowPanelMode.ShowSpecialist || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
+						 (this.ShowTempo   == ShowPanelMode.ShowSpecialist || this.ShowTempo   == ShowPanelMode.DoesNotExist) &&
 						 (this.ShowOptions == ShowPanelMode.ShowSpecialist || this.ShowOptions == ShowPanelMode.DoesNotExist))
 				{
 					return "Tout montrer (avancé)";
@@ -208,6 +250,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 					list.Add (this.GetShowPanelModeSummary (this.ShowSearch,  "les recherches"));
 					list.Add (this.GetShowPanelModeSummary (this.ShowFilter,  "le filtre"));
+					list.Add (this.GetShowPanelModeSummary (this.ShowTempo,   "le filtre"));
 					list.Add (this.GetShowPanelModeSummary (this.ShowOptions, "les options"));
 
 					return Strings.FirstLetterToUpper (Strings.SentenceConcat (list));

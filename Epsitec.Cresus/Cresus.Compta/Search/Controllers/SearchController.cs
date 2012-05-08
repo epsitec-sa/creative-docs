@@ -606,7 +606,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				var initialDate = beginDate.HasValue ? beginDate.Value.ToString () : null;
+				var initialDate = Converters.DateToString(beginDate);
 				this.beginnerBeginDateController = UIBuilder.CreateDateField (this.controller, frame1, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
 
@@ -619,7 +619,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 				};
 
-				var initialDate = endDate.HasValue ? endDate.Value.ToString () : null;
+				var initialDate = Converters.DateToString (endDate);
 				this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame2, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			}
 		}

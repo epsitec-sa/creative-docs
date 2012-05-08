@@ -88,6 +88,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		public TempoData TempoData
+		{
+			get
+			{
+				return this.tempoData;
+			}
+		}
+
 		public SoldesJournalManager SoldesJournalManager
 		{
 			get
@@ -657,8 +665,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly List<AbstractEditionLine>	editionLine;
 		protected readonly List<SearchResult>			searchResults;
 
-		protected SearchData							filterData;
 		protected SearchData							searchData;
+		protected SearchData							filterData;
+		protected TempoData								tempoData;
 		protected AbstractOptions						options;
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;

@@ -116,10 +116,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var searchButton = this.CreateButton (toolbar, Res.Commands.Panel.Search, -1, UIBuilder.SearchBackColor);
 			var filterButton = this.CreateButton (toolbar, Res.Commands.Panel.Filter, -1, UIBuilder.FilterBackColor);
+			var tempoButton  = this.CreateButton (toolbar, Res.Commands.Panel.Tempo,  -1, UIBuilder.TempoBackColor);
 			                   this.CreateButton (toolbar, Res.Commands.Panel.Options, 0, UIBuilder.OptionsBackColor);
 
 			this.searchMarker = this.CreateMarker (searchButton);
 			this.filterMarker = this.CreateMarker (filterButton);
+			this.tempoMarker  = this.CreateMarker (tempoButton);
 		}
 
 		public bool SearchEnable
@@ -137,7 +139,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool FilterEnable
 		{
-			//	Indique si le fitlre est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			//	Indique si le filtre est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
 			get
 			{
 				return this.filterMarker.Visibility;
@@ -145,6 +147,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.filterMarker.Visibility = value;
+			}
+		}
+
+		public bool TempoEnable
+		{
+			//	Indique si le filtre temporel est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			get
+			{
+				return this.tempoMarker.Visibility;
+			}
+			set
+			{
+				this.tempoMarker.Visibility = value;
 			}
 		}
 
@@ -175,6 +190,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Text             = UIBuilder.GetTextIconUri("Panel.Active"),
 				ContentAlignment = ContentAlignment.BottomRight,
 				Anchor           = AnchorStyles.All,
+				Visibility       = false,
 			};
 		}
 
@@ -185,5 +201,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private StaticText						searchMarker;
 		private StaticText						filterMarker;
+		private StaticText						tempoMarker;
 	}
 }

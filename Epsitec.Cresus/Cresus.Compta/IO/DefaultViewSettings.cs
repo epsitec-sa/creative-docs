@@ -54,34 +54,35 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Rechercher...", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Rechercher...", searchExist, filterExist, tempoExist, optionsExist);
 				viewSettings.ShowSearch = ShowPanelMode.ShowBeginner;
 			}
 
@@ -94,34 +95,35 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Actifs", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, "Actifs", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Actif);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Passifs", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, "Passifs", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Passif);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Charges", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, "Charges", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Produits", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, "Produits", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Produit);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Exploitations", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, "Exploitations", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Exploitation);
 			}
 
@@ -134,22 +136,23 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Vue d'ensemble", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Vue d'ensemble", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Histogramme des comptes importants", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Histogramme des comptes importants", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -163,7 +166,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Secteurs des comptes importants", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Secteurs des comptes importants", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -188,14 +191,15 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, "Graphique du solde", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, "Graphique du solde", searchExist, filterExist, tempoExist, optionsExist);
 
 				this.OptionsAdaptGraph (viewSettings.Options);
 				viewSettings.Options.GraphOptions.Mode = GraphMode.Lines;
@@ -210,16 +214,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -227,7 +232,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -235,7 +240,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -243,7 +248,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
@@ -251,7 +256,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
@@ -267,16 +272,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "1er trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -284,7 +290,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "2ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -292,7 +298,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "3ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -300,7 +306,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "4ème trimestre", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
@@ -308,7 +314,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
@@ -316,7 +322,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Comparaison avec le budget", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Comparaison avec le budget", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -335,10 +341,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
@@ -351,10 +358,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -366,10 +374,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = false;
+			bool tempoExist   = false;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -381,10 +390,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = false;
+			bool tempoExist   = false;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -396,10 +406,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = false;
+			bool tempoExist   = false;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -411,10 +422,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = false;
+			bool tempoExist   = false;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -426,10 +438,11 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
+			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Charges et produits", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Charges et produits", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -438,12 +451,12 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Tout", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Tout", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Histogramme des soldes", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Histogramme des soldes", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -455,7 +468,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Secteurs des soldes", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Secteurs des soldes", searchExist, filterExist, tempoExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -474,10 +487,10 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private ViewSettingsData CreateViewSettingsData<T>(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
+		private ViewSettingsData CreateViewSettingsData<T>(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool tempoExist, bool optionsExist)
 			where T : AbstractOptions, new ()
 		{
-			var viewSettings = this.CreateViewSettingsData (list, name, searchExist, filterExist, optionsExist);
+			var viewSettings = this.CreateViewSettingsData (list, name, searchExist, filterExist, tempoExist, optionsExist);
 
 			viewSettings.Options = new T ();
 			viewSettings.Options.SetComptaEntity (this.compta);
@@ -486,7 +499,7 @@ namespace Epsitec.Cresus.Compta.IO
 			return viewSettings;
 		}
 
-		private ViewSettingsData CreateViewSettingsData(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
+		private ViewSettingsData CreateViewSettingsData(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool tempoExist, bool optionsExist)
 		{
 			var viewSettings = new ViewSettingsData ()
 			{
@@ -495,8 +508,10 @@ namespace Epsitec.Cresus.Compta.IO
 				Permanent   = true,
 				Search      = new SearchData (),
 				Filter      = new SearchData (),
+				Tempo       = new TempoData (),
 				ShowSearch  = searchExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowFilter  = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
+				ShowTempo   = tempoExist   ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowOptions = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
 

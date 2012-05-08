@@ -49,6 +49,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.showSearchPanel       = false;
 			this.showFilterPanel       = false;
+			this.showTempoPanel        = false;
 			this.showOptionsPanel      = false;
 			this.showViewSettingsPanel = false;
 			this.showInfoPanel         = true;
@@ -699,6 +700,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public bool ShowTempoPanel
+		{
+			get
+			{
+				return this.showTempoPanel;
+			}
+			set
+			{
+				this.showTempoPanel = value;
+				this.UpdatePanelCommands ();
+			}
+		}
+
 		public bool ShowOptionsPanel
 		{
 			get
@@ -873,6 +887,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Tempo);
+				cs.ActiveState = this.showTempoPanel ? ActiveState.Yes : ActiveState.No;
+				cs.Enable = (this.controller == null) ? false : this.controller.HasShowTempoPanel;
+			}
+
+			if (this.controller != null)
+			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
 				cs.ActiveState = this.showOptionsPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasShowOptionsPanel;
@@ -887,7 +908,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showOptionsPanel, this.showInfoPanel);
+				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showTempoPanel, this.showOptionsPanel, this.showInfoPanel);
 			}
 		}
 
@@ -958,6 +979,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Search);
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
+						MainWindowController.AdaptTempoData (this.période, viewSettingsData.Tempo);
 					}
 				}
 			}
@@ -985,6 +1007,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 						}
 					}
 				}
+			}
+		}
+
+		private static void AdaptTempoData(ComptaPériodeEntity période, TempoData data)
+		{
+			//	Adapte un filtre temporel pour être dans une période donnée.
+			if (data.BeginDate.HasValue)
+			{
+				data.BeginDate = MainWindowController.AdaptDate (période, data.BeginDate.Value);
+			}
+
+			if (data.EndDate.HasValue)
+			{
+				data.EndDate = MainWindowController.AdaptDate (période, data.EndDate.Value);
 			}
 		}
 
@@ -1259,6 +1295,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
+		public void ClosePanelTempo()
+		{
+			this.showTempoPanel = false;
+			this.UpdatePanelCommands ();
+		}
+
+		public void OpenPanelTempo()
+		{
+			this.showTempoPanel = true;
+			this.UpdatePanelCommands ();
+		}
+
 		public void ClosePanelOptions()
 		{
 			this.showOptionsPanel = false;
@@ -1283,6 +1331,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandPanelFilter()
 		{
 			this.showFilterPanel = !this.showFilterPanel;
+			this.UpdatePanelCommands ();
+		}
+
+		[Command (Res.CommandIds.Panel.Tempo)]
+		private void CommandPanelTempo()
+		{
+			this.showTempoPanel = !this.showTempoPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1709,6 +1764,26 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
+		public TempoData GetSettingsTempoData(string key, System.Action<TempoData> initialize = null)
+		{
+			ISettingsData result;
+			if (this.settingsData.TryGetValue (key, out result))
+			{
+				return result as TempoData;
+			}
+
+			var data = new TempoData ();
+
+			if (initialize != null)
+			{
+				initialize (data);
+			}
+
+			this.settingsData.Add (key, data);
+
+			return data;
+		}
+
 		public ViewSettingsList GetViewSettingsList(string key)
 		{
 			ISettingsData result;
@@ -1746,6 +1821,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool										dirty;
 		private bool										showSearchPanel;
 		private bool										showFilterPanel;
+		private bool										showTempoPanel;
 		private bool										showOptionsPanel;
 		private bool										showViewSettingsPanel;
 		private bool										showInfoPanel;

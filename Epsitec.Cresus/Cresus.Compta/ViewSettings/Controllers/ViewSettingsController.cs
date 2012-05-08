@@ -590,6 +590,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Parent          = frame,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
+			};
+
+			var line5 = new FrameBox
+			{
+				Parent          = frame,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 5, 0),
 			};
 
@@ -609,9 +616,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock           = DockStyle.Left,
 			};
 
-			this.extendedOptionsIconSummary = new StaticText
+			this.extendedTempoIconSummary = new StaticText
 			{
 				Parent         = line3,
+				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Tempo"),
+				PreferredWidth = 30,
+				Dock           = DockStyle.Left,
+			};
+
+			this.extendedOptionsIconSummary = new StaticText
+			{
+				Parent         = line4,
 				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Options"),
 				PreferredWidth = 30,
 				Dock           = DockStyle.Left,
@@ -633,7 +648,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			this.extendedOptionsSummary = new CheckButton
+			this.extendedTempoSummary = new CheckButton
 			{
 				Parent          = line3,
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
@@ -641,16 +656,24 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
+			this.extendedOptionsSummary = new CheckButton
+			{
+				Parent          = line4,
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+			};
+
 			this.extendedShowPanelModeLabel = new StaticText
 			{
-				Parent         = line4,
+				Parent         = line5,
 				FormattedText  = "Action spéciale",
 				PreferredWidth = 85,
 				Dock           = DockStyle.Left,
 			};
 
 			GlyphButton showPanelModeButton;
-			this.extendedShowPanelModeFrame = UIBuilder.CreatePseudoCombo (line4, out this.extendedShowPanelMode, out showPanelModeButton);
+			this.extendedShowPanelModeFrame = UIBuilder.CreatePseudoCombo (line5, out this.extendedShowPanelMode, out showPanelModeButton);
 			this.extendedShowPanelModeFrame.PreferredWidth = 300;
 
 			//	Connexions des événements.
@@ -669,6 +692,15 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				if (viewSettings != null && this.ignoreChanges.IsZero)
 				{
 					viewSettings.EnableFilter = this.extendedFilterSummary.ActiveState == ActiveState.Yes;
+				}
+			};
+
+			this.extendedTempoSummary.ActiveStateChanged += delegate
+			{
+				var viewSettings = this.viewSettingsList.Selected;
+				if (viewSettings != null && this.ignoreChanges.IsZero)
+				{
+					viewSettings.EnableTempo = this.extendedTempoSummary.ActiveState == ActiveState.Yes;
 				}
 			};
 
@@ -821,11 +853,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 					this.extendedSearchSummary .FormattedText = FormattedText.Empty;
 					this.extendedFilterSummary .FormattedText = FormattedText.Empty;
+					this.extendedTempoSummary  .FormattedText = FormattedText.Empty;
 					this.extendedOptionsSummary.FormattedText = FormattedText.Empty;
 					this.extendedShowPanelMode .FormattedText = FormattedText.Empty;
 
 					this.extendedSearchSummary .ActiveState = ActiveState.No;
 					this.extendedFilterSummary .ActiveState = ActiveState.No;
+					this.extendedTempoSummary  .ActiveState = ActiveState.No;
 					this.extendedOptionsSummary.ActiveState = ActiveState.No;
 				}
 				else
@@ -834,6 +868,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 					this.extendedSearchSummary .FormattedText = viewSettings.GetSearchSummary  (this.controller.ColumnMappers);
 					this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
+					this.extendedTempoSummary  .FormattedText = viewSettings.GetTempoSummary   (this.controller.ColumnMappers);
 					this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
 
 					this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
@@ -852,6 +887,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.extendedFilterSummary.FormattedText = "Vide";
 					}
 
+					if (this.extendedTempoSummary.FormattedText.IsNullOrEmpty)
+					{
+						this.extendedTempoSummary.FormattedText = "Vide";
+					}
+
 					if (this.extendedOptionsSummary.FormattedText.IsNullOrEmpty)
 					{
 						this.extendedOptionsSummary.FormattedText = "Vide";
@@ -859,6 +899,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 					this.extendedSearchSummary.ActiveState  = viewSettings.EnableSearch  ? ActiveState.Yes : ActiveState.No;
 					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
+					this.extendedTempoSummary.ActiveState   = viewSettings.EnableTempo   ? ActiveState.Yes : ActiveState.No;
 					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
 
 					this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
@@ -870,16 +911,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				this.extendedSearchSummary .Enable = (viewSettings != null && !this.IsReadonly);
 				this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
+				this.extendedTempoSummary  .Enable = (viewSettings != null && !this.IsReadonly);
 				this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
 
 				this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
 
 				this.extendedSearchIconSummary .Visibility = this.controller.HasShowSearchPanel;
 				this.extendedFilterIconSummary .Visibility = this.controller.HasShowFilterPanel;
+				this.extendedTempoIconSummary  .Visibility = this.controller.HasShowTempoPanel;
 				this.extendedOptionsIconSummary.Visibility = this.controller.HasShowOptionsPanel;
 
 				this.extendedSearchSummary .Visibility = this.controller.HasShowSearchPanel;
 				this.extendedFilterSummary .Visibility = this.controller.HasShowFilterPanel;
+				this.extendedTempoSummary  .Visibility = this.controller.HasShowTempoPanel;
 				this.extendedOptionsSummary.Visibility = this.controller.HasShowOptionsPanel;
 
 				this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
@@ -919,6 +963,15 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					if (!summary.IsNullOrEmpty)
 					{
 						builder.Append (UIBuilder.GetTextIconUri ("Panel.Filter"));
+						builder.Append ("  ");
+						builder.Append (summary);
+						builder.Append ("<br/>");
+					}
+
+					summary = viewSettings.GetTempoSummary (this.controller.ColumnMappers);
+					if (!summary.IsNullOrEmpty)
+					{
+						builder.Append (UIBuilder.GetTextIconUri ("Panel.Tempo"));
 						builder.Append ("  ");
 						builder.Append (summary);
 						builder.Append ("<br/>");
@@ -989,6 +1042,16 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode avancé", () => viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowFilter = ShowPanelMode.ShowSpecialist);
 			}
 
+			if (viewSettings.ShowTempo != ShowPanelMode.DoesNotExist)
+			{
+				menu.Items.Add (new MenuSeparator ());
+
+				this.AddMenuPanelMode (menu, "Laisser le panneau du filtre temporel dans son état",  () => viewSettings.ShowTempo == ShowPanelMode.Nop,            x => viewSettings.ShowTempo = ShowPanelMode.Nop);
+				this.AddMenuPanelMode (menu, "Cacher le panneau du filtre temporel",                 () => viewSettings.ShowTempo == ShowPanelMode.Hide,           x => viewSettings.ShowTempo = ShowPanelMode.Hide);
+				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre temporel en mode simple", () => viewSettings.ShowTempo == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowTempo = ShowPanelMode.ShowBeginner);
+				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre temporel en mode avancé", () => viewSettings.ShowTempo == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowTempo = ShowPanelMode.ShowSpecialist);
+			}
+
 			if (viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
 			{
 				menu.Items.Add (new MenuSeparator ());
@@ -1013,6 +1076,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				return viewSettings.ShowSearch  == ShowPanelMode.Nop && 
 					   viewSettings.ShowFilter  == ShowPanelMode.Nop && 
+					   viewSettings.ShowTempo   == ShowPanelMode.Nop && 
 					   viewSettings.ShowOptions == ShowPanelMode.Nop;
 			}
 		}
@@ -1023,6 +1087,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			viewSettings.ShowSearch  = ShowPanelMode.Nop;
 			viewSettings.ShowFilter  = ShowPanelMode.Nop;
+			viewSettings.ShowTempo   = ShowPanelMode.Nop;
 			viewSettings.ShowOptions = ShowPanelMode.Nop;
 		}
 
@@ -1079,6 +1144,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					}
 				}
 
+				if (viewSettings.ShowTempo != ShowPanelMode.Nop && viewSettings.ShowTempo != ShowPanelMode.DoesNotExist)
+				{
+					if (this.controller.MainWindowController.ShowTempoPanel != (viewSettings.ShowTempo != ShowPanelMode.Hide))
+					{
+						return false;
+					}
+				}
+
 				if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
 				{
 					if (this.controller.MainWindowController.ShowOptionsPanel != (viewSettings.ShowOptions != ShowPanelMode.Hide))
@@ -1099,6 +1172,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
 				{
 					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.Filter))
+					{
+						return false;
+					}
+				}
+
+				if (this.dataAccessor != null && this.dataAccessor.TempoData != null && viewSettings.Tempo != null && viewSettings.EnableTempo)
+				{
+					if (!this.dataAccessor.TempoData.CompareTo (viewSettings.Tempo))
 					{
 						return false;
 					}
@@ -1129,6 +1210,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				viewSettings.Filter = this.dataAccessor.FilterData.CopyFrom ();
 			}
 
+			if (this.dataAccessor != null && this.dataAccessor.TempoData != null)
+			{
+				viewSettings.Tempo = this.dataAccessor.TempoData.CopyFrom ();
+			}
+
 			if (this.dataAccessor != null && this.dataAccessor.Options != null)
 			{
 				viewSettings.Options = this.dataAccessor.Options.CopyFrom ();
@@ -1144,7 +1230,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				viewSettings.ShowFilter = ShowPanelMode.DoesNotExist;
 			}
-			
+
+			if (!this.controller.HasShowTempoPanel)
+			{
+				viewSettings.ShowTempo = ShowPanelMode.DoesNotExist;
+			}
+
 			if (!this.controller.HasShowOptionsPanel)
 			{
 				viewSettings.ShowOptions = ShowPanelMode.DoesNotExist;
@@ -1164,6 +1255,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				viewSettings.Filter.CopyTo (this.dataAccessor.FilterData);
 			}
 
+			if (this.dataAccessor != null && this.dataAccessor.TempoData != null && viewSettings.Tempo != null && viewSettings.EnableTempo)
+			{
+				viewSettings.Tempo.CopyTo (this.dataAccessor.TempoData);
+			}
+
 			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
 			{
 				viewSettings.Options.CopyTo (this.dataAccessor.Options);
@@ -1180,6 +1276,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				this.controller.MainWindowController.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
 				this.controller.FilterSpecialist = (viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist);
+			}
+
+			if (viewSettings.ShowTempo != ShowPanelMode.Nop && viewSettings.ShowTempo != ShowPanelMode.DoesNotExist)
+			{
+				this.controller.MainWindowController.ShowTempoPanel = (viewSettings.ShowTempo != ShowPanelMode.Hide);
+				this.controller.TempoSpecialist = (viewSettings.ShowTempo == ShowPanelMode.ShowSpecialist);
 			}
 
 			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
@@ -1295,9 +1397,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private Button									extendedRemoveButton;
 		private StaticText								extendedSearchIconSummary;
 		private StaticText								extendedFilterIconSummary;
+		private StaticText								extendedTempoIconSummary;
 		private StaticText								extendedOptionsIconSummary;
 		private CheckButton								extendedSearchSummary;
 		private CheckButton								extendedFilterSummary;
+		private CheckButton								extendedTempoSummary;
 		private CheckButton								extendedOptionsSummary;
 		private FrameBox								extendedShowPanelModeFrame;
 		private StaticText								extendedShowPanelModeLabel;

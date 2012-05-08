@@ -92,6 +92,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public override bool HasShowTempoPanel
+		{
+			get
+			{
+				return true;
+			}
+		}
+
 		public override bool HasShowOptionsPanel
 		{
 			get
