@@ -29,7 +29,12 @@ namespace Epsitec.Common.BigList
 		
 		public bool Select(int index, ItemSelection selection)
 		{
-			ItemListSelectionEventArgs e = new ItemListSelectionEventArgs ();
+			if (index == -1)
+			{
+				return false;
+			}
+
+			var e = new ItemListSelectionEventArgs ();
 
 			if (this.Select (index, selection, e))
 			{

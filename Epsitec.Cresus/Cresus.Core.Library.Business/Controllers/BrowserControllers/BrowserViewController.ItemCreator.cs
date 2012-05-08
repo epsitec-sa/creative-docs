@@ -162,8 +162,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				context.Dispose ();
 
-				this.browser.browserListController.SelectedEntityKey = localEntityKey;
-				this.browser.browserListController.RefreshScrollList ();
+				this.browser.browserListController.RefreshCollection ();
+				this.browser.SelectEntity (localEntityKey);
+//#				this.browser.browserListController.RefreshScrollList ();
 
 				return localEntity;
 			}

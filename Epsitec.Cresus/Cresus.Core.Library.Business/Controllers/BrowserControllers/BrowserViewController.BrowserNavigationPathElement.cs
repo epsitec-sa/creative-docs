@@ -42,10 +42,10 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				var browserViewController = navigator.BrowserViewController;
 
 				browserViewController.SelectDataSet (this.dataSetName);
-				browserViewController.browserListController.SelectedEntityKey = this.entityKey;
-				browserViewController.browserListController.RefreshScrollList ();
-				
-				return browserViewController.ReselectActiveEntity ();
+				browserViewController.SelectEntity (this.entityKey);
+				browserViewController.SelectActiveEntity ();
+
+				return true;
 			}
 
 			protected override string Serialize()

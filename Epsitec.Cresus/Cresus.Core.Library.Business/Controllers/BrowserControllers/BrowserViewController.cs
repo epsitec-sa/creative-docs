@@ -89,9 +89,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		/// <param name="entity">The entity.</param>
 		public void SelectEntity(AbstractEntity entity)
 		{
+			this.SelectEntity (this.data.FindEntityKey (entity));
+		}
+
+		public void SelectEntity(EntityKey? entityKey)
+		{
 			if (this.browserListController != null)
 			{
-				this.browserListController.SelectedEntity = entity;
+				this.browserListController.SelectedEntityKey = entityKey;
+				this.browserListController.RefreshScrollList ();
+				this.SelectActiveEntity ();
 			}
 		}
 
@@ -213,38 +220,28 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (this.browserListController.SelectedEntityKey.HasValue)
 			{
-				var activeEntityKey       = this.browserListController.SelectedEntityKey.Value;
-				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
-
-				this.Orchestrator.SetActiveEntity (activeEntityKey, navigationPathElement);
-
+				this.SelectActiveEntity (this.browserListController.SelectedEntityKey.Value);
 				return true;
 			}
 			else
 			{
-				this.Orchestrator.ClearActiveEntity ();
+				this.DeselectActiveEntity ();
 				return false;
 			}
 		}
 
-		private bool ReselectActiveEntity()
+		private void SelectActiveEntity(EntityKey entityKey)
 		{
-			if (this.browserListController.SelectedEntityKey.HasValue)
-			{
-				var activeEntityKey       = this.browserListController.SelectedEntityKey.Value;
-				var navigationPathElement = new BrowserNavigationPathElement (this, activeEntityKey);
-				
-				this.Orchestrator.ResetActiveEntity (activeEntityKey, navigationPathElement);
-
-				return true;
-			}
-			else
-			{
-				this.Orchestrator.ClearActiveEntity ();
-				return false;
-			}
+			var navigationPathElement = new BrowserNavigationPathElement (this, entityKey);
+			this.Orchestrator.ResetActiveEntity (entityKey, navigationPathElement);
 		}
 
+		private void DeselectActiveEntity()
+		{
+			this.Orchestrator.ClearActiveEntity ();
+		}
+
+		
 		private void OnCurrentChanged()
 		{
 			this.CurrentChanged.Raise (this);

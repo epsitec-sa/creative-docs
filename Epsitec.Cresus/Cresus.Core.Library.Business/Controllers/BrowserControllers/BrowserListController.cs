@@ -83,10 +83,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				return this.dataContext.ResolveEntity (this.SelectedEntityKey);
 			}
-			set
-			{
-				this.SelectedEntityKey = this.data.FindEntityKey (value);
-			}
 		}
 
 		public int								SelectedIndex
@@ -305,6 +301,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 			this.RefreshScrollList (reset);
+		}
+
+		public void RefreshCollection()
+		{
+			this.UpdateCollection (reset: false);
 		}
 
 		public void RefreshScrollList(bool reset = false)
