@@ -139,29 +139,54 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			var periodLabel = new StaticText
+			this.editionFrame = new FrameBox
 			{
 				Parent          = this.mainFrame,
-				FormattedText   = "Durée",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			periodLabel.PreferredWidth = periodLabel.GetBestFitSize ().Width;
-
-			this.periodField = new TextFieldCombo
+			this.staticDates = new StaticText
 			{
 				Parent          = this.mainFrame,
-				PreferredWidth  = 100,
+				PreferredWidth  = 160,
 				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			TopTempoController.InitTempoDataPeriodCombo (this.periodField);
+			{
+				var label = new StaticText
+				{
+					Parent         = this.editionFrame,
+					Text           = "Du",
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (0, 10, 0, 0),
+				};
+
+				label.PreferredWidth = label.GetBestFitSize ().Width;
+
+				var initialDate = Converters.DateToString (this.data.BeginDate);
+				this.beginDateController = UIBuilder.CreateDateField (this.controller, this.editionFrame, initialDate, "Date initiale incluse", this.ValidateDate, this.DateChanged);
+				this.beginDateController.Box.Dock = DockStyle.Left;
+			}
+
+			{
+				var label = new StaticText
+				{
+					Parent         = this.editionFrame,
+					Text           = "Au",
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (10, 10, 0, 0),
+				};
+
+				label.PreferredWidth = label.GetBestFitSize ().Width;
+
+				var initialDate = Converters.DateToString (this.data.EndDate);
+				this.endDateController = UIBuilder.CreateDateField (this.controller, this.editionFrame, initialDate, "Date finale incluse", this.ValidateDate, this.DateChanged);
+				this.endDateController.Box.Dock = DockStyle.Left;
+			}
 
 			this.prevButton = new GlyphButton
 			{
@@ -186,41 +211,36 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			ToolTip.Default.SetToolTip (this.prevButton, "Période précédente");
 			ToolTip.Default.SetToolTip (this.nextButton, "Période suivante");
 
+			var durationLabel = new StaticText
 			{
-				var label = new StaticText
-				{
-					Parent         = this.mainFrame,
-					Text           = "Du",
-					Dock           = DockStyle.Left,
-					Margins        = new Margins (10, 10, 0, 0),
-				};
+				Parent          = this.mainFrame,
+				FormattedText   = "Durée",
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (10, 10, 0, 0),
+			};
 
-				label.PreferredWidth = label.GetBestFitSize ().Width;
+			durationLabel.PreferredWidth = durationLabel.GetBestFitSize ().Width;
 
-				var initialDate = Converters.DateToString (this.data.BeginDate);
-				this.beginDateController = UIBuilder.CreateDateField (this.controller, this.mainFrame, initialDate, "Date initiale incluse", this.ValidateDate, this.DateChanged);
-				this.beginDateController.Box.Dock = DockStyle.Left;
-			}
-
+			this.durationField = new TextFieldCombo
 			{
-				var label = new StaticText
-				{
-					Parent         = this.mainFrame,
-					Text           = "Au",
-					Dock           = DockStyle.Left,
-					Margins        = new Margins (10, 10, 0, 0),
-				};
+				Parent          = this.mainFrame,
+				PreferredWidth  = 100,
+				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				IsReadOnly      = true,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
 
-				label.PreferredWidth = label.GetBestFitSize ().Width;
+			TopTempoController.InitTempoDataDurationCombo (this.durationField);
 
-				var initialDate = Converters.DateToString (this.data.EndDate);
-				this.endDateController = UIBuilder.CreateDateField (this.controller, this.mainFrame, initialDate, "Date finale incluse", this.ValidateDate, this.DateChanged);
-				this.endDateController.Box.Dock = DockStyle.Left;
-			}
-
-			this.periodField.SelectedItemChanged += delegate
+			//	Connexion des événements.
+			this.durationField.SelectedItemChanged += delegate
 			{
-				this.data.Period = TopTempoController.TempoDataPeriodToType (this.periodField.FormattedText);
+				this.data.Duration = TopTempoController.TempoDataDurationToType (this.durationField.FormattedText);
+				this.InitDefaultDates ();
+				this.UpdateButtons ();
 			};
 
 			this.prevButton.Clicked += delegate
@@ -306,81 +326,106 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
+			this.editionFrame.Visibility =  this.EditionEnable;
+			this.staticDates.Visibility  = !this.EditionEnable;
+			this.prevButton.Visibility   = !this.EditionEnable;
+			this.nextButton.Visibility   = !this.EditionEnable;
+
 			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
 			this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
-			this.periodField.FormattedText = TopTempoController.TempoDataPeriodToString (this.data.Period);
+			this.durationField.FormattedText = TopTempoController.TempoDataDurationToString (this.data.Duration);
 
 			this.beginDateController.EditionData.Text = Converters.DateToString (this.data.BeginDate);
-			this.endDateController.EditionData.Text = Converters.DateToString (this.data.EndDate);
 			this.beginDateController.EditionDataToWidget ();
+			this.beginDateController.Validate ();
+
+			this.endDateController.EditionData.Text = Converters.DateToString (this.data.EndDate);
 			this.endDateController.EditionDataToWidget ();
+			this.endDateController.Validate ();
+
+			this.staticDates.FormattedText = string.Format ("Du <b>{0}</b> au <b>{1}</b>", Converters.DateToString (this.data.BeginDate), Converters.DateToString (this.data.EndDate));
 		}
 
 
-		private static void InitTempoDataPeriodCombo(TextFieldCombo combo)
+		private void InitDefaultDates()
 		{
-			combo.Items.Clear ();
+			this.data.InitDefaultDates (this.controller.MainWindowController.Période);
+		}
 
-			foreach (var type in TopTempoController.TempoDataPeriods)
+		private bool EditionEnable
+		{
+			get
 			{
-				combo.Items.Add (TopTempoController.TempoDataPeriodToString (type));
+				return this.data.Duration == TempoDataDuration.Other;
 			}
 		}
 
-		private static TempoDataPeriod TempoDataPeriodToType(FormattedText text)
+
+		private static void InitTempoDataDurationCombo(TextFieldCombo combo)
 		{
-			foreach (var type in TopTempoController.TempoDataPeriods)
+			combo.Items.Clear ();
+
+			foreach (var type in TopTempoController.TempoDataDurations)
 			{
-				if (TopTempoController.TempoDataPeriodToString (type) == text)
+				combo.Items.Add (TopTempoController.TempoDataDurationToString (type));
+			}
+		}
+
+		private static TempoDataDuration TempoDataDurationToType(FormattedText text)
+		{
+			foreach (var type in TopTempoController.TempoDataDurations)
+			{
+				if (TopTempoController.TempoDataDurationToString (type) == text)
 				{
 					return type;
 				}
 			}
 
-			return TempoDataPeriod.Unknown;
+			return TempoDataDuration.Unknown;
 		}
 
-		private static  FormattedText TempoDataPeriodToString(TempoDataPeriod period)
+		private static FormattedText TempoDataDurationToString(TempoDataDuration duration)
 		{
-			switch (period)
+			//	Texte affiché après "Durée".
+			switch (duration)
 			{
-				case TempoDataPeriod.Daily:
+				case TempoDataDuration.Daily:
 					return "Journalière";
 
-				case TempoDataPeriod.Weekly:
+				case TempoDataDuration.Weekly:
 					return "Hebdomadaire";
 
-				case TempoDataPeriod.Monthly:
+				case TempoDataDuration.Monthly:
 					return "Mensuelle";
 
-				case TempoDataPeriod.Quarterly:
+				case TempoDataDuration.Quarterly:
 					return "Trimestrielle";
 
-				case TempoDataPeriod.Biannual:
+				case TempoDataDuration.Biannual:
 					return "Semestrielle";
 
-				case TempoDataPeriod.Annual:
+				case TempoDataDuration.Annual:
 					return "Annuelle";
 
-				case TempoDataPeriod.Other:
-					return "Autre";
+				case TempoDataDuration.Other:
+					return "Quelconque";
 
 				default:
 					return "?";
 			}
 		}
 
-		private static IEnumerable<TempoDataPeriod> TempoDataPeriods
+		private static IEnumerable<TempoDataDuration> TempoDataDurations
 		{
 			get
 			{
-				yield return TempoDataPeriod.Daily;
-				yield return TempoDataPeriod.Weekly;
-				yield return TempoDataPeriod.Monthly;
-				yield return TempoDataPeriod.Quarterly;
-				yield return TempoDataPeriod.Biannual;
-				yield return TempoDataPeriod.Annual;
-				yield return TempoDataPeriod.Other;
+				yield return TempoDataDuration.Other;
+				yield return TempoDataDuration.Daily;
+				yield return TempoDataDuration.Weekly;
+				yield return TempoDataDuration.Monthly;
+				yield return TempoDataDuration.Quarterly;
+				yield return TempoDataDuration.Biannual;
+				yield return TempoDataDuration.Annual;
 			}
 		}
 
@@ -394,16 +439,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly TempoData						data;
 
 		private System.Action							searchStartAction;
-		private FrameBox								toolbar;
-		private FrameBox								mainFrame;
 		private TopPanelLeftController					topPanelLeftController;
 		private TopPanelRightController					topPanelRightController;
+		private FrameBox								toolbar;
+		private FrameBox								mainFrame;
+		private FrameBox								editionFrame;
 		private CheckButton								filterEnableButton;
-		private TextFieldCombo							periodField;
+		private TextFieldCombo							durationField;
 		private GlyphButton								prevButton;
 		private GlyphButton								nextButton;
 		private DateFieldController						beginDateController;
 		private DateFieldController						endDateController;
+		private StaticText								staticDates;
 		private bool									showPanel;
 	}
 }

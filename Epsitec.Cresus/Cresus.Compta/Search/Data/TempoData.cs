@@ -7,6 +7,8 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 
+using Epsitec.Cresus.Compta.Entities;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public void Clear()
 		{
 			//	Vide les données et prépare une unique ligne.
-			this.period    = TempoDataPeriod.Daily;
+			this.duration   = TempoDataDuration.Other;
 			this.beginDate = null;
 			this.endDate   = null;
 
@@ -61,60 +63,131 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public void InitDefaultDates(ComptaPériodeEntity période)
+		{
+			var now = Date.Today;
+
+			if (!Dates.DateInRange (now, période.DateDébut, période.DateFin))
+			{
+				now = période.DateDébut;
+			}
+
+			switch (this.duration)
+			{
+				case TempoDataDuration.Daily:
+					this.beginDate = now;
+					break;
+
+				case TempoDataDuration.Weekly:
+					int dof = (int) now.DayOfWeek - 1;  // 0..6
+					System.Diagnostics.Debug.Assert (dof >= 0 && dof <= 6);
+					this.beginDate = Dates.AddDays (now, -dof);
+					break;
+
+				case TempoDataDuration.Monthly:
+					this.beginDate = new Date (now.Year, now.Month, 1);
+					break;
+
+				case TempoDataDuration.Quarterly:
+					this.beginDate = new Date (now.Year, (now.Month-1)/3+1, 1);
+					break;
+
+				case TempoDataDuration.Biannual:
+					this.beginDate = new Date (now.Year, (now.Month-1)/6+1, 1);
+					break;
+
+				case TempoDataDuration.Annual:
+					this.beginDate = new Date (now.Year, 1, 1);
+					break;
+			}
+
+			this.InitEndDate ();
+		}
+
 		public void Next(int step)
 		{
 			this.beginDate = this.Next (this.beginDate, step);
-			this.endDate   = this.Next (this.endDate,   step);
+			this.InitEndDate ();
 		}
 
 		private Date? Next(Date? date, int step)
 		{
 			if (date.HasValue)
 			{
-				if (this.period == TempoDataPeriod.Daily)
+				switch (this.duration)
 				{
-					date = Dates.AddDays (date.Value, step);
-				}
+					case TempoDataDuration.Daily:
+						date = Dates.AddDays (date.Value, step);
+						break;
 
-				if (this.period == TempoDataPeriod.Weekly)
-				{
-					date = Dates.AddDays (date.Value, step*7);
-				}
+					case TempoDataDuration.Weekly:
+						date = Dates.AddDays (date.Value, step*7);
+						break;
 
-				if (this.period == TempoDataPeriod.Monthly)
-				{
-					date = Dates.AddMonths (date.Value, step);
-				}
+					case TempoDataDuration.Monthly:
+						date = Dates.AddMonths (date.Value, step);
+						break;
 
-				if (this.period == TempoDataPeriod.Quarterly)
-				{
-					date = Dates.AddMonths (date.Value, step*3);
-				}
+					case TempoDataDuration.Quarterly:
+						date = Dates.AddMonths (date.Value, step*3);
+						break;
 
-				if (this.period == TempoDataPeriod.Biannual)
-				{
-					date = Dates.AddMonths (date.Value, step*6);
-				}
+					case TempoDataDuration.Biannual:
+						date = Dates.AddMonths (date.Value, step*6);
+						break;
 
-				if (this.period == TempoDataPeriod.Annual)
-				{
-					date = Dates.AddMonths (date.Value, step*12);
+					case TempoDataDuration.Annual:
+						date = Dates.AddMonths (date.Value, step*12);
+						break;
 				}
 			}
 
 			return date;
 		}
 
+		private void InitEndDate()
+		{
+			if (this.beginDate.HasValue)
+			{
+				switch (this.duration)
+				{
+					case TempoDataDuration.Daily:
+						this.endDate = this.beginDate;
+						break;
 
-		public TempoDataPeriod Period
+					case TempoDataDuration.Weekly:
+						this.endDate = Dates.AddDays (this.beginDate.Value, 7-1);
+						break;
+
+					case TempoDataDuration.Monthly:
+						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 1), -1);
+						break;
+
+					case TempoDataDuration.Quarterly:
+						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 3), -1);
+						break;
+
+					case TempoDataDuration.Biannual:
+						this.endDate = Dates.AddDays (Dates.AddMonths (this.beginDate.Value, 6), -1);
+						break;
+
+					case TempoDataDuration.Annual:
+						this.endDate = new Date (this.beginDate.Value.Year, 12, 31);
+						break;
+				}
+			}
+		}
+
+
+		public TempoDataDuration Duration
 		{
 			get
 			{
-				return this.period;
+				return this.duration;
 			}
 			set
 			{
-				this.period = value;
+				this.duration = value;
 			}
 		}
 
@@ -145,7 +218,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool CompareTo(TempoData other)
 		{
-			return this.period    == other.period    &&
+			return this.duration  == other.duration  &&
 				   this.beginDate == other.beginDate &&
 				   this.endDate   == other.endDate;
 		}
@@ -159,7 +232,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public void CopyTo(TempoData dst)
 		{
-			dst.period    = this.period;
+			dst.duration  = this.duration;
 			dst.beginDate = this.beginDate;
 			dst.endDate   = this.endDate;
 		}
@@ -198,8 +271,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		private TempoDataPeriod		period;
-		private Date?				beginDate;
-		private Date?				endDate;
+		private TempoDataDuration		duration;
+		private Date?					beginDate;
+		private Date?					endDate;
 	}
 }

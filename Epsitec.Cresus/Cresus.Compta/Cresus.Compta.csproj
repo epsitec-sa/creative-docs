@@ -119,7 +119,7 @@
     <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />
     <Compile Include="Options\Data\RésuméTVAOptions.cs" />
     <Compile Include="Search\Controllers\TopTempoController.cs" />
-    <Compile Include="Search\Data\TempoDataPeriod.cs" />
+    <Compile Include="Search\Data\TempoDataDuration.cs" />
     <Compile Include="Search\Data\TempoData.cs" />
     <Compile Include="TypeEcriture.cs" />
     <Compile Include="Entities\ComptaUtilisateurEntity.cs" />
