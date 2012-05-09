@@ -70,6 +70,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Date? dateDébut, dateFin;
 			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
+			this.temporalData.MergeDates (ref dateDébut, ref dateFin);
 			this.soldesJournalManager.Initialize (this.période.Journal, dateDébut, dateFin);
 
 			base.UpdateAfterOptionsChanged ();
