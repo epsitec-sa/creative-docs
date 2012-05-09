@@ -5,6 +5,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Serialization;
@@ -256,11 +257,22 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			bool modifications = false;
 
+			var example = EntityClassFactory.CreateEmptyEntity (entityTypeId);
+
 			Request request = new Request ()
 			{
-				RootEntity = EntityClassFactory.CreateEmptyEntity (entityTypeId),
-				RequestedEntityMinimumLogId = currentlogId + 1,
+				RootEntity = example,
 			};
+
+			request.Conditions.Add
+			(
+				new BinaryComparison
+				(
+					InternalField.CreateModificationEntryId (example),
+					BinaryComparator.IsGreater,
+					new Constant (currentlogId)
+				)
+			);
 
 			var result = this.LoaderQueryGenerator.GetEntitiesData (request);
 

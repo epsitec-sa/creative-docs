@@ -114,16 +114,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		/// <summary>
-		/// Defines the minimum log id that the entities should have to be returned by the request.
-		/// </summary>
-		internal long? RequestedEntityMinimumLogId
-		{
-			get;
-			set;
-		}
-
-
 		public List<Expression> Conditions
 		{
 			get
@@ -348,7 +338,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private static bool IsInternalField(string name)
 		{
-			return name == EntitySchemaBuilder.EntityTableColumnIdName;
+			return name == EntitySchemaBuilder.EntityTableColumnIdName
+				|| name == EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName;
 		}
 
 

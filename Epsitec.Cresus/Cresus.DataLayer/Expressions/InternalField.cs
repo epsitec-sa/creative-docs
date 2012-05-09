@@ -63,6 +63,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Creates a new InternalField instance that will target the id of the entity modification
+		/// log entry of the given entity.
+		/// </summary>
+		public static InternalField CreateModificationEntryId(AbstractEntity entity)
+		{
+			var name = EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName;
+
+			return new InternalField(entity, name);
+		}
+
+
 	}
 
 

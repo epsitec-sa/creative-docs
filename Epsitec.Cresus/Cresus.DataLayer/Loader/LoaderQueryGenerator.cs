@@ -578,12 +578,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private SqlContainer BuildSqlContainerForEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
 		{
 			SqlContainer sqlContainerForRequestRootEntityId = this.BuildSqlContainerForRequestRootEntityId (request, rootEntityAlias, entity);
-			SqlContainer sqlContainerForRequestRequestedEntity = this.BuildSqlContainerForRequestRequestedEntity (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
 			SqlContainer sqlContainerForFields = this.BuildSqlContainerForFields (request, rootEntityAlias, entity);
 
 			return sqlContainerForRequestRootEntityId
-				.Plus (sqlContainerForRequestRequestedEntity)
 				.Plus (sqlContainerForSubEntities)
 				.Plus (sqlContainerForFields);
 		}
@@ -607,31 +605,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					SqlFunctionCode.CompareEqual,
 					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName),
 					SqlField.CreateConstant (id, DbRawType.Int64)
-				);
-
-				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
-			}
-
-			return sqlContainer;
-		}
-
-
-		private SqlContainer BuildSqlContainerForRequestRequestedEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
-		{
-			SqlContainer sqlContainer = SqlContainer.Empty;
-
-			long? minimumLogId = request.RequestedEntityMinimumLogId;
-
-			if (minimumLogId.HasValue)
-			{
-				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-				Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
-
-				SqlFunction sqlCondition = new SqlFunction
-				(
-					SqlFunctionCode.CompareGreaterThanOrEqual,
-					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName),
-					SqlField.CreateConstant (minimumLogId.Value, DbRawType.Int64)
 				);
 
 				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
