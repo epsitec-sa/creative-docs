@@ -42,7 +42,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			Assert.IsNull (request.RequestedEntity);
 			Assert.IsNull (request.RootEntity);
-			Assert.IsNull (request.RootEntityKey);
 		}
 
 
@@ -259,24 +258,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			request.RootEntity = null;
 			Assert.IsNull (request.RootEntity);
-		}
-
-
-		[TestMethod]
-		public void RootEntityKeyTest()
-		{
-			Request request = new Request ();
-			
-			DbKey dbKey = new DbKey (new DbId (1000000001));
-
-			Assert.IsFalse (request.RootEntityKey.HasValue);
-
-			request.RootEntityKey = dbKey;
-			Assert.IsTrue (request.RootEntityKey.HasValue);
-			Assert.AreEqual (dbKey, request.RootEntityKey.Value);
-
-			request.RootEntityKey = null;
-			Assert.IsFalse (request.RootEntityKey.HasValue);
 		}
 
 

@@ -98,11 +98,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			
 			AbstractEntity entity = EntityClassFactory.CreateEmptyEntity (entityId);
 
-			Request request = new Request ()
-			{
-				RootEntity = entity,
-				RootEntityKey = rowKey,
-			};
+			Request request = Request.Create (entity, rowKey);
 
 			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
 		}

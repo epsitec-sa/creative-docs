@@ -67,17 +67,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
-		/// The <see cref="DbKey"/> of the <see cref="AbstractEntity"/> which is at the root of the
-		/// <c>Request</c>.
-		/// </summary>
-		public DbKey? RootEntityKey
-		{
-			get;
-			set;
-		}
-
-
-		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
@@ -379,6 +368,37 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				sortClause.CheckField (fieldChecker);
 			}
+		}
+
+
+		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
+		{
+			var request = new Request ()
+			{
+				RootEntity = rootEntity,
+			};
+
+			request.Conditions.Add
+			(
+				new BinaryComparison
+				(
+					InternalField.CreateId (rootEntity),
+					BinaryComparator.IsEqual,
+					new Constant (rootEntityKey.Id.Value)
+				)
+			);
+
+			return request;
+		}
+
+
+		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey, AbstractEntity requestedEntity)
+		{
+			var request = Request.Create (rootEntity, rootEntityKey);
+
+			request.RequestedEntity = requestedEntity;
+
+			return request;
 		}
 
 

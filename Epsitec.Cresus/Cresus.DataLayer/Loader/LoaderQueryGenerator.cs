@@ -9,7 +9,6 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Serialization;
 
@@ -153,11 +152,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			AbstractEntity example = EntityClassFactory.CreateEmptyEntity (localEntityId);
 			DbKey exampleKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 
-			Request request = new Request ()
-			{
-				RootEntity = example,
-				RootEntityKey = exampleKey,
-			};
+			Request request = Request.Create (example, exampleKey);
 
 			object value;
 
@@ -184,20 +179,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			StructuredTypeField field = this.TypeEngine.GetField (leafEntityId, fieldId);
 
-			AbstractEntity rootExample   = EntityClassFactory.CreateEmptyEntity (leafEntityId);
+			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
 			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
-
+			DbKey rootExampleKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
+			
 			using (rootExample.DefineOriginalValues ())
 			{
 				rootExample.SetField<AbstractEntity> (fieldName, targetExample);
 			}
 
-			Request request = new Request ()
-			{
-				RootEntity      = rootExample,
-				RootEntityKey   = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
-				RequestedEntity = targetExample,
-			};
+			Request request = Request.Create(rootExample, rootExampleKey, targetExample);
 
 			List<EntityData> data = this.GetEntitiesData (request).ToList ();
 
@@ -261,18 +252,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			AbstractEntity rootExample   = EntityClassFactory.CreateEmptyEntity (leafEntityId);
 			AbstractEntity targetExample = EntityClassFactory.CreateEmptyEntity (field.TypeId);
+			DbKey rootExampleKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
 
 			using (rootExample.DefineOriginalValues ())
 			{
 				rootExample.GetFieldCollection<AbstractEntity> (fieldName).Add (targetExample);
 			}
 
-			Request request = new Request ()
-			{
-				RootEntity      = rootExample,
-				RootEntityKey   = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
-				RequestedEntity = targetExample,
-			};
+			Request request = Request.Create(rootExample, rootExampleKey, targetExample);
 
 			return this.GetEntitiesData (request);
 		}
@@ -283,12 +270,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 
 			AbstractEntity rootExample = EntityClassFactory.CreateEmptyEntity (leafEntityId);
-			
-			Request request = new Request ()
-			{
-				RootEntity    = rootExample,
-				RootEntityKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey,
-			};
+			DbKey rootExampleKey = this.DataContext.GetNormalizedEntityKey (entity).Value.RowKey;
+
+			Request request = Request.Create (rootExample, rootExampleKey);
 
 			return this.GetCollectionData (transaction, request, fieldId);
 		}
@@ -577,40 +561,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForEntity(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
 		{
-			SqlContainer sqlContainerForRequestRootEntityId = this.BuildSqlContainerForRequestRootEntityId (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
 			SqlContainer sqlContainerForFields = this.BuildSqlContainerForFields (request, rootEntityAlias, entity);
 
-			return sqlContainerForRequestRootEntityId
-				.Plus (sqlContainerForSubEntities)
-				.Plus (sqlContainerForFields);
-		}
-
-
-		private SqlContainer BuildSqlContainerForRequestRootEntityId(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
-		{
-			DbKey? rootEntityKey = request.RootEntityKey;
-
-			SqlContainer sqlContainer = SqlContainer.Empty;
-
-			if (rootEntityKey.HasValue && entity == request.RootEntity)
-			{
-				Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-				Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
-
-				long id = rootEntityKey.Value.Id.Value;
-
-				SqlFunction sqlCondition = new SqlFunction
-				(
-					SqlFunctionCode.CompareEqual,
-					this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName),
-					SqlField.CreateConstant (id, DbRawType.Int64)
-				);
-
-				sqlContainer = sqlContainer.PlusSqlConditions (sqlCondition);
-			}
-
-			return sqlContainer;
+			return sqlContainerForSubEntities.Plus (sqlContainerForFields);
 		}
 
 
