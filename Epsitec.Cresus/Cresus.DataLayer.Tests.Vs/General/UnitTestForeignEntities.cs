@@ -1,12 +1,10 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.UnitTesting;
+﻿using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Loader;
-using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
