@@ -371,12 +371,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
+		public static Request Create(AbstractEntity rootEntity)
 		{
-			var request = new Request ()
+			return new Request ()
 			{
 				RootEntity = rootEntity,
 			};
+		}
+
+
+		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
+		{
+			var request = Request.Create (rootEntity);
 
 			request.Conditions.Add
 			(
