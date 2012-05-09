@@ -77,11 +77,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 			//	Janv. — Mars 2012				-> quelques mois entiers
 			//	10.01.2012 — 25.04.2012			-> une période quelconque
 			//	25.07.2011 — 31.07.2011 (30)	-> une semaine entière
+			//	09.05.2012 (me)					-> un jour entier
 			FormattedText title;
 
 			if (date1 == date2)
 			{
-				title = Converters.DateToString (date1);
+				title = Converters.DateToString (date1) + " (" + Dates.GetDayOfWeekShortDescription (date1) + ")";
 			}
 			else if (Dates.NumberOfDays (date2, date1) == 7-1   &&
 					 date1.DayOfWeek == System.DayOfWeek.Monday &&
@@ -124,6 +125,40 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			return title;
 		}
+
+
+		public static string GetDayOfWeekShortDescription(Date date)
+		{
+			string[] dow =
+			{
+				"di",
+				"lu",
+				"ma",
+				"me",
+				"je",
+				"ve",
+				"sa",
+			};
+
+			return dow[(int) date.DayOfWeek];
+		}
+
+		public static string GetDayOfWeekDescription(Date date)
+		{
+			string[] dow =
+			{
+				"dimanche",
+				"lundi",
+				"mardi",
+				"mercredi",
+				"jeudi",
+				"vendredi",
+				"samedi",
+			};
+
+			return dow[(int) date.DayOfWeek];
+		}
+
 
 		public static string GetMonthShortDescription(Date date1, Date date2)
 		{
