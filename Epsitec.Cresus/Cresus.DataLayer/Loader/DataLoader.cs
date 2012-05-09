@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public IList<AbstractEntity> GetByRequest(Request request)
 		{
 			request.ThrowIfNull ("request");
-			request.Check(this.DataContext);
+			request.Check (this.DataContext);
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
