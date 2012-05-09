@@ -35,6 +35,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.data            = this.controller.DataAccessor.TemporalData;
 
 			this.ignoreChanges = new SafeCounter ();
+			this.descriptionBestFitWidths = new Dictionary<TemporalDataDuration, int> ();
 		}
 
 
@@ -450,7 +451,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateInfos()
 		{
-			this.staticDates.PreferredWidth = Dates.GetDescriptionBestFitWidth (this.data.Duration) + 10;
+			this.staticDates.PreferredWidth = this.DescriptionBestFitWidth;
 			this.staticDates.FormattedText = Dates.GetDescription (this.data.BeginDate, this.data.EndDate).ApplyBold ();
 			this.editionInfo.FormattedText = this.NumberOfDays;
 
@@ -466,6 +467,106 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				ToolTip.Default.SetToolTip (this.warningIcon, error);
 			}
 		}
+
+
+		private int DescriptionBestFitWidth
+		{
+			//	Retourne la largeur nécessaire pour afficher en gras une période.
+			get
+			{
+				int width;
+
+				//	Le dictionnaire agit comme un cache.
+				if (!this.descriptionBestFitWidths.TryGetValue (this.data.Duration, out width))
+				{
+					width = TopTemporalController.GetDescriptionBestFitWidth (this.data.Duration);
+					this.descriptionBestFitWidths.Add (this.data.Duration, width);
+				}
+
+				return width;
+			}
+		}
+
+		private static int GetDescriptionBestFitWidth(TemporalDataDuration duration)
+		{
+			//	Retourne la largeur nécessaire pour afficher en gras une période.
+			var textLayout = new TextLayout ();
+
+			int max = 0;
+			foreach (var dr in TopTemporalController.GetDateRangeSamples (duration))
+			{
+				textLayout.FormattedText = Dates.GetDescription (dr.BeginDate, dr.EndDate).ApplyBold ();
+				int width = (int) textLayout.GetSingleLineSize ().Width;
+				max = System.Math.Max (max, width);
+			}
+
+			if (max == 0)
+			{
+				return 100;
+			}
+			else
+			{
+				return max + 10;
+			}
+		}
+
+		private static IEnumerable<DateRange> GetDateRangeSamples(TemporalDataDuration duration)
+		{
+			//	Retourne suffisemment d'échantillons pour représenter la plus grande largeur à utiliser pour une durée.
+			Date date1, date2;
+
+			switch (duration)
+			{
+				case TemporalDataDuration.Daily:
+					for (int i = 0; i < 7; i++)
+					{
+						date1 = new Date (2012, 1, i+1);
+						date2 = date1;
+						yield return new DateRange (date1, date2);
+					}
+					break;
+
+				case TemporalDataDuration.Weekly:
+					date1 = new Date (2012, 5, 7);
+					date2 = new Date (2012, 5, 13);
+					yield return new DateRange (date1, date2);
+					break;
+
+				case TemporalDataDuration.Monthly:
+					for (int i = 0; i < 12; i++)
+					{
+						date1 = new Date (2012, i+1, 1);
+						date2 = Dates.AddDays (Dates.AddMonths(date1, 1), -1);
+						yield return new DateRange (date1, date2);
+					}
+					break;
+
+				case TemporalDataDuration.Quarterly:
+					for (int i = 0; i < 4; i++)
+					{
+						date1 = new Date (2012, i+1, 1);
+						date2 = Dates.AddDays (Dates.AddMonths(date1, 3), -1);
+						yield return new DateRange (date1, date2);
+					}
+					break;
+
+				case TemporalDataDuration.Biannual:
+					for (int i = 0; i < 2; i++)
+					{
+						date1 = new Date (2012, i+1, 1);
+						date2 = Dates.AddDays (Dates.AddMonths(date1, 6), -1);
+						yield return new DateRange (date1, date2);
+					}
+					break;
+
+				case TemporalDataDuration.Annual:
+					date1 = new Date (2012, 1, 1);
+					date2 = new Date (2012, 12, 31);
+					yield return new DateRange (date1, date2);
+					break;
+			}
+		}
+
 
 		private FormattedText NumberOfDays
 		{
@@ -748,6 +849,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly TemporalData					data;
 		private readonly SafeCounter					ignoreChanges;
+		private readonly Dictionary<TemporalDataDuration, int> descriptionBestFitWidths;
 
 		private System.Action							searchStartAction;
 		private TopPanelLeftController					topPanelLeftController;

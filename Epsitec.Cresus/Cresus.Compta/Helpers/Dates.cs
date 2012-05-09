@@ -7,7 +7,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
-using Epsitec.Cresus.Compta.Search.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -33,33 +32,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return Dates.NumberOfDays (date, lundiSemaineUn)/7 + 1;
 		}
 
-
-		public static int GetDescriptionBestFitWidth(TemporalDataDuration duration)
-		{
-			switch (duration)
-			{
-				case TemporalDataDuration.Daily:
-					return 88;  // 09.05.2012 (me)
-
-				case TemporalDataDuration.Weekly:
-					return 163;  // 25.07.2011 — 31.07.2011 (30)
-
-				case TemporalDataDuration.Monthly:
-					return 64;  // Mars 2012
-
-				case TemporalDataDuration.Quarterly:
-					return 110;  // Janv. — Mars 2012
-
-				case TemporalDataDuration.Biannual:
-					return 110;  // Janv. — Mars 2012
-
-				case TemporalDataDuration.Annual:
-					return 38;  // 2012
-
-				default:
-					return 100;
-			}
-		}
 
 		public static FormattedText GetDescription(Date? date1, Date? date2)
 		{
