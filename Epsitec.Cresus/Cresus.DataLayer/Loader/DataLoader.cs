@@ -100,20 +100,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			Request request = Request.Create (entity, rowKey);
 
-			return this.GetByRequest<AbstractEntity> (request).FirstOrDefault ();
+			return this.GetByRequest (request).FirstOrDefault ();
 		}
 
 
 		/// <summary>
-		/// Gets the sequence of <see cref="AbstractEntity"/> of type <typeparamref name="T"/> which
-		/// corresponds to the given request.
+		/// Gets the sequence of <see cref="AbstractEntity"/> which corresponds to the given
+		/// request.
 		/// </summary>
-		/// <typeparam name="T">The type of the <see cref="AbstractEntity"/> to retrieve.</typeparam>
 		/// <param name="request">The <see cref="Request"/> defining which <see cref="AbstractEntity"/> to retrieve.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which corresponds to the <see cref="Request"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="request"/> is <c>null</c>.</exception>
 		/// <exception cref="System.ArgumentException">If request is invalid.</exception>
-		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
+		public IList<AbstractEntity> GetByRequest(Request request)
 		{
 			request.ThrowIfNull ("request");
 			request.Check(this.DataContext);
@@ -129,7 +128,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				dbTransaction.Commit ();
 			}
 
-			List<T> entities = entityData.Select (d => (T) this.DeserializeEntityData (d)).ToList ();
+			var entities = entityData
+				.Select (d => this.DeserializeEntityData (d))
+				.ToList ();
 
 			this.AssignModificationEntryIds (latestEntityModificationEntry, entities);
 

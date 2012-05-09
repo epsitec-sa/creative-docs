@@ -21,10 +21,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		// continue its work on the BigList.
 
 
-		internal RequestView(DataContext dataContext, Request request, Type type)
+		internal RequestView(DataContext dataContext, Request request)
 		{
 			this.dataContext = dataContext;
-			this.type = type;
 			this.request = request;
 
 			//var dataInfrastructure = dataContext.DataInfrastructure;
@@ -61,7 +60,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 			// TODO Use this.dbTransaction here.
 
-			return this.dataContext.GetByRequest (this.type, this.request);
+			return this.dataContext.GetByRequest (this.request);
 		}
 
 
@@ -97,9 +96,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		private readonly DataContext dataContext;
-
-
-		private readonly Type type;
 
 
 		private readonly Request request;

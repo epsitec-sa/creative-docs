@@ -1051,40 +1051,55 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which match the
 		/// given example.
 		/// </summary>
+		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
+		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="example"/> is managed by another <see cref="DataContext"/>.</exception>
+		/// <exception cref="System.InvalidOperationException">If <paramref name="example"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
+		public IList<AbstractEntity> GetByExample(AbstractEntity example)
+		{
+			var request = Request.Create (example);
+
+			return this.GetByRequest (request);
+		}
+
+
+		/// <summary>
+		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which match the
+		/// given example.
+		/// </summary>
 		/// <typeparam name="TEntity">The type of the <see cref="AbstractEntity"/> to return.</typeparam>
 		/// <param name="example">The <see cref="AbstractEntity"/> to use as an example.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given example.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="example"/> is managed by another <see cref="DataContext"/>.</exception>
 		/// <exception cref="System.InvalidOperationException">If <paramref name="example"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
-		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
+		public IList<TEntity> GetByExample<TEntity>(TEntity example)
 			where TEntity : AbstractEntity
 		{
-			Request request = new Request ()
-			{
-				RootEntity = example,
-			};
+			var request = Request.Create (example);
 
 			return this.GetByRequest<TEntity> (request);
 		}
 
-		public IEnumerable<AbstractEntity> GetByRequest(System.Type entityType, Request request)
-		{
-			GetByRequestHelper helper = System.Activator.CreateInstance (typeof (GetByRequestHelper<>).MakeGenericType (entityType)) as GetByRequestHelper;
-			return helper.Query (this, request);
-		}
 
-		abstract class GetByRequestHelper
+		/// <summary>
+		/// Queries the database to retrieve all the <see cref="AbstractEntity"/> which correspond
+		/// to the given <see cref="Request"/>.
+		/// </summary>
+		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
+		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> is managed by another <see cref="DataContext"/>.</exception>
+		/// <exception cref="System.InvalidOperationException">If <paramref name="request"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
+		public IList<AbstractEntity> GetByRequest(Request request)
 		{
-			public abstract IEnumerable<AbstractEntity> Query(DataContext context, Request request);
-		}
-		
-		sealed class GetByRequestHelper<TEntity> : GetByRequestHelper
-			where TEntity : AbstractEntity
-		{
-			public override IEnumerable<AbstractEntity> Query(DataContext context, Request request)
+			this.AssertDataContextIsNotDisposed ();
+			this.AssertRequestIsValid (request);
+
+			using (this.LockWrite ())
 			{
-				return context.GetByRequest<TEntity> (request).Cast<AbstractEntity> ();
+				return this.DataLoader.GetByRequest (request);
 			}
 		}
 
@@ -1099,16 +1114,12 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
 		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> is managed by another <see cref="DataContext"/>.</exception>
 		/// <exception cref="System.InvalidOperationException">If <paramref name="request"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
-		public IEnumerable<TEntity> GetByRequest<TEntity>(Request request)
+		public IList<TEntity> GetByRequest<TEntity>(Request request)
 			where TEntity : AbstractEntity
 		{
-			this.AssertDataContextIsNotDisposed ();
-			this.AssertRequestIsValid (request);
-
-			using (this.LockWrite ())
-			{
-				return this.DataLoader.GetByRequest<TEntity> (request);
-			}
+			return this.GetByRequest (request)
+				.Cast<TEntity> ()
+				.ToList ();
 		}
 
 
@@ -1117,10 +1128,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		public int GetCount(AbstractEntity example)
 		{
-			Request request = new Request ()
-			{
-				RootEntity = example,
-			};
+			var request = Request.Create (example);
 
 			return this.GetCount (request);
 		}
@@ -1141,9 +1149,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public RequestView GetRequestView(Request request, System.Type entityType)
+		public RequestView GetRequestView(Request request)
 		{
-			return new RequestView (this, request, entityType);
+			return new RequestView (this, request);
 		}
 
 
