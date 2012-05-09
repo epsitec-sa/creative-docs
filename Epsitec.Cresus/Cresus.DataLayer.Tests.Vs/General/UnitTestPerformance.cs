@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				DbInfrastructureHelper.ResetTestDatabase ();
 
 				TestHelper.MeasureAndWriteTime (
-					TestHelper.extendString ("database population", 46),
+					"database population".PadRight (40),
 					UnitTestPerformance.logFile,
 					() => DatabaseCreator1.PopulateDatabase (UnitTestPerformance.databaseSize),
 					1
@@ -90,7 +90,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		{
 			AbstractEntity entity = new EntityContext ().CreateEmptyEntity (entityTypeId);
 
-			string title = TestHelper.extendString (entity.GetType ().Name, 40) + "warmup: level " + warmupLevel;
+			string title = entity.GetType ().Name.PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				dataContext.GetByExample (entity).Count ();
@@ -115,7 +115,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetUriContactWithGivenUriSchemeReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				UriSchemeEntity uriScheme = dataContext.ResolveEntity<UriSchemeEntity> (new DbKey (new DbId (1000000001)));
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetUriContactWithGivenUriSchemeValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				UriContactEntity example = new UriContactEntity ()
@@ -167,7 +167,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetLocationsGivenCountryReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				CountryEntity country = dataContext.ResolveEntity<CountryEntity> (new DbKey (new DbId (1000000001)));
@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetLocationsGivenCountryValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				LocationEntity example = new LocationEntity ()
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetLegalPersonsGivenTypeReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				LegalPersonTypeEntity legalPersonType = dataContext.ResolveEntity<LegalPersonTypeEntity> (new DbKey (new DbId (1000000001)));
@@ -238,7 +238,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetLegalPersonsGivenTypeValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				LegalPersonEntity example = new LegalPersonEntity ()
@@ -271,7 +271,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetContactsGivenPersonReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				NaturalPersonEntity naturalPerson = dataContext.ResolveEntity<NaturalPersonEntity> (new DbKey (new DbId (1000000001)));
@@ -290,7 +290,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetContactsGivenPersonValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				AbstractContactEntity example = new AbstractContactEntity ()
@@ -323,7 +323,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetPersonGivenLocationReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				LocationEntity location = dataContext.ResolveEntity<LocationEntity> (new DbKey (new DbId (1000000001)));
@@ -349,7 +349,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetPersonGivenLocationValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				NaturalPersonEntity example = new NaturalPersonEntity ();
@@ -389,7 +389,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetAddressGivenLegalPersonReference(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: reference", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: reference".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				LegalPersonEntity legalPerson = dataContext.ResolveEntity<LegalPersonEntity> (new DbKey (new DbId (1000000000 + UnitTestPerformance.legalPersonId[UnitTestPerformance.databaseSize])));
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		public void GetAddressGivenLegalPersonValue(int warmupLevel)
 		{
-			string title = TestHelper.extendString ("mode: value", 40) + "warmup: level " + warmupLevel;
+			string title = "mode: value".PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				MailContactEntity example = new MailContactEntity ()
@@ -447,8 +447,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		private void DeleteEntity(Druid entityTypeId, int warmupLevel)
 		{
 			AbstractEntity entity = new EntityContext ().CreateEmptyEntity (entityTypeId);
-			
-			string title = TestHelper.extendString (entity.GetType ().Name, 40) + "warmup: level " + warmupLevel;
+
+			string title = entity.GetType ().Name.PadRight (40) + "warmup: level " + warmupLevel;
 			System.Action<DataContext> action = (dataContext) =>
 			{
 				AbstractEntity e = dataContext.ResolveEntity (entityTypeId, new DbKey (new DbId (1000000000 + warmupLevel)));

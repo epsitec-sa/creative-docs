@@ -61,19 +61,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 		}
 
 
-		public static string extendString(string text, int length)
-		{
-			string result = text;
-
-			while (result.Length < length)
-			{
-				result += " ";
-			}
-
-			return result;
-		}
-
-
 	}
 
 
