@@ -1,11 +1,8 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
-
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -24,9 +21,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// Builds a new <c>UnaryComparison</c>.
 		/// </summary>
 		/// <param name="field">The field on which to apply the <see cref="UnaryComparator"/>.</param>
-		/// <param name="op">The predicate to apply on the <see cref="Field"/>.</param>
+		/// <param name="op">The predicate to apply on the <see cref="EntityField"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="field"/> is null.</exception>
-		public UnaryComparison(Field field, UnaryComparator op) : base()
+		public UnaryComparison(EntityField field, UnaryComparator op) : base()
 		{
 			field.ThrowIfNull ("field");
 			
@@ -46,38 +43,28 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The <see cref="Field"/> of the current instance.
+		/// The <see cref="EntityField"/> of the current instance.
 		/// </summary>
-		public Field Field
+		public EntityField Field
 		{
 			get;
 			private set;
 		}
 
 
-		/// <summary>
-		/// Gets the sequence of field ids that are used in this instance.
-		/// </summary>
-		/// <returns>The sequence of field ids that are used in this instance.</returns>
-		internal override IEnumerable<Druid> GetFields()
-		{
-			yield return this.Field.FieldId;
-		}
-
-
-		/// <summary>
-		/// Creates an <see cref="SqlFunction"/> that corresponds to this instance.
-		/// </summary>
-		/// <param name="sqlConstantResolver">A function used to build the <see cref="SqlField"/> that represent constants.</param>
-		/// <param name="sqlColumnResolver">A function used to build the <see cref="SqlField"/> that represent columns in a table.</param>
-		/// <returns>The new <see cref="SqlFunction"/>.</returns>
-		internal override SqlFunction CreateSqlCondition(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver, System.Func<Druid, SqlField> sqlColumnResolver)
+		internal override SqlFunction CreateSqlCondition(SqlFieldBuilder builder)
 		{
 			return new SqlFunction
 			(
 				EnumConverter.ToSqlFunctionCode (this.Operator),
-				this.Field.CreateSqlField (sqlColumnResolver)
+				this.Field.CreateSqlField (builder)
 			);
+		}
+
+
+		internal override void CheckFields(FieldChecker checker)
+		{
+			this.Field.CheckField (checker);
 		}
 
 

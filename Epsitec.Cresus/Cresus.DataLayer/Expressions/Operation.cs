@@ -8,15 +8,7 @@
 	public abstract class Operation : Expression
 	{
 
-
-		/// <summary>
-		/// Builds a new <c>Operation</c>.
-		/// </summary>
-		protected Operation() : base ()
-		{
-		}
-
-
+		
 	}
 
 

@@ -24,6 +24,7 @@ using System.Linq;
 
 using System.Threading;
 
+
 namespace Epsitec.Cresus.DataLayer.Context
 {
 	/// <summary>
@@ -1059,7 +1060,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IEnumerable<TEntity> GetByExample<TEntity>(TEntity example)
 			where TEntity : AbstractEntity
 		{
-			Request request = Request.Create (example);
+			Request request = new Request ()
+			{
+				RootEntity = example,
+			};
 
 			return this.GetByRequest<TEntity> (request);
 		}
@@ -1113,7 +1117,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// </summary>
 		public int GetCount(AbstractEntity example)
 		{
-			var request = Request.Create (example);
+			Request request = new Request ()
+			{
+				RootEntity = example,
+			};
 
 			return this.GetCount (request);
 		}

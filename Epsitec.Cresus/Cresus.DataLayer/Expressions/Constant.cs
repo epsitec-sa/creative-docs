@@ -4,6 +4,8 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
+using Epsitec.Cresus.DataLayer.Loader;
+
 using System.Text.RegularExpressions;
 
 
@@ -15,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	///  The <c>Constant</c> class represents a constant value that can be used in an
 	///  <see cref="Expression"/>.
 	/// </summary>
-	public sealed class Constant
+	public sealed class Constant : Value
 	{
 
 
@@ -164,18 +166,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		/// <summary>
-		/// Builds an <see cref="SqlField"/> that corresponds to this instance.
-		/// </summary>
-		/// <param name="sqlConstantResolver">A function used to build the <see cref="SqlField"/> that represent constants.</param>
-		/// <returns>The new <see cref="SqlField"/>.</returns>
-		internal SqlField CreateSqlField(System.Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> sqlConstantResolver)
+		internal override SqlField CreateSqlField(SqlFieldBuilder builder)
 		{
 			DbRawType dbRawType = EnumConverter.ToDbRawType (this.Type);
 			DbSimpleType dbSimpleType = EnumConverter.ToDbSimpleType (this.Type);
 			DbNumDef dbNumDef = EnumConverter.ToDbNumDef (this.Type);
 
-			return sqlConstantResolver (dbRawType, dbSimpleType, dbNumDef, this.Value);
+			return builder.Build (dbRawType, dbSimpleType, dbNumDef, this.Value);
+		}
+
+
+		internal override void CheckField(FieldChecker checker)
+		{
 		}
 
 

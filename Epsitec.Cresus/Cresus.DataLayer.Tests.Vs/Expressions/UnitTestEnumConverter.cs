@@ -25,13 +25,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ UnaryComparator.IsNotNull, SqlFunctionCode.CompareIsNotNull },
 			};
 
-			foreach (UnaryComparator match in matches.Keys)
-			{
-				SqlFunctionCode result1 = matches[match];
-				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
-
-				Assert.AreEqual (result1, result2);
-			}
+			this.Check (matches, EnumConverter.ToSqlFunctionCode);
 		}
 		
 
@@ -52,13 +46,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ BinaryComparator.IsNotLikeEscape, SqlFunctionCode.CompareNotLikeEscape },
 			};
 
-			foreach (BinaryComparator match in matches.Keys)
-			{
-				SqlFunctionCode result1 = matches[match];
-				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
-
-				Assert.AreEqual (result1, result2);
-			}
+			this.Check (matches, EnumConverter.ToSqlFunctionCode);
 		}
 		
 		
@@ -70,13 +58,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ UnaryOperator.Not, SqlFunctionCode.LogicNot },
 			};
 
-			foreach (UnaryOperator match in matches.Keys)
-			{
-				SqlFunctionCode result1 = matches[match];
-				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
-
-				Assert.AreEqual (result1, result2);
-			}
+			this.Check (matches, EnumConverter.ToSqlFunctionCode);
 		}
 		
 
@@ -89,13 +71,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ BinaryOperator.Or, SqlFunctionCode.LogicOr },
 			};
 
-			foreach (BinaryOperator match in matches.Keys)
-			{
-				SqlFunctionCode result1 = matches[match];
-				SqlFunctionCode result2 = EnumConverter.ToSqlFunctionCode (match);
-
-				Assert.AreEqual (result1, result2);
-			}
+			this.Check (matches, EnumConverter.ToSqlFunctionCode);
 		}
 		
 
@@ -117,13 +93,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ Type.Enum, DbRawType.Int32 },
 			};
 
-			foreach (Type match in matches.Keys)
-			{
-				DbRawType result1 = matches[match];
-				DbRawType result2 = EnumConverter.ToDbRawType (match);
-
-				Assert.AreEqual (result1, result2);
-			}
+			this.Check (matches, EnumConverter.ToDbRawType);
 		}
 
 
@@ -145,13 +115,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ Type.Enum, DbSimpleType.Decimal },
 			};
 
-			foreach (Type match in matches.Keys)
-			{
-				DbSimpleType result1 = matches[match];
-				DbSimpleType result2 = EnumConverter.ToDbSimpleType (match);
+			this.Check (matches, EnumConverter.ToDbSimpleType);
+		}
 
-				Assert.AreEqual (result1, result2);
-			}
+
+		[TestMethod]
+		public void ToSqlSortOrderTest()
+		{
+			var matches = new Dictionary<SortOrder, SqlSortOrder> ()
+			{
+				{ SortOrder.Ascending, SqlSortOrder.Ascending },
+				{ SortOrder.Descending, SqlSortOrder.Descending },
+			};
+
+			this.Check (matches, EnumConverter.ToSqlSortOrder);
 		}
 
 
@@ -173,12 +150,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 				{ Type.Enum, DbNumDef.FromRawType (DbRawType.Int32) },
 			};
 
-			foreach (Type match in matches.Keys)
-			{
-				DbNumDef result1 = matches[match];
-				DbNumDef result2 = EnumConverter.ToDbNumDef (match);
+			this.Check (matches, EnumConverter.ToDbNumDef);
+		}
 
-				Assert.AreEqual (result1, result2);
+
+		private void Check<T1, T2>(Dictionary<T1, T2> matches, System.Func<T1, T2> converter)
+		{
+			foreach (var match in matches)
+			{
+				var v1 = match.Key;
+				var v2 = match.Value;
+
+				Assert.AreEqual (v2, converter (v1));
 			}
 		}
 

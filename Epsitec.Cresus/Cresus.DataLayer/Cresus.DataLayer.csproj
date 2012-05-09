@@ -148,8 +148,13 @@
     <Compile Include="Context\EntityChangedEventSource.cs" />
     <Compile Include="Context\EntityChangedEventType.cs" />
     <Compile Include="Context\RequestView.cs" />
+    <Compile Include="Expressions\EntityField.cs" />
+    <Compile Include="Expressions\InternalField.cs" />
     <Compile Include="Expressions\SortClause.cs" />
     <Compile Include="Expressions\SortOrder.cs" />
+    <Compile Include="Loader\FieldChecker.cs" />
+    <Compile Include="Loader\SqlFieldBuilder.cs" />
+    <Compile Include="Expressions\Value.cs" />
     <Compile Include="ImportExport\ColumnDefinition.cs" />
     <Compile Include="ImportExport\RawExportMode.cs" />
     <Compile Include="ImportExport\RawEntitySerializer.cs" />
@@ -166,8 +171,6 @@
     <Compile Include="Infrastructure\LockState.cs" />
     <Compile Include="Infrastructure\UidGenerator.cs" />
     <Compile Include="Infrastructure\UidSlot.cs" />
-    <Compile Include="Loader\RequestConstraintList.cs" />
-    <Compile Include="Loader\RequestEntityConstraints.cs" />
     <Compile Include="Loader\SqlContainer.cs" />
     <Compile Include="Proxies\KeyedCollectionFieldProxy.cs" />
     <Compile Include="Proxies\KeyedReferenceFieldProxy.cs" />
@@ -186,8 +189,7 @@
     <Compile Include="Serialization\EntityData.cs" />
     <Compile Include="Serialization\ReferenceData.cs" />
     <Compile Include="Context\EntityKey.cs" />
-    <Compile Include="Expressions\ComparisonFieldField.cs" />
-    <Compile Include="Expressions\ComparisonFieldValue.cs" />
+    <Compile Include="Expressions\BinaryComparison.cs" />
     <Compile Include="Expressions\BinaryOperation.cs" />
     <Compile Include="Expressions\BinaryOperator.cs" />
     <Compile Include="Expressions\BinaryComparator.cs" />
@@ -200,7 +202,7 @@
     <Compile Include="Expressions\UnaryComparison.cs" />
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
-    <Compile Include="Expressions\Field.cs" />
+    <Compile Include="Expressions\PublicField.cs" />
     <Compile Include="Loader\AliasNode.cs" />
     <Compile Include="Serialization\ValueData.cs" />
     <Compile Include="Proxies\AbstractFieldProxy.cs" />

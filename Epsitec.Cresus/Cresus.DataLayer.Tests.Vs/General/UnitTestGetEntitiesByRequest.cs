@@ -1,11 +1,6 @@
 ﻿using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Common.Types;
-
-using Epsitec.Common.UnitTesting;
-
-using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
@@ -63,12 +58,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
+				request.Conditions.Add (
 					new UnaryComparison (
-						new Field (new Druid ("[J1AM1]")),
+						new PublicField (example, new Druid ("[J1AM1]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -84,8 +78,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void BinaryComparisonFieldWithValueTest()
-		{			
+		public void BinaryComparisonTest1()
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -94,12 +88,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AL1]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
@@ -114,8 +107,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void BinaryComparisonFieldWithFieldTest()
-		{			
+		public void BinaryComparisonTest2()
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -124,14 +117,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldField (
-						new Field (new Druid ("[J1AL1]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
-						new Field (new Druid ("[J1AM1]"))
+						new PublicField (example, new Druid ("[J1AM1]"))
 					)
 				);
 
@@ -143,8 +135,71 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void BinaryComparisonTest3()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL1]")),
+						BinaryComparator.IsLowerOrEqual,
+						new PublicField (example.Gender, new Druid ("[J1AR]"))
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (persons.Any (p => DatabaseCreator2.CheckAlfred (p)));
+			}
+		}
+
+
+		[TestMethod]
+		public void BinaryComparisonTest4()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				ValueDataEntity example = new ValueDataEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AD2]")),
+						BinaryComparator.IsLowerOrEqual,
+						InternalField.CreateId (example)
+					)
+				);
+
+				ValueDataEntity[] data = dataContext.GetByRequest<ValueDataEntity> (request).ToArray ();
+
+				Assert.IsTrue (data.Count () == 3);
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData1 (d)));
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData2 (d)));
+				Assert.IsTrue (data.Any (d => DatabaseCreator2.CheckValueData3 (d)));
+			}
+		}
+
+
+		[TestMethod]
 		public void UnaryOperationTest()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -153,14 +208,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
+				request.Conditions.Add (
 					new UnaryOperation (
 						UnaryOperator.Not,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1AL1]")),
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
@@ -178,7 +232,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void BinaryOperationTest()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -187,19 +241,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
+				request.Conditions.Add (
 					new BinaryOperation (
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1AL1]")),
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Hans")
 						),
 						BinaryOperator.And,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1AL1]")),
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Gertrude")
 						)
@@ -216,7 +269,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DoubleRequest1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -225,20 +278,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AL1]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
 				);
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AM1]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AM1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Dupond")
 					)
@@ -253,7 +305,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void DoubleRequest2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -265,20 +317,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AL1]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
 				);
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AR]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
 					)
@@ -294,7 +345,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void InnerRequest()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -306,12 +357,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AR]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
 					)
@@ -327,7 +377,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void LikeRequest()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -339,12 +389,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example.Gender,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AR]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsLike,
 						new Constant ("%ale")
 					)
@@ -361,7 +410,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void LikeEscapeRequest()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -381,12 +430,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Request request = new Request ()
 					{
 						RootEntity = example,
-						RequestedEntity = example,
 					};
 
-					request.AddLocalConstraint (example,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1A5]")),
+					request.Conditions.Add (
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLike,
 							new Constant ("test%test")
 						)
@@ -408,12 +456,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Request request = new Request ()
 					{
 						RootEntity = example,
-						RequestedEntity = example,
 					};
 
-					request.AddLocalConstraint (example,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1A5]")),
+					request.Conditions.Add (
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLike,
 							new Constant ("test_test")
 						)
@@ -434,14 +481,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Request request = new Request ()
 					{
 						RootEntity = example,
-						RequestedEntity = example,
 					};
 
 					string value = Constant.Escape ("test%test");
 
-					request.AddLocalConstraint (example,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1A5]")),
+					request.Conditions.Add (
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -459,15 +505,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					Request request = new Request ()
 					{
-						RootEntity = example,
-						RequestedEntity = example,
+						RootEntity = example,	
 					};
 
 					string value = Constant.Escape ("test_test");
 
-					request.AddLocalConstraint (example,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1A5]")),
+					request.Conditions.Add (
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -486,14 +531,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					Request request = new Request ()
 					{
 						RootEntity = example,
-						RequestedEntity = example,
 					};
 
 					string value = Constant.Escape ("test#test");
 
-					request.AddLocalConstraint (example,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1A5]")),
+					request.Conditions.Add (
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -510,7 +554,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RequestedEntityRequest1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -533,7 +577,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RequestedEntityRequest2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -558,7 +602,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RequestedEntityRequest3()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -581,7 +625,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RootEntityReferenceRequest1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -605,7 +649,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RootEntityReferenceRequest2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -636,7 +680,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void RootEntityReferenceRequest3()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -665,7 +709,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnBooleanField1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -674,12 +718,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1A82]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1A82]")),
 						BinaryComparator.IsEqual,
 						new Constant (true)
 					)
@@ -697,7 +740,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnBooleanField2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -706,12 +749,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1A82]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1A82]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (false)
 					)
@@ -729,7 +771,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnByteArrayField1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -738,12 +780,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1A92]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1A92]")),
 						BinaryComparator.IsEqual,
 						new Constant (new byte[] { 0x0F, 0xF0 })
 					)
@@ -760,7 +801,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnByteArrayField2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -769,12 +810,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1A92]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1A92]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new byte[] { 0x0F, 0xF0 })
 					)
@@ -792,7 +832,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -801,12 +841,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AA2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -832,12 +871,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AA2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -855,7 +893,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateTimeField3()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -864,12 +902,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AA2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsGreater,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -887,7 +924,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateField1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -896,12 +933,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AB2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -918,7 +954,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateField2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -927,12 +963,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AB2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -950,7 +985,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDateField3()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -959,12 +994,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AB2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsGreater,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -982,7 +1016,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -991,12 +1025,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AC2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsEqual,
 						new Constant (123.456m)
 					)
@@ -1013,7 +1046,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1022,12 +1055,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AC2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (123.456m)
 					)
@@ -1045,7 +1077,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnDecimalField3()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1054,12 +1086,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AC2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsGreater,
 						new Constant (123.456m)
 					)
@@ -1076,7 +1107,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnEnumField1()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1085,12 +1116,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AL2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL2]")),
 						BinaryComparator.IsEqual,
 						new Constant (SimpleEnum.Value2)
 					)
@@ -1107,7 +1137,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnEnumField2()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1116,12 +1146,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AL2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AL2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (SimpleEnum.Value2)
 					)
@@ -1139,7 +1168,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1148,19 +1177,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AD2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsEqual,
 						new Constant (42)
 					)
 				);
 
 				var valueData = dataContext.GetByRequest<ValueDataEntity> (request).ToList ();
-	
+
 				Assert.IsTrue (valueData.Count () == 1);
 
 				Assert.IsTrue (valueData.Any (vd => DatabaseCreator2.CheckValueData1 (vd)));
@@ -1170,7 +1198,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField2()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1179,12 +1207,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AD2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (42)
 					)
@@ -1202,7 +1229,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnIntegerField3()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1211,12 +1238,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AD2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsLower,
 						new Constant (42)
 					)
@@ -1233,7 +1259,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1242,12 +1268,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AE2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsEqual,
 						new Constant (4242)
 					)
@@ -1264,7 +1289,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField2()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1273,12 +1298,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AE2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (4242)
 					)
@@ -1296,7 +1320,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnLongIntegerField3()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1305,12 +1329,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AE2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsLower,
 						new Constant (4242)
 					)
@@ -1328,7 +1351,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnStringField1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1337,12 +1360,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AF2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsEqual,
 						new Constant ("blupi")
 					)
@@ -1359,7 +1381,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnStringField2()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1368,12 +1390,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AF2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant ("blupi")
 					)
@@ -1391,7 +1412,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnStringField3()
-		{			
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1400,12 +1421,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AF2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsLower,
 						new Constant ("blupi")
 					)
@@ -1422,7 +1442,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnTimeField1()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1431,12 +1451,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AG2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1453,7 +1472,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnTimeField2()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1462,12 +1481,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AG2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1485,7 +1503,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 		[TestMethod]
 		public void GetObjectBasedOnTimeField3()
-		{		
+		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
 			{
@@ -1494,12 +1512,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddLocalConstraint (example,
-					new ComparisonFieldValue (
-						new Field (new Druid ("[J1AG2]")),
+				request.Conditions.Add (
+					new BinaryComparison (
+						new PublicField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsLower,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1526,12 +1543,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddSortClause (example,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AL1]")),
+						new PublicField (example, new Druid ("[J1AL1]")),
 						SortOrder.Ascending
 					)
 				);
@@ -1558,12 +1574,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddSortClause (example,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AL1]")),
+						new PublicField (example, new Druid ("[J1AL1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1593,12 +1608,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddSortClause (example.PreferredLanguage,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AU]")),
+						new PublicField (example.PreferredLanguage, new Druid ("[J1AU]")),
 						SortOrder.Descending
 					)
 				);
@@ -1627,19 +1641,18 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddSortClause (example,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AL1]")),
+						new PublicField (example, new Druid ("[J1AL1]")),
 						SortOrder.Ascending
 					)
 				);
 
-				request.AddSortClause (example.PreferredLanguage,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AU]")),
+						new PublicField (example.PreferredLanguage, new Druid ("[J1AU]")),
 						SortOrder.Descending
 					)
 				);
@@ -1668,24 +1681,22 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-
-				request.AddLocalConstraint (example,
+				request.Conditions.Add (
 					new UnaryOperation (
 						UnaryOperator.Not,
-						new ComparisonFieldValue (
-							new Field (new Druid ("[J1AL1]")),
+						new BinaryComparison (
+							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
 					)
 				);
 
-				request.AddSortClause (example,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AO1]")),
+						new PublicField (example, new Druid ("[J1AO1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1701,6 +1712,37 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void GetSortedObjects6()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				var request = new Request ()
+				{
+					RootEntity = example
+				};
+
+				request.SortClauses.Add (
+					new SortClause (
+						InternalField.CreateId (example),
+						SortOrder.Descending
+					)
+				);
+
+				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
+
+				Assert.IsTrue (result.Count () == 3);
+
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[0]));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[2]));
+			}
+		}
+
+
+		[TestMethod]
 		public void GetObjectsWithSkipAndTake()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -1711,12 +1753,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					RequestedEntity = example,
 				};
 
-				request.AddSortClause (example,
+				request.SortClauses.Add (
 					new SortClause (
-						new Field (new Druid ("[J1AL1]")),
+						new PublicField (example, new Druid ("[J1AL1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1743,114 +1784,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 						CollectionAssert.AreEqual (expected, result2);
 					}
 				}
-			}
-		}
-
-
-		[TestMethod]
-		public void QueryCycleDetectionTest1()
-		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				foreach (var entity in this.GetGraphsWithCycle ())
-				{
-					Request request = new Request ()
-					{
-						RootEntity = entity
-					};
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataContext.GetByExample (entity)
-					);
-
-					ExceptionAssert.Throw<System.ArgumentException>
-					(
-						() => dataContext.GetByRequest<AbstractEntity> (request)
-					);
-				}
-			}
-		}
-
-
-		[TestMethod]
-		public void QueryCycleDetectionTest2()
-		{
-			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
-			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
-			{
-				foreach (var entity in this.GetGraphsWithoutCycle (dataContext))
-				{
-					Request request = new Request ()
-					{
-						RootEntity = entity
-					};
-
-					dataContext.GetByExample (entity).ToList ();
-					dataContext.GetByRequest<AbstractEntity> (request).ToList ();
-				}
-			}
-		}
-
-
-		private IEnumerable<AbstractEntity> GetGraphsWithCycle()
-		{
-			{
-				NaturalPersonEntity person = new NaturalPersonEntity ();
-				MailContactEntity contact = new MailContactEntity ();
-
-				person.Contacts.Add (contact);
-				contact.NaturalPerson = person;
-
-				yield return person;
-			}
-
-			{
-				NaturalPersonEntity person1 = new NaturalPersonEntity ();
-				NaturalPersonEntity person2 = new NaturalPersonEntity ();
-				MailContactEntity contact1 = new MailContactEntity ();
-				MailContactEntity contact2 = new MailContactEntity ();
-
-				person1.Contacts.Add (contact1);
-				contact1.NaturalPerson = person2;
-				person2.Contacts.Add (contact2);
-				contact2.NaturalPerson = person1;
-			}
-		}
-
-
-		private IEnumerable<AbstractEntity> GetGraphsWithoutCycle(DataContext dataContext)
-		{
-			{
-				CountryEntity country = new CountryEntity ();
-				RegionEntity region = new RegionEntity ();
-				LocationEntity location = new LocationEntity ();
-
-				country.Name = "country";
-
-				region.Country = country;
-				location.Country = country;
-				location.Region = region;
-
-				yield return location;
-			}
-
-			{
-				PersonGenderEntity gender = new PersonGenderEntity ();
-				PersonTitleEntity title = new PersonTitleEntity ();
-				NaturalPersonEntity person = new NaturalPersonEntity ();
-
-				gender.Name = "gender";
-				title.ComptatibleGenders.Add (gender);
-				person.Gender = gender;
-				person.Title = title;
-
-				yield return person;
-			}
-
-			{
-				yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 			}
 		}
 

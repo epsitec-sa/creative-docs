@@ -115,11 +115,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="request">The <see cref="Request"/> defining which <see cref="AbstractEntity"/> to retrieve.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which corresponds to the <see cref="Request"/>.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="request"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If request.RootEntity is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If request.RequestedEntity is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If request is invalid.</exception>
 		public IEnumerable<T> GetByRequest<T>(Request request) where T : AbstractEntity
 		{
-			this.CheckRequest (request);
+			request.ThrowIfNull ("request");
+			request.Check(this.DataContext);
 
 			EntityModificationEntry latestEntityModificationEntry;
 			IEnumerable<EntityData> entityData;
@@ -146,11 +146,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <param name="request">The request defining which entities to count.</param>
 		/// <returns>The number of entities that match the given request.</returns>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="request"/> is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If request.RootEntity is <c>null</c>.</exception>
-		/// <exception cref="System.ArgumentNullException">If request.RequestedEntity is <c>null</c>.</exception>
+		/// <exception cref="System.ArgumentException">If request is invalid.</exception>
 		public int GetCount(Request request)
 		{
-			this.CheckRequest (request);
+			request.ThrowIfNull ("request");
+			request.Check (this.DataContext);
 
 			return this.LoaderQueryGenerator.GetCount (request);
 		}
@@ -358,107 +358,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				this.DataContext.DefineEntityModificationEntryId (entity, entryId);
 			}
-		}
-
-
-		private void CheckRequest(Request request)
-		{
-			request.ThrowIfNull ("request");
-			request.RootEntity.ThrowIfNull ("request.RootEntity");
-			request.RequestedEntity.ThrowIfNull ("request.RequestedEntity");
-
-			this.CheckForCycles (request.RootEntity);
-			this.CheckForForeignEntities (request.RootEntity);
-		}
-
-
-		private void CheckForCycles(AbstractEntity entity)
-		{
-			if (!this.DataContext.IsPersistent (entity))
-			{
-				ISet<AbstractEntity> currentEntities = new HashSet<AbstractEntity> ();
-				ISet<AbstractEntity> entitiesChecked = new HashSet<AbstractEntity> ();
-
-				this.CheckForCycles (currentEntities, entitiesChecked, entity);
-			}
-		}
-
-
-		private void CheckForCycles(ISet<AbstractEntity> currentEntities, ISet<AbstractEntity> entitiesChecked, AbstractEntity entity)
-		{
-			if (currentEntities.Contains (entity))
-			{
-				throw new System.ArgumentException ("Cycles are not allowed in requests.");
-			}
-
-			if (!entitiesChecked.Contains (entity))
-			{
-				currentEntities.Add (entity);
-
-				var targets = this.GetDefinedChildren (entity)
-					.Where (e => !this.DataContext.IsPersistent (e))
-					.ToList ();
-
-				foreach (var target in targets)
-				{
-					this.CheckForCycles (currentEntities, entitiesChecked, target);
-				}
-
-				currentEntities.Remove (entity);
-				entitiesChecked.Add (entity);
-			}
-		}
-
-
-		private void CheckForForeignEntities(AbstractEntity entity)
-		{
-			HashSet<AbstractEntity> entitiesChecked = new HashSet<AbstractEntity> ();
-			HashSet<AbstractEntity> entitiesToCheck = new HashSet<AbstractEntity> ()
-			{
-				entity,
-			};
-
-			while (entitiesToCheck.Count > 0)
-			{
-				var entityToCheck = entitiesToCheck.First ();
-
-				entitiesToCheck.Remove (entityToCheck);
-
-				if (this.DataContext.IsForeignEntity (entityToCheck))
-				{
-					throw new System.ArgumentException ("Usage of a foreign entity in a request is not allowed.");
-				}
-
-				entitiesChecked.Add (entityToCheck);
-
-				if (!this.DataContext.IsPersistent (entityToCheck))
-				{
-					var targets = this.GetDefinedChildren (entityToCheck)
-						.Where (e => !entitiesChecked.Contains (e));
-
-					entitiesToCheck.AddRange (targets);
-				}
-			}
-		}
-
-
-		private IEnumerable<AbstractEntity> GetDefinedChildren(AbstractEntity entity)
-		{
-			EntityTypeEngine entityTypeEngine = this.DataInfrastructure.EntityEngine.EntityTypeEngine;
-
-			Druid entityTypeId = entity.GetEntityStructuredTypeId ();
-
-			var referenceTargets = entityTypeEngine
-				.GetReferenceFields (entityTypeId)
-				.Where (f => entity.IsFieldNotEmpty (f.Id))
-				.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
-
-			var collectionTargets = entityTypeEngine
-				.GetCollectionFields (entityTypeId)
-				.Where (f => entity.IsFieldNotEmpty (f.Id))
-				.SelectMany (f => entity.GetFieldCollection<AbstractEntity> (f.CaptionId.ToResourceId ()));
-
-			return referenceTargets.Concat (collectionTargets);
 		}
 
 		

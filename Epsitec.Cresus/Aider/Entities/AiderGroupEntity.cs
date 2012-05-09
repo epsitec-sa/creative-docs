@@ -110,9 +110,9 @@ namespace Epsitec.Aider.Entities
 			var rootGroupName = AiderGroupEntity.GetParishGroupName(parishName);
 			var rootGroupNamePattern = rootGroupName.Replace("-", "%");
 
-			request.AddLocalConstraint (example,
-				new ComparisonFieldValue (
-					new Field (new Druid ("[LVAA4]")),
+			request.Conditions.Add (
+				new BinaryComparison (
+					new PublicField (example, new Druid ("[LVAA4]")),
 					BinaryComparator.IsLike,
 					new Constant (rootGroupNamePattern)
 				)

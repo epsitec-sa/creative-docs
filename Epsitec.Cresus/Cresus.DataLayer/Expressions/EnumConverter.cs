@@ -178,6 +178,12 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		/// <summary>
+		/// Converts a <see cref="SortOrder"/> to the corresponding <see cref="SqlSortOrder"/>.
+		/// </summary>
+		/// <param name="sortOrder">The <see cref="SortOrder"/> to convert.</param>
+		/// <returns>The corresponding <see cref="SqlSortOrder"/>.</returns>
+		/// <exception cref="System.NotSupportedException">If the conversion is not possible.</exception>
 		public static SqlSortOrder ToSqlSortOrder(SortOrder sortOrder)
 		{
 			switch (sortOrder)

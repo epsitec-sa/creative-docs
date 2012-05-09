@@ -555,8 +555,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			SqlField sqlTableForRequestRootEntity = this.BuildTableForRootEntity (rootEntityAlias, entity);
 			SqlContainer sqlContainerForEntity = this.BuildSqlContainerForEntity (request, rootEntityAlias, entity);
+			SqlContainer sqlContainerForConstraints = this.BuildSqlContainerForConstraints (request, rootEntityAlias);
 
-			return SqlContainer.CreateSqlTables (sqlTableForRequestRootEntity).Plus (sqlContainerForEntity);
+			return SqlContainer
+				.CreateSqlTables (sqlTableForRequestRootEntity)
+				.Plus (sqlContainerForEntity)
+				.Plus (sqlContainerForConstraints);
 		}
 
 
@@ -577,13 +581,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			SqlContainer sqlContainerForRequestRequestedEntity = this.BuildSqlContainerForRequestRequestedEntity (request, rootEntityAlias, entity);
 			SqlContainer sqlContainerForSubEntities = this.BuildSqlContainerForSubEntities (rootEntityAlias, entity);
 			SqlContainer sqlContainerForFields = this.BuildSqlContainerForFields (request, rootEntityAlias, entity);
-			SqlContainer sqlContainerForLocalConstraints = this.BuildSqlContainerForLocalConstraints (request, rootEntityAlias, entity);
 
 			return sqlContainerForRequestRootEntityId
 				.Plus (sqlContainerForRequestRequestedEntity)
 				.Plus (sqlContainerForSubEntities)
-				.Plus (sqlContainerForFields)
-				.Plus (sqlContainerForLocalConstraints);
+				.Plus (sqlContainerForFields);
 		}
 
 
@@ -968,37 +970,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private SqlContainer BuildSqlContainerForLocalConstraints(Request request, AliasNode rootEntityAlias, AbstractEntity entity)
+		private SqlContainer BuildSqlContainerForConstraints(Request request, AliasNode rootEntityAlias)
 		{
-			return request
-				.GetLocalConstraints (entity)
-				.Select (c => this.BuildConditionForLocalConstraint (rootEntityAlias, entity, c))
-				.Aggregate (SqlContainer.Empty, (acc, e) => acc.PlusSqlConditions (e));
-		}
+			var sqlFieldBuilder = this.CreateSqlFieldBuilder (request.RootEntity, rootEntityAlias);
 
+			var sqlFunctions = from condition in request.Conditions
+							   select condition.CreateSqlCondition(sqlFieldBuilder);
 
-		private SqlFunction BuildConditionForLocalConstraint(AliasNode rootEntityAlias, AbstractEntity entity, Expression constraint)
-		{
-			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
-
-			return constraint.CreateSqlCondition
-			(
-				(dbRawType, dbSimpleType, dbNumDef, value) =>
-				{
-					object convertedValue = this.DataConverter.FromCresusToDatabaseValue (dbRawType, dbSimpleType, dbNumDef, value);
-					DbRawType convertedType = this.DataConverter.FromDotNetToDatabaseType (dbRawType);
-
-					return SqlField.CreateConstant (convertedValue, convertedType);
-				},
-				(fieldId) =>
-				{
-					Druid localEntityId = this.TypeEngine.GetLocalType (leafEntityId, fieldId).CaptionId;
-					DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
-					string columnName = dbColumn.Name;
-
-					return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName);
-				}
-			);
+			return SqlContainer.CreateSqlConditions (sqlFunctions.ToArray ());
 		}
 
 
@@ -1140,21 +1119,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		private SqlContainer BuildSqlContainerForOrderBy(Request request, AliasNode rootEntityAlias)
 		{
-			var sqlFields = new List<SqlField> ();
+			var sqlFieldBuilder = this.CreateSqlFieldBuilder (request.RootEntity, rootEntityAlias);
 
-			foreach (var sortClause in request.GetSortClauses ())
-			{
-				var sortEntity = sortClause.Item1;
-				var sortField = sortClause.Item2;
-
-				var sortRootAlias = this.RetreiveRequestedEntityAliasRec (request.RootEntity, sortEntity, rootEntityAlias);
-
-				var sqlField = this.BuildSqlFieldForValueField (sortRootAlias, sortEntity, sortField.Field.FieldId);
-
-				sqlField.SortOrder = EnumConverter.ToSqlSortOrder (sortField.SortOrder);
-
-				sqlFields.Add (sqlField);
-			}
+			var sqlFields = from sortClause in request.SortClauses
+							select sortClause.CreateSqlField (sqlFieldBuilder);
 
 			return SqlContainer.CreateSqlOrderBys (sqlFields.ToArray ());
 		}
@@ -1297,5 +1265,56 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		#endregion
+
+
+		private SqlFieldBuilder CreateSqlFieldBuilder(AbstractEntity rootEntity, AliasNode rootAlias)
+		{
+			return new SqlFieldBuilder
+			(
+				rootEntity,
+				rootAlias,
+				this.ResolveSqlConstantField,
+				this.ResolveSqlPublicField,
+				this.ResolveSqlInternalField
+			);
+		}
+
+
+		private SqlField ResolveSqlConstantField(DbRawType dbRawType, DbSimpleType dbSimpleType, DbNumDef dbNumDef, object value)
+		{
+			object convertedValue = this.DataConverter.FromCresusToDatabaseValue (dbRawType, dbSimpleType, dbNumDef, value);
+			DbRawType convertedType = this.DataConverter.FromDotNetToDatabaseType (dbRawType);
+
+			return SqlField.CreateConstant (convertedValue, convertedType);
+		}
+
+
+		private SqlField ResolveSqlPublicField(AbstractEntity rootEntity, AliasNode rootAlias, AbstractEntity entity, Druid fieldId)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid localEntityId = this.TypeEngine.GetLocalType (leafEntityId, fieldId).CaptionId;
+
+			AliasNode rootEntityAlias = this.RetreiveRequestedEntityAliasRec (rootEntity, entity, rootAlias);
+
+			DbColumn dbColumn = this.SchemaEngine.GetEntityFieldColumn (localEntityId, fieldId);
+			string columnName = dbColumn.Name;
+
+			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, localEntityId, columnName);
+		}
+
+
+		private SqlField ResolveSqlInternalField(AbstractEntity rootEntity, AliasNode rootAlias, AbstractEntity entity, string name)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			AliasNode rootEntityAlias = this.RetreiveRequestedEntityAliasRec (rootEntity, entity, rootAlias);
+
+			return this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, name);
+		}
+
+
 	}
+
+
 }

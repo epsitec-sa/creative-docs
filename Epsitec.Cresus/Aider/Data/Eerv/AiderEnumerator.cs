@@ -164,16 +164,16 @@ namespace Epsitec.Aider.Data.Eerv
 
 			var request = new Request ();
 
-			request.AddLocalConstraint (eChPersonExample, new ComparisonFieldValue
+			request.Conditions.Add (new BinaryComparison
 			(
-				new Field (new Druid ("[LVGO02]")),
+				new PublicField (eChPersonExample, new Druid ("[LVGO02]")),
 				BinaryComparator.IsGreaterOrEqual,
 				new Constant (lowerBound)
 			));
 
-			request.AddLocalConstraint (eChPersonExample, new ComparisonFieldValue
+			request.Conditions.Add (new BinaryComparison
 			(
-				new Field (new Druid ("[LVGO02]")),
+				new PublicField (eChPersonExample, new Druid ("[LVGO02]")),
 				BinaryComparator.IsLowerOrEqual,
 				new Constant (upperBound)
 			));

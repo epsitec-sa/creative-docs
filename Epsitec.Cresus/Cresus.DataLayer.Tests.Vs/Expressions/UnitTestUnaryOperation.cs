@@ -2,17 +2,13 @@
 
 using Epsitec.Common.UnitTesting;
 
-using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.Loader;
+
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Collections.Generic;
-
-using System.Linq;
+using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
@@ -24,84 +20,39 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 	{
 
 
+		// TODO Add tests for CreateSqlCondition(...)
+		// TODO Add tests for CheckFields(...)
+		
+		
 		[ClassInitialize]
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
 		}
-		
+
 
 		[TestMethod]
-		public void UnaryOperationConstructorTest()
+		public void ConstructorTest()
 		{
-			Field field = new Field (Druid.FromLong (1));
-			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
+			var field = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var expression = new UnaryComparison (field, UnaryComparator.IsNull);
 
-			new UnaryOperation (UnaryOperator.Not, expression);
+			var op = UnaryOperator.Not;
+
+			var operation = new UnaryOperation (op, expression);
+
+			Assert.AreSame (expression, operation.Expression);
+			Assert.AreEqual (UnaryOperator.Not, operation.Operator);
 		}
 
 
 		[TestMethod]
-		public void UnaryOperationConstructorTestArgumentCheck()
+		public void ConstructorArgumentCheck()
 		{
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(
 				() => new UnaryOperation (UnaryOperator.Not, null)
 			);
-		}
-
-
-		[TestMethod]
-		public void ExpressionTest()
-		{
-			Field field = new Field (Druid.FromLong (1));
-			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
-
-			UnaryOperation operation = new UnaryOperation (UnaryOperator.Not, expression);
-
-			Assert.AreSame (expression, operation.Expression);
-		}
-
-
-		[TestMethod]
-		public void OperatorTest()
-		{
-			Field field = new Field (Druid.FromLong (1));
-			UnaryComparison expression = new UnaryComparison (field, UnaryComparator.IsNull);
-
-			UnaryOperation operation = new UnaryOperation (UnaryOperator.Not, expression);
-
-			Assert.AreEqual (UnaryOperator.Not, operation.Operator);
-		}
-		
-		
-		[TestMethod]
-		public void GetFieldsTest()
-		{
-			foreach (Field field1 in ExpressionHelper.GetSampleFields ())
-			{
-				foreach (Field field2 in ExpressionHelper.GetSampleFields ())
-				{
-					UnaryOperation operation = new UnaryOperation (
-						UnaryOperator.Not,
-						new ComparisonFieldField (field1, BinaryComparator.IsEqual, field2)
-					);
-
-					List<Druid> fields = operation.GetFields ().ToList ();
-
-					if (field1.FieldId == field2.FieldId)
-					{
-						Assert.IsTrue (fields.Count () == 1);
-						Assert.AreEqual (field1.FieldId, fields.Single ());
-					}
-					else
-					{
-						Assert.IsTrue (fields.Count () == 2);
-						CollectionAssert.Contains (fields, field1.FieldId);
-						CollectionAssert.Contains (fields, field2.FieldId);
-					}
-				}
-			}
 		}
 
 

@@ -5,15 +5,16 @@ using Epsitec.Common.UnitTesting;
 
 using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.DataLayer.Loader;
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Infrastructure;
+using Epsitec.Cresus.DataLayer.Loader;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
-using System.Linq;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
@@ -29,6 +30,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
@@ -36,16 +39,15 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		public void RequestConstructorTest()
 		{
 			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
 
-			Assert.IsNull (requestAccessor.RequestedEntity);
-			Assert.IsNull (requestAccessor.RootEntity);
-			Assert.IsNull (requestAccessor.RootEntityKey);
+			Assert.IsNull (request.RequestedEntity);
+			Assert.IsNull (request.RootEntity);
+			Assert.IsNull (request.RootEntityKey);
 		}
 
 
 		[TestMethod]
-		public void AddLocalConstraintTest()
+		public void ConditionsTest()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
@@ -56,268 +58,225 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			Request request = new Request ();
 
-			Expression expression1 =
-				new ComparisonFieldField (
-					new Field (new Druid ("[J1AM1]")),
-					BinaryComparator.IsEqual,
-					new Field (new Druid ("[J1AL1]"))
-				);
+			Expression expression1 = new BinaryComparison
+			(
+				new PublicField (person, new Druid ("[J1AM1]")),
+				BinaryComparator.IsEqual,
+				new PublicField (person, new Druid ("[J1AL1]"))
+			);
 
-			Expression expression2 =
-				new ComparisonFieldValue (
-					new Field (new Druid ("[J1AO1]")),
-					BinaryComparator.IsEqual,
-					new Constant (true)
-				);
+			Expression expression2 = new BinaryComparison
+			(
+				new PublicField (person, new Druid ("[J1AO1]")),
+				BinaryComparator.IsEqual,
+				new Constant (true)
+			);
 
-			Expression expression3 =
-				new UnaryComparison (
-					new Field (new Druid ("[J1A62]")),
-					UnaryComparator.IsNull
-				);
+			Expression expression3 = new UnaryComparison
+			(
+				new PublicField (uriContact, new Druid ("[J1A62]")),
+				UnaryComparator.IsNull
+			);
 
-			Expression expression4 =
-				new BinaryOperation (
-					new UnaryComparison (
-						new Field (new Druid ("[J1AP]")),
-						UnaryComparator.IsNotNull
-					),
-					BinaryOperator.Or,
-					new UnaryComparison (
-						new Field (new Druid ("[J1AO]")),
-						UnaryComparator.IsNotNull
-					)
-				);
-			
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
+			Expression expression4 = new BinaryOperation
+			(
+				new UnaryComparison
+				(
+					new PublicField (title, new Druid ("[J1AP]")),
+					UnaryComparator.IsNotNull
+				),
+				BinaryOperator.Or,
+				new UnaryComparison
+				(
+					new PublicField (title, new Druid ("[J1AO]")),
+					UnaryComparator.IsNotNull
+				)
+			);
 
-			Assert.IsFalse (requestAccessor.IsLocalyConstrained (person));
-			Assert.IsFalse (requestAccessor.IsLocalyConstrained (uriContact));
-			Assert.IsFalse (requestAccessor.IsLocalyConstrained (title));
+			var expected = new List<Expression> ();
 
-			request.AddLocalConstraint (person, expression1);
-			request.AddLocalConstraint (person, expression2);
-			request.AddLocalConstraint (uriContact, expression3);
-			request.AddLocalConstraint (title, expression4);
+			expected.Add (expression1);
+			request.Conditions.Add (expression1);
 
-			Assert.IsTrue (requestAccessor.GetLocalConstraints (person).Count () == 2);
-			Assert.IsTrue (requestAccessor.GetLocalConstraints (uriContact).Count () == 1);
-			Assert.IsTrue (requestAccessor.GetLocalConstraints (title).Count () == 1);
+			CollectionAssert.AreEqual (expected, request.Conditions);
 
-			CollectionAssert.Contains (requestAccessor.GetLocalConstraints (person).ToList (), expression1);
-			CollectionAssert.Contains (requestAccessor.GetLocalConstraints (person).ToList (), expression2);
-			CollectionAssert.Contains (requestAccessor.GetLocalConstraints (uriContact).ToList (), expression3);
-			CollectionAssert.Contains (requestAccessor.GetLocalConstraints (title).ToList (), expression4);
+			expected.Add (expression2);
+			request.Conditions.Add (expression2);
 
-			Assert.IsTrue (requestAccessor.IsLocalyConstrained (person));
-			Assert.IsTrue (requestAccessor.IsLocalyConstrained (uriContact));
-			Assert.IsTrue (requestAccessor.IsLocalyConstrained (title));
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Add (expression3);
+			request.Conditions.Add (expression3);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Add (expression4);
+			request.Conditions.Add (expression4);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Remove (expression1);
+			request.Conditions.Remove (expression1);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Remove (expression2);
+			request.Conditions.Remove (expression2);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Remove (expression3);
+			request.Conditions.Remove (expression3);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
+
+			expected.Remove (expression4);
+			request.Conditions.Remove (expression4);
+
+			CollectionAssert.AreEqual (expected, request.Conditions);
 		}
 
 
 		[TestMethod]
-		public void AddLocalConstraintArgumentCheck()
+		public void SortClausesTest()
 		{
 			NaturalPersonEntity person = new NaturalPersonEntity ();
-			PersonTitleEntity title = new PersonTitleEntity ();
 			UriContactEntity uriContact = new UriContactEntity ();
-			
+			PersonTitleEntity title = new PersonTitleEntity ();
+
 			person.Title = title;
 			person.Contacts.Add (uriContact);
 
 			Request request = new Request ();
 
-			Expression expression1 =
-				new ComparisonFieldField (
-					new Field (new Druid ("[J1AO]")),
-					BinaryComparator.IsEqual,
-					new Field (new Druid ("[J1AL1]"))
-				);
-
-			ExceptionAssert.Throw<System.ArgumentException>
+			SortClause sortClause1 = new SortClause
 			(
-				() => request.AddLocalConstraint (person, expression1)
-			);
-		
-			Expression expression2 =
-				new ComparisonFieldValue (
-					new Field (new Druid ("[J1AC1]")),
-					BinaryComparator.IsEqual,
-					new Constant (true)
-				);
-
-			ExceptionAssert.Throw<System.ArgumentException>
-			(
-				() => request.AddLocalConstraint (person, expression2)
+				new PublicField (person, new Druid ("[J1AM1]")),
+				SortOrder.Ascending
 			);
 
-			Expression expression3 =
-				new UnaryComparison (
-					new Field (new Druid ("[J1AV1]")),
-					UnaryComparator.IsNull
-				);
+			SortClause sortClause2 = new SortClause
+			(
+				new PublicField (person, new Druid ("[J1AO1]")),
+				SortOrder.Descending
+			);
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			SortClause sortClause3 = new SortClause
 			(
-				() => request.AddLocalConstraint (uriContact, expression3)
+				new PublicField (uriContact, new Druid ("[J1A62]")),
+				SortOrder.Ascending
 			);
-		
-			Expression expression4 =
-				new BinaryOperation (
-					new UnaryComparison (
-						new Field (new Druid ("[J1AO1]")),
-						UnaryComparator.IsNotNull
-					),
-					BinaryOperator.Or,
-					new UnaryComparison (
-						new Field (new Druid ("[J1AO]")),
-						UnaryComparator.IsNotNull
-					)
-				);
 
-			ExceptionAssert.Throw<System.ArgumentException>
+			SortClause sortClause4 = new SortClause
 			(
-				() => request.AddLocalConstraint (title, expression4)
+				new PublicField (title, new Druid ("[J1AP]")),
+				SortOrder.Descending
 			);
-		
-			Expression expression5 =
-				new UnaryComparison (
-					new Field (new Druid ("[J1AL1]")),
-					UnaryComparator.IsNull
-				);
 
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => request.AddLocalConstraint (null, expression5)
-			);
-		
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => request.AddLocalConstraint (person, null)
-			);
+			var expected = new List<SortClause> ();
+
+			expected.Add (sortClause1);
+			request.SortClauses.Add (sortClause1);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Add (sortClause2);
+			request.SortClauses.Add (sortClause2);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Add (sortClause3);
+			request.SortClauses.Add (sortClause3);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Add (sortClause4);
+			request.SortClauses.Add (sortClause4);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Remove (sortClause1);
+			request.SortClauses.Remove (sortClause1);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Remove (sortClause2);
+			request.SortClauses.Remove (sortClause2);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Remove (sortClause3);
+			request.SortClauses.Remove (sortClause3);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
+
+			expected.Remove (sortClause4);
+			request.SortClauses.Remove (sortClause4);
+
+			CollectionAssert.AreEqual (expected, request.SortClauses);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
-		public void IsEntityValueFieldTest()
-		{
-			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
-
-			NaturalPersonEntity person = new NaturalPersonEntity ();
-
-			List<string> validIds = new List<string> ()
-			{
-				"[J1AL1]",
-				"[J1AM1]",
-				"[J1AO1]"
-			};
-
-			List<string> invalidIds = new List<string> ()
-			{
-				"[L0S]",
-				"[J1AD1]",
-				"[J1AK1]",
-				"[J1AN1]",
-				"[J1A52]",
-				"[J1AJ1]",
-				"[J1AB1]",
-				"[J1AP1]",
-				"[J1A8]",
-				"[J1AV1]",
-			};
-
-			foreach (string validId in validIds)
-			{
-				Assert.IsTrue (requestAccessor.IsEntityValueField (person, validId));
-			}
-
-			foreach (string invalidId in invalidIds)
-			{
-				Assert.IsFalse (requestAccessor.IsEntityValueField (person, invalidId));
-			}
-		}
-
-
-		[TestMethod]
-		public void IsLocalyConstrainedArgumentCheck()
-		{
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (new Request ()));
-
-			ExceptionAssert.Throw<System.ArgumentNullException>
-			(
-				() => requestAccessor.IsLocalyConstrained (null)
-			);
-		}
-
-
-		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void RequestedEntityTest()
 		{
 			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
-
+			
 			AbstractEntity entity1 = new NaturalPersonEntity ();
 			AbstractEntity entity2 = new NaturalPersonEntity ();
 
-			Assert.IsNull (requestAccessor.RequestedEntity);
-			
+			Assert.IsNull (request.RequestedEntity);
+
 			request.RequestedEntity = entity1;
-			Assert.AreSame (entity1, requestAccessor.RequestedEntity);
+			Assert.AreSame (entity1, request.RequestedEntity);
 
 			request.RequestedEntity = null;
-			Assert.IsNull (requestAccessor.RequestedEntity);
+			Assert.IsNull (request.RequestedEntity);
 
 			request.RootEntity = entity1;
-			Assert.AreSame (entity1, requestAccessor.RequestedEntity);
+			Assert.AreSame (entity1, request.RequestedEntity);
 
 			request.RootEntity = null;
-			Assert.IsNull (requestAccessor.RequestedEntity);
+			Assert.IsNull (request.RequestedEntity);
 
 			request.RootEntity = entity1;
 			request.RequestedEntity = entity2;
-			Assert.AreSame (entity2, requestAccessor.RequestedEntity);
+			Assert.AreSame (entity2, request.RequestedEntity);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void RootEntityTest()
 		{
 			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
-
+			
 			AbstractEntity entity = new NaturalPersonEntity ();
 
-			Assert.IsNull (requestAccessor.RootEntity);
+			Assert.IsNull (request.RootEntity);
 
 			request.RootEntity = entity;
-			Assert.AreSame (entity, requestAccessor.RootEntity);
+			Assert.AreSame (entity, request.RootEntity);
 
 			request.RootEntity = null;
-			Assert.IsNull (requestAccessor.RootEntity);
+			Assert.IsNull (request.RootEntity);
 		}
 
 
 		[TestMethod]
-		[DeploymentItem ("Cresus.DataLayer.dll")]
 		public void RootEntityKeyTest()
 		{
 			Request request = new Request ();
-			Request_Accessor requestAccessor = new Request_Accessor (new PrivateObject (request));
-
+			
 			DbKey dbKey = new DbKey (new DbId (1000000001));
 
-			Assert.IsFalse (requestAccessor.RootEntityKey.HasValue);
+			Assert.IsFalse (request.RootEntityKey.HasValue);
 
 			request.RootEntityKey = dbKey;
-			Assert.IsTrue (requestAccessor.RootEntityKey.HasValue);
-			Assert.AreEqual (dbKey, requestAccessor.RootEntityKey.Value);
+			Assert.IsTrue (request.RootEntityKey.HasValue);
+			Assert.AreEqual (dbKey, request.RootEntityKey.Value);
 
 			request.RootEntityKey = null;
-			Assert.IsFalse (requestAccessor.RootEntityKey.HasValue);
+			Assert.IsFalse (request.RootEntityKey.HasValue);
 		}
 
 
@@ -371,6 +330,304 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				Assert.AreEqual (i, request.Skip);
 
 				request.Skip = null;
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckRootEntity()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ();
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckRequestedEntity()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+					RequestedEntity = new NaturalPersonEntity (),
+				};
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckSkipAndTakeTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+					Skip = -1,
+				};
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+					Take = -1,
+				};
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckConditionsTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.Conditions.Add
+				(
+					new UnaryComparison
+					(
+						new PublicField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
+						UnaryComparator.IsNotNull
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.Conditions.Add
+				(
+					new UnaryComparison
+					(
+						new PublicField (request.RootEntity, Druid.Parse ("[J1A82]")),
+						UnaryComparator.IsNotNull
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.Conditions.Add
+				(
+					new UnaryComparison
+					(
+						InternalField.CreateId (new NaturalPersonEntity ()),
+						UnaryComparator.IsNotNull
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckSortClausesTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						new PublicField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
+						SortOrder.Ascending
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						new PublicField (request.RootEntity, Druid.Parse ("[J1A82]")),
+						SortOrder.Descending
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						InternalField.CreateId (new NaturalPersonEntity ()),
+						SortOrder.Descending
+					)
+				);
+
+				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckCycleDetectionTest1()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				foreach (var entity in this.GetGraphsWithCycle ())
+				{
+					Request request = new Request ()
+					{
+						RootEntity = entity
+					};
+
+					ExceptionAssert.Throw<System.ArgumentException>
+					(
+						() => request.Check (dataContext)
+					);
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckCycleDetectionTest2()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				foreach (var entity in this.GetGraphsWithoutCycle (dataContext))
+				{
+					Request request = new Request ()
+					{
+						RootEntity = entity
+					};
+
+					request.Check (dataContext);
+				}
+			}
+		}
+
+
+		private IEnumerable<AbstractEntity> GetGraphsWithCycle()
+		{
+			{
+				NaturalPersonEntity person = new NaturalPersonEntity ();
+				MailContactEntity contact = new MailContactEntity ();
+
+				person.Contacts.Add (contact);
+				contact.NaturalPerson = person;
+
+				yield return person;
+			}
+			{
+				NaturalPersonEntity person1 = new NaturalPersonEntity ();
+				NaturalPersonEntity person2 = new NaturalPersonEntity ();
+				MailContactEntity contact1 = new MailContactEntity ();
+				MailContactEntity contact2 = new MailContactEntity ();
+
+				person1.Contacts.Add (contact1);
+				contact1.NaturalPerson = person2;
+				person2.Contacts.Add (contact2);
+				contact2.NaturalPerson = person1;
+			}
+		}
+
+
+		private IEnumerable<AbstractEntity> GetGraphsWithoutCycle(DataContext dataContext)
+		{
+			{
+				CountryEntity country = new CountryEntity ();
+				RegionEntity region = new RegionEntity ();
+				LocationEntity location = new LocationEntity ();
+
+				country.Name = "country";
+
+				region.Country = country;
+				location.Country = country;
+				location.Region = region;
+
+				yield return location;
+			}
+			{
+				PersonGenderEntity gender = new PersonGenderEntity ();
+				PersonTitleEntity title = new PersonTitleEntity ();
+				NaturalPersonEntity person = new NaturalPersonEntity ();
+
+				gender.Name = "gender";
+				title.ComptatibleGenders.Add (gender);
+				person.Gender = gender;
+				person.Title = title;
+
+				yield return person;
+			}
+			{
+				yield return dataContext.ResolveEntity<UriContactEntity> (new DbKey (new DbId (1000000001)));
 			}
 		}
 

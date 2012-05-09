@@ -10,22 +10,23 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 	/// <summary>
-	/// The <c>BinaryOperation</c> class represent a logical operation on two <see cref="Expression"/>,
-	/// such as ((a = b) and (c = d)).
+	/// The <c>BinaryComparison</c> class represents a comparison between two
+	/// <see cref="Value"/>, such as (a = b).
 	/// </summary>
-	public class BinaryOperation : Operation
+	public class BinaryComparison : Comparison
 	{
 
 
 		/// <summary>
-		/// Builds a new <c>BinaryOperation</c>.
+		/// Builds a new <c>BinaryComparison</c>.
 		/// </summary>
-		/// <param name="left">The left side of the <see cref="BinaryOperator"/>.</param>
-		/// <param name="op">The <see cref="BinaryOperator"/> to apply to the left and right argument.</param>
-		/// <param name="right">The right side of the <see cref="BinaryOperator"/>.</param>
+		/// <param name="left">The <see cref="Value"/> on the left of the <see cref="BinaryComparator"/>.</param>
+		/// <param name="op">The <see cref="BinaryComparator"/> used by the <c>BinaryComparison</c>.</param>
+		/// <param name="right">The <see cref="Value"/> on the left of the <see cref="BinaryComparator"/>.</param>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="left"/> is null.</exception>
 		/// <exception cref="System.ArgumentNullException">If <paramref name="right"/> is null.</exception>
-		public BinaryOperation(Expression left, BinaryOperator op, Expression right)
+		public BinaryComparison(Value left, BinaryComparator op, Value right)
+			: base ()
 		{
 			left.ThrowIfNull ("left");
 			right.ThrowIfNull ("right");
@@ -37,9 +38,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The left side of the <c>Expression</c>.
+		/// The left side of the <c>BinaryComparison</c>.
 		/// </summary>
-		public Expression Left
+		public Value Left
 		{
 			get;
 			private set;
@@ -47,9 +48,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The <see cref="BinaryOperator"/> of the <c>Expression</c>.
+		/// The <see cref="BinaryComparator"/> of the <c>BinaryComparison</c>.
 		/// </summary>
-		public BinaryOperator Operator
+		public BinaryComparator Operator
 		{
 			get;
 			private set;
@@ -57,9 +58,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// The right side of the <c>Expression</c>.
+		/// The right side of the <c>BinaryComparison</c>.
 		/// </summary>
-		public Expression Right
+		public Value Right
 		{
 			get;
 			private set;
@@ -71,16 +72,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			return new SqlFunction
 			(
 				EnumConverter.ToSqlFunctionCode (this.Operator),
-				SqlField.CreateFunction (this.Left.CreateSqlCondition (builder)),
-				SqlField.CreateFunction (this.Right.CreateSqlCondition (builder))
+				this.Left.CreateSqlField (builder),
+				this.Right.CreateSqlField (builder)
 			);
 		}
 
 
 		internal override void CheckFields(FieldChecker checker)
 		{
-			this.Left.CheckFields (checker);
-			this.Right.CheckFields (checker);
+			this.Left.CheckField (checker);
+			this.Right.CheckField (checker);
 		}
 
 

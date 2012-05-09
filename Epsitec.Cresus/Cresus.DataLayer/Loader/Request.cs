@@ -1,8 +1,8 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -10,8 +10,8 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
+using Epsitec.Cresus.DataLayer.Schema;
 
-using System.Collections;
 using System.Collections.Generic;
 
 using System;
@@ -28,18 +28,19 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// via a <see cref="DataContext"/> and <see cref="DataLoader"/>.
 	/// </summary>
 	/// <remarks>
-	/// A <c>Request</c> is basically a search by example query with a little more flexibility. What
-	/// you do is to give it an acyclic tree of <see cref="AbstractEntity"/>, whose root is
-	/// <see cref="RootEntity"/>. Then the <see cref="DataLoader"/> does a search by example in the
-	/// database and returns all the <see cref="AbstractEntity"/> corresponding to that example.
-	/// The <see cref="AbstractEntity"/> to return is one given by the property <see cref="RequestedEntity"/>,
-	/// which defaults to the property <see cref="RootEntity"/>.
-	/// If an <see cref="AbstractEntity"/> in the tree is present in the <see cref="DataContext"/>,
-	/// then this part of the search related to this <see cref="AbstractEntity"/> is not done by
-	/// value, but by reference. In addition, it is possible to specify the <see cref="DbKey"/> of
-	/// the root <see cref="AbstractEntity"/> with the property <see cref="RootEntityKey"/>.
-	/// Finally, it is possible to associate constraints to the <see cref="AbstractEntity"/>, with
-	/// the method <see cref="AddLocalConstraint"/>.
+	/// A Request is basically a search by example query with more power and flexibility. What you
+	/// do is to give it a directed acyclic graph of entities where all entities are reachable from
+	/// the root of the graphe, which is given by the property RootEntity. This gives you a subset
+	/// of the entities in the database.
+	/// Moreover, you can reduce this subset furthermore by adding conditions that will allow you to
+	/// express things that are not expressable as examples, such a if a value is smaller that
+	/// another.
+	/// The result of the request is defined by the property RequestedEntity which defaults to the
+	/// property RootEntity. It is only the entities in the result set that match this entity that
+	/// are retured as the resulf of the request.
+	/// Moreover, you can sort the result by adding sort clauses and you can return only a subset
+	/// of the result by specifying the number of entities to skip and the number of entities to
+	/// take.
 	/// </remarks>
 	public sealed class Request
 	{
@@ -50,11 +51,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		public Request()
 		{
-			this.localConstraints = new RequestEntityConstraints ();
-			this.sortClauses = new List<Tuple<AbstractEntity, SortClause>> ();
-
-			this.RootEntity = null;
-			this.RequestedEntity = null;
+			this.conditions = new List<Expression> ();
+			this.sortClauses = new List<SortClause> ();
 		}
 
 
@@ -63,7 +61,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		public AbstractEntity RootEntity
 		{
-			internal get;
+			get;
 			set;
 		}
 
@@ -74,7 +72,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		public DbKey? RootEntityKey
 		{
-			internal get;
+			get;
 			set;
 		}
 
@@ -85,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// </summary>
 		public AbstractEntity RequestedEntity
 		{
-			internal get
+			get
 			{
 				return this.requestedEntity ?? this.RootEntity;
 			}
@@ -125,156 +123,281 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			set;
 		}
 
-		
-		/// <summary>
-		/// Adds a constraint to an <see cref="AbstractEntity"/>. Note that the constraint should
-		/// only target value fields on the given <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> associated with the constraint.</param>
-		/// <param name="constraint">The constraint to add.</param>
-		/// <exception cref="System.ArgumentException">If the constraint is not supported.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="constraint"/> is null.</exception>
-		public void AddLocalConstraint(AbstractEntity entity, Expression constraint)
+
+		public List<Expression> Conditions
 		{
-			entity.ThrowIfNull ("entity");
-			constraint.ThrowIfNull ("constraint");
-
-			if (!this.IsLocalConstraintValid (entity, constraint))
+			get
 			{
-				throw new System.ArgumentException ("A field in 'expression' is not a field of 'entity'.");
+				return this.conditions;
 			}
-
-			this.GetWritableLocalConstraints (entity).Add (constraint);
 		}
 
 
-		/// <summary>
-		/// Adds a sort clause to the current request. It will be added after the ones that have
-		/// already been added, so it will be considered after those ones when sorting the result.
-		/// </summary>
-		public void AddSortClause(AbstractEntity entity, SortClause sortClause)
+		public List<SortClause> SortClauses
 		{
-			entity.ThrowIfNull ("entity");
-			sortClause.ThrowIfNull ("sortClause");
-
-			if (!this.IsEntityValueField (entity, sortClause.Field.FieldId.ToResourceId ()))
+			get
 			{
-				throw new ArgumentException ("The field in the sort clause is not a value field of entity.");
-			}
-
-			var clause = Tuple.Create (entity, sortClause);
-
-			this.sortClauses.Add (clause);
-		}
-
-
-		/// <summary>
-		/// Gets the sort clauses that are part of this request.
-		/// </summary>
-		internal IEnumerable<Tuple<AbstractEntity, SortClause>> GetSortClauses()
-		{
-			return this.sortClauses;
-		}
-
-
-		/// <summary>
-		/// Gets all the constraints associated with an <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose constraints to retrieve.</param>
-		/// <returns>The constraints.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
-		internal IEnumerable<Expression> GetLocalConstraints(AbstractEntity entity)
-		{
-			entity.ThrowIfNull ("entity");
-
-			if (this.IsLocalyConstrained (entity))
-			{
-				return this.localConstraints[entity].Select (c => c);
-			}
-			else
-			{
-				return new Expression[0];
+				return this.sortClauses;
 			}
 		}
 
 
 		/// <summary>
-		/// Tells whether there are constraints associated with an <see cref="AbstractEntity"/>.
+		/// Checks that the request and all its data is valid and consistent.
 		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> to check if there are constraints associated.</param>
-		/// <returns><c>true</c> if there are constraints associated with the <see cref="AbstractEntity"/>, <c>false</c> if there are not.</returns>
-		/// <exception cref="System.ArgumentNullException">If <paramref name="entity"/> is null.</exception>
-		internal bool IsLocalyConstrained(AbstractEntity entity)
+		internal void Check(DataContext dataContext)
 		{
-			entity.ThrowIfNull ("entity");
+			if (this.RootEntity == null)
+			{
+				throw new ArgumentException ("RootEntity is null");
+			}
+			
+			var entities = this.GetEntitiesInRequestGraph (dataContext);
 
-			return this.localConstraints.ContainsKey (entity);
+			this.CheckRequestedEntity(entities);
+			this.CheckForeignEntities(entities, dataContext);
+			this.CheckSkipAndTake();
+
+			var fieldChecker = this.BuildFieldChecker (entities, dataContext);
+
+			this.CheckConditions(fieldChecker);
+			this.CheckSortClauses(fieldChecker);
 		}
 
-		
-		/// <summary>
-		/// Gets the <see cref="IList"/> of constraints associated with an <see cref="AbstractEntity"/>
-		/// and creates it if there isn't any.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> whose constraints to retrieve.</param>
-		/// <returns>The <see cref="IList"/> of constraints.</returns>
-		private RequestConstraintList GetWritableLocalConstraints(AbstractEntity entity)
+
+		private HashSet<AbstractEntity> GetEntitiesInRequestGraph(DataContext dataContext)
 		{
-			if (!this.IsLocalyConstrained (entity))
+			var entities = new HashSet<AbstractEntity> ();
+			var todo = new Stack<AbstractEntity> ();
+			var parents = new Dictionary<AbstractEntity, List<AbstractEntity>> ();
+
+			if (!dataContext.IsPersistent (this.RootEntity))
 			{
-				this.localConstraints[entity] = new RequestConstraintList ();
+				todo.Push (this.RootEntity);
 			}
 
-			return this.localConstraints[entity];
+			while (todo.Count > 0)
+			{
+				var entity = todo.Pop ();
+
+				entities.Add (entity);
+
+				foreach (var child in this.GetDefinedChildren (dataContext, entity))
+				{
+					if (!dataContext.IsPersistent (child))
+					{
+						List<AbstractEntity> parentSet;
+
+						if (!parents.TryGetValue (child, out parentSet))
+						{
+							parentSet = new List<AbstractEntity> ();
+
+							parents[child] = parentSet;
+						}
+
+						parentSet.Add (entity);
+
+						if (entities.Contains (child) || todo.Contains (child))
+						{
+							this.CheckForCycle (parents, child);
+						}
+						else
+						{
+							todo.Push (child);
+						}
+					}
+				}
+			}
+
+			return entities;
 		}
 
 
-		/// <summary>
-		/// Checks that a constraint is valid for a given <see cref="AbstractEntity"/>, which means
-		/// that it targets only value fields which exists in <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> associated with the constraint.</param>
-		/// <param name="constraint">The constraint whose validity to check.</param>
-		/// <returns><c>true</c> if the constraint is valid, <c>false</c> if it is not.</returns>
-		private bool IsLocalConstraintValid(AbstractEntity entity, Expression constraint)
+		private void CheckForCycle(Dictionary<AbstractEntity, List<AbstractEntity>> parents, AbstractEntity entity)
 		{
-			return constraint.GetFields ().All (field => this.IsEntityValueField (entity, field.ToResourceId ()));
+			var todo = new Stack <AbstractEntity> ();
+
+			todo.Push (entity);
+
+			while (todo.Count > 0)
+			{
+				var child = todo.Pop ();
+
+				List<AbstractEntity> parentSet;
+
+				if (parents.TryGetValue (child, out parentSet))
+				{
+					foreach (var parent in parentSet)
+					{
+						if (parent == entity)
+						{
+							var message = "Cycles are not allowed in entity graph";
+
+							throw new ArgumentException (message);
+						}
+
+						todo.Push (parent);
+					}
+				}			
+			}
 		}
 
 
-		/// <summary>
-		/// Checks that a field is valid for an <see cref="AbstractEntity"/>, which means that it
-		/// is a value field of this <see cref="AbstractEntity"/>.
-		/// </summary>
-		/// <param name="entity">The <see cref="AbstractEntity"/> associated with the field.</param>
-		/// <param name="fieldId">The id of the field to check.</param>
-		/// <returns><c>true</c> if the field is valid, false if it isn't.</returns>
-		private bool IsEntityValueField(AbstractEntity entity, string fieldId)
+		private IEnumerable<AbstractEntity> GetDefinedChildren(DataContext dataContext, AbstractEntity entity)
 		{
-			StructuredTypeField field = entity.GetEntityContext ().GetStructuredTypeField(entity, fieldId);
+			var entityTypeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
+
+			var entityTypeId = entity.GetEntityStructuredTypeId ();
+
+			var referenceTargets = entityTypeEngine
+				.GetReferenceFields (entityTypeId)
+				.Where (f => entity.IsFieldNotEmpty (f.Id))
+				.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
+
+			var collectionTargets = entityTypeEngine
+				.GetCollectionFields (entityTypeId)
+				.Where (f => entity.IsFieldNotEmpty (f.Id))
+				.SelectMany (f => entity.GetFieldCollection<AbstractEntity> (f.CaptionId.ToResourceId ()));
+
+			return referenceTargets
+				.Concat (collectionTargets)
+				.Distinct ();
+		}
+
+
+		private void CheckRequestedEntity(HashSet<AbstractEntity> entities)
+		{
+			if (this.RequestedEntity != this.RootEntity)
+			{
+				if (!entities.Contains (requestedEntity))
+				{
+					throw new ArgumentException ("RequestedEntity is not reachable from RootEntity.");
+				}
+			}
+		}
+
+
+		private void CheckForeignEntities(HashSet<AbstractEntity> entities, DataContext dataContext)
+		{
+			foreach (var entity in entities)
+			{
+				if (dataContext.IsForeignEntity (entity))
+				{
+					throw new ArgumentException ("Foreign entities are not allowed.");
+				}
+			}
+		}
+
+
+		private void CheckSkipAndTake()
+		{
+			if (this.Skip.HasValue && this.Skip < 0)
+			{
+				throw new ArgumentException ("Skip is lower than zero");
+			}
+
+			if (this.Take.HasValue && this.Take < 0)
+			{
+				throw new ArgumentException ("Take is lower than zero");
+			}
+		}
+
+
+		private FieldChecker BuildFieldChecker(HashSet<AbstractEntity> entities, DataContext dataContext)
+		{
+			return new FieldChecker
+			(
+				entities,
+				dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine,
+				Request.CheckValueField,
+				Request.CheckInternalField
+			);
+		}
+
+
+		private static void CheckValueField(HashSet<AbstractEntity> entities, EntityTypeEngine entityTypeEngine, AbstractEntity entity, Druid fieldId)
+		{
+			Request.CheckEntity (entities, entity);
+
+			if (!Request.IsValueField (entityTypeEngine, entity, fieldId))
+			{
+				throw new ArgumentException ("Invalid public field id");
+			}
+		}
+
+
+		private static bool IsValueField(EntityTypeEngine entityTypeEngine, AbstractEntity entity, Druid fieldId)
+		{
+			var leafEntityId = entity.GetEntityStructuredTypeId();
+			var field = entityTypeEngine.GetField(leafEntityId, fieldId);
 
 			return field != null && field.Relation == FieldRelation.None;
 		}
 
 
-		public static Request Create(AbstractEntity example)
+		private static void CheckInternalField(HashSet<AbstractEntity> entities, AbstractEntity entity, string name)
 		{
-			return new Request ()
+			Request.CheckEntity (entities, entity);
+
+			if (!Request.IsInternalField (name))
 			{
-				RootEntity = example,
-				RequestedEntity = example,
-			};
+				throw new ArgumentException ("Invalid internal field name");
+			}
 		}
 
-	
-		private readonly RequestEntityConstraints localConstraints;
+
+		private static bool IsInternalField(string name)
+		{
+			return name == EntitySchemaBuilder.EntityTableColumnIdName;
+		}
 
 
-		private readonly List<Tuple<AbstractEntity, SortClause>> sortClauses;
+		private static void CheckEntity(HashSet<AbstractEntity> entities, AbstractEntity entity)
+		{
+			if (!entities.Contains (entity))
+			{
+				var message = "Entity in condition or sort clause is not in reachable graph.";
+
+				throw new ArgumentException(message);
+			}
+		}
+
+
+		private void CheckConditions(FieldChecker fieldChecker)
+		{
+			foreach (var condition in this.Conditions)
+			{
+				if (condition == null)
+				{
+					throw new ArgumentException ("A condition is null");
+				}
+
+				condition.CheckFields (fieldChecker);
+			}
+		}
+
+
+		private void CheckSortClauses(FieldChecker fieldChecker)
+		{
+			foreach (var sortClause in this.SortClauses)
+			{
+				if (sortClause == null)
+				{
+					throw new ArgumentException ("A sort clause is null");
+				}
+
+				sortClause.CheckField (fieldChecker);
+			}
+		}
 
 
 		private AbstractEntity requestedEntity;
+
+
+		private readonly List<Expression> conditions;
+
+
+		private readonly List<SortClause> sortClauses;
 
 
 	}
