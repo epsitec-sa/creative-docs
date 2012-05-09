@@ -228,6 +228,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SearchStartAction ();
 			this.FilterUpdateTopToolbar ();
+			this.TemporalUpdateTopToolbar ();
 			this.UpdateTitle ();
 			
 			if (this.editorController != null)
@@ -667,6 +668,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.BaseUpdateArrayContent ();
 
 				this.FilterUpdateTopToolbar ();
+				this.TemporalUpdateTopToolbar ();
 				this.SearchUpdateLocator (true);
 				this.SearchUpdateTopToolbar ();
 			}

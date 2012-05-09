@@ -156,7 +156,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				PreferredWidth  = 180,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
 			};
 
 			{
@@ -228,7 +227,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				AutoFocus       = false,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 20, 0, 0),
+				Margins         = new Margins (0, 1, 0, 0),
 			};
 			this.nowButton.PreferredWidth = this.nowButton.GetBestFitSize ().Width;
 
@@ -236,13 +235,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			ToolTip.Default.SetToolTip (this.menuButton, "Choix d'une autre période...");
 			ToolTip.Default.SetToolTip (this.nowButton,  "Période incluant aujourd'hui");
 
+			this.warningIcon = new StaticText
+			{
+				Parent         = this.mainFrame,
+				Text           = UIBuilder.GetTextIconUri ("Warning"),
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+			};
+
 			var durationLabel = new StaticText
 			{
 				Parent          = this.mainFrame,
 				FormattedText   = "Durée",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
+				Margins         = new Margins (20, 10, 0, 0),
 			};
 			durationLabel.PreferredWidth = durationLabel.GetBestFitSize ().Width;
 
@@ -254,16 +261,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
 			};
 
 			TopTemporalController.InitTempoDataDurationCombo (this.durationField);
 
-			this.errorInfo = new StaticText
+			this.resultLabel = new StaticText
 			{
 				Parent         = this.mainFrame,
 				TextBreakMode  = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Dock           = DockStyle.Fill,
+				PreferredWidth = 110-5,
+				Dock           = DockStyle.Right,
 				Margins        = new Margins (10, 0, 0, 0),
 			};
 
@@ -348,15 +355,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.UpdateButtons ();
 		}
 
-
 		public void UpdateColumns()
 		{
 			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
 		}
 
-
 		public void SetFilterCount(int dataCount, int count, int allCount)
 		{
+			if (count == allCount)
+			{
+				this.resultLabel.Text = string.Format ("{0} (tous)", allCount.ToString ());
+			}
+			else
+			{
+				this.resultLabel.Text = string.Format ("{0} sur {1}", count.ToString (), allCount.ToString ());
+			}
 		}
 
 
@@ -437,9 +450,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateInfos()
 		{
+			this.staticDates.PreferredWidth = Dates.GetDescriptionBestFitWidth (this.data.Duration) + 10;
 			this.staticDates.FormattedText = Dates.GetDescription (this.data.BeginDate, this.data.EndDate).ApplyBold ();
 			this.editionInfo.FormattedText = this.NumberOfDays;
-			this.errorInfo.FormattedText = this.ErrorDescription;
+
+			var error = this.ErrorDescription;
+
+			if (error.IsNullOrEmpty)
+			{
+				this.warningIcon.Visibility = false;
+			}
+			else
+			{
+				this.warningIcon.Visibility = true;
+				ToolTip.Default.SetToolTip (this.warningIcon, error);
+			}
 		}
 
 		private FormattedText NumberOfDays
@@ -483,7 +508,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				}
 				else
 				{
-					return FormattedText.Concat ("Attention, la période choisie déborde de la période comptable.").ApplyItalic ();
+					return FormattedText.Concat ("La période choisie déborde de la période comptable");
 				}
 			}
 		}
@@ -660,10 +685,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				rank = ((dateRange.BeginDate.Month-1)/6+1).ToString ("0");  // 1..2
 			}
-			else if (this.data.Duration == TemporalDataDuration.Weekly)
-			{
-				rank = Dates.GetWeekNumber (dateRange.BeginDate).ToString ("00");  // 01..52
-			}
 
 			if (!rank.IsNullOrEmpty)
 			{
@@ -698,7 +719,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private class DateRange
 		{
-			//	Cette petite classe représente simplement un intervalle de deux dates.
+			//	Cette petite classe représente simplement un intervalle de dates (de ... à ...).
 			public DateRange(Date beginDate, Date endDate)
 			{
 				this.BeginDate = beginDate;
@@ -743,7 +764,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private DateFieldController						endDateController;
 		private StaticText								staticDates;
 		private StaticText								editionInfo;
-		private StaticText								errorInfo;
+		private StaticText								warningIcon;
+		private StaticText								resultLabel;
 		private bool									showPanel;
 	}
 }

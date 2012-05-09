@@ -406,6 +406,7 @@
     <EmbeddedResource Include="Images\Level.Specialist.Arrow.icon" />
     <EmbeddedResource Include="Images\Panel.Specialist.icon" />
     <EmbeddedResource Include="Images\Panel.Temporal.icon" />
+    <EmbeddedResource Include="Images\Warning.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
