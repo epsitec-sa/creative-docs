@@ -3,11 +3,13 @@
 
 using Epsitec.Common.Support;
 
+using Epsitec.Cresus.Database.Exceptions;
+
 using FirebirdSql.Data.FirebirdClient;
 
 using System.Collections.Generic;
-using System.Data;
-using System.Linq;
+
+using System.IO;
 
 namespace Epsitec.Cresus.Database.Implementation
 {
@@ -47,18 +49,14 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	Si l'appelant a demandé la création de la base, commence par tenter d'ouvrir une
 				//	base existante. Si celle-ci existe, c'est considéré comme une erreur, et on génère
 				//	une exception.
-				
-				this.CreateConnection (ignoreErrors: true);
-				
-				if (this.dbConnection == null)
+
+				if (this.CheckDatabaseExistence ())
 				{
-					this.CreateDatabase ();
-					this.CreateConnection ();
+					throw new ExistsException (this.dbAccess, "Cannot create existing database, it already exists");
 				}
-				else
-				{
-					throw new Exceptions.ExistsException (this.dbAccess, "Cannot create existing database, it already exists");
-				}
+
+				this.CreateDatabase ();
+				this.CreateConnection ();
 			}
 			else
 			{
@@ -167,6 +165,48 @@ namespace Epsitec.Cresus.Database.Implementation
 			string connection = FirebirdAbstraction.MakeConnectionStringForDbCreation (this.dbAccess, path, this.serverType);
 			
 			FbConnection.CreateDatabase (connection, FirebirdAbstraction.fbPageSize, true, false);
+		}
+
+		public bool CheckDatabaseExistence()
+		{
+			// This method is not very reliable, as it could tell that the database does not
+			// exists when the database exists but the login information is not valid.
+			// The problem is that there is no other way to check if the database exist that to try
+			// to connect to it and see if it successds or not. This has two problems. First it
+			// takes time if the database does not exist and if the credentials are not valid the
+			// connection will fail.
+			// Marc
+
+			var dbAccess = this.DbAccess;
+			var path = this.GetDbFilePath ();
+			
+			// Here we make an optimization. If the database is local, we check if the file exists
+			// and if the file does not exist, we know for sure that the database does not exist and
+			// we return false. It is only if the file does exist that we must check the existence
+			// of the database by trying to connect to it.
+
+			if (dbAccess.IsLocalHost && !File.Exists (path))
+			{
+				return false;
+			}
+
+			var serverType = this.ServerType;
+			var connectionString = FirebirdAbstraction.MakeConnectionString (dbAccess, path, serverType);
+			
+			try
+			{
+				using (var fbConnection = new FbConnection (connectionString))
+				{
+					fbConnection.Open ();
+					fbConnection.Close ();
+				}
+			}
+			catch
+			{
+				return false;
+			}
+
+			return true;
 		}
 
 
