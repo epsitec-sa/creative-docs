@@ -1095,7 +1095,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public IList<AbstractEntity> GetByRequest(Request request)
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertRequestIsValid (request);
 
 			using (this.LockWrite ())
 			{
@@ -1140,7 +1139,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 		public int GetCount(Request request)
 		{
 			this.AssertDataContextIsNotDisposed ();
-			this.AssertRequestIsValid (request);
 
 			using (this.LockRead ())
 			{
@@ -1550,23 +1548,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 			if (this.IsDisposed)
 			{
 				throw new System.ObjectDisposedException ("DataContext #" + this.UniqueId);
-			}
-		}
-
-
-		/// <summary>
-		/// Checks that the given request is valid.
-		/// </summary>
-		/// <param name="request">The request to check.</param>
-		private void AssertRequestIsValid(Request request)
-		{
-			request.ThrowIfNull ("request");
-
-			this.AssertEntityIsNotForeign (request.RequestedEntity);
-
-			if (request.RequestedEntity != request.RootEntity)
-			{
-				this.AssertEntityIsNotForeign (request.RootEntity);
 			}
 		}
 
