@@ -232,10 +232,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					this.CreateMiddleBeginnerSoldeUI ();
 				}
 
+#if false
+				//	Ce n'est plus nécessaire, grace au filtre temporel !
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Date).Any ())
 				{
 					this.CreateMiddleBeginnerDatesUI ();
 				}
+#endif
 			}
 			else
 			{
