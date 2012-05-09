@@ -4,6 +4,7 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Business;
 
@@ -32,6 +33,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
 			this.data            = this.controller.DataAccessor.TemporalData;
+
+			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -195,10 +198,20 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins        = new Margins (10, 0, 0, 0),
 			};
 
-			this.prevButton = new GlyphButton
+			this.dateSlider = new HSlider
 			{
 				Parent          = this.mainFrame,
-				GlyphShape      = GlyphShape.ArrowLeft,
+				UseArrowGlyphs  = true,
+				PreferredWidth  = 100,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 2, 0, 0),
+			};
+
+			this.menuButton = new GlyphButton
+			{
+				Parent          = this.mainFrame,
+				GlyphShape      = GlyphShape.Menu,
 				ButtonStyle     = ButtonStyle.Icon,
 				AutoFocus       = false,
 				PreferredWidth  = 20,
@@ -215,38 +228,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				AutoFocus       = false,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 1, 0, 0),
+				Margins         = new Margins (0, 20, 0, 0),
 			};
 			this.nowButton.PreferredWidth = this.nowButton.GetBestFitSize ().Width;
 
-			this.nextButton = new GlyphButton
-			{
-				Parent          = this.mainFrame,
-				GlyphShape      = GlyphShape.ArrowRight,
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				PreferredWidth  = 20,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 1, 0, 0),
-			};
-
-			this.menuButton = new GlyphButton
-			{
-				Parent          = this.mainFrame,
-				GlyphShape      = GlyphShape.Menu,
-				ButtonStyle     = ButtonStyle.Icon,
-				AutoFocus       = false,
-				PreferredWidth  = 20,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 20, 0, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.prevButton, "Période précédente");
-			ToolTip.Default.SetToolTip (this.nowButton,  "Période incluant aujourd'hui");
-			ToolTip.Default.SetToolTip (this.nextButton, "Période suivante");
+			ToolTip.Default.SetToolTip (this.dateSlider, "Choix de la période");
 			ToolTip.Default.SetToolTip (this.menuButton, "Choix d'une autre période...");
+			ToolTip.Default.SetToolTip (this.nowButton,  "Période incluant aujourd'hui");
 
 			var durationLabel = new StaticText
 			{
@@ -288,18 +276,19 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.searchStartAction ();
 			};
 
-			this.prevButton.Clicked += delegate
+			this.dateSlider.ValueChanged += delegate
 			{
-				this.data.Next (-1);
-				this.UpdateButtons ();
-				this.searchStartAction ();
-			};
-
-			this.nextButton.Clicked += delegate
-			{
-				this.data.Next (1);
-				this.UpdateButtons ();
-				this.searchStartAction ();
+				if (this.ignoreChanges.IsZero)
+				{
+					int sel = (int) this.dateSlider.Value;
+					var dr = this.DateRanges.ToArray ();
+					if (sel >= 0 && sel < dr.Length)
+					{
+						this.data.InitDefaultDates (dr[sel].BeginDate);
+						this.UpdateButtons ();
+						this.searchStartAction ();
+					}
+				}
 			};
 
 			this.nowButton.Clicked += delegate
@@ -386,33 +375,69 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateButtons()
 		{
-			this.editionFrame.Visibility =  this.EditionEnable;
-			this.staticDates.Visibility  = !this.EditionEnable;
-			this.prevButton.Visibility   = !this.EditionEnable;
-			this.nowButton.Visibility    = !this.EditionEnable;
-			this.nextButton.Visibility   = !this.EditionEnable;
-			this.menuButton.Visibility   = !this.EditionEnable;
+			using (this.ignoreChanges.Enter ())
+			{
+				this.editionFrame.Visibility =  this.EditionEnable;
+				this.staticDates.Visibility  = !this.EditionEnable;
+				this.dateSlider.Visibility   = !this.EditionEnable;
+				this.nowButton.Visibility    = !this.EditionEnable;
+				this.menuButton.Visibility   = !this.EditionEnable;
 
-			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
-			this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
-			this.durationField.FormattedText = TopTemporalController.TempoDataDurationToString (this.data.Duration);
+				this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
+				this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
+				this.durationField.FormattedText = TopTemporalController.TempoDataDurationToString (this.data.Duration);
 
-			this.beginDateController.EditionData.Text = Converters.DateToString (this.data.BeginDate);
-			this.beginDateController.EditionDataToWidget ();
-			this.beginDateController.Validate ();
+				this.beginDateController.EditionData.Text = Converters.DateToString (this.data.BeginDate);
+				this.beginDateController.EditionDataToWidget ();
+				this.beginDateController.Validate ();
 
-			this.endDateController.EditionData.Text = Converters.DateToString (this.data.EndDate);
-			this.endDateController.EditionDataToWidget ();
-			this.endDateController.Validate ();
+				this.endDateController.EditionData.Text = Converters.DateToString (this.data.EndDate);
+				this.endDateController.EditionDataToWidget ();
+				this.endDateController.Validate ();
 
-			this.nowButton.Enable = !Dates.DateInRange (Date.Today, this.data.BeginDate, this.data.EndDate);
+				this.nowButton.Enable = !Dates.DateInRange (Date.Today, this.data.BeginDate, this.data.EndDate);
+
+				if (!this.EditionEnable)
+				{
+					var dr = this.DateRanges.ToArray ();
+					int n = dr.Length;
+					int sel = 0;
+
+					if (this.data.BeginDate < dr.First ().BeginDate)
+					{
+						sel = 0;
+					}
+					else if (this.data.BeginDate > dr.Last ().BeginDate)
+					{
+						sel = n-1;
+					}
+					else
+					{
+						for (int i = 0; i < n; i++)
+						{
+							if (this.data.BeginDate == dr[i].BeginDate)
+							{
+								sel = i;
+								break;
+							}
+						}
+					}
+
+					this.dateSlider.MinValue    = (decimal) 0;
+					this.dateSlider.MaxValue    = (decimal) n-1;
+					this.dateSlider.Resolution  = (decimal) 1;
+					this.dateSlider.SmallChange = (decimal) 1;
+					this.dateSlider.LargeChange = (decimal) 2;
+					this.dateSlider.Value       = (decimal) sel;
+				}
+			}
 
 			this.UpdateInfos ();
 		}
 
 		private void UpdateInfos()
 		{
-			this.staticDates.FormattedText = FormattedText.Concat ("Période ", Dates.GetDescription (this.data.BeginDate, this.data.EndDate)).ApplyBold ();
+			this.staticDates.FormattedText = Dates.GetDescription (this.data.BeginDate, this.data.EndDate).ApplyBold ();
 			this.editionInfo.FormattedText = this.NumberOfDays;
 			this.errorInfo.FormattedText = this.ErrorDescription;
 		}
@@ -547,20 +572,20 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			//	Affiche le menu permettant de choisir la période.
 			var menu = new VMenu ();
 
-			var périodes = this.Périodes.ToArray ();
+			var dr = this.DateRanges.ToArray ();
 
 			int first = 0;
-			int count = périodes.Length;
-			int max = 20;
+			int count = dr.Length;
+			int max = 20;  // limite arbitraire, au-delà de laquelle le menu est considéré comme trop long
 
 			if (count > max)  // menu trop long ?
 			{
 				int sel = -1;
 
-				for (int i = 0; i < périodes.Length; i++)
+				for (int i = 0; i < dr.Length; i++)
 				{
-					var période = périodes[i];
-					bool select = période.DateDébut == this.data.BeginDate;
+					var dateRange = dr[i];
+					bool select = dateRange.BeginDate == this.data.BeginDate;
 
 					if (select)
 					{
@@ -571,36 +596,36 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				if (sel == -1)
 				{
-					if (this.data.BeginDate > périodes.First ().DateDébut)
+					if (this.data.BeginDate > dr.First ().BeginDate)
 					{
-						first = périodes.Length-max;
+						first = dr.Length-max;
 					}
 				}
 				else
 				{
-					first = System.Math.Min (sel+max/2, périodes.Length-1);
+					first = System.Math.Min (sel+max/2, dr.Length-1);
 					first = System.Math.Max (first-max+1, 0);
 				}
 
-				count = System.Math.Min (périodes.Length - first, max);
+				count = System.Math.Min (dr.Length - first, max);
 			}
 
 			for (int i = first; i < first+count; i++)
 			{
-				var période = périodes[i];
-				bool select = période.DateDébut == this.data.BeginDate;
+				var dateRange = dr[i];
+				bool select = dateRange.BeginDate == this.data.BeginDate;
 
 				var item = new MenuItem ()
 				{
 					IconUri       = UIBuilder.GetRadioStateIconUri (select),
-					FormattedText = this.GetPériodeDescription (période),
+					FormattedText = this.GetDateRangeDescription (dateRange),
 					TabIndex      = i,
 				};
 
 				item.Clicked += delegate
 				{
-					this.data.BeginDate = périodes[item.TabIndex].DateDébut;
-					this.data.EndDate   = périodes[item.TabIndex].DateFin;
+					this.data.BeginDate = dr[item.TabIndex].BeginDate;
+					this.data.EndDate   = dr[item.TabIndex].EndDate;
 					this.UpdateButtons ();
 					this.searchStartAction ();
 				};
@@ -618,26 +643,26 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private FormattedText GetPériodeDescription(Période période)
+		private FormattedText GetDateRangeDescription(DateRange dateRange)
 		{
-			var desc = Dates.GetDescription (période.DateDébut, période.DateFin);
+			var desc = Dates.GetDescription (dateRange.BeginDate, dateRange.EndDate);
 			var rank = FormattedText.Empty;
 
 			if (this.data.Duration == TemporalDataDuration.Monthly)
 			{
-				rank = période.DateDébut.Month.ToString ("00");  // 01..12
+				rank = dateRange.BeginDate.Month.ToString ("00");  // 01..12
 			}
 			else if (this.data.Duration == TemporalDataDuration.Quarterly)
 			{
-				rank = ((période.DateDébut.Month-1)/3+1).ToString ("0");  // 1..4
+				rank = ((dateRange.BeginDate.Month-1)/3+1).ToString ("0");  // 1..4
 			}
 			else if (this.data.Duration == TemporalDataDuration.Biannual)
 			{
-				rank = ((période.DateDébut.Month-1)/6+1).ToString ("0");  // 1..2
+				rank = ((dateRange.BeginDate.Month-1)/6+1).ToString ("0");  // 1..2
 			}
 			else if (this.data.Duration == TemporalDataDuration.Weekly)
 			{
-				rank = Dates.GetWeekNumber (période.DateDébut).ToString ("00");  // 01..52
+				rank = Dates.GetWeekNumber (dateRange.BeginDate).ToString ("00");  // 01..52
 			}
 
 			if (!rank.IsNullOrEmpty)
@@ -648,8 +673,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			return desc;
 		}
 
-		private IEnumerable<Période> Périodes
+		private IEnumerable<DateRange> DateRanges
 		{
+			//	Retourne la liste des intervalles faisant partie de la période comptable en cours.
 			get
 			{
 				var période = this.controller.MainWindowController.Période;
@@ -661,7 +687,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				do
 				{
-					yield return new Période (temp.BeginDate.Value, temp.EndDate.Value);
+					yield return new DateRange (temp.BeginDate.Value, temp.EndDate.Value);
 
 					temp.BeginDate = Dates.AddDays (temp.EndDate.Value, 1);
 					temp.InitDefaultDates (temp.BeginDate);
@@ -670,21 +696,22 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
-		private class Période
+		private class DateRange
 		{
-			public Période(Date dateDébut, Date dateFin)
+			//	Cette petite classe représente simplement un intervalle de deux dates.
+			public DateRange(Date beginDate, Date endDate)
 			{
-				this.DateDébut = dateDébut;
-				this.DateFin   = dateFin;
+				this.BeginDate = beginDate;
+				this.EndDate   = endDate;
 			}
 
-			public Date DateDébut
+			public Date BeginDate
 			{
 				get;
 				private set;
 			}
 
-			public Date DateFin
+			public Date EndDate
 			{
 				get;
 				private set;
@@ -699,6 +726,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly TemporalData					data;
+		private readonly SafeCounter					ignoreChanges;
 
 		private System.Action							searchStartAction;
 		private TopPanelLeftController					topPanelLeftController;
@@ -708,9 +736,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private FrameBox								editionFrame;
 		private CheckButton								filterEnableButton;
 		private TextFieldCombo							durationField;
-		private GlyphButton								prevButton;
+		private HSlider									dateSlider;
 		private Button									nowButton;
-		private GlyphButton								nextButton;
 		private GlyphButton								menuButton;
 		private DateFieldController						beginDateController;
 		private DateFieldController						endDateController;

@@ -71,16 +71,23 @@ namespace Epsitec.Cresus.Compta.Helpers
 		{
 			//	Retourne un résumé court d'une période.
 			//	Par exemple:
-			//	2012					-> une année entière
-			//	2012 — 2013				-> deux années entières
-			//	Mars 2012				-> un mois entier
-			//	Janv. — Mars 2012		-> quelques mois entiers
-			//	10.01.2012 — 25.04.2012	-> une période quelconque
+			//	2012							-> une année entière
+			//	2012 — 2013						-> deux années entières
+			//	Mars 2012						-> un mois entier
+			//	Janv. — Mars 2012				-> quelques mois entiers
+			//	10.01.2012 — 25.04.2012			-> une période quelconque
+			//	25.07.2011 — 31.07.2011 (30)	-> une semaine entière
 			FormattedText title;
 
 			if (date1 == date2)
 			{
 				title = Converters.DateToString (date1);
+			}
+			else if (Dates.NumberOfDays (date2, date1) == 7-1   &&
+					 date1.DayOfWeek == System.DayOfWeek.Monday &&
+					 date2.DayOfWeek == System.DayOfWeek.Sunday)  // pile une semaine entière ?
+			{
+				title = Converters.DateToString (date1) + " — " + Converters.DateToString (date2) + " (" + Dates.GetWeekNumber (date1).ToString ("00") + ")";
 			}
 			else if (date1.Year  == date2.Year &&
 					 date1.Day   == 1  &&
