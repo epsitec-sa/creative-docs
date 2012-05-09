@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
+			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			this.budgetsManager = new BudgetsManager (this.compta, this.période, this.options, this.lastBeginDate, this.lastEndDate);

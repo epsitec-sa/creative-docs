@@ -179,6 +179,18 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public void MergeDates(ref Date? beginDate, ref Date? endDate)
+		{
+			//	Fusionne les dates du filtre normal avec celles du filtre temporel, pour obtenir
+			//	le "et" logique.
+			if (!this.IsEmpty)
+			{
+				beginDate = Dates.Max (beginDate, this.beginDate);
+				endDate   = Dates.Min (endDate,   this.endDate);
+			}
+		}
+
+
 		public TemporalDataDuration Duration
 		{
 			get

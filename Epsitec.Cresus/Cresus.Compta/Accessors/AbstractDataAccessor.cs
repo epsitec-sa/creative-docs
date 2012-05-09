@@ -242,7 +242,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Met à jour le filtre.
 			this.readonlyData.Clear ();
 
-			if (this.filterData == null || this.filterData.IsEmpty)
+			if ((this.filterData == null || this.filterData.IsEmpty) &&
+				(this.temporalData == null || this.temporalData.IsEmpty))
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
@@ -306,7 +307,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			if (this.temporalData != null)
+			if (this.temporalData != null && !this.temporalData.IsEmpty)
 			{
 				var date = Converters.ParseDate (this.GetText (row, ColumnType.Date, true));
 				if (!this.temporalData.Match (date))

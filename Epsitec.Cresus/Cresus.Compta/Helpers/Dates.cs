@@ -15,6 +15,61 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Dates
 	{
+		public static Date? Max(Date? date1, Date? date2)
+		{
+			if (date1.HasValue && date2.HasValue)
+			{
+				if (date1.Value > date2.Value)
+				{
+					return date1;
+				}
+				else
+				{
+					return date2;
+				}
+			}
+			else if (date1.HasValue)
+			{
+				return date1;
+			}
+			else if (date2.HasValue)
+			{
+				return date2;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+		public static Date? Min(Date? date1, Date? date2)
+		{
+			if (date1.HasValue && date2.HasValue)
+			{
+				if (date1.Value < date2.Value)
+				{
+					return date1;
+				}
+				else
+				{
+					return date2;
+				}
+			}
+			else if (date1.HasValue)
+			{
+				return date1;
+			}
+			else if (date2.HasValue)
+			{
+				return date2;
+			}
+			else
+			{
+				return null;
+			}
+		}
+
+
 		public static int GetWeekNumber(Date date)
 		{
 			//	Retourne le numéro de la semaine, selon la définition suivante:

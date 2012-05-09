@@ -23,10 +23,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BalanceDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.compta);
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Filter");
-			//?this.filterData = this.mainWindowController.GetSettingsSearchData<SearchData> ("Présentation.Balance.Filter", this.FilterInitialize);
+			this.options      = this.mainWindowController.GetSettingsOptions<BalanceOptions> ("Présentation.Balance.Options", this.compta);
+			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Search");
+			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Balance.Filter");
+			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.Balance.Temporal");
 
 			this.arrayGraphOptions = new GraphOptions ();
 
@@ -46,6 +46,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			Date? beginDate, endDate;
 			this.filterData.GetBeginnerDates (out beginDate, out endDate);
+			this.temporalData.MergeDates (ref beginDate, ref endDate);
 
 			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
 			{
@@ -66,6 +67,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			decimal totalSoldeC = 0;
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
+			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			this.budgetsManager = new BudgetsManager (this.compta, this.période, this.options, this.lastBeginDate, this.lastEndDate);
