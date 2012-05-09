@@ -1,10 +1,9 @@
 ﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Support;
-using Epsitec.Cresus.Database;
-using Epsitec.Cresus.Database.Implementation;
 using Epsitec.Common.IO;
+using Epsitec.Common.Support;
+
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers
 {

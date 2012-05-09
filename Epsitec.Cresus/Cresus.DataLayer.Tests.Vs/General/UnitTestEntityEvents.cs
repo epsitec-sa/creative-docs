@@ -1,16 +1,13 @@
-﻿using Epsitec.Common.Support;
-using Epsitec.Cresus.Database;
+﻿using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Infrastructure;
-using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using System.Collections.Generic;
-
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.General

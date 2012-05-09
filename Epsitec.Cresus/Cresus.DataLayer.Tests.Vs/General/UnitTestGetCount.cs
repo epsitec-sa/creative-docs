@@ -6,8 +6,6 @@ using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 {

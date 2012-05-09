@@ -10,11 +10,9 @@ using Epsitec.Cresus.DataLayer.Infrastructure;
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Tests.Vs.Entities;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
 
 using System.Linq;
-
-using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Tests.Vs.Helpers

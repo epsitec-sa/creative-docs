@@ -3,7 +3,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
-using Epsitec.Common.Types.Exceptions;
 
 using Epsitec.Cresus.Database;
 
