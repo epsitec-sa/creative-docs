@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasShowSearchPanel
+		public override bool HasSearchPanel
 		{
 			get
 			{
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowFilterPanel
+		public override bool HasFilterPanel
 		{
 			get
 			{
@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowOptionsPanel
+		public override bool HasOptionsPanel
 		{
 			get
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowInfoPanel
+		public override bool HasInfoPanel
 		{
 			get
 			{

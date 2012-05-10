@@ -916,15 +916,15 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
 
-				this.extendedSearchIconSummary  .Visibility = this.controller.HasShowSearchPanel;
-				this.extendedFilterIconSummary  .Visibility = this.controller.HasShowFilterPanel;
-				this.extendedTemporalIconSummary.Visibility = this.controller.HasShowTemporalPanel;
-				this.extendedOptionsIconSummary .Visibility = this.controller.HasShowOptionsPanel;
+				this.extendedSearchIconSummary  .Visibility = this.controller.HasSearchPanel;
+				this.extendedFilterIconSummary  .Visibility = this.controller.HasFilterPanel;
+				this.extendedTemporalIconSummary.Visibility = this.controller.HasTemporalPanel;
+				this.extendedOptionsIconSummary .Visibility = this.controller.HasOptionsPanel;
 
-				this.extendedSearchSummary  .Visibility = this.controller.HasShowSearchPanel;
-				this.extendedFilterSummary  .Visibility = this.controller.HasShowFilterPanel;
-				this.extendedTemporalSummary.Visibility = this.controller.HasShowTemporalPanel;
-				this.extendedOptionsSummary .Visibility = this.controller.HasShowOptionsPanel;
+				this.extendedSearchSummary  .Visibility = this.controller.HasSearchPanel;
+				this.extendedFilterSummary  .Visibility = this.controller.HasFilterPanel;
+				this.extendedTemporalSummary.Visibility = this.controller.HasTemporalPanel;
+				this.extendedOptionsSummary .Visibility = this.controller.HasOptionsPanel;
 
 				this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
 				this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
@@ -1221,22 +1221,22 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 
 			//	Met un mode spécial si le panneau n'existe pas.
-			if (!this.controller.HasShowSearchPanel)
+			if (!this.controller.HasSearchPanel)
 			{
 				viewSettings.ShowSearch = ShowPanelMode.DoesNotExist;
 			}
 
-			if (!this.controller.HasShowFilterPanel)
+			if (!this.controller.HasFilterPanel)
 			{
 				viewSettings.ShowFilter = ShowPanelMode.DoesNotExist;
 			}
 
-			if (!this.controller.HasShowTemporalPanel)
+			if (!this.controller.HasTemporalPanel)
 			{
 				viewSettings.ShowTemporal = ShowPanelMode.DoesNotExist;
 			}
 
-			if (!this.controller.HasShowOptionsPanel)
+			if (!this.controller.HasOptionsPanel)
 			{
 				viewSettings.ShowOptions = ShowPanelMode.DoesNotExist;
 			}

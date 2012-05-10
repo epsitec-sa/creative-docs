@@ -57,6 +57,89 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateViewSettings ();
 		}
 
+		protected override void CreateTitleFrame()
+		{
+			this.titleLabel.Visibility = false;
+
+			var label = new StaticText
+			{
+				Parent          = this.titleFrame,
+				FormattedText   = FormattedText.Concat ("Journal").ApplyBold ().ApplyFontSize (13.0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
+			label.PreferredWidth = label.GetBestFitSize ().Width;
+
+			this.comboJournaux = new TextFieldCombo
+			{
+				Parent          = this.titleFrame,
+				PreferredWidth  = JournalController.JournauxWidth,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				IsReadOnly      = true,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 0, 3, 3),
+			};
+
+			this.comboJournaux.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
+			this.comboJournaux.TextLayout.DefaultFontSize = 13.0;
+
+			this.summaryLabel = new StaticText
+			{
+				Parent          = this.titleFrame,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (10, 0, 0, 0),
+			};
+
+			this.UpdateCombo ();
+			this.UpdateSummary ();
+
+			this.comboJournaux.SelectedItemChanged += delegate
+			{
+				if (this.ignoreChanges.IsZero && this.comboJournaux.SelectedItemIndex != -1)
+				{
+					if (this.comboJournaux.SelectedItemIndex == this.compta.Journaux.Count)  // tous les journaux ?
+					{
+						this.Options.JournalId = 0;
+					}
+					else
+					{
+						this.Options.JournalId = this.compta.Journaux[this.comboJournaux.SelectedItemIndex].Id;
+					}
+
+					this.OptionsChanged ();
+					this.UpdateSummary ();
+				}
+			};
+		}
+
+		private void UpdateCombo()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.comboJournaux.Items.Clear ();
+				FormattedText sel = JournalController.AllJournaux;
+
+				foreach (var journal in this.compta.Journaux)
+				{
+					this.comboJournaux.Items.Add (journal.Nom);
+
+					if (journal.Id ==  this.Options.JournalId)
+					{
+						sel = journal.Nom;
+					}
+				}
+
+				this.comboJournaux.Items.Add (JournalController.AllJournaux);
+				this.comboJournaux.FormattedText = sel;
+			}
+		}
+
+		private void UpdateSummary()
+		{
+			var journal = this.compta.Journaux.Where (x => x.Id == this.Options.JournalId).FirstOrDefault ();
+			this.summaryLabel.Text = this.période.GetJournalSummary (journal);
+		}
+
 		protected override void UpdateTitle()
 		{
 			int id = (this.dataAccessor.Options as JournalOptions).JournalId;
@@ -64,7 +147,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (journal == null)  // tous les journaux ?
 			{
-				var name = Core.TextFormatter.FormatText (JournalOptionsController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
+				var name = Core.TextFormatter.FormatText (JournalController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
 				this.SetTitle (name);
 			}
 			else
@@ -76,7 +159,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasShowSearchPanel
+		public override bool HasSearchPanel
 		{
 			get
 			{
@@ -84,7 +167,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowFilterPanel
+		public override bool HasFilterPanel
 		{
 			get
 			{
@@ -92,7 +175,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowTemporalPanel
+		public override bool HasTemporalPanel
 		{
 			get
 			{
@@ -100,15 +183,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowOptionsPanel
+#if false
+		public override bool HasOptionsPanel
 		{
 			get
 			{
 				return true;
 			}
 		}
+#endif
 
-		public override bool HasShowInfoPanel
+		public override bool HasInfoPanel
 		{
 			get
 			{
@@ -225,12 +310,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateColumnMappers()
 		{
-			var options = this.dataAccessor.Options as JournalOptions;
-
-			this.ShowHideColumn (ColumnType.Journal,    options.JournalId == 0);  // tous les journaux ?
+			this.ShowHideColumn (ColumnType.Journal,    this.Options.JournalId == 0);  // tous les journaux ?
 			this.ShowHideColumn (ColumnType.Type,       this.settingsList.GetBool (SettingsType.EcritureMontreType));
 			this.ShowHideColumn (ColumnType.OrigineTVA, this.settingsList.GetBool (SettingsType.EcritureMontreOrigineTVA));
 			this.ShowHideColumn (ColumnType.MontantTTC, this.settingsList.GetBool (SettingsType.EcritureTVA));
 		}
+
+		private JournalOptions Options
+		{
+			get
+			{
+				return this.dataAccessor.Options as JournalOptions;
+			}
+		}
+
+
+		private static readonly double JournauxWidth = 200;
+		public static readonly string AllJournaux = "Tous les journaux";
+
+		private TextFieldCombo			comboJournaux;
+		private StaticText				summaryLabel; 
 	}
 }

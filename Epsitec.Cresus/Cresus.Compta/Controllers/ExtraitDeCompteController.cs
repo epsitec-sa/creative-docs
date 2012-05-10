@@ -17,6 +17,7 @@ using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -47,7 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowSearchPanel
+		public override bool HasSearchPanel
 		{
 			get
 			{
@@ -55,7 +56,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowFilterPanel
+		public override bool HasFilterPanel
 		{
 			get
 			{
@@ -63,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowTemporalPanel
+		public override bool HasTemporalPanel
 		{
 			get
 			{
@@ -71,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowOptionsPanel
+		public override bool HasOptionsPanel
 		{
 			get
 			{
@@ -79,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasShowInfoPanel
+		public override bool HasInfoPanel
 		{
 			get
 			{
@@ -112,6 +113,89 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateWindowTitle ();
 
 			base.OptionsChanged ();
+		}
+
+		protected override void CreateTitleFrame()
+		{
+			this.titleLabel.Visibility = false;
+
+			var label = new StaticText
+			{
+				Parent          = this.titleFrame,
+				FormattedText   = FormattedText.Concat ("Compte").ApplyBold ().ApplyFontSize (13.0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
+			label.PreferredWidth = label.GetBestFitSize ().Width;
+
+			this.compteController = UIBuilder.CreateAutoCompleteField (this, this.titleFrame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Box.Dock = DockStyle.Left;
+			this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
+			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
+			this.compteController.EditWidget.TextLayout.DefaultFontSize = 13.0;
+
+			this.summaryLabel = new StaticText
+			{
+				Parent          = this.titleFrame,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (10, 0, 0, 0),
+			};
+
+			this.UpdateComptes ();
+			this.UpdateSummary ();
+		}
+
+		private void UpdateComptes()
+		{
+			UIBuilder.UpdateAutoCompleteTextField (this.compteController.EditWidget as AutoCompleteTextField, this.compta.PlanComptable);
+
+			using (this.ignoreChanges.Enter ())
+			{
+				this.compteController.EditionData.Text = this.NuméroCompte;
+			}
+		}
+
+		private void UpdateSummary()
+		{
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
+
+			if (compte == null)
+			{
+				this.summaryLabel.FormattedText = FormattedText.Empty;
+			}
+			else
+			{
+				this.summaryLabel.FormattedText = compte.Titre.ApplyBold ().ApplyFontSize (13.0);
+			}
+		}
+
+		private void ValidateCompteAction(EditionData data)
+		{
+			data.ClearError ();
+		}
+
+		private void CompteChangedAction(int line, ColumnType columnType)
+		{
+			if (this.ignoreChanges.IsZero)
+			{
+				this.NuméroCompte = this.compteController.EditionData.Text;
+				this.UpdateSummary ();
+				this.PermanentsChanged ();
+			}
+		}
+
+		private FormattedText NuméroCompte
+		{
+			get
+			{
+				var p = this.dataAccessor.Permanents as ExtraitDeComptePermanents;
+				return p.NuméroCompte;
+			}
+			set
+			{
+				var p = this.dataAccessor.Permanents as ExtraitDeComptePermanents;
+				p.NuméroCompte = value;
+			}
 		}
 
 		protected override void UpdateTitle()
@@ -263,5 +347,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ShowHideColumn (ColumnType.TauxTVA,   hasTVA);
 			this.ShowHideColumn (ColumnType.CompteTVA, compteTVA);
 		}
+
+
+		private AutoCompleteFieldController		compteController;
+		private StaticText						summaryLabel;
 	}
 }

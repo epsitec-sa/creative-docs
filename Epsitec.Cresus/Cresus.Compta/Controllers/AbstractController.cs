@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowSearchPanel
+		public virtual bool HasSearchPanel
 		{
 			get
 			{
@@ -319,7 +319,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowFilterPanel
+		public virtual bool HasFilterPanel
 		{
 			get
 			{
@@ -327,7 +327,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowTemporalPanel
+		public virtual bool HasTemporalPanel
 		{
 			get
 			{
@@ -335,7 +335,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowOptionsPanel
+		public virtual bool HasOptionsPanel
 		{
 			get
 			{
@@ -351,7 +351,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasShowInfoPanel
+		public virtual bool HasInfoPanel
 		{
 			get
 			{
@@ -785,14 +785,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (20, 0, 0, 0),
 			};
 
-			this.titleLabel = new StaticText
+			this.titleFrame = new FrameBox
 			{
 				Parent           = frame,
+				PreferredHeight  = 20,
+				Dock             = DockStyle.Fill,
+				Margins          = new Margins (10, 0, 0, 0),
+			};
+
+			this.titleLabel = new StaticText
+			{
+				Parent           = this.titleFrame,
 				ContentAlignment = ContentAlignment.MiddleLeft,
 				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				PreferredHeight  = 20,
 				Dock             = DockStyle.Fill,
-				Margins          = new Margins (10, 0, 0, 0),
 			};
 
 			this.titleLabel.HypertextClicked += delegate
@@ -841,7 +848,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
+			this.CreateTitleFrame ();
 			this.UpdateUser ();
+		}
+
+		protected virtual void CreateTitleFrame()
+		{
 		}
 
 		public void UpdateUser()
@@ -1374,6 +1386,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;
+		protected FrameBox										titleFrame;
 		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;
 		protected FormattedText									title;
