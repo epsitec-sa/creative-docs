@@ -15,6 +15,7 @@ using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -52,6 +53,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.columnMappers;
+			}
+		}
+
+		public AbstractPermanents Permanents
+		{
+			get
+			{
+				return this.permanents;
 			}
 		}
 
@@ -675,6 +684,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected SearchData							filterData;
 		protected TemporalData							temporalData;
 		protected AbstractOptions						options;
+		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
 		protected int									initialCountEditedRow;

@@ -13,6 +13,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -85,7 +86,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.summaryLabel = new StaticText
 			{
 				Parent          = this.titleFrame,
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (10, 0, 0, 0),
 			};
@@ -264,8 +264,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
 
-					var accessor = présentation.DataAccessor as ExtraitDeCompteDataAccessor;
-					accessor.NuméroCompte = compte.Numéro;
+					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
+					permanent.NuméroCompte = compte.Numéro;
 
 					présentation.UpdateAfterChanged ();
 

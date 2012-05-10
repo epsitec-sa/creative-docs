@@ -8,6 +8,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -104,13 +105,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		private NavigatorData CreateNavigatorData(AbstractController controller, Command command)
 		{
 			//	Présentation active -> NavigatorData.
-			SearchData      search  = null;
-			SearchData      filter  = null;
-			AbstractOptions options = null;
+			SearchData         search     = null;
+			SearchData         filter     = null;
+			AbstractOptions    options    = null;
+			AbstractPermanents permanents = null;
 
 			if (controller == null)
 			{
-				return new NavigatorData (command, FormattedText.Empty, null, search, filter, options, null);
+				return new NavigatorData (command, FormattedText.Empty, null, search, filter, options, permanents, null);
 			}
 			else
 			{
@@ -129,13 +131,18 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 					options = controller.DataAccessor.Options.CopyFrom ();
 				}
 
+				if (controller.DataAccessor != null && controller.DataAccessor.Permanents != null)
+				{
+					permanents = controller.DataAccessor.Permanents.CopyFrom ();
+				}
+
 				if (controller.ViewSettingsList == null)
 				{
-					return new NavigatorData (command, controller.MixTitle, null, search, filter, options, controller.SelectedArrayLine);
+					return new NavigatorData (command, controller.MixTitle, null, search, filter, options, permanents, controller.SelectedArrayLine);
 				}
 				else
 				{
-					return new NavigatorData (command, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, controller.SelectedArrayLine);
+					return new NavigatorData (command, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, permanents, controller.SelectedArrayLine);
 				}
 			}
 		}
@@ -192,6 +199,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 				if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
 				{
 					data.Options.CopyTo (controller.DataAccessor.Options);
+				}
+
+				if (controller.DataAccessor != null && controller.DataAccessor.Permanents != null)
+				{
+					data.Permanents.CopyTo (controller.DataAccessor.Permanents);
 				}
 			}
 		}
