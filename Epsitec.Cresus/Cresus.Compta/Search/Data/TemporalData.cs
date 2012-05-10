@@ -63,89 +63,47 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		public void InitDefaultDates(Date? hope)
+		public void SetDate(Date? date)
 		{
 			//	Initialise les dates début/fin selon la durée en cours.
-			if (!hope.HasValue)
+			if (!date.HasValue)
 			{
-				hope = Date.Today;
+				date = Date.Today;
 			}
 
 			switch (this.duration)
 			{
 				case TemporalDataDuration.Daily:
-					this.beginDate = hope.Value;
+					this.beginDate = date.Value;
 					break;
 
 				case TemporalDataDuration.Weekly:
-					int dow = (int) hope.Value.DayOfWeek - 1;  // 0..6
+					int dow = (int) date.Value.DayOfWeek - 1;  // 0..6
 					System.Diagnostics.Debug.Assert (dow >= 0 && dow <= 6);
-					this.beginDate = Dates.AddDays (hope.Value, -dow);
+					this.beginDate = Dates.AddDays (date.Value, -dow);
 					break;
 
 				case TemporalDataDuration.Monthly:
-					this.beginDate = new Date (hope.Value.Year, hope.Value.Month, 1);
+					this.beginDate = new Date (date.Value.Year, date.Value.Month, 1);
 					break;
 
 				case TemporalDataDuration.Quarterly:
-					this.beginDate = new Date (hope.Value.Year, ((hope.Value.Month-1)/3)*3+1, 1);
+					this.beginDate = new Date (date.Value.Year, ((date.Value.Month-1)/3)*3+1, 1);
 					break;
 
 				case TemporalDataDuration.Biannual:
-					this.beginDate = new Date (hope.Value.Year, ((hope.Value.Month-1)/6)*6+1, 1);
+					this.beginDate = new Date (date.Value.Year, ((date.Value.Month-1)/6)*6+1, 1);
 					break;
 
 				case TemporalDataDuration.Annual:
-					this.beginDate = new Date (hope.Value.Year, 1, 1);
+					this.beginDate = new Date (date.Value.Year, 1, 1);
 					break;
 			}
 
-			this.InitEndDate ();
+			this.InitializeEndDate ();
 		}
 
-		public void Next(int step)
-		{
-			//	Passe à la période suivante/précédente.
-			this.beginDate = this.Next (this.beginDate, step);
-			this.InitEndDate ();
-		}
-
-		private Date? Next(Date? date, int step)
-		{
-			if (date.HasValue)
-			{
-				switch (this.duration)
-				{
-					case TemporalDataDuration.Daily:
-						date = Dates.AddDays (date.Value, step);
-						break;
-
-					case TemporalDataDuration.Weekly:
-						date = Dates.AddDays (date.Value, step*7);
-						break;
-
-					case TemporalDataDuration.Monthly:
-						date = Dates.AddMonths (date.Value, step);
-						break;
-
-					case TemporalDataDuration.Quarterly:
-						date = Dates.AddMonths (date.Value, step*3);
-						break;
-
-					case TemporalDataDuration.Biannual:
-						date = Dates.AddMonths (date.Value, step*6);
-						break;
-
-					case TemporalDataDuration.Annual:
-						date = Dates.AddMonths (date.Value, step*12);
-						break;
-				}
-			}
-
-			return date;
-		}
-
-		private void InitEndDate()
+		private void InitializeEndDate()
 		{
 			if (this.beginDate.HasValue)
 			{

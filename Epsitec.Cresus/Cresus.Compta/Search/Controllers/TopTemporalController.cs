@@ -262,7 +262,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.durationField.SelectedItemChanged += delegate
 			{
 				this.data.Duration = TopTemporalController.TemporalDataDurationToType (this.durationField.FormattedText);
-				this.data.InitDefaultDates (this.data.BeginDate);
+				this.data.SetDate (this.data.BeginDate);
 				this.UpdateButtons ();
 				this.searchStartAction ();
 			};
@@ -275,7 +275,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					var dr = this.DateRanges.ToArray ();
 					if (sel >= 0 && sel < dr.Length)
 					{
-						this.data.InitDefaultDates (dr[sel].BeginDate);
+						this.data.SetDate (dr[sel].BeginDate);
 						this.UpdateButtons ();
 						this.searchStartAction ();
 					}
@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.nowButton.Clicked += delegate
 			{
-				this.data.InitDefaultDates (Date.Today);
+				this.data.SetDate (Date.Today);
 				this.UpdateButtons ();
 				this.searchStartAction ();
 			};
@@ -818,14 +818,14 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				var temp = new TemporalData ();
 				this.data.CopyTo (temp);
 				temp.BeginDate = période.DateDébut;
-				temp.InitDefaultDates (temp.BeginDate);
+				temp.SetDate (temp.BeginDate);
 
 				do
 				{
 					yield return new DateRange (temp.BeginDate.Value, temp.EndDate.Value);
 
 					temp.BeginDate = Dates.AddDays (temp.EndDate.Value, 1);
-					temp.InitDefaultDates (temp.BeginDate);
+					temp.SetDate (temp.BeginDate);
 				}
 				while (temp.BeginDate <= période.DateFin);
 			}
