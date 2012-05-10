@@ -134,8 +134,6 @@
     <Compile Include="Helpers\Strings.cs" />
     <Compile Include="IO\PiècesGenerator.cs" />
     <Compile Include="IO\DefaultViewSettings.cs" />
-    <Compile Include="Permanents\Controllers\AbstractPermanentsController.cs" />
-    <Compile Include="Permanents\Controllers\ExtraitDeComptePermanentsController.cs" />
     <Compile Include="Permanents\Data\AbstractPermanents.cs" />
     <Compile Include="Permanents\Data\ExtraitDeComptePermanents.cs" />
     <Compile Include="Search\Controllers\SearchNodeController.cs" />
@@ -438,7 +436,9 @@
       <Name>Cresus.DataLayer</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Permanents\Controllers\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

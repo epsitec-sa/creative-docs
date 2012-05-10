@@ -86,6 +86,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.summaryLabel = new StaticText
 			{
 				Parent          = this.titleFrame,
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (10, 0, 0, 0),
 			};

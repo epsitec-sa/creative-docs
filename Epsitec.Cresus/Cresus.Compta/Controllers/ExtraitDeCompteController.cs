@@ -14,7 +14,6 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
 using Epsitec.Cresus.Compta.Permanents.Data;
-using Epsitec.Cresus.Compta.Permanents.Controllers;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Widgets;
@@ -89,14 +88,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreatePermanents(FrameBox parent)
-		{
-			this.permanentsController = new ExtraitDeComptePermanentsController (this);
-			this.permanentsController.CreateUI (parent, this.OptionsChanged);
-
-			this.UpdateColumnMappers ();
-		}
-
 		protected override void CreateOptions(FrameBox parent)
 		{
 			this.optionsController = new ExtraitDeCompteOptionsController (this);
@@ -137,6 +128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.summaryLabel = new StaticText
 			{
 				Parent          = this.titleFrame,
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock            = DockStyle.Fill,
 				Margins         = new Margins (10, 0, 0, 0),
 			};
@@ -180,7 +172,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.NuméroCompte = this.compteController.EditionData.Text;
 				this.UpdateSummary ();
-				this.PermanentsChanged ();
+				this.OptionsChanged ();
 			}
 		}
 

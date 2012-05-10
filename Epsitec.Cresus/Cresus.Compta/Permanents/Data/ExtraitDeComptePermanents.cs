@@ -40,34 +40,12 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 					this.NuméroCompte = compte.Numéro;
 				}
 			}
-
-			this.CatégorieMontrée             = CatégorieDeCompte.Tous;
-			this.MontreComptesVides           = true;
-			this.MontreComptesCentralisateurs = false;
 		}
 
 
 		public FormattedText NuméroCompte
 		{
 			//	Numéro du compte dont on affiche l'extrait.
-			get;
-			set;
-		}
-
-		public CatégorieDeCompte CatégorieMontrée
-		{
-			get;
-			set;
-		}
-
-		public bool MontreComptesVides
-		{
-			get;
-			set;
-		}
-
-		public bool MontreComptesCentralisateurs
-		{
 			get;
 			set;
 		}
@@ -85,10 +63,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 		{
 			var d = dst as ExtraitDeComptePermanents;
 
-			d.NuméroCompte                 = this.NuméroCompte;
-			d.CatégorieMontrée             = this.CatégorieMontrée;
-			d.MontreComptesVides           = this.MontreComptesVides;
-			d.MontreComptesCentralisateurs = this.MontreComptesCentralisateurs;
+			d.NuméroCompte = this.NuméroCompte;
 
 			base.CopyTo (dst);
 		}
@@ -100,11 +75,7 @@ namespace Epsitec.Cresus.Compta.Permanents.Data
 				return false;
 			}
 
-			var o = other as ExtraitDeComptePermanents;
-
-			return this.CatégorieMontrée             == o.CatégorieMontrée             &&
-				   this.MontreComptesVides           == o.MontreComptesVides           &&
-				   this.MontreComptesCentralisateurs == o.MontreComptesCentralisateurs;
+			return true;
 		}
 	}
 }
