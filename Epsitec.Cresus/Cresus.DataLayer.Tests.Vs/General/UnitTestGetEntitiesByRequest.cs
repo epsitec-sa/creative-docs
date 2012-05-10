@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support;
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support;
 
 using Epsitec.Common.Types;
 
@@ -1603,7 +1606,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					new UnaryOperation (
 						UnaryOperator.Not,
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1AL1]")),
+							PublicField.Create (example, x => x.Firstname),
+//-							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
@@ -1612,7 +1616,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example, new Druid ("[J1AO1]")),
+						PublicField.Create (example, x => x.BirthDate),
+//-						new PublicField (example, new Druid ("[J1AO1]")),
 						SortOrder.Descending
 					)
 				);

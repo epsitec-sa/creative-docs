@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -61,6 +61,25 @@ namespace Epsitec.Common.Support.EntityEngine
 			else
 			{
 				return field.Type;
+			}
+		}
+
+		/// <summary>
+		/// Gets the field DRUID based on the expression.
+		/// </summary>
+		/// <param name="properyLambdaExpression">The lambda expression pointing to the property.</param>
+		/// <returns>The DRUID of the field, or <c>Druid.Empty</c> if it cannot be resolved.</returns>
+		public static Druid GetFieldDruid(Expression properyLambdaExpression)
+		{
+			var field = EntityInfo.GetStructuredTypeField (properyLambdaExpression);
+
+			if (field == null)
+			{
+				return Druid.Empty;
+			}
+			else
+			{
+				return field.CaptionId;
 			}
 		}
 

@@ -112,6 +112,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		public void AddSortClause(EntityField field, SortOrder sortOrder)
+		{
+			this.sortClauses.Add (new SortClause (field, sortOrder));
+		}
+
+
 		public static Request Create(AbstractEntity rootEntity)
 		{
 			return new Request ()
