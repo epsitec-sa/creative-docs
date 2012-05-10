@@ -1,42 +1,54 @@
-﻿using Epsitec.Common.Support.EntityEngine;
+﻿using Epsitec.Cresus.Database;
 
-using Epsitec.Cresus.Database;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System;
 
 using System.Collections.Generic;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.DataLayer.Context
 {
 	
 	
+	/// <summary>
+	/// The RequestView class gives a view on a request that will not change over time. For this, it
+	/// uses a new connection do the database and opens a readonly transaction. That means that the
+	/// results of the queries made to the database via this class are totally independent of
+	/// whatever might happen in the database via the DataContext bound to this class.
+	/// Note also that the RequestView uses its request more than once. In fact it uses it each time
+	/// one of its method is called. The Request used internally is copy of the one given in the
+	/// constructor so you are free to modify it after the call to the constructor. However, the
+	/// entities embedded in the request are not copied, and therefore any modification made to
+	/// these entities might end up in causing problems here.
+	/// </summary>
 	public sealed class RequestView : IDisposable
 	{
-
-		// TODO Finish this class as it is a simple stub that I updated in order to allow Pierre to
-		// continue its work on the BigList.
 
 
 		internal RequestView(DataContext dataContext, Request request)
 		{
 			this.dataContext = dataContext;
-			this.request = request;
 
-			//var dataInfrastructure = dataContext.DataInfrastructure;
-			//var dbInfrastructure = dataInfrastructure.DbInfrastructure;
+			this.entityKeyRequest = this.GetEntityKeyRequest (request);
+			this.countRequest = this.GetCountRequest (request);
 
-			//this.iDbAbstraction = this.CreateIDbAbstraction (dbInfrastructure);
-			//this.dbTransaction = this.CreateDbTransaction (dbInfrastructure, this.iDbAbstraction);
+			var dataInfrastructure = dataContext.DataInfrastructure;
+			var dbInfrastructure = dataInfrastructure.DbInfrastructure;
+
+			this.iDbAbstraction = this.CreateIDbAbstraction (dbInfrastructure);
+			this.dbTransaction = this.CreateDbTransaction (dbInfrastructure, this.iDbAbstraction);
 		}
 
 
 		private IDbAbstraction CreateIDbAbstraction(DbInfrastructure dbInfrastructure)
 		{
-			return dbInfrastructure.CreateDatabaseAbstraction ();
+			var idbAbstraction = dbInfrastructure.CreateDatabaseAbstraction ();
+
+			idbAbstraction.SqlBuilder.AutoClear = true;
+
+			return idbAbstraction;
 		}
 
 
@@ -46,32 +58,45 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		public IEnumerable<EntityKey> GetKeys(int index, int count)
+		private Request GetEntityKeyRequest(Request request)
 		{
-			return from entity in this.GetEntities (index, count)
-				   select this.dataContext.GetNormalizedEntityKey (entity).Value;
+			var entityKeyRequest = request.Clone ();
+
+			entityKeyRequest.SortClauses.Add
+			(
+				new SortClause
+				(
+					InternalField.CreateId (request.RequestedEntity),
+					SortOrder.Ascending
+				)
+			);
+
+			return entityKeyRequest;
 		}
 
 
-		public IEnumerable<AbstractEntity> GetEntities(int index, int count)
+		private Request GetCountRequest(Request request)
 		{
-			this.request.Skip = index;
-			this.request.Take = count;
+			var countRequest = request.Clone ();
 
-			// TODO Use this.dbTransaction here.
+			countRequest.SortClauses.RemoveRange (0, countRequest.SortClauses.Count);
 
-			return this.dataContext.GetByRequest (this.request);
+			return countRequest;
+		}
+
+
+		public IList<EntityKey> GetKeys(int index, int count)
+		{
+			this.entityKeyRequest.Skip = index;
+			this.entityKeyRequest.Take = count;
+
+			return this.dataContext.DataLoader.GetEntityKeys (this.entityKeyRequest, this.dbTransaction);
 		}
 
 
 		public int GetCount()
 		{
-			this.request.Skip = null;
-			this.request.Take = null;
-
-			// TODO Use this.dbTransaction here.
-
-			return this.dataContext.GetCount (this.request);
+			return this.dataContext.DataLoader.GetCount (this.countRequest, this.dbTransaction);
 		}
 
 
@@ -80,9 +105,9 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public void Dispose()
 		{
-			//this.dbTransaction.Commit ();
+			this.dbTransaction.Commit ();
 
-			//this.iDbAbstraction.Dispose ();
+			this.iDbAbstraction.Dispose ();
 		}
 
 
@@ -98,7 +123,10 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly DataContext dataContext;
 
 
-		private readonly Request request;
+		private readonly Request entityKeyRequest;
+
+
+		private readonly Request countRequest;
 
 
 	}

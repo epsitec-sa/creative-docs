@@ -58,8 +58,7 @@ namespace Epsitec.Cresus.Core.Data
 				count = total - index;
 			}
 
-			return this.requestView.GetEntities (index, count)
-				.Select (x => this.GetEntityKey (x))
+			return this.requestView.GetKeys (index, count)
 				.ToArray ();
 		}
 

@@ -153,6 +153,23 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		public Request Clone()
+		{
+			var copy = new Request ()
+			{
+				RootEntity = this.RootEntity,
+				RequestedEntity = this.RequestedEntity,
+				Skip = this.Skip,
+				Take = this.Take,
+			};
+
+			copy.Conditions.AddRange (this.Conditions);
+			copy.SortClauses.AddRange (this.SortClauses);
+
+			return copy;
+		}
+
+
 		/// <summary>
 		/// Checks that the request and all its data is valid and consistent.
 		/// </summary>

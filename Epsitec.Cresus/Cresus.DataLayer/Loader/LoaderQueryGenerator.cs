@@ -79,20 +79,52 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public int GetCount(Request request)
 		{
-			int count = 0;
-
 			var sqlSelect = this.CreateSqlSelectForCount (request);
 
-			using (DbTransaction transaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+			using (var dbTransaction = this.DbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 			{
-				transaction.SqlBuilder.SelectData (sqlSelect);
-				
-				count = (int) this.DbInfrastructure.ExecuteScalar(transaction);			
+				var count = this.GetCount (sqlSelect, dbTransaction);
 
-				transaction.Commit ();
+				dbTransaction.Commit ();
+
+				return count;
 			}
+		}
 
-			return count;
+
+		public int GetCount(Request request, DbTransaction dbTransaction)
+		{
+			var sqlSelect = this.CreateSqlSelectForCount (request);
+
+			return this.GetCount (sqlSelect, dbTransaction);
+		}
+
+
+		public int GetCount(SqlSelect sqlSelect, DbTransaction dbTransaction)
+		{
+			dbTransaction.SqlBuilder.SelectData (sqlSelect);
+
+			return (int) this.DbInfrastructure.ExecuteScalar (dbTransaction);
+		}
+
+
+		public IEnumerable<EntityKey> GetEntityKeys(Request request, DbTransaction dbTransaction)
+		{
+			var sqlSelect = this.CreateSqlSelectForEntityKeys (request);
+
+			dbTransaction.SqlBuilder.SelectData (sqlSelect);
+
+			var data = this.DbInfrastructure.ExecuteRetData (dbTransaction);
+
+			var leafEntityId = request.RequestedEntity.GetEntityStructuredTypeId ();
+			var rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			foreach (DataRow dataRow in data.Tables[0].Rows)
+			{
+				var rowKey = new DbKey (new DbId ((long) dataRow[0]));
+
+				yield return new EntityKey (rootEntityId, rowKey);
+			}
 		}
 
 
@@ -364,6 +396,30 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return sqlContainerForConditions
 				.Plus (sqlContainerForCount)
+				.BuildSqlSelect (skip: request.Skip, take: request.Take);
+		}
+
+
+		#endregion
+
+
+		#region GET ENTITY KEYS
+
+
+		private SqlSelect CreateSqlSelectForEntityKeys(Request request)
+		{
+			var rootAlias = this.CreateRootEntityAlias (request);
+			var sqlContainerForConditions = this.BuildSqlContainerForConditions (request, rootAlias);
+
+			AbstractEntity requestedEntity = request.RequestedEntity;
+			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
+
+			var sqlContainerForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
+			var sqlContainerForEntityKeys = this.BuildSqlContainerForEntityKeys (requestedAlias, requestedEntity);
+
+			return sqlContainerForConditions
+				.Plus (sqlContainerForOrderBy)
+				.Plus (sqlContainerForEntityKeys)
 				.BuildSqlSelect (skip: request.Skip, take: request.Take);
 		}
 
@@ -1037,6 +1093,23 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			SqlField sqlAggregateField = SqlField.CreateAggregate (SqlAggregateFunction.Count, SqlSelectPredicate.Distinct, sqlField);
 
 			return SqlContainer.CreateSqlFields (sqlAggregateField);
+		}
+
+
+		#endregion
+
+
+		#region ENTITY KEYS GENERATION
+
+
+		private SqlContainer BuildSqlContainerForEntityKeys(AliasNode rootEntityAlias, AbstractEntity entity)
+		{
+			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
+			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
+
+			var sqlFieldForEntityId = this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName);
+
+			return SqlContainer.CreateSqlFields (sqlFieldForEntityId);
 		}
 
 

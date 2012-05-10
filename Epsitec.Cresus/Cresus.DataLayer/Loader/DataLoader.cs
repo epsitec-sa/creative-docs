@@ -139,6 +139,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
+		/// Gets the entity keys which corresponds to the given request in the database. The query
+		/// is made to the database with the given transaction and will therefore not interfere with
+		/// other queries and will be totaly independent of them.
+		/// </summary>
+		/// <param name="request">The request defining which entity keys to get.</param>
+		/// <param name="dbTransaction">The transaction to use for the query.</param>
+		/// <returns>The entity keys corresponding to the request.</returns>
+		public IList<EntityKey> GetEntityKeys(Request request, DbTransaction dbTransaction)
+		{
+			return this.LoaderQueryGenerator.GetEntityKeys (request, dbTransaction).ToList ();
+		}
+
+
+		/// <summary>
 		/// Gets the number of entities which correspond to the given request in the database.
 		/// </summary>
 		/// <param name="request">The request defining which entities to count.</param>
@@ -151,6 +165,20 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			request.Check (this.DataContext);
 
 			return this.LoaderQueryGenerator.GetCount (request);
+		}
+
+
+		/// <summary>
+		/// Gets the number of entities which correspond to the given request in the database. The
+		/// query is made to the database with the given transaction and will therefore not
+		/// interfere with other queries and will be totaly independent of them.
+		/// </summary>
+		/// <param name="request">The request defining which entities to count.</param>
+		/// <param name="dbTransaction">The transaction to use for the query.</param>
+		/// <returns>The number of entities that match the given request.</returns>
+		public int GetCount(Request request, DbTransaction dbTransaction)
+		{
+			return this.LoaderQueryGenerator.GetCount (request, dbTransaction);
 		}
 
 

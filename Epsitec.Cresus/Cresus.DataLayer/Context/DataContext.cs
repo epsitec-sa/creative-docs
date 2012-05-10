@@ -1090,8 +1090,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="request">The <see cref="Request"/> to execute against the database.</param>
 		/// <returns>The <see cref="AbstractEntity"/> which match the given <see cref="Request"/>.</returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
-		/// <exception cref="System.ArgumentException">If <paramref name="request"/> contains <see cref="AbstractEntity"/> is managed by another <see cref="DataContext"/>.</exception>
-		/// <exception cref="System.InvalidOperationException">If <paramref name="request"/> contains an <see cref="AbstractEntity"/> managed by another <see cref="DataContext"/>.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="request"/> is null or invalid.</exception>
 		public IList<AbstractEntity> GetByRequest(Request request)
 		{
 			this.AssertDataContextIsNotDisposed ();
@@ -1147,8 +1146,20 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
+		/// <summary>
+		/// Create a new RequestView. See the constructor of this class for more info.
+		/// </summary>
+		/// <param name="request">The Request that will be used in the RequestView.</param>
+		/// <returns>The RequestView.</returns>
+		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		/// <exception cref="System.ArgumentException">If <paramref name="request"/> is null or invalid.</exception>
 		public RequestView GetRequestView(Request request)
 		{
+			this.AssertDataContextIsNotDisposed ();
+
+			request.ThrowIfNull ("request");
+			request.Check (this);
+
 			return new RequestView (this, request);
 		}
 
