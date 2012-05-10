@@ -1104,41 +1104,13 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 			}
 			set
 			{
-				if (value)  // démarre l'enregistrement ?
+				if (value)
 				{
-					if (this.logEnabled)
-					{
-						throw new System.InvalidOperationException ("Logging is alraedy enabled.");
-					}
-
-					this.queryLog = new MemoryLog (500)
-					{
-						LogResult = LoggingTabPage.globalLogResult,
-						LogStackTrace = LoggingTabPage.globalLogStackTrace,
-						LogThreadName = LoggingTabPage.globalLogThreadName
-					};
-
-					this.Container.Data.DataInfrastructure.AddQueryLog (this.queryLog);
-
-					this.logEnabled = true;
-
-					this.UpdateWidgets ();
+					this.EnableLogging ();
 				}
-				else  // stoppe l'enregistrement ?
+				else
 				{
-					if (!this.logEnabled)
-					{
-						throw new System.InvalidOperationException ("Logging is already disabled.");
-					}
-
-					this.Container.Data.DataInfrastructure.RemoveQueryLog (this.queryLog);
-
-					this.logEnabled = false;
-
-					this.UpdateSlider ();
-					this.UpdateTable ();
-					this.UpdateDetails ();
-					this.UpdateWidgets ();
+					this.DisableLogging ();
 				}
 			}
 		}
@@ -1182,6 +1154,44 @@ namespace Epsitec.Cresus.Core.Dialogs.SettingsTabPages
 		}
 
 
+		private void EnableLogging()
+		{
+			if (this.logEnabled)
+			{
+				throw new System.InvalidOperationException ("Logging is already enabled.");
+			}
+
+			this.queryLog = new MemoryLog (500)
+			{
+				LogResult = LoggingTabPage.globalLogResult,
+				LogStackTrace = LoggingTabPage.globalLogStackTrace,
+				LogThreadName = LoggingTabPage.globalLogThreadName
+			};
+
+			this.Container.Data.DataInfrastructure.AddQueryLog (this.queryLog);
+
+			this.logEnabled = true;
+
+			this.UpdateWidgets ();
+		}
+		
+		private void DisableLogging()
+		{
+			if (!this.logEnabled)
+			{
+				throw new System.InvalidOperationException ("Logging is already disabled.");
+			}
+
+			this.Container.Data.DataInfrastructure.RemoveQueryLog (this.queryLog);
+
+			this.logEnabled = false;
+
+			this.UpdateSlider ();
+			this.UpdateTable ();
+			this.UpdateDetails ();
+			this.UpdateWidgets ();
+		}
+		
 		private static string ToNiceString(System.TimeSpan time)
 		{
 			long t = time.Ticks / 10L;  // en us

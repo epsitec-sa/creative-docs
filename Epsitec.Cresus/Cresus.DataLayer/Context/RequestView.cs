@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public IEnumerable<AbstractEntity> GetEntities(int index, int count)
 		{
-			this.request.Skip = index + 1;
+			this.request.Skip = index;
 			this.request.Take = count;
 
 			// TODO Use this.dbTransaction here.

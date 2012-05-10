@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -2257,7 +2257,7 @@ namespace Epsitec.Cresus.Database
 
 				if (!this.IsLogEnabled ())
 				{
-					data = ExecuteNonQuery (count, command);
+					data = this.ExecuteNonQuery (count, command);
 				}
 				else
 				{
@@ -2265,7 +2265,7 @@ namespace Epsitec.Cresus.Database
 					System.DateTime startTime = System.DateTime.Now;
 
 					watch.Start ();
-					data = ExecuteNonQuery (count, command);
+					data = this.ExecuteNonQuery (count, command);
 					watch.Stop ();
 
 					this.Log (l => l.AddEntry (command, startTime, watch.Elapsed, data));

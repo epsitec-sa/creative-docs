@@ -1,6 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Debug;
 using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Library;
@@ -62,7 +63,7 @@ namespace Epsitec.Cresus.Core.Factories
 
 						if (factory.CanCreate (host))
 						{
-							long ms = Epsitec.Common.Debugging.Profiler.ElapsedMilliseconds (() => host.RegisterComponent (type, factory.Create (host)));
+							long ms = Profiler.ElapsedMilliseconds (() => host.RegisterComponent (type, factory.Create (host)));
 
 							if (ms > 10)
 							{
