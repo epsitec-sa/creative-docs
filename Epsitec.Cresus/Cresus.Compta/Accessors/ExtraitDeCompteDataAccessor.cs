@@ -10,7 +10,6 @@ using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,7 +24,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ExtraitDeCompteDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.permanents   = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
 			this.options      = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.compta);
 			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
 			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
@@ -43,6 +41,13 @@ namespace Epsitec.Cresus.Compta.Accessors
 			{
 				return false;
 			}
+		}
+
+
+		public FormattedText NuméroCompte
+		{
+			get;
+			set;
 		}
 
 
@@ -64,8 +69,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.readonlyAllData.Clear ();
 
-			FormattedText numéroCompte = this.Permanents.NuméroCompte;
-			if (numéroCompte.IsNullOrEmpty)
+			if (this.NuméroCompte.IsNullOrEmpty)
 			{
 				return;
 			}
@@ -74,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
 			if (compte == null)
 			{
 				return;
@@ -87,8 +91,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 					continue;
 				}
 
-				bool débit  = ExtraitDeCompteDataAccessor.Match (écriture.Débit,  numéroCompte);
-				bool crédit = ExtraitDeCompteDataAccessor.Match (écriture.Crédit, numéroCompte);
+				bool débit  = ExtraitDeCompteDataAccessor.Match (écriture.Débit,  this.NuméroCompte);
+				bool crédit = ExtraitDeCompteDataAccessor.Match (écriture.Crédit, this.NuméroCompte);
 
 				if (débit)
 				{
@@ -155,13 +159,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void UpdateSoldes()
 		{
 			//	Met à jour l'évolution du solde du compte, visible dans la colonne 'Solde'.
-			FormattedText numéroCompte = this.Permanents.NuméroCompte;
-			if (numéroCompte.IsNullOrEmpty)
+			if (this.NuméroCompte.IsNullOrEmpty)
 			{
 				return;
 			}
 
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
 			if (compte == null)
 			{
 				return;
@@ -217,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.cube.SetDimensionTitle (1, "Pièces");
 			this.cube.Clear ();
 
-			this.cube.SetShortTitle (0, 0, this.Permanents.NuméroCompte);
+			this.cube.SetShortTitle (0, 0, this.NuméroCompte);
 
 			int y = 0;
 			foreach (var d in this.readonlyData)
@@ -514,14 +517,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				return compte.Numéro;
-			}
-		}
-
-		private new ExtraitDeComptePermanents Permanents
-		{
-			get
-			{
-				return this.permanents as ExtraitDeComptePermanents;
 			}
 		}
 

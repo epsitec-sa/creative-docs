@@ -7,7 +7,6 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Permanents.Data;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -20,7 +19,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 	/// </summary>
 	public class NavigatorData
 	{
-		public NavigatorData(Command command, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, AbstractPermanents permanents, int? arrayIndex)
+		public NavigatorData(Command command, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, int? arrayIndex)
 		{
 			this.Command      = command;
 			this.Description  = description;
@@ -28,7 +27,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			this.Search       = search;
 			this.Filter       = filter;
 			this.Options      = options;
-			this.Permanents   = permanents;
 			this.ArrayIndex   = arrayIndex;
 		}
 
@@ -65,12 +63,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 		public AbstractOptions Options
-		{
-			get;
-			private set;
-		}
-
-		public AbstractPermanents Permanents
 		{
 			get;
 			private set;

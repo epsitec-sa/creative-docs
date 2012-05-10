@@ -13,7 +13,6 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
-using Epsitec.Cresus.Compta.Permanents.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -213,8 +212,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
 
-				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-				permanent.NuméroCompte = data.Numéro;
+				var accessor = présentation.DataAccessor as ExtraitDeCompteDataAccessor;
+				accessor.NuméroCompte = data.Numéro;
 
 				présentation.UpdateAfterChanged ();
 			};
