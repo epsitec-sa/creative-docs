@@ -21,8 +21,6 @@ using System.Linq;
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
-	
-	
 	/// <summary>
 	/// A <c>Request</c> object represent a high level query that can be executed against the database
 	/// via a <see cref="DataContext"/> and <see cref="DataLoader"/>.
@@ -44,8 +42,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public sealed class Request
 	{
-		
-		
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
@@ -59,18 +55,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is at the root of the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RootEntity
+		public AbstractEntity					RootEntity
 		{
 			get;
 			set;
 		}
 
-
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity RequestedEntity
+		public AbstractEntity					RequestedEntity
 		{
 			get
 			{
@@ -82,28 +77,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		/// <summary>
 		/// The number of entities that the request must skip from the result.
 		/// </summary>
-		public int? Skip
+		public int?								Skip
 		{
 			get;
 			set;
 		}
-
 
 		/// <summary>
 		/// The number of entities that the request must take from the result.
 		/// </summary>
-		public int? Take
+		public int?								Take
 		{
 			get;
 			set;
 		}
 
-
-		public List<Expression> Conditions
+		public List<Expression>					Conditions
 		{
 			get
 			{
@@ -111,13 +103,47 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
-		public List<SortClause> SortClauses
+		public List<SortClause>					SortClauses
 		{
 			get
 			{
 				return this.sortClauses;
 			}
+		}
+
+
+		public static Request Create(AbstractEntity rootEntity)
+		{
+			return new Request ()
+			{
+				RootEntity = rootEntity,
+			};
+		}
+
+		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
+		{
+			var request = Request.Create (rootEntity);
+
+			request.Conditions.Add
+			(
+				new BinaryComparison
+				(
+					InternalField.CreateId (rootEntity),
+					BinaryComparator.IsEqual,
+					new Constant (rootEntityKey.Id.Value)
+				)
+			);
+
+			return request;
+		}
+
+		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey, AbstractEntity requestedEntity)
+		{
+			var request = Request.Create (rootEntity, rootEntityKey);
+
+			request.RequestedEntity = requestedEntity;
+
+			return request;
 		}
 
 
@@ -356,7 +382,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-
 		private void CheckSortClauses(FieldChecker fieldChecker)
 		{
 			foreach (var sortClause in this.SortClauses)
@@ -371,53 +396,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public static Request Create(AbstractEntity rootEntity)
-		{
-			return new Request ()
-			{
-				RootEntity = rootEntity,
-			};
-		}
-
-
-		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
-		{
-			var request = Request.Create (rootEntity);
-
-			request.Conditions.Add
-			(
-				new BinaryComparison
-				(
-					InternalField.CreateId (rootEntity),
-					BinaryComparator.IsEqual,
-					new Constant (rootEntityKey.Id.Value)
-				)
-			);
-
-			return request;
-		}
-
-
-		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey, AbstractEntity requestedEntity)
-		{
-			var request = Request.Create (rootEntity, rootEntityKey);
-
-			request.RequestedEntity = requestedEntity;
-
-			return request;
-		}
-
-
-		private AbstractEntity requestedEntity;
-
-
-		private readonly List<Expression> conditions;
-
-
-		private readonly List<SortClause> sortClauses;
-
-
+		private readonly List<Expression>		conditions;
+		private readonly List<SortClause>		sortClauses;
+		private AbstractEntity					requestedEntity;
 	}
-
-
 }

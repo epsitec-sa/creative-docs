@@ -1,4 +1,7 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Marc BETTEX, Maintainer: Marc BETTEX
+
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
@@ -7,35 +10,60 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
-
-
 	/// <summary>
 	/// The <c>SortClause</c> class defines a part of an ordering for the result of requests.
 	/// </summary>
-	public sealed class SortClause
+	public sealed class SortClause : System.IEquatable<SortClause>
 	{
-
-
 		public SortClause(EntityField field, SortOrder sortOrder)
 		{
 			field.ThrowIfNull ("field");
 
-			this.Field = field;
-			this.SortOrder = sortOrder;
+			this.field = field;
+			this.sortOrder = sortOrder;
 		}
 
 
-		public EntityField Field
+		public EntityField						Field
 		{
-			get;
-			private set;
+			get
+			{
+				return this.field;
+			}
+		}
+
+		public SortOrder						SortOrder
+		{
+			get
+			{
+				return this.sortOrder;
+			}
 		}
 
 
-		public SortOrder SortOrder
+		#region IEquatable<SortClause> Members
+
+		public bool Equals(SortClause other)
 		{
-			get;
-			private set;
+			if (other == null)
+			{
+				return false;
+			}
+
+			return this.field == other.field
+				&& this.sortOrder == other.sortOrder;
+		}
+
+		#endregion
+
+		public override bool Equals(object obj)
+		{
+			return this.Equals (obj as SortClause);
+		}
+
+		public override int GetHashCode()
+		{
+			return this.field.GetHashCode () ^ this.sortOrder.GetHashCode ();
 		}
 
 
@@ -55,7 +83,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
+		private readonly EntityField			field;
+		private readonly SortOrder				sortOrder;
 	}
-
-
 }
