@@ -27,7 +27,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Proxies
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+		}
 
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
 			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 

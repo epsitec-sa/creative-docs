@@ -28,8 +28,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 		public static void ClassInitialize(TestContext testContext)
 		{
 			TestHelper.Initialize ();
+		}
 
-			DatabaseCreator2.ResetEmptyTestDatabase ();
+
+		[TestInitialize]
+		public void TestInitialize()
+		{
+			DatabaseCreator2.ResetPopulatedTestDatabase ();
 		}
 
 
