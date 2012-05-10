@@ -1664,7 +1664,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
-		public void GetObjectsWithSkipAndTake()
+		public void GetObjectsWithSkipAndTake1()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
 			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
@@ -1705,6 +1705,41 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 						CollectionAssert.AreEqual (expected, result2);
 					}
 				}
+			}
+		}
+
+
+		[TestMethod]
+		public void GetObjectsWithOrderBySkipAndTake()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ()
+				{
+					Gender = new PersonGenderEntity (),
+				};
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					Skip = 0,
+					Take = 1,
+				};
+
+				request.SortClauses.Add (
+					new SortClause (
+						new PublicField (example.Gender, new Druid ("[J1AR]")),
+						SortOrder.Ascending
+					)
+				);
+
+				var result = dataContext
+					.GetByRequest<NaturalPersonEntity> (request)
+					.ToList ();
+
+				Assert.AreEqual (1, result.Count);
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[0]));
 			}
 		}
 

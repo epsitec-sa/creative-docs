@@ -515,9 +515,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			AbstractEntity requestedEntity = request.RequestedEntity;
 			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
+			SqlContainer sqlContaierForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
 			SqlContainer sqlContainerForCollectionSourceIds = this.BuildSqlContainerForCollectionSourceIds (requestedAlias, requestedEntity);
 
 			SqlSelect sqlSelectForSourceIds = sqlContainerForConditions
+				.Plus (sqlContaierForOrderBy)
 				.Plus (sqlContainerForCollectionSourceIds)
 				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
 
