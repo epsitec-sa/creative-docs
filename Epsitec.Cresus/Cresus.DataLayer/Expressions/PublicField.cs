@@ -23,14 +23,16 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			fieldId.ThrowIf (id => id.IsEmpty, "fieldId is empty");
 
-			this.FieldId = fieldId;
+			this.fieldId = fieldId;
 		}
 
 
 		public Druid							FieldId
 		{
-			get;
-			private set;
+			get
+			{
+				return this.fieldId;
+			}
 		}
 
 
@@ -50,5 +52,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			checker.Check (this.Entity, this.FieldId);
 		}
+
+		
+		private readonly Druid					fieldId;
 	}
 }
