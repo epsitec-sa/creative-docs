@@ -202,7 +202,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetContentsBasedOnDataSet()
 		{
+			this.SetContents (this.GetContentAccessor (), EntityInfo.GetTypeId (this.dataSetType));
 			this.SetContents (this.GetContentGetter (), EntityInfo.GetTypeId (this.dataSetType));
+		}
+
+		private DataSetAccessor GetContentAccessor()
+		{
+			var component = this.data.GetComponent<DataSetGetter> ();
+			var accessor  = component.ResolveAccessor (this.dataSetType);
+
+			return accessor;
 		}
 
 		private DataSetCollectionGetter GetContentGetter()
@@ -211,6 +220,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			var getter    = component.ResolveDataSet (this.dataSetType);
 			
 			return getter;
+		}
+
+		private void SetContents(DataSetAccessor collectionAccessor, Druid entityId)
+		{
+			this.collectionAccessor = collectionAccessor;
+			this.collectionEntityId = entityId;
+
+			this.SetUpContentExtractor ();
+			
+			this.UpdateCollection ();
 		}
 
 		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
@@ -364,6 +383,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private BrowserListContext				context;
 		private DataSetCollectionGetter			collectionGetter;
+		private DataSetAccessor					collectionAccessor;
 		private Druid							collectionEntityId;
 		
 		private EntityKey?						activeEntityKey;

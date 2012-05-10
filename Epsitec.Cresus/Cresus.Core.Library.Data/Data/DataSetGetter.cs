@@ -6,12 +6,14 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Factories;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -35,6 +37,11 @@ namespace Epsitec.Cresus.Core.Data
 		public DataSetCollectionGetter ResolveDataSet(System.Type entityType)
 		{
 			return Resolver.ResolveGetter (entityType, this.Host);
+		}
+
+		public DataSetAccessor ResolveAccessor(System.Type entityType)
+		{
+			return Resolver.ResolveAccessor (entityType, this.Host);
 		}
 		
 		public static Druid GetRootEntityId(string dataSetName)
@@ -89,27 +96,47 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			public static DataSetCollectionGetter ResolveGetter(System.Type entityType, CoreData data)
 			{
-				var getter = Resolver.GetResolver (entityType);
-				return getter.Resolve (data);
+				var resolver = Resolver.GetResolver (entityType);
+				return resolver.ResolveGetter (data);
 			}
 
+			public static DataSetAccessor ResolveAccessor(System.Type entityType, CoreData data)
+			{
+				var resolver = Resolver.GetResolver (entityType);
+				return resolver.ResolveAccessor (data);
+			}
+
+			
+			protected abstract DataSetCollectionGetter ResolveGetter(CoreData data);
+
+			protected abstract DataSetAccessor ResolveAccessor(CoreData data);
+
+			
 			private static Resolver GetResolver(System.Type entityType)
 			{
 				System.Diagnostics.Debug.Assert (entityType != null);
 
-				return System.Activator.CreateInstance (typeof (Implementation<>).MakeGenericType (entityType)) as Resolver;
+				return SingletonFactory.GetSingleton<Resolver> (typeof (Implementation<>), entityType);
 			}
 			
-			protected abstract DataSetCollectionGetter Resolve(CoreData data);
-			
+
+			#region Implementation<T> Class
+
 			private sealed class Implementation<T> : Resolver
 				where T : AbstractEntity, new ()
 			{
-				protected override DataSetCollectionGetter Resolve(CoreData data)
+				protected override DataSetCollectionGetter ResolveGetter(CoreData data)
 				{
 					return context => data.GetAllEntities<T> (dataContext: context);
 				}
+
+				protected override DataSetAccessor ResolveAccessor(CoreData data)
+				{
+					return new DataSetAccessor<T> (data);
+				}
 			}
+
+			#endregion
 		}
 
 		#endregion

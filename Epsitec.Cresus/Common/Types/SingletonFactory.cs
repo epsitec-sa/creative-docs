@@ -16,11 +16,12 @@ namespace Epsitec.Common.Types
 		public static T GetSingleton<T>(System.Type type)
 			where T : class
 		{
-			cacheExclusion.Wait ();
+			SingletonFactory.cacheExclusion.Wait ();
 
 			try
 			{
 				object value;
+
 				if (SingletonFactory.cache.TryGetValue (type, out value) == false)
 				{
 					value = System.Activator.CreateInstance (type);
@@ -31,7 +32,7 @@ namespace Epsitec.Common.Types
 			}
 			finally
 			{
-				cacheExclusion.Release ();
+				SingletonFactory.cacheExclusion.Release ();
 			}
 		}
 
