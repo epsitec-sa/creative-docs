@@ -1041,6 +1041,7 @@
     <Compile Include="Types\Serialization\MarkupExtension.cs" />
     <Compile Include="Types\Serialization\SerializerContext.cs" />
     <Compile Include="Types\Serialization\SimpleSerialization.cs" />
+    <Compile Include="Types\SingletonFactory.cs" />
     <Compile Include="Types\SortDescription.cs" />
     <Compile Include="Types\Storage.cs" />
     <Compile Include="Types\StringComparisonBehavior.cs" />
