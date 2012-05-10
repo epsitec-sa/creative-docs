@@ -8,7 +8,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Permanents;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;

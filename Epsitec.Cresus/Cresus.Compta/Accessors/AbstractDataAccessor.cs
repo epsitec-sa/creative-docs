@@ -15,7 +15,7 @@ using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Permanents;
 
 using System.Collections.Generic;
 using System.Linq;

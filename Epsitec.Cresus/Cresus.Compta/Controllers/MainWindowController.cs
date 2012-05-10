@@ -17,7 +17,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
-using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Permanents;
 using Epsitec.Cresus.Compta.ViewSettings.Data;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Graph;

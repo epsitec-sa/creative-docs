@@ -13,7 +13,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Options.Controllers;
-using Epsitec.Cresus.Compta.Permanents.Data;
+using Epsitec.Cresus.Compta.Permanents;
 using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Widgets;
