@@ -27,7 +27,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.itemScrollList = scrollList;
 			this.dataSetType    = dataSetType;
 			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
-			this.collection     = new BrowserList ();
 			this.suspendUpdates = new SafeCounter ();
 			this.context        = new BrowserListContext (this.dataContext);
 
@@ -130,7 +129,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.TearDownItemList ();
 			this.DetachEventHandlers ();
-			this.collection.Dispose ();
 			this.data.DisposeDataContext (this.dataContext);
 		}
 
@@ -205,7 +203,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void SetContentsBasedOnDataSet()
 		{
 			this.SetContents (this.GetContentAccessor (), EntityInfo.GetTypeId (this.dataSetType));
-			this.SetContents (this.GetContentGetter (), EntityInfo.GetTypeId (this.dataSetType));
 		}
 
 		private DataSetAccessor GetContentAccessor()
@@ -227,16 +224,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void SetContents(DataSetAccessor collectionAccessor, Druid entityId)
 		{
 			this.context.Accessor = collectionAccessor;
-			this.collectionEntityId = entityId;
-
-			this.SetUpContentExtractor ();
-			
-			this.UpdateCollection ();
-		}
-
-		private void SetContents(DataSetCollectionGetter collectionGetter, Druid entityId)
-		{
-			this.collectionGetter   = collectionGetter;
 			this.collectionEntityId = entityId;
 
 			this.SetUpContentExtractor ();
@@ -289,32 +276,12 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.UpdateCollection (reset: false);
 		}
 
-		private BrowserListItem[] GetCollectionListItems()
-		{
-			if (this.collectionGetter == null)
-			{
-				return new BrowserListItem[0];
-			}
-			else
-			{
-				//	TODO: filter...
-
-				return this.collectionGetter (this.dataContext).Select (x => new BrowserListItem (x, this.context.GetEntityKey (x))).ToArray ();
-			}
-		}
-
 		private void UpdateCollection(bool reset = true)
 		{
-			if (this.collectionGetter == null)
+			if (this.itemProvider == null)
 			{
 				return;
 			}
-
-			//	TODO: handle extracted collection
-
-//-				this.extractor.Fill (this.GetCollectionEntities ());
-			
-			this.collection.ClearAndAddRange (this.GetCollectionListItems ());
 
 			this.itemProvider.Reset ();
 			this.RefreshScrollList (reset);
@@ -384,7 +351,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private EntityDataCollection			extractedCollection;
 
 		private BrowserListContext				context;
-		private DataSetCollectionGetter			collectionGetter;
 		private Druid							collectionEntityId;
 		
 		private EntityKey?						activeEntityKey;
