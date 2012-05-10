@@ -147,7 +147,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetUpItemList()
 		{
-			this.itemProvider = new BrowserListItemProvider (this.collection);
+			this.SetContents (this.GetContentAccessor (), EntityInfo.GetTypeId (this.dataSetType));
+			
+			this.itemProvider = new BrowserListItemProvider (this.context);
 			this.itemMapper   = new BrowserListItemMapper ();
 			this.itemRenderer = new BrowserListItemRenderer (this.context);
 			
@@ -224,7 +226,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetContents(DataSetAccessor collectionAccessor, Druid entityId)
 		{
-			this.collectionAccessor = collectionAccessor;
+			this.context.Accessor = collectionAccessor;
 			this.collectionEntityId = entityId;
 
 			this.SetUpContentExtractor ();
@@ -383,7 +385,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private BrowserListContext				context;
 		private DataSetCollectionGetter			collectionGetter;
-		private DataSetAccessor					collectionAccessor;
 		private Druid							collectionEntityId;
 		
 		private EntityKey?						activeEntityKey;

@@ -2,21 +2,48 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.BigList;
+using Epsitec.Common.Debug;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.Core.Data;
 
 using Epsitec.Cresus.Database;
 using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
+using System.Diagnostics;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListItemProvider : IItemDataProvider<BrowserListItem>
 	{
-		public BrowserListItemProvider(BrowserList list)
+		public BrowserListItemProvider(BrowserListContext context)
 		{
-			this.list = list;
+			this.context  = context;
+			
+			this.dataCache  = new Dictionary<int, BrowserListItem> ();
 			this.reverseMap = new Dictionary<DbKey, int> ();
+
+			this.DefaultPrefetchCount = 50;
+		}
+
+		public int								DefaultPrefetchCount
+		{
+			get;
+			set;
+		}
+
+		public DataSetAccessor					Accessor
+		{
+			get
+			{
+				var accessor = this.context.Accessor;
+
+				accessor.ThrowIfNull ("accessor");
+
+				return accessor;
+			}
 		}
 
 		#region IItemDataProvider<BrowserListItem> Members
@@ -24,17 +51,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public bool Resolve(int index, out BrowserListItem value)
 		{
 			if ((index < 0) ||
-				(index >= this.list.Count))
+				(index >= this.Count))
 			{
 				value = null;
 				return false;
 			}
 
-			value = this.list[index];
-			
-			this.reverseMap[value.RowKey] = index;
+			long 탎 = Profiler.ElapsedMicroseconds (() => this.FillDataCache (index));
 
-			return true;
+			System.Diagnostics.Debug.WriteLine ("Resolved index {0} in {1} 탎", index, 탎);
+
+			return this.dataCache.TryGetValue (index, out value);
 		}
 
 		#endregion
@@ -45,7 +72,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			get
 			{
-				return this.list.Count;
+				if (this.count == null)
+				{
+					long 탎;
+
+					this.count = Profiler.ElapsedMicroseconds (() => this.Accessor.GetItemCount (), out 탎);
+
+					System.Diagnostics.Debug.WriteLine ("Retrieved item count in {0} 탎", 탎);
+				}
+
+				return this.count.Value;
 			}
 		}
 
@@ -64,9 +100,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 					return index;
 				}
 
-				//	TODO: ask the database about this row
-
-				return this.list.IndexOf (entityKey);
+				return this.Accessor.IndexOf (entityKey);
 			}
 			else
 			{
@@ -79,7 +113,69 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.reverseMap.Clear ();
 		}
 
-		private readonly BrowserList			list;
+
+		private void FillDataCache(int start, int prefetchCount = 0)
+		{
+			if (prefetchCount == 0)
+			{
+				prefetchCount = this.DefaultPrefetchCount;
+			}
+
+			int end = this.GetNextKnownIndex (start, prefetchCount);
+
+			if (end == start)
+			{
+				return;
+			}
+
+			this.LoadDataCache (start, end);
+		}
+
+		private void LoadDataCache(int first, int last)
+		{
+			var keys   = this.Accessor.GetItemKeys (first, last - first + 1);
+			int offset = 0;
+
+			for (int index = first; index <= last && offset < keys.Length; index++)
+			{
+				var key = keys[offset++];
+
+				this.dataCache[index] = this.CreateBrowserListItem (key);
+				this.reverseMap[key.RowKey] = index;
+			}
+		}
+
+		private BrowserListItem CreateBrowserListItem(EntityKey entityKey)
+		{
+			var entity = this.context.ResolveEntity (entityKey);
+			
+			return new BrowserListItem (entity, entityKey);
+		}
+
+
+		private int GetNextKnownIndex(int start, int take)
+		{
+			int end = start + take;
+			int max = this.Count;
+
+			while (take-- > 0)
+			{
+				if ((this.dataCache.ContainsKey (start)) ||
+					(start >= max))
+				{
+					return start;
+				}
+
+				start++;
+			}
+			
+			return end;
+		}
+
+
+		private readonly BrowserListContext		context;
+		private readonly Dictionary<int, BrowserListItem> dataCache;
 		private readonly Dictionary<DbKey, int>	reverseMap;
+		private int? count;
 	}
 }

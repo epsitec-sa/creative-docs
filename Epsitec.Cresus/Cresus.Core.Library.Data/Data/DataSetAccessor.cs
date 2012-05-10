@@ -35,6 +35,12 @@ namespace Epsitec.Cresus.Core.Data
 			return this.itemCount.Value;
 		}
 
+		public int IndexOf(EntityKey? entityKey)
+		{
+			//	TODO: implement...
+
+			return -1;
+		}
 		
 		public EntityKey[] GetItemKeys(int index, int count)
 		{
