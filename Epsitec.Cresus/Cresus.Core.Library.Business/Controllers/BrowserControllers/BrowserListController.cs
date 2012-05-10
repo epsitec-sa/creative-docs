@@ -336,7 +336,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private readonly CoreData				data;
 		private readonly ItemScrollList			itemScrollList;
-		private readonly BrowserList			collection;
 		private readonly System.Type			dataSetType;
 		private readonly DataContext			dataContext;
 		private readonly SafeCounter			suspendUpdates;

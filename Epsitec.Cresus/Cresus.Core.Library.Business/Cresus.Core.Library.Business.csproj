@@ -180,7 +180,6 @@
     <Compile Include="Controllers\EditionControllers\IEditionViewController.cs" />
     <Compile Include="Controllers\SpecialControllers\SerializedDocumentBlobController.cs" />
     <Compile Include="Controllers\SpecialControllers\SpecialArticleParameterListEnumValuesController.cs" />
-    <Compile Include="Controllers\BrowserControllers\BrowserList.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserListItem.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsController.cs" />
     <Compile Include="Controllers\BrowserControllers\BrowserSettingsMode.cs" />
