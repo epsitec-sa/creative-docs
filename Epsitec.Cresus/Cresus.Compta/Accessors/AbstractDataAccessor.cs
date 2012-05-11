@@ -88,14 +88,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public TemporalData TemporalData
-		{
-			get
-			{
-				return this.temporalData;
-			}
-		}
-
 		public SoldesJournalManager SoldesJournalManager
 		{
 			get
@@ -243,7 +235,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyData.Clear ();
 
 			if ((this.filterData == null || this.filterData.IsEmpty) &&
-				(this.temporalData == null || this.temporalData.IsEmpty))
+				(this.mainWindowController.TemporalData == null || this.mainWindowController.TemporalData.IsEmpty))
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
@@ -307,10 +299,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return false;
 			}
 
-			if (this.temporalData != null && !this.temporalData.IsEmpty)
+			if (this.mainWindowController.TemporalData != null && !this.mainWindowController.TemporalData.IsEmpty)
 			{
 				var date = Converters.ParseDate (this.GetText (row, ColumnType.Date, true));
-				if (!this.temporalData.Match (date))
+				if (!this.mainWindowController.TemporalData.Match (date))
 				{
 					return false;
 				}
@@ -682,7 +674,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected SearchData							searchData;
 		protected SearchData							filterData;
-		protected TemporalData							temporalData;
 		protected AbstractOptions						options;
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;

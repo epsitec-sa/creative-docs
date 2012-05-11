@@ -25,11 +25,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ExtraitDeCompteDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.permanents   = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
-			this.options      = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.compta);
-			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
-			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
-			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.ExtraitDeCompte.Temporal");
+			this.permanents = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
+			this.options    = this.mainWindowController.GetSettingsOptions<ExtraitDeCompteOptions> ("Présentation.ExtraitDeCompte.Options", this.compta);
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Filter");
 
 			this.arrayGraphOptions = new GraphOptions ();
 
@@ -50,7 +49,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			Date? beginDate, endDate;
 			this.filterData.GetBeginnerDates (out beginDate, out endDate);
-			this.temporalData.MergeDates (ref beginDate, ref endDate);
+			this.mainWindowController.TemporalData.MergeDates (ref beginDate, ref endDate);
 
 			if (this.lastBeginDate != beginDate || this.lastEndDate != endDate)
 			{
@@ -71,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
+			this.mainWindowController.TemporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();

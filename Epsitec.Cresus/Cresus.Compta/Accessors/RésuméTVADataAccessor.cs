@@ -22,10 +22,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public RésuméTVADataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options      = this.mainWindowController.GetSettingsOptions<RésuméTVAOptions> ("Présentation.RésuméTVA.Options", this.compta);
-			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Search");
-			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Filter");
-			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.RésuméTVA.Temporal");
+			this.options    = this.mainWindowController.GetSettingsOptions<RésuméTVAOptions> ("Présentation.RésuméTVA.Options", this.compta);
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -48,7 +47,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
+			this.mainWindowController.TemporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			var blocs = new List<BlocDeRésumé> ();

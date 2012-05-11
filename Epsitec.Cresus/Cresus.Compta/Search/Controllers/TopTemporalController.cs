@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.compta          = this.controller.ComptaEntity;
 			this.dataAccessor    = this.controller.DataAccessor;
 			this.businessContext = this.controller.BusinessContext;
-			this.data            = this.controller.DataAccessor.TemporalData;
+			this.data            = this.controller.MainWindowController.TemporalData;
 		}
 
 

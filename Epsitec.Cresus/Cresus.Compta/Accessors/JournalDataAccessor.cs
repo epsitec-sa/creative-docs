@@ -27,10 +27,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public JournalDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options      = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.compta);
-			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Search");
-			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
-			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.Journal.Temporal");
+			this.options    = this.mainWindowController.GetSettingsOptions<JournalOptions> ("Présentation.Journal.Options", this.compta);
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Journal.Filter");
 
 			this.UpdateAfterOptionsChanged ();
 		}
@@ -53,8 +52,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.journalAll = this.période.Journal.Where (x => x.Journal.Id == id).ToList ();
 			}
 
-			if ((this.filterData == null || this.filterData.IsEmpty) &&
-				(this.temporalData == null || this.temporalData.IsEmpty))
+			if ((this.filterData == null || this.filterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
 			{
 				this.journal = this.journalAll;
 			}

@@ -22,9 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BudgetsDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Search");
-			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Filter");
-			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.Budgets.Temporal");
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Budgets.Filter");
 
 			this.soldesJournalManager.Initialize (this.période.Journal);
 		}
@@ -48,8 +47,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.planComptableAll = this.compta.PlanComptable;
 
-			if ((this.filterData == null || this.filterData.IsEmpty) &&
-				(this.temporalData == null || this.temporalData.IsEmpty))
+			if ((this.filterData == null || this.filterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
 			{
 				this.planComptable = this.planComptableAll;
 			}
@@ -70,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 			Date? dateDébut, dateFin;
 			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
-			this.temporalData.MergeDates (ref dateDébut, ref dateFin);
+			this.mainWindowController.TemporalData.MergeDates (ref dateDébut, ref dateFin);
 			this.soldesJournalManager.Initialize (this.période.Journal, dateDébut, dateFin);
 
 			base.UpdateAfterOptionsChanged ();

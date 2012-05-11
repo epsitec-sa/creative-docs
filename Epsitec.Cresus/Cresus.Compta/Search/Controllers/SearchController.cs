@@ -509,55 +509,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = this.CreateBeginnerFrame (parent, "Période");
 
-#if false
-			Date? beginDate, endDate;
-			this.data.GetBeginnerDates (out beginDate, out endDate);
-
-			var fromLabel = new StaticText
-			{
-				Parent  = frame,
-				Text    = "Du",
-				Dock    = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
-			};
-			fromLabel.PreferredWidth = fromLabel.GetBestFitSize ().Width;
-
-			var initialDate = Converters.DateToString(beginDate);
-			this.beginnerBeginDateController = UIBuilder.CreateDateField (this.controller, frame, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
-			this.beginnerBeginDateController.Box.Dock = DockStyle.Left;
-			this.beginnerBeginDateController.Box.Margins = new Margins (0, 10, 0, 0);
-
-			var toLabel = new StaticText
-			{
-				Parent  = frame,
-				Text    = "Au",
-				Dock    = DockStyle.Left,
-				Margins = new Margins (0, 10, 0, 0),
-			};
-			toLabel.PreferredWidth = toLabel.GetBestFitSize ().Width;
-
-			initialDate = Converters.DateToString (endDate);
-			this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
-			this.beginnerEndDateController.Box.Dock = DockStyle.Left;
-			this.beginnerEndDateController.Box.Margins = new Margins (0, 10, 0, 0);
-#else
 			this.temporalController = new TemporalController (this.controller, this.data.TemporalData);
 			this.temporalController.CreateUI (frame, this.BeginnerDateChanged);
-#endif
-		}
-
-		private void BeginnerValidateDate(EditionData data)
-		{
-			Validators.ValidateDate (this.controller.MainWindowController.Période, data, emptyAccepted: true);
-		}
-
-		private void BeginnerDateChanged(int line, ColumnType columnType)
-		{
-			Date? beginDate = Converters.ParseDate (this.beginnerBeginDateController.EditionData.Text);
-			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);
-			data.SetBeginnerDates (beginDate, endDate);
-
-			this.SearchStartAction ();
 		}
 
 		private void BeginnerDateChanged()

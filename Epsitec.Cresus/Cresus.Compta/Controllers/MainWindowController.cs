@@ -44,6 +44,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.defaultSettingsList = new SettingsList ();
 			this.navigatorEngine = new NavigatorEngine ();
 			this.piècesGenerator = new PiècesGenerator (this);
+			this.temporalData = new TemporalData ();
 
 			this.Dirty = false;
 
@@ -157,6 +158,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.piècesGenerator;
+			}
+		}
+
+		public TemporalData TemporalData
+		{
+			get
+			{
+				return this.temporalData;
 			}
 		}
 
@@ -1764,26 +1773,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
-		public TemporalData GetSettingsTemporalData(string key, System.Action<TemporalData> initialize = null)
-		{
-			ISettingsData result;
-			if (this.settingsData.TryGetValue (key, out result))
-			{
-				return result as TemporalData;
-			}
-
-			var data = new TemporalData ();
-
-			if (initialize != null)
-			{
-				initialize (data);
-			}
-
-			this.settingsData.Add (key, data);
-
-			return data;
-		}
-
 		public ViewSettingsList GetViewSettingsList(string key)
 		{
 			ISettingsData result;
@@ -1808,6 +1797,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly SettingsList						defaultSettingsList;
 		private readonly NavigatorEngine					navigatorEngine;
 		private readonly PiècesGenerator					piècesGenerator;
+		private readonly TemporalData						temporalData;
 
 		private Window										mainWindow;
 		private BusinessContext								businessContext;

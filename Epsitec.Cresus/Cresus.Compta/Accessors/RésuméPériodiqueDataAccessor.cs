@@ -24,10 +24,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public RésuméPériodiqueDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options      = this.mainWindowController.GetSettingsOptions<RésuméPériodiqueOptions> ("Présentation.RésuméPériodique.Options", this.compta);
-			this.searchData   = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Search");
-			this.filterData   = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Filter");
-			this.temporalData = this.mainWindowController.GetSettingsTemporalData ("Présentation.RésuméPériodique.Temporal");
+			this.options    = this.mainWindowController.GetSettingsOptions<RésuméPériodiqueOptions> ("Présentation.RésuméPériodique.Options", this.compta);
+			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Search");
+			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Filter");
 
 			this.arrayGraphOptions = new GraphOptions ();
 
@@ -69,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 
 			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
-			this.temporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
+			this.mainWindowController.TemporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			//	Crée un SoldesJournalManager par colonne.

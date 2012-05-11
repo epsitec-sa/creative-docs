@@ -691,7 +691,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Temporal panel
 		private void CreateTopTemporal(FrameBox parent)
 		{
-			if (this.dataAccessor != null && this.dataAccessor.TemporalData != null)
+			if (this.dataAccessor != null)
 			{
 				this.topTemporalController = new TopTemporalController (this);
 				this.topTemporalController.CreateUI (parent, this.FilterStartAction);
@@ -781,7 +781,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.mainWindowController.OpenPanelFilter ();
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.TemporalData != null && !this.dataAccessor.TemporalData.IsEmpty)
+				if (!this.mainWindowController.TemporalData.IsEmpty)
 				{
 					this.mainWindowController.OpenPanelTemporal ();
 				}
@@ -873,8 +873,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			title = title.ApplyBold ().ApplyFontSize (13.0);
 
-			if ((this.dataAccessor != null && this.dataAccessor.FilterData   != null && !this.dataAccessor.FilterData.IsEmpty) ||
-				(this.dataAccessor != null && this.dataAccessor.TemporalData != null && !this.dataAccessor.TemporalData.IsEmpty))
+			if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
+				!this.mainWindowController.TemporalData.IsEmpty)
 			{
 				FormattedText ht = "filtre actif";
 				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
@@ -919,10 +919,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.SetTitle (this.title);
 				}
 
-				if (this.dataAccessor.TemporalData != null)
-				{
-					this.panelsToolbarController.TemporalEnable = !this.dataAccessor.TemporalData.IsEmpty;
-				}
+				this.panelsToolbarController.TemporalEnable = !this.mainWindowController.TemporalData.IsEmpty;
 			}
 		}
 		#endregion
