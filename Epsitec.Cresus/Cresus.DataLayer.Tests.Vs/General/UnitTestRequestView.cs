@@ -112,6 +112,27 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 
 		[TestMethod]
+		public void SimpleTest3()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				Request request = new Request ()
+				{
+					RootEntity = DatabaseCreator2.GetCorrectExample3 (),
+				};
+
+				using (var requestView = dataContext.GetRequestView (request))
+				{
+					var keys = requestView.GetKeys (0, 5);
+
+					Assert.AreEqual (2, keys.Count);
+				}
+			}
+		}
+
+
+		[TestMethod]
 		public void ConcurrencyTest()
 		{
 			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())

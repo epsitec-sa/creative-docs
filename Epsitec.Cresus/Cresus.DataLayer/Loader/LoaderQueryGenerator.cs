@@ -420,7 +420,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			return sqlContainerForConditions
 				.Plus (sqlContainerForOrderBy)
 				.Plus (sqlContainerForEntityKeys)
-				.BuildSqlSelect (skip: request.Skip, take: request.Take);
+				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
 		}
 
 
