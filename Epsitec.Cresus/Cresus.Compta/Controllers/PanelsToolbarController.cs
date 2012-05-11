@@ -27,47 +27,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-#if false
-			var toolbar = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = PanelsToolbarController.toolbarHeight,
-				Dock            = DockStyle.Left,
-			};
+			var temporalButton = this.CreateButton (parent, Res.Commands.Panel.Temporal, 0, UIBuilder.TemporalBackColor);
+			temporalButton.Margins = new Margins (3, 3+3, 3, 3);
 
-			this.CreateButton (toolbar, Res.Commands.Panel.ViewSettings, 0, UIBuilder.ViewSettingsBackColor);
-
-			new StaticText
-			{
-				Parent         = toolbar,
-				Text           = UIBuilder.GetTextIconUri ("Panel.Separator"),  // petite flèche ->
-				PreferredWidth = 12,
-				Dock           = DockStyle.Left,
-			};
-#endif
-#if false
-			var toolbar = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
-				DrawFullFrame   = true,
-				BackColor       = UIBuilder.ViewSettingsBackColor,
-				Dock            = DockStyle.Left,
-				Padding         = new Margins (3),
-			};
-
-			new FrameBox
-			{
-				Parent        = toolbar,
-				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
-				DrawFullFrame = true,
-				BackColor     = RibbonController.GetBackgroundColor1 (),
-				Anchor        = AnchorStyles.TopLeft,
-			};
-
-			this.CreateButton (toolbar, Res.Commands.Panel.ViewSettings, 2, UIBuilder.ViewSettingsBackColor);
-#endif
-#if true
 			var vsFrame = new FrameBox
 			{
 				Parent          = parent,
@@ -110,13 +72,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				DrawFrameEdges  = FrameEdges.Top | FrameEdges.Bottom,
 				BackColor       = UIBuilder.ViewSettingsBackColor,
 				Anchor          = AnchorStyles.BottomLeft,
-				Margins         = new Margins (PanelsToolbarController.toolbarHeight+5, 0, 0, 13),
+				Margins         = new Margins (33+PanelsToolbarController.toolbarHeight+5, 0, 0, 13),
 			};
-#endif
 
 			var searchButton   = this.CreateButton (toolbar, Res.Commands.Panel.Search,   -1, UIBuilder.SearchBackColor);
 			var filterButton   = this.CreateButton (toolbar, Res.Commands.Panel.Filter,   -1, UIBuilder.FilterBackColor);
-			var temporalButton = this.CreateButton (toolbar, Res.Commands.Panel.Temporal, -1, UIBuilder.TemporalBackColor);
 			                     this.CreateButton (toolbar, Res.Commands.Panel.Options,   0, UIBuilder.OptionsBackColor);
 
 			this.searchMarker   = this.CreateMarker (searchButton);

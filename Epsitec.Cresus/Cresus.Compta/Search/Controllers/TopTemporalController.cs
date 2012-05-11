@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				DrawFullFrame   = true,
 				BackColor       = UIBuilder.TemporalBackColor,
 				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, -1),
+				Margins         = new Margins (0, 0, 0, 5),
 				Visibility      = false,
 			};
 
