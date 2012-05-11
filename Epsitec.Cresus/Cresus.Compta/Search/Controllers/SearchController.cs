@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.beginnerFrame = new FrameBox
 			{
 				Parent              = this.middleFrame,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
+				ContainerLayoutMode = this.isFilter ? ContainerLayoutMode.VerticalFlow : ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Fill,
-				Padding             = new Margins (5),
+				Padding             = new Margins (5, 5, this.isFilter ? 0 : 5, this.isFilter ? 0 : 5),
 			};
 
 			{
@@ -211,34 +211,37 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					PreferredWidth   = UIBuilder.LeftLabelWidth+1-10,
 					PreferredHeight  = 20,
 					Dock             = DockStyle.Top,
-					Margins          = new Margins (0, 10, 0, 0),
+					Margins          = new Margins (0, 10, this.isFilter ? 5 : 0, 0),
 				};
 			}
 
 			if (this.isFilter)
 			{
+				var stackFrame = new FrameBox
+				{
+					Parent = this.beginnerFrame,
+					Dock   = DockStyle.Fill,
+				};
+
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Catégorie).Any ())
 				{
-					this.CreateMiddleBeginnerCatégorieUI ();
+					this.CreateMiddleBeginnerCatégorieUI (stackFrame);
 				}
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Profondeur).Any ())
 				{
-					this.CreateMiddleBeginnerProfondeurUI ();
+					this.CreateMiddleBeginnerProfondeurUI (stackFrame);
 				}
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Solde).Any ())
 				{
-					this.CreateMiddleBeginnerSoldeUI ();
+					this.CreateMiddleBeginnerSoldeUI (stackFrame);
 				}
 
-#if false
-				//	Ce n'est plus nécessaire, grace au filtre temporel !
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Date).Any ())
 				{
-					this.CreateMiddleBeginnerDatesUI ();
+					this.CreateMiddleBeginnerDatesUI (stackFrame);
 				}
-#endif
 			}
 			else
 			{
@@ -247,97 +250,61 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void CreateMiddleBeginnerCatégorieUI()
+		private void CreateMiddleBeginnerCatégorieUI(FrameBox parent)
 		{
-			var frame = new GroupBox
-			{
-				Parent          = this.beginnerFrame,
-				Text            = "Catégories",
-				PreferredHeight = 65,  // pour aider le layout !
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
-				Padding         = new Margins (5, 5, 2, 2),
-			};
-
-			int buttonWidth = 60;
-
-			var frame1 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 16,
-				Dock            = DockStyle.Top,
-			};
-
-			var frame2 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 16,
-				Dock            = DockStyle.Top,
-			};
-
-			var frame3 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 16,
-				Dock            = DockStyle.Top,
-			};
+			var frame = this.CreateBeginnerFrame (parent, "Catégories");
 
 			var catégorie = this.data.BeginnerCatégories;
 
+			this.beginnerCatégorieActif = new CheckButton
 			{
-				this.beginnerCatégorieActif = new CheckButton
-				{
-					Parent          = frame1,
-					Text            = Converters.CatégorieToString (CatégorieDeCompte.Actif),
-					ActiveState     = ((catégorie & CatégorieDeCompte.Actif) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth  = buttonWidth,
-					PreferredHeight = 16,
-					Dock            = DockStyle.Left,
-				};
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Actif),
+				ActiveState = ((catégorie & CatégorieDeCompte.Actif) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégorieActif.PreferredWidth = this.beginnerCatégorieActif.GetBestFitSize ().Width;
 
-				this.beginnerCatégorieCharge = new CheckButton
-				{
-					Parent          = frame1,
-					Text            = Converters.CatégorieToString (CatégorieDeCompte.Charge),
-					ActiveState     = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth  = buttonWidth,
-					PreferredHeight = 16,
-					Dock            = DockStyle.Left,
-				};
-			}
-
+			this.beginnerCatégorieCharge = new CheckButton
 			{
-				this.beginnerCatégoriePassif = new CheckButton
-				{
-					Parent          = frame2,
-					Text            = Converters.CatégorieToString (CatégorieDeCompte.Passif),
-					ActiveState     = ((catégorie & CatégorieDeCompte.Passif) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth  = buttonWidth,
-					PreferredHeight = 16,
-					Dock            = DockStyle.Left,
-				};
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Charge),
+				ActiveState = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégorieCharge.PreferredWidth = this.beginnerCatégorieCharge.GetBestFitSize ().Width;
 
-				this.beginnerCatégorieProduit = new CheckButton
-				{
-					Parent          = frame2,
-					Text            = Converters.CatégorieToString (CatégorieDeCompte.Produit),
-					ActiveState     = ((catégorie & CatégorieDeCompte.Produit) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth  = buttonWidth,
-					Dock            = DockStyle.Left,
-				};
-			}
-
+			this.beginnerCatégoriePassif = new CheckButton
 			{
-				this.beginnerCatégorieExploitation = new CheckButton
-				{
-					Parent          = frame3,
-					Text            = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
-					ActiveState     = ((catégorie & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No,
-					PreferredWidth  = buttonWidth+40,
-					PreferredHeight = 16,
-					Dock            = DockStyle.Left,
-				};
-			}
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Passif),
+				ActiveState = ((catégorie & CatégorieDeCompte.Passif) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégoriePassif.PreferredWidth = this.beginnerCatégoriePassif.GetBestFitSize ().Width;
+
+			this.beginnerCatégorieProduit = new CheckButton
+			{
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Produit),
+				ActiveState = ((catégorie & CatégorieDeCompte.Produit) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégorieProduit.PreferredWidth = this.beginnerCatégorieProduit.GetBestFitSize ().Width;
+
+			this.beginnerCatégorieExploitation = new CheckButton
+			{
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
+				ActiveState = ((catégorie & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégorieExploitation.PreferredWidth = this.beginnerCatégorieExploitation.GetBestFitSize ().Width;
 
 			this.beginnerCatégorieActif       .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
 			this.beginnerCatégoriePassif      .ActiveStateChanged += new Common.Support.EventHandler (this.HandleCheckButtonCatégorie);
@@ -380,75 +347,51 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void CreateMiddleBeginnerProfondeurUI()
+		private void CreateMiddleBeginnerProfondeurUI(FrameBox parent)
 		{
-			var frame = new GroupBox
+			var frame = this.CreateBeginnerFrame (parent, "Profondeur");
+
+			var fromLabel = new StaticText
 			{
-				Parent          = this.beginnerFrame,
-				Text            = "Profondeur",
-				PreferredWidth  = 20+50,  // pour aider le layout !
-				PreferredHeight = 65,  // pour aider le layout !
+				Parent         = frame,
+				Text           = "De",
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+			};
+			fromLabel.PreferredWidth = fromLabel.GetBestFitSize ().Width;
+
+			this.beginnerFromProfondeurField = new TextFieldCombo
+			{
+				Parent          = frame,
+				IsReadOnly      = true,
+				PreferredWidth  = 50,
+				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
-				Padding         = new Margins (5, 5, 2, 2),
+				TabIndex        = 1,
 			};
 
-			var frame1 = new FrameBox
+			var toLabel = new StaticText
 			{
 				Parent         = frame,
-				PreferredWidth = 20+50,  // pour aider le layout !
-				Dock           = DockStyle.Top,
-				Margins        = new Margins (0, 0, 0, 1),
+				Text           = "À",
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 			};
+			toLabel.PreferredWidth = toLabel.GetBestFitSize ().Width;
 
-			var frame2 = new FrameBox
+			this.beginnerToProfondeurField = new TextFieldCombo
 			{
-				Parent         = frame,
-				PreferredWidth = 20+50,  // pour aider le layout !
-				Dock           = DockStyle.Top,
+				Parent          = frame,
+				IsReadOnly      = true,
+				PreferredWidth  = 50,
+				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = 2,
 			};
-
-			{
-				new StaticText
-				{
-					Parent         = frame1,
-					Text           = "De",
-					PreferredWidth = 20,
-					Dock           = DockStyle.Left,
-				};
-
-				this.beginnerFromProfondeurField = new TextFieldCombo
-				{
-					Parent          = frame1,
-					IsReadOnly      = true,
-					PreferredWidth  = 50,
-					PreferredHeight = 20,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth,
-					Dock            = DockStyle.Left,
-					TabIndex        = 1,
-				};
-			}
-
-			{
-				new StaticText
-				{
-					Parent         = frame2,
-					Text           = "À",
-					PreferredWidth = 20,
-					Dock           = DockStyle.Left,
-				};
-
-				this.beginnerToProfondeurField = new TextFieldCombo
-				{
-					Parent          = frame2,
-					IsReadOnly      = true,
-					PreferredWidth  = 50,
-					PreferredHeight = 20,
-					MenuButtonWidth = UIBuilder.ComboButtonWidth,
-					Dock            = DockStyle.Left,
-					TabIndex        = 2,
-				};
-			}
 
 			this.InitializeProfondeurs ();
 
@@ -540,27 +483,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void CreateMiddleBeginnerSoldeUI()
+		private void CreateMiddleBeginnerSoldeUI(FrameBox parent)
 		{
-			var frame = new GroupBox
-			{
-				Parent          = this.beginnerFrame,
-				Text            = "Soldes",
-				PreferredHeight = 65,  // pour aider le layout !
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
-				Padding         = new Margins (5, 5, 2, 2),
-			};
+			var frame = this.CreateBeginnerFrame (parent, "Soldes");
 
 			var button = new CheckButton
 			{
-				Parent      = frame,
-				Text        = "Cacher nuls",
-				ActiveState = this.data.BeginnerHideNuls ? ActiveState.Yes : ActiveState.No,
-				Dock        = DockStyle.Top,
+				Parent         = frame,
+				Text           = "Cacher les comptes dont le solde est nul",
+				PreferredWidth = 300,
+				ActiveState    = this.data.BeginnerHideNuls ? ActiveState.Yes : ActiveState.No,
+				Dock           = DockStyle.Left,
 			};
-
-			ToolTip.Default.SetToolTip (button, "Cache les comptes dont le solde est nul");
 
 			button.ActiveStateChanged += delegate
 			{
@@ -571,60 +505,40 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private void CreateMiddleBeginnerDatesUI()
+		private void CreateMiddleBeginnerDatesUI(FrameBox parent)
 		{
-			var frame = new GroupBox
-			{
-				Parent          = this.beginnerFrame,
-				Text            = "Période",
-				PreferredWidth  = 100,  // pour aider le layout !
-				PreferredHeight = 65,  // pour aider le layout !
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
-				Padding         = new Margins (5, 5, 2, 2),
-			};
-
-			var frame1 = new FrameBox
-			{
-				Parent  = frame,
-				Dock    = DockStyle.Top,
-				Margins = new Margins (0, 0, 0, 1),
-			};
-
-			var frame2 = new FrameBox
-			{
-				Parent = frame,
-				Dock   = DockStyle.Top,
-			};
+			var frame = this.CreateBeginnerFrame (parent, "Période");
 
 			Date? beginDate, endDate;
 			this.data.GetBeginnerDates (out beginDate, out endDate);
 
+			var fromLabel = new StaticText
 			{
-				new StaticText
-				{
-					Parent         = frame1,
-					Text           = "Du",
-					PreferredWidth = 20,
-					Dock           = DockStyle.Left,
-				};
+				Parent  = frame,
+				Text    = "Du",
+				Dock    = DockStyle.Left,
+				Margins = new Margins (0, 10, 0, 0),
+			};
+			fromLabel.PreferredWidth = fromLabel.GetBestFitSize ().Width;
 
-				var initialDate = Converters.DateToString(beginDate);
-				this.beginnerBeginDateController = UIBuilder.CreateDateField (this.controller, frame1, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
-			}
+			var initialDate = Converters.DateToString(beginDate);
+			this.beginnerBeginDateController = UIBuilder.CreateDateField (this.controller, frame, initialDate, "Date initiale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
+			this.beginnerBeginDateController.Box.Dock = DockStyle.Left;
+			this.beginnerBeginDateController.Box.Margins = new Margins (0, 10, 0, 0);
 
+			var toLabel = new StaticText
 			{
-				new StaticText
-				{
-					Parent         = frame2,
-					Text           = "Au",
-					PreferredWidth = 20,
-					Dock           = DockStyle.Left,
-				};
+				Parent  = frame,
+				Text    = "Au",
+				Dock    = DockStyle.Left,
+				Margins = new Margins (0, 10, 0, 0),
+			};
+			toLabel.PreferredWidth = toLabel.GetBestFitSize ().Width;
 
-				var initialDate = Converters.DateToString (endDate);
-				this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame2, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
-			}
+			initialDate = Converters.DateToString (endDate);
+			this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
+			this.beginnerEndDateController.Box.Dock = DockStyle.Left;
+			this.beginnerEndDateController.Box.Margins = new Margins (0, 10, 0, 0);
 		}
 
 		private void BeginnerValidateDate(EditionData data)
@@ -639,6 +553,40 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			data.SetBeginnerDates (beginDate, endDate);
 
 			this.SearchStartAction ();
+		}
+
+
+		private FrameBox CreateBeginnerFrame(FrameBox parent, FormattedText title)
+		{
+			var line = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 5+20+5,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 0, -1),
+			};
+
+			new StaticText
+			{
+				Parent           = line,
+				FormattedText    = title,
+				ContentAlignment = ContentAlignment.MiddleRight,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				PreferredWidth   = 60,
+				Dock             = DockStyle.Left,
+				Margins          = new Margins (0, 10, 0, 0),
+			};
+
+			var frame = new FrameBox
+			{
+				Parent          = line,
+				PreferredHeight = 20,
+				DrawFullFrame   = true,
+				Dock            = DockStyle.Fill,
+				Padding         = new Margins (10, 5, 5, 5),
+			};
+
+			return frame;
 		}
 
 
