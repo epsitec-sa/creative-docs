@@ -27,6 +27,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
+			new FrameBox
+			{
+				Parent        = parent,
+				PreferredSize = new Size (PanelsToolbarController.toolbarHeight+6, PanelsToolbarController.toolbarHeight+6),
+				DrawFullFrame = true,
+				BackColor     = UIBuilder.TemporalBackColor,
+				Anchor        = AnchorStyles.TopLeft,
+			};
+
+			new FrameBox
+			{
+				Parent        = parent,
+				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
+				DrawFullFrame = true,
+				BackColor     = RibbonController.GetBackgroundColor1 (),
+				Anchor        = AnchorStyles.TopLeft,
+				Margins         = new Margins (3, 0, 3, 0),
+			};
+
 			var temporalButton = this.CreateButton (parent, Res.Commands.Panel.Temporal, 0, UIBuilder.TemporalBackColor);
 			temporalButton.Margins = new Margins (3, 3+3, 3, 3);
 
