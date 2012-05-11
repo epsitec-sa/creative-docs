@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Parent        = this.mainFrame,
 				DrawFullFrame = true,
 				Dock          = DockStyle.Fill,
-				Padding       = new Margins (5, 0, 0, 0),
+				Padding       = new Margins (10, 5, 5, 5),
 			};
 
 			this.temporalController = new TemporalController (this.controller, this.data);

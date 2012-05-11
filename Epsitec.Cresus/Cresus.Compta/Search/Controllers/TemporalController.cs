@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent  = parent,
 				Dock    = DockStyle.Fill,
-				Padding = new Margins (5),
+				//?Padding = new Margins (5),
 			};
 
 			this.CreateMainUI ();

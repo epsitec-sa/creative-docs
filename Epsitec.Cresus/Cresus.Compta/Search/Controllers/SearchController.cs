@@ -509,6 +509,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = this.CreateBeginnerFrame (parent, "Période");
 
+#if false
 			Date? beginDate, endDate;
 			this.data.GetBeginnerDates (out beginDate, out endDate);
 
@@ -539,6 +540,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.beginnerEndDateController = UIBuilder.CreateDateField (this.controller, frame, initialDate, "Date finale incluse", this.BeginnerValidateDate, this.BeginnerDateChanged);
 			this.beginnerEndDateController.Box.Dock = DockStyle.Left;
 			this.beginnerEndDateController.Box.Margins = new Margins (0, 10, 0, 0);
+#else
+			this.temporalController = new TemporalController (this.controller, this.data.TemporalData);
+			this.temporalController.CreateUI (frame, this.BeginnerDateChanged);
+#endif
 		}
 
 		private void BeginnerValidateDate(EditionData data)
@@ -552,6 +557,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			Date? endDate   = Converters.ParseDate (this.beginnerEndDateController.EditionData.Text);
 			data.SetBeginnerDates (beginDate, endDate);
 
+			this.SearchStartAction ();
+		}
+
+		private void BeginnerDateChanged()
+		{
+			data.SetBeginnerDates (this.data.TemporalData.BeginDate, this.data.TemporalData.EndDate);
 			this.SearchStartAction ();
 		}
 
@@ -968,5 +979,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private DateFieldController						beginnerEndDateController;
 		private TopPanelLeftController					topPanelLeftController;
 		private TopPanelRightController					topPanelRightController;
+		private TemporalController						temporalController;
 	}
 }

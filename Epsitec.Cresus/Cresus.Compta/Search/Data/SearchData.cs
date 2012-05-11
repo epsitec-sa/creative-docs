@@ -21,6 +21,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public SearchData()
 		{
 			this.nodesData = new List<SearchNodeData> ();
+			this.temporalData = new TemporalData ();
+
 			this.Clear ();
 		}
 
@@ -30,6 +32,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			//	Vide les données et prépare une unique ligne.
 			this.nodesData.Clear ();
 			this.Adjust ();
+
+			this.temporalData.Clear ();
 
 			this.Enable = true;
 			this.OrMode = false;
@@ -85,6 +89,14 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			get
 			{
 				return this.nodesData;
+			}
+		}
+
+		public TemporalData TemporalData
+		{
+			get
+			{
+				return this.temporalData;
 			}
 		}
 
@@ -265,7 +277,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 			}
 
-			return true;
+			return this.temporalData.CompareTo (other.temporalData);
 		}
 
 		public SearchData CopyFrom()
@@ -286,6 +298,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				node.CopyTo (n);
 				dst.nodesData.Add (n);
 			}
+
+			this.temporalData.CopyTo (dst.temporalData);
 		}
 
 
@@ -450,5 +464,6 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 
 		private readonly List<SearchNodeData>		nodesData;
+		private readonly TemporalData				temporalData;
 	}
 }
