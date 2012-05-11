@@ -75,7 +75,9 @@ namespace Epsitec.Cresus.Compta.Permanents
 				return false;
 			}
 
-			return true;
+			var o = other as ExtraitDeComptePermanents;
+
+			return this.NuméroCompte == o.NuméroCompte;
 		}
 	}
 }

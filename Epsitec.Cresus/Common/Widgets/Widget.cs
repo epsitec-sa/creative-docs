@@ -501,6 +501,10 @@ namespace Epsitec.Common.Widgets
 				{
 					state |= WidgetPaintState.Focused;
 				}
+				if (this.Furtive)
+				{
+					state |= WidgetPaintState.Furtive;
+				}
 				if (this.AcceptThreeState)
 				{
 					state |= WidgetPaintState.ThreeState;

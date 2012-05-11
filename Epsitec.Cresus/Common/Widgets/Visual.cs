@@ -889,6 +889,19 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		public bool								Furtive
+		{
+			get
+			{
+				return (bool) this.GetValue (Visual.AcceptFurtivePropery);
+			}
+			set
+			{
+				this.SetValue (Visual.AcceptFurtivePropery, value);
+			}
+		}
+
+
 		public bool								DrawDesignerFrame
 		{
 			//	Détermine s'il faut dessiner un cadre traitillé (utilisé par Designer).
@@ -2227,8 +2240,9 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty AutoToggleProperty			= DependencyProperty.Register ("AutoToggle", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoRadioProperty				= DependencyProperty.Register ("AutoRadio", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		public static readonly DependencyProperty AutoDoubleClickProperty		= DependencyProperty.Register ("AutoDoubleClick", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
-		
+
 		public static readonly DependencyProperty AcceptThreeStatePropery		= DependencyProperty.Register ("AcceptThreeState", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty AcceptFurtivePropery			= DependencyProperty.Register ("AcceptFurtive", typeof (bool), typeof (Visual), new DependencyPropertyMetadata (false));
 		
 		public static readonly DependencyProperty BackColorProperty				= DependencyProperty.Register ("BackColor", typeof (Drawing.Color), typeof (Visual), new VisualPropertyMetadata (Drawing.Color.Empty, VisualPropertyMetadataOptions.AffectsDisplay));
 

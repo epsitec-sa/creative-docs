@@ -49,6 +49,22 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			};
 		}
 
+		public bool Furtive
+		{
+			get
+			{
+				return this.furtive;
+			}
+			set
+			{
+				if (this.furtive != value)
+				{
+					this.furtive = value;
+					this.UpdateFurtive ();
+				}
+			}
+		}
+
 		public ColumnMapper ColumnMapper
 		{
 			get
@@ -300,6 +316,20 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			}
 		}
 
+		protected virtual void UpdateFurtive()
+		{
+			if (this.Furtive)
+			{
+				this.box.DrawFullFrame = false;
+				this.box.BackColor = Color.Empty;
+			}
+			else
+			{
+				this.box.DrawFullFrame = true;
+				this.box.BackColor = Color.FromName ("White");
+			}
+		}
+
 		protected Margins BoxMargins
 		{
 			get
@@ -371,5 +401,6 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		protected Widget										editWidget;
 		protected CustomFrameBox								foregroundFrame;
 		protected bool											hasFocus;
+		protected bool											furtive;
 	}
 }

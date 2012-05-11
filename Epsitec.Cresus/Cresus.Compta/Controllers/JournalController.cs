@@ -82,6 +82,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.comboJournaux.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
 			this.comboJournaux.TextLayout.DefaultFontSize = 13.0;
+			this.comboJournaux.Furtive = true;
+			this.comboJournaux.Button.Furtive = true;
 
 			this.summaryLabel = new StaticText
 			{

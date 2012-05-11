@@ -26,5 +26,7 @@ namespace Epsitec.Common.Widgets
 
 		InheritedFocus		= 0x01000000,				//	=> le parent est Focused
 		InheritedEnter		= 0x02000000,				//	=> l'enfant est Entered
+
+		Furtive				= 0x04000000,				//	=> widget furtif, sans bords lorsque la souris ne le survole pas
 	}
 }

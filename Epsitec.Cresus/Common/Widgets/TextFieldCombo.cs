@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public Button Button
+		public Button							Button
 		{
 			get
 			{

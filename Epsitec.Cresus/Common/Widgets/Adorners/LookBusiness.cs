@@ -296,6 +296,13 @@ namespace Epsitec.Common.Widgets.Adorners
 										  Widgets.ButtonStyle style)
 		{
 			//	Dessine le fond d'un bouton rectangulaire.
+			if ((state&WidgetPaintState.Furtive) != 0 &&
+				(state&WidgetPaintState.Entered) == 0 &&
+				(state&WidgetPaintState.Focused) == 0)
+			{
+				return;
+			}
+
 			Drawing.Rectangle rFocus = rect;
 			if ( System.Math.Min(rect.Width, rect.Height) < 16 )
 			{
@@ -665,9 +672,9 @@ namespace Epsitec.Common.Widgets.Adorners
 				}
 				rFocus.Deflate(1.0);
 			}
-			else if ( style == ButtonStyle.ListItem )
+			else if (style == ButtonStyle.ListItem)
 			{
-				this.PaintImageButton(graphics, rect, 8);
+				this.PaintImageButton (graphics, rect, 8);
 			}
 			else
 			{
@@ -723,12 +730,21 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'une ligne éditable.
 			var frame = AbstractAdorner.GetMultilingualFrame (rect, isMultilingual);
 
+			if ((state&WidgetPaintState.Furtive) != 0 &&
+				(state&WidgetPaintState.Entered) == 0 &&
+				(state&WidgetPaintState.Focused) == 0)
+			{
+				graphics.Rasterizer.AddOutline (frame);
+				graphics.RenderSolid (this.colorBorder);
+				return;
+			}
+
 			if ( style == TextFieldStyle.Normal ||
 				 style == TextFieldStyle.Multiline  ||
 				 style == TextFieldStyle.Combo  ||
 				 style == TextFieldStyle.UpDown )
 			{
-				if ( (state&WidgetPaintState.Enabled) != 0 )  // bouton enable ?
+				if ((state&WidgetPaintState.Enabled) != 0)  // bouton enable ?
 				{
 					Drawing.Color color = this.ColorTextDisplayMode(mode);
 					if ((state&WidgetPaintState.Error) != 0)

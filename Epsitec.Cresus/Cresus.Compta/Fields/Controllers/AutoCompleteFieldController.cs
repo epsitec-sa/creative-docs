@@ -166,6 +166,23 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 				this.ClearFocusAction ();
 			}
+
+#if false
+			Application.QueueAsyncCallback
+			(
+				delegate
+				{
+					this.UpdateFurtive ();
+				}
+			);
+#endif
+		}
+
+
+		protected override void UpdateFurtive()
+		{
+			this.InternalField.Furtive = this.furtive;
+			this.menuButton.Furtive = this.furtive;
 		}
 
 

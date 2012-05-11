@@ -120,6 +120,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			label.PreferredWidth = label.GetBestFitSize ().Width;
 
 			this.compteController = UIBuilder.CreateAutoCompleteField (this, this.titleFrame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Furtive = true;
 			this.compteController.Box.Dock = DockStyle.Left;
 			this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
 			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
