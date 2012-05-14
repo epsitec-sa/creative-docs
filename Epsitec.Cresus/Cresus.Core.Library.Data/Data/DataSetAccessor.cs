@@ -17,11 +17,12 @@ namespace Epsitec.Cresus.Core.Data
 	/// </summary>
 	public abstract class DataSetAccessor : System.IDisposable
 	{
-		protected DataSetAccessor(CoreData data, System.Type entityType)
+		protected DataSetAccessor(CoreData data, System.Type entityType, IsolatedTransaction isolatedTransaction = null)
 		{
 			this.data = data;
 			this.entityType = entityType;
 			this.dataContext = this.data.CreateDataContext ("DataSetAccessor");
+			this.isolatedTransaction = isolatedTransaction;
 		}
 
 
@@ -114,7 +115,7 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
-			this.requestView = this.dataContext.GetRequestView (request);
+			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
 		}
 
 		private int RetrieveItemCount()
@@ -134,6 +135,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly CoreData				data;
 		private readonly DataContext			dataContext;
 		private readonly System.Type			entityType;
+		private readonly IsolatedTransaction	isolatedTransaction;
 		
 		private RequestView						requestView;
 		private int?							itemCount;
