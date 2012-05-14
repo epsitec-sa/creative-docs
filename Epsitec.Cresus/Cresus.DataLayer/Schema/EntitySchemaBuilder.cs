@@ -287,8 +287,8 @@ namespace Epsitec.Cresus.DataLayer.Schema
 				string indexSourceName = string.Join (separator, prefix, "DESC", typeName, fieldName, sourceName);
 				string indexTargetName = string.Join (separator, prefix, "DESC", typeName, fieldName, targetName);
 
-				table.AddIndex (indexSourceName, SqlSortOrder.Ascending, sourceColumn);
-				table.AddIndex (indexTargetName, SqlSortOrder.Ascending, targetColumn);
+				table.AddIndex (indexSourceName, SqlSortOrder.Descending, sourceColumn);
+				table.AddIndex (indexTargetName, SqlSortOrder.Descending, targetColumn);
 			}
 		}
 
