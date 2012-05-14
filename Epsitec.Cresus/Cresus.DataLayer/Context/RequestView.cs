@@ -24,18 +24,22 @@ namespace Epsitec.Cresus.DataLayer.Context
 	/// </summary>
 	public sealed class RequestView : System.IDisposable
 	{
-		internal RequestView(DataContext dataContext, Request request)
+		internal RequestView(DataContext dataContext, Request request, IsolatedTransaction isolatedTransaction = null)
 		{
 			this.dataContext = dataContext;
 
-			this.entityKeyRequest = this.GetEntityKeyRequest (request);
-			this.countRequest = this.GetCountRequest (request);
+			this.entityKeyRequest = RequestView.GetEntityKeyRequest (request);
+			this.countRequest     = RequestView.GetCountRequest (request);
 
-			var dataInfrastructure = dataContext.DataInfrastructure;
-			var dbInfrastructure = dataInfrastructure.DbInfrastructure;
-
-			this.iDbAbstraction = this.CreateIDbAbstraction (dbInfrastructure);
-			this.dbTransaction = this.CreateDbTransaction (dbInfrastructure, this.iDbAbstraction);
+			if (isolatedTransaction == null)
+			{
+				this.isolatedTransaction        = new IsolatedTransaction (this.dataContext);
+				this.disposeIsolatedTransaction = true;
+			}
+			else
+			{
+				this.isolatedTransaction = isolatedTransaction;
+			}
 		}
 
 
@@ -44,30 +48,16 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.entityKeyRequest.Skip = index;
 			this.entityKeyRequest.Take = count;
 
-			return this.dataContext.DataLoader.GetEntityKeys (this.entityKeyRequest, this.dbTransaction);
+			return this.dataContext.DataLoader.GetEntityKeys (this.entityKeyRequest, this.isolatedTransaction.Transaction);
 		}
 
 		public int GetCount()
 		{
-			return this.dataContext.DataLoader.GetCount (this.countRequest, this.dbTransaction);
+			return this.dataContext.DataLoader.GetCount (this.countRequest, this.isolatedTransaction.Transaction);
 		}
 
 		
-		private IDbAbstraction CreateIDbAbstraction(DbInfrastructure dbInfrastructure)
-		{
-			var idbAbstraction = dbInfrastructure.CreateDatabaseAbstraction ();
-
-			idbAbstraction.SqlBuilder.AutoClear = true;
-
-			return idbAbstraction;
-		}
-
-		private DbTransaction CreateDbTransaction(DbInfrastructure dbInfrastructure, IDbAbstraction iDbAbstraction)
-		{
-			return dbInfrastructure.BeginTransaction (DbTransactionMode.ReadOnly, iDbAbstraction);
-		}
-
-		private Request GetEntityKeyRequest(Request request)
+		private static Request GetEntityKeyRequest(Request request)
 		{
 			var entityKeyRequest = request.Clone ();
 
@@ -83,7 +73,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 			return entityKeyRequest;
 		}
 
-		private Request GetCountRequest(Request request)
+		private static Request GetCountRequest(Request request)
 		{
 			var countRequest = request.Clone ();
 
@@ -97,15 +87,17 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public void Dispose()
 		{
-			this.dbTransaction.Dispose ();
-			this.iDbAbstraction.Dispose ();
+			if (this.disposeIsolatedTransaction)
+			{
+				this.isolatedTransaction.Dispose ();
+			}
 		}
 
 		#endregion
 
 
-		private readonly IDbAbstraction			iDbAbstraction;
-		private readonly DbTransaction			dbTransaction;
+		private readonly IsolatedTransaction	isolatedTransaction;
+		private readonly bool					disposeIsolatedTransaction;
 		private readonly DataContext			dataContext;
 		private readonly Request				entityKeyRequest;
 		private readonly Request				countRequest;
