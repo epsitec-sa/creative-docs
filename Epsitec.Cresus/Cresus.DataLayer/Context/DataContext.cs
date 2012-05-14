@@ -1147,20 +1147,24 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		/// <summary>
-		/// Create a new RequestView. See the constructor of this class for more info.
+		/// Create a new <see cref="RequestView"/>. See the constructor of that class for more info.
 		/// </summary>
-		/// <param name="request">The Request that will be used in the RequestView.</param>
-		/// <returns>The RequestView.</returns>
+		/// <param name="request">The <c>Request</c> that will be used in the <c>RequestView</c>.</param>
+		/// <param name="isolatedTransaction">The isolated transaction to share, or <c>null</c> if a new isolated transaction should be used.</param>
+		/// <returns>
+		/// The <see cref="RequestView"/>.
+		/// </returns>
 		/// <exception cref="System.ObjectDisposedException">If this instance has been disposed.</exception>
+		///   
 		/// <exception cref="System.ArgumentException">If <paramref name="request"/> is null or invalid.</exception>
-		public RequestView GetRequestView(Request request)
+		public RequestView GetRequestView(Request request, IsolatedTransaction isolatedTransaction = null)
 		{
 			this.AssertDataContextIsNotDisposed ();
 
 			request.ThrowIfNull ("request");
 			request.Check (this);
 
-			return new RequestView (this, request);
+			return new RequestView (this, request, isolatedTransaction);
 		}
 
 
