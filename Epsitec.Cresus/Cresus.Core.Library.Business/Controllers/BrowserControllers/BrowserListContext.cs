@@ -13,7 +13,7 @@ using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
-	public class BrowserListContext
+	public class BrowserListContext : System.IDisposable
 	{
 		public BrowserListContext(DataContext dataContext)
 		{
@@ -23,8 +23,21 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public DataSetAccessor Accessor
 		{
-			get;
-			set;
+			get
+			{
+				return this.accessor;
+			}
+		}
+
+		public void SetAccessor(DataSetAccessor collectionAccessor)
+		{
+			if (this.accessor != null)
+			{
+				this.accessor.Dispose ();
+				this.accessor = null;
+			}
+
+			this.accessor = collectionAccessor;
 		}
 
 		public FormattedText GetDisplayText(AbstractEntity entity)
@@ -48,6 +61,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		
+		#region IDisposable Members
+
+		public void Dispose()
+		{
+			this.SetAccessor (null);
+		}
+
+		#endregion
+
+		
 		internal AbstractEntity ResolveEntity(EntityKey? entityKey)
 		{
 			return this.dataContext.ResolveEntity (entityKey);
@@ -75,5 +99,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 
 		private readonly DataContext			dataContext;
+		private DataSetAccessor					accessor;
 	}
 }

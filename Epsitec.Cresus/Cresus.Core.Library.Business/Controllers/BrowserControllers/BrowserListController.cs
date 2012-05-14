@@ -129,6 +129,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			this.TearDownItemList ();
 			this.DetachEventHandlers ();
+			this.context.Dispose ();
 			this.data.DisposeDataContext (this.dataContext);
 		}
 
@@ -223,7 +224,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetContents(DataSetAccessor collectionAccessor, Druid entityId)
 		{
-			this.context.Accessor = collectionAccessor;
+			this.context.SetAccessor (collectionAccessor);
 			this.collectionEntityId = entityId;
 
 			this.SetUpContentExtractor ();

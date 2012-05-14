@@ -156,6 +156,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
+		protected override void Dispose(bool disposing)
+		{
+			if (disposing)
+			{
+				this.DisposeBrowserListController ();
+			}
+			
+			base.Dispose (disposing);
+		}
+
 		private void CreateUITopPanel(FrameBox frame)
 		{
 			this.topPanel = new FrameBox

@@ -161,6 +161,12 @@ namespace Epsitec.Cresus.Core.Controllers
 			if (disposing)
 			{
 				this.commandContext.DetachCommandHandler (this);
+
+				this.browserViewController.DataSetSelected -= this.HandleBrowserViewControllerDataSetSelected;
+
+				this.browserSettingsController.Dispose ();
+				this.browserViewController.Dispose ();
+				this.previewViewController.Dispose ();
 			}
 
 			base.Dispose (disposing);

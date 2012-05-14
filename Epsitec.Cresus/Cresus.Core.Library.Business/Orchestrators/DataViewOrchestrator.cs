@@ -327,6 +327,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		public void Dispose()
 		{
 			this.ClearActiveEntity ();
+			this.components.Dispose ();
 		}
 
 		#endregion

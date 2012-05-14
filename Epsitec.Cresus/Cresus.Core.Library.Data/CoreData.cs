@@ -23,7 +23,7 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core
 {
-	public sealed partial class CoreData : CoreAppComponent, System.IDisposable, ICoreComponentHost<CoreDataComponent>
+	public sealed partial class CoreData : CoreAppComponent, System.IDisposable, IIsDisposed, ICoreComponentHost<CoreDataComponent>
 	{
 		private CoreData(CoreApp app, bool forceDatabaseCreation = false, bool allowDatabaseUpdate = true, bool enableConnectionRecycling = true)
 			: base (app)
@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return this.isReady;
+				return this.state == State.Ready;
 			}
 		}
 
@@ -388,7 +388,7 @@ namespace Epsitec.Cresus.Core
 
 		internal void NotifyDatabaseReady()
 		{
-			this.isReady = true;
+			this.state = State.Ready;
 		}
 
 
@@ -402,18 +402,34 @@ namespace Epsitec.Cresus.Core
 
 		#region IDisposable Members
 
-
 		public void Dispose()
 		{
+			if (this.state == State.Disposed)
+			{
+				return;
+			}
+			
+			this.state = State.Disposed;
+			
 			if (this.activeDataContext != null)
 			{
-				this.activeDataContext.Dispose ();
-				this.activeDataContext = null;
+				this.DisposeDataContext (this.activeDataContext);
 			}
 
 			this.components.Dispose ();
 		}
 
+		#endregion
+
+		#region IIsDisposed Members
+
+		public bool								IsDisposed
+		{
+			get
+			{
+				return this.state == State.Disposed;
+			}
+		}
 
 		#endregion
 
@@ -475,7 +491,7 @@ namespace Epsitec.Cresus.Core
 			EntityEngine.Create (dbAccess, managedEntityIds);
 			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
 			{
 				dataInfrastructure.OpenConnection ("root");
 
@@ -499,7 +515,7 @@ namespace Epsitec.Cresus.Core
 
 			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
 			{
 				dataInfrastructure.OpenConnection ("root");
 
@@ -523,7 +539,7 @@ namespace Epsitec.Cresus.Core
 
 			EntityEngine entityEngine = EntityEngine.Connect (dbAccess, managedEntityIds);
 
-			using (DataInfrastructure dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
+			using (var dataInfrastructure = new DataInfrastructure (dbAccess, entityEngine))
 			{
 				dataInfrastructure.OpenConnection ("root");
 
@@ -619,6 +635,17 @@ namespace Epsitec.Cresus.Core
 
 		#endregion
 
+		#region State Enumeration
+		
+		private enum State
+		{
+			NotInitialized,
+			Ready,
+			Disposed,
+		}
+
+		#endregion
+
 #if REBUILD_DATABASE
 		public static bool ForceDatabaseCreationRequest = true;
 #else
@@ -629,7 +656,7 @@ namespace Epsitec.Cresus.Core
 		private readonly CoreComponentHostImplementation<CoreDataComponent>	components;
 		private readonly EntityContext			independentEntityContext;
 
-		private bool							isReady;
+		private State							state;
 		private DataContext						immutableDataContext;
 		private DataContext						stableDataContext;
 		private DataContext						activeDataContext;
