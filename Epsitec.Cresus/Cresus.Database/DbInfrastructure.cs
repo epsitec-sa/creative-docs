@@ -1977,7 +1977,7 @@ namespace Epsitec.Cresus.Database
 		/// independent; all database connections created through this
 		/// <c>DbInfrastructure</c> will be locked).
 		/// Neither <c>GlobalLock</c> nor <c>DatabaseLock</c> is allowed
-		/// until <c>GlobalUnlcok</c> is called.
+		/// until <c>GlobalUnlock</c> is called.
 		/// </summary>
 		/// <returns>An object which should be used in a <c>using</c> block.</returns>
 		public System.IDisposable GlobalLock()

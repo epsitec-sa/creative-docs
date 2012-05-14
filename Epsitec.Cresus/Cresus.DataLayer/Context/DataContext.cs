@@ -1,4 +1,4 @@
-//	Copyright © 2007-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2007-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Marc BETTEX
 
 using Epsitec.Common.Support;
@@ -1498,17 +1498,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 		}
 
 
-		#region IDisposable Members
-
-
 		/// <summary>
-		/// Release all the resources kept by this instance.
+		/// Release all the resources kept by this instance. This should not be called directly
+		/// by others and is called by <see cref="DataInfrastructure.DeleteDataContext"/>.
 		/// </summary>
-		public void Dispose()
+		internal void Dispose()
 		{
 			this.Dipose (true);
 		}
 
+		#region IDisposable Members
+
+		void System.IDisposable.Dispose()
+		{
+			this.Dipose (true);
+		}
 
 		#endregion
 
