@@ -392,7 +392,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			AbstractEntity requestedEntity = request.RequestedEntity;
 			AliasNode requestedAlias = this.RetreiveRequestedEntityAlias (request, rootAlias);
 
-			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity);
+			SqlSelectPredicate predicate = this.GetSqlSelectPredicate (request);
+			SqlContainer sqlContainerForCount = this.BuildSqlContainerForCount (requestedAlias, requestedEntity, predicate);
 
 			return sqlContainerForConditions
 				.Plus (sqlContainerForCount)
@@ -417,10 +418,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var sqlContainerForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
 			var sqlContainerForEntityKeys = this.BuildSqlContainerForEntityKeys (requestedAlias, requestedEntity);
 
+			var predicate = this.GetSqlSelectPredicate (request);
+
 			return sqlContainerForConditions
 				.Plus (sqlContainerForOrderBy)
 				.Plus (sqlContainerForEntityKeys)
-				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
+				.BuildSqlSelect (predicate, request.Skip, request.Take);
 		}
 
 
@@ -506,10 +509,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			SqlContainer sqlContainerForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
 
+			var predicate = this.GetSqlSelectPredicate (request);
+
 			return sqlContainerForConditions
 				.Plus (sqlContainerForValuesAndReferences)
 				.Plus (sqlContainerForOrderBy)
-				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
+				.BuildSqlSelect (predicate, request.Skip, request.Take);
 		}
 
 
@@ -574,10 +579,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			SqlContainer sqlContaierForOrderBy = this.BuildSqlContainerForOrderBy (request, rootAlias);
 			SqlContainer sqlContainerForCollectionSourceIds = this.BuildSqlContainerForCollectionSourceIds (requestedAlias, requestedEntity);
 
+			var predicate = this.GetSqlSelectPredicate (request);
+
 			SqlSelect sqlSelectForSourceIds = sqlContainerForConditions
 				.Plus (sqlContaierForOrderBy)
 				.Plus (sqlContainerForCollectionSourceIds)
-				.BuildSqlSelect (SqlSelectPredicate.Distinct, request.Skip, request.Take);
+				.BuildSqlSelect (predicate, request.Skip, request.Take);
 
 			SqlContainer sqlContainerForCollectionData = this.BuildSqlContainerForCollection (requestedEntity, fieldId, sqlSelectForSourceIds);
 			
@@ -1084,13 +1091,13 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		#region COUNT QUERY GENERATION
 
 
-		private SqlContainer BuildSqlContainerForCount(AliasNode rootEntityAlias, AbstractEntity entity)
+		private SqlContainer BuildSqlContainerForCount(AliasNode rootEntityAlias, AbstractEntity entity, SqlSelectPredicate predicate)
 		{
 			Druid leafEntityId = entity.GetEntityStructuredTypeId ();
 			Druid rootEntityId = this.TypeEngine.GetRootType (leafEntityId).CaptionId;
 
 			SqlField sqlField = this.BuildSqlFieldForEntityColumn (rootEntityAlias, rootEntityId, EntitySchemaBuilder.EntityTableColumnIdName);
-			SqlField sqlAggregateField = SqlField.CreateAggregate (SqlAggregateFunction.Count, SqlSelectPredicate.Distinct, sqlField);
+			SqlField sqlAggregateField = SqlField.CreateAggregate (SqlAggregateFunction.Count, predicate, sqlField);
 
 			return SqlContainer.CreateSqlFields (sqlAggregateField);
 		}
@@ -1153,6 +1160,60 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbColumn dbColumn = dbTable.Columns[columnName];
 
 			return SqlField.CreateAliasedName (relationAlias.Alias, dbColumn.GetSqlName (), columnName);
+		}
+
+
+		private SqlSelectPredicate GetSqlSelectPredicate(Request request)
+		{
+			return this.UseDistinct (request)
+				? SqlSelectPredicate.Distinct
+				: SqlSelectPredicate.All;
+		}
+
+
+		private bool UseDistinct(Request request)
+		{
+			// The only queries that must contain a DISTINCT clause are the queries where a
+			// collection is involved. If a collection is involved in a WHERE or a ORDER BY clause,
+			// there might be duplicate rows in the result if the collection contains more than one
+			// element. Therefore, we need to add a DISTINCT clause in the query.
+
+			var todo = new Stack<AbstractEntity> ();
+			var done = new HashSet<AbstractEntity> ();
+
+			todo.Push (request.RootEntity);
+			done.Add (request.RootEntity);
+
+			while (todo.Count > 0)
+			{
+				var entity = todo.Pop ();
+				var leafEntityId = entity.GetEntityStructuredTypeId ();
+
+				var hasCollectionDefined = this.TypeEngine
+					.GetCollectionFields (leafEntityId)
+					.Any (f => entity.IsFieldNotEmpty (f.Id));
+
+				if (hasCollectionDefined)
+				{
+					return true;
+				}
+
+				var children = this.TypeEngine
+					.GetReferenceFields (leafEntityId)
+					.Where (f => entity.IsFieldNotEmpty (f.Id))
+					.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
+
+				foreach (var child in children)
+				{
+					if (!done.Contains (child))
+					{
+						todo.Push (child);
+						done.Add (child);
+					}
+				}
+			}
+
+			return false;
 		}
 
 
