@@ -108,6 +108,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateTitleFrame()
 		{
+#if false
 			this.titleLabel.Visibility = false;
 
 			var label = new StaticText
@@ -122,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.compteController = UIBuilder.CreateAutoCompleteField (this, this.titleFrame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
 			this.compteController.Furtive = true;
 			this.compteController.Box.Dock = DockStyle.Left;
-			this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
+			//?this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
 			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
 			this.compteController.EditWidget.TextLayout.DefaultFontSize = 13.0;
 
@@ -136,6 +137,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateComptes ();
 			this.UpdateSummary ();
+#else
+			if (this.viewSettingsController == null)
+			{
+				return;
+			}
+
+			var frame = this.viewSettingsController.GetTitleFrame ();
+
+			var label = new StaticText
+			{
+				Parent          = frame,
+				FormattedText   = FormattedText.Concat ("Compte").ApplyBold ().ApplyFontSize (13.0),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
+			label.PreferredWidth = label.GetBestFitSize ().Width;
+
+			this.compteController = UIBuilder.CreateAutoCompleteField (this, frame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Furtive = true;
+			this.compteController.Box.Dock = DockStyle.Left;
+			//?this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
+			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
+			this.compteController.EditWidget.TextLayout.DefaultFontSize = 13.0;
+
+			this.UpdateComptes ();
+			this.UpdateSummary ();
+#endif
 		}
 
 		private void UpdateComptes()
@@ -150,6 +178,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateSummary()
 		{
+#if false
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
 
 			if (compte == null)
@@ -160,6 +189,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.summaryLabel.FormattedText = compte.Titre.ApplyBold ().ApplyFontSize (13.0);
 			}
+#endif
 		}
 
 		private void ValidateCompteAction(EditionData data)
@@ -198,10 +228,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (compte == null)
 			{
+				this.SetGroupTitle ("Compte");
 				this.SetTitle (null);
 			}
 			else
 			{
+				this.SetGroupTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 				this.SetTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
 
@@ -272,7 +304,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
 
 				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 				permanent.NuméroCompte = data.CP.Numéro;
@@ -290,7 +322,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Journal);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Journal);
 
 				int row = (présentation.DataAccessor as JournalDataAccessor).GetIndexOf (écriture);
 				if (row != -1)

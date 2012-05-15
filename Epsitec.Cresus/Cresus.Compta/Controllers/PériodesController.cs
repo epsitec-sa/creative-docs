@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new PériodesDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Périodes.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Réglages");
 			this.SetTitle ("Périodes comptables");
 		}
 

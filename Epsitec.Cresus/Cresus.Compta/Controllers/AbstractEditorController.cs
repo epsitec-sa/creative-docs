@@ -920,12 +920,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock   = DockStyle.Fill,
 			};
 
+#if false
 			//	Met la petite toolbar qui contient des icônes liées à des commandes.
 			var commands = this.MiniToolbarCommands;
 			if (commands != null && commands.Any ())
 			{
 				UIBuilder.CreateMiniToolbar (mainFrame, commands.ToArray ());
 			}
+#endif
 
 			//	Met la "toolbar", qui affiche le mode "Création/Modification d'un ...". 
 			this.bottomToolbarController = new BottomToolbarController (this.businessContext);
@@ -993,6 +995,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+#if false
 		protected virtual IEnumerable<Command> MiniToolbarCommands
 		{
 			get
@@ -1000,6 +1003,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return null;
 			}
 		}
+#endif
 
 
 		public void UpdateFieldsEditionData()

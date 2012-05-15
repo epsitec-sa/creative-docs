@@ -27,12 +27,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new UtilisateursDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Utilisateurs.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Réglages");
 			this.SetTitle ("Utilisateurs");
 		}
 

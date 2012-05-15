@@ -79,20 +79,20 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 
-		public void Update(AbstractController controller, Command command)
+		public void Update(AbstractController controller, ControllerType controllerType)
 		{
 			//	Met à jour les données de la présentation active dans l'historique de la navigation.
-			if (this.index != -1 && this.history[this.index].Command == command)
+			if (this.index != -1 && this.history[this.index].ControllerType == controllerType)
 			{
-				this.history[this.index] = this.CreateNavigatorData (controller, command);
+				this.history[this.index] = this.CreateNavigatorData (controller, controllerType);
 			}
 		}
 
-		public void Put(AbstractController controller, Command command)
+		public void Put(AbstractController controller, ControllerType controllerType)
 		{
 			//	Ajoute les données de la présentation active au somment de l'historique de la navigation.
 			//	Toutes les données "en avant" sont supprimées.
-			var data = this.CreateNavigatorData (controller, command);
+			var data = this.CreateNavigatorData (controller, controllerType);
 			this.history.Insert (++this.index, data);
 
 			int overflow = this.history.Count-this.index-1;
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 		}
 
-		private NavigatorData CreateNavigatorData(AbstractController controller, Command command)
+		private NavigatorData CreateNavigatorData(AbstractController controller, ControllerType controllerType)
 		{
 			//	Présentation active -> NavigatorData.
 			SearchData         search     = null;
@@ -112,7 +112,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 			if (controller == null)
 			{
-				return new NavigatorData (command, FormattedText.Empty, null, search, filter, options, permanents, null);
+				return new NavigatorData (controllerType, FormattedText.Empty, null, search, filter, options, permanents, null);
 			}
 			else
 			{
@@ -138,38 +138,38 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 				if (controller.ViewSettingsList == null)
 				{
-					return new NavigatorData (command, controller.MixTitle, null, search, filter, options, permanents, controller.SelectedArrayLine);
+					return new NavigatorData (controllerType, controller.MixTitle, null, search, filter, options, permanents, controller.SelectedArrayLine);
 				}
 				else
 				{
-					return new NavigatorData (command, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, permanents, controller.SelectedArrayLine);
+					return new NavigatorData (controllerType, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, permanents, controller.SelectedArrayLine);
 				}
 			}
 		}
 
 
-		public Command Any(int index)
+		public ControllerType Any(int index)
 		{
 			//	Retourne l'index permettant de revenir à une position quelconque dans l'historique de la navigation.
 			this.index = index;
-			return this.history[this.index].Command;
+			return this.history[this.index].ControllerType;
 		}
 
-		public Command Back
+		public ControllerType Back
 		{
 			//	Retourne l'index permettant de revenir en arrière dans l'historique de la navigation.
 			get
 			{
-				return this.history[--this.index].Command;
+				return this.history[--this.index].ControllerType;
 			}
 		}
 
-		public Command Forward
+		public ControllerType Forward
 		{
 			//	Retourne l'index permettant de revenir en avant dans l'historique de la navigation.
 			get
 			{
-				return this.history[++this.index].Command;
+				return this.history[++this.index].ControllerType;
 			}
 		}
 

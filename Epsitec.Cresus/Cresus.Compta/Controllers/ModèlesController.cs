@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new ModèlesDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Modèles.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journal.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Journal");
 			this.SetTitle ("Écritures modèles");
 		}
 

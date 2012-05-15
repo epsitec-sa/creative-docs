@@ -11,6 +11,7 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Dialogs;
 
+using Epsitec.Cresus.Compta.MetaControllers;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.IO;
 using Epsitec.Cresus.Compta.Entities;
@@ -38,25 +39,271 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.app = app;
 
 			this.businessContext = null;
-			this.controllers = new List<AbstractController> ();
+			//?this.controllers = new List<AbstractController> ();
 			this.settingsData = new Dictionary<string, ISettingsData> ();
 			this.settingsList = new SettingsList ();
 			this.defaultSettingsList = new SettingsList ();
 			this.navigatorEngine = new NavigatorEngine ();
 			this.piècesGenerator = new PiècesGenerator (this);
 			this.temporalData = new TemporalData ();
+			//?this.metas = new Dictionary<MetaControllerType, List<ControllerType>> ();
+			//?this.InitMetas ();
 
 			this.Dirty = false;
 
-			this.showSearchPanel       = false;
-			this.showFilterPanel       = false;
-			this.showTemporalPanel     = false;
-			this.showOptionsPanel      = false;
-			this.showViewSettingsPanel = false;
-			this.showInfoPanel         = true;
+			this.showSearchPanel   = false;
+			this.showFilterPanel   = false;
+			this.showTemporalPanel = false;
+			this.showOptionsPanel  = false;
+			this.showInfoPanel     = true;
 
 			Converters.ImportSettings (this.settingsList);
 			this.app.CommandDispatcher.RegisterController (this);
+		}
+
+
+#if false
+		private void InitMetas()
+		{
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Open);
+				this.metas.Add (MetaControllerType.Open, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Save);
+				this.metas.Add (MetaControllerType.Save, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Print);
+				this.metas.Add (MetaControllerType.Print, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Login);
+				this.metas.Add (MetaControllerType.Login, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Journal);
+				list.Add (ControllerType.Journaux);
+				this.metas.Add (MetaControllerType.Journal, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Balance);
+				this.metas.Add (MetaControllerType.Balance, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Extrait);
+				this.metas.Add (MetaControllerType.Extrait, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Bilan);
+				this.metas.Add (MetaControllerType.Bilan, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.PP);
+				this.metas.Add (MetaControllerType.PP, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Exploitation);
+				this.metas.Add (MetaControllerType.Exploitation, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Budgets);
+				this.metas.Add (MetaControllerType.Budgets, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.RésuméTVA);
+				list.Add (ControllerType.DécompteTVA);
+				list.Add (ControllerType.CodesTVA);
+				list.Add (ControllerType.ListeTVA);
+				this.metas.Add (MetaControllerType.TVA, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.RésuméPériodique);
+				this.metas.Add (MetaControllerType.RésuméPériodique, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.Soldes);
+				this.metas.Add (MetaControllerType.Soldes, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.DifférencesChange);
+				this.metas.Add (MetaControllerType.DifférencesChange, list);
+			}
+
+			{
+				var list = new List<ControllerType> ();
+				list.Add (ControllerType.PlanComptable);
+				list.Add (ControllerType.Libellés);
+				list.Add (ControllerType.Modèles);
+				list.Add (ControllerType.Monnaies);
+				list.Add (ControllerType.Périodes);
+				list.Add (ControllerType.PiècesGenerator);
+				list.Add (ControllerType.Utilisateurs);
+				list.Add (ControllerType.Réglages);
+				this.metas.Add (MetaControllerType.Réglages, list);
+			}
+		}
+
+		private MetaControllerType GetMeta(ControllerType type)
+		{
+			foreach (var pair in this.metas)
+			{
+				if (pair.Value.Contains (type))
+				{
+					return pair.Key;
+				}
+			}
+
+			return MetaControllerType.Unknown;
+		}
+#endif
+
+		private ControllerType GetControllerType(Command cmd)
+		{
+			string key = string.Concat (cmd.Name + ".ViewSettings");
+			var list = this.GetViewSettingsList (key);
+			if (list != null && list.Selected != null)
+			{
+				return list.Selected.ControllerType;
+			}
+
+			if (cmd == Res.Commands.Présentation.Open)
+			{
+				return ControllerType.Open;
+			}
+
+			if (cmd == Res.Commands.Présentation.Save)
+			{
+				return ControllerType.Save;
+			}
+
+			if (cmd == Res.Commands.Présentation.Print)
+			{
+				return ControllerType.Print;
+			}
+
+			if (cmd == Res.Commands.Présentation.Login)
+			{
+				return ControllerType.Login;
+			}
+
+			if (cmd == Res.Commands.Présentation.Journal)
+			{
+				return ControllerType.Journal;
+			}
+
+			if (cmd == Res.Commands.Présentation.Balance)
+			{
+				return ControllerType.Balance;
+			}
+
+			if (cmd == Res.Commands.Présentation.Extrait)
+			{
+				return ControllerType.Extrait;
+			}
+
+			if (cmd == Res.Commands.Présentation.Bilan)
+			{
+				return ControllerType.Bilan;
+			}
+
+			if (cmd == Res.Commands.Présentation.PP)
+			{
+				return ControllerType.PP;
+			}
+
+			if (cmd == Res.Commands.Présentation.Exploitation)
+			{
+				return ControllerType.Exploitation;
+			}
+
+			if (cmd == Res.Commands.Présentation.Budgets)
+			{
+				return ControllerType.Budgets;
+			}
+
+			if (cmd == Res.Commands.Présentation.DifférencesChange)
+			{
+				return ControllerType.DifférencesChange;
+			}
+
+			if (cmd == Res.Commands.Présentation.RésuméPériodique)
+			{
+				return ControllerType.RésuméPériodique;
+			}
+
+			if (cmd == Res.Commands.Présentation.Soldes)
+			{
+				return ControllerType.Soldes;
+			}
+
+			if (cmd == Res.Commands.Présentation.TVA)
+			{
+				return ControllerType.RésuméTVA;
+			}
+
+			if (cmd == Res.Commands.Présentation.Réglages)
+			{
+				return ControllerType.Réglages;
+			}
+
+			return ControllerType.Unknown;
+		}
+
+
+#if false
+		public Dictionary<MetaControllerType, List<ControllerType>> Metas
+		{
+			get
+			{
+				return this.metas;
+			}
+		}
+
+		public AbstractMetaController MetaController
+		{
+			get
+			{
+				return this.metaController;
+			}
+		}
+#endif
+
+		public ControllerType SelectedDocument
+		{
+			get
+			{
+				return this.selectedDocument;
+			}
 		}
 
 
@@ -68,11 +315,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 
+#if false
+			//	Crée le TabController.
+			this.tabFrame = new FrameBox
+			{
+				Parent          = window.Root,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+			};
+
+			this.tabController = new TabController (this);
+			this.tabController.CreateUI (this.tabFrame);
+#endif
+
 			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox
 			{
 				Parent    = window.Root,
 				BackColor = RibbonController.GetBackgroundColor1 (),
+				//?BackColor = UIBuilder.WindowBackColor,
 				Dock      = DockStyle.Fill,
 				Padding   = new Margins (3),
 			};
@@ -146,9 +407,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.navigatorEngine.Clear ();
 				this.UpdateNavigatorCommands ();
 
-				if (this.controller != null)
+				if (this.Controller != null)
 				{
-					this.controller.UpdateUser ();
+					this.Controller.UpdateUser ();
 				}
 			}
 		}
@@ -185,6 +446,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+#if false
 		public List<AbstractController> Controllers
 		{
 			//	Retourne la liste de contrôleurs de toutes les fenêtres ouvertes.
@@ -193,6 +455,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return this.controllers;
 			}
 		}
+#endif
 
 
 		public void SetDirty()
@@ -217,18 +480,64 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public AbstractController ShowPrésentation(Command cmd)
+		public AbstractController ShowPrésentation(ViewSettingsData viewSettings)
+		{
+			this.ShowPrésentation (viewSettings.ControllerType);
+
+			var controller = this.Controller;
+
+			//	Utilise un réglage de présentation (viewSettings -> panneaux).
+			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null && viewSettings.Search != null && viewSettings.EnableSearch)
+			{
+				viewSettings.Search.CopyTo (controller.DataAccessor.SearchData);
+			}
+
+			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
+			{
+				viewSettings.Filter.CopyTo (controller.DataAccessor.FilterData);
+			}
+
+			if (controller.DataAccessor != null && controller.DataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
+			{
+				viewSettings.Options.CopyTo (controller.DataAccessor.Options);
+			}
+
+			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
+			if (viewSettings.ShowSearch != ShowPanelMode.Nop && viewSettings.ShowSearch != ShowPanelMode.DoesNotExist)
+			{
+				this.ShowSearchPanel = (viewSettings.ShowSearch != ShowPanelMode.Hide);
+				controller.SearchSpecialist = (viewSettings.ShowSearch == ShowPanelMode.ShowSpecialist);
+			}
+
+			if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
+			{
+				this.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
+				controller.FilterSpecialist = (viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist);
+			}
+
+			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
+			{
+				this.ShowOptionsPanel = (viewSettings.ShowOptions != ShowPanelMode.Hide);
+				controller.OptionsSpecialist = (viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist);
+			}
+
+			controller.UpdateAfterChanged ();
+			
+			return this.Controller;
+		}
+
+		public AbstractController ShowPrésentation(ControllerType type)
 		{
 			//	Utilise une autre présentation.
 			this.NavigatorUpdate ();
 
-			this.SelectedCommandDocument = cmd;
+			this.selectedDocument = type;
 			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
 			this.NavigatorPut ();
 
-			return this.controller;
+			return this.Controller;
 		}
 
 
@@ -237,20 +546,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Appelé la première fois, pour mettre la première présentation dans l'historique.
 			this.navigatorEngine.Clear ();
-			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument);
+			this.navigatorEngine.Put (this.Controller, this.selectedDocument);
 			this.UpdateNavigatorCommands ();
 		}
 
 		private void NavigatorUpdate()
 		{
 			//	Appelé avant un changement de présentation, pour mettre à jour la présentation dans l'historique.
-			this.navigatorEngine.Update (this.controller, this.selectedCommandDocument);
+			this.navigatorEngine.Update (this.Controller, this.selectedDocument);
 		}
 
 		private void NavigatorPut()
 		{
 			//	Appelé après un changement de présentation, pour ajouter la nouvelle présentation dans l'historique.
-			this.navigatorEngine.Put (this.controller, this.selectedCommandDocument);
+			this.navigatorEngine.Put (this.Controller, this.selectedDocument);
 			this.UpdateNavigatorCommands ();
 		}
 
@@ -294,12 +603,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>   ", data.Command.Icon);
+			//?string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>   ", data.Command.Icon);
 
 			var item = new MenuItem ()
 			{
 				IconUri       = UIBuilder.GetMarkStateIconUri (index == this.navigatorEngine.Index),
-				FormattedText = icon + data.Description,
+				//?FormattedText = icon + data.Description,
+				FormattedText = data.Description,
 				Name          = index.ToString (),  // on ne peut pas utiliser simplement Index !
 			};
 
@@ -315,21 +625,21 @@ namespace Epsitec.Cresus.Compta.Controllers
 			menu.Items.Add (item);
 		}
 
-		private void NavigatorRestore(Command cmd)
+		private void NavigatorRestore(ControllerType type)
 		{
 			//	Restaure une présentation utilisée précédemment.
-			this.SelectedCommandDocument = cmd;
+			this.selectedDocument = type;
 			this.UpdatePrésentationCommands ();
 			this.CreateController ();
 
-			this.navigatorEngine.Restore (this.controller);
+			this.navigatorEngine.Restore (this.Controller);
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.UpdateAfterChanged ();
+				this.Controller.UpdateAfterChanged ();
 			}
 
-			this.navigatorEngine.RestoreArrayController (this.controller);
+			this.navigatorEngine.RestoreArrayController (this.Controller);
 
 			this.UpdateNavigatorCommands ();
 		}
@@ -368,8 +678,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SelectCurrentPériode ();
 			this.SelectDefaultPrésentation ();
-			this.controller.UpdateUser ();
-			this.controller.ClearHilite ();
+			this.Controller.UpdateUser ();
+			this.Controller.ClearHilite ();
 		}
 
 		private void InitializeAfterCloseCompta()
@@ -397,22 +707,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.compta == null)  // compta fermée ?
 			{
-				this.SelectedCommandDocument = Res.Commands.Présentation.Open;
+				this.selectedDocument = ControllerType.Open;
 			}
 			else if (this.currentUser == null)  // déconnecté ?
 			{
-				this.SelectedCommandDocument = Res.Commands.Présentation.Login;
+				this.selectedDocument = ControllerType.Login;
 			}
 			else if (this.compta.PlanComptable.Any ())  // plan comptable existe ?
 			{
-				this.SelectedCommandDocument = Res.Commands.Présentation.Journal;
+				this.selectedDocument = ControllerType.Journal;
 			}
 			else  // plan comptable vide ?
 			{
-				this.SelectedCommandDocument = Res.Commands.Présentation.PlanComptable;
+				this.selectedDocument = ControllerType.PlanComptable;
 			}
 
-			this.ribbonController.PrésentationsLastButton.CommandObject = Res.Commands.Présentation.Réglages;
+			//?this.ribbonController.PrésentationsLastButton.CommandObject = Res.Commands.Présentation.Réglages;
 
 			this.CreateController ();
 			this.UpdateTitle ();
@@ -423,6 +733,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+#if false
 		private void OpenNewWindow(Command command)
 		{
 			//	Ouvre une nouvelle fenêtre contenant une présentation fixe donnée (command).
@@ -453,190 +764,195 @@ namespace Epsitec.Cresus.Compta.Controllers
 				secondaryWindow.Close ();
 			};
 		}
+#endif
 
 
 		private void CreateController()
 		{
+			//?var type = this.GetMeta (this.selectedDocument);
+			//?this.metaController = this.CreateMetaController (this.mainWindow, type);
+
+			//?this.tabController.CreateTabs (type);
+
 			this.DisposeController ();
-
-			this.controller = this.CreateController (this.mainWindow, this.selectedCommandDocument);
-
-			if (this.controller != null)
-			{
-				this.controller.CreateUI (this.mainFrame);
-				this.controllers.Add (this.controller);
-			}
+			this.CreateController (this.mainFrame, this.selectedDocument);
 
 			this.UpdatePanelCommands ();
 			this.UpdatePériodeCommands ();
 			this.UpdateNavigatorCommands ();
 		}
 
-		private AbstractController CreateController(Window parentWindow, Command command)
+		private void CreateController(FrameBox parent, ControllerType type)
 		{
-			AbstractController controller = null;
-
-			//	Les comparaisons ci-dessous doivent accepter les commandes Res.Commands.Présentation.Xyz
-			//	et Res.Commands.NouvellePrésentation.Xyz !
-
-			if (command.Name.EndsWith ("Présentation.Open"))
+			switch (type)
 			{
-				controller = new OpenController (this.app, this.businessContext, this);
+				case ControllerType.Open:
+					this.controller = new OpenController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Save:
+					this.controller = new SaveController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Print:
+					this.controller = new PrintController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Login:
+					this.controller = new LoginController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Périodes:
+					this.controller = new PériodesController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Modèles:
+					this.controller = new ModèlesController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Libellés:
+					this.controller = new LibellésController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Journaux:
+					this.controller = new JournauxController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Journal:
+					this.controller = new JournalController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.PlanComptable:
+					this.controller = new PlanComptableController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Balance:
+					this.controller = new BalanceController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Extrait:
+					this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Bilan:
+					this.controller = new BilanController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.PP:
+					this.controller = new PPController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Exploitation:
+					this.controller = new ExploitationController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Budgets:
+					this.controller = new BudgetsController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.RésuméTVA:
+					this.controller = new RésuméTVAController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.RésuméPériodique:
+					this.controller = new RésuméPériodiqueController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Soldes:
+					this.controller = new SoldesController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.PiècesGenerator:
+					this.controller = new PiècesGeneratorController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.CodesTVA:
+					this.controller = new CodesTVAController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.ListeTVA:
+					this.controller = new ListesTVAController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Monnaies:
+					this.controller = new MonnaiesController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Utilisateurs:
+					this.controller = new UtilisateursController (this.app, this.businessContext, this);
+					break;
+
+				case ControllerType.Réglages:
+					this.controller = new RéglagesController (this.app, this.businessContext, this);
+					break;
 			}
 
-			if (command.Name.EndsWith ("Présentation.Save"))
+			if (this.controller != null)
 			{
-				controller = new SaveController (this.app, this.businessContext, this);
+				this.controller.CreateUI (this.mainFrame);
+				//?controller.SetVariousParameters (parentWindow, command);
+			}
+		}
+
+		public void DisposeController()
+		{
+			if (this.controller != null)
+			{
+				this.controller.Dispose ();
+				this.controller = null;
 			}
 
-			if (command.Name.EndsWith ("Présentation.Print"))
-			{
-				controller = new PrintController (this.app, this.businessContext, this);
-			}
+			this.mainFrame.Children.Clear ();
+		}
 
-			if (command.Name.EndsWith ("Présentation.Login"))
-			{
-				controller = new LoginController (this.app, this.businessContext, this);
-			}
+#if false
+		private AbstractMetaController CreateMetaController(Window parentWindow, MetaControllerType type)
+		{
+			this.DisposeMetaController ();
 
-			if (command.Name.EndsWith ("Présentation.Périodes"))
-			{
-				controller = new PériodesController (this.app, this.businessContext, this);
-			}
+			AbstractMetaController controller = null;
 
-			if (command.Name.EndsWith ("Présentation.Modèles"))
+			switch (type)
 			{
-				controller = new ModèlesController (this.app, this.businessContext, this);
-			}
+				case MetaControllerType.Open:
+					controller = new OpenMetaController (this.app, this.businessContext, this);
+					break;
 
-			if (command.Name.EndsWith ("Présentation.Libellés"))
-			{
-				controller = new LibellésController (this.app, this.businessContext, this);
-			}
+				case MetaControllerType.Login:
+					controller = new LoginMetaController (this.app, this.businessContext, this);
+					break;
 
-			if (command.Name.EndsWith ("Présentation.Journaux"))
-			{
-				controller = new JournauxController (this.app, this.businessContext, this);
-			}
+				case MetaControllerType.Journal:
+					controller = new JournalMetaController (this.app, this.businessContext, this);
+					break;
 
-			if (command.Name.EndsWith ("Présentation.Journal"))
-			{
-				controller = new JournalController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.PlanComptable"))
-			{
-				controller = new PlanComptableController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Balance"))
-			{
-				controller = new BalanceController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Extrait"))
-			{
-				controller = new ExtraitDeCompteController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Bilan"))
-			{
-				controller = new BilanController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.PP"))
-			{
-				controller = new PPController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Exploitation"))
-			{
-				controller = new ExploitationController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Budgets"))
-			{
-				controller = new BudgetsController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.RésuméTVA"))
-			{
-				controller = new RésuméTVAController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.RésuméPériodique"))
-			{
-				controller = new RésuméPériodiqueController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Soldes"))
-			{
-				controller = new SoldesController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.PiècesGenerator"))
-			{
-				controller = new PiècesGeneratorController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.CodesTVA"))
-			{
-				controller = new CodesTVAController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.ListeTVA"))
-			{
-				controller = new ListesTVAController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Monnaies"))
-			{
-				controller = new MonnaiesController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Utilisateurs"))
-			{
-				controller = new UtilisateursController (this.app, this.businessContext, this);
-			}
-
-			if (command.Name.EndsWith ("Présentation.Réglages"))
-			{
-				controller = new RéglagesController (this.app, this.businessContext, this);
+				case MetaControllerType.Réglages:
+					controller = new RéglagesMetaController (this.app, this.businessContext, this);
+					break;
 			}
 
 			if (controller != null)
 			{
-				controller.SetVariousParameters (parentWindow, command);
+				controller.CreateController (this.mainFrame, this.selectedDocument);
 			}
 
 			return controller;
 		}
 
-		private void DisposeController()
+		private void DisposeMetaController()
 		{
-			this.DisposeController (this.controller);
-			this.controller = null;
-
-			this.mainFrame.Children.Clear ();
-		}
-
-		private void DisposeController(AbstractController controller)
-		{
-			if (controller != null)
+			if (this.metaController != null)
 			{
-				if (this.controllers.Contains (controller))
-				{
-					this.controllers.Remove (controller);
-				}
-
-				controller.Dispose ();
+				this.metaController.DisposeController ();
+				this.metaController = null;
 			}
 		}
+#endif
 
 
 		private void UpdateTitle()
 		{
-			this.mainWindow.Text = this.GetTitle (this.selectedCommandDocument);
+			this.mainWindow.Text = this.GetTitle (this.selectedDocument);
 		}
 
 		public void SetTitleComplement(string text)
@@ -645,7 +961,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateTitle ();
 		}
 
-		public string GetTitle(Command command)
+		public string GetTitle(ControllerType type)
 		{
 			if (this.compta  == null)
 			{
@@ -653,13 +969,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				return string.Concat ("Crésus Comptabilité NG / ", this.compta.Nom, " / ", this.GetShortTitle (command));
+				return string.Concat ("Crésus Comptabilité NG / ", this.compta.Nom, " / ", this.GetShortTitle (type));
 			}
 		}
 
-		private string GetShortTitle(Command command)
+		private string GetShortTitle(ControllerType type)
 		{
-			string text = command.Description;
+			string text = type.ToString ();  // TODO: provisoire !!!
 
 			if (!string.IsNullOrEmpty (this.titleComplement))
 			{
@@ -669,19 +985,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return text;
 		}
 
-
-		public bool ShowViewSettingsPanel
-		{
-			get
-			{
-				return this.showViewSettingsPanel;
-			}
-			set
-			{
-				this.showViewSettingsPanel = value;
-				this.UpdatePanelCommands ();
-			}
-		}
 
 		public bool ShowSearchPanel
 		{
@@ -749,30 +1052,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private Command SelectedCommandDocument
+#if false
+		private ControllerType SelectedDocument
 		{
 			get
 			{
-				return this.selectedCommandDocument;
+				return this.selectedDocument;
 			}
 			set
 			{
-				this.selectedCommandDocument = value;
+				this.selectedDocument = value;
 
 				//	S'il s'agit d'une présentation accessible par le menu, on met à jour la commande.
-				if (Converters.MenuPrésentationCommands.Contains (this.selectedCommandDocument))
+				if (Converters.MenuPrésentationCommands.Contains (this.selectedDocument))
 				{
-					this.ribbonController.PrésentationsLastButton.CommandObject = this.selectedCommandDocument;
+					this.ribbonController.PrésentationsLastButton.CommandObject = this.selectedDocument;
 				}
 			}
 		}
+#endif
 
 		private void UpdatePrésentationCommands()
 		{
 			foreach (var command in Converters.PrésentationCommands)
 			{
+				var type = this.GetControllerType (command);
+
 				CommandState cs = this.app.CommandContext.GetCommandState (command);
-				cs.ActiveState = (command == this.selectedCommandDocument) ? ActiveState.Yes : ActiveState.No;
+				cs.ActiveState = (type == this.selectedDocument) ? ActiveState.Yes : ActiveState.No;
 
 				if (this.compta == null)
 				{
@@ -812,6 +1119,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 
+#if false
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.Menu);
 				cs.Enable = (this.compta != null && this.currentUser != null);
@@ -821,6 +1129,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Présentation.New);
 				cs.Enable = (this.compta != null && this.currentUser != null);
 			}
+#endif
 		}
 
 		private bool HasPrésentationCommand(Command cmd)
@@ -873,66 +1182,59 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePanelCommands()
 		{
-			if (this.controller != null)
-			{
-				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.ViewSettings);
-				cs.ActiveState = this.showViewSettingsPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasShowViewSettingsPanel;
-			}
-
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
 				cs.ActiveState = this.showSearchPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasSearchPanel;
+				cs.Enable = (this.Controller == null) ? false : this.Controller.HasSearchPanel;
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Filter);
 				cs.ActiveState = this.showFilterPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasFilterPanel;
+				cs.Enable = (this.Controller == null) ? false : this.Controller.HasFilterPanel;
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Temporal);
 				cs.ActiveState = this.showTemporalPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasTemporalPanel;
+				cs.Enable = (this.Controller == null) ? false : this.Controller.HasTemporalPanel;
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
 				cs.ActiveState = this.showOptionsPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasOptionsPanel;
+				cs.Enable = (this.Controller == null) ? false : this.Controller.HasOptionsPanel;
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Info);
 				cs.ActiveState = this.showInfoPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasInfoPanel;
+				cs.Enable = (this.Controller == null) ? false : this.Controller.HasInfoPanel;
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.showViewSettingsPanel, this.showSearchPanel, this.showFilterPanel, this.showTemporalPanel, this.showOptionsPanel, this.showInfoPanel);
+				this.Controller.UpdatePanelsShowed (this.showSearchPanel, this.showFilterPanel, this.showTemporalPanel, this.showOptionsPanel, this.showInfoPanel);
 			}
 		}
 
 		private void UpdatePériodeCommands()
 		{
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodePrécédente);
-				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, -1) != null);
+				cs.Enable = (this.Controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, -1) != null);
 			}
 
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodeSuivante);
-				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, 1) != null);
+				cs.Enable = (this.Controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, 1) != null);
 			}
 		}
 
@@ -949,7 +1251,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				
 				this.CreateController ();
 				this.AdaptSettingsData ();
-				this.controller.UpdateAfterChanged ();
+				this.Controller.UpdateAfterChanged ();
 
 				this.NavigatorPut ();
 			}
@@ -988,7 +1290,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					{
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Search);
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
-						MainWindowController.AdaptTemporalData (this.période, viewSettingsData.Temporal);
 					}
 				}
 			}
@@ -1016,20 +1317,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 						}
 					}
 				}
-			}
-		}
-
-		private static void AdaptTemporalData(ComptaPériodeEntity période, TemporalData data)
-		{
-			//	Adapte un filtre temporel pour être dans une période donnée.
-			if (data.BeginDate.HasValue)
-			{
-				data.BeginDate = MainWindowController.AdaptDate (période, data.BeginDate.Value);
-			}
-
-			if (data.EndDate.HasValue)
-			{
-				data.EndDate = MainWindowController.AdaptDate (période, data.EndDate.Value);
 			}
 		}
 
@@ -1129,7 +1416,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public DialogResult QuestionDialog(FormattedText message)
 		{
 			var dialog = MessageDialog.CreateYesNo ("Question", DialogIcon.Question, message);
-			dialog.OwnerWindow = this.controller.MainWindowController.Window;
+			dialog.OwnerWindow = this.Controller.MainWindowController.Window;
 			dialog.OpenDialog ();
 			return dialog.Result;
 		}
@@ -1227,12 +1514,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Save)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Print)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Login)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Périodes)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Modèles)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Libellés)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journaux)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.PlanComptable)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Extrait)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Bilan)]
@@ -1240,27 +1522,24 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Exploitation)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Budgets)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DifférencesChange)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Monnaies)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Soldes)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméTVA)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.DécompteTVA)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.CodesTVA)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.ListeTVA)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.PiècesGenerator)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Utilisateurs)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.TVA)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Réglages)]
 		private void ProcessShowPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
-			this.ShowPrésentation (e.Command);
+			this.ShowPrésentation (this.GetControllerType (e.Command));
 		}
 
+#if false
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Menu)]
 		private void ProcessMenuPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			this.ShowPrésentationsMenu ();
 		}
+#endif
 
+#if false
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.New)]
 		private void ProcessNewPrésentation(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
@@ -1284,6 +1563,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.OpenNewWindow (e.Command);
 		}
+#endif
 
 
 		public void ClosePanelSearch()
@@ -1322,12 +1602,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		public void ClosePanelViewSettings()
-		{
-			this.showViewSettingsPanel = false;
-			this.UpdatePanelCommands ();
-		}
-
 
 		[Command (Res.CommandIds.Panel.Search)]
 		private void CommandPanelSearch()
@@ -1357,13 +1631,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		[Command (Res.CommandIds.Panel.ViewSettings)]
-		private void CommandPanelViewSettings()
-		{
-			this.showViewSettingsPanel = !this.showViewSettingsPanel;
-			this.UpdatePanelCommands ();
-		}
-
 		[Command (Res.CommandIds.Panel.Info)]
 		private void CommandPanelInfo()
 		{
@@ -1375,27 +1642,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Select.Up)]
 		private void CommandSelectUp()
 		{
-			if (this.controller != null && this.controller.ArrayController != null)
+			if (this.Controller != null && this.Controller.ArrayController != null)
 			{
-				this.controller.ArrayController.MoveSelection (-1);
+				this.Controller.ArrayController.MoveSelection (-1);
 			}
 		}
 
 		[Command (Res.CommandIds.Select.Down)]
 		private void CommandSelectDown()
 		{
-			if (this.controller != null && this.controller.ArrayController != null)
+			if (this.Controller != null && this.Controller.ArrayController != null)
 			{
-				this.controller.ArrayController.MoveSelection (1);
+				this.Controller.ArrayController.MoveSelection (1);
 			}
 		}
 
 		[Command (Res.CommandIds.Select.Home)]
 		private void CommandSelectHome()
 		{
-			if (this.controller != null && this.controller.ArrayController != null)
+			if (this.Controller != null && this.Controller.ArrayController != null)
 			{
-				this.controller.ArrayController.MoveSelection (0);
+				this.Controller.ArrayController.MoveSelection (0);
 			}
 		}
 
@@ -1403,27 +1670,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Create)]
 		private void CommandEditCreate()
 		{
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.CreateAction ();
+				this.Controller.CreateAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Accept)]
 		private void CommandEditAccept()
 		{
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.AcceptAction ();
+				this.Controller.AcceptAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Cancel)]
 		private void CommandEditCancel()
 		{
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.CancelAction ();
+				this.Controller.CancelAction ();
 			}
 		}
 
@@ -1440,135 +1707,135 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Edit.Up)]
 		private void CommandEditUp()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MoveAction (-1);
+				this.Controller.EditorController.MoveAction (-1);
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Down)]
 		private void CommandEditDown()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MoveAction (1);
+				this.Controller.EditorController.MoveAction (1);
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Duplicate)]
 		private void CommandEditDuplicate()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.DuplicateAction ();
+				this.Controller.EditorController.DuplicateAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Edit.Delete)]
 		private void CommandEditDelete()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.DeleteAction ();
+				this.Controller.EditorController.DeleteAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.LastLine)]
 		private void CommandMultiLastLine()
 		{
-			if (this.controller != null)
+			if (this.Controller != null)
 			{
-				this.controller.EditorController.MultiLastLineAction ();
+				this.Controller.EditorController.MultiLastLineAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.InsertBefore)]
 		private void CommandMultiInsertBefore()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiInsertLineAction (true);
+				this.Controller.EditorController.MultiInsertLineAction (true);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.InsertAfter)]
 		private void CommandMultiInsertAfter()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiInsertLineAction (false);
+				this.Controller.EditorController.MultiInsertLineAction (false);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.InsertTVA)]
 		private void CommandMultiInsertTVA()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiInsertTVALineAction ();
+				this.Controller.EditorController.MultiInsertTVALineAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Delete)]
 		private void CommandMultiDelete()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiDeleteLineAction ();
+				this.Controller.EditorController.MultiDeleteLineAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Up)]
 		private void CommandMultiUp()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiMoveLineAction (-1);
+				this.Controller.EditorController.MultiMoveLineAction (-1);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Down)]
 		private void CommandMultiDown()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiMoveLineAction (1);
+				this.Controller.EditorController.MultiMoveLineAction (1);
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Swap)]
 		private void CommandMultiSwap()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiLineSwapAction ();
+				this.Controller.EditorController.MultiLineSwapAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Split)]
 		private void CommandMultiSplit()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiLineSplitAction ();
+				this.Controller.EditorController.MultiLineSplitAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Join)]
 		private void CommandMultiJoin()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiLineJoinAction ();
+				this.Controller.EditorController.MultiLineJoinAction ();
 			}
 		}
 
 		[Command (Res.CommandIds.Multi.Auto)]
 		private void CommandMultiAuto()
 		{
-			if (this.controller != null && this.controller.EditorController != null)
+			if (this.Controller != null && this.Controller.EditorController != null)
 			{
-				this.controller.EditorController.MultiLineAutoAction ();
+				this.Controller.EditorController.MultiLineAutoAction ();
 			}
 		}
 
@@ -1585,7 +1852,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandModèleInsert(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			int n = e.Command.Name.Last () - '0';  // 0..9
-			this.controller.EditorController.InsertModèle (n);
+			this.Controller.EditorController.InsertModèle (n);
 		}
 
 		[Command (Res.CommandIds.Compta.PériodePrécédente)]
@@ -1625,6 +1892,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		private AbstractController Controller
+		{
+			get
+			{
+#if false
+				if (this.metaController != null)
+				{
+					return this.metaController.Controller;
+				}
+
+				return null;
+#else
+				return this.controller;
+#endif
+			}
+		}
+
+
+#if false
 		#region Présentations menu
 		private void ShowPrésentationsMenu()
 		{
@@ -1664,8 +1950,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 		#endregion
+#endif
 
 
+#if false
 		#region New window menu
 		public void ShowNewWindowMenu()
 		{
@@ -1714,7 +2002,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 		#endregion
-
+#endif
 
 		#region Settings data
 		public AbstractPermanents GetSettingsPermanents<T>(string key, ComptaEntity compta)
@@ -1791,21 +2079,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private readonly ComptaApplication					app;
-		private readonly List<AbstractController>			controllers;
+		//?private readonly List<AbstractController>			controllers;
 		private readonly Dictionary<string, ISettingsData>	settingsData;
 		private readonly SettingsList						settingsList;
 		private readonly SettingsList						defaultSettingsList;
 		private readonly NavigatorEngine					navigatorEngine;
 		private readonly PiècesGenerator					piècesGenerator;
 		private readonly TemporalData						temporalData;
+		//?private readonly Dictionary<MetaControllerType, List<ControllerType>> metas;
 
 		private Window										mainWindow;
 		private BusinessContext								businessContext;
 		private ComptaEntity								compta;
 		private ComptaPériodeEntity							période;
-		private Command										selectedCommandDocument;
+		private ControllerType								selectedDocument;
 		private AbstractController							controller;
+		//?private AbstractMetaController						metaController;
 		private RibbonController							ribbonController;
+		private FrameBox									tabFrame;
+		private TabController								tabController;
 		private FrameBox									mainFrame;
 		private string										titleComplement;
 		private bool										dirty;
@@ -1813,7 +2105,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private bool										showFilterPanel;
 		private bool										showTemporalPanel;
 		private bool										showOptionsPanel;
-		private bool										showViewSettingsPanel;
 		private bool										showInfoPanel;
 		private ComptaUtilisateurEntity						currentUser;
 	}

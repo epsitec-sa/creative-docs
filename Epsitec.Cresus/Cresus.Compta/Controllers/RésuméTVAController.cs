@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new RésuméTVADataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.RésuméTVA.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TVA.ViewSettings");
 		}
 
 
@@ -99,6 +99,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("TVA");
 			this.SetTitle ("Résumé TVA");
 			this.SetSubtitle (this.période.ShortTitle);
 		}
@@ -146,7 +147,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Journal);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Journal);
 
 				int row = (présentation.DataAccessor as JournalDataAccessor).GetIndexOf (écriture);
 				if (row != -1)
@@ -164,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
 
 				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 				permanent.NuméroCompte = data.Numéro;

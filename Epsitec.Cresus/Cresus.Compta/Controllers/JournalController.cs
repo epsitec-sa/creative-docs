@@ -57,6 +57,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateViewSettings ();
 		}
 
+#if false
 		protected override void CreateTitleFrame()
 		{
 			this.titleLabel.Visibility = false;
@@ -77,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 0, 3, 3),
+				//?Margins         = new Margins (0, 0, 3, 3),
 			};
 
 			this.comboJournaux.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
@@ -114,6 +115,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			};
 		}
+#endif
 
 		private void UpdateCombo()
 		{
@@ -145,6 +147,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Journal");
+
 			int id = (this.dataAccessor.Options as JournalOptions).JournalId;
 			var journal = this.ComptaEntity.Journaux.Where (x => x.Id == id).FirstOrDefault ();
 
@@ -186,7 +190,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-#if false
 		public override bool HasOptionsPanel
 		{
 			get
@@ -194,7 +197,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return true;
 			}
 		}
-#endif
 
 		public override bool HasInfoPanel
 		{
@@ -265,7 +267,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				item.Clicked += delegate
 				{
-					var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+					var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
 
 					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 					permanent.NuméroCompte = compte.Numéro;

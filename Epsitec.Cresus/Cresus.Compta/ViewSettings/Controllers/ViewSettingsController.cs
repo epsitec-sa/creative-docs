@@ -40,32 +40,24 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		}
 
 
-		public bool ShowPanel
+		public PanelsToolbarController PanelsToolbarController
 		{
 			get
 			{
-				return this.showPanel;
+				return this.panelsToolbarController;
 			}
-			set
-			{
-				if (this.showPanel != value)
-				{
-					this.showPanel = value;
-					this.toolbar.Visibility = this.showPanel;
+		}
 
-					if (this.showPanel)
-					{
-						if (this.topPanelLeftController.Specialist)
-						{
-							this.extendedListViewSettings.Focus ();
-						}
-						else
-						{
-							this.compactComboViewSettings.Focus ();
-						}
-					}
-				}
-			}
+		public void SetTitle(FormattedText title)
+		{
+			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
+			this.titleFrame.PreferredWidth = this.titleLabel.GetBestFitSize ().Width;
+		}
+
+		public FrameBox GetTitleFrame()
+		{
+			this.titleLabel.Visibility = false;
+			return this.titleFrame;
 		}
 
 
@@ -77,51 +69,63 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				BackColor           = UIBuilder.ViewSettingsBackColor,
+				//?BackColor           = UIBuilder.ViewSettingsBackColor,
+				BackColor           = RibbonController.GetBackgroundColor1 (),
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
 				Margins             = new Margins (0, 0, 0, -1),
-				Visibility          = false,
 			};
 
-			var topPanelLeftFrame = new FrameBox
+			this.titleFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
 				Dock           = DockStyle.Left,
-				Padding        = new Margins (5),
+				Margins        = new Margins (10, 10, 5, 5),
 			};
 
-			//	Crée les frames gauche, centrale et droite.
+			this.titleLabel = new StaticText
+			{
+				Parent         = this.titleFrame,
+				Dock           = DockStyle.Fill,
+			};
+
 			this.mainFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
 				Dock           = DockStyle.Fill,
-				Padding        = new Margins (5),
 			};
 
-			var topPanelRightFrame = new FrameBox
+			var specialistFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
-				DrawFullFrame  = true,
 				PreferredWidth = 20,
 				Dock           = DockStyle.Right,
-				Padding        = new Margins (5),
+				Padding        = new Margins (0, 5, 5, 5),
+			};
+
+			var panelsToolbarFrame = new FrameBox
+			{
+				Parent         = this.toolbar,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Right,
 			};
 
 			this.CreateComptactViewSettingsUI (this.mainFrame);
 			this.CreateExtendedViewSettingsUI (this.mainFrame);
+			this.CreateSpecialistUI (specialistFrame);
+
+			this.panelsToolbarController = new PanelsToolbarController (this.controller);
+			this.panelsToolbarController.CreateUI (panelsToolbarFrame);
 
 			//	Remplissage de la frame gauche.
-			this.topPanelLeftController = new TopPanelLeftController (this.controller);
-			this.topPanelLeftController.CreateUI (topPanelLeftFrame, true, "Panel.ViewSettings", this.LevelChangedAction);
+			//?this.topPanelLeftController = new TopPanelLeftController (this.controller);
+			//?this.topPanelLeftController.CreateUI (topPanelLeftFrame, true, "Panel.ViewSettings", this.LevelChangedAction);
 
 			//	Remplissage de la frame droite.
-			this.topPanelRightController = new TopPanelRightController (this.controller);
-			this.topPanelRightController.CreateUI (topPanelRightFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
+			//?this.topPanelRightController = new TopPanelRightController (this.controller);
+			//?this.topPanelRightController.CreateUI (topPanelRightFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
 
-			this.UpdateCombo ();
+			this.UpdateTabs ();
 			this.UpdateList ();
 			this.UpdateWidgets ();
 		}
@@ -143,8 +147,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			var viewSettings = this.viewSettingsList.Selected;
 			if (viewSettings != null)
 			{
+#if false
 				this.CopyViewSettingsToData (viewSettings);
 				this.viewSettingsChangedAction ();
+#else
+				this.controller.MainWindowController.ShowPrésentation (viewSettings);
+#endif
 			}
 
 			this.UpdateWidgets ();
@@ -152,10 +160,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void UpdateLevel()
 		{
-			this.comptactFrame.Visibility = !this.topPanelLeftController.Specialist;
-			this.extendedFrame.Visibility =  this.topPanelLeftController.Specialist;
+			this.comptactFrame.Visibility = !this.specialist;
+			this.extendedFrame.Visibility =  this.specialist;
 
-			this.topPanelLeftController.Specialist = this.topPanelLeftController.Specialist;
+			this.UpdateSpecialist ();
 		}
 
 		private void UpdateWidgets()
@@ -169,8 +177,32 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			this.UpdateButtons ();
 			this.UpdateSummary ();
-			this.UpdateComboSelection ();
+			this.UpdateTabSelected ();
 			this.UpdateListSelection ();
+		}
+
+
+		private void CreateSpecialistUI(FrameBox parent)
+		{
+			this.specialistButton = new GlyphButton
+			{
+				Parent          = parent,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredWidth  = 20,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Top,
+			};
+
+			this.specialistButton.Clicked += delegate
+			{
+				this.specialist = !this.specialist;
+				this.UpdateLevel ();
+			};
+		}
+
+		private void UpdateSpecialist()
+		{
+			this.specialistButton.GlyphShape = this.specialist ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 		}
 
 
@@ -181,48 +213,44 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Parent          = parent,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
+				Padding         = new Margins (5, 5, 5, 0),
 			};
 
-			new StaticText
-			{
-				Parent           = this.comptactFrame,
-				Text             = "Réglage",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			this.compactComboViewSettings = new TextFieldCombo
+			this.comptactTabFrame = new FrameBox
 			{
 				Parent          = this.comptactFrame,
-				PreferredWidth  = ViewSettingsController.fieldWidth,
 				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				IsReadOnly      = true,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
+			};
+
+			var buttonFrame = new FrameBox
+			{
+				Parent          = this.comptactFrame,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (10, 0, 0, 0),
+				Padding         = new Margins (0, 0, 0, 5),
 			};
 
 			this.compactUpdateButton = new IconButton
 			{
-				Parent            = this.comptactFrame,
+				Parent            = buttonFrame,
 				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
 				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (20, 20),
+				PreferredSize     = new Size (24, 24),
 				Dock              = DockStyle.Left,
 			};
 
 			this.compactUseButton = new IconButton
 			{
-				Parent            = this.comptactFrame,
+				Parent            = buttonFrame,
 				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
 				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (20, 20),
+				PreferredSize     = new Size (24, 24),
 				Dock              = DockStyle.Left,
 			};
 
+#if false
 			this.compactSummary = new StaticText
 			{
 				Parent        = this.comptactFrame,
@@ -230,16 +258,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock          = DockStyle.Fill,
 				Margins       = new Margins (20, 0, 0, 0),
 			};
-
-			this.compactComboViewSettings.SelectedItemChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero && this.compactComboViewSettings.SelectedItemIndex != -1)
-				{
-					this.viewSettingsList.SelectedIndex = this.compactComboViewSettings.SelectedItemIndex;
-					this.UpdateAfterSelectionChanged ();
-					this.ViewSettingsChanged ();
-				}
-			};
+#endif
 
 			this.compactUseButton.Clicked += delegate
 			{
@@ -265,12 +284,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Parent          = parent,
 				PreferredHeight = 15*7+29,  // 7 lignes dans la liste
 				Dock            = DockStyle.Top,
-			};
-
-			var leftFrame = new FrameBox
-			{
-				Parent = this.extendedFrame,
-				Dock   = DockStyle.Left,
+				Padding         = new Margins (5),
 			};
 
 			var centerFrame = new FrameBox
@@ -285,19 +299,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent          = this.extendedFrame,
 				Dock            = DockStyle.Fill,
-			};
-
-			//	Panneau de gauche.
-			new StaticText
-			{
-				Parent           = leftFrame,
-				Text             = "Réglages",
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Top,
-				Margins          = new Margins (0, 10, 0, 0),
 			};
 
 			//	Panneau du milieu.
@@ -336,7 +337,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				if (this.ignoreChanges.IsZero && this.viewSettingsList.Selected != null)
 				{
 					this.viewSettingsList.Selected.Name = this.extendedFieldName.FormattedText;
-					this.UpdateCombo ();
+					this.UpdateTabs ();
 					this.UpdateList ();
 				}
 			};
@@ -432,14 +433,18 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.extendedAddButton.Clicked += delegate
 			{
-				var viewSettings = new ViewSettingsData ();
-				viewSettings.Name = this.NewViewSettingsName;
+				var viewSettings = new ViewSettingsData
+				{
+					Name           = this.NewViewSettingsName,
+					ControllerType = this.controller.MainWindowController.SelectedDocument,
+				};
+
 				this.CopyDataToViewSettings (viewSettings);
 
 				this.viewSettingsList.List.Add (viewSettings);
 				this.viewSettingsList.Selected = viewSettings;
 
-				this.UpdateCombo ();
+				this.UpdateTabs ();
 				this.UpdateList ();
 				this.UpdateButtons ();
 				this.UpdateSummary ();
@@ -466,7 +471,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				this.viewSettingsList.List[sel-1] = m2;
 				this.viewSettingsList.List[sel]   = m1;
 
-				this.UpdateCombo ();
+				this.UpdateTabs ();
 				this.UpdateList ();
 				this.UpdateButtons ();
 			};
@@ -481,7 +486,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				this.viewSettingsList.List[sel+1] = m2;
 				this.viewSettingsList.List[sel]   = m1;
 
-				this.UpdateCombo ();
+				this.UpdateTabs ();
 				this.UpdateList ();
 				this.UpdateButtons ();
 			};
@@ -491,7 +496,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				int sel = this.extendedListViewSettings.SelectedItemIndex;
 				this.viewSettingsList.List.RemoveAt (sel);
 
-				this.UpdateCombo ();
+				this.UpdateTabs ();
 				this.UpdateList ();
 
 				sel = System.Math.Min (sel, this.viewSettingsList.List.Count-1);
@@ -708,35 +713,51 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		}
 
 
-		private void UpdateCombo()
+		private void UpdateTabs()
 		{
-			using (this.ignoreChanges.Enter ())
+			this.comptactTabFrame.Children.Clear ();
+
+			for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 			{
-				this.compactComboViewSettings.Items.Clear ();
-
-				foreach (var viewSettings in this.viewSettingsList.List)
-				{
-					this.compactComboViewSettings.Items.Add (viewSettings.Name);
-				}
-
-				this.compactComboViewSettings.Enable = this.viewSettingsList.List.Any ();
-
+				this.CreateTab (this.comptactTabFrame, i);
 			}
-
-			this.UpdateComboSelection ();
 		}
 
-		private void UpdateComboSelection()
+		private void CreateTab(Widget parent, int index)
 		{
-			using (this.ignoreChanges.Enter ())
+			bool select = index == this.viewSettingsList.SelectedIndex;
+
+			var button = new TabButton
 			{
-				if (this.viewSettingsList.Selected == null)
+				Parent            = parent,
+				FormattedText     = this.viewSettingsList.List[index].Name,
+				ActiveState       = select ? ActiveState.Yes : ActiveState.No,
+				PreferredHeight   = 26,
+				Dock              = DockStyle.Left,
+				TabIndex          = index,
+				AutoFocus         = false,
+			};
+
+			button.PreferredWidth = button.GetBestFitSize ().Width + 10;
+
+			button.Clicked += delegate
+			{
+				this.viewSettingsList.SelectedIndex = button.TabIndex;
+				this.UpdateAfterSelectionChanged ();
+				this.ViewSettingsChanged ();
+			};
+		}
+
+		private void UpdateTabSelected()
+		{
+			foreach (var widget in this.comptactTabFrame.Children)
+			{
+				var button = widget as TabButton;
+
+				if (button != null)
 				{
-					this.compactComboViewSettings.FormattedText = FormattedText.Empty;
-				}
-				else
-				{
-					this.compactComboViewSettings.FormattedText = this.viewSettingsList.Selected.Name;
+					bool select = button.TabIndex == this.viewSettingsList.SelectedIndex;
+					button.ActiveState = select ? ActiveState.Yes : ActiveState.No;
 				}
 			}
 		}
@@ -774,7 +795,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					this.extendedFieldName.FormattedText = this.viewSettingsList.Selected.Name;
 				}
 
-				this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
+				//?this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
 			}
 		}
 
@@ -782,7 +803,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+				//?this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+				this.UpdateTabSelected ();
 				this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
 			}
 		}
@@ -793,7 +815,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			int count = this.viewSettingsList.List.Count;
 			bool eq = this.CompareTo (this.viewSettingsList.Selected);
 
-			this.topPanelRightController.ClearEnable = sel != 0 || !eq;
+			//?this.topPanelRightController.ClearEnable = sel != 0 || !eq;
 
 			this.compactUseButton.Enable    = (sel != -1 && !eq);
 			this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
@@ -830,11 +852,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 				else
 				{
-					this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
+					//?this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
 
-					this.extendedSearchSummary  .FormattedText = viewSettings.GetSearchSummary   (this.controller.ColumnMappers);
-					this.extendedFilterSummary  .FormattedText = viewSettings.GetFilterSummary   (this.controller.ColumnMappers);
-					this.extendedOptionsSummary .FormattedText = viewSettings.GetOptionsSummary  (this.controller.ColumnMappers);
+					this.extendedSearchSummary .FormattedText = viewSettings.GetSearchSummary  (this.controller.ColumnMappers);
+					this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
+					this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
 
 					this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
 					if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
@@ -857,15 +879,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.extendedOptionsSummary.FormattedText = "Vide";
 					}
 
-					this.extendedSearchSummary.ActiveState  = viewSettings.EnableSearch   ? ActiveState.Yes : ActiveState.No;
-					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter   ? ActiveState.Yes : ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions  ? ActiveState.Yes : ActiveState.No;
+					this.extendedSearchSummary.ActiveState  = viewSettings.EnableSearch  ? ActiveState.Yes : ActiveState.No;
+					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
+					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
 
 					this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
 					this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
 
-					var tooltipSummary = this.TooltipSummary;
-					ToolTip.Default.SetToolTip (this.comptactFrame, tooltipSummary);
+					//?ToolTip.Default.SetToolTip (this.comptactFrame, this.TooltipSummary);
 				}
 
 				this.extendedSearchSummary .Enable = (viewSettings != null && !this.IsReadonly);
@@ -1272,14 +1293,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private System.Action							viewSettingsChangedAction;
 
+		private FrameBox								titleFrame;
+		private StaticText								titleLabel;
 		private FrameBox								mainFrame;
 		private FrameBox								toolbar;
-		private TopPanelLeftController					topPanelLeftController;
-		private TopPanelRightController					topPanelRightController;
+		//?private TopPanelLeftController					topPanelLeftController;
+		//?private TopPanelRightController					topPanelRightController;
 		private bool									showPanel;
+		private bool									specialist;
+
+		private GlyphButton								specialistButton;
 
 		private FrameBox								comptactFrame;
-		private TextFieldCombo							compactComboViewSettings;
+		private FrameBox								comptactTabFrame;
 		private Button									compactUseButton;
 		private Button									compactUpdateButton;
 		private StaticText								compactSummary;
@@ -1305,5 +1331,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private CheckButton								extendedAttributeReadonly;
 		private CheckButton								extendedAttributePermanent;
+
+		private PanelsToolbarController					panelsToolbarController;
 	}
 }

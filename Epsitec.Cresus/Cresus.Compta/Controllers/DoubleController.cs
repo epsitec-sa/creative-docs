@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
 
 				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 				permanent.NuméroCompte = data.Numéro;
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Budgets);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Budgets);
 
 				var compte = this.compta.PlanComptable.Where (x => x.Numéro == data.Numéro).FirstOrDefault ();
 				int row = (présentation.DataAccessor as BudgetsDataAccessor).GetIndexOf (compte);

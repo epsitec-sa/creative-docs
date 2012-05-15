@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new ListesTVADataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ListesTVA.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TVA.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("TVA");
 			this.SetTitle ("Listes de taux de TVA");
 		}
 

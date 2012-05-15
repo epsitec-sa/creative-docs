@@ -26,12 +26,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new MonnaiesDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Monnaies.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Réglages");
 			this.SetTitle ("Monnaies");
 		}
 

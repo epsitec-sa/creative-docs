@@ -33,18 +33,20 @@ namespace Epsitec.Cresus.Compta.IO
 		public void CreateDefaultViewSettings()
 		{
 			this.CreateDefaultViewSettingsJournal          ("Journal");
-			this.CreateDefaultViewSettingsPlanComptable    ("PlanComptable");
 			this.CreateDefaultViewSettingsBalance          ("Balance");
 			this.CreateDefaultViewSettingsExtraitDeCompte  ("ExtraitDeCompte");
 			this.CreateDefaultViewSettingsBilan            ("Bilan");
 			this.CreateDefaultViewSettingsPP               ("PP");
 			this.CreateDefaultViewSettingsExploitation     ("Exploitation");
 			this.CreateDefaultViewSettingsBudgets          ("Budgets");
-			this.CreateDefaultViewSettingsJournaux         ("Journaux");
-			this.CreateDefaultViewSettingsLibellés         ("Libellés");
-			this.CreateDefaultViewSettingsModèles          ("Modèles");
-			this.CreateDefaultViewSettingsPériodes         ("Périodes");
 			this.CreateDefaultViewSettingsRésuméPériodique ("RésuméPériodique");
+			this.CreateDefaultViewSettingsTVA              ("TVA");
+			this.CreateDefaultViewSettingsLogin            ("Login");
+			this.CreateDefaultViewSettingsOpen             ("Open");
+			this.CreateDefaultViewSettingsPrint            ("Print");
+			this.CreateDefaultViewSettingsSave             ("Save");
+			this.CreateDefaultViewSettingsSoldes           ("Soldes");
+			this.CreateDefaultViewSettingsRéglages         ("Réglages");
 		}
 
 
@@ -54,78 +56,91 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des écritures", searchExist, filterExist, optionsExist);
 			}
 
+#if false
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, "Rechercher...", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Rechercher...", searchExist, filterExist, optionsExist);
 				viewSettings.ShowSearch = ShowPanelMode.ShowBeginner;
 			}
+#endif
+
+			this.CreateViewSettingsData (list, ControllerType.Libellés, "Libellés usuels",   true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Modèles,  "Ecritures modèles", true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",          true, false, false);
 
 			this.Select<JournalOptions> (list, nomPrésentation);
 		}
 
-		private void CreateDefaultViewSettingsPlanComptable(string nomPrésentation)
+		private void CreateDefaultViewSettingsRéglages(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
 
+#if false
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Actifs", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Actifs", searchExist, filterExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Actif);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Passifs", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Passifs", searchExist, filterExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Passif);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Charges", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Charges", searchExist, filterExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Produits", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Produits", searchExist, filterExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Produit);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, "Exploitations", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Exploitations", searchExist, filterExist, optionsExist);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Exploitation);
 			}
+#endif
+
+			this.CreateViewSettingsData (list, ControllerType.PlanComptable,   "Plan comptable",        true,  true,  false);
+			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Périodes,        "Périodes comptables",   true,  false, false);
+			this.CreateViewSettingsData (list, ControllerType.PiècesGenerator, "Générateurs n° pièces", false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Utilisateurs,    "Utilisateurs",          false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Réglages,        "Réglages",              false, false, false);
 
 			this.Select (list, nomPrésentation);
 		}
@@ -136,23 +151,22 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Vue d'ensemble", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Vue d'ensemble", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Histogramme des comptes importants", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Histogramme des comptes importants", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -166,7 +180,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, "Secteurs des comptes importants", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Secteurs des comptes importants", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -191,15 +205,14 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.Extrait, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, "Graphique du solde", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.Extrait, "Graphique du solde", searchExist, filterExist, optionsExist);
 
 				this.OptionsAdaptGraph (viewSettings.Options);
 				viewSettings.Options.GraphOptions.Mode = GraphMode.Lines;
@@ -214,17 +227,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
+#if false
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -232,7 +245,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -240,7 +253,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -248,15 +261,16 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
+#endif
 
 			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
@@ -272,17 +286,17 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
+#if false
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "1er trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "1er trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
@@ -290,7 +304,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "2ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "2ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
@@ -298,7 +312,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "3ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "3ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
@@ -306,15 +320,16 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "4ème trimestre", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "4ème trimestre", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
+#endif
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Vue d'ensemble du budget", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
@@ -322,7 +337,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, "Comparaison avec le budget", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Comparaison avec le budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
@@ -341,11 +356,10 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, ControllerType.Exploitation, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
@@ -358,75 +372,10 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = false;
 
 			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
-			}
-
-			this.Select (list, nomPrésentation);
-		}
-
-		private void CreateDefaultViewSettingsJournaux(string nomPrésentation)
-		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-
-			bool searchExist  = true;
-			bool filterExist  = false;
-			bool tempoExist   = false;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
-			}
-
-			this.Select (list, nomPrésentation);
-		}
-
-		private void CreateDefaultViewSettingsLibellés(string nomPrésentation)
-		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-
-			bool searchExist  = true;
-			bool filterExist  = false;
-			bool tempoExist   = false;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
-			}
-
-			this.Select (list, nomPrésentation);
-		}
-
-		private void CreateDefaultViewSettingsModèles(string nomPrésentation)
-		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-
-			bool searchExist  = true;
-			bool filterExist  = false;
-			bool tempoExist   = false;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
-			}
-
-			this.Select (list, nomPrésentation);
-		}
-
-		private void CreateDefaultViewSettingsPériodes(string nomPrésentation)
-		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-
-			bool searchExist  = true;
-			bool filterExist  = false;
-			bool tempoExist   = false;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, DefaultViewSettings.defaultName, searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData (list, ControllerType.Budgets, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			this.Select (list, nomPrésentation);
@@ -438,11 +387,10 @@ namespace Epsitec.Cresus.Compta.IO
 
 			bool searchExist  = true;
 			bool filterExist  = true;
-			bool tempoExist   = true;
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Charges et produits", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Charges et produits", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -451,12 +399,12 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Tout", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Tout", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Histogramme des soldes", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Histogramme des soldes", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -468,7 +416,7 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, "Secteurs des soldes", searchExist, filterExist, tempoExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Secteurs des soldes", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.SearchAdd (viewSettings.Filter);
 				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
@@ -487,10 +435,57 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private ViewSettingsData CreateViewSettingsData<T>(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool tempoExist, bool optionsExist)
+		private void CreateDefaultViewSettingsTVA(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+
+			this.CreateViewSettingsData (list, ControllerType.RésuméTVA, "Résumé TVA", false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.CodesTVA, "Codes TVA", false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.ListeTVA, "Listes de taux de TVA", false, false, false);
+			
+			this.Select (list, nomPrésentation);
+		}
+
+		private void CreateDefaultViewSettingsLogin(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Login, DefaultViewSettings.defaultName, false, false, false);
+			this.Select (list, nomPrésentation);
+		}
+
+		private void CreateDefaultViewSettingsOpen(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Open, DefaultViewSettings.defaultName, false, false, false);
+			this.Select (list, nomPrésentation);
+		}
+
+		private void CreateDefaultViewSettingsPrint(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Print, DefaultViewSettings.defaultName, false, false, false);
+			this.Select (list, nomPrésentation);
+		}
+
+		private void CreateDefaultViewSettingsSave(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Save, DefaultViewSettings.defaultName, false, false, false);
+			this.Select (list, nomPrésentation);
+		}
+
+		private void CreateDefaultViewSettingsSoldes(string nomPrésentation)
+		{
+			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Soldes, DefaultViewSettings.defaultName, false, false, false);
+			this.Select (list, nomPrésentation);
+		}
+
+
+		private ViewSettingsData CreateViewSettingsData<T>(ViewSettingsList list, ControllerType type, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
 			where T : AbstractOptions, new ()
 		{
-			var viewSettings = this.CreateViewSettingsData (list, name, searchExist, filterExist, tempoExist, optionsExist);
+			var viewSettings = this.CreateViewSettingsData (list, type, name, searchExist, filterExist, optionsExist);
 
 			viewSettings.Options = new T ();
 			viewSettings.Options.SetComptaEntity (this.compta);
@@ -499,20 +494,19 @@ namespace Epsitec.Cresus.Compta.IO
 			return viewSettings;
 		}
 
-		private ViewSettingsData CreateViewSettingsData(ViewSettingsList list, FormattedText name, bool searchExist, bool filterExist, bool tempoExist, bool optionsExist)
+		private ViewSettingsData CreateViewSettingsData(ViewSettingsList list, ControllerType type, FormattedText name, bool searchExist, bool filterExist, bool optionsExist)
 		{
 			var viewSettings = new ViewSettingsData ()
 			{
-				Name        = name,
-				Readonly    = true,
-				Permanent   = true,
-				Search      = new SearchData (),
-				Filter      = new SearchData (),
-				Temporal       = new TemporalData (),
-				ShowSearch  = searchExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
-				ShowFilter  = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
-				ShowTemporal   = tempoExist   ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
-				ShowOptions = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
+				Name           = name,
+				Readonly       = true,
+				Permanent      = true,
+				ControllerType = type,
+				Search         = new SearchData (),
+				Filter         = new SearchData (),
+				ShowSearch     = searchExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
+				ShowFilter     = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
+				ShowOptions    = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
 
 			list.List.Add (viewSettings);
@@ -640,7 +634,7 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private readonly static FormattedText				defaultName = "Réglages standards";
+		private readonly static FormattedText				defaultName = "Standard";
 
 		private readonly MainWindowController				mainWindowController;
 		private readonly ComptaEntity						compta;

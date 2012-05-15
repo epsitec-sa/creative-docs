@@ -27,76 +27,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-			new FrameBox
-			{
-				Parent        = parent,
-				PreferredSize = new Size (PanelsToolbarController.toolbarHeight+6, PanelsToolbarController.toolbarHeight+6),
-				DrawFullFrame = true,
-				BackColor     = UIBuilder.TemporalBackColor,
-				Anchor        = AnchorStyles.TopLeft,
-			};
-
-			new FrameBox
-			{
-				Parent        = parent,
-				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
-				DrawFullFrame = true,
-				BackColor     = RibbonController.GetBackgroundColor1 (),
-				Anchor        = AnchorStyles.TopLeft,
-				Margins         = new Margins (3, 0, 3, 0),
-			};
-
-			var temporalButton = this.CreateButton (parent, Res.Commands.Panel.Temporal, 0, UIBuilder.TemporalBackColor);
-			temporalButton.Margins = new Margins (3, 3+3, 3, 3);
-
-			var vsFrame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredWidth  = 20,
-				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
-				DrawFullFrame   = true,
-				BackColor       = UIBuilder.ViewSettingsBackColor,
-				Dock            = DockStyle.Left,
-				Padding         = new Margins (3),
-			};
-
-			new FrameBox
-			{
-				Parent        = vsFrame,
-				PreferredSize = new Size (PanelsToolbarController.toolbarHeight, PanelsToolbarController.toolbarHeight),
-				DrawFullFrame = true,
-				BackColor     = RibbonController.GetBackgroundColor1 (),
-				Anchor        = AnchorStyles.TopLeft,
-			};
-
-			this.CreateButton (vsFrame, Res.Commands.Panel.ViewSettings, 0, UIBuilder.ViewSettingsBackColor);
-
 			var toolbar = new FrameBox
 			{
 				Parent          = parent,
 				PreferredWidth  = 20*3,
-				PreferredHeight = PanelsToolbarController.toolbarHeight+6,
-				DrawFullFrame   = true,
-				BackColor       = UIBuilder.ViewSettingsBackColor,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (12-2, 0, 0, 0),
-				Padding         = new Margins (3),
+				PreferredHeight = PanelsToolbarController.toolbarHeight,
+				Dock            = DockStyle.Top,
+				Padding         = new Margins (5),
 			};
 
-			new FrameBox
-			{
-				Parent          = parent,
-				PreferredWidth  = 12,
-				PreferredHeight = 4,
-				DrawFrameEdges  = FrameEdges.Top | FrameEdges.Bottom,
-				BackColor       = UIBuilder.ViewSettingsBackColor,
-				Anchor          = AnchorStyles.BottomLeft,
-				Margins         = new Margins (33+PanelsToolbarController.toolbarHeight+5, 0, 0, 13),
-			};
-
-			var searchButton   = this.CreateButton (toolbar, Res.Commands.Panel.Search,   -1, UIBuilder.SearchBackColor);
-			var filterButton   = this.CreateButton (toolbar, Res.Commands.Panel.Filter,   -1, UIBuilder.FilterBackColor);
-			                     this.CreateButton (toolbar, Res.Commands.Panel.Options,   0, UIBuilder.OptionsBackColor);
+			var temporalButton = this.CreateButton (toolbar, Res.Commands.Panel.Temporal, 5, UIBuilder.TemporalBackColor);
+			var searchButton   = this.CreateButton (toolbar, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
+			var filterButton   = this.CreateButton (toolbar, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
+			                     this.CreateButton (toolbar, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);
 
 			this.searchMarker   = this.CreateMarker (searchButton);
 			this.filterMarker   = this.CreateMarker (filterButton);

@@ -1094,7 +1094,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Save;
 				yield return Res.Commands.Présentation.Login;
 				yield return Res.Commands.Présentation.Print;
-
 				yield return Res.Commands.Présentation.Journal;
 				yield return Res.Commands.Présentation.Balance;
 				yield return Res.Commands.Présentation.Extrait;
@@ -1103,25 +1102,14 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Exploitation;
 				yield return Res.Commands.Présentation.Budgets;
 				yield return Res.Commands.Présentation.DifférencesChange;
-				yield return Res.Commands.Présentation.Monnaies;
 				yield return Res.Commands.Présentation.RésuméPériodique;
 				yield return Res.Commands.Présentation.Soldes;
-				yield return Res.Commands.Présentation.RésuméTVA;
-				yield return Res.Commands.Présentation.DécompteTVA;
-
-				yield return Res.Commands.Présentation.PlanComptable;
-				yield return Res.Commands.Présentation.CodesTVA;
-				yield return Res.Commands.Présentation.ListeTVA;
-				yield return Res.Commands.Présentation.Libellés;
-				yield return Res.Commands.Présentation.Modèles;
-				yield return Res.Commands.Présentation.Journaux;
-				yield return Res.Commands.Présentation.Périodes;
-				yield return Res.Commands.Présentation.PiècesGenerator;
-				yield return Res.Commands.Présentation.Utilisateurs;
+				yield return Res.Commands.Présentation.TVA;
 				yield return Res.Commands.Présentation.Réglages;
 			}
 		}
 
+#if false
 		public static IEnumerable<Command> MenuPrésentationCommands
 		{
 			//	Présentations rarement utilisées, accessible par un menu.
@@ -1139,6 +1127,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Réglages;
 			}
 		}
+#endif
 		#endregion
 
 

@@ -20,20 +20,20 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 	/// </summary>
 	public class NavigatorData
 	{
-		public NavigatorData(Command command, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, AbstractPermanents permanents, int? arrayIndex)
+		public NavigatorData(ControllerType controllerType, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, AbstractPermanents permanents, int? arrayIndex)
 		{
-			this.Command      = command;
-			this.Description  = description;
-			this.ViewSettings = viewSettings;
-			this.Search       = search;
-			this.Filter       = filter;
-			this.Options      = options;
-			this.Permanents   = permanents;
-			this.ArrayIndex   = arrayIndex;
+			this.ControllerType = controllerType;
+			this.Description    = description;
+			this.ViewSettings   = viewSettings;
+			this.Search         = search;
+			this.Filter         = filter;
+			this.Options        = options;
+			this.Permanents     = permanents;
+			this.ArrayIndex     = arrayIndex;
 		}
 
 
-		public Command Command
+		public ControllerType ControllerType
 		{
 			get;
 			private set;

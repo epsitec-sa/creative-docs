@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Pertes et Profits");
 			this.SetTitle ("Pertes et Profits");
 			this.SetSubtitle (this.période.ShortTitle);
 		}

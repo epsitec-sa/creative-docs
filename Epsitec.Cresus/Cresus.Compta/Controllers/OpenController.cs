@@ -27,11 +27,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public OpenController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Open.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Ouverture d'une comptabilité");
 			this.SetTitle ("Ouverture d'une comptabilité");
 		}
 

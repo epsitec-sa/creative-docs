@@ -81,6 +81,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return modify ? "Modification d'une liste de taux :" : "Création d'une liste de taux :";
 		}
 
+#if false
 		protected override IEnumerable<Command> MiniToolbarCommands
 		{
 			get
@@ -89,5 +90,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				yield return Res.Commands.Présentation.ListeTVA;
 			}
 		}
+#endif
 	}
 }

@@ -27,11 +27,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public PrintController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Print.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Impression");
 			this.SetTitle ("Impression d'un document comptable");
 		}
 

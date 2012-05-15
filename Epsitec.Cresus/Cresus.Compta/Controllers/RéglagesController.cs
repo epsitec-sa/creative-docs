@@ -27,6 +27,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public RéglagesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
+
 			this.groups = new List<SettingsGroup> ();
 			this.controllers = new List<AbstractSettingController> ();
 
@@ -36,6 +38,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Réglages");
+
 			int sel = (this.scrollList == null) ? -1 : this.scrollList.SelectedItemIndex;
 
 			if (sel < 0 || sel >= this.groups.Count)

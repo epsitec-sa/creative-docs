@@ -114,8 +114,7 @@ namespace Epsitec.Cresus.Compta.IO
 			string list = null;
 			foreach (var cmd in Converters.PrésentationCommands)
 			{
-				if (cmd != Res.Commands.Présentation.Utilisateurs &&
-					cmd != Res.Commands.Présentation.Réglages)
+				if (cmd != Res.Commands.Présentation.Réglages)
 				{
 					Converters.SetPrésentationCommand (ref list, cmd, true);
 				}

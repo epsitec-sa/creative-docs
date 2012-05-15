@@ -28,7 +28,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new PlanComptableDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.PlanComptable.ViewSettings");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
 		}
 
 
@@ -76,6 +76,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Réglages");
 			this.SetTitle ("Plan comptable");
 			this.SetSubtitle ("Toutes les périodes");
 		}
@@ -134,7 +135,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Extrait);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
 
 				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 				permanent.NuméroCompte = compte.Numéro;
@@ -151,7 +152,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (Res.Commands.Présentation.Budgets);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Budgets);
 
 				int row = (présentation.DataAccessor as BudgetsDataAccessor).GetIndexOf (compte);
 				if (row != -1)

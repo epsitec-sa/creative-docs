@@ -27,11 +27,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public SaveController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Save.ViewSettings");
 		}
 
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Enregistrement de la comptabilité");
 			this.SetTitle ("Enregistrement de la comptabilité");
 		}
 

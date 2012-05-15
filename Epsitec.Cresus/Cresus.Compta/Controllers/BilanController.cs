@@ -42,6 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
+			this.SetGroupTitle ("Bilan intermédiaire");
 			this.SetTitle ("Bilan intermédiaire");
 			this.SetSubtitle (this.période.ShortTitle);
 		}

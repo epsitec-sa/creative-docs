@@ -53,12 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.app.CommandDispatcher.RegisterController (this);
 		}
 
-		public void SetVariousParameters(Window parentWindow, Command commandDocument)
-		{
-			this.parentWindow    = parentWindow;
-			this.commandDocument = commandDocument;
-		}
-
 
 		public ComptaEntity ComptaEntity
 		{
@@ -143,9 +137,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public FrameBox CreateUI(FrameBox parent)
 		{
-			System.Diagnostics.Debug.Assert (this.parentWindow != null);
-			System.Diagnostics.Debug.Assert (this.commandDocument != null);
-
 			this.SetCommandEnable (Res.Commands.Select.Up, false);
 			this.SetCommandEnable (Res.Commands.Select.Down, false);
 			this.SetCommandEnable (Res.Commands.Select.Home, false);
@@ -179,8 +170,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateTitle (this.frameBox);
-			this.CreateTopTemporal (this.frameBox);
 			this.CreateViewSettings (this.frameBox);
+			this.CreateTopTemporal (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateOptions (this.frameBox);
@@ -357,13 +348,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public void UpdatePanelsShowed(bool viewSettings, bool search, bool filter, bool temporal, bool options, bool info)
+		public void UpdatePanelsShowed(bool search, bool filter, bool temporal, bool options, bool info)
 		{
-			if (this.viewSettingsController != null)
-			{
-				this.viewSettingsController.ShowPanel = viewSettings;
-			}
-
 			if (this.topSearchController != null)
 			{
 				this.topSearchController.ShowPanel = search;
@@ -514,7 +500,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.viewSettingsController = new ViewSettingsController (this);
 				this.viewSettingsController.CreateUI (parent, this.ViewSettingsChangedAction);
-				this.viewSettingsController.ShowPanel = this.mainWindowController.ShowViewSettingsPanel;
+
+				this.CreateTitleFrame ();
 			}
 		}
 
@@ -738,13 +725,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var frame = new FrameBox
 			{
 				Parent          = this.frameBox,
-				PreferredHeight = 20,
+				PreferredHeight = 22,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (0, 0, 0, 4),
+				Visibility      = false,  //?
 			};
-
-			this.panelsToolbarController = new PanelsToolbarController (this);
-			this.panelsToolbarController.CreateUI (frame);
 
 			this.userLabel = new StaticText
 			{
@@ -867,6 +852,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
+		protected void SetGroupTitle(FormattedText title)
+		{
+			this.viewSettingsController.SetTitle (title);
+		}
+
 		protected void SetTitle(FormattedText title)
 		{
 			this.title = title;
@@ -906,20 +896,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePanelsToolbar()
 		{
-			if (this.panelsToolbarController != null && this.dataAccessor != null)
+			if (this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
 			{
 				if (this.dataAccessor.SearchData != null)
 				{
-					this.panelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
+					this.viewSettingsController.PanelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
 				}
 
 				if (this.dataAccessor.FilterData != null)
 				{
-					this.panelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
+					this.viewSettingsController.PanelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
 					this.SetTitle (this.title);
 				}
 
-				this.panelsToolbarController.TemporalEnable = !this.mainWindowController.TemporalData.IsEmpty;
+				this.viewSettingsController.PanelsToolbarController.TemporalEnable = !this.mainWindowController.TemporalData.IsEmpty;
 			}
 		}
 		#endregion
@@ -1130,7 +1120,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.editorController.UpdateEditorContent ();
 			}
 
-			this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
+			//?this.parentWindow.Text = this.mainWindowController.GetTitle (this.commandDocument);
 		}
 
 		protected void UpdateArrayContent()
@@ -1138,6 +1128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Met à jour le contenu du tableau, ainsi que des tableaux des fenêtre associées.
 			this.BaseUpdateArrayContent ();
 
+#if false
 			foreach (var controller in this.mainWindowController.Controllers)
 			{
 				if (controller != this)
@@ -1146,6 +1137,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					controller.BaseUpdateArrayContent ();
 				}
 			}
+#endif
 		}
 
 		private void BaseUpdateArrayContent()
@@ -1338,13 +1330,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected readonly SafeCounter							ignoreChanges;
 
 		protected MainWindowController							mainWindowController;
-		protected Window										parentWindow;
-		protected Command										commandDocument;
 
 		protected AbstractDataAccessor							dataAccessor;
 		protected ViewSettingsList								viewSettingsList;
 
-		protected PanelsToolbarController						panelsToolbarController;
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;
 		protected TopTemporalController							topTemporalController;

@@ -27,6 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public LoginController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Login.ViewSettings");
 		}
 
 

@@ -76,6 +76,8 @@
     <Compile Include="Assistants\Data\AbstractAssistantData.cs" />
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
+    <Compile Include="Controllers\ControllerType.cs" />
+    <Compile Include="Controllers\TabController.cs" />
     <Compile Include="Controllers\TopPanelLeftController.cs" />
     <Compile Include="Controllers\SoldesController.cs" />
     <Compile Include="Controllers\RésuméPériodiqueController.cs" />
@@ -110,6 +112,12 @@
     <Compile Include="Graph\GraphEngine.cs" />
     <Compile Include="Helpers\Rectangles.cs" />
     <Compile Include="Helpers\Currencies.cs" />
+    <Compile Include="MetaControllers\AbstractMetaController.cs" />
+    <Compile Include="MetaControllers\LoginMetaController.cs" />
+    <Compile Include="MetaControllers\OpenMetaController.cs" />
+    <Compile Include="MetaControllers\JournalMetaController.cs" />
+    <Compile Include="MetaControllers\MetaControllerType.cs" />
+    <Compile Include="MetaControllers\RéglagesMetaController.cs" />
     <Compile Include="Options\Controllers\SoldesColumnController.cs" />
     <Compile Include="Options\Controllers\SoldesOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />
