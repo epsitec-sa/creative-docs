@@ -376,9 +376,7 @@ namespace Epsitec.Cresus.Compta.IO
 				Readonly       = true,
 				Permanent      = true,
 				ControllerType = type,
-				Search         = new SearchData (),
 				Filter         = new SearchData (),
-				ShowSearch     = searchExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowFilter     = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowOptions    = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
@@ -489,11 +487,6 @@ namespace Epsitec.Cresus.Compta.IO
 		private void Select(ViewSettingsList list, string nomPrésentation)
 		{
 			list.SelectedIndex = 0;  // sélectionne "Réglages standards"
-
-			if (list.Selected.Search != null)
-			{
-				list.Selected.Search.CopyTo (this.mainWindowController.GetSettingsSearchData (this.GetKey (nomPrésentation, "Search")));
-			}
 
 			if (list.Selected.Filter != null)
 			{

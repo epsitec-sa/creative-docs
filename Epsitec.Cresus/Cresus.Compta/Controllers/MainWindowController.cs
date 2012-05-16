@@ -315,11 +315,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var controller = this.controller;
 
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null && viewSettings.Search != null && viewSettings.EnableSearch)
-			{
-				viewSettings.Search.CopyTo (controller.DataAccessor.SearchData);
-			}
-
 			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
 			{
 				viewSettings.Filter.CopyTo (controller.DataAccessor.FilterData);
@@ -331,12 +326,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
-			if (viewSettings.ShowSearch != ShowPanelMode.Nop && viewSettings.ShowSearch != ShowPanelMode.DoesNotExist)
-			{
-				this.ShowSearchPanel = (viewSettings.ShowSearch != ShowPanelMode.Hide);
-				controller.SearchSpecialist = (viewSettings.ShowSearch == ShowPanelMode.ShowSpecialist);
-			}
-
 			if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
 			{
 				this.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
@@ -1002,7 +991,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var viewSettingsList = data as ViewSettingsList;
 					foreach (var viewSettingsData in viewSettingsList.List)
 					{
-						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Search);
 						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
 					}
 				}
