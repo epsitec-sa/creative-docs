@@ -22,11 +22,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 	{
 		public ViewSettingsData()
 		{
-			this.ShowFilter  = ShowPanelMode.Nop;
-			this.ShowOptions = ShowPanelMode.Nop;
-
-			this.EnableFilter  = true;
-			this.EnableOptions = true;
 		}
 
 
@@ -106,36 +101,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 
-		public bool EnableFilter
-		{
-			get;
-			set;
-		}
-
-		public bool EnableOptions
-		{
-			get;
-			set;
-		}
-
-
-		public ShowPanelMode ShowFilter
-		{
-			get;
-			set;
-		}
-
-		public ShowPanelMode ShowOptions
-		{
-			get;
-			set;
-		}
-
-
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			var f = this.EnableFilter  ? this.GetFilterSummary  (columnMappers) : FormattedText.Empty;
-			var o = this.EnableOptions ? this.GetOptionsSummary (columnMappers) : FormattedText.Empty;
+			var f = this.GetFilterSummary  (columnMappers);
+			var o = this.GetOptionsSummary (columnMappers);
 
 			var list = new List<string> ();
 
@@ -173,62 +142,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			else
 			{
 				return this.BaseOptions.Summary;
-			}
-		}
-
-
-		public FormattedText ShowPanelModeSummary
-		{
-			//	Retourne le résumé lié à l'affichage des panneaux (action spéciale).
-			get
-			{
-				if ((this.ShowFilter  == ShowPanelMode.Nop || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
-					(this.ShowOptions == ShowPanelMode.Nop || this.ShowOptions == ShowPanelMode.DoesNotExist))
-				{
-					return FormattedText.Empty;
-				}
-				else if ((this.ShowFilter  == ShowPanelMode.Hide || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
-						 (this.ShowOptions == ShowPanelMode.Hide || this.ShowOptions == ShowPanelMode.DoesNotExist))
-				{
-					return "Tout cacher";
-				}
-				else if ((this.ShowFilter  == ShowPanelMode.ShowBeginner || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
-						 (this.ShowOptions == ShowPanelMode.ShowBeginner || this.ShowOptions == ShowPanelMode.DoesNotExist))
-				{
-					return "Tout montrer (simple)";
-				}
-				else if ((this.ShowFilter  == ShowPanelMode.ShowSpecialist || this.ShowFilter  == ShowPanelMode.DoesNotExist) &&
-						 (this.ShowOptions == ShowPanelMode.ShowSpecialist || this.ShowOptions == ShowPanelMode.DoesNotExist))
-				{
-					return "Tout montrer (avancé)";
-				}
-				else
-				{
-					var list = new List<string> ();
-
-					list.Add (this.GetShowPanelModeSummary (this.ShowFilter,  "le filtre"));
-					list.Add (this.GetShowPanelModeSummary (this.ShowOptions, "les options"));
-
-					return Strings.FirstLetterToUpper (Strings.SentenceConcat (list));
-				}
-			}
-		}
-
-		private string GetShowPanelModeSummary(ShowPanelMode mode, string name)
-		{
-			switch (mode)
-			{
-				case ShowPanelMode.Hide:
-					return string.Format ("cacher {0}", name);
-
-				case ShowPanelMode.ShowBeginner:
-					return string.Format ("montrer {0} (simple)", name);
-
-				case ShowPanelMode.ShowSpecialist:
-					return string.Format ("montrer {0} (avancé)", name);
-
-				default:
-					return null;
 			}
 		}
 

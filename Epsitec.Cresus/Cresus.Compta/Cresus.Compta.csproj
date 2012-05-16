@@ -144,7 +144,6 @@
     <Compile Include="Settings\Data\DecimalSettingData.cs" />
     <Compile Include="ViewSettings\Data\NavigatorEngine.cs" />
     <Compile Include="ViewSettings\Data\NavigatorData.cs" />
-    <Compile Include="ViewSettings\Data\ShowPanelMode.cs" />
     <Compile Include="ViewSettings\Data\ViewSettingsList.cs" />
     <Compile Include="ViewSettings\Data\ViewSettingsData.cs" />
     <Compile Include="ViewSettings\Controllers\ViewSettingsController.cs" />

@@ -72,7 +72,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent              = parent,
 				DrawFullFrame       = true,
-				//?BackColor           = UIBuilder.ViewSettingsBackColor,
 				BackColor           = RibbonController.GetBackgroundColor1 (),
 				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
 				Dock                = DockStyle.Top,
@@ -329,7 +328,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			};
 
 			this.CreateExtendedViewSettingsToolbarUI (rightFrame);
-			this.CreateExtendedViewSettingsSummaryUI (rightFrame);
 
 			this.extendedListViewSettings.SelectedItemChanged += delegate
 			{
@@ -567,123 +565,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			};
 		}
 
-		private void CreateExtendedViewSettingsSummaryUI(FrameBox parent)
-		{
-			//	Panneau de droite, résumé (en bas).
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				DrawFullFrame   = true,
-				BackColor       = Color.FromAlphaColor (0.7, Color.FromName ("White")),
-				Dock            = DockStyle.Bottom,
-				Padding         = new Margins (10, 10, 4, 4),
-			};
-
-			var line1 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
-
-			var line2 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
-
-			var line3 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-			};
-
-			var line4 = new FrameBox
-			{
-				Parent          = frame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 5, 0),
-			};
-
-			this.extendedFilterIconSummary = new StaticText
-			{
-				Parent         = line2,
-				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Filter"),
-				PreferredWidth = 30,
-				Dock           = DockStyle.Left,
-			};
-
-			this.extendedOptionsIconSummary = new StaticText
-			{
-				Parent         = line3,
-				FormattedText  = UIBuilder.GetTextIconUri ("Panel.Options"),
-				PreferredWidth = 30,
-				Dock           = DockStyle.Left,
-			};
-
-			this.extendedFilterSummary = new CheckButton
-			{
-				Parent          = line2,
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-			};
-
-			this.extendedOptionsSummary = new CheckButton
-			{
-				Parent          = line3,
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
-			};
-
-			this.extendedShowPanelModeLabel = new StaticText
-			{
-				Parent         = line4,
-				FormattedText  = "Action spéciale",
-				PreferredWidth = 85,
-				Dock           = DockStyle.Left,
-			};
-
-			GlyphButton showPanelModeButton;
-			this.extendedShowPanelModeFrame = UIBuilder.CreatePseudoCombo (line4, out this.extendedShowPanelMode, out showPanelModeButton);
-			this.extendedShowPanelModeFrame.PreferredWidth = 300;
-
-			//	Connexions des événements.
-			this.extendedFilterSummary.ActiveStateChanged += delegate
-			{
-				var viewSettings = this.viewSettingsList.Selected;
-				if (viewSettings != null && this.ignoreChanges.IsZero)
-				{
-					viewSettings.EnableFilter = this.extendedFilterSummary.ActiveState == ActiveState.Yes;
-				}
-			};
-
-			this.extendedOptionsSummary.ActiveStateChanged += delegate
-			{
-				var viewSettings = this.viewSettingsList.Selected;
-				if (viewSettings != null && this.ignoreChanges.IsZero)
-				{
-					viewSettings.EnableOptions = this.extendedOptionsSummary.ActiveState == ActiveState.Yes;
-				}
-			};
-
-			this.extendedShowPanelMode.Clicked += delegate
-			{
-				this.ShowMenuPanelMode (this.extendedShowPanelModeFrame);
-			};
-
-			showPanelModeButton.Clicked += delegate
-			{
-				this.ShowMenuPanelMode (this.extendedShowPanelModeFrame);
-			};
-
-			ToolTip.Default.SetToolTip (frame, "Résumé du réglage de présentation");
-		}
-
 		private void UpdateViewSettingsAction()
 		{
 			var viewSettings = this.viewSettingsList.Selected;
@@ -893,59 +774,16 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					if (viewSettings == null)
 					{
 						var compactSummary = FormattedText.Empty;
-
-						this.extendedFilterSummary .FormattedText = FormattedText.Empty;
-						this.extendedOptionsSummary.FormattedText = FormattedText.Empty;
-						this.extendedShowPanelMode .FormattedText = FormattedText.Empty;
-
-						this.extendedFilterSummary .ActiveState = ActiveState.No;
-						this.extendedOptionsSummary.ActiveState = ActiveState.No;
 					}
 					else
 					{
 						//?this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
-
-						this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
-						this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
-
-						this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
-						if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
-						{
-							this.extendedShowPanelMode.FormattedText = "Aucune";
-						}
-
-						if (this.extendedFilterSummary.FormattedText.IsNullOrEmpty)
-						{
-							this.extendedFilterSummary.FormattedText = "Vide";
-						}
-
-						if (this.extendedOptionsSummary.FormattedText.IsNullOrEmpty)
-						{
-							this.extendedOptionsSummary.FormattedText = "Vide";
-						}
-
-						this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
-						this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
 
 						this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
 						this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
 
 						//?ToolTip.Default.SetToolTip (this.comptactFrame, this.TooltipSummary);
 					}
-
-					this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
-					this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
-
-					this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
-
-					this.extendedFilterIconSummary .Visibility = this.controller.HasFilterPanel;
-					this.extendedOptionsIconSummary.Visibility = this.controller.HasOptionsPanel;
-
-					this.extendedFilterSummary .Visibility = this.controller.HasFilterPanel;
-					this.extendedOptionsSummary.Visibility = this.controller.HasOptionsPanel;
-
-					this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
-					this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
 
 					this.extendedAttributePermanent.Visibility = (viewSettings != null);
 					this.extendedAttributeReadonly .Visibility = (viewSettings != null);
@@ -986,15 +824,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						builder.Append (summary);
 						builder.Append ("<br/>");
 					}
-
-					summary = viewSettings.ShowPanelModeSummary;
-					if (!summary.IsNullOrEmpty)
-					{
-						builder.Append (UIBuilder.GetTextIconUri ("Panel.Info"));
-						builder.Append ("  ");
-						builder.Append (summary);
-						builder.Append ("<br/>");
-					}
 				}
 
 				var text = builder.ToString ();
@@ -1007,84 +836,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				return text;
 			}
 		}
-
-
-		#region Menu panel mode
-		private void ShowMenuPanelMode(Widget parentButton)
-		{
-			//	Affiche le menu permettant de choisir l'action spéciale.
-			if (this.IsReadonly)
-			{
-				return;
-			}
-
-			var menu = new VMenu ();
-			var viewSettings = this.viewSettingsList.Selected;
-
-			this.AddMenuPanelMode (menu, "Aucune", () => this.IsNop, x => this.SetNop (), true);
-
-			if (viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
-			{
-				menu.Items.Add (new MenuSeparator ());
-
-				this.AddMenuPanelMode (menu, "Laisser le panneau du filtre dans son état",  () => viewSettings.ShowFilter == ShowPanelMode.Nop,            x => viewSettings.ShowFilter = ShowPanelMode.Nop);
-				this.AddMenuPanelMode (menu, "Cacher le panneau du filtre",                 () => viewSettings.ShowFilter == ShowPanelMode.Hide,           x => viewSettings.ShowFilter = ShowPanelMode.Hide);
-				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode simple", () => viewSettings.ShowFilter == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowFilter = ShowPanelMode.ShowBeginner);
-				this.AddMenuPanelMode (menu, "Montrer le panneau du filtre en mode avancé", () => viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowFilter = ShowPanelMode.ShowSpecialist);
-			}
-
-			if (viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
-			{
-				menu.Items.Add (new MenuSeparator ());
-
-				this.AddMenuPanelMode (menu, "Laisser le panneau des options dans son état",  () => viewSettings.ShowOptions == ShowPanelMode.Nop,            x => viewSettings.ShowOptions = ShowPanelMode.Nop);
-				this.AddMenuPanelMode (menu, "Cacher le panneau des options",                 () => viewSettings.ShowOptions == ShowPanelMode.Hide,           x => viewSettings.ShowOptions = ShowPanelMode.Hide);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode simple", () => viewSettings.ShowOptions == ShowPanelMode.ShowBeginner,   x => viewSettings.ShowOptions = ShowPanelMode.ShowBeginner);
-				this.AddMenuPanelMode (menu, "Montrer le panneau des options en mode avancé", () => viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist, x => viewSettings.ShowOptions = ShowPanelMode.ShowSpecialist);
-			}
-
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
-
-			menu.Host = parentButton.Window;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
-		}
-
-		private bool IsNop
-		{
-			get
-			{
-				var viewSettings = this.viewSettingsList.Selected;
-
-				return viewSettings.ShowFilter  == ShowPanelMode.Nop && 
-					   viewSettings.ShowOptions == ShowPanelMode.Nop;
-			}
-		}
-
-		private void SetNop()
-		{
-			var viewSettings = this.viewSettingsList.Selected;
-
-			viewSettings.ShowFilter  = ShowPanelMode.Nop;
-			viewSettings.ShowOptions = ShowPanelMode.Nop;
-		}
-
-		private void AddMenuPanelMode(VMenu menu, FormattedText text, System.Func<bool> getter, System.Action<bool> setter, bool check = false)
-		{
-			var item = new MenuItem ()
-			{
-				IconUri       = check ? UIBuilder.GetCheckStateIconUri (getter ()) : UIBuilder.GetRadioStateIconUri (getter ()),
-				FormattedText = text,
-			};
-
-			item.Clicked += delegate
-			{
-				setter (true);
-				this.UpdateSummary ();
-			};
-
-			menu.Items.Add (item);
-		}
-		#endregion
 
 
 		private bool AlreadyMemorized()
@@ -1104,25 +855,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (viewSettings != null)
 			{
-				//	Compare avec la visibilité des panneaux, si cela a un sens.
-				if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
-				{
-					if (this.controller.MainWindowController.ShowFilterPanel != (viewSettings.ShowFilter != ShowPanelMode.Hide))
-					{
-						return false;
-					}
-				}
-
-				if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
-				{
-					if (this.controller.MainWindowController.ShowOptionsPanel != (viewSettings.ShowOptions != ShowPanelMode.Hide))
-					{
-						return false;
-					}
-				}
-
-				//	Compare avec les données.
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null && viewSettings.EnableFilter)
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null)
 				{
 					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.BaseFilter))
 					{
@@ -1130,7 +863,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null && viewSettings.EnableOptions)
+				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null)
 				{
 					if (!this.dataAccessor.Options.CompareTo (viewSettings.BaseOptions))
 					{
@@ -1154,43 +887,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				viewSettings.BaseOptions = this.dataAccessor.Options.CopyFrom ();
 			}
-
-			//	Met un mode spécial si le panneau n'existe pas.
-			if (!this.controller.HasFilterPanel)
-			{
-				viewSettings.ShowFilter = ShowPanelMode.DoesNotExist;
-			}
-
-			if (!this.controller.HasOptionsPanel)
-			{
-				viewSettings.ShowOptions = ShowPanelMode.DoesNotExist;
-			}
 		}
 
 		private void CopyViewSettingsToData(ViewSettingsData viewSettings)
 		{
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null && viewSettings.EnableFilter)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null)
 			{
 				viewSettings.BaseFilter.CopyTo (this.dataAccessor.FilterData);
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null && viewSettings.EnableOptions)
+			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null)
 			{
 				viewSettings.BaseOptions.CopyTo (this.dataAccessor.Options);
-			}
-
-			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
-			if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
-			{
-				this.controller.MainWindowController.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
-				this.controller.FilterSpecialist = (viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist);
-			}
-
-			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
-			{
-				this.controller.MainWindowController.ShowOptionsPanel = (viewSettings.ShowOptions != ShowPanelMode.Hide);
-				this.controller.OptionsSpecialist = (viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist);
 			}
 		}
 
@@ -1301,13 +1010,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private Button									extendedUpButton;
 		private Button									extendedDownButton;
 		private Button									extendedRemoveButton;
-		private StaticText								extendedFilterIconSummary;
-		private StaticText								extendedOptionsIconSummary;
-		private CheckButton								extendedFilterSummary;
-		private CheckButton								extendedOptionsSummary;
-		private FrameBox								extendedShowPanelModeFrame;
-		private StaticText								extendedShowPanelModeLabel;
-		private StaticText								extendedShowPanelMode;
 
 		private CheckButton								extendedAttributeReadonly;
 		private CheckButton								extendedAttributePermanent;

@@ -315,27 +315,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var controller = this.controller;
 
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.CurrentFilter != null && viewSettings.EnableFilter)
+			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.CurrentFilter != null)
 			{
 				viewSettings.CurrentFilter.CopyTo (controller.DataAccessor.FilterData);
 			}
 
-			if (controller.DataAccessor != null && controller.DataAccessor.Options != null && viewSettings.CurrentOptions != null && viewSettings.EnableOptions)
+			if (controller.DataAccessor != null && controller.DataAccessor.Options != null && viewSettings.CurrentOptions != null)
 			{
 				viewSettings.CurrentOptions.CopyTo (controller.DataAccessor.Options);
-			}
-
-			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
-			if (viewSettings.ShowFilter != ShowPanelMode.Nop && viewSettings.ShowFilter != ShowPanelMode.DoesNotExist)
-			{
-				this.ShowFilterPanel = (viewSettings.ShowFilter != ShowPanelMode.Hide);
-				controller.FilterSpecialist = (viewSettings.ShowFilter == ShowPanelMode.ShowSpecialist);
-			}
-
-			if (viewSettings.ShowOptions != ShowPanelMode.Nop && viewSettings.ShowOptions != ShowPanelMode.DoesNotExist)
-			{
-				this.ShowOptionsPanel = (viewSettings.ShowOptions != ShowPanelMode.Hide);
-				controller.OptionsSpecialist = (viewSettings.ShowOptions == ShowPanelMode.ShowSpecialist);
 			}
 
 			controller.UpdateAfterChanged ();

@@ -378,8 +378,6 @@ namespace Epsitec.Cresus.Compta.IO
 				Permanent      = true,
 				ControllerType = type,
 				BaseFilter     = new SearchData (),
-				ShowFilter     = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
-				ShowOptions    = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
 
 			list.List.Add (viewSettings);
