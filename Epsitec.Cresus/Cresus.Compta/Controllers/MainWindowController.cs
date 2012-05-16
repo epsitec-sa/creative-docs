@@ -11,7 +11,6 @@ using Epsitec.Common.Support;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Dialogs;
 
-using Epsitec.Cresus.Compta.MetaControllers;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.IO;
 using Epsitec.Cresus.Compta.Entities;
@@ -2097,7 +2096,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		//?private AbstractMetaController						metaController;
 		private RibbonController							ribbonController;
 		private FrameBox									tabFrame;
-		private TabController								tabController;
 		private FrameBox									mainFrame;
 		private string										titleComplement;
 		private bool										dirty;

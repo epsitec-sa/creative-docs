@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreateViewSettingsData (list, ControllerType.Périodes,        "Périodes comptables",   true,  false, false);
 			this.CreateViewSettingsData (list, ControllerType.PiècesGenerator, "Générateurs n° pièces", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Utilisateurs,    "Utilisateurs",          false, false, false);
-			this.CreateViewSettingsData (list, ControllerType.Réglages,        "Réglages",              false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Réglages,        "Réglages avancés",      false, false, false);
 
 			this.Select (list, nomPrésentation);
 		}
@@ -177,6 +177,8 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
 				viewSettings.Options.GraphOptions.HasThreshold0 = true;
 				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.01m;
+				viewSettings.Options.GraphOptions.HasThreshold1 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			{
@@ -194,6 +196,8 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
 				viewSettings.Options.GraphOptions.HasThreshold0 = true;
 				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.02m;
+				viewSettings.Options.GraphOptions.HasThreshold1 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			this.Select<BalanceOptions> (list, nomPrésentation);
@@ -413,6 +417,10 @@ namespace Epsitec.Cresus.Compta.IO
 
 				this.OptionsAdaptGraph (viewSettings.Options);
 				viewSettings.Options.GraphOptions.Mode = GraphMode.Stacked;
+				viewSettings.Options.GraphOptions.HasThreshold0 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.02m;
+				viewSettings.Options.GraphOptions.HasThreshold1 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			{
@@ -427,6 +435,9 @@ namespace Epsitec.Cresus.Compta.IO
 				this.OptionsAdaptGraph (viewSettings.Options);
 				viewSettings.Options.GraphOptions.Mode = GraphMode.Pie;
 				viewSettings.Options.GraphOptions.HasThreshold0 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.05m;
+				viewSettings.Options.GraphOptions.HasThreshold1 = true;
+				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
 				viewSettings.Options.GraphOptions.PrimaryDimension = 0;
 				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
 			}
