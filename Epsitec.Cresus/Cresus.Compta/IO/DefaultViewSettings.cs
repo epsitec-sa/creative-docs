@@ -54,44 +54,10 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
 
-			bool searchExist  = true;
-			bool filterExist  = true;
-			bool optionsExist = true;
-
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des écritures", searchExist, filterExist, optionsExist);
-			}
-
-#if false
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "1er trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "2ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "3ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "4ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Rechercher...", searchExist, filterExist, optionsExist);
-				viewSettings.ShowSearch = ShowPanelMode.ShowBeginner;
-			}
-#endif
-
-			this.CreateViewSettingsData (list, ControllerType.Libellés, "Libellés usuels",   true, false, false);
-			this.CreateViewSettingsData (list, ControllerType.Modèles,  "Ecritures modèles", true, false, false);
-			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",          true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Journal,  "Journal des écritures", true, true,  true);
+			this.CreateViewSettingsData (list, ControllerType.Libellés, "Libellés usuels",       true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Modèles,  "Ecritures modèles",     true, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",              true, false, false);
 
 			this.Select<JournalOptions> (list, nomPrésentation);
 		}
@@ -99,41 +65,6 @@ namespace Epsitec.Cresus.Compta.IO
 		private void CreateDefaultViewSettingsRéglages(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-
-#if false
-			bool searchExist  = true;
-			bool filterExist  = true;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Actifs", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Actif);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Passifs", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Passif);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Charges", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Produits", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Produit);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.PlanComptable, "Exploitations", searchExist, filterExist, optionsExist);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Exploitation);
-			}
-#endif
 
 			this.CreateViewSettingsData (list, ControllerType.PlanComptable,   "Plan comptable",        true,  true,  false);
 			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
@@ -239,40 +170,6 @@ namespace Epsitec.Cresus.Compta.IO
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
-#if false
-			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "1er trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "2ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "3ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "4ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-#endif
-
 			{
 				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.Filter);
@@ -297,40 +194,6 @@ namespace Epsitec.Cresus.Compta.IO
 				this.SearchAdaptForNonZero (viewSettings.Filter);
 				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
-
-#if false
-			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "1er trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 1, 31, 3);  // 1 janvier -> 31 mars
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "2ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 4, 30, 6);  // 1 avril -> 30 juin
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "3ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 7, 30, 9);  // 1 juillet  -> 30 septembre
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-
-			{
-				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "4ème trimestre", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptDate (viewSettings.Filter, 1, 10, 31, 12);  // 1 octobre -> 31 décembre
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
-			}
-#endif
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
