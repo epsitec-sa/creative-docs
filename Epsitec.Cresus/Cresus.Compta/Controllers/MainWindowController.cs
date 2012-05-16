@@ -1132,7 +1132,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 		}
 
-		private bool HasPrésentationCommand(Command cmd)
+		public bool HasPrésentationCommand(Command cmd)
 		{
 			if (this.currentUser == null)  // déconnecté ?
 			{

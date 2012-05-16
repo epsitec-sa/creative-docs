@@ -414,6 +414,8 @@
     <EmbeddedResource Include="Images\Panel.Specialist.icon" />
     <EmbeddedResource Include="Images\Panel.Temporal.icon" />
     <EmbeddedResource Include="Images\Warning.icon" />
+    <EmbeddedResource Include="Images\Views.Menu.icon" />
+    <EmbeddedResource Include="Images\Présentation.TVA.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

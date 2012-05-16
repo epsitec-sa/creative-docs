@@ -1108,26 +1108,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Réglages;
 			}
 		}
-
-#if false
-		public static IEnumerable<Command> MenuPrésentationCommands
-		{
-			//	Présentations rarement utilisées, accessible par un menu.
-			//	L'ordre est utilisé pour construire le menu.
-			get
-			{
-				yield return Res.Commands.Présentation.Libellés;
-				yield return Res.Commands.Présentation.Modèles;
-				yield return Res.Commands.Présentation.Journaux;
-				yield return Res.Commands.Présentation.Monnaies;
-				yield return Res.Commands.Présentation.Périodes;
-				yield return Res.Commands.Présentation.PiècesGenerator;
-				yield return Res.Commands.Présentation.CodesTVA;
-				yield return Res.Commands.Présentation.Utilisateurs;
-				yield return Res.Commands.Présentation.Réglages;
-			}
-		}
-#endif
 		#endregion
 
 
