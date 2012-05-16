@@ -708,6 +708,26 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					this.CreateTab (this.comptactTabFrame, i);
 				}
+
+				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
+				{
+					var addButton = new TabButton
+					{
+						Parent            = this.comptactTabFrame,
+						FormattedText     = "+",
+						TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+						PreferredWidth    = 26,
+						PreferredHeight   = 26,
+						Dock              = DockStyle.Left,
+						TabIndex          = 999,
+						AutoFocus         = false,
+					};
+
+					addButton.Clicked += delegate
+					{
+						this.AddViewSettings ();
+					};
+				}
 			}
 		}
 
@@ -753,6 +773,29 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 			}
 		}
+
+		private void AddViewSettings()
+		{
+			var viewSettings = new ViewSettingsData
+			{
+				Name           = this.NewViewSettingsName,
+				ControllerType = this.controller.MainWindowController.SelectedDocument,
+			};
+
+			this.CopyDataToViewSettings (viewSettings);
+
+			this.viewSettingsList.List.Add (viewSettings);
+			this.viewSettingsList.Selected = viewSettings;
+
+			this.UpdateTabs ();
+			this.UpdateList ();
+			this.UpdateButtons ();
+			this.UpdateSummary ();
+
+			this.extendedFieldName.SelectAll ();
+			this.extendedFieldName.Focus ();
+		}
+
 
 		private void UpdateList()
 		{
@@ -817,8 +860,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				int sel = this.extendedListViewSettings.SelectedItemIndex;
 				int count = this.viewSettingsList.List.Count;
 				bool eq = this.CompareTo (this.viewSettingsList.Selected);
+				bool h = this.controller.HasOptionsPanel || this.controller.HasFilterPanel;
 
 				//?this.topPanelRightController.ClearEnable = sel != 0 || !eq;
+
+				this.compactUseButton.Visibility    = h;
+				this.compactUpdateButton.Visibility = h;
 
 				this.compactUseButton.Enable    = (sel != -1 && !eq);
 				this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);

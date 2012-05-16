@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
 
-			this.CreateViewSettingsData (list, ControllerType.RésuméTVA, "Résumé TVA", false, false, false);
+			this.CreateViewSettingsData<RésuméTVAOptions> (list, ControllerType.RésuméTVA, "Résumé TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.CodesTVA, "Codes TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.ListeTVA, "Listes de taux de TVA", false, false, false);
 			
