@@ -23,6 +23,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public CodesTVADataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TVA.ViewSettings");
+
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.CodesTVA.Search");
 		}
 

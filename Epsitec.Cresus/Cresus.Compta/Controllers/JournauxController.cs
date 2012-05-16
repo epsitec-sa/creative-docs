@@ -25,8 +25,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new JournauxDataAccessor (this);
-
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journal.ViewSettings");
 		}
 
 

@@ -29,8 +29,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new BalanceDataAccessor (this);
-
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Balance.ViewSettings");
 		}
 
 
@@ -68,14 +66,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasTemporalPanel
 		{
 			get
 			{

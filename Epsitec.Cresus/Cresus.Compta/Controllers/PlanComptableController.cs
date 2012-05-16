@@ -27,8 +27,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new PlanComptableDataAccessor (this);
-
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
 		}
 
 

@@ -289,6 +289,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public void CopyTo(SearchData dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			dst.OrMode = this.OrMode;
 
 			dst.nodesData.Clear ();

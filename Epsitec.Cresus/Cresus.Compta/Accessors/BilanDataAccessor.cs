@@ -22,9 +22,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public BilanDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<BilanOptions> ("Présentation.Bilan.Options", this.compta);
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Bilan.ViewSettings");
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Filter");
+			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
+			this.options    = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.arrayGraphOptions = new GraphOptions ();
 

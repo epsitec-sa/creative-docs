@@ -315,14 +315,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var controller = this.controller;
 
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
+			if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null && viewSettings.CurrentFilter != null && viewSettings.EnableFilter)
 			{
-				viewSettings.Filter.CopyTo (controller.DataAccessor.FilterData);
+				viewSettings.CurrentFilter.CopyTo (controller.DataAccessor.FilterData);
 			}
 
-			if (controller.DataAccessor != null && controller.DataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
+			if (controller.DataAccessor != null && controller.DataAccessor.Options != null && viewSettings.CurrentOptions != null && viewSettings.EnableOptions)
 			{
-				viewSettings.Options.CopyTo (controller.DataAccessor.Options);
+				viewSettings.CurrentOptions.CopyTo (controller.DataAccessor.Options);
 			}
 
 			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.
@@ -903,7 +903,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Temporal);
 				cs.ActiveState = this.showTemporalPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasTemporalPanel;
 			}
 
 			if (this.controller != null)
@@ -991,7 +990,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					var viewSettingsList = data as ViewSettingsList;
 					foreach (var viewSettingsData in viewSettingsList.List)
 					{
-						MainWindowController.AdaptSearchData (this.période, viewSettingsData.Filter);
+						MainWindowController.AdaptSearchData (this.période, viewSettingsData.BaseFilter);
 					}
 				}
 			}
@@ -1579,6 +1578,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return data;
 		}
 
+#if false
 		public AbstractOptions GetSettingsOptions<T>(string key, ComptaEntity compta)
 			where T : AbstractOptions, new ()
 		{
@@ -1596,6 +1596,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			return data;
 		}
+#endif
 
 		public SearchData GetSettingsSearchData(string key, System.Action<SearchData> initialize = null)
 		{

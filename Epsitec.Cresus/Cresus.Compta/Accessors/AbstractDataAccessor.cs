@@ -16,6 +16,7 @@ using Epsitec.Cresus.Compta.Graph;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
 using Epsitec.Cresus.Compta.Permanents;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -53,6 +54,14 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.columnMappers;
+			}
+		}
+
+		public ViewSettingsList ViewSettingsList
+		{
+			get
+			{
+				return this.viewSettingsList;
 			}
 		}
 
@@ -672,6 +681,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected readonly List<AbstractEditionLine>	editionLine;
 		protected readonly List<SearchResult>			searchResults;
 
+		protected ViewSettingsList						viewSettingsList;
 		protected SearchData							searchData;
 		protected SearchData							filterData;
 		protected AbstractOptions						options;

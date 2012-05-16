@@ -118,13 +118,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
 		public ViewSettingsList ViewSettingsList
 		{
 			get
 			{
-				return this.viewSettingsList;
+				if (this.dataAccessor == null)
+				{
+					return this.DirectViewSettingsList;
+				}
+				else
+				{
+					return this.dataAccessor.ViewSettingsList;
+				}
 			}
 		}
+
+		protected virtual ViewSettingsList DirectViewSettingsList
+		{
+			get
+			{
+				return null;
+			}
+		}
+
 
 		public MainWindowController MainWindowController
 		{
@@ -316,27 +333,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasTemporalPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 		public virtual bool HasOptionsPanel
 		{
 			get
 			{
 				return false;
-			}
-		}
-
-		public bool HasShowViewSettingsPanel
-		{
-			get
-			{
-				return this.viewSettingsList != null;
 			}
 		}
 
@@ -496,13 +497,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region ViewSettings panel
 		private void CreateViewSettings(FrameBox parent)
 		{
-			if (this.HasShowViewSettingsPanel)
-			{
-				this.viewSettingsController = new ViewSettingsController (this);
-				this.viewSettingsController.CreateUI (parent, this.ViewSettingsChangedAction);
+			this.viewSettingsController = new ViewSettingsController (this);
+			this.viewSettingsController.CreateUI (parent, this.ViewSettingsChangedAction);
 
-				this.CreateTitleFrame ();
-			}
+			this.CreateTitleFrame ();
 		}
 
 		private void ViewSettingsChangedAction()
@@ -854,16 +852,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetGroupTitle(FormattedText title)
 		{
-			title = title.ApplyBold ().ApplyFontSize (13.0);
-
-			if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
-				!this.mainWindowController.TemporalData.IsEmpty)
+			if (this.viewSettingsController != null)
 			{
-				FormattedText ht = "filtre actif";
-				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
-			}
+				title = title.ApplyBold ().ApplyFontSize (13.0);
 
-			this.viewSettingsController.SetTitle (title);
+				if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
+				!this.mainWindowController.TemporalData.IsEmpty)
+				{
+					FormattedText ht = "filtre actif";
+					title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
+				}
+
+				this.viewSettingsController.SetTitle (title);
+			}
 		}
 
 		protected void SetTitle(FormattedText title)
@@ -905,7 +906,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePanelsToolbar()
 		{
-			if (this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
+			if (this.viewSettingsController != null && this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
 			{
 				if (this.dataAccessor.SearchData != null)
 				{
@@ -1341,7 +1342,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected MainWindowController							mainWindowController;
 
 		protected AbstractDataAccessor							dataAccessor;
-		protected ViewSettingsList								viewSettingsList;
 
 		protected TopSearchController							topSearchController;
 		protected TopFilterController							topFilterController;

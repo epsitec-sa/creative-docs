@@ -13,6 +13,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Settings.Controllers;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -27,12 +28,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public RéglagesController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
-
 			this.groups = new List<SettingsGroup> ();
 			this.controllers = new List<AbstractSettingController> ();
 
 			this.OpenSettings ();
+		}
+
+
+		protected override ViewSettingsList DirectViewSettingsList
+		{
+			get
+			{
+				return this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
+			}
 		}
 
 
@@ -178,7 +186,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent         = leftFrame,
-				Text           = "Catégories des réglages",
+				Text           = "Catégories des réglages avancés",
 				Dock           = DockStyle.Top,
 				Margins        = new Margins (5, 0, 0, 5),
 			};
@@ -193,7 +201,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent         = rightFrame,
-				Text           = "Détails des réglages",
+				Text           = "Détails des réglages avancés",
 				Dock           = DockStyle.Top,
 				Margins        = new Margins (10, 0, 0, 5),
 			};

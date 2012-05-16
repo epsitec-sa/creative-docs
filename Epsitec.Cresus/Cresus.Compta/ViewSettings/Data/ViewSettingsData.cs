@@ -58,16 +58,51 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 
-		public SearchData Filter
+		public SearchData BaseFilter
 		{
 			get;
 			set;
 		}
 
-		public AbstractOptions Options
+		public SearchData CurrentFilter
+		{
+			get
+			{
+				if (this.currentFilter == null && this.BaseFilter != null)
+				{
+					this.currentFilter = this.BaseFilter.CopyFrom ();
+				}
+
+				return this.currentFilter;
+			}
+			set
+			{
+				this.currentFilter = value;
+			}
+		}
+
+
+		public AbstractOptions BaseOptions
 		{
 			get;
 			set;
+		}
+
+		public AbstractOptions CurrentOptions
+		{
+			get
+			{
+				if (this.currentOptions == null && this.BaseOptions != null)
+				{
+					this.currentOptions = this.BaseOptions.CopyFrom ();
+				}
+
+				return this.currentOptions;
+			}
+			set
+			{
+				this.currentOptions = value;
+			}
 		}
 
 
@@ -119,25 +154,25 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 		public FormattedText GetFilterSummary(List<ColumnMapper> columnMappers)
 		{
-			if (this.Filter == null || columnMappers == null)
+			if (this.BaseFilter == null || columnMappers == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return this.Filter.GetSummary (columnMappers);
+				return this.BaseFilter.GetSummary (columnMappers);
 			}
 		}
 
 		public FormattedText GetOptionsSummary(List<ColumnMapper> columnMappers)
 		{
-			if (this.Options == null)
+			if (this.BaseOptions == null)
 			{
 				return FormattedText.Empty;
 			}
 			else
 			{
-				return this.Options.Summary;
+				return this.BaseOptions.Summary;
 			}
 		}
 
@@ -196,5 +231,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 					return null;
 			}
 		}
+
+
+		private SearchData			currentFilter;
+		private AbstractOptions		currentOptions;
 	}
 }

@@ -76,6 +76,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public override void CopyTo(AbstractOptions dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			var d = dst as RésuméTVAOptions;
 			d.MontreEcritures = this.MontreEcritures;
 			d.MontantTTC      = this.MontantTTC;

@@ -33,8 +33,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new ExtraitDeCompteDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ExtraitDeCompte.ViewSettings");
-
 			this.UpdateColumnMappers ();
 		}
 
@@ -56,14 +54,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasTemporalPanel
 		{
 			get
 			{

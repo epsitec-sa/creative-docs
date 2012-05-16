@@ -83,6 +83,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public override void CopyTo(AbstractOptions dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			var d = dst as RésuméPériodiqueOptions;
 			d.NumberOfMonths       = this.NumberOfMonths;
 			d.Cumul                = this.Cumul;

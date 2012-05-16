@@ -20,11 +20,14 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	/// </summary>
 	public abstract class AbstractOptions : ISettingsData
 	{
-		public virtual void SetComptaEntity(ComptaEntity compta)
+		public AbstractOptions()
+		{
+			this.graphOptions = new GraphOptions ();
+		}
+
+		public void SetComptaEntity(ComptaEntity compta)
 		{
 			this.compta = compta;
-
-			this.graphOptions = new GraphOptions ();
 		}
 
 
@@ -163,6 +166,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public virtual void CopyTo(AbstractOptions dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			dst.ViewGraph             = this.ViewGraph;
 			dst.ComparisonEnable      = this.ComparisonEnable;
 			dst.ComparisonShowed      = this.ComparisonShowed;

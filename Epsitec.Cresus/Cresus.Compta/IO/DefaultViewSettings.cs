@@ -54,7 +54,8 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
 
-			this.CreateViewSettingsData (list, ControllerType.Journal,  "Journal des écritures", true, true,  true);
+			this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des écritures", true, true,  true);
+
 			this.CreateViewSettingsData (list, ControllerType.Libellés, "Libellés usuels",       true, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Modèles,  "Ecritures modèles",     true, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",              true, false, false);
@@ -86,49 +87,49 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Vue d'ensemble", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Histogramme des comptes importants", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.SideBySide;
-				viewSettings.Options.GraphOptions.PrimaryDimension = 0;
-				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
-				viewSettings.Options.GraphOptions.HasThreshold0 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.01m;
-				viewSettings.Options.GraphOptions.HasThreshold1 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.SideBySide;
+				viewSettings.BaseOptions.GraphOptions.PrimaryDimension = 0;
+				viewSettings.BaseOptions.GraphOptions.SecondaryDimension = 1;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold0 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue0 = 0.01m;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold1 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Secteurs des comptes importants", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.Pie;
-				viewSettings.Options.GraphOptions.ExplodedPieFactor = 0;
-				viewSettings.Options.GraphOptions.PiePercents = false;
-				viewSettings.Options.GraphOptions.PieValues = true;
-				viewSettings.Options.GraphOptions.PrimaryDimension = 0;
-				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
-				viewSettings.Options.GraphOptions.HasThreshold0 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.02m;
-				viewSettings.Options.GraphOptions.HasThreshold1 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Pie;
+				viewSettings.BaseOptions.GraphOptions.ExplodedPieFactor = 0;
+				viewSettings.BaseOptions.GraphOptions.PiePercents = false;
+				viewSettings.BaseOptions.GraphOptions.PieValues = true;
+				viewSettings.BaseOptions.GraphOptions.PrimaryDimension = 0;
+				viewSettings.BaseOptions.GraphOptions.SecondaryDimension = 1;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold0 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue0 = 0.02m;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold1 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			this.Select<BalanceOptions> (list, nomPrésentation);
@@ -149,8 +150,8 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.Extrait, "Graphique du solde", searchExist, filterExist, optionsExist);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.Lines;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Lines;
 			}
 
 			this.Select<ExtraitDeCompteOptions> (list, nomPrésentation);
@@ -166,16 +167,16 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
+				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
 			this.Select<BilanOptions> (list, nomPrésentation);
@@ -191,27 +192,27 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.None, ComparisonDisplayMode.Montant);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 1, 2);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
+				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Comparaison avec le budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
-				this.OptionsAdaptDouble (viewSettings.Options, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.SideBySide;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.SideBySide;
 			}
 
 			this.Select<PPOptions> (list, nomPrésentation);
@@ -227,7 +228,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, ControllerType.Exploitation, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			this.Select<ExploitationOptions> (list, nomPrésentation);
@@ -258,51 +259,51 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Charges et produits", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Tout", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Histogramme des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.Stacked;
-				viewSettings.Options.GraphOptions.HasThreshold0 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.02m;
-				viewSettings.Options.GraphOptions.HasThreshold1 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Stacked;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold0 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue0 = 0.02m;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold1 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Secteurs des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.Filter);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptCatégorie (viewSettings.Filter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.Filter);
-				this.SearchAdaptProfondeur (viewSettings.Filter, 4, int.MaxValue);
-				this.OptionsAdaptRésuméPériodique (viewSettings.Options, 1);
+				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdd (viewSettings.BaseFilter);
+				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.OptionsAdaptRésuméPériodique (viewSettings.BaseOptions, 1);
 
-				this.OptionsAdaptGraph (viewSettings.Options);
-				viewSettings.Options.GraphOptions.Mode = GraphMode.Pie;
-				viewSettings.Options.GraphOptions.HasThreshold0 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue0 = 0.05m;
-				viewSettings.Options.GraphOptions.HasThreshold1 = true;
-				viewSettings.Options.GraphOptions.ThresholdValue1 = 0.02m;
-				viewSettings.Options.GraphOptions.PrimaryDimension = 0;
-				viewSettings.Options.GraphOptions.SecondaryDimension = 1;
+				this.OptionsAdaptGraph (viewSettings.BaseOptions);
+				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Pie;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold0 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue0 = 0.05m;
+				viewSettings.BaseOptions.GraphOptions.HasThreshold1 = true;
+				viewSettings.BaseOptions.GraphOptions.ThresholdValue1 = 0.02m;
+				viewSettings.BaseOptions.GraphOptions.PrimaryDimension = 0;
+				viewSettings.BaseOptions.GraphOptions.SecondaryDimension = 1;
 			}
 
 			this.Select<RésuméPériodiqueOptions> (list, nomPrésentation);
@@ -361,9 +362,9 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var viewSettings = this.CreateViewSettingsData (list, type, name, searchExist, filterExist, optionsExist);
 
-			viewSettings.Options = new T ();
-			viewSettings.Options.SetComptaEntity (this.compta);
-			viewSettings.Options.Clear ();
+			viewSettings.BaseOptions = new T ();
+			viewSettings.BaseOptions.SetComptaEntity (this.compta);
+			viewSettings.BaseOptions.Clear ();
 
 			return viewSettings;
 		}
@@ -376,7 +377,7 @@ namespace Epsitec.Cresus.Compta.IO
 				Readonly       = true,
 				Permanent      = true,
 				ControllerType = type,
-				Filter         = new SearchData (),
+				BaseFilter     = new SearchData (),
 				ShowFilter     = filterExist  ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 				ShowOptions    = optionsExist ? ShowPanelMode.Nop : ShowPanelMode.DoesNotExist,
 			};
@@ -478,9 +479,9 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			this.Select (list, nomPrésentation);
 
-			if (list.Selected.Options != null)
+			if (list.Selected.BaseOptions != null)
 			{
-				list.Selected.Options.CopyTo (this.mainWindowController.GetSettingsOptions<T> (this.GetKey (nomPrésentation, "Options"), this.compta));
+				//?list.Selected.BaseOptions.CopyTo (this.mainWindowController.GetSettingsOptions<T> (this.GetKey (nomPrésentation, "Options"), this.compta));
 			}
 		}
 
@@ -488,9 +489,9 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			list.SelectedIndex = 0;  // sélectionne "Réglages standards"
 
-			if (list.Selected.Filter != null)
+			if (list.Selected.BaseFilter != null)
 			{
-				list.Selected.Filter.CopyTo (this.mainWindowController.GetSettingsSearchData (this.GetKey (nomPrésentation, "Filter")));
+				//?list.Selected.BaseFilter.CopyTo (this.mainWindowController.GetSettingsSearchData (this.GetKey (nomPrésentation, "Filter")));
 			}
 		}
 

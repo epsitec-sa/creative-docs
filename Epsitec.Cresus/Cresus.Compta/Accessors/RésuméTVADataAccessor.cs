@@ -22,9 +22,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public RésuméTVADataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<RésuméTVAOptions> ("Présentation.RésuméTVA.Options", this.compta);
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TVA.ViewSettings");
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméTVA.Filter");
+			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
+			this.options    = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.UpdateAfterOptionsChanged ();
 		}

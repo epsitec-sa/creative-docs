@@ -18,13 +18,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	/// </summary>
 	public class JournalOptions : AbstractOptions
 	{
-		public override void SetComptaEntity(ComptaEntity compta)
-		{
-			base.SetComptaEntity (compta);
-			this.Clear ();
-		}
-
-
 		public override void Clear()
 		{
 			base.Clear ();
@@ -59,6 +52,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public override void CopyTo(AbstractOptions dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			var d = dst as JournalOptions;
 			d.JournalId = this.JournalId;
 

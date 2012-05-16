@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ModèlesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journal.ViewSettings");
+
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Modèles.Search");
 		}
 

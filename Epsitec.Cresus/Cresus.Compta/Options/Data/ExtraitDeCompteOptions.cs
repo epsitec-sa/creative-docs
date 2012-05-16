@@ -19,15 +19,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	/// </summary>
 	public class ExtraitDeCompteOptions : AbstractOptions
 	{
-		public override void SetComptaEntity(ComptaEntity compta)
-		{
-			base.SetComptaEntity (compta);
-
-			this.Clear ();
-
-		}
-
-
 		public override void Clear()
 		{
 			base.Clear ();
@@ -42,9 +33,17 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public bool HasGraphics
 		{
-			get;
-			set;
+			get
+			{
+				return this.hg;
+			}
+			set
+			{
+				this.hg = value;
+			}
 		}
+
+		private bool hg;
 
 
 		protected override void CreateEmpty()
@@ -65,6 +64,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public override void CopyTo(AbstractOptions dst)
 		{
+			if (dst == this)
+			{
+				return;
+			}
+
 			var d = dst as ExtraitDeCompteOptions;
 
 			d.HasGraphics = this.HasGraphics;

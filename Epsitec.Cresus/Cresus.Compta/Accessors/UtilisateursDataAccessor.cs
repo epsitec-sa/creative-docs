@@ -22,6 +22,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public UtilisateursDataAccessor(AbstractController controller)
 			: base (controller)
 		{
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
+
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Utilisateurs.Search");
 		}
 

@@ -54,14 +54,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public override bool HasTemporalPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
 		public override bool HasOptionsPanel
 		{
 			get

@@ -29,8 +29,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			: base (app, businessContext, mainWindowController)
 		{
 			this.dataAccessor = new RésuméTVADataAccessor (this);
-
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.TVA.ViewSettings");
 		}
 
 
@@ -43,14 +41,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasTemporalPanel
 		{
 			get
 			{

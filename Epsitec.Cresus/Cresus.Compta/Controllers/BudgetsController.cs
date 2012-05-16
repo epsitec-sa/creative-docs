@@ -28,8 +28,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.dataAccessor = new BudgetsDataAccessor (this);
 
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Budgets.ViewSettings");
-
 			this.UpdateColumnMappers ();
 		}
 
@@ -43,14 +41,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasTemporalPanel
 		{
 			get
 			{

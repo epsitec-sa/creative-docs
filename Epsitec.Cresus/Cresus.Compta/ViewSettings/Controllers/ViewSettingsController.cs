@@ -133,14 +133,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.panelsToolbarController = new PanelsToolbarController (this.controller);
 			this.panelsToolbarController.CreateUI (panelsToolbarFrame);
 
-			//	Remplissage de la frame gauche.
-			//?this.topPanelLeftController = new TopPanelLeftController (this.controller);
-			//?this.topPanelLeftController.CreateUI (topPanelLeftFrame, true, "Panel.ViewSettings", this.LevelChangedAction);
-
-			//	Remplissage de la frame droite.
-			//?this.topPanelRightController = new TopPanelRightController (this.controller);
-			//?this.topPanelRightController.CreateUI (topPanelRightFrame, "Utilise le premier réglage de présentation", this.ClearAction, this.controller.MainWindowController.ClosePanelViewSettings, this.LevelChangedAction);
-
 			this.UpdateTabs ();
 			this.UpdateList ();
 			this.UpdateWidgets ();
@@ -278,12 +270,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.compactUseButton.Clicked += delegate
 			{
+				this.CopyViewSettingsToData (this.viewSettingsList.Selected);
 				this.ViewSettingsChanged ();
 			};
 
 			this.compactUpdateButton.Clicked += delegate
 			{
-				string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après la recherche, le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
+				string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
 				var result = this.controller.MainWindowController.QuestionDialog (message);
 
 				if (result == DialogResult.Yes)
@@ -432,18 +425,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.CreateExtendedViewSettingsAttributeUI (toolbar);
 
-			ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise la recherche, le filtre et les options définis dans le réglage de présentation");
-			ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après la recherche, le filtre et les options en cours");
+			ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
+			ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
 
-			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise la recherche, le filtre et les options définis dans le réglage de présentation");
-			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve la recherche, le filtre et les options dans un nouveau réglage de présentation");
-			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le réglage de présentation d'après la recherche, le filtre et les options en cours");
+			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
+			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve le filtre et les options dans un nouveau réglage de présentation");
+			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
 			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le réglage de présentation d'une ligne dnas la liste");
 			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le réglage de présentation d'une ligne dnas la liste");
 			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le réglage de présentation");
 
 			this.extendedUseButton.Clicked += delegate
 			{
+				this.CopyViewSettingsToData (this.viewSettingsList.Selected);
 				this.ViewSettingsChanged ();
 			};
 
@@ -706,11 +700,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void UpdateTabs()
 		{
-			this.comptactTabFrame.Children.Clear ();
-
-			for (int i = 0; i < this.viewSettingsList.List.Count; i++)
+			if (this.viewSettingsList != null)
 			{
-				this.CreateTab (this.comptactTabFrame, i);
+				this.comptactTabFrame.Children.Clear ();
+
+				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
+				{
+					this.CreateTab (this.comptactTabFrame, i);
+				}
 			}
 		}
 
@@ -742,152 +739,170 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void UpdateTabSelected()
 		{
-			foreach (var widget in this.comptactTabFrame.Children)
+			if (this.viewSettingsList != null)
 			{
-				var button = widget as TabButton;
-
-				if (button != null)
+				foreach (var widget in this.comptactTabFrame.Children)
 				{
-					bool select = button.TabIndex == this.viewSettingsList.SelectedIndex;
-					button.ActiveState = select ? ActiveState.Yes : ActiveState.No;
+					var button = widget as TabButton;
+
+					if (button != null)
+					{
+						bool select = button.TabIndex == this.viewSettingsList.SelectedIndex;
+						button.ActiveState = select ? ActiveState.Yes : ActiveState.No;
+					}
 				}
 			}
 		}
 
 		private void UpdateList()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.viewSettingsList != null)
 			{
-				this.extendedListViewSettings.Items.Clear ();
-
-				foreach (var viewSettings in this.viewSettingsList.List)
+				using (this.ignoreChanges.Enter ())
 				{
-					this.extendedListViewSettings.Items.Add (viewSettings.Name);
+					this.extendedListViewSettings.Items.Clear ();
+
+					foreach (var viewSettings in this.viewSettingsList.List)
+					{
+						this.extendedListViewSettings.Items.Add (viewSettings.Name);
+					}
+
 				}
 
+				this.UpdateListSelection ();
 			}
-
-			this.UpdateListSelection ();
 		}
 
 		private void UpdateListSelection()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.viewSettingsList != null)
 			{
-				if (this.viewSettingsList.Selected == null)
+				using (this.ignoreChanges.Enter ())
 				{
-					this.extendedListViewSettings.SelectedItemIndex = -1;
-					this.extendedFieldName.FormattedText = FormattedText.Empty;
-				}
-				else
-				{
-					this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
-					this.extendedListViewSettings.ShowSelected (ScrollShowMode.Extremity);
+					if (this.viewSettingsList.Selected == null)
+					{
+						this.extendedListViewSettings.SelectedItemIndex = -1;
+						this.extendedFieldName.FormattedText = FormattedText.Empty;
+					}
+					else
+					{
+						this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+						this.extendedListViewSettings.ShowSelected (ScrollShowMode.Extremity);
 
-					this.extendedFieldName.FormattedText = this.viewSettingsList.Selected.Name;
-				}
+						this.extendedFieldName.FormattedText = this.viewSettingsList.Selected.Name;
+					}
 
-				//?this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
+					//?this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
+				}
 			}
 		}
 
 		private void UpdateAfterSelectionChanged()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.viewSettingsList != null)
 			{
-				//?this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
-				this.UpdateTabSelected ();
-				this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+				using (this.ignoreChanges.Enter ())
+				{
+					//?this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+					this.UpdateTabSelected ();
+					this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
+				}
 			}
 		}
 
 		private void UpdateButtons()
 		{
-			int sel = this.extendedListViewSettings.SelectedItemIndex;
-			int count = this.viewSettingsList.List.Count;
-			bool eq = this.CompareTo (this.viewSettingsList.Selected);
+			if (this.viewSettingsList != null)
+			{
+				int sel = this.extendedListViewSettings.SelectedItemIndex;
+				int count = this.viewSettingsList.List.Count;
+				bool eq = this.CompareTo (this.viewSettingsList.Selected);
 
-			//?this.topPanelRightController.ClearEnable = sel != 0 || !eq;
+				//?this.topPanelRightController.ClearEnable = sel != 0 || !eq;
 
-			this.compactUseButton.Enable    = (sel != -1 && !eq);
-			this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+				this.compactUseButton.Enable    = (sel != -1 && !eq);
+				this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
 
-			this.extendedAddButton.Enable    = true;
-			this.extendedUseButton.Enable    = (sel != -1 && !eq);
-			this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
-			this.extendedUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
-			this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
-			this.extendedRemoveButton.Enable = (sel != -1 && !this.IsPermanent);
+				this.extendedAddButton.Enable    = true;
+				this.extendedUseButton.Enable    = (sel != -1 && !eq);
+				this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
+				this.extendedUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+				this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
+				this.extendedRemoveButton.Enable = (sel != -1 && !this.IsPermanent);
 
-			this.extendedFieldName.IsReadOnly = this.IsReadonly;
-			this.extendedFieldName.Invalidate ();  // pour contourner un bug !
+				this.extendedFieldName.IsReadOnly = this.IsReadonly;
+				this.extendedFieldName.Invalidate ();  // pour contourner un bug !
+			}
 		}
 
 		private void UpdateSummary()
 		{
-			using (this.ignoreChanges.Enter ())
+			if (this.viewSettingsList != null)
 			{
-				var viewSettings = this.viewSettingsList.Selected;
-
-				if (viewSettings == null)
+				using (this.ignoreChanges.Enter ())
 				{
-					var compactSummary = FormattedText.Empty;
+					var viewSettings = this.viewSettingsList.Selected;
 
-					this.extendedFilterSummary .FormattedText = FormattedText.Empty;
-					this.extendedOptionsSummary.FormattedText = FormattedText.Empty;
-					this.extendedShowPanelMode .FormattedText = FormattedText.Empty;
+					if (viewSettings == null)
+					{
+						var compactSummary = FormattedText.Empty;
 
-					this.extendedFilterSummary .ActiveState = ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = ActiveState.No;
+						this.extendedFilterSummary .FormattedText = FormattedText.Empty;
+						this.extendedOptionsSummary.FormattedText = FormattedText.Empty;
+						this.extendedShowPanelMode .FormattedText = FormattedText.Empty;
+
+						this.extendedFilterSummary .ActiveState = ActiveState.No;
+						this.extendedOptionsSummary.ActiveState = ActiveState.No;
+					}
+					else
+					{
+						//?this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
+
+						this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
+						this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
+
+						this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
+						if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
+						{
+							this.extendedShowPanelMode.FormattedText = "Aucune";
+						}
+
+						if (this.extendedFilterSummary.FormattedText.IsNullOrEmpty)
+						{
+							this.extendedFilterSummary.FormattedText = "Vide";
+						}
+
+						if (this.extendedOptionsSummary.FormattedText.IsNullOrEmpty)
+						{
+							this.extendedOptionsSummary.FormattedText = "Vide";
+						}
+
+						this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
+						this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
+
+						this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
+						this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
+
+						//?ToolTip.Default.SetToolTip (this.comptactFrame, this.TooltipSummary);
+					}
+
+					this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
+					this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
+
+					this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
+
+					this.extendedFilterIconSummary .Visibility = this.controller.HasFilterPanel;
+					this.extendedOptionsIconSummary.Visibility = this.controller.HasOptionsPanel;
+
+					this.extendedFilterSummary .Visibility = this.controller.HasFilterPanel;
+					this.extendedOptionsSummary.Visibility = this.controller.HasOptionsPanel;
+
+					this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
+					this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
+
+					this.extendedAttributePermanent.Visibility = (viewSettings != null);
+					this.extendedAttributeReadonly .Visibility = (viewSettings != null);
 				}
-				else
-				{
-					//?this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
-
-					this.extendedFilterSummary .FormattedText = viewSettings.GetFilterSummary  (this.controller.ColumnMappers);
-					this.extendedOptionsSummary.FormattedText = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
-
-					this.extendedShowPanelMode.FormattedText = viewSettings.ShowPanelModeSummary;
-					if (this.extendedShowPanelMode.FormattedText.IsNullOrEmpty)
-					{
-						this.extendedShowPanelMode.FormattedText = "Aucune";
-					}
-
-					if (this.extendedFilterSummary.FormattedText.IsNullOrEmpty)
-					{
-						this.extendedFilterSummary.FormattedText = "Vide";
-					}
-
-					if (this.extendedOptionsSummary.FormattedText.IsNullOrEmpty)
-					{
-						this.extendedOptionsSummary.FormattedText = "Vide";
-					}
-
-					this.extendedFilterSummary.ActiveState  = viewSettings.EnableFilter  ? ActiveState.Yes : ActiveState.No;
-					this.extendedOptionsSummary.ActiveState = viewSettings.EnableOptions ? ActiveState.Yes : ActiveState.No;
-
-					this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
-					this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
-
-					//?ToolTip.Default.SetToolTip (this.comptactFrame, this.TooltipSummary);
-				}
-
-				this.extendedFilterSummary .Enable = (viewSettings != null && !this.IsReadonly);
-				this.extendedOptionsSummary.Enable = (viewSettings != null && !this.IsReadonly);
-
-				this.extendedShowPanelModeFrame.Enable = (viewSettings != null && !this.IsReadonly);
-
-				this.extendedFilterIconSummary .Visibility = this.controller.HasFilterPanel;
-				this.extendedOptionsIconSummary.Visibility = this.controller.HasOptionsPanel;
-
-				this.extendedFilterSummary .Visibility = this.controller.HasFilterPanel;
-				this.extendedOptionsSummary.Visibility = this.controller.HasOptionsPanel;
-
-				this.extendedShowPanelModeLabel.Visibility = (viewSettings != null);
-				this.extendedShowPanelModeFrame.Visibility = (viewSettings != null);
-
-				this.extendedAttributePermanent.Visibility = (viewSettings != null);
-				this.extendedAttributeReadonly .Visibility = (viewSettings != null);
 			}
 		}
 
@@ -897,7 +912,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				var builder = new System.Text.StringBuilder ();
 
-				var viewSettings = this.viewSettingsList.Selected;
+				var viewSettings = (this.viewSettingsList == null) ? null : this.viewSettingsList.Selected;
 
 				if (viewSettings == null)
 				{
@@ -1060,17 +1075,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 
 				//	Compare avec les données.
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null && viewSettings.EnableFilter)
 				{
-					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.Filter))
+					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.BaseFilter))
 					{
 						return false;
 					}
 				}
 
-				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
+				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null && viewSettings.EnableOptions)
 				{
-					if (!this.dataAccessor.Options.CompareTo (viewSettings.Options))
+					if (!this.dataAccessor.Options.CompareTo (viewSettings.BaseOptions))
 					{
 						return false;
 					}
@@ -1085,12 +1100,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			//	Met les paramètres des panneaux dans un réglage de présentation (panneaux -> viewSettings).
 			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
 			{
-				viewSettings.Filter = this.dataAccessor.FilterData.CopyFrom ();
+				viewSettings.BaseFilter = this.dataAccessor.FilterData.CopyFrom ();
 			}
 
 			if (this.dataAccessor != null && this.dataAccessor.Options != null)
 			{
-				viewSettings.Options = this.dataAccessor.Options.CopyFrom ();
+				viewSettings.BaseOptions = this.dataAccessor.Options.CopyFrom ();
 			}
 
 			//	Met un mode spécial si le panneau n'existe pas.
@@ -1108,14 +1123,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private void CopyViewSettingsToData(ViewSettingsData viewSettings)
 		{
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.Filter != null && viewSettings.EnableFilter)
+			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null && viewSettings.EnableFilter)
 			{
-				viewSettings.Filter.CopyTo (this.dataAccessor.FilterData);
+				viewSettings.BaseFilter.CopyTo (this.dataAccessor.FilterData);
 			}
 
-			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.Options != null && viewSettings.EnableOptions)
+			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null && viewSettings.EnableOptions)
 			{
-				viewSettings.Options.CopyTo (this.dataAccessor.Options);
+				viewSettings.BaseOptions.CopyTo (this.dataAccessor.Options);
 			}
 
 			//	Effectue éventuellement l'action spéciale, qui consiste à montrer ou cacher des panneaux.

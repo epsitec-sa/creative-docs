@@ -13,6 +13,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Settings.Data;
 using Epsitec.Cresus.Compta.Settings.Controllers;
+using Epsitec.Cresus.Compta.ViewSettings.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -27,7 +28,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public SaveController(ComptaApplication app, BusinessContext businessContext, MainWindowController mainWindowController)
 			: base (app, businessContext, mainWindowController)
 		{
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Save.ViewSettings");
+		}
+
+
+		protected override ViewSettingsList DirectViewSettingsList
+		{
+			get
+			{
+				return this.mainWindowController.GetViewSettingsList ("Présentation.Save.ViewSettings");
+			}
 		}
 
 

@@ -22,9 +22,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public PPDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<PPOptions> ("Présentation.PP.Options", this.compta);
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.PP.ViewSettings");
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.PP.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.PP.Filter");
+			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
+			this.options    = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.arrayGraphOptions = new GraphOptions ();
 

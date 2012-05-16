@@ -21,6 +21,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		public ViewSettingsList()
 		{
 			this.list = new List<ViewSettingsData> ();
+			this.selectedIndex = -1;
 		}
 
 
@@ -37,18 +38,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		{
 			get
 			{
-				return this.list.IndexOf (this.selected);
+				return this.selectedIndex;
 			}
 			set
 			{
-				if (value >= 0 && value < this.list.Count)
-				{
-					this.selected = this.list[value];
-				}
-				else
-				{
-					this.selected = null;
-				}
+				this.selectedIndex = value;
 			}
 		}
 
@@ -56,16 +50,24 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		{
 			get
 			{
-				return this.selected;
+				if (this.selectedIndex < 0 || this.selectedIndex >= this.list.Count)
+				{
+					return null;
+				}
+				else
+				{
+					return this.list[this.selectedIndex];
+				}
 			}
 			set
 			{
-				this.selected = value;
+				this.selectedIndex = this.list.IndexOf (value);
 			}
 		}
 
 
-		private readonly List<ViewSettingsData>	list;
-		private ViewSettingsData					selected;
+		private readonly List<ViewSettingsData>		list;
+
+		private int									selectedIndex;
 	}
 }

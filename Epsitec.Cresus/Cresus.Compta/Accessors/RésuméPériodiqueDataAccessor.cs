@@ -24,9 +24,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public RésuméPériodiqueDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.options    = this.mainWindowController.GetSettingsOptions<RésuméPériodiqueOptions> ("Présentation.RésuméPériodique.Options", this.compta);
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.RésuméPériodique.ViewSettings");
 			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Search");
-			this.filterData = this.mainWindowController.GetSettingsSearchData ("Présentation.RésuméPériodique.Filter");
+			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
+			this.options    = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.arrayGraphOptions = new GraphOptions ();
 
