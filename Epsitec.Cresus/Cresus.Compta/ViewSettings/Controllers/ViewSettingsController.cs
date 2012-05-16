@@ -50,8 +50,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		public void SetTitle(FormattedText title)
 		{
-			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
-			this.titleFrame.PreferredWidth = this.titleLabel.GetBestFitSize ().Width;
+			if (this.titleLabel.Visibility)
+			{
+				this.titleLabel.FormattedText = title;
+				this.titleFrame.PreferredWidth = this.titleLabel.GetBestFitSize ().Width;
+			}
 		}
 
 		public FrameBox GetTitleFrame()
@@ -87,6 +90,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent         = this.titleFrame,
 				Dock           = DockStyle.Fill,
+			};
+
+			this.titleLabel.HypertextClicked += delegate
+			{
+				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty)
+				{
+					this.controller.MainWindowController.OpenPanelFilter ();
+				}
+
+				if (!this.controller.MainWindowController.TemporalData.IsEmpty)
+				{
+					this.controller.MainWindowController.OpenPanelTemporal ();
+				}
 			};
 
 			this.mainFrame = new FrameBox
@@ -731,6 +747,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent            = parent,
 				FormattedText     = this.viewSettingsList.List[index].Name,
+				TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				ActiveState       = select ? ActiveState.Yes : ActiveState.No,
 				PreferredHeight   = 26,
 				Dock              = DockStyle.Left,

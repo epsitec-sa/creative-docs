@@ -161,6 +161,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
 			this.compteController.EditWidget.TextLayout.DefaultFontSize = 13.0;
 
+			this.summaryLabel = new StaticText
+			{
+				Parent          = frame,
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (10, 0, 0, 0),
+			};
+
 			this.UpdateComptes ();
 			this.UpdateSummary ();
 #endif
@@ -178,18 +186,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateSummary()
 		{
-#if false
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
 
 			if (compte == null)
 			{
-				this.summaryLabel.FormattedText = FormattedText.Empty;
+				this.summaryLabel.FormattedText = FormattedText.Concat ("Inconnu").ApplyBold ().ApplyFontSize (13.0).ApplyFontColor (Color.FromName ("Red"));
 			}
 			else
 			{
 				this.summaryLabel.FormattedText = compte.Titre.ApplyBold ().ApplyFontSize (13.0);
 			}
-#endif
+
+			this.summaryLabel.PreferredWidth = System.Math.Min (this.summaryLabel.GetBestFitSize ().Width, 150);
 		}
 
 		private void ValidateCompteAction(EditionData data)
@@ -212,7 +220,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				var p = this.dataAccessor.Permanents as ExtraitDeComptePermanents;
-				return p.NuméroCompte;
+				return p.NuméroCompte.ToSimpleText ();
 			}
 			set
 			{

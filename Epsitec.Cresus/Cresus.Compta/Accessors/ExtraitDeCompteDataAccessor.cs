@@ -63,9 +63,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.readonlyAllData.Clear ();
 
-			FormattedText numéroCompte = this.Permanents.NuméroCompte;
+			FormattedText numéroCompte = this.Permanents.NuméroCompte.ToSimpleText ();
 			if (numéroCompte.IsNullOrEmpty)
 			{
+				this.readonlyData.Clear ();
 				return;
 			}
 
@@ -76,6 +77,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéroCompte).FirstOrDefault ();
 			if (compte == null)
 			{
+				this.readonlyData.Clear ();
 				return;
 			}
 

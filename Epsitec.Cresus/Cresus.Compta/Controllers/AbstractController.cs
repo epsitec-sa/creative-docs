@@ -854,6 +854,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected void SetGroupTitle(FormattedText title)
 		{
+			title = title.ApplyBold ().ApplyFontSize (13.0);
+
+			if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
+				!this.mainWindowController.TemporalData.IsEmpty)
+			{
+				FormattedText ht = "filtre actif";
+				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
+			}
+
 			this.viewSettingsController.SetTitle (title);
 		}
 
