@@ -26,10 +26,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ExtraitDeCompte.ViewSettings");
-			this.permanents = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
-			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
-			this.options    = this.viewSettingsList.Selected.CurrentOptions;
+			this.permanents       = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
+			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
+			this.filterData       = this.viewSettingsList.Selected.CurrentFilter;
+			this.options          = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.arrayGraphOptions = new GraphOptions ();
 

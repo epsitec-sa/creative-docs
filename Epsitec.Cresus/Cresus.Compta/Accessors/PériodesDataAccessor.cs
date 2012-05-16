@@ -25,8 +25,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Réglages.ViewSettings");
-
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Périodes.Search");
+			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.Périodes.Search");
 		}
 
 

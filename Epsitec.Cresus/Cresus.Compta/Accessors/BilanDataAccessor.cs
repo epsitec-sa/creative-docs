@@ -23,9 +23,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			: base (controller)
 		{
 			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Bilan.ViewSettings");
-			this.searchData = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Search");
-			this.filterData = this.viewSettingsList.Selected.CurrentFilter;
-			this.options    = this.viewSettingsList.Selected.CurrentOptions;
+			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.Bilan.Search");
+			this.filterData       = this.viewSettingsList.Selected.CurrentFilter;
+			this.options          = this.viewSettingsList.Selected.CurrentOptions;
 
 			this.arrayGraphOptions = new GraphOptions ();
 
