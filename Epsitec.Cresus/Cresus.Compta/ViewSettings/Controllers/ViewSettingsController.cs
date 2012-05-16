@@ -673,8 +673,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.UpdateButtons ();
 			this.UpdateSummary ();
 
-			this.extendedFieldName.SelectAll ();
-			this.extendedFieldName.Focus ();
+			this.ViewSettingsChanged ();
 		}
 
 
