@@ -9,6 +9,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Widgets
 {
@@ -124,26 +125,47 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			for (int i = 0; i < this.tabs.Count; i++)
+			foreach (var index in this.Indexes.Reverse ())
 			{
-				this.PaintTab (graphics, i);
+				this.PaintTab (graphics, index);
 			}
 		}
 
 
 		private int Detect(Point pos)
 		{
-			for (int i = 0; i < this.tabs.Count; i++)
+			foreach (var index in this.Indexes)
 			{
-				var path = this.GetTabPath (i);
+				var path = this.GetTabPath (index);
 
 				if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
 				{
-					return i;
+					return index;
 				}
 			}
 
 			return -1;
+		}
+
+		private IEnumerable<int> Indexes
+		{
+			//	Retourne les index dans l'ordre pour la détection.
+			//	Il faut utiliser l'ordre inverse pour le dessin.
+			get
+			{
+				if (this.selectedIndex != -1)
+				{
+					yield return this.selectedIndex;
+				}
+
+				for (int i = 0; i < this.tabs.Count; i++)
+				{
+					if (i != this.selectedIndex)
+					{
+						yield return i;
+					}
+				}
+			}
 		}
 
 		private void PaintTab(Graphics graphics, int index)
@@ -183,10 +205,55 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var rect = this.GetTabRect (index);
 			rect.Deflate (0.5);
 
-			path.MoveTo (rect.Left-TabsPane.tabMargin, rect.Bottom);
-			path.LineTo (rect.Left, rect.Top);
-			path.LineTo (rect.Right, rect.Top);
-			path.LineTo (rect.Right+TabsPane.tabMargin, rect.Bottom);
+#if false
+			//	Onglet en trapèze.
+			var p1 = new Point (rect.Left-TabsPane.tabMargin, rect.Bottom);
+			var p2 = new Point (rect.Left, rect.Top);
+			var p3 = new Point (rect.Right, rect.Top);
+			var p4 = new Point (rect.Right+TabsPane.tabMargin, rect.Bottom);
+
+			double d = rect.Height * 0.25;
+
+			var p21 = Point.Move (p2, p1, d);
+			var p23 = Point.Move (p2, p3, d);
+			var p32 = Point.Move (p3, p2, d);
+			var p34 = Point.Move (p3, p4, d);
+
+			if (p23.X < p32.X)
+			{
+				path.MoveTo (p1);
+				path.LineTo (p21);
+				path.CurveTo (p2, p23);
+				path.LineTo (p32);
+				path.CurveTo (p3, p34);
+				path.LineTo (p4);
+			}
+			else
+			{
+				path.MoveTo (p1);
+				path.LineTo (p2);
+				path.LineTo (p3);
+				path.LineTo (p4);
+			}
+#else
+			//	Onglet style "OneNote".
+			var p1 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Bottom);
+			var p2 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Top);
+			var p3 = new Point (rect.Right-TabsPane.tabMargin*0.5, rect.Top);
+			var p4 = new Point (rect.Right+TabsPane.tabMargin*1.8, rect.Bottom);
+
+			double d = rect.Height * 0.2;
+
+			var p21 = Point.Move (p2, p1, d);
+			var p23 = Point.Move (p2, p3, d);
+
+			path.MoveTo (p1);
+			path.LineTo (p21);
+			path.CurveTo (p2, p23);
+			path.LineTo (p3);
+			path.LineTo (p4);
+
+#endif
 
 			return path;
 		}
@@ -253,7 +320,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				get
 				{
-					return this.textWidth + TabsPane.textMargin*2;
+					return System.Math.Floor (this.textWidth + TabsPane.textMargin*2) + 1;
 				}
 			}
 
@@ -279,8 +346,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public event EventHandler SelectedIndexChanged;
 
 
-		private static readonly double				tabMargin  = 10;
-		private static readonly double				textMargin = 6;
+		private static readonly double				tabMargin  = 8;
+		private static readonly double				textMargin = 2;
 
 		private readonly List<Tab>					tabs;
 		private int									selectedIndex;
