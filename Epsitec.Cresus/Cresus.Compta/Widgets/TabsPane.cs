@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 
-			foreach (var index in this.Indexes.Reverse ())
+			foreach (var index in this.DetectionIndexes.Reverse ())
 			{
 				this.PaintTab (graphics, index);
 			}
@@ -134,7 +134,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int Detect(Point pos)
 		{
-			foreach (var index in this.Indexes)
+			foreach (var index in this.DetectionIndexes)
 			{
 				var path = this.GetTabPath (index);
 
@@ -147,7 +147,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return -1;
 		}
 
-		private IEnumerable<int> Indexes
+		private IEnumerable<int> DetectionIndexes
 		{
 			//	Retourne les index dans l'ordre pour la détection.
 			//	Il faut utiliser l'ordre inverse pour le dessin.
@@ -178,15 +178,27 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var rect     = this.GetTabRect (index);
 			var path     = this.GetTabPath (index);
 
-			var color = hilited ? UIBuilder.SelectionColor : Color.FromBrightness (1.0);
-
-			graphics.AddFilledPath (path);
-			graphics.RenderSolid (color);
-
-			if (!selected)
+			if (hilited)
 			{
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromAlphaColor (0.2, adorner.ColorBorder));
+				graphics.RenderSolid (UIBuilder.SelectionColor);
+			}
+			else if (selected)
+			{
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (UIBuilder.SelectionColor);
+
+				var p = this.GetTabPath (index, new Margins (2.5, 2.5, 2.5, 0));
+				graphics.AddFilledPath (p);
+				graphics.RenderSolid (Color.FromBrightness (1.0));
+			}
+			else
+			{
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (Color.FromBrightness (1.0));
+
+				graphics.AddFilledPath (path);
+				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.5, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
 			}
 
 			graphics.AddPath (path);
@@ -200,9 +212,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Path GetTabPath(int index)
 		{
+			return this.GetTabPath (index, Margins.Zero);
+		}
+
+		private Path GetTabPath(int index, Margins margins)
+		{
 			var path = new Path ();
 
 			var rect = this.GetTabRect (index);
+			rect.Deflate (margins);
 			rect.Deflate (0.5);
 
 #if false
