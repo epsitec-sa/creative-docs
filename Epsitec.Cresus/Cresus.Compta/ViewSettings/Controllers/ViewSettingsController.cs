@@ -15,6 +15,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.ViewSettings.Data;
+using Epsitec.Cresus.Compta.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -218,23 +219,23 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.comptactFrame = new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 20,
+				PreferredHeight = 34,
 				Dock            = DockStyle.Top,
 				Padding         = new Margins (5, 5, 5, 0),
 			};
 
-			this.comptactTabFrame = new FrameBox
+			this.compactTabsPane = new TabsPane
 			{
 				Parent          = this.comptactFrame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
+				PreferredHeight = 34-5,
+				Dock            = DockStyle.Fill,
 			};
 
 			var buttonFrame = new FrameBox
 			{
 				Parent          = this.comptactFrame,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Right,
 				Margins         = new Margins (10, 0, 0, 0),
 				Padding         = new Margins (0, 0, 0, 5),
 			};
@@ -583,6 +584,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
+#if false
 				this.comptactTabFrame.Children.Clear ();
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
@@ -609,6 +611,35 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.AddViewSettings ();
 					};
 				}
+#endif
+
+				this.compactTabsPane.Clear ();
+
+				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
+				{
+					this.compactTabsPane.Add (this.viewSettingsList.List[i].Name);
+				}
+
+				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
+				{
+					this.compactTabsPane.Add ("+");
+				}
+
+				this.compactTabsPane.SelectedIndexChanged += delegate
+				{
+					int sel = this.compactTabsPane.SelectedIndex;
+
+					if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && sel == this.viewSettingsList.List.Count)
+					{
+						this.AddViewSettings ();
+					}
+					else
+					{
+						this.viewSettingsList.SelectedIndex = sel;
+						this.UpdateAfterSelectionChanged ();
+						this.ViewSettingsChanged ();
+					}
+				};
 			}
 		}
 
@@ -642,6 +673,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
+#if false
 				foreach (var widget in this.comptactTabFrame.Children)
 				{
 					var button = widget as TabButton;
@@ -652,6 +684,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						button.ActiveState = select ? ActiveState.Yes : ActiveState.No;
 					}
 				}
+#endif
+
+				this.compactTabsPane.SelectedIndex = this.viewSettingsList.SelectedIndex;
 			}
 		}
 
@@ -995,10 +1030,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private GlyphButton								specialistButton;
 
 		private FrameBox								comptactFrame;
-		private FrameBox								comptactTabFrame;
 		private Button									compactUseButton;
 		private Button									compactUpdateButton;
 		private StaticText								compactSummary;
+		private TabsPane								compactTabsPane;
 
 		private FrameBox								extendedFrame;
 		private ScrollList								extendedListViewSettings;
