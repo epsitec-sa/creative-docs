@@ -136,11 +136,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			foreach (var index in this.DetectionIndexes)
 			{
-				var path = this.GetTabPath (index);
+				var rect = this.GetTextRect (index);
 
-				if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
+				if (!rect.IsEmpty)
 				{
-					return index;
+					var path = this.GetTabPath (rect);
+
+					if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
+					{
+						return index;
+					}
 				}
 			}
 
@@ -153,6 +158,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Il faut utiliser l'ordre inverse pour le dessin.
 			get
 			{
+				var overflow = this.OverflowCount;
+
 				if (this.selectedIndex != -1)
 				{
 					yield return this.selectedIndex;
@@ -160,35 +167,85 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				for (int i = 0; i < this.tabs.Count; i++)
 				{
-					if (i != this.selectedIndex)
+					if (i != this.selectedIndex && i < this.tabs.Count-overflow)
 					{
 						yield return i;
 					}
 				}
+
+				yield return this.tabs.Count;  // onglet du menu
 			}
 		}
 
 		private void PaintTab(Graphics graphics, int index)
 		{
-			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
-
-			var tab      = this.tabs[index];
 			var selected = index == this.selectedIndex;
 			var hilited  = index == this.hilitedIndex;
-			var rect     = this.GetTabRect (index);
-			var path     = this.GetTabPath (index);
+			var rect     = this.GetTextRect (index);
 
+			if (!rect.IsEmpty)
+			{
+				if (index == this.tabs.Count)  // onglet du menu ?
+				{
+					this.PaintTabMenu (graphics, rect, selected, hilited);
+				}
+				else
+				{
+					//	Dessine le cadre et le fond.
+					this.PaintTabFrame (graphics, rect, selected, hilited);
+
+					//	Dessine le texte.
+					rect.Inflate (1);
+					var pos = rect.BottomLeft;
+					var tab = this.tabs[index];
+					tab.TextLayout.LayoutSize = rect.Size;
+					tab.TextLayout.Paint (pos, graphics);
+				}
+			}
+		}
+
+		private void PaintTabMenu(Graphics graphics, Rectangle rect, bool selected, bool hilited)
+		{
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			this.PaintTabFrame (graphics, rect, selected, hilited);
+
+			var c = rect.Center;
+			var d = rect.Height*0.25;
+
+			var path = new Path ();
+			path.MoveTo (c.X, c.Y-d);
+			path.LineTo (c.X-d, c.Y);
+			path.LineTo (c.X+d, c.Y);
+			path.Close ();
+
+			graphics.AddFilledPath (path);
+			graphics.RenderSolid (adorner.ColorBorder);
+		}
+
+		private void PaintTabFrame(Graphics graphics, Rectangle rect, bool selected, bool hilited)
+		{
+			//	Dessine le cadre et le fond d'un onglet.
+			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
+
+			var path = this.GetTabPath (rect);
+
+			//	Dessine le fond.
 			if (hilited)
 			{
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (UIBuilder.SelectionColor);
+				graphics.RenderSolid (adorner.ColorBorder);
+
+				var p = this.GetTabPath (rect, new Margins (2.5, 2.5, 2.5, 0));
+				graphics.AddFilledPath (p);
+				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
 			}
 			else if (selected)
 			{
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (UIBuilder.SelectionColor);
 
-				var p = this.GetTabPath (index, new Margins (2.5, 2.5, 2.5, 0));
+				var p = this.GetTabPath (rect, new Margins (2.5, 2.5, 2.5, 0));
 				graphics.AddFilledPath (p);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 			}
@@ -201,25 +258,20 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.5, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
 			}
 
+			//	Dessine le cadre.
 			graphics.AddPath (path);
 			graphics.RenderSolid (adorner.ColorBorder);
-
-			rect.Inflate (1);
-			var pos = rect.BottomLeft;
-			tab.TextLayout.LayoutSize = rect.Size;
-			tab.TextLayout.Paint (pos, graphics);
 		}
 
-		private Path GetTabPath(int index)
+		private Path GetTabPath(Rectangle rect)
 		{
-			return this.GetTabPath (index, Margins.Zero);
+			return this.GetTabPath (rect, Margins.Zero);
 		}
 
-		private Path GetTabPath(int index, Margins margins)
+		private Path GetTabPath(Rectangle rect, Margins margins)
 		{
 			var path = new Path ();
 
-			var rect = this.GetTabRect (index);
 			rect.Deflate (margins);
 			rect.Deflate (0.5);
 
@@ -276,21 +328,61 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return path;
 		}
 
-		private Rectangle GetTabRect(int index)
+		private Rectangle GetTextRect(int index)
 		{
-			double x = TabsPane.tabMargin;
-
-			for (int i = 0; i < index; i++)
+			if (index == this.tabs.Count)  // onglet du menu ?
 			{
-				var tab = this.tabs[i];
-				x += tab.TextWidth;
-				x += TabsPane.tabMargin;
+				int overflow = this.OverflowCount;
+
+				if (overflow == 0)
+				{
+					return Rectangle.Empty;
+				}
+				else
+				{
+					var rect = this.GetTextRect (this.tabs.Count-overflow);
+					return new Rectangle (rect.Left, rect.Bottom, TabsPane.menuWidth, rect.Height);
+				}
 			}
+			else
+			{
+				double x = TabsPane.tabMargin;
 
-			//?double h = (index == this.selectedIndex) ? this.ActualHeight : this.ActualHeight-5;
-			double h = this.ActualHeight-5;
+				for (int i = 0; i < index; i++)
+				{
+					var tab = this.tabs[i];
+					x += tab.TextWidth;
+					x += TabsPane.tabMargin;
+				}
 
-			return new Rectangle (x, 0, this.tabs[index].TextWidth, h);
+				//?double h = (index == this.selectedIndex) ? this.ActualHeight : this.ActualHeight-5;
+				double h = this.ActualHeight-5;
+
+				return new Rectangle (x, 0, this.tabs[index].TextWidth, h);
+			}
+		}
+
+		private int OverflowCount
+		{
+			get
+			{
+				int count = 0;
+
+				if (this.GetTextRect (this.tabs.Count-1).Right > this.ActualWidth-TabsPane.tabMargin*1.8)
+				{
+					for (int i = this.tabs.Count-1; i >= 0; i--)
+					{
+						if (this.GetTextRect (i).Right <= this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2)
+						{
+							break;
+						}
+
+						count++;
+					}
+				}
+
+				return count;
+			}
 		}
 
 
@@ -366,6 +458,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private static readonly double				tabMargin  = 8;
 		private static readonly double				textMargin = 2;
+		private static readonly double				menuWidth  = 20;
 
 		private readonly List<Tab>					tabs;
 		private int									selectedIndex;
