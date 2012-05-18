@@ -17,7 +17,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 	{
 		public TabsPane()
 		{
-			this.tabs = new List<Tab> ();
+			this.tabs          = new List<Tab> ();
+			this.showedIndexes = new List<int> ();
+			this.hiddenIndexes = new List<int> ();
 
 			this.selectedIndex = -1;
 			this.hilitedIndex = -1;
@@ -51,7 +53,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			this.tabs.Insert (index, tab);
 
-			this.UpdateTabs ();
 			this.Invalidate ();
 		}
 
@@ -59,7 +60,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			this.tabs.RemoveAt (index);
 
-			this.UpdateTabs ();
 			this.Invalidate ();
 		}
 
@@ -121,22 +121,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
-		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
-		{
-			base.PaintBackgroundImplementation (graphics, clipRect);
-
-			foreach (var index in this.DetectionIndexes.Reverse ())
-			{
-				this.PaintTab (graphics, index);
-			}
-		}
-
-
 		private int Detect(Point pos)
 		{
-			foreach (var index in this.DetectionIndexes)
+			foreach (var rank in this.RanksForDetection)
 			{
-				var rect = this.GetTextRect (index);
+				var rect = this.GetTextRect (rank);
 
 				if (!rect.IsEmpty)
 				{
@@ -144,6 +133,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					if (path.SurfaceContainsPoint (pos.X, pos.Y, 1))
 					{
+						var index = this.showedIndexes[rank];
 						return index;
 					}
 				}
@@ -152,40 +142,31 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return -1;
 		}
 
-		private IEnumerable<int> DetectionIndexes
+
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
-			//	Retourne les index dans l'ordre pour la détection.
-			//	Il faut utiliser l'ordre inverse pour le dessin.
-			get
+			base.PaintBackgroundImplementation (graphics, clipRect);
+
+			this.UpdateIndexes ();
+
+			foreach (var rank in this.RanksForDetection.Reverse ())
 			{
-				var overflow = this.OverflowCount;
-
-				if (this.selectedIndex != -1)
-				{
-					yield return this.selectedIndex;
-				}
-
-				for (int i = 0; i < this.tabs.Count; i++)
-				{
-					if (i != this.selectedIndex && i < this.tabs.Count-overflow)
-					{
-						yield return i;
-					}
-				}
-
-				yield return this.tabs.Count;  // onglet du menu
+				this.PaintTab (graphics, rank);
 			}
 		}
 
-		private void PaintTab(Graphics graphics, int index)
+		private void PaintTab(Graphics graphics, int rank)
 		{
+			//	Dessine un onglet.
+			var index = this.showedIndexes[rank];
+
 			var selected = index == this.selectedIndex;
 			var hilited  = index == this.hilitedIndex;
-			var rect     = this.GetTextRect (index);
+			var rect     = this.GetTextRect (rank);
 
 			if (!rect.IsEmpty)
 			{
-				if (index == this.tabs.Count)  // onglet du menu ?
+				if (index == TabsPane.menuIndex)  // onglet 'v' du menu ?
 				{
 					this.PaintTabMenu (graphics, rect, selected, hilited);
 				}
@@ -197,7 +178,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					//	Dessine le texte.
 					rect.Inflate (1);
 					var pos = rect.BottomLeft;
-					var tab = this.tabs[index];
+					var tab = this.GetShowedTab (rank);
 					tab.TextLayout.LayoutSize = rect.Size;
 					tab.TextLayout.Paint (pos, graphics);
 				}
@@ -328,68 +309,174 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return path;
 		}
 
-		private Rectangle GetTextRect(int index)
-		{
-			if (index == this.tabs.Count)  // onglet du menu ?
-			{
-				int overflow = this.OverflowCount;
 
-				if (overflow == 0)
+		private IEnumerable<int> RanksForDetection
+		{
+			//	Retourne les rangs dans l'ordre pour la détection.
+			//	Il faut utiliser l'ordre inverse pour le dessin.
+			get
+			{
+				//	Retourne toujours l'onglet sélectionné en premier.
+				if (this.selectedIndex != -1)
 				{
-					return Rectangle.Empty;
+					yield return this.showedIndexes.IndexOf (this.selectedIndex);
 				}
-				else
+
+				//	Retourne ensuite tous les autres onglets.
+				for (int rank = 0; rank < this.showedIndexes.Count; rank++)
 				{
-					var rect = this.GetTextRect (this.tabs.Count-overflow);
-					return new Rectangle (rect.Left, rect.Bottom, TabsPane.menuWidth, rect.Height);
+					int index = this.showedIndexes[rank];
+
+					if (index != this.selectedIndex)
+					{
+						yield return rank;
+					}
+				}
+			}
+		}
+
+		private Rectangle GetTextRect(int rank)
+		{
+			double x = TabsPane.tabMargin;
+
+			for (int r = 0; r < rank; r++)
+			{
+				x += this.GetShowedWidth (r);
+				x += TabsPane.tabMargin;
+			}
+
+			return new Rectangle (x, 0, this.GetShowedWidth (rank), this.ActualHeight-5);
+		}
+
+		private double GetShowedWidth(int rank)
+		{
+			var tab = this.GetShowedTab (rank);
+
+			if (tab == null)
+			{
+				return TabsPane.menuWidth;
+			}
+			else
+			{
+				return tab.CurrentWidth;
+			}
+		}
+
+		private Tab GetShowedTab(int rank)
+		{
+			if (rank >= 0 && rank < this.showedIndexes.Count)
+			{
+				int index = this.showedIndexes[rank];
+
+				if (index >= 0 && index < this.tabs.Count)
+				{
+					return this.tabs[index];
+				}
+			}
+
+			return null;
+		}
+
+		private void UpdateIndexes()
+		{
+			//	Met à jour les index devant être dessinés et ceux qui sont cachés, dans l'ordre de visibilité
+			//	de gauche à droite. A ne pas confondre avec l'ordre de détection/dessin.
+			this.showedIndexes.Clear ();
+			this.hiddenIndexes.Clear ();
+
+			//	Initialise les largeurs courantes des onglets, en diminuant la largeur si l'onglet est
+			//	vraiment trop grand.
+			int n = this.tabs.Count;
+			n = System.Math.Max (n, 1);
+			n = System.Math.Min (n, 4);
+
+			//?double max = System.Math.Floor (this.ActualWidth/n - TabsPane.tabMargin*n*2);
+			double max = System.Math.Floor (this.ActualWidth/n);
+
+			foreach (var tab in this.tabs)
+			{
+				tab.CurrentWidth = System.Math.Min (tab.TextWidth, max);
+			}
+
+			//	Génère la table des positions droites des onglets.
+			var rigths = new List<double> ();
+			double x = TabsPane.tabMargin;
+			for (int i = 0; i < tabs.Count; i++)
+			{
+				var tab = this.tabs[i];
+				x += tab.CurrentWidth;
+				x += TabsPane.tabMargin;
+
+				rigths.Add (x);
+			}
+
+			if (rigths[this.tabs.Count-1] <= this.ActualWidth-TabsPane.tabMargin*1.8)  // assez de place ?
+			{
+				//	Cas où on a assez de place pour tout mettre normalement.
+				for (int i = 0; i < tabs.Count; i++)
+				{
+					this.showedIndexes.Add (i);
 				}
 			}
 			else
 			{
-				double x = TabsPane.tabMargin;
+				max = this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2;
 
-				for (int i = 0; i < index; i++)
+				if (this.selectedIndex == -1 || rigths[this.selectedIndex] <= max)
 				{
-					var tab = this.tabs[i];
-					x += tab.TextWidth;
-					x += TabsPane.tabMargin;
-				}
-
-				//?double h = (index == this.selectedIndex) ? this.ActualHeight : this.ActualHeight-5;
-				double h = this.ActualHeight-5;
-
-				return new Rectangle (x, 0, this.tabs[index].TextWidth, h);
-			}
-		}
-
-		private int OverflowCount
-		{
-			get
-			{
-				int count = 0;
-
-				if (this.GetTextRect (this.tabs.Count-1).Right > this.ActualWidth-TabsPane.tabMargin*1.8)
-				{
-					for (int i = this.tabs.Count-1; i >= 0; i--)
+					//	Cas où il manque de la place, mais où l'onglet sélectionné est visible normalement.
+					for (int i = 0; i < this.tabs.Count; i++)
 					{
-						if (this.GetTextRect (i).Right <= this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2)
+						if (rigths[i] > max)
 						{
 							break;
 						}
 
-						count++;
+						this.showedIndexes.Add (i);
 					}
 				}
+				else
+				{
+					//	Cas où il manque de la place et où l'onglet sélectionné est invisible normalement.
+					max -= this.tabs[this.selectedIndex].CurrentWidth;
 
-				return count;
+					for (int i = 0; i < this.tabs.Count; i++)
+					{
+						if (i != this.selectedIndex)
+						{
+							if (rigths[i] > max)
+							{
+								break;
+							}
+
+							this.showedIndexes.Add (i);
+						}
+					}
+
+					//	L'onglet sélectionné vient en dernier à droite.
+					this.showedIndexes.Add (this.selectedIndex);
+				}
+
+				//	On ajoute l'index de l'onglet 'v' du menu.
+				this.showedIndexes.Add (TabsPane.menuIndex);
 			}
-		}
 
-
-		private void UpdateTabs()
-		{
-			foreach (var tab in this.tabs)
+			//	Garde-fou.
+			if (this.selectedIndex != -1)
 			{
+				if (!this.showedIndexes.Contains (this.selectedIndex))
+				{
+					this.showedIndexes.Add (this.selectedIndex);
+				}
+			}
+
+			//	Met à jour la liste des index invisibles.
+			for (int i = 0; i < this.tabs.Count; i++)
+			{
+				if (!this.showedIndexes.Contains (i))
+				{
+					this.hiddenIndexes.Add (i);
+				}
 			}
 		}
 
@@ -459,8 +546,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private static readonly double				tabMargin  = 8;
 		private static readonly double				textMargin = 2;
 		private static readonly double				menuWidth  = 20;
+		private static readonly int					menuIndex  = 999;
 
 		private readonly List<Tab>					tabs;
+		private readonly List<int>					showedIndexes;
+		private readonly List<int>					hiddenIndexes;
 		private int									selectedIndex;
 		private int									hilitedIndex;
 	}
