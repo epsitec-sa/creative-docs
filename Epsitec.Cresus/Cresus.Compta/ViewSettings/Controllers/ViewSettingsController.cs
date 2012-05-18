@@ -568,35 +568,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-#if false
-				this.comptactTabFrame.Children.Clear ();
-
-				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
-				{
-					this.CreateTab (this.comptactTabFrame, i);
-				}
-
-				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
-				{
-					var addButton = new TabButton
-					{
-						Parent            = this.comptactTabFrame,
-						FormattedText     = "+",
-						TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-						PreferredWidth    = 26,
-						PreferredHeight   = 26,
-						Dock              = DockStyle.Left,
-						TabIndex          = 999,
-						AutoFocus         = false,
-					};
-
-					addButton.Clicked += delegate
-					{
-						this.AddViewSettings ();
-					};
-				}
-#endif
-
 				this.compactTabsPane.Clear ();
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
@@ -623,24 +594,26 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					this.compactTabsPane.Add (item);
 				}
 
-				this.compactTabsPane.SelectedIndexChanged += delegate
-				{
-					int sel = this.compactTabsPane.SelectedIndex;
-
-					if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && sel == this.viewSettingsList.List.Count)
-					{
-						this.AddViewSettings ();
-					}
-					else
-					{
-						this.viewSettingsList.SelectedIndex = sel;
-						this.UpdateAfterSelectionChanged ();
-						this.ViewSettingsChanged ();
-					}
-				};
-
+				this.compactTabsPane.SelectedIndexChanged += new EventHandler (this.HandlerTabsPaneSelectedIndexChanged);
 				this.compactTabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
 				this.compactTabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
+				this.compactTabsPane.DraggingDoing += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
+			}
+		}
+
+		private void HandlerTabsPaneSelectedIndexChanged(object sender)
+		{
+			int sel = this.compactTabsPane.SelectedIndex;
+
+			if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && sel == this.viewSettingsList.List.Count)  // onglet "+" ?
+			{
+				this.AddViewSettings ();
+			}
+			else
+			{
+				this.viewSettingsList.SelectedIndex = sel;
+				this.UpdateAfterSelectionChanged ();
+				this.ViewSettingsChanged ();
 			}
 		}
 
@@ -663,6 +636,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.UpdateAfterSelectionChanged ();
 			this.ViewSettingsChanged ();
+		}
+
+		private void HandlerTabsPaneDraggingDoing(object sender, int srcIndex, int dstIndex)
+		{
 		}
 
 		private void CreateTab(Widget parent, int index)

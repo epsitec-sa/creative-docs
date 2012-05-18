@@ -127,10 +127,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				case MessageType.MouseMove:
 					index = this.Detect (pos);
-					if (this.hilitedIndex != index)
+
+					if (this.isDragging)
 					{
-						this.hilitedIndex = index;
-						this.Invalidate ();
+					}
+					else
+					{
+						if (this.hilitedIndex != index)
+						{
+							this.hilitedIndex = index;
+							this.Invalidate ();
+						}
 					}
 					break;
 
@@ -157,6 +164,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 						index = this.Detect (pos);
 						if (index != -1)
 						{
+							this.isDragging = true;
+							this.draggingStartIndex = index;
+						}
+					}
+					break;
+
+				case MessageType.MouseUp:
+					if (this.isDragging)
+					{
+						index = this.Detect (pos);
+						if (index == this.draggingStartIndex)  // clic sans bouger ?
+						{
 							if (index == TabsPane.menuIndex)
 							{
 								this.ShowHiddenMenu ();
@@ -167,10 +186,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 								this.OnSelectedIndexChanged ();
 							}
 						}
-					}
-					break;
+						else
+						{
+							this.OnDraggingDoing (this.draggingStartIndex, index);
+						}
 
-				case MessageType.MouseUp:
+						this.isDragging = false;
+					}
 					break;
 
 				case MessageType.KeyDown:
@@ -903,6 +925,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public event DeleteEventHandler DeleteDoing;
 
 
+		private void OnDraggingDoing(int srcIndex, int dstIndex)
+		{
+			if (this.DraggingDoing != null)
+			{
+				this.DraggingDoing (this, srcIndex, dstIndex);
+			}
+		}
+
+		public delegate void DraggingEventHandler(object sender, int srcIndex, int dstIndex);
+		public event DraggingEventHandler DraggingDoing;
+
+
 		private static readonly double				tabMargin  = 8;
 		private static readonly double				textMargin = 2;
 		private static readonly double				menuWidth  = 20;
@@ -917,7 +951,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int									selectedIndex;
 		private int									hilitedIndex;
 		private int									menuTabIndex;
+		private int									draggingStartIndex;
 		private bool								menuOpened;
+		private bool								isDragging;
 		private bool								isRename;
 		private bool								dirtyLayout;
 		private double								lastWidth;
