@@ -83,34 +83,41 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			int i;
+			int index;
 
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
-					i = this.Detect (pos);
-					if (this.hilitedIndex != i)
+					index = this.Detect (pos);
+					if (this.hilitedIndex != index)
 					{
-						this.hilitedIndex = i;
+						this.hilitedIndex = index;
 						this.Invalidate ();
 					}
 					break;
 
 				case MessageType.MouseLeave:
-					i = -1;
-					if (this.hilitedIndex != i)
+					index = -1;
+					if (this.hilitedIndex != index)
 					{
-						this.hilitedIndex = i;
+						this.hilitedIndex = index;
 						this.Invalidate ();
 					}
 					break;
 
 				case MessageType.MouseDown:
-					i = this.Detect (pos);
-					if (i != -1)
+					index = this.Detect (pos);
+					if (index != -1)
 					{
-						this.selectedIndex = i;
-						this.OnSelectedIndexChanged ();
+						if (index == TabsPane.menuIndex)
+						{
+							this.ShowMenu ();
+						}
+						else
+						{
+							this.selectedIndex = index;
+							this.OnSelectedIndexChanged ();
+						}
 					}
 					break;
 
@@ -123,6 +130,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int Detect(Point pos)
 		{
+			//	Retourne l'index de l'onglet visé.
 			foreach (var rank in this.RanksForDetection)
 			{
 				var rect = this.GetTextRect (rank);
@@ -159,24 +167,38 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			//	Dessine un onglet.
 			var index = this.showedIndexes[rank];
+			var rect = this.GetTextRect (rank);
 
-			var selected = index == this.selectedIndex;
-			var hilited  = index == this.hilitedIndex;
-			var rect     = this.GetTextRect (rank);
+			var state = TabState.Normal;
+
+			if (index == this.selectedIndex)
+			{
+				state = TabState.Selected;
+			}
+
+			if (index == this.hilitedIndex)
+			{
+				state = TabState.Hilited;
+			}
+
+			if (this.menuOpened && index == TabsPane.menuIndex)
+			{
+				state = TabState.MenuOpened;
+			}
 
 			if (!rect.IsEmpty)
 			{
 				if (index == TabsPane.menuIndex)  // onglet 'v' du menu ?
 				{
-					this.PaintTabMenu (graphics, rect, selected, hilited);
+					this.PaintTabMenu (graphics, rect, state);
 				}
 				else
 				{
 					//	Dessine le cadre et le fond.
-					this.PaintTabFrame (graphics, rect, selected, hilited);
+					this.PaintTabFrame (graphics, rect, state);
 
 					//	Dessine le texte.
-					rect.Inflate (1);
+					rect.Inflate (1, -2);
 					var pos = rect.BottomLeft;
 					var tab = this.GetShowedTab (rank);
 					tab.TextLayout.LayoutSize = rect.Size;
@@ -185,12 +207,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		private void PaintTabMenu(Graphics graphics, Rectangle rect, bool selected, bool hilited)
+		private void PaintTabMenu(Graphics graphics, Rectangle rect, TabState state)
 		{
+			//	Dessine l'onglet 'v' pour le menu.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			this.PaintTabFrame (graphics, rect, selected, hilited);
+			this.PaintTabFrame (graphics, rect, state);
 
+			//	Dessine le triangle 'v'.
 			var c = rect.Center;
 			var d = rect.Height*0.25;
 
@@ -204,7 +228,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
-		private void PaintTabFrame(Graphics graphics, Rectangle rect, bool selected, bool hilited)
+		private void PaintTabFrame(Graphics graphics, Rectangle rect, TabState state)
 		{
 			//	Dessine le cadre et le fond d'un onglet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -212,7 +236,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var path = this.GetTabPath (rect);
 
 			//	Dessine le fond.
-			if (hilited)
+			if (state == TabState.Hilited)
 			{
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (adorner.ColorBorder);
@@ -221,13 +245,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (p);
 				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
 			}
-			else if (selected)
+			else if (state == TabState.Selected)
 			{
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (UIBuilder.SelectionColor);
 
 				var p = this.GetTabPath (rect, new Margins (2.5, 2.5, 2.5, 0));
 				graphics.AddFilledPath (p);
+				graphics.RenderSolid (Color.FromBrightness (1.0));
+			}
+			else if (state == TabState.MenuOpened)
+			{
+				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 			}
 			else
@@ -251,6 +280,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Path GetTabPath(Rectangle rect, Margins margins)
 		{
+			//	Retourne le chemin pour dessiner/détecter un onglet.
 			var path = new Path ();
 
 			rect.Deflate (margins);
@@ -316,6 +346,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Il faut utiliser l'ordre inverse pour le dessin.
 			get
 			{
+				int menuIndex = -1;
+
+				//	Retourne toujours l'onglet 'v' du menu en premier, si le menu est ouvert.
+				if (this.menuOpened)
+				{
+					menuIndex = TabsPane.menuIndex;
+					yield return this.showedIndexes.IndexOf (menuIndex);
+				}
+
 				//	Retourne toujours l'onglet sélectionné en premier.
 				if (this.selectedIndex != -1)
 				{
@@ -327,7 +366,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					int index = this.showedIndexes[rank];
 
-					if (index != this.selectedIndex)
+					if (index != this.selectedIndex && index != menuIndex)
 					{
 						yield return rank;
 					}
@@ -337,6 +376,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Rectangle GetTextRect(int rank)
 		{
+			//	Retourne le rectangle du texte d'un onglet. Le cadre de l'onglet déborde ce rectangle.
 			double x = TabsPane.tabMargin;
 
 			for (int r = 0; r < rank; r++)
@@ -345,11 +385,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 				x += TabsPane.tabMargin;
 			}
 
-			return new Rectangle (x, 0, this.GetShowedWidth (rank), this.ActualHeight-5);
+			return new Rectangle (x, 0, this.GetShowedWidth (rank), this.ActualHeight-2);
 		}
 
 		private double GetShowedWidth(int rank)
 		{
+			//	Retourne la largeur du texte contenu dans un onglet.
 			var tab = this.GetShowedTab (rank);
 
 			if (tab == null)
@@ -364,6 +405,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private Tab GetShowedTab(int rank)
 		{
+			//	Retourne le contenu d'un onglet. L'onglet 'v' du menu retourne null.
 			if (rank >= 0 && rank < this.showedIndexes.Count)
 			{
 				int index = this.showedIndexes[rank];
@@ -420,7 +462,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
-				max = this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2;
+				max = this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2.8;
 
 				if (this.selectedIndex == -1 || rigths[this.selectedIndex] <= max)
 				{
@@ -461,7 +503,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				this.showedIndexes.Add (TabsPane.menuIndex);
 			}
 
-			//	Garde-fou.
+			//	Garde-fou. Si l'onglet sélectionné n'y est pas, on l'ajoute !
 			if (this.selectedIndex != -1)
 			{
 				if (!this.showedIndexes.Contains (this.selectedIndex))
@@ -478,6 +520,48 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.hiddenIndexes.Add (i);
 				}
 			}
+		}
+
+
+		private void ShowMenu()
+		{
+			//	Affiche le menu sous l'onglet 'v'.
+			var menu = new VMenu ();
+
+			foreach (var index in this.hiddenIndexes)
+			{
+				var item = new MenuItem
+				{
+					FormattedText = this.tabs[index].Text,
+					TabIndex      = index,  // il est étrange d'utiliser TabIndex, mais cela fonctionne !
+				};
+
+				menu.Items.Add (item);
+
+				item.Clicked += delegate
+				{
+					this.selectedIndex = item.TabIndex;
+					this.OnSelectedIndexChanged ();
+				};
+			}
+
+			this.menuOpened = true;
+			this.Invalidate ();
+
+			menu.Accepted += delegate
+			{
+				this.menuOpened = false;
+			};
+
+			menu.Rejected += delegate
+			{
+				this.menuOpened = false;
+			};
+
+			var x = this.GetTextRect (this.showedIndexes.IndexOf (TabsPane.menuIndex)).Left - TabsPane.tabMargin*0.5;
+
+			menu.AutoDispose = true;
+			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
 		}
 
 
@@ -515,6 +599,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			public double TextWidth
 			{
+				//	Largeur requise pour afficher la totalité du texte.
 				get
 				{
 					return System.Math.Floor (this.textWidth + TabsPane.textMargin*2) + 1;
@@ -523,12 +608,21 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			public double CurrentWidth
 			{
+				//	Largeur utilisée pour l'onglet.
 				get;
 				set;
 			}
 
 			private readonly TextLayout			textLayout;
 			private double						textWidth;
+		}
+
+		private enum TabState
+		{
+			Normal,
+			Selected,
+			Hilited,
+			MenuOpened,
 		}
 
 
@@ -553,5 +647,6 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly List<int>					hiddenIndexes;
 		private int									selectedIndex;
 		private int									hilitedIndex;
+		private bool								menuOpened;
 	}
 }

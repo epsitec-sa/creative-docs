@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent         = this.toolbar,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 10, 5, 5),
+				Margins        = new Margins (10, 2, 5, 5),
 			};
 
 			this.titleLabel = new StaticText
@@ -234,9 +234,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			var buttonFrame = new FrameBox
 			{
 				Parent          = this.comptactFrame,
+				PreferredWidth  = 24*2,
 				PreferredHeight = 24,
 				Dock            = DockStyle.Right,
-				Margins         = new Margins (10, 0, 0, 0),
+				Margins         = new Margins (0, 0, 0, 0),
 				Padding         = new Margins (0, 0, 0, 5),
 			};
 

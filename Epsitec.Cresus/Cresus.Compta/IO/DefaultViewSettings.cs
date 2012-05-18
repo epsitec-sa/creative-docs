@@ -324,35 +324,35 @@ namespace Epsitec.Cresus.Compta.IO
 		private void CreateDefaultViewSettingsLogin(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Login, DefaultViewSettings.defaultName, false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Login, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list, nomPrésentation);
 		}
 
 		private void CreateDefaultViewSettingsOpen(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Open, DefaultViewSettings.defaultName, false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Open, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list, nomPrésentation);
 		}
 
 		private void CreateDefaultViewSettingsPrint(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Print, DefaultViewSettings.defaultName, false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Print, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list, nomPrésentation);
 		}
 
 		private void CreateDefaultViewSettingsSave(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Save, DefaultViewSettings.defaultName, false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Save, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list, nomPrésentation);
 		}
 
 		private void CreateDefaultViewSettingsSoldes(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
-			var viewSettings = this.CreateViewSettingsData (list, ControllerType.Soldes, DefaultViewSettings.defaultName, false, false, false);
+			this.CreateViewSettingsData<SoldesOptions> (list, ControllerType.Soldes, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list, nomPrésentation);
 		}
 
