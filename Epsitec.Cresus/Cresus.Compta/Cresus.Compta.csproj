@@ -275,6 +275,7 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
     <Compile Include="Graph\GraphWidget.cs" />
+    <Compile Include="Widgets\TabItem.cs" />
     <Compile Include="Widgets\TabsPane.cs" />
     <Compile Include="Widgets\CustomFrameBox.cs" />
     <Compile Include="Widgets\TabCatcherFrameBox.cs" />
@@ -409,6 +410,7 @@
     <EmbeddedResource Include="Images\Warning.icon" />
     <EmbeddedResource Include="Images\Views.Menu.icon" />
     <EmbeddedResource Include="Images\Présentation.TVA.icon" />
+    <EmbeddedResource Include="Images\Edit.Rename.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

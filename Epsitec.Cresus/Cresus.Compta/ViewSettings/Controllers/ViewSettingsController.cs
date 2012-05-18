@@ -601,12 +601,26 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 				{
-					this.compactTabsPane.Add (this.viewSettingsList.List[i].Name);
+					var item = new TabItem
+					{
+						Description      = this.viewSettingsList.List[i].Name,
+						RenameEnable     = !this.viewSettingsList.List[i].Readonly,
+						DeleteEnable     = !this.viewSettingsList.List[i].Permanent,
+						RenameVisibility = true,
+						DeleteVisibility = true,
+					};
+
+					this.compactTabsPane.Add (item);
 				}
 
 				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 				{
-					this.compactTabsPane.Add (" + ");
+					var item = new TabItem
+					{
+						Description = " + ",
+					};
+
+					this.compactTabsPane.Add (item);
 				}
 
 				this.compactTabsPane.SelectedIndexChanged += delegate
@@ -624,7 +638,31 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						this.ViewSettingsChanged ();
 					}
 				};
+
+				this.compactTabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
+				this.compactTabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
 			}
+		}
+
+		private void HandlerTabsPaneRenameDoing(object sender, int index, FormattedText text)
+		{
+			this.viewSettingsList.List[index].Name = text;
+
+			this.UpdateAfterSelectionChanged ();
+			this.ViewSettingsChanged ();
+		}
+
+		private void HandlerTabsPaneDeleteDoing(object sender, int index)
+		{
+			this.viewSettingsList.List.RemoveAt (index);
+
+			if (this.viewSettingsList.SelectedIndex >= this.viewSettingsList.List.Count)
+			{
+				this.viewSettingsList.SelectedIndex = this.viewSettingsList.List.Count-1;
+			}
+
+			this.UpdateAfterSelectionChanged ();
+			this.ViewSettingsChanged ();
 		}
 
 		private void CreateTab(Widget parent, int index)

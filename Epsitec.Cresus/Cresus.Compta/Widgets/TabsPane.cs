@@ -22,6 +22,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.hiddenIndexes      = new List<int> ();
 			this.additionnalWidgets = new List<Widget> ();
 
+			this.renameField = new TextField
+			{
+				Parent     = this,
+				Anchor     = AnchorStyles.BottomLeft,
+				Visibility = false,
+			};
+
 			this.selectedIndex = -1;
 			this.hilitedIndex  = -1;
 		}
@@ -43,16 +50,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		public void Add(FormattedText text)
+		public void Add(TabItem item)
 		{
-			this.Insert (this.tabs.Count, text);
+			this.Insert (this.tabs.Count, item);
 		}
 
-		public void Insert(int index, FormattedText text)
+		public void Insert(int index, TabItem item)
 		{
 			var tab = new Tab
 			{
-				Text = text,
+				TabItem = item,
 			};
 
 			this.tabs.Insert (index, tab);
@@ -137,22 +144,51 @@ namespace Epsitec.Cresus.Compta.Widgets
 					break;
 
 				case MessageType.MouseDown:
-					index = this.Detect (pos);
-					if (index != -1)
+					if (this.isRename)
 					{
-						if (index == TabsPane.menuIndex)
+						this.StopRename ();
+					}
+					else if (message.IsRightButton)
+					{
+						this.ShowContextMenu ();
+					}
+					else
+					{
+						index = this.Detect (pos);
+						if (index != -1)
 						{
-							this.ShowMenu ();
-						}
-						else
-						{
-							this.selectedIndex = index;
-							this.OnSelectedIndexChanged ();
+							if (index == TabsPane.menuIndex)
+							{
+								this.ShowHiddenMenu ();
+							}
+							else
+							{
+								this.selectedIndex = index;
+								this.OnSelectedIndexChanged ();
+							}
 						}
 					}
 					break;
 
 				case MessageType.MouseUp:
+					break;
+
+				case MessageType.KeyDown:
+					if (message.KeyCode == KeyCode.Return)
+					{
+						if (this.isRename)
+						{
+							this.AcceptRename ();
+						}
+					}
+
+					if (message.KeyCode == KeyCode.Escape)
+					{
+						if (this.isRename)
+						{
+							this.StopRename ();
+						}
+					}
 					break;
 			}
 
@@ -219,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				state = TabState.Hilited;
 			}
 
-			if (this.menuOpened && index == TabsPane.menuIndex)
+			if (this.menuOpened && index == this.menuTabIndex)
 			{
 				state = TabState.MenuOpened;
 			}
@@ -279,7 +315,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (adorner.ColorBorder);
 
-				var p = this.GetTabPath (rect, new Margins (2.5, 2.5, 2.5, 0));
+				var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0));
 				graphics.AddFilledPath (p);
 				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
 			}
@@ -389,8 +425,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				//	Retourne toujours l'onglet 'v' du menu en premier, si le menu est ouvert.
 				if (this.menuOpened)
 				{
-					menuIndex = TabsPane.menuIndex;
-					yield return this.showedIndexes.IndexOf (menuIndex);
+					yield return this.showedIndexes.IndexOf (this.menuTabIndex);
 				}
 
 				//	Retourne toujours l'onglet sélectionné en premier.
@@ -601,16 +636,65 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		private void ShowMenu()
+		private void StartRename()
 		{
-			//	Affiche le menu sous l'onglet 'v'.
+			if (this.menuTabIndex != -1)
+			{
+				int rank = this.showedIndexes.IndexOf (this.menuTabIndex);
+
+				if (rank != -1)
+				{
+					var tab = this.GetShowedTab (rank);
+
+					if (tab != null)
+					{
+						var rect = this.GetTextRect (rank);
+						double h = 20;
+						double y = System.Math.Floor ((this.ActualHeight-h)/2);
+
+						this.renameField.Margins = new Margins (rect.Left, 0, 0, y);
+						this.renameField.PreferredSize = new Size (rect.Width, h);
+						this.renameField.Visibility = true;
+						this.renameField.FormattedText = tab.TabItem.Description;
+
+						this.isRename = true;
+
+						Application.QueueAsyncCallback
+						(
+							delegate
+							{
+								this.renameField.SelectAll ();
+								this.renameField.Focus ();
+							}
+						);
+					}
+				}
+			}
+		}
+
+		private void AcceptRename()
+		{
+			this.OnRenameDoing (this.menuTabIndex, this.renameField.FormattedText);
+			this.StopRename ();
+		}
+
+		private void StopRename()
+		{
+			this.isRename = false;
+			this.renameField.Visibility = false;
+		}
+
+
+		private void ShowHiddenMenu()
+		{
+			//	Affiche le menu sous l'onglet 'v', qui permet d'accèder aux onglets cachés.
 			var menu = new VMenu ();
 
 			foreach (var index in this.hiddenIndexes)
 			{
 				var item = new MenuItem
 				{
-					FormattedText = this.tabs[index].Text,
+					FormattedText = this.tabs[index].TabItem.Description,
 					TabIndex      = index,  // il est étrange d'utiliser TabIndex, mais cela fonctionne !
 				};
 
@@ -624,6 +708,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			this.menuOpened = true;
+			this.menuTabIndex = TabsPane.menuIndex;
 			this.Invalidate ();
 
 			menu.Accepted += delegate
@@ -637,6 +722,81 @@ namespace Epsitec.Cresus.Compta.Widgets
 			};
 
 			var x = this.GetTextRect (this.showedIndexes.IndexOf (TabsPane.menuIndex)).Left - TabsPane.tabMargin*0.5;
+
+			menu.AutoDispose = true;
+			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
+		}
+
+		private void ShowContextMenu()
+		{
+			if (this.hilitedIndex == -1)
+			{
+				return;
+			}
+
+			var menu = new VMenu ();
+
+			var tab = this.GetShowedTab (this.hilitedIndex);
+
+			if (tab == null)
+			{
+				return;
+			}
+
+			if (tab.TabItem.RenameVisibility)
+			{
+				var item = new MenuItem
+				{
+					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Rename"),
+					FormattedText = "Renommer",
+					Enable        = tab.TabItem.RenameEnable,
+				};
+
+				menu.Items.Add (item);
+
+				item.Clicked += delegate
+				{
+					this.StartRename ();
+				};
+			}
+
+			if (tab.TabItem.DeleteVisibility)
+			{
+				var item = new MenuItem
+				{
+					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Delete"),
+					FormattedText = "Supprimer",
+					Enable        = tab.TabItem.DeleteEnable,
+				};
+
+				menu.Items.Add (item);
+
+				item.Clicked += delegate
+				{
+					this.OnDeleteDoing (this.menuTabIndex);
+				};
+			}
+
+			if (!menu.Items.Any ())
+			{
+				return;
+			}
+
+			this.menuOpened = true;
+			this.menuTabIndex = this.hilitedIndex;
+			this.Invalidate ();
+
+			menu.Accepted += delegate
+			{
+				this.menuOpened = false;
+			};
+
+			menu.Rejected += delegate
+			{
+				this.menuOpened = false;
+			};
+
+			var x = this.GetTextRect (this.showedIndexes.IndexOf (this.hilitedIndex)).Left - TabsPane.tabMargin*0.5;
 
 			menu.AutoDispose = true;
 			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
@@ -662,15 +822,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 			}
 
-			public FormattedText Text
+			public TabItem TabItem
 			{
 				get
 				{
-					return this.textLayout.FormattedText;
+					return this.tabItem;
 				}
 				set
 				{
-					this.textLayout.FormattedText = value;
+					this.tabItem = value;
+
+					this.textLayout.FormattedText = this.tabItem.Description;
 					this.textWidth = this.textLayout.GetSingleLineSize ().Width;
 				}
 			}
@@ -692,6 +854,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 
 			private readonly TextLayout			textLayout;
+			private TabItem						tabItem;
 			private double						textWidth;
 		}
 
@@ -716,6 +879,30 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public event EventHandler SelectedIndexChanged;
 
 
+		private void OnRenameDoing(int index, FormattedText text)
+		{
+			if (this.RenameDoing != null)
+			{
+				this.RenameDoing (this, index, text);
+			}
+		}
+
+		public delegate void RenameEventHandler(object sender, int index, FormattedText text);
+		public event RenameEventHandler RenameDoing;
+
+
+		private void OnDeleteDoing(int index)
+		{
+			if (this.DeleteDoing != null)
+			{
+				this.DeleteDoing (this, index);
+			}
+		}
+
+		public delegate void DeleteEventHandler(object sender, int index);
+		public event DeleteEventHandler DeleteDoing;
+
+
 		private static readonly double				tabMargin  = 8;
 		private static readonly double				textMargin = 2;
 		private static readonly double				menuWidth  = 20;
@@ -725,10 +912,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly List<int>					showedIndexes;
 		private readonly List<int>					hiddenIndexes;
 		private readonly List<Widget>				additionnalWidgets;
+		private readonly TextField					renameField;
 
 		private int									selectedIndex;
 		private int									hilitedIndex;
+		private int									menuTabIndex;
 		private bool								menuOpened;
+		private bool								isRename;
 		private bool								dirtyLayout;
 		private double								lastWidth;
 	}
