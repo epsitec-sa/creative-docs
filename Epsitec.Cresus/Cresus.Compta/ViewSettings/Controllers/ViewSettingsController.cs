@@ -623,7 +623,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 				{
-					this.compactTabsPane.Add ("+");
+					this.compactTabsPane.Add (" + ");
 				}
 
 				this.compactTabsPane.SelectedIndexChanged += delegate

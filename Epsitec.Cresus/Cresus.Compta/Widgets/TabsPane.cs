@@ -29,6 +29,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public void Clear()
 		{
 			this.tabs.Clear ();
+			this.dirtyLayout = true;
 		}
 
 		public int Count
@@ -53,6 +54,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			this.tabs.Insert (index, tab);
 
+			this.dirtyLayout = true;
 			this.Invalidate ();
 		}
 
@@ -60,6 +62,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			this.tabs.RemoveAt (index);
 
+			this.dirtyLayout = true;
 			this.Invalidate ();
 		}
 
@@ -75,6 +78,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (this.selectedIndex != value)
 				{
 					this.selectedIndex = value;
+
+					this.dirtyLayout = true;
 					this.Invalidate ();
 				}
 			}
@@ -130,7 +135,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private int Detect(Point pos)
 		{
-			//	Retourne l'index de l'onglet visé.
+			//	Retourne l'index de l'onglet visé, ou -1.
+			this.UpdateIndexes ();
+
 			foreach (var rank in this.RanksForDetection)
 			{
 				var rect = this.GetTextRect (rank);
@@ -154,7 +161,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
+			this.PaintTabs (graphics);
+		}
 
+		private void PaintTabs(Graphics graphics)
+		{
+			//	Dessine tous les onglets.
 			this.UpdateIndexes ();
 
 			foreach (var rank in this.RanksForDetection.Reverse ())
@@ -216,7 +228,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			//	Dessine le triangle 'v'.
 			var c = rect.Center;
-			var d = rect.Height*0.25;
+			var d = rect.Height*0.2;
 
 			var path = new Path ();
 			path.MoveTo (c.X, c.Y-d);
@@ -421,6 +433,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void UpdateIndexes()
 		{
+			if (!this.dirtyLayout && this.lastWidth == this.ActualWidth)
+			{
+				return;
+			}
+
+			this.dirtyLayout = false;
+			this.lastWidth = this.ActualWidth;
+
 			//	Met à jour les index devant être dessinés et ceux qui sont cachés, dans l'ordre de visibilité
 			//	de gauche à droite. A ne pas confondre avec l'ordre de détection/dessin.
 			this.showedIndexes.Clear ();
@@ -617,6 +637,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			private double						textWidth;
 		}
 
+
 		private enum TabState
 		{
 			Normal,
@@ -648,5 +669,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int									selectedIndex;
 		private int									hilitedIndex;
 		private bool								menuOpened;
+		private bool								dirtyLayout;
+		private double								lastWidth;
 	}
 }
