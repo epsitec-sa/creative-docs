@@ -122,6 +122,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			var panelsToolbarFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
+				DrawFullFrame  = true,
 				PreferredWidth = 20,
 				Dock           = DockStyle.Right,
 			};
@@ -221,7 +222,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Parent          = parent,
 				PreferredHeight = 34,
 				Dock            = DockStyle.Top,
-				Padding         = new Margins (5, 5, 5, 0),
+				Padding         = new Margins (5, 0, 5, 0),
 			};
 
 			this.compactTabsPane = new TabsPane
@@ -231,60 +232,45 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			var buttonFrame = new FrameBox
+			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 			{
-				Parent          = this.comptactFrame,
-				PreferredWidth  = 24*2,
-				PreferredHeight = 24,
-				Dock            = DockStyle.Right,
-				Margins         = new Margins (0, 0, 0, 0),
-				Padding         = new Margins (0, 0, 0, 5),
-			};
-
-			this.compactUpdateButton = new IconButton
-			{
-				Parent            = buttonFrame,
-				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
-				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (24, 24),
-				Dock              = DockStyle.Left,
-			};
-
-			this.compactUseButton = new IconButton
-			{
-				Parent            = buttonFrame,
-				IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
-				PreferredIconSize = new Size (20, 20),
-				PreferredSize     = new Size (24, 24),
-				Dock              = DockStyle.Left,
-			};
-
-#if false
-			this.compactSummary = new StaticText
-			{
-				Parent        = this.comptactFrame,
-				TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Dock          = DockStyle.Fill,
-				Margins       = new Margins (20, 0, 0, 0),
-			};
-#endif
-
-			this.compactUseButton.Clicked += delegate
-			{
-				this.CopyViewSettingsToData (this.viewSettingsList.Selected);
-				this.ViewSettingsChanged ();
-			};
-
-			this.compactUpdateButton.Clicked += delegate
-			{
-				string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
-				var result = this.controller.MainWindowController.QuestionDialog (message);
-
-				if (result == DialogResult.Yes)
+				this.compactUpdateButton = new IconButton
 				{
-					this.UpdateViewSettingsAction ();
-				}
-			};
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
+					PreferredIconSize = new Size (20, 20),
+					PreferredSize     = new Size (24, 24),
+				};
+
+				this.compactUseButton = new IconButton
+				{
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
+					PreferredIconSize = new Size (20, 20),
+					PreferredSize     = new Size (24, 24),
+				};
+
+				ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
+				ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
+
+				this.compactTabsPane.AddAdditionnalWidget (this.compactUpdateButton);
+				this.compactTabsPane.AddAdditionnalWidget (this.compactUseButton);
+
+				this.compactUseButton.Clicked += delegate
+				{
+					this.CopyViewSettingsToData (this.viewSettingsList.Selected);
+					this.ViewSettingsChanged ();
+				};
+
+				this.compactUpdateButton.Clicked += delegate
+				{
+					string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
+					var result = this.controller.MainWindowController.QuestionDialog (message);
+
+					if (result == DialogResult.Yes)
+					{
+						this.UpdateViewSettingsAction ();
+					}
+				};
+			}
 		}
 
 		private void CreateExtendedViewSettingsUI(FrameBox parent)
@@ -424,9 +410,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			};
 
 			this.CreateExtendedViewSettingsAttributeUI (toolbar);
-
-			ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
-			ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
 
 			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
 			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve le filtre et les options dans un nouveau réglage de présentation");
@@ -776,15 +759,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				int sel = this.extendedListViewSettings.SelectedItemIndex;
 				int count = this.viewSettingsList.List.Count;
 				bool eq = this.CompareTo (this.viewSettingsList.Selected);
-				bool h = this.controller.HasOptionsPanel || this.controller.HasFilterPanel;
 
-				//?this.topPanelRightController.ClearEnable = sel != 0 || !eq;
-
-				this.compactUseButton.Visibility    = h;
-				this.compactUpdateButton.Visibility = h;
-
-				this.compactUseButton.Enable    = (sel != -1 && !eq);
-				this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+				if (this.compactUseButton != null)
+				{
+					this.compactUseButton.Enable    = (sel != -1 && !eq);
+					this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+				}
 
 				this.extendedAddButton.Enable    = true;
 				this.extendedUseButton.Enable    = (sel != -1 && !eq);

@@ -17,19 +17,22 @@ namespace Epsitec.Cresus.Compta.Widgets
 	{
 		public TabsPane()
 		{
-			this.tabs          = new List<Tab> ();
-			this.showedIndexes = new List<int> ();
-			this.hiddenIndexes = new List<int> ();
+			this.tabs               = new List<Tab> ();
+			this.showedIndexes      = new List<int> ();
+			this.hiddenIndexes      = new List<int> ();
+			this.additionnalWidgets = new List<Widget> ();
 
 			this.selectedIndex = -1;
-			this.hilitedIndex = -1;
+			this.hilitedIndex  = -1;
 		}
 
 
 		public void Clear()
 		{
 			this.tabs.Clear ();
+
 			this.dirtyLayout = true;
+			this.Invalidate ();
 		}
 
 		public int Count
@@ -83,6 +86,29 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.Invalidate ();
 				}
 			}
+		}
+
+
+		public void ClearAdditionnalWidgets()
+		{
+			//	Supprime tous les widgets à droite des onglets.
+			this.additionnalWidgets.Clear ();
+			this.Children.Clear ();
+
+			this.dirtyLayout = true;
+			this.Invalidate ();
+		}
+
+		public void AddAdditionnalWidget(Widget widget)
+		{
+			//	Ajoute un widget à droite des onglets.
+			this.additionnalWidgets.Add (widget);
+
+			widget.Parent = this;
+			widget.Anchor = AnchorStyles.TopLeft;
+
+			this.dirtyLayout = true;
+			this.Invalidate ();
 		}
 
 
@@ -452,8 +478,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 			n = System.Math.Max (n, 1);
 			n = System.Math.Min (n, 4);
 
-			//?double max = System.Math.Floor (this.ActualWidth/n - TabsPane.tabMargin*n*2);
-			double max = System.Math.Floor (this.ActualWidth/n);
+			double actualWidth = this.ActualWidth - this.GetAdditionnalWidgetsWidth;
+			double max = System.Math.Floor (actualWidth/n);
 
 			foreach (var tab in this.tabs)
 			{
@@ -472,7 +498,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				rigths.Add (x);
 			}
 
-			if (rigths[this.tabs.Count-1] <= this.ActualWidth-TabsPane.tabMargin*1.8)  // assez de place ?
+			if (rigths[this.tabs.Count-1] <= actualWidth-TabsPane.tabMargin*1.8)  // assez de place ?
 			{
 				//	Cas où on a assez de place pour tout mettre normalement.
 				for (int i = 0; i < tabs.Count; i++)
@@ -482,7 +508,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
-				max = this.ActualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2.8;
+				max = actualWidth-TabsPane.menuWidth-TabsPane.tabMargin*2.8;
 
 				if (this.selectedIndex == -1 || rigths[this.selectedIndex] <= max)
 				{
@@ -539,6 +565,38 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					this.hiddenIndexes.Add (i);
 				}
+			}
+
+			double offset = this.GetTextRect (this.showedIndexes.Count-1).Right + TabsPane.tabMargin;
+			this.UpdateAdditionnalWidgetsLayout (offset);
+		}
+
+
+		private double GetAdditionnalWidgetsWidth
+		{
+			//	Retourne la largeur de l'ensemble des widgets additionnels.
+			get
+			{
+				double width = 0;
+
+				foreach (var widget in this.additionnalWidgets)
+				{
+					width += widget.PreferredWidth;
+				}
+
+				return width;
+			}
+		}
+
+		private void UpdateAdditionnalWidgetsLayout(double offset)
+		{
+			//	Met à jour les positions des widgets additionnels.
+			double x = 0;
+
+			foreach (var widget in this.additionnalWidgets)
+			{
+				widget.Margins = new Margins (offset+x, 0, 0, 0);
+				x += widget.PreferredWidth;
 			}
 		}
 
@@ -640,10 +698,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private enum TabState
 		{
-			Normal,
-			Selected,
-			Hilited,
-			MenuOpened,
+			Normal,			// onglet non sélectionné
+			Selected,		// onglet sélectionné
+			Hilited,		// onglet survolé par la souris
+			MenuOpened,		// onglet 'v' du menu, avec le menu ouvert
 		}
 
 
@@ -666,6 +724,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly List<Tab>					tabs;
 		private readonly List<int>					showedIndexes;
 		private readonly List<int>					hiddenIndexes;
+		private readonly List<Widget>				additionnalWidgets;
+
 		private int									selectedIndex;
 		private int									hilitedIndex;
 		private bool								menuOpened;
