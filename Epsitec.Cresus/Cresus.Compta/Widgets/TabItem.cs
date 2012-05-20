@@ -16,13 +16,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
-		public bool RenameVisibility
-		{
-			get;
-			set;
-		}
 
-		public bool DeleteVisibility
+		public bool RenameVisibility
 		{
 			get;
 			set;
@@ -34,7 +29,33 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
+
+		public bool DeleteVisibility
+		{
+			get;
+			set;
+		}
+
 		public bool DeleteEnable
+		{
+			get;
+			set;
+		}
+
+
+		public bool MoveVisibility
+		{
+			get;
+			set;
+		}
+
+		public bool MoveFirstEnable
+		{
+			get;
+			set;
+		}
+
+		public bool MoveLastEnable
 		{
 			get;
 			set;

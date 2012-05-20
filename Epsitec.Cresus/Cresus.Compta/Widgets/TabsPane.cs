@@ -29,8 +29,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 				Visibility = false,
 			};
 
-			this.selectedIndex = -1;
-			this.hilitedIndex  = -1;
+			this.selectedIndex  = -1;
+			this.hilitedIndex   = -1;
+			this.gapHilitedRank = -1;
 		}
 
 
@@ -121,15 +122,21 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		protected override void ProcessMessage(Message message, Point pos)
 		{
-			int index;
+			int index, rank;
 
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
-					index = this.Detect (pos);
+					index = this.GetDetectedIndex (pos);
 
 					if (this.isDragging)
 					{
+						rank = this.GetDetectedGapRank (pos);
+						if (this.gapHilitedRank != rank)
+						{
+							this.gapHilitedRank = rank;
+							this.Invalidate ();
+						}
 					}
 					else
 					{
@@ -142,10 +149,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 					break;
 
 				case MessageType.MouseLeave:
-					index = -1;
-					if (this.hilitedIndex != index)
+					if (!this.isDragging)
 					{
-						this.hilitedIndex = index;
+						this.hilitedIndex = -1;
+						this.isDragging = false;
+						this.gapHilitedRank = -1;
 						this.Invalidate ();
 					}
 					break;
@@ -161,11 +169,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 					else
 					{
-						index = this.Detect (pos);
+						index = this.GetDetectedIndex (pos);
 						if (index != -1)
 						{
 							this.isDragging = true;
 							this.draggingStartIndex = index;
+							this.gapHilitedRank = this.GetDetectedGapRank (pos);
+							//?this.Invalidate ();
+							message.Captured = true;
+							message.Consumer = this;
+							return;
 						}
 					}
 					break;
@@ -173,7 +186,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				case MessageType.MouseUp:
 					if (this.isDragging)
 					{
-						index = this.Detect (pos);
+						index = this.GetDetectedIndex (pos);
 						if (index == this.draggingStartIndex)  // clic sans bouger ?
 						{
 							if (index == TabsPane.menuIndex)
@@ -188,10 +201,21 @@ namespace Epsitec.Cresus.Compta.Widgets
 						}
 						else
 						{
+							if (this.gapHilitedRank < this.showedIndexes.Count)
+							{
+								index = this.showedIndexes[this.gapHilitedRank];
+							}
+							else
+							{
+								index = this.showedIndexes.Count;
+							}
+
 							this.OnDraggingDoing (this.draggingStartIndex, index);
 						}
 
 						this.isDragging = false;
+						this.gapHilitedRank = -1;
+						this.Invalidate ();
 					}
 					break;
 
@@ -217,7 +241,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			base.ProcessMessage (message, pos);
 		}
 
-		private int Detect(Point pos)
+		private int GetDetectedIndex(Point pos)
 		{
 			//	Retourne l'index de l'onglet visé, ou -1.
 			this.UpdateIndexes ();
@@ -241,11 +265,30 @@ namespace Epsitec.Cresus.Compta.Widgets
 			return -1;
 		}
 
+		private int GetDetectedGapRank(Point pos)
+		{
+			for (int rank = 0; rank < this.showedIndexes.Count; rank++ )
+			{
+				var rect = this.GetTextRect (rank);
+
+				if (!rect.IsEmpty)
+				{
+					if (pos.X < rect.Center.X)
+					{
+						return rank;
+					}
+				}
+			}
+
+			return this.showedIndexes.Count;
+		}
+
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			base.PaintBackgroundImplementation (graphics, clipRect);
 			this.PaintTabs (graphics);
+			this.PaintGap (graphics);
 		}
 
 		private void PaintTabs(Graphics graphics)
@@ -267,19 +310,24 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			var state = TabState.Normal;
 
-			if (index == this.selectedIndex)
-			{
-				state = TabState.Selected;
-			}
-
 			if (index == this.hilitedIndex)
 			{
 				state = TabState.Hilited;
 			}
 
+			if (index == this.selectedIndex)
+			{
+				state = TabState.Selected;
+			}
+
 			if (this.menuOpened && index == this.menuTabIndex)
 			{
 				state = TabState.MenuOpened;
+			}
+
+			if (this.isDragging && index == this.draggingStartIndex)
+			{
+				state = TabState.StartDragging;
 			}
 
 			if (!rect.IsEmpty)
@@ -294,10 +342,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 					this.PaintTabFrame (graphics, rect, state);
 
 					//	Dessine le texte.
+					var color = Color.FromBrightness (0);
+
+					if (state == TabState.StartDragging)
+					{
+						color = Color.FromBrightness (0.7);
+					}
+
 					rect.Inflate (1, -2);
 					var pos = rect.BottomLeft;
 					var tab = this.GetShowedTab (rank);
 					tab.TextLayout.LayoutSize = rect.Size;
+					tab.TextLayout.DefaultColor = color;
 					tab.TextLayout.Paint (pos, graphics);
 				}
 			}
@@ -330,6 +386,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			var path = this.GetTabPath (rect);
+			var colorFrame = adorner.ColorBorder;
 
 			//	Dessine le fond.
 			if (state == TabState.Hilited)
@@ -355,6 +412,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 			}
+			else if (state == TabState.StartDragging)
+			{
+				graphics.AddFilledPath (path);
+				graphics.RenderSolid (Color.FromAlphaColor (0.2, UIBuilder.SelectionColor));
+
+				colorFrame = Color.FromBrightness (0.8);
+			}
 			else
 			{
 				graphics.AddFilledPath (path);
@@ -366,7 +430,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			//	Dessine le cadre.
 			graphics.AddPath (path);
-			graphics.RenderSolid (adorner.ColorBorder);
+			graphics.RenderSolid (colorFrame);
 		}
 
 		private Path GetTabPath(Rectangle rect)
@@ -433,6 +497,42 @@ namespace Epsitec.Cresus.Compta.Widgets
 #endif
 
 			return path;
+		}
+
+
+		private void PaintGap(Graphics graphics)
+		{
+			if (this.gapHilitedRank == -1)
+			{
+				return;
+			}
+
+			double x;
+
+			if (this.gapHilitedRank < this.showedIndexes.Count)
+			{
+				var rect = this.GetTextRect (this.gapHilitedRank);
+				x = rect.Left - TabsPane.tabMargin*0.5 + 1;
+			}
+			else
+			{
+				var rect = this.GetTextRect (this.gapHilitedRank-1);
+				x = rect.Right + TabsPane.tabMargin*0.5 + 1;
+			}
+
+			var bounds = this.Client.Bounds;
+
+			var c = new Point (x, bounds.Top);
+			var d = 10;
+
+			var path = new Path ();
+			path.MoveTo (c.X, c.Y-d-3);
+			path.LineTo (c.X-d, c.Y);
+			path.LineTo (c.X+d, c.Y);
+			path.Close ();
+
+			graphics.AddFilledPath (path);
+			graphics.RenderSolid (Color.FromBrightness (0));
 		}
 
 
@@ -799,6 +899,41 @@ namespace Epsitec.Cresus.Compta.Widgets
 				};
 			}
 
+			if (tab.TabItem.MoveVisibility)
+			{
+				menu.Items.Add (new MenuSeparator ());
+
+				{
+					var item = new MenuItem
+					{
+						IconUri       = UIBuilder.GetResourceIconUri ("Edit.Up"),
+						FormattedText = "Déplacer en tête",
+						Enable        = tab.TabItem.MoveFirstEnable,
+					};
+
+					menu.Items.Add (item);
+
+					item.Clicked += delegate
+					{
+					};
+				}
+
+				{
+					var item = new MenuItem
+					{
+						IconUri       = UIBuilder.GetResourceIconUri ("Edit.Down"),
+						FormattedText = "Déplacer en queue",
+						Enable        = tab.TabItem.MoveLastEnable,
+					};
+
+					menu.Items.Add (item);
+
+					item.Clicked += delegate
+					{
+					};
+				}
+			}
+
 			if (!menu.Items.Any ())
 			{
 				return;
@@ -887,6 +1022,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			Selected,		// onglet sélectionné
 			Hilited,		// onglet survolé par la souris
 			MenuOpened,		// onglet 'v' du menu, avec le menu ouvert
+			StartDragging,	// onglet en cours de déplacement
 		}
 
 
@@ -952,6 +1088,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private int									hilitedIndex;
 		private int									menuTabIndex;
 		private int									draggingStartIndex;
+		private int									gapHilitedRank;
 		private bool								menuOpened;
 		private bool								isDragging;
 		private bool								isRename;
