@@ -510,8 +510,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 				string indexSourceName = string.Join (separator, prefix, "DESC", typeName, fieldName, sourceName);
 				string indexTargetName = string.Join (separator, prefix, "DESC", typeName, fieldName, targetName);
 
-				indexes.Add (new DbIndex (indexSourceName, new DbColumn[] { sourceColumn }, SqlSortOrder.Ascending));
-				indexes.Add (new DbIndex (indexTargetName, new DbColumn[] { targetColumn }, SqlSortOrder.Ascending));
+				indexes.Add (new DbIndex (indexSourceName, new DbColumn[] { sourceColumn }, SqlSortOrder.Descending));
+				indexes.Add (new DbIndex (indexTargetName, new DbColumn[] { targetColumn }, SqlSortOrder.Descending));
 			}
 
 			Assert.AreEqual (indexes.Count, table.Indexes.Count);
