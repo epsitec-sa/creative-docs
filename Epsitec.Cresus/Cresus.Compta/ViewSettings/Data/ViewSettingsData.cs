@@ -33,14 +33,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 		public bool Readonly
 		{
-			//	true -> réglage de présentation non modifiable
-			get;
-			set;
-		}
-
-		public bool Permanent
-		{
-			//	true -> réglage de présentation indestructible
+			//	true -> présentation système non modifiable
 			get;
 			set;
 		}

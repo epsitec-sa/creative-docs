@@ -413,6 +413,9 @@
     <EmbeddedResource Include="Images\Edit.Rename.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Begin.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.End.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.User.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Settings.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.System.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

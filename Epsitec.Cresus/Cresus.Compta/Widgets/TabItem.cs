@@ -10,6 +10,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 {
 	public class TabItem
 	{
+		public string Icon
+		{
+			get;
+			set;
+		}
+
 		public FormattedText FormattedText
 		{
 			get;

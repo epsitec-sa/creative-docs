@@ -1228,6 +1228,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				var floatingItem = new TabItem
 				{
+					Icon          = tab.TabItem.Icon,
 					FormattedText = tab.TabItem.FormattedText,
 				};
 
@@ -1316,7 +1317,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					this.tabItem = value;
 
-					this.textLayout.FormattedText = this.tabItem.FormattedText;
+					if (string.IsNullOrEmpty (this.tabItem.Icon))
+					{
+						this.textLayout.FormattedText = this.tabItem.FormattedText;
+					}
+					else
+					{
+						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon) + " " + this.tabItem.FormattedText;
+					}
+
 					this.textWidth = this.textLayout.GetSingleLineSize ().Width;
 				}
 			}

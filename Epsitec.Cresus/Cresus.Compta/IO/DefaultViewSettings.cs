@@ -375,7 +375,6 @@ namespace Epsitec.Cresus.Compta.IO
 			{
 				Name           = name,
 				Readonly       = true,
-				Permanent      = true,
 				ControllerType = type,
 				BaseFilter     = new SearchData (),
 			};
