@@ -37,7 +37,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.viewSettingsList = this.controller.ViewSettingsList;
 
 			this.showPanel = false;
-			this.ignoreChanges = new SafeCounter ();
 		}
 
 
@@ -128,14 +127,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			};
 
 			this.CreateComptactViewSettingsUI (this.mainFrame);
-			this.CreateExtendedViewSettingsUI (this.mainFrame);
-			this.CreateSpecialistUI (specialistFrame);
 
 			this.panelsToolbarController = new PanelsToolbarController (this.controller);
 			this.panelsToolbarController.CreateUI (panelsToolbarFrame);
 
 			this.UpdateTabs ();
-			this.UpdateList ();
 			this.UpdateWidgets ();
 		}
 
@@ -146,78 +142,32 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.ViewSettingsChanged ();
 		}
 
-		private void LevelChangedAction()
-		{
-			this.UpdateLevel ();
-		}
-
 		private void ViewSettingsChanged()
 		{
 			var viewSettings = this.viewSettingsList.Selected;
 			if (viewSettings != null)
 			{
-#if false
-				this.CopyViewSettingsToData (viewSettings);
-				this.viewSettingsChangedAction ();
-#else
 				this.controller.MainWindowController.ShowPrésentation (viewSettings);
-#endif
 			}
 
 			this.UpdateWidgets ();
 		}
 
-		private void UpdateLevel()
-		{
-			this.comptactFrame.Visibility = !this.specialist;
-			this.extendedFrame.Visibility =  this.specialist;
-
-			this.UpdateSpecialist ();
-		}
-
 		private void UpdateWidgets()
 		{
 			this.UpdateButtons ();
-			this.UpdateLevel ();
-			this.UpdateSummary ();
 		}
 
 		public void Update()
 		{
 			this.UpdateButtons ();
-			this.UpdateSummary ();
 			this.UpdateTabSelected ();
-			this.UpdateListSelection ();
-		}
-
-
-		private void CreateSpecialistUI(FrameBox parent)
-		{
-			this.specialistButton = new GlyphButton
-			{
-				Parent          = parent,
-				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredWidth  = 20,
-				PreferredHeight = 24,
-				Dock            = DockStyle.Top,
-			};
-
-			this.specialistButton.Clicked += delegate
-			{
-				this.specialist = !this.specialist;
-				this.UpdateLevel ();
-			};
-		}
-
-		private void UpdateSpecialist()
-		{
-			this.specialistButton.GlyphShape = this.specialist ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
 		}
 
 
 		private void CreateComptactViewSettingsUI(FrameBox parent)
 		{
-			this.comptactFrame = new FrameBox
+			var frame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 34,
@@ -225,42 +175,42 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Padding         = new Margins (5, 0, 5, 0),
 			};
 
-			this.compactTabsPane = new TabsPane
+			this.tabsPane = new TabsPane
 			{
-				Parent          = this.comptactFrame,
+				Parent          = frame,
 				PreferredHeight = 34-5,
 				Dock            = DockStyle.Fill,
 			};
 
 			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 			{
-				this.compactUpdateButton = new IconButton
+				this.updateButton = new IconButton
 				{
 					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
 					PreferredIconSize = new Size (20, 20),
 					PreferredSize     = new Size (24, 24),
 				};
 
-				this.compactUseButton = new IconButton
+				this.useButton = new IconButton
 				{
 					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
 					PreferredIconSize = new Size (20, 20),
 					PreferredSize     = new Size (24, 24),
 				};
 
-				ToolTip.Default.SetToolTip (this.compactUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
-				ToolTip.Default.SetToolTip (this.compactUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
+				ToolTip.Default.SetToolTip (this.useButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
+				ToolTip.Default.SetToolTip (this.updateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
 
-				this.compactTabsPane.AddAdditionnalWidget (this.compactUpdateButton);
-				this.compactTabsPane.AddAdditionnalWidget (this.compactUseButton);
+				this.tabsPane.AddAdditionnalWidget (this.updateButton);
+				this.tabsPane.AddAdditionnalWidget (this.useButton);
 
-				this.compactUseButton.Clicked += delegate
+				this.useButton.Clicked += delegate
 				{
 					this.CopyViewSettingsToData (this.viewSettingsList.Selected);
 					this.ViewSettingsChanged ();
 				};
 
-				this.compactUpdateButton.Clicked += delegate
+				this.updateButton.Clicked += delegate
 				{
 					string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
 					var result = this.controller.MainWindowController.QuestionDialog (message);
@@ -273,283 +223,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 		}
 
-		private void CreateExtendedViewSettingsUI(FrameBox parent)
-		{
-			this.extendedFrame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 15*7+29,  // 7 lignes dans la liste
-				Dock            = DockStyle.Top,
-				Padding         = new Margins (5),
-			};
-
-			var centerFrame = new FrameBox
-			{
-				Parent          = this.extendedFrame,
-				PreferredWidth  = ViewSettingsController.fieldWidth,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 20, 0, 0),
-			};
-
-			var rightFrame = new FrameBox
-			{
-				Parent          = this.extendedFrame,
-				Dock            = DockStyle.Fill,
-			};
-
-			//	Panneau du milieu.
-			this.extendedListViewSettings = new ScrollList
-			{
-				Parent  = centerFrame,
-				Dock    = DockStyle.Fill,
-				Margins = new Margins (0, 0, 0, 2),
-			};
-
-			this.extendedFieldName = new TextFieldEx
-			{
-				Parent                       = centerFrame,
-				PreferredHeight              = 20,
-				Dock                         = DockStyle.Bottom,
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-			};
-
-			this.CreateExtendedViewSettingsToolbarUI (rightFrame);
-
-			this.extendedListViewSettings.SelectedItemChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero && this.extendedListViewSettings.SelectedItemIndex != -1)
-				{
-					this.viewSettingsList.SelectedIndex = this.extendedListViewSettings.SelectedItemIndex;
-					this.UpdateAfterSelectionChanged ();
-					this.ViewSettingsChanged ();
-				}
-			};
-
-			this.extendedFieldName.EditionAccepted += delegate
-			{
-				if (this.ignoreChanges.IsZero && this.viewSettingsList.Selected != null)
-				{
-					this.viewSettingsList.Selected.Name = this.extendedFieldName.FormattedText;
-					this.UpdateTabs ();
-					this.UpdateList ();
-				}
-			};
-		}
-
-		private void CreateExtendedViewSettingsToolbarUI(FrameBox parent)
-		{
-			//	Panneau de droite, toolbar (en haut).
-			int w = 32+4;
-
-			var toolbar = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-			};
-
-			this.extendedAddButton = new IconButton
-			{
-				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Add"),
-				PreferredSize   = new Size (w, w),
-				Dock            = DockStyle.Left,
-			};
-
-			this.extendedUpdateButton = new IconButton
-			{
-				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
-				PreferredSize   = new Size (w, w),
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (2, 0, 0, 0),
-			};
-
-			this.extendedUseButton = new IconButton
-			{
-				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
-				PreferredSize   = new Size (w, w),
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (2, 0, 0, 0),
-			};
-
-			{
-				var upDown = new FrameBox
-				{
-					Parent          = toolbar,
-					PreferredSize   = new Size (w/2, 2),
-					Dock            = DockStyle.Left,
-					Margins         = new Margins (20, 0, 0, 0),
-				};
-
-				this.extendedUpButton = new IconButton
-				{
-					Parent          = upDown,
-					IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Up"),
-					PreferredSize   = new Size (w/2, w/2),
-					Dock            = DockStyle.Top,
-				};
-
-				this.extendedDownButton = new IconButton
-				{
-					Parent          = upDown,
-					IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Down"),
-					PreferredSize   = new Size (w/2, w/2),
-					Dock            = DockStyle.Bottom,
-				};
-			}
-
-			this.extendedRemoveButton = new IconButton
-			{
-				Parent          = toolbar,
-				IconUri         = UIBuilder.GetResourceIconUri ("ViewSettings.Delete"),
-				PreferredSize   = new Size (w, w),
-				Dock            = DockStyle.Left,
-			};
-
-			this.CreateExtendedViewSettingsAttributeUI (toolbar);
-
-			ToolTip.Default.SetToolTip (this.extendedUseButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
-			ToolTip.Default.SetToolTip (this.extendedAddButton,    "Conserve le filtre et les options dans un nouveau réglage de présentation");
-			ToolTip.Default.SetToolTip (this.extendedUpdateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
-			ToolTip.Default.SetToolTip (this.extendedUpButton,     "Monte le réglage de présentation d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedDownButton,   "Descend le réglage de présentation d'une ligne dnas la liste");
-			ToolTip.Default.SetToolTip (this.extendedRemoveButton, "Supprime le réglage de présentation");
-
-			this.extendedUseButton.Clicked += delegate
-			{
-				this.CopyViewSettingsToData (this.viewSettingsList.Selected);
-				this.ViewSettingsChanged ();
-			};
-
-			this.extendedAddButton.Clicked += delegate
-			{
-				var viewSettings = new ViewSettingsData
-				{
-					Name           = this.NewViewSettingsName,
-					ControllerType = this.controller.MainWindowController.SelectedDocument,
-				};
-
-				this.CopyDataToViewSettings (viewSettings);
-
-				this.viewSettingsList.List.Add (viewSettings);
-				this.viewSettingsList.Selected = viewSettings;
-
-				this.UpdateTabs ();
-				this.UpdateList ();
-				this.UpdateButtons ();
-				this.UpdateSummary ();
-
-				this.extendedFieldName.SelectAll ();
-				this.extendedFieldName.Focus ();
-			};
-
-			this.extendedUpdateButton.Clicked += delegate
-			{
-				this.UpdateViewSettingsAction ();
-
-				this.extendedFieldName.SelectAll ();
-				this.extendedFieldName.Focus ();
-			};
-
-			this.extendedUpButton.Clicked += delegate
-			{
-				int sel = this.extendedListViewSettings.SelectedItemIndex;
-
-				var m1 = this.viewSettingsList.List[sel-1];
-				var m2 = this.viewSettingsList.List[sel];
-
-				this.viewSettingsList.List[sel-1] = m2;
-				this.viewSettingsList.List[sel]   = m1;
-
-				this.UpdateTabs ();
-				this.UpdateList ();
-				this.UpdateButtons ();
-			};
-
-			this.extendedDownButton.Clicked += delegate
-			{
-				int sel = this.extendedListViewSettings.SelectedItemIndex;
-
-				var m1 = this.viewSettingsList.List[sel+1];
-				var m2 = this.viewSettingsList.List[sel];
-
-				this.viewSettingsList.List[sel+1] = m2;
-				this.viewSettingsList.List[sel]   = m1;
-
-				this.UpdateTabs ();
-				this.UpdateList ();
-				this.UpdateButtons ();
-			};
-
-			this.extendedRemoveButton.Clicked += delegate
-			{
-				int sel = this.extendedListViewSettings.SelectedItemIndex;
-				this.viewSettingsList.List.RemoveAt (sel);
-
-				this.UpdateTabs ();
-				this.UpdateList ();
-
-				sel = System.Math.Min (sel, this.viewSettingsList.List.Count-1);
-				var viewSettings = (sel == -1) ? null : this.viewSettingsList.List[sel];
-
-				this.viewSettingsList.Selected = viewSettings;
-
-				this.UpdateAfterSelectionChanged ();
-				this.ViewSettingsChanged ();
-			};
-		}
-
-		private void CreateExtendedViewSettingsAttributeUI(FrameBox parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Right,
-			};
-
-			this.extendedAttributePermanent = new CheckButton
-			{
-				Parent         = frame,
-				Text           = "Non supprimable",
-				PreferredWidth = 120,
-				Dock           = DockStyle.Bottom,
-			};
-
-			this.extendedAttributeReadonly = new CheckButton
-			{
-				Parent         = frame,
-				Text           = "Non modifiable",
-				PreferredWidth = 120,
-				Dock           = DockStyle.Bottom,
-			};
-
-			ToolTip.Default.SetToolTip (this.extendedAttributeReadonly,  "Une coche indique que ce réglage de présentation peut être utilisé en l'état, mais plus modifié");
-			ToolTip.Default.SetToolTip (this.extendedAttributePermanent, "Une coche indique que ce réglage de présentation est indestructible");
-
-			this.extendedAttributeReadonly.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.IsReadonly = !this.IsReadonly;
-					this.UpdateButtons ();
-					this.UpdateSummary ();
-				}
-			};
-
-			this.extendedAttributePermanent.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.IsPermanent = !this.IsPermanent;
-					this.UpdateButtons ();
-					this.UpdateSummary ();
-				}
-			};
-		}
-
 		private void UpdateViewSettingsAction()
 		{
 			var viewSettings = this.viewSettingsList.Selected;
@@ -559,7 +232,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				this.CopyDataToViewSettings (viewSettings);
 
 				this.UpdateButtons ();
-				this.UpdateSummary ();
 			}
 		}
 
@@ -568,7 +240,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-				this.compactTabsPane.Clear ();
+				this.tabsPane.Clear ();
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 				{
@@ -584,7 +256,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						MoveVisibility   = true,
 					};
 
-					this.compactTabsPane.Add (item);
+					this.tabsPane.Add (item);
 				}
 
 				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
@@ -594,19 +266,19 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 						FormattedText = " + ",
 					};
 
-					this.compactTabsPane.Add (item);
+					this.tabsPane.Add (item);
 				}
 
-				this.compactTabsPane.SelectedIndexChanged += new EventHandler (this.HandlerTabsPaneSelectedIndexChanged);
-				this.compactTabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
-				this.compactTabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
-				this.compactTabsPane.DraggingDoing += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
+				this.tabsPane.SelectedIndexChanged += new EventHandler (this.HandlerTabsPaneSelectedIndexChanged);
+				this.tabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
+				this.tabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
+				this.tabsPane.DraggingDoing += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
 			}
 		}
 
 		private void HandlerTabsPaneSelectedIndexChanged(object sender)
 		{
-			int sel = this.compactTabsPane.SelectedIndex;
+			int sel = this.tabsPane.SelectedIndex;
 
 			if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && sel == this.viewSettingsList.List.Count)  // onglet "+" ?
 			{
@@ -693,20 +365,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-#if false
-				foreach (var widget in this.comptactTabFrame.Children)
-				{
-					var button = widget as TabButton;
-
-					if (button != null)
-					{
-						bool select = button.TabIndex == this.viewSettingsList.SelectedIndex;
-						button.ActiveState = select ? ActiveState.Yes : ActiveState.No;
-					}
-				}
-#endif
-
-				this.compactTabsPane.SelectedIndex = this.viewSettingsList.SelectedIndex;
+				this.tabsPane.SelectedIndex = this.viewSettingsList.SelectedIndex;
 			}
 		}
 
@@ -724,67 +383,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.viewSettingsList.Selected = viewSettings;
 
 			this.UpdateTabs ();
-			this.UpdateList ();
 			this.UpdateButtons ();
-			this.UpdateSummary ();
 
 			this.ViewSettingsChanged ();
 		}
 
 
-		private void UpdateList()
-		{
-			if (this.viewSettingsList != null)
-			{
-				using (this.ignoreChanges.Enter ())
-				{
-					this.extendedListViewSettings.Items.Clear ();
-
-					foreach (var viewSettings in this.viewSettingsList.List)
-					{
-						this.extendedListViewSettings.Items.Add (viewSettings.Name);
-					}
-
-				}
-
-				this.UpdateListSelection ();
-			}
-		}
-
-		private void UpdateListSelection()
-		{
-			if (this.viewSettingsList != null)
-			{
-				using (this.ignoreChanges.Enter ())
-				{
-					if (this.viewSettingsList.Selected == null)
-					{
-						this.extendedListViewSettings.SelectedItemIndex = -1;
-						this.extendedFieldName.FormattedText = FormattedText.Empty;
-					}
-					else
-					{
-						this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
-						this.extendedListViewSettings.ShowSelected (ScrollShowMode.Extremity);
-
-						this.extendedFieldName.FormattedText = this.viewSettingsList.Selected.Name;
-					}
-
-					//?this.compactComboViewSettings.SelectedItemIndex = this.extendedListViewSettings.SelectedItemIndex;
-				}
-			}
-		}
-
 		private void UpdateAfterSelectionChanged()
 		{
 			if (this.viewSettingsList != null)
 			{
-				using (this.ignoreChanges.Enter ())
-				{
-					//?this.compactComboViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
-					this.UpdateTabSelected ();
-					this.extendedListViewSettings.SelectedItemIndex = this.viewSettingsList.SelectedIndex;
-				}
+				this.UpdateTabSelected ();
 			}
 		}
 
@@ -792,99 +401,15 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-				int sel = this.extendedListViewSettings.SelectedItemIndex;
+				int sel = this.viewSettingsList.SelectedIndex;
 				int count = this.viewSettingsList.List.Count;
 				bool eq = this.CompareTo (this.viewSettingsList.Selected);
 
-				if (this.compactUseButton != null)
+				if (this.useButton != null)
 				{
-					this.compactUseButton.Enable    = (sel != -1 && !eq);
-					this.compactUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+					this.useButton.Enable    = (sel != -1 && !eq);
+					this.updateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
 				}
-
-				this.extendedAddButton.Enable    = true;
-				this.extendedUseButton.Enable    = (sel != -1 && !eq);
-				this.extendedUpButton.Enable     = (sel != -1 && sel > 0);
-				this.extendedUpdateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
-				this.extendedDownButton.Enable   = (sel != -1 && sel < count-1);
-				this.extendedRemoveButton.Enable = (sel != -1 && !this.IsPermanent);
-
-				this.extendedFieldName.IsReadOnly = this.IsReadonly;
-				this.extendedFieldName.Invalidate ();  // pour contourner un bug !
-			}
-		}
-
-		private void UpdateSummary()
-		{
-			if (this.viewSettingsList != null)
-			{
-				using (this.ignoreChanges.Enter ())
-				{
-					var viewSettings = this.viewSettingsList.Selected;
-
-					if (viewSettings == null)
-					{
-						var compactSummary = FormattedText.Empty;
-					}
-					else
-					{
-						//?this.compactSummary.FormattedText = viewSettings.GetSummary (this.controller.ColumnMappers);
-
-						this.extendedAttributePermanent.ActiveState = viewSettings.Permanent ? ActiveState.Yes : ActiveState.No;
-						this.extendedAttributeReadonly .ActiveState = viewSettings.Readonly  ? ActiveState.Yes : ActiveState.No;
-
-						//?ToolTip.Default.SetToolTip (this.comptactFrame, this.TooltipSummary);
-					}
-
-					this.extendedAttributePermanent.Visibility = (viewSettings != null);
-					this.extendedAttributeReadonly .Visibility = (viewSettings != null);
-				}
-			}
-		}
-
-		private FormattedText TooltipSummary
-		{
-			get
-			{
-				var builder = new System.Text.StringBuilder ();
-
-				var viewSettings = (this.viewSettingsList == null) ? null : this.viewSettingsList.Selected;
-
-				if (viewSettings == null)
-				{
-					builder.Append ("Aucun");
-				}
-				else
-				{
-					FormattedText summary;
-
-					summary = viewSettings.GetFilterSummary (this.controller.ColumnMappers);
-					if (!summary.IsNullOrEmpty)
-					{
-						builder.Append (UIBuilder.GetTextIconUri ("Panel.Filter"));
-						builder.Append ("  ");
-						builder.Append (summary);
-						builder.Append ("<br/>");
-					}
-
-					summary = viewSettings.GetOptionsSummary (this.controller.ColumnMappers);
-					if (!summary.IsNullOrEmpty)
-					{
-						builder.Append (UIBuilder.GetTextIconUri ("Panel.Options"));
-						builder.Append ("  ");
-						builder.Append (summary);
-						builder.Append ("<br/>");
-					}
-				}
-
-				var text = builder.ToString ();
-
-				if (text.EndsWith ("<br/>"))
-				{
-					text = text.Substring (0, text.Length-5);  // enlève le <br/> à la fin
-				}
-
-				return text;
 			}
 		}
 
@@ -1026,14 +551,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		}
 
 	
-		private static readonly double					fieldWidth = 200;
-
 		private readonly AbstractController				controller;
 		private readonly ComptaEntity					compta;
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly ViewSettingsList				viewSettingsList;
-		private readonly SafeCounter					ignoreChanges;
 
 		private System.Action							viewSettingsChangedAction;
 
@@ -1042,28 +564,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private FrameBox								mainFrame;
 		private FrameBox								toolbar;
 		private bool									showPanel;
-		private bool									specialist;
 
-		private GlyphButton								specialistButton;
-
-		private FrameBox								comptactFrame;
-		private Button									compactUseButton;
-		private Button									compactUpdateButton;
-		private StaticText								compactSummary;
-		private TabsPane								compactTabsPane;
-
-		private FrameBox								extendedFrame;
-		private ScrollList								extendedListViewSettings;
-		private TextFieldEx								extendedFieldName;
-		private Button									extendedUseButton;
-		private Button									extendedAddButton;
-		private Button									extendedUpdateButton;
-		private Button									extendedUpButton;
-		private Button									extendedDownButton;
-		private Button									extendedRemoveButton;
-
-		private CheckButton								extendedAttributeReadonly;
-		private CheckButton								extendedAttributePermanent;
+		private Button									useButton;
+		private Button									updateButton;
+		private TabsPane								tabsPane;
 
 		private PanelsToolbarController					panelsToolbarController;
 	}

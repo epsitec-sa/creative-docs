@@ -497,10 +497,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromAlphaColor (0.4, Color.FromBrightness (1.0)));
 
-				if (!this.IsNopDrag)
-				{
-					colorFrame = Color.FromAlphaColor (0.5, colorFrame);
-				}
+				colorFrame = Color.FromAlphaColor (0.5, colorFrame);
 			}
 			else if (state == TabState.Floating)
 			{
