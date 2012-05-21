@@ -21,7 +21,7 @@ namespace Epsitec.Common.BigList
 			get;
 		}
 
-		int										Count
+		int										ItemCount
 		{
 			get;
 		}

@@ -26,7 +26,7 @@ namespace Epsitec.Common.BigList
 			}
 			set
 			{
-				var count = this.itemList.Count;
+				var count = this.itemList.ItemCount;
 
 				if ((value >= count) &&
 					(value > 0))
@@ -131,7 +131,7 @@ namespace Epsitec.Common.BigList
 			}
 
 			this.visibleRows.Clear ();
-			this.visibleIndex = this.itemList.Count;
+			this.visibleIndex = this.itemList.ItemCount;
 
 			this.SetVisibleIndex (index);
 			this.OnVisibleContentChanged ();
@@ -147,7 +147,7 @@ namespace Epsitec.Common.BigList
 			}
 			else if (distance == System.Int32.MinValue)
 			{
-				rows = this.GetVisibleRowsEndingWith (this.itemList.Count-1);
+				rows = this.GetVisibleRowsEndingWith (this.itemList.ItemCount-1);
 			}
 			else
 			{
@@ -343,7 +343,7 @@ namespace Epsitec.Common.BigList
 			this.RefreshIfNeeded ();
 
 			var rows  = new List<ItemListRow> ();
-			int count = this.itemList.Count;
+			int count = this.itemList.ItemCount;
 
 			if (count == 0)
 			{
@@ -412,7 +412,7 @@ namespace Epsitec.Common.BigList
 			this.RefreshIfNeeded ();
 
 			var rows  = new List<ItemListRow> ();
-			int count = this.itemList.Count;
+			int count = this.itemList.ItemCount;
 
 			if (count == 0)
 			{

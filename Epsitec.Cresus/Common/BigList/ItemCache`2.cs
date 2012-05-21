@@ -313,6 +313,5 @@ namespace Epsitec.Common.BigList
 		private readonly IndexedStore<TState>	extraStates;
 		private readonly ReadWriteLock			exclusion;
 		private readonly IndexedStore<ItemData<TData>>	data;
-		private readonly IItemDataMapper<TData>	mapper;
 	}
 }

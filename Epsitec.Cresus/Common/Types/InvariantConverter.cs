@@ -960,7 +960,7 @@ namespace Epsitec.Common.Types
 			System.Type underlyingType = System.Enum.GetUnderlyingType (type);
 			System.Array values = System.Enum.GetValues (type);
 
-			// some enums like System.CodeDom.MemberAttributes *are* flags but are not declared with Flags...
+			//	Some enums like System.CodeDom.MemberAttributes *are* flags but are not declared with Flags...
 
 			if ((type.IsDefined (typeof (System.FlagsAttribute), true) == false) &&
 				(input.IndexOfAny (EnumFlagSeperators) < 0))
@@ -968,7 +968,7 @@ namespace Epsitec.Common.Types
 				return InvariantConverter.EnumTokenToObject (type, underlyingType, names, values, input, out value);
 			}
 
-			// multi value enum
+			//	Multi-value enum:
 			string[] tokens = input.Split (EnumFlagSeperators, System.StringSplitOptions.RemoveEmptyEntries);
 
 			if (tokens.Length == 0)

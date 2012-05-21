@@ -78,7 +78,7 @@ namespace Epsitec.Common.BigList
 		public void ActivateRow(int index)
 		{
 			if ((index < 0) ||
-				(index >= this.ItemList.Count))
+				(index >= this.ItemList.ItemCount))
 			{
 				return;
 			}
@@ -100,7 +100,7 @@ namespace Epsitec.Common.BigList
 		public void FocusRow(int index)
 		{
 			if ((index < 0) ||
-				(index >= this.ItemList.Count))
+				(index >= this.ItemList.ItemCount))
 			{
 				return;
 			}
@@ -116,7 +116,7 @@ namespace Epsitec.Common.BigList
 		public void SelectRow(int index, ItemSelection selection)
 		{
 			if ((index < 0) ||
-				(index >= this.ItemList.Count))
+				(index >= this.ItemList.ItemCount))
 			{
 				return;
 			}
@@ -280,7 +280,7 @@ namespace Epsitec.Common.BigList
 					if (amplitude < 0)
 					{
 						//	End
-						index = this.ItemList.Count-1;
+						index = this.ItemList.ItemCount-1;
 					}
 					break;
 
@@ -336,7 +336,7 @@ namespace Epsitec.Common.BigList
 					if (amplitude < 0)
 					{
 						//	End
-						index = this.ItemList.Count-1;
+						index = this.ItemList.ItemCount-1;
 					}
 					break;
 
@@ -481,7 +481,7 @@ namespace Epsitec.Common.BigList
 
 		#region EventNames Class
 
-		private static class EventNames
+		private static new class EventNames
 		{
 			public const string					SelectionChanged = "SelectionChanged";
 		}

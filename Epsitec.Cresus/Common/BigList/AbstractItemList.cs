@@ -43,7 +43,7 @@ namespace Epsitec.Common.BigList
 			}
 		}
 
-		public int								Count
+		public int								ItemCount
 		{
 			get
 			{
@@ -131,7 +131,7 @@ namespace Epsitec.Common.BigList
 		protected virtual void SetActiveIndex(int index)
 		{
 			if ((index < 0) ||
-				(index >= this.Count))
+				(index >= this.ItemCount))
 			{
 				throw new System.ArgumentOutOfRangeException ("index", "Index out of bounds");
 			}
@@ -161,7 +161,7 @@ namespace Epsitec.Common.BigList
 		protected virtual void SetFocusedIndex(int index)
 		{
 			if ((index < 0) ||
-				(index >= this.Count))
+				(index >= this.ItemCount))
 			{
 				throw new System.ArgumentOutOfRangeException ("index", "Index out of bounds");
 			}
