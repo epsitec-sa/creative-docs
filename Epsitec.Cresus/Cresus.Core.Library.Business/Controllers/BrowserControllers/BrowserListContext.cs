@@ -21,7 +21,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		}
 
 
-		public DataSetAccessor Accessor
+		public DataSetAccessor					Accessor
 		{
 			get
 			{

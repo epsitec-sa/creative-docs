@@ -74,6 +74,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			}
 		}
 
+		public LambdaExpression					Lambda
+		{
+			get
+			{
+				return this.lambda;
+			}
+		}
+
 
 		private readonly LambdaExpression			lambda;
 		private readonly EntityDataColumnConverter	converter;

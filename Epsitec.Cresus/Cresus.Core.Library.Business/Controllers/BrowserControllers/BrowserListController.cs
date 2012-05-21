@@ -236,14 +236,16 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		{
 			if (EntityInfo<CustomerEntity>.GetTypeId () == this.collectionEntityId)
 			{
-				this.extractor =
-						new EntityDataExtractor (
-						new EntityDataMetadataRecorder<CustomerEntity> ()
+				var recorder = new EntityDataMetadataRecorder<CustomerEntity> ()
 							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode)
 							.Column (x => x.MainRelation.DefaultMailContact.Location.Name)
 							.Column (x => x.MainRelation.DefaultMailContact.StreetName)
-							.Column (x => x.MainRelation.DefaultMailContact.HouseNumber)
-						.GetMetadata ());
+							.Column (x => x.MainRelation.DefaultMailContact.HouseNumber);
+				var metadata = recorder.GetMetadata ();
+				
+				this.context.Accessor.SetSortOrder (recorder.Columns);
+
+				this.extractor = new EntityDataExtractor (metadata);
 
 				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
 				

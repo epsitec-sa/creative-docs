@@ -1,12 +1,16 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support.EntityEngine;
+
+using Epsitec.Cresus.Core.Data.Extraction;
+
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Loader;
-using Epsitec.Common.Support.EntityEngine;
+
 
 namespace Epsitec.Cresus.Core.Data
 {
@@ -64,6 +68,15 @@ namespace Epsitec.Cresus.Core.Data
 				.ToArray ();
 		}
 
+		public void SetSortOrder(IEnumerable<EntityDataColumn> columns)
+		{
+			foreach (var column in columns)
+			{
+				var fieldId = EntityInfo.GetFieldCaption (column.Lambda).Id;
+				var fieldSetter = Epsitec.Common.Types.ExpressionAnalyzer.CreateSetter (column.Lambda);
+//				var fieldNode = new Epsitec.Cresus.DataLayer.Expressions.PublicField (entity, fieldId);
+			}
+		}
 
 
 		#region IDisposable Members
@@ -126,11 +139,6 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
-
-		private EntityKey GetEntityKey(Epsitec.Common.Support.EntityEngine.AbstractEntity x)
-		{
-			return this.dataContext.GetNormalizedEntityKey (x).Value;
-		}
 
 		private readonly CoreData				data;
 		private readonly DataContext			dataContext;
