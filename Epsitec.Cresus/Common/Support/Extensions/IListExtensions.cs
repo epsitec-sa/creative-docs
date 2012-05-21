@@ -1,4 +1,4 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -25,6 +25,25 @@ namespace Epsitec.Common.Support.Extensions
 			foreach (object item in collection)
 			{
 				list.Add (item);
+			}
+		}
+
+		public static IEnumerable<T> TrimEnd<T>(this IList<T> list, int trimCount)
+		{
+			return list.Truncate (list.Count - trimCount);
+		}
+
+		public static IEnumerable<T> Truncate<T>(this IList<T> list, int maxCount)
+		{
+			int count = list.Count;
+
+			if (count <= maxCount)
+			{
+				return list;
+			}
+			else
+			{
+				return list.ExtractRange (0, maxCount);
 			}
 		}
 
@@ -101,7 +120,23 @@ namespace Epsitec.Common.Support.Extensions
 			return list[index];
 		}
 
-		private static System.Random Dice
+
+		public static IEnumerable<T> ExtractRange<T>(this IList<T> source, int skip, int take)
+		{
+			int index = skip;
+			int count = source.Count;
+
+			while (index < count && take > 0)
+			{
+				yield return source[index];
+				
+				index++;
+				take--;
+			}
+		}
+
+		
+		private static System.Random			Dice
 		{
 			get
 			{
@@ -115,6 +150,6 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 		[System.ThreadStatic]
-		private static System.Random dice;
+		private static System.Random			dice;
 	}
 }
