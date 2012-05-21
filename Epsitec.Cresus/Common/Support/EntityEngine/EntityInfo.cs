@@ -157,5 +157,52 @@ namespace Epsitec.Common.Support.EntityEngine
 			return SafeResourceResolver.Instance.GetCaption (id);
 		}
 
+		/// <summary>
+		/// Walks through the entity graph, starting from the specified root, following the
+		/// edges defined by collection of properties.
+		/// </summary>
+		/// <param name="rootEntity">The example.</param>
+		/// <param name="fieldPath">The field path.</param>
+		/// <param name="nullNodeAction">What to do when a <c>null</c> node is reached.</param>
+		/// <returns>
+		/// The leaf entity or <c>null</c>.
+		/// </returns>
+		public static AbstractEntity WalkEntityGraph(AbstractEntity rootEntity, IEnumerable<PropertyInfo> fieldPath, NullNodeAction nullNodeAction)
+		{
+			var node = rootEntity;
+
+			foreach (var fieldPropertyInfo in fieldPath)
+			{
+				if (fieldPropertyInfo.CanRead)
+				{
+					var child = fieldPropertyInfo.GetValue (node, EntityInfo.emptyIndexArray) as AbstractEntity;
+
+					if (child == null)
+					{
+						switch (nullNodeAction)
+						{
+							case NullNodeAction.ReturnNull:
+								return null;
+
+							case NullNodeAction.CreateMissing:
+								break;
+
+							default:
+								throw new System.NotImplementedException (string.Format ("{0} not implemented", nullNodeAction.GetQualifiedName ()));
+						}
+
+						child = System.Activator.CreateInstance (fieldPropertyInfo.PropertyType) as AbstractEntity;
+						fieldPropertyInfo.SetValue (node, child, EntityInfo.emptyIndexArray);
+					}
+
+					node = child;
+				}
+			}
+
+			return node;
+		}
+
+
+		private static readonly object[]		emptyIndexArray = new object[0];
 	}
 }
