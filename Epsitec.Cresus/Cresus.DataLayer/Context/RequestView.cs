@@ -1,8 +1,6 @@
 ﻿//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Cresus.Database;
-
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -45,15 +43,39 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		public IList<EntityKey> GetKeys(int index, int count)
 		{
-			this.entityKeyRequest.Skip = index;
-			this.entityKeyRequest.Take = count;
+			this.SetupEntityKeysRequest (index, count);
 
-			return this.dataContext.DataLoader.GetEntityKeys (this.entityKeyRequest, this.isolatedTransaction.Transaction);
+			var request = this.entityKeyRequest;
+			var transaction = this.isolatedTransaction.Transaction;
+
+			return this.dataContext.DataLoader.GetEntityKeys(request, transaction);
 		}
+
+
+		public int? GetIndex(EntityKey entityKey)
+		{
+			this.SetupEntityKeysRequest (null, null);
+
+			var request = this.entityKeyRequest;
+			var transaction = this.isolatedTransaction.Transaction;
+
+			return this.dataContext.DataLoader.GetIndex(request, entityKey, transaction);
+		}
+
 
 		public int GetCount()
 		{
-			return this.dataContext.DataLoader.GetCount (this.countRequest, this.isolatedTransaction.Transaction);
+			var request = this.countRequest;
+			var transaction = this.isolatedTransaction.Transaction;
+
+			return this.dataContext.DataLoader.GetCount(request, transaction);
+		}
+
+
+		private void SetupEntityKeysRequest(int? nbTake, int? nbSkip)
+		{
+			this.entityKeyRequest.Skip = nbTake;
+			this.entityKeyRequest.Take = nbSkip;
 		}
 
 		
@@ -101,5 +123,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 		private readonly DataContext			dataContext;
 		private readonly Request				entityKeyRequest;
 		private readonly Request				countRequest;
+
+	
 	}
 }

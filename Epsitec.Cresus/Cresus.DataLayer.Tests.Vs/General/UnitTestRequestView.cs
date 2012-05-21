@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
@@ -63,6 +64,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 							var actualKeys = requestView.GetKeys (i, j).ToArray ();
 
 							CollectionAssert.AreEqual (expectedKeys, actualKeys);
+							this.GetIndexTest (requestView, actualKeys, i);
 						}
 					}
 				}
@@ -104,6 +106,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 							var actualKeys = requestView.GetKeys (i, j).ToArray ();
 
 							CollectionAssert.AreEqual (expectedKeys, actualKeys);
+							this.GetIndexTest (requestView, actualKeys, i);
 						}
 					}
 				}
@@ -127,7 +130,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					var keys = requestView.GetKeys (0, 5);
 
 					Assert.AreEqual (2, keys.Count);
+					this.GetIndexTest (requestView, keys.ToArray (), 0);
 				}
+			}
+		}
+
+
+		public void GetIndexTest(RequestView requestView, EntityKey[] entityKeys, int nbSkip)
+		{
+			for (int i = 0; i < entityKeys.Length; i++)
+			{
+				var entityKey = entityKeys[i];
+				var index = requestView.GetIndex (entityKey);
+
+				Assert.AreEqual (i + nbSkip, index);
 			}
 		}
 

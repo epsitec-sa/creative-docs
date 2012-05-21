@@ -153,6 +153,21 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 		/// <summary>
+		/// Gets the index of the entity key as it will be in the given request to the database. The
+		/// query is made to the database with the given transaction and will therefore not
+		/// interfere with other queries and will be totaly independent of them.
+		/// </summary>
+		/// <param name="request">The request defining the order of the entity keys.</param>
+		/// <param name="entityKey">The entity key whose index to get.</param>
+		/// <param name="dbTransaction">The transaction to use for the query.</param>
+		/// <returns>The index of the given entity key within the result of the request.</returns>
+		public int? GetIndex(Request request, EntityKey entityKey, DbTransaction dbTransaction)
+		{
+			return this.LoaderQueryGenerator.GetIndex (request, entityKey, dbTransaction);
+		}
+
+
+		/// <summary>
 		/// Gets the number of entities which correspond to the given request in the database.
 		/// </summary>
 		/// <param name="request">The request defining which entities to count.</param>

@@ -128,6 +128,40 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		public int? GetIndex(Request request, EntityKey entityKey, DbTransaction dbTransaction)
+		{
+			// HACK This method is a big hack that I implemented only because Pierre wanted something
+			// quickly. It is totally inefficient and I plan to implement a better way to do this
+			// which will be more performant.
+
+			var sqlSelect = this.CreateSqlSelectForEntityKeys (request);
+
+			dbTransaction.SqlBuilder.SelectData (sqlSelect);
+
+			var data = this.DbInfrastructure.ExecuteRetData (dbTransaction);
+
+			long expectedId = entityKey.RowKey.Id;
+			int i = 0;
+			int? result = null;
+
+			foreach (DataRow dataRow in data.Tables[0].Rows)
+			{
+				var rowId = (long) dataRow[0];
+
+				if (rowId == expectedId)
+				{
+					result = i;
+
+					break;
+				}
+
+				i++;
+			}
+
+			return result;
+		}
+
+
 		public IEnumerable<EntityData> GetEntitiesData(Request request)
 		{
 			List<Tuple<DbKey, Druid, long, ValueData, ReferenceData>> valuesAndReferencesData;
