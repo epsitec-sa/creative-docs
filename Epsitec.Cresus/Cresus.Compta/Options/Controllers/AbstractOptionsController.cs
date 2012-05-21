@@ -130,16 +130,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Padding        = new Margins (5),
 			};
 
-			var viewsFrame = new FrameBox
-			{
-				Parent         = this.toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (0, -1, 0, 0),
-				Padding        = new Margins (5),
-			};
-
 			//	Remplissage de la frame gauche.
 			this.topPanelLeftController = new TopPanelLeftController (this.controller);
 			this.topPanelLeftController.CreateUI (topPanelLeftFrame, this.HasBeginnerSpecialist, "Panel.Options", this.LevelChangedAction);
@@ -148,8 +138,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			//	Remplissage de la frame droite.
 			this.topPanelRightController = new TopPanelRightController (this.controller);
 			this.topPanelRightController.CreateUI (topPanelRightFrame, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
-
-			this.CreateViewsUI (viewsFrame);
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);
 			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged);
@@ -196,77 +184,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.ShowArrayOrGraph ();
 		}
-
-
-		#region Additionnal views
-		private void CreateViewsUI(FrameBox parent)
-		{
-			var button = new IconButton
-			{
-				Parent        = parent,
-				IconUri       = UIBuilder.GetResourceIconUri ("Views.Menu"),
-				PreferredSize = new Size (20, 20),
-				Dock          = DockStyle.Top,
-			};
-
-			ToolTip.Default.SetToolTip (button, "Choix des vues additionnelles");
-
-			button.Clicked += delegate
-			{
-				this.ShowPrésentationsMenu (button);
-			};
-		}
-
-		private void ShowPrésentationsMenu(Widget parentButton)
-		{
-			var menu = new VMenu ();
-
-			foreach (var command in AbstractOptionsController.MenuPrésentationCommands)
-			{
-				this.AddPrésentationToMenu (menu, command);
-			}
-
-			if (menu.Items.Count == 0)
-			{
-				return;
-			}
-
-			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
-
-			menu.Host = parentButton;
-			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
-		}
-
-		private void AddPrésentationToMenu(VMenu menu, Command cmd)
-		{
-			if (this.controller.MainWindowController.HasPrésentationCommand (cmd))
-			{
-				var item = new MenuItem ()
-				{
-					CommandObject = cmd,
-				};
-
-				menu.Items.Add (item);
-			}
-		}
-
-		private static IEnumerable<Command> MenuPrésentationCommands
-		{
-			get
-			{
-				yield return Res.Commands.Présentation.Journal;
-				yield return Res.Commands.Présentation.Extrait;
-				yield return Res.Commands.Présentation.Bilan;
-				yield return Res.Commands.Présentation.PP;
-				yield return Res.Commands.Présentation.Exploitation;
-				yield return Res.Commands.Présentation.Budgets;
-				yield return Res.Commands.Présentation.RésuméPériodique;
-				yield return Res.Commands.Présentation.Soldes;
-				yield return Res.Commands.Présentation.Balance;
-				yield return Res.Commands.Présentation.TVA;
-			}
-		}
-		#endregion
 
 
 		#region Comparaison

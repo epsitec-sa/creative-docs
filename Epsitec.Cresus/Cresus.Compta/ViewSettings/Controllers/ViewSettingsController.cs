@@ -110,13 +110,23 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock           = DockStyle.Fill,
 			};
 
-			var specialistFrame = new FrameBox
+			var viewsFrame = new FrameBox
 			{
 				Parent         = this.toolbar,
 				PreferredWidth = 20,
 				Dock           = DockStyle.Right,
-				Padding        = new Margins (0, 5, 5, 5),
+				Padding        = new Margins (5),
 			};
+
+			var button = new IconButton
+			{
+				Parent        = viewsFrame,
+				IconUri       = UIBuilder.GetResourceIconUri ("Views.Menu"),
+				PreferredSize = new Size (24, 24),
+				Dock          = DockStyle.Top,
+			};
+
+			ToolTip.Default.SetToolTip (button, "Choix des vues (pas encore disponible)");
 
 			var panelsToolbarFrame = new FrameBox
 			{
