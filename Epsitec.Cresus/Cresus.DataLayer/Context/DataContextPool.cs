@@ -153,11 +153,13 @@ namespace Epsitec.Cresus.DataLayer.Context
 		/// <param name="jobs">The sequence of <see cref="AbstractSynchronizationJob"/> to synchronize.</param>
 		internal void Synchronize(DataContext dataContext, IEnumerable<AbstractSynchronizationJob> jobs)
 		{
+			dataContext.IsIsolated.WhenTrueThrow<System.InvalidOperationException> ("An isolated data context may not synchronize its changes");
+
 			if (this.Contains (dataContext))
 			{
 				List<DataContext> otherDataContexts = this
 					.Where (d => d != dataContext)
-					.Where (d => !d.IsDisposed)
+					.Where (d => !d.IsDisposed && !d.IsIsolated)
 					.ToList ();
 
 				foreach (AbstractSynchronizationJob job in jobs)

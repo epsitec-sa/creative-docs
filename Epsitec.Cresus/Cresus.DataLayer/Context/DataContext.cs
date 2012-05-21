@@ -274,6 +274,21 @@ namespace Epsitec.Cresus.DataLayer.Context
 			private set;
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is isolated. An isolated <c>DataContext</c>
+		/// wont' be affected by updates to other contexts.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is isolated; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsIsolated
+		{
+			get
+			{
+				return this.isIsolated;
+			}
+		}
+
 
 		/// <summary>
 		/// Creates a new <see cref="AbstractEntity"/> of type <typeparamref name="TEntity"/> associated
@@ -1184,6 +1199,15 @@ namespace Epsitec.Cresus.DataLayer.Context
 			this.DataContextPool.Synchronize (this, jobs);
 		}
 
+		
+		/// <summary>
+		/// Makes this instance isolated. See <see cref="DataContext.IsIsolated"/>.
+		/// </summary>
+		public void Isolate()
+		{
+			this.isIsolated = true;
+		}
+
 
 		/// <summary>
 		/// Tells whether this instance manages an <see cref="AbstractEntity"/> corresponding to a
@@ -1929,5 +1953,6 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 
 		private bool								isDisposed;
+		private bool								isIsolated;
 	}
 }
