@@ -411,6 +411,8 @@
     <EmbeddedResource Include="Images\Views.Menu.icon" />
     <EmbeddedResource Include="Images\Présentation.TVA.icon" />
     <EmbeddedResource Include="Images\Edit.Rename.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Begin.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.End.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

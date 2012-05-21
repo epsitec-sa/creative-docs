@@ -10,7 +10,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 {
 	public class TabItem
 	{
-		public FormattedText Description
+		public FormattedText FormattedText
 		{
 			get;
 			set;
@@ -49,13 +49,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
-		public bool MoveFirstEnable
+		public bool MoveBeginEnable
 		{
 			get;
 			set;
 		}
 
-		public bool MoveLastEnable
+		public bool MoveEndEnable
 		{
 			get;
 			set;

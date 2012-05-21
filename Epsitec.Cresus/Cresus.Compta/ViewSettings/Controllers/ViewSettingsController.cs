@@ -574,11 +574,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					var item = new TabItem
 					{
-						Description      = this.viewSettingsList.List[i].Name,
+						FormattedText    = this.viewSettingsList.List[i].Name,
 						RenameEnable     = !this.viewSettingsList.List[i].Readonly,
 						DeleteEnable     = !this.viewSettingsList.List[i].Permanent,
-						MoveFirstEnable  = i > 0,
-						MoveLastEnable   = i < this.viewSettingsList.List.Count-1,
+						MoveBeginEnable  = i > 0,
+						MoveEndEnable    = i < this.viewSettingsList.List.Count-1,
 						RenameVisibility = true,
 						DeleteVisibility = true,
 						MoveVisibility   = true,
@@ -591,7 +591,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					var item = new TabItem
 					{
-						Description = " + ",
+						FormattedText = " + ",
 					};
 
 					this.compactTabsPane.Add (item);
@@ -643,6 +643,11 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneDraggingDoing(object sender, int srcIndex, int dstIndex)
 		{
+			if (srcIndex == dstIndex || srcIndex == dstIndex-1)
+			{
+				return;
+			}
+
 			var s = this.viewSettingsList.List[srcIndex];
 			this.viewSettingsList.List.RemoveAt (srcIndex);
 

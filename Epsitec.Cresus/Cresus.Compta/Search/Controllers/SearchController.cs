@@ -266,16 +266,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 			this.beginnerCatégorieActif.PreferredWidth = this.beginnerCatégorieActif.GetBestFitSize ().Width;
 
-			this.beginnerCatégorieCharge = new CheckButton
-			{
-				Parent      = frame,
-				Text        = Converters.CatégorieToString (CatégorieDeCompte.Charge),
-				ActiveState = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
-				Dock        = DockStyle.Left,
-				Margins     = new Margins (0, 10, 0, 0),
-			};
-			this.beginnerCatégorieCharge.PreferredWidth = this.beginnerCatégorieCharge.GetBestFitSize ().Width;
-
 			this.beginnerCatégoriePassif = new CheckButton
 			{
 				Parent      = frame,
@@ -285,6 +275,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins     = new Margins (0, 10, 0, 0),
 			};
 			this.beginnerCatégoriePassif.PreferredWidth = this.beginnerCatégoriePassif.GetBestFitSize ().Width;
+
+			this.beginnerCatégorieCharge = new CheckButton
+			{
+				Parent      = frame,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Charge),
+				ActiveState = ((catégorie & CatégorieDeCompte.Charge) != 0) ? ActiveState.Yes : ActiveState.No,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+			};
+			this.beginnerCatégorieCharge.PreferredWidth = this.beginnerCatégorieCharge.GetBestFitSize ().Width;
 
 			this.beginnerCatégorieProduit = new CheckButton
 			{
