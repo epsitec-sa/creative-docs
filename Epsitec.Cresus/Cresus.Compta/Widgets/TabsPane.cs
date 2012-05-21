@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void MouseDown(Message message, Point pos)
 		{
-			int index, rank;
+			int index;
 
 			this.mouseDown = true;
 			this.draggingStartPos = pos;
@@ -217,14 +217,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			index = this.GetDetectedIndex (pos);
 			if (index != -1)
 			{
-				rank = this.showedIndexes.IndexOf (index);
-				if (rank != -1)
+				var tab = this.GetShowedTabFromIndex (index);
+				if (tab != null && tab.TabItem.MoveVisibility)
 				{
-					var tab = this.GetShowedTab (rank);
-					if (tab != null && tab.TabItem.MoveVisibility)
-					{
-						this.fixedTab = false;
-					}
+					this.fixedTab = false;
 				}
 			}
 
@@ -276,8 +272,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 				else
 				{
-					rank = this.showedIndexes.IndexOf (this.selectedIndex);
-					if (this.selectedIndex == index && rank != -1 && this.GetShowedTab (rank).TabItem.RenameEnable)  // clic sur onglet déjà sélectionné ?
+					var tab = this.GetShowedTabFromIndex (this.selectedIndex);
+					if (this.selectedIndex == index && tab != null && tab.TabItem.RenameEnable)  // clic sur l'onglet déjà sélectionné ?
 					{
 						this.menuTabIndex = this.selectedIndex;
 						this.StartRename ();
@@ -372,18 +368,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			this.DragEnd ();
 
-			int rank = this.showedIndexes.IndexOf (this.draggingStartIndex);
-			if (rank != -1)
+			var tab = this.GetShowedTabFromIndex (this.draggingStartIndex);
+			this.dragInfo = new DragInfo (tab, this);
+
+			this.DragMove ();
+
+			foreach (var widget in this.additionnalWidgets)
 			{
-				var tab = this.GetShowedTab (rank);
-				this.dragInfo = new DragInfo (tab, this);
-
-				this.DragMove ();
-
-				foreach (var widget in this.additionnalWidgets)
-				{
-					widget.Visibility = false;
-				}
+				widget.Visibility = false;
 			}
 		}
 
@@ -485,7 +477,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					rect.Inflate (1, -2);
 					var pos = rect.BottomLeft;
-					var tab = this.GetShowedTab (rank);
+					var tab = this.GetShowedTabFromRank (rank);
 					tab.TextLayout.LayoutSize = rect.Size;
 					tab.TextLayout.DefaultColor = color;
 					tab.TextLayout.Paint (pos, graphics);
@@ -775,7 +767,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private double GetShowedWidth(int rank)
 		{
 			//	Retourne la largeur du texte contenu dans un onglet.
-			var tab = this.GetShowedTab (rank);
+			var tab = this.GetShowedTabFromRank (rank);
 
 			if (tab == null)
 			{
@@ -787,7 +779,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 		}
 
-		private Tab GetShowedTab(int rank)
+		private Tab GetShowedTabFromIndex(int index)
+		{
+			int rank = this.showedIndexes.IndexOf (index);
+			return this.GetShowedTabFromRank (rank);
+		}
+
+		private Tab GetShowedTabFromRank(int rank)
 		{
 			//	Retourne le contenu d'un onglet. L'onglet 'v' du menu retourne null.
 			if (rank >= 0 && rank < this.showedIndexes.Count)
@@ -1003,7 +1001,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				int rank = this.showedIndexes.IndexOf (this.menuTabIndex);
 				if (rank != -1)
 				{
-					var tab = this.GetShowedTab (rank);
+					var tab = this.GetShowedTabFromRank (rank);
 					if (tab != null)
 					{
 						var rect = this.GetTextRect (rank);
@@ -1050,14 +1048,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 			int index = this.GetDetectedIndex (pos);
 			if (index != -1)
 			{
-				int rank = this.showedIndexes.IndexOf (index);
-				if (rank != -1)
+				var tab = this.GetShowedTabFromIndex (index);
+				if (tab != null && tab.TextWidth > tab.CurrentWidth)  // manque-il de la place pour le texte ?
 				{
-					var tab = this.GetShowedTab (rank);
-					if (tab != null && tab.TextWidth > tab.CurrentWidth)
-					{
-						return tab.TabItem.FormattedText;
-					}
+					return tab.TabItem.FormattedText;
 				}
 			}
 
@@ -1111,89 +1105,43 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void ShowContextMenu()
 		{
-			if (this.hilitedIndex == -1)
+			var tab = this.GetShowedTabFromIndex (this.hilitedIndex);
+			if (tab == null)
 			{
 				return;
 			}
 
 			var menu = new VMenu ();
 
-			var tab = this.GetShowedTab (this.hilitedIndex);
-
-			if (tab == null)
-			{
-				return;
-			}
-
 			if (tab.TabItem.RenameVisibility)
 			{
-				var item = new MenuItem
-				{
-					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Rename"),
-					FormattedText = "Renommer",
-					Enable        = tab.TabItem.RenameEnable,
-				};
-
-				menu.Items.Add (item);
-
-				item.Clicked += delegate
+				this.AddToContextMenu (menu, "Edit.Rename", "Renommer", tab.TabItem.RenameEnable, delegate
 				{
 					this.StartRename ();
-				};
+				});
 			}
 
 			if (tab.TabItem.DeleteVisibility)
 			{
-				var item = new MenuItem
-				{
-					IconUri       = UIBuilder.GetResourceIconUri ("Edit.Delete"),
-					FormattedText = "Supprimer",
-					Enable        = tab.TabItem.DeleteEnable,
-				};
-
-				menu.Items.Add (item);
-
-				item.Clicked += delegate
+				this.AddToContextMenu (menu, "Edit.Delete", "Supprimer", tab.TabItem.DeleteEnable, delegate
 				{
 					this.OnDeleteDoing (this.menuTabIndex);
-				};
+				});
 			}
 
 			if (tab.TabItem.MoveVisibility)
 			{
 				menu.Items.Add (new MenuSeparator ());
 
+				this.AddToContextMenu (menu, "Edit.Tab.Begin", "Déplacer en tête", tab.TabItem.MoveBeginEnable, delegate
 				{
-					var item = new MenuItem
-					{
-						IconUri       = UIBuilder.GetResourceIconUri ("Edit.Tab.Begin"),
-						FormattedText = "Déplacer en tête",
-						Enable        = tab.TabItem.MoveBeginEnable,
-					};
+					this.OnDraggingDoing (this.selectedIndex, this.BeginIndex);
+				});
 
-					menu.Items.Add (item);
-
-					item.Clicked += delegate
-					{
-						this.OnDraggingDoing (this.selectedIndex, this.BeginIndex);
-					};
-				}
-
+				this.AddToContextMenu (menu, "Edit.Tab.End", "Déplacer en queue", tab.TabItem.MoveEndEnable, delegate
 				{
-					var item = new MenuItem
-					{
-						IconUri       = UIBuilder.GetResourceIconUri ("Edit.Tab.End"),
-						FormattedText = "Déplacer en queue",
-						Enable        = tab.TabItem.MoveEndEnable,
-					};
-
-					menu.Items.Add (item);
-
-					item.Clicked += delegate
-					{
-						this.OnDraggingDoing (this.selectedIndex, this.EndIndex);
-					};
-				}
+					this.OnDraggingDoing (this.selectedIndex, this.EndIndex);
+				});
 			}
 
 			if (!menu.Items.Any ())
@@ -1219,6 +1167,23 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			menu.AutoDispose = true;
 			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
+		}
+
+		private void AddToContextMenu(VMenu menu, string icon, FormattedText text, bool enable, System.Action action)
+		{
+			var item = new MenuItem
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (icon),
+				FormattedText = text,
+				Enable        = enable,
+			};
+
+			item.Clicked += delegate
+			{
+				action ();
+			};
+
+			menu.Items.Add (item);
 		}
 
 		private int BeginIndex
