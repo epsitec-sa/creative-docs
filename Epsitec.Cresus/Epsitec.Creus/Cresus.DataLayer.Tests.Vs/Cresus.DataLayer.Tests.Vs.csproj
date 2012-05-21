@@ -113,7 +113,6 @@
     <Compile Include="Helpers\TestHelper.cs" />
     <Compile Include="Proxies\UnitTestReferenceFieldProxy.cs" />
     <Compile Include="Proxies\UnitTestCollectionFieldProxy.cs" />
-    <Compile Include="Loader\UnitTestAliasNode.cs" />
     <Compile Include="Schema\UnitTestEntityEngine.cs" />
     <Compile Include="Schema\UnitTestEntityTypeEngine.cs" />
     <Compile Include="Schema\UnitTestServiceSchemaBuilder.cs" />

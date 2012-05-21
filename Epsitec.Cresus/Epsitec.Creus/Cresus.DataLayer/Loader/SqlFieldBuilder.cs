@@ -16,10 +16,9 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 
 
-		public SqlFieldBuilder(AbstractEntity rootEntity, AliasNode rootAlias, Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> constantResolver, Func<AbstractEntity, AliasNode, AbstractEntity, Druid, SqlField> publicFieldResolver, Func<AbstractEntity, AliasNode, AbstractEntity, string, SqlField> privateFieldResolver)
+		public SqlFieldBuilder(AliasManager aliasManager, Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> constantResolver, Func<AliasManager, AbstractEntity, Druid, SqlField> publicFieldResolver, Func<AliasManager, AbstractEntity, string, SqlField> privateFieldResolver)
 		{
-			this.rootEntity = rootEntity;
-			this.rootAlias = rootAlias;
+			this.aliasManager = aliasManager;
 
 			this.constantResolver = constantResolver;
 			this.publicFieldResolver = publicFieldResolver;
@@ -35,29 +34,26 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 		public SqlField Build(AbstractEntity entity, Druid fieldId)
 		{
-			return this.publicFieldResolver (this.rootEntity, this.rootAlias, entity, fieldId);
+			return this.publicFieldResolver (this.aliasManager, entity, fieldId);
 		}
 
 
 		public SqlField Build(AbstractEntity entity, string name)
 		{
-			return this.privateFieldResolver (this.rootEntity, this.rootAlias, entity, name);
+			return this.privateFieldResolver (this.aliasManager, entity, name);
 		}
 
 
-		private readonly AbstractEntity rootEntity;
-
-
-		private readonly AliasNode rootAlias;
+		private readonly AliasManager aliasManager;
 
 
 		private readonly Func<DbRawType, DbSimpleType, DbNumDef, object, SqlField> constantResolver;
 
 
-		private readonly Func<AbstractEntity, AliasNode, AbstractEntity, Druid, SqlField> publicFieldResolver;
+		private readonly Func<AliasManager, AbstractEntity, Druid, SqlField> publicFieldResolver;
 
 
-		private readonly Func<AbstractEntity, AliasNode, AbstractEntity, string, SqlField> privateFieldResolver;
+		private readonly Func<AliasManager, AbstractEntity, string, SqlField> privateFieldResolver;
 
 
 	}

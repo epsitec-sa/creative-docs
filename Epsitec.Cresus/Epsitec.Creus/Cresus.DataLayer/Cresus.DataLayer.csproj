@@ -153,6 +153,7 @@
     <Compile Include="Expressions\InternalField.cs" />
     <Compile Include="Expressions\SortClause.cs" />
     <Compile Include="Expressions\SortOrder.cs" />
+    <Compile Include="Loader\AliasManager.cs" />
     <Compile Include="Loader\FieldChecker.cs" />
     <Compile Include="Loader\SqlFieldBuilder.cs" />
     <Compile Include="Expressions\Value.cs" />
@@ -204,7 +205,6 @@
     <Compile Include="Expressions\UnaryOperation.cs" />
     <Compile Include="Expressions\UnaryOperator.cs" />
     <Compile Include="Expressions\PublicField.cs" />
-    <Compile Include="Loader\AliasNode.cs" />
     <Compile Include="Serialization\ValueData.cs" />
     <Compile Include="Proxies\AbstractFieldProxy.cs" />
     <Compile Include="Proxies\CollectionFieldProxy.cs" />
