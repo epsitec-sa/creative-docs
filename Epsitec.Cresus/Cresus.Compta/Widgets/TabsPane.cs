@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 					else
 					{
-						if (this.mouseDown && !this.isDragging && Point.Distance (pos, this.draggingStartPos) >= 5)
+						if (this.mouseDown && !this.isDragging && !this.fixedTab && Point.Distance (pos, this.draggingStartPos) >= 5)
 						{
 							index = this.GetDetectedIndex (pos);
 							if (index != -1)
@@ -197,6 +197,21 @@ namespace Epsitec.Cresus.Compta.Widgets
 				case MessageType.MouseDown:
 					this.mouseDown = true;
 					this.draggingStartPos = pos;
+
+					this.fixedTab = true;
+					index = this.GetDetectedIndex (pos);
+					if (index != -1)
+					{
+						rank = this.showedIndexes.IndexOf (index);
+						if (rank != -1)
+						{
+							var tab = this.GetShowedTab (rank);
+							if (tab != null && tab.TabItem.MoveVisibility)
+							{
+								this.fixedTab = false;
+							}
+						}
+					}
 
 					if (this.isRename)
 					{
@@ -1405,6 +1420,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private bool								menuOpened;
 		private bool								isDragging;
 		private bool								isRename;
+		private bool								fixedTab;
 		private bool								dirtyLayout;
 		private double								lastWidth;
 		private DragInfo							dragInfo;
