@@ -84,7 +84,12 @@ namespace Epsitec.Common.Support
 
 			using (AssemblyLoader.recursionCount.Enter ().AndFinally (AssemblyLoader.DispatchPendingEvents))
 			{
-				var assembly = Assembly.LoadWithPartialName (name);
+				System.Reflection.Assembly assembly = null;
+
+#if false
+				//	Obsolete: should not be used any longer...
+				//	See http://msdn.microsoft.com/en-us/library/1009fa28.aspx
+				assembly = Assembly.LoadWithPartialName (name);
 
 				if (assembly != null)
 				{
@@ -100,6 +105,7 @@ namespace Epsitec.Common.Support
 
 					return assembly;
 				}
+#endif
 				
 				if ((string.IsNullOrEmpty (loadPath) == false) &&
 					(System.IO.Directory.Exists (loadPath)))
