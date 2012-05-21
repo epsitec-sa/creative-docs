@@ -1,5 +1,7 @@
-//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using Epsitec.Common.Support.Extensions;
 
 using System.Collections.Generic;
 
@@ -33,9 +35,42 @@ namespace Epsitec.Common.Types
 			}
 		}
 
-#if DOTNET35
-/* Nothing */
-#else
+		/// <summary>
+		/// Explodes the lambda into a sequence of properties.
+		/// </summary>
+		/// <param name="expression">The expression.</param>
+		/// <param name="trimCount">The trim count (<c>1</c> means don't include the last property).</param>
+		/// <returns>The collection of properties.</returns>
+		public static IEnumerable<PropertyInfo> ExplodeLambda(Expression expression, int trimCount = 0)
+		{
+			if (expression.NodeType != ExpressionType.Lambda)
+			{
+				throw new System.ArgumentException ("Expression is not a valid lambda");
+			}
+
+			var list   = new List<PropertyInfo> ();
+			var lambda = expression as LambdaExpression;
+			var body   = lambda.Body as MemberExpression;
+
+			System.Diagnostics.Debug.Assert (lambda != null);
+
+			while (body != null)
+			{
+				if (trimCount == 0)
+				{
+					list.Insert (0, body.Member as PropertyInfo);
+				}
+				else
+				{
+					trimCount--;
+				}
+				
+				body = body.Expression as MemberExpression;
+			}
+
+			return list;
+		}
+
 
 		/// <summary>
 		/// Creates a setter expression based on a getter expression.
@@ -71,7 +106,6 @@ namespace Epsitec.Common.Types
 
 			return setterLambda;
 		}
-#endif
 
 		private static PropertyInfo GetLambdaPropertyInfo(LambdaExpression expression)
 		{
