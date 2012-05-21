@@ -137,152 +137,191 @@ namespace Epsitec.Cresus.Compta.Widgets
 				return;
 			}
 
-			int index, rank;
-
 			switch (message.MessageType)
 			{
 				case MessageType.MouseMove:
-					index = this.GetDetectedIndex (pos);
-
-					if (this.isDragging)
-					{
-						rank = this.GetDetectedGapRank (pos);
-						if (this.gapHilitedRank != rank)
-						{
-							this.gapHilitedRank = rank;
-							this.Invalidate ();
-						}
-
-						this.DragMove ();
-					}
-					else
-					{
-						if (this.mouseDown && !this.isDragging && !this.fixedTab && Point.Distance (pos, this.draggingStartPos) >= 5)
-						{
-							index = this.GetDetectedIndex (pos);
-							if (index != -1)
-							{
-								this.isDragging = true;
-								this.dirtyLayout = true;
-								this.draggingStartIndex = index;
-								this.gapHilitedRank = this.GetDetectedGapRank (pos);
-								this.Invalidate ();
-								this.DragBegin ();
-							}
-						}
-						else
-						{
-							if (this.hilitedIndex != index)
-							{
-								this.hilitedIndex = index;
-								this.Invalidate ();
-							}
-						}
-					}
-					break;
-
-				case MessageType.MouseLeave:
-					if (!this.isDragging)
-					{
-						this.mouseDown = false;
-						this.hilitedIndex = -1;
-						this.isDragging = false;
-						this.dirtyLayout = true;
-						this.gapHilitedRank = -1;
-						this.Invalidate ();
-						this.DragEnd ();
-					}
+					this.MouseMove (message, pos);
 					break;
 
 				case MessageType.MouseDown:
-					this.mouseDown = true;
-					this.draggingStartPos = pos;
-
-					this.fixedTab = true;
-					index = this.GetDetectedIndex (pos);
-					if (index != -1)
-					{
-						rank = this.showedIndexes.IndexOf (index);
-						if (rank != -1)
-						{
-							var tab = this.GetShowedTab (rank);
-							if (tab != null && tab.TabItem.MoveVisibility)
-							{
-								this.fixedTab = false;
-							}
-						}
-					}
-
-					if (this.isRename)
-					{
-						this.StopRename ();
-					}
-
-					message.Captured = true;
-					message.Consumer = this;
+					this.MouseDown (message, pos);
 					return;
 
 				case MessageType.MouseUp:
-					this.mouseDown = false;
+					this.MouseUp (message, pos);
+					break;
 
-					if (this.isDragging)
-					{
-						if (this.gapHilitedRank < this.showedIndexes.Count)
-						{
-							index = this.showedIndexes[this.gapHilitedRank];
-						}
-						else
-						{
-							index = this.showedIndexes.Count;
-						}
-
-						this.OnDraggingDoing (this.draggingStartIndex, index);
-
-						this.isDragging = false;
-						this.dirtyLayout = true;
-						this.gapHilitedRank = -1;
-						this.Invalidate ();
-						this.DragEnd ();
-					}
-					else if (message.IsRightButton)
-					{
-						this.ShowContextMenu ();
-					}
-					else
-					{
-						index = this.GetDetectedIndex (pos);
-						if (index == TabsPane.menuIndex)
-						{
-							this.ShowHiddenMenu ();
-						}
-						else
-						{
-							this.selectedIndex = index;
-							this.OnSelectedIndexChanged ();
-						}
-					}
+				case MessageType.MouseLeave:
+					this.MouseLeave (message, pos);
 					break;
 
 				case MessageType.KeyDown:
-					if (message.KeyCode == KeyCode.Return)
-					{
-						if (this.isRename)
-						{
-							this.AcceptRename ();
-						}
-					}
-
-					if (message.KeyCode == KeyCode.Escape)
-					{
-						if (this.isRename)
-						{
-							this.StopRename ();
-						}
-					}
+					this.KeyDown (message, pos);
 					break;
 			}
 
 			base.ProcessMessage (message, pos);
+		}
+
+		private void MouseMove(Message message, Point pos)
+		{
+			int index, rank;
+
+			index = this.GetDetectedIndex (pos);
+
+			if (this.isDragging)
+			{
+				rank = this.GetDetectedGapRank (pos);
+				if (this.gapHilitedRank != rank)
+				{
+					this.gapHilitedRank = rank;
+					this.Invalidate ();
+				}
+
+				this.DragMove ();
+			}
+			else
+			{
+				if (this.mouseDown && !this.isDragging && !this.fixedTab && Point.Distance (pos, this.draggingStartPos) >= 5)
+				{
+					index = this.GetDetectedIndex (pos);
+					if (index != -1)
+					{
+						this.isDragging = true;
+						this.dirtyLayout = true;
+						this.draggingStartIndex = index;
+						this.gapHilitedRank = this.GetDetectedGapRank (pos);
+						this.Invalidate ();
+						this.DragBegin ();
+					}
+				}
+				else
+				{
+					if (this.hilitedIndex != index)
+					{
+						this.hilitedIndex = index;
+						this.Invalidate ();
+					}
+				}
+			}
+		}
+
+		private void MouseDown(Message message, Point pos)
+		{
+			int index, rank;
+
+			this.mouseDown = true;
+			this.draggingStartPos = pos;
+
+			this.fixedTab = true;
+			index = this.GetDetectedIndex (pos);
+			if (index != -1)
+			{
+				rank = this.showedIndexes.IndexOf (index);
+				if (rank != -1)
+				{
+					var tab = this.GetShowedTab (rank);
+					if (tab != null && tab.TabItem.MoveVisibility)
+					{
+						this.fixedTab = false;
+					}
+				}
+			}
+
+			if (this.isRename)
+			{
+				this.StopRename ();
+			}
+
+			message.Captured = true;
+			message.Consumer = this;
+		}
+
+		private void MouseUp(Message message, Point pos)
+		{
+			int index, rank;
+
+			this.mouseDown = false;
+
+			if (this.isDragging)
+			{
+				if (this.gapHilitedRank < this.showedIndexes.Count)
+				{
+					index = this.showedIndexes[this.gapHilitedRank];
+				}
+				else
+				{
+					index = this.showedIndexes.Count;
+				}
+
+				this.OnDraggingDoing (this.draggingStartIndex, index);
+
+				this.isDragging = false;
+				this.dirtyLayout = true;
+				this.gapHilitedRank = -1;
+				this.Invalidate ();
+				this.DragEnd ();
+			}
+			else if (message.IsRightButton)
+			{
+				this.ShowContextMenu ();
+			}
+			else
+			{
+				index = this.GetDetectedIndex (pos);
+
+				if (index == TabsPane.menuIndex)
+				{
+					this.ShowHiddenMenu ();
+				}
+				else
+				{
+					rank = this.showedIndexes.IndexOf (this.selectedIndex);
+					if (this.selectedIndex == index && rank != -1 && this.GetShowedTab (rank).TabItem.RenameEnable)  // clic sur onglet déjà sélectionné ?
+					{
+						this.menuTabIndex = this.selectedIndex;
+						this.StartRename ();
+					}
+					else
+					{
+						this.selectedIndex = index;
+						this.OnSelectedIndexChanged ();
+					}
+				}
+			}
+		}
+
+		private void MouseLeave(Message message, Point pos)
+		{
+			if (!this.isDragging)
+			{
+				this.mouseDown = false;
+				this.hilitedIndex = -1;
+				this.isDragging = false;
+				this.dirtyLayout = true;
+				this.gapHilitedRank = -1;
+				this.Invalidate ();
+				this.DragEnd ();
+			}
+		}
+
+		private void KeyDown(Message message, Point pos)
+		{
+			if (message.KeyCode == KeyCode.Return)
+			{
+				if (this.isRename)
+				{
+					this.AcceptRename ();
+				}
+			}
+
+			if (message.KeyCode == KeyCode.Escape)
+			{
+				if (this.isRename)
+				{
+					this.StopRename ();
+				}
+			}
 		}
 
 		private int GetDetectedIndex(Point pos)
@@ -962,11 +1001,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 			if (this.menuTabIndex != -1)
 			{
 				int rank = this.showedIndexes.IndexOf (this.menuTabIndex);
-
 				if (rank != -1)
 				{
 					var tab = this.GetShowedTab (rank);
-
 					if (tab != null)
 					{
 						var rect = this.GetTextRect (rank);
@@ -974,7 +1011,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 						double y = System.Math.Floor ((this.ActualHeight-h)/2);
 
 						this.renameField.Margins = new Margins (rect.Left, 0, 0, y);
-						this.renameField.PreferredSize = new Size (rect.Width, h);
+						this.renameField.PreferredSize = new Size (rect.Width+6, h);
 						this.renameField.Visibility = true;
 						this.renameField.FormattedText = tab.TabItem.FormattedText;
 
