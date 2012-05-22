@@ -186,32 +186,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-#if false
-		public IconButton PrésentationsMenuButton
-		{
-			get
-			{
-				return this.présentationsMenuButton;
-			}
-		}
-
-		public IconButton PrésentationsLastButton
-		{
-			get
-			{
-				return this.présentationsLastButton;
-			}
-		}
-
-		public IconButton NewWindowMenuButton
-		{
-			get
-			{
-				return this.newWindowMenuButton;
-			}
-		}
-#endif
-
 
 		#region Ribbon mode menu
 		private void ShowRibbonModeMenu(Widget parentButton)

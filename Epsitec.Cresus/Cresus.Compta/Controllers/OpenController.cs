@@ -40,9 +40,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.Open;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Open));
+			this.SetTitle ();
 		}
 
 		public override bool AcceptPériodeChanged

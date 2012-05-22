@@ -29,9 +29,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.PiècesGenerator;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.PiècesGenerator));
+			this.SetTitle ();
 		}
 
 

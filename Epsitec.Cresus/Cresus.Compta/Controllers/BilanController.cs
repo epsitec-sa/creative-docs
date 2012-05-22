@@ -39,9 +39,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateColumnMappers ();
 		}
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.Bilan;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Bilan));
+			this.SetTitle ();
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 	}

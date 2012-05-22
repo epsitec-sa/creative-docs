@@ -740,36 +740,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (20, 0, 0, 0),
 			};
 
-			this.titleFrame = new FrameBox
-			{
-				Parent           = frame,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Fill,
-				Margins          = new Margins (10, 0, 0, 0),
-			};
-
-			this.titleLabel = new StaticText
-			{
-				Parent           = this.titleFrame,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Fill,
-			};
-
-			this.titleLabel.HypertextClicked += delegate
-			{
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty)
-				{
-					this.mainWindowController.OpenPanelFilter ();
-				}
-
-				if (!this.mainWindowController.TemporalData.IsEmpty)
-				{
-					this.mainWindowController.OpenPanelTemporal ();
-				}
-			};
-
 			new GlyphButton
 			{
 				Parent           = frame,
@@ -850,10 +820,31 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		protected void SetGroupTitle(FormattedText title)
+		protected virtual ControllerType ControllerType
 		{
+			get
+			{
+				return Controllers.ControllerType.Unknown;
+			}
+		}
+
+		protected void SetTitle()
+		{
+			this.SetTitle (FormattedText.Null);
+		}
+
+		protected void SetTitle(FormattedText title)
+		{
+			if (title.IsNullOrEmpty)
+			{
+				title = Présentations.GetName (this.ControllerType);
+			}
+
+			this.title = title;
+			
 			if (this.viewSettingsController != null)
 			{
+				title = Présentations.GetGroupName (this.ControllerType);
 				title = title.ApplyBold ().ApplyFontSize (13.0);
 
 				if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
@@ -865,22 +856,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.viewSettingsController.SetTitle (title);
 			}
-		}
-
-		protected void SetTitle(FormattedText title)
-		{
-			this.title = title;
-
-			title = title.ApplyBold ().ApplyFontSize (13.0);
-
-			if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
-				!this.mainWindowController.TemporalData.IsEmpty)
-			{
-				FormattedText ht = "filtre actif";
-				title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
-			}
-
-			this.titleLabel.FormattedText = title;
 		}
 
 		protected void SetSubtitle(FormattedText subtitle)
@@ -916,7 +891,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				if (this.dataAccessor.FilterData != null)
 				{
 					this.viewSettingsController.PanelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
-					this.SetTitle (this.title);
 				}
 
 				this.viewSettingsController.PanelsToolbarController.TemporalEnable = !this.mainWindowController.TemporalData.IsEmpty;
@@ -1353,8 +1327,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
 		protected StaticText									userLabel;
-		protected FrameBox										titleFrame;
-		protected StaticText									titleLabel;
 		protected StaticText									subtitleLabel;
 		protected FormattedText									title;
 		protected FormattedText									subtitle;

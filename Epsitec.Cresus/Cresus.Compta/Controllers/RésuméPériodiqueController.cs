@@ -114,9 +114,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateViewSettings ();
 		}
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.RésuméPériodique;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.RésuméPériodique));
+			this.SetTitle ();
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

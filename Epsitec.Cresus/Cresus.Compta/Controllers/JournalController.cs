@@ -143,9 +143,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.summaryLabel.Text = this.période.GetJournalSummary (journal);
 		}
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.Journal;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Journal));
+			this.SetTitle ();
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

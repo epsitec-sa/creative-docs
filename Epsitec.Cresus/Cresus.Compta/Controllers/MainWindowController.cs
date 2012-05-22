@@ -314,13 +314,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			//?string icon = string.Format (@"<img src=""{0}"" voff=""-10"" dx=""32"" dy=""32""/>   ", data.Command.Icon);
+			string icon = UIBuilder.GetTextIconUri (Présentations.GetIcon (data.ControllerType), iconSize: 32, verticalOffset: -10);
 
 			var item = new MenuItem ()
 			{
 				IconUri       = UIBuilder.GetMarkStateIconUri (index == this.navigatorEngine.Index),
-				//?FormattedText = icon + data.Description,
-				FormattedText = data.Description,
+				FormattedText = icon + "   " + data.Description,
 				Name          = index.ToString (),  // on ne peut pas utiliser simplement Index !
 			};
 

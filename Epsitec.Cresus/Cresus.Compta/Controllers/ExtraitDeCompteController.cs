@@ -219,6 +219,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		protected override ControllerType ControllerType
+		{
+			get
+			{
+				return Controllers.ControllerType.Extrait;
+			}
+		}
+
 		protected override void UpdateTitle()
 		{
 			var numéro = (this.dataAccessor.Permanents as ExtraitDeComptePermanents).NuméroCompte;
@@ -226,11 +234,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (compte == null)
 			{
-				this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Extrait));
+				this.SetTitle ();
 			}
 			else
 			{
-				this.SetGroupTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
+				this.SetTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
 
 			this.SetSubtitle (this.période.ShortTitle);
