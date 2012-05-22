@@ -36,6 +36,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.businessContext  = this.controller.BusinessContext;
 			this.viewSettingsList = this.controller.ViewSettingsList;
 
+			this.viewSettingsIndexes = new List<int> ();
+
 			this.showPanel = false;
 		}
 
@@ -250,18 +252,35 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-				this.tabsPane.Clear ();
+				//	Cherche les index des ViewSettings accessibles à l'utilisateur.
+				this.viewSettingsIndexes.Clear ();
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 				{
+					if (this.HasPrésentation (this.viewSettingsList.List[i].ControllerType))
+					{
+						this.viewSettingsIndexes.Add (i);
+					}
+				}
+
+				//?bool all = this.viewSettingsIndexes.Count == this.viewSettingsList.List.Count;
+
+				//	Génère les onglets des ViewSettings accessibles à l'utilisateur.
+				this.tabsPane.Clear ();
+
+				for (int i = 0; i < this.viewSettingsIndexes.Count; i++)
+				{
+					var index = this.viewSettingsIndexes[i];
+
+					//	Si tous les onglets ne sont pas visibles, on ne peut rien déplacer !
 					var item = new TabItem
 					{
-						Icon             = Présentations.GetTabIcon (this.viewSettingsList.List[i]),
-						FormattedText    = this.viewSettingsList.List[i].Name,
-						RenameEnable     = !this.viewSettingsList.List[i].Readonly,
-						DeleteEnable     = !this.viewSettingsList.List[i].Readonly,
+						Icon             = Présentations.GetTabIcon (this.viewSettingsList.List[index]),
+						FormattedText    = this.viewSettingsList.List[index].Name,
+						RenameEnable     = !this.viewSettingsList.List[index].Readonly,
+						DeleteEnable     = !this.viewSettingsList.List[index].Readonly,
 						MoveBeginEnable  = i > 0,
-						MoveEndEnable    = i < this.viewSettingsList.List.Count-1,
+						MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
 						RenameVisibility = true,
 						DeleteVisibility = true,
 						MoveVisibility   = true,
@@ -288,16 +307,42 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 		}
 
+		private bool HasPrésentation(ControllerType type)
+		{
+			if (type == ControllerType.Login)
+			{
+				return true;  // le login est toujours possible !
+			}
+
+			var user = this.controller.MainWindowController.CurrentUser;
+			if (user == null)  // déconnecté ?
+			{
+				return false;
+			}
+			else
+			{
+				if (user.Admin)
+				{
+					return true;  // l'administrateur a toujours accès à tout
+				}
+				else
+				{
+					return Présentations.ContainsPrésentationType (user.Présentations, type);
+				}
+			}
+		}
+
 		private void HandlerTabsPaneSelectedIndexChanged(object sender)
 		{
-			int sel = this.tabsPane.SelectedIndex;
+			int index = this.tabsPane.SelectedIndex;
 
-			if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && sel == this.viewSettingsList.List.Count)  // onglet "+" ?
+			if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && index == this.viewSettingsIndexes.Count)  // onglet "+" ?
 			{
 				this.AddViewSettings ();
 			}
 			else
 			{
+				int sel = this.viewSettingsIndexes[index];
 				this.viewSettingsList.SelectedIndex = sel;
 				this.UpdateAfterSelectionChanged ();
 				this.ViewSettingsChanged ();
@@ -306,7 +351,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneRenameDoing(object sender, int index, FormattedText text)
 		{
-			this.viewSettingsList.List[index].Name = text;
+			int sel = this.viewSettingsIndexes[index];
+			this.viewSettingsList.List[sel].Name = text;
 
 			this.UpdateAfterSelectionChanged ();
 			this.ViewSettingsChanged ();
@@ -314,12 +360,16 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneDeleteDoing(object sender, int index)
 		{
-			this.viewSettingsList.List.RemoveAt (index);
+			int sel = this.viewSettingsIndexes[index];
+			this.viewSettingsList.List.RemoveAt (sel);
 
-			if (this.viewSettingsList.SelectedIndex >= this.viewSettingsList.List.Count)
+			if (index >= this.viewSettingsIndexes.Count)
 			{
-				this.viewSettingsList.SelectedIndex = this.viewSettingsList.List.Count-1;
+				index = this.viewSettingsIndexes.Count-1;
 			}
+
+			sel = this.viewSettingsIndexes[index];
+			this.viewSettingsList.SelectedIndex = sel;
 
 			this.UpdateAfterSelectionChanged ();
 			this.ViewSettingsChanged ();
@@ -330,6 +380,24 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			if (srcIndex == dstIndex || srcIndex == dstIndex-1)
 			{
 				return;
+			}
+
+			if (srcIndex < this.viewSettingsIndexes.Count)
+			{
+				srcIndex = this.viewSettingsIndexes[srcIndex];
+			}
+			else
+			{
+				srcIndex = this.viewSettingsList.List.Count;
+			}
+
+			if (dstIndex < this.viewSettingsIndexes.Count)
+			{
+				dstIndex = this.viewSettingsIndexes[dstIndex];
+			}
+			else
+			{
+				dstIndex = this.viewSettingsList.List.Count;
 			}
 
 			var s = this.viewSettingsList.List[srcIndex];
@@ -377,7 +445,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			if (this.viewSettingsList != null)
 			{
-				this.tabsPane.SelectedIndex = this.viewSettingsList.SelectedIndex;
+				int sel = this.viewSettingsIndexes.IndexOf (this.viewSettingsList.SelectedIndex);
+				this.tabsPane.SelectedIndex = sel;
 			}
 		}
 
@@ -544,6 +613,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private readonly BusinessContext				businessContext;
 		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly ViewSettingsList				viewSettingsList;
+		private readonly List<int>						viewSettingsIndexes;
 
 		private System.Action							viewSettingsChangedAction;
 
