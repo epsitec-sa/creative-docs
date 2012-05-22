@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 			wall.AddBrick ()
 				.Input ()
 				  .Field (x => x.Complement)
-				  .Field (x => x.StreetAndHouseNumber)
-				  .Field (x => x.PostBoxNumber)
+				  .Field (x => x.EditionStreetAndHouseNumber)
+				  .Field (x => x.EditionPostBoxNumber)
 				  .Field (x => x.Location)
 				.End ();
 		}

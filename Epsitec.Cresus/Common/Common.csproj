@@ -856,6 +856,7 @@
     <Compile Include="Types\BindingUpdateMode.cs" />
     <Compile Include="Types\BooleanType.cs" />
     <Compile Include="Types\Caption.cs" />
+    <Compile Include="Types\CharacterExtractor.cs" />
     <Compile Include="Types\Collection.cs" />
     <Compile Include="Types\CollectionChangedAction.cs" />
     <Compile Include="Types\CollectionChangedEventArgs.cs" />

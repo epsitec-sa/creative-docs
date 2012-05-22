@@ -247,6 +247,10 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVA2
 				public static readonly global::Epsitec.Common.Support.Druid Contacts = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 2);
+				//	designer:cap/FVA23
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName1 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 98);
+				//	designer:cap/FVA33
+				public static readonly global::Epsitec.Common.Support.Druid DisplayName2 = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 99);
 				//	designer:cap/FVA3
 				public static readonly global::Epsitec.Common.Support.Druid PreferredLanguage = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 3);
 			}
@@ -363,16 +367,26 @@ namespace Epsitec.Cresus.Core.Library.Address
 				
 				//	designer:cap/FVAB2
 				public static readonly global::Epsitec.Common.Support.Druid Complement = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 75);
-				//	designer:cap/FVAR2
-				public static readonly global::Epsitec.Common.Support.Druid HouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 91);
+				//	designer:cap/FVA53
+				public static readonly global::Epsitec.Common.Support.Druid EditionPostBoxNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 101);
+				//	designer:cap/FVA43
+				public static readonly global::Epsitec.Common.Support.Druid EditionStreetAndHouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 100);
+				//	designer:cap/FVAU2
+				public static readonly global::Epsitec.Common.Support.Druid HouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 94);
+				//	designer:cap/FVA13
+				public static readonly global::Epsitec.Common.Support.Druid HouseNumberPrefix = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 97);
+				//	designer:cap/FVAT2
+				public static readonly global::Epsitec.Common.Support.Druid HouseNumberSuffix = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 93);
 				//	designer:cap/FVAE2
 				public static readonly global::Epsitec.Common.Support.Druid Location = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 78);
 				//	designer:cap/FVAH2
 				public static readonly global::Epsitec.Common.Support.Druid PersonAddress = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 81);
+				//	designer:cap/FVAV2
+				public static readonly global::Epsitec.Common.Support.Druid PostBoxNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 95);
 				//	designer:cap/FVAD2
-				public static readonly global::Epsitec.Common.Support.Druid PostBoxNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
-				//	designer:cap/FVAS2
-				public static readonly global::Epsitec.Common.Support.Druid StreetAndHouseNumber = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
+				public static readonly global::Epsitec.Common.Support.Druid PostBoxPrefix = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 77);
+				//	designer:cap/FVA03
+				public static readonly global::Epsitec.Common.Support.Druid PostBoxSuffix = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 96);
 				//	designer:cap/FVAC2
 				public static readonly global::Epsitec.Common.Support.Druid StreetName = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 76);
 			}

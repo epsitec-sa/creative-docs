@@ -85,9 +85,57 @@ namespace Epsitec.Cresus.Core.Entities
 				}
 			}
 		}
+		///	<summary>
+		///	The <c>DisplayName1</c> field.
+		///	designer:fld/FVA/FVA23
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA23]")]
+		public string DisplayName1
+		{
+			get
+			{
+				return this.GetField<string> ("[FVA23]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName1;
+				if (oldValue != value || !this.IsFieldDefined("[FVA23]"))
+				{
+					this.OnDisplayName1Changing (oldValue, value);
+					this.SetField<string> ("[FVA23]", oldValue, value);
+					this.OnDisplayName1Changed (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>DisplayName2</c> field.
+		///	designer:fld/FVA/FVA33
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA33]")]
+		public string DisplayName2
+		{
+			get
+			{
+				return this.GetField<string> ("[FVA33]");
+			}
+			set
+			{
+				string oldValue = this.DisplayName2;
+				if (oldValue != value || !this.IsFieldDefined("[FVA33]"))
+				{
+					this.OnDisplayName2Changing (oldValue, value);
+					this.SetField<string> ("[FVA33]", oldValue, value);
+					this.OnDisplayName2Changed (oldValue, value);
+				}
+			}
+		}
 		
 		partial void OnPreferredLanguageChanging(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
 		partial void OnPreferredLanguageChanged(global::Epsitec.Cresus.Core.Entities.LanguageEntity oldValue, global::Epsitec.Cresus.Core.Entities.LanguageEntity newValue);
+		partial void OnDisplayName1Changing(string oldValue, string newValue);
+		partial void OnDisplayName1Changed(string oldValue, string newValue);
+		partial void OnDisplayName2Changing(string oldValue, string newValue);
+		partial void OnDisplayName2Changed(string oldValue, string newValue);
 		
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
@@ -1078,57 +1126,77 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 		}
 		///	<summary>
-		///	The <c>HouseNumber</c> field.
-		///	designer:fld/FVAR/FVAR2
+		///	The <c>HouseNumberPrefix</c> field.
+		///	designer:fld/FVAR/FVA13
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAR2]")]
-		public string HouseNumber
+		[global::Epsitec.Common.Support.EntityField ("[FVA13]")]
+		public string HouseNumberPrefix
 		{
 			get
 			{
-				return this.GetField<string> ("[FVAR2]");
+				return this.GetField<string> ("[FVA13]");
 			}
 			set
 			{
-				string oldValue = this.HouseNumber;
-				if (oldValue != value || !this.IsFieldDefined("[FVAR2]"))
+				string oldValue = this.HouseNumberPrefix;
+				if (oldValue != value || !this.IsFieldDefined("[FVA13]"))
+				{
+					this.OnHouseNumberPrefixChanging (oldValue, value);
+					this.SetField<string> ("[FVA13]", oldValue, value);
+					this.OnHouseNumberPrefixChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>HouseNumber</c> field.
+		///	designer:fld/FVAR/FVAU2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAU2]")]
+		public int? HouseNumber
+		{
+			get
+			{
+				return this.GetField<int?> ("[FVAU2]");
+			}
+			set
+			{
+				int? oldValue = this.HouseNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVAU2]"))
 				{
 					this.OnHouseNumberChanging (oldValue, value);
-					this.SetField<string> ("[FVAR2]", oldValue, value);
+					this.SetField<int?> ("[FVAU2]", oldValue, value);
 					this.OnHouseNumberChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>StreetAndHouseNumber</c> field.
-		///	designer:fld/FVAR/FVAS2
+		///	The <c>HouseNumberSuffix</c> field.
+		///	designer:fld/FVAR/FVAT2
 		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[FVAS2]")]
-		public string StreetAndHouseNumber
+		[global::Epsitec.Common.Support.EntityField ("[FVAT2]")]
+		public string HouseNumberSuffix
 		{
 			get
 			{
-				string value = default (string);
-				this.GetStreetAndHouseNumber (ref value);
-				return value;
+				return this.GetField<string> ("[FVAT2]");
 			}
 			set
 			{
-				string oldValue = this.StreetAndHouseNumber;
-				if (oldValue != value || !this.IsFieldDefined("[FVAS2]"))
+				string oldValue = this.HouseNumberSuffix;
+				if (oldValue != value || !this.IsFieldDefined("[FVAT2]"))
 				{
-					this.OnStreetAndHouseNumberChanging (oldValue, value);
-					this.SetStreetAndHouseNumber (value);
-					this.OnStreetAndHouseNumberChanged (oldValue, value);
+					this.OnHouseNumberSuffixChanging (oldValue, value);
+					this.SetField<string> ("[FVAT2]", oldValue, value);
+					this.OnHouseNumberSuffixChanged (oldValue, value);
 				}
 			}
 		}
 		///	<summary>
-		///	The <c>PostBoxNumber</c> field.
+		///	The <c>PostBoxPrefix</c> field.
 		///	designer:fld/FVAR/FVAD2
 		///	</summary>
 		[global::Epsitec.Common.Support.EntityField ("[FVAD2]")]
-		public string PostBoxNumber
+		public string PostBoxPrefix
 		{
 			get
 			{
@@ -1136,12 +1204,104 @@ namespace Epsitec.Cresus.Core.Entities
 			}
 			set
 			{
-				string oldValue = this.PostBoxNumber;
+				string oldValue = this.PostBoxPrefix;
 				if (oldValue != value || !this.IsFieldDefined("[FVAD2]"))
 				{
-					this.OnPostBoxNumberChanging (oldValue, value);
+					this.OnPostBoxPrefixChanging (oldValue, value);
 					this.SetField<string> ("[FVAD2]", oldValue, value);
+					this.OnPostBoxPrefixChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PostBoxNumber</c> field.
+		///	designer:fld/FVAR/FVAV2
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVAV2]")]
+		public int? PostBoxNumber
+		{
+			get
+			{
+				return this.GetField<int?> ("[FVAV2]");
+			}
+			set
+			{
+				int? oldValue = this.PostBoxNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVAV2]"))
+				{
+					this.OnPostBoxNumberChanging (oldValue, value);
+					this.SetField<int?> ("[FVAV2]", oldValue, value);
 					this.OnPostBoxNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>PostBoxSuffix</c> field.
+		///	designer:fld/FVAR/FVA03
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA03]")]
+		public string PostBoxSuffix
+		{
+			get
+			{
+				return this.GetField<string> ("[FVA03]");
+			}
+			set
+			{
+				string oldValue = this.PostBoxSuffix;
+				if (oldValue != value || !this.IsFieldDefined("[FVA03]"))
+				{
+					this.OnPostBoxSuffixChanging (oldValue, value);
+					this.SetField<string> ("[FVA03]", oldValue, value);
+					this.OnPostBoxSuffixChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EditionStreetAndHouseNumber</c> field.
+		///	designer:fld/FVAR/FVA43
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA43]")]
+		public string EditionStreetAndHouseNumber
+		{
+			get
+			{
+				string value = default (string);
+				this.GetEditionStreetAndHouseNumber (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.EditionStreetAndHouseNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVA43]"))
+				{
+					this.OnEditionStreetAndHouseNumberChanging (oldValue, value);
+					this.SetEditionStreetAndHouseNumber (value);
+					this.OnEditionStreetAndHouseNumberChanged (oldValue, value);
+				}
+			}
+		}
+		///	<summary>
+		///	The <c>EditionPostBoxNumber</c> field.
+		///	designer:fld/FVAR/FVA53
+		///	</summary>
+		[global::Epsitec.Common.Support.EntityField ("[FVA53]")]
+		public string EditionPostBoxNumber
+		{
+			get
+			{
+				string value = default (string);
+				this.GetEditionPostBoxNumber (ref value);
+				return value;
+			}
+			set
+			{
+				string oldValue = this.EditionPostBoxNumber;
+				if (oldValue != value || !this.IsFieldDefined("[FVA53]"))
+				{
+					this.OnEditionPostBoxNumberChanging (oldValue, value);
+					this.SetEditionPostBoxNumber (value);
+					this.OnEditionPostBoxNumberChanged (oldValue, value);
 				}
 			}
 		}
@@ -1174,17 +1334,29 @@ namespace Epsitec.Cresus.Core.Entities
 		partial void OnComplementChanged(string oldValue, string newValue);
 		partial void OnStreetNameChanging(string oldValue, string newValue);
 		partial void OnStreetNameChanged(string oldValue, string newValue);
-		partial void OnHouseNumberChanging(string oldValue, string newValue);
-		partial void OnHouseNumberChanged(string oldValue, string newValue);
-		partial void OnStreetAndHouseNumberChanging(string oldValue, string newValue);
-		partial void OnStreetAndHouseNumberChanged(string oldValue, string newValue);
-		partial void OnPostBoxNumberChanging(string oldValue, string newValue);
-		partial void OnPostBoxNumberChanged(string oldValue, string newValue);
+		partial void OnHouseNumberPrefixChanging(string oldValue, string newValue);
+		partial void OnHouseNumberPrefixChanged(string oldValue, string newValue);
+		partial void OnHouseNumberChanging(int? oldValue, int? newValue);
+		partial void OnHouseNumberChanged(int? oldValue, int? newValue);
+		partial void OnHouseNumberSuffixChanging(string oldValue, string newValue);
+		partial void OnHouseNumberSuffixChanged(string oldValue, string newValue);
+		partial void OnPostBoxPrefixChanging(string oldValue, string newValue);
+		partial void OnPostBoxPrefixChanged(string oldValue, string newValue);
+		partial void OnPostBoxNumberChanging(int? oldValue, int? newValue);
+		partial void OnPostBoxNumberChanged(int? oldValue, int? newValue);
+		partial void OnPostBoxSuffixChanging(string oldValue, string newValue);
+		partial void OnPostBoxSuffixChanged(string oldValue, string newValue);
+		partial void OnEditionStreetAndHouseNumberChanging(string oldValue, string newValue);
+		partial void OnEditionStreetAndHouseNumberChanged(string oldValue, string newValue);
+		partial void OnEditionPostBoxNumberChanging(string oldValue, string newValue);
+		partial void OnEditionPostBoxNumberChanged(string oldValue, string newValue);
 		partial void OnLocationChanging(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		partial void OnLocationChanged(global::Epsitec.Cresus.Core.Entities.LocationEntity oldValue, global::Epsitec.Cresus.Core.Entities.LocationEntity newValue);
 		
-		partial void GetStreetAndHouseNumber(ref string value);
-		partial void SetStreetAndHouseNumber(string value);
+		partial void GetEditionStreetAndHouseNumber(ref string value);
+		partial void SetEditionStreetAndHouseNumber(string value);
+		partial void GetEditionPostBoxNumber(ref string value);
+		partial void SetEditionPostBoxNumber(string value);
 		
 		public override global::Epsitec.Common.Support.Druid GetEntityStructuredTypeId()
 		{

@@ -4,6 +4,8 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -38,12 +40,15 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// </summary>
 		/// <typeparam name="TField">The type of the field.</typeparam>
 		/// <param name="expression">The expression.</param>
-		/// <returns>Self, so that fluent interfaces can be used.</returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression)
+		/// <param name="sortOrder">The sort order.</param>
+		/// <returns>
+		/// Self, so that fluent interfaces can be used.
+		/// </returns>
+		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField>> expression, SortOrder sortOrder = SortOrder.Ascending)
 			where TField : struct
 		{
 			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func)));
+			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
 			return this;
 		}
 
@@ -52,12 +57,15 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// </summary>
 		/// <typeparam name="TField">The type of the field.</typeparam>
 		/// <param name="expression">The expression.</param>
-		/// <returns>Self, so that fluent interfaces can be used.</returns>
-		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression)
+		/// <param name="sortOrder">The sort order.</param>
+		/// <returns>
+		/// Self, so that fluent interfaces can be used.
+		/// </returns>
+		public EntityDataMetadataRecorder<TEntity> Column<TField>(Expression<System.Func<TEntity, TField?>> expression, SortOrder sortOrder = SortOrder.Ascending)
 			where TField : struct
 		{
 			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func)));
+			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
 			return this;
 		}
 
@@ -66,10 +74,10 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		/// </summary>
 		/// <param name="expression">The expression.</param>
 		/// <returns>Self, so that fluent interfaces can be used.</returns>
-		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression)
+		public EntityDataMetadataRecorder<TEntity> Column(Expression<System.Func<TEntity, string>> expression, SortOrder sortOrder = SortOrder.Ascending)
 		{
 			var func = expression.Compile ();
-			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func)));
+			this.Add (new EntityDataColumn (expression, EntityDataConverter.GetFieldConverter (func), sortOrder));
 			return this;
 		}
 

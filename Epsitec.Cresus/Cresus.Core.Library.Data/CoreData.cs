@@ -308,8 +308,21 @@ namespace Epsitec.Cresus.Core
 			return context;
 		}
 
+		public DataContext CreateIsolatedDataContext(string name)
+		{
+			var context = this.CreateDataContext (name);
+			context.Isolate ();
+			return context;
+		}
+
+
 		public void DisposeDataContext(DataContext context)
 		{
+			if (context.IsDisposed)
+			{
+				throw new System.InvalidOperationException ("Context has already been disposed previously");
+			}
+
 			if (this.DataInfrastructure.ContainsDataContext (context))
 			{
 				if (this.activeDataContext == context)

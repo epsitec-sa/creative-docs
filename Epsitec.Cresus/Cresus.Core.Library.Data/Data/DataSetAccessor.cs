@@ -2,10 +2,12 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Data.Extraction;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Loader;
 
 using System.Collections.Generic;
@@ -25,8 +27,11 @@ namespace Epsitec.Cresus.Core.Data
 		{
 			this.data = data;
 			this.entityType = entityType;
-			this.dataContext = this.data.CreateDataContext ("DataSetAccessor");
+			
+			this.dataContext = this.data.CreateIsolatedDataContext ("DataSetAccessor");
+
 			this.isolatedTransaction = isolatedTransaction;
+			this.sortColumns = new List<EntityDataColumn> ();
 		}
 
 
@@ -70,11 +75,11 @@ namespace Epsitec.Cresus.Core.Data
 
 		public void SetSortOrder(IEnumerable<EntityDataColumn> columns)
 		{
-			foreach (var column in columns)
+			this.sortColumns.Clear ();
+
+			if (columns != null)
 			{
-				var fieldId = EntityInfo.GetFieldCaption (column.Lambda).Id;
-				var fieldSetter = Epsitec.Common.Types.ExpressionAnalyzer.CreateSetter (column.Lambda);
-//				var fieldNode = new Epsitec.Cresus.DataLayer.Expressions.PublicField (entity, fieldId);
+				this.sortColumns.AddRange (columns);
 			}
 		}
 
@@ -128,7 +133,26 @@ namespace Epsitec.Cresus.Core.Data
 				RootEntity = example,
 			};
 
+
+			this.CreateSortRequest (request);
+
 			this.requestView = this.dataContext.GetRequestView (request, this.isolatedTransaction);
+		}
+
+		private void CreateSortRequest(Request request)
+		{
+			var example = request.RootEntity;
+
+			foreach (var column in this.sortColumns)
+			{
+				var fieldPath   = ExpressionAnalyzer.ExplodeLambda (column.Lambda, trimCount: 1);
+				var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
+				var fieldId     = EntityInfo.GetFieldCaption (column.Lambda).Id;
+				
+				var fieldNode = new PublicField (fieldEntity, fieldId);
+				
+				request.AddSortClause (fieldNode, column.SortOrder);
+			}
 		}
 
 		private int RetrieveItemCount()
@@ -144,6 +168,7 @@ namespace Epsitec.Cresus.Core.Data
 		private readonly DataContext			dataContext;
 		private readonly System.Type			entityType;
 		private readonly IsolatedTransaction	isolatedTransaction;
+		private readonly List<EntityDataColumn>	sortColumns;
 		
 		private RequestView						requestView;
 		private int?							itemCount;

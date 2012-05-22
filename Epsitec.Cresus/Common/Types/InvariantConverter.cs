@@ -1131,6 +1131,5 @@ namespace Epsitec.Common.Types
 
 
 		private static Dictionary<System.Type, ISerializationConverter> typeConverters = new Dictionary<System.Type, ISerializationConverter> ();
-
 	}
 }

@@ -4,6 +4,8 @@
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
+using Epsitec.Cresus.DataLayer.Expressions;
+
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -16,11 +18,12 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 	/// </summary>
 	public sealed class EntityDataColumn
 	{
-		internal EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter)
+		internal EntityDataColumn(LambdaExpression lambda, EntityDataColumnConverter converter, SortOrder sortOrder)
 		{
-			this.lambda = lambda;
+			this.lambda    = lambda;
 			this.converter = converter;
-			this.name = TextFormatter.FormatText (EntityInfo.GetFieldCaption (lambda));
+			this.sortOrder = sortOrder;
+			this.name      = TextFormatter.FormatText (EntityInfo.GetFieldCaption (lambda));
 		}
 
 
@@ -46,6 +49,14 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 			get
 			{
 				return this.converter.IsNumeric;
+			}
+		}
+
+		public SortOrder						SortOrder
+		{
+			get
+			{
+				return this.sortOrder;
 			}
 		}
 
@@ -86,6 +97,7 @@ namespace Epsitec.Cresus.Core.Data.Extraction
 		private readonly LambdaExpression			lambda;
 		private readonly EntityDataColumnConverter	converter;
 		private readonly FormattedText				name;
+		private readonly SortOrder					sortOrder;
 		
 		private int								textualIndex;
 		private int								numericIndex;

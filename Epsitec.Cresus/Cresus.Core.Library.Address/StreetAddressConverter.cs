@@ -39,6 +39,17 @@ namespace Epsitec.Cresus.Core.Library.Address
 			return StreetAddressFormat.Default;
 		}
 
+		public static System.Tuple<string, int?, string> SplitHouseNumber(string value)
+		{
+			var extractor = new CharacterExtractor (value);
+
+			string prefix = extractor.GetNextText ();
+			int?   number = extractor.GetNextDigits ();
+			string suffix = extractor.GetNextText ();
+
+			return new System.Tuple<string, int?, string> (prefix, number, suffix);
+		}
+
 		public static System.Tuple<string, string> SplitStreetAndHouseNumber(string value, StreetAddressFormat format)
 		{
 			if (value.IsNullOrWhiteSpace ())
@@ -59,8 +70,40 @@ namespace Epsitec.Cresus.Core.Library.Address
 			}
 		}
 
+		public static string MergeHouseNumber(string prefix, int? number, string suffix)
+		{
+			if (prefix == null)
+			{
+				prefix = "";
+			}
+			if (suffix == null)
+			{
+				suffix = null;
+			}
+
+			if (number.HasValue)
+			{
+				var value = number.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
+
+				return string.Concat (prefix, value, suffix);
+			}
+			else
+			{
+				return string.Concat (prefix, suffix);
+			}
+		}
+
 		public static string MergeStreetAndHouseNumber(string streetName, string houseNumber, StreetAddressFormat format)
 		{
+			if (string.IsNullOrEmpty (streetName))
+			{
+				return houseNumber ?? "";
+			}
+			if (string.IsNullOrEmpty (houseNumber))
+			{
+				return streetName;
+			}
+
 			switch (format)
 			{
 				case StreetAddressFormat.Default:

@@ -61,7 +61,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		private FormattedText GetLocalSummary()
 		{
-			return TextFormatter.FormatText (this.PersonAddress, "\n", this.Complement, "\n", this.StreetAndHouseNumber, "\n", this.PostBoxNumber, "\n", this.Location.PostalCode, this.Location.Name);
+			return TextFormatter.FormatText (this.PersonAddress, "\n", this.Complement, "\n", this.EditionStreetAndHouseNumber, "\n", this.EditionPostBoxNumber, "\n", this.Location.PostalCode, this.Location.Name);
 		}
 
 		private FormattedText GetForeignSummary()
@@ -75,7 +75,7 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText
 				(
 					TextFormatter.FormatText (this.PersonAddress).ToSimpleText ().Split ('\n').Last (), "~,",
-					this.StreetAndHouseNumber, "~,",
+					this.EditionStreetAndHouseNumber, "~,",
 					this.Location.PostalCode, this.Location.Name
 				);
 		}
@@ -83,7 +83,7 @@ namespace Epsitec.Cresus.Core.Entities
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
 			yield return TextFormatter.FormatText (this.PersonAddress).Lines.Last ();
-			yield return TextFormatter.FormatText (this.StreetAndHouseNumber);
+			yield return TextFormatter.FormatText (this.EditionStreetAndHouseNumber);
 			yield return TextFormatter.FormatText (this.Location.PostalCode);
 			yield return TextFormatter.FormatText (this.Location.Name);
 		}
@@ -95,8 +95,12 @@ namespace Epsitec.Cresus.Core.Entities
 				a.Accumulate (this.PersonAddress.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Complement.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.StreetName.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.HouseNumberPrefix.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.HouseNumberSuffix.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.HouseNumber.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.PostBoxPrefix.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.PostBoxNumber.GetEntityStatus ().TreatAsOptional ());
+				a.Accumulate (this.PostBoxSuffix.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.Location.GetEntityStatus ().TreatAsOptional ());
 				a.Accumulate (this.ContactGroups.Select (x => x.GetEntityStatus ()));
 				a.Accumulate (this.Comments.Select (x => x.GetEntityStatus ()));
@@ -112,23 +116,50 @@ namespace Epsitec.Cresus.Core.Entities
 		}
 
 
-		partial void GetStreetAndHouseNumber(ref string value)
+		partial void GetEditionStreetAndHouseNumber(ref string value)
 		{
 			var format = StreetAddressConverter.Classify (this);
 
 			var street = this.StreetName;
-			var house  = this.HouseNumber;
+			
+			var housePrefix = this.HouseNumberPrefix;
+			var houseNumber = this.HouseNumber;
+			var houseSuffix = this.HouseNumberSuffix;
+
+			var house = StreetAddressConverter.MergeHouseNumber (housePrefix, houseNumber, houseSuffix);
 
 			value = StreetAddressConverter.MergeStreetAndHouseNumber (street, house, format);
 		}
 
-		partial void OnStreetAndHouseNumberChanged(string oldValue, string newValue)
+		partial void GetEditionPostBoxNumber(ref string value)
+		{
+			var poboxPrefix = this.PostBoxPrefix;
+			var poboxNumber = this.PostBoxNumber;
+			var poboxSuffix = this.PostBoxSuffix;
+
+			value = PostBoxConverter.MergePostBox (poboxPrefix, poboxNumber, poboxSuffix);
+		}
+
+		partial void OnEditionStreetAndHouseNumberChanged(string oldValue, string newValue)
 		{
 			var format = StreetAddressConverter.Classify (this);
 			var split  = StreetAddressConverter.SplitStreetAndHouseNumber (newValue, format);
+			var number = StreetAddressConverter.SplitHouseNumber (split.Item2);
 
 			this.StreetName  = split.Item1;
-			this.HouseNumber = split.Item2;
+			
+			this.HouseNumberPrefix = number.Item1;
+			this.HouseNumber       = number.Item2;
+			this.HouseNumberSuffix = number.Item3;
+		}
+
+		partial void OnEditionPostBoxNumberChanged(string oldValue, string newValue)
+		{
+			var pobox = PostBoxConverter.SplitPostBox (newValue);
+
+			this.PostBoxPrefix = pobox.Item1;
+			this.PostBoxNumber = pobox.Item2;
+			this.PostBoxSuffix = pobox.Item3;
 		}
 	}
 }

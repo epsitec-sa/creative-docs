@@ -5,7 +5,9 @@ using Epsitec.Common.BigList;
 using Epsitec.Common.BigList.Widgets;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Widgets;
+using Epsitec.Common.Types;
+
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Data.Extraction;
@@ -15,7 +17,6 @@ using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -26,7 +27,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.data           = data;
 			this.itemScrollList = scrollList;
 			this.dataSetType    = dataSetType;
-			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			
+			this.dataContext = this.data.CreateIsolatedDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+
 			this.suspendUpdates = new SafeCounter ();
 			this.context        = new BrowserListContext (this.dataContext);
 
@@ -227,33 +230,25 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.context.SetAccessor (collectionAccessor);
 			this.collectionEntityId = entityId;
 
-			this.SetUpContentExtractor ();
+			this.DefineContentSortOrder ();
 			
 			this.UpdateCollection ();
 		}
 
-		private void SetUpContentExtractor()
+		private void DefineContentSortOrder()
 		{
 			if (EntityInfo<CustomerEntity>.GetTypeId () == this.collectionEntityId)
 			{
 				var recorder = new EntityDataMetadataRecorder<CustomerEntity> ()
-							.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode)
-							.Column (x => x.MainRelation.DefaultMailContact.Location.Name)
-							.Column (x => x.MainRelation.DefaultMailContact.StreetName)
-							.Column (x => x.MainRelation.DefaultMailContact.HouseNumber);
-				var metadata = recorder.GetMetadata ();
+							.Column (x => x.MainRelation.Person.DisplayName1, SortOrder.Ascending)
+						//	.Column (x => x.MainRelation.DefaultMailContact.Location.PostalCode, SortOrder.Ascending)
+						//	.Column (x => x.MainRelation.DefaultMailContact.Location.Name, SortOrder.Ascending)
+						//	.Column (x => x.MainRelation.DefaultMailContact.StreetName, SortOrder.Ascending)
+						//	.Column (x => x.MainRelation.DefaultMailContact.HouseNumber, SortOrder.Ascending)
+							;
 				
 				this.context.Accessor.SetSortOrder (recorder.Columns);
-
-				this.extractor = new EntityDataExtractor (metadata);
-
-				this.extractedCollection = this.extractor.CreateCollection (EntityDataRowComparer.Instance);
-				
-				return;
 			}
-
-			this.extractor           = null;
-			this.extractedCollection = null;
 		}
 
 		private void AttachEventHandlers()
@@ -349,8 +344,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private ItemCache						itemCache;
 
 		private System.Predicate<AbstractEntity> filter;
-		private EntityDataExtractor             extractor;
-		private EntityDataCollection			extractedCollection;
 
 		private BrowserListContext				context;
 		private Druid							collectionEntityId;

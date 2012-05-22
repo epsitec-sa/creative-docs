@@ -67,6 +67,7 @@
     <Compile Include="Entities\PersonTitleEntity.cs" />
     <Compile Include="Entities\TelecomContactEntity.cs" />
     <Compile Include="Entities\UriContactEntity.cs" />
+    <Compile Include="PostBoxConverter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Entities.cs" />
     <Compile Include="Resources\Cresus.Core.Library.Address\SourceCode\Res.cs" />

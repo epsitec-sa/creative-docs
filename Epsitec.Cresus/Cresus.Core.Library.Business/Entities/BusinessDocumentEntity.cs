@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Entities
 					(
 						x.PersonAddress, "\n",
 						x.Complement, "\n",
-						x.StreetAndHouseNumber, "\n",
+						x.EditionStreetAndHouseNumber, "\n",
 						x.Location.PostalCode, x.Location.Name
 					);
 			}
