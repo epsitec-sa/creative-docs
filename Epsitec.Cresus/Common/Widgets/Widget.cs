@@ -1412,7 +1412,10 @@ namespace Epsitec.Common.Widgets
 
 		internal void InternalSetEntered()
 		{
-			this.SetEntered (true);
+			if (this.IsEntered == false)
+			{
+				this.SetEntered (true);
+			}
 		}
 		
 		protected void SetEntered(bool value)

@@ -376,7 +376,10 @@ namespace Epsitec.Common.Widgets.Layouts
 					}
 					else
 					{
-						node.Visual.ClearDirtyLayoutFlag ();
+						if (node.Visual.ClearDirtyLayoutFlag ())
+						{
+							node.Visual.Invalidate ();
+						}
 					}
 
 					System.Diagnostics.Debug.Assert (this.cacheVisual == node.Visual);

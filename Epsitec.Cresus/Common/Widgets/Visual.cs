@@ -1469,9 +1469,11 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		internal virtual void ClearDirtyLayoutFlag()
+		internal virtual bool ClearDirtyLayoutFlag()
 		{
 			this.dirtyLayout = false;
+			
+			return this.dirtyDisplay;
 		}
 
 		internal void SetParentVisual(Visual visual)
