@@ -30,7 +30,6 @@ namespace Epsitec.Cresus.Compta.IO
 
 			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
 			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
-			//?compta.Utilisateurs.Add (NewCompta.CreateFirstUser ());
 		}
 
 		public static void NewEmpty(ComptaEntity compta)
@@ -50,7 +49,6 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.PiècesGenerator.Add (NewCompta.CreatePiècesGenerator ());
 			compta.Journaux.Add (NewCompta.CreateJournal (compta));
 			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
-			//?compta.Utilisateurs.Add (NewCompta.CreateFirstUser ());
 		}
 
 		public static void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
@@ -99,27 +97,6 @@ namespace Epsitec.Cresus.Compta.IO
 			utilisateur.NomComplet  = "Administrateur";
 			//?utilisateur.MotDePasse  = Strings.ComputeMd5Hash ("epsitec");
 			utilisateur.Admin       = true;
-
-			return utilisateur;
-		}
-
-		private static ComptaUtilisateurEntity CreateFirstUser()
-		{
-			//	Crée un premier utilisateur neutre, sans mot de passe.
-			var utilisateur = new ComptaUtilisateurEntity ();
-
-			utilisateur.Utilisateur = "Moi";
-			utilisateur.NomComplet  = "Moi-même";
-
-			string list = null;
-			foreach (var cmd in Converters.PrésentationCommands)
-			{
-				if (cmd != Res.Commands.Présentation.Réglages)
-				{
-					Converters.SetPrésentationCommand (ref list, cmd, true);
-				}
-			}
-			utilisateur.Présentations = list;
 
 			return utilisateur;
 		}

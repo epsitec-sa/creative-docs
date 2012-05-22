@@ -391,7 +391,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetResourceIconUri(string icon)
 		{
-			if (icon.Contains (':'))
+			if (string.IsNullOrEmpty (icon))
+			{
+				return null;
+			}
+			else if (icon.Contains (':'))
 			{
 				return FormattedText.Escape (icon);
 			}

@@ -67,7 +67,7 @@ namespace Epsitec.Cresus.Compta.Entities
 				return "Toutes les présentations";
 			}
 
-			int n = Converters.PrésentationCommandCount (this.Présentations);
+			int n = Helpers.Présentations.PrésentationTypeCount (this.Présentations);
 
 			if (n == 0)
 			{
@@ -81,21 +81,6 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				return string.Format ("{0} présentations", n.ToString ());
 			}
-		}
-
-
-		public void SetPrésenttion(Command cmd, bool state)
-		{
-			//	Ajoute ou enlève une présentation à l'utilisateur.
-			string p = this.Présentations;
-			Converters.SetPrésentationCommand (ref p, cmd, state);
-			this.Présentations = p;
-		}
-
-		public bool HasPrésentation(Command cmd)
-		{
-			//	Indique si l'utilisateur contient une présentation.
-			return Converters.ContainsPrésentationCommand (this.Présentations, cmd);
 		}
 
 

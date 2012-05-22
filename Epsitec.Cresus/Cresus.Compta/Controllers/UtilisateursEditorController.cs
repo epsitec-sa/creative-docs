@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.checkPrésentationsButtons.Clear ();
 
-			var list = Converters.PrésentationCommands.Where (x => x != Res.Commands.Présentation.Login);  //  Login est toujours accessible !
+			var list = Présentations.ControllerTypes.Where (x => x != ControllerType.Login);  //  Login est toujours accessible !
 			int numberPerColumn = 16;  // 16 boutons par colonne
 			int columnCount = (list.Count ()+numberPerColumn-1) / numberPerColumn;
 
@@ -168,7 +168,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			int rank = 0;
-			foreach (var cmd in list)
+			foreach (var type in list)
 			{
 				int column = rank++/numberPerColumn;
 				if (column >= columns.Count)
@@ -176,7 +176,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					break;
 				}
 
-				this.CreatePrésentationButton (columns[column], cmd);
+				this.CreatePrésentationButton (columns[column], type);
 			}
 
 			{
@@ -228,17 +228,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 		}
 
-		private void CreatePrésentationButton(Widget parent, Command cmd)
+		private void CreatePrésentationButton(Widget parent, ControllerType type)
 		{
-			var icon = UIBuilder.GetTextIconUri ("Présentation." + Converters.PrésentationCommandToString (cmd), iconSize: 20);
-			var desc = Converters.GetPrésentationCommandDescription (cmd);
+			var icon = UIBuilder.GetTextIconUri (Présentations.GetIcon (type), iconSize: 20);
+			var desc = Présentations.GetName (type);
 
 			var button = new CheckButton
 			{
 				Parent          = parent,
 				FormattedText   = icon,  // juste l'icône, sans texte
 				PreferredWidth  = 50,
-				Name            = Converters.PrésentationCommandToString (cmd),
+				Name            = Présentations.ControllerTypeToString (type),
 				PreferredHeight = 20,
 				Dock            = DockStyle.Top,
 			};
@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				if (this.ignoreChanges.IsZero && this.EditionLine != null)
 				{
-					this.EditionLine.SetPrésenttion (cmd, button.ActiveState == ActiveState.Yes);
+					this.EditionLine.SetPrésentation (type, button.ActiveState == ActiveState.Yes);
 					this.EditorTextChanged (0, ColumnType.None);
 				}
 			};
@@ -274,8 +274,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				foreach (var button in this.checkPrésentationsButtons)
 				{
-					var cmd = Converters.StringToPrésentationCommand(button.Name);
-					var state = (this.EditionLine == null) ? false : this.EditionLine.HasPrésentation (cmd);
+					var type = Présentations.StringToControllerType (button.Name);
+					var state = (this.EditionLine == null) ? false : this.EditionLine.HasPrésentation (type);
 
 					button.ActiveState = state || admin ? ActiveState.Yes : ActiveState.No;
 					button.Enable = !admin;

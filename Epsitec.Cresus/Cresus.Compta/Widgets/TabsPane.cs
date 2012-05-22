@@ -1049,9 +1049,17 @@ namespace Epsitec.Cresus.Compta.Widgets
 			if (index != -1)
 			{
 				var tab = this.GetShowedTabFromIndex (index);
-				if (tab != null && tab.TextWidth > tab.CurrentWidth)  // manque-il de la place pour le texte ?
+				if (tab != null)
 				{
-					return tab.TabItem.FormattedText;
+					if (!tab.TabItem.Tooltip.IsNullOrEmpty)  // existe-t-il un tooltip spécifique ?
+					{
+						return tab.TabItem.Tooltip;
+					}
+
+					if (tab.TextWidth > tab.CurrentWidth)  // manque-t-il de la place pour le texte ?
+					{
+						return tab.TabItem.FormattedText;
+					}
 				}
 			}
 
@@ -1068,9 +1076,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			foreach (var index in this.hiddenIndexes)
 			{
+				var text = this.tabs[index].TabItem.FormattedText;
+				if (text.IsNullOrEmpty)
+				{
+					text = this.tabs[index].TabItem.Tooltip;
+				}
+
 				var item = new MenuItem
 				{
-					FormattedText = this.tabs[index].TabItem.FormattedText,
+					IconUri       = UIBuilder.GetResourceIconUri (this.tabs[index].TabItem.Icon),
+					FormattedText = text,
 					TabIndex      = index,  // il est étrange d'utiliser TabIndex, mais cela fonctionne !
 				};
 
@@ -1323,7 +1338,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 					else
 					{
-						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon) + " " + this.tabItem.FormattedText;
+						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: 20) + " " + this.tabItem.FormattedText;
 					}
 
 					this.textWidth = this.textLayout.GetSingleLineSize ().Width;

@@ -22,6 +22,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
+		public FormattedText Tooltip
+		{
+			get;
+			set;
+		}
+
 
 		public bool RenameVisibility
 		{

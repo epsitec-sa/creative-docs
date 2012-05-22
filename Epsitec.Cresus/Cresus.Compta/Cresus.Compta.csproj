@@ -109,6 +109,7 @@
     <Compile Include="Graph\Cube.cs" />
     <Compile Include="Graph\GraphMode.cs" />
     <Compile Include="Graph\GraphEngine.cs" />
+    <Compile Include="Helpers\Présentations.cs" />
     <Compile Include="Helpers\Rectangles.cs" />
     <Compile Include="Helpers\Currencies.cs" />
     <Compile Include="Options\Controllers\SoldesColumnController.cs" />
@@ -416,6 +417,7 @@
     <EmbeddedResource Include="Images\Edit.Tab.User.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Settings.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.System.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Create.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

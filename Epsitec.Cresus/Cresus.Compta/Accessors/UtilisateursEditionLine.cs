@@ -137,17 +137,17 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
-		public void SetPrésenttion(Command cmd, bool state)
+		public void SetPrésentation(ControllerType type, bool state)
 		{
 			string s = this.GetText (ColumnType.Présentations).ToString ();
-			Converters.SetPrésentationCommand (ref s, cmd, state);
+			Présentations.SetPrésentationType (ref s, type, state);
 			this.SetText (ColumnType.Présentations, s);
 		}
 
-		public bool HasPrésentation(Command cmd)
+		public bool HasPrésentation(ControllerType type)
 		{
 			string s = this.GetText (ColumnType.Présentations).ToString ();
-			return Converters.ContainsPrésentationCommand (s, cmd);
+			return Présentations.ContainsPrésentationType (s, type);
 		}
 	}
 }

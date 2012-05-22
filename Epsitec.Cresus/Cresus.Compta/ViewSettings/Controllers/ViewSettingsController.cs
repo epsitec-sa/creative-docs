@@ -254,35 +254,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 				{
-					var icon = "Edit.Tab.User";
-
-					if (this.viewSettingsList.List[i].Readonly)
-					{
-						var type = this.viewSettingsList.List[i].ControllerType;
-
-						if (type == ControllerType.Journal ||
-							type == ControllerType.Extrait ||
-							type == ControllerType.PlanComptable ||
-							type == ControllerType.Balance ||
-							type == ControllerType.Extrait ||
-							type == ControllerType.Bilan ||
-							type == ControllerType.PP ||
-							type == ControllerType.Exploitation ||
-							type == ControllerType.RésuméPériodique ||
-							type == ControllerType.Soldes ||
-							type == ControllerType.RésuméTVA)
-						{
-							icon = "Edit.Tab.System";
-						}
-						else
-						{
-							icon = "Edit.Tab.Settings";
-						}
-					}
-
 					var item = new TabItem
 					{
-						Icon             = icon,
+						Icon             = Présentations.GetTabIcon (this.viewSettingsList.List[i]),
 						FormattedText    = this.viewSettingsList.List[i].Name,
 						RenameEnable     = !this.viewSettingsList.List[i].Readonly,
 						DeleteEnable     = !this.viewSettingsList.List[i].Readonly,
@@ -300,7 +274,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					var item = new TabItem
 					{
-						FormattedText = " + ",
+						Icon    = "Edit.Tab.Create",
+						Tooltip = "Crée une nouvelle présentation",
 					};
 
 					this.tabsPane.Add (item);

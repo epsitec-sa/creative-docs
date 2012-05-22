@@ -67,87 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return list.Selected.ControllerType;
 			}
 
-			if (cmd == Res.Commands.Présentation.Open)
-			{
-				return ControllerType.Open;
-			}
-
-			if (cmd == Res.Commands.Présentation.Save)
-			{
-				return ControllerType.Save;
-			}
-
-			if (cmd == Res.Commands.Présentation.Print)
-			{
-				return ControllerType.Print;
-			}
-
-			if (cmd == Res.Commands.Présentation.Login)
-			{
-				return ControllerType.Login;
-			}
-
-			if (cmd == Res.Commands.Présentation.Journal)
-			{
-				return ControllerType.Journal;
-			}
-
-			if (cmd == Res.Commands.Présentation.Balance)
-			{
-				return ControllerType.Balance;
-			}
-
-			if (cmd == Res.Commands.Présentation.Extrait)
-			{
-				return ControllerType.Extrait;
-			}
-
-			if (cmd == Res.Commands.Présentation.Bilan)
-			{
-				return ControllerType.Bilan;
-			}
-
-			if (cmd == Res.Commands.Présentation.PP)
-			{
-				return ControllerType.PP;
-			}
-
-			if (cmd == Res.Commands.Présentation.Exploitation)
-			{
-				return ControllerType.Exploitation;
-			}
-
-			if (cmd == Res.Commands.Présentation.Budgets)
-			{
-				return ControllerType.Budgets;
-			}
-
-			if (cmd == Res.Commands.Présentation.DifférencesChange)
-			{
-				return ControllerType.DifférencesChange;
-			}
-
-			if (cmd == Res.Commands.Présentation.RésuméPériodique)
-			{
-				return ControllerType.RésuméPériodique;
-			}
-
-			if (cmd == Res.Commands.Présentation.Soldes)
-			{
-				return ControllerType.Soldes;
-			}
-
-			if (cmd == Res.Commands.Présentation.TVA)
-			{
-				return ControllerType.RésuméTVA;
-			}
-
-			if (cmd == Res.Commands.Présentation.Réglages)
-			{
-				return ControllerType.Réglages;
-			}
-
-			return ControllerType.Unknown;
+			return Présentations.GetControllerType (cmd);
 		}
 
 
@@ -776,7 +696,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdatePrésentationCommands()
 		{
-			foreach (var command in Converters.PrésentationCommands)
+			foreach (var command in Présentations.PrésentationCommands)
 			{
 				var type = this.GetControllerType (command);
 
@@ -822,7 +742,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool HasPrésentationCommand(Command cmd)
+		private bool HasPrésentationCommand(Command cmd)
 		{
 			if (this.currentUser == null)  // déconnecté ?
 			{
@@ -836,7 +756,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else
 				{
-					return Converters.ContainsPrésentationCommand (this.currentUser.Présentations, cmd);
+					foreach (var type in Présentations.GetControllerTypes (cmd))
+					{
+						if (Présentations.ContainsPrésentationType (this.currentUser.Présentations, type))
+						{
+							return true;
+						}
+					}
+
+					return false;
 				}
 			}
 		}
