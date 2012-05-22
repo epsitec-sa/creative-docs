@@ -9,25 +9,8 @@ namespace Epsitec.Cresus.Core.Library.Address
 	{
 		public static string MergePostBox(string prefix, int? number, string suffix)
 		{
-			if (prefix == null)
-			{
-				prefix = "";
-			}
-			if (suffix == null)
-			{
-				suffix = null;
-			}
-
-			if (number.HasValue)
-			{
-				var value = number.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-				return string.Concat (prefix, value, suffix);
-			}
-			else
-			{
-				return string.Concat (prefix, suffix);
-			}
+			var value = InvariantConverter.ConvertToString (number);
+			return string.Concat (prefix, value, suffix);
 		}
 
 		public static System.Tuple<string, int?, string> SplitPostBox(string value)

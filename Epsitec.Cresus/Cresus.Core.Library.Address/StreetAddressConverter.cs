@@ -72,45 +72,19 @@ namespace Epsitec.Cresus.Core.Library.Address
 
 		public static string MergeHouseNumber(string prefix, int? number, string suffix)
 		{
-			if (prefix == null)
-			{
-				prefix = "";
-			}
-			if (suffix == null)
-			{
-				suffix = null;
-			}
-
-			if (number.HasValue)
-			{
-				var value = number.Value.ToString (System.Globalization.CultureInfo.InvariantCulture);
-
-				return string.Concat (prefix, value, suffix);
-			}
-			else
-			{
-				return string.Concat (prefix, suffix);
-			}
+			var value = InvariantConverter.ConvertToString (number);
+			return string.Concat (prefix, value, suffix);
 		}
 
 		public static string MergeStreetAndHouseNumber(string streetName, string houseNumber, StreetAddressFormat format)
 		{
-			if (string.IsNullOrEmpty (streetName))
-			{
-				return houseNumber ?? "";
-			}
-			if (string.IsNullOrEmpty (houseNumber))
-			{
-				return streetName;
-			}
-
 			switch (format)
 			{
 				case StreetAddressFormat.Default:
-					return string.Concat (streetName, " ", houseNumber);
+					return StringExtensions.JoinNonEmpty (" ", streetName, houseNumber);
 
 				case StreetAddressFormat.HouseNumberBeforeStreetName:
-					return string.Concat (houseNumber, ", ", streetName);
+					return StringExtensions.JoinNonEmpty (", ", streetName, houseNumber);
 
 				default:
 					throw StreetAddressConverter.GetNotSupportedException (format);

@@ -68,6 +68,20 @@ namespace Epsitec.Common.Types
 			InvariantConverter.typeConverters[type] = converter;
 		}
 
+		public static string ConvertToString<T>(T? value)
+			where T : struct
+		{
+			if (value.HasValue)
+			{
+				return (string) Converters.AutomaticValueConverter.Instance.Convert (value.Value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);
+			}
+			else
+			{
+				return null;
+			}
+		}
+		
+
 		public static string ConvertToString<T>(T value)
 		{
 			return (string) Converters.AutomaticValueConverter.Instance.Convert (value, typeof (string), null, System.Globalization.CultureInfo.InvariantCulture);

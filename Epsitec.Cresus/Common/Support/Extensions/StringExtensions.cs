@@ -16,6 +16,32 @@ namespace Epsitec.Common.Support.Extensions
 	/// </summary>
 	public static class StringExtensions
 	{
+		public static string JoinNonEmpty(string separator, params string[] values)
+		{
+			separator.ThrowIfNull ("separator");
+			values.ThrowIfNull ("values");
+
+			var buffer = new System.Text.StringBuilder ();
+
+			foreach (var value in values)
+			{
+				if (string.IsNullOrEmpty (value))
+				{
+					continue;
+				}
+
+				if (buffer.Length > 0)
+				{
+					buffer.Append (separator);
+				}
+
+				buffer.Append (value);
+			}
+			
+			return buffer.ToString ();
+		}
+
+
 		public static bool IsNullOrWhiteSpace(this string text)
 		{
 #if DOTNET35
@@ -412,6 +438,14 @@ namespace Epsitec.Common.Support.Extensions
 			separator.ThrowIfNull ("separator");
 
 			return string.Join (separator, strings.ToArray ());
+		}
+
+		public static string JoinNonEmpty(this IEnumerable<string> strings, string separator)
+		{
+			strings.ThrowIfNull ("strings");
+			separator.ThrowIfNull ("separator");
+
+			return StringExtensions.JoinNonEmpty (separator, strings.ToArray ());
 		}
 
 		public static int CountOccurences(this string text, string substring)

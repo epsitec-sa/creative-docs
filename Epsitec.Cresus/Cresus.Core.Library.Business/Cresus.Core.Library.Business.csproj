@@ -90,7 +90,8 @@
     <Compile Include="Business\Rules\ArticleGroupBusinessRules.cs" />
     <Compile Include="Business\Rules\ArticlePriceBusinessRules.cs" />
     <Compile Include="Business\Rules\ContactPersonBusinessRules.cs" />
-    <Compile Include="Business\Rules\NaturalBusinessBusinessRules.cs" />
+    <Compile Include="Business\Rules\LegalPersonBusinessRule.cs" />
+    <Compile Include="Business\Rules\NaturalPersonBusinessRules.cs" />
     <Compile Include="Business\Rules\PaymentTransactionBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessDocumentBusinessRules.cs" />
     <Compile Include="Business\Rules\BusinessSettingsBusinessRules.cs" />
