@@ -31,8 +31,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Réglages");
-			this.SetTitle ("Utilisateurs");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Utilisateurs));
 		}
 
 

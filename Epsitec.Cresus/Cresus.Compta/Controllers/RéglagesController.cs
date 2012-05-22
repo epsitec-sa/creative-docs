@@ -46,18 +46,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Réglages");
-
-			int sel = (this.scrollList == null) ? -1 : this.scrollList.SelectedItemIndex;
-
-			if (sel < 0 || sel >= this.groups.Count)
-			{
-				this.SetTitle ("Réglages");
-			}
-			else
-			{
-				this.SetTitle ("Réglages" + " — " + VerboseSettings.GetDescription (this.groups[sel]));
-			}
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Réglages));
 		}
 
 		public override bool AcceptPériodeChanged

@@ -11,6 +11,7 @@ using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Options.Controllers;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -40,8 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Pertes et Profits");
-			this.SetTitle ("Pertes et Profits");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.PP));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 	}

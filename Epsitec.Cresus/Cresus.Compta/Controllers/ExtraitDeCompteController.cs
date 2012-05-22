@@ -226,13 +226,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (compte == null)
 			{
-				this.SetGroupTitle ("Compte");
-				this.SetTitle (null);
+				this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Extrait));
 			}
 			else
 			{
 				this.SetGroupTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
-				this.SetTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
 
 			this.SetSubtitle (this.période.ShortTitle);

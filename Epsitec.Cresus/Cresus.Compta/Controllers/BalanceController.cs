@@ -43,8 +43,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Balance de vérification");
-			this.SetTitle ("Balance de vérification");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Balance));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

@@ -10,6 +10,7 @@ using Epsitec.Cresus.Core.Business;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -30,8 +31,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Réglages");
-			this.SetTitle ("Périodes comptables");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Périodes));
 		}
 
 

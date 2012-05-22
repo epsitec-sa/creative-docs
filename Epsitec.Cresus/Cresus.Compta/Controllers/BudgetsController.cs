@@ -67,8 +67,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Budget");
-			this.SetTitle ("Budget");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Budgets));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

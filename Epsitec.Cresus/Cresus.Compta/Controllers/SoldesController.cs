@@ -116,8 +116,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Soldes");
-			this.SetTitle ("Soldes");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Soldes));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

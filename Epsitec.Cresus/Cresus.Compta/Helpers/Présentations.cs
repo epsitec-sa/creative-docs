@@ -19,93 +19,37 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Présentations
 	{
-		public static ControllerType GetControllerType(Command cmd)
+		public static FormattedText GetGroupName(ControllerType type)
 		{
-			if (cmd == Res.Commands.Présentation.Open)
+			//	Retourne le nom du groupe d'une présnetation.
+			//	Par exemple, ControllerType.Libellés retourne "Journal", puisque la présentations
+			//	des libellés fait partir du groupe Res.Commands.Présentation.Journal.
+			var cmd = Présentations.GetCommand (type);
+			if (cmd != null)
 			{
-				return ControllerType.Open;
+				type = Présentations.GetControllerType (cmd);
+
+				switch (type)
+				{
+					case ControllerType.Journal:
+						return "Journal";
+
+					case ControllerType.PlanComptable:
+						return "Réglages";
+
+					case ControllerType.RésuméTVA:
+						return "TVA";
+				}
+	
+				return Présentations.GetName (type);
 			}
 
-			if (cmd == Res.Commands.Présentation.Save)
-			{
-				return ControllerType.Save;
-			}
-
-			if (cmd == Res.Commands.Présentation.Print)
-			{
-				return ControllerType.Print;
-			}
-
-			if (cmd == Res.Commands.Présentation.Login)
-			{
-				return ControllerType.Login;
-			}
-
-			if (cmd == Res.Commands.Présentation.Journal)
-			{
-				return ControllerType.Journal;
-			}
-
-			if (cmd == Res.Commands.Présentation.Balance)
-			{
-				return ControllerType.Balance;
-			}
-
-			if (cmd == Res.Commands.Présentation.Extrait)
-			{
-				return ControllerType.Extrait;
-			}
-
-			if (cmd == Res.Commands.Présentation.Bilan)
-			{
-				return ControllerType.Bilan;
-			}
-
-			if (cmd == Res.Commands.Présentation.PP)
-			{
-				return ControllerType.PP;
-			}
-
-			if (cmd == Res.Commands.Présentation.Exploitation)
-			{
-				return ControllerType.Exploitation;
-			}
-
-			if (cmd == Res.Commands.Présentation.Budgets)
-			{
-				return ControllerType.Budgets;
-			}
-
-			if (cmd == Res.Commands.Présentation.DifférencesChange)
-			{
-				return ControllerType.DifférencesChange;
-			}
-
-			if (cmd == Res.Commands.Présentation.RésuméPériodique)
-			{
-				return ControllerType.RésuméPériodique;
-			}
-
-			if (cmd == Res.Commands.Présentation.Soldes)
-			{
-				return ControllerType.Soldes;
-			}
-
-			if (cmd == Res.Commands.Présentation.TVA)
-			{
-				return ControllerType.RésuméTVA;
-			}
-
-			if (cmd == Res.Commands.Présentation.Réglages)
-			{
-				return ControllerType.Réglages;
-			}
-
-			return ControllerType.Unknown;
+			return FormattedText.Empty;
 		}
 
 		public static FormattedText GetName(ControllerType type)
 		{
+			//	Retourne le nom d'une présnetation.
 			switch (type)
 			{
 				case ControllerType.Open:
@@ -317,6 +261,23 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		private static Command GetCommand(ControllerType type)
+		{
+			foreach (var cmd in Présentations.PrésentationCommands)
+			{
+				foreach (var t in Présentations.GetControllerTypes (cmd))
+				{
+					if (t == type)
+					{
+						return cmd;
+					}
+				}
+			}
+
+			return null;
+		}
+
+
 		public static IEnumerable<ControllerType> ControllerTypes
 		{
 			//	Liste de toutes les présentations existantes.
@@ -333,9 +294,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 			}
 		}
 
+		public static ControllerType GetControllerType(Command cmd)
+		{
+			//	Retourne la présentation principale associée à une commande.
+			return Présentations.GetControllerTypes (cmd).FirstOrDefault ();
+		}
+
 		public static IEnumerable<ControllerType> GetControllerTypes(Command cmd)
 		{
-			//	Liste des présentations associées à une commande.
+			//	Retourne la liste des présentations associées à une commande.
 			if (cmd == Res.Commands.Présentation.Open)
 			{
 				yield return ControllerType.Open;

@@ -145,21 +145,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Journal");
-
-			int id = (this.dataAccessor.Options as JournalOptions).JournalId;
-			var journal = this.ComptaEntity.Journaux.Where (x => x.Id == id).FirstOrDefault ();
-
-			if (journal == null)  // tous les journaux ?
-			{
-				var name = Core.TextFormatter.FormatText (JournalController.AllJournaux).ApplyFontColor (Color.FromName ("Red"));
-				this.SetTitle (name);
-			}
-			else
-			{
-				this.SetTitle (Core.TextFormatter.FormatText ("Journal", journal.Nom));
-			}
-
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Journal));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

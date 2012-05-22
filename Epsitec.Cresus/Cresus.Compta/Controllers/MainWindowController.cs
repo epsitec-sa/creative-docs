@@ -58,19 +58,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private ControllerType GetControllerType(Command cmd)
-		{
-			string key = string.Concat (cmd.Name + ".ViewSettings");
-			var list = this.GetViewSettingsList (key);
-			if (list != null && list.Selected != null)
-			{
-				return list.Selected.ControllerType;
-			}
-
-			return Présentations.GetControllerType (cmd);
-		}
-
-
 		public ControllerType SelectedDocument
 		{
 			get
@@ -740,6 +727,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
+		}
+
+		private ControllerType GetControllerType(Command cmd)
+		{
+			string key = string.Concat (cmd.Name + ".ViewSettings");
+			var list = this.GetViewSettingsList (key);
+			if (list != null && list.Selected != null)
+			{
+				return list.Selected.ControllerType;
+			}
+
+			return Présentations.GetControllerType (cmd);
 		}
 
 		private bool HasPrésentationCommand(Command cmd)

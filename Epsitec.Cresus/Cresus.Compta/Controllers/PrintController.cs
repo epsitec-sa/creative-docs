@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Impression");
-			this.SetTitle ("Impression d'un document comptable");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Print));
 		}
 
 		public override bool AcceptPériodeChanged

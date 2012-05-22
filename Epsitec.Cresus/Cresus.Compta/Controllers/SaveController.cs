@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Enregistrement de la comptabilité");
-			this.SetTitle ("Enregistrement de la comptabilité");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Save));
 		}
 
 		public override bool AcceptPériodeChanged

@@ -74,8 +74,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Réglages");
-			this.SetTitle ("Plan comptable");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.PlanComptable));
 			this.SetSubtitle ("Toutes les périodes");
 		}
 

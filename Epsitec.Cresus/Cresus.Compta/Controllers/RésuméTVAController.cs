@@ -89,8 +89,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("TVA");
-			this.SetTitle ("Résumé TVA");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.RésuméTVA));
 			this.SetSubtitle (this.période.ShortTitle);
 		}
 

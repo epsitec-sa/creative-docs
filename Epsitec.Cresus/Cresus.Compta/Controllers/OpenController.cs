@@ -42,8 +42,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void UpdateTitle()
 		{
-			this.SetGroupTitle ("Ouverture d'une comptabilité");
-			this.SetTitle ("Ouverture d'une comptabilité");
+			this.SetGroupTitle (Présentations.GetGroupName (ControllerType.Open));
 		}
 
 		public override bool AcceptPériodeChanged
