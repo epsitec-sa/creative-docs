@@ -23,8 +23,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public LibellésDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Journal.ViewSettings");
-			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.Libellés.Search");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList (controller.ViewSettingsName);
+			this.searchData       = this.mainWindowController.GetSettingsSearchData (controller.SearchName);
 		}
 
 

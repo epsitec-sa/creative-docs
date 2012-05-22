@@ -828,6 +828,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+		public string ViewSettingsName
+		{
+			get
+			{
+				return Présentations.GetViewSettingsKey (this.ControllerType);
+			}
+		}
+
+		public string SearchName
+		{
+			get
+			{
+				return Présentations.GetSearchSettingsKey (this.ControllerType);
+			}
+		}
+
+		public string PermanentsName
+		{
+			get
+			{
+				return Présentations.GetPermanentsSettingsKey (this.ControllerType);
+			}
+		}
+
 		protected void SetTitle()
 		{
 			this.SetTitle (FormattedText.Null);

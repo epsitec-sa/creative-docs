@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
+using Epsitec.Common.Widgets;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
@@ -32,27 +33,27 @@ namespace Epsitec.Cresus.Compta.IO
 
 		public void CreateDefaultViewSettings()
 		{
-			this.CreateDefaultViewSettingsJournal          ("Journal");
-			this.CreateDefaultViewSettingsBalance          ("Balance");
-			this.CreateDefaultViewSettingsExtrait          ("Extrait");
-			this.CreateDefaultViewSettingsBilan            ("Bilan");
-			this.CreateDefaultViewSettingsPP               ("PP");
-			this.CreateDefaultViewSettingsExploitation     ("Exploitation");
-			this.CreateDefaultViewSettingsBudgets          ("Budgets");
-			this.CreateDefaultViewSettingsRésuméPériodique ("RésuméPériodique");
-			this.CreateDefaultViewSettingsTVA              ("TVA");
-			this.CreateDefaultViewSettingsLogin            ("Login");
-			this.CreateDefaultViewSettingsOpen             ("Open");
-			this.CreateDefaultViewSettingsPrint            ("Print");
-			this.CreateDefaultViewSettingsSave             ("Save");
-			this.CreateDefaultViewSettingsSoldes           ("Soldes");
-			this.CreateDefaultViewSettingsRéglages         ("Réglages");
+			this.CreateDefaultViewSettingsJournal          (Res.Commands.Présentation.Journal);
+			this.CreateDefaultViewSettingsBalance          (Res.Commands.Présentation.Balance);
+			this.CreateDefaultViewSettingsExtrait          (Res.Commands.Présentation.Extrait);
+			this.CreateDefaultViewSettingsBilan            (Res.Commands.Présentation.Bilan);
+			this.CreateDefaultViewSettingsPP               (Res.Commands.Présentation.PP);
+			this.CreateDefaultViewSettingsExploitation     (Res.Commands.Présentation.Exploitation);
+			this.CreateDefaultViewSettingsBudgets          (Res.Commands.Présentation.Budgets);
+			this.CreateDefaultViewSettingsRésuméPériodique (Res.Commands.Présentation.RésuméPériodique);
+			this.CreateDefaultViewSettingsTVA              (Res.Commands.Présentation.TVA);
+			this.CreateDefaultViewSettingsLogin            (Res.Commands.Présentation.Login);
+			this.CreateDefaultViewSettingsOpen             (Res.Commands.Présentation.Open);
+			this.CreateDefaultViewSettingsPrint            (Res.Commands.Présentation.Print);
+			this.CreateDefaultViewSettingsSave             (Res.Commands.Présentation.Save);
+			this.CreateDefaultViewSettingsSoldes           (Res.Commands.Présentation.Soldes);
+			this.CreateDefaultViewSettingsRéglages         (Res.Commands.Présentation.Réglages);
 		}
 
 
-		private void CreateDefaultViewSettingsJournal(string nomPrésentation)
+		private void CreateDefaultViewSettingsJournal(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			this.CreateViewSettingsData<JournalOptions> (list, ControllerType.Journal, "Journal des écritures", true, true,  true);
 
@@ -60,12 +61,12 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreateViewSettingsData (list, ControllerType.Modèles,  "Ecritures modèles",     true, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Journaux, "Journaux",              true, false, false);
 
-			this.Select<JournalOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsRéglages(string nomPrésentation)
+		private void CreateDefaultViewSettingsRéglages(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			this.CreateViewSettingsData (list, ControllerType.PlanComptable,   "Plan comptable",        true,  true,  false);
 			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
@@ -74,12 +75,12 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreateViewSettingsData (list, ControllerType.Utilisateurs,    "Utilisateurs",          false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Réglages,        "Réglages avancés",      false, false, false);
 
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsBalance(string nomPrésentation)
+		private void CreateDefaultViewSettingsBalance(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -132,12 +133,12 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.BaseOptions.GraphOptions.ThresholdValue1 = 0.02m;
 			}
 
-			this.Select<BalanceOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsExtrait(string nomPrésentation)
+		private void CreateDefaultViewSettingsExtrait(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -154,12 +155,12 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Lines;
 			}
 
-			this.Select<ExtraitDeCompteOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsBilan(string nomPrésentation)
+		private void CreateDefaultViewSettingsBilan(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -179,12 +180,12 @@ namespace Epsitec.Cresus.Compta.IO
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
-			this.Select<BilanOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsPP(string nomPrésentation)
+		private void CreateDefaultViewSettingsPP(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -215,12 +216,12 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.SideBySide;
 			}
 
-			this.Select<PPOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsExploitation(string nomPrésentation)
+		private void CreateDefaultViewSettingsExploitation(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -231,12 +232,12 @@ namespace Epsitec.Cresus.Compta.IO
 				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
-			this.Select<ExploitationOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsBudgets(string nomPrésentation)
+		private void CreateDefaultViewSettingsBudgets(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -246,12 +247,12 @@ namespace Epsitec.Cresus.Compta.IO
 				var viewSettings = this.CreateViewSettingsData (list, ControllerType.Budgets, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 			}
 
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsRésuméPériodique(string nomPrésentation)
+		private void CreateDefaultViewSettingsRésuméPériodique(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			bool searchExist  = true;
 			bool filterExist  = true;
@@ -306,54 +307,54 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.BaseOptions.GraphOptions.SecondaryDimension = 1;
 			}
 
-			this.Select<RésuméPériodiqueOptions> (list, nomPrésentation);
+			this.Select (list);
 		}
 
 
-		private void CreateDefaultViewSettingsTVA(string nomPrésentation)
+		private void CreateDefaultViewSettingsTVA(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 
 			this.CreateViewSettingsData<RésuméTVAOptions> (list, ControllerType.RésuméTVA, "Résumé TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.CodesTVA, "Codes TVA", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.ListeTVA, "Listes de taux de TVA", false, false, false);
-			
-			this.Select (list, nomPrésentation);
+
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsLogin(string nomPrésentation)
+		private void CreateDefaultViewSettingsLogin(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			this.CreateViewSettingsData (list, ControllerType.Login, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsOpen(string nomPrésentation)
+		private void CreateDefaultViewSettingsOpen(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			this.CreateViewSettingsData (list, ControllerType.Open, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsPrint(string nomPrésentation)
+		private void CreateDefaultViewSettingsPrint(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			this.CreateViewSettingsData (list, ControllerType.Print, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsSave(string nomPrésentation)
+		private void CreateDefaultViewSettingsSave(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			this.CreateViewSettingsData (list, ControllerType.Save, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsSoldes(string nomPrésentation)
+		private void CreateDefaultViewSettingsSoldes(Command cmd)
 		{
-			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
+			var list = this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			this.CreateViewSettingsData<SoldesOptions> (list, ControllerType.Soldes, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list, nomPrésentation);
+			this.Select (list);
 		}
 
 
@@ -471,31 +472,9 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private void Select<T>(ViewSettingsList list, string nomPrésentation)
-			where T : AbstractOptions, new ()
-		{
-			this.Select (list, nomPrésentation);
-
-			if (list.Selected.BaseOptions != null)
-			{
-				//?list.Selected.BaseOptions.CopyTo (this.mainWindowController.GetSettingsOptions<T> (this.GetKey (nomPrésentation, "Options"), this.compta));
-			}
-		}
-
-		private void Select(ViewSettingsList list, string nomPrésentation)
+		private void Select(ViewSettingsList list)
 		{
 			list.SelectedIndex = 0;  // sélectionne "Réglages standards"
-
-			if (list.Selected.BaseFilter != null)
-			{
-				//?list.Selected.BaseFilter.CopyTo (this.mainWindowController.GetSettingsSearchData (this.GetKey (nomPrésentation, "Filter")));
-			}
-		}
-
-		private string GetKey(string nomPrésentation, string typeName)
-		{
-			//	Retourne par exemple "Présentation.Journal.Search".
-			return "Présentation." + nomPrésentation + "." + typeName;
 		}
 
 

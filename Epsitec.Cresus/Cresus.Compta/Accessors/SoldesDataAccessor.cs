@@ -24,8 +24,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public SoldesDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Soldes.ViewSettings");
-			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.Soldes.Search");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList (controller.ViewSettingsName);
+			this.searchData       = this.mainWindowController.GetSettingsSearchData (controller.SearchName);
 			this.filterData       = this.viewSettingsList.Selected.CurrentFilter;
 			this.options          = this.viewSettingsList.Selected.CurrentOptions;
 

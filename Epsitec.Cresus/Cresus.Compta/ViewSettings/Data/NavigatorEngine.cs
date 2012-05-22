@@ -181,8 +181,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			var data = this.history[this.index];
 
 			{
-				string key = string.Concat ("Présentation." + Présentations.ControllerTypeToString (data.ControllerType) + ".Search");
-				var searchData = mainWindowController.GetSettingsSearchData ("Présentation." + key + ".Search");
+				string key = Présentations.GetSearchSettingsKey (data.ControllerType);
+				var searchData = mainWindowController.GetSettingsSearchData (key);
 
 				if (data.Search != null && searchData != null)
 				{
@@ -191,8 +191,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 
 			{
-				var type = Présentations.GetGroupControllerType (data.ControllerType);
-				string key = string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".ViewSettings");
+				string key = Présentations.GetViewSettingsKey (data.ControllerType);
 				var list = mainWindowController.GetViewSettingsList (key);
 				System.Diagnostics.Debug.Assert (list != null);
 

@@ -19,6 +19,28 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Présentations
 	{
+		public static string GetViewSettingsKey(ControllerType type)
+		{
+			var cmd = Présentations.GetCommand (type);
+			return Présentations.GetViewSettingsKey (cmd);
+		}
+
+		public static string GetViewSettingsKey(Command cmd)
+		{
+			return string.Concat (cmd.Name + ".ViewSettings");
+		}
+
+		public static string GetSearchSettingsKey(ControllerType type)
+		{
+			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".Search");
+		}
+
+		public static string GetPermanentsSettingsKey(ControllerType type)
+		{
+			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".Permanents");
+		}
+
+
 		public static FormattedText GetGroupName(ControllerType type)
 		{
 			//	Retourne le nom du groupe d'une présnetation.
