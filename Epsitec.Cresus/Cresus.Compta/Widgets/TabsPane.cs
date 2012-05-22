@@ -13,6 +13,11 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Widgets
 {
+	/// <summary>
+	/// Ce widget affiche des onglets, ainsi que quelques widgets quelconques (généralement des boutons) à leurs
+	/// droite. Les onglets peuvent être renommés, supprimés et déplacés (par drag & drop). S'il y a trop d'onglets
+	/// par rapport à la largeur disponible, un dernier onglet "v" affiche un menu avec les onglets surnuméraires.
+	/// </summary>
 	public class TabsPane : FrameBox, Epsitec.Common.Widgets.Helpers.IToolTipHost
 	{
 		public TabsPane()
@@ -1335,6 +1340,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 					if (string.IsNullOrEmpty (this.tabItem.Icon))
 					{
 						this.textLayout.FormattedText = this.tabItem.FormattedText;
+					}
+					else if (this.tabItem.FormattedText.IsNullOrEmpty)
+					{
+						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: 20);
 					}
 					else
 					{

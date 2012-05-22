@@ -339,10 +339,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			//	Restaure une présentation utilisée précédemment.
 			this.selectedDocument = type;
-			this.UpdatePrésentationCommands ();
+			this.navigatorEngine.Restore (this);
 			this.CreateController ();
-
-			this.navigatorEngine.Restore (this.controller);
+			this.UpdatePrésentationCommands ();
 
 			if (this.controller != null)
 			{
@@ -350,7 +349,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.navigatorEngine.RestoreArrayController (this.controller);
-
 			this.UpdateNavigatorCommands ();
 		}
 
@@ -730,6 +728,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private ControllerType GetControllerType(Command cmd)
 		{
+			//	Retourne la dernière présentation utilisée pour une commande donnée.
 			string key = string.Concat (cmd.Name + ".ViewSettings");
 			var list = this.GetViewSettingsList (key);
 			if (list != null && list.Selected != null)
@@ -754,6 +753,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else
 				{
+					//	Si le groupe a au moins une présentation accessible pour l'utilisateur, on considère
+					//	la commande comme valide.
 					foreach (var type in Présentations.GetControllerTypes (cmd))
 					{
 						if (Présentations.ContainsPrésentationType (this.currentUser.Présentations, type))

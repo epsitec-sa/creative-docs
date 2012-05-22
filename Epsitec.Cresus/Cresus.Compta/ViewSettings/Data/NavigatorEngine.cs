@@ -84,7 +84,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			//	Met à jour les données de la présentation active dans l'historique de la navigation.
 			if (this.index != -1 && this.history[this.index].ControllerType == controllerType)
 			{
-				this.history[this.index] = this.CreateNavigatorData (controller, controllerType);
+				this.history[this.index] = this.CreateNavigatorData (controller, controllerType, this.history[this.index].ViewSettingsName);
 			}
 		}
 
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		{
 			//	Ajoute les données de la présentation active au somment de l'historique de la navigation.
 			//	Toutes les données "en avant" sont supprimées.
-			var data = this.CreateNavigatorData (controller, controllerType);
+			var data = this.CreateNavigatorData (controller, controllerType, FormattedText.Null);
 			this.history.Insert (++this.index, data);
 
 			int overflow = this.history.Count-this.index-1;
@@ -102,7 +102,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 		}
 
-		private NavigatorData CreateNavigatorData(AbstractController controller, ControllerType controllerType)
+		private NavigatorData CreateNavigatorData(AbstractController controller, ControllerType controllerType, FormattedText viewSettingsName)
 		{
 			//	Présentation active -> NavigatorData.
 			SearchData         search     = null;
@@ -116,34 +116,35 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 			else
 			{
-				if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
+				if (controller.DataAccessor != null)
 				{
-					search = controller.DataAccessor.SearchData.CopyFrom ();
+					if (controller.DataAccessor.SearchData != null)
+					{
+						search = controller.DataAccessor.SearchData.CopyFrom ();
+					}
+
+					if (controller.DataAccessor.FilterData != null)
+					{
+						filter = controller.DataAccessor.FilterData.CopyFrom ();
+					}
+
+					if (controller.DataAccessor.Options != null)
+					{
+						options = controller.DataAccessor.Options.CopyFrom ();
+					}
+
+					if (controller.DataAccessor.Permanents != null)
+					{
+						permanents = controller.DataAccessor.Permanents.CopyFrom ();
+					}
 				}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
+				if (viewSettingsName.IsNullOrEmpty && controller.ViewSettingsList != null && controller.ViewSettingsList.Selected != null)
 				{
-					filter = controller.DataAccessor.FilterData.CopyFrom ();
+					viewSettingsName = controller.ViewSettingsList.Selected.Name;
 				}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
-				{
-					options = controller.DataAccessor.Options.CopyFrom ();
-				}
-
-				if (controller.DataAccessor != null && controller.DataAccessor.Permanents != null)
-				{
-					permanents = controller.DataAccessor.Permanents.CopyFrom ();
-				}
-
-				if (controller.ViewSettingsList == null)
-				{
-					return new NavigatorData (controllerType, controller.MixTitle, null, search, filter, options, permanents, controller.SelectedArrayLine);
-				}
-				else
-				{
-					return new NavigatorData (controllerType, controller.MixTitle, controller.ViewSettingsList.Selected, search, filter, options, permanents, controller.SelectedArrayLine);
-				}
+				return new NavigatorData (controllerType, controller.MixTitle, viewSettingsName, search, filter, options, permanents, controller.SelectedArrayLine);
 			}
 		}
 
@@ -173,39 +174,81 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 			}
 		}
 
-		public void Restore(AbstractController controller)
+		public void Restore(MainWindowController mainWindowController)
 		{
 			//	Restitue le NavigatorData obtenu par Any/Back/Forward.
 			//	NavigatorData -> présetation active.
 			var data = this.history[this.index];
 
-			if (controller != null)
 			{
+				string key = string.Concat ("Présentation." + Présentations.ControllerTypeToString (data.ControllerType) + ".Search");
+				var searchData = mainWindowController.GetSettingsSearchData ("Présentation." + key + ".Search");
+
+				if (data.Search != null && searchData != null)
+				{
+					data.Search.CopyTo (searchData);
+				}
+			}
+
+			{
+				var type = Présentations.GetGroupControllerType (data.ControllerType);
+				string key = string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".ViewSettings");
+				var list = mainWindowController.GetViewSettingsList (key);
+				System.Diagnostics.Debug.Assert (list != null);
+
+				//	On cherche le ViewSettingsData qui avait le même nom. Si on ne le trouve pas, on cherche
+				//	un ViewSettingsData qui a le même type. Le dernier est préférable !
+				var viewSettingsData = list.List.Where (x => x.Name == data.ViewSettingsName).LastOrDefault ();
+
+				if (viewSettingsData == null)
+				{
+					viewSettingsData = list.List.Where (x => x.ControllerType == data.ControllerType).LastOrDefault ();
+				}
+
+				//	On sélectionne le ViewSettingsData trouvé.
+				System.Diagnostics.Debug.Assert (viewSettingsData != null);
+				list.Selected = viewSettingsData;
+
+				if (viewSettingsData.CurrentFilter != null && data.Filter != null)
+				{
+					data.Filter.CopyTo (viewSettingsData.CurrentFilter);
+				}
+
+				if (viewSettingsData.CurrentOptions != null && data.Options != null)
+				{
+					data.Options.CopyTo (viewSettingsData.CurrentOptions);
+				}
+			}
+
+#if false
 				if (controller.ViewSettingsList != null && data.ViewSettings != null)
 				{
 					controller.ViewSettingsList.Selected = data.ViewSettings;
 				}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.SearchData != null)
+				if (controller.DataAccessor != null)
 				{
-					data.Search.CopyTo (controller.DataAccessor.SearchData);
-				}
+					if (controller.DataAccessor.SearchData != null)
+					{
+						data.Search.CopyTo (controller.DataAccessor.SearchData);
+					}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.FilterData != null)
-				{
-					data.Filter.CopyTo (controller.DataAccessor.FilterData);
-				}
+					if (controller.DataAccessor.FilterData != null)
+					{
+						data.Filter.CopyTo (controller.DataAccessor.FilterData);
+					}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.Options != null)
-				{
-					data.Options.CopyTo (controller.DataAccessor.Options);
-				}
+					if (controller.DataAccessor.Options != null)
+					{
+						data.Options.CopyTo (controller.DataAccessor.Options);
+					}
 
-				if (controller.DataAccessor != null && controller.DataAccessor.Permanents != null)
-				{
-					data.Permanents.CopyTo (controller.DataAccessor.Permanents);
+					if (controller.DataAccessor.Permanents != null)
+					{
+						data.Permanents.CopyTo (controller.DataAccessor.Permanents);
+					}
 				}
-			}
+#endif
 		}
 
 		public void RestoreArrayController(AbstractController controller)

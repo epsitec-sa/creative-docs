@@ -263,8 +263,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					}
 				}
 
-				//?bool all = this.viewSettingsIndexes.Count == this.viewSettingsList.List.Count;
-
 				//	Génère les onglets des ViewSettings accessibles à l'utilisateur.
 				this.tabsPane.Clear ();
 
@@ -272,7 +270,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					var index = this.viewSettingsIndexes[i];
 
-					//	Si tous les onglets ne sont pas visibles, on ne peut rien déplacer !
 					var item = new TabItem
 					{
 						Icon             = Présentations.GetTabIcon (this.viewSettingsList.List[index]),

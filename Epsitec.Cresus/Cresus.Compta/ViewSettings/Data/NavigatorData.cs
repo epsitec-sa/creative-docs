@@ -20,16 +20,16 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 	/// </summary>
 	public class NavigatorData
 	{
-		public NavigatorData(ControllerType controllerType, FormattedText description, ViewSettingsData viewSettings, SearchData search, SearchData filter, AbstractOptions options, AbstractPermanents permanents, int? arrayIndex)
+		public NavigatorData(ControllerType controllerType, FormattedText description, FormattedText viewSettingsName, SearchData search, SearchData filter, AbstractOptions options, AbstractPermanents permanents, int? arrayIndex)
 		{
-			this.ControllerType = controllerType;
-			this.Description    = description;
-			this.ViewSettings   = viewSettings;
-			this.Search         = search;
-			this.Filter         = filter;
-			this.Options        = options;
-			this.Permanents     = permanents;
-			this.ArrayIndex     = arrayIndex;
+			this.ControllerType   = controllerType;
+			this.Description      = description;
+			this.ViewSettingsName = viewSettingsName;
+			this.Search           = search;
+			this.Filter           = filter;
+			this.Options          = options;
+			this.Permanents       = permanents;
+			this.ArrayIndex       = arrayIndex;
 		}
 
 
@@ -46,7 +46,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 
-		public ViewSettingsData ViewSettings
+		public FormattedText ViewSettingsName
 		{
 			get;
 			private set;

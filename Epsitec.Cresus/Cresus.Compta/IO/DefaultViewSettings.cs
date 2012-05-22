@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			this.CreateDefaultViewSettingsJournal          ("Journal");
 			this.CreateDefaultViewSettingsBalance          ("Balance");
-			this.CreateDefaultViewSettingsExtraitDeCompte  ("ExtraitDeCompte");
+			this.CreateDefaultViewSettingsExtrait          ("Extrait");
 			this.CreateDefaultViewSettingsBilan            ("Bilan");
 			this.CreateDefaultViewSettingsPP               ("PP");
 			this.CreateDefaultViewSettingsExploitation     ("Exploitation");
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Compta.IO
 			this.Select<BalanceOptions> (list, nomPrésentation);
 		}
 
-		private void CreateDefaultViewSettingsExtraitDeCompte(string nomPrésentation)
+		private void CreateDefaultViewSettingsExtrait(string nomPrésentation)
 		{
 			var list = this.mainWindowController.GetViewSettingsList (this.GetKey (nomPrésentation, "ViewSettings"));
 

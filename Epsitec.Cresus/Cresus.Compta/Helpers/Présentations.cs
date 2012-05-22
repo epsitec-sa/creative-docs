@@ -22,8 +22,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static FormattedText GetGroupName(ControllerType type)
 		{
 			//	Retourne le nom du groupe d'une présnetation.
-			//	Par exemple, ControllerType.Libellés retourne "Journal", puisque la présentations
-			//	des libellés fait partir du groupe Res.Commands.Présentation.Journal.
+			//	Par exemple, ControllerType.Modèles retourne "Journal", puisque la présentation
+			//	des écritures modèles fait partir du groupe Res.Commands.Présentation.Journal.
 			var cmd = Présentations.GetCommand (type);
 			if (cmd != null)
 			{
@@ -140,6 +140,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetTabIcon(ViewSettingsData data)
 		{
+			//	Retourne l'icône à afficher dans l'onglet, à gauche de la description.
 			if (data.Readonly == false)
 			{
 				return "Edit.Tab.User";
@@ -173,7 +174,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string GetIcon(ControllerType type)
 		{
-			return "Présentation." + type.ToString ();
+			//	Retourne l'icône d'une présentation.
+			return "Présentation." + type.ToString ();  // requiert des noms d'icônes parfaitement synchrones avec les noms des ControllerType !
 		}
 
 
@@ -261,8 +263,32 @@ namespace Epsitec.Cresus.Compta.Helpers
 		#endregion
 
 
+		public static ControllerType GetGroupControllerType(ControllerType type)
+		{
+			foreach (var cmd in Présentations.PrésentationCommands)
+			{
+				var mainType = ControllerType.Unknown;
+
+				foreach (var t in Présentations.GetControllerTypes (cmd))
+				{
+					if (mainType == ControllerType.Unknown)
+					{
+						mainType = t;
+					}
+
+					if (t == type)
+					{
+						return mainType;
+					}
+				}
+			}
+
+			return ControllerType.Unknown;
+		}
+
 		private static Command GetCommand(ControllerType type)
 		{
+			//	Retourne la commande de base permettant d'accéder à une présentation.
 			foreach (var cmd in Présentations.PrésentationCommands)
 			{
 				foreach (var t in Présentations.GetControllerTypes (cmd))
@@ -303,6 +329,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static IEnumerable<ControllerType> GetControllerTypes(Command cmd)
 		{
 			//	Retourne la liste des présentations associées à une commande.
+			//	La première est toujours la présentation priccipale.
 			if (cmd == Res.Commands.Présentation.Open)
 			{
 				yield return ControllerType.Open;
@@ -325,7 +352,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			if (cmd == Res.Commands.Présentation.Journal)
 			{
-				yield return ControllerType.Journal;
+				yield return ControllerType.Journal;  // présentation principale
 				yield return ControllerType.Libellés;
 				yield return ControllerType.Modèles;
 				yield return ControllerType.Journaux;
@@ -378,7 +405,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			if (cmd == Res.Commands.Présentation.TVA)
 			{
-				yield return ControllerType.RésuméTVA;
+				yield return ControllerType.RésuméTVA;  // présentation principale
 				yield return ControllerType.DécompteTVA;
 				yield return ControllerType.CodesTVA;
 				yield return ControllerType.ListeTVA;
@@ -386,8 +413,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 			if (cmd == Res.Commands.Présentation.Réglages)
 			{
-				yield return ControllerType.PlanComptable;
-				yield return ControllerType.PlanComptable;
+				yield return ControllerType.PlanComptable;  // présentation principale
 				yield return ControllerType.Monnaies;
 				yield return ControllerType.Périodes;
 				yield return ControllerType.PiècesGenerator;
@@ -399,6 +425,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static IEnumerable<Command> PrésentationCommands
 		{
 			//	Liste de toutes les commandes de groupes de présentations.
+			//	L'ordre n'a pas d'importance.
 			get
 			{
 				yield return Res.Commands.Présentation.Open;

@@ -25,9 +25,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public ExtraitDeCompteDataAccessor(AbstractController controller)
 			: base (controller)
 		{
-			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.ExtraitDeCompte.ViewSettings");
-			this.permanents       = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.ExtraitDeCompte.Permanents", this.compta);
-			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.ExtraitDeCompte.Search");
+			this.viewSettingsList = this.mainWindowController.GetViewSettingsList ("Présentation.Extrait.ViewSettings");
+			this.permanents       = this.mainWindowController.GetSettingsPermanents<ExtraitDeComptePermanents> ("Présentation.Extrait.Permanents", this.compta);
+			this.searchData       = this.mainWindowController.GetSettingsSearchData ("Présentation.Extrait.Search");
 			this.filterData       = this.viewSettingsList.Selected.CurrentFilter;
 			this.options          = this.viewSettingsList.Selected.CurrentOptions;
 
