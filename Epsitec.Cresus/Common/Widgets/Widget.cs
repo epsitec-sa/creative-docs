@@ -1454,20 +1454,8 @@ namespace Epsitec.Common.Widgets
 					}
 
 					this.SetValue (Visual.EnteredProperty, value);
+					Widget.ExitWidgetsDirectChildrenOf (this);
 					
-					//	Il faut aussi supprimer les éventuels enfants encore marqués comme 'entered'.
-					//	Pour ce faire, on passe en revue tous les widgets à la recherche d'enfants
-					//	directs.
-
-					Widget.ProcessEntered (
-						delegate (Widget candidate)
-						{
-							if (candidate.Parent == this)
-							{
-								candidate.SetEntered (false);
-							}
-						});
-
 					message = Message.CreateDummyMessage (MessageType.MouseLeave);
 					
 					this.OnExited (new MessageEventArgs (message, Message.CurrentState.LastPosition));
@@ -1482,23 +1470,34 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 		}
+
+		internal static void ClearAllEntered()
+		{
+			Widget.ClearEntered (_ => true);
+		}
+
 		
-		protected static void ExitWidgetsNotParentOf(Widget widget)
+		private static void ExitWidgetsDirectChildrenOf(Widget widget)
+		{
+			Widget.ClearEntered (candidate => candidate.Parent == widget);
+		}
+		
+		private static void ExitWidgetsNotParentOf(Widget widget)
+		{
+			Widget.ClearEntered (candidate => !VisualTree.IsAncestor (widget, candidate));
+		}
+
+
+		private static void ClearEntered(System.Predicate<Widget> clearPredicate)
 		{
 			Widget.ProcessEntered (
-				delegate (Widget candidate)
+				candidate =>
 				{
-					if (VisualTree.IsAncestor (widget, candidate) == false)
+					if (clearPredicate (candidate))
 					{
 						candidate.SetEntered (false);
 					}
 				});
-		}
-
-
-		internal static void ClearEntered(Window window)
-		{
-			Widget.ProcessEntered (widget => widget.SetEntered (false));
 		}
 
 		private static void ProcessEntered(System.Action<Widget> action)
