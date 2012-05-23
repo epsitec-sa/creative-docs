@@ -111,7 +111,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				case ControllerType.Balance:
 					return "Balance de vérification";
 
-				case ControllerType.Extrait:
+				case ControllerType.ExtraitDeCompte:
 					return "Extrait de compte";
 
 				case ControllerType.Bilan:
@@ -389,9 +389,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return ControllerType.Balance;
 			}
 
-			if (cmd == Res.Commands.Présentation.Extrait)
+			if (cmd == Res.Commands.Présentation.ExtraitDeCompte)
 			{
-				yield return ControllerType.Extrait;
+				yield return ControllerType.ExtraitDeCompte;
 			}
 
 			if (cmd == Res.Commands.Présentation.Bilan)
@@ -456,7 +456,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Print;
 				yield return Res.Commands.Présentation.Journal;
 				yield return Res.Commands.Présentation.Balance;
-				yield return Res.Commands.Présentation.Extrait;
+				yield return Res.Commands.Présentation.ExtraitDeCompte;
 				yield return Res.Commands.Présentation.Bilan;
 				yield return Res.Commands.Présentation.PP;
 				yield return Res.Commands.Présentation.Budgets;

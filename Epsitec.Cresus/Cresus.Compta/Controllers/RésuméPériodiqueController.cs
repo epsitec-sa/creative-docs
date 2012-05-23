@@ -209,7 +209,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			item.Clicked += delegate
 			{
-				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.Extrait);
+				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.ExtraitDeCompte);
 
 				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
 				permanent.NuméroCompte = data.Numéro;

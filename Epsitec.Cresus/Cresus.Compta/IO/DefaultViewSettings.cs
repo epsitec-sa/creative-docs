@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			this.CreateDefaultViewSettingsJournal          (Res.Commands.Présentation.Journal);
 			this.CreateDefaultViewSettingsBalance          (Res.Commands.Présentation.Balance);
-			this.CreateDefaultViewSettingsExtrait          (Res.Commands.Présentation.Extrait);
+			this.CreateDefaultViewSettingsExtraitDeCompte  (Res.Commands.Présentation.ExtraitDeCompte);
 			this.CreateDefaultViewSettingsBilan            (Res.Commands.Présentation.Bilan);
 			this.CreateDefaultViewSettingsPP               (Res.Commands.Présentation.PP);
 			this.CreateDefaultViewSettingsBudgets          (Res.Commands.Présentation.Budgets);
@@ -135,7 +135,7 @@ namespace Epsitec.Cresus.Compta.IO
 			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsExtrait(Command cmd)
+		private void CreateDefaultViewSettingsExtraitDeCompte(Command cmd)
 		{
 			var list = this.GetList (cmd);
 
@@ -144,11 +144,11 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.Extrait, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.Extrait, "Graphique du solde", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Graphique du solde", searchExist, filterExist, optionsExist);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Lines;

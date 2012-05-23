@@ -190,10 +190,8 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command Budgets = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 50));
 				//	designer:cap/OVKJ1
 				public static readonly global::Epsitec.Common.Widgets.Command DifférencesChange = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 51));
-				//	designer:cap/OVKH1
-				public static readonly global::Epsitec.Common.Widgets.Command Exploitation = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 49));
 				//	designer:cap/OVKE1
-				public static readonly global::Epsitec.Common.Widgets.Command Extrait = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
+				public static readonly global::Epsitec.Common.Widgets.Command ExtraitDeCompte = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
 				//	designer:cap/OVKB1
 				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
 				//	designer:cap/OVKQ5
@@ -411,10 +409,8 @@ namespace Epsitec.Cresus.Compta
 				public const long Budgets = 0x3F800014000032L;
 				//	designer:cap/OVKJ1
 				public const long DifférencesChange = 0x3F800014000033L;
-				//	designer:cap/OVKH1
-				public const long Exploitation = 0x3F800014000031L;
 				//	designer:cap/OVKE1
-				public const long Extrait = 0x3F80001400002EL;
+				public const long ExtraitDeCompte = 0x3F80001400002EL;
 				//	designer:cap/OVKB1
 				public const long Journal = 0x3F80001400002BL;
 				//	designer:cap/OVKQ5

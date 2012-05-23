@@ -301,7 +301,7 @@
     <EmbeddedResource Include="Images\Présentation.Balance.icon" />
     <EmbeddedResource Include="Images\Présentation.Bilan.icon" />
     <EmbeddedResource Include="Images\Présentation.Budgets.icon" />
-    <EmbeddedResource Include="Images\Présentation.Extrait.icon" />
+    <EmbeddedResource Include="Images\Présentation.ExtraitDeCompte.icon" />
     <EmbeddedResource Include="Images\Présentation.DécompteTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.Exploitation.icon" />
     <EmbeddedResource Include="Images\Comptabilité.icon" />

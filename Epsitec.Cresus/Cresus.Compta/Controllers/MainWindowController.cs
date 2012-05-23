@@ -500,7 +500,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					this.controller = new BalanceController (this.app, this.businessContext, this);
 					break;
 
-				case ControllerType.Extrait:
+				case ControllerType.ExtraitDeCompte:
 					this.controller = new ExtraitDeCompteController (this.app, this.businessContext, this);
 					break;
 
@@ -1130,10 +1130,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Login)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Extrait)]
+		[Command (Cresus.Compta.Res.CommandIds.Présentation.ExtraitDeCompte)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Bilan)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.PP)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Exploitation)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Budgets)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.DifférencesChange)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.RésuméPériodique)]

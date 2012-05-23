@@ -158,7 +158,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			Présentations.SetPrésentationType (ref s, ControllerType.Print, true);
 			Présentations.SetPrésentationType (ref s, ControllerType.Journal, true);
 			Présentations.SetPrésentationType (ref s, ControllerType.Balance, true);
-			Présentations.SetPrésentationType (ref s, ControllerType.Extrait, true);
+			Présentations.SetPrésentationType (ref s, ControllerType.ExtraitDeCompte, true);
 
 			this.editionLine[line].SetText (ColumnType.Présentations, s);
 

@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		Journal,
 		PlanComptable,
 		Balance,
-		Extrait,
+		ExtraitDeCompte,
 		Bilan,
 		PP,
 		Exploitation,
