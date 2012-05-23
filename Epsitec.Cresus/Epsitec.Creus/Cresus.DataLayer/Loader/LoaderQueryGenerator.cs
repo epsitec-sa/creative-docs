@@ -688,17 +688,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			string rootAlias = aliasManager.GetAlias (entity, rootEntityId);
 			string localAlias = aliasManager.GetAlias (entity, localEntityId);
-			
-			SqlField sqlTable = SqlField.CreateAliasedName (localDbTable.GetSqlName (), localAlias);
 
+			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+			SqlField sqlTable = SqlField.CreateAliasedName (localDbTable.GetSqlName (), localAlias);
 			SqlField rootIdColumn = SqlField.CreateAliasedName (rootAlias, rootIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 			SqlField localIdColumn = SqlField.CreateAliasedName (localAlias, localIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
-			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+			SqlJoin sqlJoin = SqlJoin.Create (sqlJoinCode, sqlTable, rootIdColumn, localIdColumn);
 
-			SqlJoin sqlJoin = new SqlJoin (rootIdColumn, localIdColumn, sqlJoinCode);
-
-			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+			return SqlContainer.CreateSqlJoins (sqlJoin);
 		}
 
 
@@ -854,16 +852,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbTable rootTargetDbTable = this.SchemaEngine.GetEntityTable (rootTargetId);
 			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 
+			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
 			SqlField sqlTable = SqlField.CreateAliasedName (rootTargetDbTable.GetSqlName (), rootTargetAlias);
-
 			SqlField sourceRefIdColumn = SqlField.CreateAliasedName (localSourceAlias, localSourceRefIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
 			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias, targetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
-			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+			SqlJoin sqlJoin = SqlJoin.Create (sqlJoinCode, sqlTable, sourceRefIdColumn, targetIdColumn);
 
-			SqlJoin sqlJoin = new SqlJoin (sourceRefIdColumn, targetIdColumn, sqlJoinCode);
-
-			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+			return SqlContainer.CreateSqlJoins (sqlJoin);
 		}
 
 
@@ -942,13 +938,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbColumn relationSourceIdDbColumn = relationDbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnSourceIdName];
 
 			SqlField sqlTable = SqlField.CreateAliasedName (relationDbTable.GetSqlName (), relationAlias);
-
 			SqlField sourceIdColumn = SqlField.CreateAliasedName (aliasManager.GetAlias (entity), sourceIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 			SqlField relationSourceIdColumn = SqlField.CreateAliasedName (relationAlias, relationSourceIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnSourceIdName);
 
-			SqlJoin sqlJoin = new SqlJoin (sourceIdColumn, relationSourceIdColumn, sqlJoinCode);
+			SqlJoin sqlJoin = SqlJoin.Create (sqlJoinCode, sqlTable, sourceIdColumn, relationSourceIdColumn);
 
-			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+			return SqlContainer.CreateSqlJoins (sqlJoin);
 		}
 
 
@@ -962,16 +957,14 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			DbColumn relationTargetIdDbColumn = relationDbTable.Columns[EntitySchemaBuilder.EntityFieldTableColumnTargetIdName];
 			DbColumn targetIdDbColumn = rootTargetDbTable.Columns[EntitySchemaBuilder.EntityTableColumnIdName];
 
+			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
 			SqlField sqlTable = SqlField.CreateAliasedName (rootTargetDbTable.GetSqlName (), rootTargetAlias);
-
 			SqlField relationTargetIdColumn = SqlField.CreateAliasedName (relationAlias, relationTargetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityFieldTableColumnTargetIdName);
 			SqlField targetIdColumn = SqlField.CreateAliasedName (rootTargetAlias, targetIdDbColumn.GetSqlName (), EntitySchemaBuilder.EntityTableColumnIdName);
 
-			SqlJoinCode sqlJoinCode = SqlJoinCode.Inner;
+			SqlJoin sqlJoin = SqlJoin.Create (sqlJoinCode, sqlTable, relationTargetIdColumn, targetIdColumn);
 
-			SqlJoin sqlJoin = new SqlJoin (relationTargetIdColumn, targetIdColumn, sqlJoinCode);
-
-			return SqlContainer.CreateSqlTables (sqlTable).PlusSqlJoins (sqlJoin);
+			return SqlContainer.CreateSqlJoins (sqlJoin);
 		}
 
 

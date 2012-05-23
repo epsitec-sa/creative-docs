@@ -301,25 +301,25 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlField table2 = SqlField.CreateName ("EMPLOYEE");
 				table2.Alias = "A2";
-				sqlSelect.Tables.Add (table2);
 
 				SqlField table3 = SqlField.CreateName ("PROJECT");
 				table3.Alias = "A3";
-				sqlSelect.Tables.Add (table3);
 
-				SqlJoin sqlJoin1 = new SqlJoin
+				SqlJoin sqlJoin1 = SqlJoin.Create
 				(
+					SqlJoinCode.Inner,
+					table2,
 					SqlField.CreateName ("A1", "EMP_NO"),
-					SqlField.CreateName ("A2", "EMP_NO"),
-					SqlJoinCode.Inner
+					SqlField.CreateName ("A2", "EMP_NO")
 				);
 				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin1));
 
-				SqlJoin sqlJoin2 = new SqlJoin
+				SqlJoin sqlJoin2 = SqlJoin.Create
 				(
+					SqlJoinCode.Inner,
+					table3,
 					SqlField.CreateName ("A1", "PROJ_ID"),
-					SqlField.CreateName ("A3", "PROJ_ID"),
-					SqlJoinCode.Inner
+					SqlField.CreateName ("A3", "PROJ_ID")
 				);
 				sqlSelect.Joins.Add (sqlJoin2);
 
