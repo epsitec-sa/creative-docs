@@ -72,8 +72,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindow = window;
 
 			//	Crée le ruban tout en haut.
+#if false
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
+#endif
 
 			this.CreatePrésentationUI (window.Root);
 
@@ -81,7 +83,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainFrame = new FrameBox
 			{
 				Parent    = window.Root,
-				BackColor = RibbonController.GetBackgroundColor1 (),
+				BackColor = UIBuilder.WindowBackColor2,
 				Dock      = DockStyle.Fill,
 				Padding   = new Margins (3),
 			};
@@ -108,16 +110,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = parent,
 				PreferredHeight = 44+5,
-				BackColor       = RibbonController.GetBackgroundColor1 (),
+				BackColor       = UIBuilder.WindowBackColor1,
 				Dock            = DockStyle.Top,
+				Margins         = new Margins (-1, -1, 0, 0),
 				Padding         = new Margins (0, 0, 5, 0),
 			};
 
+			//	Crée un petit gap.
 			new FrameBox
 			{
 				Parent          = parent,
-				PreferredHeight = 20,
-				BackColor       = Color.FromBrightness (1.0),
+				PreferredHeight = 2,
+				BackColor       = UIBuilder.WindowBackColor2,
 				Dock            = DockStyle.Top,
 			};
 
@@ -454,8 +458,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.selectedDocument = ControllerType.PlanComptable;
 			}
-
-			//?this.ribbonController.PrésentationsLastButton.CommandObject = Res.Commands.Présentation.Réglages;
 
 			this.CreateController ();
 			this.UpdateTitle ();

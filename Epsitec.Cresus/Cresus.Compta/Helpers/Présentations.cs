@@ -167,6 +167,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static string GetTabIcon(ViewSettingsData data)
 		{
 			//	Retourne l'icône à afficher dans l'onglet, à gauche de la description.
+			return null;  //?
+
 			if (data.Readonly == false)
 			{
 				return "Edit.Tab.User";
@@ -447,7 +449,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static IEnumerable<Command> PrésentationCommands
 		{
 			//	Liste de toutes les commandes de groupes de présentations.
-			//	L'ordre n'a pas d'importance.
+			//	L'ordre détermine la position dans PrésentationController.
 			get
 			{
 				yield return Res.Commands.Présentation.Open;
@@ -455,15 +457,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Login;
 				yield return Res.Commands.Présentation.Print;
 				yield return Res.Commands.Présentation.Journal;
-				yield return Res.Commands.Présentation.Balance;
 				yield return Res.Commands.Présentation.ExtraitDeCompte;
-				yield return Res.Commands.Présentation.Bilan;
-				yield return Res.Commands.Présentation.PP;
-				yield return Res.Commands.Présentation.Budgets;
-				yield return Res.Commands.Présentation.DifférencesChange;
 				yield return Res.Commands.Présentation.RésuméPériodique;
 				yield return Res.Commands.Présentation.Soldes;
+				yield return Res.Commands.Présentation.Bilan;
+				yield return Res.Commands.Présentation.PP;
+				yield return Res.Commands.Présentation.Balance;
 				yield return Res.Commands.Présentation.TVA;
+				yield return Res.Commands.Présentation.Budgets;
+				yield return Res.Commands.Présentation.DifférencesChange;
 				yield return Res.Commands.Présentation.Réglages;
 			}
 		}

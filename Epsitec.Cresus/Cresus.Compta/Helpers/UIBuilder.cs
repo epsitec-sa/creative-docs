@@ -406,7 +406,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static readonly Color WindowBackColor			= Color.FromHexa ("fafbff");  // blanc cassé, comme un TabButton sélectionné
+		public static readonly Color WindowBackColor1			= Color.FromHexa ("d8dee6");  // gris supérieur
+		public static readonly Color WindowBackColor2			= Color.FromHexa ("f0f3f7");  // gris inférieur (plus clair)
 		public static readonly Color CreationBackColor			= Color.FromHexa ("e5f4ff");  // bleu pastel
 		public static readonly Color ModificationBackColor		= Color.FromHexa ("fff8d5");  // orange pastel
 		public static readonly Color CreationHiliteBackColor	= Color.FromHexa ("c3e6ff");  // bleu

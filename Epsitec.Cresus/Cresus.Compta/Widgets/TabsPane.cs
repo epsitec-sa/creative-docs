@@ -39,8 +39,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.hilitedIndex   = -1;
 			this.gapHilitedRank = -1;
 
-			this.TabLookStyle = TabLook.OneNote;
-			this.IconSize     = 20;
+			this.TabLookStyle   = TabLook.OneNote;
+			this.selectionColor = Color.FromName ("White");
+			this.IconSize       = 20;
 
 			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
@@ -57,6 +58,22 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (this.tabLook != value)
 				{
 					this.tabLook = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
+		public Color SelectionColor
+		{
+			get
+			{
+				return this.selectionColor;
+			}
+			set
+			{
+				if (this.selectionColor != value)
+				{
+					this.selectionColor = value;
 					this.Invalidate ();
 				}
 			}
@@ -606,7 +623,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				var p = this.GetTabPath (rect, m, false);
 				graphics.AddFilledPath (p);
-				graphics.RenderSolid (Color.FromBrightness (1.0));
+				graphics.RenderSolid (this.selectionColor);
 			}
 			else if (state == TabState.MenuOpened)
 			{
@@ -727,12 +744,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
-				var p1 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Bottom);
-				var p2 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Top);
-				var p3 = new Point (rect.Right+TabsPane.tabMargin*0.5, rect.Top);
-				var p4 = new Point (rect.Right+TabsPane.tabMargin*0.5, rect.Bottom);
+				double x1 = System.Math.Floor (rect.Left -TabsPane.tabMargin*0.7) - 0.5;
+				double x2 = System.Math.Floor (rect.Right+TabsPane.tabMargin*0.7) + 0.5;
 
-				double d = rect.Height * 0.1;
+				var p1 = new Point (x1, rect.Bottom);
+				var p2 = new Point (x1, rect.Top);
+				var p3 = new Point (x2, rect.Top);
+				var p4 = new Point (x2, rect.Bottom);
+
+				double d = rect.Height * 0.15;
 
 				var p21 = Point.Move (p2, p1, d);
 				var p23 = Point.Move (p2, p3, d);
@@ -1626,6 +1646,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly TextField					renameField;
 
 		private TabLook								tabLook;
+		private Color								selectionColor;
 		private int									selectedIndex;
 		private int									hilitedIndex;
 		private int									menuTabIndex;

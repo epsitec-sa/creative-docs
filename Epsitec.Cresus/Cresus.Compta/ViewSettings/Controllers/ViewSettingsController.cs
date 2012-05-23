@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
-				BackColor       = RibbonController.GetBackgroundColor1 (),
+				BackColor       = UIBuilder.WindowBackColor2,
 				PreferredHeight = 5+24,
 				Dock            = DockStyle.Top,
 			};
@@ -80,6 +80,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				Parent          = this.toolbar,
 				TabLookStyle    = TabLook.OneNote,
+				SelectionColor  = Color.FromName ("White"),
 				IconSize        = 20,
 				PreferredHeight = 5+24,
 				Dock            = DockStyle.Fill,

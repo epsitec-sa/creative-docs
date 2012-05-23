@@ -19,6 +19,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public PrésentationController(AbstractController controller)
 		{
 			this.controller = controller;
+			this.commands = new List<Command> ();
 		}
 
 
@@ -28,8 +29,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = parent,
 				TabLookStyle    = TabLook.Simple,
+				SelectionColor  = UIBuilder.WindowBackColor2,
 				IconSize        = 32,
 				Dock            = DockStyle.Fill,
+			};
+
+			this.tabsPane.SelectedIndexChanged += delegate
+			{
+				this.ChangePrésentation ();
 			};
 
 			this.CreateRightUI ();
@@ -107,6 +114,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateTabItems()
 		{
 			this.tabsPane.Clear ();
+			this.commands.Clear ();
 
 			foreach (var cmd in Présentations.PrésentationCommands)
 			{
@@ -125,10 +133,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.tabsPane.Add (tabItem);
+			this.commands.Add (cmd);
+		}
+
+
+		private void ChangePrésentation()
+		{
+			int sel = this.tabsPane.SelectedIndex;
+
+			if (sel != -1)
+			{
+				var cmd = this.commands[sel];
+
+				this.tabsPane.Window.QueueCommand (this.tabsPane.Window.Root, cmd);
+			}
 		}
 
 
 		private readonly AbstractController		controller;
+		private readonly List<Command>			commands;
 
 		private TabsPane						tabsPane;
 	}
