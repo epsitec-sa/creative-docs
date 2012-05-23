@@ -39,11 +39,36 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.hilitedIndex   = -1;
 			this.gapHilitedRank = -1;
 
+			this.TabLookStyle = TabLook.OneNote;
+			this.IconSize     = 20;
+
 			ToolTip.Default.RegisterDynamicToolTipHost (this);  // pour voir les tooltips dynamiques
 		}
 
 
+		public TabLook TabLookStyle
+		{
+			get
+			{
+				return this.tabLook;
+			}
+			set
+			{
+				if (this.tabLook != value)
+				{
+					this.tabLook = value;
+					this.Invalidate ();
+				}
+			}
+		}
+
 		public bool IsDragSource
+		{
+			get;
+			set;
+		}
+
+		public double IconSize
 		{
 			get;
 			set;
@@ -73,7 +98,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public void Insert(int index, TabItem item)
 		{
-			var tab = new Tab
+			var tab = new Tab (this.IconSize)
 			{
 				TabItem = item,
 			};
@@ -311,6 +336,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 					{
 						this.selectedIndex = index;
 						this.OnSelectedIndexChanged ();
+						this.Invalidate ();
 					}
 				}
 			}
@@ -548,19 +574,37 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Dessine le fond.
 			if (state == TabState.Hilited)
 			{
-				graphics.AddFilledPath (path);
-				graphics.RenderSolid (adorner.ColorBorder);
+				if (this.tabLook == TabLook.Simple)
+				{
+					graphics.AddFilledPath (path);
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
+				}
+				else
+				{
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (adorner.ColorBorder);
 
-				var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0), selected);
-				graphics.AddFilledPath (p);
-				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
+					var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0), selected);
+					graphics.AddFilledPath (p);
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
+				}
 			}
 			else if (state == TabState.Selected)
 			{
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (UIBuilder.SelectionColor);
 
-				var p = this.GetTabPath (rect, new Margins (2.5, 1.5, 2.5, -2.5), false);
+				Margins m;
+				if (this.tabLook == TabLook.OneNote)
+				{
+					m = new Margins (2.5, 1.5, 2.5, -2.5);
+				}
+				else
+				{
+					m = new Margins (2.5, 2.5, 2.5, -2.5);
+				}
+
+				var p = this.GetTabPath (rect, m, false);
 				graphics.AddFilledPath (p);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 			}
@@ -583,6 +627,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else
 			{
+				if (this.tabLook == TabLook.Simple)
+				{
+					return;
+				}
+
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 
@@ -608,73 +657,115 @@ namespace Epsitec.Cresus.Compta.Widgets
 			rect.Deflate (margins);
 			rect.Deflate (0.5);
 
-#if false
-			//	Onglet en trapèze.
-			var p1 = new Point (rect.Left-TabsPane.tabMargin, rect.Bottom);
-			var p2 = new Point (rect.Left, rect.Top);
-			var p3 = new Point (rect.Right, rect.Top);
-			var p4 = new Point (rect.Right+TabsPane.tabMargin, rect.Bottom);
-
-			double d = rect.Height * 0.25;
-
-			var p21 = Point.Move (p2, p1, d);
-			var p23 = Point.Move (p2, p3, d);
-			var p32 = Point.Move (p3, p2, d);
-			var p34 = Point.Move (p3, p4, d);
-
-			if (p23.X < p32.X)
+			if (this.tabLook == TabLook.Trapeze)
 			{
-				path.MoveTo (p1);
-				path.LineTo (p21);
-				path.CurveTo (p2, p23);
-				path.LineTo (p32);
-				path.CurveTo (p3, p34);
-				path.LineTo (p4);
+				var p1 = new Point (rect.Left-TabsPane.tabMargin, rect.Bottom);
+				var p2 = new Point (rect.Left, rect.Top);
+				var p3 = new Point (rect.Right, rect.Top);
+				var p4 = new Point (rect.Right+TabsPane.tabMargin, rect.Bottom);
+
+				double d = rect.Height * 0.25;
+
+				var p21 = Point.Move (p2, p1, d);
+				var p23 = Point.Move (p2, p3, d);
+				var p32 = Point.Move (p3, p2, d);
+				var p34 = Point.Move (p3, p4, d);
+
+				if (p23.X < p32.X)
+				{
+					path.MoveTo (p1);
+					path.LineTo (p21);
+					path.CurveTo (p2, p23);
+					path.LineTo (p32);
+					path.CurveTo (p3, p34);
+					path.LineTo (p4);
+				}
+				else
+				{
+					path.MoveTo (p1);
+					path.LineTo (p2);
+					path.LineTo (p3);
+					path.LineTo (p4);
+				}
+			}
+			else if (this.tabLook == TabLook.OneNote)
+			{
+				var p1 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Bottom);
+				var p2 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Top);
+				var p3 = new Point (rect.Right-TabsPane.tabMargin*0.5, rect.Top);
+				var p4 = new Point (rect.Right+TabsPane.tabMargin*1.8, rect.Bottom);
+
+				double d = rect.Height * 0.2;
+
+				var p21 = Point.Move (p2, p1, d);
+				var p23 = Point.Move (p2, p3, d);
+
+				if (selected)
+				{
+					var bounds = this.Client.Bounds;
+
+					path.MoveTo (new Point (bounds.Left+0.5, bounds.Bottom));
+					path.LineTo (new Point (bounds.Left+0.5, p1.Y));
+
+					path.LineTo (p1);
+					path.LineTo (p21);
+					path.CurveTo (p2, p23);
+					path.LineTo (p3);
+					path.LineTo (p4);
+
+					path.LineTo (new Point (bounds.Right-0.5, p4.Y));
+					path.LineTo (new Point (bounds.Right-0.5, bounds.Bottom));
+				}
+				else
+				{
+					path.MoveTo (p1);
+					path.LineTo (p21);
+					path.CurveTo (p2, p23);
+					path.LineTo (p3);
+					path.LineTo (p4);
+				}
 			}
 			else
 			{
-				path.MoveTo (p1);
-				path.LineTo (p2);
-				path.LineTo (p3);
-				path.LineTo (p4);
+				var p1 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Bottom);
+				var p2 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Top);
+				var p3 = new Point (rect.Right+TabsPane.tabMargin*0.5, rect.Top);
+				var p4 = new Point (rect.Right+TabsPane.tabMargin*0.5, rect.Bottom);
+
+				double d = rect.Height * 0.1;
+
+				var p21 = Point.Move (p2, p1, d);
+				var p23 = Point.Move (p2, p3, d);
+				var p32 = Point.Move (p3, p2, d);
+				var p34 = Point.Move (p3, p4, d);
+
+				if (selected)
+				{
+					var bounds = this.Client.Bounds;
+
+					path.MoveTo (new Point (bounds.Left+0.5, bounds.Bottom));
+					path.LineTo (new Point (bounds.Left+0.5, p1.Y));
+
+					path.LineTo (p1);
+					path.LineTo (p21);
+					path.CurveTo (p2, p23);
+					path.LineTo (p32);
+					path.CurveTo (p3, p34);
+					path.LineTo (p4);
+
+					path.LineTo (new Point (bounds.Right-0.5, p4.Y));
+					path.LineTo (new Point (bounds.Right-0.5, bounds.Bottom));
+				}
+				else
+				{
+					path.MoveTo (p1);
+					path.LineTo (p21);
+					path.CurveTo (p2, p23);
+					path.LineTo (p32);
+					path.CurveTo (p3, p34);
+					path.LineTo (p4);
+				}
 			}
-#else
-			//	Onglet style "OneNote".
-			var p1 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Bottom);
-			var p2 = new Point (rect.Left-TabsPane.tabMargin*0.5, rect.Top);
-			var p3 = new Point (rect.Right-TabsPane.tabMargin*0.5, rect.Top);
-			var p4 = new Point (rect.Right+TabsPane.tabMargin*1.8, rect.Bottom);
-
-			double d = rect.Height * 0.2;
-
-			var p21 = Point.Move (p2, p1, d);
-			var p23 = Point.Move (p2, p3, d);
-
-			if (selected)
-			{
-				var bounds = this.Client.Bounds;
-
-				path.MoveTo (new Point (bounds.Left+0.5, bounds.Bottom));
-				path.LineTo (new Point (bounds.Left+0.5, p1.Y));
-
-				path.LineTo (p1);
-				path.LineTo (p21);
-				path.CurveTo (p2, p23);
-				path.LineTo (p3);
-				path.LineTo (p4);
-
-				path.LineTo (new Point (bounds.Right-0.5, p4.Y));
-				path.LineTo (new Point (bounds.Right-0.5, bounds.Bottom));
-			}
-			else
-			{
-				path.MoveTo (p1);
-				path.LineTo (p21);
-				path.CurveTo (p2, p23);
-				path.LineTo (p3);
-				path.LineTo (p4);
-			}
-#endif
 
 			if (this.IsDragSource)
 			{
@@ -1390,13 +1481,21 @@ namespace Epsitec.Cresus.Compta.Widgets
 	
 		private class Tab
 		{
-			public Tab()
+			public Tab(double iconSize)
 			{
+				this.IconSize = iconSize;
+
 				this.textLayout = new TextLayout
 				{
 					Alignment = ContentAlignment.MiddleCenter,
 					BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				};
+			}
+
+			public double IconSize
+			{
+				get;
+				private set;
 			}
 
 			public TextLayout TextLayout
@@ -1423,11 +1522,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 					else if (this.tabItem.FormattedText.IsNullOrEmpty)
 					{
-						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: 20);
+						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: this.IconSize);
 					}
 					else
 					{
-						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: 20) + " " + this.tabItem.FormattedText;
+						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: this.IconSize) + " " + this.tabItem.FormattedText;
 					}
 
 					this.textWidth = this.textLayout.GetSingleLineSize ().Width;
@@ -1526,6 +1625,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly List<Widget>				rightWidgets;
 		private readonly TextField					renameField;
 
+		private TabLook								tabLook;
 		private int									selectedIndex;
 		private int									hilitedIndex;
 		private int									menuTabIndex;

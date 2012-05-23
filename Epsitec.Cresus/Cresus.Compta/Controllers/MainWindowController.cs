@@ -75,6 +75,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 
+			this.CreatePrésentationUI (window.Root);
+
 			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox
 			{
@@ -98,6 +100,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.InitializeAfterNewCompta ();
 			this.ChangePériode (-1);  // en 2011
 #endif
+		}
+
+		private void CreatePrésentationUI(Widget parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 44+5,
+				BackColor       = RibbonController.GetBackgroundColor1 (),
+				Dock            = DockStyle.Top,
+				Padding         = new Margins (0, 0, 5, 0),
+			};
+
+			new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 20,
+				BackColor       = Color.FromBrightness (1.0),
+				Dock            = DockStyle.Top,
+			};
+
+			var c = new PrésentationController (this.controller);
+			c.CreateUI (frame);
 		}
 
 

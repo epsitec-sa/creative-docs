@@ -79,6 +79,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.tabsPane = new TabsPane
 			{
 				Parent          = this.toolbar,
+				TabLookStyle    = TabLook.OneNote,
+				IconSize        = 20,
 				PreferredHeight = 5+24,
 				Dock            = DockStyle.Fill,
 			};

@@ -77,6 +77,7 @@
     <Compile Include="Controllers\CodesTVAController.cs" />
     <Compile Include="Controllers\CodesTVAEditorController.cs" />
     <Compile Include="Controllers\ControllerType.cs" />
+    <Compile Include="Controllers\PrésentationController.cs" />
     <Compile Include="Controllers\TopPanelLeftController.cs" />
     <Compile Include="Controllers\SoldesController.cs" />
     <Compile Include="Controllers\RésuméPériodiqueController.cs" />
@@ -276,6 +277,7 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
     <Compile Include="Graph\GraphWidget.cs" />
+    <Compile Include="Widgets\TabLook.cs" />
     <Compile Include="Widgets\TabItem.cs" />
     <Compile Include="Widgets\TabsPane.cs" />
     <Compile Include="Widgets\CustomFrameBox.cs" />
