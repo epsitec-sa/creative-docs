@@ -21,22 +21,26 @@ namespace Epsitec.Cresus.Compta.Helpers
 	{
 		public static string GetViewSettingsKey(ControllerType type)
 		{
+			//	Retourne la clé d'accès pour les données ViewSettingsList.
 			var cmd = Présentations.GetCommand (type);
 			return Présentations.GetViewSettingsKey (cmd);
 		}
 
 		public static string GetViewSettingsKey(Command cmd)
 		{
+			//	Retourne la clé d'accès pour les données ViewSettingsList.
 			return string.Concat (cmd.Name + ".ViewSettings");
 		}
 
 		public static string GetSearchSettingsKey(ControllerType type)
 		{
+			//	Retourne la clé d'accès pour les données SearchData.
 			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".Search");
 		}
 
 		public static string GetPermanentsSettingsKey(ControllerType type)
 		{
+			//	Retourne la clé d'accès pour les données AbstractPermanents.
 			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".Permanents");
 		}
 

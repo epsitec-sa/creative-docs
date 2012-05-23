@@ -729,8 +729,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private ControllerType GetControllerType(Command cmd)
 		{
 			//	Retourne la dernière présentation utilisée pour une commande donnée.
-			string key = Présentations.GetViewSettingsKey (cmd);
-			var list = this.GetViewSettingsList (key);
+			var list = this.GetViewSettingsList (Présentations.GetViewSettingsKey (cmd));
 			if (list != null && list.Selected != null)
 			{
 				return list.Selected.ControllerType;

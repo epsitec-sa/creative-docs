@@ -822,30 +822,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected virtual ControllerType ControllerType
 		{
+			//	Retourne le type du contrôleur.
 			get
 			{
 				return Controllers.ControllerType.Unknown;
 			}
 		}
 
-		public string ViewSettingsName
+		public string ViewSettingsKey
 		{
+			//	Retourne la clé d'accès pour les données ViewSettingsList.
 			get
 			{
 				return Présentations.GetViewSettingsKey (this.ControllerType);
 			}
 		}
 
-		public string SearchName
+		public string SearchKey
 		{
+			//	Retourne la clé d'accès pour les données SearchData.
 			get
 			{
 				return Présentations.GetSearchSettingsKey (this.ControllerType);
 			}
 		}
 
-		public string PermanentsName
+		public string PermanentsKey
 		{
+			//	Retourne la clé d'accès pour les données AbstractPermanents.
 			get
 			{
 				return Présentations.GetPermanentsSettingsKey (this.ControllerType);
