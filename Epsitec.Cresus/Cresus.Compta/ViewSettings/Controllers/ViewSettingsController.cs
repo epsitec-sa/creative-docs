@@ -359,6 +359,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			int sel = this.viewSettingsIndexes[index];
 			this.viewSettingsList.List.RemoveAt (sel);
+			this.viewSettingsIndexes.RemoveAt (index);
 
 			if (index >= this.viewSettingsIndexes.Count)
 			{
