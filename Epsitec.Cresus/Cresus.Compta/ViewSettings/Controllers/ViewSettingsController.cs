@@ -37,8 +37,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.viewSettingsList = this.controller.ViewSettingsList;
 
 			this.viewSettingsIndexes = new List<int> ();
-
-			this.showPanel = false;
 		}
 
 
@@ -72,25 +70,50 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.toolbar = new FrameBox
 			{
-				Parent              = parent,
-				DrawFullFrame       = true,
-				BackColor           = RibbonController.GetBackgroundColor1 (),
-				ContainerLayoutMode = ContainerLayoutMode.VerticalFlow,
-				Dock                = DockStyle.Top,
-				Margins             = new Margins (0, 0, 0, -1),
+				Parent          = parent,
+				BackColor       = RibbonController.GetBackgroundColor1 (),
+				PreferredHeight = 5+24,
+				Dock            = DockStyle.Top,
+			};
+
+			this.tabsPane = new TabsPane
+			{
+				Parent          = this.toolbar,
+				PreferredHeight = 5+24,
+				Dock            = DockStyle.Fill,
+			};
+
+			this.CreateLeftUI ();
+			this.CreateRightUI ();
+
+			this.UpdateTabs ();
+			this.UpdateWidgets ();
+		}
+
+		private void CreateLeftUI()
+		{
+			var leftFrame = new FrameBox
+			{
+				PreferredWidth  = 10,
+				PreferredHeight = 24,
+				Padding         = new Margins (0, 0, 0, 5),
 			};
 
 			this.titleFrame = new FrameBox
 			{
-				Parent         = this.toolbar,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 2, 5, 5),
+				Parent          = leftFrame,
+				PreferredWidth  = 10,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 2, 0, 0),
 			};
 
 			this.titleLabel = new StaticText
 			{
-				Parent         = this.titleFrame,
-				Dock           = DockStyle.Fill,
+				Parent          = this.titleFrame,
+				PreferredWidth  = 10,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Fill,
 			};
 
 			this.titleLabel.HypertextClicked += delegate
@@ -106,46 +129,85 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 			};
 
-			this.mainFrame = new FrameBox
+			this.tabsPane.AddLeftWidget (leftFrame);
+		}
+
+		private void CreateRightUI()
+		{
+			var rightFrame = new FrameBox
 			{
-				Parent         = this.toolbar,
-				Dock           = DockStyle.Fill,
+				PreferredWidth  = 10,
+				PreferredHeight = 24,
+				Padding         = new Margins (0, 0, 0, 5),
 			};
 
-			var viewsFrame = new FrameBox
+			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 			{
-				Parent         = this.toolbar,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Right,
-				Padding        = new Margins (5),
-			};
+				this.updateButton = new IconButton
+				{
+					Parent            = rightFrame,
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
+					PreferredIconSize = new Size (20, 20),
+					PreferredSize     = new Size (24, 24),
+					Dock              = DockStyle.Left,
+				};
 
-			var button = new IconButton
-			{
-				Parent        = viewsFrame,
-				IconUri       = UIBuilder.GetResourceIconUri ("Views.Menu"),
-				PreferredSize = new Size (24, 24),
-				Dock          = DockStyle.Top,
-			};
+				this.useButton = new IconButton
+				{
+					Parent            = rightFrame,
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
+					PreferredIconSize = new Size (20, 20),
+					PreferredSize     = new Size (24, 24),
+					Dock              = DockStyle.Left,
+					Margins           = new Margins (0, 10, 0, 0),
+				};
 
-			ToolTip.Default.SetToolTip (button, "Choix des vues (pas encore disponible)");
+				ToolTip.Default.SetToolTip (this.useButton, "Utilise le filtre et les options définis dans le réglage de présentation");
+				ToolTip.Default.SetToolTip (this.updateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
+
+				this.useButton.Clicked += delegate
+				{
+					this.CopyViewSettingsToData (this.viewSettingsList.Selected);
+					this.ViewSettingsChanged ();
+				};
+
+				this.updateButton.Clicked += delegate
+				{
+					string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
+					var result = this.controller.MainWindowController.QuestionDialog (message);
+
+					if (result == DialogResult.Yes)
+					{
+						this.UpdateViewSettingsAction ();
+					}
+				};
+			}
 
 			var panelsToolbarFrame = new FrameBox
 			{
-				Parent         = this.toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Right,
+				Parent          = rightFrame,
+				PreferredWidth  = 20,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Left,
 			};
-
-			this.CreateComptactViewSettingsUI (this.mainFrame);
 
 			this.panelsToolbarController = new PanelsToolbarController (this.controller);
 			this.panelsToolbarController.CreateUI (panelsToolbarFrame);
 
-			this.UpdateTabs ();
-			this.UpdateWidgets ();
+			var button = new IconButton
+			{
+				Parent        = rightFrame,
+				IconUri       = UIBuilder.GetResourceIconUri ("Views.Menu"),
+				PreferredSize = new Size (24, 24),
+				Dock          = DockStyle.Left,
+				Margins       = new Margins (10, 0, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (button, "Choix des vues (pas encore disponible)");
+
+			this.tabsPane.AddRightWidget (rightFrame);
 		}
+
 
 		private void ClearAction()
 		{
@@ -176,64 +238,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.UpdateTabSelected ();
 		}
 
-
-		private void CreateComptactViewSettingsUI(FrameBox parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 34,
-				Dock            = DockStyle.Top,
-				Padding         = new Margins (5, 0, 5, 0),
-			};
-
-			this.tabsPane = new TabsPane
-			{
-				Parent          = frame,
-				PreferredHeight = 34-5,
-				Dock            = DockStyle.Fill,
-			};
-
-			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
-			{
-				this.updateButton = new IconButton
-				{
-					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
-					PreferredIconSize = new Size (20, 20),
-					PreferredSize     = new Size (24, 24),
-				};
-
-				this.useButton = new IconButton
-				{
-					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
-					PreferredIconSize = new Size (20, 20),
-					PreferredSize     = new Size (24, 24),
-				};
-
-				ToolTip.Default.SetToolTip (this.useButton,    "Utilise le filtre et les options définis dans le réglage de présentation");
-				ToolTip.Default.SetToolTip (this.updateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
-
-				this.tabsPane.AddAdditionnalWidget (this.updateButton);
-				this.tabsPane.AddAdditionnalWidget (this.useButton);
-
-				this.useButton.Clicked += delegate
-				{
-					this.CopyViewSettingsToData (this.viewSettingsList.Selected);
-					this.ViewSettingsChanged ();
-				};
-
-				this.updateButton.Clicked += delegate
-				{
-					string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
-					var result = this.controller.MainWindowController.QuestionDialog (message);
-
-					if (result == DialogResult.Yes)
-					{
-						this.UpdateViewSettingsAction ();
-					}
-				};
-			}
-		}
 
 		private void UpdateViewSettingsAction()
 		{
@@ -413,32 +417,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.ViewSettingsChanged ();
 		}
 
-		private void CreateTab(Widget parent, int index)
-		{
-			bool select = index == this.viewSettingsList.SelectedIndex;
-
-			var button = new TabButton
-			{
-				Parent            = parent,
-				FormattedText     = this.viewSettingsList.List[index].Name,
-				TextBreakMode     = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				ActiveState       = select ? ActiveState.Yes : ActiveState.No,
-				PreferredHeight   = 26,
-				Dock              = DockStyle.Left,
-				TabIndex          = index,
-				AutoFocus         = false,
-			};
-
-			button.PreferredWidth = button.GetBestFitSize ().Width + 10;
-
-			button.Clicked += delegate
-			{
-				this.viewSettingsList.SelectedIndex = button.TabIndex;
-				this.UpdateAfterSelectionChanged ();
-				this.ViewSettingsChanged ();
-			};
-		}
-
 		private void UpdateTabSelected()
 		{
 			if (this.viewSettingsList != null)
@@ -615,15 +593,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private System.Action							viewSettingsChangedAction;
 
+		private FrameBox								toolbar;
+		private TabsPane								tabsPane;
 		private FrameBox								titleFrame;
 		private StaticText								titleLabel;
-		private FrameBox								mainFrame;
-		private FrameBox								toolbar;
-		private bool									showPanel;
-
 		private Button									useButton;
 		private Button									updateButton;
-		private TabsPane								tabsPane;
 
 		private PanelsToolbarController					panelsToolbarController;
 	}

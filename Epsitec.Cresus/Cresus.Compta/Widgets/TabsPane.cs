@@ -22,10 +22,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 	{
 		public TabsPane()
 		{
-			this.tabs               = new List<Tab> ();
-			this.showedIndexes      = new List<int> ();
-			this.hiddenIndexes      = new List<int> ();
-			this.additionnalWidgets = new List<Widget> ();
+			this.tabs          = new List<Tab> ();
+			this.showedIndexes = new List<int> ();
+			this.hiddenIndexes = new List<int> ();
+			this.leftWidgets   = new List<Widget> ();
+			this.rightWidgets  = new List<Widget> ();
 
 			this.renameField = new TextField
 			{
@@ -111,23 +112,46 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		public void ClearAdditionnalWidgets()
+		public void ClearLeftWidgets()
 		{
-			//	Supprime tous les widgets à droite des onglets.
-			this.additionnalWidgets.Clear ();
+			//	Supprime tous les widgets additionnels à gauche des onglets.
+			this.leftWidgets.Clear ();
 			this.Children.Clear ();
 
 			this.dirtyLayout = true;
 			this.Invalidate ();
 		}
 
-		public void AddAdditionnalWidget(Widget widget)
+		public void AddLeftWidget(Widget widget)
 		{
-			//	Ajoute un widget à droite des onglets.
-			this.additionnalWidgets.Add (widget);
+			//	Ajoute un widget à gauche des onglets.
+			this.leftWidgets.Add (widget);
 
 			widget.Parent = this;
 			widget.Anchor = AnchorStyles.TopLeft;
+
+			this.dirtyLayout = true;
+			this.Invalidate ();
+		}
+
+
+		public void ClearRightWidgets()
+		{
+			//	Supprime tous les widgets additionnels à droite des onglets.
+			this.rightWidgets.Clear ();
+			this.Children.Clear ();
+
+			this.dirtyLayout = true;
+			this.Invalidate ();
+		}
+
+		public void AddRightWidget(Widget widget)
+		{
+			//	Ajoute un widget à droite des onglets.
+			this.rightWidgets.Add (widget);
+
+			widget.Parent = this;
+			widget.Anchor = AnchorStyles.TopRight;
 
 			this.dirtyLayout = true;
 			this.Invalidate ();
@@ -377,18 +401,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.dragInfo = new DragInfo (tab, this);
 
 			this.DragMove ();
-
-			foreach (var widget in this.additionnalWidgets)
-			{
-				widget.Visibility = false;
-			}
 		}
 
 		private void DragMove()
 		{
 			if (this.dragInfo != null)
 			{
-				var pos = new Point (this.GapMarkPos, this.ActualHeight);
+				var pos = new Point (this.GapMarkPos, this.ActualHeight-1);
 				this.dragInfo.Update (this.MapClientToScreen (pos), this.IsNopDrag);
 			}
 		}
@@ -481,6 +500,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 
 					rect.Inflate (1, -2);
+
+					if (state == TabState.Selected)
+					{
+						rect.Offset (0, -2);
+					}
+
 					var pos = rect.BottomLeft;
 					var tab = this.GetShowedTabFromRank (rank);
 					tab.TextLayout.LayoutSize = rect.Size;
@@ -516,7 +541,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Dessine le cadre et le fond d'un onglet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			var path = this.GetTabPath (rect);
+			bool selected = (state == TabState.Selected || state == TabState.MenuOpened);
+			var path = this.GetTabPath (rect, selected);
 			var colorFrame = adorner.ColorBorder;
 
 			//	Dessine le fond.
@@ -525,7 +551,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (adorner.ColorBorder);
 
-				var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0));
+				var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0), selected);
 				graphics.AddFilledPath (p);
 				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
 			}
@@ -534,7 +560,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (UIBuilder.SelectionColor);
 
-				var p = this.GetTabPath (rect, new Margins (2.5, 2.5, 2.5, 0));
+				var p = this.GetTabPath (rect, new Margins (2.5, 1.5, 2.5, -2.5), false);
 				graphics.AddFilledPath (p);
 				graphics.RenderSolid (Color.FromBrightness (1.0));
 			}
@@ -569,12 +595,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.RenderSolid (colorFrame);
 		}
 
-		private Path GetTabPath(Rectangle rect)
+		private Path GetTabPath(Rectangle rect, bool selected = false)
 		{
-			return this.GetTabPath (rect, Margins.Zero);
+			return this.GetTabPath (rect, Margins.Zero, selected);
 		}
 
-		private Path GetTabPath(Rectangle rect, Margins margins)
+		private Path GetTabPath(Rectangle rect, Margins margins, bool selected = false)
 		{
 			//	Retourne le chemin pour dessiner/détecter un onglet.
 			var path = new Path ();
@@ -624,11 +650,30 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var p21 = Point.Move (p2, p1, d);
 			var p23 = Point.Move (p2, p3, d);
 
-			path.MoveTo (p1);
-			path.LineTo (p21);
-			path.CurveTo (p2, p23);
-			path.LineTo (p3);
-			path.LineTo (p4);
+			if (selected)
+			{
+				var bounds = this.Client.Bounds;
+
+				path.MoveTo (new Point (bounds.Left+0.5, bounds.Bottom));
+				path.LineTo (new Point (bounds.Left+0.5, p1.Y));
+
+				path.LineTo (p1);
+				path.LineTo (p21);
+				path.CurveTo (p2, p23);
+				path.LineTo (p3);
+				path.LineTo (p4);
+
+				path.LineTo (new Point (bounds.Right-0.5, p4.Y));
+				path.LineTo (new Point (bounds.Right-0.5, bounds.Bottom));
+			}
+			else
+			{
+				path.MoveTo (p1);
+				path.LineTo (p21);
+				path.CurveTo (p2, p23);
+				path.LineTo (p3);
+				path.LineTo (p4);
+			}
 #endif
 
 			if (this.IsDragSource)
@@ -679,7 +724,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				var l = (this.gapHilitedRank == 0) ? 0 : d;
 
 				var path = new Path ();
-				path.MoveTo (c.X, c.Y-d-6);
+				path.MoveTo (c.X, c.Y-d-4);
 				path.LineTo (c.X-l, c.Y);
 				path.LineTo (c.X+d, c.Y);
 				path.Close ();
@@ -758,7 +803,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private Rectangle GetTextRect(int rank)
 		{
 			//	Retourne le rectangle du texte d'un onglet. Le cadre de l'onglet déborde ce rectangle.
-			double x = TabsPane.tabMargin;
+			double x = this.LeftWidgetsWidth + TabsPane.tabMargin;
 
 			for (int r = 0; r < rank; r++)
 			{
@@ -766,7 +811,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 				x += TabsPane.tabMargin;
 			}
 
-			return new Rectangle (x, 0, this.GetShowedWidth (rank), this.ActualHeight-2);
+			if (this.IsDragSource)
+			{
+				return new Rectangle (x, 0, this.GetShowedWidth (rank), this.ActualHeight-2);
+			}
+			else
+			{
+				return new Rectangle (x, 2, this.GetShowedWidth (rank), this.ActualHeight-2);
+			}
 		}
 
 		private double GetShowedWidth(int rank)
@@ -850,7 +902,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			n = System.Math.Max (n, 1);
 			n = System.Math.Min (n, 4);
 
-			double actualWidth = this.ActualWidth - this.GetAdditionnalWidgetsWidth;
+			double actualWidth = this.ActualWidth - this.LeftWidgetsWidth - this.RightWidgetsWidth;
 			double max = System.Math.Floor (actualWidth/n);
 
 			foreach (var tab in this.tabs)
@@ -930,15 +982,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 			}
 
-			double offset = this.GetTextRect (this.showedIndexes.Count-1).Right + TabsPane.tabMargin;
-			this.UpdateAdditionnalWidgetsLayout (offset);
+			this.UpdateLeftWidgetsLayout ();
+			this.UpdateRightWidgetsLayout ();
 		}
 
 		private void UpdateIndexesStretch()
 		{
 			this.showedIndexes.Clear ();
 
-			double actualWidth = this.ActualWidth - this.GetAdditionnalWidgetsWidth;
+			double actualWidth = this.ActualWidth - this.LeftWidgetsWidth - this.RightWidgetsWidth;
 			double totalWidth = 0;
 
 			foreach (var tab in this.tabs)
@@ -970,30 +1022,58 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
-		private double GetAdditionnalWidgetsWidth
+		private double LeftWidgetsWidth
 		{
-			//	Retourne la largeur de l'ensemble des widgets additionnels.
+			//	Retourne la largeur de l'ensemble des widgets additionnels de gauche.
 			get
 			{
 				double width = 0;
 
-				foreach (var widget in this.additionnalWidgets)
+				foreach (var widget in this.leftWidgets)
 				{
-					width += widget.PreferredWidth;
+					width += widget.ActualWidth;
 				}
 
 				return width;
 			}
 		}
 
-		private void UpdateAdditionnalWidgetsLayout(double offset)
+		private double RightWidgetsWidth
 		{
-			//	Met à jour les positions des widgets additionnels.
+			//	Retourne la largeur de l'ensemble des widgets additionnels de droite.
+			get
+			{
+				double width = 0;
+
+				foreach (var widget in this.rightWidgets)
+				{
+					width += widget.ActualWidth;
+				}
+
+				return width;
+			}
+		}
+
+		private void UpdateLeftWidgetsLayout()
+		{
+			//	Met à jour les positions des widgets additionnels de gauche.
 			double x = 0;
 
-			foreach (var widget in this.additionnalWidgets)
+			foreach (var widget in this.rightWidgets)
 			{
-				widget.Margins = new Margins (offset+x, 0, 0, 0);
+				widget.Margins = new Margins (x, 0, 0, 0);
+				x += widget.PreferredWidth;
+			}
+		}
+
+		private void UpdateRightWidgetsLayout()
+		{
+			//	Met à jour les positions des widgets additionnels de droite.
+			double x = 0;
+
+			foreach (var widget in this.rightWidgets)
+			{
+				widget.Margins = new Margins (0, x, 0, 0);
 				x += widget.PreferredWidth;
 			}
 		}
@@ -1120,7 +1200,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var x = this.GetTextRect (this.showedIndexes.IndexOf (TabsPane.menuIndex)).Left - TabsPane.tabMargin*0.5;
 
 			menu.AutoDispose = true;
-			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
+			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 0)), this);
 		}
 
 		private void ShowContextMenu()
@@ -1186,7 +1266,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var x = this.GetTextRect (this.showedIndexes.IndexOf (this.hilitedIndex)).Left - TabsPane.tabMargin*0.5;
 
 			menu.AutoDispose = true;
-			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 1)), this);
+			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 0)), this);
 		}
 
 		private void AddToContextMenu(VMenu menu, string icon, FormattedText text, bool enable, System.Action action)
@@ -1442,7 +1522,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 		private readonly List<Tab>					tabs;
 		private readonly List<int>					showedIndexes;
 		private readonly List<int>					hiddenIndexes;
-		private readonly List<Widget>				additionnalWidgets;
+		private readonly List<Widget>				leftWidgets;
+		private readonly List<Widget>				rightWidgets;
 		private readonly TextField					renameField;
 
 		private int									selectedIndex;

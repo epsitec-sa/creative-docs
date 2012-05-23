@@ -27,19 +27,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-			var toolbar = new FrameBox
-			{
-				Parent          = parent,
-				PreferredWidth  = 20*3,
-				PreferredHeight = PanelsToolbarController.toolbarHeight,
-				Dock            = DockStyle.Top,
-				Padding         = new Margins (5),
-			};
-
-			var temporalButton = this.CreateButton (toolbar, Res.Commands.Panel.Temporal, 5, UIBuilder.TemporalBackColor);
-			var searchButton   = this.CreateButton (toolbar, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
-			var filterButton   = this.CreateButton (toolbar, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
-			                     this.CreateButton (toolbar, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);
+			var temporalButton = this.CreateButton (parent, Res.Commands.Panel.Temporal, 5, UIBuilder.TemporalBackColor);
+			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,  -1, UIBuilder.SearchBackColor);
+			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
+			                     this.CreateButton (parent, Res.Commands.Panel.Options,  0, UIBuilder.OptionsBackColor);
 
 			this.searchMarker   = this.CreateMarker (searchButton);
 			this.filterMarker   = this.CreateMarker (filterButton);
