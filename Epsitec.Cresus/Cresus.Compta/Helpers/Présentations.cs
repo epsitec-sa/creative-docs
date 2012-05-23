@@ -402,10 +402,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			if (cmd == Res.Commands.Présentation.PP)
 			{
 				yield return ControllerType.PP;
-			}
-
-			if (cmd == Res.Commands.Présentation.Exploitation)
-			{
 				yield return ControllerType.Exploitation;
 			}
 
@@ -463,7 +459,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 				yield return Res.Commands.Présentation.Extrait;
 				yield return Res.Commands.Présentation.Bilan;
 				yield return Res.Commands.Présentation.PP;
-				yield return Res.Commands.Présentation.Exploitation;
 				yield return Res.Commands.Présentation.Budgets;
 				yield return Res.Commands.Présentation.DifférencesChange;
 				yield return Res.Commands.Présentation.RésuméPériodique;

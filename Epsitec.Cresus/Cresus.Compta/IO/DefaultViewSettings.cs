@@ -38,7 +38,6 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreateDefaultViewSettingsExtrait          (Res.Commands.Présentation.Extrait);
 			this.CreateDefaultViewSettingsBilan            (Res.Commands.Présentation.Bilan);
 			this.CreateDefaultViewSettingsPP               (Res.Commands.Présentation.PP);
-			this.CreateDefaultViewSettingsExploitation     (Res.Commands.Présentation.Exploitation);
 			this.CreateDefaultViewSettingsBudgets          (Res.Commands.Présentation.Budgets);
 			this.CreateDefaultViewSettingsRésuméPériodique (Res.Commands.Présentation.RésuméPériodique);
 			this.CreateDefaultViewSettingsTVA              (Res.Commands.Présentation.TVA);
@@ -216,19 +215,8 @@ namespace Epsitec.Cresus.Compta.IO
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.SideBySide;
 			}
 
-			this.Select (list);
-		}
-
-		private void CreateDefaultViewSettingsExploitation(Command cmd)
-		{
-			var list = this.GetList (cmd);
-
-			bool searchExist  = true;
-			bool filterExist  = true;
-			bool optionsExist = true;
-
 			{
-				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, ControllerType.Exploitation, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, ControllerType.Exploitation, "Compte d'exploitation", searchExist, filterExist, optionsExist);
 				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
