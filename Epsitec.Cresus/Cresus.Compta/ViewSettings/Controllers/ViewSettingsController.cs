@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
-				BackColor       = UIBuilder.WindowBackColor2,
+				BackColor       = UIBuilder.WindowBackColor3,
 				PreferredHeight = 5+24,
 				Dock            = DockStyle.Top,
 			};

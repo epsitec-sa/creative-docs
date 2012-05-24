@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = parent,
 				TabLookStyle    = TabLook.Simple,
-				SelectionColor  = UIBuilder.WindowBackColor2,
+				SelectionColor  = UIBuilder.WindowBackColor3,
 				IconSize        = 32,
 				Dock            = DockStyle.Fill,
 			};
@@ -63,12 +63,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 			PrésentationController.CreateSubsections (rightFrame, out topSection, out bottomSection);
 
 			this.CreateSmallButton (topSection, Res.Commands.Edit.Duplicate);
-			this.CreateSmallButton (topSection, Res.Commands.Edit.Delete);
 			this.CreateSmallButton (topSection, Res.Commands.Edit.Up);
 
-			this.CreateSmallButton (bottomSection, Res.Commands.Edit.Undo);
-			this.CreateSmallButton (bottomSection, Res.Commands.Edit.Redo);
+			this.CreateSmallButton (bottomSection, Res.Commands.Edit.Delete);
 			this.CreateSmallButton (bottomSection, Res.Commands.Edit.Down);
+
+			new FrameBox
+			{
+				Parent         = rightFrame,
+				PreferredWidth = 10,
+				Dock           = DockStyle.StackBegin,
+			};
 
 			this.tabsPane.AddRightWidget (rightFrame);
 		}

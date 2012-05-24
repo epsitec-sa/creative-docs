@@ -72,18 +72,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindow = window;
 
 			//	Crée le ruban tout en haut.
-#if true
+#if false
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 #endif
 
+			this.CreateToolbarUI (window.Root);
 			this.CreatePrésentationUI (window.Root);
 
 			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox
 			{
 				Parent    = window.Root,
-				BackColor = UIBuilder.WindowBackColor2,
+				BackColor = UIBuilder.WindowBackColor3,
 				Dock      = DockStyle.Fill,
 				Padding   = new Margins (3),
 			};
@@ -104,13 +105,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 #endif
 		}
 
+		private void CreateToolbarUI(Widget parent)
+		{
+			this.toolbarController = new ToolbarController (this);
+			this.toolbarController.CreateUI (parent);
+		}
+
 		private void CreatePrésentationUI(Widget parent)
 		{
 			var frame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = 44+5,
-				BackColor       = UIBuilder.WindowBackColor1,
+				BackColor       = UIBuilder.WindowBackColor2,
 				Dock            = DockStyle.Top,
 				Margins         = new Margins (-1, -1, 0, 0),
 				Padding         = new Margins (0, 0, 5, 0),
@@ -121,7 +128,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent          = parent,
 				PreferredHeight = 2,
-				BackColor       = UIBuilder.WindowBackColor2,
+				BackColor       = UIBuilder.WindowBackColor3,
 				Dock            = DockStyle.Top,
 			};
 
@@ -1574,6 +1581,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private ControllerType								selectedDocument;
 		private AbstractController							controller;
 		private RibbonController							ribbonController;
+		private ToolbarController							toolbarController;
 		private PrésentationController						présentationController;
 		private FrameBox									tabFrame;
 		private FrameBox									mainFrame;
