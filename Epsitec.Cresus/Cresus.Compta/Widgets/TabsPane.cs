@@ -1007,6 +1007,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 		{
 			this.showedIndexes.Clear ();
 
+			if (this.tabs.Count == 0)
+			{
+				return;
+			}
+
 			//	Initialise les largeurs courantes des onglets, en diminuant la largeur si l'onglet est
 			//	vraiment trop grand.
 			int n = this.tabs.Count;

@@ -194,20 +194,14 @@ namespace Epsitec.Cresus.Compta
 				public static readonly global::Epsitec.Common.Widgets.Command ExtraitDeCompte = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 46));
 				//	designer:cap/OVKB1
 				public static readonly global::Epsitec.Common.Widgets.Command Journal = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 43));
-				//	designer:cap/OVKQ5
-				public static readonly global::Epsitec.Common.Widgets.Command Login = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 186));
 				//	designer:cap/OVKR5
 				public static readonly global::Epsitec.Common.Widgets.Command Open = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 187));
 				//	designer:cap/OVKG1
 				public static readonly global::Epsitec.Common.Widgets.Command PP = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 48));
-				//	designer:cap/OVKT5
-				public static readonly global::Epsitec.Common.Widgets.Command Print = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 189));
 				//	designer:cap/OVK15
 				public static readonly global::Epsitec.Common.Widgets.Command Réglages = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 161));
 				//	designer:cap/OVKK1
 				public static readonly global::Epsitec.Common.Widgets.Command RésuméPériodique = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 52));
-				//	designer:cap/OVKS5
-				public static readonly global::Epsitec.Common.Widgets.Command Save = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 188));
 				//	designer:cap/OVK68
 				public static readonly global::Epsitec.Common.Widgets.Command Soldes = global::Epsitec.Common.Widgets.Command.Get (new global::Epsitec.Common.Support.Druid (_moduleId, 20, 262));
 				//	designer:cap/OVKL1
@@ -413,20 +407,14 @@ namespace Epsitec.Cresus.Compta
 				public const long ExtraitDeCompte = 0x3F80001400002EL;
 				//	designer:cap/OVKB1
 				public const long Journal = 0x3F80001400002BL;
-				//	designer:cap/OVKQ5
-				public const long Login = 0x3F8000140000BAL;
 				//	designer:cap/OVKR5
 				public const long Open = 0x3F8000140000BBL;
 				//	designer:cap/OVKG1
 				public const long PP = 0x3F800014000030L;
-				//	designer:cap/OVKT5
-				public const long Print = 0x3F8000140000BDL;
 				//	designer:cap/OVK15
 				public const long Réglages = 0x3F8000140000A1L;
 				//	designer:cap/OVKK1
 				public const long RésuméPériodique = 0x3F800014000034L;
-				//	designer:cap/OVKS5
-				public const long Save = 0x3F8000140000BCL;
 				//	designer:cap/OVK68
 				public const long Soldes = 0x3F800014000106L;
 				//	designer:cap/OVKL1

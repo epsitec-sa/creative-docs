@@ -420,6 +420,7 @@
     <EmbeddedResource Include="Images\Edit.Tab.Settings.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.System.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Create.icon" />
+    <EmbeddedResource Include="Images\Présentation.File.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

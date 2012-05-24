@@ -72,7 +72,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.mainWindow = window;
 
 			//	Crée le ruban tout en haut.
-#if false
+#if true
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 #endif
@@ -125,8 +125,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-			var c = new PrésentationController (this.controller);
-			c.CreateUI (frame);
+			this.présentationController = new PrésentationController (this);
+			this.présentationController.CreateUI (frame);
 		}
 
 
@@ -727,30 +727,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 				else
 				{
-					if (command == Res.Commands.Présentation.Login)
+					if (command == Res.Commands.Présentation.Open)
 					{
 						cs.Enable = true;  // cette commande doit toujours être disponible !
 					}
 					else
 					{
-						if (this.currentUser == null)  // déconnecté ?
-						{
-							if (command == Res.Commands.Présentation.Open)
-							{
-								cs.Enable = true;
-							}
-							else
-							{
-								cs.Enable = false;
-							}
-						}
-						else
-						{
-							cs.Enable = this.HasPrésentationCommand (command);
-						}
+						cs.Enable = this.HasPrésentationCommand (command);
 					}
 				}
 			}
+
+			this.présentationController.UpdateTabItems ();
 		}
 
 		private ControllerType GetControllerType(Command cmd)
@@ -1152,9 +1140,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Open)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Save)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Print)]
-		[Command (Cresus.Compta.Res.CommandIds.Présentation.Login)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Journal)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.Balance)]
 		[Command (Cresus.Compta.Res.CommandIds.Présentation.ExtraitDeCompte)]
@@ -1589,6 +1574,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private ControllerType								selectedDocument;
 		private AbstractController							controller;
 		private RibbonController							ribbonController;
+		private PrésentationController						présentationController;
 		private FrameBox									tabFrame;
 		private FrameBox									mainFrame;
 		private string										titleComplement;

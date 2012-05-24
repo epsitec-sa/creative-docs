@@ -70,16 +70,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var section = this.CreateSection (this.container, DockStyle.Left, "Comptabilité");
 
-				Widget topSection, bottomSection;
-				RibbonController.CreateSubsections (section, out topSection, out bottomSection);
-
-				UIBuilder.CreateButton (topSection, Res.Commands.Présentation.Open, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-
-				UIBuilder.CreateButton (bottomSection, Res.Commands.Présentation.Save, RibbonController.ButtonSmallWidth, RibbonController.IconSmallWidth, isActivable: true);
-
-				UIBuilder.CreateButton (section, Res.Commands.Présentation.Login, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
-				UIBuilder.CreateButton (section, Res.Commands.Présentation.Print, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
-				//?UIBuilder.CreateButton (section, Res.Commands.Panel.Temporal, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
+				UIBuilder.CreateButton (section, Res.Commands.Présentation.Open, RibbonController.ButtonLargeWidth, RibbonController.IconLargeWidth, isActivable: true);
 			}
 
 			{

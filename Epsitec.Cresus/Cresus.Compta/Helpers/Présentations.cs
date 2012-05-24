@@ -57,6 +57,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 				switch (type)
 				{
+					case ControllerType.Open:
+						return "Fichier";
+
 					case ControllerType.Journal:
 						return "Journal";
 
@@ -88,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 					return "Impression";
 
 				case ControllerType.Login:
-					return "Indentification";
+					return "Identification";
 
 				case ControllerType.Modèles:
 					return "Ecritures modèles";
@@ -361,21 +364,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 			if (cmd == Res.Commands.Présentation.Open)
 			{
 				yield return ControllerType.Open;
-			}
-
-			if (cmd == Res.Commands.Présentation.Save)
-			{
 				yield return ControllerType.Save;
-			}
-
-			if (cmd == Res.Commands.Présentation.Login)
-			{
-				yield return ControllerType.Login;
-			}
-
-			if (cmd == Res.Commands.Présentation.Print)
-			{
 				yield return ControllerType.Print;
+				yield return ControllerType.Login;
 			}
 
 			if (cmd == Res.Commands.Présentation.Journal)
@@ -453,9 +444,6 @@ namespace Epsitec.Cresus.Compta.Helpers
 			get
 			{
 				yield return Res.Commands.Présentation.Open;
-				yield return Res.Commands.Présentation.Save;
-				yield return Res.Commands.Présentation.Login;
-				yield return Res.Commands.Présentation.Print;
 				yield return Res.Commands.Présentation.Journal;
 				yield return Res.Commands.Présentation.ExtraitDeCompte;
 				yield return Res.Commands.Présentation.RésuméPériodique;

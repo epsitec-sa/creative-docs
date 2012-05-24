@@ -16,9 +16,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 {
 	public class PrésentationController
 	{
-		public PrésentationController(AbstractController controller)
+		public PrésentationController(MainWindowController mainWindowController)
 		{
-			this.controller = controller;
+			this.mainWindowController = mainWindowController;
+
 			this.commands = new List<Command> ();
 		}
 
@@ -111,7 +112,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void UpdateTabItems()
+		public void UpdateTabItems()
 		{
 			this.tabsPane.Clear ();
 			this.commands.Clear ();
@@ -124,16 +125,25 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateTabItem(Command cmd)
 		{
-			var type = Présentations.GetControllerType (cmd);
-
-			var tabItem = new TabItem
+			CommandState cs = this.mainWindowController.CommandContext.GetCommandState (cmd);
+			if (cs.Enable)
 			{
-				Icon    = Présentations.GetIcon (type),
-				Tooltip = Présentations.GetGroupName (type),
-			};
+				var type = Présentations.GetControllerType (cmd);
 
-			this.tabsPane.Add (tabItem);
-			this.commands.Add (cmd);
+				var tabItem = new TabItem
+				{
+					Icon    = Présentations.GetIcon (type),
+					Tooltip = Présentations.GetGroupName (type),
+				};
+
+				this.tabsPane.Add (tabItem);
+				this.commands.Add (cmd);
+
+				if (cs.ActiveState == ActiveState.Yes)
+				{
+					this.tabsPane.SelectedIndex = this.tabsPane.Count-1;
+				}
+			}
 		}
 
 
@@ -150,7 +160,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private readonly AbstractController		controller;
+		private readonly MainWindowController	mainWindowController;
 		private readonly List<Command>			commands;
 
 		private TabsPane						tabsPane;

@@ -41,10 +41,7 @@ namespace Epsitec.Cresus.Compta.IO
 			this.CreateDefaultViewSettingsBudgets          (Res.Commands.Présentation.Budgets);
 			this.CreateDefaultViewSettingsRésuméPériodique (Res.Commands.Présentation.RésuméPériodique);
 			this.CreateDefaultViewSettingsTVA              (Res.Commands.Présentation.TVA);
-			this.CreateDefaultViewSettingsLogin            (Res.Commands.Présentation.Login);
 			this.CreateDefaultViewSettingsOpen             (Res.Commands.Présentation.Open);
-			this.CreateDefaultViewSettingsPrint            (Res.Commands.Présentation.Print);
-			this.CreateDefaultViewSettingsSave             (Res.Commands.Présentation.Save);
 			this.CreateDefaultViewSettingsSoldes           (Res.Commands.Présentation.Soldes);
 			this.CreateDefaultViewSettingsRéglages         (Res.Commands.Présentation.Réglages);
 		}
@@ -310,31 +307,15 @@ namespace Epsitec.Cresus.Compta.IO
 			this.Select (list);
 		}
 
-		private void CreateDefaultViewSettingsLogin(Command cmd)
-		{
-			var list = this.GetList (cmd);
-			this.CreateViewSettingsData (list, ControllerType.Login, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list);
-		}
-
 		private void CreateDefaultViewSettingsOpen(Command cmd)
 		{
 			var list = this.GetList (cmd);
-			this.CreateViewSettingsData (list, ControllerType.Open, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list);
-		}
 
-		private void CreateDefaultViewSettingsPrint(Command cmd)
-		{
-			var list = this.GetList (cmd);
-			this.CreateViewSettingsData (list, ControllerType.Print, DefaultViewSettings.defaultName, false, false, false);
-			this.Select (list);
-		}
+			this.CreateViewSettingsData (list, ControllerType.Open,  "Ouvrir",         false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Save,  "Enregistrer",    false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Print, "Imprimer",       false, false, false);
+			this.CreateViewSettingsData (list, ControllerType.Login, "Identification", false, false, false);
 
-		private void CreateDefaultViewSettingsSave(Command cmd)
-		{
-			var list = this.GetList (cmd);
-			this.CreateViewSettingsData (list, ControllerType.Save, DefaultViewSettings.defaultName, false, false, false);
 			this.Select (list);
 		}
 

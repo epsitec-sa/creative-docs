@@ -35,7 +35,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				return this.mainWindowController.GetViewSettingsList ("Présentation.Login.ViewSettings");
+				return this.mainWindowController.GetViewSettingsList (Présentations.GetViewSettingsKey (ControllerType.Login));
 			}
 		}
 
