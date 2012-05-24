@@ -46,6 +46,25 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		}
 
 
+		public bool ShowSearchPanel
+		{
+			get;
+			set;
+		}
+
+		public bool ShowFilterPanel
+		{
+			get;
+			set;
+		}
+
+		public bool ShowOptionsPanel
+		{
+			get;
+			set;
+		}
+
+
 		public SearchData BaseFilter
 		{
 			get;

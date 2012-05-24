@@ -96,7 +96,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.optionsController = new SoldesOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
-			this.optionsController.ShowPanel = this.mainWindowController.ShowOptionsPanel;
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
 			this.UpdateColumnMappers ();
 		}

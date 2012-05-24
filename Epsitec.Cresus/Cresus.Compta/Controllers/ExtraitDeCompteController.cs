@@ -80,9 +80,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateOptions(FrameBox parent)
 		{
+			this.ShowOptionsPanel = true;
+
 			this.optionsController = new ExtraitDeCompteOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
-			this.optionsController.ShowPanel = this.mainWindowController.ShowOptionsPanel;
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
 
 			this.UpdateColumnMappers ();
 		}
@@ -275,7 +277,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			var enable = (data != null && data.CP != null);
 			var text = enable ? string.Format ("Montre la contrepartie {0}", data.CP.Numéro) : "Montre la contrepartie";
-			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", text, enable);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), text, enable);
 
 			item.Clicked += delegate
 			{
@@ -293,7 +295,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as ExtraitDeCompteData;
 			var écriture = data.Entity as ComptaEcritureEntity;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Journal", "Montre dans le journal", écriture != null);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.Journal), "Montre dans le journal", écriture != null);
 
 			item.Clicked += delegate
 			{

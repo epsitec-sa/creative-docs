@@ -124,7 +124,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			if (compte == null)
 			{
-				this.summaryLabel.FormattedText = FormattedText.Concat ("Inconnu").ApplyFontColor (Color.FromName ("Red"));
+				if (this.NuméroCompte.IsNullOrEmpty)
+				{
+					this.summaryLabel.FormattedText = FormattedText.Concat ("Indéfini").ApplyFontColor (Color.FromName ("Red"));
+				}
+				else
+				{
+					this.summaryLabel.FormattedText = FormattedText.Concat ("Inconnu").ApplyFontColor (Color.FromName ("Red"));
+				}
 			}
 			else
 			{

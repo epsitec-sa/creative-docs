@@ -555,7 +555,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.topSearchController = new TopSearchController (this);
 				this.topSearchController.CreateUI (parent, this.SearchStartAction, this.SearchNextAction);
-				this.topSearchController.ShowPanel = this.mainWindowController.ShowSearchPanel;
+				this.topSearchController.ShowPanel = this.ShowSearchPanel;
 			}
 		}
 
@@ -621,7 +621,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.topFilterController = new TopFilterController (this);
 				this.topFilterController.CreateUI (parent, this.FilterStartAction, this.FilterNextAction);
-				this.topFilterController.ShowPanel = this.mainWindowController.ShowSearchPanel;
+				this.topFilterController.ShowPanel = this.ShowFilterPanel;
 
 				this.dataAccessor.UpdateFilter ();
 			}
@@ -680,7 +680,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.topTemporalController = new TopTemporalController (this);
 				this.topTemporalController.CreateUI (parent, this.FilterStartAction);
-				this.topTemporalController.ShowPanel = this.mainWindowController.ShowSearchPanel;
+				//?this.topTemporalController.ShowPanel = this.mainWindowController.ShowSearchPanel;
 
 				this.dataAccessor.UpdateFilter ();
 			}
@@ -1235,6 +1235,73 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 		#endregion
+
+
+		public bool ShowSearchPanel
+		{
+			get
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					return this.dataAccessor.ViewSettingsList.Selected.ShowSearchPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					this.dataAccessor.ViewSettingsList.Selected.ShowSearchPanel = value;
+				}
+			}
+		}
+
+		public bool ShowFilterPanel
+		{
+			get
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					return this.dataAccessor.ViewSettingsList.Selected.ShowFilterPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					this.dataAccessor.ViewSettingsList.Selected.ShowFilterPanel = value;
+				}
+			}
+		}
+
+		public bool ShowOptionsPanel
+		{
+			get
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					return this.dataAccessor.ViewSettingsList.Selected.ShowOptionsPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.dataAccessor != null && this.dataAccessor.ViewSettingsList != null && this.dataAccessor.ViewSettingsList.Selected != null)
+				{
+					this.dataAccessor.ViewSettingsList.Selected.ShowOptionsPanel = value;
+				}
+			}
+		}
 
 
 		protected virtual void CreateEditor(FrameBox parent)

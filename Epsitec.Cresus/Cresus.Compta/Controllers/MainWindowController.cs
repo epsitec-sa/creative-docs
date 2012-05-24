@@ -49,10 +49,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.Dirty = false;
 
-			this.showSearchPanel   = false;
-			this.showFilterPanel   = false;
 			this.showTemporalPanel = false;
-			this.showOptionsPanel  = false;
 			this.showInfoPanel     = true;
 
 			Converters.ImportSettings (this.settingsList);
@@ -663,32 +660,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public bool ShowSearchPanel
-		{
-			get
-			{
-				return this.showSearchPanel;
-			}
-			set
-			{
-				this.showSearchPanel = value;
-				this.UpdatePanelCommands ();
-			}
-		}
-
-		public bool ShowFilterPanel
-		{
-			get
-			{
-				return this.showFilterPanel;
-			}
-			set
-			{
-				this.showFilterPanel = value;
-				this.UpdatePanelCommands ();
-			}
-		}
-
 		public bool ShowTemporalPanel
 		{
 			get
@@ -698,19 +669,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.showTemporalPanel = value;
-				this.UpdatePanelCommands ();
-			}
-		}
-
-		public bool ShowOptionsPanel
-		{
-			get
-			{
-				return this.showOptionsPanel;
-			}
-			set
-			{
-				this.showOptionsPanel = value;
 				this.UpdatePanelCommands ();
 			}
 		}
@@ -840,14 +798,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
-				cs.ActiveState = this.showSearchPanel ? ActiveState.Yes : ActiveState.No;
+				cs.ActiveState = this.ShowSearchPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasSearchPanel;
 			}
 
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Filter);
-				cs.ActiveState = this.showFilterPanel ? ActiveState.Yes : ActiveState.No;
+				cs.ActiveState = this.ShowFilterPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasFilterPanel;
 			}
 
@@ -860,7 +818,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
-				cs.ActiveState = this.showOptionsPanel ? ActiveState.Yes : ActiveState.No;
+				cs.ActiveState = this.ShowOptionsPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : this.controller.HasOptionsPanel;
 			}
 
@@ -873,7 +831,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.showSearchPanel, this.showFilterPanel, this.showTemporalPanel, this.showOptionsPanel, this.showInfoPanel);
+				this.controller.UpdatePanelsShowed (this.ShowSearchPanel, this.ShowFilterPanel, this.showTemporalPanel, this.ShowOptionsPanel, this.showInfoPanel);
 			}
 		}
 
@@ -1183,19 +1141,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ClosePanelSearch()
 		{
-			this.showSearchPanel = false;
+			this.ShowSearchPanel = false;
 			this.UpdatePanelCommands ();
 		}
 
 		public void ClosePanelFilter()
 		{
-			this.showFilterPanel = false;
+			this.ShowFilterPanel = false;
 			this.UpdatePanelCommands ();
 		}
 
 		public void OpenPanelFilter()
 		{
-			this.showFilterPanel = true;
+			this.ShowFilterPanel = true;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1213,7 +1171,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void ClosePanelOptions()
 		{
-			this.showOptionsPanel = false;
+			this.ShowOptionsPanel = false;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1221,14 +1179,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Panel.Search)]
 		private void CommandPanelSearch()
 		{
-			this.showSearchPanel = !this.showSearchPanel;
+			this.ShowSearchPanel = !this.ShowSearchPanel;
 			this.UpdatePanelCommands ();
 		}
 
 		[Command (Res.CommandIds.Panel.Filter)]
 		private void CommandPanelFilter()
 		{
-			this.showFilterPanel = !this.showFilterPanel;
+			this.ShowFilterPanel = !this.ShowFilterPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1242,7 +1200,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Panel.Options)]
 		private void CommandPanelOptions()
 		{
-			this.showOptionsPanel = !this.showOptionsPanel;
+			this.ShowOptionsPanel = !this.ShowOptionsPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1507,6 +1465,73 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		private bool ShowSearchPanel
+		{
+			get
+			{
+				if (this.controller!= null)
+				{
+					return this.controller.ShowSearchPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.controller != null)
+				{
+					this.controller.ShowSearchPanel = value;
+				}
+			}
+		}
+
+		private bool ShowFilterPanel
+		{
+			get
+			{
+				if (this.controller!= null)
+				{
+					return this.controller.ShowFilterPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.controller != null)
+				{
+					this.controller.ShowFilterPanel = value;
+				}
+			}
+		}
+
+		private bool ShowOptionsPanel
+		{
+			get
+			{
+				if (this.controller!= null)
+				{
+					return this.controller.ShowOptionsPanel;
+				}
+				else
+				{
+					return false;
+				}
+			}
+			set
+			{
+				if (this.controller != null)
+				{
+					this.controller.ShowOptionsPanel = value;
+				}
+			}
+		}
+
+
 		#region Settings data
 		public AbstractPermanents GetSettingsPermanents<T>(string key, ComptaEntity compta)
 			where T : AbstractPermanents, new ()
@@ -1604,10 +1629,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private FrameBox									mainFrame;
 		private string										titleComplement;
 		private bool										dirty;
-		private bool										showSearchPanel;
-		private bool										showFilterPanel;
 		private bool										showTemporalPanel;
-		private bool										showOptionsPanel;
 		private bool										showInfoPanel;
 		private ComptaUtilisateurEntity						currentUser;
 	}
