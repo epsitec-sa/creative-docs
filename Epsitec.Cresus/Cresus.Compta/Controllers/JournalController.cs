@@ -247,14 +247,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (compte != null)
 			{
-				var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", compte.Numéro));
+				var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", compte.Numéro));
 
 				item.Clicked += delegate
 				{
 					var présentation = this.mainWindowController.ShowPrésentation (ControllerType.ExtraitDeCompte);
 
-					var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-					permanent.NuméroCompte = compte.Numéro;
+					var options = présentation.DataAccessor.Options as ExtraitDeCompteOptions;
+					options.NuméroCompte = compte.Numéro;
 
 					présentation.UpdateAfterChanged ();
 

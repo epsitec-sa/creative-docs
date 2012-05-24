@@ -96,38 +96,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			base.OptionsChanged ();
 		}
 
+#if false
 		protected override void CreateTitleFrame()
 		{
-#if false
-			this.titleLabel.Visibility = false;
-
-			var label = new StaticText
-			{
-				Parent          = this.titleFrame,
-				FormattedText   = FormattedText.Concat ("Compte").ApplyBold ().ApplyFontSize (13.0),
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
-			};
-			label.PreferredWidth = label.GetBestFitSize ().Width;
-
-			this.compteController = UIBuilder.CreateAutoCompleteField (this, this.titleFrame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
-			this.compteController.Furtive = true;
-			this.compteController.Box.Dock = DockStyle.Left;
-			//?this.compteController.Box.Margins = new Margins (0, 0, 3, 3);
-			this.compteController.EditWidget.TextLayout.DefaultFont = Font.GetFont (Font.DefaultFontFamily, "Bold");
-			this.compteController.EditWidget.TextLayout.DefaultFontSize = 13.0;
-
-			this.summaryLabel = new StaticText
-			{
-				Parent          = this.titleFrame,
-				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				Dock            = DockStyle.Fill,
-				Margins         = new Margins (10, 0, 0, 0),
-			};
-
-			this.UpdateComptes ();
-			this.UpdateSummary ();
-#else
 			if (this.viewSettingsController == null)
 			{
 				return;
@@ -161,7 +132,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.UpdateComptes ();
 			this.UpdateSummary ();
-#endif
 		}
 
 		private void UpdateComptes()
@@ -218,6 +188,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				p.NuméroCompte = value;
 			}
 		}
+#endif
 
 		protected override ControllerType ControllerType
 		{

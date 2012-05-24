@@ -141,14 +141,33 @@ namespace Epsitec.Cresus.Compta.IO
 			bool optionsExist = true;
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Ecritures d'un compte à choix", searchExist, filterExist, optionsExist);
 			}
 
 			{
-				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Graphique du solde", searchExist, filterExist, optionsExist);
+				var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, "Graphique d'un compte à choix", searchExist, filterExist, optionsExist);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Lines;
+			}
+
+			//	A titre d'exemple, on met un accès direct aux 3 premiers comptes.
+			int count = 0;
+			foreach (var compte in this.compta.PlanComptable)
+			{
+				if (compte.Type == TypeDeCompte.Normal)
+				{
+					var viewSettings = this.CreateViewSettingsData<ExtraitDeCompteOptions> (list, ControllerType.ExtraitDeCompte, compte.Titre, searchExist, filterExist, optionsExist);
+
+					var o = viewSettings.BaseOptions as ExtraitDeCompteOptions;
+					o.NuméroCompte = compte.Numéro;
+
+					count++;
+					if (count >= 3)
+					{
+						break;
+					}
+				}
 			}
 
 			this.Select (list);
@@ -223,15 +242,7 @@ namespace Epsitec.Cresus.Compta.IO
 		private void CreateDefaultViewSettingsBudgets(Command cmd)
 		{
 			var list = this.GetList (cmd);
-
-			bool searchExist  = true;
-			bool filterExist  = true;
-			bool optionsExist = false;
-
-			{
-				var viewSettings = this.CreateViewSettingsData (list, ControllerType.Budgets, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-			}
-
+			this.CreateViewSettingsData (list, ControllerType.Budgets, DefaultViewSettings.defaultName, true, true, false);
 			this.Select (list);
 		}
 

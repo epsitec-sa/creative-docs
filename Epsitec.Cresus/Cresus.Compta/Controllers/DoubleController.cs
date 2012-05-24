@@ -152,14 +152,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as DoubleData;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", data.Numéro));
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro));
 
 			item.Clicked += delegate
 			{
 				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.ExtraitDeCompte);
 
-				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-				permanent.NuméroCompte = data.Numéro;
+				var options = présentation.DataAccessor.Options as ExtraitDeCompteOptions;
+				options.NuméroCompte = data.Numéro;
 
 				présentation.UpdateAfterChanged ();
 			};
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as DoubleData;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Budgets", string.Format ("Budgets du compte {0}", data.Numéro));
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.Budgets), string.Format ("Budgets du compte {0}", data.Numéro));
 
 			item.Clicked += delegate
 			{

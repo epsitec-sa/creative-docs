@@ -28,7 +28,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = parent,
 				PreferredHeight     = 24,
-				BackColor           = UIBuilder.WindowBackColor1,
+				//?BackColor           = UIBuilder.WindowBackColor1,
+				BackColor           = UIBuilder.WindowBackColor2,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
 				Padding             = new Margins (5, 5, 1, 1),

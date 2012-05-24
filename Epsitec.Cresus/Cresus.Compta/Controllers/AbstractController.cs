@@ -189,9 +189,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateTitle (this.frameBox);
 			this.CreateViewSettings (this.frameBox);
 			this.CreateTopTemporal (this.frameBox);
+			this.CreateOptions (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
-			this.CreateOptions (this.frameBox);
 
 			if (this.HasRightEditor)
 			{

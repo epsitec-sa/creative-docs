@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as RésuméPériodiqueData;
 			var écriture = data.Entity as ComptaEcritureEntity;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Journal", "Montre dans le journal", écriture != null);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.Journal), "Montre dans le journal", écriture != null);
 
 			item.Clicked += delegate
 			{
@@ -205,14 +205,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as RésuméPériodiqueData;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty);
 
 			item.Clicked += delegate
 			{
 				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.ExtraitDeCompte);
 
-				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-				permanent.NuméroCompte = data.Numéro;
+				var options = présentation.DataAccessor.Options as ExtraitDeCompteOptions;
+				options.NuméroCompte = data.Numéro;
 
 				présentation.UpdateAfterChanged ();
 			};

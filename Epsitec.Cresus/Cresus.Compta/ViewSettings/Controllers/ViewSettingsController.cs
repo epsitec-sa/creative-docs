@@ -132,7 +132,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 			};
 
-			this.tabsPane.AddLeftWidget (leftFrame);
+			//?this.tabsPane.AddLeftWidget (leftFrame);
 		}
 
 		private void CreateRightUI()

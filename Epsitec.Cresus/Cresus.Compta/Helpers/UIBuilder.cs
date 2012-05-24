@@ -414,11 +414,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color CreationHiliteBackColor	= Color.FromHexa ("c3e6ff");  // bleu
 		public static readonly Color ModificationHiliteBackColor= Color.FromHexa ("ffeb85");  // orange
 
-		public static readonly Color TemporalBackColor			= Color.FromHexa ("d2f0ff");  // bleu pastel
+		public static readonly Color TemporalBackColor			= Color.FromHexa ("ffddcc");  // rouge pastel
 		public static readonly Color ViewSettingsBackColor		= Color.FromHexa ("ccffcc");  // vert pastel
 		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffcc");  // jaune pastel
 		public static readonly Color FilterBackColor			= Color.FromHexa ("ffeecc");  // orange pastel
-		public static readonly Color OptionsBackColor			= Color.FromHexa ("ffddcc");  // rouge pastel
+		public static readonly Color OptionsBackColor			= Color.FromHexa ("d2f0ff");  // bleu pastel
 
 		public static readonly Color SelectionColor				= Color.FromHexa ("ffd700");  // orange "gold"
 		public static readonly Color JustCreatedColor			= Color.FromHexa ("b3d7ff");  // bleu pastel

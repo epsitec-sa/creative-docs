@@ -11,6 +11,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Controllers;
+using Epsitec.Cresus.Compta.Fields.Controllers;
 using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
@@ -57,6 +58,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			this.CreateGraphUI (frame);
+			this.CreateCompteUI (frame);
 
 			this.graphicsButton = new CheckButton
 			{
@@ -79,6 +81,86 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 		}
+
+		private void CreateCompteUI(FrameBox parent)
+		{
+			var label = new StaticText
+			{
+				Parent          = parent,
+				FormattedText   = FormattedText.Concat ("Compte"),
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
+			label.PreferredWidth = label.GetBestFitSize ().Width;
+
+			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, parent, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Box.Dock = DockStyle.Left;
+
+			this.summaryLabel = new StaticText
+			{
+				Parent          = parent,
+				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (10, 20, 0, 0),
+			};
+
+			this.UpdateComptes ();
+			this.UpdateSummary ();
+		}
+
+		private void UpdateComptes()
+		{
+			UIBuilder.UpdateAutoCompleteTextField (this.compteController.EditWidget as AutoCompleteTextField, this.compta.PlanComptable);
+
+			using (this.ignoreChanges.Enter ())
+			{
+				this.compteController.EditionData.Text = this.NuméroCompte;
+			}
+		}
+
+		private void UpdateSummary()
+		{
+			var compte = this.compta.PlanComptable.Where (x => x.Numéro == this.NuméroCompte).FirstOrDefault ();
+
+			if (compte == null)
+			{
+				this.summaryLabel.FormattedText = FormattedText.Concat ("Inconnu").ApplyFontColor (Color.FromName ("Red"));
+			}
+			else
+			{
+				this.summaryLabel.FormattedText = compte.Titre;
+			}
+
+			this.summaryLabel.PreferredWidth = System.Math.Min (this.summaryLabel.GetBestFitSize ().Width, 150);
+		}
+
+		private void ValidateCompteAction(EditionData data)
+		{
+			data.ClearError ();
+		}
+
+		private void CompteChangedAction(int line, ColumnType columnType)
+		{
+			if (this.ignoreChanges.IsZero)
+			{
+				this.NuméroCompte = this.compteController.EditionData.Text;
+				this.UpdateSummary ();
+				this.OptionsChanged ();
+			}
+		}
+
+		private FormattedText NuméroCompte
+		{
+			get
+			{
+				return this.Options.NuméroCompte.ToSimpleText ();
+			}
+			set
+			{
+				this.Options.NuméroCompte = value;
+			}
+		}
+
 
 		protected override bool HasBeginnerSpecialist
 		{
@@ -117,6 +199,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
+		private AutoCompleteFieldController		compteController;
+		private StaticText						summaryLabel;
 		private CheckButton						graphicsButton;
 	}
 }

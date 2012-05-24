@@ -64,7 +64,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			this.readonlyAllData.Clear ();
 
-			FormattedText numéroCompte = this.Permanents.NuméroCompte.ToSimpleText ();
+			FormattedText numéroCompte = this.Options.NuméroCompte.ToSimpleText ();
 			if (numéroCompte.IsNullOrEmpty)
 			{
 				this.readonlyData.Clear ();
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private void UpdateSoldes()
 		{
 			//	Met à jour l'évolution du solde du compte, visible dans la colonne 'Solde'.
-			FormattedText numéroCompte = this.Permanents.NuméroCompte;
+			FormattedText numéroCompte = this.Options.NuméroCompte;
 			if (numéroCompte.IsNullOrEmpty)
 			{
 				return;
@@ -219,7 +219,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.cube.SetDimensionTitle (1, "Pièces");
 			this.cube.Clear ();
 
-			this.cube.SetShortTitle (0, 0, this.Permanents.NuméroCompte);
+			this.cube.SetShortTitle (0, 0, this.Options.NuméroCompte);
 
 			int y = 0;
 			foreach (var d in this.readonlyData)

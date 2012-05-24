@@ -31,19 +31,17 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
-		public bool HasGraphics
+		public FormattedText NuméroCompte
 		{
-			get
-			{
-				return this.hg;
-			}
-			set
-			{
-				this.hg = value;
-			}
+			get;
+			set;
 		}
 
-		private bool hg;
+		public bool HasGraphics
+		{
+			get;
+			set;
+		}
 
 
 		protected override void CreateEmpty()
@@ -71,7 +69,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var d = dst as ExtraitDeCompteOptions;
 
-			d.HasGraphics = this.HasGraphics;
+			d.NuméroCompte = this.NuméroCompte;
+			d.HasGraphics  = this.HasGraphics;
 
 			base.CopyTo (dst);
 		}
@@ -85,7 +84,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as ExtraitDeCompteOptions;
 
-			return this.HasGraphics == o.HasGraphics;
+			return this.NuméroCompte == o.NuméroCompte &&
+				   this.HasGraphics  == o.HasGraphics;
 		}
 
 
@@ -94,6 +94,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			get
 			{
 				this.StartSummaryBuilder ();
+
+				if (!this.NuméroCompte.IsNullOrEmpty)
+				{
+					this.AppendSummaryBuilder (FormattedText.Concat ("Compte ", this.NuméroCompte));
+				}
 
 				if (this.ViewGraph)
 				{

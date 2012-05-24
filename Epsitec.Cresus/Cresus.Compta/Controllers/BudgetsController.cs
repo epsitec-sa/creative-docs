@@ -12,6 +12,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Permanents;
+using Epsitec.Cresus.Compta.Options.Data;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -125,14 +126,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var compte = this.dataAccessor.GetEditionEntity (this.arrayController.SelectedRow) as ComptaCompteEntity;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.Extrait", string.Format ("Extrait du compte {0}", compte.Numéro));
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", compte.Numéro));
 
 			item.Clicked += delegate
 			{
 				var présentation = this.mainWindowController.ShowPrésentation (ControllerType.ExtraitDeCompte);
 
-				var permanent = présentation.DataAccessor.Permanents as ExtraitDeComptePermanents;
-				permanent.NuméroCompte = compte.Numéro;
+				var options = présentation.DataAccessor.Options as ExtraitDeCompteOptions;
+				options.NuméroCompte = compte.Numéro;
 
 				présentation.UpdateAfterChanged ();
 			};
@@ -142,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var compte = this.dataAccessor.GetEditionEntity (this.arrayController.SelectedRow) as ComptaCompteEntity;
 
-			var item = this.PutContextMenuItem (menu, "Présentation.PlanComptable", string.Format ("Définition du compte {0}", compte.Numéro));
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.PlanComptable), string.Format ("Définition du compte {0}", compte.Numéro));
 
 			item.Clicked += delegate
 			{
