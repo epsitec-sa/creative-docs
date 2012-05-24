@@ -467,6 +467,7 @@ namespace Epsitec.Cresus.Database
 			//	We currently allow a single transaction per database abstraction,
 			//	because some ADO.NET providers do not support cascaded transactions.
 
+			System.Data.IDbTransaction iDbTransaction = null;
 			DbTransaction transaction = null;
 
 			//	Make sure we can get a lock on the database. If not, this means
@@ -481,19 +482,29 @@ namespace Epsitec.Cresus.Database
 				switch (mode)
 				{
 					case DbTransactionMode.ReadOnly:
-						transaction = new DbTransaction (abstraction.BeginReadOnlyTransaction (tablesToLock), abstraction, this, mode);
+						iDbTransaction = abstraction.BeginReadOnlyTransaction (tablesToLock);
 						break;
 
 					case DbTransactionMode.ReadWrite:
-						transaction = new DbTransaction (abstraction.BeginReadWriteTransaction (tablesToLock), abstraction, this, mode);
+						iDbTransaction = abstraction.BeginReadWriteTransaction (tablesToLock);
 						break;
 
 					default:
-						throw new System.ArgumentOutOfRangeException ("mode", mode, string.Format ("Transaction mode {0} not supported", mode.ToString ()));
+						var message = string.Format ("Transaction mode {0} not supported", mode);
+						throw new System.ArgumentOutOfRangeException ("mode", mode, message);
 				}
+
+				transaction = new DbTransaction (iDbTransaction, abstraction, mode);
+				this.HandleLiveDbTransactionStart (transaction);
+				transaction.Disposed += this.HandleLiveDbTransactionEnd;
 			}
 			catch
 			{
+				if (iDbTransaction != null)
+				{
+					iDbTransaction.Dispose ();
+				}
+
 				this.DatabaseUnlock (abstraction);
 				throw;
 			}
@@ -509,6 +520,8 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The transaction.</returns>
 		public DbTransaction InheritOrBeginTransaction(DbTransactionMode mode)
 		{
+			DbTransaction transaction;
+			
 			this.DatabaseLock (this.abstraction);
 
 			try
@@ -530,7 +543,8 @@ namespace Epsitec.Cresus.Database
 
 					try
 					{
-						return new DbTransaction (live);
+						transaction = new DbTransaction (live);
+						transaction.Disposed += this.HandleDbTransactionEnd;
 					}
 					catch
 					{
@@ -543,6 +557,8 @@ namespace Epsitec.Cresus.Database
 			{
 				this.DatabaseUnlock (this.abstraction);
 			}
+
+			return transaction;
 		}
 
 
@@ -2017,20 +2033,19 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Notifies that a transaction begins. This is called by <c>DbTransaction</c>
-		/// when a new transaction object is created. Checks that there is at most
+		/// Notifies that a transaction begins. Checks that there is at most
 		/// one active transaction for every database abstraction.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		internal void NotifyBeginTransaction(DbTransaction transaction)
+		private void HandleLiveDbTransactionStart(DbTransaction transaction)
 		{
-			IDbAbstraction abstraction = transaction.Database;
+			var dbAbstraction = transaction.Database;
 			
 			lock (this.liveTransactions)
 			{
 				foreach (DbTransaction item in this.liveTransactions)
 				{
-					if (item.Database == abstraction)
+					if (item.Database == dbAbstraction)
 					{
 						throw new Exceptions.GenericException (this.access, string.Format ("Nested transactions not supported."));
 					}
@@ -2041,44 +2056,45 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Notifies that the transaction ended. This is called by <c>DbTransaction</c>
-		/// when a transaction is committed, rolled back or disposed.
+		/// Notifies that the transaction ended.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
-		internal void NotifyEndTransaction(DbTransaction transaction)
+		private void HandleLiveDbTransactionEnd(object transaction)
 		{
-			IDbAbstraction abstraction = transaction.Database;
-			
+			var dbTransaction = (DbTransaction) transaction;
+			var dbAbstraction = dbTransaction.Database;
+
 			bool release = false;
-			
+
 			lock (this.liveTransactions)
 			{
-				if (this.liveTransactions.Remove (transaction) == false)
+				if (this.liveTransactions.Remove (dbTransaction) == false)
 				{
 					throw new Exceptions.GenericException (this.access, string.Format ("Ending wrong transaction."));
 				}
-				
-				if (this.releaseRequested.Contains (abstraction))
+
+				if (this.releaseRequested.Contains (dbAbstraction))
 				{
-					this.releaseRequested.Remove (abstraction);
+					this.releaseRequested.Remove (dbAbstraction);
 					release = true;
 				}
 			}
 
 			if (release)
 			{
-				this.ReleaseConnection (abstraction);
+				this.ReleaseConnection (dbAbstraction);
 			}
 
-			this.DatabaseUnlock (abstraction);		
+			this.HandleDbTransactionEnd (transaction);
 		}
 
 
-		internal void NotifyEndInheritedTransaction(DbTransaction transaction)
+		private void HandleDbTransactionEnd(object transaction)
 		{
-			IDbAbstraction abstraction = transaction.Database;
-
-			this.DatabaseUnlock (abstraction);
+			var dbTransaction = (DbTransaction) transaction;
+			var dbAbstraction = dbTransaction.Database;
+			
+			this.DatabaseUnlock (dbAbstraction);
 		}
 
 
@@ -2087,7 +2103,7 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="abstraction">The database abstraction.</param>
 		/// <returns>The live transaction or <c>null</c>.</returns>
-		internal DbTransaction FindLiveTransaction(IDbAbstraction abstraction)
+		private DbTransaction FindLiveTransaction(IDbAbstraction abstraction)
 		{
 			lock (this.liveTransactions)
 			{

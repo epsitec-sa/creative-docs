@@ -1,54 +1,74 @@
 //	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
+using System;
+
+using System.Data;
+
+using System.Threading;
+
+
 namespace Epsitec.Cresus.Database
 {
+	
+	
 	/// <summary>
 	/// The <c>DbTransaction</c> class encapsulates real ADO.NET transactions
 	/// in order to better track them. <c>DbInfrastructure</c> can use this
 	/// class to avoid creating nested transactions.
 	/// </summary>
-	public sealed class DbTransaction : System.IDisposable, System.Data.IDbTransaction, Epsitec.Common.Types.IReadOnly
+	public sealed class DbTransaction : IDbTransaction, IReadOnly, IDisposed, IIsDisposed
 	{
+		
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbTransaction"/> class.
 		/// </summary>
 		/// <param name="transaction">The transaction.</param>
 		/// <param name="database">The database.</param>
-		/// <param name="infrastructure">The infrastructure.</param>
 		/// <param name="mode">The transaction mode.</param>
-		internal DbTransaction(System.Data.IDbTransaction transaction, IDbAbstraction database, DbInfrastructure infrastructure, DbTransactionMode mode)
+		internal DbTransaction(IDbTransaction transaction, IDbAbstraction database, DbTransactionMode mode)
 		{
-			this.transaction    = transaction;
-			this.database       = database;
-			this.infrastructure = infrastructure;
-			this.mode           = mode;
+			this.transaction = transaction;
+			this.database = database;
+			this.mode = mode;
 			
-			this.infrastructure.NotifyBeginTransaction (this);
+			this.isInheritor = false;
+			this.inheritFromTransaction = null;
+			this.nbInheritors = 0;
+
+			this.isDisposed = false;
 		}
 
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbTransaction"/> class.
 		/// </summary>
 		/// <param name="liveTransaction">The live transaction from which to inherit.</param>
 		internal DbTransaction(DbTransaction liveTransaction)
 		{
-			this.transaction    = liveTransaction.transaction;
-			this.database       = liveTransaction.database;
-			this.infrastructure = liveTransaction.infrastructure;
-			this.mode           = liveTransaction.mode;
-
+			this.transaction = liveTransaction.transaction;
+			this.database = liveTransaction.database;
+			this.mode = liveTransaction.mode;
+			
+			this.isInheritor = true;
 			this.inheritFromTransaction = liveTransaction;
+			this.nbInheritors = 0;
 
-			System.Threading.Interlocked.Increment (ref this.inheritFromTransaction.inheritanceCount);
+			this.isDisposed = false;
 
+			Interlocked.Increment (ref this.inheritFromTransaction.nbInheritors);
 		}
 
+		
 		/// <summary>
 		/// Gets the ADO.NET transaction.
 		/// </summary>
 		/// <value>The ADO.NET transaction.</value>
-		public System.Data.IDbTransaction		Transaction
+		public IDbTransaction Transaction
 		{
 			get
 			{
@@ -56,11 +76,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets the database.
 		/// </summary>
 		/// <value>The database.</value>
-		public IDbAbstraction					Database
+		public IDbAbstraction Database
 		{
 			get
 			{
@@ -72,7 +93,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the SQL builder.
 		/// </summary>
 		/// <value>The SQL builder.</value>
-		public ISqlBuilder						SqlBuilder
+		public ISqlBuilder SqlBuilder
 		{
 			get
 			{
@@ -80,25 +101,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
-		/// <summary>
-		/// Gets the infrastructure.
-		/// </summary>
-		/// <value>The infrastructure.</value>
-		public DbInfrastructure					Infrastructure
-		{
-			get
-			{
-				return this.infrastructure;
-			}
-		}
-
+		
 		/// <summary>
 		/// Gets a value indicating whether this transaction is read only.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this transaction is read only; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsReadOnly
+		/// <value><c>true</c> if this transaction is read only; otherwise, <c>false</c>.</value>
+		public bool IsReadOnly
 		{
 			get
 			{
@@ -106,13 +114,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
 		/// Gets a value indicating whether this transaction is read/write.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this transaction is read/write; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsReadWrite
+		/// <value><c>true</c> if this transaction is read/write; otherwise, <c>false</c>.</value>
+		public bool IsReadWrite
 		{
 			get
 			{
@@ -120,79 +127,70 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
-		/// Gets a value indicating whether this transaction is inherited.
+		/// Gets a value indicating whether this transaction inherits from another transaction.
 		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this transaction is inherited; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsInherited
+		/// <value><c>true</c> if this transaction is an inheritor; otherwise, <c>false</c>.</value>
+		public bool IsInheritor
 		{
 			get
 			{
-				return this.inheritFromTransaction != null;
+				return this.isInheritor;
 			}
 		}
 
-		/// <summary>
-		/// Gets a value indicating whether this transaction is currently
-		/// active. Committing, rolling back or disposing will render the
-		/// transaction inactive.
-		/// </summary>
-		/// <value><c>true</c> if this transaction is active; otherwise, <c>false</c>.</value>
-		public bool								IsActive
+
+		private void ThrowIfHasInheritors()
 		{
-			get
+			if (this.nbInheritors > 0)
 			{
-				return this.infrastructure != null;
+				var message = "Operation forbidden because this instance has inheritors";
+
+				throw new InvalidOperationException (message);
 			}
 		}
+
+
+		private void ThrowIfIsInheritor()
+		{
+			if (this.IsInheritor)
+			{
+				var message = "Operation forbidden because this instance inherits from another";
+
+				throw new InvalidOperationException (message);
+			}
+		}
+
 		
 		#region IDbTransaction Members
+		
 		
 		/// <summary>
 		/// Rolls back the transaction.
 		/// </summary>
+		/// <exception cref="InvalidOperationException">If this instance inherits from another transaction.</exception>
+		/// <exception cref="InvalidOperationException">If this instance currently has one or more inheritor.</exception>
 		public void Rollback()
 		{
-			if (this.IsInherited)
-			{
-				throw new System.InvalidOperationException ("Inherited transaction may not be rolled back");
-			}
-			else if (this.inheritanceCount > 0)
-			{
-				throw new System.InvalidOperationException ("Rollback of inherited transaction prohibited");
-			}
+			this.ThrowIfIsInheritor ();
+			this.ThrowIfHasInheritors ();
 
 			this.transaction.Rollback ();
-			this.infrastructure.NotifyEndTransaction (this);
-			this.infrastructure = null;
 		}
+
 
 		/// <summary>
 		/// Commits the transaction.
 		/// </summary>
+		/// <exception cref="InvalidOperationException">If this instance currently has one or more inheritors.</exception>
 		public void Commit()
 		{
-			if (this.IsInherited)
-			{
-				System.Threading.Interlocked.Decrement (ref this.inheritFromTransaction.inheritanceCount);
+			this.ThrowIfHasInheritors ();
 
-				this.infrastructure.NotifyEndInheritedTransaction (this);
-
-				this.inheritFromTransaction = null;
-				this.infrastructure         = null;
-				this.transaction            = null;
-			}
-			else if (this.inheritanceCount > 0)
-			{
-				throw new System.InvalidOperationException ("Commit of inherited transaction prohibited");
-			}
-			else
+			if (!this.isInheritor)
 			{
 				this.transaction.Commit ();
-				this.infrastructure.NotifyEndTransaction (this);
-				this.infrastructure = null;
 			}
 		}
 
@@ -201,7 +199,7 @@ namespace Epsitec.Cresus.Database
 		/// Specifies the <c>Connection</c> object to associate with the transaction.
 		/// </summary>
 		/// <returns>The <c>Connection</c> object to associate with the transaction.</returns>
-		public System.Data.IDbConnection		Connection
+		public IDbConnection Connection
 		{
 			get
 			{
@@ -209,11 +207,12 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+		
 		/// <summary>
-		/// Specifies the <see cref="T:System.Data.IsolationLevel"/> for this transaction.
+		/// Specifies the <see cref="IsolationLevel"/> for this transaction.
 		/// </summary>
-		/// <returns>The <see cref="T:System.Data.IsolationLevel"/> for this transaction. The default is <c>ReadCommitted</c>.</returns>
-		public System.Data.IsolationLevel		IsolationLevel
+		/// <returns>The <see cref="IsolationLevel"/> for this transaction. The default is <c>ReadCommitted</c>.</returns>
+		public IsolationLevel IsolationLevel
 		{
 			get
 			{
@@ -221,47 +220,80 @@ namespace Epsitec.Cresus.Database
 			}
 		}
 
+
+		#endregion
+
+
+
+		#region IIsDisposed Members
+
+
+		public bool IsDisposed
+		{
+			get
+			{
+				return this.isDisposed;
+			}
+		}
+
+
 		#endregion
 		
+		
 		#region IDisposable Members
+		
 		
 		/// <summary>
 		/// Disposes the transaction.
 		/// </summary>
+		/// <exception cref="InvalidOperationException">If this instance currently has one or more inheritors.</exception>
 		public void Dispose()
 		{
-			if (this.inheritanceCount > 0)
-			{
-				throw new System.InvalidOperationException ("Disposing inherited transaction");
-			}
+			this.ThrowIfHasInheritors ();
 
-			if (this.IsInherited)
+			if (!this.isDisposed)
 			{
-				throw new System.InvalidOperationException ("Inherited transaction may not be rolled back by Dispose");
-			}
+				if (this.IsInheritor)
+				{
+					Interlocked.Decrement (ref this.inheritFromTransaction.nbInheritors);
+				}
+				else
+				{
+					this.transaction.Dispose ();
+				}
 
-			if (this.transaction != null)
-			{
-				this.transaction.Dispose ();
-				this.transaction = null;
+				this.Disposed.Raise (this);
+				this.isDisposed = true;
 			}
-
-			if (this.infrastructure != null)
-			{
-				this.infrastructure.NotifyEndTransaction (this);
-				this.infrastructure = null;
-			}
-			
-			this.database = null;
 		}
 
+		
 		#endregion
 
-		private System.Data.IDbTransaction		transaction;
-		private IDbAbstraction					database;
-		private DbInfrastructure				infrastructure;
-		private readonly DbTransactionMode		mode;
-		private DbTransaction					inheritFromTransaction;
-		private int								inheritanceCount;
+		
+		#region IDisposed Members
+
+		
+		public event Epsitec.Common.Support.EventHandler Disposed;
+
+		
+		#endregion
+
+		
+		private readonly IDbTransaction transaction;
+		private readonly IDbAbstraction database;
+		private readonly DbTransactionMode mode;
+		
+		
+		private readonly bool isInheritor;
+		private readonly DbTransaction inheritFromTransaction;
+		private int nbInheritors;
+
+
+		private bool isDisposed;
+
+
 	}
+
+
 }

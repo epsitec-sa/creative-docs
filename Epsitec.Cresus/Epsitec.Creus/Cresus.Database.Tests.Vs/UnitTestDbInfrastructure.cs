@@ -1102,73 +1102,59 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 					Assert.AreNotSame (dbAbstraction1.SqlBuilder, dbAbstraction2.SqlBuilder);
 					Assert.AreSame (dbAbstraction1.Factory, dbAbstraction2.Factory);
 
-					using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-					using (DbTransaction transaction2 = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, dbAbstraction1))
-					using (DbTransaction transaction3 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, dbAbstraction2))
-					{
-						Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
-						
-						using (DbTransaction transaction4 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-						{
-							Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
-							transaction4.Commit ();
-						}
+					Assert.AreEqual (0, infrastructure.LiveTransactions.Length);
 
-						transaction3.Commit ();
-						Assert.AreEqual (2, infrastructure.LiveTransactions.Length);
-						
-						transaction2.Rollback ();
+					using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+					{
 						Assert.AreEqual (1, infrastructure.LiveTransactions.Length);
 						
+						using (DbTransaction transaction2 = infrastructure.BeginTransaction (DbTransactionMode.ReadWrite, dbAbstraction1))
+						{
+							Assert.AreEqual (2, infrastructure.LiveTransactions.Length);
+
+							using (DbTransaction transaction3 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly, dbAbstraction2))
+							{
+								Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
+
+								using (DbTransaction transaction4 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+								{
+									Assert.AreEqual (3, infrastructure.LiveTransactions.Length);
+									transaction4.Commit ();
+									transaction4.Dispose ();
+								}
+
+								transaction3.Commit ();
+							}
+
+							Assert.AreEqual (2, infrastructure.LiveTransactions.Length);
+							transaction2.Rollback ();
+						}
+
+						Assert.AreEqual (1, infrastructure.LiveTransactions.Length);
+
 						transaction1.Commit ();
-						Assert.AreEqual (0, infrastructure.LiveTransactions.Length);
 					}
+
+					Assert.AreEqual (0, infrastructure.LiveTransactions.Length);
 				}
 			}
 		}
 
 
 		[TestMethod]
-		public void MultipleTransactionsExeptionTest1()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly);
-
-				ExceptionAssert.Throw<System.InvalidOperationException>
-				(
-					() => infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite)
-				);
-
-				transaction1.Commit ();
-				transaction1.Dispose ();
-			}
-		}
-
-
-		[TestMethod]
-		public void MultipleTransactionsExeptionTest2()
+		public void MultipleTransactionsExceptionTest1()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
 					ExceptionAssert.Throw<System.InvalidOperationException>
 					(
-					   () => transaction2.Dispose ()
+						() => infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite)
 					);
 
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => transaction1.Dispose ()
-					);
-
-					transaction2.Commit ();
 					transaction1.Commit ();
 				}
 			}
@@ -1176,21 +1162,49 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
-		public void MultipleTransactionsExeptionTest3()
+		public void MultipleTransactionsExceptionTest2()
 		{
 			DbInfrastructureHelper.ResetTestDatabase ();
 
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{		
+			{
 				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => transaction1.Commit ()
-					);
+					using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						ExceptionAssert.Throw<System.InvalidOperationException>
+						(
+							() => transaction1.Dispose ()
+						);
 
-					transaction2.Commit ();
+						transaction2.Commit ();
+					}
+
+					transaction1.Commit ();
+				}
+			}
+		}
+
+
+		[TestMethod]
+		public void MultipleTransactionsExceptionTest3()
+		{
+			DbInfrastructureHelper.ResetTestDatabase ();
+
+			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
+				{
+					using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						ExceptionAssert.Throw<System.InvalidOperationException>
+						(
+							() => transaction1.Commit ()
+						);
+
+						transaction2.Commit ();
+					}
+
 					transaction1.Commit ();
 				}
 			}
@@ -1205,36 +1219,22 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
 			{
 				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
 				{
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => transaction1.Rollback ()
-					);
+					using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
+					{
+						ExceptionAssert.Throw<System.InvalidOperationException>
+						(
+							() => transaction1.Rollback ()
+						);
 
-					transaction2.Commit ();
-					transaction1.Commit ();
-				}
-			}
-		}
+						ExceptionAssert.Throw<System.InvalidOperationException>
+						(
+							() => transaction2.Rollback ()
+						);
 
+						transaction2.Commit ();
+					}
 
-		[TestMethod]
-		public void MultipleTransactionsExceptionTest5()
-		{
-			DbInfrastructureHelper.ResetTestDatabase ();
-
-			using (DbInfrastructure infrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
-			{
-				using (DbTransaction transaction1 = infrastructure.BeginTransaction (DbTransactionMode.ReadOnly))
-				using (DbTransaction transaction2 = infrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadOnly))
-				{
-					ExceptionAssert.Throw<System.InvalidOperationException>
-					(
-						() => transaction2.Rollback ()
-					);
-
-					transaction2.Commit ();
 					transaction1.Commit ();
 				}
 			}
@@ -1811,6 +1811,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 									for (int j = 9; j >= 0; j--)
 									{
 										transactions[j].Commit ();
+										transactions[j].Dispose ();
 									}
 								}
 							}
