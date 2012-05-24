@@ -1345,6 +1345,27 @@ namespace Epsitec.Cresus.Compta.Widgets
 				});
 			}
 
+			if (tab.TabItem.ReloadVisibility || tab.TabItem.SaveVisibility)
+			{
+				menu.Items.Add (new MenuSeparator ());
+
+				if (tab.TabItem.ReloadVisibility)
+				{
+					this.AddToContextMenu (menu, "ViewSettings.Reload", "Réutilise les réglages initiaux", tab.TabItem.ReloadEnable, delegate
+					{
+						this.OnReloadDoing (this.menuTabIndex);
+					});
+				}
+
+				if (tab.TabItem.SaveVisibility)
+				{
+					this.AddToContextMenu (menu, "ViewSettings.Save", "Enregistre les réglages actuels", tab.TabItem.SaveEnable, delegate
+					{
+						this.OnSaveDoing (this.menuTabIndex);
+					});
+				}
+			}
+
 			if (tab.TabItem.MoveVisibility)
 			{
 				menu.Items.Add (new MenuSeparator ());
@@ -1624,6 +1645,30 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public delegate void DeleteEventHandler(object sender, int index);
 		public event DeleteEventHandler DeleteDoing;
+
+
+		private void OnReloadDoing(int index)
+		{
+			if (this.ReloadDoing != null)
+			{
+				this.ReloadDoing (this, index);
+			}
+		}
+
+		public delegate void ReloadEventHandler(object sender, int index);
+		public event ReloadEventHandler ReloadDoing;
+
+
+		private void OnSaveDoing(int index)
+		{
+			if (this.SaveDoing != null)
+			{
+				this.SaveDoing (this, index);
+			}
+		}
+
+		public delegate void SaveEventHandler(object sender, int index);
+		public event SaveEventHandler SaveDoing;
 
 
 		private void OnDraggingDoing(int srcIndex, int dstIndex)

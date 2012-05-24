@@ -55,6 +55,32 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public bool SaveVisibility
+		{
+			get;
+			set;
+		}
+
+		public bool SaveEnable
+		{
+			get;
+			set;
+		}
+
+
+		public bool ReloadVisibility
+		{
+			get;
+			set;
+		}
+
+		public bool ReloadEnable
+		{
+			get;
+			set;
+		}
+
+
 		public bool MoveVisibility
 		{
 			get;

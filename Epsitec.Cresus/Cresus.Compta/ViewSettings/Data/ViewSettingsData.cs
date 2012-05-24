@@ -48,18 +48,21 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 		public bool ShowSearchPanel
 		{
+			//	Indique si le panneau des recherches est visible.
 			get;
 			set;
 		}
 
 		public bool ShowFilterPanel
 		{
+			//	Indique si le panneau du filtre est visible.
 			get;
 			set;
 		}
 
 		public bool ShowOptionsPanel
 		{
+			//	Indique si le panneau des options est visible.
 			get;
 			set;
 		}

@@ -356,11 +356,11 @@
     <EmbeddedResource Include="Images\Présentation.Réglages.icon" />
     <EmbeddedResource Include="Images\Panel.ViewSettings.icon" />
     <EmbeddedResource Include="Images\ViewSettings.Add.icon" />
-    <EmbeddedResource Include="Images\ViewSettings.Update.icon" />
+    <EmbeddedResource Include="Images\ViewSettings.Save.icon" />
     <EmbeddedResource Include="Images\ViewSettings.Delete.icon" />
     <EmbeddedResource Include="Images\ViewSettings.Down.icon" />
     <EmbeddedResource Include="Images\ViewSettings.Up.icon" />
-    <EmbeddedResource Include="Images\ViewSettings.Use.icon" />
+    <EmbeddedResource Include="Images\ViewSettings.Reload.icon" />
     <EmbeddedResource Include="Images\Panel.Separator.icon" />
     <EmbeddedResource Include="Images\Présentation.PiècesGenerator.icon" />
     <EmbeddedResource Include="Images\Présentation.Utilisateurs.icon" />

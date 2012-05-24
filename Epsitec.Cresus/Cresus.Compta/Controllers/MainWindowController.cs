@@ -267,6 +267,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public AbstractController ShowPrésentation(ViewSettingsData viewSettings)
 		{
+			//	Utilise une autre présentation.
 			this.ShowPrésentation (viewSettings.ControllerType);
 
 			var controller = this.controller;
@@ -659,19 +660,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return text;
 		}
 
-
-		public bool ShowTemporalPanel
-		{
-			get
-			{
-				return this.showTemporalPanel;
-			}
-			set
-			{
-				this.showTemporalPanel = value;
-				this.UpdatePanelCommands ();
-			}
-		}
 
 		public bool ShowInfoPanel
 		{

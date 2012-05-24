@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.CreateLeftUI ();
 			this.CreateRightUI ();
 
-			this.UpdateTabs ();
+			this.CreateTabs ();
 			this.UpdateWidgets ();
 		}
 
@@ -132,6 +132,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				}
 			};
 
+			//?Cette zone à gauche des onglets n'est plus utile !!!
 			//?this.tabsPane.AddLeftWidget (leftFrame);
 		}
 
@@ -146,40 +147,36 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
 			{
-				this.updateButton = new IconButton
+				this.reloadButton = new IconButton
 				{
 					Parent            = rightFrame,
-					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Update"),
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Reload"),
 					PreferredIconSize = new Size (20, 20),
 					PreferredSize     = new Size (24, 24),
 					Dock              = DockStyle.Left,
 				};
 
-				this.useButton = new IconButton
+				this.saveButton = new IconButton
 				{
 					Parent            = rightFrame,
-					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Use"),
+					IconUri           = UIBuilder.GetResourceIconUri ("ViewSettings.Save"),
 					PreferredIconSize = new Size (20, 20),
 					PreferredSize     = new Size (24, 24),
 					Dock              = DockStyle.Left,
-					Margins           = new Margins (0, 10, 0, 0),
 				};
 
-				ToolTip.Default.SetToolTip (this.useButton, "Utilise le filtre et les options définis dans le réglage de présentation");
-				ToolTip.Default.SetToolTip (this.updateButton, "Met à jour le réglage de présentation d'après le filtre et les options en cours");
+				ToolTip.Default.SetToolTip (this.reloadButton, "Réutilise les réglages initiaux");
+				ToolTip.Default.SetToolTip (this.saveButton,   "Enregistre les réglages actuels");
 
-				this.useButton.Clicked += delegate
+				this.reloadButton.Clicked += delegate
 				{
-					this.CopyViewSettingsToData (this.viewSettingsList.Selected);
+					this.ReloadViewSettings (this.viewSettingsList.Selected);
 					this.ViewSettingsChanged ();
 				};
 
-				this.updateButton.Clicked += delegate
+				this.saveButton.Clicked += delegate
 				{
-					string message = string.Format ("Voulez-vous vraiment mettre à jour le réglage de présentation \"{0}\"<br/>d'après le filtre et les options en cours ?", this.viewSettingsList.Selected.Name);
-					var result = this.controller.MainWindowController.QuestionDialog (message);
-
-					if (result == DialogResult.Yes)
+					if (this.SaveDialog (this.viewSettingsList.Selected))
 					{
 						this.UpdateViewSettingsAction ();
 					}
@@ -192,6 +189,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				PreferredWidth  = 20,
 				PreferredHeight = 24,
 				Dock            = DockStyle.Left,
+				Margins         = new Margins (10, 0, 0, 0),
 			};
 
 			this.panelsToolbarController = new PanelsToolbarController (this.controller);
@@ -209,6 +207,15 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			ToolTip.Default.SetToolTip (button, "Choix des vues (pas encore disponible)");
 
 			this.tabsPane.AddRightWidget (rightFrame);
+		}
+
+
+		private bool SaveDialog(ViewSettingsData viewSettings)
+		{
+			string message = string.Format ("Voulez-vous enregistrer le filtre et les options en cours<br/>dans les réglages \"{0}\" ?", viewSettings.Name);
+			var result = this.controller.MainWindowController.QuestionDialog (message);
+
+			return result == DialogResult.Yes;
 		}
 
 
@@ -248,14 +255,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			if (viewSettings != null && !viewSettings.Readonly)  // garde-fou
 			{
-				this.CopyDataToViewSettings (viewSettings);
-
+				this.SaveViewSettings (viewSettings);
 				this.UpdateButtons ();
 			}
 		}
 
 
-		private void UpdateTabs()
+		private void CreateTabs()
 		{
 			if (this.viewSettingsList != null)
 			{
@@ -276,17 +282,33 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				for (int i = 0; i < this.viewSettingsIndexes.Count; i++)
 				{
 					var index = this.viewSettingsIndexes[i];
+					var viewSettings = this.viewSettingsList.List[index];
+					bool isModified = this.IsModified (viewSettings);
+
+					FormattedText name;
+					if (isModified)
+					{
+						name = viewSettings.Name.ApplyBold ();
+					}
+					else
+					{
+						name = viewSettings.Name;
+					}
 
 					var item = new TabItem
 					{
-						Icon             = Présentations.GetTabIcon (this.viewSettingsList.List[index]),
-						FormattedText    = this.viewSettingsList.List[index].Name,
-						RenameEnable     = !this.viewSettingsList.List[index].Readonly,
-						DeleteEnable     = !this.viewSettingsList.List[index].Readonly,
+						Icon             = Présentations.GetTabIcon (viewSettings),
+						FormattedText    = name,
+						RenameEnable     = !viewSettings.Readonly,
+						DeleteEnable     = !viewSettings.Readonly,
+						ReloadEnable     = isModified,
+						SaveEnable       = isModified && !viewSettings.Readonly,
 						MoveBeginEnable  = i > 0,
 						MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
 						RenameVisibility = true,
 						DeleteVisibility = true,
+						ReloadVisibility = true,
+						SaveVisibility   = true,
 						MoveVisibility   = true,
 					};
 
@@ -307,6 +329,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				this.tabsPane.SelectedIndexChanged += new EventHandler (this.HandlerTabsPaneSelectedIndexChanged);
 				this.tabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
 				this.tabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
+				this.tabsPane.ReloadDoing += new TabsPane.ReloadEventHandler (this.HandlerTabsPaneReloadDoing);
+				this.tabsPane.SaveDoing += new TabsPane.SaveEventHandler (this.HandlerTabsPaneSaveDoing);
 				this.tabsPane.DraggingDoing += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
 			}
 		}
@@ -380,6 +404,33 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.ViewSettingsChanged ();
 		}
 
+		private void HandlerTabsPaneReloadDoing(object sender, int index)
+		{
+			int sel = this.viewSettingsIndexes[index];
+			var viewSettings = this.viewSettingsList.List[sel];
+
+			this.ReloadViewSettings (viewSettings);
+			this.viewSettingsList.Selected = viewSettings;
+
+			this.UpdateAfterSelectionChanged ();
+			this.ViewSettingsChanged ();
+		}
+
+		private void HandlerTabsPaneSaveDoing(object sender, int index)
+		{
+			int sel = this.viewSettingsIndexes[index];
+			var viewSettings = this.viewSettingsList.List[sel];
+
+			if (this.SaveDialog (viewSettings))
+			{
+				this.SaveViewSettings (viewSettings);
+				this.viewSettingsList.Selected = viewSettings;
+
+				this.UpdateAfterSelectionChanged ();
+				this.ViewSettingsChanged ();
+			}
+		}
+
 		private void HandlerTabsPaneDraggingDoing(object sender, int srcIndex, int dstIndex)
 		{
 			if (srcIndex == dstIndex || srcIndex == dstIndex-1)
@@ -437,12 +488,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				ControllerType = this.controller.MainWindowController.SelectedDocument,
 			};
 
-			this.CopyDataToViewSettings (viewSettings);
+			this.SaveViewSettings (this.viewSettingsList.Selected, viewSettings);
 
 			this.viewSettingsList.List.Add (viewSettings);
 			this.viewSettingsList.Selected = viewSettings;
 
-			this.UpdateTabs ();
+			this.CreateTabs ();
 			this.UpdateButtons ();
 
 			this.ViewSettingsChanged ();
@@ -459,34 +510,26 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void UpdateButtons()
 		{
-			if (this.viewSettingsList != null)
+			if (this.viewSettingsList != null && this.reloadButton != null)
 			{
-				int sel = this.viewSettingsList.SelectedIndex;
-				int count = this.viewSettingsList.List.Count;
-				bool eq = this.CompareTo (this.viewSettingsList.Selected);
+				var viewSettings = this.viewSettingsList.Selected;
 
-				if (this.useButton != null)
+				if (viewSettings == null)
 				{
-					this.useButton.Enable    = (sel != -1 && !eq);
-					this.updateButton.Enable = (sel != -1 && !eq && !this.IsReadonly);
+					this.reloadButton.Enable = false;
+					this.saveButton.Enable   = false;
+				}
+				else
+				{
+					bool isModified = this.IsModified (viewSettings);
+
+					this.reloadButton.Enable = isModified;
+					this.saveButton.Enable   = isModified && !viewSettings.Readonly;
 				}
 			}
 		}
 
-
-		private bool AlreadyMemorized()
-		{
-			foreach (var viewSettings in this.viewSettingsList.List)
-			{
-				if (this.CompareTo (viewSettings))
-				{
-					return true;
-				}
-			}
-
-			return false;
-		}
-
+#if false
 		private bool CompareTo(ViewSettingsData viewSettings)
 		{
 			if (viewSettings != null)
@@ -510,7 +553,31 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			return true;
 		}
+#endif
 
+		private bool IsModified(ViewSettingsData viewSettings)
+		{
+			if (viewSettings != null)
+			{
+				if (viewSettings.BaseFilter    != null &&
+					viewSettings.CurrentFilter != null &&
+					viewSettings.BaseFilter.CompareTo (viewSettings.CurrentFilter) == false)
+				{
+					return true;
+				}
+
+				if (viewSettings.BaseOptions    != null &&
+					viewSettings.CurrentOptions != null &&
+					viewSettings.BaseOptions.CompareTo (viewSettings.CurrentOptions) == false)
+				{
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+#if false
 		private void CopyDataToViewSettings(ViewSettingsData viewSettings)
 		{
 			//	Met les paramètres des panneaux dans un réglage de présentation (panneaux -> viewSettings).
@@ -524,7 +591,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				viewSettings.BaseOptions = this.dataAccessor.Options.CopyFrom ();
 			}
 		}
+#endif
 
+#if false
 		private void CopyViewSettingsToData(ViewSettingsData viewSettings)
 		{
 			//	Utilise un réglage de présentation (viewSettings -> panneaux).
@@ -538,31 +607,51 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				viewSettings.BaseOptions.CopyTo (this.dataAccessor.Options);
 			}
 		}
+#endif
 
-
-		private bool IsReadonly
+		private void ReloadViewSettings(ViewSettingsData viewSettings)
 		{
-			get
+			if (viewSettings.BaseFilter    != null &&
+				viewSettings.CurrentFilter != null)
 			{
-				var viewSettings = this.viewSettingsList.Selected;
-				if (viewSettings == null)
-				{
-					return false;
-				}
-				else
-				{
-					return viewSettings.Readonly;
-				}
+				viewSettings.BaseFilter.CopyTo (viewSettings.CurrentFilter);
 			}
-			set
+
+			if (viewSettings.BaseOptions    != null &&
+				viewSettings.CurrentOptions != null)
 			{
-				var viewSettings = this.viewSettingsList.Selected;
-				if (viewSettings != null)
-				{
-					viewSettings.Readonly = value;
-				}
+				viewSettings.BaseOptions.CopyTo (viewSettings.CurrentOptions);
 			}
 		}
+
+		private void SaveViewSettings(ViewSettingsData viewSettings)
+		{
+			if (viewSettings.BaseFilter    != null &&
+				viewSettings.CurrentFilter != null)
+			{
+				viewSettings.CurrentFilter.CopyTo (viewSettings.BaseFilter);
+			}
+
+			if (viewSettings.BaseOptions    != null &&
+				viewSettings.CurrentOptions != null)
+			{
+				viewSettings.CurrentOptions.CopyTo (viewSettings.BaseOptions);
+			}
+		}
+
+		private void SaveViewSettings(ViewSettingsData src, ViewSettingsData dst)
+		{
+			if (src.BaseFilter != null)
+			{
+				dst.BaseFilter = src.BaseFilter.CopyFrom ();
+			}
+
+			if (src.BaseOptions != null)
+			{
+				dst.BaseOptions = src.BaseOptions.CopyFrom ();
+			}
+		}
+
 
 		private string NewViewSettingsName
 		{
@@ -572,7 +661,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				while (true)
 				{
-					string name = "Réglages" + " " + i.ToString ();
+					string name = "Vue" + " " + i.ToString ();
 
 					if (this.viewSettingsList.List.Where (x => x.Name == name).Any ())
 					{
@@ -600,8 +689,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private TabsPane								tabsPane;
 		private FrameBox								titleFrame;
 		private StaticText								titleLabel;
-		private Button									useButton;
-		private Button									updateButton;
+		private Button									saveButton;
+		private Button									reloadButton;
 
 		private PanelsToolbarController					panelsToolbarController;
 	}
