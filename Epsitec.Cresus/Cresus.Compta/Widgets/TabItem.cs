@@ -28,6 +28,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 			set;
 		}
 
+		public TabColor Color
+		{
+			get;
+			set;
+		}
+
 
 		public bool RenameVisibility
 		{
@@ -75,6 +81,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 		public bool ReloadEnable
+		{
+			get;
+			set;
+		}
+
+
+		public bool ColorVisibility
 		{
 			get;
 			set;

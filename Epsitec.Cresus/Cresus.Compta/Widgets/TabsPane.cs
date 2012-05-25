@@ -1407,6 +1407,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 			}
 
+			if (tab.TabItem.ColorVisibility)
+			{
+				menu.Items.Add (new MenuSeparator ());
+				this.AddColorToContextMenu (menu, tab.TabItem, TabColor.None);
+				this.AddColorToContextMenu (menu, tab.TabItem, TabColor.Red);
+				this.AddColorToContextMenu (menu, tab.TabItem, TabColor.Green);
+				this.AddColorToContextMenu (menu, tab.TabItem, TabColor.Blue);
+			}
+
 			if (tab.TabItem.MoveVisibility)
 			{
 				menu.Items.Add (new MenuSeparator ());
@@ -1445,6 +1454,36 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			menu.AutoDispose = true;
 			menu.ShowAsComboList (this, this.MapClientToScreen (new Point (x, 0)), this);
+		}
+
+		private void AddColorToContextMenu(VMenu menu, TabItem item, TabColor color)
+		{
+			string icon = UIBuilder.GetRadioStateIconUri (item.Color == color);
+			FormattedText text;
+
+			switch (color)
+			{
+				case TabColor.Red:
+					text = "Pastille rouge";
+					break;
+
+				case TabColor.Green:
+					text = "Pastille verte";
+					break;
+
+				case TabColor.Blue:
+					text = "Pastille bleue";
+					break;
+
+				default:
+					text = "Aucune pastille";
+					break;
+			}
+
+			this.AddToContextMenu (menu, icon, text, true, delegate
+			{
+				this.OnColorChanging (this.menuTabIndex, color);
+			});
 		}
 
 		private void AddToContextMenu(VMenu menu, string icon, FormattedText text, bool enable, System.Action action)
@@ -1722,6 +1761,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public delegate void DraggingEventHandler(object sender, int srcIndex, int dstIndex);
 		public event DraggingEventHandler DraggingDoing;
+
+
+		private void OnColorChanging(int index, TabColor color)
+		{
+			if (this.ColorChanging != null)
+			{
+				this.ColorChanging (this, index, color);
+			}
+		}
+
+		public delegate void ColorEventHandler(object sender, int index, TabColor color);
+		public event ColorEventHandler ColorChanging;
 
 
 		private static readonly double				tabMargin  = 8;

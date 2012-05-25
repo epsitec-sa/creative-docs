@@ -7,6 +7,7 @@ using Epsitec.Common.Widgets;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
@@ -22,6 +23,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 	{
 		public ViewSettingsData()
 		{
+			this.Color = TabColor.None;
 		}
 
 
@@ -63,6 +65,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 		public bool ShowOptionsPanel
 		{
 			//	Indique si le panneau des options est visible.
+			get;
+			set;
+		}
+
+
+		public TabColor Color
+		{
 			get;
 			set;
 		}

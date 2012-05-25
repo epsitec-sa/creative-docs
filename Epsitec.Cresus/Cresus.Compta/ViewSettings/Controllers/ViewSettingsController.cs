@@ -283,7 +283,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				var item = new TabItem
 				{
-					Icon             = Présentations.GetTabIcon (viewSettings),
 					RenameEnable     = !viewSettings.Readonly,
 					DeleteEnable     = !viewSettings.Readonly,
 					MoveBeginEnable  = i > 0,
@@ -292,6 +291,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					DeleteVisibility = true,
 					ReloadVisibility = hasPanel,
 					SaveVisibility   = hasPanel,
+					ColorVisibility  = true,
 					MoveVisibility   = true,
 				};
 
@@ -319,6 +319,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.tabsPane.ReloadDoing          += new TabsPane.ReloadEventHandler   (this.HandlerTabsPaneReloadDoing);
 			this.tabsPane.SaveDoing            += new TabsPane.SaveEventHandler     (this.HandlerTabsPaneSaveDoing);
 			this.tabsPane.DraggingDoing        += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
+			this.tabsPane.ColorChanging        += new TabsPane.ColorEventHandler    (this.HandleTabsPaneColorChanging);
 		}
 
 		private void UpdateTabs()
@@ -345,9 +346,28 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					name = viewSettings.Name;
 				}
 
+				string icon = Présentations.GetTabIcon (viewSettings);
+
+				if (viewSettings.Color == TabColor.Red)
+				{
+					icon = "Edit.Tab.Color.Red";
+				}
+
+				if (viewSettings.Color == TabColor.Green)
+				{
+					icon = "Edit.Tab.Color.Green";
+				}
+
+				if (viewSettings.Color == TabColor.Blue)
+				{
+					icon = "Edit.Tab.Color.Blue";
+				}
+
 				var item = this.tabsPane.Get (index);
 
 				item.FormattedText = name;
+				item.Icon          = icon;
+				item.Color         = viewSettings.Color;
 				item.ReloadEnable  = isModified;
 				item.SaveEnable    = isModified && !viewSettings.Readonly;
 
@@ -502,6 +522,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.UpdateAfterSelectionChanged ();
 			this.ViewSettingsChanged ();
 		}
+
+		private void HandleTabsPaneColorChanging(object sender, int index, TabColor color)
+		{
+			//	Appelé lorsqu'un onglet doit changer de couleur.
+			int sel = this.viewSettingsIndexes[index];
+			var viewSettings = this.viewSettingsList.List[sel];
+
+			viewSettings.Color = color;
+			this.UpdateTabs ();
+		}
+
 
 		private void UpdateTabSelected()
 		{

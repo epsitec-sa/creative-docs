@@ -278,6 +278,7 @@
     <Compile Include="Widgets\AutoCompleteTextField.cs" />
     <Compile Include="Widgets\BackIconButton.cs" />
     <Compile Include="Graph\GraphWidget.cs" />
+    <Compile Include="Widgets\TabColor.cs" />
     <Compile Include="Widgets\TabLook.cs" />
     <Compile Include="Widgets\TabItem.cs" />
     <Compile Include="Widgets\TabsPane.cs" />
@@ -422,6 +423,10 @@
     <EmbeddedResource Include="Images\Edit.Tab.System.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Create.icon" />
     <EmbeddedResource Include="Images\Présentation.File.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Color.Blue.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Color.Green.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Color.Red.icon" />
+    <EmbeddedResource Include="Images\Edit.Tab.Color.None.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
