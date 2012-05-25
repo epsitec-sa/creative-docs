@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.Graph
 			var labels = new HashSet<string> ();
 			System.Func<GraphDataSeries, string> formatter;
 
-			labels.AddRange (document.OutputSeries.Select (x => x.Label));
+			labels.UnionWith (document.OutputSeries.Select (x => x.Label));
 
 			if (labels.Count < 2)
 			{

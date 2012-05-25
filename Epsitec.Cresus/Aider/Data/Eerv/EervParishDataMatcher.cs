@@ -273,7 +273,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 				foreach (var aiderPerson in aiderPersons)
 				{
-					aiderHouseholds.AddRange (aiderPerson.Households);
+					aiderHouseholds.UnionWith (aiderPerson.Households);
 				}
 			}
 
@@ -611,7 +611,7 @@ namespace Epsitec.Aider.Data.Eerv
 
 						if (d.TryGetValue(fistname, out c))
 						{
-							candidates.AddRange(c);
+							candidates.UnionWith (c);
 						}
 					}
 				}

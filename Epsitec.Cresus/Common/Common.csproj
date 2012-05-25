@@ -533,7 +533,6 @@
     <Compile Include="Support\Extensions\EntityModifications.cs" />
     <Compile Include="Support\Extensions\EnumerableExtensions.cs" />
     <Compile Include="Support\Extensions\ExceptionThrower.cs" />
-    <Compile Include="Support\Extensions\HashSetExtensions.cs" />
     <Compile Include="Support\Extensions\IListExtensions.cs" />
     <Compile Include="Support\Extensions\NumericExtensions.cs" />
     <Compile Include="Support\Extensions\QueueExtensions.cs" />

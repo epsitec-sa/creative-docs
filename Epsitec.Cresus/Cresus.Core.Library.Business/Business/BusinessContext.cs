@@ -922,7 +922,7 @@ namespace Epsitec.Cresus.Core.Business
 
 			public void Enqueue(IEnumerable<EntityRecord> records)
 			{
-				this.records.AddRange (records);
+				this.records.UnionWith (records);
 			}
 
 			#region IDisposable Members

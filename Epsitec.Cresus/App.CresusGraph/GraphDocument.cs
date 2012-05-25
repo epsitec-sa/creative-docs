@@ -969,7 +969,7 @@ namespace Epsitec.Cresus.Graph
 
 				if (save != null)
 				{
-					this.filterCategories.AddRange (save.FilterCategories);
+					this.filterCategories.UnionWith (save.FilterCategories);
 					this.groups.AddRange (save.Groups);
 					this.outputSeries.AddRange (save.OutputSeries);
 

@@ -104,8 +104,8 @@ namespace Epsitec.Aider.Entities
 
 			var members = new HashSet<AiderPersonEntity> ();
 
-			members.AddRange (dataContext.GetByExample (example1));
-			members.AddRange (dataContext.GetByExample (example2));
+			members.UnionWith (dataContext.GetByExample (example1));
+			members.UnionWith (dataContext.GetByExample (example2));
 
 			return members;
 		}
