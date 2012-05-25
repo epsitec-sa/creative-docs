@@ -179,22 +179,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			{
 				throw new ArgumentException ("RootEntity is null");
 			}
-			
-			var entities = this.GetEntitiesInRequestGraph (dataContext);
 
-			this.CheckRequestedEntity(entities);
-			this.CheckForeignEntities(entities, dataContext);
-			this.CheckSkipAndTake();
+			var nonPersistentEntities = this.GetNonPersistentEntities (dataContext);
 
-			var fieldChecker = this.BuildFieldChecker (entities, dataContext);
+			this.CheckRequestedEntity (nonPersistentEntities);
+			this.CheckForeignEntities (nonPersistentEntities, dataContext);
+			this.CheckSkipAndTake ();
 
-			this.CheckConditions(fieldChecker);
-			this.CheckSortClauses(fieldChecker);
+			var fieldChecker = this.BuildFieldChecker (nonPersistentEntities, dataContext);
+
+			this.CheckConditions (fieldChecker);
+			this.CheckSortClauses (fieldChecker);
 		}
 
 
-		private HashSet<AbstractEntity> GetEntitiesInRequestGraph(DataContext dataContext)
+		public HashSet<AbstractEntity> GetNonPersistentEntities(DataContext dataContext)
 		{
+			var typeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
+
 			var entities = new HashSet<AbstractEntity> ();
 			var todo = new Stack<AbstractEntity> ();
 			var parents = new Dictionary<AbstractEntity, List<AbstractEntity>> ();
@@ -210,7 +212,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 				entities.Add (entity);
 
-				foreach (var child in this.GetDefinedChildren (dataContext, entity))
+				foreach (var child in EntityHelper.GetChildren (typeEngine, entity))
 				{
 					if (!dataContext.IsPersistent (child))
 					{
@@ -268,28 +270,6 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					}
 				}			
 			}
-		}
-
-
-		private IEnumerable<AbstractEntity> GetDefinedChildren(DataContext dataContext, AbstractEntity entity)
-		{
-			var entityTypeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
-
-			var entityTypeId = entity.GetEntityStructuredTypeId ();
-
-			var referenceTargets = entityTypeEngine
-				.GetReferenceFields (entityTypeId)
-				.Where (f => entity.IsFieldNotEmpty (f.Id))
-				.Select (f => entity.GetField<AbstractEntity> (f.CaptionId.ToResourceId ()));
-
-			var collectionTargets = entityTypeEngine
-				.GetCollectionFields (entityTypeId)
-				.Where (f => entity.IsFieldNotEmpty (f.Id))
-				.SelectMany (f => entity.GetFieldCollection<AbstractEntity> (f.CaptionId.ToResourceId ()));
-
-			return referenceTargets
-				.Concat (collectionTargets)
-				.Distinct ();
 		}
 
 

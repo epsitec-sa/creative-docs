@@ -1,8 +1,7 @@
-﻿using System;
-using Epsitec.Common.Support;
+﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.DataLayer.Schema;
+using System;
 
 using System.Collections.Generic;
 
@@ -15,10 +14,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	{
 
 
-		public AliasManager(EntityTypeEngine typeEngine)
+		public AliasManager()
 		{
-			this.typeEngine = typeEngine;
-			this.aliases = new Dictionary<Tuple<AbstractEntity, Druid>, string> ();
+			this.entityTableAliases = new Dictionary<Tuple<AbstractEntity, Druid>, string> ();
+			this.relationTableAliases = new Dictionary<Tuple<AbstractEntity, Druid, AbstractEntity>, string> ();
 
 			this.aliasCount = 0;
 		}
@@ -34,36 +33,43 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public string GetAlias(AbstractEntity entity)
+		public string GetAlias(AbstractEntity entity, Druid typeId)
 		{
-			var leafEntityId = entity.GetEntityStructuredTypeId ();
-			var rootEntityId = this.typeEngine.GetRootType (leafEntityId).CaptionId;
+			var key = Tuple.Create (entity, typeId);
+			var aliases = this.entityTableAliases;
 
-			return this.GetAlias (entity, rootEntityId);
+			return this.GetAlias (key, aliases);
 		}
 
 
-		public string GetAlias(AbstractEntity entity, Druid typeId)
+		public string GetAlias(AbstractEntity source, Druid typeId, AbstractEntity target)
+		{
+			var key = Tuple.Create (source, typeId, target);
+			var aliases = this.relationTableAliases;
+
+			return this.GetAlias (key, aliases);
+		}
+
+
+		private string GetAlias<T>(T key, Dictionary<T, string> aliases)
 		{
 			string alias;
 
-			var key = Tuple.Create (entity, typeId);
-
-			if (!this.aliases.TryGetValue (key, out alias))
+			if (!aliases.TryGetValue (key, out alias))
 			{
 				alias = this.GetAlias ();
 
-				this.aliases[key] = alias;
+				aliases[key] = alias;
 			}
 
 			return alias;
 		}
 
 
-		private readonly EntityTypeEngine typeEngine;
+		private readonly Dictionary<Tuple<AbstractEntity, Druid>, string> entityTableAliases;
 
 
-		private readonly Dictionary<Tuple<AbstractEntity, Druid>, string> aliases;
+		private readonly Dictionary<Tuple<AbstractEntity, Druid, AbstractEntity>, string> relationTableAliases; 
 
 
 		private int aliasCount;

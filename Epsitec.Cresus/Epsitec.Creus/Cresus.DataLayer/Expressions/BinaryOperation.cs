@@ -1,8 +1,11 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -81,6 +84,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			this.Left.CheckFields (checker);
 			this.Right.CheckFields (checker);
+		}
+
+
+		internal override void AddEntities(HashSet<AbstractEntity> entities)
+		{
+			this.Left.AddEntities (entities);
+			this.Right.AddEntities (entities);
 		}
 
 

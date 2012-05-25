@@ -1538,10 +1538,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
 
-				Assert.IsTrue (result.Count () == 2);
+				Assert.IsTrue (result.Count () == 3);
 
 				Assert.IsTrue (DatabaseCreator2.CheckHans (result[0]));
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[2]));
 			}
 		}
 
@@ -1578,10 +1579,11 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				var result = dataContext.GetByRequest<NaturalPersonEntity> (request).ToList ();
 
-				Assert.IsTrue (result.Count () == 2);
+				Assert.IsTrue (result.Count () == 3);
 
 				Assert.IsTrue (DatabaseCreator2.CheckAlfred (result[0]));
-				Assert.IsTrue (DatabaseCreator2.CheckHans (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[1]));
+				Assert.IsTrue (DatabaseCreator2.CheckHans (result[2]));
 			}
 		}
 
@@ -1607,7 +1609,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 						UnaryOperator.Not,
 						new BinaryComparison (
 							PublicField.Create (example, x => x.Firstname),
-//-							new PublicField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
@@ -1617,7 +1618,6 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				request.SortClauses.Add (
 					new SortClause (
 						PublicField.Create (example, x => x.BirthDate),
-//-						new PublicField (example, new Druid ("[J1AO1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1723,7 +1723,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				Request request = new Request ()
 				{
 					RootEntity = example,
-					Skip = 0,
+					Skip = 1,
 					Take = 1,
 				};
 

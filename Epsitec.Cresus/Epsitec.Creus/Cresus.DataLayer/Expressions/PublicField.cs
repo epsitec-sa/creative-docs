@@ -45,7 +45,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		
 		internal override SqlField CreateSqlField(SqlFieldBuilder builder)
 		{
-			return builder.Build (this.Entity, this.FieldId);
+			return builder.BuildEntityField (this.Entity, this.FieldId);
 		}
 
 		internal override void CheckField(FieldChecker checker)
