@@ -189,11 +189,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateTitle (this.frameBox);
 			this.CreateViewSettings (this.frameBox);
 			this.CreateTopTemporal (this.frameBox);
-			this.CreateOptions (this.frameBox);
+			this.CreateTopOptions (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
 			this.CreateTopSearch (this.frameBox);
 
-			if (this.HasRightEditor)
+			if (Présentations.HasRightEditor (this.ControllerType))
 			{
 				var band = new FrameBox
 				{
@@ -285,14 +285,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public virtual bool HasRightEditor
-		{
-			get
-			{
-				return false;
-			}
-		}
-
 		public virtual double RightEditorWidth
 		{
 			get
@@ -301,53 +293,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public virtual bool HasArray
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public virtual bool HasGraph
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public virtual bool HasSearchPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public virtual bool HasFilterPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public virtual bool HasOptionsPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public virtual bool HasInfoPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
 
 		public void UpdatePanelsShowed(bool search, bool filter, bool temporal, bool options, bool info)
 		{
@@ -697,7 +642,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		#region Options
-		protected virtual void CreateOptions(FrameBox parent)
+		protected virtual void CreateTopOptions(FrameBox parent)
 		{
 		}
 
@@ -820,7 +765,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 		}
 
-		protected virtual ControllerType ControllerType
+		public virtual ControllerType ControllerType
 		{
 			//	Retourne le type du contrôleur.
 			get
@@ -957,7 +902,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateArray(FrameBox parent)
 		{
 			//	Crée le tableau principal avec son en-tête.
-			if (this.HasArray)
+			if (Présentations.HasArray (this.ControllerType))
 			{
 				this.arrayController = new ArrayController (this);
 				this.arrayController.CreateUI (parent, this.ArrayUpdateCellContent, this.ArrayColumnsWidthChanged, this.ArraySelectedRowChanged, this.ArrayRightClick);
@@ -1211,7 +1156,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#region Graph
 		protected void CreateGraph(FrameBox parent)
 		{
-			if (this.HasGraph)
+			if (Présentations.HasGraph (this.ControllerType))
 			{
 				this.graphWidget = new GraphWidget (this)
 				{

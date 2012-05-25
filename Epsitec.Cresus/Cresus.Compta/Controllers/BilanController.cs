@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateOptions(FrameBox parent)
+		protected override void CreateTopOptions(FrameBox parent)
 		{
 			this.optionsController = new BilanOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateColumnMappers ();
 		}
 
-		protected override ControllerType ControllerType
+		public override ControllerType ControllerType
 		{
 			get
 			{

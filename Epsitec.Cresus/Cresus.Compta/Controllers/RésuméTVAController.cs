@@ -32,40 +32,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasSearchPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasOptionsPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasInfoPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-
-		protected override void CreateOptions(FrameBox parent)
+		protected override void CreateTopOptions(FrameBox parent)
 		{
 			this.optionsController = new RésuméTVAOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
@@ -87,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateViewSettings ();
 		}
 
-		protected override ControllerType ControllerType
+		public override ControllerType ControllerType
 		{
 			get
 			{

@@ -30,47 +30,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasGraph
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasSearchPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasOptionsPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasInfoPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-
 		protected override int ArrayLineHeight
 		{
 			get

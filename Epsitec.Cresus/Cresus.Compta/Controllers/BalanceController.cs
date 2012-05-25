@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override void CreateOptions(FrameBox parent)
+		protected override void CreateTopOptions(FrameBox parent)
 		{
 			this.optionsController = new BalanceOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateColumnMappers ();
 		}
 
-		protected override ControllerType ControllerType
+		public override ControllerType ControllerType
 		{
 			get
 			{
@@ -53,47 +53,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.SetTitle ();
 			this.SetSubtitle (this.période.ShortTitle);
-		}
-
-
-		public override bool HasGraph
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasSearchPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasOptionsPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasInfoPanel
-		{
-			get
-			{
-				return false;
-			}
 		}
 
 

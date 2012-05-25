@@ -37,48 +37,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public override bool HasGraph
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasSearchPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasFilterPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasOptionsPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-		public override bool HasInfoPanel
-		{
-			get
-			{
-				return true;
-			}
-		}
-
-
-		protected override void CreateOptions(FrameBox parent)
+		protected override void CreateTopOptions(FrameBox parent)
 		{
 			this.ShowOptionsPanel = true;
 
@@ -192,7 +151,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 #endif
 
-		protected override ControllerType ControllerType
+		public override ControllerType ControllerType
 		{
 			get
 			{

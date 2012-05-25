@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		protected override ControllerType ControllerType
+		public override ControllerType ControllerType
 		{
 			get
 			{
@@ -58,47 +58,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 		public override bool AcceptPériodeChanged
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-
-		public override bool HasArray
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override bool HasSearchPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override bool HasFilterPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override bool HasOptionsPanel
-		{
-			get
-			{
-				return false;
-			}
-		}
-
-		public override bool HasInfoPanel
 		{
 			get
 			{

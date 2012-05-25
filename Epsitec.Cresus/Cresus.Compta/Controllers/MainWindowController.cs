@@ -787,14 +787,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Search);
 				cs.ActiveState = this.ShowSearchPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasSearchPanel;
+				cs.Enable = (this.controller == null) ? false : Présentations.HasSearchPanel (this.controller.ControllerType);
 			}
 
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Filter);
 				cs.ActiveState = this.ShowFilterPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasFilterPanel;
+				cs.Enable = (this.controller == null) ? false : Présentations.HasFilterPanel (this.controller.ControllerType);
 			}
 
 			if (this.controller != null)
@@ -807,14 +807,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
 				cs.ActiveState = this.ShowOptionsPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasOptionsPanel;
+				cs.Enable = (this.controller == null) ? false : Présentations.HasOptionsPanel (this.controller.ControllerType);
 			}
 
 			if (this.controller != null)
 			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Info);
 				cs.ActiveState = this.showInfoPanel ? ActiveState.Yes : ActiveState.No;
-				cs.Enable = (this.controller == null) ? false : this.controller.HasInfoPanel;
+				cs.Enable = (this.controller == null) ? false : Présentations.HasInfoPanel (this.controller.ControllerType);
 			}
 
 			if (this.controller != null)

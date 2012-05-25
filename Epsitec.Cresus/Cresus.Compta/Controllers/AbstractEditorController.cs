@@ -569,7 +569,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.EditorAdditionalValidate ();
 
-			if (this.errorCount == 0 || this.controller.HasRightEditor)
+			if (this.errorCount == 0 || Présentations.HasRightEditor (this.controller.ControllerType))
 			{
 				this.bottomToolbarController.SetErrorDescription (FormattedText.Null);
 			}
@@ -627,7 +627,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public virtual void UpdateEditorGeometry()
 		{
-			if (!this.controller.HasRightEditor)
+			if (!Présentations.HasRightEditor (this.controller.ControllerType))
 			{
 				//?this.UpdateArrayColumns ();  // provoque un Stack overflow !!!
 
@@ -887,7 +887,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Crée le panneau d'édition.
 			this.fieldControllers.Clear ();
 
-			if (this.controller.HasRightEditor)
+			if (Présentations.HasRightEditor (this.controller.ControllerType))
 			{
 				return this.CreateRightEditorUI (parent);
 			}

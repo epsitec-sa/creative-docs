@@ -19,6 +19,93 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class Présentations
 	{
+		public static bool HasRightEditor(ControllerType type)
+		{
+			return type == ControllerType.CodesTVA ||
+				   type == ControllerType.Journaux ||
+				   type == ControllerType.ListeTVA ||
+				   type == ControllerType.Monnaies ||
+				   type == ControllerType.Périodes ||
+				   type == ControllerType.PiècesGenerator ||
+				   type == ControllerType.Utilisateurs;
+		}
+
+		public static bool HasArray(ControllerType type)
+		{
+			return type != ControllerType.Login &&
+				   type != ControllerType.Open &&
+				   type != ControllerType.Save &&
+				   type != ControllerType.Print &&
+				   type != ControllerType.Réglages;
+		}
+
+		public static bool HasGraph(ControllerType type)
+		{
+			return type == ControllerType.Balance ||
+				   type == ControllerType.Bilan ||
+				   type == ControllerType.PP ||
+				   type == ControllerType.ExtraitDeCompte ||
+				   type == ControllerType.RésuméPériodique ||
+				   type == ControllerType.Soldes;
+		}
+
+		public static bool HasSearchPanel(ControllerType type)
+		{
+			return type != ControllerType.Login &&
+				   type != ControllerType.Open &&
+				   type != ControllerType.Save &&
+				   type != ControllerType.Print &&
+				   type != ControllerType.Réglages;
+		}
+
+		public static bool HasFilterPanel(ControllerType type)
+		{
+			return type == ControllerType.Balance ||
+				   type == ControllerType.Budgets ||
+				   type == ControllerType.Bilan ||
+				   type == ControllerType.PP ||
+				   type == ControllerType.Exploitation ||
+				   type == ControllerType.ExtraitDeCompte ||
+				   type == ControllerType.Journal ||
+				   type == ControllerType.PlanComptable ||
+				   type == ControllerType.RésuméPériodique ||
+				   type == ControllerType.RésuméTVA ||
+				   type == ControllerType.Soldes;
+		}
+
+		public static bool HasOptionsPanel(ControllerType type)
+		{
+			return type == ControllerType.Balance ||
+				   type == ControllerType.Budgets ||
+				   type == ControllerType.Bilan ||
+				   type == ControllerType.PP ||
+				   type == ControllerType.Exploitation ||
+				   type == ControllerType.ExtraitDeCompte ||
+				   type == ControllerType.Journal ||
+				   type == ControllerType.PlanComptable ||
+				   type == ControllerType.RésuméPériodique ||
+				   type == ControllerType.RésuméTVA ||
+				   type == ControllerType.Soldes;
+		}
+
+		public static bool HasInfoPanel(ControllerType type)
+		{
+			return type == ControllerType.Budgets ||
+				   type == ControllerType.CodesTVA ||
+				   type == ControllerType.ExtraitDeCompte ||
+				   type == ControllerType.Journal ||
+				   type == ControllerType.Journaux ||
+				   type == ControllerType.Libellés ||
+				   type == ControllerType.ListeTVA ||
+				   type == ControllerType.Modèles ||
+				   type == ControllerType.Monnaies ||
+				   type == ControllerType.Périodes ||
+				   type == ControllerType.PiècesGenerator ||
+				   type == ControllerType.PlanComptable ||
+				   type == ControllerType.Utilisateurs;
+		}
+
+	
 		public static string GetViewSettingsKey(ControllerType type)
 		{
 			//	Retourne la clé d'accès pour les données ViewSettingsList.

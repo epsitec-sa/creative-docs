@@ -361,7 +361,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 		{
 			get
 			{
-				return this.controller.HasRightEditor;
+				return Présentations.HasRightEditor (this.controller.ControllerType);
 			}
 		}
 

@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Padding         = new Margins (0, 0, 0, 5),
 			};
 
-			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
+			if (Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType))
 			{
 				this.reloadButton = new IconButton
 				{
@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 
 			//	Si nécessaire, crée l'onglet "+".
-			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
+			if (Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType))
 			{
 				var item = new TabItem
 				{
@@ -383,7 +383,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			int index = this.tabsPane.SelectedIndex;
 
-			if ((this.controller.HasOptionsPanel || this.controller.HasFilterPanel) && index == this.viewSettingsIndexes.Count)  // onglet "+" ?
+			if ((Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType)) &&
+				index == this.viewSettingsIndexes.Count)  // onglet "+" ?
 			{
 				this.AddViewSettings ();
 			}
