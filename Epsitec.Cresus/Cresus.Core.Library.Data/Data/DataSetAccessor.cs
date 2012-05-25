@@ -47,9 +47,12 @@ namespace Epsitec.Cresus.Core.Data
 
 		public int IndexOf(EntityKey? entityKey)
 		{
-			//	TODO: implement...
+			if (entityKey == null)
+			{
+				return -1;
+			}
 
-			return -1;
+			return this.requestView.GetIndex (entityKey.Value) ?? -1;
 		}
 		
 		public EntityKey[] GetItemKeys(int index, int count)
