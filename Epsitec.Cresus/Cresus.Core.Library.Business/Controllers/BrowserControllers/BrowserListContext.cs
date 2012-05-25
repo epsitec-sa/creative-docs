@@ -15,9 +15,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListContext : System.IDisposable
 	{
-		public BrowserListContext(DataContext dataContext)
+		public BrowserListContext()
 		{
-			this.dataContext = dataContext;
 		}
 
 
@@ -26,6 +25,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			get
 			{
 				return this.accessor;
+			}
+		}
+
+		public DataContext						IsolatedDataContext
+		{
+			get
+			{
+				return this.accessor.IsolatedDataContext;
 			}
 		}
 
@@ -74,7 +81,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		
 		internal AbstractEntity ResolveEntity(EntityKey? entityKey)
 		{
-			return this.dataContext.ResolveEntity (entityKey);
+			return this.IsolatedDataContext.ResolveEntity (entityKey);
 		}
 
 
@@ -86,7 +93,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 				throw new System.ArgumentNullException ("entity");
 			}
 
-			var key = this.dataContext.GetNormalizedEntityKey (entity);
+			var key = this.IsolatedDataContext.GetNormalizedEntityKey (entity);
 
 			if (key == null)
 			{
@@ -98,7 +105,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 
 
-		private readonly DataContext			dataContext;
 		private DataSetAccessor					accessor;
 	}
 }

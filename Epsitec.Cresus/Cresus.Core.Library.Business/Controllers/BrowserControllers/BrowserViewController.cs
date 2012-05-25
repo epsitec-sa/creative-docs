@@ -197,7 +197,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.Orchestrator.ClearActiveEntity ();
 
-			this.browserListController = new BrowserListController (this.data, this.itemScrollList, this.DataSetEntityType);
+			this.browserListController = new BrowserListController (this.Orchestrator, this.itemScrollList, this.DataSetEntityType);
 			
 			this.browserListController.CurrentChanged  += this.HandleBrowserListControllerCurrentChanged;
 			this.browserListController.CurrentChanging += this.HandleBrowserListControllerCurrentChanging;

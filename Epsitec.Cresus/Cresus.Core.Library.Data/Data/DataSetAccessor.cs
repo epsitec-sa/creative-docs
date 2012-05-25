@@ -35,6 +35,15 @@ namespace Epsitec.Cresus.Core.Data
 		}
 
 
+		public DataContext						IsolatedDataContext
+		{
+			get
+			{
+				return this.dataContext;
+			}
+		}
+
+
 		public int GetItemCount()
 		{
 			if (this.itemCount == null)

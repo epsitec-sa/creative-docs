@@ -12,6 +12,7 @@ using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.Core.Data;
 using Epsitec.Cresus.Core.Data.Extraction;
 using Epsitec.Cresus.Core.Entities;
+using Epsitec.Cresus.Core.Orchestrators;
 
 using Epsitec.Cresus.DataLayer.Context;
 
@@ -22,16 +23,17 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
 	public class BrowserListController : System.IDisposable
 	{
-		public BrowserListController(CoreData data, ItemScrollList scrollList, System.Type dataSetType)
+		public BrowserListController(DataViewOrchestrator orchestrator, ItemScrollList scrollList, System.Type dataSetType)
 		{
-			this.data           = data;
+			this.orchestrator   = orchestrator;
+			this.data           = orchestrator.Data;
 			this.itemScrollList = scrollList;
 			this.dataSetType    = dataSetType;
 			
-			this.dataContext = this.data.CreateIsolatedDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 
 			this.suspendUpdates = new SafeCounter ();
-			this.context        = new BrowserListContext (this.dataContext);
+			this.context        = new BrowserListContext ();
 
 			this.SetUpItemList ();
 			this.AttachEventHandlers ();
@@ -149,7 +151,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetUpItemList()
 		{
-			this.SetContents (this.GetContentAccessor (), EntityInfo.GetTypeId (this.dataSetType));
+			this.SetContentsBasedOnDataSet ();
 			
 			this.itemProvider = new BrowserListItemProvider (this.context);
 			this.itemMapper   = new BrowserListItemMapper ();
@@ -206,7 +208,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetContentsBasedOnDataSet()
 		{
-			this.SetContents (this.GetContentAccessor (), EntityInfo.GetTypeId (this.dataSetType));
+			this.SetContents (EntityInfo.GetTypeId (this.dataSetType));
 		}
 
 		private DataSetAccessor GetContentAccessor()
@@ -217,23 +219,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			return accessor;
 		}
 
-		private DataSetCollectionGetter GetContentGetter()
+		private void SetContents(Druid entityId)
 		{
-			var component = this.data.GetComponent<DataSetGetter> ();
-			var getter    = component.ResolveDataSet (this.dataSetType);
-			
-			return getter;
-		}
-
-		private void SetContents(DataSetAccessor collectionAccessor, Druid entityId)
-		{
-			this.context.SetAccessor (collectionAccessor);
 			this.collectionEntityId = entityId;
 
-			this.DefineContentSortOrder ();
-			
+			this.UpdateAccessor ();
 			this.UpdateCollection ();
 		}
+
 
 		private void DefineContentSortOrder()
 		{
@@ -253,12 +246,20 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void AttachEventHandlers()
 		{
-			this.dataContext.EntityChanged += this.HandleDataContextEntityChanged;
+			this.dataContext.EntityChanged  += this.HandleDataContextEntityChanged;
+			this.orchestrator.SavingChanges += this.HandleOrchestratorSavingChanges;
 		}
 
 		private void DetachEventHandlers()
 		{
-			this.dataContext.EntityChanged -= this.HandleDataContextEntityChanged;
+			this.orchestrator.SavingChanges -= this.HandleOrchestratorSavingChanges;
+			this.dataContext.EntityChanged  -= this.HandleDataContextEntityChanged;
+		}
+
+
+		private void HandleOrchestratorSavingChanges(object sender, CancelEventArgs e)
+		{
+			this.UpdateAccessor ();
 		}
 
 		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
@@ -274,19 +275,29 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.UpdateCollection (reset: false);
 		}
 
+		private void UpdateAccessor()
+		{
+			this.context.SetAccessor (this.GetContentAccessor ());
+			this.DefineContentSortOrder ();
+
+			if (this.itemProvider != null)
+			{
+				this.itemProvider.Reset ();
+			}
+		}
+		
 		private void UpdateCollection(bool reset = true)
 		{
-			if (this.itemProvider == null)
+			if (this.itemProvider != null)
 			{
-				return;
+				this.itemProvider.Reset ();
+				this.RefreshScrollList (reset);
 			}
-
-			this.itemProvider.Reset ();
-			this.RefreshScrollList (reset);
 		}
 
 		public void RefreshCollection()
 		{
+			this.UpdateAccessor ();
 			this.UpdateCollection (reset: false);
 		}
 
@@ -332,6 +343,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		public event EventHandler				SelectedItemChange;
 
+		private readonly DataViewOrchestrator	orchestrator;
 		private readonly CoreData				data;
 		private readonly ItemScrollList			itemScrollList;
 		private readonly System.Type			dataSetType;

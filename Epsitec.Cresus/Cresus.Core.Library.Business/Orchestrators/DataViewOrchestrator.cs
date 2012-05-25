@@ -375,6 +375,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 				if (oldContext != null)
 				{
+					oldContext.SavingChanges          -= this.HandleBusinessContextSavingChanges;
 					oldContext.ContainsChangesChanged -= this.HandleBusinessContextContainsChangesChanged;
 					oldContext.RefreshUIRequested     -= this.HandleBusinessContextRefreshUIRequested;
 
@@ -383,6 +384,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 				
 				if (newContext != null)
 				{
+					newContext.SavingChanges          += this.HandleBusinessContextSavingChanges;
 					newContext.ContainsChangesChanged += this.HandleBusinessContextContainsChangesChanged;
 					newContext.RefreshUIRequested     += this.HandleBusinessContextRefreshUIRequested;
 
@@ -399,6 +401,11 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 				this.UpdateBusinessContextContainsChanges ();
 			}
+		}
+
+		private void HandleBusinessContextSavingChanges(object sender, CancelEventArgs e)
+		{
+			this.OnSavingChanges (e);
 		}
 
 		private void HandleBusinessContextContainsChangesChanged(object sender)
@@ -431,6 +438,10 @@ namespace Epsitec.Cresus.Core.Orchestrators
 			}
 		}
 
+		private void OnSavingChanges(CancelEventArgs e)
+		{
+			this.SavingChanges.Raise (this, e);
+		}
 
 		private void OnSettingActiveEntity(ActiveEntityCancelEventArgs e)
 		{
@@ -490,6 +501,7 @@ namespace Epsitec.Cresus.Core.Orchestrators
 
 
 		public event EventHandler<ActiveEntityCancelEventArgs>	SettingActiveEntity;
+		public event EventHandler<CancelEventArgs>				SavingChanges;
 		public event EventHandler								ViewChanged;
 
 		private readonly CoreComponentHostImplementation<ViewControllerComponent> components;

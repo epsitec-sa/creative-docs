@@ -111,6 +111,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		public void Reset()
 		{
 			this.reverseMap.Clear ();
+			this.dataCache.Clear ();
+			
+			this.count = null;
 		}
 
 
