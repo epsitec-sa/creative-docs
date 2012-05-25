@@ -25,245 +25,138 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 	/// </summary>
 	public class TopTemporalController
 	{
-		public TopTemporalController(AbstractController controller)
+		public TopTemporalController(MainWindowController mainWindowController)
 		{
-			this.controller = controller;
+			this.mainWindowController = mainWindowController;
 
-			this.compta          = this.controller.ComptaEntity;
-			this.dataAccessor    = this.controller.DataAccessor;
-			this.businessContext = this.controller.BusinessContext;
-			this.data            = this.controller.MainWindowController.TemporalData;
+			this.compta = this.mainWindowController.Compta;
+			this.data   = this.mainWindowController.TemporalData;
 		}
 
 
-		public bool ShowPanel
-		{
-			get
-			{
-				return this.showPanel;
-			}
-			set
-			{
-				if (this.showPanel != value)
-				{
-					this.showPanel = value;
-					this.toolbar.Visibility = this.showPanel;
-				}
-			}
-		}
-
-		public bool Specialist
-		{
-			get
-			{
-				return false;
-			}
-			set
-			{
-			}
-		}
-
-		public void SearchClear()
-		{
-			this.data.Clear ();
-			this.UpdateButtons ();
-			this.temporalController.UpdateContent ();
-		}
-
-
-		public void CreateUI(FrameBox parent, System.Action searchStartAction)
+		public void CreateUI(Widget parent, System.Action searchStartAction)
 		{
 			this.searchStartAction = searchStartAction;
 
-			this.toolbar = new FrameBox
+			this.mainFrame = new FrameBox
 			{
 				Parent          = parent,
 				PreferredHeight = TopTemporalController.toolbarHeight,
-				DrawFullFrame   = true,
-				BackColor       = UIBuilder.TemporalBackColor,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 5),
-				Visibility      = false,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			//	Crée les frames gauche, centrale et droite.
-			var topPanelLeftFrame = new FrameBox
+			new GlyphButton
 			{
-				Parent         = this.toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
+				Parent          = this.mainFrame,
+				CommandObject   = Res.Commands.Compta.PériodePrécédente,
+				GlyphShape      = GlyphShape.ArrowLeft,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = TopTemporalController.toolbarHeight,
+				PreferredWidth  = TopTemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+			};
+
+			this.périodeLabel = new StaticText
+			{
+				Parent          = this.mainFrame,
+				PreferredHeight = TopTemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (5, 5, 0, 0),
+			};
+
+			new GlyphButton
+			{
+				Parent          = this.mainFrame,
+				CommandObject   = Res.Commands.Compta.PériodeSuivante,
+				GlyphShape      = GlyphShape.ArrowRight,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = TopTemporalController.toolbarHeight,
+				PreferredWidth  = TopTemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+			};
+
+			this.CreateSeparator (this.mainFrame);
+
+			this.CreateButton (this.mainFrame, "jan.");
+			this.CreateButton (this.mainFrame, "fév.");
+			this.CreateButton (this.mainFrame, "mars");
+			this.CreateButton (this.mainFrame, "avril");
+			this.CreateButton (this.mainFrame, "mai");
+			this.CreateButton (this.mainFrame, "juin");
+			this.CreateButton (this.mainFrame, "juil.");
+			this.CreateButton (this.mainFrame, "août");
+			this.CreateButton (this.mainFrame, "sept.");
+			this.CreateButton (this.mainFrame, "oct.");
+			this.CreateButton (this.mainFrame, "nov.");
+			this.CreateButton (this.mainFrame, "déc.");
+
+			this.CreateSeparator (this.mainFrame);
+
+			this.CreateButton (this.mainFrame, "T1");
+			this.CreateButton (this.mainFrame, "T2");
+			this.CreateButton (this.mainFrame, "T3");
+			this.CreateButton (this.mainFrame, "T4");
+
+			this.CreateSeparator (this.mainFrame);
+
+			this.CreateButton (this.mainFrame, "année");
+
+			this.CreateSeparator (this.mainFrame);
+
+			this.CreateButton (this.mainFrame, "autres...");
+		}
+
+		public void UpdatePériode()
+		{
+			if (this.mainWindowController.Période != null)
+			{
+				this.périodeLabel.FormattedText = this.mainWindowController.Période.ShortTitle;
+				this.périodeLabel.PreferredWidth = this.périodeLabel.GetBestFitSize ().Width;
+			}
+		}
+
+		private void UpdateWidgets()
+		{
+		}
+
+		private Button CreateButton(FrameBox parent, FormattedText text)
+		{
+			var button = new Button
+			{
+				Parent          = parent,
+				FormattedText   = text,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = TopTemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+			};
+
+			button.PreferredWidth = button.GetBestFitSize ().Width;
+
+			return button;
+		}
+
+		private void CreateSeparator(FrameBox parent)
+		{
+			new Separator
+			{
+				Parent         = parent,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
 				Dock           = DockStyle.Left,
-				Padding        = new Margins (5),
-			};
-
-			this.mainFrame = new FrameBox
-			{
-				Parent         = this.toolbar,
-				Dock           = DockStyle.Fill,
-				Padding        = new Margins (5, 5, 0, 0),
-			};
-
-			var topPanelRightFrame = new FrameBox
-			{
-				Parent         = this.toolbar,
-				DrawFullFrame  = true,
-				PreferredWidth = 20,
-				Dock           = DockStyle.Right,
-				Padding        = new Margins (5),
-			};
-
-			this.CreateFilterEnableButtonUI ();
-
-			//	Remplissage de la frame gauche.
-			this.topPanelLeftController = new TopPanelLeftController (this.controller);
-			this.topPanelLeftController.CreateUI (topPanelLeftFrame, false, "Panel.Temporal", this.LevelChangedAction);
-			this.topPanelLeftController.Specialist = false;
-
-			//	Reemplissage de la frame centrale.
-			new StaticText
-			{
-				Parent           = this.mainFrame,
-				Text             = "Filtrer",
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				PreferredWidth   = UIBuilder.LeftLabelWidth-10,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			new StaticText
-			{
-				Parent           = this.mainFrame,
-				FormattedText    = "Période",
-				ContentAlignment = ContentAlignment.MiddleRight,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth   = 60,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			var temporalFrame = new FrameBox
-			{
-				Parent        = this.mainFrame,
-				DrawFullFrame = true,
-				Dock          = DockStyle.Fill,
-				Padding       = new Margins (10, 5, 5, 5),
-			};
-
-			this.temporalController = new TemporalController (this.controller, this.data);
-			this.temporalController.CreateUI (temporalFrame, this.SearchStartAction);
-
-			this.resultLabel = new StaticText
-			{
-				Parent         = this.mainFrame,
-				TextBreakMode  = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth = 110-5,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (49+10, 0, 0, 0),
-			};
-
-			//	Remplissage de la frame droite.
-			this.topPanelRightController = new TopPanelRightController (this.controller);
-			this.topPanelRightController.CreateUI (topPanelRightFrame, "Termine le filtre", this.ClearAction, this.controller.MainWindowController.ClosePanelTemporal, this.LevelChangedAction);
-
-			this.UpdateButtons ();
-			this.temporalController.UpdateContent ();
-		}
-
-		private void SearchStartAction()
-		{
-			this.UpdateButtons ();
-			this.searchStartAction ();
-		}
-
-
-		private void CreateFilterEnableButtonUI()
-		{
-			this.filterEnableButton = new CheckButton
-			{
-				Parent           = this.mainFrame,
-				PreferredWidth   = 20,
-				PreferredHeight  = 20,
-				AutoToggle       = false,
-				Anchor           = AnchorStyles.TopLeft,
-				Margins          = new Margins (3, 0, 6, 0),
-			};
-
-			ToolTip.Default.SetToolTip (this.filterEnableButton, "Active ou désactive le filtre temporel");
-
-			this.filterEnableButton.Clicked += delegate
-			{
-				this.data.Enable = !this.data.Enable;
-				this.UpdateButtons ();
-				this.searchStartAction ();
+				Margins        = new Margins (10, 10, 0, 0),
 			};
 		}
 
 
+		private static readonly double					toolbarHeight = 24;
 
-		public void UpdateContent()
-		{
-			this.UpdateButtons ();
-			this.temporalController.UpdateContent ();
-		}
-
-		public void UpdateColumns()
-		{
-			//	Met à jour les widgets en fonction de la liste des colonnes présentes.
-		}
-
-		public void SetFilterCount(int dataCount, int count, int allCount)
-		{
-			if (count == allCount)
-			{
-				this.resultLabel.Text = string.Format ("{0} (tous)", allCount.ToString ());
-			}
-			else
-			{
-				this.resultLabel.Text = string.Format ("{0} sur {1}", count.ToString (), allCount.ToString ());
-			}
-		}
-
-
-		private void LevelChangedAction()
-		{
-			this.UpdateButtons ();
-			this.temporalController.UpdateContent ();
-		}
-
-		private void ClearAction()
-		{
-			this.data.Clear ();
-			this.UpdateButtons ();
-			this.temporalController.UpdateContent ();
-			this.searchStartAction ();
-		}
-
-
-		private void UpdateButtons()
-		{
-			this.topPanelRightController.ClearEnable = !this.data.IsEmpty;
-			this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
-		}
-
-
-		private static readonly double					toolbarHeight = 20;
-
-		private readonly AbstractController				controller;
+		private readonly MainWindowController			mainWindowController;
 		private readonly ComptaEntity					compta;
-		private readonly BusinessContext				businessContext;
-		private readonly AbstractDataAccessor			dataAccessor;
 		private readonly TemporalData					data;
 
 		private System.Action							searchStartAction;
 		private FrameBox								mainFrame;
-		private CheckButton								filterEnableButton;
-		private TopPanelLeftController					topPanelLeftController;
-		private TopPanelRightController					topPanelRightController;
-		private TemporalController						temporalController;
-		private FrameBox								toolbar;
-		private StaticText								resultLabel;
-		private bool									showPanel;
+		private StaticText								périodeLabel;
 	}
 }

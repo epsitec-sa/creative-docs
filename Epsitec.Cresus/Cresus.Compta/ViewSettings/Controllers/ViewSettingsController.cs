@@ -125,11 +125,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					this.controller.MainWindowController.OpenPanelFilter ();
 				}
-
-				if (!this.controller.MainWindowController.TemporalData.IsEmpty)
-				{
-					this.controller.MainWindowController.OpenPanelTemporal ();
-				}
 			};
 
 			//?Cette zone à gauche des onglets n'est plus utile !!!

@@ -579,7 +579,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					rect.Inflate (1, -2);
 
-					if (state == TabState.Selected)
+					if (state == TabState.Selected || state == TabState.MenuOpened)
 					{
 						rect.Offset (0, -2);
 					}
@@ -1648,11 +1648,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 					}
 					else if (this.tabItem.FormattedText.IsNullOrEmpty)
 					{
-						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: this.IconSize);
+						this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize);
 					}
 					else
 					{
-						this.textLayout.FormattedText = UIBuilder.GetTextIconUri (this.tabItem.Icon, iconSize: this.IconSize) + " " + this.tabItem.FormattedText;
+						this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize) + " " + this.tabItem.FormattedText;
 					}
 
 					this.textWidth = this.textLayout.GetSingleLineSize ().Width;

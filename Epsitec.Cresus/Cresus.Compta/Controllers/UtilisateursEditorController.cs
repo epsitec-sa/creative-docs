@@ -230,7 +230,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreatePrésentationButton(Widget parent, ControllerType type)
 		{
-			var icon = UIBuilder.GetTextIconUri (Présentations.GetIcon (type), iconSize: 20);
+			var icon = UIBuilder.GetIconTag (Présentations.GetIcon (type), iconSize: 20);
 			var desc = Présentations.GetName (type);
 
 			var button = new CheckButton

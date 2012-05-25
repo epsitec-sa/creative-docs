@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.warningIcon = new StaticText
 			{
 				Parent         = this.mainFrame,
-				Text           = UIBuilder.GetTextIconUri ("Warning"),
+				Text           = UIBuilder.GetIconTag ("Warning"),
 				PreferredWidth = 20,
 				Dock           = DockStyle.Left,
 				Margins         = new Margins (2, 0, 0, 0),

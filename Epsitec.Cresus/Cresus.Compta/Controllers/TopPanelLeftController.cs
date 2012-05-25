@@ -178,7 +178,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return new StaticText
 			{
 				Parent           = parent,
-				Text             = UIBuilder.GetTextIconUri ("Panel.Specialist"),
+				Text             = UIBuilder.GetIconTag ("Panel.Specialist"),
 				ContentAlignment = ContentAlignment.BottomRight,
 				Anchor           = AnchorStyles.All,
 			};

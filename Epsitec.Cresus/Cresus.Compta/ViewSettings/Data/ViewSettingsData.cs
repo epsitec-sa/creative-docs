@@ -72,6 +72,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 		public TabColor Color
 		{
+			//	Couleur de la pastille.
 			get;
 			set;
 		}

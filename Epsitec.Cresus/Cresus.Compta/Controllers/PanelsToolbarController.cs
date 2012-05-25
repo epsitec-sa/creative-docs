@@ -27,14 +27,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-			var temporalButton = this.CreateButton (parent, Res.Commands.Panel.Temporal, 5, UIBuilder.TemporalBackColor);
 			                     this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
 			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
 			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
 
 			this.searchMarker   = this.CreateMarker (searchButton);
 			this.filterMarker   = this.CreateMarker (filterButton);
-			this.temporalMarker = this.CreateMarker (temporalButton);
 		}
 
 		public bool SearchEnable
@@ -63,19 +61,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		public bool TemporalEnable
-		{
-			//	Indique si le filtre temporel est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
-			get
-			{
-				return this.temporalMarker.Visibility;
-			}
-			set
-			{
-				this.temporalMarker.Visibility = value;
-			}
-		}
-
 
 		private IconButton CreateButton(Widget parent, Command command, double rightMargin, Color backColor)
 		{
@@ -100,7 +85,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return new StaticText
 			{
 				Parent           = parent,
-				Text             = UIBuilder.GetTextIconUri("Panel.Active"),
+				Text             = UIBuilder.GetIconTag("Panel.Active"),
 				ContentAlignment = ContentAlignment.BottomRight,
 				Anchor           = AnchorStyles.All,
 				Visibility       = false,
@@ -114,6 +99,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private StaticText						searchMarker;
 		private StaticText						filterMarker;
-		private StaticText						temporalMarker;
 	}
 }

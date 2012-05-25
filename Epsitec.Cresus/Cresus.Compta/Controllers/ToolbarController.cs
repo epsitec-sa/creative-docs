@@ -8,6 +8,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Search.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -28,7 +29,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = parent,
 				PreferredHeight     = 24,
-				//?BackColor           = UIBuilder.WindowBackColor1,
 				BackColor           = UIBuilder.WindowBackColor2,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
@@ -51,12 +51,30 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.CreateButton (frame, Res.Commands.Select.Up);
 			this.CreateButton (frame, Res.Commands.Select.Down);
-			this.CreateButton (frame, Res.Commands.Select.Home);
+			this.CreateButton (frame, Res.Commands.Select.Home, 10);
+
+			new Separator
+			{
+				Parent         = frame,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+			};
+
+			this.topTemporalController = new TopTemporalController (this.mainWindowController);
+			this.topTemporalController.CreateUI (frame, null);
+		}
+
+		public void UpdatePériode()
+		{
+			this.topTemporalController.UpdatePériode ();
 		}
 
 		private void CreateButton(Widget parent, Command cmd, double rightMargin = 0)
 		{
 			var button = UIBuilder.CreateButton (parent, cmd, 24, 20);
+			button.Dock = DockStyle.Left;
 
 			if (rightMargin != 0)
 			{
@@ -66,5 +84,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 
 		private readonly MainWindowController	mainWindowController;
+
+		private TopTemporalController			topTemporalController;
 	}
 }

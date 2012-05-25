@@ -48,9 +48,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.temporalData = new TemporalData ();
 
 			this.Dirty = false;
-
-			this.showTemporalPanel = false;
-			this.showInfoPanel     = true;
+			this.showInfoPanel = true;
 
 			Converters.ImportSettings (this.settingsList);
 			this.app.CommandDispatcher.RegisterController (this);
@@ -365,7 +363,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			string icon = UIBuilder.GetTextIconUri (Présentations.GetIcon (data.ControllerType), iconSize: 32, verticalOffset: -10);
+			string icon = UIBuilder.GetIconTag (Présentations.GetIcon (data.ControllerType), iconSize: 32, verticalOffset: -10);
 
 			var item = new MenuItem ()
 			{
@@ -799,12 +797,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Temporal);
-				cs.ActiveState = this.showTemporalPanel ? ActiveState.Yes : ActiveState.No;
-			}
-
-			if (this.controller != null)
-			{
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Panel.Options);
 				cs.ActiveState = this.ShowOptionsPanel ? ActiveState.Yes : ActiveState.No;
 				cs.Enable = (this.controller == null) ? false : Présentations.HasOptionsPanel (this.controller.ControllerType);
@@ -819,7 +811,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
-				this.controller.UpdatePanelsShowed (this.ShowSearchPanel, this.ShowFilterPanel, this.showTemporalPanel, this.ShowOptionsPanel, this.showInfoPanel);
+				this.controller.UpdatePanelsShowed (this.ShowSearchPanel, this.ShowFilterPanel, this.ShowOptionsPanel, this.showInfoPanel);
 			}
 		}
 
@@ -836,6 +828,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Compta.PériodeSuivante);
 				cs.Enable = (this.controller.AcceptPériodeChanged && this.compta.GetPériode (this.période, 1) != null);
 			}
+
+			this.toolbarController.UpdatePériode ();
 		}
 
 
@@ -1145,18 +1139,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdatePanelCommands ();
 		}
 
-		public void ClosePanelTemporal()
-		{
-			this.showTemporalPanel = false;
-			this.UpdatePanelCommands ();
-		}
-
-		public void OpenPanelTemporal()
-		{
-			this.showTemporalPanel = true;
-			this.UpdatePanelCommands ();
-		}
-
 		public void ClosePanelOptions()
 		{
 			this.ShowOptionsPanel = false;
@@ -1175,13 +1157,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CommandPanelFilter()
 		{
 			this.ShowFilterPanel = !this.ShowFilterPanel;
-			this.UpdatePanelCommands ();
-		}
-
-		[Command (Res.CommandIds.Panel.Temporal)]
-		private void CommandPanelTemporal()
-		{
-			this.showTemporalPanel = !this.showTemporalPanel;
 			this.UpdatePanelCommands ();
 		}
 
@@ -1613,11 +1588,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private RibbonController							ribbonController;
 		private ToolbarController							toolbarController;
 		private PrésentationController						présentationController;
-		private FrameBox									tabFrame;
 		private FrameBox									mainFrame;
 		private string										titleComplement;
 		private bool										dirty;
-		private bool										showTemporalPanel;
 		private bool										showInfoPanel;
 		private ComptaUtilisateurEntity						currentUser;
 	}
