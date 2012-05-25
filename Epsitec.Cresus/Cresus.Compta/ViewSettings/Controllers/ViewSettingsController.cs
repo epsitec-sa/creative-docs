@@ -163,6 +163,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					PreferredIconSize = new Size (20, 20),
 					PreferredSize     = new Size (24, 24),
 					Dock              = DockStyle.Left,
+					Visibility        = false,  // à voir !
 				};
 
 				ToolTip.Default.SetToolTip (this.reloadButton, "Réutilise les réglages initiaux");
@@ -178,7 +179,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					if (this.SaveDialog (this.viewSettingsList.Selected))
 					{
-						this.UpdateViewSettingsAction ();
+						this.SaveViewSettings (this.viewSettingsList.Selected);
+						this.UpdateButtons ();
 					}
 				};
 			}
@@ -249,89 +251,104 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		}
 
 
-		private void UpdateViewSettingsAction()
-		{
-			var viewSettings = this.viewSettingsList.Selected;
-
-			if (viewSettings != null && !viewSettings.Readonly)  // garde-fou
-			{
-				this.SaveViewSettings (viewSettings);
-				this.UpdateButtons ();
-			}
-		}
-
-
 		private void CreateTabs()
 		{
-			if (this.viewSettingsList != null)
+			//	Crée tous les onglets pour les présentations.
+			if (this.viewSettingsList == null)
 			{
-				//	Cherche les index des ViewSettings accessibles à l'utilisateur.
-				this.viewSettingsIndexes.Clear ();
+				return;
+			}
 
-				for (int i = 0; i < this.viewSettingsList.List.Count; i++)
+			//	Cherche les index des ViewSettings accessibles à l'utilisateur.
+			this.viewSettingsIndexes.Clear ();
+
+			for (int i = 0; i < this.viewSettingsList.List.Count; i++)
+			{
+				if (this.HasPrésentation (this.viewSettingsList.List[i].ControllerType))
 				{
-					if (this.HasPrésentation (this.viewSettingsList.List[i].ControllerType))
-					{
-						this.viewSettingsIndexes.Add (i);
-					}
+					this.viewSettingsIndexes.Add (i);
+				}
+			}
+
+			//	Crée les onglets des ViewSettings accessibles à l'utilisateur.
+			this.tabsPane.Clear ();
+
+			for (int i = 0; i < this.viewSettingsIndexes.Count; i++)
+			{
+				var index = this.viewSettingsIndexes[i];
+				var viewSettings = this.viewSettingsList.List[index];
+
+				var item = new TabItem
+				{
+					Icon             = Présentations.GetTabIcon (viewSettings),
+					RenameEnable     = !viewSettings.Readonly,
+					DeleteEnable     = !viewSettings.Readonly,
+					MoveBeginEnable  = i > 0,
+					MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
+					RenameVisibility = true,
+					DeleteVisibility = true,
+					ReloadVisibility = true,
+					SaveVisibility   = true,
+					MoveVisibility   = true,
+				};
+
+				this.tabsPane.Add (item);
+			}
+
+			//	Si nécessaire, crée l'onglet "+".
+			if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
+			{
+				var item = new TabItem
+				{
+					Icon    = "Edit.Tab.Create",
+					Tooltip = "Crée une nouvelle présentation",
+				};
+
+				this.tabsPane.Add (item);
+			}
+
+			this.UpdateTabs ();
+
+			//	Connexion des événements.
+			this.tabsPane.SelectedIndexChanged += new EventHandler                  (this.HandlerTabsPaneSelectedIndexChanged);
+			this.tabsPane.RenameDoing          += new TabsPane.RenameEventHandler   (this.HandlerTabsPaneRenameDoing);
+			this.tabsPane.DeleteDoing          += new TabsPane.DeleteEventHandler   (this.HandlerTabsPaneDeleteDoing);
+			this.tabsPane.ReloadDoing          += new TabsPane.ReloadEventHandler   (this.HandlerTabsPaneReloadDoing);
+			this.tabsPane.SaveDoing            += new TabsPane.SaveEventHandler     (this.HandlerTabsPaneSaveDoing);
+			this.tabsPane.DraggingDoing        += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
+		}
+
+		private void UpdateTabs()
+		{
+			//	Met à jour tous les onglets pour les présentations.
+			if (this.viewSettingsList == null)
+			{
+				return;
+			}
+
+			for (int i = 0; i < this.viewSettingsIndexes.Count; i++)
+			{
+				var index = this.viewSettingsIndexes[i];
+				var viewSettings = this.viewSettingsList.List[index];
+				bool isModified = this.IsModified (viewSettings);
+
+				FormattedText name;
+				if (isModified)
+				{
+					name = viewSettings.Name.ApplyBold ();
+				}
+				else
+				{
+					name = viewSettings.Name;
 				}
 
-				//	Génère les onglets des ViewSettings accessibles à l'utilisateur.
-				this.tabsPane.Clear ();
+				var item = this.tabsPane.Get (index);
 
-				for (int i = 0; i < this.viewSettingsIndexes.Count; i++)
-				{
-					var index = this.viewSettingsIndexes[i];
-					var viewSettings = this.viewSettingsList.List[index];
-					bool isModified = this.IsModified (viewSettings);
+				item.FormattedText = name;
+				item.ReloadEnable  = isModified;
+				item.SaveEnable    = isModified && !viewSettings.Readonly;
 
-					FormattedText name;
-					if (isModified)
-					{
-						name = viewSettings.Name.ApplyBold ();
-					}
-					else
-					{
-						name = viewSettings.Name;
-					}
-
-					var item = new TabItem
-					{
-						Icon             = Présentations.GetTabIcon (viewSettings),
-						FormattedText    = name,
-						RenameEnable     = !viewSettings.Readonly,
-						DeleteEnable     = !viewSettings.Readonly,
-						ReloadEnable     = isModified,
-						SaveEnable       = isModified && !viewSettings.Readonly,
-						MoveBeginEnable  = i > 0,
-						MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
-						RenameVisibility = true,
-						DeleteVisibility = true,
-						ReloadVisibility = true,
-						SaveVisibility   = true,
-						MoveVisibility   = true,
-					};
-
-					this.tabsPane.Add (item);
-				}
-
-				if (this.controller.HasOptionsPanel || this.controller.HasFilterPanel)
-				{
-					var item = new TabItem
-					{
-						Icon    = "Edit.Tab.Create",
-						Tooltip = "Crée une nouvelle présentation",
-					};
-
-					this.tabsPane.Add (item);
-				}
-
-				this.tabsPane.SelectedIndexChanged += new EventHandler (this.HandlerTabsPaneSelectedIndexChanged);
-				this.tabsPane.RenameDoing += new TabsPane.RenameEventHandler (this.HandlerTabsPaneRenameDoing);
-				this.tabsPane.DeleteDoing += new TabsPane.DeleteEventHandler (this.HandlerTabsPaneDeleteDoing);
-				this.tabsPane.ReloadDoing += new TabsPane.ReloadEventHandler (this.HandlerTabsPaneReloadDoing);
-				this.tabsPane.SaveDoing += new TabsPane.SaveEventHandler (this.HandlerTabsPaneSaveDoing);
-				this.tabsPane.DraggingDoing += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
+				this.tabsPane.Set (index, item);
 			}
 		}
 
@@ -488,7 +505,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				ControllerType = this.controller.MainWindowController.SelectedDocument,
 			};
 
-			this.SaveViewSettings (this.viewSettingsList.Selected, viewSettings);
+			this.CopyViewSettings (this.viewSettingsList.Selected, viewSettings);
 
 			this.viewSettingsList.List.Add (viewSettings);
 			this.viewSettingsList.Selected = viewSettings;
@@ -639,7 +656,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 		}
 
-		private void SaveViewSettings(ViewSettingsData src, ViewSettingsData dst)
+		private void CopyViewSettings(ViewSettingsData src, ViewSettingsData dst)
 		{
 			if (src.BaseFilter != null)
 			{

@@ -134,6 +134,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 			this.Invalidate ();
 		}
 
+		public void Set(int index, TabItem item)
+		{
+			this.tabs[index].TabItem = item;
+		}
+
+		public TabItem Get(int index)
+		{
+			return this.tabs[index].TabItem;
+		}
+
 
 		public int SelectedIndex
 		{
