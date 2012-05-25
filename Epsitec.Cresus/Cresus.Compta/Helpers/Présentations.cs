@@ -257,13 +257,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static string GetTabIcon(ViewSettingsData data)
 		{
 			//	Retourne l'icône à afficher dans l'onglet, à gauche de la description.
-			return null;  //?
-
 			if (data.Readonly == false)
 			{
 				return "Edit.Tab.User";
 			}
 
+			return null;  //?
 #if false
 			var type = data.ControllerType;
 

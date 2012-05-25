@@ -145,7 +145,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Padding         = new Margins (0, 0, 0, 5),
 			};
 
-			if (Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType))
+			if (this.HasPanel (this.controller.ControllerType))
 			{
 				this.reloadButton = new IconButton
 				{
@@ -279,6 +279,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			{
 				var index = this.viewSettingsIndexes[i];
 				var viewSettings = this.viewSettingsList.List[index];
+				bool hasPanel = this.HasPanel (viewSettings.ControllerType);
 
 				var item = new TabItem
 				{
@@ -289,8 +290,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
 					RenameVisibility = true,
 					DeleteVisibility = true,
-					ReloadVisibility = true,
-					SaveVisibility   = true,
+					ReloadVisibility = hasPanel,
+					SaveVisibility   = hasPanel,
 					MoveVisibility   = true,
 				};
 
@@ -298,7 +299,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 
 			//	Si nécessaire, crée l'onglet "+".
-			if (Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType))
+			if (this.HasPanel (this.controller.ControllerType))
 			{
 				var item = new TabItem
 				{
@@ -381,10 +382,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneSelectedIndexChanged(object sender)
 		{
+			//	Appelé lors d'un changement d'onglet.
 			int index = this.tabsPane.SelectedIndex;
 
-			if ((Présentations.HasOptionsPanel (this.controller.ControllerType) || Présentations.HasFilterPanel (this.controller.ControllerType)) &&
-				index == this.viewSettingsIndexes.Count)  // onglet "+" ?
+			if (this.HasPanel (this.controller.ControllerType) && index == this.viewSettingsIndexes.Count)  // onglet "+" ?
 			{
 				this.AddViewSettings ();
 			}
@@ -399,6 +400,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneRenameDoing(object sender, int index, FormattedText text)
 		{
+			//	Appelé lorsqu'un onglet doit être renommé.
 			int sel = this.viewSettingsIndexes[index];
 			this.viewSettingsList.List[sel].Name = text;
 
@@ -408,6 +410,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneDeleteDoing(object sender, int index)
 		{
+			//	Appelé lorsqu'un onglet doit être supprimé.
 			int sel = this.viewSettingsIndexes[index];
 			this.viewSettingsList.List.RemoveAt (sel);
 			this.viewSettingsIndexes.RemoveAt (index);
@@ -426,6 +429,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneReloadDoing(object sender, int index)
 		{
+			//	Appelé lorsqu'un onglet doit être rechargé.
 			int sel = this.viewSettingsIndexes[index];
 			var viewSettings = this.viewSettingsList.List[sel];
 
@@ -438,6 +442,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneSaveDoing(object sender, int index)
 		{
+			//	Appelé lorsqu'un onglet doit être sauvegardé.
 			int sel = this.viewSettingsIndexes[index];
 			var viewSettings = this.viewSettingsList.List[sel];
 
@@ -459,6 +464,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void HandlerTabsPaneDraggingDoing(object sender, int srcIndex, int dstIndex)
 		{
+			//	Appelé lorsqu'un onglet doit être déplacé.
 			if (srcIndex == dstIndex || srcIndex == dstIndex-1)
 			{
 				return;
@@ -511,7 +517,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			//	L'onglet "+" a été cliqué.
 			var viewSettings = new ViewSettingsData
 			{
-				Name           = this.NewViewSettingsName,
+				Name           = this.GetNewViewSettingsName (this.viewSettingsList.Selected),
 				ControllerType = this.controller.MainWindowController.SelectedDocument,
 			};
 
@@ -556,34 +562,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 		}
 
-#if false
-		private bool CompareTo(ViewSettingsData viewSettings)
-		{
-			if (viewSettings != null)
-			{
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null)
-				{
-					if (!this.dataAccessor.FilterData.CompareTo (viewSettings.BaseFilter))
-					{
-						return false;
-					}
-				}
-
-				if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null)
-				{
-					if (!this.dataAccessor.Options.CompareTo (viewSettings.BaseOptions))
-					{
-						return false;
-					}
-				}
-			}
-
-			return true;
-		}
-#endif
-
 		private bool IsModified(ViewSettingsData viewSettings)
 		{
+			//	Retourne true si la partie 'Current' d'un réglage a été modifiée par rapport à la partie 'Base'.
 			if (viewSettings != null)
 			{
 				if (viewSettings.BaseFilter    != null &&
@@ -604,40 +585,9 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			return false;
 		}
 
-#if false
-		private void CopyDataToViewSettings(ViewSettingsData viewSettings)
-		{
-			//	Met les paramètres des panneaux dans un réglage de présentation (panneaux -> viewSettings).
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null)
-			{
-				viewSettings.BaseFilter = this.dataAccessor.FilterData.CopyFrom ();
-			}
-
-			if (this.dataAccessor != null && this.dataAccessor.Options != null)
-			{
-				viewSettings.BaseOptions = this.dataAccessor.Options.CopyFrom ();
-			}
-		}
-#endif
-
-#if false
-		private void CopyViewSettingsToData(ViewSettingsData viewSettings)
-		{
-			//	Utilise un réglage de présentation (viewSettings -> panneaux).
-			if (this.dataAccessor != null && this.dataAccessor.FilterData != null && viewSettings.BaseFilter != null)
-			{
-				viewSettings.BaseFilter.CopyTo (this.dataAccessor.FilterData);
-			}
-
-			if (this.dataAccessor != null && this.dataAccessor.Options != null && viewSettings.BaseOptions != null)
-			{
-				viewSettings.BaseOptions.CopyTo (this.dataAccessor.Options);
-			}
-		}
-#endif
-
 		private void ReloadViewSettings(ViewSettingsData viewSettings)
 		{
+			//	Dans un réglage, effectue une copie 'Base' -> 'Current'.
 			if (viewSettings.BaseFilter    != null &&
 				viewSettings.CurrentFilter != null)
 			{
@@ -653,6 +603,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void SaveViewSettings(ViewSettingsData viewSettings)
 		{
+			//	Dans un réglage, effectue une copie 'Current' -> 'Base'.
 			if (viewSettings.BaseFilter    != null &&
 				viewSettings.CurrentFilter != null)
 			{
@@ -668,36 +619,42 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void CopyViewSettings(ViewSettingsData src, ViewSettingsData dst)
 		{
-			if (src.BaseFilter != null)
+			//	Effectue une copie 'src.Current' -> 'dst.Current'.
+			if (src.CurrentFilter != null)
 			{
-				dst.BaseFilter = src.BaseFilter.CopyFrom ();
+				dst.BaseFilter = src.CurrentFilter.CopyFrom ();
 			}
 
-			if (src.BaseOptions != null)
+			if (src.CurrentOptions != null)
 			{
-				dst.BaseOptions = src.BaseOptions.CopyFrom ();
+				dst.BaseOptions = src.CurrentOptions.CopyFrom ();
 			}
 		}
 
 
-		private string NewViewSettingsName
+		private bool HasPanel(ControllerType type)
 		{
-			get
+			return Présentations.HasOptionsPanel (type) ||
+				   Présentations.HasFilterPanel  (type);
+		}
+
+
+		private string GetNewViewSettingsName(ViewSettingsData src)
+		{
+			var srcName = src.Name;
+			int i = 1;
+
+			while (true)
 			{
-				int i = 1;
+				string name = srcName + " " + i.ToString ();
 
-				while (true)
+				if (this.viewSettingsList.List.Where (x => x.Name == name).Any ())
 				{
-					string name = "Vue" + " " + i.ToString ();
-
-					if (this.viewSettingsList.List.Where (x => x.Name == name).Any ())
-					{
-						i++;
-					}
-					else
-					{
-						return name;
-					}
+					i++;
+				}
+				else
+				{
+					return name;
 				}
 			}
 		}
