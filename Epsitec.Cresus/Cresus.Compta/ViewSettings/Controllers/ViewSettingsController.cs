@@ -641,9 +641,22 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private string GetNewViewSettingsName(ViewSettingsData src)
 		{
-			var srcName = src.Name;
-			int i = 1;
+			string srcName = src.Name.ToSimpleText ();
 
+			//	Si le nom est terminé par un numéro, on l'enlève, afin d'éviter de créer la présentation
+			//	"Vue 1 1" à partir de "Vue 1" !
+			int p = srcName.LastIndexOf (' ');
+			if (p != -1)
+			{
+				string l = srcName.Substring (p+1);
+				var n = Converters.ParseInt (l);
+				if (n.HasValue)
+				{
+					srcName = srcName.Substring (0, p);
+				}
+			}
+
+			int i = 1;
 			while (true)
 			{
 				string name = srcName + " " + i.ToString ();

@@ -457,6 +457,9 @@ namespace Epsitec.Cresus.Compta.Widgets
 			var tab = this.GetShowedTabFromIndex (this.draggingStartIndex);
 			this.dragInfo = new DragInfo (tab, this);
 
+			this.ShowHideAdditionnalWidgets (false);
+			this.Invalidate ();
+
 			this.DragMove ();
 		}
 
@@ -475,7 +478,25 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				this.dragInfo.Dispose ();
 				this.dragInfo = null;
+
+				this.ShowHideAdditionnalWidgets (true);
+				this.Invalidate ();
 			}
+		}
+
+		private void ShowHideAdditionnalWidgets(bool show)
+		{
+			foreach (var widget in this.leftWidgets)
+			{
+				widget.Visibility = show;
+			}
+
+			foreach (var widget in this.rightWidgets)
+			{
+				widget.Visibility = show;
+			}
+
+			this.dirtyLayout = true;
 		}
 
 
@@ -1161,7 +1182,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				foreach (var widget in this.leftWidgets)
 				{
-					width += widget.ActualWidth;
+					if (widget.Visibility)
+					{
+						width += widget.ActualWidth;
+					}
 				}
 
 				return width;
@@ -1177,7 +1201,10 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				foreach (var widget in this.rightWidgets)
 				{
-					width += widget.ActualWidth;
+					if (widget.Visibility)
+					{
+						width += widget.ActualWidth;
+					}
 				}
 
 				return width;
@@ -1365,7 +1392,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (tab.TabItem.ReloadVisibility)
 				{
-					this.AddToContextMenu (menu, "ViewSettings.Reload", "Réutilise les réglages initiaux", tab.TabItem.ReloadEnable, delegate
+					this.AddToContextMenu (menu, "ViewSettings.Reload", "Réutiliser les réglages initiaux", tab.TabItem.ReloadEnable, delegate
 					{
 						this.OnReloadDoing (this.menuTabIndex);
 					});
@@ -1373,7 +1400,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (tab.TabItem.SaveVisibility)
 				{
-					this.AddToContextMenu (menu, "ViewSettings.Save", "Enregistre les réglages actuels", tab.TabItem.SaveEnable, delegate
+					this.AddToContextMenu (menu, "ViewSettings.Save", "Enregistrer les réglages actuels", tab.TabItem.SaveEnable, delegate
 					{
 						this.OnSaveDoing (this.menuTabIndex);
 					});
