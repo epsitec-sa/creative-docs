@@ -181,6 +181,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					{
 						this.SaveViewSettings (this.viewSettingsList.Selected);
 						this.UpdateButtons ();
+						this.UpdateTabs ();
 					}
 				};
 			}
@@ -216,7 +217,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			string message = string.Format ("Voulez-vous enregistrer le filtre et les options en cours<br/>dans les réglages \"{0}\" ?", viewSettings.Name);
 			var result = this.controller.MainWindowController.QuestionDialog (message);
-
 			return result == DialogResult.Yes;
 		}
 
@@ -242,11 +242,13 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		private void UpdateWidgets()
 		{
 			this.UpdateButtons ();
+			this.UpdateTabs ();
 		}
 
 		public void Update()
 		{
 			this.UpdateButtons ();
+			this.UpdateTabs ();
 			this.UpdateTabSelected ();
 		}
 
@@ -438,14 +440,20 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			int sel = this.viewSettingsIndexes[index];
 			var viewSettings = this.viewSettingsList.List[sel];
 
-			if (this.SaveDialog (viewSettings))
-			{
-				this.SaveViewSettings (viewSettings);
-				this.viewSettingsList.Selected = viewSettings;
+			Application.QueueAsyncCallback
+			(
+				delegate
+				{
+					if (this.SaveDialog (viewSettings))
+					{
+						this.SaveViewSettings (viewSettings);
+						this.viewSettingsList.Selected = viewSettings;
 
-				this.UpdateAfterSelectionChanged ();
-				this.ViewSettingsChanged ();
-			}
+						this.UpdateAfterSelectionChanged ();
+						this.ViewSettingsChanged ();
+					}
+				}
+			);
 		}
 
 		private void HandlerTabsPaneDraggingDoing(object sender, int srcIndex, int dstIndex)
@@ -499,6 +507,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private void AddViewSettings()
 		{
+			//	L'onglet "+" a été cliqué.
 			var viewSettings = new ViewSettingsData
 			{
 				Name           = this.NewViewSettingsName,
