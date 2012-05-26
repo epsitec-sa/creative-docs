@@ -43,6 +43,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock                = DockStyle.Top,
 			};
 
+			this.userLabel = this.CreateButton (frame, "");
+			ToolTip.Default.SetToolTip (this.userLabel, "Nom de l'utilisateur identifié");
+
+			this.userLabel.Clicked += delegate
+			{
+				this.mainWindowController.ShowPrésentation (ControllerType.Login);
+			};
+
+			new Separator
+			{
+				Parent         = frame,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 10, 0, 0),
+			};
+
 			this.CreateButton (frame, Res.Commands.Navigator.Prev);
 			this.CreateButton (frame, Res.Commands.Navigator.Next, 10);
 
@@ -66,9 +83,40 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.topTemporalController.CreateUI (frame, null);
 		}
 
+		public void UpdateUser()
+		{
+			var user = this.mainWindowController.CurrentUser;
+			if (user == null)  // déconnecté ?
+			{
+				this.userLabel.FormattedText = FormattedText.Concat ("Déconnecté").ApplyItalic ();
+			}
+			else
+			{
+				this.userLabel.FormattedText = user.Utilisateur;
+			}
+
+			this.userLabel.PreferredWidth = this.userLabel.GetBestFitSize ().Width;
+		}
+
 		public void UpdatePériode()
 		{
 			this.topTemporalController.UpdatePériode ();
+		}
+
+		private Button CreateButton(FrameBox parent, FormattedText text)
+		{
+			var button = new Button
+			{
+				Parent          = parent,
+				FormattedText   = text,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Left,
+			};
+
+			button.PreferredWidth = button.GetBestFitSize ().Width;
+
+			return button;
 		}
 
 		private void CreateButton(Widget parent, Command cmd, double rightMargin = 0)
@@ -85,6 +133,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly MainWindowController	mainWindowController;
 
+		private Button							userLabel;
 		private TopTemporalController			topTemporalController;
 	}
 }

@@ -358,7 +358,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					icon = "Edit.Tab.Color.Blue";
 				}
 
-				var item = this.tabsPane.Get (index);
+				var item = this.tabsPane.Get (i);
 
 				item.FormattedText = name;
 				item.Icon          = icon;
@@ -366,7 +366,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				item.ReloadEnable  = isModified;
 				item.SaveEnable    = isModified && !viewSettings.Readonly;
 
-				this.tabsPane.Set (index, item);
+				this.tabsPane.Set (i, item);
 			}
 		}
 

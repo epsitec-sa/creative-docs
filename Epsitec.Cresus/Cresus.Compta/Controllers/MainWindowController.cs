@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.compta = new ComptaEntity ();  // crée une compta vide
 			NewCompta.NewEmpty (this.compta);
 
-			this.currentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
+			this.CurrentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
 			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\pme 2011.crp");
 			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\écritures.txt");
 
@@ -203,7 +203,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (this.controller != null)
 				{
-					this.controller.UpdateUser ();
+					//?this.controller.UpdateUser ();
+					this.toolbarController.UpdateUser ();
 				}
 			}
 		}
@@ -435,7 +436,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SelectCurrentPériode ();
 			this.SelectDefaultPrésentation ();
-			this.controller.UpdateUser ();
+			//?this.controller.UpdateUser ();
+			this.toolbarController.UpdateUser ();
 			this.controller.ClearHilite ();
 		}
 

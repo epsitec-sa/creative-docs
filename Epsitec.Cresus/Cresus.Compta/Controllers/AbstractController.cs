@@ -660,7 +660,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateTitleFrame ();
-			this.UpdateUser ();
+			//?this.UpdateUser ();
 		}
 
 		protected virtual void CreateTitleFrame()

@@ -78,33 +78,33 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.CreateSeparator (this.mainFrame);
 
-			this.CreateButton (this.mainFrame, "jan.");
-			this.CreateButton (this.mainFrame, "fév.");
-			this.CreateButton (this.mainFrame, "mars");
-			this.CreateButton (this.mainFrame, "avril");
-			this.CreateButton (this.mainFrame, "mai");
-			this.CreateButton (this.mainFrame, "juin");
-			this.CreateButton (this.mainFrame, "juil.");
-			this.CreateButton (this.mainFrame, "août");
-			this.CreateButton (this.mainFrame, "sept.");
-			this.CreateButton (this.mainFrame, "oct.");
-			this.CreateButton (this.mainFrame, "nov.");
-			this.CreateButton (this.mainFrame, "déc.");
+			this.CreateButton (this.mainFrame, "J", "01: Janvier",   15);
+			this.CreateButton (this.mainFrame, "F", "02: Février",   15);
+			this.CreateButton (this.mainFrame, "M", "03: Mars",      15);
+			this.CreateButton (this.mainFrame, "A", "04: Avril",     15);
+			this.CreateButton (this.mainFrame, "M", "05: Mai",       15);
+			this.CreateButton (this.mainFrame, "J", "06: Juin",      15);
+			this.CreateButton (this.mainFrame, "J", "07: Juillet",   15);
+			this.CreateButton (this.mainFrame, "A", "08: Août",      15);
+			this.CreateButton (this.mainFrame, "S", "09: Septembre", 15);
+			this.CreateButton (this.mainFrame, "O", "10: Octobre",   15);
+			this.CreateButton (this.mainFrame, "N", "11: Novembre",  15);
+			this.CreateButton (this.mainFrame, "D", "12: Décembre",  15);
 
 			this.CreateSeparator (this.mainFrame);
 
-			this.CreateButton (this.mainFrame, "T1");
-			this.CreateButton (this.mainFrame, "T2");
-			this.CreateButton (this.mainFrame, "T3");
-			this.CreateButton (this.mainFrame, "T4");
+			this.CreateButton (this.mainFrame, "T1", "Premier trimestre");
+			this.CreateButton (this.mainFrame, "T2", "Deuxième trimestre");
+			this.CreateButton (this.mainFrame, "T3", "Troisième trimestre");
+			this.CreateButton (this.mainFrame, "T4", "Quatrième trimestre");
 
 			this.CreateSeparator (this.mainFrame);
 
-			this.CreateButton (this.mainFrame, "année");
+			this.CreateButton (this.mainFrame, "Année", "Toute l'année");
 
 			this.CreateSeparator (this.mainFrame);
 
-			this.CreateButton (this.mainFrame, "autres...");
+			this.CreateButton (this.mainFrame, "Autres...", "Choix d'une période quelconque");
 		}
 
 		public void UpdatePériode()
@@ -120,7 +120,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 		}
 
-		private Button CreateButton(FrameBox parent, FormattedText text)
+		private Button CreateButton(FrameBox parent, FormattedText text, FormattedText tooltip, double? width = null)
 		{
 			var button = new Button
 			{
@@ -131,7 +131,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			button.PreferredWidth = button.GetBestFitSize ().Width;
+			if (width.HasValue)
+			{
+				button.PreferredWidth = width.Value;
+			}
+			else
+			{
+				button.PreferredWidth = button.GetBestFitSize ().Width;
+			}
+
+			ToolTip.Default.SetToolTip (button, tooltip);
 
 			return button;
 		}
