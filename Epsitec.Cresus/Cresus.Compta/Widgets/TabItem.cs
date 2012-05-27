@@ -49,6 +49,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 		}
 
 
+		public bool DuplicateVisibility
+		{
+			get;
+			set;
+		}
+
+		public bool DuplicateEnable
+		{
+			get;
+			set;
+		}
+
+
 		public bool DeleteVisibility
 		{
 			get;

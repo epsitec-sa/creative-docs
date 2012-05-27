@@ -278,16 +278,18 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				var item = new TabItem
 				{
-					RenameEnable     = !viewSettings.Readonly,
-					DeleteEnable     = !viewSettings.Readonly,
-					MoveBeginEnable  = i > 0,
-					MoveEndEnable    = i < this.viewSettingsIndexes.Count-1,
-					RenameVisibility = true,
-					DeleteVisibility = true,
-					ReloadVisibility = hasPanel,
-					SaveVisibility   = hasPanel,
-					ColorVisibility  = true,
-					MoveVisibility   = true,
+					RenameEnable        = !viewSettings.Readonly,
+					DuplicateEnable     = hasPanel,
+					DeleteEnable        = !viewSettings.Readonly,
+					MoveBeginEnable     = i > 0,
+					MoveEndEnable       = i < this.viewSettingsIndexes.Count-1,
+					RenameVisibility    = true,
+					DuplicateVisibility = true,
+					DeleteVisibility    = true,
+					ReloadVisibility    = hasPanel,
+					SaveVisibility      = hasPanel,
+					ColorVisibility     = true,
+					MoveVisibility      = true,
 				};
 
 				this.tabsPane.Add (item);
@@ -308,13 +310,14 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			this.UpdateTabs ();
 
 			//	Connexion des événements.
-			this.tabsPane.SelectedIndexChanged += new EventHandler                  (this.HandlerTabsPaneSelectedIndexChanged);
-			this.tabsPane.RenameDoing          += new TabsPane.RenameEventHandler   (this.HandlerTabsPaneRenameDoing);
-			this.tabsPane.DeleteDoing          += new TabsPane.DeleteEventHandler   (this.HandlerTabsPaneDeleteDoing);
-			this.tabsPane.ReloadDoing          += new TabsPane.ReloadEventHandler   (this.HandlerTabsPaneReloadDoing);
-			this.tabsPane.SaveDoing            += new TabsPane.SaveEventHandler     (this.HandlerTabsPaneSaveDoing);
-			this.tabsPane.DraggingDoing        += new TabsPane.DraggingEventHandler (this.HandlerTabsPaneDraggingDoing);
-			this.tabsPane.ColorChanging        += new TabsPane.ColorEventHandler    (this.HandleTabsPaneColorChanging);
+			this.tabsPane.SelectedIndexChanged += new EventHandler                   (this.HandlerTabsPaneSelectedIndexChanged);
+			this.tabsPane.RenameDoing          += new TabsPane.RenameEventHandler    (this.HandlerTabsPaneRenameDoing);
+			this.tabsPane.DuplicateDoing       += new TabsPane.DuplicateEventHandler (this.HandlerTabsPaneDuplicateDoing);
+			this.tabsPane.DeleteDoing          += new TabsPane.DeleteEventHandler    (this.HandlerTabsPaneDeleteDoing);
+			this.tabsPane.ReloadDoing          += new TabsPane.ReloadEventHandler    (this.HandlerTabsPaneReloadDoing);
+			this.tabsPane.SaveDoing            += new TabsPane.SaveEventHandler      (this.HandlerTabsPaneSaveDoing);
+			this.tabsPane.DraggingDoing        += new TabsPane.DraggingEventHandler  (this.HandlerTabsPaneDraggingDoing);
+			this.tabsPane.ColorChanging        += new TabsPane.ColorEventHandler     (this.HandleTabsPaneColorChanging);
 		}
 
 		private void UpdateTabs()
@@ -421,6 +424,16 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 			this.UpdateAfterSelectionChanged ();
 			this.ViewSettingsChanged ();
+		}
+
+		private void HandlerTabsPaneDuplicateDoing(object sender, int index)
+		{
+			//	Appelé lorsqu'un onglet doit être dupliqué.
+			int sel = this.viewSettingsIndexes[index];
+			this.viewSettingsList.SelectedIndex = sel;
+			this.ViewSettingsChanged ();
+
+			this.AddViewSettings ();
 		}
 
 		private void HandlerTabsPaneDeleteDoing(object sender, int index)

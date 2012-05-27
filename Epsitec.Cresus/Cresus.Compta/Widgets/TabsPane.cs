@@ -1378,6 +1378,14 @@ namespace Epsitec.Cresus.Compta.Widgets
 				});
 			}
 
+			if (tab.TabItem.DuplicateVisibility)
+			{
+				this.AddToContextMenu (menu, "Edit.Duplicate", "Dupliquer", tab.TabItem.DuplicateEnable, delegate
+				{
+					this.OnDuplicateDoing (this.menuTabIndex);
+				});
+			}
+
 			if (tab.TabItem.DeleteVisibility)
 			{
 				this.AddToContextMenu (menu, "Edit.Delete", "Supprimer", tab.TabItem.DeleteEnable, delegate
@@ -1713,6 +1721,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public delegate void RenameEventHandler(object sender, int index, FormattedText text);
 		public event RenameEventHandler RenameDoing;
+
+
+		private void OnDuplicateDoing(int index)
+		{
+			if (this.DuplicateDoing != null)
+			{
+				this.DuplicateDoing (this, index);
+			}
+		}
+
+		public delegate void DuplicateEventHandler(object sender, int index);
+		public event DuplicateEventHandler DuplicateDoing;
 
 
 		private void OnDeleteDoing(int index)

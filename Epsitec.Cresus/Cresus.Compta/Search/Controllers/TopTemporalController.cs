@@ -100,18 +100,18 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 
 			this.tabIndex = 0;
-			this.CreateMonthButton (this.regularFrame, "J", "01: Janvier", 17);
-			this.CreateMonthButton (this.regularFrame, "F", "02: Février", 17);
-			this.CreateMonthButton (this.regularFrame, "M", "03: Mars", 17);
-			this.CreateMonthButton (this.regularFrame, "A", "04: Avril", 17);
-			this.CreateMonthButton (this.regularFrame, "M", "05: Mai", 17);
-			this.CreateMonthButton (this.regularFrame, "J", "06: Juin", 17);
-			this.CreateMonthButton (this.regularFrame, "J", "07: Juillet", 17);
-			this.CreateMonthButton (this.regularFrame, "A", "08: Août", 17);
-			this.CreateMonthButton (this.regularFrame, "S", "09: Septembre", 17);
-			this.CreateMonthButton (this.regularFrame, "O", "10: Octobre", 17);
-			this.CreateMonthButton (this.regularFrame, "N", "11: Novembre", 17);
-			this.CreateMonthButton (this.regularFrame, "D", "12: Décembre", 17);
+			this.CreateMonthButton (this.regularFrame, "J", "01: Janvier",   16);
+			this.CreateMonthButton (this.regularFrame, "F", "02: Février",   16);
+			this.CreateMonthButton (this.regularFrame, "M", "03: Mars",      16);
+			this.CreateMonthButton (this.regularFrame, "A", "04: Avril",     16);
+			this.CreateMonthButton (this.regularFrame, "M", "05: Mai",       16);
+			this.CreateMonthButton (this.regularFrame, "J", "06: Juin",      16);
+			this.CreateMonthButton (this.regularFrame, "J", "07: Juillet",   16);
+			this.CreateMonthButton (this.regularFrame, "A", "08: Août",      16);
+			this.CreateMonthButton (this.regularFrame, "S", "09: Septembre", 16);
+			this.CreateMonthButton (this.regularFrame, "O", "10: Octobre",   16);
+			this.CreateMonthButton (this.regularFrame, "N", "11: Novembre",  16);
+			this.CreateMonthButton (this.regularFrame, "D", "12: Décembre",  16);
 			this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
 
 			this.tabIndex = 0;
@@ -179,7 +179,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Parent         = this.anyFrame,
 					Text           = "Du",
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (0, 10, 0, 0),
+					Margins        = new Margins (5, 5, 0, 0),
 				};
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Parent         = this.anyFrame,
 					Text           = "Au",
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (10, 10, 0, 0),
+					Margins        = new Margins (5, 5, 0, 0),
 				};
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
