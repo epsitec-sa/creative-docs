@@ -110,6 +110,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreatePrésentationUI(Widget parent)
 		{
+			//	Crée la bande horizontale pour choisir la présentation, constituée de gros onglets avec les icônes des présentations.
 #if false
 			var frame = new FrameBox
 			{
@@ -222,6 +223,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.temporalData;
+			}
+		}
+
+		public void TemporalDataChanged()
+		{
+			if (this.controller != null)
+			{
+				this.controller.FilterStartAction ();
 			}
 		}
 
@@ -888,6 +897,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 					}
 				}
 			}
+
+			if (this.temporalData.BeginDate.HasValue)
+			{
+				this.temporalData.BeginDate = MainWindowController.AdaptDate (this.période, this.temporalData.BeginDate.Value);
+			}
+
+			if (this.temporalData.EndDate.HasValue)
+			{
+				this.temporalData.EndDate = MainWindowController.AdaptDate (this.période, this.temporalData.EndDate.Value);
+			}
+
+			this.toolbarController.UpdateTemporalFilter ();
 		}
 
 		private static void AdaptSearchData(ComptaPériodeEntity période, SearchData data)
@@ -927,7 +948,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 					période.DateFin.Day     == 31 &&
 					période.DateFin.Month   == 12)  // pile une année entière ?
 				{
-					date = new Date (période.DateDébut.Year, date.Month, date.Day);
+					if (Dates.IsLastDayOfMonth (date))
+					{
+						date = new Date (période.DateDébut.Year, date.Month, 1);
+						date = Dates.AddDays (Dates.AddMonths (date, 1), -1);
+					}
+					else
+					{
+						date = new Date (période.DateDébut.Year, date.Month, date.Day);
+					}
 				}
 				else
 				{

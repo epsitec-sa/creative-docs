@@ -538,7 +538,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		private void FilterStartAction()
+		public void FilterStartAction()
 		{
 			if (this.editorController != null)
 			{

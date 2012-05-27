@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				BackColor           = UIBuilder.WindowBackColor2,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
-				Padding             = new Margins (5, 5, 1, 1),
+				Padding             = new Margins (5, 5, 0, 0),
 			};
 
 			new Separator
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.topTemporalController = new TopTemporalController (this.mainWindowController);
-			this.topTemporalController.CreateUI (frame, null);
+			this.topTemporalController.CreateUI (frame);
 		}
 
 		public void UpdateUser()
@@ -101,6 +101,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public void UpdatePériode()
 		{
 			this.topTemporalController.UpdatePériode ();
+		}
+
+		public void UpdateTemporalFilter()
+		{
+			this.topTemporalController.UpdateTemporalFilter ();
 		}
 
 		private Button CreateButton(FrameBox parent, FormattedText text)
