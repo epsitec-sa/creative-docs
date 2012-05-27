@@ -262,15 +262,53 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return "Edit.Tab.User";
 			}
 
+			var type = data.ControllerType;
+
+			if (type == ControllerType.Open ||
+				type == ControllerType.Save ||
+				type == ControllerType.Print ||
+				type == ControllerType.Login ||
+
+				type == ControllerType.RésuméTVA ||
+				type == ControllerType.DécompteTVA ||
+				type == ControllerType.CodesTVA ||
+				type == ControllerType.ListeTVA ||
+				
+				type == ControllerType.PlanComptable ||
+				type == ControllerType.Monnaies ||
+				type == ControllerType.Périodes ||
+				type == ControllerType.PiècesGenerator ||
+				type == ControllerType.Utilisateurs ||
+				type == ControllerType.Réglages)
+			{
+				return Présentations.GetIcon (type);
+			}
+
 			return null;  //?
 #if false
+				yield return ControllerType.RésuméTVA;  // présentation principale
+				yield return ControllerType.DécompteTVA;
+				yield return ControllerType.CodesTVA;
+				yield return ControllerType.ListeTVA;
+			}
+
+			if (cmd == Res.Commands.Présentation.Réglages)
+			{
+				yield return ControllerType.PlanComptable;  // présentation principale
+				yield return ControllerType.Monnaies;
+				yield return ControllerType.Périodes;
+				yield return ControllerType.PiècesGenerator;
+				yield return ControllerType.Utilisateurs;
+				yield return ControllerType.Réglages;
+
+	
+			
 			var type = data.ControllerType;
 
 			if (type == ControllerType.Journal ||
-				type == ControllerType.Extrait ||
 				type == ControllerType.PlanComptable ||
 				type == ControllerType.Balance ||
-				type == ControllerType.Extrait ||
+				type == ControllerType.ExtraitDeCompte ||
 				type == ControllerType.Bilan ||
 				type == ControllerType.PP ||
 				type == ControllerType.Exploitation ||
