@@ -6,14 +6,9 @@ using Epsitec.Common.Widgets;
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 
-using Epsitec.Cresus.Core.Business;
-
-using Epsitec.Cresus.Compta.Accessors;
-using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
-using Epsitec.Cresus.Compta.Fields.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -25,712 +20,575 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 	/// </summary>
 	public class TemporalController
 	{
-		public TemporalController(AbstractController controller, TemporalData data)
+		public TemporalController(TemporalData data)
 		{
-			this.controller = controller;
-			this.data       = data;
+			this.data = data;
 
-			this.compta          = this.controller.ComptaEntity;
-			this.dataAccessor    = this.controller.DataAccessor;
-			this.businessContext = this.controller.BusinessContext;
-
-			this.ignoreChanges = new SafeCounter ();
-			this.descriptionBestFitWidths = new Dictionary<TemporalDataDuration, int> ();
+			this.monthsSelected   = new List<bool> ();
+			this.quartersSelected = new List<bool> ();
+			this.monthButtons     = new List<Button> ();
+			this.quarterButtons   = new List<Button> ();
 		}
 
 
-		public void SearchClear()
+		public bool HasColorizedHilite
+		{
+			get;
+			set;
+		}
+
+		public void Clear()
 		{
 			this.data.Clear ();
-			this.UpdateButtons ();
+			this.UpdateTemporalData ();
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, System.Action searchStartAction)
+		public FrameBox CreateUI(FrameBox parent, System.Func<ComptaPériodeEntity> getPériode, System.Action filterStartAction)
 		{
-			this.searchStartAction = searchStartAction;
+			this.getPériode        = getPériode;
+			this.filterStartAction = filterStartAction;
 
 			this.mainFrame = new FrameBox
 			{
-				Parent  = parent,
-				Dock    = DockStyle.Fill,
-				//?Padding = new Margins (5),
+				Parent          = parent,
+				PreferredHeight = TemporalController.toolbarHeight,
+				Dock            = DockStyle.Fill,
+				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			this.CreateMainUI ();
-			this.UpdateButtons ();
+			this.CreateRegularFilterUI (this.mainFrame);
+			this.CreateAnyFilterUI (this.mainFrame);
+
+			this.UpdateWidgets ();
 
 			return this.mainFrame;
 		}
 
-		private void CreateMainUI()
+
+		private void CreateRegularFilterUI(FrameBox parent)
 		{
-			this.editionFrame = new FrameBox
+			this.regularFrame = new FrameBox
 			{
-				Parent          = this.mainFrame,
-				PreferredHeight = 20,
+				Parent          = parent,
+				PreferredHeight = TemporalController.toolbarHeight,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			this.staticFrame = UIBuilder.CreatePseudoCombo (this.mainFrame, out this.staticDates, out this.menuButton);
+			this.tabIndex = 0;
+			this.CreateMonthButton (this.regularFrame, "J", "01: Janvier",   16);
+			this.CreateMonthButton (this.regularFrame, "F", "02: Février",   16);
+			this.CreateMonthButton (this.regularFrame, "M", "03: Mars",      16);
+			this.CreateMonthButton (this.regularFrame, "A", "04: Avril",     16);
+			this.CreateMonthButton (this.regularFrame, "M", "05: Mai",       16);
+			this.CreateMonthButton (this.regularFrame, "J", "06: Juin",      16);
+			this.CreateMonthButton (this.regularFrame, "J", "07: Juillet",   16);
+			this.CreateMonthButton (this.regularFrame, "A", "08: Août",      16);
+			this.CreateMonthButton (this.regularFrame, "S", "09: Septembre", 16);
+			this.CreateMonthButton (this.regularFrame, "O", "10: Octobre",   16);
+			this.CreateMonthButton (this.regularFrame, "N", "11: Novembre",  16);
+			this.CreateMonthButton (this.regularFrame, "D", "12: Décembre",  16);
+			this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+
+			this.tabIndex = 0;
+			this.CreateQuarterButton (this.regularFrame, "T1", "Premier trimestre (janvier à mars)");
+			this.CreateQuarterButton (this.regularFrame, "T2", "Deuxième trimestre (avril à juin)");
+			this.CreateQuarterButton (this.regularFrame, "T3", "Troisième trimestre (juillet à septembre)");
+			this.CreateQuarterButton (this.regularFrame, "T4", "Quatrième trimestre (octobre à décembre)");
+			this.quarterButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+
+			var anyButton = this.CreateButton (this.regularFrame, "Autre", "Choix d'une période quelconque", null, 5);
+			anyButton.Margins = new Margins (0, 5, 0, 0);
+
+			foreach (var button in this.monthButtons)
+			{
+				button.Clicked += new EventHandler<MessageEventArgs> (this.HandleButtonMonthClicked);
+			}
+
+			foreach (var button in this.quarterButtons)
+			{
+				button.Clicked += new EventHandler<MessageEventArgs> (this.HandleButtonQuarterClicked);
+			}
+
+			anyButton.Clicked += delegate
+			{
+				this.data.AnyMode = true;
+				this.UpdateWidgets ();
+			};
+
+			this.regularClearButton = new GlyphButton
+			{
+				Parent          = this.regularFrame,
+				GlyphShape      = GlyphShape.Close,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = TemporalController.toolbarHeight,
+				PreferredWidth  = TemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 0, 0, 0),
+			};
+
+			ToolTip.Default.SetToolTip (this.regularClearButton, "Annule le filtre temporel");
+
+			this.regularClearButton.Clicked += delegate
+			{
+				for (int i = 0; i < this.monthsSelected.Count; i++)
+				{
+					this.monthsSelected[i] = false;
+				}
+
+				this.MonthsToQuarters ();
+				this.UpdateTemporalData ();
+			};
+		}
+
+		private void CreateAnyFilterUI(FrameBox parent)
+		{
+			this.anyFrame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = TemporalController.toolbarHeight,
+				Dock            = DockStyle.Left,
+			};
 
 			{
 				var label = new StaticText
 				{
-					Parent         = this.editionFrame,
+					Parent         = this.anyFrame,
 					Text           = "Du",
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (0, 10, 0, 0),
+					Margins        = new Margins (1, 5, 0, 0),
 				};
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
-				var initialDate = Converters.DateToString (this.data.BeginDate);
-				this.beginDateController = UIBuilder.CreateDateField (this.controller, this.editionFrame, initialDate, "Date initiale incluse", this.ValidateDate, this.DateChanged);
-				this.beginDateController.Box.Dock = DockStyle.Left;
+				this.beginDateField = new TextFieldEx
+				{
+					Parent                       = this.anyFrame,
+					PreferredWidth               = 90,
+					PreferredHeight              = TemporalController.toolbarHeight,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+					Margins                      = new Margins (0, 10, 0, 0),
+					TabIndex                     = 1,
+				};
 			}
 
 			{
 				var label = new StaticText
 				{
-					Parent         = this.editionFrame,
+					Parent         = this.anyFrame,
 					Text           = "Au",
 					Dock           = DockStyle.Left,
-					Margins        = new Margins (10, 10, 0, 0),
+					Margins        = new Margins (5, 5, 0, 0),
 				};
 				label.PreferredWidth = label.GetBestFitSize ().Width;
 
-				var initialDate = Converters.DateToString (this.data.EndDate);
-				this.endDateController = UIBuilder.CreateDateField (this.controller, this.editionFrame, initialDate, "Date finale incluse", this.ValidateDate, this.DateChanged);
-				this.endDateController.Box.Dock = DockStyle.Left;
+				this.endDateField = new TextFieldEx
+				{
+					Parent                       = this.anyFrame,
+					PreferredWidth               = 90,
+					PreferredHeight              = TemporalController.toolbarHeight,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+					Margins                      = new Margins (0, 10, 0, 0),
+					TabIndex                     = 2,
+				};
 			}
 
-			this.editionInfo = new StaticText
+			this.beginDateField.EditionAccepted += delegate
 			{
-				Parent         = this.editionFrame,
-				TextBreakMode  = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth = 60,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 0, 0, 0),
+				this.data.BeginDate = Converters.ParseDate (this.beginDateField.FormattedText);
+				this.UpdateTemporalData ();
 			};
 
-			this.dateSlider = new HSlider
+			this.endDateField.EditionAccepted += delegate
 			{
-				Parent          = this.mainFrame,
-				UseArrowGlyphs  = true,
-				PreferredWidth  = 100,
-				PreferredHeight = 20-2,
+				this.data.EndDate = Converters.ParseDate (this.endDateField.FormattedText);
+				this.UpdateTemporalData ();
+			};
+
+			var regularButton = this.CreateButton (this.anyFrame, "Mensuel", "Choix d'une période mensuelle", null, 5);
+			regularButton.Margins = new Margins (10, 5, 0, 0);
+
+			regularButton.Clicked += delegate
+			{
+				this.data.AnyMode = false;
+				this.UpdateWidgets ();
+			};
+
+			this.anyClearButton = new GlyphButton
+			{
+				Parent          = this.anyFrame,
+				GlyphShape      = GlyphShape.Close,
+				ButtonStyle     = ButtonStyle.ToolItem,
+				PreferredHeight = TemporalController.toolbarHeight,
+				PreferredWidth  = TemporalController.toolbarHeight,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (3, 0, 1, 1),
+				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			this.nowButton = new Button
+			ToolTip.Default.SetToolTip (this.anyClearButton, "Annule le filtre temporel");
+
+			this.anyClearButton.Clicked += delegate
 			{
-				Parent          = this.mainFrame,
-				FormattedText   = "Auj.",
-				ButtonStyle     = ButtonStyle.Icon,
+				this.Clear ();
+			};
+		}
+
+		private void HandleButtonMonthClicked(object sender, MessageEventArgs e)
+		{
+			var button = sender as Button;
+			int index = button.TabIndex;
+
+			if (e.Message.IsControlPressed)
+			{
+				this.monthsSelected[index] = !this.monthsSelected[index];
+
+				int first = this.FirstMonth;
+				int last  = this.LastMonth;
+
+				if (first != -1 && last != -1)
+				{
+					for (int i = 0; i < this.monthsSelected.Count; i++)
+					{
+						this.monthsSelected[i] = (i >= first && i <= last);
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < this.monthsSelected.Count; i++)
+				{
+					if (i != index)
+					{
+						this.monthsSelected[i] = false;
+					}
+				}
+
+				this.monthsSelected[index] = !this.monthsSelected[index];
+			}
+
+			this.MonthsToQuarters ();
+			this.UpdateTemporalData ();
+		}
+
+		private void HandleButtonQuarterClicked(object sender, MessageEventArgs e)
+		{
+			var button = sender as Button;
+			int index = button.TabIndex;
+
+			if (e.Message.IsControlPressed)
+			{
+				this.quartersSelected[index] = !this.quartersSelected[index];
+
+				int first = this.FirstQuarter;
+				int last  = this.LastQuarter;
+
+				if (first != -1 && last != -1)
+				{
+					for (int i = 0; i < this.quartersSelected.Count; i++)
+					{
+						this.quartersSelected[i] = (i >= first && i <= last);
+					}
+				}
+			}
+			else
+			{
+				for (int i = 0; i < this.quartersSelected.Count; i++)
+				{
+					if (i != index)
+					{
+						this.quartersSelected[i] = false;
+					}
+				}
+
+				this.quartersSelected[index] = !this.quartersSelected[index];
+			}
+
+			this.QuartersToMonths ();
+			this.UpdateTemporalData ();
+		}
+
+
+		private void MonthsToQuarters()
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				if (this.monthsSelected[i*3] == this.monthsSelected[i*3+1] &&
+					this.monthsSelected[i*3] == this.monthsSelected[i*3+2])
+				{
+					this.quartersSelected[i] = this.monthsSelected[i*3];
+				}
+				else
+				{
+					this.quartersSelected[i] = false;
+				}
+			}
+		}
+
+		private void QuartersToMonths()
+		{
+			for (int i = 0; i < 4; i++)
+			{
+				this.monthsSelected[i*3+0] = this.quartersSelected[i];
+				this.monthsSelected[i*3+1] = this.quartersSelected[i];
+				this.monthsSelected[i*3+2] = this.quartersSelected[i];
+			}
+		}
+
+
+		public void Update()
+		{
+			this.UpdateWidgets ();
+		}
+
+		private void UpdateWidgets()
+		{
+			this.regularFrame.Visibility = !this.data.AnyMode;
+			this.anyFrame.Visibility     =  this.data.AnyMode;
+
+			if (this.data.AnyMode)
+			{
+				this.beginDateField.FormattedText = Converters.DateToString (this.data.BeginDate);
+				this.endDateField.FormattedText   = Converters.DateToString (this.data.EndDate);
+			}
+			else
+			{
+				var first = int.MinValue;
+				if (this.data.BeginDate.HasValue)
+				{
+					first = this.data.BeginDate.Value.Month-1;
+				}
+
+				var last = int.MaxValue;
+				if (this.data.EndDate.HasValue)
+				{
+					last = this.data.EndDate.Value.Month-1;
+				}
+
+				for (int i = 0; i < this.monthsSelected.Count; i++)
+				{
+					if (first == int.MinValue && last == int.MaxValue)
+					{
+						this.monthsSelected[i] = false;
+					}
+					else
+					{
+						this.monthsSelected[i] = (i >= first && i <= last);
+					}
+				}
+
+				this.MonthsToQuarters ();
+
+				for (int i = 0; i < this.monthsSelected.Count; i++)
+				{
+					this.ActivateButton (this.monthButtons[i], this.monthsSelected[i]);
+				}
+
+				for (int i = 0; i < this.quartersSelected.Count; i++)
+				{
+					this.ActivateButton (this.quarterButtons[i], this.quartersSelected[i]);
+				}
+			}
+
+			bool hasFilter = !this.data.IsEmpty;
+
+			this.regularFrame.BackColor = hasFilter && this.HasColorizedHilite ? UIBuilder.SelectionColor : Color.Empty;
+			this.anyFrame.BackColor     = hasFilter && this.HasColorizedHilite ? UIBuilder.SelectionColor : Color.Empty;
+
+			this.regularClearButton.Enable = hasFilter;
+			this.anyClearButton.Enable     = hasFilter;
+		}
+
+
+		private Button CreateMonthButton(FrameBox parent, FormattedText text, FormattedText tooltip, double? width = null, double margins = 0)
+		{
+			var button = this.CreateButton (parent, text, tooltip, width, margins);
+
+			this.monthButtons.Add (button);
+			this.monthsSelected.Add (false);
+
+			return button;
+		}
+
+		private Button CreateQuarterButton(FrameBox parent, FormattedText text, FormattedText tooltip, double? width = null, double margins = 0)
+		{
+			var button = this.CreateButton (parent, text, tooltip, width, margins);
+
+			this.quarterButtons.Add (button);
+			this.quartersSelected.Add (false);
+
+			return button;
+		}
+
+		private Button CreateButton(FrameBox parent, FormattedText text, FormattedText tooltip, double? width = null, double margins = 0)
+		{
+			var button = new Button
+			{
+				Parent          = parent,
+				FormattedText   = text,
+				Name            = text.ToString (),
+				ButtonStyle     = ButtonStyle.ToolItem,
 				AutoFocus       = false,
-				PreferredHeight = 20,
+				PreferredHeight = TemporalController.toolbarHeight,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (3, 1, 0, 0),
+				Margins         = new Margins (0, -1, 0, 0),
+				TabIndex        = this.tabIndex++,
 			};
-			this.nowButton.PreferredWidth = this.nowButton.GetBestFitSize ().Width;
 
-			ToolTip.Default.SetToolTip (this.dateSlider, "Choix de la période");
-			ToolTip.Default.SetToolTip (this.menuButton, "Choix de la période");
-			ToolTip.Default.SetToolTip (this.nowButton,  "Période incluant aujourd'hui");
-
-			this.warningIcon = new StaticText
+			if (width.HasValue)
 			{
-				Parent         = this.mainFrame,
-				Text           = UIBuilder.GetIconTag ("Warning"),
-				PreferredWidth = 20,
+				button.PreferredWidth = width.Value;
+			}
+			else
+			{
+				button.PreferredWidth = button.GetBestFitSize ().Width + margins;
+			}
+
+			ToolTip.Default.SetToolTip (button, tooltip);
+
+			return button;
+		}
+
+		private void ActivateButton(Button button, bool active)
+		{
+			button.ActiveState = active ? ActiveState.Yes : ActiveState.No;
+
+			if (active)
+			{
+				button.FormattedText = FormattedText.Concat (button.Name).ApplyFontColor (Color.FromName ("White")).ApplyBold ();
+			}
+			else
+			{
+				button.FormattedText = button.Name;
+			}
+		}
+
+		private void CreateSeparator(FrameBox parent)
+		{
+			new Separator
+			{
+				Parent         = parent,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
 				Dock           = DockStyle.Left,
-				Margins         = new Margins (2, 0, 0, 0),
+				Margins        = new Margins (10, 10, 0, 0),
 			};
+		}
 
-			var durationLabel = new StaticText
+
+		private void UpdateTemporalData()
+		{
+			if (!this.data.AnyMode)
 			{
-				Parent          = this.mainFrame,
-				FormattedText   = "Durée",
-				PreferredHeight = 20,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (10, 10, 0, 0),
-			};
-			durationLabel.PreferredWidth = durationLabel.GetBestFitSize ().Width;
+				int first = this.FirstMonth;
+				int last  = this.LastMonth;
 
-			this.durationField = new TextFieldCombo
-			{
-				Parent          = this.mainFrame,
-				PreferredWidth  = 100,
-				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				IsReadOnly      = true,
-				Dock            = DockStyle.Left,
-			};
-
-			TemporalController.InitTemporalDataDurationCombo (this.durationField);
-
-			//	Connexion des événements.
-			this.durationField.SelectedItemChanged += delegate
-			{
-				this.data.Duration = TemporalController.TemporalDataDurationToType (this.durationField.FormattedText);
-				this.data.SetDate (this.data.BeginDate);
-				this.UpdateButtons ();
-				this.searchStartAction ();
-			};
-
-			this.dateSlider.ValueChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
+				if (first == -1 || last == -1)
 				{
-					int sel = (int) this.dateSlider.Value;
-					var dr = this.DateRanges.ToArray ();
-					if (sel >= 0 && sel < dr.Length)
-					{
-						this.data.SetDate (dr[sel].BeginDate);
-						this.UpdateButtons ();
-						this.searchStartAction ();
-					}
-				}
-			};
-
-			this.nowButton.Clicked += delegate
-			{
-				this.data.SetDate (Date.Today);
-				this.UpdateButtons ();
-				this.searchStartAction ();
-			};
-
-			this.staticDates.Clicked += delegate
-			{
-				this.ShowMenu (this.staticFrame);
-			};
-
-			this.menuButton.Clicked += delegate
-			{
-				this.ShowMenu (this.staticFrame);
-			};
-		}
-
-		private void ValidateDate(EditionData data)
-		{
-			Validators.ValidateDate (data, emptyAccepted: true);
-		}
-
-		private void DateChanged(int line, ColumnType columnType)
-		{
-			this.data.BeginDate = Converters.ParseDate (this.beginDateController.EditionData.Text);
-			this.data.EndDate   = Converters.ParseDate (this.endDateController.EditionData.Text);
-
-			this.UpdateInfos ();
-			this.searchStartAction ();
-		}
-
-
-		public void UpdateContent()
-		{
-			this.UpdateButtons ();
-		}
-
-		private void UpdateButtons()
-		{
-			using (this.ignoreChanges.Enter ())
-			{
-				this.editionFrame.Visibility =  this.EditionEnable;
-				this.staticFrame.Visibility  = !this.EditionEnable;
-				this.dateSlider.Visibility   = !this.EditionEnable;
-				this.nowButton.Visibility    = !this.EditionEnable;
-				this.menuButton.Visibility   = !this.EditionEnable;
-
-				this.durationField.FormattedText = TemporalController.TemporalDataDurationToString (this.data.Duration);
-
-				this.beginDateController.EditionData.Text = Converters.DateToString (this.data.BeginDate);
-				this.beginDateController.EditionDataToWidget ();
-				this.beginDateController.Validate ();
-
-				this.endDateController.EditionData.Text = Converters.DateToString (this.data.EndDate);
-				this.endDateController.EditionDataToWidget ();
-				this.endDateController.Validate ();
-
-				this.nowButton.Enable = !Dates.DateInRange (Date.Today, this.data.BeginDate, this.data.EndDate);
-
-				if (!this.EditionEnable)
-				{
-					var dr = this.DateRanges.ToArray ();
-					int n = dr.Length;
-					int sel = 0;
-
-					if (this.data.BeginDate < dr.First ().BeginDate)
-					{
-						sel = 0;
-					}
-					else if (this.data.BeginDate > dr.Last ().BeginDate)
-					{
-						sel = n-1;
-					}
-					else
-					{
-						for (int i = 0; i < n; i++)
-						{
-							if (this.data.BeginDate == dr[i].BeginDate)
-							{
-								sel = i;
-								break;
-							}
-						}
-					}
-
-					this.dateSlider.MinValue    = (decimal) 0;
-					this.dateSlider.MaxValue    = (decimal) n-1;
-					this.dateSlider.Resolution  = (decimal) 1;
-					this.dateSlider.SmallChange = (decimal) 1;
-					this.dateSlider.LargeChange = (decimal) 2;
-					this.dateSlider.Value       = (decimal) sel;
-				}
-			}
-
-			this.UpdateInfos ();
-		}
-
-		private void UpdateInfos()
-		{
-			this.staticFrame.PreferredWidth = this.DescriptionBestFitWidth + UIBuilder.ComboButtonWidth;
-			this.staticDates.FormattedText = Dates.GetDescription (this.data.BeginDate, this.data.EndDate);
-			this.editionInfo.FormattedText = this.NumberOfDays;
-
-			var error = this.ErrorDescription;
-
-			if (error.IsNullOrEmpty)
-			{
-				this.warningIcon.Visibility = false;
-			}
-			else
-			{
-				this.warningIcon.Visibility = true;
-				ToolTip.Default.SetToolTip (this.warningIcon, error);
-			}
-		}
-
-
-		#region Best fit width code
-		private int DescriptionBestFitWidth
-		{
-			//	Retourne la largeur nécessaire pour afficher une période.
-			get
-			{
-				int width;
-
-				//	Le dictionnaire agit comme un cache.
-				if (!this.descriptionBestFitWidths.TryGetValue (this.data.Duration, out width))
-				{
-					width = TemporalController.GetDescriptionBestFitWidth (this.data.Duration);
-					this.descriptionBestFitWidths.Add (this.data.Duration, width);
-				}
-
-				return width;
-			}
-		}
-
-		private static int GetDescriptionBestFitWidth(TemporalDataDuration duration)
-		{
-			//	Retourne la largeur nécessaire pour afficher une période.
-			var textLayout = new TextLayout ();
-
-			int max = 0;
-			foreach (var dr in TemporalController.GetDateRangeSamples (duration))
-			{
-				textLayout.FormattedText = Dates.GetDescription (dr.BeginDate, dr.EndDate);
-				int width = (int) textLayout.GetSingleLineSize ().Width;
-				max = System.Math.Max (max, width);
-			}
-
-			if (max == 0)
-			{
-				return 100;
-			}
-			else
-			{
-				return max + 10;
-			}
-		}
-
-		private static IEnumerable<DateRange> GetDateRangeSamples(TemporalDataDuration duration)
-		{
-			//	Retourne suffisemment d'échantillons pour représenter la plus grande largeur à utiliser pour une durée.
-			Date date1, date2;
-
-			switch (duration)
-			{
-				case TemporalDataDuration.Daily:
-					for (int i = 0; i < 7; i++)
-					{
-						date1 = new Date (2012, 1, i+1);
-						date2 = date1;
-						yield return new DateRange (date1, date2);
-					}
-					break;
-
-				case TemporalDataDuration.Weekly:
-					date1 = new Date (2012, 5, 7);
-					date2 = new Date (2012, 5, 13);
-					yield return new DateRange (date1, date2);
-					break;
-
-				case TemporalDataDuration.Monthly:
-					for (int i = 0; i < 12; i++)
-					{
-						date1 = new Date (2012, i+1, 1);
-						date2 = Dates.AddDays (Dates.AddMonths(date1, 1), -1);
-						yield return new DateRange (date1, date2);
-					}
-					break;
-
-				case TemporalDataDuration.Quarterly:
-					for (int i = 0; i < 4; i++)
-					{
-						date1 = new Date (2012, i+1, 1);
-						date2 = Dates.AddDays (Dates.AddMonths(date1, 3), -1);
-						yield return new DateRange (date1, date2);
-					}
-					break;
-
-				case TemporalDataDuration.Biannual:
-					for (int i = 0; i < 2; i++)
-					{
-						date1 = new Date (2012, i+1, 1);
-						date2 = Dates.AddDays (Dates.AddMonths(date1, 6), -1);
-						yield return new DateRange (date1, date2);
-					}
-					break;
-
-				case TemporalDataDuration.Annual:
-					date1 = new Date (2012, 1, 1);
-					date2 = new Date (2012, 12, 31);
-					yield return new DateRange (date1, date2);
-					break;
-			}
-		}
-		#endregion
-
-
-		private FormattedText NumberOfDays
-		{
-			get
-			{
-				if (this.data.BeginDate.HasValue && this.data.EndDate.HasValue)
-				{
-					int n = Dates.NumberOfDays (this.data.EndDate.Value, this.data.BeginDate.Value) + 1;
-
-					if (n <= 0)
-					{
-						return "(0 jour)";
-					}
-					else if (n == 1)
-					{
-						return "(1 jour)";
-					}
-					else
-					{
-						return string.Format ("({0} jours)", n.ToString ());
-					}
+					this.data.Clear ();
 				}
 				else
 				{
-					return FormattedText.Empty;
+					var year = this.getPériode ().DateDébut.Year;
+					var begin = new Date (year, first+1, 1);  // par exemple 01.01.2012
+					var end   = new Date (year, last+1,  1);  // par exemple 01.12.2012
+
+					this.data.BeginDate = begin;
+					this.data.EndDate = Dates.AddDays (Dates.AddMonths (end, 1), -1);
 				}
 			}
+
+			this.UpdateWidgets ();
+			this.filterStartAction ();
 		}
 
-		private FormattedText ErrorDescription
+
+		private int FirstMonth
 		{
 			get
 			{
-				var période = this.controller.MainWindowController.Période;
-
-				if (Dates.DateInRange (this.data.BeginDate, période.DateDébut, période.DateFin) &&
-					Dates.DateInRange (this.data.EndDate,   période.DateDébut, période.DateFin))
+				for (int i = 0; i < this.monthsSelected.Count; i++)
 				{
-					return FormattedText.Empty;
-				}
-				else
-				{
-					return FormattedText.Concat ("La période choisie déborde de la période comptable");
-				}
-			}
-		}
-
-
-		private bool EditionEnable
-		{
-			get
-			{
-				return this.data.Duration == TemporalDataDuration.Other;
-			}
-		}
-
-
-		#region TemporalDataDuration helpers
-		private static void InitTemporalDataDurationCombo(TextFieldCombo combo)
-		{
-			combo.Items.Clear ();
-
-			foreach (var type in TemporalController.TemporalDataDurations)
-			{
-				combo.Items.Add (TemporalController.TemporalDataDurationToString (type));
-			}
-		}
-
-		private static TemporalDataDuration TemporalDataDurationToType(FormattedText text)
-		{
-			foreach (var type in TemporalController.TemporalDataDurations)
-			{
-				if (TemporalController.TemporalDataDurationToString (type) == text)
-				{
-					return type;
-				}
-			}
-
-			return TemporalDataDuration.Unknown;
-		}
-
-		private static FormattedText TemporalDataDurationToString(TemporalDataDuration duration)
-		{
-			//	Texte affiché après "Durée".
-			switch (duration)
-			{
-				case TemporalDataDuration.Daily:
-					return "Journalière";
-
-				case TemporalDataDuration.Weekly:
-					return "Hebdomadaire";
-
-				case TemporalDataDuration.Monthly:
-					return "Mensuelle";
-
-				case TemporalDataDuration.Quarterly:
-					return "Trimestrielle";
-
-				case TemporalDataDuration.Biannual:
-					return "Semestrielle";
-
-				case TemporalDataDuration.Annual:
-					return "Annuelle";
-
-				case TemporalDataDuration.Other:
-					return "Quelconque";
-
-				default:
-					return "?";
-			}
-		}
-
-		private static IEnumerable<TemporalDataDuration> TemporalDataDurations
-		{
-			get
-			{
-				yield return TemporalDataDuration.Other;
-				yield return TemporalDataDuration.Daily;
-				yield return TemporalDataDuration.Weekly;
-				yield return TemporalDataDuration.Monthly;
-				yield return TemporalDataDuration.Quarterly;
-				yield return TemporalDataDuration.Biannual;
-				yield return TemporalDataDuration.Annual;
-			}
-		}
-		#endregion
-
-
-		private void ShowMenu(Widget parentButton)
-		{
-			//	Affiche le menu permettant de choisir la période.
-			var menu = new VMenu ();
-
-			var dr = this.DateRanges.ToArray ();
-
-			int first = 0;
-			int count = dr.Length;
-			int max = 20;  // limite arbitraire, au-delà de laquelle le menu est considéré comme trop long
-
-			if (count > max)  // menu trop long ?
-			{
-				int sel = -1;
-
-				for (int i = 0; i < dr.Length; i++)
-				{
-					var dateRange = dr[i];
-					bool select = dateRange.BeginDate == this.data.BeginDate;
-
-					if (select)
+					if (this.monthsSelected[i])
 					{
-						sel = i;
-						break;
+						return i;
 					}
 				}
 
-				if (sel == -1)
-				{
-					if (this.data.BeginDate > dr.First ().BeginDate)
-					{
-						first = dr.Length-max;
-					}
-				}
-				else
-				{
-					first = System.Math.Min (sel+max/2, dr.Length-1);
-					first = System.Math.Max (first-max+1, 0);
-				}
-
-				count = System.Math.Min (dr.Length - first, max);
-			}
-
-			//	Ajoute la première case ?
-			if (first > 0)
-			{
-				this.AddToMenu (menu, dr, 0);
-				menu.Items.Add (new MenuSeparator ());
-			}
-
-			//	Ajoute les cases intermédiaires (20 au maximum).
-			for (int i = first; i < first+count; i++)
-			{
-				this.AddToMenu (menu, dr, i);
-			}
-
-			//	Ajoute la dernière case ?
-			if (first+count < dr.Length)
-			{
-				menu.Items.Add (new MenuSeparator ());
-				this.AddToMenu (menu, dr, dr.Length-1);
-			}
-
-			if (menu.Items.Any ())
-			{
-				TextFieldCombo.AdjustComboSize (parentButton, menu, false);
-
-				menu.Host = parentButton.Window;
-				menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+				return -1;
 			}
 		}
 
-		private void AddToMenu(VMenu menu, DateRange[] dr, int i)
+		private int LastMonth
 		{
-			//	Ajoute une case dans le menu permettant de choisir la période.
-			var dateRange = dr[i];
-			bool select = dateRange.BeginDate == this.data.BeginDate;
-
-			var item = new MenuItem ()
-			{
-				IconUri       = UIBuilder.GetRadioStateIconUri (select),
-				FormattedText = this.GetDateRangeDescription (dateRange),
-				TabIndex      = i,
-			};
-
-			item.Clicked += delegate
-			{
-				this.data.BeginDate = dr[item.TabIndex].BeginDate;
-				this.data.EndDate   = dr[item.TabIndex].EndDate;
-				this.UpdateButtons ();
-				this.searchStartAction ();
-			};
-
-			menu.Items.Add (item);
-		}
-
-
-		private FormattedText GetDateRangeDescription(DateRange dateRange)
-		{
-			var desc = Dates.GetDescription (dateRange.BeginDate, dateRange.EndDate);
-			var rank = FormattedText.Empty;
-
-			if (this.data.Duration == TemporalDataDuration.Monthly)
-			{
-				rank = dateRange.BeginDate.Month.ToString ("00");  // 01..12
-			}
-			else if (this.data.Duration == TemporalDataDuration.Quarterly)
-			{
-				rank = ((dateRange.BeginDate.Month-1)/3+1).ToString ("0");  // 1..4
-			}
-			else if (this.data.Duration == TemporalDataDuration.Biannual)
-			{
-				rank = ((dateRange.BeginDate.Month-1)/6+1).ToString ("0");  // 1..2
-			}
-
-			if (!rank.IsNullOrEmpty)
-			{
-				desc = FormattedText.Concat (rank.ApplyBold (), ": ", desc);
-			}
-
-			return desc;
-		}
-
-		private IEnumerable<DateRange> DateRanges
-		{
-			//	Retourne la liste des intervalles faisant partie de la période comptable en cours.
 			get
 			{
-				var période = this.controller.MainWindowController.Période;
-
-				var temp = new TemporalData ();
-				this.data.CopyTo (temp);
-				temp.BeginDate = période.DateDébut;
-				temp.SetDate (temp.BeginDate);
-
-				do
+				for (int i = this.monthsSelected.Count-1; i >= 0; i--)
 				{
-					yield return new DateRange (temp.BeginDate.Value, temp.EndDate.Value);
-
-					temp.BeginDate = Dates.AddDays (temp.EndDate.Value, 1);
-					temp.SetDate (temp.BeginDate);
+					if (this.monthsSelected[i])
+					{
+						return i;
+					}
 				}
-				while (temp.BeginDate <= période.DateFin);
+
+				return -1;
 			}
 		}
 
-		private class DateRange
+		private int FirstQuarter
 		{
-			//	Cette petite classe représente simplement un intervalle de dates (de x à y),
-			//	où les 2 dates sont inclues.
-			public DateRange(Date beginDate, Date endDate)
+			get
 			{
-				this.BeginDate = beginDate;
-				this.EndDate   = endDate;
-			}
+				for (int i = 0; i < this.quartersSelected.Count; i++)
+				{
+					if (this.quartersSelected[i])
+					{
+						return i;
+					}
+				}
 
-			public Date BeginDate
-			{
-				get;
-				private set;
+				return -1;
 			}
+		}
 
-			public Date EndDate
+		private int LastQuarter
+		{
+			get
 			{
-				get;
-				private set;
+				for (int i = this.quartersSelected.Count-1; i >= 0; i--)
+				{
+					if (this.quartersSelected[i])
+					{
+						return i;
+					}
+				}
+
+				return -1;
 			}
 		}
 
 
-		private readonly AbstractController				controller;
-		private readonly ComptaEntity					compta;
-		private readonly BusinessContext				businessContext;
-		private readonly AbstractDataAccessor			dataAccessor;
+		private static readonly double					toolbarHeight = 20;
+
 		private readonly TemporalData					data;
-		private readonly SafeCounter					ignoreChanges;
-		private readonly Dictionary<TemporalDataDuration, int> descriptionBestFitWidths;
+		private readonly List<bool>						monthsSelected;
+		private readonly List<bool>						quartersSelected;
+		private readonly List<Button>					monthButtons;
+		private readonly List<Button>					quarterButtons;
 
-		private System.Action							searchStartAction;
+		private System.Func<ComptaPériodeEntity>		getPériode;
+		private System.Action							filterStartAction;
 		private FrameBox								mainFrame;
-		private FrameBox								editionFrame;
-		private TextFieldCombo							durationField;
-		private HSlider									dateSlider;
-		private Button									nowButton;
-		private DateFieldController						beginDateController;
-		private DateFieldController						endDateController;
-		private FrameBox								staticFrame;
-		private StaticText								staticDates;
-		private GlyphButton								menuButton;
-		private StaticText								editionInfo;
-		private StaticText								warningIcon;
+		private FrameBox								regularFrame;
+		private FrameBox								anyFrame;
+		private TextFieldEx								beginDateField;
+		private TextFieldEx								endDateField;
+		private GlyphButton								regularClearButton;
+		private GlyphButton								anyClearButton;
+		private int										tabIndex;
 	}
 }

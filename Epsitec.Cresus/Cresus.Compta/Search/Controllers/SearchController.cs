@@ -509,7 +509,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var frame = this.CreateBeginnerFrame (parent, "Période");
 
-			this.temporalController = new TemporalController2 (this.data.TemporalData);
+			this.temporalController = new TemporalController (this.data.TemporalData);
 			this.temporalController.CreateUI (frame, this.GetPériode, this.BeginnerDateChanged);
 		}
 
@@ -937,6 +937,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private DateFieldController						beginnerEndDateController;
 		private TopPanelLeftController					topPanelLeftController;
 		private TopPanelRightController					topPanelRightController;
-		private TemporalController2						temporalController;
+		private TemporalController						temporalController;
 	}
 }

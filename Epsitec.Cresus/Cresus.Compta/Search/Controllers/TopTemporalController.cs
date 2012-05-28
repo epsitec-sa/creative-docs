@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Padding = new Margins (0, 0, 2, 2),
 			};
 
-			this.temporalController = new TemporalController2 (this.data);
+			this.temporalController = new TemporalController (this.data);
 			this.temporalController.HasColorizedHilite = true;
 			this.temporalController.CreateUI (frame, this.GetPériode, this.mainWindowController.TemporalDataChanged);
 		}
@@ -123,7 +123,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					compta;
 		private readonly TemporalData					data;
 
-		private TemporalController2						temporalController;
+		private TemporalController						temporalController;
 		private FrameBox								mainFrame;
 		private StaticText								périodeLabel;
 	}
