@@ -161,6 +161,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 		}
 
+		public bool AnyMode
+		{
+			get;
+			set;
+		}
+
 		public Date? BeginDate
 		{
 			get
