@@ -396,8 +396,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			bool hasFilter = !this.data.IsEmpty;
 
-			this.regularFrame.BackColor = hasFilter && this.HasColorizedHilite ? UIBuilder.SelectionColor : Color.Empty;
-			this.anyFrame.BackColor     = hasFilter && this.HasColorizedHilite ? UIBuilder.SelectionColor : Color.Empty;
+			var color = Color.FromAlphaColor (0.3, UIBuilder.SelectionColor);
+			this.regularFrame.BackColor = hasFilter && this.HasColorizedHilite ? color : Color.Empty;
+			this.anyFrame.BackColor     = hasFilter && this.HasColorizedHilite ? color : Color.Empty;
 
 			this.regularClearButton.Enable = hasFilter;
 			this.anyClearButton.Enable     = hasFilter;

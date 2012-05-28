@@ -123,8 +123,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					compta;
 		private readonly TemporalData					data;
 
-		private TemporalController						temporalController;
 		private FrameBox								mainFrame;
+		private TemporalController						temporalController;
 		private StaticText								périodeLabel;
 	}
 }
