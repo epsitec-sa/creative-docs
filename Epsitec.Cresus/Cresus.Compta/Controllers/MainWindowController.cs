@@ -197,10 +197,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.currentUser = value;
 
-				this.UpdatePrésentationCommands ();
-
 				this.navigatorEngine.Clear ();
 				this.UpdateNavigatorCommands ();
+
+				//	Il faut absolument changer de présentation (même si en fait c'est toujours la même), car
+				//	les présentations possibles ne sont probablement plus les mêmes, et il faut réinitialiser
+				//	les onglets.
+				this.ShowPrésentation (ControllerType.Login);
 
 				if (this.controller != null)
 				{

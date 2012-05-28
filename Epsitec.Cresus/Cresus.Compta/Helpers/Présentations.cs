@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				return Présentations.GetIcon (type);
 			}
 
-			return null;  //?
+			return null;  // pas d'icône
 #if false
 				yield return ControllerType.RésuméTVA;  // présentation principale
 				yield return ControllerType.DécompteTVA;

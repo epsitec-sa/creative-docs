@@ -121,7 +121,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.CreateQuarterButton (this.regularFrame, "T4", "Quatrième trimestre (octobre à décembre)");
 			this.quarterButtons.Last ().Margins = new Margins (0, 10, 0, 0);
 
-			var anyButton = this.CreateButton (this.regularFrame, "Autre...", "Choix d'une période quelconque", null, 5);
+			var anyButton = this.CreateButton (this.regularFrame, "Autre", "Choix d'une période quelconque", null, 5);
 			anyButton.Margins = new Margins (0);
 
 			foreach (var button in this.monthButtons)
@@ -231,7 +231,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.UpdateTemporalData ();
 			};
 
-			var regularButton = this.CreateButton (this.anyFrame, "Mensuel...", "Choix d'une période mensuelle", null, 5);
+			var regularButton = this.CreateButton (this.anyFrame, "Mensuel", "Choix d'une période mensuelle", null, 5);
 			regularButton.Margins = new Margins (10, 0, 0, 0);
 
 			regularButton.Clicked += delegate
