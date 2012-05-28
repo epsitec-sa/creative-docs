@@ -14,6 +14,12 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Compta.Controllers
 {
+	/// <summary>
+	/// Ce contrôleur gère la deuxième barre présente depuis le haut de la fenêtre.
+	/// On y trouve:
+	/// - Les gros onglets vec les icônes des groupes de présentations.
+	/// - Les grandes icônes des commandes d'édition.
+	/// </summary>
 	public class PrésentationController
 	{
 		public PrésentationController(MainWindowController mainWindowController)

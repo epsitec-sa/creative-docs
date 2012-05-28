@@ -23,7 +23,10 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la barre d'outil supérieure des réglages de présentation pour la comptabilité.
+	/// Ce contrôleur gère la troisième barre présente depuis le haut de la fenêtre.
+	/// On y trouve:
+	/// - Les onglets textuels des présentations du groupe.
+	/// - Les choix des panneaux visibles (options, filtre, recherches).
 	/// </summary>
 	public class ViewSettingsController
 	{
