@@ -768,6 +768,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.data.NodesData[0].TabsData[0].Clear ();
 			}
 
+			if (this.temporalController != null)
+			{
+				this.data.TemporalData.Clear ();
+			}
+
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();
 			this.SearchStartAction ();
