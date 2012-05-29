@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.Support.EntityEngine;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
@@ -172,12 +173,18 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			DbSimpleType dbSimpleType = EnumConverter.ToDbSimpleType (this.Type);
 			DbNumDef dbNumDef = EnumConverter.ToDbNumDef (this.Type);
 
-			return builder.Build (dbRawType, dbSimpleType, dbNumDef, this.Value);
+			return builder.BuildConstantForField (dbRawType, dbSimpleType, dbNumDef, this.Value);
 		}
 
 
 		internal override void CheckField(FieldChecker checker)
 		{
+		}
+
+
+		internal override AbstractEntity GetEntity()
+		{
+			return null;
 		}
 
 

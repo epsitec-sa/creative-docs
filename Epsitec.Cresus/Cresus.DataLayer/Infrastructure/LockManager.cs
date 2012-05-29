@@ -169,22 +169,18 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				string lTableName = this.tableLock.GetSqlName ();
 				string lConnectionIdColumnName = lConnectionIdColumn.GetSqlName ();
 				string lNameColumnName = lNameColumn.GetSqlName ();
-				string lCounterColumnName = lCounterColumn.GetSqlName ();
 				string lCreationTimeColumnName = lCreationTimeColumn.GetSqlName ();
 
 				query.Tables.Add (SqlField.CreateAliasedName (cTableName, "c"));
-				query.Tables.Add (SqlField.CreateAliasedName (lTableName, "l"));
 
 				query.Joins.Add
 				(
-					SqlField.CreateJoin
+					SqlJoin.Create
 					(
-						new SqlJoin
-						(
-							SqlField.CreateAliasedName ("c", cIdColumnName, cIdColumnName),
-							SqlField.CreateAliasedName ("l", lConnectionIdColumnName, lConnectionIdColumnName),
-							SqlJoinCode.Inner
-						)
+						SqlJoinCode.Inner,
+						SqlField.CreateAliasedName (lTableName, "l"),
+						SqlField.CreateAliasedName ("c", cIdColumnName, cIdColumnName),
+						SqlField.CreateAliasedName ("l", lConnectionIdColumnName, lConnectionIdColumnName)
 					)
 				);
 

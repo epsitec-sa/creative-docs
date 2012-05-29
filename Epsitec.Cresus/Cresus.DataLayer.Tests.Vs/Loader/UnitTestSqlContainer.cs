@@ -505,8 +505,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 		{
 			return new List<SqlJoin> ()
 			{
-				new SqlJoin (SqlField.CreateAliasedName ("a", "field1", "field1"), SqlField.CreateAliasedName ("a", "field2", "field2"), SqlJoinCode.Inner),
-				new SqlJoin (SqlField.CreateAliasedName ("a", "field3", "field3"), SqlField.CreateAliasedName ("a", "field4", "field4"), SqlJoinCode.OuterLeft),
+				SqlJoin.Create (SqlJoinCode.Inner, SqlField.CreateAliasedName ("a", "a1"), SqlField.CreateAliasedName ("a", "field1", "field1"), SqlField.CreateAliasedName ("a", "field2", "field2")),
+				SqlJoin.Create (SqlJoinCode.OuterLeft, SqlField.CreateAliasedName ("a", "a2"), SqlField.CreateAliasedName ("a", "field3", "field3"), SqlField.CreateAliasedName ("a", "field4", "field4")),
 			};
 		}
 

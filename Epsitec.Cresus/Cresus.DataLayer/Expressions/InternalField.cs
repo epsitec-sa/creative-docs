@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		internal override SqlField CreateSqlField(SqlFieldBuilder builder)
 		{
-			return builder.Build (this.Entity, this.Name);
+			return builder.BuildRootColumn (this.Entity, this.Name);
 		}
 
 

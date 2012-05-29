@@ -1343,21 +1343,8 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
-		private void Append(SqlJoin sqlJoin, Collections.SqlFieldList sqlTables, int row)
+		private void Append(SqlJoin sqlJoin)
 		{
-			//	Convertit la jointure en SQL. La liste des tables est nécessaire pour
-			//	retrouver le nom de la table et son alias.
-
-			if (row == 1)
-			{
-				this.Append (sqlTables[0]);
-
-				if (!this.AppendAlias (sqlTables[0]))
-				{
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unqualified table {0} in JOIN", sqlTables[0].AsName));
-				}
-			}
-
 			switch (sqlJoin.Code)
 			{
 				case SqlJoinCode.Inner:			this.Append (" INNER JOIN ");		break;
@@ -1368,46 +1355,15 @@ namespace Epsitec.Cresus.Database.Implementation
 					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Join {0} not supported", sqlJoin.Code));
 			}
 			
-			this.Append (sqlTables[row]);
+			this.Append (sqlJoin.Table);
 
-			if (!this.AppendAlias (sqlTables[row]))
+			if (!this.AppendAlias (sqlJoin.Table))
 			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unqualified table {0} in JOIN", sqlTables[row].AsName));
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unqualified table {0} in JOIN", sqlJoin.Table.AsName));
 			}
 
 			this.Append (" ON ( ");
-			this.Append (this.GetQualifiedName (sqlJoin.LeftColumn));
-			this.Append (" = ");
-			this.Append (this.GetQualifiedName (sqlJoin.RightColumn));
-			
-			if (sqlJoin.Conditions.Count > 0)
-			{
-				this.Append (" AND ( ");
-
-				bool isFirstField = true;
-
-				foreach (SqlField field in sqlJoin.Conditions)
-				{
-					if (isFirstField)
-					{
-						isFirstField = false;
-					}
-					else
-					{
-						this.Append (" AND ");
-					}
-
-					if (field.FieldType != SqlFieldType.Function)
-					{
-						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Invalid field {0} in Join clause", field.AsName));
-					}
-
-					this.Append (field.AsFunction, true);
-				}
-
-				this.Append (" ) ");
-			}
-
+			this.Append (sqlJoin.Condition, true);
 			this.Append (" ) ");
 		}
 
@@ -1415,7 +1371,11 @@ namespace Epsitec.Cresus.Database.Implementation
 		{
 			this.tableAliases.Clear ();
 
-			foreach (SqlField field in sqlQuery.Tables)
+			var simpleTables = sqlQuery.Tables;
+			var joinTables = sqlQuery.Joins.Select (j => j.AsJoin.Table);
+			var tables = simpleTables.Concat (joinTables);
+
+			foreach (SqlField field in tables)
 			{
 				if (string.IsNullOrEmpty (field.Alias))
 				{
@@ -1491,41 +1451,26 @@ namespace Epsitec.Cresus.Database.Implementation
 			this.Append (" FROM ");
 			isFirstField = true;
 
-			if (sqlQuery.Joins.Count > 0)
+			foreach (SqlField field in sqlQuery.Tables)
 			{
-				//	Cas particulier pour les jointures :
-
-				int row = 1;
-
-				foreach (SqlField field in sqlQuery.Joins)
+				if (isFirstField)
 				{
-					this.Append (field.AsJoin, sqlQuery.Tables, row++);
 					isFirstField = false;
 				}
-			}
-			else
-			{
-				foreach (SqlField field in sqlQuery.Tables)
+				else
 				{
-					if (isFirstField)
-					{
-						isFirstField = false;
-					}
-					else
-					{
-						this.Append (", ");
-					}
+					this.Append (", ");
+				}
 
-					switch (field.FieldType)
-					{
-						case SqlFieldType.Name:
-							this.Append (field.AsName);
-							this.AppendAlias (field);
-							break;
-						
-						default:
-							throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unsupported field {0} in SELECT FROM", field.AsName));
-					}
+				switch (field.FieldType)
+				{
+					case SqlFieldType.Name:
+						this.Append (field.AsName);
+						this.AppendAlias (field);
+						break;
+
+					default:
+						throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unsupported field {0} in SELECT FROM", field.AsName));
 				}
 			}
 
@@ -1534,6 +1479,18 @@ namespace Epsitec.Cresus.Database.Implementation
 				//	Aucune table n'a été spécifiée. On ne peut pas faire un SELECT sans tables.
 
 				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("No table specified in SELECT"));
+			}
+
+			if (sqlQuery.Tables.Count > 1 && sqlQuery.Joins.Any ())
+			{
+				var message = "Combination of implicit and explicit JOIN is forbidden";
+
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, message);
+			}
+
+			foreach (SqlField field in sqlQuery.Joins)
+			{
+				this.Append (field.AsJoin);
 			}
 
 			if ((aggregateCount > 0) && 
