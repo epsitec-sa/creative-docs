@@ -293,6 +293,236 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
 				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE");
+				table1.Alias = "T1";
+				sqlSelect.Tables.Add (table1);
+
+				SqlField table2 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+				table2.Alias = "T2";
+						
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.Inner,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (28, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectLeftOuterJoinTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE");
+				table1.Alias = "T1";
+				sqlSelect.Tables.Add (table1);
+
+				SqlField table2 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+				table2.Alias = "T2";
+
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.OuterLeft,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (48, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectRightOuterJoinTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+				table1.Alias = "T1";
+				sqlSelect.Tables.Add (table1);
+
+				SqlField table2 = SqlField.CreateName ("EMPLOYEE");
+				table2.Alias = "T2";
+
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.OuterRight,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (48, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectFullOuterJoinTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+				table1.Alias = "T1";
+				sqlSelect.Tables.Add (table1);
+
+				SqlField table2 = SqlField.CreateName ("EMPLOYEE");
+				table2.Alias = "T2";
+
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.OuterFull,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (48, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectCrossJoinTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE_PROJECT");
+				table1.Alias = "T1";
+				sqlSelect.Tables.Add (table1);
+
+				SqlField table2 = SqlField.CreateName ("EMPLOYEE");
+				table2.Alias = "T2";
+
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.Cross,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (1176, n);
+
+				dataSet.Dispose ();
+			}
+		}
+		
+		
+		[TestMethod]
+		public void SqlSelectMultipleJoinTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect = new SqlSelect ();
+
+				sqlSelect.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
 				sqlSelect.Fields.Add (SqlField.CreateName ("PROJ_NAME"));
 
 				SqlField table1 = SqlField.CreateName ("EMPLOYEE_PROJECT");
@@ -324,6 +554,56 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				sqlSelect.Joins.Add (sqlJoin2);
 
 				sqlBuilder.SelectData (sqlSelect);
+
+				IDbCommand command = sqlBuilder.Command;
+				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();
+
+				DataSet dataSet;
+				sqlEngine.Execute (command, sqlBuilder.CommandType, sqlBuilder.CommandCount, out dataSet);
+
+				int n = UnitTestSqlSelect.DumpDataSet (dataSet);
+
+				Assert.AreEqual (28, n);
+
+				dataSet.Dispose ();
+			}
+		}
+
+
+		[TestMethod]
+		public void SqlSelectJoinWithSelectTest()
+		{
+			using (IDbAbstraction dbAbstraction = IDbAbstractionHelper.ConnectToTestDatabase ())
+			{
+				ISqlEngine sqlEngine = dbAbstraction.SqlEngine;
+				ISqlBuilder sqlBuilder = dbAbstraction.SqlBuilder;
+
+				SqlSelect sqlSelect1 = new SqlSelect ();
+
+				sqlSelect1.Fields.Add (SqlField.CreateName ("LAST_NAME"));
+				sqlSelect1.Fields.Add (SqlField.CreateName ("FIRST_NAME"));
+
+				SqlField table1 = SqlField.CreateName ("EMPLOYEE");
+				table1.Alias = "T1";
+				sqlSelect1.Tables.Add (table1);
+
+				SqlSelect sqlSelect2 = new SqlSelect ();
+				sqlSelect2.Fields.Add (SqlField.CreateName ("EMP_NO"));
+				sqlSelect2.Fields.Add (SqlField.CreateName ("PROJ_ID"));
+				sqlSelect2.Tables.Add (SqlField.CreateName ("EMPLOYEE_PROJECT"));
+
+				SqlField table2 = SqlField.CreateSubQuery (sqlSelect2, "T2");
+
+				SqlJoin sqlJoin = SqlJoin.Create
+				(
+					SqlJoinCode.Inner,
+					table2,
+					SqlField.CreateName ("T1", "EMP_NO"),
+					SqlField.CreateName ("T2", "EMP_NO")
+				);
+				sqlSelect1.Joins.Add (SqlField.CreateJoin (sqlJoin));
+
+				sqlBuilder.SelectData (sqlSelect1);
 
 				IDbCommand command = sqlBuilder.Command;
 				command.Transaction = dbAbstraction.BeginReadOnlyTransaction ();

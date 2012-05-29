@@ -656,6 +656,14 @@ namespace Epsitec.Cresus.Database
 			return new SqlField (SqlFieldType.SubQuery, subQuery, DbRawType.Unknown);
 		}
 
+		public static SqlField CreateSubQuery(SqlSelect subQuery, string alias)
+		{
+			return new SqlField (SqlFieldType.SubQuery, subQuery, DbRawType.Unknown)
+			{
+				Alias = alias
+			};
+		}
+
 		public static SqlField CreateRawSql(string rawSql)
 		{
 			return new SqlField (SqlFieldType.RawSql, rawSql, DbRawType.Unknown);

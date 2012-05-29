@@ -13,6 +13,12 @@ namespace Epsitec.Cresus.Database
 	{
 
 
+		public SqlJoin(SqlJoinCode code, SqlField table)
+			: this (code, table, null)
+		{
+		}
+
+
 		public SqlJoin(SqlJoinCode code, SqlField table, SqlFunction condition)
 		{
 			this.code = code;

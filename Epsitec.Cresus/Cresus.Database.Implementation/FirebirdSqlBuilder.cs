@@ -1345,27 +1345,52 @@ namespace Epsitec.Cresus.Database.Implementation
 
 		private void Append(SqlJoin sqlJoin)
 		{
-			switch (sqlJoin.Code)
-			{
-				case SqlJoinCode.Inner:			this.Append (" INNER JOIN ");		break;
-				case SqlJoinCode.OuterLeft:		this.Append (" LEFT OUTER JOIN ");	break;
-				case SqlJoinCode.OuterRight:	this.Append (" RIGHT OUTER JOIN ");	break;
-
-				default:
-					throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("SQL Join {0} not supported", sqlJoin.Code));
-			}
-			
+			this.Append (" " + this.GetSql (sqlJoin.Code) + " ");
 			this.Append (sqlJoin.Table);
 
 			if (!this.AppendAlias (sqlJoin.Table))
 			{
-				throw new Exceptions.SyntaxException (this.fb.DbAccess, string.Format ("Unqualified table {0} in JOIN", sqlJoin.Table.AsName));
+				var message = string.Format ("Unqualified table {0} in JOIN", sqlJoin.Table.AsName);
+
+				throw new Exceptions.SyntaxException (this.fb.DbAccess, message);
 			}
 
-			this.Append (" ON ( ");
-			this.Append (sqlJoin.Condition, true);
-			this.Append (" ) ");
+			if (sqlJoin.Code != SqlJoinCode.Cross)
+			{
+				this.Append (" ON ( ");
+				this.Append (sqlJoin.Condition, true);
+				this.Append (" ) ");
+			}
 		}
+
+
+		private string GetSql(SqlJoinCode code)
+		{
+			switch (code)
+			{
+				case SqlJoinCode.Inner:
+					return "INNER JOIN";
+				
+				case SqlJoinCode.OuterLeft:
+					return "LEFT OUTER JOIN";
+				
+				case SqlJoinCode.OuterRight:
+					return "RIGHT OUTER JOIN";
+				
+				case SqlJoinCode.OuterFull:
+					return "FULL OUTER JOIN";
+				
+				case SqlJoinCode.Cross:
+					return "CROSS JOIN";
+
+				default:
+
+					var message = string.Format ("SQL Join {0} not supported", code);
+
+					throw new Exceptions.SyntaxException (this.fb.DbAccess, message);
+			}
+		}
+
 
 		private void Append(SqlSelect sqlQuery)
 		{
@@ -1377,7 +1402,7 @@ namespace Epsitec.Cresus.Database.Implementation
 
 			foreach (SqlField field in tables)
 			{
-				if (string.IsNullOrEmpty (field.Alias))
+				if (field.AsName == null || string.IsNullOrEmpty (field.Alias))
 				{
 					continue;
 				}
