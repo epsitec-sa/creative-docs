@@ -32,149 +32,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(Widget parent)
 		{
-			this.box = new FrameBox
-			{
-				Parent = parent,
-				Dock   = DockStyle.Top,
-			};
-
-			this.extendedButton = new GlyphButton
-			{
-				Parent          = parent,
-				GlyphShape      = this.extendedMode ? GlyphShape.TriangleUp : GlyphShape.TriangleDown,
-				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredHeight = 20,
-				PreferredWidth  = 20,
-				Anchor          = AnchorStyles.TopRight,
-				Margins         = new Margins (0, 2, 2, 0),
-			};
-
-			this.extendedButton.Clicked += new Common.Support.EventHandler<MessageEventArgs> (this.HandleEtendedButtonClicked);
-
-			this.CreateModeUI ();
-		}
-
-		private void HandleEtendedButtonClicked(object sender, MessageEventArgs e)
-		{
-			this.extendedMode = !this.extendedMode;
-			this.extendedButton.GlyphShape = this.extendedMode ? GlyphShape.TriangleUp : GlyphShape.TriangleDown;
-
-			Application.QueueAsyncCallback
-			(
-				delegate
-				{
-					this.box.Children.Clear ();
-					this.CreateModeUI ();
-
-					this.UpdateTitle ();
-					this.UpdateUser ();
-					this.UpdatePériode ();
-					this.UpdateTemporalFilter ();
-				}
-			);
-		}
-
-		public void CreateModeUI()
-		{
-			if (this.extendedMode)
-			{
-				this.CreateExtendedUI (this.box);
-			}
-			else
-			{
-				this.CreateCompactUI (this.box);
-			}
-		}
-
-		public void CreateCompactUI(Widget parent)
-		{
-			var frame = new FrameBox
+			var line1 = new WindowTitle
 			{
 				Parent              = parent,
-				PreferredHeight     = 24,
-				BackColor           = UIBuilder.WindowBackColor2,
+				PreferredHeight     = 26,
+				BackColor           = Color.FromHexa ("a3ccef"),  // bleu
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
-				Padding             = new Margins (5, 20+5, 0, 0),
-			};
-
-			new Separator
-			{
-				Parent              = parent,
-				PreferredHeight     = 1,
-				IsVerticalLine      = false,
-				Dock                = DockStyle.Top,
-			};
-
-			//	Partie gauche.
-			this.CreateButton (frame, Res.Commands.Navigator.Prev);
-			this.CreateButton (frame, Res.Commands.Navigator.Next, 10);
-
-			this.CreateButton (frame, Res.Commands.Edit.Undo);
-			this.CreateButton (frame, Res.Commands.Edit.Redo, 10);
-
-			this.CreateButton (frame, Res.Commands.Select.Up);
-			this.CreateButton (frame, Res.Commands.Select.Down);
-			this.CreateButton (frame, Res.Commands.Select.Home, 10);
-
-			new Separator
-			{
-				Parent         = frame,
-				PreferredWidth = 1,
-				IsVerticalLine = true,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-			};
-
-			this.titleLabel = new StaticText
-			{
-				Parent           = frame,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				Dock             = DockStyle.Left,
-			};
-
-			new Separator
-			{
-				Parent         = frame,
-				PreferredWidth = 1,
-				IsVerticalLine = true,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (10, 10, 0, 0),
-			};
-
-			this.topTemporalController = new TopTemporalController (this.mainWindowController);
-			this.topTemporalController.CreateUI (frame, this.extendedMode);
-
-			//	Partie droite.
-			this.userLabel = this.CreateButton (frame, "");
-			this.userLabel.Dock = DockStyle.Right;
-			ToolTip.Default.SetToolTip (this.userLabel, "Nom de l'utilisateur identifié");
-
-			new Separator
-			{
-				Parent         = frame,
-				PreferredWidth = 1,
-				IsVerticalLine = true,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (10, 10, 0, 0),
-			};
-
-			this.userLabel.Clicked += delegate
-			{
-				this.mainWindowController.ShowPrésentation (ControllerType.Login);
-			};
-		}
-
-		public void CreateExtendedUI(Widget parent)
-		{
-			var line1 = new FrameBox
-			{
-				Parent              = parent,
-				PreferredHeight     = 24,
-				BackColor           = UIBuilder.WindowBackColor2,
-				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
-				Dock                = DockStyle.Top,
-				Padding             = new Margins (5, 20+5, 0, 0),
+				Padding             = new Margins (5, 5, 0, 0),
 			};
 
 #if false
@@ -217,6 +82,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateButton (line1, Res.Commands.Select.Home, 10);
 
 			//	Partie droite de la ligne supérieure.
+			this.closeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Close,
+				PreferredWidth = 48,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.maximizeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Plus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.minimizeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Minus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (10, 0, -1, 7),
+			};
+
+			this.closeButton.Clicked += delegate
+			{
+			};
+
+			this.maximizeButton.Clicked += delegate
+			{
+				parent.Window.StartWindowManagerOperation (Epsitec.Common.Widgets.Platform.WindowManagerOperation.PressMaximizeButton);
+			};
+
+			this.minimizeButton.Clicked += delegate
+			{
+				parent.Window.StartWindowManagerOperation (Epsitec.Common.Widgets.Platform.WindowManagerOperation.PressMinimizeButton);
+			};
+
 			this.userLabel = this.CreateButton (line1, "");
 			this.userLabel.Dock = DockStyle.Right;
 			ToolTip.Default.SetToolTip (this.userLabel, "Nom de l'utilisateur identifié");
@@ -245,27 +151,29 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//	Ligne inférieure.
 			this.topTemporalController = new TopTemporalController (this.mainWindowController);
-			this.topTemporalController.CreateUI (line2, this.extendedMode);
+			this.topTemporalController.CreateUI (line2, false);
 		}
 
 
 		public void UpdateTitle()
 		{
-			if (this.extendedMode)
-			{
-				var n1 = Présentations.GetGroupName (this.mainWindowController.SelectedDocument);
-				var n2 = this.mainWindowController.Compta.Nom;
-				var n3 = "Crésus Comptabilité NG";
+			FormattedText title;
 
-				var n = FormattedText.Concat (n1, " — ", n2, " — ", n3).ApplyBold ().ApplyFontSize (13.0);
-				this.titleLabel.FormattedText = n;
+			var n1 = Présentations.GetGroupName (this.mainWindowController.SelectedDocument);
+			var n3 = "Crésus Comptabilité NG";
+
+			if (this.mainWindowController.Compta == null)
+			{
+				title = FormattedText.Concat (n1, " — ", n3);
 			}
 			else
 			{
-				var n = Présentations.GetGroupName (this.mainWindowController.SelectedDocument).ApplyBold ().ApplyFontSize (12.0);
-				this.titleLabel.FormattedText = n;
-				this.titleLabel.PreferredWidth = this.titleLabel.GetBestFitSize ().Width;
+				var n2 = this.mainWindowController.Compta.Nom;
+				title = FormattedText.Concat (n1, " — ", n2, " — ", n3);
 			}
+
+			//?this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
+			this.titleLabel.FormattedText = title.ApplyFontSize (13.0);
 		}
 
 		public void UpdateUser()
@@ -324,9 +232,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly MainWindowController	mainWindowController;
 
-		private FrameBox						box;
-		private bool							extendedMode;
-		private GlyphButton						extendedButton;
+		private GlyphButton						closeButton;
+		private GlyphButton						maximizeButton;
+		private GlyphButton						minimizeButton;
 		private Button							userLabel;
 		private StaticText						titleLabel;
 		private TopTemporalController			topTemporalController;

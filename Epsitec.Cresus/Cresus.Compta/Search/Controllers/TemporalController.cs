@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		public FrameBox CreateUI(FrameBox parent, bool extendedMode, System.Func<ComptaPériodeEntity> getPériode, System.Action filterStartAction)
 		{
 			//?this.extendedMode      = extendedMode;
-			this.extendedMode      = true;
+			this.extendedMode      = false;
 			this.getPériode        = getPériode;
 			this.filterStartAction = filterStartAction;
 

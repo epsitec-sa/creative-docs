@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.mainWindow = window;
 
+#if false
 			var title = new WindowTitle ()
 			{
 				Parent = window.Root,
@@ -75,6 +76,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Text = "Crésus Comptabilité NG",
 				PreferredHeight = 26,
 			};
+#endif
 
 			//	Crée le ruban tout en haut.
 #if false
