@@ -43,6 +43,15 @@ namespace Epsitec.Cresus.Compta
 			return true;
 		}
 
+		protected override Window CreateWindow()
+		{
+			var window = base.CreateWindow ();
+			
+			window.MakeTitlelessResizableWindow ();
+			
+			return window;
+		}
+
 		protected override void ExecuteQuit(CommandDispatcher dispatcher, CommandEventArgs e)
 		{
 			base.ExecuteQuit (dispatcher, e);

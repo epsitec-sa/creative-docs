@@ -68,6 +68,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.mainWindow = window;
 
+			var title = new WindowTitle ()
+			{
+				Parent = window.Root,
+				Dock = DockStyle.Top,
+				Text = "Crésus Comptabilité NG",
+				PreferredHeight = 26,
+			};
+
 			//	Crée le ruban tout en haut.
 #if false
 			this.ribbonController = new RibbonController (this.app);

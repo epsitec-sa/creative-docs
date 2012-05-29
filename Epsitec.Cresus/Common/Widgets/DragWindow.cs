@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -17,12 +17,12 @@ namespace Epsitec.Common.Widgets
 		public DragWindow()
 		{
 			this.Root.BackColor = Drawing.Color.Transparent;
-			
+
 			this.MakeFramelessWindow ();
-			this.MakeFloatingWindow();
+			this.MakeFloatingWindow ();
 			this.MakeLayeredWindow ();
 			this.DisableMouseActivation ();
-			
+
 			this.Alpha = 0.8;
 			this.Name = "DragWindow";
 		}
@@ -38,7 +38,7 @@ namespace Epsitec.Common.Widgets
 				this.Alpha = value ? 0.4 : 0.8;
 			}
 		}
-		
+
 		public void DefineWidget(Widget widget, Drawing.Size initialSize, Drawing.Margins margins)
 		{
 			this.WindowSize = initialSize + margins.Size;
@@ -47,17 +47,17 @@ namespace Epsitec.Common.Widgets
 
 			this.Root.Padding = margins;
 			this.Root.Children.Add (widget);
-			
+
 			this.MarkForRepaint ();
 		}
-		
+
 		public void DissolveAndDisposeWindow()
 		{
 			this.WindowAnimationEnded += this.HandleWindowAnimationEnded;
 			this.AnimateHide (Animation.FadeOut);
 		}
-		
-		
+
+
 		private void HandleWindowAnimationEnded(object sender)
 		{
 			this.Hide ();
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Widgets
 		{
 			return obj.GetValue (DragWindow.DragWindowProperty) as DragWindow;
 		}
-		
+
 		public static readonly DependencyProperty DragWindowProperty = DependencyProperty.RegisterAttached ("DragWindow", typeof (DragWindow), typeof (DragWindow));
 	}
 }

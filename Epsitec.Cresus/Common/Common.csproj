@@ -1441,6 +1441,7 @@
     <Compile Include="Widgets\WindowPlacement.cs" />
     <Compile Include="Widgets\WindowRoot.cs" />
     <Compile Include="Widgets\WindowStyles.cs" />
+    <Compile Include="Widgets\WindowTitle.cs" />
     <Compile Include="Widgets\WindowType.cs" />
   </ItemGroup>
   <ItemGroup>

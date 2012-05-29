@@ -1,5 +1,5 @@
 //	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUDinternal void MakeTitlelessResizableWindow()
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
@@ -204,6 +204,11 @@ namespace Epsitec.Common.Widgets
 		public void MakeButtonlessWindow()
 		{
 			this.window.MakeButtonlessWindow ();
+		}
+
+		public void MakeTitlelessResizableWindow()
+		{
+			this.window.MakeTitlelessResizableWindow ();
 		}
 		
 		public void MakeSecondaryWindow()

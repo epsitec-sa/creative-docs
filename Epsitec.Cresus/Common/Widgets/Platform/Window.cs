@@ -123,6 +123,8 @@ namespace Epsitec.Common.Widgets.Platform
 			this.TopLevel = true;
 			this.TopMost  = true;
 		}
+
+
 		
 		internal void MakeFramelessWindow()
 		{
@@ -187,6 +189,11 @@ namespace Epsitec.Common.Widgets.Platform
 			Window.DummyHandleEater (this.Handle);
 		}
 
+		internal void MakeTitlelessResizableWindow()
+		{
+			this.specialMode = SpecialMode.Titleless;
+		}
+
 		internal void MakeToolWindow()
 		{
 			this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
@@ -213,6 +220,13 @@ namespace Epsitec.Common.Widgets.Platform
 		internal void ResetHostingWidgetWindow()
 		{
 			this.widgetWindowDisposed = true;
+		}
+
+
+		private enum SpecialMode
+		{
+			None,
+			Titleless,
 		}
 
 
@@ -1237,6 +1251,23 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 
+		protected override System.Windows.Forms.CreateParams CreateParams
+		{
+			get
+			{
+				var parms = base.CreateParams;
+
+				switch (this.specialMode)
+				{
+					case SpecialMode.Titleless:
+						parms.Style &= ~0x00C00000; //WS_CAPTION 
+						parms.Style |= 0x00040000; //WS_SIZEBOX 
+						break;
+				}
+
+				return parms;
+			}
+		} 
 
 		
 		protected override void OnClosing(System.ComponentModel.CancelEventArgs e)
@@ -2758,6 +2789,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							isToolWindow;
 		
 		private bool							hasActiveFrame;
+		private SpecialMode						specialMode;
 		
 		private bool							preventClose;
 		private bool							preventQuit;
