@@ -95,6 +95,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 		public void Clear()
 		{
 			this.tabs.Clear ();
+			this.selectedIndex = -1;
 
 			this.dirtyLayout = true;
 			this.Invalidate ();
@@ -579,10 +580,12 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					rect.Inflate (1, -2);
 
+#if false
 					if (state == TabState.Selected || state == TabState.MenuOpened)
 					{
 						rect.Offset (0, -2);
 					}
+#endif
 
 					var pos = rect.BottomLeft;
 					var tab = this.GetShowedTabFromRank (rank);

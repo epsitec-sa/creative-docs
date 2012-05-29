@@ -640,6 +640,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void UpdateTitle()
 		{
 			this.mainWindow.Text = this.GetTitle (this.selectedDocument);
+			this.toolbarController.UpdateTitle ();
 		}
 
 		public void SetTitleComplement(string text)

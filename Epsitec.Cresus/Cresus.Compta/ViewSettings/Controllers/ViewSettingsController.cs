@@ -262,11 +262,17 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			//	Cherche les index des ViewSettings accessibles à l'utilisateur.
 			this.viewSettingsIndexes.Clear ();
 
+			int sel = -1;
 			for (int i = 0; i < this.viewSettingsList.List.Count; i++)
 			{
 				if (this.HasPrésentation (this.viewSettingsList.List[i].ControllerType))
 				{
 					this.viewSettingsIndexes.Add (i);
+				}
+
+				if (this.viewSettingsList.SelectedIndex == i)
+				{
+					sel = this.viewSettingsIndexes.Count-1;
 				}
 			}
 
@@ -309,6 +315,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				this.tabsPane.Add (item);
 			}
+
+			this.tabsPane.SelectedIndex = sel;
 
 			this.UpdateTabs ();
 

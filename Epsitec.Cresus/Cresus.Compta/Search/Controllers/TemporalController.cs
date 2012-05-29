@@ -44,8 +44,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, System.Func<ComptaPériodeEntity> getPériode, System.Action filterStartAction)
+		public FrameBox CreateUI(FrameBox parent, bool extendedMode, System.Func<ComptaPériodeEntity> getPériode, System.Action filterStartAction)
 		{
+			this.extendedMode      = extendedMode;
 			this.getPériode        = getPériode;
 			this.filterStartAction = filterStartAction;
 
@@ -75,27 +76,54 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock            = DockStyle.Left,
 			};
 
-			this.tabIndex = 0;
-			this.CreateMonthButton (this.regularFrame, "J", "01: Janvier",   16);
-			this.CreateMonthButton (this.regularFrame, "F", "02: Février",   16);
-			this.CreateMonthButton (this.regularFrame, "M", "03: Mars",      16);
-			this.CreateMonthButton (this.regularFrame, "A", "04: Avril",     16);
-			this.CreateMonthButton (this.regularFrame, "M", "05: Mai",       16);
-			this.CreateMonthButton (this.regularFrame, "J", "06: Juin",      16);
-			this.CreateMonthButton (this.regularFrame, "J", "07: Juillet",   16);
-			this.CreateMonthButton (this.regularFrame, "A", "08: Août",      16);
-			this.CreateMonthButton (this.regularFrame, "S", "09: Septembre", 16);
-			this.CreateMonthButton (this.regularFrame, "O", "10: Octobre",   16);
-			this.CreateMonthButton (this.regularFrame, "N", "11: Novembre",  16);
-			this.CreateMonthButton (this.regularFrame, "D", "12: Décembre",  16);
-			this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+			if (this.extendedMode)
+			{
+				this.tabIndex = 0;
+				this.CreateMonthButton (this.regularFrame, "Jan.",  "01: Janvier",   32);
+				this.CreateMonthButton (this.regularFrame, "Fév.",  "02: Février",   32);
+				this.CreateMonthButton (this.regularFrame, "Mars",  "03: Mars",      32);
+				this.CreateMonthButton (this.regularFrame, "Avril", "04: Avril",     32);
+				this.CreateMonthButton (this.regularFrame, "Mai",   "05: Mai",       32);
+				this.CreateMonthButton (this.regularFrame, "Juin",  "06: Juin",      32);
+				this.CreateMonthButton (this.regularFrame, "Juil.", "07: Juillet",   32);
+				this.CreateMonthButton (this.regularFrame, "Août",  "08: Août",      32);
+				this.CreateMonthButton (this.regularFrame, "Sept.", "09: Septembre", 32);
+				this.CreateMonthButton (this.regularFrame, "Oct.",  "10: Octobre",   32);
+				this.CreateMonthButton (this.regularFrame, "Nov.",  "11: Novembre",  32);
+				this.CreateMonthButton (this.regularFrame, "Déc.",  "12: Décembre",  32);
+				this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
 
-			this.tabIndex = 0;
-			this.CreateQuarterButton (this.regularFrame, "T1", "Premier trimestre (janvier à mars)");
-			this.CreateQuarterButton (this.regularFrame, "T2", "Deuxième trimestre (avril à juin)");
-			this.CreateQuarterButton (this.regularFrame, "T3", "Troisième trimestre (juillet à septembre)");
-			this.CreateQuarterButton (this.regularFrame, "T4", "Quatrième trimestre (octobre à décembre)");
-			this.quarterButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+				this.tabIndex = 0;
+				this.CreateQuarterButton (this.regularFrame, "Q1", "Premier trimestre (janvier à mars)");
+				this.CreateQuarterButton (this.regularFrame, "Q2", "Deuxième trimestre (avril à juin)");
+				this.CreateQuarterButton (this.regularFrame, "Q3", "Troisième trimestre (juillet à septembre)");
+				this.CreateQuarterButton (this.regularFrame, "Q4", "Quatrième trimestre (octobre à décembre)");
+				this.quarterButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+			}
+			else
+			{
+				this.tabIndex = 0;
+				this.CreateMonthButton (this.regularFrame, "J", "01: Janvier",   16);
+				this.CreateMonthButton (this.regularFrame, "F", "02: Février",   16);
+				this.CreateMonthButton (this.regularFrame, "M", "03: Mars",      16);
+				this.CreateMonthButton (this.regularFrame, "A", "04: Avril",     16);
+				this.CreateMonthButton (this.regularFrame, "M", "05: Mai",       16);
+				this.CreateMonthButton (this.regularFrame, "J", "06: Juin",      16);
+				this.CreateMonthButton (this.regularFrame, "J", "07: Juillet",   16);
+				this.CreateMonthButton (this.regularFrame, "A", "08: Août",      16);
+				this.CreateMonthButton (this.regularFrame, "S", "09: Septembre", 16);
+				this.CreateMonthButton (this.regularFrame, "O", "10: Octobre",   16);
+				this.CreateMonthButton (this.regularFrame, "N", "11: Novembre",  16);
+				this.CreateMonthButton (this.regularFrame, "D", "12: Décembre",  16);
+				this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+
+				this.tabIndex = 0;
+				this.CreateQuarterButton (this.regularFrame, "Q1", "Premier trimestre (janvier à mars)");
+				this.CreateQuarterButton (this.regularFrame, "Q2", "Deuxième trimestre (avril à juin)");
+				this.CreateQuarterButton (this.regularFrame, "Q3", "Troisième trimestre (juillet à septembre)");
+				this.CreateQuarterButton (this.regularFrame, "Q4", "Quatrième trimestre (octobre à décembre)");
+				this.quarterButtons.Last ().Margins = new Margins (0, 10, 0, 0);
+			}
 
 			var anyButton = this.CreateButton (this.regularFrame, "Autre", "Choix d'une période quelconque", null, 5);
 			anyButton.Margins = new Margins (0, 5, 0, 0);
@@ -581,6 +609,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly List<Button>					monthButtons;
 		private readonly List<Button>					quarterButtons;
 
+		private bool									extendedMode;
 		private System.Func<ComptaPériodeEntity>		getPériode;
 		private System.Action							filterStartAction;
 		private FrameBox								mainFrame;
