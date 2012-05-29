@@ -231,9 +231,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public SqlField BuildColumn(string tableAlias, DbColumn dbColumn)
 		{
 			var columnName = dbColumn.GetSqlName ();
-			var columnAlias = dbColumn.Name;
 
-			return SqlField.CreateAliasedName (tableAlias, columnName, columnAlias);
+			return SqlField.CreateName (tableAlias, columnName);
 		}
 
 
