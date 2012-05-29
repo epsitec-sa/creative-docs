@@ -672,12 +672,16 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (backColor.IsEmpty)
 				{
-					backColor = this.selectionColor;
+					var p = this.GetTabPath (rect, m, false);
+					graphics.AddFilledPath (p);
+					graphics.RenderSolid (this.selectionColor);
 				}
-
-				var p = this.GetTabPath (rect, m, false);
-				graphics.AddFilledPath (p);
-				graphics.RenderSolid (backColor);
+				else
+				{
+					var p = this.GetTabPath (rect, m, false);
+					graphics.AddFilledPath (p);
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
+				}
 			}
 			else if (state == TabState.MenuOpened)
 			{
