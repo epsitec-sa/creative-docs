@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		private void MouseUp(Message message, Point pos)
 		{
-			int index, rank;
+			int index;
 
 			this.mouseDown = false;
 
@@ -561,7 +561,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				else
 				{
 					//	Dessine le cadre et le fond.
-					this.PaintTabFrame (graphics, rect, state);
+					this.PaintTabFrame (graphics, rect, state, this.GetBackColor (index));
 
 					//	Dessine le texte.
 					var color = Color.FromBrightness (0);
@@ -601,7 +601,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Dessine l'onglet 'v' pour le menu.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
-			this.PaintTabFrame (graphics, rect, state);
+			this.PaintTabFrame (graphics, rect, state, Color.Empty);
 
 			//	Dessine le triangle 'v'.
 			var c = rect.Center;
@@ -617,7 +617,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			graphics.RenderSolid (adorner.ColorBorder);
 		}
 
-		private void PaintTabFrame(Graphics graphics, Rectangle rect, TabState state)
+		private void PaintTabFrame(Graphics graphics, Rectangle rect, TabState state, Color backColor)
 		{
 			//	Dessine le cadre et le fond d'un onglet.
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
@@ -629,10 +629,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 			//	Dessine le fond.
 			if (state == TabState.Hilited)
 			{
+				if (backColor.IsEmpty)
+				{
+					backColor = Color.FromBrightness (1.0);
+				}
+
 				if (this.tabLook == TabLook.Simple)
 				{
 					graphics.AddFilledPath (path);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
 				}
 				else
 				{
@@ -641,13 +646,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0), selected);
 					graphics.AddFilledPath (p);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, Color.FromBrightness (1.0)), Color.FromBrightness (1.0));
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
 				}
 			}
 			else if (state == TabState.Selected)
 			{
+				var selColor = UIBuilder.SelectionColor;
+				if (!backColor.IsEmpty)
+				{
+					selColor = Color.FromHsv (backColor.Hue, 0.3, 0.7);
+				}
+
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (UIBuilder.SelectionColor);
+				graphics.RenderSolid (selColor);
 
 				Margins m;
 				if (this.tabLook == TabLook.OneNote)
@@ -659,14 +670,24 @@ namespace Epsitec.Cresus.Compta.Widgets
 					m = new Margins (2.5, 2.5, 2.5, -2.5);
 				}
 
+				if (backColor.IsEmpty)
+				{
+					backColor = this.selectionColor;
+				}
+
 				var p = this.GetTabPath (rect, m, false);
 				graphics.AddFilledPath (p);
-				graphics.RenderSolid (this.selectionColor);
+				graphics.RenderSolid (backColor);
 			}
 			else if (state == TabState.MenuOpened)
 			{
+				if (backColor.IsEmpty)
+				{
+					backColor = Color.FromBrightness (1.0);
+				}
+
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromBrightness (1.0));
+				graphics.RenderSolid (backColor);
 			}
 			else if (state == TabState.StartDragging)
 			{
@@ -677,8 +698,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else if (state == TabState.Floating)
 			{
+				if (backColor.IsEmpty)
+				{
+					backColor = Color.FromBrightness (1.0);
+				}
+
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromBrightness (1.0));
+				graphics.RenderSolid (backColor);
 			}
 			else
 			{
@@ -687,8 +713,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 					return;
 				}
 
+				if (backColor.IsEmpty)
+				{
+					backColor = Color.FromBrightness (1.0);
+				}
+
 				graphics.AddFilledPath (path);
-				graphics.RenderSolid (Color.FromBrightness (1.0));
+				graphics.RenderSolid (backColor);
 
 				graphics.AddFilledPath (path);
 				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.5, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
@@ -912,6 +943,24 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				int rank = this.showedIndexes.IndexOf (this.draggingStartIndex);
 				return this.gapHilitedRank == rank || this.gapHilitedRank == rank+1;
+			}
+		}
+
+		private Color GetBackColor(int index)
+		{
+			switch (this.tabs[index].TabItem.Color)
+			{
+				case TabColor.Red:
+					return Color.FromHexa ("ffd7d7");
+
+				case TabColor.Green:
+					return Color.FromHexa ("d7ffda");
+
+				case TabColor.Blue:
+					return Color.FromHexa ("d7f2ff");
+
+				default:
+					return Color.Empty;
 			}
 		}
 
@@ -1475,19 +1524,19 @@ namespace Epsitec.Cresus.Compta.Widgets
 			switch (color)
 			{
 				case TabColor.Red:
-					text = "Pastille rouge";
+					text = "Rouge";
 					break;
 
 				case TabColor.Green:
-					text = "Pastille verte";
+					text = "Vert";
 					break;
 
 				case TabColor.Blue:
-					text = "Pastille bleue";
+					text = "Bleu";
 					break;
 
 				default:
-					text = "Aucune pastille";
+					text = "Normal";
 					break;
 			}
 
@@ -1558,6 +1607,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					Icon          = tab.TabItem.Icon,
 					FormattedText = tab.TabItem.FormattedText,
+					Color         = tab.TabItem.Color,
 				};
 
 				double width = tab.TextWidth + TabsPane.tabMargin*2;

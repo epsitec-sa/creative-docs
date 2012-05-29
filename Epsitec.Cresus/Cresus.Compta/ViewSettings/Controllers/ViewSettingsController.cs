@@ -357,6 +357,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 				string icon = Présentations.GetTabIcon (viewSettings);
 
+#if false
 				if (viewSettings.Color == TabColor.Red)
 				{
 					icon = "Edit.Tab.Color.Red";
@@ -371,6 +372,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				{
 					icon = "Edit.Tab.Color.Blue";
 				}
+#endif
 
 				var item = this.tabsPane.Get (i);
 
@@ -413,6 +415,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 		{
 			//	Appelé lors d'un changement d'onglet.
 			int index = this.tabsPane.SelectedIndex;
+			if (index == -1)
+			{
+				return;
+			}
 
 			if (this.HasPanel (this.controller.ControllerType) && index == this.viewSettingsIndexes.Count)  // onglet "+" ?
 			{

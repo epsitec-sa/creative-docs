@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 		public TabColor Color
 		{
-			//	Couleur de la pastille.
+			//	Couleur de fond.
 			get;
 			set;
 		}
