@@ -1,6 +1,7 @@
 ﻿using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
+using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Schema;
 
 using System;
@@ -63,6 +64,32 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 
 			return result;
+		}
+
+
+		public static bool HasRelationToPersistentTarget(EntityTypeEngine typeEngine, DataContext dataContext, AbstractEntity entity)
+		{
+			var children = EntityHelper.GetChildren (typeEngine, entity);
+
+			return children.Any (dataContext.IsPersistent);
+		}
+
+
+		public static bool HasValueFieldDefined(EntityTypeEngine typeEngine, AbstractEntity entity)
+		{
+			var leafEntityTypeId = entity.GetEntityStructuredTypeId ();
+			var valueFields = typeEngine.GetValueFields (leafEntityTypeId);
+			
+			return valueFields.Any (f => entity.IsFieldDefined (f.Id));
+		}
+
+
+		public static bool HasCollectionFieldDefined(EntityTypeEngine typeEngine, AbstractEntity entity)
+		{
+			var leafEntityId = entity.GetEntityStructuredTypeId ();
+			var collectionFields = typeEngine.GetCollectionFields (leafEntityId);
+
+			return collectionFields.Any (f => entity.IsFieldNotEmpty (f.Id));
 		}
 
 
