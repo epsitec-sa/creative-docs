@@ -869,6 +869,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.CreateController ();
 				this.AdaptSettingsData ();
 				this.controller.UpdateAfterChanged ();
+				this.toolbarController.UpdatePériode ();
 
 				this.NavigatorPut ();
 			}

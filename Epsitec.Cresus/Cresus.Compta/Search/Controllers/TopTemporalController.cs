@@ -110,6 +110,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.périodeLabel.FormattedText = this.mainWindowController.Période.ShortTitle.ApplyFontSize (12.0);
 				this.périodeLabel.PreferredWidth = this.périodeLabel.GetBestFitSize ().Width;
+
+				this.temporalController.UpdatePériode ();
 			}
 		}
 
