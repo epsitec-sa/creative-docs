@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 				else
 				{
-					surfaceColor = Color.FromHexa ("7eafd3");  // bleu clair
+					surfaceColor = Color.FromHexa ("a8d1f0");  // bleu clair
 				}
 			}
 

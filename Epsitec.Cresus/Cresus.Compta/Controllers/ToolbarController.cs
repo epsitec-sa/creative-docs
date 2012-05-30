@@ -146,24 +146,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public void UpdateWindow()
-		{
-			if (this.windowActivated)
-			{
-				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");
-				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
-
-				this.closeButton.BackColor = Color.FromHexa ("e66c56");  // rouge
-			}
-			else
-			{
-				this.gradientTitle.BackColor2 = Color.FromHexa ("deecf9");
-				this.gradientTitle.BackColor1 = Color.FromHexa ("eeeeee");
-
-				this.closeButton.BackColor = Color.Empty;
-			}
-		}
-
 		public void UpdateTitle()
 		{
 			FormattedText title;
@@ -244,34 +226,66 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins          = new Margins (10, 0, -1, 7),
 			};
 
-			var window = parent.Window;
+			ToolTip.Default.SetToolTip (this.minimizeButton, "Réduire");
+			ToolTip.Default.SetToolTip (this.maximizeButton, "Agrandir");
+			ToolTip.Default.SetToolTip (this.closeButton,    "Fermer");
+
+			this.window = parent.Window;
 
 			this.closeButton.Clicked += delegate
 			{
-				window.SimulateCloseClick ();
+				this.window.SimulateCloseClick ();
 			};
 
 			this.maximizeButton.Clicked += delegate
 			{
-				window.ToggleMaximize ();
+				this.window.ToggleMaximize ();
 			};
 
 			this.minimizeButton.Clicked += delegate
 			{
-				window.ToggleMinimize ();
+				this.window.ToggleMinimize ();
 			};
 
-			window.WindowActivated += delegate
+			this.window.WindowActivated += delegate
 			{
 				this.windowActivated = true;
 				this.UpdateWindow ();
 			};
 
-			window.WindowDeactivated += delegate
+			this.window.WindowDeactivated += delegate
 			{
 				this.windowActivated = false;
 				this.UpdateWindow ();
 			};
+
+			this.window.WindowPlacementChanged += delegate
+			{
+				this.UpdateWindow ();
+			};
+		}
+
+		private void UpdateWindow()
+		{
+			this.isFullScreen = this.window.IsFullScreen;
+
+			this.maximizeButton.IconUri = UIBuilder.GetResourceIconUri (this.isFullScreen ? "Window.Restore" : "Window.Maximize");
+			ToolTip.Default.SetToolTip (this.maximizeButton, this.isFullScreen ? "Niveau inf." : "Agrandir");
+
+			if (this.windowActivated)
+			{
+				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");
+				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
+
+				this.closeButton.BackColor = Color.FromHexa ("e66c56");  // rouge
+			}
+			else
+			{
+				this.gradientTitle.BackColor2 = Color.FromHexa ("deecf9");
+				this.gradientTitle.BackColor1 = Color.FromHexa ("eeeeee");
+
+				this.closeButton.BackColor = Color.Empty;
+			}
 		}
 
 		private Button CreateButton(FrameBox parent, FormattedText text)
@@ -304,6 +318,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private readonly MainWindowController	mainWindowController;
 
+		private Window							window;
 		private GradientFrameBox				gradientTitle;
 		private WindowButton					closeButton;
 		private WindowButton					maximizeButton;
@@ -312,5 +327,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private StaticText						titleLabel;
 		private TopTemporalController			topTemporalController;
 		private bool							windowActivated;
+		private bool							isFullScreen;
 	}
 }
