@@ -68,6 +68,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		public void UpdatePériode()
 		{
 			this.CreateRegularWidgetsUI ();
+			this.UpdateWidgets ();
 		}
 
 
