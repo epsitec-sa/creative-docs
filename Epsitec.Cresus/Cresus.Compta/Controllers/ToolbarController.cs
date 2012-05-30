@@ -163,8 +163,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				title = FormattedText.Concat (n1, " — ", n2, " — ", n3);
 			}
 
-			//?this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
-			this.titleLabel.FormattedText = title.ApplyBold ();
+			if (this.windowActivated)
+			{
+				this.titleLabel.FormattedText = title.ApplyBold ();
+			}
+			else
+			{
+				this.titleLabel.FormattedText = title;
+			}
 		}
 
 		public void UpdateUser()
@@ -274,7 +280,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.windowActivated)
 			{
-				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");
+				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");  // bleu
 				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
 
 				this.closeButton.BackColor = Color.FromHexa ("e66c56");  // rouge
@@ -286,6 +292,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				this.closeButton.BackColor = Color.Empty;
 			}
+
+			this.UpdateTitle ();
 		}
 
 		private Button CreateButton(FrameBox parent, FormattedText text)
@@ -295,8 +303,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent          = parent,
 				FormattedText   = text,
 				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredHeight = 24,
 				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 0, 2, 2),
 			};
 
 			button.PreferredWidth = button.GetBestFitSize ().Width;
@@ -307,12 +315,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateButton(Widget parent, Command cmd, double rightMargin = 0)
 		{
 			var button = UIBuilder.CreateButton (parent, cmd, 24, 20);
-			button.Dock = DockStyle.Left;
 
-			if (rightMargin != 0)
-			{
-				button.Margins = new Margins (0, rightMargin, 0, 0);
-			}
+			button.Dock = DockStyle.Left;
+			button.Margins = new Margins (0, rightMargin, 2, 2);
 		}
 
 
