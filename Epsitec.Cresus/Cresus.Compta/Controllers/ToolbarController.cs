@@ -152,11 +152,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");
 				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
+
+				this.closeButton.BackColor = Color.FromHexa ("e66c56");  // rouge
 			}
 			else
 			{
 				this.gradientTitle.BackColor2 = Color.FromHexa ("deecf9");
-				this.gradientTitle.BackColor1 = Color.FromHexa ("ffffff");
+				this.gradientTitle.BackColor1 = Color.FromHexa ("eeeeee");
+
+				this.closeButton.BackColor = Color.Empty;
 			}
 		}
 
@@ -210,31 +214,34 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreateWindowManagementButtons(Widget parent)
 		{
 			//	Partie droite de la ligne supérieure.
-			this.closeButton = new GlyphButton
+			this.closeButton = new WindowButton
 			{
-				Parent         = parent,
-				GlyphShape     = GlyphShape.Close,
-				PreferredWidth = 48,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
+				Parent           = parent,
+				WindowButtonType = Widgets.WindowButtonType.Close,
+				IconUri          = UIBuilder.GetResourceIconUri ("Window.Close"),
+				PreferredWidth   = 48,
+				Dock             = DockStyle.Right,
+				Margins          = new Margins (-1, 0, -1, 7),
 			};
 
-			this.maximizeButton = new GlyphButton
+			this.maximizeButton = new WindowButton
 			{
-				Parent         = parent,
-				GlyphShape     = GlyphShape.Plus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
+				Parent           = parent,
+				WindowButtonType = Widgets.WindowButtonType.Maximize,
+				IconUri          = UIBuilder.GetResourceIconUri ("Window.Maximize"),
+				PreferredWidth   = 28,
+				Dock             = DockStyle.Right,
+				Margins          = new Margins (-1, 0, -1, 7),
 			};
 
-			this.minimizeButton = new GlyphButton
+			this.minimizeButton = new WindowButton
 			{
-				Parent         = parent,
-				GlyphShape     = GlyphShape.Minus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (10, 0, -1, 7),
+				Parent           = parent,
+				WindowButtonType = Widgets.WindowButtonType.Minimize,
+				IconUri          = UIBuilder.GetResourceIconUri ("Window.Minimize"),
+				PreferredWidth   = 28,
+				Dock             = DockStyle.Right,
+				Margins          = new Margins (10, 0, -1, 7),
 			};
 
 			var window = parent.Window;
@@ -298,9 +305,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly MainWindowController	mainWindowController;
 
 		private GradientFrameBox				gradientTitle;
-		private GlyphButton						closeButton;
-		private GlyphButton						maximizeButton;
-		private GlyphButton						minimizeButton;
+		private WindowButton					closeButton;
+		private WindowButton					maximizeButton;
+		private WindowButton					minimizeButton;
 		private Button							userLabel;
 		private StaticText						titleLabel;
 		private TopTemporalController			topTemporalController;
