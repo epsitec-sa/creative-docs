@@ -127,6 +127,17 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 						}
 					}
 
+					double max = 0;
+					foreach (var button in this.monthButtons)
+					{
+						max = System.Math.Max (max, System.Math.Floor (button.GetBestFitSize ().Width+1));
+					}
+
+					foreach (var button in this.monthButtons)
+					{
+						button.PreferredWidth = max;
+					}
+
 					if (this.monthButtons.Count != 0)
 					{
 						this.monthButtons.Last ().Margins = new Margins (0, 10, 0, 0);
@@ -520,7 +531,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			var tooltip = Dates.GetMonthDescription (new Date (year, month, 1)) + " " + Converters.IntToString (year);
 
-			var button = this.CreateButton (parent, text, tooltip, extendedMode ? 32 : 16);
+			var button = this.CreateButton (parent, text, tooltip);
 
 			this.monthButtons.Add (button);
 			this.monthsInfo.Add (new ButtonInfo (month, year));
