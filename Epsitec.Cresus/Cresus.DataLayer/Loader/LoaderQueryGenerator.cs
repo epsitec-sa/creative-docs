@@ -664,7 +664,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var targetsWithsources = this.GetTargetsWithSources (nonPersistentEntities);
 			var mandatoryEntities = this.GetMandatoryEntities (request, targetsWithsources, nonPersistentEntities);
 
-			this.BuildTablesAndJoinsForEntities (builder, nonPersistentEntities, tables, joins);
+			this.BuildTablesAndJoinsForEntities (builder, nonPersistentEntities, mandatoryEntities, tables, joins);
 			this.BuildTablesAndJoinsForRelations (builder, mandatoryEntities, targetsWithsources, tables, joins);
 		}
 
@@ -778,16 +778,24 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private void BuildTablesAndJoinsForEntities(SqlFieldBuilder builder, IEnumerable<AbstractEntity> entities, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
+		private void BuildTablesAndJoinsForEntities(SqlFieldBuilder builder, IEnumerable<AbstractEntity> entities, HashSet<AbstractEntity> mandatoryEntities, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
 		{
 			foreach(var entity in entities)
 			{
-				this.BuildTablesAndJoinsForEntity (builder, entity, tables, joins);
+				var isMandatory = this.IsMandatory (entity, mandatoryEntities);
+
+				this.BuildTablesAndJoinsForEntity (builder, entity, isMandatory, tables, joins);
 			}
 		}
 
 
-		private void BuildTablesAndJoinsForEntity(SqlFieldBuilder builder, AbstractEntity entity, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
+		private bool IsMandatory(AbstractEntity entity, HashSet<AbstractEntity> mandatoryEntities)
+		{
+			return mandatoryEntities.Contains (entity);
+		}
+
+
+		private void BuildTablesAndJoinsForEntity(SqlFieldBuilder builder, AbstractEntity entity, bool isMandatory, Dictionary<string, SqlField> tables, List<Tuple<string, SqlField, string, SqlField, bool>> joins)
 		{
 			var leafEntityTypeId = entity.GetEntityStructuredTypeId ();
 			var rootEntityTypeId = this.TypeEngine.GetRootType (leafEntityTypeId).CaptionId;
@@ -810,7 +818,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				{
 					var localColumnId = builder.BuildEntityId (entity, localEntityTypeId);
 
-					var join = Tuple.Create (rootTableAlias, rootColumnId, localTableAlias, localColumnId, true);
+					var join = Tuple.Create (rootTableAlias, rootColumnId, localTableAlias, localColumnId, isMandatory);
 					joins.Add (join);
 				}
 			}
@@ -839,7 +847,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var leafEntityTypeId = source.GetEntityStructuredTypeId ();
 			var field = this.TypeEngine.GetField (leafEntityTypeId, fieldId);
 
-			var isMandatory = mandatoryEntities.Contains (target);
+			var isMandatory = this.IsMandatory (target, mandatoryEntities);
 
 			switch (field.Relation)
 			{
@@ -909,7 +917,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				var targetTableAlias = builder.AliasManager.GetAlias (target, rootTargetTypeId);
 				var targetColumn = builder.BuildRootId (target);
 
-				var joinToTarget = Tuple.Create (relationTableAlias, relationColumnTargetId, targetTableAlias, targetColumn, true);
+				var joinToTarget = Tuple.Create (relationTableAlias, relationColumnTargetId, targetTableAlias, targetColumn, isMandatory);
 				joins.Add (joinToTarget);
 			}
 		}
