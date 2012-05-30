@@ -803,8 +803,7 @@ namespace Epsitec.Common.Widgets.Platform
 					clientSize.Height += deltaHeight;
 				}
 
-				if ((this.specialMode == SpecialMode.Titleless) &&
-					(this.NativeWindowPlacement.IsFullScreen))
+				if (this.UseSpecialModeHack ())
 				{
 					clientSize.Width  -= 16;
 					clientSize.Height -= 16;
@@ -825,8 +824,15 @@ namespace Epsitec.Common.Widgets.Platform
 				this.minimumSize = value;
 			}
 		}
-		
-		internal Drawing.Rectangle				WindowPlacementNormalBounds
+
+		private bool UseSpecialModeHack()
+		{
+			return false;
+
+			return (this.specialMode == SpecialMode.Titleless)
+				&& (this.NativeWindowPlacement.IsFullScreen);
+		}
+		internal Drawing.Rectangle WindowPlacementNormalBounds
 		{
 			get
 			{
@@ -1280,8 +1286,8 @@ namespace Epsitec.Common.Widgets.Platform
 				switch (this.specialMode)
 				{
 					case SpecialMode.Titleless:
-						parms.Style &= ~0x00400000; //WS_CAPTION 
-//-						parms.Style |= 0x00040000; //WS_SIZEBOX 
+						parms.Style &= ~0x00C00000; //WS_CAPTION 
+						parms.Style |= 0x00040000; //WS_SIZEBOX 
 						break;
 				}
 
@@ -1771,12 +1777,14 @@ namespace Epsitec.Common.Widgets.Platform
 				return;
 			}
 
+#if false
 			if ((this.specialMode == SpecialMode.Titleless) &&
 				(msg.Msg == Win32Const.WM_NCCALCSIZE))
 			{
 				msg.Result = System.IntPtr.Zero;
 				return;
 			}
+#endif
 
 			bool syncCommandCache = false;
 
@@ -2493,8 +2501,7 @@ namespace Epsitec.Common.Widgets.Platform
 				{
 					System.Drawing.Point offset = new System.Drawing.Point ((int)(this.paintOffset.X), (int)(this.paintOffset.Y));
 
-					if ((this.specialMode == SpecialMode.Titleless) &&
-						(this.NativeWindowPlacement.IsFullScreen))
+					if (this.UseSpecialModeHack ())
 					{
 						offset.X += 4;
 						offset.Y += 4;
