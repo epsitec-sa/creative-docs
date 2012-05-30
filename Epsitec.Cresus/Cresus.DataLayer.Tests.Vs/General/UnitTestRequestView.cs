@@ -136,6 +136,103 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
+		[TestMethod]
+		public void ComplexTest()
+		{
+			using (var dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (var dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var keys = dataContext.GetByExample (new NaturalPersonEntity ())
+					.OrderByDescending (p => p.Lastname)
+					.Select (e => dataContext.GetNormalizedEntityKey (e).Value)
+					.ToList ();
+
+				var person = new NaturalPersonEntity ();
+				var gender = new PersonGenderEntity ();
+				var contact = new UriContactEntity ();
+				var scheme = new UriSchemeEntity ();
+
+				person.Gender = gender;
+				person.Contacts.Add (contact);
+				contact.UriScheme = scheme;
+
+				var request = Request.Create (person);
+
+				request.Conditions.Add
+				(
+					new BinaryOperation
+					(
+						new BinaryComparison
+						(
+							PublicField.Create (person, x => x.Firstname),
+							BinaryComparator.IsNotEqual,
+							new Constant ("Boo !")
+						),
+						BinaryOperator.And,
+						new UnaryComparison
+						(
+							PublicField.Create (person, x => x.Lastname),
+							UnaryComparator.IsNotNull
+						)
+					)
+				);
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						PublicField.Create (person, p => p.Lastname),
+						SortOrder.Descending
+					)
+				);
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						PublicField.Create (gender, g => g.Code),
+						SortOrder.Ascending
+					)
+				);
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						PublicField.Create (contact, c => c.Uri),
+						SortOrder.Descending
+					)
+				);
+
+				request.SortClauses.Add
+				(
+					new SortClause
+					(
+						PublicField.Create (scheme, s => s.Code),
+						SortOrder.Ascending
+					)
+				);
+
+				using (var requestView = dataContext.GetRequestView (request))
+				{
+					Assert.AreEqual (3, requestView.GetCount ());
+
+					for (int i = 0; i < 5; i++)
+					{
+						for (int j = 0; j < 5; j++)
+						{
+							var expectedKeys = keys.Skip (i).Take (j).ToList ();
+							var actualKeys = requestView.GetKeys (i, j).ToArray ();
+
+							CollectionAssert.AreEqual (expectedKeys, actualKeys);
+							this.GetIndexTest (requestView, actualKeys, i);
+						}
+					}
+				}
+			}
+		}
+
+
 		public void GetIndexTest(RequestView requestView, EntityKey[] entityKeys, int nbSkip)
 		{
 			for (int i = 0; i < entityKeys.Length; i++)

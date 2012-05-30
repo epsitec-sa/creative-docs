@@ -19,15 +19,22 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.entityTableAliases = new Dictionary<Tuple<AbstractEntity, Druid>, string> ();
 			this.relationTableAliases = new Dictionary<Tuple<AbstractEntity, Druid, AbstractEntity>, string> ();
 
-			this.aliasCount = 0;
+			this.AliasCount = 0;
+		}
+
+
+		public int AliasCount
+		{
+			get;
+			set;
 		}
 
 
 		public string GetAlias()
 		{
-			var alias = "alias" + aliasCount;
+			var alias = "alias" + this.AliasCount;
 
-			this.aliasCount++;
+			this.AliasCount++;
 
 			return alias;
 		}
@@ -69,10 +76,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		private readonly Dictionary<Tuple<AbstractEntity, Druid>, string> entityTableAliases;
 
 
-		private readonly Dictionary<Tuple<AbstractEntity, Druid, AbstractEntity>, string> relationTableAliases; 
-
-
-		private int aliasCount;
+		private readonly Dictionary<Tuple<AbstractEntity, Druid, AbstractEntity>, string> relationTableAliases;
 
 
 	}

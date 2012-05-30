@@ -89,11 +89,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public SqlField BuildConstantForKey(AbstractEntity entity)
 		{
 			var entityKey = this.dataContext.GetNormalizedEntityKey (entity);
-			
-			var value = entityKey.Value.RowKey.Id.Value;
-			var dbRawType = DbRawType.Int64;
 
-			return this.BuildConstant (value, dbRawType);
+			return this.BuildConstantForKey (entityKey.Value);
 		}
 
 
@@ -217,6 +214,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		public SqlField BuildConstant(object value, DbRawType dbRawType)
 		{
 			return SqlField.CreateConstant (value, dbRawType);
+		}
+
+
+		public SqlField BuildConstantForKey(EntityKey entityKey)
+		{
+			var value = entityKey.RowKey.Id.Value;
+			var dbRawType = DbRawType.Int64;
+
+			return this.BuildConstant (value, dbRawType);
 		}
 
 

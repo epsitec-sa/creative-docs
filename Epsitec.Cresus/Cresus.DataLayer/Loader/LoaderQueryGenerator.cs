@@ -3,13 +3,13 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 using Epsitec.Cresus.DataLayer.Schema;
 using Epsitec.Cresus.DataLayer.Serialization;
 
@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			using (var dbTransaction = this.StartTransaction ())
 			{
-				var count = this.GetCount (sqlSelect, dbTransaction);
+				var count = this.GetInteger (sqlSelect, dbTransaction);
 
 				dbTransaction.Commit ();
 
@@ -91,32 +91,30 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var sqlSelect = this.BuildSelectForCount (request);
 
-			return this.GetCount (sqlSelect, dbTransaction);
-		}
-
-
-		public int GetCount(SqlSelect sqlSelect, DbTransaction dbTransaction)
-		{
-			dbTransaction.SqlBuilder.SelectData (sqlSelect);
-
-			return (int) this.DbInfrastructure.ExecuteScalar (dbTransaction);
+			return this.GetInteger (sqlSelect, dbTransaction);
 		}
 
 
 		private SqlSelect BuildSelectForCount(Request request)
 		{
 			var builder = this.GetBuilder ();
-			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
-
-			var aggregate = SqlAggregateFunction.Count;
-			var predicate = this.GetSqlSelectPredicate (request);
-			var entityId = builder.BuildRootId (request.RequestedEntity);
 			
-			var fieldForCount = SqlField.CreateAggregate (aggregate, predicate, entityId);
+			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
+			var fieldForCount = this.BuildFieldForCount (builder, request);
 
 			return fromWhereOrderBy
 				.PlusSqlFields (fieldForCount)
 				.BuildSqlSelect (skip: request.Skip, take: request.Take);
+		}
+
+
+		private SqlField BuildFieldForCount(SqlFieldBuilder builder, Request request)
+		{
+			var aggregate = SqlAggregateFunction.Count;
+			var predicate = this.GetSqlSelectPredicate (request);
+			var entityId = builder.BuildRootId (request.RequestedEntity);
+
+			return SqlField.CreateAggregate (aggregate, predicate, entityId);
 		}
 
 
@@ -153,35 +151,176 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		
 		public int? GetIndex(Request request, EntityKey entityKey, DbTransaction dbTransaction)
 		{
-			// HACK This method is a big hack that I implemented only because Pierre wanted something
-			// quickly. It is totally inefficient and I plan to implement a better way to do this
-			// which will be more performant.
+			// NOTE This SQL query could probably be improved by using the windowing function that
+			// will be available in Firebird 3 which is not even yet in alpha stage.
+			
+			var sqlSelect = this.BuildSelectForIndex (request, entityKey);
 
-			var sqlSelect = this.BuildSelectForEntityKeys (request);
+			return this.GetNullableInteger (sqlSelect, dbTransaction);
+		}
 
-			dbTransaction.SqlBuilder.SelectData (sqlSelect);
 
-			var data = this.DbInfrastructure.ExecuteRetData (dbTransaction);
+		public SqlSelect BuildSelectForIndex(Request request, EntityKey entityKey)
+		{
+			var innerBuilder = this.GetBuilder ();
+			var innerSelect = this.BuildInnerRequestForIndex (innerBuilder, request, entityKey);
 
-			var expectedId = entityKey.RowKey.Id.Value;
-			var i = 0;
-			int? result = null;
+			return this.BuildOuterRequestForIndex (request, innerBuilder, innerSelect);
+		}
 
-			foreach (DataRow dataRow in data.Tables[0].Rows)
+
+		public SqlSelect BuildInnerRequestForIndex(SqlFieldBuilder builder, Request request, EntityKey entityKey)
+		{
+			var fromWhereAndOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
+			var condition = this.BuildInnerRequestForIndexCondition (builder, request, entityKey);
+			var fields = this.BuildInnerRequestForIndexFields (builder, request);
+
+			return fromWhereAndOrderBy
+				.PlusSqlConditions (condition)
+				.PlusSqlFields (fields.ToArray ())
+				.BuildSqlSelect (take: 1);
+		}
+
+
+		private SqlFunction BuildInnerRequestForIndexCondition(SqlFieldBuilder builder, Request request, EntityKey entityKey)
+		{
+			var op = SqlFunctionCode.CompareEqual;
+			var idColumn = builder.BuildRootId (request.RequestedEntity);
+			var idValue = builder.BuildConstantForKey (entityKey);
+
+			return new SqlFunction (op, idColumn, idValue);
+		}
+
+
+		private IEnumerable<SqlField> BuildInnerRequestForIndexFields(SqlFieldBuilder builder, Request request)
+		{
+			foreach (var sortClause in request.SortClauses)
 			{
-				var rowId = (long) dataRow[0];
+				var field = sortClause.Field.CreateSqlField (builder);
+				
+				field.Alias = this.GetAliasForInnerQueryForIndexField (field);
 
-				if (rowId == expectedId)
+				yield return field;
+			}
+		}
+
+
+		public SqlSelect BuildOuterRequestForIndex(Request request, SqlFieldBuilder innerBuilder, SqlSelect innerSelect)
+		{
+			var outerBuilder = this.GetBuilder ();
+			outerBuilder.AliasManager.AliasCount = innerBuilder.AliasManager.AliasCount;
+
+			var fromAndWhere = this.BuildFromAndWhere (outerBuilder, request);
+			
+			var innerQueryAlias = outerBuilder.AliasManager.GetAlias ();
+			var innerQueryJoin = this.BuildOuterRequestForIndexInnerQueryJoin (innerSelect, innerQueryAlias);
+
+			var converterOrderBy = this.BuildOuterRequestForIndexOrderByCondition (outerBuilder, innerBuilder, innerQueryAlias, request);
+
+			var fieldForCount = this.BuildFieldForCount (outerBuilder, request);
+
+			return fromAndWhere
+				.PlusSqlJoins (innerQueryJoin)
+				.PlusSqlConditions (converterOrderBy)
+				.PlusSqlFields (fieldForCount)
+				.BuildSqlSelect ();
+		}
+
+
+		private SqlJoin BuildOuterRequestForIndexInnerQueryJoin(SqlSelect innerSelect, string subQueryAlias)
+		{
+			var subQuery = SqlField.CreateSubQuery (innerSelect, subQueryAlias);
+			var subQueryJoinCode = SqlJoinCode.Cross;
+
+			return new SqlJoin (subQueryJoinCode, subQuery);
+		}
+
+
+		private SqlFunction BuildOuterRequestForIndexOrderByCondition(SqlFieldBuilder outerBuilder, SqlFieldBuilder innerBuilder, string innerQueryAlias, Request request)
+		{
+			SqlFunction condition = null;
+			SqlFunction accumulator = null;
+
+			foreach (var sortClause in request.SortClauses)
+			{
+				var opSort = this.GetComparisonOperatorForSortClause (sortClause);
+				var opEqual = SqlFunctionCode.CompareEqual;
+				var opAnd = SqlFunctionCode.LogicAnd;
+				var opOr = SqlFunctionCode.LogicOr;
+				
+				var outerColumn = sortClause.Field.CreateSqlField (outerBuilder);
+				var innerColumnData = sortClause.Field.CreateSqlField (innerBuilder);
+				var innerColumnName = this.GetAliasForInnerQueryForIndexField (innerColumnData);
+				var innerColumn = SqlField.CreateName (innerQueryAlias, innerColumnName);
+
+				var conditionPart = new SqlFunction (opSort, outerColumn, innerColumn);
+				
+				if (sortClause.SortOrder == SortOrder.Ascending)
 				{
-					result = i;
+					var opNull = SqlFunctionCode.CompareIsNull;
+					var opNotNull = SqlFunctionCode.CompareIsNotNull;
 
-					break;
+					var partA = new SqlFunction (opNull, outerColumn);
+					var partB = new SqlFunction (opNotNull, innerColumn);
+
+					var fieldPartA = SqlField.CreateFunction (partA);
+					var fieldPartB = SqlField.CreateFunction (partB);
+
+					var part1 = new SqlFunction (opAnd, fieldPartA, fieldPartB);
+					var part2 = conditionPart;
+					
+					var fieldPart1 = SqlField.CreateFunction (part1);
+					var fieldPart2 = SqlField.CreateFunction (part2);
+					
+					conditionPart = new SqlFunction (opOr, fieldPart1, fieldPart2);
 				}
+				
+				var accumulatorPart = new SqlFunction (opEqual, outerColumn, innerColumn);
 
-				i++;
+				if (accumulator == null)
+				{
+					condition = conditionPart;
+					accumulator = accumulatorPart;
+				}
+				else
+				{
+					var fieldCondition = SqlField.CreateFunction (condition);
+					var fieldConditionPart = SqlField.CreateFunction (conditionPart);
+					
+					var fieldAccumulator = SqlField.CreateFunction (accumulator);
+					var fieldAccumulatorPart = SqlField.CreateFunction (accumulatorPart);
+					
+					var localCondition = new SqlFunction (opAnd, fieldConditionPart, fieldAccumulator);
+					var fieldLocalCondition = SqlField.CreateFunction (localCondition);
+					
+					accumulator = new SqlFunction (opAnd, fieldAccumulatorPart, fieldAccumulator);
+					condition = new SqlFunction (opOr, fieldCondition, fieldLocalCondition);
+				}
 			}
 
-			return result;
+			return condition;
+		}
+
+
+		private SqlFunctionCode GetComparisonOperatorForSortClause(SortClause sortClause)
+		{
+			switch (sortClause.SortOrder)
+			{
+				case SortOrder.Ascending:
+					return SqlFunctionCode.CompareLessThan;
+
+				case SortOrder.Descending:
+					return SqlFunctionCode.CompareGreaterThan;
+
+				default:
+					throw new NotImplementedException ();
+			}
+		}
+
+
+		private string GetAliasForInnerQueryForIndexField(SqlField field)
+		{
+			return field.AsQualifier + "_" + field.AsName;
 		}
 		
 		
@@ -516,7 +655,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			var builder = this.GetBuilder ();
 
-			var fromWhereOrderBy = this.BuildFromWhereAndOrderBy (builder, request);
+			var fromWhereOrderBy = this.BuildFromAndWhere (builder, request);
 			var select = builder.BuildEntityField (request.RequestedEntity, fieldId);
 
 			return fromWhereOrderBy
@@ -632,19 +771,25 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return this.GetCollectionData (transaction, request, fieldId);
 		}
-		
-		
+
+
 		private SqlContainer BuildFromWhereAndOrderBy(SqlFieldBuilder builder, Request request)
+		{
+			var fromAndWhere = this.BuildFromAndWhere (builder, request);
+			var orderBy = this.BuildOrderBy (builder, request);
+
+			return fromAndWhere.PlusSqlOrderBys (orderBy.ToArray ());
+		}
+		
+		
+		private SqlContainer BuildFromAndWhere(SqlFieldBuilder builder, Request request)
 		{
 			var nonPersistentEntities = request.GetNonPersistentEntities (this.dataContext);
 
 			var from = this.BuildFrom (builder, request, nonPersistentEntities);
 			var where = this.BuildWhere (builder, request, nonPersistentEntities);
-			var orderBy = this.BuildOrderBy (builder, request);
 
-			return from
-				.PlusSqlConditions (where.ToArray ())
-				.PlusSqlOrderBys (orderBy.ToArray ());
+			return from.PlusSqlConditions (where.ToArray ());
 		}
 
 
@@ -860,7 +1005,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					break;
 
 				default:
-					throw new InvalidOperationException();
+					throw new InvalidOperationException ();
 			}
 		}
 
@@ -1218,6 +1363,31 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			var mode = DbTransactionMode.ReadOnly;
 
 			return this.DbInfrastructure.InheritOrBeginTransaction (mode);
+		}
+
+
+		private int GetInteger(SqlSelect sqlSelect, DbTransaction dbTransaction)
+		{
+			dbTransaction.SqlBuilder.SelectData (sqlSelect);
+
+			return (int) this.DbInfrastructure.ExecuteScalar (dbTransaction);
+		}
+
+
+		private int? GetNullableInteger(SqlSelect sqlSelect, DbTransaction dbTransaction)
+		{
+			dbTransaction.SqlBuilder.SelectData (sqlSelect);
+
+			var result = this.DbInfrastructure.ExecuteScalar (dbTransaction);
+
+			if (result == null || result == DBNull.Value)
+			{
+				return null;
+			}
+			else
+			{
+				return (int) result;
+			}
 		}
 
 
