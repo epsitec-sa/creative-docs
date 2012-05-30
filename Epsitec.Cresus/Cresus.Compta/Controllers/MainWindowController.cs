@@ -68,24 +68,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.mainWindow = window;
 
-#if false
-			var title = new WindowTitle ()
-			{
-				Parent = window.Root,
-				Dock = DockStyle.Top,
-				Text = "Crésus Comptabilité NG",
-				PreferredHeight = 26,
-			};
-#endif
+			//	Crée la barre de titre et la barre d'outils tout en haut.
+			this.CreateToolbarUI (window.Root);
+			this.CreatePrésentationUI (window.Root);
 
-			//	Crée le ruban tout en haut.
 #if false
+			//	Crée le ruban tout en haut.
 			this.ribbonController = new RibbonController (this.app);
 			this.ribbonController.CreateUI (window.Root);
 #endif
-
-			this.CreateToolbarUI (window.Root);
-			this.CreatePrésentationUI (window.Root);
 
 			//	Crée la zone éditable principale.
 			this.mainFrame = new FrameBox

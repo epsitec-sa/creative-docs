@@ -43,44 +43,60 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Parent          = parent,
 				PreferredHeight = TopTemporalController.toolbarHeight,
 				Dock            = DockStyle.Fill,
-				Margins         = new Margins (0, 0, 0, 0),
 			};
 
 			this.CreatePériodeUI (this.mainFrame);
+
+			new Separator
+			{
+				Parent         = this.mainFrame,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 10, 0, 0),
+			};
+
 			this.CreateTemporalFilterUI (this.mainFrame);
 		}
 
 		private void CreatePériodeUI(FrameBox parent)
 		{
+			var frame = new FrameBox
+			{
+				Parent         = parent,
+				PreferredWidth = 20,
+				Dock           = DockStyle.Left,
+				Padding        = new Margins (0, 0, 2, 2),
+			};
+
 			new GlyphButton
 			{
-				Parent          = parent,
+				Parent          = frame,
 				CommandObject   = Res.Commands.Compta.PériodePrécédente,
 				GlyphShape      = GlyphShape.ArrowLeft,
 				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredHeight = TopTemporalController.toolbarHeight,
-				PreferredWidth  = TopTemporalController.toolbarHeight,
+				PreferredHeight = TopTemporalController.toolbarHeight-4,
+				PreferredWidth  = TopTemporalController.toolbarHeight-4,
 				Dock            = DockStyle.Left,
 			};
 
 			this.périodeLabel = new StaticText
 			{
-				Parent          = parent,
-				PreferredHeight = TopTemporalController.toolbarHeight,
+				Parent          = frame,
+				PreferredHeight = TopTemporalController.toolbarHeight-4,
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (5, 5, 0, 0),
 			};
 
 			new GlyphButton
 			{
-				Parent          = parent,
+				Parent          = frame,
 				CommandObject   = Res.Commands.Compta.PériodeSuivante,
 				GlyphShape      = GlyphShape.ArrowRight,
 				ButtonStyle     = ButtonStyle.ToolItem,
-				PreferredHeight = TopTemporalController.toolbarHeight,
-				PreferredWidth  = TopTemporalController.toolbarHeight,
+				PreferredHeight = TopTemporalController.toolbarHeight-4,
+				PreferredWidth  = TopTemporalController.toolbarHeight-4,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
 			};
 		}
 

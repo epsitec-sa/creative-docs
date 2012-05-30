@@ -428,6 +428,7 @@
     <EmbeddedResource Include="Images\Edit.Tab.Color.Green.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Color.Red.icon" />
     <EmbeddedResource Include="Images\Edit.Tab.Color.None.icon" />
+    <EmbeddedResource Include="Images\app.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

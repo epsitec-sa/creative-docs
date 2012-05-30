@@ -10,6 +10,9 @@ using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Controllers;
 
+using Epsitec.Cresus.Core.Widgets;
+using Epsitec.Cresus.Core.Widgets.Tiles;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -32,25 +35,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(Widget parent)
 		{
-			var line1 = new WindowTitle
+			var titleBar = new WindowTitle
 			{
 				Parent              = parent,
-				PreferredHeight     = 26,
-				BackColor           = Color.FromHexa ("6fc3ff"), //("a3ccef"),  // bleu
+				PreferredHeight     = 24+1,
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
-				Padding             = new Margins (5, 5, 0, 0),
+				Padding             = new Margins (0, 0, 0, 1),
 			};
 
-#if false
-			new Separator
+			this.gradientTitle = new GradientFrameBox
 			{
-				Parent              = parent,
-				PreferredHeight     = 1,
-				IsVerticalLine      = false,
-				Dock                = DockStyle.Top,
+				Parent              = titleBar,
+				IsVerticalGradient  = true,
+				Dock                = DockStyle.Fill,
+				Padding             = new Margins (5, 5, 0, 0),
 			};
-#endif
 
 			var line2 = new FrameBox
 			{
@@ -71,25 +71,53 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			//	Partie gauche de la ligne supérieure.
-			this.CreateButton (line1, Res.Commands.Navigator.Prev);
-			this.CreateButton (line1, Res.Commands.Navigator.Next, 10);
+			new StaticText
+			{
+				Parent          = this.gradientTitle,
+				Text            = UIBuilder.GetIconTag ("app"),
+				PreferredWidth  = 24,
+				PreferredHeight = 24,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 0, 0, 0),
+			};
 
-			this.CreateButton (line1, Res.Commands.Edit.Undo);
-			this.CreateButton (line1, Res.Commands.Edit.Redo, 10);
+			new Separator
+			{
+				Parent         = this.gradientTitle,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (1, 4, 0, 0),
+			};
 
-			this.CreateButton (line1, Res.Commands.Select.Up);
-			this.CreateButton (line1, Res.Commands.Select.Down);
-			this.CreateButton (line1, Res.Commands.Select.Home, 10);
+			this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Prev);
+			this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Next, 10);
 
-			this.CreateWindowManagementButtons (line1);
+			this.CreateButton (this.gradientTitle, Res.Commands.Edit.Undo);
+			this.CreateButton (this.gradientTitle, Res.Commands.Edit.Redo, 10);
 
-			this.userLabel = this.CreateButton (line1, "");
+			this.CreateButton (this.gradientTitle, Res.Commands.Select.Up);
+			this.CreateButton (this.gradientTitle, Res.Commands.Select.Down);
+			this.CreateButton (this.gradientTitle, Res.Commands.Select.Home);
+
+			new Separator
+			{
+				Parent         = this.gradientTitle,
+				PreferredWidth = 1,
+				IsVerticalLine = true,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (4, 0, 0, 0),
+			};
+
+			this.CreateWindowManagementButtons (this.gradientTitle);
+
+			this.userLabel = this.CreateButton (this.gradientTitle, "");
 			this.userLabel.Dock = DockStyle.Right;
 			ToolTip.Default.SetToolTip (this.userLabel, "Nom de l'utilisateur identifié");
 
 			new Separator
 			{
-				Parent         = line1,
+				Parent         = this.gradientTitle,
 				PreferredWidth = 1,
 				IsVerticalLine = true,
 				Dock           = DockStyle.Right,
@@ -104,16 +132,33 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Partie centrale de la ligne supérieure.
 			this.titleLabel = new StaticText
 			{
-				Parent           = line1,
+				Parent           = this.gradientTitle,
 				ContentAlignment = ContentAlignment.MiddleCenter,
+				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock             = DockStyle.Fill,
 			};
 
 			//	Ligne inférieure.
 			this.topTemporalController = new TopTemporalController (this.mainWindowController);
 			this.topTemporalController.CreateUI (line2, false);
+
+			this.UpdateWindow ();
 		}
 
+
+		public void UpdateWindow()
+		{
+			if (this.windowActivated)
+			{
+				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");
+				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
+			}
+			else
+			{
+				this.gradientTitle.BackColor2 = Color.FromHexa ("deecf9");
+				this.gradientTitle.BackColor1 = Color.FromHexa ("ffffff");
+			}
+		}
 
 		public void UpdateTitle()
 		{
@@ -133,7 +178,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//?this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
-			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.5).ApplyFontColor (Color.FromBrightness (1));
+			this.titleLabel.FormattedText = title.ApplyBold ();
 		}
 
 		public void UpdateUser()
@@ -161,6 +206,66 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.topTemporalController.UpdateTemporalFilter ();
 		}
 
+
+		private void CreateWindowManagementButtons(Widget parent)
+		{
+			//	Partie droite de la ligne supérieure.
+			this.closeButton = new GlyphButton
+			{
+				Parent         = parent,
+				GlyphShape     = GlyphShape.Close,
+				PreferredWidth = 48,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.maximizeButton = new GlyphButton
+			{
+				Parent         = parent,
+				GlyphShape     = GlyphShape.Plus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.minimizeButton = new GlyphButton
+			{
+				Parent         = parent,
+				GlyphShape     = GlyphShape.Minus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (10, 0, -1, 7),
+			};
+
+			var window = parent.Window;
+
+			this.closeButton.Clicked += delegate
+			{
+				window.SimulateCloseClick ();
+			};
+
+			this.maximizeButton.Clicked += delegate
+			{
+				window.ToggleMaximize ();
+			};
+
+			this.minimizeButton.Clicked += delegate
+			{
+				window.ToggleMinimize ();
+			};
+
+			window.WindowActivated += delegate
+			{
+				this.windowActivated = true;
+				this.UpdateWindow ();
+			};
+
+			window.WindowDeactivated += delegate
+			{
+				this.windowActivated = false;
+				this.UpdateWindow ();
+			};
+		}
 
 		private Button CreateButton(FrameBox parent, FormattedText text)
 		{
@@ -190,71 +295,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void CreateWindowManagementButtons(WindowTitle line1)
-		{
-			//	Partie droite de la ligne supérieure.
-			this.closeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Close,
-				PreferredWidth = 48,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
-			};
-
-			this.maximizeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Plus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
-			};
-
-			this.minimizeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Minus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (10, 0, -1, 7),
-			};
-
-			var window = line1.Window;
-
-			this.closeButton.Clicked += delegate
-			{
-				window.SimulateCloseClick ();
-			};
-
-			this.maximizeButton.Clicked += delegate
-			{
-				window.ToggleMaximize ();
-			};
-
-			this.minimizeButton.Clicked += delegate
-			{
-				window.ToggleMinimize ();
-			};
-
-			window.WindowActivated += delegate
-			{
-				line1.BackColor = Color.FromHexa ("6fc3ff"); //("a3ccef");  // bleu
-			};
-
-			window.WindowDeactivated += delegate
-			{
-				line1.BackColor = Color.FromHexa ("cccccc");
-			};
-		}
-		
 		private readonly MainWindowController	mainWindowController;
 
+		private GradientFrameBox				gradientTitle;
 		private GlyphButton						closeButton;
 		private GlyphButton						maximizeButton;
 		private GlyphButton						minimizeButton;
 		private Button							userLabel;
 		private StaticText						titleLabel;
 		private TopTemporalController			topTemporalController;
+		private bool							windowActivated;
 	}
 }
