@@ -1528,7 +1528,7 @@ namespace Epsitec.Cresus.DataLayer.Context
 
 		/// <summary>
 		/// Release all the resources kept by this instance. This should not be called directly
-		/// by others and is called by <see cref="DataInfrastructure.DeleteDataContext"/>.
+		/// by others and is called by <see cref="DataLayer.Infrastructure.DataInfrastructure.DeleteDataContext"/>.
 		/// </summary>
 		internal void Dispose()
 		{
