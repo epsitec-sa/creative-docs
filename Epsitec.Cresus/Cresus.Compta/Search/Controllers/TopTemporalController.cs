@@ -34,10 +34,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		public void CreateUI(Widget parent, bool extendedMode)
+		public void CreateUI(Widget parent)
 		{
-			this.extendedMode = extendedMode;
-
 			this.mainFrame = new FrameBox
 			{
 				Parent          = parent,
@@ -111,7 +109,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			this.temporalController = new TemporalController (this.data);
 			this.temporalController.HasColorizedHilite = true;
-			this.temporalController.CreateUI (frame, this.extendedMode, this.GetPériode, this.mainWindowController.TemporalDataChanged);
+			this.temporalController.CreateUI (frame, this.GetPériode, this.mainWindowController.TemporalDataChanged);
 		}
 
 		private ComptaPériodeEntity GetPériode()
@@ -143,7 +141,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity					compta;
 		private readonly TemporalData					data;
 
-		private bool									extendedMode;
 		private FrameBox								mainFrame;
 		private TemporalController						temporalController;
 		private StaticText								périodeLabel;

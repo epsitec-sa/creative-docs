@@ -140,7 +140,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			//	Ligne inférieure.
 			this.topTemporalController = new TopTemporalController (this.mainWindowController);
-			this.topTemporalController.CreateUI (line2, false);
+			this.topTemporalController.CreateUI (line2);
 
 			this.UpdateWindow ();
 		}
@@ -165,11 +165,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.windowActivated)
 			{
-				this.titleLabel.FormattedText = title.ApplyBold ();
+				this.titleLabel.FormattedText = title.ApplyFontSize (13.0).ApplyBold ();
 			}
 			else
 			{
-				this.titleLabel.FormattedText = title;
+				this.titleLabel.FormattedText = title.ApplyFontSize (13.0);
 			}
 		}
 
