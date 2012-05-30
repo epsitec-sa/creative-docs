@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				Parent              = parent,
 				PreferredHeight     = 26,
-				BackColor           = Color.FromHexa ("a3ccef"),  // bleu
+				BackColor           = Color.FromHexa ("6fc3ff"), //("a3ccef"),  // bleu
 				ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Top,
 				Padding             = new Margins (5, 5, 0, 0),
@@ -81,48 +81,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.CreateButton (line1, Res.Commands.Select.Down);
 			this.CreateButton (line1, Res.Commands.Select.Home, 10);
 
-			//	Partie droite de la ligne supérieure.
-			this.closeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Close,
-				PreferredWidth = 48,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
-			};
-
-			this.maximizeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Plus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (-1, 0, -1, 7),
-			};
-
-			this.minimizeButton = new GlyphButton
-			{
-				Parent         = line1,
-				GlyphShape     = GlyphShape.Minus,
-				PreferredWidth = 28,
-				Dock           = DockStyle.Right,
-				Margins        = new Margins (10, 0, -1, 7),
-			};
-
-			this.closeButton.Clicked += delegate
-			{
-				parent.Window.SimulateCloseClick ();
-			};
-
-			this.maximizeButton.Clicked += delegate
-			{
-				parent.Window.ToggleMaximize ();
-			};
-
-			this.minimizeButton.Clicked += delegate
-			{
-				parent.Window.ToggleMinimize ();
-			};
+			this.CreateWindowManagementButtons (line1);
 
 			this.userLabel = this.CreateButton (line1, "");
 			this.userLabel.Dock = DockStyle.Right;
@@ -174,7 +133,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			//?this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.0);
-			this.titleLabel.FormattedText = title.ApplyFontSize (13.0);
+			this.titleLabel.FormattedText = title.ApplyBold ().ApplyFontSize (13.5).ApplyFontColor (Color.FromBrightness (1));
 		}
 
 		public void UpdateUser()
@@ -231,6 +190,64 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		private void CreateWindowManagementButtons(WindowTitle line1)
+		{
+			//	Partie droite de la ligne supérieure.
+			this.closeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Close,
+				PreferredWidth = 48,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.maximizeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Plus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (-1, 0, -1, 7),
+			};
+
+			this.minimizeButton = new GlyphButton
+			{
+				Parent         = line1,
+				GlyphShape     = GlyphShape.Minus,
+				PreferredWidth = 28,
+				Dock           = DockStyle.Right,
+				Margins        = new Margins (10, 0, -1, 7),
+			};
+
+			var window = line1.Window;
+
+			this.closeButton.Clicked += delegate
+			{
+				window.SimulateCloseClick ();
+			};
+
+			this.maximizeButton.Clicked += delegate
+			{
+				window.ToggleMaximize ();
+			};
+
+			this.minimizeButton.Clicked += delegate
+			{
+				window.ToggleMinimize ();
+			};
+
+			window.WindowActivated += delegate
+			{
+				line1.BackColor = Color.FromHexa ("6fc3ff"); //("a3ccef");  // bleu
+			};
+
+			window.WindowDeactivated += delegate
+			{
+				line1.BackColor = Color.FromHexa ("cccccc");
+			};
+		}
+		
 		private readonly MainWindowController	mainWindowController;
 
 		private GlyphButton						closeButton;

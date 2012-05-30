@@ -803,6 +803,13 @@ namespace Epsitec.Common.Widgets.Platform
 					clientSize.Height += deltaHeight;
 				}
 
+				if ((this.specialMode == SpecialMode.Titleless) &&
+					(this.NativeWindowPlacement.IsFullScreen))
+				{
+					clientSize.Width  -= 16;
+					clientSize.Height -= 16;
+				}
+
 				return clientSize;
 			}
 		}
@@ -1273,8 +1280,8 @@ namespace Epsitec.Common.Widgets.Platform
 				switch (this.specialMode)
 				{
 					case SpecialMode.Titleless:
-						parms.Style &= ~0x00C00000; //WS_CAPTION 
-						parms.Style |= 0x00040000; //WS_SIZEBOX 
+						parms.Style &= ~0x00400000; //WS_CAPTION 
+//-						parms.Style |= 0x00040000; //WS_SIZEBOX 
 						break;
 				}
 
@@ -1761,6 +1768,13 @@ namespace Epsitec.Common.Widgets.Platform
 			if (this.isWndProcHandlingRestricted.IsNotZero)
 			{
 				base.WndProc (ref msg);
+				return;
+			}
+
+			if ((this.specialMode == SpecialMode.Titleless) &&
+				(msg.Msg == Win32Const.WM_NCCALCSIZE))
+			{
+				msg.Result = System.IntPtr.Zero;
 				return;
 			}
 
@@ -2478,6 +2492,14 @@ namespace Epsitec.Common.Widgets.Platform
 				if (pixmap != null)
 				{
 					System.Drawing.Point offset = new System.Drawing.Point ((int)(this.paintOffset.X), (int)(this.paintOffset.Y));
+
+					if ((this.specialMode == SpecialMode.Titleless) &&
+						(this.NativeWindowPlacement.IsFullScreen))
+					{
+						offset.X += 4;
+						offset.Y += 4;
+					}
+
 					pixmap.Paint (winGraphics, offset, winClipRect);
 				}
 			}

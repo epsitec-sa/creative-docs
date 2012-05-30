@@ -1273,16 +1273,42 @@ namespace Epsitec.Common.Widgets
 
 		public void ToggleMaximize()
 		{
-			var placement = this.WindowPlacement;
-			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
-			this.WindowPlacement = placement;
+			if (this.window.WindowState == System.Windows.Forms.FormWindowState.Maximized)
+			{
+				this.window.WindowState = System.Windows.Forms.FormWindowState.Normal;
+			}
+			else
+			{
+				this.window.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+			}
+
+//			var placement = this.WindowPlacement;
+//			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
+//			this.WindowPlacement = placement;
 		}
 
 		public void ToggleMinimize()
 		{
 			var placement = this.WindowPlacement;
-			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
-			this.WindowPlacement = placement;
+			
+			if (this.window.WindowState == System.Windows.Forms.FormWindowState.Minimized)
+			{
+				if (placement.IsFullScreen)
+				{
+					this.window.WindowState = System.Windows.Forms.FormWindowState.Maximized;
+				}
+				else
+				{
+					this.window.WindowState = System.Windows.Forms.FormWindowState.Normal;
+				}
+			}
+			else
+			{
+				this.window.WindowState = System.Windows.Forms.FormWindowState.Minimized;
+			}
+
+//			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
+//			this.WindowPlacement = placement;
 		}
 
 		public void SimulateCloseClick()
