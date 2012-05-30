@@ -1269,8 +1269,26 @@ namespace Epsitec.Common.Widgets
 				Widget.UpdateEntered (this, child, message);
 			}
 		}
-		
-		
+
+
+		public void ToggleMaximize()
+		{
+			var placement = this.WindowPlacement;
+			placement = new WindowPlacement (placement.Bounds, !placement.IsFullScreen, placement.IsMinimized, placement.IsHidden);
+			this.WindowPlacement = placement;
+		}
+
+		public void ToggleMinimize()
+		{
+			var placement = this.WindowPlacement;
+			placement = new WindowPlacement (placement.Bounds, placement.IsFullScreen, !placement.IsMinimized, placement.IsHidden);
+			this.WindowPlacement = placement;
+		}
+
+		public void SimulateCloseClick()
+		{
+			this.window.SimulateCloseClick ();
+		}
 		
 		internal void PlatformWindowDisposing()
 		{

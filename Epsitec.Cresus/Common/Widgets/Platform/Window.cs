@@ -1167,6 +1167,19 @@ namespace Epsitec.Common.Widgets.Platform
 			}
 		}
 
+		internal void SimulateCloseClick()
+		{
+			try
+			{
+				this.simulateCloseClick = true;
+				base.Close ();
+			}
+			finally
+			{
+				this.simulateCloseClick = false;
+			}
+		}
+
 		internal void SetFrozen(bool frozen)
 		{
 			this.isFrozen = frozen;
@@ -2794,6 +2807,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							preventClose;
 		private bool							preventQuit;
 		private bool							forcedClose;
+		private bool							simulateCloseClick;
 		private bool							filterMouseMessages;
 		private bool							filterKeyMessages;
 		private double							alpha = 1.0;

@@ -111,16 +111,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.closeButton.Clicked += delegate
 			{
+				parent.Window.SimulateCloseClick ();
 			};
 
 			this.maximizeButton.Clicked += delegate
 			{
-				parent.Window.StartWindowManagerOperation (Epsitec.Common.Widgets.Platform.WindowManagerOperation.PressMaximizeButton);
+				parent.Window.ToggleMaximize ();
 			};
 
 			this.minimizeButton.Clicked += delegate
 			{
-				parent.Window.StartWindowManagerOperation (Epsitec.Common.Widgets.Platform.WindowManagerOperation.PressMinimizeButton);
+				parent.Window.ToggleMinimize ();
 			};
 
 			this.userLabel = this.CreateButton (line1, "");
