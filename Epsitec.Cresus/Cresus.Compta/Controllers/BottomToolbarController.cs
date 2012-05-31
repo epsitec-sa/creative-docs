@@ -76,19 +76,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void SetOperationDescription(FormattedText text, bool hilited)
 		{
-#if false
-			text = text.ApplyFontSize (12.5);
-
-			if (hilited)
-			{
-				text = text.ApplyBold ().ApplyFontColor (Color.FromHexa ("b00000"));  // gras + rouge
-			}
-#else
 			if (hilited)
 			{
 				text = text.ApplyBold ();
 			}
-#endif
 
 			if (text.IsNullOrEmpty)
 			{

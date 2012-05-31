@@ -955,13 +955,13 @@ namespace Epsitec.Cresus.Compta.Widgets
 			switch (this.tabs[index].TabItem.Color)
 			{
 				case TabColor.Red:
-					return Color.FromHexa ("ffd7d7");
+					return UIBuilder.TabsPaneRedBack;
 
 				case TabColor.Green:
-					return Color.FromHexa ("d7ffda");
+					return UIBuilder.TabsPaneGreenBack;
 
 				case TabColor.Blue:
-					return Color.FromHexa ("d7f2ff");
+					return UIBuilder.TabsPaneBlueBack;
 
 				default:
 					return Color.Empty;

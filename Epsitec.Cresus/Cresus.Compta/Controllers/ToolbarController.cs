@@ -280,15 +280,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.windowActivated)
 			{
-				this.gradientTitle.BackColor2 = Color.FromHexa ("8fb6d8");  // bleu
-				this.gradientTitle.BackColor1 = Color.FromHexa ("c7e5ff");
+				this.gradientTitle.BackColor2 = UIBuilder.TitleBarActiveTop;
+				this.gradientTitle.BackColor1 = UIBuilder.TitleBarActiveBottom;
 
-				this.closeButton.BackColor = Color.FromHexa ("e66c56");  // rouge
+				this.closeButton.BackColor = UIBuilder.TitleBarCloseButtonBack;
 			}
 			else
 			{
-				this.gradientTitle.BackColor2 = Color.FromHexa ("deecf9");
-				this.gradientTitle.BackColor1 = Color.FromHexa ("eeeeee");
+				this.gradientTitle.BackColor2 = UIBuilder.TitleBarDesactiveTop;
+				this.gradientTitle.BackColor1 = UIBuilder.TitleBarDesactiveBottom;
 
 				this.closeButton.BackColor = Color.Empty;
 			}

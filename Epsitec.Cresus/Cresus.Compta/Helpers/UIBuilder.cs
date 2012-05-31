@@ -406,6 +406,15 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
+		public static readonly Color TitleBarActiveTop			= Color.FromHexa ("8fb6d8");  // bleu
+		public static readonly Color TitleBarActiveBottom		= Color.FromHexa ("c7e5ff");  // bleu plus clair
+		public static readonly Color TitleBarDesactiveTop		= Color.FromHexa ("deecf9");  // gris
+		public static readonly Color TitleBarDesactiveBottom	= Color.FromHexa ("eeeeee");  // gris clair
+		public static readonly Color TitleBarCloseButtonBack	= Color.FromHexa ("e66c56");  // rouge
+		public static readonly Color TitleBarCloseButtonHilite	= Color.FromHexa ("f49786");  // rouge clair
+		public static readonly Color TitleBarMinMaxButtonHilite	= Color.FromHexa ("a8d1f0");  // bleu clair
+		public static readonly Color TitleBarButtonBorder		= Color.FromHexa ("5b6473");  // gris bleu foncé
+
 		public static readonly Color WindowBackColor1			= Color.FromHexa ("c4cad3");  // gris supérieur
 		public static readonly Color WindowBackColor2			= Color.FromHexa ("d8dee6");  // gris supérieur
 		public static readonly Color WindowBackColor3			= Color.FromHexa ("f0f3f7");  // gris supérieur
@@ -413,6 +422,10 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color ModificationBackColor		= Color.FromHexa ("fff8d5");  // orange pastel
 		public static readonly Color CreationHiliteBackColor	= Color.FromHexa ("c3e6ff");  // bleu
 		public static readonly Color ModificationHiliteBackColor= Color.FromHexa ("ffeb85");  // orange
+
+		public static readonly Color TabsPaneRedBack			= Color.FromHexa ("ffd7d7");  // rouge
+		public static readonly Color TabsPaneGreenBack			= Color.FromHexa ("d7ffda");  // vert
+		public static readonly Color TabsPaneBlueBack			= Color.FromHexa ("d7f2ff");  // bleu
 
 #if true
 		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffcc");  // jaune pastel

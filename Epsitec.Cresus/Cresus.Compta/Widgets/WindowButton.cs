@@ -4,6 +4,8 @@
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
 
+using Epsitec.Cresus.Compta.Helpers;
+
 using System.Collections.Generic;
 using System.Linq;
 
@@ -43,11 +45,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 			{
 				if (this.WindowButtonType == Widgets.WindowButtonType.Close)
 				{
-					surfaceColor = Color.FromHexa ("f49786");  // rouge clair
+					surfaceColor = UIBuilder.TitleBarCloseButtonHilite;
 				}
 				else
 				{
-					surfaceColor = Color.FromHexa ("a8d1f0");  // bleu clair
+					surfaceColor = UIBuilder.TitleBarMinMaxButtonHilite;
 				}
 			}
 
@@ -57,7 +59,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.PaintSurface (path);
 			}
 
-			graphics.Color = Color.FromHexa ("5b6473");  // gris bleuté foncé
+			graphics.Color = UIBuilder.TitleBarButtonBorder;
 			graphics.PaintOutline (path);
 
 			adorner.PaintButtonTextLayout (graphics, pos, this.TextLayout, state, this.ButtonStyle);
