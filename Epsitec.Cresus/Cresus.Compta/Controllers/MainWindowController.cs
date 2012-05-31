@@ -52,6 +52,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			Converters.ImportSettings (this.settingsList);
 			this.app.CommandDispatcher.RegisterController (this);
+
+			this.UpdateUndoRedoCommands ();
 		}
 
 
@@ -436,6 +438,20 @@ namespace Epsitec.Cresus.Compta.Controllers
 		#endregion
 
 
+		private void UpdateUndoRedoCommands()
+		{
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Edit.Undo);
+				cs.Enable = false;
+			}
+
+			{
+				CommandState cs = this.app.CommandContext.GetCommandState (Res.Commands.Edit.Redo);
+				cs.Enable = false;
+			}
+		}
+		
+		
 		private void InitializeAfterNewCompta()
 		{
 			//	Initialisation pour pouvoir travailler dans une nouvelle comptabilité, soit vide

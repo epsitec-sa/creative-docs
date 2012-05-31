@@ -41,6 +41,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.soldesColumn.NuméroCompte = value.NuméroCompte;
 				this.soldesColumn.DateDébut    = value.DateDébut;
 
+				if (this.soldesColumn.DateDébut.Year == 1)
+				{
+					this.soldesColumn.DateDébut = this.controller.MainWindowController.Période.DateDébut;
+				}
+
 				this.UpdateWidgets ();
 			}
 		}

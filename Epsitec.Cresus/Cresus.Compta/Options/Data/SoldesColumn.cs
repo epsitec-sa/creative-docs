@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 	{
 		public SoldesColumn()
 		{
-			this.DateDébut = new Date (Date.Today.Year, 1, 1);
+			this.DateDébut = new Date (1, 1, 1);
 		}
 
 		public FormattedText NuméroCompte
