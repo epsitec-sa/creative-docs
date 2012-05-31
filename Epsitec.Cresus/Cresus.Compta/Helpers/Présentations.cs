@@ -327,6 +327,22 @@ namespace Epsitec.Cresus.Compta.Helpers
 #endif
 		}
 
+		public static string GetGroupIcon(ControllerType type)
+		{
+			if (type == ControllerType.Open)
+			{
+				return "Présentation.Group.Open";
+			}
+			else if (type == ControllerType.PlanComptable)
+			{
+				return "Présentation.Group.PlanComptable";
+			}
+			else
+			{
+				return Présentations.GetIcon (type);
+			}
+		}
+
 		public static string GetIcon(ControllerType type)
 		{
 			//	Retourne l'icône d'une présentation.

@@ -435,6 +435,8 @@
     <EmbeddedResource Include="Images\Window.Maximize.icon" />
     <EmbeddedResource Include="Images\Window.Minimize.icon" />
     <EmbeddedResource Include="Images\Window.Restore.icon" />
+    <EmbeddedResource Include="Images\Présentation.Group.Open.icon" />
+    <EmbeddedResource Include="Images\Présentation.Group.PlanComptable.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

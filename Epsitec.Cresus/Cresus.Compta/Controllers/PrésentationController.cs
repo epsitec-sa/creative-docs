@@ -143,7 +143,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				var tabItem = new TabItem
 				{
-					Icon    = Présentations.GetIcon (type),
+					Icon    = Présentations.GetGroupIcon (type),
 					Tooltip = Présentations.GetGroupName (type),
 				};
 
