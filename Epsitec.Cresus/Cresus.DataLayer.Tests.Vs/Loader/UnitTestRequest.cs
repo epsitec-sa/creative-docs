@@ -14,6 +14,8 @@ using Epsitec.Cresus.DataLayer.Tests.Vs.Helpers;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+using System;
+
 using System.Collections.Generic;
 
 
@@ -298,6 +300,48 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 
 		[TestMethod]
+		public void SignificantFieldsTest()
+		{
+			Request request = new Request ();
+
+			var person = new NaturalPersonEntity ();
+			var contact = new UriContactEntity ();
+
+			var f1 = ValueField.Create (person, p => p.Firstname);
+			var f2 = ReferenceField.Create (person, p => p.Gender);
+			var f3 = CollectionField.CreateRank (person, Druid.Parse ("[J1AC1]"), contact);
+
+			var expected = new List<EntityField> ();
+
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Add (f1);
+			expected.Add (f1);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Add (f2);
+			expected.Add (f2);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Add (f3);
+			expected.Add (f3);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Remove (f1);
+			expected.Remove (f1);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Remove (f2);
+			expected.Remove (f2);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+
+			request.SignificantFields.Remove (f3);
+			expected.Remove (f3);
+			CollectionAssert.AreEqual (expected, request.SignificantFields);
+		}
+
+
+		[TestMethod]
 		public void CheckRootEntity()
 		{
 			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
@@ -489,6 +533,51 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				);
 
 				ExceptionAssert.Throw<System.ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+			}
+		}
+
+
+		[TestMethod]
+		public void CheckSignificantFieldsTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				var request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SignificantFields.Add (null);
+
+				ExceptionAssert.Throw<ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SignificantFields.Add (new ValueField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")));
+
+				ExceptionAssert.Throw<ArgumentException>
+				(
+					() => request.Check (dataContext)
+				);
+
+				request = new Request ()
+				{
+					RootEntity = new NaturalPersonEntity (),
+				};
+
+				request.SignificantFields.Add (new ValueField (request.RootEntity, Druid.Parse ("[J1AK1]")));
+
+				ExceptionAssert.Throw<ArgumentException>
 				(
 					() => request.Check (dataContext)
 				);

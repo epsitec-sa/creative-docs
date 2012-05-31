@@ -47,6 +47,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		{
 			this.conditions = new List<Expression> ();
 			this.sortClauses = new List<SortClause> ();
+			this.significantFields = new List<EntityField> ();
 		}
 
 
@@ -111,6 +112,27 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			get
 			{
 				return this.sortClauses;
+			}
+		}
+
+
+		/// <summary>
+		/// The list of fields that are significant for the SQL query, even if they are not used
+		/// to build the EntityData.
+		/// </summary>
+		/// <remarks>
+		/// These fields are included in the result set of the SQL query, which means that they are
+		/// taken into account when the DISTINCT operator that might be present will be applied.
+		/// This allow, for instance, to return an entity multiple times with a query. The instance
+		/// of the entity will be the same, but it will be present more than once in the result set.
+		/// With this, I am able to get the entities present in a collection field even if there are
+		/// duplicates within the collection.
+		/// </remarks>
+		internal List<EntityField> SignificantFields
+		{
+			get
+			{
+				return this.significantFields;
 			}
 		}
 
@@ -195,6 +217,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			this.CheckConditions (checker);
 			this.CheckSortClauses (checker);
+			this.CheckSignificantFields (checker);
 		}
 
 
@@ -352,8 +375,29 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
+		private void CheckSignificantFields(FieldChecker checker)
+		{
+			foreach (var field in this.SignificantFields)
+			{
+				if (field == null)
+				{
+					throw new ArgumentException ("A significant field is null");
+				}
+
+				field.CheckField (checker);
+			}
+		}
+
+
 		private readonly List<Expression> conditions;
+		
+		
 		private readonly List<SortClause> sortClauses;
+
+
+		private readonly List<EntityField> significantFields;
+ 
+		
 		private AbstractEntity requestedEntity;
 
 	}

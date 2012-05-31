@@ -1863,6 +1863,39 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 		}
 
 
+		[TestMethod]
+		public void SignificantFieldTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+				UriContactEntity contact = new UriContactEntity ()
+				{
+					UriScheme = new UriSchemeEntity ()
+					{
+						Name = "email"
+					}
+				};
+
+				example.Contacts.Add (contact);
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.SignificantFields.Add (CollectionField.CreateRank (example, Druid.Parse ("[J1AC1]"), contact));
+
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 3);
+				Assert.AreEqual (1, persons.Count (p => DatabaseCreator2.CheckGertrude (p)));
+				Assert.AreEqual (2, persons.Count (p => DatabaseCreator2.CheckAlfred (p)));
+			}
+		}
+
+
 	}
 
 

@@ -446,6 +446,11 @@ namespace Epsitec.Cresus.DataLayer.Loader
 				yield return builder.BuildEntityField (entity, fieldId);
 			}
 
+			foreach(var field in request.SignificantFields)
+			{
+				yield return field.CreateSqlField (builder);
+			}
+
 			yield return builder.BuildRootLogId (entity);
 			yield return builder.BuildRootTypeId (entity);
 			yield return builder.BuildRootId (entity);
