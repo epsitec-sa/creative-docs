@@ -700,48 +700,17 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		
 		public IEnumerable<EntityData> GetCollectionField(AbstractEntity entity, Druid fieldId)
 		{
-			// TODO This method could be improved by doing only one request with an ORDER BY clause
-			// instead of doing one request to get the data and one request to get the order.
+			// NOTE This query will return duplicate entries for duplicates in the collection. This
+			// is important in order to have the collection in memory to match the data in the
+			// database. Those duplicates will be mapped to the same entity in the DataLoader.
 
-			Dictionary<DbKey, EntityData> targetsData;
-			List<DbKey> targetKeys;
+			var request = this.GetRequestForCollectionField (entity, fieldId);
 
-			using (var transaction = this.StartTransaction ())
-			{
-				targetsData = this.GetCollectionEntityData (entity, fieldId)
-					.ToDictionary (data => data.RowKey);
-
-				if (targetsData.Count > 0)
-				{
-					targetKeys = this.GetCollectionKeys (transaction, entity, fieldId)
-						.Select (d => d.Item2)
-						.ToList ();
-				}
-				else
-				{
-					targetKeys = new List<DbKey> ();
-				}
-
-				transaction.Commit ();
-			}
-
-			var result = new List<EntityData> ();
-
-			foreach (var targetKey in targetKeys)
-			{
-				EntityData entityData;
-
-				if (targetsData.TryGetValue (targetKey, out entityData))
-				{
-					result.Add (entityData);
-				}
-			}
-
-			return result;
+			return this.GetEntitiesData (request);
 		}
 
 
-		private IEnumerable<EntityData> GetCollectionEntityData(AbstractEntity entity, Druid fieldId)
+		private Request GetRequestForCollectionField(AbstractEntity entity, Druid fieldId)
 		{
 			var leafEntityTypeId = entity.GetEntityStructuredTypeId ();
 			var field = this.TypeEngine.GetField (leafEntityTypeId, fieldId);
@@ -761,20 +730,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			var request = Request.Create (source, sourceKey, target);
 
-			return this.GetEntitiesData (request);
-		}
+			var rankField = CollectionField.CreateRank (source, fieldId, target);
 
+			request.SortClauses.Add (new SortClause (rankField, SortOrder.Ascending));
+			request.SignificantFields.Add (rankField);
 
-		private IEnumerable<Tuple<DbKey, DbKey>> GetCollectionKeys(DbTransaction transaction, AbstractEntity entity, Druid fieldId)
-		{
-			var leafEntityTypeId = entity.GetEntityStructuredTypeId ();
-
-			var source = EntityClassFactory.CreateEmptyEntity (leafEntityTypeId);
-			var sourceKey = this.dataContext.GetNormalizedEntityKey (entity).Value.RowKey;
-
-			var request = Request.Create (source, sourceKey);
-
-			return this.GetCollectionData (transaction, request, fieldId);
+			return request;
 		}
 
 
