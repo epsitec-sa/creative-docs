@@ -6,6 +6,7 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
+using Epsitec.Cresus.Compta.Accessors;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -570,6 +571,8 @@ namespace Epsitec.Cresus.Compta.IO
 						this.compta.AddLibellé (période, écriture.Libellé);
 					}
 
+					this.GenerateBudgets (période);
+
 					return null;  // ok
 				}
 				catch (System.Exception ex)
@@ -920,6 +923,35 @@ namespace Epsitec.Cresus.Compta.IO
 			}
 
 			return libellé.Substring (0, i);
+		}
+		#endregion
+
+
+		#region Budgets
+		private void GenerateBudgets(ComptaPériodeEntity période)
+		{
+			//	Hack qui génère des montants bidons au budget.
+			var m = new SoldesJournalManager (this.compta);
+			m.Initialize (période.Journal);
+
+			decimal[] factors = {1.25m, 2.50m, 0.50m, 0.75m, 1.50m};
+
+			int i = 0;
+			foreach (var compte in this.compta.PlanComptable)
+			{
+				var solde = m.GetSolde (compte);
+
+				if (solde.HasValue && solde.Value != 0)
+				{
+					var budget = new ComptaBudgetEntity ();
+					var factor = factors[(i++)%factors.Length];
+
+					budget.Période = période;
+					budget.Montant = solde.Value*factor;
+
+					compte.Budgets.Add (budget);
+				}
+			}
 		}
 		#endregion
 
