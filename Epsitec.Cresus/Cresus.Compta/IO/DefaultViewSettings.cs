@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			this.CreateViewSettingsData (list, ControllerType.PlanComptable,   "Plan comptable",        true,  true,  false);
 			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
-			this.CreateViewSettingsData (list, ControllerType.Périodes,        "Périodes comptables",   true,  false, false);
+			this.CreateViewSettingsData (list, ControllerType.Périodes,        "Exercices comptables",  true,  false, false);
 			this.CreateViewSettingsData (list, ControllerType.PiècesGenerator, "Générateurs n° pièces", false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Utilisateurs,    "Utilisateurs",          false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Réglages,        "Réglages avancés",      false, false, false);

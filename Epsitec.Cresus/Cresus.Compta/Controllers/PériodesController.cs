@@ -79,11 +79,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			get
 			{
-				yield return new ColumnMapper (ColumnType.Utilise,   0.20, ContentAlignment.MiddleCenter, "En cours",                  "Détermine la période comptable en cours");
-				yield return new ColumnMapper (ColumnType.DateDébut, 0.50, ContentAlignment.MiddleLeft,   "Dates de début et de fin",  "Date de début de la période (inclue)");
-				yield return new ColumnMapper (ColumnType.DateFin,   0.00, ContentAlignment.MiddleLeft,   "",                          "Date de fin de la période (inclue)");
-				yield return new ColumnMapper (ColumnType.Titre,     0.00, ContentAlignment.MiddleLeft,   "Commentaire",               "Commentaire affiché entre parenthèses après la période");
-				yield return new ColumnMapper (ColumnType.Pièce,     0.00, ContentAlignment.MiddleLeft,   "Générateur de pièces",      "Générateur pour les numéros de pièces (facultatif)");
+				yield return new ColumnMapper (ColumnType.Utilise,   0.20, ContentAlignment.MiddleCenter, "En cours",                 "Détermine l'exercice comptable en cours");
+				yield return new ColumnMapper (ColumnType.DateDébut, 0.50, ContentAlignment.MiddleLeft,   "Dates de début et de fin", "Date de début de l'exercice (inclue)");
+				yield return new ColumnMapper (ColumnType.DateFin,   0.00, ContentAlignment.MiddleLeft,   "",                         "Date de fin de l'exercice (inclue)");
+				yield return new ColumnMapper (ColumnType.Titre,     0.00, ContentAlignment.MiddleLeft,   "Commentaire",              "Commentaire affiché entre parenthèses après l'exercice");
+				yield return new ColumnMapper (ColumnType.Pièce,     0.00, ContentAlignment.MiddleLeft,   "Générateur de pièces",     "Générateur pour les numéros de pièces (facultatif)");
 				yield return new ColumnMapper (ColumnType.Résumé,    1.50, ContentAlignment.MiddleLeft,   "Résumé", edition: false);
 			}
 		}

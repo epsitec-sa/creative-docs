@@ -187,7 +187,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 					return "Libellés usuels";
 
 				case ControllerType.Périodes:
-					return "Périodes comptables";
+					return "Exercices comptables";
 
 				case ControllerType.Journaux:
 					return "Journaux";

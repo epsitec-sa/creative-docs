@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override FormattedText GetOperationDescription(bool modify)
 		{
-			return modify ? "Modification d'une période :" : "Création d'une période :";
+			return modify ? "Modification d'un exercice :" : "Création d'un exercice :";
 		}
 	}
 }

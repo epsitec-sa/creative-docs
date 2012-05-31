@@ -53,6 +53,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		protected override void CreateTopOptions(FrameBox parent)
 		{
+			this.ShowOptionsPanel = true;
+
 			this.optionsController = new SoldesOptionsController (this);
 			this.optionsController.CreateUI (parent, this.OptionsChanged);
 			this.optionsController.ShowPanel = this.ShowOptionsPanel;
