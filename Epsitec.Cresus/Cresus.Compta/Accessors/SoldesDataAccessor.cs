@@ -80,6 +80,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					Description = FormattedText.Concat ("t", Converters.IntToString (t+1)),
 				};
 
+#if false
 				if (this.Options.Cumul)
 				{
 					for (int c = 0; c < this.columnCount; c++)
@@ -87,6 +88,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 						data.SetSolde (c, 0);
 					}
 				}
+#endif
 
 				this.readonlyAllData.Add (data);
 			}

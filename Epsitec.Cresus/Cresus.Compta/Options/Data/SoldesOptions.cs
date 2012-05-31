@@ -28,8 +28,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			base.Clear ();
 
 			this.ViewGraph          = true;
-			this.Resolution         = 30;
-			this.Count              = 12;
+			this.Resolution         = 7;
+			this.Count              = 26;
 			this.Cumul              = true;
 			this.HasStackedGraph    = true;
 			this.HasSideBySideGraph = false;

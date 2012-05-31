@@ -38,8 +38,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			}
 			set
 			{
-				this.soldesColumn.NuméroCompte = value.NuméroCompte;
-				this.soldesColumn.DateDébut    = value.DateDébut;
+				this.NuméroCompte           = value.NuméroCompte;
+				this.soldesColumn.DateDébut = value.DateDébut;
 
 				if (this.soldesColumn.DateDébut.Year == 1)
 				{
@@ -91,20 +91,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins          = new Margins (0, 10, 0, 0),
 			};
 
-			this.compteField = new TextFieldCombo
-			{
-				Parent          = this.frame,
-				PreferredWidth  = 70,
-				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				Dock            = DockStyle.Left,
-				TabIndex        = 1,
-			};
-
-			foreach (var compte in this.controller.ComptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal || x.Type == TypeDeCompte.TVA))
-			{
-				this.compteField.Items.Add (compte.Numéro);
-			}
+			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, this.frame, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController.Box.Dock = DockStyle.Left;
 
 			new StaticText
 			{
@@ -139,16 +127,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins         = new Margins (5, 0, 0, 0),
 			};
 
-			this.compteField.TextChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.soldesColumn.NuméroCompte = this.compteField.FormattedText;
-					this.UpdateWidgets ();
-					this.dataChanged (this.Index);
-				}
-			};
-
 			this.dateField.EditionAccepted += delegate
 			{
 				if (this.ignoreChanges.IsZero)
@@ -168,20 +146,41 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				addSubClicked (this.Index);
 			};
 
+			this.UpdateComptes ();
 			this.UpdateWidgets ();
 
 			return this.frame;
+		}
+
+		private void UpdateComptes()
+		{
+			var comptes = this.controller.ComptaEntity.PlanComptable.Where (x => x.Type == TypeDeCompte.Normal || x.Type == TypeDeCompte.TVA);
+			UIBuilder.UpdateAutoCompleteTextField (this.compteController.EditWidget as AutoCompleteTextField, comptes);
 		}
 
 		private void UpdateWidgets()
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.compteField.FormattedText = this.soldesColumn.NuméroCompte;
+				this.compteController.EditionData.Text = this.NuméroCompte;
+				this.compteController.EditionDataToWidget ();
+
 				this.dateField.Text = Converters.DateToString (this.soldesColumn.DateDébut);
 			}
 		}
 
+
+		private FormattedText NuméroCompte
+		{
+			get
+			{
+				return this.soldesColumn.NuméroCompte.ToSimpleText ();
+			}
+			set
+			{
+				this.soldesColumn.NuméroCompte = value;
+			}
+		}
 
 		private void ValidateCompteAction(EditionData data)
 		{
@@ -192,7 +191,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			if (this.ignoreChanges.IsZero)
 			{
-				this.soldesColumn.NuméroCompte = this.compteField.FormattedText;
+				this.NuméroCompte = this.compteController.EditionData.Text;
+				this.UpdateWidgets ();
 				this.dataChanged (this.Index);
 			}
 		}
@@ -204,7 +204,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private System.Action<int>						dataChanged;
 		private FrameBox								frame;
-		private TextFieldCombo							compteField;
+		private AutoCompleteFieldController				compteController;
 		private TextFieldEx								dateField;
 		private GlyphButton								addSubButton;
 	}

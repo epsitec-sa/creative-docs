@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			for (int i = 0; i < 3; i++)
+			for (int i = 0; i < 5; i++)
 			{
 				int resolution = SoldesOptionsController.IndexToResolution (i);
 				this.resolutionField.Items.Add (SoldesOptions.ResolutionToDescription (resolution));
@@ -279,7 +279,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 					return 7;  // hebdomadaire
 
 				case 2:
-					return 30;  // mansuel
+					return 10;
+
+				case 3:
+					return 20;
+
+				case 4:
+					return 30;
 
 				default:
 					return 0;  // inconnu
