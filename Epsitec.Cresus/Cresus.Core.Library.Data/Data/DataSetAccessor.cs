@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Core.Data
 				var fieldEntity = EntityInfo.WalkEntityGraph (example, fieldPath, NullNodeAction.CreateMissing);
 				var fieldId     = EntityInfo.GetFieldCaption (column.Lambda).Id;
 				
-				var fieldNode = new PublicField (fieldEntity, fieldId);
+				var fieldNode = new ValueField (fieldEntity, fieldId);
 				
 				request.AddSortClause (fieldNode, column.SortOrder);
 			}

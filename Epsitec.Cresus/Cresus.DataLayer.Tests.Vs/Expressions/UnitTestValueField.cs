@@ -16,7 +16,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 	[TestClass]
-	public sealed class UnitTestPublicField
+	public sealed class UnitTestValueField
 	{
 
 
@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 			var entity = new NaturalPersonEntity ();
 			var druid = Druid.FromLong (1);
 
-			var field = new PublicField (entity, druid);
+			var field = new ValueField (entity, druid);
 
 			Assert.AreEqual (entity, field.Entity);
 			Assert.AreEqual (druid, field.FieldId);
@@ -42,12 +42,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		{
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new PublicField (null, Druid.FromLong (1))
+				() => new ValueField (null, Druid.FromLong (1))
 			);
 
 			ExceptionAssert.Throw<ArgumentException>
 			(
-				() => new PublicField (new NaturalPersonEntity (), Druid.Empty)
+				() => new ValueField (new NaturalPersonEntity (), Druid.Empty)
 			);
 		}
 

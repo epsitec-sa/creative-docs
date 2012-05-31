@@ -16,26 +16,24 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 
 
 	[TestClass]
-	public sealed class UnitTestSortClause
+	public sealed class UnitTestReferenceField
 	{
 
 
 		// TODO Add tests for CreateSqlField(...)
 		// TODO Add tests for CheckField(...)
 		
-
+		
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			foreach (SortOrder sortOrder in Enum.GetValues (typeof (SortOrder)))
-			{
-				var field = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var entity = new NaturalPersonEntity ();
+			var druid = Druid.FromLong (1);
 
-				var sortClause = new SortClause (field, sortOrder);
+			var field = new ReferenceField (entity, druid);
 
-				Assert.AreSame (field, sortClause.Field);
-				Assert.AreEqual (sortOrder, sortClause.SortOrder);
-			}
+			Assert.AreEqual (entity, field.Entity);
+			Assert.AreEqual (druid, field.FieldId);
 		}
 
 
@@ -44,7 +42,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		{
 			ExceptionAssert.Throw<ArgumentNullException>
 			(
-				() => new SortClause (null, SortOrder.Ascending)
+				() => new ReferenceField (null, Druid.FromLong (1))
+			);
+
+			ExceptionAssert.Throw<ArgumentException>
+			(
+				() => new ReferenceField (new NaturalPersonEntity (), Druid.Empty)
 			);
 		}
 

@@ -7,6 +7,8 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
+using System.Collections.Generic;
+
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
@@ -31,9 +33,10 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 		/// <summary>
-		/// Gets the entity that is reference by this value or null if there is none.
+		/// Adds the entities thate are referenced within this instance to the given set.
 		/// </summary>
-		internal abstract AbstractEntity GetEntity();
+		/// <param name="entities">The set in which to add the entities.</param>
+		internal abstract void AddEntities(HashSet<AbstractEntity> entities);
 	
 	
 	}

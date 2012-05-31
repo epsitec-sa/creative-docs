@@ -7,6 +7,8 @@ using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Loader;
 
+using System.Collections.Generic;
+
 using System.Text.RegularExpressions;
 
 
@@ -182,9 +184,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		internal override AbstractEntity GetEntity()
+		internal override void AddEntities(HashSet<AbstractEntity> entities)
 		{
-			return null;
 		}
 
 

@@ -112,7 +112,7 @@ namespace Epsitec.Aider.Entities
 
 			request.Conditions.Add (
 				new BinaryComparison (
-					new PublicField (example, new Druid ("[LVAA4]")),
+					new ValueField (example, new Druid ("[LVAA4]")),
 					BinaryComparator.IsLike,
 					new Constant (rootGroupNamePattern)
 				)

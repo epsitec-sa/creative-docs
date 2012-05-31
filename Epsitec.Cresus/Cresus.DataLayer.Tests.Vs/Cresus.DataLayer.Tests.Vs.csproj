@@ -74,6 +74,8 @@
   <ItemGroup>
     <Compile Include="Entities\NaturalPersonEntity.cs" />
     <Compile Include="Entities\SimpleEnum.cs" />
+    <Compile Include="Expressions\UnitTestCollectionField.cs" />
+    <Compile Include="Expressions\UnitTestReferenceField.cs" />
     <Compile Include="Expressions\UnitTestSortClause.cs" />
     <Compile Include="Expressions\UnitTestInternalField.cs" />
     <Compile Include="General\UnitTestConcurrencyDelete.cs" />
@@ -120,7 +122,7 @@
     <Compile Include="Serialization\UnitTestCollectionData.cs" />
     <Compile Include="Serialization\UnitTestEntityData.cs" />
     <Compile Include="Expressions\UnitTestConstant.cs" />
-    <Compile Include="Expressions\UnitTestPublicField.cs" />
+    <Compile Include="Expressions\UnitTestValueField.cs" />
     <Compile Include="Expressions\UnitTestBinaryOperation.cs" />
     <Compile Include="Expressions\UnitTestBinaryComparison.cs" />
     <Compile Include="General\UnitTestConcurrency.cs" />

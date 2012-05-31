@@ -65,7 +65,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new UnaryComparison (
-						new PublicField (example, new Druid ("[J1AM1]")),
+						new ValueField (example, new Druid ("[J1AM1]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -95,7 +95,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
@@ -124,9 +124,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
-						new PublicField (example, new Druid ("[J1AM1]"))
+						new ValueField (example, new Druid ("[J1AM1]"))
 					)
 				);
 
@@ -155,9 +155,9 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsLowerOrEqual,
-						new PublicField (example.Gender, new Druid ("[J1AR]"))
+						new ValueField (example.Gender, new Druid ("[J1AR]"))
 					)
 				);
 
@@ -184,7 +184,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AD2]")),
+						new ValueField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsLowerOrEqual,
 						InternalField.CreateId (example)
 					)
@@ -217,7 +217,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					new UnaryOperation (
 						UnaryOperator.Not,
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1AL1]")),
+							new ValueField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
@@ -249,13 +249,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				request.Conditions.Add (
 					new BinaryOperation (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1AL1]")),
+							new ValueField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Hans")
 						),
 						BinaryOperator.And,
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1AL1]")),
+							new ValueField (example, new Druid ("[J1AL1]")),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Gertrude")
 						)
@@ -285,7 +285,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
@@ -293,7 +293,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AM1]")),
+						new ValueField (example, new Druid ("[J1AM1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Dupond")
 					)
@@ -324,7 +324,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Alfred")
 					)
@@ -332,7 +332,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example.Gender, new Druid ("[J1AR]")),
+						new ValueField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
 					)
@@ -364,7 +364,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example.Gender, new Druid ("[J1AR]")),
+						new ValueField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsEqual,
 						new Constant ("Male")
 					)
@@ -396,7 +396,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example.Gender, new Druid ("[J1AR]")),
+						new ValueField (example.Gender, new Druid ("[J1AR]")),
 						BinaryComparator.IsLike,
 						new Constant ("%ale")
 					)
@@ -437,7 +437,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					request.Conditions.Add (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1A5]")),
+							new ValueField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLike,
 							new Constant ("test%test")
 						)
@@ -463,7 +463,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					request.Conditions.Add (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1A5]")),
+							new ValueField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLike,
 							new Constant ("test_test")
 						)
@@ -490,7 +490,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					request.Conditions.Add (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1A5]")),
+							new ValueField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -515,7 +515,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					request.Conditions.Add (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1A5]")),
+							new ValueField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -540,7 +540,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 					request.Conditions.Add (
 						new BinaryComparison (
-							new PublicField (example, new Druid ("[J1A5]")),
+							new ValueField (example, new Druid ("[J1A5]")),
 							BinaryComparator.IsLikeEscape,
 							new Constant (value)
 						)
@@ -641,7 +641,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1A82]")),
+						new ValueField (example, new Druid ("[J1A82]")),
 						BinaryComparator.IsEqual,
 						new Constant (true)
 					)
@@ -672,7 +672,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1A82]")),
+						new ValueField (example, new Druid ("[J1A82]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (false)
 					)
@@ -703,7 +703,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1A92]")),
+						new ValueField (example, new Druid ("[J1A92]")),
 						BinaryComparator.IsEqual,
 						new Constant (new byte[] { 0x0F, 0xF0 })
 					)
@@ -733,7 +733,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1A92]")),
+						new ValueField (example, new Druid ("[J1A92]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new byte[] { 0x0F, 0xF0 })
 					)
@@ -764,7 +764,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AA2]")),
+						new ValueField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -794,7 +794,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AA2]")),
+						new ValueField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -825,7 +825,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AA2]")),
+						new ValueField (example, new Druid ("[J1AA2]")),
 						BinaryComparator.IsGreater,
 						new Constant (new System.DateTime (1969, 7, 21, 4, 17, 0))
 					)
@@ -856,7 +856,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AB2]")),
+						new ValueField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -886,7 +886,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AB2]")),
+						new ValueField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -917,7 +917,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AB2]")),
+						new ValueField (example, new Druid ("[J1AB2]")),
 						BinaryComparator.IsGreater,
 						new Constant (new Date (1291, 8, 1))
 					)
@@ -948,7 +948,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AC2]")),
+						new ValueField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsEqual,
 						new Constant (123.456m)
 					)
@@ -978,7 +978,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AC2]")),
+						new ValueField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (123.456m)
 					)
@@ -1009,7 +1009,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AC2]")),
+						new ValueField (example, new Druid ("[J1AC2]")),
 						BinaryComparator.IsGreater,
 						new Constant (123.456m)
 					)
@@ -1039,7 +1039,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL2]")),
+						new ValueField (example, new Druid ("[J1AL2]")),
 						BinaryComparator.IsEqual,
 						new Constant (SimpleEnum.Value2)
 					)
@@ -1069,7 +1069,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AL2]")),
+						new ValueField (example, new Druid ("[J1AL2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (SimpleEnum.Value2)
 					)
@@ -1100,7 +1100,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AD2]")),
+						new ValueField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsEqual,
 						new Constant (42)
 					)
@@ -1130,7 +1130,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AD2]")),
+						new ValueField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (42)
 					)
@@ -1161,7 +1161,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AD2]")),
+						new ValueField (example, new Druid ("[J1AD2]")),
 						BinaryComparator.IsLower,
 						new Constant (42)
 					)
@@ -1191,7 +1191,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AE2]")),
+						new ValueField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsEqual,
 						new Constant (4242)
 					)
@@ -1221,7 +1221,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AE2]")),
+						new ValueField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (4242)
 					)
@@ -1252,7 +1252,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AE2]")),
+						new ValueField (example, new Druid ("[J1AE2]")),
 						BinaryComparator.IsLower,
 						new Constant (4242)
 					)
@@ -1283,7 +1283,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AF2]")),
+						new ValueField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsEqual,
 						new Constant ("blupi")
 					)
@@ -1313,7 +1313,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AF2]")),
+						new ValueField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant ("blupi")
 					)
@@ -1344,7 +1344,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AF2]")),
+						new ValueField (example, new Druid ("[J1AF2]")),
 						BinaryComparator.IsLower,
 						new Constant ("blupi")
 					)
@@ -1374,7 +1374,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AG2]")),
+						new ValueField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsEqual,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1404,7 +1404,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AG2]")),
+						new ValueField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsNotEqual,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1435,7 +1435,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.Conditions.Add (
 					new BinaryComparison (
-						new PublicField (example, new Druid ("[J1AG2]")),
+						new ValueField (example, new Druid ("[J1AG2]")),
 						BinaryComparator.IsLower,
 						new Constant (new Time (12, 12, 12))
 					)
@@ -1466,7 +1466,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						SortOrder.Ascending
 					)
 				);
@@ -1497,7 +1497,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1531,7 +1531,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example.PreferredLanguage, new Druid ("[J1AU]")),
+						new ValueField (example.PreferredLanguage, new Druid ("[J1AU]")),
 						SortOrder.Descending
 					)
 				);
@@ -1565,14 +1565,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						SortOrder.Ascending
 					)
 				);
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example.PreferredLanguage, new Druid ("[J1AU]")),
+						new ValueField (example.PreferredLanguage, new Druid ("[J1AU]")),
 						SortOrder.Descending
 					)
 				);
@@ -1608,7 +1608,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					new UnaryOperation (
 						UnaryOperator.Not,
 						new BinaryComparison (
-							PublicField.Create (example, x => x.Firstname),
+							ValueField.Create (example, x => x.Firstname),
 							BinaryComparator.IsEqual,
 							new Constant ("Hans")
 						)
@@ -1617,7 +1617,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						PublicField.Create (example, x => x.BirthDate),
+						ValueField.Create (example, x => x.BirthDate),
 						SortOrder.Descending
 					)
 				);
@@ -1678,7 +1678,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example, new Druid ("[J1AL1]")),
+						new ValueField (example, new Druid ("[J1AL1]")),
 						SortOrder.Descending
 					)
 				);
@@ -1729,7 +1729,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				request.SortClauses.Add (
 					new SortClause (
-						new PublicField (example.Gender, new Druid ("[J1AR]")),
+						new ValueField (example.Gender, new Druid ("[J1AR]")),
 						SortOrder.Ascending
 					)
 				);
@@ -1740,6 +1740,125 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 
 				Assert.AreEqual (1, result.Count);
 				Assert.IsTrue (DatabaseCreator2.CheckGertrude (result[0]));
+			}
+		}
+
+
+		[TestMethod]
+		public void ValueFieldTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						ValueField.Create (example, p => p.Firstname),
+						BinaryComparator.IsEqual,
+						new Constant ("Alfred")
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (persons[0]));
+			}
+		}
+
+
+		[TestMethod]
+		public void ReferenceFieldTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						ReferenceField.Create (example, p => p.Gender),
+						BinaryComparator.IsEqual,
+						new Constant ((long) 1000000001)
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (persons[0]));
+			}
+		}
+
+
+		[TestMethod]
+		public void CollectionFieldTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+				UriContactEntity contact = new UriContactEntity ();
+				example.Contacts.Add (contact);
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+					RequestedEntity = contact,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						CollectionField.CreateRank (example, Druid.Parse ("[J1AC1]"), contact),
+						BinaryComparator.IsEqual,
+						new Constant ((long) 1)
+					)
+				);
+
+				UriContactEntity[] contacts = dataContext.GetByRequest<UriContactEntity> (request).ToArray ();
+
+				Assert.IsTrue (contacts.Count () == 1);
+				Assert.IsTrue (DatabaseCreator2.CheckUriContact (contacts[0], "alfred@blabla.com", "Alfred"));
+			}
+		}
+
+
+		[TestMethod]
+		public void InternalFieldTest()
+		{
+			using (DataInfrastructure dataInfrastructure = DataInfrastructureHelper.ConnectToTestDatabase ())
+			using (DataContext dataContext = DataContextHelper.ConnectToTestDatabase (dataInfrastructure))
+			{
+				NaturalPersonEntity example = new NaturalPersonEntity ();
+
+				Request request = new Request ()
+				{
+					RootEntity = example,
+				};
+
+				request.Conditions.Add (
+					new BinaryComparison (
+						InternalField.CreateId (example),
+						BinaryComparator.IsEqual,
+						new Constant ((long) 1000000001)
+					)
+				);
+
+				NaturalPersonEntity[] persons = dataContext.GetByRequest<NaturalPersonEntity> (request).ToArray ();
+
+				Assert.IsTrue (persons.Count () == 1);
+				Assert.IsTrue (DatabaseCreator2.CheckAlfred (persons[0]));
 			}
 		}
 

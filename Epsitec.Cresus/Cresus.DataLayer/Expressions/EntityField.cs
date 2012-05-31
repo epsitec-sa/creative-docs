@@ -1,11 +1,12 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
 using System;
+
+using System.Collections.Generic;
 
 
 namespace Epsitec.Cresus.DataLayer.Expressions
@@ -16,7 +17,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 	/// The <c>EntityField</c> class represents a field of an <see cref="AbstractEntity"/> in an
 	/// <see cref="Expression"/>.
 	/// </summary>
-	public abstract class EntityField : Value, IEquatable<EntityField>
+	public abstract class EntityField : Value
 	{
 		
 		
@@ -44,40 +45,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		#region IEquatable<EntityField> Members
-
-		
-		public bool Equals(EntityField other)
+		internal override void AddEntities(HashSet<AbstractEntity> entities)
 		{
-			if (other == null)
-			{
-				return false;
-			}
-			else
-			{
-				return this.entity == other.entity;
-			}
-		}
-
-		
-		#endregion
-		
-		
-		public override bool Equals(object obj)
-		{
-			return this.Equals (obj as EntityField);
-		}
-		
-		
-		public override int GetHashCode()
-		{
-			return this.entity.GetHashCode ();
-		}
-
-
-		internal override AbstractEntity GetEntity()
-		{
-			return this.entity;
+			entities.Add (this.entity);
 		}
 
 		

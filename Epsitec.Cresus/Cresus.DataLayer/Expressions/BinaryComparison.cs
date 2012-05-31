@@ -90,8 +90,8 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		internal override void AddEntities(HashSet<AbstractEntity> entities)
 		{
-			this.AddEntity (entities, this.Left.GetEntity ());
-			this.AddEntity (entities, this.Right.GetEntity ());
+			this.Left.AddEntities (entities);
+			this.Right.AddEntities (entities);
 		}
 
 

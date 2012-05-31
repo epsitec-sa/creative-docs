@@ -1,26 +1,22 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
-using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
 
 using Epsitec.Cresus.DataLayer.Context;
 using Epsitec.Cresus.DataLayer.Expressions;
-using Epsitec.Cresus.DataLayer.Schema;
 
 using System.Collections.Generic;
 
 using System;
 
-using System.Linq;
-
 
 namespace Epsitec.Cresus.DataLayer.Loader
 {
+
+
 	/// <summary>
 	/// A <c>Request</c> object represent a high level query that can be executed against the database
 	/// via a <see cref="DataContext"/> and <see cref="DataLoader"/>.
@@ -42,6 +38,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 	/// </remarks>
 	public sealed class Request
 	{
+		
+		
 		/// <summary>
 		/// Builds a brand new <c>Request</c>.
 		/// </summary>
@@ -55,17 +53,18 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is at the root of the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity					RootEntity
+		public AbstractEntity RootEntity
 		{
 			get;
 			set;
 		}
 
+
 		/// <summary>
 		/// The <see cref="AbstractEntity"/> which is to be returned at the end of the execution of
 		/// the <c>Request</c>.
 		/// </summary>
-		public AbstractEntity					RequestedEntity
+		public AbstractEntity RequestedEntity
 		{
 			get
 			{
@@ -77,25 +76,28 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
+
 		/// <summary>
 		/// The number of entities that the request must skip from the result.
 		/// </summary>
-		public int?								Skip
+		public int? Skip
 		{
 			get;
 			set;
 		}
+
 
 		/// <summary>
 		/// The number of entities that the request must take from the result.
 		/// </summary>
-		public int?								Take
+		public int? Take
 		{
 			get;
 			set;
 		}
 
-		public List<Expression>					Conditions
+
+		public List<Expression> Conditions
 		{
 			get
 			{
@@ -103,7 +105,8 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			}
 		}
 
-		public List<SortClause>					SortClauses
+
+		public List<SortClause> SortClauses
 		{
 			get
 			{
@@ -126,6 +129,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			};
 		}
 
+
 		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey)
 		{
 			var request = Request.Create (rootEntity);
@@ -142,6 +146,7 @@ namespace Epsitec.Cresus.DataLayer.Loader
 
 			return request;
 		}
+
 
 		public static Request Create(AbstractEntity rootEntity, DbKey rootEntityKey, AbstractEntity requestedEntity)
 		{
@@ -186,10 +191,10 @@ namespace Epsitec.Cresus.DataLayer.Loader
 			this.CheckForeignEntities (nonPersistentEntities, dataContext);
 			this.CheckSkipAndTake ();
 
-			var fieldChecker = this.BuildFieldChecker (nonPersistentEntities, dataContext);
+			var checker = this.BuildChecker (nonPersistentEntities, dataContext);
 
-			this.CheckConditions (fieldChecker);
-			this.CheckSortClauses (fieldChecker);
+			this.CheckConditions (checker);
+			this.CheckSortClauses (checker);
 		}
 
 
@@ -311,68 +316,15 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		private FieldChecker BuildFieldChecker(HashSet<AbstractEntity> entities, DataContext dataContext)
+		private FieldChecker BuildChecker(HashSet<AbstractEntity> entities, DataContext dataContext)
 		{
-			return new FieldChecker
-			(
-				entities,
-				dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine,
-				Request.CheckValueField,
-				Request.CheckInternalField
-			);
+			var typeEngine = dataContext.DataInfrastructure.EntityEngine.EntityTypeEngine;
+
+			return new FieldChecker (entities, typeEngine);
 		}
 
 
-		private static void CheckValueField(HashSet<AbstractEntity> entities, EntityTypeEngine entityTypeEngine, AbstractEntity entity, Druid fieldId)
-		{
-			Request.CheckEntity (entities, entity);
-
-			if (!Request.IsValueField (entityTypeEngine, entity, fieldId))
-			{
-				throw new ArgumentException ("Invalid public field id");
-			}
-		}
-
-
-		private static bool IsValueField(EntityTypeEngine entityTypeEngine, AbstractEntity entity, Druid fieldId)
-		{
-			var leafEntityId = entity.GetEntityStructuredTypeId();
-			var field = entityTypeEngine.GetField(leafEntityId, fieldId);
-
-			return field != null && field.Relation == FieldRelation.None;
-		}
-
-
-		private static void CheckInternalField(HashSet<AbstractEntity> entities, AbstractEntity entity, string name)
-		{
-			Request.CheckEntity (entities, entity);
-
-			if (!Request.IsInternalField (name))
-			{
-				throw new ArgumentException ("Invalid internal field name");
-			}
-		}
-
-
-		private static bool IsInternalField(string name)
-		{
-			return name == EntitySchemaBuilder.EntityTableColumnIdName
-				|| name == EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName;
-		}
-
-
-		private static void CheckEntity(HashSet<AbstractEntity> entities, AbstractEntity entity)
-		{
-			if (!entities.Contains (entity))
-			{
-				var message = "Entity in condition or sort clause is not in reachable graph.";
-
-				throw new ArgumentException(message);
-			}
-		}
-
-
-		private void CheckConditions(FieldChecker fieldChecker)
+		private void CheckConditions(FieldChecker checker)
 		{
 			foreach (var condition in this.Conditions)
 			{
@@ -381,11 +333,12 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					throw new ArgumentException ("A condition is null");
 				}
 
-				condition.CheckFields (fieldChecker);
+				condition.CheckFields (checker);
 			}
 		}
 
-		private void CheckSortClauses(FieldChecker fieldChecker)
+
+		private void CheckSortClauses(FieldChecker checker)
 		{
 			foreach (var sortClause in this.SortClauses)
 			{
@@ -394,13 +347,16 @@ namespace Epsitec.Cresus.DataLayer.Loader
 					throw new ArgumentException ("A sort clause is null");
 				}
 
-				sortClause.CheckField (fieldChecker);
+				sortClause.CheckField (checker);
 			}
 		}
 
 
-		private readonly List<Expression>		conditions;
-		private readonly List<SortClause>		sortClauses;
-		private AbstractEntity					requestedEntity;
+		private readonly List<Expression> conditions;
+		private readonly List<SortClause> sortClauses;
+		private AbstractEntity requestedEntity;
+
 	}
+
+
 }

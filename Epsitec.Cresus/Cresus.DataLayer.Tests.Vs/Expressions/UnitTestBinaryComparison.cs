@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			var left = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var left = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 			var op = BinaryComparator.IsEqual;
 			var right = new Constant (0);
 
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		{
 			var right = new Constant (0);
 			var op = BinaryComparator.IsEqual;
-			var left = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var left = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 
 			ExceptionAssert.Throw<System.ArgumentNullException>
 			(

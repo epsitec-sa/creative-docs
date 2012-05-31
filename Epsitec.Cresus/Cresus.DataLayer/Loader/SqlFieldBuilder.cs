@@ -202,10 +202,21 @@ namespace Epsitec.Cresus.DataLayer.Loader
 		}
 
 
-		public SqlField BuildRelationColumn(string tableAlias, Druid localEntityTypeId, Druid fieldId, string columnName)
+		public SqlField BuildRelationColumn(AbstractEntity source, Druid fieldId, AbstractEntity target, string name)
+		{
+			var leafSourceTypeId = source.GetEntityStructuredTypeId ();
+			var localSourceTypeId = this.TypeEngine.GetLocalType (leafSourceTypeId, fieldId).CaptionId;
+
+			var tableAlias = this.AliasManager.GetAlias (source, fieldId, target);
+
+			return this.BuildRelationColumn (tableAlias, localSourceTypeId, fieldId, name);
+		}
+
+
+		public SqlField BuildRelationColumn(string tableAlias, Druid localEntityTypeId, Druid fieldId, string name)
 		{
 			var dbTable = this.SchemaEngine.GetEntityFieldTable (localEntityTypeId, fieldId);
-			var dbColumn = dbTable.Columns[columnName];
+			var dbColumn = dbTable.Columns[name];
 
 			return this.BuildColumn (tableAlias, dbColumn);
 		}

@@ -59,21 +59,21 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			Expression expression1 = new BinaryComparison
 			(
-				new PublicField (person, new Druid ("[J1AM1]")),
+				new ValueField (person, new Druid ("[J1AM1]")),
 				BinaryComparator.IsEqual,
-				new PublicField (person, new Druid ("[J1AL1]"))
+				new ValueField (person, new Druid ("[J1AL1]"))
 			);
 
 			Expression expression2 = new BinaryComparison
 			(
-				new PublicField (person, new Druid ("[J1AO1]")),
+				new ValueField (person, new Druid ("[J1AO1]")),
 				BinaryComparator.IsEqual,
 				new Constant (true)
 			);
 
 			Expression expression3 = new UnaryComparison
 			(
-				new PublicField (uriContact, new Druid ("[J1A62]")),
+				new ValueField (uriContact, new Druid ("[J1A62]")),
 				UnaryComparator.IsNull
 			);
 
@@ -81,13 +81,13 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 			(
 				new UnaryComparison
 				(
-					new PublicField (title, new Druid ("[J1AP]")),
+					new ValueField (title, new Druid ("[J1AP]")),
 					UnaryComparator.IsNotNull
 				),
 				BinaryOperator.Or,
 				new UnaryComparison
 				(
-					new PublicField (title, new Druid ("[J1AO]")),
+					new ValueField (title, new Druid ("[J1AO]")),
 					UnaryComparator.IsNotNull
 				)
 			);
@@ -150,25 +150,25 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 
 			SortClause sortClause1 = new SortClause
 			(
-				new PublicField (person, new Druid ("[J1AM1]")),
+				new ValueField (person, new Druid ("[J1AM1]")),
 				SortOrder.Ascending
 			);
 
 			SortClause sortClause2 = new SortClause
 			(
-				new PublicField (person, new Druid ("[J1AO1]")),
+				new ValueField (person, new Druid ("[J1AO1]")),
 				SortOrder.Descending
 			);
 
 			SortClause sortClause3 = new SortClause
 			(
-				new PublicField (uriContact, new Druid ("[J1A62]")),
+				new ValueField (uriContact, new Druid ("[J1A62]")),
 				SortOrder.Ascending
 			);
 
 			SortClause sortClause4 = new SortClause
 			(
-				new PublicField (title, new Druid ("[J1AP]")),
+				new ValueField (title, new Druid ("[J1AP]")),
 				SortOrder.Descending
 			);
 
@@ -379,7 +379,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				(
 					new UnaryComparison
 					(
-						new PublicField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
+						new ValueField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -398,7 +398,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				(
 					new UnaryComparison
 					(
-						new PublicField (request.RootEntity, Druid.Parse ("[J1A82]")),
+						new ValueField (request.RootEntity, Druid.Parse ("[J1A82]")),
 						UnaryComparator.IsNotNull
 					)
 				);
@@ -445,7 +445,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				(
 					new SortClause
 					(
-						new PublicField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
+						new ValueField (new NaturalPersonEntity (), Druid.Parse ("[J1AL1]")),
 						SortOrder.Ascending
 					)
 				);
@@ -464,7 +464,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Loader
 				(
 					new SortClause
 					(
-						new PublicField (request.RootEntity, Druid.Parse ("[J1A82]")),
+						new ValueField (request.RootEntity, Druid.Parse ("[J1A82]")),
 						SortOrder.Descending
 					)
 				);

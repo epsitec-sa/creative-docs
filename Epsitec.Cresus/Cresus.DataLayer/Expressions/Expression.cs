@@ -54,15 +54,6 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		internal abstract void AddEntities(HashSet<AbstractEntity> entities);
 
 
-		protected void AddEntity(HashSet<AbstractEntity> entities, AbstractEntity entity)
-		{
-			if (entity != null)
-			{
-				entities.Add (entity);
-			}
-		}
-
-
 	}
 
 

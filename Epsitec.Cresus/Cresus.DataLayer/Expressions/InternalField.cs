@@ -11,15 +11,15 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 
 	/// <summary>
-	/// The <c>InternalField</c> class represents a field of an <see cref="AbstractEntity"/> in an
-	/// <see cref="Expression"/> that targets an field of the entity, such as its id.
+	/// The <c>InternalField</c> class represents a field of an <see cref="AbstractEntity"/>
+	/// in an <see cref="Expression"/> that targets an field of the entity, such as its id.
 	/// </summary>
 	public sealed class InternalField : EntityField
 	{
 
 
 		/// <summary>
-		/// Creates a new <c>PublicField</c>.
+		/// Creates a new <c>InternalField</c>.
 		/// </summary>
 		/// <param name="entity">The entity that will be referenced by this instance</param>
 		/// <param name="name">The name that identifies the field.</param>
@@ -48,7 +48,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 
 		internal override void CheckField(FieldChecker checker)
 		{
-			checker.Check (this.Entity, this.Name);
+			checker.CheckInternalEntityField (this.Entity, this.Name);
 		}
 		
 		
@@ -59,7 +59,9 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		/// <returns>The internal field.</returns>
 		public static InternalField CreateId(AbstractEntity entity)
 		{
-			return new InternalField (entity, EntitySchemaBuilder.EntityTableColumnIdName);
+			var name = EntitySchemaBuilder.EntityTableColumnIdName;
+
+			return new InternalField (entity, name);
 		}
 
 
@@ -71,7 +73,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		{
 			var name = EntitySchemaBuilder.EntityTableColumnEntityModificationEntryIdName;
 
-			return new InternalField(entity, name);
+			return new InternalField (entity, name);
 		}
 
 

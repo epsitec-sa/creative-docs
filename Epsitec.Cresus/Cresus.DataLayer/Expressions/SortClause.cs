@@ -10,11 +10,15 @@ using Epsitec.Cresus.DataLayer.Loader;
 
 namespace Epsitec.Cresus.DataLayer.Expressions
 {
+	
+	
 	/// <summary>
 	/// The <c>SortClause</c> class defines a part of an ordering for the result of requests.
 	/// </summary>
-	public sealed class SortClause : System.IEquatable<SortClause>
+	public sealed class SortClause
 	{
+
+
 		public SortClause(EntityField field, SortOrder sortOrder)
 		{
 			field.ThrowIfNull ("field");
@@ -24,7 +28,7 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		public EntityField						Field
+		public EntityField Field
 		{
 			get
 			{
@@ -32,38 +36,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 			}
 		}
 
-		public SortOrder						SortOrder
+
+		public SortOrder SortOrder
 		{
 			get
 			{
 				return this.sortOrder;
 			}
-		}
-
-
-		#region IEquatable<SortClause> Members
-
-		public bool Equals(SortClause other)
-		{
-			if (other == null)
-			{
-				return false;
-			}
-
-			return this.field == other.field
-				&& this.sortOrder == other.sortOrder;
-		}
-
-		#endregion
-
-		public override bool Equals(object obj)
-		{
-			return this.Equals (obj as SortClause);
-		}
-
-		public override int GetHashCode()
-		{
-			return this.field.GetHashCode () ^ this.sortOrder.GetHashCode ();
 		}
 
 
@@ -83,7 +62,13 @@ namespace Epsitec.Cresus.DataLayer.Expressions
 		}
 
 
-		private readonly EntityField			field;
-		private readonly SortOrder				sortOrder;
+		private readonly EntityField field;
+
+
+		private readonly SortOrder sortOrder;
+
+
 	}
+
+
 }

@@ -34,12 +34,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			var leftField = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var leftField = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 			var left = new UnaryComparison (leftField, UnaryComparator.IsNull);
 
 			var op = BinaryOperator.And;
 
-			var rightField = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var rightField = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 			var right = new UnaryComparison (rightField, UnaryComparator.IsNull);
 
 			var operation = new BinaryOperation(left, op, right);
@@ -53,8 +53,8 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		[TestMethod]
 		public void ConstructorArgumentCheck()
 		{
-			var rightField = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
-			var leftField = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var rightField = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var leftField = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 
 			var right = new UnaryComparison (rightField, UnaryComparator.IsNull);
 			var left = new UnaryComparison (leftField, UnaryComparator.IsNull);

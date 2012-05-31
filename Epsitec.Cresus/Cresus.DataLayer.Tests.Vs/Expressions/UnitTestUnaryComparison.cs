@@ -32,7 +32,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Expressions
 		[TestMethod]
 		public void ConstructorTest()
 		{
-			var field = new PublicField (new NaturalPersonEntity (), Druid.FromLong (1));
+			var field = new ValueField (new NaturalPersonEntity (), Druid.FromLong (1));
 			var op = UnaryComparator.IsNull;
 
 			var comparison = new UnaryComparison (field, op);

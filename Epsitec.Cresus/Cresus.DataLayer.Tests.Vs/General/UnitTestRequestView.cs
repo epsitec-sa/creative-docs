@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				(
 					new SortClause
 					(
-						new PublicField (request.RootEntity, Druid.Parse ("[J1AM1]")),
+						new ValueField (request.RootEntity, Druid.Parse ("[J1AM1]")),
 						SortOrder.Descending
 					)
 				);
@@ -164,14 +164,14 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 					(
 						new BinaryComparison
 						(
-							PublicField.Create (person, x => x.Firstname),
+							ValueField.Create (person, x => x.Firstname),
 							BinaryComparator.IsNotEqual,
 							new Constant ("Boo !")
 						),
 						BinaryOperator.And,
 						new UnaryComparison
 						(
-							PublicField.Create (person, x => x.Lastname),
+							ValueField.Create (person, x => x.Lastname),
 							UnaryComparator.IsNotNull
 						)
 					)
@@ -181,7 +181,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				(
 					new SortClause
 					(
-						PublicField.Create (person, p => p.Lastname),
+						ValueField.Create (person, p => p.Lastname),
 						SortOrder.Descending
 					)
 				);
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				(
 					new SortClause
 					(
-						PublicField.Create (gender, g => g.Code),
+						ValueField.Create (gender, g => g.Code),
 						SortOrder.Ascending
 					)
 				);
@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				(
 					new SortClause
 					(
-						PublicField.Create (contact, c => c.Uri),
+						ValueField.Create (contact, c => c.Uri),
 						SortOrder.Descending
 					)
 				);
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.General
 				(
 					new SortClause
 					(
-						PublicField.Create (scheme, s => s.Code),
+						ValueField.Create (scheme, s => s.Code),
 						SortOrder.Ascending
 					)
 				);

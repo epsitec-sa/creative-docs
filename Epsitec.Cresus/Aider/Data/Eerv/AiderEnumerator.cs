@@ -166,14 +166,14 @@ namespace Epsitec.Aider.Data.Eerv
 
 			request.Conditions.Add (new BinaryComparison
 			(
-				new PublicField (eChPersonExample, new Druid ("[LVGO02]")),
+				new ValueField (eChPersonExample, new Druid ("[LVGO02]")),
 				BinaryComparator.IsGreaterOrEqual,
 				new Constant (lowerBound)
 			));
 
 			request.Conditions.Add (new BinaryComparison
 			(
-				new PublicField (eChPersonExample, new Druid ("[LVGO02]")),
+				new ValueField (eChPersonExample, new Druid ("[LVGO02]")),
 				BinaryComparator.IsLowerOrEqual,
 				new Constant (upperBound)
 			));
