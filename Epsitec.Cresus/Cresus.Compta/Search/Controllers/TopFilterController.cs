@@ -77,6 +77,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
+		public void LinkHilitePanel(bool hilite)
+		{
+			this.toolbar.BackColor = hilite ? UIBuilder.LinkHiliteBackColor : UIBuilder.FilterBackColor;
+		}
+
 		public void CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> searchNextAction)
 		{
 			this.toolbar = new FrameBox

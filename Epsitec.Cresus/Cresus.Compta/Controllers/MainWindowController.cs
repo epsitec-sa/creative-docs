@@ -39,13 +39,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.app = app;
 
-			this.businessContext = null;
-			this.settingsData = new Dictionary<string, ISettingsData> ();
-			this.settingsList = new SettingsList ();
+			this.businessContext     = null;
+			this.settingsData        = new Dictionary<string, ISettingsData> ();
+			this.settingsList        = new SettingsList ();
 			this.defaultSettingsList = new SettingsList ();
-			this.navigatorEngine = new NavigatorEngine ();
-			this.piècesGenerator = new PiècesGenerator (this);
-			this.temporalData = new TemporalData ();
+			this.navigatorEngine     = new NavigatorEngine ();
+			this.piècesGenerator     = new PiècesGenerator (this);
+			this.temporalData        = new TemporalData ();
 
 			this.Dirty = false;
 			this.showInfoPanel = true;

@@ -441,6 +441,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color FilterBackColor			= Color.FromHexa ("ffffff");  // orange pastel
 		public static readonly Color OptionsBackColor			= Color.FromHexa ("ffffff");  // bleu pastel
 #endif
+		public static readonly Color LinkHiliteBackColor		= Color.FromHexa ("fff5bd");  // jaune pastel
 
 		public static readonly Color SelectionColor				= Color.FromHexa ("ffd700");  // orange "gold"
 		public static readonly Color JustCreatedColor			= Color.FromHexa ("b3d7ff");  // bleu pastel

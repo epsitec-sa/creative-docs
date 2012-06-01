@@ -28,17 +28,47 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public void CreateUI(FrameBox parent)
 		{
 #if false
-			                     this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
-			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
-			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
+			var optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
+			var filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
+			var searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
 #else
-			                     this.CreateButton (parent, Res.Commands.Panel.Options, -1, Color.FromHexa ("d1e7ff"));
-			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, Color.FromHexa ("d1e7ff"));
-			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,   0, Color.FromHexa ("d1e7ff"));
+			var optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, Color.FromHexa ("ffe34d"));
+			var filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, Color.FromHexa ("ffe34d"));
+			var searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, Color.FromHexa ("ffe34d"));
 #endif
 
-			this.searchMarker   = this.CreateMarker (searchButton);
-			this.filterMarker   = this.CreateMarker (filterButton);
+			this.searchMarker = this.CreateMarker (searchButton);
+			this.filterMarker = this.CreateMarker (filterButton);
+
+			optionsButton.Entered += delegate
+			{
+				this.controller.LinkHiliteOptionsPanel (true);
+			};
+
+			optionsButton.Exited += delegate
+			{
+				this.controller.LinkHiliteOptionsPanel (false);
+			};
+
+			filterButton.Entered += delegate
+			{
+				this.controller.LinkHiliteFilterPanel (true);
+			};
+
+			filterButton.Exited += delegate
+			{
+				this.controller.LinkHiliteFilterPanel (false);
+			};
+
+			searchButton.Entered += delegate
+			{
+				this.controller.LinkHiliteSearchPanel (true);
+			};
+
+			searchButton.Exited += delegate
+			{
+				this.controller.LinkHiliteSearchPanel (false);
+			};
 		}
 
 		public bool SearchEnable

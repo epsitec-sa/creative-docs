@@ -410,6 +410,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public void LinkHiliteOptionsPanel(bool hilite)
+		{
+			this.optionsController.LinkHilitePanel (hilite);
+		}
+
+		public void LinkHiliteFilterPanel(bool hilite)
+		{
+			this.topFilterController.LinkHilitePanel (hilite);
+		}
+
+		public void LinkHiliteSearchPanel(bool hilite)
+		{
+			this.topSearchController.LinkHilitePanel (hilite);
+		}
+
+
 		#region ViewSettings panel
 		private void CreateViewSettings(FrameBox parent)
 		{

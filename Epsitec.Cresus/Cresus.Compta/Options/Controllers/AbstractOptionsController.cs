@@ -70,6 +70,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			}
 		}
 
+		public void LinkHilitePanel(bool hilite)
+		{
+			this.container.BackColor = hilite ? UIBuilder.LinkHiliteBackColor : UIBuilder.OptionsBackColor;
+			this.toolbar.BackColor   = hilite ? UIBuilder.LinkHiliteBackColor : UIBuilder.OptionsBackColor;
+			this.graphbar.BackColor  = hilite ? UIBuilder.LinkHiliteBackColor : UIBuilder.OptionsBackColor;
+		}
+
 
 		public virtual void CreateUI(FrameBox parent, System.Action optionsChanged)
 		{
