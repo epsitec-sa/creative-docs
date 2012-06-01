@@ -225,6 +225,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="length">The length.</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, this column is fixed length.</param>
 		/// <param name="encoding">The character encoding.</param>
+		/// <param name="collation">The collation.</param>
 		public void SetType(DbRawType type, int length, bool isFixedLength, DbCharacterEncoding? encoding, DbCollation? collation)
 		{
 			if (length < 1)
