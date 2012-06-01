@@ -257,6 +257,22 @@ namespace Epsitec.Common.Types
 				{
 				}
 				
+				//	designer:cap/10AQ
+				public static global::Epsitec.Common.Types.Caption CollationAccentInsensitive
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 26));
+					}
+				}
+				//	designer:cap/10AP
+				public static global::Epsitec.Common.Types.Caption CollationCaseInsensitive
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res._manager.GetCaption (new global::Epsitec.Common.Support.Druid (_moduleId, 10, 25));
+					}
+				}
 				//	designer:cap/10AK
 				public static global::Epsitec.Common.Types.Caption IndexAscending
 				{

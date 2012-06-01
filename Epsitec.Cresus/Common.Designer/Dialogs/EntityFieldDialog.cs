@@ -195,6 +195,27 @@ namespace Epsitec.Common.Designer.Dialogs
 				this.buttonIsVirtual.Clicked += this.HandleRadioClicked;
 				this.buttonIsVirtual.TabIndex = tabIndex++;
 
+				this.buttonIsCaseInsensitive = new CheckButton (leftFooter);
+				this.buttonIsCaseInsensitive.AutoToggle = false;
+				this.buttonIsCaseInsensitive.Text = "Collation a=A";
+				this.buttonIsCaseInsensitive.PreferredWidth = 140;
+				this.buttonIsCaseInsensitive.Dock = DockStyle.Top;
+				this.buttonIsCaseInsensitive.TabIndex = tabIndex++;
+				this.buttonIsCaseInsensitive.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsCaseInsensitive.Clicked += this.HandleRadioClicked;
+				this.buttonIsCaseInsensitive.TabIndex = tabIndex++;
+
+				this.buttonIsAccentInsensitive = new CheckButton (leftFooter);
+				this.buttonIsAccentInsensitive.AutoToggle = false;
+				this.buttonIsAccentInsensitive.Text = "Collation a=à";
+				this.buttonIsAccentInsensitive.PreferredWidth = 140;
+				this.buttonIsAccentInsensitive.Margins = new Margins (0, 0, 0, 4);
+				this.buttonIsAccentInsensitive.Dock = DockStyle.Top;
+				this.buttonIsAccentInsensitive.TabIndex = tabIndex++;
+				this.buttonIsAccentInsensitive.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+				this.buttonIsAccentInsensitive.Clicked += this.HandleRadioClicked;
+				this.buttonIsAccentInsensitive.TabIndex = tabIndex++;
+
 				this.buttonIndexAscending = new CheckButton (leftFooter);
 				this.buttonIndexAscending.AutoToggle = false;
 				this.buttonIndexAscending.Text = "Index ascendant";
@@ -291,7 +312,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		}
 
 
-		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, bool isNullable, bool isCollection, bool isPrivate, bool isVirtual, bool isIndexAscending, bool isIndexDescending)
+		public void AccessOpen(Module baseModule, ResourceAccess.Type type, string prefix, string fieldName, Druid resource, EntityFieldDialogOptions options)
 		{
 			//	Début de l'accès aux ressources pour le dialogue.
 			System.Diagnostics.Debug.Assert(resource.Type != Common.Support.DruidType.ModuleRelative);
@@ -301,12 +322,7 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.fieldName = fieldName;
 			this.resourceType = type;
 			this.resource = resource;
-			this.isNullable = isNullable;
-			this.isCollection = isCollection;
-			this.isPrivate = isPrivate;
-			this.isVirtual = isVirtual;
-			this.isIndexAscending = isIndexAscending;
-			this.isIndexDescending = isIndexDescending;
+			this.options = options;
 
 			//	Cherche le module contenant le Druid de la ressource.
 			this.baseModule = baseModule;
@@ -358,51 +374,11 @@ namespace Epsitec.Common.Designer.Dialogs
 			}
 		}
 
-		public bool IsNullable
+		public EntityFieldDialogOptions Options
 		{
 			get
 			{
-				return this.isNullable;
-			}
-		}
-
-		public bool IsCollection
-		{
-			get
-			{
-				return this.isCollection;
-			}
-		}
-
-		public bool IsPrivate
-		{
-			get
-			{
-				return this.isPrivate;
-			}
-		}
-
-		public bool IsVirtual
-		{
-			get
-			{
-				return this.isVirtual;
-			}
-		}
-
-		public bool IsIndexAscending
-		{
-			get
-			{
-				return this.isIndexAscending;
-			}
-		}
-
-		public bool IsIndexDescending
-		{
-			get
-			{
-				return this.isIndexDescending;
+				return this.options;
 			}
 		}
 
@@ -508,8 +484,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		{
 			if (this.resourceType == ResourceAccess.Type.Entities)
 			{
-				this.relationSample.Relation = this.isCollection ? FieldRelation.Collection : FieldRelation.Reference;
-				this.relationSample.IsPrivateRelation = this.IsPrivate;
+				this.relationSample.Relation = this.options.IsCollection ? FieldRelation.Collection : FieldRelation.Reference;
+				this.relationSample.IsPrivateRelation = this.options.IsPrivate;
 			}
 			else
 			{
@@ -646,13 +622,15 @@ namespace Epsitec.Common.Designer.Dialogs
 			this.radioTypes.ActiveState = (this.resourceType == ResourceAccess.Type.Types) ? ActiveState.Yes : ActiveState.No;
 			this.radioEntities.ActiveState = (this.resourceType == ResourceAccess.Type.Entities) ? ActiveState.Yes : ActiveState.No;
 
-			this.buttonIsNullable.ActiveState = this.isNullable ? ActiveState.Yes : ActiveState.No;
-			this.buttonIsPrivate.ActiveState = this.isPrivate ? ActiveState.Yes : ActiveState.No;
-			this.buttonIsVirtual.ActiveState = this.isVirtual? ActiveState.Yes : ActiveState.No;
-			this.buttonIndexAscending.ActiveState = this.isIndexAscending ? ActiveState.Yes : ActiveState.No;
-			this.buttonIndexDescending.ActiveState = this.isIndexDescending ? ActiveState.Yes : ActiveState.No;
-			this.buttonIsReference.ActiveState = this.isCollection ? ActiveState.No : ActiveState.Yes;
-			this.buttonIsCollection.ActiveState = this.isCollection ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsNullable.ActiveState = this.options.IsNullable ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsPrivate.ActiveState = this.options.IsPrivate ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsVirtual.ActiveState = this.options.IsVirtual ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsCaseInsensitive.ActiveState = this.options.IsCaseInsensitive ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsAccentInsensitive.ActiveState = this.options.IsAccentInsensitive ? ActiveState.Yes : ActiveState.No;
+			this.buttonIndexAscending.ActiveState = this.options.IsIndexAscending ? ActiveState.Yes : ActiveState.No;
+			this.buttonIndexDescending.ActiveState = this.options.IsIndexDescending ? ActiveState.Yes : ActiveState.No;
+			this.buttonIsReference.ActiveState = this.options.IsCollection ? ActiveState.No : ActiveState.Yes;
+			this.buttonIsCollection.ActiveState = this.options.IsCollection ? ActiveState.Yes : ActiveState.No;
 
 			this.buttonIsPrivate.Enable = (this.resourceType == ResourceAccess.Type.Entities);
 			this.buttonIsReference.Enable = (this.resourceType == ResourceAccess.Type.Entities);
@@ -747,48 +725,62 @@ namespace Epsitec.Common.Designer.Dialogs
 
 			if (button == this.buttonIsNullable)
 			{
-				this.isNullable = !this.isNullable;
+				this.options.IsNullable = !this.options.IsNullable;
 				this.UpdateRadios();
 			}
 
 			if (button == this.buttonIsPrivate)
 			{
-				this.isPrivate = !this.isPrivate;
+				this.options.IsPrivate = !this.options.IsPrivate;
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
 
 			if (button == this.buttonIsVirtual)
 			{
-				this.isVirtual = !this.isVirtual;
+				this.options.IsVirtual = !this.options.IsVirtual;
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
+			}
+
+			if (button == this.buttonIsCaseInsensitive)
+			{
+				this.options.IsCaseInsensitive = !this.options.IsCaseInsensitive;
+				this.UpdateRadios ();
+				this.UpdateRelationSample ();
+			}
+
+			if (button == this.buttonIsAccentInsensitive)
+			{
+				this.options.IsAccentInsensitive = !this.options.IsAccentInsensitive;
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
 
 			if (button == this.buttonIndexAscending)
 			{
-				this.isIndexAscending = !this.isIndexAscending;
+				this.options.IsIndexAscending = !this.options.IsIndexAscending;
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
 
 			if (button == this.buttonIndexDescending)
 			{
-				this.isIndexDescending = !this.isIndexDescending;
+				this.options.IsIndexDescending = !this.options.IsIndexDescending;
 				this.UpdateRadios ();
 				this.UpdateRelationSample ();
 			}
 
 			if (button == this.buttonIsReference)
 			{
-				this.isCollection = false;
+				this.options.IsCollection = false;
 				this.UpdateRadios();
 				this.UpdateRelationSample();
 			}
 
 			if (button == this.buttonIsCollection)
 			{
-				this.isCollection = true;
+				this.options.IsCollection = true;
 				this.UpdateRadios();
 				this.UpdateRelationSample();
 			}
@@ -894,12 +886,7 @@ namespace Epsitec.Common.Designer.Dialogs
 		private string							prefix;
 		private string							initialFieldName;
 		private string							fieldName;
-		private bool							isNullable;
-		private bool							isCollection;
-		private bool							isPrivate;
-		private bool							isVirtual;
-		private bool							isIndexAscending;
-		private bool							isIndexDescending;
+		private EntityFieldDialogOptions		options;
 		private CollectionView					collectionView;
 		private Common.Dialogs.DialogResult		result;
 		private List<Module>					allModules;
@@ -919,6 +906,8 @@ namespace Epsitec.Common.Designer.Dialogs
 		private CheckButton						buttonIsNullable;
 		private CheckButton						buttonIsPrivate;
 		private CheckButton						buttonIsVirtual;
+		private CheckButton						buttonIsCaseInsensitive;
+		private CheckButton						buttonIsAccentInsensitive;
 		private CheckButton						buttonIndexAscending;
 		private CheckButton						buttonIndexDescending;
 		private RadioButton						buttonIsReference;

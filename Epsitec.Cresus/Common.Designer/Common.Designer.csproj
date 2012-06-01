@@ -92,6 +92,7 @@
     <Compile Include="Comparers\ProxyRank.cs" />
     <Compile Include="Comparers\WidgetDisposition.cs" />
     <Compile Include="Controllers\FilterController.cs" />
+    <Compile Include="Dialogs\EntityFieldDialogOptions.cs" />
     <Compile Include="Dialogs\SaveAllBitmapsDialog.cs" />
     <Compile Include="Dialogs\ModuleInfoDialog.cs" />
     <Compile Include="Dialogs\EntityCreationDialog.cs" />

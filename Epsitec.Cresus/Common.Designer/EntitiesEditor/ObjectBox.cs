@@ -1544,14 +1544,9 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			Module module = this.editor.Module;
 			string fieldName = this.GetNewName();
 			Druid druid = Druid.Empty;
-			bool isNullable = false;
-			bool isPrivate = false;
-			bool isVirtual = false;
-			bool isCollection = false;
-			bool isIndexAscending = false;
-			bool isIndexDescending = false;
+			var dialogOptions = new Dialogs.EntityFieldDialogOptions ();
 
-			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isVirtual, ref isIndexAscending, ref isIndexDescending);
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, this.Title, ref fieldName, ref druid, ref dialogOptions);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1582,80 +1577,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 
 			StructuredData dataField = dataFields[fieldRank+1];
 
-			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
-
-			Druid typeId = druid;
-			Module typeModule = this.SearchModule(typeId);
-			if (typeModule == null)
+			if (this.ApplyOptions (dataField, druid, dialogOptions) == false)
 			{
 				return;
 			}
-			System.Diagnostics.Debug.Assert(typeId.IsValid);
-
-			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
-			{
-				if (isCollection)
-				{
-					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Collection);
-				}
-				else
-				{
-					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
-				}
-			}
-			else
-			{
-				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
-			}
-
-			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
-
-			if (isNullable)
-			{
-				fieldOptions |= FieldOptions.Nullable;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.Nullable;
-			}
-
-			if (isPrivate)
-			{
-				fieldOptions |= FieldOptions.PrivateRelation;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.PrivateRelation;
-			}
-
-			if (isVirtual)
-			{
-				fieldOptions |= FieldOptions.Virtual;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.Virtual;
-			}
-
-			if (isIndexAscending)
-			{
-				fieldOptions |= FieldOptions.IndexAscending;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.IndexAscending;
-			}
-
-			if (isIndexDescending)
-			{
-				fieldOptions |= FieldOptions.IndexDescending;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.IndexDescending;
-			}
-
-			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank+1].Initialize(this, dataField);
 
@@ -1951,15 +1876,10 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 			CultureMap fieldCultureMap = fieldAccessor.Collection[fieldCaptionId];
 			System.Diagnostics.Debug.Assert(fieldCultureMap != null);
 			string fieldName = fieldCultureMap.Name;
-			
-			bool isNullable = (options & FieldOptions.Nullable) != 0;
-			bool isPrivate = (options & FieldOptions.PrivateRelation) != 0;
-			bool isVirtual = (options & FieldOptions.Virtual) != 0;
-			bool isCollection = (rel == FieldRelation.Collection);
-			bool isIndexAscending = (options & FieldOptions.IndexAscending) != 0;
-			bool isIndexDescending = (options & FieldOptions.IndexDescending) != 0;
 
-			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref isNullable, ref isCollection, ref isPrivate, ref isVirtual, ref isIndexAscending, ref isIndexDescending);
+			var dialogOptions = new Dialogs.EntityFieldDialogOptions (options, rel);
+			
+			var result = module.DesignerApplication.DlgEntityField (module, ResourceAccess.Type.Types, fieldCultureMap.Prefix, ref fieldName, ref druid, ref dialogOptions);
 			if (result != Common.Dialogs.DialogResult.Yes)
 			{
 				return;
@@ -1975,84 +1895,50 @@ namespace Epsitec.Common.Designer.EntitiesEditor
 				this.editor.CloseBox(dst);  // ferme les boîtes pointées
 			}
 
-			dataField.SetValue(Support.Res.Fields.Field.TypeId, druid);
-
-			Druid typeId = druid;
-			Module typeModule = this.SearchModule(typeId);
-			if (typeModule == null)
+			if (this.ApplyOptions (dataField, druid, dialogOptions) == false)
 			{
 				return;
 			}
-			System.Diagnostics.Debug.Assert (typeId.IsValid);
-			
-			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
-			{
-				if (isCollection)
-				{
-					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Collection);
-				}
-				else
-				{
-					dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.Reference);
-				}
-			}
-			else
-			{
-				dataField.SetValue(Support.Res.Fields.Field.Relation, FieldRelation.None);
-			}
-
-			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue(Support.Res.Fields.Field.Options);
-			
-			if (isNullable)
-			{
-				fieldOptions |= FieldOptions.Nullable;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.Nullable;
-			}
-
-			if (isPrivate)
-			{
-				fieldOptions |= FieldOptions.PrivateRelation;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.PrivateRelation;
-			}
-
-			if (isVirtual)
-			{
-				fieldOptions |= FieldOptions.Virtual;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.Virtual;
-			}
-
-			if (isIndexAscending)
-			{
-				fieldOptions |= FieldOptions.IndexAscending;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.IndexAscending;
-			}
-
-			if (isIndexDescending)
-			{
-				fieldOptions |= FieldOptions.IndexDescending;
-			}
-			else
-			{
-				fieldOptions &= ~FieldOptions.IndexDescending;
-			}
-
-			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
 
 			this.fields[rank].Initialize(this, dataField);
 			this.SetDirty ();
 			this.editor.UpdateAfterAddOrRemoveConnection (this);
+		}
+
+		private bool ApplyOptions(StructuredData dataField, Druid druid, Dialogs.EntityFieldDialogOptions dialogOptions)
+		{
+			dataField.SetValue (Support.Res.Fields.Field.TypeId, druid);
+
+			Druid typeId = druid;
+			Module typeModule = this.SearchModule (typeId);
+			
+			if (typeModule == null)
+			{
+				return false;
+			}
+			System.Diagnostics.Debug.Assert (typeId.IsValid);
+
+			if (typeModule.AccessEntities.Accessor.Collection[typeId] != null)
+			{
+				if (dialogOptions.IsCollection)
+				{
+					dataField.SetValue (Support.Res.Fields.Field.Relation, FieldRelation.Collection);
+				}
+				else
+				{
+					dataField.SetValue (Support.Res.Fields.Field.Relation, FieldRelation.Reference);
+				}
+			}
+			else
+			{
+				dataField.SetValue (Support.Res.Fields.Field.Relation, FieldRelation.None);
+			}
+
+			FieldOptions fieldOptions = (FieldOptions) dataField.GetValue (Support.Res.Fields.Field.Options);
+			fieldOptions = dialogOptions.GetFieldOptions (fieldOptions);
+			dataField.SetValue (Support.Res.Fields.Field.Options, fieldOptions);
+
+			return true;
 		}
 
 		private void UpdateFieldsContent()
