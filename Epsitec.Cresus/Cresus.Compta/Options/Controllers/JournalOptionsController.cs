@@ -79,14 +79,16 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			new StaticText
+			var label = new StaticText
 			{
 				Parent          = frame,
-				Text            = "Choix du journal à utiliser",
-				PreferredWidth  = 140,
+				Text            = "Journal",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
 			};
+
+			label.PreferredWidth = label.GetBestFitSize ().Width;
 
 			this.comboJournaux = new TextFieldCombo
 			{
