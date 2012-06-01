@@ -828,10 +828,12 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool UseSpecialModeHack()
 		{
 			return false;
-
+#if false
 			return (this.specialMode == SpecialMode.Titleless)
 				&& (this.NativeWindowPlacement.IsFullScreen);
+#endif
 		}
+		
 		internal Drawing.Rectangle WindowPlacementNormalBounds
 		{
 			get
@@ -1182,15 +1184,7 @@ namespace Epsitec.Common.Widgets.Platform
 
 		internal void SimulateCloseClick()
 		{
-			try
-			{
-				this.simulateCloseClick = true;
-				base.Close ();
-			}
-			finally
-			{
-				this.simulateCloseClick = false;
-			}
+			base.Close ();
 		}
 
 		internal void SetFrozen(bool frozen)
@@ -2836,7 +2830,6 @@ namespace Epsitec.Common.Widgets.Platform
 		private bool							preventClose;
 		private bool							preventQuit;
 		private bool							forcedClose;
-		private bool							simulateCloseClick;
 		private bool							filterMouseMessages;
 		private bool							filterKeyMessages;
 		private double							alpha = 1.0;
@@ -2862,7 +2855,7 @@ namespace Epsitec.Common.Widgets.Platform
 		private static bool						isAppActive;
 		private static bool						isSyncRequested;
 		private static bool						isAwakeRequested;
-		private static Window					dispatchWindow;
-		private static System.IntPtr			dispatchWindowHandle;
+		private static readonly Window			dispatchWindow;
+		private static readonly System.IntPtr	dispatchWindowHandle;
 	}
 }
