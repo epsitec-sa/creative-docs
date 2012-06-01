@@ -129,6 +129,7 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
+    <Compile Include="DbCollation.cs" />
     <Compile Include="DbSchemaUpdater.cs" />
     <Compile Include="Logging\AbstractLog.cs" />
     <Compile Include="Logging\Column.cs" />

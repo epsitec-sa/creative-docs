@@ -66,17 +66,17 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 			
 			ExceptionAssert.Throw<System.ArgumentOutOfRangeException>
 			(
-				() => sqlColumn.SetType (DbRawType.Int32, 2, true, DbCharacterEncoding.Unicode)
+				() => sqlColumn.SetType (DbRawType.Int32, 2, true, null, null)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentOutOfRangeException>
 			(
-				() => sqlColumn.SetType (DbRawType.Int32, 1, false, DbCharacterEncoding.Unicode)
+				() => sqlColumn.SetType (DbRawType.Int32, 1, false, null, null)
 			);
 
 			ExceptionAssert.Throw<System.ArgumentOutOfRangeException>
 			(
-				() => sqlColumn.SetType (DbRawType.String, 0, false, DbCharacterEncoding.Unicode)
+				() => sqlColumn.SetType (DbRawType.String, 0, false, null, null)
 			);
 		}
 

@@ -51,7 +51,12 @@ namespace Epsitec.Cresus.Database
 		/// Gets the character encoding.
 		/// </summary>
 		/// <value>The character encoding.</value>
-		DbCharacterEncoding Encoding
+		DbCharacterEncoding? Encoding
+		{
+			get;
+		}
+
+		DbCollation? Collation
 		{
 			get;
 		}

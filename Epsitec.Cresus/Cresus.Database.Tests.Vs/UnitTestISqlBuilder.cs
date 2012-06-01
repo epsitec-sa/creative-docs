@@ -69,14 +69,20 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlColumn sqlCol1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 				SqlColumn sqlCol2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
-				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, DbNullability.Yes);
+				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, true, DbNullability.Yes);
 				SqlColumn sqlCol4 = new SqlColumn ("StringFixed", DbRawType.String, 50, false, DbNullability.Yes);
+				SqlColumn sqlCol5 = new SqlColumn ("StringWithCollation")
+				{
+					IsNullable = true,
+				};
+				sqlCol5.SetType (DbRawType.String, 500, true, DbCharacterEncoding.Unicode, DbCollation.UnicodeCi);
 
 				sqlTable.Name = "FbTestTable";
 				sqlTable.Columns.Add (sqlCol1);
 				sqlTable.Columns.Add (sqlCol2);
 				sqlTable.Columns.Add (sqlCol3);
 				sqlTable.Columns.Add (sqlCol4);
+				sqlTable.Columns.Add (sqlCol5);
 				sqlTable.PrimaryKey = new SqlColumn[] { sqlCol1, sqlCol2 };
 
 				sqlBuilder.InsertTable (sqlTable);

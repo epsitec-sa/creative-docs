@@ -110,11 +110,19 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 			}
 
-			public DbCharacterEncoding			Encoding
+			public DbCharacterEncoding?			Encoding
 			{
 				get
 				{
-					return DbCharacterEncoding.Unicode;
+					return null;
+				}
+			}
+
+			public DbCollation?					Collation
+			{
+				get
+				{
+					return null;
 				}
 			}
 			
@@ -196,11 +204,19 @@ namespace Epsitec.Cresus.Database.Implementation
 				}
 			}
 
-			public DbCharacterEncoding Encoding
+			public DbCharacterEncoding?			Encoding
 			{
 				get
 				{
 					return DbCharacterEncoding.Ascii;
+				}
+			}
+
+			public DbCollation?					Collation
+			{
+				get
+				{
+					return null;
 				}
 			}
 			

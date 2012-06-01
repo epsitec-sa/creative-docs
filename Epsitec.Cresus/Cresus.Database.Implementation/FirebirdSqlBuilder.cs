@@ -167,10 +167,7 @@ namespace Epsitec.Cresus.Database.Implementation
 					this.Append (", ");
 				}
 				
-				this.Append (column.Name);
-				this.Append (' ');
-				this.Append (this.GetSqlType (column));
-				this.Append (this.GetSqlColumnAttributes (column));
+				this.Append (this.GetColumn (column));
 			}
 			
 			this.Append (");\n");
@@ -307,10 +304,7 @@ namespace Epsitec.Cresus.Database.Implementation
 				this.Append ("ALTER TABLE ");
 				this.Append (tableName);
 				this.Append (" ADD ");			//	not " ADD COLUMN "
-				this.Append (column.Name);
-				this.Append (" ");
-				this.Append (this.GetSqlType (column));
-				this.Append (this.GetSqlColumnAttributes (column));
+				this.Append (this.GetColumn (column));
 				this.Append (";\n");
 
 				if (!string.IsNullOrEmpty (column.Comment))
@@ -1693,81 +1687,166 @@ namespace Epsitec.Cresus.Database.Implementation
 			}
 		}
 
-		private string GetSqlType(SqlColumn column)
+		private string GetColumn(SqlColumn column)
 		{
-			string basicType = null;
-			string length;
-			string encoding;
+			return string.Join
+			(
+				" ",
+				column.Name,
+				this.GetType (column),
+				this.GetNullable (column),
+				this.GetCollation (column)
+			);
+		}
 
+		private string GetType(SqlColumn column)
+		{
 			//	Construit le nom du type SQL en fonction de la description de la
 			//	colonne.
 
 			switch (column.Type)
 			{
 				case DbRawType.Int16:
-					basicType = "SMALLINT";
-					break;
+					return "SMALLINT";
+
 				case DbRawType.Int32:
-					basicType = "INTEGER";
-					break;
+					return "INTEGER";
+
 				case DbRawType.Int64:
-					basicType = "BIGINT";
-					break;
+					return "BIGINT";
+
 				case DbRawType.Date:
-					basicType = "DATE";
-					break;
+					return "DATE";
+
 				case DbRawType.Time:
-					basicType = "TIME";
-					break;
+					return "TIME";
+
 				case DbRawType.DateTime:
-					basicType = "TIMESTAMP";
-					break;
+					return "TIMESTAMP";
+
 				case DbRawType.SmallDecimal:
-					basicType = "DECIMAL(18,9)";
-					break;
+					return "DECIMAL(18,9)";
+
 				case DbRawType.LargeDecimal:
-					basicType = "DECIMAL(18,3)";
-					break;
+					return "DECIMAL(18,3)";
 
 				case DbRawType.String:
-					length    = column.Length.ToString (TypeConverter.InvariantFormatProvider);
-					encoding  = column.Encoding == DbCharacterEncoding.Ascii ? "ASCII" : "UTF8";
-					basicType = (column.IsFixedLength ? "CHAR(" : "VARCHAR(") + length + ") CHARACTER SET " + encoding;
-					break;
+					var kind = column.IsFixedLength
+						? "CHAR"
+						: "VARCHAR";
+
+					var length = column.Length.ToString (TypeConverter.InvariantFormatProvider);
+
+					var result = kind + "(" + length + ")";
+					
+					if (column.Encoding.HasValue)
+					{
+						var encoding = this.GetEncoding (column.Encoding.Value);
+
+						result += " CHARACTER SET " + encoding;
+					}
+
+					return result;
 
 				case DbRawType.ByteArray:
-					basicType = "BLOB SUB_TYPE 0 SEGMENT SIZE 2048";
-					break;
-
-				//	Tous les types ne sont pas gérés ici, seuls ceux supportés en natif par
-				//	Firebird sont listés ici. Pour une base plus complète que Firebird, il
-				//	faudra par exemple ajouter un support pour Guid.
+					return "BLOB SUB_TYPE 0 SEGMENT SIZE 2048";
 
 				default:
-					break;
-			}
 
-			if (basicType == null)
-			{
-				throw new Exceptions.FormatException (string.Format ("Unsupported type {0} in column {1}", column.Type.ToString (), column.Name));
-			}
+					var type = column.Type.ToString ();
+					var name = column.Name;
+					var message = string.Format ("Unsupported type {0} in column {1}", type, name);
 
-			return basicType;
+					throw new Exceptions.FormatException (message);
+			}
 		}
 
-		private string GetSqlColumnAttributes(SqlColumn column)
+		private string GetEncoding(DbCharacterEncoding encoding)
 		{
-			//	Construit les attributs de la colonne, tels qu'ils sont utilisés dans la
-			//	définition d'une table (ce sont généralement des contraintes).
-			
-			System.Text.StringBuilder buffer = new System.Text.StringBuilder ();
-			
-			if (!column.IsNullable)
+			switch (encoding)
 			{
-				buffer.Append (" NOT NULL");
+				case DbCharacterEncoding.Ascii:
+					return "ASCII";
+
+				case DbCharacterEncoding.Unicode:
+					return "UTF8";
+
+				default:
+					throw new System.NotImplementedException ();
 			}
-			
-			return buffer.ToString ();
+		}
+
+		private string GetNullable(SqlColumn column)
+		{
+			return column.IsNullable
+				? ""
+				:"NOT NULL";
+		}
+
+		private string GetCollation (SqlColumn column)
+		{
+			if (column.Type == DbRawType.String)
+			{
+				var encoding = column.Encoding;
+				var collation = column.Collation;
+
+				if (encoding.HasValue && collation.HasValue)
+				{
+					var text = this.GetCollation (encoding.Value, collation.Value);
+
+					return "COLLATE " + text;
+				}
+			}
+
+			return "";
+		}
+
+		private string GetCollation(DbCharacterEncoding encoding, DbCollation collation)
+		{
+			switch (encoding)
+			{
+				case DbCharacterEncoding.Ascii:
+					return this.GetAsciiCollation (collation);
+
+				case DbCharacterEncoding.Unicode:
+					return this.GetUnicodeCollation (collation);
+
+				default:
+					throw new System.NotImplementedException ();
+			}
+		}
+
+		private string GetAsciiCollation(DbCollation collation)
+		{
+			switch (collation)
+			{
+				case DbCollation.Ascii:
+					return "ASCII";
+
+				default:
+					throw new Exceptions.FormatException ();
+			}
+		}
+
+		private string GetUnicodeCollation(DbCollation collation)
+		{
+			switch (collation)
+			{
+				case DbCollation.UcsBasic:
+					return "UCS_BASIC";
+
+				case DbCollation.Unicode:
+					return "UNICODE";
+
+				case DbCollation.UnicodeCi:
+					return "UNICODE_CI";
+
+				case DbCollation.UnicodeCiAi:
+					return "UNICODE_CI_AI";
+
+				default:
+					throw new Exceptions.FormatException ();
+			}
 		}
 
 		private FbDbType GetFbType(DbRawType rawType)

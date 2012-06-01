@@ -713,41 +713,62 @@ namespace Epsitec.Cresus.Database
 		/// <returns>The SQL column.</returns>
 		public SqlColumn CreateSqlColumn(ITypeConverter typeConverter)
 		{
-			DbRawType rawType = this.type.RawType;
-			SqlColumn column;
-
 			if (this.columnClass == DbColumnClass.KeyId)
 			{
 				if (this.Category != DbElementCat.Internal)
 				{
-					throw new System.InvalidOperationException (string.Format ("Column '{0}' category should be internal, but is {1}", this.Name, this.Category));
+					var format = "Column '{0}' category should be internal, but is {1}";
+					var message = string.Format (format, this.Name, this.Category);
+
+					throw new System.InvalidOperationException (message);
 				}
 			}
+
+			DbRawType rawType = this.type.RawType;
+			int length;
+			bool isFixedLength;
+			DbCharacterEncoding? encoding;
+			DbCollation? collation;
 
 			IRawTypeConverter rawConverter;
 
 			if (typeConverter.CheckNativeSupport (rawType))
 			{
-				column = new SqlColumn ();
-				column.SetType (rawType, this.Type.Length, this.Type.IsFixedLength, DbCharacterEncoding.Unicode);
+				length = this.Type.Length;
+				isFixedLength = this.Type.IsFixedLength;
+
+				encoding = rawType == DbRawType.String
+					? DbCharacterEncoding.Unicode
+					: (DbCharacterEncoding?) null;
+
+				collation = DbCollation.Unicode;
 			}
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
-				column = new SqlColumn ();
-				column.SetType (rawConverter.InternalType, rawConverter.Length, rawConverter.IsFixedLength, rawConverter.Encoding);
+				rawType = rawConverter.InternalType;
+				length = rawConverter.Length;
+				isFixedLength = rawConverter.IsFixedLength;
+				encoding = rawConverter.Encoding;
+				collation = rawConverter.Collation;
 			}
 			else
 			{
-				throw new System.InvalidOperationException (string.Format ("Column '{0}' cannot be translated to an SQL column", this.Name));
+				var format = "Column '{0}' cannot be translated to an SQL column";
+				var message = string.Format (format, this.Name);
+
+				throw new System.InvalidOperationException (message);
 			}
 
+			var column = new SqlColumn ();
+			column.SetType (rawType, length, isFixedLength, encoding, collation);
 			column.Name = this.GetSqlName ();
 			column.Comment = this.Comment;
 			column.IsNullable = this.IsNullable || this.Type.IsNullable;
 			column.IsForeignKey = this.IsForeignKey;
-	
+
 			return column;
 		}
+
 
 		/// <summary>
 		/// Creates the SQL name of the column. This name will most certainly

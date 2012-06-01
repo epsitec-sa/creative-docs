@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Database
 		public SqlColumn(string name, DbRawType type, int length, bool isFixedLength, DbNullability nullability)
 		{
 			this.Name = name;
-			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode);
+			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode, null);
 			this.IsNullable = (nullability == DbNullability.Yes);
 			this.comment = null;
 		}
@@ -173,11 +173,23 @@ namespace Epsitec.Cresus.Database
 		/// Gets the character encoding (if this column defines a string).
 		/// </summary>
 		/// <value>The character encoding.</value>
-		public DbCharacterEncoding				Encoding
+		public DbCharacterEncoding?				Encoding
 		{
 			get
 			{
 				return this.encoding;
+			}
+		}
+
+		/// <summary>
+		/// Gets the collation (if this column defines a string).
+		/// </summary>
+		/// <value>The collation.</value>
+		public DbCollation? Collation
+		{
+			get
+			{
+				return this.collation;
 			}
 		}
 
@@ -203,7 +215,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="type">The type.</param>
 		public void SetType(DbRawType type)
 		{
-			this.SetType (type, 1, true, DbCharacterEncoding.Unicode);
+			this.SetType (type, 1, true, null, null);
 		}
 
 		/// <summary>
@@ -213,7 +225,7 @@ namespace Epsitec.Cresus.Database
 		/// <param name="length">The length.</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, this column is fixed length.</param>
 		/// <param name="encoding">The character encoding.</param>
-		public void SetType(DbRawType type, int length, bool isFixedLength, DbCharacterEncoding encoding)
+		public void SetType(DbRawType type, int length, bool isFixedLength, DbCharacterEncoding? encoding, DbCollation? collation)
 		{
 			if (length < 1)
 			{
@@ -242,6 +254,7 @@ namespace Epsitec.Cresus.Database
 			this.length        = length;
 			this.isFixedLength = isFixedLength;
 			this.encoding      = encoding;
+			this.collation     = collation;
 		}
 
 		private string							name;
@@ -250,7 +263,8 @@ namespace Epsitec.Cresus.Database
 		private bool							isNullable;
 		private bool							isFixedLength;
 		private bool							isForeignKey;
-		private DbCharacterEncoding				encoding;
+		private DbCharacterEncoding?			encoding;
+		private DbCollation?					collation;
 		private int								length;
 	}
 }
