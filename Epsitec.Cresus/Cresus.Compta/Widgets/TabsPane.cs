@@ -589,6 +589,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					var pos = rect.BottomLeft;
 					var tab = this.GetShowedTabFromRank (rank);
+					tab.UpdateTextLayout (state == TabState.Selected || state == TabState.Hilited);
 					tab.TextLayout.LayoutSize = rect.Size;
 					tab.TextLayout.DefaultColor = color;
 					tab.TextLayout.Paint (pos, graphics);
@@ -1710,6 +1711,26 @@ namespace Epsitec.Cresus.Compta.Widgets
 				}
 			}
 
+			public void UpdateTextLayout(bool selected)
+			{
+				string style = selected ? "Active" : null;
+
+				if (string.IsNullOrEmpty (this.tabItem.Icon))
+				{
+					this.textLayout.FormattedText = this.tabItem.FormattedText;
+				}
+				else if (this.tabItem.FormattedText.IsNullOrEmpty)
+				{
+					this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize, style: style);
+				}
+				else
+				{
+					this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize, style: style) + " " + this.tabItem.FormattedText;
+				}
+
+				this.textWidth = this.textLayout.GetSingleLineSize ().Width;
+			}
+
 			public TabItem TabItem
 			{
 				get
@@ -1719,21 +1740,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				set
 				{
 					this.tabItem = value;
-
-					if (string.IsNullOrEmpty (this.tabItem.Icon))
-					{
-						this.textLayout.FormattedText = this.tabItem.FormattedText;
-					}
-					else if (this.tabItem.FormattedText.IsNullOrEmpty)
-					{
-						this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize);
-					}
-					else
-					{
-						this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize) + " " + this.tabItem.FormattedText;
-					}
-
-					this.textWidth = this.textLayout.GetSingleLineSize ().Width;
+					this.UpdateTextLayout (false);
 				}
 			}
 
