@@ -133,10 +133,13 @@ namespace Epsitec.Cresus.Database
 			// from the old column to the now one and one transaction to remove the old one.
 			// Marc
 
+			var indexesToDisable = DbSchemaUpdater.GetIndexesToDisable (dbColumnsToAlter);
+
 			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
+				DbSchemaUpdater.DisableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
 				DbSchemaUpdater.ExecutePart1OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
-
+				
 				dbTransaction.Commit ();
 			}
 
@@ -160,6 +163,7 @@ namespace Epsitec.Cresus.Database
 			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
 				DbSchemaUpdater.ExecutePart3OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
+				DbSchemaUpdater.EnableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
 
 				dbTransaction.Commit ();
 			}
@@ -374,8 +378,14 @@ namespace Epsitec.Cresus.Database
 					|| a.IsPrimaryKey != b.IsPrimaryKey
 					|| a.IsForeignKey != b.IsForeignKey
 					|| a.IsAutoIncremented != b.IsAutoIncremented
+					|| a.IsAutoIncremented
+					|| b.IsAutoIncremented
 					|| a.IsAutoTimeStampOnInsert != b.IsAutoTimeStampOnInsert
+					|| a.IsAutoTimeStampOnInsert
+					|| b.IsAutoTimeStampOnInsert
 					|| a.IsAutoTimeStampOnUpdate != b.IsAutoTimeStampOnUpdate
+					|| a.IsAutoTimeStampOnUpdate
+					|| b.IsAutoTimeStampOnUpdate
 					|| !DbSchemaUpdater.AreDbTypeDefsValueCompatibles (a.Type, b.Type)
 				   select item;
 		}
@@ -603,6 +613,50 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		private static Dictionary<DbTable, List<DbIndex>> GetIndexesToDisable(IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
+		{
+			return dbColumsToAlter
+				.Select (c => c.Item2)
+				.GroupBy (c => c.Table)
+				.Select (g => System.Tuple.Create (g.Key, g.ToSet ()))
+				.ToDictionary
+				(
+					t => t.Item1,
+					t => t.Item1.Indexes
+						.Where (i => i.Columns.Any (c => t.Item2.Contains (c)))
+						.ToList ()
+				);
+		}
+
+
+		private static void DisableIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, Dictionary<DbTable, List<DbIndex>> dbIndexes)
+		{
+			foreach (var item in dbIndexes)
+			{
+				var dbTable = item.Key;
+
+				foreach (var dbIndex in item.Value)
+				{
+					dbInfrastructure.RemoveIndexFromTable (dbTransaction, dbTable, dbIndex);
+				}
+			}
+		}
+
+
+		private static void EnableIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, Dictionary<DbTable, List<DbIndex>> dbIndexes)
+		{
+			foreach (var item in dbIndexes)
+			{
+				var dbTable = item.Key;
+
+				foreach (var dbIndex in item.Value)
+				{
+					dbInfrastructure.AddIndexToTable (dbTransaction, dbTable, dbIndex);
+				}
+			}
+		}
+
+
 		private static void ExecutePart1OfColumnAlteration(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
 		{
 			foreach (var item in dbColumsToAlter)
@@ -615,9 +669,6 @@ namespace Epsitec.Cresus.Database
 
 				string tmpColumnName = oldColumn.Name + "TMP";
 				dbInfrastructure.RenameTableColumn (dbTable, oldColumn, tmpColumnName);
-
-				dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
-				var tmpColumn = dbTable.Columns[tmpColumnName];
 
 				dbInfrastructure.AddColumnToTable (dbTable, newColumn);
 			}
@@ -705,7 +756,6 @@ namespace Epsitec.Cresus.Database
 			foreach (var item in dbColumsToAlter)
 			{
 				var oldColumn = item.Item1;
-				var newColumn = item.Item2;
 
 				var dbTableName = oldColumn.Table.Name;
 				var dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
