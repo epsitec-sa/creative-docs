@@ -267,6 +267,14 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 
+		public static HashSet<T> ToSet<T>(this IEnumerable<T> sequence)
+		{
+			sequence.ThrowIfNull ("sequence");
+
+			return new HashSet<T> (sequence);
+		}
+
+
 		[System.ThreadStatic]
 		private static System.Random dice;
 	}
