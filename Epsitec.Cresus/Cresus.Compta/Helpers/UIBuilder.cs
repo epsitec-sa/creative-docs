@@ -418,8 +418,13 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color WindowBackColor1			= Color.FromHexa ("c4cad3");  // gris supérieur
 		public static readonly Color WindowBackColor2			= Color.FromHexa ("d8dee6");  // gris supérieur
 		public static readonly Color WindowBackColor3			= Color.FromHexa ("f0f3f7");  // gris supérieur
+#if false
 		public static readonly Color CreationBackColor			= Color.FromHexa ("e5f4ff");  // bleu pastel
 		public static readonly Color ModificationBackColor		= Color.FromHexa ("fff8d5");  // orange pastel
+#else
+		public static readonly Color CreationBackColor			= Color.FromHexa ("daeffe");  // bleu pastel
+		public static readonly Color ModificationBackColor		= Color.FromHexa ("faf3cf");  // orange pastel
+#endif
 		public static readonly Color CreationHiliteBackColor	= Color.FromHexa ("c3e6ff");  // bleu
 		public static readonly Color ModificationHiliteBackColor= Color.FromHexa ("ffeb85");  // orange
 
@@ -427,14 +432,14 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color TabsPaneGreenBack			= Color.FromHexa ("d7ffda");  // vert
 		public static readonly Color TabsPaneBlueBack			= Color.FromHexa ("d7f2ff");  // bleu
 
-#if true
+#if false
 		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffcc");  // jaune pastel
 		public static readonly Color FilterBackColor			= Color.FromHexa ("ffeecc");  // orange pastel
 		public static readonly Color OptionsBackColor			= Color.FromHexa ("d2f0ff");  // bleu pastel
 #else
-		public static readonly Color SearchBackColor			= Color.FromHexa ("f0f0f0");  // jaune pastel
-		public static readonly Color FilterBackColor			= Color.FromHexa ("e0e0e0");  // orange pastel
-		public static readonly Color OptionsBackColor			= Color.FromHexa ("d0d0d0");  // bleu pastel
+		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffff");  // jaune pastel
+		public static readonly Color FilterBackColor			= Color.FromHexa ("ffffff");  // orange pastel
+		public static readonly Color OptionsBackColor			= Color.FromHexa ("ffffff");  // bleu pastel
 #endif
 
 		public static readonly Color SelectionColor				= Color.FromHexa ("ffd700");  // orange "gold"

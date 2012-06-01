@@ -651,6 +651,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			}
 			else if (state == TabState.Selected)
 			{
+#if false
 				var selColor = UIBuilder.SelectionColor;
 				if (!backColor.IsEmpty)
 				{
@@ -682,6 +683,18 @@ namespace Epsitec.Cresus.Compta.Widgets
 					graphics.AddFilledPath (p);
 					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
 				}
+#else
+				if (backColor.IsEmpty)
+				{
+					graphics.AddFilledPath (path);
+					graphics.RenderSolid (this.selectionColor);
+				}
+				else
+				{
+					graphics.AddFilledPath (path);
+					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
+				}
+#endif
 			}
 			else if (state == TabState.MenuOpened)
 			{

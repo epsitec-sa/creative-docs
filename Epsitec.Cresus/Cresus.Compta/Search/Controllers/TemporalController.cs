@@ -510,7 +510,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			bool hasFilter = !this.data.IsEmpty;
 
-			var color = Color.FromAlphaColor (0.3, UIBuilder.SelectionColor);
+			//?var color = Color.FromAlphaColor (0.3, UIBuilder.SelectionColor);
+			var color = Color.FromHexa ("ffffff");
 			this.regularFrame.BackColor = hasFilter && this.HasColorizedHilite ? color : Color.Empty;
 			this.anyFrame.BackColor     = hasFilter && this.HasColorizedHilite ? color : Color.Empty;
 

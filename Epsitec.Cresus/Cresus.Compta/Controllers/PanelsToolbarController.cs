@@ -27,9 +27,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
+#if false
 			                     this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
 			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
 			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
+#else
+			                     this.CreateButton (parent, Res.Commands.Panel.Options, -1, Color.FromHexa ("c7cdd6"));
+			var filterButton   = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, Color.FromHexa ("c7cdd6"));
+			var searchButton   = this.CreateButton (parent, Res.Commands.Panel.Search,   0, Color.FromHexa ("c7cdd6"));
+#endif
 
 			this.searchMarker   = this.CreateMarker (searchButton);
 			this.filterMarker   = this.CreateMarker (filterButton);
