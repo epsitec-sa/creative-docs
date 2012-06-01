@@ -295,7 +295,6 @@
       <Link>Properties\Epsitec.Cresus.snk</Link>
     </None>
     <None Include="Epsitec.Cresus.snk" />
-    <Content Include="External\Data\écritures.txt" />
     <Content Include="Resources\Cresus.Compta\Captions.00.resource">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -389,7 +388,6 @@
     <EmbeddedResource Include="Images\Présentation.TauxTVA.icon" />
     <EmbeddedResource Include="Images\Présentation.Menu.icon" />
     <EmbeddedResource Include="Images\Présentation.ListeTVA.icon" />
-    <None Include="External\Data\pme 2011.crp" />
     <EmbeddedResource Include="Images\Multi.InsertTVA.icon" />
     <EmbeddedResource Include="Images\Multi.LastLine.icon" />
     <EmbeddedResource Include="Images\Multi.InsertAfter.icon" />

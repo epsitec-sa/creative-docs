@@ -97,8 +97,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			NewCompta.NewEmpty (this.compta);
 
 			this.CurrentUser = this.compta.Utilisateurs.First ();  // login avec 'admin'
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\pme 2012.crp");
-			new CrésusCompta ().ImportFile (this.compta, ref this.période, "S:\\Epsitec.Cresus\\Cresus.Compta\\External\\Data\\écritures.txt");
+			var exeRootPath = Globals.Directories.ExecutableRoot;
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, System.IO.Path.Combine (exeRootPath, "External", "Data", "pme 2012.crp"));
+			new CrésusCompta ().ImportFile (this.compta, ref this.période, System.IO.Path.Combine (exeRootPath, "External", "Data", "écritures.txt"));
 
 			this.InitializeAfterNewCompta ();
 			//?this.ChangePériode (-1);  // en 2011

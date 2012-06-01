@@ -62,6 +62,8 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="Epsitec.Cresus.snk" />
+    <Content Include="External\Data\écritures.txt" />
+    <Content Include="External\Data\pme 2011.crp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\App.DebugService\App.DebugService.csproj">
