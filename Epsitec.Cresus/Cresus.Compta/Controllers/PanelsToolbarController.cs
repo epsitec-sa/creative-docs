@@ -28,44 +28,44 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public void CreateUI(FrameBox parent)
 		{
 #if false
-			var optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
-			var filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
-			var searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
+			this.optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
+			this.filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
+			this.searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
 #else
-			var optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, Color.FromHexa ("ffe34d"));
-			var filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, Color.FromHexa ("ffe34d"));
-			var searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, Color.FromHexa ("ffe34d"));
+			this.optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.PanelButtonSoftHiliteColor);
+			this.filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.PanelButtonSoftHiliteColor);
+			this.searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.PanelButtonSoftHiliteColor);
 #endif
 
-			this.searchMarker = this.CreateMarker (searchButton);
-			this.filterMarker = this.CreateMarker (filterButton);
+			this.searchMarker = this.CreateMarker (this.searchButton);
+			this.filterMarker = this.CreateMarker (this.filterButton);
 
-			optionsButton.Entered += delegate
+			this.optionsButton.Entered += delegate
 			{
 				this.controller.LinkHiliteOptionsPanel (true);
 			};
 
-			optionsButton.Exited += delegate
+			this.optionsButton.Exited += delegate
 			{
 				this.controller.LinkHiliteOptionsPanel (false);
 			};
 
-			filterButton.Entered += delegate
+			this.filterButton.Entered += delegate
 			{
 				this.controller.LinkHiliteFilterPanel (true);
 			};
 
-			filterButton.Exited += delegate
+			this.filterButton.Exited += delegate
 			{
 				this.controller.LinkHiliteFilterPanel (false);
 			};
 
-			searchButton.Entered += delegate
+			this.searchButton.Entered += delegate
 			{
 				this.controller.LinkHiliteSearchPanel (true);
 			};
 
-			searchButton.Exited += delegate
+			this.searchButton.Exited += delegate
 			{
 				this.controller.LinkHiliteSearchPanel (false);
 			};
@@ -98,6 +98,22 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
+		public void LinkHiliteOptionsButton(bool hilite)
+		{
+			this.optionsButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+		}
+
+		public void LinkHiliteFilterButton(bool hilite)
+		{
+			this.filterButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+		}
+
+		public void LinkHiliteSearchButton(bool hilite)
+		{
+			this.searchButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+		}
+
+	
 		private IconButton CreateButton(Widget parent, Command command, double rightMargin, Color backColor)
 		{
 			return new BackIconButton
@@ -121,7 +137,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return new StaticText
 			{
 				Parent           = parent,
-				Text             = UIBuilder.GetIconTag("Panel.Active"),
+				Text             = UIBuilder.GetIconTag ("Panel.Active"),
 				ContentAlignment = ContentAlignment.BottomRight,
 				Anchor           = AnchorStyles.All,
 				Visibility       = false,
@@ -132,6 +148,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private static readonly double			toolbarHeight = 24;
 
 		private readonly AbstractController		controller;
+
+		private IconButton						searchButton;
+		private IconButton						filterButton;
+		private IconButton						optionsButton;
 
 		private StaticText						searchMarker;
 		private StaticText						filterMarker;

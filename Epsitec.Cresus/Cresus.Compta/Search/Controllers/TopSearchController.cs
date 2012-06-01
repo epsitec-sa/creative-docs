@@ -94,6 +94,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Visibility      = false,
 			};
 
+			this.toolbar.Entered += delegate
+			{
+				this.controller.LinkHiliteSearchButton (true);
+			};
+
+			this.toolbar.Exited += delegate
+			{
+				this.controller.LinkHiliteSearchButton (false);
+			};
+
 			this.searchController = new SearchController (this.controller, this.dataAccessor.SearchData, false);
 			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
 		}

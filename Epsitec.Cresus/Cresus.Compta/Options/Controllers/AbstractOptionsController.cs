@@ -111,6 +111,36 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins             = new Margins (0, 0, -1, 0),
 			};
 
+			this.container.Entered += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (true);
+			};
+
+			this.container.Exited += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (false);
+			};
+
+			this.toolbar.Entered += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (true);
+			};
+
+			this.toolbar.Exited += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (false);
+			};
+
+			this.graphbar.Entered += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (true);
+			};
+
+			this.graphbar.Exited += delegate
+			{
+				this.controller.LinkHiliteOptionsButton (false);
+			};
+
 			//	Crée les frames gauche, centrale et droite.
 			var topPanelLeftFrame = new FrameBox
 			{
