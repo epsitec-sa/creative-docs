@@ -262,6 +262,7 @@ namespace Epsitec.Cresus.Database
 				&& a.IsAutoIncremented == b.IsAutoIncremented
 				&& a.IsAutoTimeStampOnInsert == b.IsAutoTimeStampOnInsert
 				&& a.IsAutoTimeStampOnUpdate == b.IsAutoTimeStampOnUpdate
+				&& a.Collation == b.Collation
 				&& DbSchemaChecker.AreDbTypeDefEqual (a.Type, b.Type)
 			);
 			return eq;

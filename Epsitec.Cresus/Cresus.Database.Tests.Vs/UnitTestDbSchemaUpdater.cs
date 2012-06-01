@@ -805,6 +805,92 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void AlterColumnCollationTest1()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef[] typesInfrastructure1 = dbInfrastructure1.FindDbTypes ();
+				DbTypeDef[] typesInfrastructure2 = dbInfrastructure2.FindDbTypes ();
+				
+				DbTypeDef typeString1 = typesInfrastructure1[13];
+				DbTypeDef typeString2 = typesInfrastructure2[13];
+
+				DbTypeDef[] types1 = new DbTypeDef[] { typeString1, };
+				DbTypeDef[] types2 = new DbTypeDef[] { typeString2, };		
+				
+				DbTable table1 = this.BuildNewTableWithGivenTypes (2, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (2, types2, DbElementCat.ManagedUserData);
+
+				table1.Columns["myNewColumn1"].DefineCollation (DbCollation.Unicode);
+				table2.Columns["myNewColumn1"].DefineCollation (DbCollation.UnicodeCi);
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure1, tables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
+		public void AlterColumnCollationTest2()
+		{
+			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			using (DbInfrastructure dbInfrastructure2 = DbInfrastructureHelper.ConnectToTestDatabase ())
+			{
+				DbTypeDef[] typesInfrastructure1 = dbInfrastructure1.FindDbTypes ();
+				DbTypeDef[] typesInfrastructure2 = dbInfrastructure2.FindDbTypes ();
+
+				DbTypeDef typeString1 = typesInfrastructure1[13];
+				DbTypeDef typeString2 = typesInfrastructure2[13];
+
+				DbTypeDef[] types1 = new DbTypeDef[] { typeString1, };
+				DbTypeDef[] types2 = new DbTypeDef[] { typeString2, };
+
+				DbTable table1 = this.BuildNewTableWithGivenTypes (2, types1, DbElementCat.ManagedUserData);
+				DbTable table2 = this.BuildNewTableWithGivenTypes (2, types2, DbElementCat.ManagedUserData);
+
+				var column1 = table1.Columns["myNewColumn1"];
+				var column2 = table2.Columns["myNewColumn1"];
+				
+				column1.DefineCollation (DbCollation.Unicode);
+				column2.DefineCollation (DbCollation.UnicodeCi);
+
+				table1.AddIndex ("myIdx", SqlSortOrder.Ascending, column1);
+				table2.AddIndex ("myIdx", SqlSortOrder.Ascending, column2);
+
+				dbInfrastructure1.AddTable (table1);
+				dbInfrastructure1.ClearCaches ();
+				dbInfrastructure2.ClearCaches ();
+
+				List<DbTable> tables = new List<DbTable> ()
+				{
+					table2,
+				};
+
+				DbSchemaUpdater.UpdateSchema (dbInfrastructure2, tables);
+
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure1, tables));
+				Assert.IsTrue (DbSchemaChecker.CheckSchema (dbInfrastructure2, tables));
+			}
+
+			this.CheckCoreAndServiceTables ();
+		}
+
+
+		[TestMethod]
 		public void ComplexTest()
 		{
 			using (DbInfrastructure dbInfrastructure1 = DbInfrastructureHelper.ConnectToTestDatabase ())

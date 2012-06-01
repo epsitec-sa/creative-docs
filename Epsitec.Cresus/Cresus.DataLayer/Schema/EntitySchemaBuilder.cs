@@ -174,7 +174,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private static DbColumn BuildValueColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
 		{
 			DbTypeDef columnType = dbTypeDefs[field.Type.CaptionId];
-			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData, null);
 
 			column.Comment = column.DisplayName;
 			column.IsNullable = field.IsNullable;
@@ -195,7 +195,7 @@ namespace Epsitec.Cresus.DataLayer.Schema
 			Druid keyTypeDefId = Epsitec.Cresus.Database.Res.Types.Num.KeyId.CaptionId;
 			DbTypeDef keyTypeDef = dbTypeDefs[keyTypeDefId];
 
-			DbColumn column = new DbColumn (field.CaptionId, keyTypeDef, DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn column = new DbColumn (field.CaptionId, keyTypeDef, DbColumnClass.Data, DbElementCat.ManagedUserData, null);
 
 			column.Comment = column.DisplayName;
 			column.IsNullable = true;

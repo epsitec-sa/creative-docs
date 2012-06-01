@@ -1069,7 +1069,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				DbTable table1 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 				DbTable table2 = infrastructure.CreateDbTable ("table", DbElementCat.ManagedUserData, false);
 
-				DbColumn column1 = new DbColumn (Druid.FromLong (1), infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);
+				DbColumn column1 = new DbColumn (Druid.FromLong (1), infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData, null);
 				table1.Columns.Add (column1);
 
 				DbColumn column2 = new DbColumn ("renamed column", infrastructure.TypeManager.DefaultInteger, DbColumnClass.Data, DbElementCat.ManagedUserData);

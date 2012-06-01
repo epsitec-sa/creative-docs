@@ -138,6 +138,18 @@ namespace Epsitec.Cresus.Database
 			return (DbSimpleType) num;
 		}
 
+		public static DbCollation? ParseCollation(string text)
+		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return null;
+			}
+			else
+			{
+				return (DbCollation) InvariantConverter.ParseInt (text);
+			}
+		}
+
 		/// <summary>
 		/// Parses the string.
 		/// </summary>
@@ -353,6 +365,19 @@ namespace Epsitec.Cresus.Database
 				return InvariantConverter.ToString ((int) value);
 			}
 		}
+
+		public static string CollationToString(DbCollation? collation)
+		{
+			if (collation.HasValue)
+			{
+				return InvariantConverter.ToString ((int) collation);
+			}
+			else
+			{
+				return null;
+			}
+		}
+
 
 		/// <summary>
 		/// Converts the value to a string.

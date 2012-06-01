@@ -821,7 +821,7 @@ namespace Epsitec.Cresus.Database
 			System.Diagnostics.Debug.Assert (targetTable != null);
 			System.Diagnostics.Debug.Assert (cardinality != DbCardinality.None);
 
-			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData);
+			DbColumn column = new DbColumn (columnCaptionId, null, DbColumnClass.Virtual, DbElementCat.ManagedUserData, null);
 
 			column.DefineCardinality (cardinality);
 			column.DefineTargetTableName (targetTable.Name);

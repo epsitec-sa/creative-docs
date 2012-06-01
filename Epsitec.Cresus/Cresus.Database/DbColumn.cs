@@ -101,11 +101,13 @@ namespace Epsitec.Cresus.Database
 		/// <param name="type">The type.</param>
 		/// <param name="columnClass">The column class.</param>
 		/// <param name="category">The category.</param>
-		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
+		/// <param name="collation">The collation.</param>
+		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbCollation? collation)
 			: this (captionId, type)
 		{
 			this.DefineColumnClass (columnClass);
 			this.DefineCategory (category);
+			this.DefineCollation (collation);
 		}
 
 		
@@ -369,6 +371,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
+		public DbCollation? Collation
+		{
+			get
+			{
+				return this.collation;
+			}
+		}
+
+
 		public bool IsAutoIncremented
 		{
 			get
@@ -536,9 +547,7 @@ namespace Epsitec.Cresus.Database
 			this.caption   = null;
 			this.name      = null;
 		}
-
-
-
+		
 		/// <summary>
 		/// Defines the column type. The column type may not be changed
 		/// after it has been defined.
@@ -598,6 +607,12 @@ namespace Epsitec.Cresus.Database
 		{
 			this.isPrimaryKey = value;
 		}
+
+		internal void DefineCollation(DbCollation? collation)
+		{
+			this.collation = collation;
+		}
+
 
 		/// <summary>
 		/// Converts a simple value (using a unified type) to an ADO.NET compatible
@@ -741,7 +756,7 @@ namespace Epsitec.Cresus.Database
 					? DbCharacterEncoding.Unicode
 					: (DbCharacterEncoding?) null;
 
-				collation = DbCollation.Unicode;
+				collation = this.collation;
 			}
 			else if (typeConverter.GetRawTypeConverter (rawType, out rawConverter))
 			{
@@ -881,6 +896,7 @@ namespace Epsitec.Cresus.Database
 				column.IsNullable		 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("null"));
 				column.IsAutoTimeStampOnInsert	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("atsi"));
 				column.IsAutoTimeStampOnUpdate	 = DbTools.ParseDefaultingToFalseBool (xmlReader.GetAttribute ("atsu"));
+				column.collation         = DbTools.ParseCollation (xmlReader.GetAttribute ("col"));
 
 				if (!isEmptyElement)
 				{
@@ -916,6 +932,7 @@ namespace Epsitec.Cresus.Database
 			DbTools.WriteAttribute (xmlWriter, "null", DbTools.BoolDefaultingToFalseToString (this.IsNullable));
 			DbTools.WriteAttribute (xmlWriter, "atsi", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStampOnInsert));
 			DbTools.WriteAttribute (xmlWriter, "atsu", DbTools.BoolDefaultingToFalseToString (this.IsAutoTimeStampOnUpdate));
+			DbTools.WriteAttribute (xmlWriter, "col", DbTools.CollationToString (this.collation));
 			
 			xmlWriter.WriteEndElement ();
 		}
@@ -973,6 +990,7 @@ namespace Epsitec.Cresus.Database
 		private bool							isAutoTimeStampOnUpdate;
 		private long							autoIncrementStartValue;
 		private string							comment;
+		private DbCollation?					collation;
 		private DbElementCat					category;
 		private DbColumnClass					columnClass;
 		private DbCardinality					cardinality;

@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			DbTable fakeTable = new DbTable (table.CaptionId);
 
-			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (field.Type), DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (field.Type), DbColumnClass.Data, DbElementCat.ManagedUserData, null);
 
 			expectedColumnValue.Comment = expectedColumnValue.DisplayName;
 			expectedColumnValue.IsNullable = field.IsNullable;
@@ -355,7 +355,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		{
 			DbTable fakeTable = new DbTable (table.CaptionId);
 
-			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (Epsitec.Cresus.Database.Res.Types.Num.KeyId), DbColumnClass.Data, DbElementCat.ManagedUserData);
+			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (Epsitec.Cresus.Database.Res.Types.Num.KeyId), DbColumnClass.Data, DbElementCat.ManagedUserData, null);
 
 			expectedColumnValue.Comment = expectedColumnValue.DisplayName;
 			expectedColumnValue.IsNullable = true;

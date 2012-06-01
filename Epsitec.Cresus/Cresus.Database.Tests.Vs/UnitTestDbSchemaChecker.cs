@@ -600,6 +600,26 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 
 		[TestMethod]
+		public void DbTableColumnCollationTest()
+		{
+			DbTable table1 = new DbTable ();
+			DbTable table2 = new DbTable ();
+			DbTable table3 = new DbTable ();
+			
+			table1.Columns.Add (new DbColumn ());
+			table2.Columns.Add (new DbColumn ());
+			table3.Columns.Add (new DbColumn ());
+
+			table1.Columns[0].DefineCollation (DbCollation.Unicode);
+			table2.Columns[0].DefineCollation (DbCollation.Unicode);
+			table3.Columns[0].DefineCollation (DbCollation.UnicodeCiAi);
+
+			Assert.IsTrue (DbSchemaChecker.AreDbTablesEqual (table1, table2));
+			Assert.IsFalse (DbSchemaChecker.AreDbTablesEqual (table1, table3));
+		}
+
+
+		[TestMethod]
 		public void DbTableMemoryDatabase()
 		{
 			using (DbInfrastructure dbInfrastructure = DbInfrastructureHelper.ConnectToTestDatabase ())
