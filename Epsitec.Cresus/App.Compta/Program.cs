@@ -17,7 +17,7 @@ namespace Epsitec.Compta
 		[System.STAThread]
 		static void Main(string[] args)
 		{
-#if false
+#if true
 			if (args.Length > 0)
 			{
 				Program.ExecuteCoreProgram (args, null);
