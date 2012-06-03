@@ -422,7 +422,22 @@ namespace Epsitec.Cresus.Compta.Helpers
 				y += 2000;
 			}
 
-			date = new Date (y, m, d);
+			if (d < 1 || d > 31 || m < 1 || m > 12)
+			{
+				date = null;
+				return true;
+			}
+
+			try
+			{
+				date = new Date (y, m, d);
+			}
+			catch
+			{
+				date = null;
+				return true;
+			}
+
 			bool ok = true;
 
 			if (minDate.HasValue && date < minDate.Value)
