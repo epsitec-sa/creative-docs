@@ -51,12 +51,12 @@ namespace Epsitec.Cresus.Compta.IO
 			compta.Utilisateurs.Add (NewCompta.CreateAdminUser ());
 		}
 
-		public static void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 10)
+		public static void CreatePériodes(ComptaEntity compta, int pastCount = -1, int postCount = 1)
 		{
 			compta.Périodes.Clear ();
 
 			var now = Date.Today;
-			for (int year = now.Year+pastCount; year < now.Year+postCount; year++)
+			for (int year = now.Year+pastCount; year <= now.Year+postCount; year++)
 			{
 				compta.Périodes.Add (NewCompta.CreatePériode (year));
 			}
