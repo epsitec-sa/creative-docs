@@ -62,6 +62,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.journal = new List<ComptaEcritureEntity> ();
 				this.journal.Clear ();
 
+#if false
 				int count = this.journalAll.Count;
 				for (int row = 0; row < count; row++)
 				{
@@ -70,6 +71,38 @@ namespace Epsitec.Cresus.Compta.Accessors
 						this.journal.Add (this.journalAll[row]);
 					}
 				}
+#else
+				//	Le filtre doit absolument laisser passer toutes les lignes d'une écriture multiple, ou aucune,
+				//	sous peine de bugs catastrophiques.
+				int count = this.journalAll.Count;
+				int row = 0;
+
+				while (row < count)
+				{
+					int firstRow, countRow;
+					JournalDataAccessor.ExploreMulti (this.journalAll, row, out firstRow, out countRow);
+
+					bool take = false;
+					for (int i = firstRow; i < firstRow+countRow; i++)
+					{
+						if (this.FilterLine (i))
+						{
+							take = true;
+							break;
+						}
+					}
+
+					if (take)
+					{
+						for (int i = firstRow; i < firstRow+countRow; i++)
+						{
+							this.journal.Add (this.journalAll[i]);
+						}
+					}
+
+					row = firstRow+countRow;
+				}
+#endif
 			}
 
 			this.soldesJournalManager.Initialize (this.journal);
