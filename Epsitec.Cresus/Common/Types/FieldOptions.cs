@@ -10,8 +10,15 @@ namespace Epsitec.Common.Types
 	/// </summary>
 	[DesignerVisible]
 	[System.Flags]
-	public enum FieldOptions
+	public enum FieldOptions : byte
 	{
+		// NOTE This enumeration is used within StructuredTypeField where it can be serialized. The
+		// serialization process combines this value with other in a single integer in order to gain
+		// space. Currently, only the least significant byte of this value will be persisted because
+		// of shifting and masking. If you ever increase the number of values of this enumeration in
+		// such a way that requires it to be a short or a bigger type, you must adapt the existing
+		// code in StructuredTypeField in order to ensure that all values can be persisted there.
+
 		/// <summary>
 		/// There is no option defined for this field.
 		/// </summary>
@@ -48,21 +55,12 @@ namespace Epsitec.Common.Types
 		/// If the field requires sorting (it is a string), then apply a case
 		/// insensitive collation (i.e. "a" is equal to "A").
 		/// </summary>
-		CollationCaseInsensitive	= 0x00040000,
+		CollationCaseInsensitive = 0x20,
 		
 		/// <summary>
 		/// If the field requires sorting (it is a string), then apply an accent
 		/// insensitive collation (i.e. "a" is equal to "à"/"ä"/...).
 		/// </summary>
-		CollationAccentInsensitive	= 0x00080000,
-
-#if false
-		//	TODO: define a meaningful mechanism here to define culture codes for collations
-
-		CollationCultureMask		= 0x0ff00000,
-		CollationCultureCodeNone	= 0x00000000,
-		CollationCultureCodeFrCh	= 0x00100000,
-		CollationCultureCodeDeCh	= 0x00200000,
-#endif
+		CollationAccentInsensitive = 0x40,
 	}
 }

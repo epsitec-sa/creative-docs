@@ -700,7 +700,7 @@ namespace Epsitec.Common.Types
 		const int								SourceShift		= 6;		//	0x000003c0
 		const int								SourceMask		= 0x0f;		//	4-bit, offset 6
 		const int								OptionsShift	= 10;		//	0x0000fc00
-		const int								OptionsMask		= 0x3f;		//	6-bit, offset 10
+		const int								OptionsMask		= 0xff;		//	8-bit, offset 10
 		
 		private readonly string					id;
 		protected INamedType					type;
