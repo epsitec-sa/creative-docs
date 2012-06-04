@@ -380,11 +380,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.navigatorEngine.GetNavigatorData (index);
 
-			string icon = UIBuilder.GetIconTag (Présentations.GetIcon (data.ControllerType), iconSize: 32, verticalOffset: -10);
+			var select = index == this.navigatorEngine.Index;
+			string icon = UIBuilder.GetIconTag (Présentations.GetIcon (data.ControllerType), iconSize: 32, verticalOffset: -10, style: select ? "Active" : null);
 
 			var item = new MenuItem ()
 			{
-				IconUri       = UIBuilder.GetMarkStateIconUri (index == this.navigatorEngine.Index),
+				IconUri       = UIBuilder.GetMarkStateIconUri (select),
 				FormattedText = icon + "   " + data.Description,
 				Name          = index.ToString (),  // on ne peut pas utiliser simplement Index !
 			};
@@ -1472,7 +1473,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		[Command (Res.CommandIds.Navigator.Menu)]
 		private void CommandNavigatorMenu()
 		{
-			this.ShowNavigatorMenu (this.ribbonController.NavigatorMenuButton);
+			this.ShowNavigatorMenu (this.toolbarController.NavigatorMenuButton);
 		}
 
 		[Command (Res.CommandIds.Global.Settings)]

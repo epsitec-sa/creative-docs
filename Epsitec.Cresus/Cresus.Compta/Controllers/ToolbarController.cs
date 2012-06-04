@@ -91,7 +91,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Prev);
-			this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Next, 10);
+			this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Next);
+			this.navigatorMenuButton = this.CreateButton (this.gradientTitle, Res.Commands.Navigator.Menu, 10);
 
 			this.CreateButton (this.gradientTitle, Res.Commands.Edit.Undo);
 			this.CreateButton (this.gradientTitle, Res.Commands.Edit.Redo, 10);
@@ -143,6 +144,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.topTemporalController.CreateUI (line2);
 
 			this.UpdateWindow ();
+		}
+
+
+		public Button NavigatorMenuButton
+		{
+			get
+			{
+				return this.navigatorMenuButton;
+			}
 		}
 
 
@@ -312,12 +322,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			return button;
 		}
 
-		private void CreateButton(Widget parent, Command cmd, double rightMargin = 0)
+		private Button CreateButton(Widget parent, Command cmd, double rightMargin = 0)
 		{
 			var button = UIBuilder.CreateButton (parent, cmd, 24, 20);
 
 			button.Dock = DockStyle.Left;
 			button.Margins = new Margins (0, rightMargin, 2, 2);
+
+			return button;
 		}
 
 
@@ -329,6 +341,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private WindowButton					maximizeButton;
 		private WindowButton					minimizeButton;
 		private Button							userLabel;
+		private Button							navigatorMenuButton;
 		private StaticText						titleLabel;
 		private TopTemporalController			topTemporalController;
 		private bool							windowActivated;
