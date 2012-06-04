@@ -26,7 +26,7 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 // RT_MANIFEST
 //
 
-1                       RT_MANIFEST             "S:\\Epsitec.Cresus\\App.CreativeDocs\\uac.manifest"
+1                       RT_MANIFEST             "S:\\Epsitec.Cresus\\App.CreativeDocs\\app.manifest"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -98,9 +98,9 @@ BEGIN
             VALUE "Comments", "Visit http://www.creativedocs.net/ for detailed information"
             VALUE "CompanyName", "OPaC bright ideas"
             VALUE "FileDescription", "Creative Docs .NET"
-            VALUE "FileVersion", "3, 3, 6, 1140"
+            VALUE "FileVersion", "3, 3, 7, 1222"
             VALUE "InternalName", "Creative Docs .NET"
-            VALUE "LegalCopyright", "Copyright © 2002-2011, OPaC bright ideas & EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
+            VALUE "LegalCopyright", "Copyright © 2002-2012, OPaC bright ideas & EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland"
             VALUE "OriginalFilename", "Creative Docs .NET.exe"
             VALUE "ProductName", "Creative Docs .NET"
             VALUE "ProductVersion", "3, 0, 0, 0"
