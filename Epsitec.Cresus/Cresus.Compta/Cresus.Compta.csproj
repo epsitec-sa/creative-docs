@@ -436,6 +436,8 @@
     <EmbeddedResource Include="Images\Présentation.Group.Open.icon" />
     <EmbeddedResource Include="Images\Présentation.Group.PlanComptable.icon" />
     <EmbeddedResource Include="Images\Navigator.Menu.icon" />
+    <EmbeddedResource Include="Images\Période.Next.icon" />
+    <EmbeddedResource Include="Images\Période.Prev.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

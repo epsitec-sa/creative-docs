@@ -67,11 +67,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Padding        = new Margins (0, 0, 2, 2),
 			};
 
-			new GlyphButton
+			var prev = new IconButton
 			{
 				Parent          = frame,
 				CommandObject   = Res.Commands.Compta.PériodePrécédente,
-				GlyphShape      = GlyphShape.ArrowLeft,
 				ButtonStyle     = ButtonStyle.ToolItem,
 				PreferredHeight = TopTemporalController.toolbarHeight-4,
 				PreferredWidth  = TopTemporalController.toolbarHeight-4,
@@ -86,16 +85,17 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (5, 5, 0, 0),
 			};
 
-			new GlyphButton
+			var next = new IconButton
 			{
 				Parent          = frame,
 				CommandObject   = Res.Commands.Compta.PériodeSuivante,
-				GlyphShape      = GlyphShape.ArrowRight,
 				ButtonStyle     = ButtonStyle.ToolItem,
 				PreferredHeight = TopTemporalController.toolbarHeight-4,
 				PreferredWidth  = TopTemporalController.toolbarHeight-4,
 				Dock            = DockStyle.Left,
 			};
+
+			ToolTip.Default.SetToolTip (this.périodeLabel, "Exercice comptable en cours");
 		}
 
 		private void CreateTemporalFilterUI(FrameBox parent)
