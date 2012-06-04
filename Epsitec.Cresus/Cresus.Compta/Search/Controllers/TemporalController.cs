@@ -197,10 +197,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.UpdateWidgets ();
 			};
 
-			this.regularClearButton = new GlyphButton
+			this.regularClearButton = new IconButton
 			{
 				Parent          = this.regularFrame,
-				GlyphShape      = GlyphShape.Close,
+				IconUri         = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				ButtonStyle     = ButtonStyle.ToolItem,
 				PreferredHeight = TemporalController.toolbarHeight,
 				PreferredWidth  = TemporalController.toolbarHeight,
@@ -208,7 +208,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (this.regularClearButton, "Annule le filtre temporel");
+			ToolTip.Default.SetToolTip (this.regularClearButton, "Termine le filtre temporel");
 
 			this.regularClearButton.Clicked += delegate
 			{
@@ -300,10 +300,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				this.UpdateWidgets ();
 			};
 
-			this.anyClearButton = new GlyphButton
+			this.anyClearButton = new IconButton
 			{
 				Parent          = this.anyFrame,
-				GlyphShape      = GlyphShape.Close,
+				IconUri         = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				ButtonStyle     = ButtonStyle.ToolItem,
 				PreferredHeight = TemporalController.toolbarHeight,
 				PreferredWidth  = TemporalController.toolbarHeight,
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (0, 0, 0, 0),
 			};
 
-			ToolTip.Default.SetToolTip (this.anyClearButton, "Annule le filtre temporel");
+			ToolTip.Default.SetToolTip (this.anyClearButton, "Termine le filtre temporel");
 
 			this.anyClearButton.Clicked += delegate
 			{
@@ -782,8 +782,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private FrameBox								anyFrame;
 		private TextFieldEx								beginDateField;
 		private TextFieldEx								endDateField;
-		private GlyphButton								regularClearButton;
-		private GlyphButton								anyClearButton;
+		private IconButton								regularClearButton;
+		private IconButton								anyClearButton;
 		private int										tabIndex;
 	}
 }
