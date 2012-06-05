@@ -47,7 +47,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 				return true;
 			}
-
+			
 			protected override string Serialize()
 			{
 				return string.Concat (BrowserNavigationPathElement.ClassIdPrefix, this.dataSetName, ".", this.entityKey.ToString ());

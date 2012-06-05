@@ -30,15 +30,13 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.itemScrollList = scrollList;
 			this.dataSetType    = dataSetType;
 			
-			this.dataContext = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
+			this.dataContext    = this.data.CreateDataContext (string.Format ("Browser.DataSet={0}", this.dataSetType.Name));
 
 			this.suspendUpdates = new SafeCounter ();
 			this.context        = new BrowserListContext ();
 
 			this.SetUpItemList ();
 			this.AttachEventHandlers ();
-
-			this.SetContentsBasedOnDataSet ();
 		}
 
 		
@@ -81,7 +79,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			get
 			{
 				return this.itemScrollList.ActiveIndex;
-//#				return this.scrollList.SelectedItemIndex;
 			}
 			set
 			{
@@ -126,6 +123,33 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			this.dataContext.SaveChanges ();
 		}
+		
+		public void RefreshCollection()
+		{
+			this.UpdateAccessor ();
+			this.DefineContentSortOrder ();
+			this.UpdateCollection (reset: false);
+		}
+
+		public void RefreshScrollList(bool reset = false)
+		{
+			if (this.itemScrollList != null)
+			{
+				int newCount = this.context.ItemProvider.Count;
+
+				int oldActive = reset ? 0 : this.context.ItemProvider.IndexOf (this.activeEntityKey);
+				int newActive = oldActive < newCount ? oldActive : newCount-1;
+
+				this.itemScrollList.RefreshContents ();
+				
+				using (this.suspendUpdates.Enter ())
+				{
+					this.SetItemScrollListSelectedIndex (newActive);
+				}
+
+				this.OnSelectedItemChange ();
+			}
+		}
 
 
 		#region IDisposable Members
@@ -151,13 +175,11 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetUpItemList()
 		{
-			this.SetContentsBasedOnDataSet ();
+			this.collectionEntityId = EntityInfo.GetTypeId (this.dataSetType);
+			this.UpdateAccessor ();
+			this.DefineContentSortOrder ();
 			
-			this.itemProvider = new BrowserListItemProvider (this.context);
-			this.itemMapper   = new BrowserListItemMapper ();
-			this.itemRenderer = new BrowserListItemRenderer (this.context);
-			
-			this.itemScrollList.SetUpItemList<BrowserListItem> (this.itemProvider, this.itemMapper, this.itemRenderer);
+			this.itemScrollList.SetUpItemList<BrowserListItem> (this.context.ItemProvider, this.context.ItemMapper, this.context.ItemRenderer);
 			
 			this.itemCache = this.itemScrollList.ItemCache;
 
@@ -171,9 +193,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 		private void SetSelectedIndex(int index)
 		{
-			if (index >= this.itemProvider.Count)
+			if (index >= this.context.ItemProvider.Count)
 			{
-				index = this.itemProvider.Count-1;
+				index = this.context.ItemProvider.Count-1;
 			}
 
 			if (index < 0)
@@ -206,11 +228,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			this.itemScrollList.ActiveIndex = index;
 		}
 
-		private void SetContentsBasedOnDataSet()
-		{
-			this.SetContents (EntityInfo.GetTypeId (this.dataSetType));
-		}
-
 		private DataSetAccessor GetContentAccessor()
 		{
 			var component = this.data.GetComponent<DataSetGetter> ();
@@ -218,15 +235,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 			return accessor;
 		}
-
-		private void SetContents(Druid entityId)
-		{
-			this.collectionEntityId = entityId;
-
-			this.UpdateAccessor ();
-			this.UpdateCollection ();
-		}
-
 
 		private void DefineContentSortOrder()
 		{
@@ -260,6 +268,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void HandleOrchestratorSavingChanges(object sender, CancelEventArgs e)
 		{
 			this.UpdateAccessor ();
+			this.DefineContentSortOrder ();
 		}
 
 		private void HandleItemListActiveIndexChanged(object sender, ItemListIndexEventArgs e)
@@ -278,46 +287,14 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private void UpdateAccessor()
 		{
 			this.context.SetAccessor (this.GetContentAccessor ());
-			this.DefineContentSortOrder ();
-
-			if (this.itemProvider != null)
-			{
-				this.itemProvider.Reset ();
-			}
 		}
 		
 		private void UpdateCollection(bool reset = true)
 		{
-			if (this.itemProvider != null)
+			if (this.context != null)
 			{
-				this.itemProvider.Reset ();
+				this.context.ItemProvider.Reset ();
 				this.RefreshScrollList (reset);
-			}
-		}
-
-		public void RefreshCollection()
-		{
-			this.UpdateAccessor ();
-			this.UpdateCollection (reset: false);
-		}
-
-		public void RefreshScrollList(bool reset = false)
-		{
-			if (this.itemScrollList != null)
-			{
-				int newCount = this.itemProvider.Count;
-
-				int oldActive = reset ? 0 : this.itemProvider.IndexOf (this.activeEntityKey);
-				int newActive = oldActive < newCount ? oldActive : newCount-1;
-
-				this.itemScrollList.RefreshContents ();
-				
-				using (this.suspendUpdates.Enter ())
-				{
-					this.SetItemScrollListSelectedIndex (newActive);
-				}
-
-				this.OnSelectedItemChange ();
 			}
 		}
 
@@ -350,9 +327,6 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 		private readonly DataContext			dataContext;
 		private readonly SafeCounter			suspendUpdates;
 
-		private BrowserListItemProvider			itemProvider;
-		private BrowserListItemMapper			itemMapper;
-		private BrowserListItemRenderer			itemRenderer;
 		private ItemCache						itemCache;
 
 		private System.Predicate<AbstractEntity> filter;

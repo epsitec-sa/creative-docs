@@ -188,6 +188,11 @@ namespace Epsitec.Common.BigList.Widgets
 
 		public void RefreshContents()
 		{
+			if (this.itemLists == null)
+			{
+				return;
+			}
+
 			this.itemLists.Reset ();
 			this.Invalidate ();
 		}

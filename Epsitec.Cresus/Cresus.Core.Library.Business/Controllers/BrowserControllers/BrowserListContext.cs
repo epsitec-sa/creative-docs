@@ -1,15 +1,17 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.BigList;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Controllers.DataAccessors;
+using Epsitec.Cresus.Core.Data;
+
+using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.Core.Data;
 
 namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 {
@@ -17,6 +19,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 	{
 		public BrowserListContext()
 		{
+			this.itemProvider = new BrowserListItemProvider (this);
+			this.itemMapper   = new BrowserListItemMapper ();
+			this.itemRenderer = new BrowserListItemRenderer (this);
 		}
 
 
@@ -36,6 +41,31 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 		}
 
+		public BrowserListItemProvider			ItemProvider
+		{
+			get
+			{
+				return this.itemProvider;
+			}
+		}
+
+		public BrowserListItemMapper			ItemMapper
+		{
+			get
+			{
+				return this.itemMapper;
+			}
+		}
+
+		public BrowserListItemRenderer			ItemRenderer
+		{
+			get
+			{
+				return this.itemRenderer;
+			}
+		}
+
+
 		public void SetAccessor(DataSetAccessor collectionAccessor)
 		{
 			if (this.accessor != null)
@@ -45,6 +75,8 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			}
 
 			this.accessor = collectionAccessor;
+			
+			this.itemProvider.Reset ();
 		}
 
 		public FormattedText GetDisplayText(AbstractEntity entity)
@@ -106,5 +138,9 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 
 
 		private DataSetAccessor					accessor;
+		
+		private BrowserListItemProvider			itemProvider;
+		private BrowserListItemMapper			itemMapper;
+		private BrowserListItemRenderer			itemRenderer;
 	}
 }
