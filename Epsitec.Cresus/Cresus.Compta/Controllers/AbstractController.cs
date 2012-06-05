@@ -1133,7 +1133,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Parent     = parent,
 					Options    = this.dataAccessor.Options.GraphOptions,
 					Dock       = DockStyle.Fill,
-					Visibility = this.dataAccessor.Options != null || this.dataAccessor.Options.ViewGraph,
+					Visibility = this.dataAccessor.Options != null && this.dataAccessor.Options.ViewGraph,
 				};
 
 				ToolTip.Default.RegisterDynamicToolTipHost (this.graphWidget);  // pour voir les tooltips dynamiques
