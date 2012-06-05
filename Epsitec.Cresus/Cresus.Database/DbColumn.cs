@@ -4,9 +4,6 @@
 using Epsitec.Common.Types;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
-using Epsitec.Cresus.Database.Collections;
-using System.Collections.Generic;
-using Epsitec.Cresus.Database;
 
 namespace Epsitec.Cresus.Database
 {
@@ -23,6 +20,19 @@ namespace Epsitec.Cresus.Database
 		public DbColumn()
 		{
 		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DbColumn"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="columnClass">The column class.</param>
+		/// <param name="category">The category.</param>
+		public DbColumn(DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
+		{
+			this.DefineType (type);
+			this.DefineColumnClass (columnClass);
+			this.DefineCategory (category);
+		}
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
@@ -30,57 +40,10 @@ namespace Epsitec.Cresus.Database
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
 		public DbColumn(string name, DbTypeDef type)
-			: this ()
-		{
-			this.DefineDisplayName (name);
-			this.DefineType (type);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
-		/// </summary>
-		/// <param name="captionId">The caption DRUID.</param>
-		/// <param name="type">The type.</param>
-		public DbColumn(Druid captionId, DbTypeDef type)
-			: this ()
-		{
-			this.DefineType (type);
-			this.DefineCaptionId (captionId);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
-		/// </summary>
-		/// <param name="captionId">The caption DRUID.</param>
-		/// <param name="type">The type.</param>
-		/// <param name="category">The category.</param>
-		public DbColumn(Druid captionId, DbTypeDef type, DbElementCat category)
-			: this (captionId, type)
-		{
-			this.DefineCategory (category);
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
-		/// </summary>
-		/// <param name="field">The structured type field definition.</param>
-		public DbColumn(StructuredTypeField field)
-			: this (field.CaptionId, new DbTypeDef (field.Type))
+			: this (name, type, DbColumnClass.Data, DbElementCat.Unknown)
 		{
 		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="DbColumn"/> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="type">The type.</param>
-		/// <param name="columnClass">The column class.</param>
-		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass)
-			: this (name, type)
-		{
-			this.DefineColumnClass (columnClass);
-		}
-
+		
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DbColumn"/> class.
 		/// </summary>
@@ -89,9 +52,9 @@ namespace Epsitec.Cresus.Database
 		/// <param name="columnClass">The column class.</param>
 		/// <param name="category">The category.</param>
 		public DbColumn(string name, DbTypeDef type, DbColumnClass columnClass, DbElementCat category)
-			: this (name, type, columnClass)
+			: this(type, columnClass, category)
 		{
-			this.DefineCategory (category);
+			this.DefineDisplayName (name);
 		}
 
 		/// <summary>
@@ -103,16 +66,13 @@ namespace Epsitec.Cresus.Database
 		/// <param name="category">The category.</param>
 		/// <param name="collation">The collation.</param>
 		public DbColumn(Druid captionId, DbTypeDef type, DbColumnClass columnClass, DbElementCat category, DbCollation? collation)
-			: this (captionId, type)
+			: this (type, columnClass, category)
 		{
-			this.DefineColumnClass (columnClass);
-			this.DefineCategory (category);
+			this.DefineCaptionId (captionId);
 			this.DefineCollation (collation);
 		}
-
-		
+	
 		#region IName Members
-
 
 		/// <summary>
 		/// Gets the name of the column.
