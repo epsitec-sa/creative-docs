@@ -693,7 +693,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				else
 				{
 					graphics.AddFilledPath (path);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
+					graphics.PaintVerticalGradient (rect, Color.FromHsv (backColor.Hue, 0.1, 0.8), backColor);
 				}
 #endif
 			}
