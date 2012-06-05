@@ -341,6 +341,7 @@
     <Compile Include="Drawing\TextBreak.cs" />
     <Compile Include="Drawing\TextBreakMode.cs" />
     <Compile Include="Drawing\TextBreakRun.cs" />
+    <Compile Include="Drawing\TextGeometry.cs" />
     <Compile Include="Drawing\TextJustifMode.cs" />
     <Compile Include="Drawing\TextListGlyph.cs" />
     <Compile Include="Drawing\TextListType.cs" />
@@ -1235,6 +1236,8 @@
     <Compile Include="Widgets\ConfirmationStaticText.cs" />
     <Compile Include="Widgets\ContainerLayoutMode.cs" />
     <Compile Include="Widgets\OptionTab.cs" />
+    <Compile Include="Widgets\SlimField.cs" />
+    <Compile Include="Widgets\SlimFieldDisplayMode.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibility.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibilityEventArgs.cs" />
     <Compile Include="Widgets\VSplitView.DragProcessor.cs" />

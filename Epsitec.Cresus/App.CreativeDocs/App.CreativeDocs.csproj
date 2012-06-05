@@ -151,7 +151,9 @@
     <None Include="App.res" />
     <None Include="App.rc" />
     <None Include="compile-rc.bat" />
-    <None Include="uac.manifest" />
+    <None Include="uac.manifest">
+      <SubType>Designer</SubType>
+    </None>
     <Content Include="..\External\AntiGrain.Win32.dll">
       <Link>AntiGrain.Win32.dll</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

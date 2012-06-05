@@ -403,6 +403,11 @@ namespace Epsitec.Common.Drawing
 		
 		public double GetTextAdvance(string text)
 		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+
 			ushort[] glyphs = this.OpenTypeFont.GenerateGlyphs (text);
 			return this.OpenTypeFont.GetTotalWidth (glyphs, 1.0);
 		}

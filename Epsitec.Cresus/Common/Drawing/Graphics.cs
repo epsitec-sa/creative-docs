@@ -372,13 +372,13 @@ namespace Epsitec.Common.Drawing
 
 		public ColorModifierCallback PopColorModifier()
 		{
-			return this.colorModifierStack.Pop () as ColorModifierCallback;
+			return this.colorModifierStack.Pop ();
 		}
 
 		
 		public RichColor GetFinalColor(RichColor color)
 		{
-			foreach (ColorModifierCallback method in this.colorModifierStack)
+			foreach (var method in this.colorModifierStack)
 			{
 				color = method (color);
 			}
@@ -395,7 +395,7 @@ namespace Epsitec.Common.Drawing
 			
 			RichColor rich = RichColor.FromColor (color);
 			
-			foreach (ColorModifierCallback method in this.colorModifierStack)
+			foreach (var method in this.colorModifierStack)
 			{
 				rich = method (rich);
 			}
@@ -481,62 +481,30 @@ namespace Epsitec.Common.Drawing
 		}
 
 
-		public void PaintText(Rectangle bounds, string text, Font font, double size, ContentAlignment align = ContentAlignment.MiddleCenter)
+		public void PaintText(Rectangle bounds, string text, Font font, double fontSize, ContentAlignment align = ContentAlignment.MiddleCenter)
 		{
-			this.PaintText (bounds.X, bounds.Y, bounds.Width, bounds.Height, text, font, size, align);
+			this.PaintText (bounds.X, bounds.Y, bounds.Width, bounds.Height, text, font, fontSize, align);
 		}
-		
-		public void   PaintText(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment align)
+
+		public void PaintText(double x, double y, double width, double height, string text, Font font, double fontSize, ContentAlignment align)
 		{
-			double textWidth  = font.GetTextAdvance (text) * size;
-			double textHeight = (font.Ascender - font.Descender) * size;
-			
-			switch (align)
-			{
-				case ContentAlignment.BottomLeft:
-				case ContentAlignment.BottomCenter:
-				case ContentAlignment.BottomRight:
-					y = y - font.Descender * size;
-					break;
-				
-				case ContentAlignment.MiddleLeft:
-				case ContentAlignment.MiddleCenter:
-				case ContentAlignment.MiddleRight:
-					y = y + (height - textHeight) / 2 - font.Descender * size;
-					break;
-				
-				case ContentAlignment.TopLeft:
-				case ContentAlignment.TopCenter:
-				case ContentAlignment.TopRight:
-					y = y + height - textHeight - font.Descender * size;
-					break;
-			}
-			
-			switch (align)
-			{
-				case ContentAlignment.BottomLeft:
-				case ContentAlignment.MiddleLeft:
-				case ContentAlignment.TopLeft:
-					break;
-				
-				case ContentAlignment.BottomCenter:
-				case ContentAlignment.MiddleCenter:
-				case ContentAlignment.TopCenter:
-					x = x + (width - textWidth) / 2;
-					break;
-				
-				case ContentAlignment.BottomRight:
-				case ContentAlignment.MiddleRight:
-				case ContentAlignment.TopRight:
-					x = x + width - textWidth;
-					break;
-			}
-			
-			this.PaintText (x, y, text, font, size);
+			TextGeometry geometry = new TextGeometry (x, y, width, height, text, font, fontSize, align);
+
+			this.PaintText (geometry, text, font, fontSize);
 		}
-		
+
+		public void PaintText(TextGeometry geometry, string text, Font font, double fontSize)
+		{
+			this.PaintText (geometry.Origin.X, geometry.Origin.Y, text, font, fontSize);
+		}
+
 		public double PaintText(double x, double y, string text, Font font, double size)
 		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+
 			if (this.transform.OnlyTranslate && ! font.IsSynthetic && this.AlphaMutiplier == 1.0)
 			{
 				x += this.transform.TX;
@@ -554,6 +522,11 @@ namespace Epsitec.Common.Drawing
 		
 		public double PaintText(double x, double y, string text, Font font, double size, FontClassInfo[] infos)
 		{
+			if (string.IsNullOrEmpty (text))
+			{
+				return 0;
+			}
+
 			//	TODO: déplacer ce code dans la librairie AGG; faire en sorte que ça marche aussi
 			//	si ClassId != ClassId.Space...
 			
@@ -1242,30 +1215,30 @@ namespace Epsitec.Common.Drawing
 		}
 
 		
-		private const double				AlmostInfinite = 1000000000.0;
-		private ImageFilter					imageFilter = new ImageFilter(ImageFilteringMode.Bilinear);
-		private Margins						imageCrop;
-		private Size						imageFinalSize;
+		private const double					AlmostInfinite = 1000000000.0;
+		private ImageFilter						imageFilter = new ImageFilter (ImageFilteringMode.Bilinear);
+		private Margins							imageCrop;
+		private Size							imageFinalSize;
 		
-		private double						lineWidth;
-		private JoinStyle					lineJoin;
-		private CapStyle					lineCap;
-		private double						lineMiterLimit;
+		private double							lineWidth;
+		private JoinStyle						lineJoin;
+		private CapStyle						lineCap;
+		private double							lineMiterLimit;
 		
-		private Pixmap						pixmap;
-		private AbstractRasterizer			rasterizer;
-		private Transform					transform;
+		private Pixmap							pixmap;
+		private AbstractRasterizer				rasterizer;
+		private Transform						transform;
 		
-		private Renderers.Solid				solidRenderer;
-		private Renderers.Image				imageRenderer;
-		private Renderers.Gradient			gradientRenderer;
-		private Renderers.Smooth			smoothRenderer;
+		private Renderers.Solid					solidRenderer;
+		private Renderers.Image					imageRenderer;
+		private Renderers.Gradient				gradientRenderer;
+		private Renderers.Smooth				smoothRenderer;
 		
-		private double						clipX1, clipY1, clipX2, clipY2;
-		private double						clipOx, clipOy;
-		private bool						hasClipRect;
+		private double							clipX1, clipY1, clipX2, clipY2;
+		private double							clipOx, clipOy;
+		private bool							hasClipRect;
 
-		private Color						originalColor;
-		private Stack<ColorModifierCallback>	colorModifierStack;
+		private Color							originalColor;
+		private readonly Stack<ColorModifierCallback>	colorModifierStack;
 	}
 }
