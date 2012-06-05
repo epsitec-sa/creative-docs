@@ -642,7 +642,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateAfterOptionsChanged ();
 			this.firstEditedRow = this.journal.IndexOf (initialEcriture);
 
-			this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, pièces);
+			//?this.mainWindowController.PiècesGenerator.Burn (journalUtilisé, pièces);
 		}
 
 		public override int CountEmptyRow
