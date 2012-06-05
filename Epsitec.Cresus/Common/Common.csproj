@@ -1238,6 +1238,9 @@
     <Compile Include="Widgets\OptionTab.cs" />
     <Compile Include="Widgets\SlimField.cs" />
     <Compile Include="Widgets\SlimFieldDisplayMode.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItem.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItemHilite.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItemType.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibility.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibilityEventArgs.cs" />
     <Compile Include="Widgets\VSplitView.DragProcessor.cs" />

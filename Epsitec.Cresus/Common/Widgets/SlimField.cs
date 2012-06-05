@@ -3,7 +3,11 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
@@ -11,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	{
 		public SlimField()
 		{
-
+			this.menuItems = new List<SlimFieldMenuItem> ();
 		}
 
 
@@ -39,6 +43,19 @@ namespace Epsitec.Common.Widgets
 			set;
 		}
 
+		public string							FieldOther
+		{
+			get;
+			set;
+		}
+
+		public IList<SlimFieldMenuItem>			MenuItems
+		{
+			get
+			{
+				return this.menuItems;
+			}
+		}
 		
 		public SlimFieldDisplayMode				DisplayMode
 		{
@@ -63,11 +80,15 @@ namespace Epsitec.Common.Widgets
 			switch (this.DisplayMode)
 			{
 				case SlimFieldDisplayMode.Label:
-					this.PaintLabel (graphics, bounds);
+					this.PaintLabel (graphics, Rectangle.Deflate (bounds, 2, 2));
 					break;
 						
 				case SlimFieldDisplayMode.Text:
-					this.PaintText (graphics, bounds);
+					this.PaintText (graphics, Rectangle.Deflate (bounds, 2, 2));
+					break;
+
+				case SlimFieldDisplayMode.Menu:
+					this.PaintMenu (graphics, Rectangle.Deflate (bounds, 2, 2));
 					break;
 			}
 		}
@@ -78,10 +99,8 @@ namespace Epsitec.Common.Widgets
 			graphics.RenderSolid (SlimField.Colors.BackColor);
 		}
 
-		private void PaintLabel(Graphics graphics, Rectangle bounds)
+		private void PaintLabel(Graphics graphics, Rectangle surface)
 		{
-			var surface = Rectangle.Deflate (bounds, 2, 2);
-
 			using (var path = Path.CreateRoundedRectangle (surface, 2, 2))
 			{
 				graphics.AddFilledPath (path);
@@ -92,10 +111,8 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void PaintText(Graphics graphics, Rectangle bounds)
+		private void PaintText(Graphics graphics, Rectangle surface)
 		{
-			var surface = Rectangle.Deflate (bounds, 2, 2);
-
 			var x       = surface.X;
 			var y       = surface.Y;
 			var width   = surface.Width;
@@ -109,6 +126,41 @@ namespace Epsitec.Common.Widgets
 			graphics.PaintText (geomPrefix, this.FieldPrefix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize);
 			graphics.PaintText (geomText,  this.FieldText,  SlimField.Fonts.TextFont, Font.DefaultFontSize);
 			graphics.PaintText (geomSuffix, this.FieldSuffix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize);
+		}
+
+		private void PaintMenu(Graphics graphics, Rectangle surface)
+		{
+			var x       = surface.X;
+			var y       = surface.Y;
+			var width   = surface.Width;
+			var height  = surface.Height;
+			var geom    = new TextGeometry (x, y, width, height, "", SlimField.Fonts.TextFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft);
+
+			x = geom.Origin.X;
+			y = geom.Origin.Y;
+
+			graphics.Color = SlimField.Colors.TextColor;
+
+			foreach (var tuple in this.GetMenuItemFontTextTuples ())
+			{
+				var font    = tuple.Item1;
+				var text    = tuple.Item2;
+				var hilite  = tuple.Item3;
+				var advance = font.GetTextAdvance (text) * Font.DefaultFontSize;
+
+				graphics.PaintText (x, y, width, height, text, font, Font.DefaultFontSize, Drawing.ContentAlignment.BaselineLeft);
+
+				if (hilite == SlimFieldMenuItemHilite.Underline)
+				{
+					graphics.LineCap = CapStyle.Butt;
+					graphics.LineWidth = 1.0;
+					graphics.AddLine (x, y - 1.5, x + advance, y - 1.5);
+					graphics.RenderSolid (SlimField.Colors.TextColor);
+				}
+
+				x     += advance;
+				width -= advance;
+			}
 		}
 
 		private double MeasureWidth()
@@ -129,12 +181,62 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SlimFieldDisplayMode.Menu:
+					foreach (var tuple in this.GetMenuItemFontTextTuples ())
+					{
+						var font = tuple.Item1;
+						var text = tuple.Item2;
+						
+						width += font.GetTextAdvance (text) * Font.DefaultFontSize;
+					}
 					break;
 			}
 
 			return width;
 		}
 
+		private IEnumerable<System.Tuple<Font, string, SlimFieldMenuItemHilite>> GetMenuItemFontTextTuples()
+		{
+			bool first = true;
+
+			foreach (var item in this.menuItems)
+			{
+				if (first)
+				{
+					first = false;
+				}
+				else
+				{
+					yield return new System.Tuple<Font, string, SlimFieldMenuItemHilite> (SlimField.Fonts.MenuFont, SlimField.Strings.MenuSeparator, SlimFieldMenuItemHilite.None);
+				}
+
+				yield return new System.Tuple<Font, string, SlimFieldMenuItemHilite> (SlimField.GetMenuItemFont (item), item.Text, item.Hilite);
+			}
+		}
+
+		private static Font GetMenuItemFont(SlimFieldMenuItem item)
+		{
+			switch (item.Type)
+			{
+				case SlimFieldMenuItemType.Value:
+				case SlimFieldMenuItemType.Option:
+					return item.Active == Widgets.ActiveState.Yes ? SlimField.Fonts.SelectedTextFont : SlimField.Fonts.TextFont;
+
+				case SlimFieldMenuItemType.Extra:
+					return item.Active == Widgets.ActiveState.Yes ? SlimField.Fonts.SelectedExtraFont : SlimField.Fonts.ExtraFont;
+
+				default:
+					throw new System.NotSupportedException (string.Format ("{0} not supported", item.Type.GetQualifiedName ()));
+			}
+		}
+
+
+
+
+		private static class Strings
+		{
+			public static readonly string		MenuSeparator = "   ";
+		}
+		
 		private static class Colors
 		{
 			public static readonly Color		BackColor  = Color.FromHexa ("ffffff");
@@ -147,6 +249,12 @@ namespace Epsitec.Common.Widgets
 			public static readonly Font			LabelFont = Font.GetFont ("Segoe UI", "Bold");
 			public static readonly Font			DescriptionFont = Font.GetFont ("Segoe UI", "Light Regular");
 			public static readonly Font			TextFont = Font.GetFont ("Segoe UI", "Regular");
+			public static readonly Font			ExtraFont = Font.GetFont ("Segoe UI", "Italic");
+			public static readonly Font			MenuFont = Font.GetFont ("Segoe UI", "Regular");
+			public static readonly Font			SelectedTextFont = Font.GetFont ("Segoe UI", "Bold");
+			public static readonly Font			SelectedExtraFont = Font.GetFont ("Segoe UI", "Bold Italic");
 		}
+
+		private readonly List<SlimFieldMenuItem> menuItems;
 	}
 }

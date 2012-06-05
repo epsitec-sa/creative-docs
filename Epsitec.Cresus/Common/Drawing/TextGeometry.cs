@@ -55,7 +55,7 @@ namespace Epsitec.Common.Drawing
 
 				case ContentAlignment.None:
 				default:
-					throw new System.NotSupportedException (string.Format ("ContentAlignment.{0} not supported", textAlignment.GetQualifiedName ()));
+					throw new System.NotSupportedException (string.Format ("{0} not supported", textAlignment.GetQualifiedName ()));
 			}
 
 			switch (textAlignment)
@@ -82,7 +82,7 @@ namespace Epsitec.Common.Drawing
 
 				case ContentAlignment.None:
 				default:
-					throw new System.NotSupportedException (string.Format ("ContentAlignment.{0} not supported", textAlignment.GetQualifiedName ()));
+					throw new System.NotSupportedException (string.Format ("{0} not supported", textAlignment.GetQualifiedName ()));
 			}
 
 			this.origin    = new Point (x, y);
