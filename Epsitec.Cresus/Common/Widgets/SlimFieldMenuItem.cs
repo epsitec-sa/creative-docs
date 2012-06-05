@@ -37,5 +37,11 @@ namespace Epsitec.Common.Widgets
 			get;
 			set;
 		}
+
+
+		public virtual bool ExecuteCommand(Behaviors.SlimFieldMenuBehavior source)
+		{
+			return false;
+		}
 	}
 }

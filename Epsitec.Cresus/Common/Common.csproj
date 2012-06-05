@@ -1184,6 +1184,7 @@
     <Compile Include="Widgets\Behaviors\IDragBehaviorHost.cs" />
     <Compile Include="Widgets\Behaviors\MenuBehavior.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldMenuBehavior.cs" />
+    <Compile Include="Widgets\Behaviors\SlimFieldMenuSelectionEventArgs.cs" />
     <Compile Include="Widgets\ISearchBox.cs" />
     <Compile Include="Widgets\SearchBoxPolicy.cs" />
     <Compile Include="Widgets\Behaviors\SelectItemBehavior.cs" />
@@ -1240,6 +1241,8 @@
     <Compile Include="Widgets\SlimField.cs" />
     <Compile Include="Widgets\SlimFieldDisplayMode.cs" />
     <Compile Include="Widgets\SlimFieldMenuItem.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItemCommand.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItemCommandCode.cs" />
     <Compile Include="Widgets\SlimFieldMenuItemHilite.cs" />
     <Compile Include="Widgets\SlimFieldMenuItemStyle.cs" />
     <Compile Include="Widgets\SplitViewFrameVisibility.cs" />

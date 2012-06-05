@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Widgets;
 
@@ -35,6 +36,71 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		#endregion
 
+
+		public void Select(SlimFieldMenuItem item)
+		{
+			bool changed = false;
+
+			var e = new SlimFieldMenuSelectionEventArgs (item);
+
+			this.OnSelecting (e);
+
+			if (e.Cancel)
+			{
+				return;
+			}
+
+			if (item.ExecuteCommand (this))
+			{
+				return;
+			}
+
+			if ((item != null) &&
+				(item.Active != ActiveState.Yes))
+			{
+				item.Active = ActiveState.Yes;
+				changed = true;
+			}
+
+			foreach (var x in this.host.MenuItems)
+			{
+				if ((x != item) &&
+					(x.Active == ActiveState.Yes))
+				{
+					x.Active = ActiveState.No;
+					changed = true;
+				}
+			}
+
+			if (changed)
+			{
+				this.OnSelected ();
+				this.host.Invalidate ();
+			}
+		}
+
+		public void Clear()
+		{
+			this.host.FieldText = null;
+			this.host.MenuItems.ForEach (x => x.Active = ActiveState.No);
+			this.host.Invalidate ();
+		}
+
+		public SlimFieldMenuItem GetSelectedItem()
+		{
+			return this.host.MenuItems.FirstOrDefault (x => x.Active == ActiveState.Yes);
+		}
+
+		private void OnSelecting(SlimFieldMenuSelectionEventArgs e)
+		{
+			this.Selecting.Raise (this, e);
+		}
+
+		private void OnSelected()
+		{
+			this.Selected.Raise (this);
+		}
+
 		
 		private void HandleHostMouseMove(object sender, MessageEventArgs e)
 		{
@@ -52,7 +118,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleHostExited(object sender, MessageEventArgs e)
 		{
-			this.host.DisplayMode = SlimFieldDisplayMode.Text;
+			this.host.DisplayMode = this.host.FieldText == null ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 			this.host.UpdatePreferredSize ();
 			this.UpdateMenuItemHilite (null);
 		}
@@ -63,9 +129,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			if (item != null)
 			{
-				item.Active = ActiveState.Yes;
-				this.host.MenuItems.Where (x => x != item).ForEach (x => x.Active = ActiveState.No);
-				this.host.Invalidate ();
+				this.Select (item);
 			}
 		}
 
@@ -110,6 +174,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 
+
+		public event EventHandler<SlimFieldMenuSelectionEventArgs>	Selecting;
+		public event EventHandler				Selected;
 
 		private readonly SlimField				host;
 	}

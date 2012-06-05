@@ -168,7 +168,8 @@ namespace Epsitec.Common.Widgets
 
 				graphics.PaintText (x, y, width, height, text, font, Font.DefaultFontSize, Drawing.ContentAlignment.BaselineLeft);
 
-				if (hilite == SlimFieldMenuItemHilite.Underline)
+				if ((hilite == SlimFieldMenuItemHilite.Underline) &&
+					(item.Style != SlimFieldMenuItemStyle.Symbol))
 				{
 					graphics.LineCap = CapStyle.Butt;
 					graphics.LineWidth = 1.0;
@@ -260,9 +261,12 @@ namespace Epsitec.Common.Widgets
 				case SlimFieldMenuItemStyle.Value:
 				case SlimFieldMenuItemStyle.Option:
 					return item.Active == Widgets.ActiveState.Yes ? SlimField.Fonts.SelectedTextFont : SlimField.Fonts.TextFont;
-
+				
 				case SlimFieldMenuItemStyle.Extra:
 					return item.Active == Widgets.ActiveState.Yes ? SlimField.Fonts.SelectedExtraFont : SlimField.Fonts.ExtraFont;
+
+				case SlimFieldMenuItemStyle.Symbol:
+					return SlimField.Fonts.SymbolFont;
 
 				default:
 					throw new System.NotSupportedException (string.Format ("{0} not supported", item.Style.GetQualifiedName ()));
@@ -274,7 +278,7 @@ namespace Epsitec.Common.Widgets
 
 		private static class Strings
 		{
-			public static readonly string		MenuSeparator = "   ";
+			public static readonly string		MenuSeparator = "  ";
 		}
 
 		private static class Colors
@@ -286,12 +290,13 @@ namespace Epsitec.Common.Widgets
 
 		private static class Fonts
 		{
-			public static readonly Font			LabelFont = Font.GetFont ("Segoe UI", "Bold");
-			public static readonly Font			DescriptionFont = Font.GetFont ("Segoe UI", "Light Regular");
-			public static readonly Font			TextFont = Font.GetFont ("Segoe UI", "Regular");
-			public static readonly Font			ExtraFont = Font.GetFont ("Segoe UI", "Italic");
-			public static readonly Font			MenuFont = Font.GetFont ("Segoe UI", "Regular");
-			public static readonly Font			SelectedTextFont = Font.GetFont ("Segoe UI", "Bold");
+			public static readonly Font			LabelFont         = Font.GetFont ("Segoe UI", "Bold");
+			public static readonly Font			DescriptionFont   = Font.GetFont ("Segoe UI", "Light Regular");
+			public static readonly Font			TextFont          = Font.GetFont ("Segoe UI", "Regular");
+			public static readonly Font			ExtraFont         = Font.GetFont ("Segoe UI", "Italic");
+			public static readonly Font			MenuFont          = Font.GetFont ("Segoe UI", "Regular");
+			public static readonly Font			SymbolFont        = Font.GetFont ("Segoe UI Symbol", "Regular");
+			public static readonly Font			SelectedTextFont  = Font.GetFont ("Segoe UI", "Bold");
 			public static readonly Font			SelectedExtraFont = Font.GetFont ("Segoe UI", "Bold Italic");
 		}
 
