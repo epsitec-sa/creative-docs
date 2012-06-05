@@ -174,12 +174,41 @@ namespace Epsitec.Cresus.DataLayer.Schema
 		private static DbColumn BuildValueColumn(IDictionary<Druid, DbTypeDef> dbTypeDefs, StructuredTypeField field)
 		{
 			DbTypeDef columnType = dbTypeDefs[field.Type.CaptionId];
-			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData, null);
+			DbCollation? collation = EntitySchemaBuilder.GetCollation (field);
+			DbColumn column = new DbColumn (field.CaptionId, columnType, DbColumnClass.Data, DbElementCat.ManagedUserData, collation);
 
 			column.Comment = column.DisplayName;
 			column.IsNullable = field.IsNullable;
 
 			return column;
+		}
+
+
+		/// <summary>
+		/// Gets the collation that must be used for the column corresponding to the given field.
+		/// </summary>
+		/// <param name="field">The field for which to get the collation information.</param>
+		/// <returns>The collation information.</returns>
+		private static DbCollation? GetCollation(StructuredTypeField field)
+		{
+			var options = field.Options;
+			
+			if (!(field.Type is IStringType))
+			{
+				return null;
+			}
+			else if (!options.HasFlag (FieldOptions.CollationCaseInsensitive))
+			{
+				return DbCollation.Unicode;
+			}
+			else if (!options.HasFlag (FieldOptions.CollationAccentInsensitive))
+			{
+				return DbCollation.UnicodeCi;
+			}
+			else
+			{
+				return DbCollation.UnicodeCiAi;
+			}
 		}
 
 

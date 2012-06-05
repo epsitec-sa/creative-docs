@@ -336,8 +336,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Schema
 		private void CheckMainTableValueColumn(StructuredTypeField field, DbTable table)
 		{
 			DbTable fakeTable = new DbTable (table.CaptionId);
+		
+			DbCollation? collation = (!(field.Type is IStringType))
+				? (DbCollation?) null
+				: !field.Options.HasFlag (FieldOptions.CollationCaseInsensitive)
+					? DbCollation.Unicode
+					: !field.Options.HasFlag (FieldOptions.CollationAccentInsensitive)
+						? DbCollation.UnicodeCi
+						: DbCollation.UnicodeCiAi;
 
-			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (field.Type), DbColumnClass.Data, DbElementCat.ManagedUserData, null);
+			DbColumn expectedColumnValue = new DbColumn (field.CaptionId, new DbTypeDef (field.Type), DbColumnClass.Data, DbElementCat.ManagedUserData, collation);
 
 			expectedColumnValue.Comment = expectedColumnValue.DisplayName;
 			expectedColumnValue.IsNullable = field.IsNullable;
