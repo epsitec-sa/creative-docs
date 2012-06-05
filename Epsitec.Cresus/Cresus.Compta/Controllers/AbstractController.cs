@@ -412,32 +412,50 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void LinkHiliteOptionsPanel(bool hilite)
 		{
-			this.optionsController.LinkHilitePanel (hilite);
+			if (this.optionsController != null)
+			{
+				this.optionsController.LinkHilitePanel (hilite);
+			}
 		}
 
 		public void LinkHiliteFilterPanel(bool hilite)
 		{
-			this.topFilterController.LinkHilitePanel (hilite);
+			if (this.topFilterController != null)
+			{
+				this.topFilterController.LinkHilitePanel (hilite);
+			}
 		}
 
 		public void LinkHiliteSearchPanel(bool hilite)
 		{
-			this.topSearchController.LinkHilitePanel (hilite);
+			if (this.topSearchController != null)
+			{
+				this.topSearchController.LinkHilitePanel (hilite);
+			}
 		}
 
 		public void LinkHiliteOptionsButton(bool hilite)
 		{
-			this.viewSettingsController.LinkHiliteOptionsButton (hilite);
+			if (this.viewSettingsController != null)
+			{
+				this.viewSettingsController.LinkHiliteOptionsButton (hilite);
+			}
 		}
 
 		public void LinkHiliteFilterButton(bool hilite)
 		{
-			this.viewSettingsController.LinkHiliteFilterButton (hilite);
+			if (this.viewSettingsController != null)
+			{
+				this.viewSettingsController.LinkHiliteFilterButton (hilite);
+			}
 		}
 
 		public void LinkHiliteSearchButton(bool hilite)
 		{
-			this.viewSettingsController.LinkHiliteSearchButton (hilite);
+			if (this.viewSettingsController != null)
+			{
+				this.viewSettingsController.LinkHiliteSearchButton (hilite);
+			}
 		}
 
 
