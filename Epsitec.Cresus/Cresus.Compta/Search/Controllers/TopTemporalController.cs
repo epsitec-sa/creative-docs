@@ -112,9 +112,20 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.temporalController.CreateUI (frame, this.GetPériode, this.mainWindowController.TemporalDataChanged);
 		}
 
-		private ComptaPériodeEntity GetPériode()
+		private TemporalData GetPériode()
 		{
-			return this.mainWindowController.Période;
+			if (this.mainWindowController.Période == null)
+			{
+				return null;
+			}
+			else
+			{
+				return new TemporalData
+				{
+					BeginDate = this.mainWindowController.Période.DateDébut,
+					EndDate   = this.mainWindowController.Période.DateFin,
+				};
+			}
 		}
 
 

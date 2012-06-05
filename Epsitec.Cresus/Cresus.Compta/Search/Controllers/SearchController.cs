@@ -136,6 +136,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.UpdateSummary ();
 		}
 
+		public void UpdatePériode()
+		{
+			if (this.temporalController != null)
+			{
+				this.temporalController.UpdatePériode ();
+			}
+		}
 
 		public void UpdateColumns()
 		{
@@ -513,9 +520,20 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.temporalController.CreateUI (frame, this.GetPériode, this.BeginnerDateChanged);
 		}
 
-		private ComptaPériodeEntity GetPériode()
+		private TemporalData GetPériode()
 		{
-			return this.controller.MainWindowController.Période;
+			var temporalData = this.controller.MainWindowController.TemporalData;
+
+			Date? beginDate = this.controller.MainWindowController.Période.DateDébut;
+			Date? endDate   = this.controller.MainWindowController.Période.DateFin;
+
+			temporalData.MergeDates(ref beginDate, ref endDate);
+
+			return new TemporalData
+			{
+				BeginDate = beginDate,
+				EndDate   = endDate,
+			};
 		}
 
 		private void BeginnerDateChanged()

@@ -113,6 +113,10 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.searchController.UpdateContent ();
 		}
 
+		public void UpdatePériode()
+		{
+			this.searchController.UpdatePériode ();
+		}
 
 		public void UpdateColumns()
 		{

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, System.Func<ComptaPériodeEntity> getPériode, System.Action filterStartAction)
+		public FrameBox CreateUI(FrameBox parent, System.Func<TemporalData> getPériode, System.Action filterStartAction)
 		{
 			this.getPériode        = getPériode;
 			this.filterStartAction = filterStartAction;
@@ -67,6 +67,22 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		public void UpdatePériode()
 		{
+			if (this.data.BeginDate.HasValue)
+			{
+				this.data.BeginDate = Dates.Max (this.data.BeginDate, this.getPériode ().BeginDate);
+			}
+
+			if (this.data.EndDate.HasValue)
+			{
+				this.data.EndDate = Dates.Min (this.data.EndDate, this.getPériode ().EndDate);
+			}
+
+			if (this.data.BeginDate.HasValue && this.data.EndDate.HasValue && this.data.BeginDate.Value > this.data.EndDate.Value)
+			{
+				this.data.Clear ();
+				this.filterStartAction ();
+			}
+
 			this.CreateRegularWidgetsUI ();
 			this.UpdateWidgets ();
 		}
@@ -96,16 +112,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			var période = this.getPériode ();
 			if (période != null)
 			{
-				this.firstYear  = période.DateDébut.Year;
-				this.firstMonth = période.DateDébut.Month;
-				this.monthCount = période.DateFin.Month - this.firstMonth + 1 + (période.DateFin.Year-période.DateDébut.Year)*12;
+				this.firstYear  = période.BeginDate.Value.Year;
+				this.firstMonth = période.BeginDate.Value.Month;
+				this.monthCount = période.EndDate.Value.Month - this.firstMonth + 1 + (période.EndDate.Value.Year-période.BeginDate.Value.Year)*12;
 
 				//	Crée les boutons pour les mois.
 				{
 					this.tabIndex = 0;
 
 					int m = this.firstMonth;
-					int y = période.DateDébut.Year;
+					int y = période.BeginDate.Value.Year;
 
 					while (true)
 					{
@@ -149,7 +165,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					this.tabIndex = 0;
 
 					int m = ((this.firstMonth+1)/3*3)+1;
-					int y = période.DateDébut.Year;
+					int y = période.BeginDate.Value.Year;
 
 					while (true)
 					{
@@ -474,13 +490,13 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				var first = int.MinValue;
 				if (this.data.BeginDate.HasValue)
 				{
-					first = this.data.BeginDate.Value.Month-1 + (this.data.BeginDate.Value.Year-this.getPériode ().DateDébut.Year)*12;
+					first = this.data.BeginDate.Value.Month + (this.data.BeginDate.Value.Year-this.getPériode ().BeginDate.Value.Year)*12 - this.firstMonth;
 				}
 
 				var last = int.MaxValue;
 				if (this.data.EndDate.HasValue)
 				{
-					last = this.data.EndDate.Value.Month-1 + (this.data.EndDate.Value.Year-this.getPériode ().DateDébut.Year)*12;
+					last = this.data.EndDate.Value.Month + (this.data.EndDate.Value.Year-this.getPériode ().BeginDate.Value.Year)*12 - this.firstMonth;
 				}
 
 				for (int i = 0; i < this.monthsInfo.Count; i++)
@@ -646,9 +662,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				}
 				else
 				{
-					var year = this.getPériode ().DateDébut.Year;
-					var begin = this.NewDate (year, first+1);  // par exemple 01.01.2012
-					var end   = this.NewDate (year, last+1 );  // par exemple 01.12.2012
+					int m1 = this.monthsInfo[first].Month;
+					int m2 = this.monthsInfo[last].Month;
+
+					var year = this.getPériode ().BeginDate.Value.Year;
+					var begin = this.NewDate (year, m1);  // par exemple 01.01.2012
+					var end   = this.NewDate (year, m2);  // par exemple 01.12.2012
 
 					this.data.BeginDate = begin;
 					this.data.EndDate = Dates.AddDays (Dates.AddMonths (end, 1), -1);
@@ -772,7 +791,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly List<Button>					monthButtons;
 		private readonly List<Button>					quarterButtons;
 
-		private System.Func<ComptaPériodeEntity>		getPériode;
+		private System.Func<TemporalData>				getPériode;
 		private System.Action							filterStartAction;
 		private int										firstYear;
 		private int										firstMonth;

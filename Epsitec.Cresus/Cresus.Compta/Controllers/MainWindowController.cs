@@ -237,6 +237,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.controller != null)
 			{
+				this.controller.SearchUpdatePériode ();
+				this.controller.FilterUpdatePériode ();
 				this.controller.FilterStartAction ();
 			}
 		}

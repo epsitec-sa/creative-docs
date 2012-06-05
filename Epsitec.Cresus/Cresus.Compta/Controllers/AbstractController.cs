@@ -553,6 +553,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.topSearchController.SetSearchCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
 			}
 		}
+
+		public void SearchUpdatePériode()
+		{
+			if (this.topSearchController != null)
+			{
+				this.topSearchController.UpdatePériode ();
+			}
+		}
 		#endregion
 
 
@@ -609,6 +617,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.topFilterController != null)
 			{
 				this.topFilterController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
+			}
+		}
+
+		public void FilterUpdatePériode()
+		{
+			if (this.topFilterController != null)
+			{
+				this.topFilterController.UpdatePériode ();
 			}
 		}
 		#endregion
