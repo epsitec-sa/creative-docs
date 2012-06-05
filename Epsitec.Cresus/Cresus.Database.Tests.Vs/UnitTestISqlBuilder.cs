@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlTable  sqlTable = new SqlTable ("Test");
 				SqlColumn sqlColA = new SqlColumn ("A", DbRawType.Int32);
-				SqlColumn sqlColB = new SqlColumn ("B", DbRawType.Int64, DbNullability.Yes);
+				SqlColumn sqlColB = new SqlColumn ("B", DbRawType.Int64, true);
 				SqlColumn sqlColC = new SqlColumn ("C", DbRawType.Int32);
 
 				sqlTable.Columns.Add (sqlColA);
@@ -69,13 +69,9 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlColumn sqlCol1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 				SqlColumn sqlCol2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
-				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, true, DbNullability.Yes);
-				SqlColumn sqlCol4 = new SqlColumn ("StringFixed", DbRawType.String, 50, false, DbNullability.Yes);
-				SqlColumn sqlCol5 = new SqlColumn ("StringWithCollation")
-				{
-					IsNullable = true,
-				};
-				sqlCol5.SetType (DbRawType.String, 500, true, DbCharacterEncoding.Unicode, DbCollation.UnicodeCi);
+				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, true, 100, true);
+				SqlColumn sqlCol4 = new SqlColumn ("StringFixed", DbRawType.String, true, 50, false);
+				SqlColumn sqlCol5 = new SqlColumn ("StringWithCollation", DbRawType.String, true, 500, true, DbCharacterEncoding.Unicode, DbCollation.UnicodeCi);
 
 				sqlTable.Name = "FbTestTable";
 				sqlTable.Columns.Add (sqlCol1);
@@ -120,8 +116,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlColumn sqlCol1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
 				SqlColumn sqlCol2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
-				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, DbNullability.Yes);
-				SqlColumn sqlCol4 = new SqlColumn ("StringFixed2", DbRawType.String, 50, false, DbNullability.Yes);
+				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic2", DbRawType.String, true, 100, true);
+				SqlColumn sqlCol4 = new SqlColumn ("StringFixed2", DbRawType.String, true, 50, false);
 
 				SqlColumn[] columns = { sqlCol1, sqlCol2, sqlCol3, sqlCol4 };
 				sqlBuilder.InsertTableColumns ("FbTestTable", columns);
@@ -155,8 +151,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlColumn sqlCol1 = new SqlColumn ("Cr_ID2", DbRawType.Int32);
 				SqlColumn sqlCol2 = new SqlColumn ("Cr_REV2", DbRawType.Int32);
-				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic2", DbRawType.String, 100, true, DbNullability.Yes);
-				SqlColumn sqlCol4 = new SqlColumn ("StringFixed2", DbRawType.String, 50, false, DbNullability.Yes);
+				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic2", DbRawType.String, true, 100, true);
+				SqlColumn sqlCol4 = new SqlColumn ("StringFixed2", DbRawType.String, true, 50, false);
 
 				SqlColumn[] columns = { sqlCol1, sqlCol2, sqlCol3, sqlCol4 };
 				sqlBuilder.RemoveTableColumns ("FbTestTable", columns);
@@ -377,8 +373,8 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 
 				SqlColumn sqlCol1 = new SqlColumn ("Cr_ID", DbRawType.Int32);
 				SqlColumn sqlCol2 = new SqlColumn ("Cr_REV", DbRawType.Int32);
-				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, 100, false, DbNullability.Yes);
-				SqlColumn sqlCol4 = new SqlColumn ("StringFixed", DbRawType.String, 50, false, DbNullability.Yes);
+				SqlColumn sqlCol3 = new SqlColumn ("StringDynamic", DbRawType.String, true, 100, false);
+				SqlColumn sqlCol4 = new SqlColumn ("StringFixed", DbRawType.String, true, 50, false);
 
 				sqlTable.Name = "FbTestTable";
 				sqlTable.Columns.AddRange (new SqlColumn[] { sqlCol1, sqlCol2, sqlCol3, sqlCol4 });
@@ -688,7 +684,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				SqlTable sqlTable = new SqlTable ("TestTable");
 
 				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
-				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, DbNullability.Yes);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, true);
 				sqlTable.Columns.Add (sqlColumn1);
 				sqlTable.Columns.Add (sqlColumn2);
 
@@ -777,7 +773,7 @@ namespace Epsitec.Cresus.Database.Tests.Vs
 				SqlTable sqlTable = new SqlTable ("TestTable");
 
 				SqlColumn sqlColumn1 = new SqlColumn ("TestColumn1", DbRawType.Int32);
-				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, DbNullability.Yes);
+				SqlColumn sqlColumn2 = new SqlColumn ("TestColumn2", DbRawType.DateTime, true);
 				sqlTable.Columns.Add (sqlColumn1);
 				sqlTable.Columns.Add (sqlColumn2);
 

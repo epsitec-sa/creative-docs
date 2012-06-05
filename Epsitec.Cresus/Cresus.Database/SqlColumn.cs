@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Support.Extensions;
 
+using System;
 
 namespace Epsitec.Cresus.Database
 {
@@ -15,27 +16,21 @@ namespace Epsitec.Cresus.Database
 		/// <summary>
 		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
 		/// </summary>
-		public SqlColumn()
-			: this (null)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		public SqlColumn(string name)
-			: this (name, DbRawType.Unknown)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
-		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
 		public SqlColumn(string name, DbRawType type)
-			: this (name, type, 1, true)
+			: this (name, type, false)
+		{
+		}
+		
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="isNullable">The nullability.</param>
+		public SqlColumn(string name, DbRawType type, bool isNullable)
+			: this (name, type, isNullable, 1, true, null, null)
 		{
 		}
 
@@ -44,10 +39,11 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
+		/// <param name="isNullable">The nullability.</param>
 		/// <param name="length">The length.</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, uses a fixed length.</param>
-		public SqlColumn(string name, DbRawType type, int length, bool isFixedLength)
-			: this (name, type, length, isFixedLength, DbNullability.No)
+		public SqlColumn(string name, DbRawType type, bool isNullable, int length, bool isFixedLength)
+			: this (name, type, isNullable, length, isFixedLength, null, null)
 		{
 		}
 
@@ -56,28 +52,34 @@ namespace Epsitec.Cresus.Database
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="type">The type.</param>
-		/// <param name="nullability">The nullability.</param>
-		public SqlColumn(string name, DbRawType type, DbNullability nullability)
-			: this (name, type, 1, true, nullability)
-		{
-		}
-
-		/// <summary>
-		/// Initializes a new instance of the <see cref="SqlColumn"/> class.
-		/// </summary>
-		/// <param name="name">The name.</param>
-		/// <param name="type">The type.</param>
+		/// <param name="isNullable">The nullability.</param>
 		/// <param name="length">The length.</param>
 		/// <param name="isFixedLength">If set to <c>true</c>, uses a fixed length.</param>
-		/// <param name="nullability">The nullability.</param>
-		public SqlColumn(string name, DbRawType type, int length, bool isFixedLength, DbNullability nullability)
+		/// <param name="encoding">The encoding of the text.</param>
+		/// <param name="collation">The collation of the text.</param>
+		public SqlColumn(string name, DbRawType type, bool isNullable, int length, bool isFixedLength, DbCharacterEncoding? encoding, DbCollation? collation)
 		{
-			this.Name = name;
-			this.SetType (type, length, isFixedLength, DbCharacterEncoding.Unicode, null);
-			this.IsNullable = (nullability == DbNullability.Yes);
-			this.comment = null;
-		}
+			length.ThrowIf (l => l < 1, "Invalid length");
 
+			if (type != DbRawType.String)
+			{
+				//	This is the only raw type which accepts a length specification. The byte array
+				// does not require it.
+
+				if (length != 1 || !isFixedLength)
+				{
+					throw new ArgumentOutOfRangeException ("Length/type mismatch");
+				}
+			}
+
+			this.name = name;
+			this.type = type;
+			this.isNullable = isNullable;
+			this.length = length;
+			this.isFixedLength = isFixedLength;
+			this.encoding = encoding;
+			this.collation = collation;
+		}
 
 		/// <summary>
 		/// Gets the name of the column.
@@ -88,10 +90,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.name;
-			}
-			set
-			{
-				this.name = value;
 			}
 		}
 
@@ -134,25 +132,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this column defines a foreign key.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance column defines a foreign key; otherwise, <c>false</c>.
-		/// </value>
-		public bool								IsForeignKey
-		{
-			get
-			{
-				return this.isForeignKey;
-			}
-			set
-			{
-				this.isForeignKey = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets or sets a value indicating whether this column is nullable.
+		/// Gets a value indicating whether this column is nullable.
 		/// </summary>
 		/// <value>
 		/// 	<c>true</c> if this column is nullable; otherwise, <c>false</c>.
@@ -162,10 +142,6 @@ namespace Epsitec.Cresus.Database
 			get
 			{
 				return this.isNullable;
-			}
-			set
-			{
-				this.isNullable = value;
 			}
 		}
 
@@ -185,7 +161,7 @@ namespace Epsitec.Cresus.Database
 		/// Gets the collation (if this column defines a string).
 		/// </summary>
 		/// <value>The collation.</value>
-		public DbCollation? Collation
+		public DbCollation?						Collation
 		{
 			get
 			{
@@ -194,78 +170,32 @@ namespace Epsitec.Cresus.Database
 		}
 
 		/// <summary>
+		/// Gets or sets a value indicating whether this column defines a foreign key.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance column defines a foreign key; otherwise, <c>false</c>.
+		/// </value>
+		public bool								IsForeignKey
+		{
+			get;
+			set;
+		}
+
+		/// <summary>
 		/// The comment associated with this instance.
 		/// </summary>
 		public string							Comment
 		{
-			get
-			{
-				return this.comment;
-			}
-			set
-			{
-				this.comment = value;
-			}
+			get;
+			set;
 		}
 
-		
-		/// <summary>
-		/// Sets the type.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		public void SetType(DbRawType type)
-		{
-			this.SetType (type, 1, true, null, null);
-		}
-
-		/// <summary>
-		/// Sets the type.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <param name="length">The length.</param>
-		/// <param name="isFixedLength">If set to <c>true</c>, this column is fixed length.</param>
-		/// <param name="encoding">The character encoding.</param>
-		/// <param name="collation">The collation.</param>
-		public void SetType(DbRawType type, int length, bool isFixedLength, DbCharacterEncoding? encoding, DbCollation? collation)
-		{
-			if (length < 1)
-			{
-				throw new System.ArgumentOutOfRangeException ("Invalid length");
-			}
-
-			switch (type)
-			{
-				case DbRawType.String:
-					
-					//	This is the only raw type which accepts a length specification.
-					//	The byte array does not require it.
-					
-					break;
-
-				default:
-					if ((length != 1) ||
-						(!isFixedLength))
-					{
-						throw new System.ArgumentOutOfRangeException ("Length/type mismatch");
-					}
-					break;
-			}
-
-			this.type          = type;
-			this.length        = length;
-			this.isFixedLength = isFixedLength;
-			this.encoding      = encoding;
-			this.collation     = collation;
-		}
-
-		private string							name;
-		private string							comment;
-		private DbRawType						type;
-		private bool							isNullable;
-		private bool							isFixedLength;
-		private bool							isForeignKey;
-		private DbCharacterEncoding?			encoding;
-		private DbCollation?					collation;
-		private int								length;
+		private readonly string					name;
+		private readonly DbRawType				type;
+		private readonly bool					isNullable;
+		private readonly bool					isFixedLength;
+		private readonly DbCharacterEncoding?	encoding;
+		private readonly DbCollation?			collation;
+		private readonly int					length;
 	}
 }

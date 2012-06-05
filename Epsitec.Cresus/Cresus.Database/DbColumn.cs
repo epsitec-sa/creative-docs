@@ -739,6 +739,9 @@ namespace Epsitec.Cresus.Database
 				}
 			}
 
+			var name = this.GetSqlName ();
+			var isNullable = this.IsNullable || this.Type.IsNullable;
+			
 			DbRawType rawType = this.type.RawType;
 			int length;
 			bool isFixedLength;
@@ -774,14 +777,11 @@ namespace Epsitec.Cresus.Database
 				throw new System.InvalidOperationException (message);
 			}
 
-			var column = new SqlColumn ();
-			column.SetType (rawType, length, isFixedLength, encoding, collation);
-			column.Name = this.GetSqlName ();
-			column.Comment = this.Comment;
-			column.IsNullable = this.IsNullable || this.Type.IsNullable;
-			column.IsForeignKey = this.IsForeignKey;
-
-			return column;
+			return new SqlColumn (name, rawType, isNullable, length, isFixedLength, encoding, collation)
+			{
+				Comment = this.Comment,
+				IsForeignKey = this.IsForeignKey
+			};
 		}
 
 
