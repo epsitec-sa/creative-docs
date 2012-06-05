@@ -3,7 +3,7 @@
 
 namespace Epsitec.Common.Widgets
 {
-	public enum SlimFieldMenuItemType
+	public enum SlimFieldMenuItemStyle
 	{
 		Value,
 		Option,
