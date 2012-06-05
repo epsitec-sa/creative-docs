@@ -4,10 +4,11 @@ using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database.Collections;
 
+using System;
+
 using System.Collections.Generic;
 
 using System.Linq;
-using System.Collections;
 
 
 namespace Epsitec.Cresus.Database
@@ -32,26 +33,26 @@ namespace Epsitec.Cresus.Database
 			List<DbTypeDef> dbTypeDefsOut;
 
 			List<DbTypeDef> dbTypeDefsToAdd;
-			List<System.Tuple<DbTypeDef, DbTypeDef>> dbTypeDefsToAlter;
+			List<Tuple<DbTypeDef, DbTypeDef>> dbTypeDefsToAlter;
 			List<DbTypeDef> dbTypeDefsToRemove;
 
 			List<DbTable> dbTablesToAdd;
-			List<System.Tuple<DbTable, DbTable>> dbTablesWithDifference ;
-			List<System.Tuple<DbTable, DbTable>> dbTablesWithDefititionDifference;
-			List<System.Tuple<DbTable, DbTable>> dbTablesWithIndexDifference;
-			List<System.Tuple<DbTable, DbTable>> dbTablesWithColumnDifference;
+			List<Tuple<DbTable, DbTable>> dbTablesWithDifference ;
+			List<Tuple<DbTable, DbTable>> dbTablesWithDefititionDifference;
+			List<Tuple<DbTable, DbTable>> dbTablesWithIndexDifference;
+			List<Tuple<DbTable, DbTable>> dbTablesWithColumnDifference;
 			List<DbTable> dbTablesToRemove;
 
-			List<System.Tuple<DbTable, DbIndex>> dbIndexesToAdd;
-			List<System.Tuple<DbTable, DbIndex>> dbIndexesToAlter;
-			List<System.Tuple<DbTable, DbIndex>> dbIndexesToRemove;
+			List<Tuple<DbTable, DbIndex>> dbIndexesToAdd;
+			List<Tuple<DbTable, DbIndex>> dbIndexesToAlter;
+			List<Tuple<DbTable, DbIndex>> dbIndexesToRemove;
 
 			List<DbColumn> dbColumnsToAdd;
-			List<System.Tuple<DbColumn, DbColumn>> dbColumnsToAlter;
+			List<Tuple<DbColumn, DbColumn>> dbColumnsToAlter;
 			List<DbColumn> dbColumnsToRemove;
 
-			List<System.Tuple<DbTable, DbTable>> dbTablesWithInvalidDefinitionDifference;
-			List<System.Tuple<DbColumn, DbColumn>> dbColumnsWithInvalidAlterations;
+			List<Tuple<DbTable, DbTable>> dbTablesWithInvalidDefinitionDifference;
+			List<Tuple<DbColumn, DbColumn>> dbColumnsWithInvalidAlterations;
 
 
 			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
@@ -87,89 +88,34 @@ namespace Epsitec.Cresus.Database
 
 			if (dbTypeDefsToAlter.Any ())
 			{
-				throw new System.InvalidOperationException ("Cannot alter a type definition");
+				throw new InvalidOperationException ("Cannot alter a type definition");
 			}
 
 			if (dbTablesWithInvalidDefinitionDifference.Any ())
 			{
-				throw new System.InvalidOperationException ("Cannot alter a table definition");
+				throw new InvalidOperationException ("Cannot alter a table definition");
 			}
 
 			if (dbColumnsWithInvalidAlterations.Any ())
 			{
-				throw new System.InvalidOperationException ("Cannot alter a column with invalid column alterations.");
+				throw new InvalidOperationException ("Cannot alter a column with invalid column alterations.");
 			}
 
-			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				DbSchemaUpdater.AddNewDbTypes (dbInfrastructure, dbTransaction, dbTypeDefsToAdd);
-
-				DbSchemaUpdater.UpdateDbTypesKey (dbInfrastructure, dbTransaction, newSchema);
-
-				DbSchemaUpdater.AddNewDbTables (dbInfrastructure, dbTransaction, dbTablesToAdd);
-
-				DbSchemaUpdater.AddNewTableColumns (dbInfrastructure, dbTransaction, dbColumnsToAdd);
-
-				DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbTransaction, dbIndexesToRemove);
-
-				DbSchemaUpdater.AlterIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
-
-				DbSchemaUpdater.AlterTableDefinitions (dbInfrastructure, dbTransaction, dbTablesWithDefititionDifference);
-
-				DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbTransaction, dbIndexesToAdd);
-
-				DbSchemaUpdater.RemoveOldTableColumns (dbInfrastructure, dbTransaction, dbColumnsToRemove);
-
-				DbSchemaUpdater.RemoveOldDbTables (dbInfrastructure, dbTransaction, dbTablesToRemove);
-
-				DbSchemaUpdater.RemoveOldDbTypes (dbInfrastructure, dbTransaction, dbTypeDefsToRemove);
-
-				dbTransaction.Commit ();
-			}
-
-			// NOTE Here we need to make 3 transactions, because we can't alter tables and columns
-			// and alter data within the same tables and columns. Therefore we need one transaction
-			// to rename the old column and create the new one, one transaction to copy the data
-			// from the old column to the now one and one transaction to remove the old one.
-			// Marc
-
-			var indexesToDisable = DbSchemaUpdater.GetIndexesToDisable (dbColumnsToAlter);
-
-			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				DbSchemaUpdater.DisableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
-				DbSchemaUpdater.ExecutePart1OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
-				
-				dbTransaction.Commit ();
-			}
-
-			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				// NOTE For now, all we can do is the following :
-				// - alter the nullability of the column. Note that I said the nullability of the
-				//  column, I don't speak of the nullability of the type of the data in the column.
-				// - alter the type of the column. Only the type alterations that doesn't require a
-				//   conversion of the values are allowed. For instance int to long is allowed as
-				//   well as anything to string, but long to int is not allowed.
-				// All other alterations are not treated and should not happen as we make sure that
-				// there aren't such alterations before in this method.
-				// Marc
-
-				DbSchemaUpdater.ExecutePart2OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
-
-				dbTransaction.Commit ();
-			}
-
-			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
-			{
-				DbSchemaUpdater.ExecutePart3OfColumnAlteration (dbInfrastructure, dbTransaction, dbColumnsToAlter);
-				DbSchemaUpdater.EnableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
-
-				dbTransaction.Commit ();
-			}
+			DbSchemaUpdater.AddNewDbTypes (dbInfrastructure, dbTypeDefsToAdd);
+			DbSchemaUpdater.UpdateDbTypesKey (dbInfrastructure, newSchema);
+			DbSchemaUpdater.AddNewDbTables (dbInfrastructure, dbTablesToAdd);
+			DbSchemaUpdater.AddNewTableColumns (dbInfrastructure, dbColumnsToAdd);
+			DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbIndexesToRemove);
+			DbSchemaUpdater.AlterIndexes (dbInfrastructure, dbIndexesToAlter);
+			DbSchemaUpdater.AlterTableDefinitions (dbInfrastructure, dbTablesWithDefititionDifference);
+			DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbIndexesToAdd);
+			DbSchemaUpdater.RemoveOldTableColumns (dbInfrastructure, dbColumnsToRemove);
+			DbSchemaUpdater.RemoveOldDbTables (dbInfrastructure, dbTablesToRemove);
+			DbSchemaUpdater.RemoveOldDbTypes (dbInfrastructure, dbTypeDefsToRemove);
+			DbSchemaUpdater.AlterTableColumns (dbInfrastructure, dbColumnsToAlter);
 		}
 
-		
+
 		private static IEnumerable<DbTable> GetDbTablesIn(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction)
 		{
 			return dbInfrastructure.FindDbTables (dbTransaction, DbElementCat.Any)
@@ -216,7 +162,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTypeDef, DbTypeDef>> GetDbTypeDefsToAlter(IList<DbTypeDef> dbTypeDefsIn, IList<DbTypeDef> dbTypeDefsOut)
+		private static IEnumerable<Tuple<DbTypeDef, DbTypeDef>> GetDbTypeDefsToAlter(IList<DbTypeDef> dbTypeDefsIn, IList<DbTypeDef> dbTypeDefsOut)
 		{
 			return DbSchemaUpdater.JoinOnName (dbTypeDefsIn, dbTypeDefsOut)
 				.Where (t => !DbSchemaChecker.AreDbTypeDefEqual (t.Item1, t.Item2));
@@ -244,14 +190,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithDifference(IList<DbTable> dbTablesIn, IList<DbTable> dbTablesOut)
+		private static IEnumerable<Tuple<DbTable, DbTable>> GetDbTablesWithDifference(IList<DbTable> dbTablesIn, IList<DbTable> dbTablesOut)
 		{
 			return DbSchemaUpdater.JoinOnName (dbTablesIn, dbTablesOut)
 				.Where (t => !DbSchemaChecker.AreDbTablesEqual (t.Item1, t.Item2));
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithDefinitionDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		private static IEnumerable<Tuple<DbTable, DbTable>> GetDbTablesWithDefinitionDifference(IEnumerable<Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableValuesEqual (t.Item1, t.Item2)
@@ -261,14 +207,14 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithIndexDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		private static IEnumerable<Tuple<DbTable, DbTable>> GetDbTablesWithIndexDifference(IEnumerable<Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableIndexesEqual (t.Item1, t.Item2));
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<System.Tuple<DbTable, DbTable>> dbTablesToAlter)
+		private static IEnumerable<Tuple<DbTable, DbTable>> GetDbTablesWithColumnDifference(IEnumerable<Tuple<DbTable, DbTable>> dbTablesToAlter)
 		{
 			return dbTablesToAlter
 				.Where (t => !DbSchemaChecker.AreDbTableColumnsEqual (t.Item1, t.Item2));
@@ -281,62 +227,62 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToAdd(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<Tuple<DbTable, DbIndex>> GetDbIndexesToAdd(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			foreach (var t in tables)
 			{
 				foreach (DbIndex index in DbSchemaUpdater.ExceptOnName (t.Item2.Indexes, t.Item1.Indexes))
 				{
-					yield return System.Tuple.Create (t.Item2, index);
+					yield return Tuple.Create (t.Item2, index);
 				}
 			}
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToAlter(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<Tuple<DbTable, DbIndex>> GetDbIndexesToAlter(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			foreach (var t in tables)
 			{
 				foreach (var i in DbSchemaUpdater.JoinOnName (t.Item1.Indexes, t.Item2.Indexes))
 				{
-					yield return System.Tuple.Create (t.Item2, i.Item2);
+					yield return Tuple.Create (t.Item2, i.Item2);
 				}
 			}
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbIndex>> GetDbIndexesToRemove(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<Tuple<DbTable, DbIndex>> GetDbIndexesToRemove(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			foreach (var t in tables)
 			{
 				foreach (DbIndex index in DbSchemaUpdater.ExceptOnName (t.Item1.Indexes, t.Item2.Indexes))
 				{
-					yield return System.Tuple.Create (t.Item1, index);
+					yield return Tuple.Create (t.Item1, index);
 				}
 			}
 		}
 
 
-		private static IEnumerable<DbColumn> GetDbColumnsToAdd(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<DbColumn> GetDbColumnsToAdd(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			return tables.SelectMany (t => DbSchemaUpdater.ExceptOnName (t.Item2.Columns, t.Item1.Columns));
 		}
 
 
-		private static IEnumerable<System.Tuple<DbColumn, DbColumn>> GetDbColumnsToAlter(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<Tuple<DbColumn, DbColumn>> GetDbColumnsToAlter(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			return tables.SelectMany (t => DbSchemaUpdater.JoinOnName (t.Item1.Columns, t.Item2.Columns))
 				.Where (t => !DbSchemaChecker.AreDbColumnEqual (t.Item1, t.Item2));
 		}
 
 
-		private static IEnumerable<DbColumn> GetDbColumnsToRemove(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<DbColumn> GetDbColumnsToRemove(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			return tables.SelectMany (t => DbSchemaUpdater.ExceptOnName (t.Item1.Columns, t.Item2.Columns));
 		}
 
 
-		private static IEnumerable<System.Tuple<DbTable, DbTable>> GetDbTablesWithInvalidDefinitionDifference(IList<System.Tuple<DbTable, DbTable>> tables)
+		private static IEnumerable<Tuple<DbTable, DbTable>> GetDbTablesWithInvalidDefinitionDifference(IList<Tuple<DbTable, DbTable>> tables)
 		{
 			return from item in tables
 				   let a = item.Item1
@@ -362,7 +308,7 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static IEnumerable<System.Tuple<DbColumn, DbColumn>> GetDbColumnsWithInvalidDifference(IList<System.Tuple<DbColumn, DbColumn>> columns)
+		private static IEnumerable<Tuple<DbColumn, DbColumn>> GetDbColumnsWithInvalidDifference(IList<Tuple<DbColumn, DbColumn>> columns)
 		{
 			return from item in columns
 				   let a = item.Item1
@@ -425,7 +371,7 @@ namespace Epsitec.Cresus.Database
 					return true;
 				
 				default:
-					throw new System.NotImplementedException ();
+					throw new NotImplementedException ();
 			}
 		}
 
@@ -470,7 +416,7 @@ namespace Epsitec.Cresus.Database
 						|| a == DbRawType.LargeDecimal;
 
 				default:
-					throw new System.NotImplementedException ();
+					throw new NotImplementedException ();
 			}
 		}
 
@@ -492,133 +438,267 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void AddNewDbTypes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTypeDef> dbTypeDefsToAdd)
+		private static void AddNewDbTypes(DbInfrastructure dbInfrastructure, IEnumerable<DbTypeDef> dbTypeDefsToAdd)
 		{
-			foreach (DbTypeDef dbTypeDef in dbTypeDefsToAdd)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				dbInfrastructure.AddType (dbTransaction, dbTypeDef);
+				foreach (DbTypeDef dbTypeDef in dbTypeDefsToAdd)
+				{
+					dbInfrastructure.AddType (dbTransaction, dbTypeDef);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void UpdateDbTypesKey(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> newTables)
+		private static void UpdateDbTypesKey(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> newTables)
 		{
 			// NOTE This method might become incorrect if we allow the alteration of types and must
 			// be changed if that ever happens.
 			// Marc
 
-			foreach (DbTypeDef dbTypeDef in DbSchemaUpdater.GetDbTypeDefsInTables (newTables))
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				if (dbTypeDef.Key.IsEmpty)
+				foreach (DbTypeDef dbTypeDef in DbSchemaUpdater.GetDbTypeDefsInTables (newTables))
 				{
-					DbTypeDef type = dbInfrastructure.ResolveDbType (dbTransaction, dbTypeDef.Name);
-
-					if (type != null)
+					if (dbTypeDef.Key.IsEmpty)
 					{
-						dbTypeDef.DefineKey (type.Key);
+						DbTypeDef type = dbInfrastructure.ResolveDbType (dbTransaction, dbTypeDef.Name);
+
+						if (type != null)
+						{
+							dbTypeDef.DefineKey (type.Key);
+						}
 					}
 				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void RemoveOldDbTypes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTypeDef> dbTypeDefsToRemove)
+		private static void RemoveOldDbTypes(DbInfrastructure dbInfrastructure, IEnumerable<DbTypeDef> dbTypeDefsToRemove)
 		{
-			foreach (DbTypeDef dbTypeDef in dbTypeDefsToRemove)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				dbInfrastructure.RemoveType (dbTransaction, dbTypeDef);
+				foreach (DbTypeDef dbTypeDef in dbTypeDefsToRemove)
+				{
+					dbInfrastructure.RemoveType (dbTransaction, dbTypeDef);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void AddNewDbTables(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToAdd)
+		private static void AddNewDbTables(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> dbTablesToAdd)
 		{
-			dbInfrastructure.AddTables (dbTransaction, dbTablesToAdd);
-		}
-
-
-		private static void RemoveOldDbTables(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbTable> dbTablesToRemove)
-		{
-			foreach (DbTable dbTable in dbTablesToRemove)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				dbInfrastructure.RemoveTable (dbTransaction, dbTable);
+				dbInfrastructure.AddTables (dbTransaction, dbTablesToAdd);
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void AddNewTableColumns(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToAdd)
+		private static void RemoveOldDbTables(DbInfrastructure dbInfrastructure, IEnumerable<DbTable> dbTablesToRemove)
 		{
-			foreach (DbColumn dbColumn in dbColumnsToAdd)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				string dbTableName = dbColumn.Table.Name;
-				DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
+				foreach (DbTable dbTable in dbTablesToRemove)
+				{
+					dbInfrastructure.RemoveTable (dbTransaction, dbTable);
+				}
 
-				dbInfrastructure.AddColumnToTable (dbTransaction, dbTable, dbColumn);
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void RemoveOldTableColumns(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<DbColumn> dbColumnsToRemove)
+		private static void AddNewTableColumns(DbInfrastructure dbInfrastructure, IEnumerable<DbColumn> dbColumnsToAdd)
 		{
-			foreach (DbColumn dbColumn in dbColumnsToRemove)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				string dbTableName = dbColumn.Table.Name;
-				DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
+				foreach (DbColumn dbColumn in dbColumnsToAdd)
+				{
+					string dbTableName = dbColumn.Table.Name;
+					DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
 
-				dbInfrastructure.RemoveColumnFromTable (dbTransaction, dbTable, dbColumn);
+					dbInfrastructure.AddColumnToTable (dbTransaction, dbTable, dbColumn);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void AddNewIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbTable, DbIndex>> dbIndexesToAdd)
+		private static void RemoveOldTableColumns(DbInfrastructure dbInfrastructure, IEnumerable<DbColumn> dbColumnsToRemove)
 		{
-			foreach (var item in dbIndexesToAdd)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				DbTable table = item.Item1;
-				DbIndex index = item.Item2;
+				foreach (DbColumn dbColumn in dbColumnsToRemove)
+				{
+					string dbTableName = dbColumn.Table.Name;
+					DbTable dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
 
-				dbInfrastructure.AddIndexToTable (dbTransaction, table, index);
+					dbInfrastructure.RemoveColumnFromTable (dbTransaction, dbTable, dbColumn);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void AlterIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, List<System.Tuple<DbTable, DbIndex>> dbIndexesToAlter)
+		private static void AddNewIndexes(DbInfrastructure dbInfrastructure, IEnumerable<Tuple<DbTable, DbIndex>> dbIndexesToAdd)
 		{
-			DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
-			DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbTransaction, dbIndexesToAlter);
-		}
-
-
-		private static void RemoveOldIndexes(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbTable, DbIndex>> dbIndexesToRemove)
-		{
-			foreach (var item in dbIndexesToRemove)
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
 			{
-				DbTable table = item.Item1;
-				DbIndex index = item.Item2;
+				foreach (var item in dbIndexesToAdd)
+				{
+					DbTable table = item.Item1;
+					DbIndex index = item.Item2;
 
-				dbInfrastructure.RemoveIndexFromTable (dbTransaction, table, index);
+					dbInfrastructure.AddIndexToTable (dbTransaction, table, index);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static void AlterTableDefinitions(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, List<System.Tuple<DbTable, DbTable>> dbTablesWithDefititionDifference)
+		private static void AlterIndexes(DbInfrastructure dbInfrastructure, List<Tuple<DbTable, DbIndex>> dbIndexesToAlter)
 		{
-			foreach (var item in dbTablesWithDefititionDifference)
-			{
-				DbTable table = item.Item2;
-				string comment = table.Comment;
+			DbSchemaUpdater.RemoveOldIndexes (dbInfrastructure, dbIndexesToAlter);
+			DbSchemaUpdater.AddNewIndexes (dbInfrastructure, dbIndexesToAlter);
+		}
 
-				dbInfrastructure.SetTableComment (dbTransaction, table, comment);
+
+		private static void RemoveOldIndexes(DbInfrastructure dbInfrastructure, IEnumerable<Tuple<DbTable, DbIndex>> dbIndexesToRemove)
+		{
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				foreach (var item in dbIndexesToRemove)
+				{
+					DbTable table = item.Item1;
+					DbIndex index = item.Item2;
+
+					dbInfrastructure.RemoveIndexFromTable (dbTransaction, table, index);
+				}
+
+				dbTransaction.Commit ();
 			}
 		}
 
 
-		private static Dictionary<DbTable, List<DbIndex>> GetIndexesToDisable(IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
+		private static void AlterTableDefinitions(DbInfrastructure dbInfrastructure, List<Tuple<DbTable, DbTable>> dbTablesWithDefititionDifference)
+		{
+			using (var dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				foreach (var item in dbTablesWithDefititionDifference)
+				{
+					DbTable table = item.Item2;
+					string comment = table.Comment;
+
+					dbInfrastructure.SetTableComment (dbTransaction, table, comment);
+				}
+
+				dbTransaction.Commit ();
+			}
+		}
+
+
+		private static void AlterTableColumns(DbInfrastructure dbInfrastructure, List<Tuple<DbColumn, DbColumn>> dbColumnsToAlter)
+		{
+			var indexesToDisable = DbSchemaUpdater.GetIndexesToDisable (dbColumnsToAlter);
+
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				DbSchemaUpdater.DisableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
+
+				dbTransaction.Commit ();
+			}
+
+			foreach (var item in dbColumnsToAlter)
+			{
+				// NOTE For now, all we can do is the following :
+				// - alter the nullability of the column. Note that I said the nullability of the
+				//  column, I don't speak of the nullability of the type of the data in the column.
+				// - alter the type of the column. Only the type alterations that doesn't require a
+				//   conversion of the values are allowed. For instance int to long is allowed as
+				//   well as anything to string, but long to int is not allowed.
+				// - alter the charset or the collation of a text column.
+				// All other alterations are not treated and should not happen as we make sure that
+				// there aren't such alterations before in this method.
+				// Marc
+
+				DbSchemaUpdater.AlterTableColumn (dbInfrastructure, item);
+			}
+			
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				DbSchemaUpdater.EnableIndexes (dbInfrastructure, dbTransaction, indexesToDisable);
+
+				dbTransaction.Commit ();
+			}
+		}
+
+
+		private static void AlterTableColumn(DbInfrastructure dbInfrastructure, Tuple<DbColumn, DbColumn> item)
+		{
+			// NOTE Here we need to make 3 transactions, because we can't alter tables and columns
+			// and alter data within the same tables and columns. Therefore we need one transaction
+			// to rename the old column and create the new one, one transaction to copy the data
+			// from the old column to the now one and one transaction to remove the old one.
+			// Marc
+		
+			var oldColumn = item.Item1;
+			var newColumn = item.Item2;
+
+			var dbTableName = oldColumn.Table.Name;
+			var dbTable = dbInfrastructure.ResolveDbTable (dbTableName);
+
+			var tmpColumnName = oldColumn.Name + "TMP";
+
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				dbInfrastructure.RenameTableColumn (dbTable, oldColumn, tmpColumnName);
+				dbInfrastructure.AddColumnToTable (dbTable, newColumn);
+
+				dbTransaction.Commit ();
+			}
+
+			dbTable = dbInfrastructure.ResolveDbTable (dbTableName);
+			var tmpColumn = dbTable.Columns[tmpColumnName];
+
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				if (oldColumn.IsNullable && !newColumn.IsNullable)
+				{
+					DbSchemaUpdater.SetDefaultValueInNullCells (dbInfrastructure, dbTransaction, dbTable, tmpColumn);
+				}
+
+				DbSchemaUpdater.CopyValues (dbInfrastructure, dbTransaction, dbTable, tmpColumn, newColumn);
+
+				dbTransaction.Commit ();
+			}
+
+			using (DbTransaction dbTransaction = dbInfrastructure.InheritOrBeginTransaction (DbTransactionMode.ReadWrite))
+			{
+				dbInfrastructure.RemoveColumnFromTable (dbTable, tmpColumn);
+
+				dbTransaction.Commit ();
+			}	
+		}
+
+
+		private static Dictionary<DbTable, List<DbIndex>> GetIndexesToDisable(IEnumerable<Tuple<DbColumn, DbColumn>> dbColumsToAlter)
 		{
 			return dbColumsToAlter
 				.Select (c => c.Item2)
 				.GroupBy (c => c.Table)
-				.Select (g => System.Tuple.Create (g.Key, g.ToSet ()))
+				.Select (g => Tuple.Create (g.Key, g.ToSet ()))
 				.ToDictionary
 				(
 					t => t.Item1,
@@ -657,59 +737,15 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void ExecutePart1OfColumnAlteration(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
+		private static void SetDefaultValueInNullCells(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumn)
 		{
-			foreach (var item in dbColumsToAlter)
-			{
-				var oldColumn = item.Item1;
-				var newColumn = item.Item2;
-
-				var dbTableName = oldColumn.Table.Name;
-				var dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
-
-				string tmpColumnName = oldColumn.Name + "TMP";
-				dbInfrastructure.RenameTableColumn (dbTable, oldColumn, tmpColumnName);
-
-				dbInfrastructure.AddColumnToTable (dbTable, newColumn);
-			}
-		}
-
-
-		private static void ExecutePart2OfColumnAlteration(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
-		{
-			foreach (var item in dbColumsToAlter)
-			{
-				var oldColumn = item.Item1;
-				var newColumn = item.Item2;
-
-				var dbTableName = oldColumn.Table.Name;
-				var dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
-
-				var tmpColumnName = oldColumn.Name + "TMP";
-				var tmpColumn = dbTable.Columns[tmpColumnName];
-
-				var sqlTableName = dbTable.GetSqlName ();
-				var sqlTmpColumnName = tmpColumn.GetSqlName ();
-				var sqlNewColumnName = newColumn.GetSqlName ();
-				
-				if (oldColumn.IsNullable && !newColumn.IsNullable)
-				{
-					DbSchemaUpdater.SetDefaultValueInNullCells (dbInfrastructure, dbTransaction, sqlTableName, sqlTmpColumnName, newColumn.Type);
-				}
-
-				DbSchemaUpdater.CopyValues (dbInfrastructure, dbTransaction, sqlTableName, sqlTmpColumnName, sqlNewColumnName);
-			}
-		}
-
-
-		private static void SetDefaultValueInNullCells(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, string sqlTableName, string sqlTmpColumnName, DbTypeDef type)
-		{
-			var sqlFields = new SqlFieldList (){};
-
+			var sqlTableName = dbTable.GetSqlName ();
+			var sqlColumnName = dbColumn.GetSqlName ();
+			
+			var sqlFields = new SqlFieldList ();
+			DbTypeDef type = dbColumn.Type;
 			SqlField sqlField = DbSchemaUpdater.GetConstantWithDefaultValue (type);
-
-			sqlField.Alias = sqlTmpColumnName;
-
+			sqlField.Alias = sqlColumnName;
 			sqlFields.Add (sqlField);
 
 			var sqlConditions = new SqlFieldList ()
@@ -719,7 +755,7 @@ namespace Epsitec.Cresus.Database
 					new SqlFunction
 					(
 						SqlFunctionCode.CompareIsNull,
-						SqlField.CreateAliasedName(sqlTmpColumnName, sqlTmpColumnName)
+						SqlField.CreateName(sqlTableName, sqlColumnName)
 					)
 				)
 			};
@@ -738,33 +774,21 @@ namespace Epsitec.Cresus.Database
 		}
 
 
-		private static void CopyValues(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, string sqlTableName, string sqlTmpColumnName, string sqlNewColumnName)
+		private static void CopyValues(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, DbTable dbTable, DbColumn dbColumnFrom, DbColumn dbColumnTo)
 		{
+			var sqlTableName = dbTable.GetSqlName ();
+			var sqlColumnFromName = dbColumnFrom.GetSqlName ();
+			var sqlColumnToName = dbColumnTo.GetSqlName ();
+
 			var sqlFields = new SqlFieldList ()
 			{
-				SqlField.CreateAliasedName (sqlTmpColumnName, sqlNewColumnName)
+				SqlField.CreateAliasedName (sqlColumnFromName, sqlColumnToName)
 			};
+			
 			var sqlConditions = new SqlFieldList ();
 
 			dbTransaction.SqlBuilder.UpdateData (sqlTableName, sqlFields, sqlConditions);
 			dbInfrastructure.ExecuteSilent (dbTransaction);
-		}
-
-
-		private static void ExecutePart3OfColumnAlteration(DbInfrastructure dbInfrastructure, DbTransaction dbTransaction, IEnumerable<System.Tuple<DbColumn, DbColumn>> dbColumsToAlter)
-		{
-			foreach (var item in dbColumsToAlter)
-			{
-				var oldColumn = item.Item1;
-
-				var dbTableName = oldColumn.Table.Name;
-				var dbTable = dbInfrastructure.ResolveDbTable (dbTransaction, dbTableName);
-
-				string tmpColumnName = oldColumn.Name + "TMP";
-				var tmpColumn = dbTable.Columns[tmpColumnName];
-
-				dbInfrastructure.RemoveColumnFromTable (dbTable, tmpColumn);
-			}
 		}
 
 
@@ -779,14 +803,14 @@ namespace Epsitec.Cresus.Database
 
 			if (comparer == null)
 			{
-				throw new System.Exception ();
+				throw new Exception ();
 			}
 
 			return Enumerable.Except<T> (a, b, comparer);
 		}
 
 
-		private static IEnumerable<System.Tuple<T, T>> JoinOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
+		private static IEnumerable<Tuple<T, T>> JoinOnName<T>(IEnumerable<T> a, IEnumerable<T> b) where T : IName
 		{
 			return Enumerable.Join
 			(
@@ -794,11 +818,11 @@ namespace Epsitec.Cresus.Database
 				b,
 				e => e,
 				e => e,
-				(e1, e2) => System.Tuple.Create (e1, e2),
+				(e1, e2) => Tuple.Create (e1, e2),
 				INameComparer.Instance
 			);
 		}
-		
+
 
 	}
 
