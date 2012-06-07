@@ -6,6 +6,7 @@ using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Database;
+using Epsitec.Cresus.Database.Collections;
 
 using Epsitec.Cresus.DataLayer.Schema;
 
@@ -14,7 +15,6 @@ using System.Collections.Generic;
 using System.Data;
 
 using System.Linq;
-using Epsitec.Cresus.Database.Collections;
 
 
 namespace Epsitec.Cresus.DataLayer.Infrastructure
@@ -312,17 +312,23 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 				{
 					SqlFieldList fields = new SqlFieldList ();
 
+					var table = this.tableLock;
+					var column = table.Columns[LockManager.TableFactory.ColumnCounterName];
+					
+					var tableName = table.GetSqlName ();
+					var columnName = column.GetSqlName ();
+
 					SqlField sqlField = SqlField.CreateFunction
 					(
 						new SqlFunction
 						(
 							functionCode,
-							SqlField.CreateName (this.tableLock.Columns[LockManager.TableFactory.ColumnCounterName]),
+							SqlField.CreateName (tableName, columnName),
 							SqlField.CreateConstant (1, DbRawType.Int32)
 						)
 					);
 
-					sqlField.Alias = this.tableLock.Columns[LockManager.TableFactory.ColumnCounterName].GetSqlName ();
+					sqlField.Alias = columnName;
 
 					fields.Add (sqlField);
 
@@ -330,9 +336,9 @@ namespace Epsitec.Cresus.DataLayer.Infrastructure
 
 					c.Add (SqlField.CreateFunction (this.CreateConditionForLockNames (locks)));
 
-					transaction.SqlBuilder.UpdateData (this.tableLock.GetSqlName (), fields, c);
+					transaction.SqlBuilder.UpdateData (tableName, fields, c);
 
-					object nbRowsAffected = this.dbInfrastructure.ExecuteNonQuery (transaction);
+					this.dbInfrastructure.ExecuteNonQuery (transaction);
 
 					transaction.Commit ();
 				}

@@ -590,20 +590,6 @@ namespace Epsitec.Cresus.Database
 			throw new Exceptions.FormatException (string.Format ("{0} is not a valid SQL name", name));
 		}
 
-		/// <summary>
-		/// Creates the qualified name based on the high level table name and
-		/// the SQL column name.
-		/// </summary>
-		/// <param name="column">The column.</param>
-		/// <returns>The field.</returns>
-		public static SqlField CreateName(DbColumn column)
-		{
-			string tableName  = DbSqlStandard.MakeDelimitedIdentifier (column.Table.Name);
-			string columnName = column.GetSqlName ();
-
-			return SqlField.CreateName (tableName, columnName);
-		}
-
 		public static SqlField CreateName(string tableName, string columnName)
 		{
 			string name = DbSqlStandard.QualifyName (tableName, columnName);
