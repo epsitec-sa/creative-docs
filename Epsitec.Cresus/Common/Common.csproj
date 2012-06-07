@@ -1185,6 +1185,7 @@
     <Compile Include="Widgets\Behaviors\MenuBehavior.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldMenuBehavior.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldMenuSelectionEventArgs.cs" />
+    <Compile Include="Widgets\Behaviors\SlimFieldTextBehavior.cs" />
     <Compile Include="Widgets\ISearchBox.cs" />
     <Compile Include="Widgets\SearchBoxPolicy.cs" />
     <Compile Include="Widgets\Behaviors\SelectItemBehavior.cs" />

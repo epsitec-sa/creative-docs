@@ -19,37 +19,37 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public string FieldLabel
+		public string							FieldLabel
 		{
 			get;
 			set;
 		}
 
-		public string FieldPrefix
+		public string							FieldPrefix
 		{
 			get;
 			set;
 		}
 
-		public string FieldSuffix
+		public string							FieldSuffix
 		{
 			get;
 			set;
 		}
 
-		public string FieldText
+		public string							FieldText
 		{
 			get;
 			set;
 		}
 
-		public string FieldOther
+		public string							FieldOther
 		{
 			get;
 			set;
 		}
 
-		public IList<SlimFieldMenuItem> MenuItems
+		public IList<SlimFieldMenuItem>			MenuItems
 		{
 			get
 			{
@@ -57,23 +57,24 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public SlimFieldDisplayMode DisplayMode
+		public SlimFieldDisplayMode				DisplayMode
 		{
 			get;
 			set;
 		}
 
+		
 		public override Size GetBestFitSize()
 		{
 			var width  = System.Math.Ceiling (this.MeasureWidth ());
-			var height = System.Math.Ceiling (Font.DefaultFontSize * 1.2 + 4.0);
+			var height = System.Math.Ceiling (Font.DefaultFontSize * 1.2 + 2 * SlimField.MarginY);
 
 			return new Size (width, height);
 		}
 
 		public Rectangle GetTextSurface()
 		{
-			return Rectangle.Deflate (this.Client.Bounds, 2, 2);
+			return Rectangle.Deflate (this.Client.Bounds, SlimField.MarginX, SlimField.MarginY);
 		}
 
 		public SlimFieldMenuItem DetectMenuItem(Point pos)
@@ -184,7 +185,7 @@ namespace Epsitec.Common.Widgets
 
 		private double MeasureWidth()
 		{
-			double width = 4;
+			double width = 2 * SlimField.MarginX;
 
 			switch (this.DisplayMode)
 			{
@@ -299,6 +300,9 @@ namespace Epsitec.Common.Widgets
 			public static readonly Font			SelectedTextFont  = Font.GetFont ("Segoe UI", "Bold");
 			public static readonly Font			SelectedExtraFont = Font.GetFont ("Segoe UI", "Bold Italic");
 		}
+
+		private const int						MarginX = 3;
+		private const int						MarginY = 2;
 
 		private readonly List<SlimFieldMenuItem> menuItems;
 	}
