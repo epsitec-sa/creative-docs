@@ -1060,7 +1060,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				Rectangle rect = this.Client.Bounds;
 				rect.Left  = this.widthDraggingPos-StringList.WidthDraggingDetectMargin;
 				rect.Right = this.widthDraggingPos+StringList.WidthDraggingDetectMargin;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(adorner.ColorBorder);

@@ -1911,7 +1911,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sélectionné ?
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				
 				this.graphics.AddFilledRectangle(rect);
 				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
@@ -2112,7 +2112,7 @@ namespace Epsitec.Common.Document.Objects
 			double descender = drawingFont.Descender*size;
 
 			Drawing.Rectangle rect = new Drawing.Rectangle(x, y+descender, w, ascender-descender);
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			if ( selRectList == null )
 			{

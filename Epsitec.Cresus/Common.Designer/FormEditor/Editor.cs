@@ -936,8 +936,8 @@ namespace Epsitec.Common.Designer.FormEditor
 		{
 			//	Dessine une flèche de 'start' à l'extrémité 'end'.
 			//	Si selected = true, on dessine une poignée à l'extrémité 'end'.
-			graphics.Align(ref start);
-			graphics.Align(ref end);
+			start = graphics.Align(start);
+			end   = graphics.Align(end);
 			start.X += 0.5;
 			start.Y += 0.5;
 			end.X += 0.5;
@@ -963,7 +963,7 @@ namespace Epsitec.Common.Designer.FormEditor
 			{
 				Rectangle rect = new Rectangle(end, end);
 				rect.Inflate(Editor.forwardTabHalfHandle);
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				rect.Offset(-0.5, -0.5);
 
 				graphics.AddFilledRectangle(rect);

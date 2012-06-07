@@ -494,9 +494,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			for (int i=0; i<this.cells.Length; i++)
 			{
-				Rectangle cell = rect;
-				graphics.Align(ref cell);
-
+				Rectangle cell = graphics.Align (rect);
+				
 				WidgetPaintState state = this.PaintState;
 				if ((state & WidgetPaintState.Enabled) != 0 && this.cells[i].Selected)
 				{
@@ -566,12 +565,8 @@ namespace Epsitec.Common.Designer.MyWidgets
 
 			for (int i=0; i<this.cells.Length-1; i++)
 			{
-				Point p1 = new Point(rect.Left, rect.Bottom);
-				Point p2 = new Point(rect.Right, rect.Bottom);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
-				p1.Y += 0.5;
-				p2.Y += 0.5;
+				var p1 = graphics.Align(rect.BottomLeft) + new Point (0, 0.5);
+				var p2 = graphics.Align(rect.BottomRight) + new Point (0, 0.5);
 				graphics.AddLine(p1, p2);
 
 				rect.Offset(0, -h);

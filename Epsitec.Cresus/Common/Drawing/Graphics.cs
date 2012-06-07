@@ -899,41 +899,26 @@ namespace Epsitec.Common.Drawing
 
 		public Rectangle Align(Rectangle rect)
 		{
-			this.Align (ref rect);
-			return rect;
-		}
-		
-		public void Align(ref Drawing.Rectangle rect)
-		{
 			double x1 = rect.Left;
 			double y1 = rect.Bottom;
 			double x2 = rect.Right;
 			double y2 = rect.Top;
+
+			this.Align (ref x1, ref y1);
+			this.Align (ref x2, ref y2);
 			
-			this.transform.TransformDirect (ref x1, ref y1);
-			this.transform.TransformDirect (ref x2, ref y2);
-			
-			x1 = System.Math.Floor (x1 + 0.5);
-			y1 = System.Math.Floor (y1 + 0.5);
-			x2 = System.Math.Floor (x2 + 0.5);
-			y2 = System.Math.Floor (y2 + 0.5);
-			
-			this.transform.TransformInverse (ref x1, ref y1);
-			this.transform.TransformInverse (ref x2, ref y2);
-			
-			rect = new Rectangle (x1, y1, x2-x1, y2-y1);
+			return new Rectangle (x1, y1, x2-x1, y2-y1);
 		}
 		
 		
-		public void Align(ref Drawing.Point p)
+		public Point Align(Point p)
 		{
 			double x = p.X;
 			double y = p.Y;
 			
 			this.Align (ref x, ref y);
 			
-			p.X = x;
-			p.Y = y;
+			return new Point (x, y);
 		}
 		
 		

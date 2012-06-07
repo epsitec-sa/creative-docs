@@ -858,12 +858,10 @@ namespace Epsitec.Common.Document
 		protected void DrawDashLine(Graphics graphics, DrawingContext drawingContext, Point p1, Point p2)
 		{
 			//	Dessine un traitillé pour le modificateur.
-			graphics.Align(ref p1);
-			graphics.Align(ref p2);
-			p1.X += 0.5/drawingContext.ScaleX;
-			p1.Y += 0.5/drawingContext.ScaleX;
-			p2.X += 0.5/drawingContext.ScaleX;
-			p2.Y += 0.5/drawingContext.ScaleX;
+			var offset = 0.5/drawingContext.ScaleX;
+
+			p1 = graphics.Align (p1) + new Point (offset, offset);
+			p2 = graphics.Align (p2) + new Point (offset, offset);
 
 			Path path = new Path();
 			path.MoveTo(p1);

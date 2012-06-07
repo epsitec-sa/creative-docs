@@ -107,7 +107,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			}
 
 			Rectangle rect = this.Bounds;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			Color color = this.isHilite ? PanelsContext.ColorHandleHilited : PanelsContext.ColorHandleNormal;
 

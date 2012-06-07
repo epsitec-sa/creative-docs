@@ -49,7 +49,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			graphics.Color = adorner.ColorTextFieldBorder(this.IsEnabled);
 			Font font = Font.GetFont("Tahoma", "Regular");
@@ -120,7 +120,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			double posy = this.DocumentToScreen(this.marker);
 

@@ -530,7 +530,7 @@ namespace Epsitec.Cresus.Compta.Graph
 
 		private void PaintPoint(Graphics graphics, Point pos, GraphPoint type, Color color)
 		{
-			graphics.Align (ref pos);
+			pos = graphics.Align (pos);
 
 			double r1 = System.Math.Floor ((this.options.PointWidth+this.options.BorderThickness+1)*0.5);
 			double r2 = System.Math.Floor (r1*0.8);

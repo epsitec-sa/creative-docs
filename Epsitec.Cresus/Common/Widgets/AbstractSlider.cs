@@ -688,7 +688,7 @@ namespace Epsitec.Common.Widgets
 			if (this.thumbRect.IsValid && this.IsEnabled)
 			{
 				Rectangle rect = this.thumbRect;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				
 				if (this.HiliteZone != Zone.Thumb)
 				{

@@ -319,7 +319,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine un bouton à cocher sans texte.
 			rect.Deflate(0.5);
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
@@ -394,7 +394,7 @@ namespace Epsitec.Common.Widgets.Adorners
 		{
 			//	Dessine un bouton radio sans texte.
 			rect.Deflate(0.5);
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			if ( (state&WidgetPaintState.Enabled) != 0 )
 			{
@@ -1653,20 +1653,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine un séparateur horizontal ou vertical.
 			if ( dir == Direction.Right )
 			{
-				Drawing.Point p1 = new Drawing.Point(rect.Left+rect.Width/2, rect.Bottom);
-				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point(rect.Left+rect.Width/2, rect.Bottom));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point(rect.Left+rect.Width/2, rect.Top));
 				p1.X -= 0.5;
 				p2.X -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 			else
 			{
-				Drawing.Point p1 = new Drawing.Point(rect.Left, rect.Bottom+rect.Height/2);
-				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point(rect.Left, rect.Bottom+rect.Height/2));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2));
 				p1.Y -= 0.5;
 				p2.Y -= 0.5;
 				graphics.AddLine(p1, p2);
@@ -1983,8 +1979,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				double original = graphics.LineWidth;
 				graphics.LineWidth = 1;
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				p1 = graphics.Align(p1);
+				p2 = graphics.Align(p2);
 				p1.X -= 0.5;
 				p2.X -= 0.5;
 				p1.Y -= 0.5;
@@ -2082,7 +2078,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
-				graphics.Align(ref rFocus);
+				rFocus = graphics.Align(rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				this.PaintFocusBox(graphics, rFocus);
 			}
@@ -2309,7 +2305,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Right = rect.Left+rectMargin;
 			picon.Left  = icon.Left;
 			picon.Right = icon.Left+iconMargin;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2319,7 +2315,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Right = rect.Right-rectMargin;
 			picon.Left  = icon.Left+iconMargin;
 			picon.Right = icon.Right-iconMargin;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2329,7 +2325,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Right = rect.Right;
 			picon.Left  = icon.Right-iconMargin;
 			picon.Right = icon.Right;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2350,7 +2346,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Top    = rect.Bottom+rectMargin;
 			picon.Bottom = icon.Bottom;
 			picon.Top    = icon.Bottom+iconMargin;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2360,7 +2356,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Top    = rect.Top-rectMargin;
 			picon.Bottom = icon.Bottom+iconMargin;
 			picon.Top    = icon.Top-iconMargin;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2370,7 +2366,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			prect.Top    = rect.Top;
 			picon.Bottom = icon.Top-iconMargin;
 			picon.Top    = icon.Top;
-			graphics.Align(ref prect);
+			prect = graphics.Align (prect);
 			if ( !prect.IsSurfaceZero )
 			{
 				graphics.PaintImage(this.bitmap, prect, picon);
@@ -2390,7 +2386,7 @@ namespace Epsitec.Common.Widgets.Adorners
 				return;
 			}
 
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			Drawing.Rectangle prect = new Drawing.Rectangle();
 			Drawing.Rectangle picon = new Drawing.Rectangle();

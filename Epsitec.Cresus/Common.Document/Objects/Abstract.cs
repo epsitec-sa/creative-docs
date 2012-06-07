@@ -2864,8 +2864,7 @@ namespace Epsitec.Common.Document.Objects
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
-			Drawing.Rectangle bbox = this.BoundingBox;
-			graphics.Align(ref bbox);
+			Drawing.Rectangle bbox = graphics.Align(this.BoundingBox);
 			bbox.Inflate(0.5/drawingContext.ScaleX);
 
 			string s = TextLayout.ConvertToSimpleText(name);
@@ -2895,7 +2894,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( m+ta+m <= bbox.Width )
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(bbox.Left, bbox.Top-h, m+ta+m, h);
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(lineColor);
 
@@ -2927,8 +2926,7 @@ namespace Epsitec.Common.Document.Objects
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/drawingContext.ScaleX;
 
-			Drawing.Rectangle bbox = this.BoundingBox;
-			graphics.Align(ref bbox);
+			Drawing.Rectangle bbox = graphics.Align(this.BoundingBox);
 			bbox.Inflate(0.5/drawingContext.ScaleX);
 
 			Point pos = bbox.BottomLeft;
@@ -2957,7 +2955,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( m+ta+m <= bbox.Width )
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(bbox.Left, bbox.Bottom, m+ta+m, h);
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				graphics.AddFilledRectangle(rect);
 				graphics.RenderSolid(lineColor);
 

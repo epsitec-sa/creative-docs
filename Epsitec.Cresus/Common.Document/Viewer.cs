@@ -2696,7 +2696,7 @@ namespace Epsitec.Common.Document
 			graphics.LineWidth = 1.0/this.drawingContext.ScaleX;
 
 			Drawing.Rectangle rect = this.editCreateRect;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 			rect.Offset(0.5/this.drawingContext.ScaleX, 0.5/this.drawingContext.ScaleX);
 
 			Path path = null;
@@ -4147,7 +4147,7 @@ namespace Epsitec.Common.Document
 				{
 					//	Dessine la "page".
 					Rectangle rect = this.document.Modifier.PageArea;
-					graphics.Align(ref rect);
+					rect = graphics.Align (rect);
 					rect.Offset(ix, iy);
 
 					if ( !this.BackColor.IsTransparent )
@@ -4182,15 +4182,14 @@ namespace Epsitec.Common.Document
 					{
 						//	Dessine la "page".
 						Rectangle rect = this.document.Modifier.PageArea;
-						graphics.Align(ref rect);
+						rect = graphics.Align (rect);
 						rect.Offset(ix, iy);
 
 						graphics.AddRectangle(rect);
 						graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5, 0.5, 0.5));
 					}
 
-					Rectangle area = this.document.Modifier.RectangleArea;
-					graphics.Align(ref area);
+					Rectangle area = graphics.Align(this.document.Modifier.RectangleArea);
 					area.Offset(ix, iy);
 					graphics.AddRectangle(area);
 					graphics.RenderSolid(Color.FromAlphaRgb(0.4, 0.5, 0.5, 0.5));
@@ -4206,7 +4205,7 @@ namespace Epsitec.Common.Document
 
 						//	Dessine la "page".
 						Rectangle rect = this.document.Modifier.PageArea;
-						graphics.Align(ref rect);
+						rect = graphics.Align (rect);
 						rect.Offset(ix, iy);
 
 						graphics.AddRectangle(rect);
@@ -4333,13 +4332,13 @@ namespace Epsitec.Common.Document
 					if ( this.document.Type == DocumentType.Pictogram )
 					{
 						Rectangle rect = new Rectangle(0, 0, this.document.PageSize.Width, this.document.PageSize.Height);
-						graphics.Align(ref rect);
+						rect = graphics.Align (rect);
 						rect.Offset(ix, iy);
 						graphics.AddRectangle(rect);
 
 						rect.Offset(-ix, -iy);
 						rect.Deflate(2);
-						graphics.Align(ref rect);
+						rect = graphics.Align (rect);
 						rect.Offset(ix, iy);
 						graphics.AddRectangle(rect);
 

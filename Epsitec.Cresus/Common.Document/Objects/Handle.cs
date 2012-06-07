@@ -361,8 +361,7 @@ namespace Epsitec.Common.Document.Objects
 			double initialWidth = graphics.LineWidth;
 			graphics.LineWidth = 1.0/scaleX;
 
-			Point pos = this.position;
-			graphics.Align(ref pos);
+			var pos = graphics.Align(this.position);
 
 			if ( this.isGlobalSelected )
 			{
@@ -373,7 +372,7 @@ namespace Epsitec.Common.Document.Objects
 					rect.Right  = pos.X+handleSize*0.25;
 					rect.Bottom = pos.Y-handleSize*0.25;
 					rect.Top    = pos.Y+handleSize*0.25;
-					graphics.Align(ref rect);
+					rect = graphics.Align (rect);
 
 					if ( this.type == HandleType.Primary  ||
 						 this.type == HandleType.Starting ||
@@ -396,7 +395,7 @@ namespace Epsitec.Common.Document.Objects
 				rect.Right  = pos.X+hs;
 				rect.Bottom = pos.Y-hs;
 				rect.Top    = pos.Y+hs;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 
 				Color color;
 				if ( this.isHilited )

@@ -611,7 +611,7 @@ namespace Epsitec.Common.Widgets
 				rect = this.rectSquare;
 				rect.Left = rect.Center.X-10.0;
 				rect.Width = 2.0*10.0;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				rect.Deflate(0.5);
 				this.PaintGradientGray(graphics, rect, colorBorder);
 
@@ -622,7 +622,7 @@ namespace Epsitec.Common.Widgets
 				this.PaintGradientCircle(graphics, rect, colorBorder, colorWindow);
 
 				rect = this.rectSquare;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				rect.Deflate(0.5);
 				this.PaintGradientSquare(graphics, rect, colorBorder);
 

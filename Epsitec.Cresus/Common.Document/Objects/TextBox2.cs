@@ -660,10 +660,8 @@ namespace Epsitec.Common.Document.Objects
 			double y  = layout.LineBaseY + layout.LineAscender*0.3;
 			double a  = System.Math.Min(layout.LineAscender*0.3, (x2-x1)*0.5);
 
-			Point p1 = new Point(x1, y);
-			Point p2 = new Point(x2, y);
-			graphics.Align(ref p1);
-			graphics.Align(ref p2);
+			var p1 = graphics.Align(new Point (x1, y));
+			var p2 = graphics.Align(new Point (x2, y));
 			double adjust = 0.5/this.drawingContext.ScaleX;
 			p1.X += adjust;  p1.Y += adjust;
 			p2.X -= adjust;  p2.Y += adjust;
@@ -677,7 +675,7 @@ namespace Epsitec.Common.Document.Objects
 			if ( (tabCode & this.markerSelected) != 0 )  // tabulateur sélectionné ?
 			{
 				Drawing.Rectangle rect = new Drawing.Rectangle(x1, layout.LineY1, x2-x1, layout.LineY2-layout.LineY1);
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				
 				this.graphics.AddFilledRectangle(rect);
 				this.graphics.RenderSolid(DrawingContext.ColorSelectEdit(this.isActive));
@@ -907,7 +905,7 @@ namespace Epsitec.Common.Document.Objects
 			double dx = x - selX;
 			double dy = layout.LineY2 - layout.LineY1;
 			Drawing.Rectangle rect = new Drawing.Rectangle(selX, layout.LineY1, dx, dy);
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			if ( selRectList == null )
 			{

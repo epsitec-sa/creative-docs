@@ -371,7 +371,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			if (!this.Rect.IsSurfaceZero)
 			{
 				var rect = this.Rect;
-				graphics.Align (ref rect);
+				rect = graphics.Align (rect);
 				rect.Inflate (0.5);
 
 				if (this.id.Type != GraphSurfaceType.Margins)
@@ -408,7 +408,7 @@ namespace Epsitec.Cresus.Compta.Graph
 		public void PaintSelected(Graphics graphics)
 		{
 			var rect = this.Rect;
-			graphics.Align (ref rect);
+			rect = graphics.Align (rect);
 
 			if (!rect.IsSurfaceZero)
 			{
@@ -467,8 +467,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			//	Dessine une poignée.
 			if (pos.HasValue)
 			{
-				var p = pos.Value;
-				graphics.Align (ref p);
+				var p = graphics.Align (pos.Value);
 
 				var rect = new Rectangle (p.X-GraphSurface.handleSize/2, p.Y-GraphSurface.handleSize/2, GraphSurface.handleSize, GraphSurface.handleSize);
 				rect.Inflate (0.5);

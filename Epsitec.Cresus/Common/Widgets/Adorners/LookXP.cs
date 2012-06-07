@@ -147,7 +147,7 @@ namespace Epsitec.Common.Widgets.Adorners
 							   Widgets.WidgetPaintState state)
 		{
 			//	Dessine un bouton à cocher sans texte.
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 			Drawing.Rectangle rInside;
 
 			graphics.AddFilledRectangle(rect);
@@ -219,7 +219,7 @@ namespace Epsitec.Common.Widgets.Adorners
 							   Widgets.WidgetPaintState state)
 		{
 			//	Dessine un bouton radio sans texte.
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 			Drawing.Rectangle rInside;
 
 			this.PaintCircle(graphics, rect, this.colorControlDarkDark);
@@ -717,10 +717,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine le fond d'un potentiomètre linéaire.
 			if ( dir == Widgets.Direction.Left )
 			{
-				Drawing.Point p1 = new Drawing.Point (sliderRect.Left +frameRect.Height*0.2, frameRect.Center.Y);
-				Drawing.Point p2 = new Drawing.Point (sliderRect.Right-frameRect.Height*0.2, frameRect.Center.Y);
-				graphics.Align (ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point (sliderRect.Left +frameRect.Height*0.2, frameRect.Center.Y));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point (sliderRect.Right-frameRect.Height*0.2, frameRect.Center.Y));
 
 				graphics.AddLine(p1.X+0.5, p1.Y+0.5, p2.X-0.5, p2.Y+0.5);
 				graphics.RenderSolid(this.colorControlDark);
@@ -736,10 +734,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			}
 			else
 			{
-				Drawing.Point p1 = new Drawing.Point (frameRect.Center.X, sliderRect.Bottom+frameRect.Width*0.2);
-				Drawing.Point p2 = new Drawing.Point (frameRect.Center.X, sliderRect.Top   -frameRect.Width*0.2);
-				graphics.Align (ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point (frameRect.Center.X, sliderRect.Bottom+frameRect.Width*0.2));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point (frameRect.Center.X, sliderRect.Top   -frameRect.Width*0.2));
 
 				graphics.AddLine(p1.X-0.5, p1.Y+0.5, p2.X-0.5, p2.Y-0.5);
 				graphics.RenderSolid(this.colorControlDark);
@@ -1374,20 +1370,16 @@ namespace Epsitec.Common.Widgets.Adorners
 			//	Dessine un séparateur horizontal ou vertical.
 			if ( dir == Direction.Right )
 			{
-				Drawing.Point p1 = new Drawing.Point(rect.Left+rect.Width/2, rect.Bottom);
-				Drawing.Point p2 = new Drawing.Point(rect.Left+rect.Width/2, rect.Top);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point(rect.Left+rect.Width/2, rect.Bottom));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point(rect.Left+rect.Width/2, rect.Top));
 				p1.X -= 0.5;
 				p2.X -= 0.5;
 				graphics.AddLine(p1, p2);
 			}
 			else
 			{
-				Drawing.Point p1 = new Drawing.Point(rect.Left, rect.Bottom+rect.Height/2);
-				Drawing.Point p2 = new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				Drawing.Point p1 = graphics.Align(new Drawing.Point(rect.Left, rect.Bottom+rect.Height/2));
+				Drawing.Point p2 = graphics.Align(new Drawing.Point(rect.Right, rect.Bottom+rect.Height/2));
 				p1.Y -= 0.5;
 				p2.Y -= 0.5;
 				graphics.AddLine(p1, p2);
@@ -1759,8 +1751,8 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				double original = graphics.LineWidth;
 				graphics.LineWidth = 1;
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
+				p1 = graphics.Align(p1);
+				p2 = graphics.Align(p2);
 				p1.X -= 0.5;
 				p2.X -= 0.5;
 				p1.Y -= 0.5;
@@ -1847,7 +1839,7 @@ namespace Epsitec.Common.Widgets.Adorners
 			{
 				Drawing.Rectangle rFocus = text.StandardRectangle;
 				rFocus.Offset(pos);
-				graphics.Align(ref rFocus);
+				rFocus = graphics.Align (rFocus);
 				rFocus.Inflate(2.5, -0.5);
 				this.PaintFocusBox(graphics, rFocus);
 			}

@@ -627,8 +627,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			for (int i=0; i<this.cells.Length; i++)
 			{
-				Rectangle cell = rect;
-				graphics.Align(ref cell);
+				Rectangle cell = graphics.Align (rect);
 
 				if (i >= this.hilitedFirstLine && i < this.hilitedFirstLine+this.hilitedCountLine)
 				{
@@ -732,12 +731,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 			for (int i=0; i<this.cells.Length; i++)
 			{
-				Point p1 = new Point(rect.Left, rect.Bottom);
-				Point p2 = new Point(rect.Right, rect.Bottom);
-				graphics.Align(ref p1);
-				graphics.Align(ref p2);
-				p1.Y += 0.5;
-				p2.Y += 0.5;
+				Point p1 = graphics.Align (rect.BottomLeft) + new Point (0, 0.5);
+				Point p2 = graphics.Align (rect.BottomRight) + new Point (0, 0.5);
 				graphics.AddLine(p1, p2);
 
 				Color separatorColor = adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0);
@@ -754,7 +749,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			if (this.insertionPointLine >= 0 && this.insertionPointLine < this.cells.Length)
 			{
 				rect = new Rectangle (this.Client.Bounds.X, this.Client.Bounds.Top-h*this.insertionPointLine-2, this.Client.Bounds.Width, 4);
-				graphics.Align (ref rect);
+				rect = graphics.Align (rect);
 				graphics.AddFilledRectangle (rect);
 				graphics.RenderSolid (adorner.ColorTextFieldBorder ((this.PaintState&WidgetPaintState.Enabled) != 0));
 

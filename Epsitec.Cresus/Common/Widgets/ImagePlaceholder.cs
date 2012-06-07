@@ -166,7 +166,7 @@ namespace Epsitec.Common.Widgets
 					graphics.ImageFilter = new ImageFilter (ImageFilteringMode.None);
 				}
 
-				graphics.Align (ref rect);
+				rect = graphics.Align (rect);
 				graphics.PaintImage (this.image, rect);
 				graphics.ImageFilter = oldFilter;
 			}

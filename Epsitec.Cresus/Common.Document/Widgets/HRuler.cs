@@ -141,7 +141,7 @@ namespace Epsitec.Common.Document.Widgets
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 
 			Rectangle rect = this.Client.Bounds;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			graphics.Color = adorner.ColorTextFieldBorder(this.IsEnabled);
 			Font font = Font.GetFont("Tahoma", "Regular");
@@ -208,7 +208,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			IAdorner adorner = Common.Widgets.Adorners.Factory.Active;
 			Rectangle rect = this.Client.Bounds;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			double posx = this.DocumentToScreen(this.marker);
 
@@ -239,7 +239,7 @@ namespace Epsitec.Common.Document.Widgets
 			double posx = this.GetHandleHorizontalPos("LeftFirst");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			Path path = new Path();
 			path.MoveTo((rect.Left+rect.Right)/2, rect.Bottom+8);
@@ -270,7 +270,7 @@ namespace Epsitec.Common.Document.Widgets
 			double posx = this.GetHandleHorizontalPos("LeftBody");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			Path path = new Path();
 			path.MoveTo((rect.Left+rect.Right)/2, rect.Top-4);
@@ -302,7 +302,7 @@ namespace Epsitec.Common.Document.Widgets
 			double posx = this.GetHandleHorizontalPos("Right");
 			rect.Left  = posx-3;
 			rect.Right = posx+3;
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			Path path = new Path();
 			path.MoveTo((rect.Left+rect.Right)/2, rect.Top-4);
@@ -343,7 +343,7 @@ namespace Epsitec.Common.Document.Widgets
 					double posx = this.GetHandleHorizontalPos(tab);
 					rect.Left  = posx-rect.Height/2;
 					rect.Right = posx+rect.Height/2;
-					graphics.Align(ref rect);
+					rect = graphics.Align (rect);
 					rect.Bottom += 3.0;
 
 					Color colorBack = Color.FromBrightness(1);

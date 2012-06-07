@@ -226,7 +226,7 @@ namespace Epsitec.Common.Designer
 			//	Aligne un rectangle pour permettre un joli Graphics.AddLine.
 			if (graphics != null)
 			{
-				graphics.Align(ref r);
+				r = graphics.Align(r);
 				r.Offset(0.5, 0.5);
 			}
 		}
@@ -236,9 +236,7 @@ namespace Epsitec.Common.Designer
 			//	Aligne un point pour permettre un joli Graphics.AddLine.
 			if (graphics != null)
 			{
-				graphics.Align(ref p);
-				p.X += 0.5;
-				p.Y += 0.5;
+				p = graphics.Align(p) + new Point (0.5, 0.5);
 			}
 		}
 

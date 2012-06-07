@@ -4027,12 +4027,10 @@ namespace Epsitec.Common.Designer.PanelEditor
 			//	Dessine les marges de padding d'un objet, sous forme de hachures.
 			if (ObjectModifier.IsAbstractGroup(obj))
 			{
-				Rectangle bounds = this.objectModifier.GetActualBounds(obj);
-				graphics.Align(ref bounds);
+				Rectangle bounds = graphics.Align(this.objectModifier.GetActualBounds(obj));
 				bounds.Deflate(0.5);
 
-				Rectangle inside = this.objectModifier.GetFinalPadding(obj);
-				graphics.Align(ref inside);
+				Rectangle inside = graphics.Align(this.objectModifier.GetFinalPadding(obj));
 				inside.Deflate(0.5);
 
 				Rectangle left   = new Rectangle(bounds.Left, bounds.Bottom, inside.Left-bounds.Left, bounds.Height);
@@ -4168,7 +4166,7 @@ namespace Epsitec.Common.Designer.PanelEditor
 			if (engine == null)  return;
 
 			Rectangle rect = this.objectModifier.GetFinalPadding(obj);
-			graphics.Align(ref rect);
+			rect = graphics.Align (rect);
 
 			int columns = engine.ColumnDefinitions.Count;
 			double x = rect.Left;

@@ -1046,7 +1046,7 @@ namespace Epsitec.Common.Document
 			if ( port is Graphics )
 			{
 				Graphics graphics = port as Graphics;
-				graphics.Align(ref rect);
+				rect = graphics.Align (rect);
 				rect.Offset(0.5/drawingContext.ScaleX, 0.5/drawingContext.ScaleX);
 			}
 

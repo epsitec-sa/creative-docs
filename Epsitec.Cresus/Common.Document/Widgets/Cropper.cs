@@ -768,8 +768,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			if (this.Enable)
 			{
-				Rectangle bounds = this.BoundsRectangle;
-				graphics.Align(ref bounds);
+				Rectangle bounds = graphics.Align(this.BoundsRectangle);
 				bounds.Deflate(0.5);
 
 				Rectangle crop = this.CropRectangle;
@@ -781,7 +780,7 @@ namespace Epsitec.Common.Document.Widgets
 				}
 				else
 				{
-					graphics.Align(ref crop);
+					crop = graphics.Align(crop);
 					crop.Deflate(0.5);
 
 					if (bounds == crop)  // partie recadrée = toute l'image ?

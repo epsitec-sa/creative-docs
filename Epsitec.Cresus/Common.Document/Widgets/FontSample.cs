@@ -286,7 +286,7 @@ namespace Epsitec.Common.Document.Widgets
 
 			if ( this.textLayout != null )
 			{
-				graphics.Align(ref left);
+				left = graphics.Align(left);
 				left.Deflate(0.5);
 				graphics.AddLine(left.BottomRight, left.TopRight);  // trait vertical de séparation
 				left.Width -= 16;
