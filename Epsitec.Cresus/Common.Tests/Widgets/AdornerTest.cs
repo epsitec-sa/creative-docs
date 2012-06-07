@@ -425,11 +425,11 @@ namespace Epsitec.Common.Tests.Widgets
 			image3.VerticalOffset = 8;
 			image3.ContentAlignment = ContentAlignment.BottomCenter;
 			
-			Widget.ObsoleteBaseLineAlign (image1, image2);
-			Widget.ObsoleteBaseLineAlign (image1, image3);
+//-			Widget.ObsoleteBaseLineAlign (image1, image2);
+//-			Widget.ObsoleteBaseLineAlign (image1, image3);
 
-			Assert.AreEqual((int) ((image1.ActualLocation.Y+image2.VerticalOffset)*100+0.5), (int) (image2.ActualLocation.Y*100+0.5));
-			Assert.AreEqual((int) ((image1.ActualLocation.Y+image3.VerticalOffset)*100+0.5), (int) (image3.ActualLocation.Y*100+0.5));
+//-			Assert.AreEqual((int) ((image1.ActualLocation.Y+image2.VerticalOffset)*100+0.5), (int) (image2.ActualLocation.Y*100+0.5));
+//-			Assert.AreEqual((int) ((image1.ActualLocation.Y+image3.VerticalOffset)*100+0.5), (int) (image3.ActualLocation.Y*100+0.5));
 
 			image4.SetManualBounds(new Rectangle (630, 15, 40, 20));
 			image4.ImageName = @"dyn:Xyz/random";

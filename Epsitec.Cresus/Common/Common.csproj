@@ -243,6 +243,7 @@
     <Compile Include="Drawing\ColorCollectionType.cs" />
     <Compile Include="Drawing\ColorSpace.cs" />
     <Compile Include="Drawing\ContentAlignment.cs" />
+    <Compile Include="Drawing\GridSnapping.cs" />
     <Compile Include="Drawing\PointDistance.cs" />
     <Compile Include="Drawing\GripIds.cs" />
     <Compile Include="Drawing\GripIdExtensions.cs" />

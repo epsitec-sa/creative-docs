@@ -23,7 +23,7 @@ namespace Epsitec.Common.Drawing
 		{
 		}
 
-		public TextGeometry(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment textAlignment)
+		public TextGeometry(double x, double y, double width, double height, string text, Font font, double size, ContentAlignment textAlignment, Graphics graphics = null, GridSnapping gridSnapping = GridSnapping.None)
 		{
 			double textWidth  = font.GetTextAdvance (text) * size;
 			double textHeight = (font.Ascender - font.Descender) * size;
@@ -85,7 +85,15 @@ namespace Epsitec.Common.Drawing
 					throw new System.NotSupportedException (string.Format ("{0} not supported", textAlignment.GetQualifiedName ()));
 			}
 
-			this.origin    = new Point (x, y);
+			if (graphics == null)
+			{
+				this.origin = new Point (x, y);
+			}
+			else
+			{
+				this.origin = graphics.Align (new Point (x, y), gridSnapping);
+			}
+			
 			this.ascender  = font.Ascender * size;
 			this.descender = font.Descender * size;
 			this.textWidth = textWidth;

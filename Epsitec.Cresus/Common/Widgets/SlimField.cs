@@ -134,7 +134,7 @@ namespace Epsitec.Common.Widgets
 			var width   = surface.Width;
 			var height  = surface.Height;
 
-			var geomPrefix = new TextGeometry (x, y, width, height, this.FieldPrefix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft);
+			var geomPrefix = new TextGeometry (x, y, width, height, this.FieldPrefix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize, ContentAlignment.MiddleLeft, graphics, GridSnapping.Both);
 			var geomText   = new TextGeometry (geomPrefix.Origin.X + geomPrefix.Width, geomPrefix.Origin.Y, width, height, this.FieldText, SlimField.Fonts.TextFont, Font.DefaultFontSize, ContentAlignment.BaselineLeft);
 			var geomSuffix = new TextGeometry (geomText.Origin.X + geomText.Width, geomText.Origin.Y, width, height, this.FieldSuffix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize, ContentAlignment.BaselineLeft);
 

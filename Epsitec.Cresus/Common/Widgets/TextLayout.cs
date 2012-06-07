@@ -1915,22 +1915,32 @@ namespace Epsitec.Common.Widgets
 			IAdorner adorner = Adorners.Factory.Active;
 			double listValue = 0.0;
 			bool listEncounter = false;
+			bool firstBlock = true;
+			double offsetY = 0.0;
+			
 			foreach (JustifBlock block in this.blocks)
 			{
 				if (!block.Visible)
 					continue;
+
+				if (firstBlock)
+				{
+					firstBlock = false;
+					double shift = block.IsImage ? block.ImageAscender : block.Font.Ascender * block.FontSize;
+					offsetY = System.Math.Floor (shift) - shift + 1;
+				}
 
 				Drawing.Rectangle blockRect = new Drawing.Rectangle ();
 
 				if (block.IsImage)
 				{
 					blockRect.Top    = pos.Y+block.Pos.Y+block.ImageAscender;
-					blockRect.Bottom = pos.Y+block.Pos.Y+block.ImageDescender;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.ImageDescender - offsetY;
 				}
 				else
 				{
 					blockRect.Top    = pos.Y+block.Pos.Y+block.Font.Ascender*block.FontSize;
-					blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize;
+					blockRect.Bottom = pos.Y+block.Pos.Y+block.Font.Descender*block.FontSize - offsetY;
 				}
 
 				blockRect.Left   = pos.X+block.Pos.X;
@@ -1961,7 +1971,7 @@ namespace Epsitec.Common.Widgets
 					double dx = image.Width;
 					double dy = image.Height;
 					double ix = pos.X+block.Pos.X;
-					double iy = pos.Y+block.Pos.Y+block.ImageDescender; //+block.VerticalOffset;
+					double iy = pos.Y+block.Pos.Y+block.ImageDescender - offsetY; //+block.VerticalOffset;
 
 					if (block.Anchor)
 					{
@@ -2004,7 +2014,7 @@ namespace Epsitec.Common.Widgets
 				if (block.List)
 				{
 					graphics.RichColor = color;
-					this.PaintList (graphics, blockRect, pos.Y+block.Pos.Y, block, ref listValue);
+					this.PaintList (graphics, blockRect, pos.Y+block.Pos.Y-offsetY, block, ref listValue);
 					listEncounter = true;
 					continue;
 				}
@@ -2039,11 +2049,11 @@ namespace Epsitec.Common.Widgets
 				{
 					if (block.Infos == null)
 					{
-						graphics.PaintText(x, y, block.Text, block.Font, block.FontSize);
+						graphics.PaintText (x, y-offsetY, block.Text, block.Font, block.FontSize);
 					}
 					else
 					{
-						graphics.PaintText(x, y, block.Text, block.Font, block.FontSize, block.Infos);
+						graphics.PaintText (x, y-offsetY, block.Text, block.Font, block.FontSize, block.Infos);
 					}
 				}
 

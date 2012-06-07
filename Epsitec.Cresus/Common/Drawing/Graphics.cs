@@ -888,12 +888,36 @@ namespace Epsitec.Common.Drawing
 				this.AddFilledPath (path);
 			}
 		}
-		
+
+		public void Align(ref double x, ref double y, GridSnapping gridSnapping)
+		{
+			if (gridSnapping == GridSnapping.None)
+			{
+				return;
+			}
+
+			this.transform.TransformDirect (ref x, ref y);
+
+			if (gridSnapping.HasFlag (GridSnapping.X))
+			{
+				x = System.Math.Floor (x + 0.5);
+			}
+
+			if (gridSnapping.HasFlag (GridSnapping.Y))
+			{
+				y = System.Math.Floor (y + 0.5);
+			}
+
+			this.transform.TransformInverse (ref x, ref y);
+		}
+
 		public void Align(ref double x, ref double y)
 		{
 			this.transform.TransformDirect (ref x, ref y);
+
 			x = System.Math.Floor (x + 0.5);
 			y = System.Math.Floor (y + 0.5);
+
 			this.transform.TransformInverse (ref x, ref y);
 		}
 
@@ -909,14 +933,23 @@ namespace Epsitec.Common.Drawing
 			
 			return new Rectangle (x1, y1, x2-x1, y2-y1);
 		}
-		
-		
+
 		public Point Align(Point p)
 		{
 			double x = p.X;
 			double y = p.Y;
-			
+
 			this.Align (ref x, ref y);
+
+			return new Point (x, y);
+		}
+		
+		public Point Align(Point p, GridSnapping gridSnapping)
+		{
+			double x = p.X;
+			double y = p.Y;
+			
+			this.Align (ref x, ref y, gridSnapping);
 			
 			return new Point (x, y);
 		}
