@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
 using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets.Behaviors;
@@ -665,7 +666,7 @@ namespace Epsitec.Common.Widgets
 			return this.GetInternalPadding (this.Client.Size);
 		}
 
-		private Drawing.Margins GetInternalPadding(Drawing.Size size)
+		public Drawing.Margins GetInternalPadding(Drawing.Size size)
 		{
 			Drawing.Margins padding = this.margins;
 
@@ -785,6 +786,7 @@ namespace Epsitec.Common.Widgets
 					this.textFieldDisplayMode = TextFieldDisplayMode.OverriddenValue;
 				}
 
+				this.UpdateButtonVisibility ();
 				this.OnEditionStarted ();
 
 				return true;
@@ -809,6 +811,7 @@ namespace Epsitec.Common.Widgets
 				this.IsEditing = false;
 
 				this.OnEditionAccepted ();
+				this.UpdateButtonVisibility ();
 
 				this.SelectAll ();
 
@@ -830,6 +833,7 @@ namespace Epsitec.Common.Widgets
 				this.Text            = this.InitialText;
 				this.TextDisplayMode = this.InitialTextDisplayMode;
 
+				this.UpdateButtonVisibility ();
 				this.SelectAll ();
 
 				return true;
@@ -884,7 +888,7 @@ namespace Epsitec.Common.Widgets
 					return true;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+					throw new System.NotImplementedException (string.Format ("{0} not implemented.", this.DefocusAction.GetQualifiedName ()));
 			}
 		}
 
@@ -1221,6 +1225,26 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual bool ProcessMouseDown(Message message, Drawing.Point pos)
 		{
+			if (this.IsReadOnly == false)
+			{
+				//	Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
+				//	soit le type de gestion de focus actif (AutoFocus, etc.).
+
+				var window = this.Window;
+				var rootPos = this.MapClientToRoot (pos);
+
+				this.Focus ();
+
+				//	Focusing the widget might move it; if we do not adjust the click position
+				//	relative to the new widget position, then we will run into issues, such as
+				//	partial selection.
+				
+				window.ForceLayout ();
+				pos = this.MapRootToClient (rootPos);
+
+				message.CancelFocus = true;
+			}
+			
 			if (!message.IsRightButton)
 			{
 				this.navigator.ProcessMessage (message, pos);
@@ -1234,15 +1258,6 @@ namespace Epsitec.Common.Widgets
 			else
 			{
 				this.mouseDown = true;
-			}
-
-			if (this.IsReadOnly == false)
-			{
-				//	Un clic dans la ligne éditable doit mettre le focus sur celle-ci, quel que
-				//	soit le type de gestion de focus actif (AutoFocus, etc.).
-
-				this.Focus ();
-				message.CancelFocus = true;
 			}
 
 			if (this.IsModal)
@@ -1513,7 +1528,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("DefocusAction.{0} not implemented.", this.DefocusAction));
+					throw new System.NotImplementedException (string.Format ("{0} not implemented.", this.DefocusAction.GetQualifiedName ()));
 			}
 		}
 
@@ -2225,7 +2240,7 @@ namespace Epsitec.Common.Widgets
 					return this.HasEditedText;
 
 				default:
-					throw new System.NotImplementedException (string.Format ("ButtonShowCondition.{0} not implemented.", this.ButtonShowCondition));
+					throw new System.NotImplementedException (string.Format ("{0} not implemented.", this.ButtonShowCondition.GetQualifiedName ()));
 			}
 		}
 
