@@ -1607,6 +1607,11 @@ namespace Epsitec.Common.Widgets
 			this.UpdateButtonVisibility ();
 		}
 
+		protected override void OnContainsFocusChanged()
+		{
+			base.OnContainsFocusChanged ();
+		}
+
 
 		protected virtual void OnTextDeleted()
 		{

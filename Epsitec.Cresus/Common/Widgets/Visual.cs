@@ -1806,6 +1806,7 @@ namespace Epsitec.Common.Widgets
 				//	to how the focus inheritance has been defined :
 
 				that.SetValueBase (Visual.KeyboardFocusProperty, value);
+				Visual.NotifyKeyboardFocusChanged (that, !focus, focus);
 				that.RefreshFocus (focus);
 			}
 		}

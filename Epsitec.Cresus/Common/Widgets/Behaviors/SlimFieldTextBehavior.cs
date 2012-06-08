@@ -52,7 +52,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if ((bool)e.NewValue == true)
 			{
-				this.textFieldInEdition = true;
+				this.StartTextFieldEdition ();
 			}
 			else
 			{
@@ -62,7 +62,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextEditionStarted(object sender)
 		{
-			this.textFieldInEdition = true;
+			this.StartTextFieldEdition ();
 		}
 
 		private void HandleTextEditionAccepted(object sender)
@@ -93,6 +93,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				Parent = this.host,
 				Dock = DockStyle.Fill,
 				FormattedText = FormattedText.FromSimpleText (this.host.FieldText),
+				ButtonShowCondition = ButtonShowCondition.WhenKeyboardFocused
 			};
 
 			this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
@@ -115,6 +116,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.textFieldInEdition = false;
 			}
 		}
+
+		private void StartTextFieldEdition()
+		{
+			System.Diagnostics.Debug.Assert (this.textField != null);
+
+			this.textFieldInEdition = true;
+		}
+
 
 		private readonly SlimField				host;
 		private TextFieldEx						textField;
