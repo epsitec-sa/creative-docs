@@ -4,6 +4,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Epsitec.Common.Types;
+using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -21,6 +22,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		public void Dispose()
 		{
+			this.DisposeTextField ();
+
 			this.host.Entered   -= this.HandleHostEntered;
 			this.host.Exited    -= this.HandleHostExited;
 		}
@@ -42,7 +45,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.textFieldHilite = false;
 
-			if (this.textFieldInEdition == false)
+			if ((this.textFieldInEdition == false) &&
+				(this.host.ContainsKeyboardFocus == false))
 			{
 				this.DisposeTextField ();
 			}
@@ -56,7 +60,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 			else
 			{
-				this.HandleTextEditionEnded ();
+				this.StopTextFieldEdition ();
 			}
 		}
 
@@ -67,23 +71,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextEditionAccepted(object sender)
 		{
-			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-			this.HandleTextEditionEnded ();
+			this.StopTextFieldEdition ();
 		}
 
 		private void HandleTextEditionRejected(object sender)
 		{
-			this.HandleTextEditionEnded ();
+			this.StopTextFieldEdition ();
 		}
 
-		private void HandleTextEditionEnded()
+		private void HandleTextTextEdited(object sender)
 		{
-			this.textFieldInEdition = false;
-
-			if (this.textFieldHilite == false)
-			{
-				this.DisposeTextField ();
-			}
+			this.AdjustHostSize ();
 		}
 
 		private void CreateTextField()
@@ -93,13 +91,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 				Parent = this.host,
 				Dock = DockStyle.Fill,
 				FormattedText = FormattedText.FromSimpleText (this.host.FieldText),
-				ButtonShowCondition = ButtonShowCondition.WhenKeyboardFocused
 			};
 
 			this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
 			this.textField.EditionStarted   += this.HandleTextEditionStarted;
 			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
+			this.textField.TextEdited      += this.HandleTextTextEdited;
 		}
 		
 		private void DisposeTextField()
@@ -110,6 +108,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.textField.EditionStarted   -= this.HandleTextEditionStarted;
 				this.textField.EditionAccepted  -= this.HandleTextEditionAccepted;
 				this.textField.EditionRejected  -= this.HandleTextEditionRejected;
+				this.textField.TextEdited      -= this.HandleTextTextEdited;
 				
 				this.textField.Dispose ();
 				this.textField = null;
@@ -121,9 +120,52 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			System.Diagnostics.Debug.Assert (this.textField != null);
 
-			this.textFieldInEdition = true;
+			if (this.textFieldInEdition == false)
+			{
+				this.textFieldInEdition = true;
+			}
+
+			this.AdjustHostSize ();
 		}
 
+		private void AdjustHostSize()
+		{
+			if (this.textFieldInEdition)
+			{
+				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+				
+				var size = this.host.GetBestFitSize ();
+				var padding = this.textField.GetInternalPadding ();
+				var width   = System.Math.Max (20, size.Width) + padding.Width - 2;
+
+				this.host.PreferredWidth = width;
+			}
+			else
+			{
+				this.host.UpdatePreferredSize ();
+			}
+		}
+
+		private void StopTextFieldEdition()
+		{
+			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+			
+			this.textFieldInEdition = false;
+
+			if ((this.textFieldHilite == false) &&
+				(this.host.ContainsKeyboardFocus == false))
+			{
+				this.DisposeTextField ();
+			}
+			else
+			{
+//				this.DisposeTextField ();
+//				this.CreateTextField ();
+				this.textField.SelectAll ();
+			}
+
+			this.AdjustHostSize ();
+		}
 
 		private readonly SlimField				host;
 		private TextFieldEx						textField;
