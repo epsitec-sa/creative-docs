@@ -210,7 +210,7 @@ namespace Epsitec.Common.Widgets
 			//? System.Diagnostics.Debug.Assert (this.HasEditedText || this.Text == this.accept_reject_behavior.InitialText);
 			
 			this.UpdateButtonEnable ();
-			this.UpdateButtonVisibility ();
+//			this.UpdateButtonVisibility ();
 		}
 
 		protected override void OnKeyboardFocusChanged(Types.DependencyPropertyChangedEventArgs e)
