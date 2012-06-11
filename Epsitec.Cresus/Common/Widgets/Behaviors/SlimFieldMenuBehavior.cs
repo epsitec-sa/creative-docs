@@ -11,12 +11,11 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	public sealed class SlimFieldMenuBehavior : System.IDisposable
+	public sealed class SlimFieldMenuBehavior : SlimFieldBehavior, System.IDisposable
 	{
 		public SlimFieldMenuBehavior(SlimField host)
+			: base (host)
 		{
-			this.host = host;
-			
 			this.host.MouseMove += this.HandleHostMouseMove;
 			this.host.Entered   += this.HandleHostEntered;
 			this.host.Exited    += this.HandleHostExited;
@@ -130,6 +129,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (item != null)
 			{
 				this.Select (item);
+				this.host.Focus ();
 			}
 		}
 
@@ -177,7 +177,5 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		public event EventHandler<SlimFieldMenuSelectionEventArgs>	Selecting;
 		public event EventHandler				Selected;
-
-		private readonly SlimField				host;
 	}
 }

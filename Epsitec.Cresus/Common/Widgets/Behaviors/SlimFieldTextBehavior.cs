@@ -8,14 +8,14 @@ using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
-	public class SlimFieldTextBehavior : System.IDisposable
+	public class SlimFieldTextBehavior : SlimFieldBehavior, System.IDisposable
 	{
 		public SlimFieldTextBehavior(SlimField host)
+			: base (host)
 		{
-			this.host = host;
-			
 			this.host.Entered   += this.HandleHostEntered;
 			this.host.Exited    += this.HandleHostExited;
+			this.host.IsFocusedChanged += this.HandleHostIsFocusedChanged;
 		}
 
 
@@ -86,6 +86,16 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.DisposeTextField ();
 		}
 
+		private void HandleHostIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
+		{
+			if ((bool) e.NewValue == true)
+			{
+				this.DisposeTextField ();
+				this.CreateTextField ();
+				this.textField.Focus ();
+			}
+		}
+
 		private void HandleTextIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
 		{
 			if ((bool)e.NewValue == true)
@@ -125,8 +135,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 				Parent = this.host,
 				Dock = DockStyle.Fill,
 				FormattedText = FormattedText.FromSimpleText (this.host.FieldText),
+				DefocusAction = DefocusAction.Modal,
 			};
 
+			this.textField.SelectAll ();
+			
 			this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
 			this.textField.EditionStarted   += this.HandleTextEditionStarted;
 			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
@@ -158,7 +171,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void StopTextFieldEdition()
 		{
-			System.Diagnostics.Debug.Assert (this.textField != null);
+			if (this.textField == null)
+			{
+				return;
+			}
 
 			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 
@@ -192,7 +208,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 
-		private readonly SlimField				host;
 		private TextFieldEx						textField;
 		private bool							textFieldHilite;
 	}

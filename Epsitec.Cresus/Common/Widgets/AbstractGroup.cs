@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
@@ -23,6 +23,14 @@ namespace Epsitec.Common.Widgets
 		{
 			this.SetEmbedder(embedder);
 		}
+
+		public override TabNavigationMode DefaultTabNavigationMode
+		{
+			get
+			{
+				return TabNavigationMode.ForwardTabPassive;
+			}
+		}
 		
 		public override TabNavigationMode		TabNavigationMode
 		{
@@ -35,8 +43,15 @@ namespace Epsitec.Common.Widgets
 				//	Un groupe transmet toujours les pressions de TAB à ses enfants
 				//	sans les consommer lui-même; c'est pourquoi on rajoute les deux
 				//	bits ci-dessous :
-				
-				this.SetTabNavigation (value | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
+
+				if (value == TabNavigationMode.None)
+				{
+					this.SetTabNavigation (value);
+				}
+				else
+				{
+					this.SetTabNavigation (value | TabNavigationMode.ForwardToChildren | TabNavigationMode.ForwardOnly);
+				}
 			}
 		}
 		

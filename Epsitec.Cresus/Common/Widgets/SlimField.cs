@@ -15,6 +15,8 @@ namespace Epsitec.Common.Widgets
 	{
 		public SlimField()
 		{
+			this.InternalState |= WidgetInternalState.Focusable;
+			
 			this.menuItems = new List<SlimFieldMenuItem> ();
 		}
 
@@ -102,6 +104,25 @@ namespace Epsitec.Common.Widgets
 				case SlimFieldDisplayMode.Menu:
 					this.PaintMenu (graphics);
 					break;
+			}
+		}
+
+		protected override void PaintForegroundImplementation(Graphics graphics, Rectangle clipRect)
+		{
+			var bounds = this.Client.Bounds;
+
+			this.PaintFocusRectangle (graphics, bounds);
+		}
+
+		private void PaintFocusRectangle(Graphics graphics, Rectangle bounds)
+		{
+			if ((this.IsFocused) ||
+				(this.ContainsKeyboardFocus))
+			{
+				graphics.LineJoin = JoinStyle.Miter;
+				graphics.LineWidth = 1.0;
+				graphics.AddRectangle (Rectangle.Deflate (bounds, 0.5, 0.5));
+				graphics.RenderSolid (SlimField.Colors.FocusColor);
 			}
 		}
 
@@ -286,6 +307,7 @@ namespace Epsitec.Common.Widgets
 		{
 			public static readonly Color		BackColor  = Color.FromHexa ("ffffff");
 			public static readonly Color		LabelColor = Color.FromHexa ("3399ff");
+			public static readonly Color		FocusColor = Color.FromHexa ("3399ff");
 			public static readonly Color		TextColor  = Color.FromHexa ("000000");
 		}
 

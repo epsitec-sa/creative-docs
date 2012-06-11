@@ -1184,6 +1184,7 @@
     <Compile Include="Widgets\Behaviors\DragBehavior.cs" />
     <Compile Include="Widgets\Behaviors\IDragBehaviorHost.cs" />
     <Compile Include="Widgets\Behaviors\MenuBehavior.cs" />
+    <Compile Include="Widgets\Behaviors\SlimFieldBehavior.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldMenuBehavior.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldMenuSelectionEventArgs.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldTextBehavior.cs" />

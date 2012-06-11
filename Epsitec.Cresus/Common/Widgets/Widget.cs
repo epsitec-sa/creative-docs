@@ -816,18 +816,28 @@ namespace Epsitec.Common.Widgets
 				if (this.TabIndex != value)
 				{
 					this.SetValue (Widget.TabIndexProperty, value);
+
+					var defaultMode = this.DefaultTabNavigationMode;
 					
 					if ((this.TabNavigationMode == TabNavigationMode.None) &&
 						(value > 0))
 					{
-						this.TabNavigationMode = TabNavigationMode.ActivateOnTab;
+						this.TabNavigationMode = defaultMode;
 					}
-					else if ((this.TabNavigationMode == TabNavigationMode.ActivateOnTab) &&
+					else if ((this.TabNavigationMode == defaultMode) &&
 						/**/ (value <= 0))
 					{
 						this.TabNavigationMode = TabNavigationMode.None;
 					}
 				}
+			}
+		}
+
+		public virtual TabNavigationMode			DefaultTabNavigationMode
+		{
+			get
+			{
+				return TabNavigationMode.ActivateOnTab;
 			}
 		}
 		
