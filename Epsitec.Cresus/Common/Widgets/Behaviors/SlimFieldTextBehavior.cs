@@ -49,6 +49,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 		
+		
 		#region IDisposable Members
 
 		public void Dispose()
@@ -61,6 +62,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		#endregion
 
+		
 		private void HandleHostEntered(object sender, MessageEventArgs e)
 		{
 			if (this.HasFocus || this.HasButtons)
@@ -125,9 +127,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextTextEdited(object sender)
 		{
-			this.AdjustHostSize ();
+			this.AdjustGeometry ();
 		}
 
+		
 		private void CreateTextField()
 		{
 			this.textField = new TextFieldEx (TextFieldStyle.Flat)
@@ -144,9 +147,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.textField.EditionStarted   += this.HandleTextEditionStarted;
 			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
-			this.textField.TextEdited      += this.HandleTextTextEdited;
+			this.textField.TextEdited       += this.HandleTextTextEdited;
 
-			this.AdjustHostSize ();
+			this.AdjustGeometry ();
 		}
 		
 		private void DisposeTextField()
@@ -157,18 +160,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.textField.EditionStarted   -= this.HandleTextEditionStarted;
 				this.textField.EditionAccepted  -= this.HandleTextEditionAccepted;
 				this.textField.EditionRejected  -= this.HandleTextEditionRejected;
-				this.textField.TextEdited      -= this.HandleTextTextEdited;
+				this.textField.TextEdited       -= this.HandleTextTextEdited;
 				
 				this.textField.Dispose ();
 				this.textField = null;
 			}
 		}
 
+		
 		private void StartTextFieldEdition()
 		{
 			System.Diagnostics.Debug.Assert (this.textField != null);
 
-			this.AdjustHostSize ();
+			this.AdjustGeometry ();
 		}
 
 		private void StopTextFieldEdition()
@@ -189,28 +193,33 @@ namespace Epsitec.Common.Widgets.Behaviors
 				this.DisposeTextField ();
 			}
 
-			this.AdjustHostSize ();
+			this.AdjustGeometry ();
 		}
 
-		private void AdjustHostSize()
+		
+		private void AdjustGeometry()
 		{
 			if (this.textField != null)
 			{
 				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 			}
 				
-			var size    = this.host.MeasureWidth (SlimFieldDisplayMode.TextOnly);
-			var prefix  = this.host.MeasureWidth (SlimFieldDisplayMode.TextPrefix) + 1;
-			var suffix  = this.host.MeasureWidth (SlimFieldDisplayMode.TextSuffix);
-			var total   = this.host.MeasureWidth (SlimFieldDisplayMode.Text);
+			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
+			var total = this.host.MeasureWidth (SlimFieldDisplayMode.Text);
 
 			if (this.HasFocus)
 			{
-				total += System.Math.Max (20, size) - size;
+				total += System.Math.Max (20, width) - width;
 			}
 
-			System.Diagnostics.Debug.WriteLine ("HasButtons: {0} HasFocus: {1} total: {2}", this.HasButtons, this.HasFocus, total);
+			this.AdjustHostPreferredWidth (total);
+			this.AdjustTextFieldMargins ();
 			
+			this.host.Invalidate ();
+		}
+
+		private void AdjustHostPreferredWidth(double total)
+		{
 			if (this.HasButtons)
 			{
 				var padding = this.textField.GetInternalPadding ();
@@ -222,21 +231,28 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				this.host.PreferredWidth = System.Math.Ceiling (total);
 			}
-
-			if (this.textField != null)
+		}
+		
+		private void AdjustTextFieldMargins()
+		{
+			if (this.textField == null)
 			{
-				//	We do not want to round the position, or else we would see the text move
-				//	a little bit horizontally whenever the slim field is being hovered:
-
-				double left  = prefix;
-				double right = suffix;
-
-				this.textField.Margins = new Margins (left, right, 0, 0);
+				return;
 			}
 
-			this.host.Invalidate ();
-		}
+			var prefix = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextPrefix) + 1;
+			var suffix = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextSuffix);
+			
+			//	We do not want to round the position, or else we would see the text move
+			//	a little bit horizontally whenever the slim field is being hovered:
 
+			double left  = prefix;
+			double right = suffix;
+
+			this.textField.Margins = new Margins (left, right, 0, 0);
+		}
+		
+		
 		private TextFieldEx						textField;
 		private bool							textFieldHilite;
 	}

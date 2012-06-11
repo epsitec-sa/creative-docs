@@ -215,7 +215,7 @@ namespace Epsitec.Common.Widgets
 					width += SlimField.Fonts.LabelFont.GetTextAdvance (this.FieldLabel) * Font.DefaultFontSize;
 					break;
 
-				case SlimFieldDisplayMode.TextOnly:
+				case SlimFieldDisplayMode.MeasureTextOnly:
 					width += SlimField.Fonts.TextFont.GetTextAdvance (this.FieldText) * Font.DefaultFontSize;
 					break;
 
@@ -225,11 +225,11 @@ namespace Epsitec.Common.Widgets
 					width += SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldSuffix) * Font.DefaultFontSize;
 					break;
 
-				case SlimFieldDisplayMode.TextPrefix:
+				case SlimFieldDisplayMode.MeasureTextPrefix:
 					width = SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldPrefix) * Font.DefaultFontSize;
 					break;
 
-				case SlimFieldDisplayMode.TextSuffix:
+				case SlimFieldDisplayMode.MeasureTextSuffix:
 					width = SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldSuffix) * Font.DefaultFontSize;
 					break;
 
