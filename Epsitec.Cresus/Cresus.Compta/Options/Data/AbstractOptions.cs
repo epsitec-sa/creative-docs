@@ -181,11 +181,23 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			return this.ViewGraph             == other.ViewGraph             &&
-				   this.ComparisonEnable      == other.ComparisonEnable      &&
-				   this.ComparisonShowed      == other.ComparisonShowed      &&
-				   this.ComparisonDisplayMode == other.ComparisonDisplayMode &&
-				   this.graphOptions.CompareTo (other.graphOptions);
+			if (this.ViewGraph        != other.ViewGraph        ||
+				this.ComparisonEnable != other.ComparisonEnable ||
+				!this.graphOptions.CompareTo (other.graphOptions))
+			{
+				return false;
+			}
+
+			if (this.ComparisonEnable)
+			{
+				if (this.ComparisonShowed      != other.ComparisonShowed      ||
+					this.ComparisonDisplayMode != other.ComparisonDisplayMode)
+				{
+					return false;
+				}
+			}
+
+			return true;
 		}
 
 

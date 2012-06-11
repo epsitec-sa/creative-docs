@@ -631,8 +631,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 					this.reloadButton.Enable = isModified;
 					this.saveButton.Enable   = isModified && !viewSettings.Readonly;
 				}
-
-				this.panelsToolbarController.OptionsEnable = this.reloadButton.Enable;
 			}
 		}
 

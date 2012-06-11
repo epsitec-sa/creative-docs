@@ -871,6 +871,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					this.viewSettingsController.PanelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
 				}
+
+				if (this.dataAccessor.Options != null)
+				{
+					this.viewSettingsController.PanelsToolbarController.OptionsEnable = !this.dataAccessor.Options.IsEmpty;
+				}
 			}
 		}
 		#endregion
