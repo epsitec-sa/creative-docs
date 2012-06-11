@@ -68,7 +68,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Size GetBestFitSize()
 		{
-			var width  = System.Math.Ceiling (this.MeasureWidth ());
+			var width  = System.Math.Ceiling (this.MeasureWidth (this.DisplayMode));
 			var height = System.Math.Ceiling (Font.DefaultFontSize * 1.2 + 2 * SlimField.MarginY);
 
 			return new Size (width, height);
@@ -204,21 +204,33 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private double MeasureWidth()
+		public double MeasureWidth(SlimFieldDisplayMode displayMode)
 		{
 			double width = 2 * SlimField.MarginX;
 
-			switch (this.DisplayMode)
+			switch (displayMode)
 			{
 				case SlimFieldDisplayMode.Label:
 					width += 6;
 					width += SlimField.Fonts.LabelFont.GetTextAdvance (this.FieldLabel) * Font.DefaultFontSize;
 					break;
 
+				case SlimFieldDisplayMode.TextOnly:
+					width += SlimField.Fonts.TextFont.GetTextAdvance (this.FieldText) * Font.DefaultFontSize;
+					break;
+
 				case SlimFieldDisplayMode.Text:
 					width += SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldPrefix) * Font.DefaultFontSize;
 					width += SlimField.Fonts.TextFont.GetTextAdvance (this.FieldText) * Font.DefaultFontSize;
 					width += SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldSuffix) * Font.DefaultFontSize;
+					break;
+
+				case SlimFieldDisplayMode.TextPrefix:
+					width = SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldPrefix) * Font.DefaultFontSize;
+					break;
+
+				case SlimFieldDisplayMode.TextSuffix:
+					width = SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldSuffix) * Font.DefaultFontSize;
 					break;
 
 				case SlimFieldDisplayMode.Menu:

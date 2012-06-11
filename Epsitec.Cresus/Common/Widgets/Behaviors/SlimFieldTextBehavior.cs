@@ -130,7 +130,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void CreateTextField()
 		{
-			this.textField = new TextFieldEx ()
+			this.textField = new TextFieldEx (TextFieldStyle.Flat)
 			{
 				Parent = this.host,
 				Dock = DockStyle.Fill,
@@ -145,6 +145,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
 			this.textField.TextEdited      += this.HandleTextTextEdited;
+
+			this.AdjustHostSize ();
 		}
 		
 		private void DisposeTextField()
@@ -192,20 +194,47 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void AdjustHostSize()
 		{
-			if (this.HasButtons)
+			if (this.textField != null)
 			{
 				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+			}
 				
-				var size    = this.host.GetBestFitSize ();
-				var padding = this.textField.GetInternalPadding ();
-				var width   = System.Math.Max (20, size.Width) + padding.Width - 2;
+			var size    = this.host.MeasureWidth (SlimFieldDisplayMode.TextOnly);
+			var prefix  = this.host.MeasureWidth (SlimFieldDisplayMode.TextPrefix) + 1;
+			var suffix  = this.host.MeasureWidth (SlimFieldDisplayMode.TextSuffix);
+			var total   = this.host.MeasureWidth (SlimFieldDisplayMode.Text);
 
-				this.host.PreferredWidth = width;
+			if (this.HasFocus)
+			{
+				total += System.Math.Max (20, size) - size;
+			}
+
+			System.Diagnostics.Debug.WriteLine ("HasButtons: {0} HasFocus: {1} total: {2}", this.HasButtons, this.HasFocus, total);
+			
+			if (this.HasButtons)
+			{
+				var padding = this.textField.GetInternalPadding ();
+				var width   = total + padding.Width - 1;
+
+				this.host.PreferredWidth = System.Math.Ceiling (width);
 			}
 			else
 			{
-				this.host.UpdatePreferredSize ();
+				this.host.PreferredWidth = System.Math.Ceiling (total);
 			}
+
+			if (this.textField != null)
+			{
+				//	We do not want to round the position, or else we would see the text move
+				//	a little bit horizontally whenever the slim field is being hovered:
+
+				double left  = prefix;
+				double right = suffix;
+
+				this.textField.Margins = new Margins (left, right, 0, 0);
+			}
+
+			this.host.Invalidate ();
 		}
 
 		private TextFieldEx						textField;

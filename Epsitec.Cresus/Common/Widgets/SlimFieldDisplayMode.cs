@@ -7,6 +7,9 @@ namespace Epsitec.Common.Widgets
 	{
 		Label,
 		Text,
+		TextOnly,
+		TextPrefix,
+		TextSuffix,
 		Menu,
 	}
 }

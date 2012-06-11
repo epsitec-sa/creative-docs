@@ -828,10 +828,10 @@ namespace Epsitec.Common.Widgets
 			{
 				this.IsEditing = false;
 
-				this.OnEditionRejected ();
-
 				this.Text            = this.InitialText;
 				this.TextDisplayMode = this.InitialTextDisplayMode;
+
+				this.OnEditionRejected ();
 
 				this.UpdateButtonVisibility ();
 				this.SelectAll ();

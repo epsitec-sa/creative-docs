@@ -17,18 +17,25 @@ namespace Epsitec.Common.Widgets
 	public class TextFieldEx : TextField
 	{
 		public TextFieldEx()
+			: this (TextFieldStyle.Normal)
+		{
+		}
+
+		public TextFieldEx(TextFieldStyle style)
+			: base (style)
 		{
 			this.acceptRejectBehavior = new AcceptRejectBehavior (this);
 			this.acceptRejectBehavior.CreateButtons ();
-			
+
 			this.acceptRejectBehavior.RejectClicked += this.HandleAcceptRejectRejectClicked;
 			this.acceptRejectBehavior.AcceptClicked += this.HandleAcceptRejectAcceptClicked;
-			
+
 			this.DefocusAction       = DefocusAction.None;
 			this.ButtonShowCondition = ButtonShowCondition.WhenModified;
 		}
 		
-		public TextFieldEx(Widget embedder) : this ()
+		public TextFieldEx(Widget embedder)
+			: this ()
 		{
 			this.SetEmbedder (embedder);
 		}

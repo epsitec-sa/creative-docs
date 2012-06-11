@@ -129,8 +129,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 			if (item != null)
 			{
 				this.Select (item);
-				this.host.Focus ();
 			}
+			
+			this.host.Focus ();
 		}
 
 		private void UpdateMenuItemHilite(Point pos)

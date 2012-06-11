@@ -14,6 +14,12 @@ namespace Epsitec.Common.Widgets
 		/// Initializes a new instance of the <see cref="TextField"/> class.
 		/// </summary>
 		public TextField()
+			: this (TextFieldStyle.Normal)
+		{
+		}
+
+		public TextField(TextFieldStyle style)
+			: base (style)
 		{
 		}
 
