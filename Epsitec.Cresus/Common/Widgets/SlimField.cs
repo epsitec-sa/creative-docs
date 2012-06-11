@@ -16,6 +16,7 @@ namespace Epsitec.Common.Widgets
 		public SlimField()
 		{
 			this.InternalState |= WidgetInternalState.Focusable;
+			this.PreferredHeight = 17;
 			
 			this.menuItems = new List<SlimFieldMenuItem> ();
 		}

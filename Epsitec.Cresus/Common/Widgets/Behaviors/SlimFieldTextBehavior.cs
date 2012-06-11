@@ -1,10 +1,12 @@
 //	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
+using Epsitec.Common.Support;
+using Epsitec.Common.Types;
+
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Common.Types;
-using Epsitec.Common.Drawing;
 
 namespace Epsitec.Common.Widgets.Behaviors
 {
@@ -62,7 +64,28 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		#endregion
 
-		
+
+		public AbstractTextField GetTextField()
+		{
+			return this.textField;
+		}
+
+		public void UpdatePreferredSize()
+		{
+			this.AdjustGeometry ();
+		}
+
+		protected virtual void OnTextEditionStarted()
+		{
+			this.TextEditionStarted.Raise (this);
+		}
+
+		protected virtual void OnTextEditionEnded()
+		{
+			this.TextEditionEnded.Raise (this);
+		}
+
+
 		private void HandleHostEntered(object sender, MessageEventArgs e)
 		{
 			if (this.HasFocus || this.HasButtons)
@@ -72,14 +95,10 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.DisposeTextField ();
 			this.CreateTextField ();
-			
-			this.textFieldHilite = true;
 		}
 
 		private void HandleHostExited(object sender, MessageEventArgs e)
 		{
-			this.textFieldHilite = false;
-
 			if (this.HasFocus || this.HasButtons)
 			{
 				return;
@@ -113,6 +132,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		private void HandleTextEditionStarted(object sender)
 		{
 			this.StartTextFieldEdition ();
+			this.TransitionToState (EditionState.Started);
 		}
 
 		private void HandleTextEditionAccepted(object sender)
@@ -127,6 +147,9 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextTextEdited(object sender)
 		{
+			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+			
+			this.TransitionToState (EditionState.Edited);
 			this.AdjustGeometry ();
 		}
 
@@ -139,6 +162,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 				Dock = DockStyle.Fill,
 				FormattedText = FormattedText.FromSimpleText (this.host.FieldText),
 				DefocusAction = DefocusAction.Modal,
+				SwallowEscapeOnRejectEdition = true,
+				SwallowReturnOnAcceptEdition = true,
 			};
 
 			this.textField.SelectAll ();
@@ -184,6 +209,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 
+			this.TransitionToState (EditionState.Inactive);
+
 			if (this.HasFocus || this.HasButtons)
 			{
 				this.textField.SelectAll ();
@@ -201,7 +228,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			if (this.textField != null)
 			{
-				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+//-				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 			}
 				
 			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
@@ -251,9 +278,55 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			this.textField.Margins = new Margins (left, right, 0, 0);
 		}
+
+		private void TransitionToState(EditionState newState)
+		{
+			var oldState = this.textFieldEditionState;
+
+			if (newState == oldState)
+			{
+				return;
+			}
+
+			this.textFieldEditionState = newState;
+
+			switch (newState)
+			{
+				case EditionState.Inactive:
+					this.OnTextEditionEnded ();
+					break;
+				
+				case EditionState.Started:
+					this.OnTextEditionStarted ();
+					break;
+
+				case EditionState.Edited:
+					if (oldState != EditionState.Started)
+					{
+						this.OnTextEditionStarted ();
+					}
+					break;
+			}
+		}
+
+
+		#region EditionState Enum
+
+		private enum EditionState
+		{
+			Inactive,
+			Started,
+			Edited,
+		}
+
+		#endregion
+
+
+		public event EventHandler				TextEditionStarted;
+		public event EventHandler				TextEditionEnded;
 		
 		
 		private TextFieldEx						textField;
-		private bool							textFieldHilite;
+		private EditionState					textFieldEditionState;
 	}
 }

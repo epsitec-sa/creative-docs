@@ -444,6 +444,7 @@
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy`1.cs" />
+    <Compile Include="Support\EventHandler`2.cs" />
     <Compile Include="Support\Extensions\EnumExtensions.cs" />
     <Compile Include="Support\Extensions\MemberInfoExtensions.cs" />
     <Compile Include="Support\Extensions\TypeExtensions.cs" />
@@ -1245,6 +1246,7 @@
     <Compile Include="Widgets\SlimField.cs" />
     <Compile Include="Widgets\SlimFieldDisplayMode.cs" />
     <Compile Include="Widgets\SlimFieldMenuItem.cs" />
+    <Compile Include="Widgets\SlimFieldMenuItem`1.cs" />
     <Compile Include="Widgets\SlimFieldMenuItemCommand.cs" />
     <Compile Include="Widgets\SlimFieldMenuItemCommandCode.cs" />
     <Compile Include="Widgets\SlimFieldMenuItemHilite.cs" />
