@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -136,7 +136,11 @@ namespace Epsitec.Common.Widgets
 		
 		protected override void UpdateButtonGeometry()
 		{
-			if (this.acceptRejectBehavior != null)
+			if (this.acceptRejectBehavior == null)
+			{
+				this.margins.Right = 0;
+			}
+			else
 			{
 				this.margins.Right = this.acceptRejectBehavior.DefaultWidth;
 				this.acceptRejectBehavior.UpdateButtonGeometry ();

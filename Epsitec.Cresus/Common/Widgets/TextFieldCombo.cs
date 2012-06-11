@@ -221,7 +221,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		protected override bool ComputeButtonVisibility()
+		public override bool ComputeButtonVisibility()
 		{
 			if (base.ComputeButtonVisibility ())
 			{

@@ -2220,7 +2220,7 @@ namespace Epsitec.Common.Widgets
 		{
 		}
 
-		protected virtual bool ComputeButtonVisibility()
+		public virtual bool ComputeButtonVisibility()
 		{
 			switch (this.ButtonShowCondition)
 			{

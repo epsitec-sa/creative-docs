@@ -17,6 +17,37 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.host.Entered   += this.HandleHostEntered;
 			this.host.Exited    += this.HandleHostExited;
 		}
+
+
+		public bool								HasFocus
+		{
+			get
+			{
+				if (this.textField == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.textField.IsFocused;
+				}
+			}
+		}
+
+		public bool								HasButtons
+		{
+			get
+			{
+				if (this.textField == null)
+				{
+					return false;
+				}
+				else
+				{
+					return this.textField.ComputeButtonVisibility ();
+				}
+			}
+		}
 		
 		#region IDisposable Members
 
@@ -32,11 +63,13 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleHostEntered(object sender, MessageEventArgs e)
 		{
-			if (this.textFieldInEdition == false)
+			if (this.HasFocus || this.HasButtons)
 			{
-				this.DisposeTextField ();
-				this.CreateTextField ();
+				return;
 			}
+			
+			this.DisposeTextField ();
+			this.CreateTextField ();
 			
 			this.textFieldHilite = true;
 		}
@@ -45,11 +78,12 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.textFieldHilite = false;
 
-			if ((this.textFieldInEdition == false) &&
-				(this.host.ContainsKeyboardFocus == false))
+			if (this.HasFocus || this.HasButtons)
 			{
-				this.DisposeTextField ();
+				return;
 			}
+			
+			this.DisposeTextField ();
 		}
 
 		private void HandleTextIsFocusedChanged(object sender, DependencyPropertyChangedEventArgs e)
@@ -112,7 +146,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				this.textField.Dispose ();
 				this.textField = null;
-				this.textFieldInEdition = false;
 			}
 		}
 
@@ -120,9 +153,22 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			System.Diagnostics.Debug.Assert (this.textField != null);
 
-			if (this.textFieldInEdition == false)
+			this.AdjustHostSize ();
+		}
+
+		private void StopTextFieldEdition()
+		{
+			System.Diagnostics.Debug.Assert (this.textField != null);
+
+			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
+
+			if (this.HasFocus || this.HasButtons)
 			{
-				this.textFieldInEdition = true;
+				this.textField.SelectAll ();
+			}
+			else
+			{
+				this.DisposeTextField ();
 			}
 
 			this.AdjustHostSize ();
@@ -130,11 +176,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void AdjustHostSize()
 		{
-			if (this.textFieldInEdition)
+			if (this.HasButtons)
 			{
 				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 				
-				var size = this.host.GetBestFitSize ();
+				var size    = this.host.GetBestFitSize ();
 				var padding = this.textField.GetInternalPadding ();
 				var width   = System.Math.Max (20, size.Width) + padding.Width - 2;
 
@@ -146,30 +192,8 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 
-		private void StopTextFieldEdition()
-		{
-			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-			
-			this.textFieldInEdition = false;
-
-			if ((this.textFieldHilite == false) &&
-				(this.host.ContainsKeyboardFocus == false))
-			{
-				this.DisposeTextField ();
-			}
-			else
-			{
-//				this.DisposeTextField ();
-//				this.CreateTextField ();
-				this.textField.SelectAll ();
-			}
-
-			this.AdjustHostSize ();
-		}
-
 		private readonly SlimField				host;
 		private TextFieldEx						textField;
-		private bool							textFieldInEdition;
 		private bool							textFieldHilite;
 	}
 }
