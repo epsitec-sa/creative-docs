@@ -194,9 +194,6 @@ namespace Epsitec.Cresus.DebugViewer
 			var b4 = new SlimFieldMenuBehavior (slim4);
 			var b5 = new SlimFieldTextBehavior (slim5);
 			
-			b1.Selected += _ => slim1.FieldText = b1.GetSelectedItem ().Text;
-			b4.Selected += _ => slim4.FieldText = b4.GetSelectedItem ().Text;
-
 			dialog.ShowDialog ();
 			System.Environment.Exit (0);
 

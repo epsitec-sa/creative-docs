@@ -40,15 +40,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			bool changed = false;
 
-			var e = new SlimFieldMenuSelectionEventArgs (item);
-
-			this.OnSelecting (e);
-
-			if (e.Cancel)
-			{
-				return;
-			}
-
 			if (item.ExecuteCommand (this))
 			{
 				return;
@@ -73,6 +64,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			if (changed)
 			{
+				this.host.FieldText = item.Text;
 				this.OnSelected ();
 				this.host.Invalidate ();
 			}
@@ -88,11 +80,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		public SlimFieldMenuItem GetSelectedItem()
 		{
 			return this.host.MenuItems.FirstOrDefault (x => x.Active == ActiveState.Yes);
-		}
-
-		private void OnSelecting(SlimFieldMenuSelectionEventArgs e)
-		{
-			this.Selecting.Raise (this, e);
 		}
 
 		private void OnSelected()
@@ -181,7 +168,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 
 
-		public event EventHandler<SlimFieldMenuSelectionEventArgs>	Selecting;
 		public event EventHandler				Selected;
 	}
 }
