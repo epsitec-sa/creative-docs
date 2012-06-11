@@ -178,8 +178,6 @@ namespace Epsitec.Common.Widgets
 			x = geom.Origin.X;
 			y = geom.Origin.Y;
 
-			graphics.Color = SlimField.Colors.TextColor;
-
 			foreach (var tuple in this.GetMenuItemFontTextTuples ())
 			{
 				var font    = tuple.Item1;
@@ -187,7 +185,9 @@ namespace Epsitec.Common.Widgets
 				var item    = tuple.Item3;
 				var hilite  = item == null ? SlimFieldMenuItemHilite.None : item.Hilite;
 				var advance = font.GetTextAdvance (text) * Font.DefaultFontSize;
+				var color   = item == null ? SlimField.Colors.TextColor : item.Enable == EnableState.Enabled ? SlimField.Colors.TextColor : SlimField.Colors.DisabledColor;
 
+				graphics.Color = color;
 				graphics.PaintText (x, y, width, height, text, font, Font.DefaultFontSize, Drawing.ContentAlignment.BaselineLeft);
 
 				if ((hilite == SlimFieldMenuItemHilite.Underline) &&
@@ -196,7 +196,7 @@ namespace Epsitec.Common.Widgets
 					graphics.LineCap = CapStyle.Butt;
 					graphics.LineWidth = 1.0;
 					graphics.AddLine (x, y - 1.5, x + advance, y - 1.5);
-					graphics.RenderSolid (SlimField.Colors.TextColor);
+					graphics.RenderSolid (color);
 				}
 
 				x     += advance;
@@ -317,10 +317,11 @@ namespace Epsitec.Common.Widgets
 
 		private static class Colors
 		{
-			public static readonly Color		BackColor  = Color.FromHexa ("ffffff");
-			public static readonly Color		LabelColor = Color.FromHexa ("3399ff");
-			public static readonly Color		FocusColor = Color.FromHexa ("3399ff");
-			public static readonly Color		TextColor  = Color.FromHexa ("000000");
+			public static readonly Color		BackColor     = Color.FromHexa ("ffffff");
+			public static readonly Color		LabelColor    = Color.FromHexa ("3399ff");
+			public static readonly Color		FocusColor    = Color.FromHexa ("3399ff");
+			public static readonly Color		TextColor     = Color.FromHexa ("000000");
+			public static readonly Color		DisabledColor = Color.FromHexa ("cccccc");
 		}
 
 		private static class Fonts

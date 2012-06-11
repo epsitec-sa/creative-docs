@@ -5,10 +5,15 @@ namespace Epsitec.Common.Widgets
 {
 	public class SlimFieldMenuItem
 	{
-		public SlimFieldMenuItem(string text, ActiveState active = ActiveState.No, SlimFieldMenuItemStyle style = SlimFieldMenuItemStyle.Value, SlimFieldMenuItemHilite hilite = SlimFieldMenuItemHilite.None)
+		public SlimFieldMenuItem(string text,
+			/**/				 ActiveState active = ActiveState.No,
+			/**/				 EnableState enable = EnableState.Enabled,
+			/**/				 SlimFieldMenuItemStyle style = SlimFieldMenuItemStyle.Value,
+			/**/				 SlimFieldMenuItemHilite hilite = SlimFieldMenuItemHilite.None)
 		{
 			this.Text   = text;
 			this.Active = active;
+			this.Enable = enable;
 			this.Style  = style;
 			this.Hilite = hilite;
 		}
@@ -21,6 +26,12 @@ namespace Epsitec.Common.Widgets
 		}
 
 		public ActiveState						Active
+		{
+			get;
+			set;
+		}
+
+		public EnableState						Enable
 		{
 			get;
 			set;

@@ -145,6 +145,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			foreach (var item in this.host.MenuItems)
 			{
+				if (item.Enable != EnableState.Enabled)
+				{
+					continue;
+				}
+
 				if ((item == hitItem) &&
 					(item.Hilite != SlimFieldMenuItemHilite.Underline))
 				{
