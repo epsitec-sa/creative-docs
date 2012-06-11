@@ -638,7 +638,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				if (this.tabLook == TabLook.Simple)
 				{
 					graphics.AddFilledPath (path);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
+					graphics.RenderSolid (backColor);
 				}
 				else
 				{
@@ -647,44 +647,11 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 					var p = this.GetTabPath (rect, new Margins (1.5, 1.5, 1.5, 0), selected);
 					graphics.AddFilledPath (p);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
+					graphics.RenderSolid (backColor);
 				}
 			}
 			else if (state == TabState.Selected)
 			{
-#if false
-				var selColor = UIBuilder.SelectionColor;
-				if (!backColor.IsEmpty)
-				{
-					selColor = Color.FromHsv (backColor.Hue, 0.3, 0.7);
-				}
-
-				graphics.AddFilledPath (path);
-				graphics.RenderSolid (selColor);
-
-				Margins m;
-				if (this.tabLook == TabLook.OneNote)
-				{
-					m = new Margins (2.5, 1.5, 2.5, -2.5);
-				}
-				else
-				{
-					m = new Margins (2.5, 2.5, 2.5, -2.5);
-				}
-
-				if (backColor.IsEmpty)
-				{
-					var p = this.GetTabPath (rect, m, false);
-					graphics.AddFilledPath (p);
-					graphics.RenderSolid (this.selectionColor);
-				}
-				else
-				{
-					var p = this.GetTabPath (rect, m, false);
-					graphics.AddFilledPath (p);
-					graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.2, backColor), backColor);
-				}
-#else
 				if (backColor.IsEmpty)
 				{
 					graphics.AddFilledPath (path);
@@ -693,9 +660,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 				else
 				{
 					graphics.AddFilledPath (path);
-					graphics.PaintVerticalGradient (rect, Color.FromHsv (backColor.Hue, 0.1, 0.8), backColor);
+					graphics.RenderSolid (backColor);
 				}
-#endif
 			}
 			else if (state == TabState.MenuOpened)
 			{
@@ -733,14 +699,15 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (backColor.IsEmpty)
 				{
-					backColor = Color.FromBrightness (1.0);
+					backColor = this.Parent.BackColor;
+				}
+				else
+				{
+					backColor = Color.FromHsv (backColor.Hue, backColor.Saturation*0.5, backColor.Value-0.1);
 				}
 
 				graphics.AddFilledPath (path);
 				graphics.RenderSolid (backColor);
-
-				graphics.AddFilledPath (path);
-				graphics.PaintVerticalGradient (rect, Color.FromAlphaColor (0.5, adorner.ColorBorder), Color.FromAlphaColor (0.0, adorner.ColorBorder));
 			}
 
 			//	Dessine le cadre.

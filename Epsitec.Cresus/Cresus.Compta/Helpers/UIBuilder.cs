@@ -406,10 +406,8 @@ namespace Epsitec.Cresus.Compta.Helpers
 		}
 
 
-		public static readonly Color TitleBarActiveTop			= Color.FromHexa ("8fb6d8");  // bleu
-		public static readonly Color TitleBarActiveBottom		= Color.FromHexa ("c7e5ff");  // bleu plus clair
-		public static readonly Color TitleBarDesactiveTop		= Color.FromHexa ("deecf9");  // gris
-		public static readonly Color TitleBarDesactiveBottom	= Color.FromHexa ("eeeeee");  // gris clair
+		public static readonly Color TitleBarActive				= Color.FromHexa ("c7e5ff");  // bleu
+		public static readonly Color TitleBarDesactive			= Color.FromHexa ("eeeeee");  // gris clair
 		public static readonly Color TitleBarCloseButtonBack	= Color.FromHexa ("e66c56");  // rouge
 		public static readonly Color TitleBarCloseButtonHilite	= Color.FromHexa ("f49786");  // rouge clair
 		public static readonly Color TitleBarMinMaxButtonHilite	= Color.FromHexa ("a8d1f0");  // bleu clair

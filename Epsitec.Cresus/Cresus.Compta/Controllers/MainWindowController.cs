@@ -10,8 +10,6 @@ using Epsitec.Common.Support;
 
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Dialogs;
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
 
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.IO;
@@ -115,7 +113,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreatePrésentationUI(Widget parent)
 		{
 			//	Crée la bande horizontale pour choisir la présentation, constituée de gros onglets avec les icônes des présentations.
-#if false
 			var frame = new FrameBox
 			{
 				Parent          = parent,
@@ -125,20 +122,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (-1, -1, 0, 0),
 				Padding         = new Margins (0, 0, 5, 0),
 			};
-#else
-			var frame = new GradientFrameBox
-			{
-				Parent              = parent,
-				PreferredHeight     = 44+5,
-				BackColor2          = UIBuilder.WindowBackColor1,
-				BackColor1          = UIBuilder.WindowBackColor2,
-				IsVerticalGradient  = true,
-				//?BottomPercentOffset = 1.0 - 0.25,  // ombre dans les 25% supérieurs
-				Dock                = DockStyle.Top,
-				Margins             = new Margins (-1, -1, 0, 0),
-				Padding             = new Margins (0, 0, 5, 0),
-			};
-#endif
 
 			//	Crée un petit gap.
 			new FrameBox

@@ -10,9 +10,6 @@ using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Controllers;
 
-using Epsitec.Cresus.Core.Widgets;
-using Epsitec.Cresus.Core.Widgets.Tiles;
-
 using System.Collections.Generic;
 using System.Linq;
 
@@ -44,10 +41,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Padding             = new Margins (0, 0, 0, 1),
 			};
 
-			this.gradientTitle = new GradientFrameBox
+			this.gradientTitle = new FrameBox
 			{
 				Parent              = titleBar,
-				IsVerticalGradient  = true,
 				Dock                = DockStyle.Fill,
 				Padding             = new Margins (5, 5, 0, 0),
 			};
@@ -290,16 +286,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.windowActivated)
 			{
-				this.gradientTitle.BackColor2 = UIBuilder.TitleBarActiveTop;
-				this.gradientTitle.BackColor1 = UIBuilder.TitleBarActiveBottom;
-
+				this.gradientTitle.BackColor = UIBuilder.TitleBarActive;
 				this.closeButton.BackColor = UIBuilder.TitleBarCloseButtonBack;
 			}
 			else
 			{
-				this.gradientTitle.BackColor2 = UIBuilder.TitleBarDesactiveTop;
-				this.gradientTitle.BackColor1 = UIBuilder.TitleBarDesactiveBottom;
-
+				this.gradientTitle.BackColor = UIBuilder.TitleBarDesactive;
 				this.closeButton.BackColor = Color.Empty;
 			}
 
@@ -336,7 +328,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly MainWindowController	mainWindowController;
 
 		private Window							window;
-		private GradientFrameBox				gradientTitle;
+		private FrameBox						gradientTitle;
 		private WindowButton					closeButton;
 		private WindowButton					maximizeButton;
 		private WindowButton					minimizeButton;
