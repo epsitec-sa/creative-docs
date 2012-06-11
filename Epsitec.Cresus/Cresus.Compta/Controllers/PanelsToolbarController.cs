@@ -37,8 +37,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.PanelButtonSoftHiliteColor);
 #endif
 
-			this.searchMarker = this.CreateMarker (this.searchButton);
-			this.filterMarker = this.CreateMarker (this.filterButton);
+			this.optionsMarker = this.CreateMarker (this.optionsButton);
+			this.filterMarker  = this.CreateMarker (this.filterButton);
+			this.searchMarker  = this.CreateMarker (this.searchButton);
 
 			this.optionsButton.Entered += delegate
 			{
@@ -94,6 +95,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 			set
 			{
 				this.filterMarker.Visibility = value;
+			}
+		}
+
+		public bool OptionsEnable
+		{
+			//	Indique si les options sont actives. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			get
+			{
+				return this.optionsMarker.Visibility;
+			}
+			set
+			{
+				this.optionsMarker.Visibility = value;
 			}
 		}
 
@@ -155,5 +169,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private StaticText						searchMarker;
 		private StaticText						filterMarker;
+		private StaticText						optionsMarker;
 	}
 }
