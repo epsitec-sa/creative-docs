@@ -32,9 +32,28 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(Widget parent)
 		{
-			this.tabsPane = new TabsPane
+			var frame = new FrameBox
 			{
 				Parent          = parent,
+				PreferredHeight = 44+5,
+				BackColor       = UIBuilder.WindowBackColor2,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (-1, -1, 0, 0),
+				Padding         = new Margins (0, 0, 5, 0),
+			};
+
+			//	Crée un petit gap.
+			new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 2,
+				BackColor       = UIBuilder.WindowBackColor3,
+				Dock            = DockStyle.Top,
+			};
+
+			this.tabsPane = new TabsPane
+			{
+				Parent          = frame,
 				TabLookStyle    = TabLook.Simple,
 				SelectionColor  = UIBuilder.WindowBackColor3,
 				IconSize        = 32,

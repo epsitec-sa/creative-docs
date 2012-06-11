@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.mainWindow = window;
 
-			//	Crée la barre de titre et la barre d'outils tout en haut.
+			//	Crée la partie supérieure de l'interface.
 			this.CreateToolbarUI (window.Root);
 			this.CreatePrésentationUI (window.Root);
 
@@ -106,6 +106,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void CreateToolbarUI(Widget parent)
 		{
+			//	Crée la barre de titre et la barre d'outils tout en haut.
 			this.toolbarController = new ToolbarController (this);
 			this.toolbarController.CreateUI (parent);
 		}
@@ -113,27 +114,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void CreatePrésentationUI(Widget parent)
 		{
 			//	Crée la bande horizontale pour choisir la présentation, constituée de gros onglets avec les icônes des présentations.
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 44+5,
-				BackColor       = UIBuilder.WindowBackColor2,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (-1, -1, 0, 0),
-				Padding         = new Margins (0, 0, 5, 0),
-			};
-
-			//	Crée un petit gap.
-			new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 2,
-				BackColor       = UIBuilder.WindowBackColor3,
-				Dock            = DockStyle.Top,
-			};
-
 			this.présentationController = new PrésentationController (this);
-			this.présentationController.CreateUI (frame);
+			this.présentationController.CreateUI (parent);
 		}
 
 

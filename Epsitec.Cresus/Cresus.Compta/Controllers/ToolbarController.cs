@@ -16,10 +16,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère la première barre présente depuis le haut de la fenêtre.
+	/// Ce contrôleur gère la barre de titre et la première barre présente depuis le haut de la fenêtre.
 	/// On y trouve:
-	/// - L'identité de l'utilisateur connecté.
 	/// - Les icônes de quelques commandes générales.
+	/// - L'identité de l'utilisateur connecté.
+	/// - Le contrôle de l'exercice.
 	/// - Le filtre temporel.
 	/// </summary>
 	public class ToolbarController
