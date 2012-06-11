@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		}
 
 
-		public bool HandlesStatusCode(HttpStatusCode statusCode)
+		public bool HandlesStatusCode(HttpStatusCode statusCode, NancyContext nancyContext)
 		{
 			return statusCode == HttpStatusCode.InternalServerError;
 		}
