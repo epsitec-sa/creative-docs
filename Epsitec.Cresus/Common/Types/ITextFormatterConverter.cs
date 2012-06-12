@@ -9,9 +9,9 @@ using System.Linq;
 namespace Epsitec.Common.Types
 {
 	/// <summary>
-	/// The <c>ITextFormatterConverter</c> interface is implemented by the pretty pringing
-	/// classes, which provide a textual representation for some simple type; this
-	/// can be used to convert <c>enum</c> values to their descriptions.
+	/// The <c>ITextFormatterConverter</c> interface is implemented by the pretty printing
+	/// classes, which provide a textual representation for some simple type; this is for
+	/// instance used to convert <c>enum</c> values to their descriptions.
 	/// </summary>
 	public interface ITextFormatterConverter
 	{

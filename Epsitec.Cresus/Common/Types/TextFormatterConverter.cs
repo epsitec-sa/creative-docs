@@ -24,11 +24,13 @@ namespace Epsitec.Common.Types
 			}
 			else
 			{
-				return TextFormatterConverter.ToFormattedText (value, value.GetType (), culture ?? System.Globalization.CultureInfo.CurrentCulture, detailLevel);
+				return TextFormatterConverter.ConvertValueToFormattedText (value, value.GetType (), culture ?? TextFormatter.CurrentCulture, detailLevel);
 			}
 		}
 		
-		private static FormattedText ToFormattedText(object value, System.Type type, System.Globalization.CultureInfo culture, TextFormatterDetailLevel detailLevel)
+		private static FormattedText ConvertValueToFormattedText(object value, System.Type type,
+			/**/												 System.Globalization.CultureInfo culture,
+			/**/												 TextFormatterDetailLevel detailLevel)
 		{
 			System.Diagnostics.Debug.Assert (value != null);
 			System.Diagnostics.Debug.Assert (type != null);
@@ -40,26 +42,25 @@ namespace Epsitec.Common.Types
 			}
 			if (type == typeof (string))
 			{
-				return new FormattedText ((string) value);
+				var text = (string) value;
+				return FormattedText.FromSimpleText (text);
 			}
 
-			var autoConvert = value as ITextFormatter;
+			var autoConvertible = value as ITextFormatter;
 
-			if (autoConvert != null)
+			if (autoConvertible != null)
 			{
-				return autoConvert.ToFormattedText (culture, detailLevel);
+				return autoConvertible.ToFormattedText (culture, detailLevel);
 			}
 
 			var prettyPrinter = TextFormatterConverterResolver.Resolve (type);
 
-			if (prettyPrinter == null)
-			{
-				return TextFormatterConverter.PrettyPrintUsingStringFormat (value, type, culture);
-			}
-			else
+			if (prettyPrinter != null)
 			{
 				return prettyPrinter.ToFormattedText (value, culture, detailLevel);
 			}
+			
+			return TextFormatterConverter.PrettyPrintUsingStringFormat (value, type, culture);
 		}
 		
 		/// <summary>
@@ -91,7 +92,7 @@ namespace Epsitec.Common.Types
 			if (type.IsValueType)
 			{
 				//	Post-process signed numeric types; we only check if we know that the type is
-				//	a value type, so we can avoid a call to GetTypeCode :
+				//	a value type, so we can avoid a call to GetTypeCode in the common case:
 
 				switch (System.Type.GetTypeCode (type))
 				{
