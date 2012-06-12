@@ -1,20 +1,14 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
-
-using Epsitec.Common.Support;
-using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Core.Library.Formatters;
-using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Resolvers
+namespace Epsitec.Common.Types.Formatters
 {
 	/// <summary>
 	/// The <c>IFormatTokenFormatter</c> interface is used to format a piece of
-	/// information. See also the <see cref="FormattedIdGenerator"/> and the
+	/// information. See also the class <c>FormattedIdGenerator</c> and the
 	/// <see cref="FormatTokenFormatterResolver"/>.
 	/// </summary>
 	public interface IFormatTokenFormatter

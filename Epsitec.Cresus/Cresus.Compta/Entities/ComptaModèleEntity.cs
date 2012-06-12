@@ -20,7 +20,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				var l = this.Libellé.ToString ().Replace ("@", "...");
 				var m = Converters.MontantToString (this.Montant, null);
-				return Core.TextFormatter.FormatText (this.Code, this.GetCompteSummary (this.Débit), "/", this.GetCompteSummary (this.Crédit), this.Pièce, l, m);
+				return TextFormatter.FormatText (this.Code, this.GetCompteSummary (this.Débit), "/", this.GetCompteSummary (this.Crédit), this.Pièce, l, m);
 			}
 		}
 

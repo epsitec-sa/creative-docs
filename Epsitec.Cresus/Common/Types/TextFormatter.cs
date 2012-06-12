@@ -1,21 +1,18 @@
 ﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Common.Types;
+using Epsitec.Common.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Core.Library;
-using Epsitec.Cresus.Core.Library.Internal;
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
-using Epsitec.Common.Text;
 using System.Linq.Expressions;
+using Epsitec.Common.Types.Formatters;
 
-namespace Epsitec.Cresus.Core
+namespace Epsitec.Common.Types
 {
 	public static class TextFormatter
 	{
@@ -23,8 +20,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				Library.UI.CultureSettings culture = Library.UI.Services.Settings.CultureForData;
-				return culture.TwoLetterISOLanguageName;
+				return TextFormatter.CurrentCulture.TwoLetterISOLanguageName;
 			}
 		}
 
@@ -32,7 +28,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				return TextFormatter.cultureOverride ?? Library.UI.Services.Settings.CultureForData.CultureInfo;
+				return TextFormatter.cultureOverride ; // TODO:PA ?? Library.UI.Services.Settings.CultureForData.CultureInfo;
 			}
 		}
 
@@ -49,7 +45,7 @@ namespace Epsitec.Cresus.Core
 		{
 			get
 			{
-				var text = TextFormatter.GetCurrentCultureText (Epsitec.Cresus.Core.Library.Res.StringIds.Text.Unknown);
+				var text = FormattedText.FromSimpleText ("inconnu"); // TODO:PA TextFormatter.GetCurrentCultureText (Epsitec.Cresus.Core.Library.Res.StringIds.Text.Unknown);
 
 				return text.ApplyItalic ();
 			}
@@ -108,6 +104,7 @@ namespace Epsitec.Cresus.Core
 
 		public static FormattedText FormatField(INamedType type, string value)
 		{
+#if false	//	TODO:PA
 			var binder = Epsitec.Cresus.Core.Factories.FieldBinderFactory.Create (type);
 
 			if (binder != null)
@@ -115,6 +112,7 @@ namespace Epsitec.Cresus.Core
 				return binder.ConvertToUI (value);
 			}
 			else
+#endif
 			{
 				return value;
 			}
@@ -287,7 +285,7 @@ namespace Epsitec.Cresus.Core
 		private static void Preprocess(List<object> values)
 		{
 			int n = values.Count;
-			Library.Formatters.FormatterHelper formatter = null;
+			FormatterHelper formatter = null;
 
 			for (int i = 1; i < n; i++)
 			{
@@ -302,7 +300,7 @@ namespace Epsitec.Cresus.Core
 					{
 						if (formatter == null)
 						{
-							formatter = new Library.Formatters.FormatterHelper ();
+							formatter = new FormatterHelper ();
 						}
 
 						values[i-1] = formatter.Format (format, values[i-1]);

@@ -440,6 +440,10 @@
     <Compile Include="Support\EntityEngine\ActionDispatcher.cs" />
     <Compile Include="Support\EntityEngine\ActionInfo.cs" />
     <Compile Include="Support\EntityEngine\EntityStatusAccumulationMode.cs" />
+    <Compile Include="Support\FormatTokenFormatterResolver.cs" />
+    <Compile Include="Support\InterfaceImplementationResolver.cs" />
+    <Compile Include="Support\TextValue.cs" />
+    <Compile Include="Support\TextValueType.cs" />
     <Compile Include="Support\EntityEngine\NullNodeAction.cs" />
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy.cs" />
@@ -943,6 +947,8 @@
     <Compile Include="Types\DoubleType.cs" />
     <Compile Include="Types\DruidType.cs" />
     <Compile Include="Types\DynamicStructuredType.cs" />
+    <Compile Include="Types\EnumKeyValues.cs" />
+    <Compile Include="Types\EnumKeyValues`1.cs" />
     <Compile Include="Types\EnumLister.cs" />
     <Compile Include="Types\EnumType.cs" />
     <Compile Include="Types\EnumValue.cs" />
@@ -955,6 +961,15 @@
     <Compile Include="Types\FieldRelation.cs" />
     <Compile Include="Types\FieldSource.cs" />
     <Compile Include="Types\FormattedText.cs" />
+    <Compile Include="Types\Formatters\ArgumentFormatToken.cs" />
+    <Compile Include="Types\Formatters\FormatterHelper.cs" />
+    <Compile Include="Types\Formatters\FormattingContext.cs" />
+    <Compile Include="Types\Formatters\FormatToken.cs" />
+    <Compile Include="Types\Formatters\FormatTokenRepository.cs" />
+    <Compile Include="Types\Formatters\IFormatTokenFormatter.cs" />
+    <Compile Include="Types\Formatters\PriceFormatTokenFormatter.cs" />
+    <Compile Include="Types\Formatters\SimpleFormatToken.cs" />
+    <Compile Include="Types\Formatters\StringFormatTokenFormatter.cs" />
     <Compile Include="Types\Freezable.cs" />
     <Compile Include="Types\GroupDescription.cs" />
     <Compile Include="Types\HiddenAttribute.cs" />
@@ -1006,6 +1021,7 @@
     <Compile Include="Types\ISuspendCollectionChanged.cs" />
     <Compile Include="Types\ISytemType.cs" />
     <Compile Include="Types\ITextFormatter.cs" />
+    <Compile Include="Types\ITextFormatterConverter.cs" />
     <Compile Include="Types\IValidationResult.cs" />
     <Compile Include="Types\IValueConverter.cs" />
     <Compile Include="Types\IValueStore.cs" />
@@ -1016,6 +1032,7 @@
     <Compile Include="Types\MultilingualText.cs" />
     <Compile Include="Types\NamedDependencyObject.cs" />
     <Compile Include="Types\NotAnEnum.cs" />
+    <Compile Include="Types\Numeric.cs" />
     <Compile Include="Types\OpenEnumType.cs" />
     <Compile Include="Types\OtherType.cs" />
     <Compile Include="Types\PendingValue.cs" />
@@ -1024,7 +1041,6 @@
     <Compile Include="Types\PropertyValuePair.cs" />
     <Compile Include="Types\RankAttribute.cs" />
     <Compile Include="Types\ResourceBinding.cs" />
-    <Compile Include="Types\Resources.cs" />
     <Compile Include="Types\SerializationConverterAttribute.cs" />
     <Compile Include="Types\Serialization\BlackList.cs" />
     <Compile Include="Types\Serialization\Context.cs" />
@@ -1061,6 +1077,10 @@
     <Compile Include="Types\StructuredTypeField.cs" />
     <Compile Include="Types\SystemTypeFamily.cs" />
     <Compile Include="Types\TextComparison.cs" />
+    <Compile Include="Types\TextFormatter.cs" />
+    <Compile Include="Types\TextFormatterConverter.cs" />
+    <Compile Include="Types\TextFormatterConverterResolver.cs" />
+    <Compile Include="Types\TextFormatterConverter`1.cs" />
     <Compile Include="Types\TextFormatterDetailLevel.cs" />
     <Compile Include="Types\Time.cs" />
     <Compile Include="Types\TimeResolution.cs" />

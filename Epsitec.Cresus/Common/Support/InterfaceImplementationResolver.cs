@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Resolvers
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>InterfaceImplementationResolver</c> class can create instances of classes

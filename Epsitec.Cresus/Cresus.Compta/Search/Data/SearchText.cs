@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 						count++;
 
-						var r = Core.TextFormatter.FormatText (target.Substring (i, this.preparedFromText.Length)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ();
+						var r = TextFormatter.FormatText (target.Substring (i, this.preparedFromText.Length)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ();
 
 						prepared = prepared.Substring (0, i) + r + prepared.Substring (i+this.preparedFromText.Length);
 						target   =   target.Substring (0, i) + r +   target.Substring (i+this.preparedFromText.Length);
@@ -337,7 +337,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					count = 1;
 
 					int i = this.preparedFromText.Length;
-					var found = Core.TextFormatter.FormatText (target.Substring (0, i)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
+					var found = TextFormatter.FormatText (target.Substring (0, i)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 					target = found + target.Substring (i);
 				}
 			}
@@ -367,7 +367,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					count = 1;
 
 					int i = target.Length - this.preparedFromText.Length;
-					var found = Core.TextFormatter.FormatText (target.Substring (i)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
+					var found = TextFormatter.FormatText (target.Substring (i)).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 					target = target.Substring (0, i) + found;
 				}
 			}
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				if (prepared == this.preparedFromText)
 				{
 					count = 1;
-					target = Core.TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
+					target = TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 				}
 			}
 
@@ -404,7 +404,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				if (this.preparedRegEx != null && this.preparedRegEx.IsMatch (prepared))
 				{
 					count = 1;
-					target = Core.TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
+					target = TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 				}
 			}
 
@@ -449,7 +449,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				}
 			}
 
-			target = Core.TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
+			target = TextFormatter.FormatText (target).ApplyFontColor (UIBuilder.TextInsideSearchColor).ApplyBold ().ToString ();
 			return 1;
 		}
 

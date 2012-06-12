@@ -162,7 +162,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					}
 					else
 					{
-						return Core.TextFormatter.FormatText (percent, "de", montant);
+						return TextFormatter.FormatText (percent, "de", montant);
 					}
 				}
 				else

@@ -1,14 +1,12 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Resolvers;
-
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Library.Formatters
+namespace Epsitec.Common.Types.Formatters
 {
 	/// <summary>
 	/// The <c>StringFormatTokenFormatter</c> class implements the <c>#string(format)</c>
@@ -19,6 +17,12 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 	{
 		#region IFormatTokenFormatter Members
 
+		/// <summary>
+		/// Gets the format token of this formatter.
+		/// </summary>
+		/// <returns>
+		/// The <see cref="FormatToken"/> of this formatter.
+		/// </returns>
 		public FormatToken GetFormatToken()
 		{
 			return new ArgumentFormatToken ("#string", this.Format);

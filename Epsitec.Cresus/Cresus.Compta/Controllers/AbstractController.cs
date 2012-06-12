@@ -739,7 +739,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.mainWindowController.CurrentUser == null)
 			{
 				this.userLabel.Visibility = true;
-				this.userLabel.FormattedText = Core.TextFormatter.FormatText ("Déconnecté").ApplyItalic ().ApplyFontSize (13.0);
+				this.userLabel.FormattedText = TextFormatter.FormatText ("Déconnecté").ApplyItalic ().ApplyFontSize (13.0);
 				tooltip = "Aucun utilisateur n'est actuellement connecté.<br/>{0} permet de se connecter.";
 			}
 			else

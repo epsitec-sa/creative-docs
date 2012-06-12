@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -6,7 +6,7 @@ using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Library.Formatters
+namespace Epsitec.Common.Types.Formatters
 {
 	/// <summary>
 	/// The <c>SimpleFormatToken</c> class handles simple formatting directives, such
@@ -43,7 +43,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 
 		/// <summary>
 		/// Outputs the formatted data, as requested by the format string submitted to
-		/// <see cref="Matches"/>.
+		/// the <see cref="Matches"/> method.
 		/// </summary>
 		/// <param name="formatter">The formatter.</param>
 		/// <param name="buffer">The buffer where to output the result.</param>
@@ -56,6 +56,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 			
 			return this.format.Length;
 		}
+		
 		
 		private readonly System.Func<FormatterHelper, string> func;
 	}

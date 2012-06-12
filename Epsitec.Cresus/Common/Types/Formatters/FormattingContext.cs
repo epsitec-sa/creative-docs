@@ -1,7 +1,7 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-namespace Epsitec.Cresus.Core.Library.Formatters
+namespace Epsitec.Common.Types.Formatters
 {
 	/// <summary>
 	/// The <c>FormattingContext</c> class is tightly coupled with the <see cref="FormatterHelper"/>.
@@ -67,10 +67,6 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 			{
 				return this.args;
 			}
-			set
-			{
-				this.args = value;
-			}
 		}
 
 		/// <summary>
@@ -83,6 +79,16 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 			{
 				return this.data;
 			}
+		}
+
+
+		/// <summary>
+		/// Defines the formatting arguments.
+		/// </summary>
+		/// <param name="args">The formatting arguments.</param>
+		public void DefineArgs(string args)
+		{
+			this.args = args;
 		}
 
 

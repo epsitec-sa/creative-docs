@@ -1,8 +1,9 @@
-//	Copyright � 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Pierre ARNAUD & Marc BETTEX, Maintainer: Pierre ARNAUD
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Text;
+using Epsitec.Common.Types;
 
 using System.Text.RegularExpressions;
 using System.Collections.Generic;
@@ -192,7 +193,7 @@ namespace Epsitec.Common.Support.Extensions
 		/// </summary>
 		/// <param name="value">The string.</param>
 		/// <param name="maximumLength">The maximum length.</param>
-		/// <param name="ellipsis">The ellipsis (by default, uses the single character <c>�</c>).</param>
+		/// <param name="ellipsis">The ellipsis (by default, uses the single character <c>…</c>).</param>
 		/// <returns>The possibly truncated string.</returns>
 		public static string TruncateAndAddEllipsis(this string value, int maximumLength, string ellipsis = "\u2026")
 		{
@@ -473,6 +474,43 @@ namespace Epsitec.Common.Support.Extensions
 		}
 
 
+		public static char LastCharacter(this string text)
+		{
+			int n = text.Length - 1;
+			return n < 0 ? (char) 0 : text[n];
+		}
+
+		public static char FirstCharacter(this string text)
+		{
+			int n = text.Length;
+			return n < 1 ? (char) 0 : text[0];
+		}
+
+		public static string RemoveTag(this string text)
+		{
+			return FormattedText.Unescape (text);
+		}
+
+		public static bool IsPunctuationMark(this char c)
+		{
+			// Exclut le caractère '/', pour permettre de numéroter une facture "1000 / 45 / bg" (par exemple).
+
+			switch (c)
+			{
+				case ',':
+				case ';':
+				case '.':
+				case ':':
+				case '!':
+				case '?':
+					return true;
+
+				default:
+					return false;
+			}
+		}
+		
+		
 		static StringExtensions()
 		{
 			StringExtensions.alphaNumRegex = new Regex ("^[a-zA-Z0-9]*$", RegexOptions.Compiled);

@@ -3,14 +3,12 @@
 
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Core.Library.Formatters;
-using Epsitec.Cresus.Core.Resolvers;
+using Epsitec.Common.Types.Formatters;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Resolvers
+namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>FormatTokenFormatterResolver</c> class is used to find all classes

@@ -1,4 +1,4 @@
-﻿//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Text;
@@ -7,7 +7,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Library
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>TextFormatterConverter</c> class is used to format an object so that it can be
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Library
 				return autoConvert.ToFormattedText (culture, detailLevel);
 			}
 
-			var prettyPrinter = Resolvers.TextFormatterConverterResolver.Resolve (type);
+			var prettyPrinter = TextFormatterConverterResolver.Resolve (type);
 
 			if (prettyPrinter == null)
 			{

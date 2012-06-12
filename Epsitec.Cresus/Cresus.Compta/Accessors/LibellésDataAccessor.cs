@@ -298,7 +298,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		}
 
 
-		private static readonly FormattedText	Permanent = Core.TextFormatter.FormatText ("Oui").ApplyBold ();
-		private static readonly FormattedText	Volatile  = Core.TextFormatter.FormatText ("Non");
+		private static readonly FormattedText	Permanent = TextFormatter.FormatText ("Oui").ApplyBold ();
+		private static readonly FormattedText	Volatile  = TextFormatter.FormatText ("Non");
 	}
 }

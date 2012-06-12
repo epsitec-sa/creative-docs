@@ -59,8 +59,8 @@ namespace Epsitec.Cresus.Compta.Entities
 
 		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			yield return Core.TextFormatter.FormatText (this.Numéro);
-			yield return Core.TextFormatter.FormatText (this.Titre);
+			yield return TextFormatter.FormatText (this.Numéro);
+			yield return TextFormatter.FormatText (this.Titre);
 		}
 		
 		public override FormattedText GetCompactSummary()
@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		
 		public override FormattedText GetSummary()
 		{
-			return Core.TextFormatter.FormatText (this.Numéro, this.Titre);
+			return TextFormatter.FormatText (this.Numéro, this.Titre);
 		}
 	}
 }

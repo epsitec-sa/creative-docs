@@ -1,12 +1,12 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types;
+using Epsitec.Common.Types.Formatters;
 
 using Epsitec.Cresus.Core.Entities;
-using Epsitec.Cresus.Core.Library.Formatters;
-using Epsitec.Cresus.Core.Resolvers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +17,7 @@ namespace Epsitec.Cresus.Core.Business
 	/// The <c>FormatterHelper</c> class gets instantiated by the <see cref="FormattedIdGenerator"/>
 	/// when it needs to assign a new set of IDs for a given entity.
 	/// </summary>
-	internal sealed class ReferenceIdFormatterHelper : Epsitec.Cresus.Core.Library.Formatters.FormatterHelper
+	internal sealed class ReferenceIdFormatterHelper : FormatterHelper
 	{
 		/// <summary>
 		/// Initializes a new instance of the <see cref="FormatterHelper"/> class.
@@ -92,7 +92,7 @@ namespace Epsitec.Cresus.Core.Business
 
 			while (pos < format.Length)
 			{
-				foreach (var token in FormatToken.Items)
+				foreach (var token in FormatTokenRepository.Items)
 				{
 					if (token.Matches (this, format, pos))
 					{

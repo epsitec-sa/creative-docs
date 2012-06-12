@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					return this.GetLibellé (écriture);
 
 				case ColumnType.Montant:
-					var montantTTC = Core.TextFormatter.FormatText (Converters.MontantToString (écriture.Montant, écriture.Monnaie));
+					var montantTTC = TextFormatter.FormatText (Converters.MontantToString (écriture.Montant, écriture.Monnaie));
 					if (écriture.TotalAutomatique)
 					{
 						montantTTC = montantTTC.ApplyBold ();

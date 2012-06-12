@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			new StaticText
 			{
 				Parent           = this.mainFrame,
-				FormattedText    = Core.TextFormatter.FormatText("Identification").ApplyFontSize (80).ApplyBold ().ApplyFontColor (Color.FromName ("White")),
+				FormattedText    = TextFormatter.FormatText("Identification").ApplyFontSize (80).ApplyBold ().ApplyFontColor (Color.FromName ("White")),
 				ContentAlignment = ContentAlignment.TopLeft,
 				PreferredHeight  = 120,
 				Margins          = new Margins (LoginController.leftMargin+10, 0, 0, 0),
@@ -283,7 +283,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.mainWindowController.CurrentUser == null)
 			{
-				this.currentField.FormattedText = Core.TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
+				this.currentField.FormattedText = TextFormatter.FormatText ("Aucun (déconnecté)").ApplyItalic ();
 				this.currentInfo.FormattedText = null;
 			}
 			else
@@ -390,13 +390,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (result == Result.LoginOK)
 			{
-				this.messageText.FormattedText = Core.TextFormatter.FormatText ("Identification effectuée avec succès");
+				this.messageText.FormattedText = TextFormatter.FormatText ("Identification effectuée avec succès");
 				this.mainFrame.BackColor = Color.FromHexa ("e2ffe2");  // vert clair
 			}
 
 			if (result == Result.LogoutOK)
 			{
-				this.messageText.FormattedText = Core.TextFormatter.FormatText ("Déconnexion effectuée avec succès");
+				this.messageText.FormattedText = TextFormatter.FormatText ("Déconnexion effectuée avec succès");
 				this.mainFrame.BackColor = Color.FromBrightness (0.95);  // gris clair
 
 				this.userField.FormattedText = null;

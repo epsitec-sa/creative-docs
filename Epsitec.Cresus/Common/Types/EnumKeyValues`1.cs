@@ -6,7 +6,7 @@ using Epsitec.Common.Types;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Library
+namespace Epsitec.Common.Types
 {
 	/// <summary>
 	/// The <c>EnumKeyValue{T}</c> class is used to store an <c>enum</c> key

@@ -1,0 +1,21 @@
+//	Copyright © 2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
+
+using System.Collections.Generic;
+using System.Linq;
+
+namespace Epsitec.Common.Support
+{
+	/// <summary>
+	/// The <c>TextValueType</c> enumeration defines a few common types used to classify
+	/// <see cref="TextValue"/> instances.
+	/// </summary>
+	public enum TextValueType
+	{
+		Data,
+
+		Summary,
+		Name,
+		Description,
+	}
+}

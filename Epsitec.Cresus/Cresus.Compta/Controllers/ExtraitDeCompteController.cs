@@ -170,7 +170,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else
 			{
-				this.SetTitle (Core.TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
+				this.SetTitle (TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
 			}
 
 			this.SetSubtitle (this.période.ShortTitle);

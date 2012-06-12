@@ -1,6 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
@@ -12,9 +13,9 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class CurrencyEntity
 	{
-		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
+		public override IEnumerable<TextValue> GetTextValues()
 		{
-			return EnumKeyValues.GetEnumKeyValue (this.CurrencyCode).Values;
+			return EnumKeyValues.GetEnumKeyValue (this.CurrencyCode).Values.Select (x => new TextValue (x));
 		}
 		
 		public override FormattedText GetCompactSummary()

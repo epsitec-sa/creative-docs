@@ -1,4 +1,6 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿
+using Epsitec.Common.Types;
+using Epsitec.Common.Support.Extensions;
 
 using Epsitec.Cresus.Core.Library;
 
@@ -6,12 +8,8 @@ using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using Nancy;
 
-using System;
-
 using System.Collections.Generic;
-
 using System.Linq;
-
 using System.Reflection;
 
 
@@ -45,7 +43,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private static IEnumerable<object> GetValues(string typeName)
 		{
-			var type = Type.GetType (typeName);
+			var type = System.Type.GetType (typeName);
 
 			var isNullable = type.IsNullable ();
 
@@ -71,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				// NOTE Here we need the double cast because the compiler won't let us cast from
 				// T to int directly, so we cast T to object because this is allowed and then we
-				// cast object to anything.
+				// unbox object to the real type.
 
 				var id = (int) (object) enumKeyValues.Key;
 				var values = enumKeyValues.Values;

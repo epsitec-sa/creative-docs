@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Entities
 				}
 				else
 				{
-					text = Core.TextFormatter.FormatText (this.NomComplet, "(", this.Utilisateur, ")");
+					text = TextFormatter.FormatText (this.NomComplet, "(", this.Utilisateur, ")");
 				}
 
 				return text;

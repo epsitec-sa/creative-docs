@@ -65,25 +65,14 @@
     <Compile Include="Library\CoreComponent.cs" />
     <Compile Include="Library\CoreContext.cs" />
     <Compile Include="Library\CoreDatabaseType.cs" />
-    <Compile Include="Library\Formatters\ArgumentFormatToken.cs" />
-    <Compile Include="Library\Formatters\FormatterHelper.cs" />
-    <Compile Include="Library\Formatters\FormattingContext.cs" />
-    <Compile Include="Library\Formatters\FormatToken.cs" />
-    <Compile Include="Library\Formatters\PriceFormatTokenFormatter.cs" />
-    <Compile Include="Library\Formatters\SimpleFormatToken.cs" />
-    <Compile Include="Library\Formatters\StringFormatTokenFormatter.cs" />
     <Compile Include="Library\ICoreComponent`2.cs" />
-    <Compile Include="Library\ITextFormatterConverter.cs" />
-    <Compile Include="Library\Numeric.cs" />
     <Compile Include="Library\Settings\IUserIdentity.cs" />
     <Compile Include="Library\Settings\UserCommandSetSettings.cs" />
     <Compile Include="Library\Settings\UserCommandSettings.cs" />
-    <Compile Include="Library\TextFormatterConverter.cs" />
     <Compile Include="Library\SettingsCollection.cs" />
     <Compile Include="Library\SettingsManager.cs" />
     <Compile Include="Library\ICoreManualComponent.cs" />
     <Compile Include="Library\SettingsTuple.cs" />
-    <Compile Include="Library\TextFormatterConverter`1.cs" />
     <Compile Include="Resolvers\WorkflowActionResolver.cs" />
     <Compile Include="Widgets\ActionButton.cs" />
     <Compile Include="Workflows\ActionVerb.cs" />
@@ -91,11 +80,9 @@
     <Compile Include="Resolvers\CoreComponentFactoryResolver.cs" />
     <Compile Include="Library\CoreComponentHostImplementation.cs" />
     <Compile Include="Library\DialogCentral.cs" />
-    <Compile Include="Library\EnumKeyValues`1.cs" />
     <Compile Include="Library\CoreCommandDispatcher.cs" />
     <Compile Include="Dialogs\MultilingualEditionDialog.cs" />
     <Compile Include="Library\Dispatcher.cs" />
-    <Compile Include="Library\EnumKeyValues.cs" />
     <Compile Include="Library\EnumValueCardinality.cs" />
     <Compile Include="Library\IAttachedDialog.cs" />
     <Compile Include="Library\ICoreComponent.cs" />
@@ -112,16 +99,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
     <Compile Include="Factories\FieldBinderFactory.cs" />
-    <Compile Include="Resolvers\FormatTokenFormatterResolver.cs" />
-    <Compile Include="Resolvers\IFormatTokenFormatter.cs" />
-    <Compile Include="Resolvers\InterfaceImplementationResolver.cs" />
-    <Compile Include="Resolvers\TextFormatterConverterResolver.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
-    <Compile Include="Library\Internal\StringBuilderExtensions.cs" />
-    <Compile Include="Library\Internal\StringExtensions.cs" />
     <Compile Include="TextBuilder.cs" />
-    <Compile Include="TextFormatter.cs" />
     <Compile Include="Library\UI\Constants.cs" />
     <Compile Include="Library\UI\Services.cs" />
     <Compile Include="Library\UI\CultureSettings.cs" />
@@ -191,7 +171,10 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Library\Formatters\" />
+    <Folder Include="Library\Internal\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

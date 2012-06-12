@@ -1,6 +1,7 @@
 //	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
 using Epsitec.Cresus.Core.Library;
@@ -12,20 +13,20 @@ namespace Epsitec.Cresus.Core.Entities
 {
 	public partial class ExchangeRateSourceEntity
 	{
-		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
+		public override IEnumerable<TextValue> GetTextValues()
 		{
 			if (string.IsNullOrWhiteSpace (this.Originator))
 			{
-				yield return "—";
+				yield return new TextValue ("—");
 			}
 			else
 			{
-				yield return TextFormatter.FormatText (this.Originator);
+				yield return new TextValue (this.Originator);
 			}
 
 			foreach (var value in EnumKeyValues.GetEnumKeyValue (this.Type).Values)
 			{
-				yield return value;
+				yield return new TextValue (value);
 			}
 		}
 		

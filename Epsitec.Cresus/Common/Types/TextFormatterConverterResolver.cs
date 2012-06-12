@@ -1,12 +1,12 @@
 //	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Common.Support;
 
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Resolvers
+namespace Epsitec.Common.Types
 {
 	public sealed class TextFormatterConverterResolver
 	{

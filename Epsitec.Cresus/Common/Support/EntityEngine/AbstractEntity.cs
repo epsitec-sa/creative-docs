@@ -221,7 +221,12 @@ namespace Epsitec.Common.Support.EntityEngine
 
 		public virtual IEnumerable<FormattedText> GetFormattedEntityKeywords()
 		{
-			yield return this.GetCompactSummary ();
+			return this.GetTextValues ().Select (x => x.FormattedText);
+		}
+
+		public virtual IEnumerable<TextValue> GetTextValues()
+		{
+			yield return new TextValue (this.GetCompactSummary ());
 		}
 
 		public bool IsEntityEmpty
@@ -540,7 +545,6 @@ namespace Epsitec.Common.Support.EntityEngine
 
 			return DisposableWrapper.CombineDisposables (d2, d1);
 		}
-
 
 		public System.IDisposable DisableEvents()
 		{

@@ -1,4 +1,4 @@
-//	Copyright © 2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -6,7 +6,7 @@ using Epsitec.Common.Support.Extensions;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Library.Formatters
+namespace Epsitec.Common.Types.Formatters
 {
 	/// <summary>
 	/// The <c>ArgumentFormatToken</c> class implements handling of formatting tokens
@@ -53,7 +53,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 					//	the format string contains more text after the argument.
 
 					string arguments = format.Substring (start, length);
-					formatter.FormattingContext.Args = "("+arguments;
+					formatter.FormattingContext.DefineArgs ("("+arguments);
 					return true;
 				}
 
@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 					//	the format string does not contain any other text after the argument.
 
 					string arguments = format.Substring (pos+n+1);
-					formatter.FormattingContext.Args = " "+arguments;
+					formatter.FormattingContext.DefineArgs (" "+arguments);
 					return true;
 				}
 			}
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.Core.Library.Formatters
 
 		/// <summary>
 		/// Outputs the formatted data, as requested by the format string submitted to
-		/// <see cref="Matches"/>.
+		/// the <see cref="Matches"/> method.
 		/// </summary>
 		/// <param name="formatter">The formatter.</param>
 		/// <param name="buffer">The buffer where to output the result.</param>

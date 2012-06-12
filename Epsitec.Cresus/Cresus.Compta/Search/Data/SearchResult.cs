@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			this.Row    = row;
 			this.Column = column;
 
-			this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchTarget, Core.TextFormatter.FormatText (hilitedText).ApplyFontColor (UIBuilder.TextOutsideSearchColor));
+			this.HilitedText = FormattedText.Concat (StringArray.SpecialContentSearchTarget, TextFormatter.FormatText (hilitedText).ApplyFontColor (UIBuilder.TextOutsideSearchColor));
 		}
 
 		public int Row
