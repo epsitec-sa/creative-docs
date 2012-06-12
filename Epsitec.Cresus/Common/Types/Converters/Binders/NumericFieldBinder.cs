@@ -7,7 +7,7 @@ using Epsitec.Common.Types.Converters;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Binders
+namespace Epsitec.Common.Types.Converters.Binders
 {
 	internal sealed class NumericFieldBinder : IFieldBinder, IFieldBinderProvider
 	{

@@ -5,12 +5,13 @@ using Epsitec.Common.Text;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
+using Epsitec.Common.Types.Formatters;
+using Epsitec.Common.Types.Converters;
 
 using System.Collections.Generic;
 using System.Linq;
 using System.Globalization;
 using System.Linq.Expressions;
-using Epsitec.Common.Types.Formatters;
 
 namespace Epsitec.Common.Types
 {
@@ -115,7 +116,7 @@ namespace Epsitec.Common.Types
 
 		public static FormattedText FormatField<T>(Expression<System.Func<T>> expression)
 		{
-			var marshaler = Epsitec.Common.Types.Converters.Marshaler.Create (expression);
+			var marshaler = Marshaler.Create (expression);
 			var fieldType = EntityInfo.GetFieldType (expression);
 			
 			return TextFormatter.FormatField (fieldType, marshaler.GetStringValue ());
@@ -123,15 +124,13 @@ namespace Epsitec.Common.Types
 
 		public static FormattedText FormatField(INamedType type, string value)
 		{
-#if false	//	TODO:PA
-			var binder = Epsitec.Cresus.Core.Factories.FieldBinderFactory.Create (type);
+			var binder = FieldBinderFactory.Create (type);
 
 			if (binder != null)
 			{
 				return binder.ConvertToUI (value);
 			}
 			else
-#endif
 			{
 				return value;
 			}

@@ -893,6 +893,7 @@
     <Compile Include="Types\CollectionViewSource.cs" />
     <Compile Include="Types\Comparer.cs" />
     <Compile Include="Types\Converters\AutomaticValueConverter.cs" />
+    <Compile Include="Types\Converters\Binders\NumericFieldBinder.cs" />
     <Compile Include="Types\Converters\ByteArrayConverter.cs" />
     <Compile Include="Types\Converters\ConversionResult.cs" />
     <Compile Include="Types\Converters\BooleanConverter.cs" />

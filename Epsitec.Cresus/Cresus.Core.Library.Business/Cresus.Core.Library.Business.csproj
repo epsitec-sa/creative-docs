@@ -48,7 +48,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Binders\NumericFieldBinder.cs" />
     <Compile Include="Binders\PhoneNumberFieldBinder.cs" />
     <Compile Include="Bricks\BrickModeExtensions.cs" />
     <Compile Include="Bricks\BridgeSpy.cs" />

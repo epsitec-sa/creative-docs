@@ -7,15 +7,13 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Common.Widgets;
 using Epsitec.Common.Widgets.Validators;
 
-using Epsitec.Cresus.Core.Business;
+using Epsitec.Cresus.Core.Binders;
 using Epsitec.Cresus.Core.Dialogs;
-using Epsitec.Cresus.Core.Library;
+using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
-using Epsitec.Cresus.Core.Binders;
-using Epsitec.Cresus.Core.Factories;
 
 namespace Epsitec.Cresus.Core.Controllers
 {
@@ -96,8 +94,6 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			this.widget = widget;
 
-			widget.MultilingualEditionCalled += this.HandleTextFieldMultilingualEditionCalled;
-
 			var validator = MarshalerValidator.CreateValidator (this.widget, this.marshaler);
 
 			this.SetupFieldBinder ();
@@ -105,7 +101,8 @@ namespace Epsitec.Cresus.Core.Controllers
 			
 			this.UpdateWidgetForMultilingualText ();
 
-			widget.EditionAccepted += this.HandleEditionAccepted;
+			widget.MultilingualEditionCalled += this.HandleTextFieldMultilingualEditionCalled;
+			widget.EditionAccepted           += this.HandleEditionAccepted;
 		}
 
 		public void Attach(CheckButton widget)
@@ -425,7 +422,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (multilingualText == null)
 					{
 						textField.SetUndefinedLanguage (Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName &&
-														!Library.UI.Services.Settings.CultureForData.IsActiveLanguageAlsoTheDefault);
+														!Library.UI.Services.Settings.CultureForData.IsDefaultLanguageActive);
 					}
 					else
 					{
@@ -433,10 +430,10 @@ namespace Epsitec.Cresus.Core.Controllers
 
 						if (Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName)
 						{
-							if (Library.UI.Services.Settings.CultureForData.IsActiveLanguageAlsoTheDefault)
+							if (Library.UI.Services.Settings.CultureForData.IsDefaultLanguageActive)
 							{
 								undefined = !multilingualText.ContainsLanguage (Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageName)
-										 && !multilingualText.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageName);
+										 && !multilingualText.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageToken);
 							}
 							else
 							{
