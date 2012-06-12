@@ -30,8 +30,15 @@ namespace Epsitec.Cresus.Core.Controllers.EditionControllers
 				  .Field (x => x.Title)
 				.End ()
 				.Input ()
+#if SLIMFIELD
+				  .HorizontalGroup ()
+				    .Field (x => x.Firstname)
+				    .Field (x => x.Lastname)
+				  .End ()
+#else
 				  .Field (x => x.Firstname)
 				  .Field (x => x.Lastname)
+#endif
 				.End ()
 				.Separator ()
 				.Input ()

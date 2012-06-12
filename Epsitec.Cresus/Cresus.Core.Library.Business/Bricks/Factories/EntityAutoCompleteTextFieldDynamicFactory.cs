@@ -137,7 +137,12 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 					var caption = DynamicFactory.GetInputCaption (this.lambda);
 					var title   = this.title ?? DynamicFactory.GetInputTitle (caption);
 					var tile    = frame as EditionTile;
+
+#if SLIMFIELD
+					var widget  = builder.CreateSlimField<TField> (tile, title, this.readOnly, sel);
+#else
 					var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, this.readOnly, sel);
+#endif
 
 					if ((caption != null) &&
 						(caption.HasDescription))

@@ -109,7 +109,11 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				}
 				else
 				{
+#if SLIMFIELD
+					return builder.CreateSlimField (tile, width, readOnly, title, marshaler);
+#else
 					return builder.CreateTextField (tile, width, readOnly, title, marshaler);
+#endif
 				}
 			}
 			else
@@ -120,7 +124,11 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 				}
 				else
 				{
+#if SLIMFIELD
+					return builder.CreateSlimField (frame, DockStyle.Stacked, width, readOnly, title, marshaler);
+#else
 					return builder.CreateTextField (frame, DockStyle.Stacked, width, readOnly, marshaler);
+#endif
 				}
 			}
 		}

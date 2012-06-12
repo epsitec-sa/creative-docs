@@ -3,6 +3,7 @@
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
+using Epsitec.Common.Widgets.Behaviors;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Common.Support.Extensions;
@@ -17,10 +18,6 @@ using Epsitec.Cresus.Core.Factories;
 using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Widgets;
 using Epsitec.Cresus.Core.Widgets.Tiles;
-using Epsitec.Cresus.Core.Entities;
-
-using Epsitec.Cresus.DataLayer;
-using Epsitec.Cresus.DataLayer.Context;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -541,7 +538,11 @@ namespace Epsitec.Cresus.Core
 			var frameBox = new FrameBox
 			{
 				Parent = tile.Container,
+#if SLIMFIELD
+				PreferredHeight = 10,
+#else
 				PreferredHeight = 20,
+#endif
 				Dock = DockStyle.Stacked,
 				Margins = new Margins (0, 0, 0, Library.UI.Constants.MarginUnderTextField),
 				TabIndex = ++this.tabIndex,
@@ -781,6 +782,101 @@ namespace Epsitec.Cresus.Core
 			}
 		}
 		#endregion
+
+#if SLIMFIELD
+		public SlimField CreateSlimField(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler)
+		{
+			return this.CreateSlimField (tile.Container, DockStyle.Stacked, width, forceReadOnly, label, marshaler);
+		}
+
+		public SlimField CreateSlimField(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, string label, Marshaler marshaler, INamedType fieldType = null)
+		{
+			string value = marshaler.GetStringValue ();
+
+			var slimField = new SlimField
+			{
+				Parent = parent,
+//-				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
+//-				PreferredHeight = 20,
+				Dock = dockStyle,
+				HorizontalAlignment = HorizontalAlignment.Left,
+//-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
+				FieldLabel = new FormattedText (label).ToSimpleText (),
+				FieldText = value,
+				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
+				TabIndex = ++this.tabIndex,
+			};
+
+//-			this.RegisterTextField (slimField);
+			this.ContentListAdd (slimField);
+
+			if (width > 0)
+			{
+				slimField.HorizontalAlignment = HorizontalAlignment.Left;
+				slimField.PreferredWidth = width;
+			}
+
+			var behavior = new SlimFieldTextBehavior (slimField);
+			var valueController = new TextValueController (marshaler);
+			valueController.FieldType = fieldType;
+
+			behavior.TextEditionStarted += 
+				delegate
+				{
+					valueController.Attach (behavior.GetTextField ());
+				};
+
+			behavior.TextEditionEnded +=
+				delegate
+				{
+					marshaler.SetStringValue (slimField.FieldText);
+//-					behavior.GetTextField ().FormattedText = FormattedText.FromSimpleText (marshaler.GetStringValue ());
+				};
+
+			this.container.Add (valueController);
+
+			return slimField;
+		}
+
+		public SlimField CreateSlimField<T>(EditionTile tile, string label, bool forceReadOnly, SelectionController<T> controller)
+			where T : AbstractEntity, new ()
+		{
+			var parent = tile.Container;
+			var dockStyle = DockStyle.Stacked;
+			var value = controller.ToFormattedTextConverter (controller.GetValue ()).ToSimpleText ();
+
+			var slimField = new SlimField
+			{
+				Parent = parent,
+				Dock = dockStyle,
+				HorizontalAlignment = HorizontalAlignment.Left,
+				FieldLabel = new FormattedText (label).ToSimpleText (),
+				FieldText = value,
+				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
+				TabIndex = ++this.tabIndex,
+			};
+
+			foreach (var item in controller.GetPossibleItems ().Take (5))
+			{
+				var text = controller.ToFormattedTextConverter (item).ToSimpleText ();
+				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, text));
+			}
+
+//-			this.RegisterTextField (slimField);
+			this.ContentListAdd (slimField);
+
+			var behavior = new SlimFieldMenuBehavior (slimField);
+
+			behavior.Selected +=
+				delegate
+				{
+					var item = behavior.GetSelectedItem () as SlimFieldMenuItem<T>;
+					controller.SetValue (item.Value);
+				};
+
+			return slimField;
+		}
+#endif		
 
 
 		public TextFieldEx CreateTextField(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler)
@@ -1214,7 +1310,7 @@ namespace Epsitec.Cresus.Core
 			// TODO Should we also use the this.IsReadonly property to know whether this widget
 			// should be readonly or not ?
 
-			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !
+			if (controller.GetPossibleItems().Count () <= 5)  // limite arbitraire !	@PA
 			{
 				//	S'il y a 5 choix ou moins, on utilise un ItemPicker, qui crée des CheckButtons.
 				var picker = this.CreateDetailedItemPickerButtons (tile, label, cardinality, out tileButton);
