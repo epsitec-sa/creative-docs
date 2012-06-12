@@ -180,11 +180,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private static bool IsStringNullOrEmpty(string text)
 		{
 			return string.IsNullOrEmpty (text)
-				|| text == EntityModule.StringForNullValue;
+				|| text == Constants.KeyForNullValue;
 		}
-
-
-		public static readonly string StringForNullValue = "null";
 
 
 	}

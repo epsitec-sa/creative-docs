@@ -62,7 +62,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			if (isNullable)
 			{
-				yield return new { id = EntityModule.StringForNullValue, name = "" };
+				yield return new
+				{
+					id = Constants.KeyForNullValue,
+					name = Constants.TextForNullValue
+				};
 			}
 
 			foreach (var enumKeyValues in EnumKeyValues.FromEnum<T> ())

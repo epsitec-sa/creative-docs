@@ -26,7 +26,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				PropertyAccessorId = textPropertyAccessor.Id,
 				Title = this.Title.ToString (),
 				IsReadOnly = this.IsReadOnly,
-				Value = textPropertyAccessor.GetString (entity) ?? EntityModule.StringForNullValue,
+				Value = textPropertyAccessor.GetString (entity) ?? Constants.KeyForNullValue,
 				TypeName = textPropertyAccessor.Type.AssemblyQualifiedName,
 			};
 		}

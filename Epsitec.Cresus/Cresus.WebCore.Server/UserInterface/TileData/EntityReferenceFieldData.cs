@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		{
 			if (this.PropertyAccessor.Property.IsNullable)
 			{
-				yield return Tuple.Create (EntityModule.StringForNullValue, "");
+				yield return Tuple.Create (Constants.KeyForNullValue, Constants.TextForNullValue);
 			}
 
 			foreach (var entity in entitiesGetter (this.PropertyAccessor.Type))
