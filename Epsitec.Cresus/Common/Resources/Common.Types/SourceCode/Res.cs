@@ -809,6 +809,17 @@ namespace Epsitec.Common.Types
 					return global::Epsitec.Common.Types.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (0));
 				}
 			}
+			public static class Text
+			{
+				//	designer:str/10A1
+				public static global::Epsitec.Common.Types.FormattedText Unknown
+				{
+					get
+					{
+						return global::Epsitec.Common.Types.Res.Strings.GetText (global::Epsitec.Common.Support.Druid.FromFieldId (167772161));
+					}
+				}
+			}
 			
 			public static global::Epsitec.Common.Types.FormattedText GetText(params string[] path)
 			{
@@ -866,6 +877,17 @@ namespace Epsitec.Common.Types
 				get
 				{
 					return global::Epsitec.Common.Support.Druid.FromFieldId (0);
+				}
+			}
+			public static class Text
+			{
+				//	designer:str/10A1
+				public static global::Epsitec.Common.Support.Druid Unknown
+				{
+					get
+					{
+						return global::Epsitec.Common.Support.Druid.FromFieldId (167772161);
+					}
 				}
 			}
 		}

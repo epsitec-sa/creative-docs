@@ -3,4 +3,5 @@
   <data name="Empty" id="0">
   </data>
   <data name="CopyrightHolder" id="A">Pierre Arnaud &amp;amp; EPSITEC SA</data>
+  <data name="Text.Unknown" id="A1">inconnu</data>
 </bundle>

@@ -52,7 +52,7 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				var text = FormattedText.FromSimpleText ("inconnu"); // TODO:PA TextFormatter.GetCurrentCultureText (Epsitec.Cresus.Core.Library.Res.StringIds.Text.Unknown);
+				var text = TextFormatter.GetCurrentCultureText (Epsitec.Common.Types.Res.StringIds.Text.Unknown);
 
 				return text.ApplyItalic ();
 			}
