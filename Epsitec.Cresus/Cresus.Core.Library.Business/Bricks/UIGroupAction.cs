@@ -10,22 +10,32 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
+	/// <summary>
+	/// The <c>UIGroupAction</c> class is similar to <see cref="UIMultiAction"/>, but
+	/// the individual widgets will all be created in a row, as children of a group.
+	/// This is used when generating a horizontal group.
+	/// </summary>
 	internal class UIGroupAction : UIAction
 	{
 		public UIGroupAction(IEnumerable<UIAction> actions, string title)
 			: base (null)
 		{
 			this.actions = new List<UIAction> (actions);
-			this.title = title;
+			this.title   = title;
 		}
+
 
 		protected override void InternalExecute(FrameBox frame, UIBuilder builder)
 		{
-			var group = builder.CreateGroup (frame as EditionTile, this.title);
+			var tile  = frame as EditionTile;
+			var group = builder.CreateGroup (tile, this.title);
+
 			group.ContainerLayoutMode = ContainerLayoutMode.HorizontalFlow;
+			
 			this.actions.ForEach (x => x.Execute (group, builder));
 		}
 
+		
 		private readonly List<UIAction>			actions;
 		private readonly string					title;
 	}

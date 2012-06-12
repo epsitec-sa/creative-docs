@@ -10,12 +10,16 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
+	/// <summary>
+	/// The <c>UIAction</c> class is used to postpone the creation of a piece of UI hosted
+	/// in an <see cref="EditionTile"/>.
+	/// </summary>
 	internal class UIAction
 	{
 		public UIAction(System.Action<FrameBox, UIBuilder> action)
 		{
-			this.action      = action;
-			this.fieldInfo   = null;
+			this.action    = action;
+			this.fieldInfo = null;
 		}
 
 		
@@ -35,17 +39,22 @@ namespace Epsitec.Cresus.Core.Bricks
 		public void Execute(FrameBox frame, UIBuilder builder)
 		{
 			if ((this.fieldInfo == null) ||
-						(this.fieldInfo.Settings.FieldVisibilityMode == TileVisibilityMode.Visible))
+				(this.fieldInfo.Settings.FieldVisibilityMode == TileVisibilityMode.Visible))
 			{
 				this.InternalExecute (frame, builder);
 			}
 		}
 
+		
 		protected virtual void InternalExecute(FrameBox frame, UIBuilder builder)
 		{
-			this.action (frame, builder);
+			if (this.action != null)
+			{
+				this.action (frame, builder);
+			}
 		}
 
+		
 		private readonly System.Action<FrameBox, UIBuilder> action;
 		private FieldInfo						fieldInfo;
 	}

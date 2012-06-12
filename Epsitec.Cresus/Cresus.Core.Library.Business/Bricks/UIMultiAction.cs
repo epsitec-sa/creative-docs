@@ -10,10 +10,14 @@ using System.Linq;
 
 namespace Epsitec.Cresus.Core.Bricks
 {
+	/// <summary>
+	/// The <c>UIMultiAction</c> class collects several <see cref="UIAction"/> instances into
+	/// one, by inserting the intermediate <see cref="EditionTile"/> widgets, as required.
+	/// </summary>
 	internal class UIMultiAction : UIAction
 	{
-		public UIMultiAction(IEnumerable<UIAction> actions) :
-			base (null)
+		public UIMultiAction(IEnumerable<UIAction> actions)
+			: base (null)
 		{
 			this.actions = new List<UIAction> (actions);
 		}
@@ -21,7 +25,7 @@ namespace Epsitec.Cresus.Core.Bricks
 		
 		protected override void InternalExecute(FrameBox frame, UIBuilder builder)
 		{
-			EditionTile tile = frame as EditionTile;
+			var tile = frame as EditionTile;
 
 			if (tile != null)
 			{
