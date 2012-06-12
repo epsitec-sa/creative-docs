@@ -4,13 +4,10 @@
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 
-using Epsitec.Cresus.Core.Resolvers;
-using Epsitec.Cresus.Core.Binders;
-
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Epsitec.Cresus.Core.Factories
+namespace Epsitec.Common.Types.Converters
 {
 	/// <summary>
 	/// The <c>FieldBinderFactory</c> class creates (or finds) a field binder for

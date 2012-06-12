@@ -900,6 +900,7 @@
     <Compile Include="Types\Converters\DateTimeConverter.cs" />
     <Compile Include="Types\Converters\DecimalConverter.cs" />
     <Compile Include="Types\Converters\EnumConverter.cs" />
+    <Compile Include="Types\Converters\FieldBinderFactory.cs" />
     <Compile Include="Types\Converters\FormattedTextConverter.cs" />
     <Compile Include="Types\Converters\GenericConversionResult.cs" />
     <Compile Include="Types\Converters\GenericConverter.cs" />
@@ -986,6 +987,8 @@
     <Compile Include="Types\IDictionaryHost.cs" />
     <Compile Include="Types\IEnumType.cs" />
     <Compile Include="Types\IEnumValue.cs" />
+    <Compile Include="Types\Converters\IFieldBinder.cs" />
+    <Compile Include="Types\Converters\IFieldBinderProvider.cs" />
     <Compile Include="Types\IFieldPropertyStore.cs" />
     <Compile Include="Types\IListHost.cs" />
     <Compile Include="Types\IName.cs" />

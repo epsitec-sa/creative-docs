@@ -48,8 +48,6 @@
     <Compile Include="..\Solution Items\AssemblyInfo.Solution.cs">
       <Link>Properties\AssemblyInfo.Solution.cs</Link>
     </Compile>
-    <Compile Include="Binders\IFieldBinder.cs" />
-    <Compile Include="Binders\IFieldBinderProvider.cs" />
     <Compile Include="CommandHandlerStack.cs" />
     <Compile Include="Controllers\EnumController.cs" />
     <Compile Include="Controllers\EnumValueController.cs" />
@@ -98,7 +96,6 @@
     <Compile Include="PlugIns\PlugInFactory.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
-    <Compile Include="Factories\FieldBinderFactory.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
     <Compile Include="TextBuilder.cs" />
@@ -172,6 +169,7 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Binders\" />
     <Folder Include="Library\Formatters\" />
     <Folder Include="Library\Internal\" />
   </ItemGroup>
