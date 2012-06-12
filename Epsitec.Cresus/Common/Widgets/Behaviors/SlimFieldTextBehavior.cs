@@ -75,16 +75,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.AdjustGeometry ();
 		}
 
-		protected virtual void OnTextEditionStarted()
-		{
-			this.TextEditionStarted.Raise (this);
-		}
-
-		protected virtual void OnTextEditionEnded()
-		{
-			this.TextEditionEnded.Raise (this);
-		}
-
 
 		private void HandleHostEntered(object sender, MessageEventArgs e)
 		{
@@ -129,6 +119,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 		}
 
+		private void HandleTextEditionStarting(object sender, CancelEventArgs e)
+		{
+			this.OnTextEditionStarting (e);
+		}
+
 		private void HandleTextEditionStarted(object sender)
 		{
 			this.StartTextFieldEdition ();
@@ -170,6 +165,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			
 			this.textField.IsFocusedChanged += this.HandleTextIsFocusedChanged;
 			this.textField.EditionStarted   += this.HandleTextEditionStarted;
+			this.textField.EditionStarting  += this.HandleTextEditionStarting;
 			this.textField.EditionAccepted  += this.HandleTextEditionAccepted;
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
 			this.textField.TextEdited       += this.HandleTextTextEdited;
@@ -183,6 +179,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				this.textField.IsFocusedChanged -= this.HandleTextIsFocusedChanged;
 				this.textField.EditionStarted   -= this.HandleTextEditionStarted;
+				this.textField.EditionStarting  -= this.HandleTextEditionStarting;
 				this.textField.EditionAccepted  -= this.HandleTextEditionAccepted;
 				this.textField.EditionRejected  -= this.HandleTextEditionRejected;
 				this.textField.TextEdited       -= this.HandleTextTextEdited;
@@ -320,10 +317,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 
 		#endregion
-
-
-		public event EventHandler				TextEditionStarted;
-		public event EventHandler				TextEditionEnded;
 		
 		
 		private TextFieldEx						textField;

@@ -807,7 +807,6 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 
-//-			this.RegisterTextField (slimField);
 			this.ContentListAdd (slimField);
 
 			if (width > 0)
@@ -817,6 +816,9 @@ namespace Epsitec.Cresus.Core
 			}
 
 			var behavior = new SlimFieldTextBehavior (slimField);
+			
+			this.RegisterSlimField (behavior);
+			
 			var valueController = new TextValueController (marshaler);
 			valueController.FieldType = fieldType;
 
@@ -1023,6 +1025,20 @@ namespace Epsitec.Cresus.Core
 			this.container.Add (valueController);
 
 			return textField;
+		}
+
+		private void RegisterSlimField(SlimFieldBehavior slimFieldBehavior)
+		{
+			if (this.businessContext != null && this.ReadOnly == false)
+			{
+				slimFieldBehavior.TextEditionStarting += (_, e) =>
+				{
+					if (!this.businessContext.AcquireLock ())
+					{
+						e.Cancel = true;
+					}
+				};
+			}
 		}
 
 		private void RegisterTextField(AbstractTextField textField)

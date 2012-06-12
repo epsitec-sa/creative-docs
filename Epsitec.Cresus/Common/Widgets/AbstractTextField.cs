@@ -776,6 +776,15 @@ namespace Epsitec.Common.Widgets
 				(this.CanStartEdition) &&
 				((this.DefocusAction != DefocusAction.None) || (this.IsCombo) || (this.ButtonShowCondition != ButtonShowCondition.Never)))
 			{
+				var e = new CancelEventArgs();
+				
+				this.OnEditionStarting (e);
+
+				if (e.Cancel)
+				{
+					return false;
+				}
+				
 				this.initialText              = this.Text;
 				this.initialTextDisplayMode = this.TextDisplayMode;
 
@@ -1423,9 +1432,21 @@ namespace Epsitec.Common.Widgets
 			this.contextMenu = null;
 		}
 
-		private void HandleNavigatorAboutToChange(object sender)
+		private void HandleNavigatorAboutToChange(object sender, CancelEventArgs e)
 		{
-			this.StartEdition ();
+			if (this.IsEditing)
+			{
+				return;
+			}
+
+			if (this.StartEdition ())
+			{
+				//	OK.
+			}
+			else
+			{
+				e.Cancel = true;
+			}
 		}
 
 		private void HandleNavigatorTextDeleted(object sender)
@@ -1727,26 +1748,22 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void OnAutoSelecting(CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AutoSelecting");
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.RaiseUserEvent<CancelEventArgs> ("AutoSelecting", e);
 		}
 
 		protected virtual void OnAutoErasing(CancelEventArgs e)
 		{
-			EventHandler<CancelEventArgs> handler = this.GetUserEventHandler<CancelEventArgs> ("AutoErasing");
-			if (handler != null)
-			{
-				handler (this, e);
-			}
+			this.RaiseUserEvent<CancelEventArgs> ("AutoErasing", e);
 		}
-
 
 		protected virtual void OnEditionStarted()
 		{
 			this.RaiseUserEvent ("EditionStarted");
+		}
+
+		protected virtual void OnEditionStarting(CancelEventArgs e)
+		{
+			this.RaiseUserEvent<CancelEventArgs> ("EditionStarting", e);
 		}
 
 		protected virtual void OnEditionAccepted()
@@ -2367,6 +2384,17 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		public event EventHandler<CancelEventArgs> EditionStarting
+		{
+			add
+			{
+				this.AddUserEventHandler ("EditionStarting", value);
+			}
+			remove
+			{
+				this.RemoveUserEventHandler ("EditionStarting", value);
+			}
+		}
 
 		public event EventHandler EditionStarted
 		{

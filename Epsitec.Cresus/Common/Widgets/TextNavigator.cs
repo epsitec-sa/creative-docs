@@ -109,11 +109,13 @@ namespace Epsitec.Common.Widgets
 
 			set
 			{
-				this.UndoMemorize(UndoType.Insert);
-				this.textLayout.ReplaceSelection(this.context, value);
-				this.OnTextInserted(true);
-				this.OnCursorScrolled();
-				this.OnCursorChanged(true);
+				if (this.BeginChange (UndoType.Insert))
+				{
+					this.textLayout.ReplaceSelection (this.context, value);
+					this.OnTextInserted (true);
+					this.OnCursorScrolled ();
+					this.OnCursorChanged (true);
+				}
 			}
 		}
 
@@ -212,9 +214,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textLayout.IsSelectionBold (this.context) != value)
 				{
-					this.UndoMemorize (UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionBold (this.context, value);
-					this.OnStyleChanged ();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionBold (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -230,9 +234,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textLayout.IsSelectionItalic (this.context) != value)
 				{
-					this.UndoMemorize (UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionItalic (this.context, value);
-					this.OnStyleChanged ();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionItalic (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -248,9 +254,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textLayout.IsSelectionUnderline (this.context) != value)
 				{
-					this.UndoMemorize (UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionUnderline (this.context, value);
-					this.OnStyleChanged ();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionUnderline (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -266,9 +274,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textLayout.IsSelectionSubscript (this.context) != value)
 				{
-					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionSubscript (this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionSubscript (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -284,9 +294,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if (this.textLayout.IsSelectionSuperscript (this.context) != value)
 				{
-					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionSuperscript (this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionSuperscript (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -311,9 +323,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontFace(this.context) != value )
 				{
-					this.UndoMemorize(UndoType.CascadableStyle);
-					this.textLayout.SetSelectionFontFace(this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.CascadableStyle))
+					{
+						this.textLayout.SetSelectionFontFace (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -329,9 +343,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontScale(this.context) != value )
 				{
-					this.UndoMemorize(UndoType.CascadableStyle);
-					this.textLayout.SetSelectionFontScale(this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.CascadableStyle))
+					{
+						this.textLayout.SetSelectionFontScale (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -347,9 +363,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontRichColor(this.context) != value )
 				{
-					this.UndoMemorize(UndoType.CascadableStyle);
-					this.textLayout.SetSelectionFontRichColor(this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.CascadableStyle))
+					{
+						this.textLayout.SetSelectionFontRichColor (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -365,9 +383,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionFontColor(this.context) != value )
 				{
-					this.UndoMemorize(UndoType.CascadableStyle);
-					this.textLayout.SetSelectionFontColor(this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.CascadableStyle))
+					{
+						this.textLayout.SetSelectionFontColor (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -383,9 +403,11 @@ namespace Epsitec.Common.Widgets
 			{
 				if ( this.textLayout.GetSelectionList(this.context) != value )
 				{
-					this.UndoMemorize(UndoType.AutonomusStyle);
-					this.textLayout.SetSelectionList(this.context, value);
-					this.OnStyleChanged();
+					if (this.BeginChange (UndoType.AutonomusStyle))
+					{
+						this.textLayout.SetSelectionList (this.context, value);
+						this.OnStyleChanged ();
+					}
 				}
 			}
 		}
@@ -440,14 +462,20 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		public void ReplaceWithText(string text)
+		public bool ReplaceWithText(string text)
 		{
-			this.UndoMemorize(UndoType.Insert);
-			this.textLayout.SelectAll (this.context);
-			this.textLayout.ReplaceSelection (this.context, text);
-			this.OnTextInserted(true);
-			this.OnCursorScrolled();
-			this.OnCursorChanged(true);
+			if (this.BeginChange (UndoType.Insert))
+			{
+				this.textLayout.SelectAll (this.context);
+				this.textLayout.ReplaceSelection (this.context, text);
+				this.OnTextInserted (true);
+				this.OnCursorScrolled ();
+				this.OnCursorChanged (true);
+				
+				return true;
+			}
+			
+			return false;
 		}
 
 		public void SelectAll()
@@ -455,16 +483,26 @@ namespace Epsitec.Common.Widgets
 			this.textLayout.SelectAll (this.context);
 		}
 
-		public void TabUndoMemorize()
+		public bool TabUndoMemorize()
 		{
-			this.UndoMemorize(UndoType.Tab);
+			if (this.BeginChange (UndoType.Tab))
+			{
+				return true;
+			}
+
+			return false;
 		}
 
 		public int TabInsert(Drawing.TextStyle.Tab tab)
 		{
-			int rank = this.textLayout.Style.TabInsert(tab);
-			this.OnStyleChanged();
-			return rank;
+			if (this.BeginChange (UndoType.None))
+			{
+				int rank = this.textLayout.Style.TabInsert (tab);
+				this.OnStyleChanged ();
+				return rank;
+			}
+
+			return -1;
 		}
 
 		public int TabCount
@@ -590,18 +628,23 @@ namespace Epsitec.Common.Widgets
 				{
 //					case KeyCode.NumericEnter:
 					case KeyCode.Return:
-						if ( this.isReadOnly )  return false;
-						this.UndoMemorize(UndoType.Insert);
-						this.textLayout.InsertCharacter(this.context, '\n');
-						this.OnTextInserted(false);
-						return true;
+						if (this.BeginChange (UndoType.Insert))
+						{
+							this.textLayout.InsertCharacter (this.context, '\n');
+							this.OnTextInserted (false);
+							return true;
+						}
+						return false;
 
 					case KeyCode.Tab:
-						if ( this.isReadOnly || !this.allowTabInsertion )  return false;
-						this.UndoMemorize(UndoType.Insert);
-						this.textLayout.InsertCharacter(this.context, '\t');
-						this.OnTextInserted(false);
-						return true;
+						if ((this.allowTabInsertion) &&
+							(this.BeginChange (UndoType.Insert)))
+						{
+							this.textLayout.InsertCharacter (this.context, '\t');
+							this.OnTextInserted (false);
+							return true;
+						}
+						return false;
 
 					case KeyCode.Home:
 						if ( isControlPressed )
@@ -657,24 +700,28 @@ namespace Epsitec.Common.Widgets
 			switch ( key )
 			{
 				case KeyCode.Back:
-					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isControlPressed )  return false;
-					this.UndoMemorize(UndoType.Delete);
-					this.textLayout.DeleteCharacter(this.context, -1);
-					this.OnTextDeleted(false);
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if (this.BeginChange (UndoType.Delete))
+					{
+						this.textLayout.DeleteCharacter (this.context, -1);
+						this.OnTextDeleted (false);
+						this.OnCursorScrolled ();
+						this.OnCursorChanged (false);
+						return true;
+					}
+					return false;
 				
 				case KeyCode.Delete:
-					if ( this.isReadOnly )  return false;
 					if ( isShiftPressed || isControlPressed )  return false;
-					this.UndoMemorize(UndoType.Delete);
-					this.textLayout.DeleteCharacter(this.context, 1);
-					this.OnTextDeleted(false);
-					this.OnCursorScrolled();
-					this.OnCursorChanged(false);
-					return true;
+					if (this.BeginChange (UndoType.Delete))
+					{
+						this.textLayout.DeleteCharacter (this.context, 1);
+						this.OnTextDeleted (false);
+						this.OnCursorScrolled ();
+						this.OnCursorChanged (false);
+						return true;
+					}
+					return false;
 				
 				case KeyCode.Home:
 					if ( this.textLayout.MoveCursor(this.context, -1000000, isShiftPressed, false) )  // recule beaucoup
@@ -724,24 +771,24 @@ namespace Epsitec.Common.Widgets
 			{
 				bool replaced = this.textLayout.HasSelection (this.context);
 
-				this.UndoMemorize (UndoType.Insert);
-				this.textLayout.InsertCharacters (this.context, text);
+				if (this.BeginChange (UndoType.Insert))
+				{
+					this.textLayout.InsertCharacters (this.context, text);
 
-				if (replaced)
-				{
-					this.OnTextDeleted (true);
-					this.OnTextInserted (true);
+					if (replaced)
+					{
+						this.OnTextDeleted (true);
+						this.OnTextInserted (true);
+					}
+					else
+					{
+						this.OnTextInserted (false);
+					}
+					return true;
 				}
-				else
-				{
-					this.OnTextInserted (false);
-				}
-				return true;
 			}
-			else
-			{
-				return false;
-			}
+			
+			return false;
 		}
 
 		private bool ProcessKeyPress(int key)
@@ -753,21 +800,23 @@ namespace Epsitec.Common.Widgets
 			if ( key >= 32 )  // TODO: à vérifier ...
 			{
 				bool replaced = this.textLayout.HasSelection(this.context);
-				
-				this.UndoMemorize(UndoType.Insert);
-				this.textLayout.InsertCharacter (this.context, (char) key);
-				
-				if ( replaced )
+
+				if (this.BeginChange (UndoType.Insert))
 				{
-					this.OnTextDeleted(true);
-					this.OnTextInserted(true);
+					this.textLayout.InsertCharacter (this.context, (char) key);
+
+					if (replaced)
+					{
+						this.OnTextDeleted (true);
+						this.OnTextInserted (true);
+					}
+					else
+					{
+						this.OnTextInserted (false);
+					}
+
+					return true;
 				}
-				else
-				{
-					this.OnTextInserted(false);
-				}
-				
-				return true;
 			}
 			
 			return false;
@@ -910,10 +959,30 @@ namespace Epsitec.Common.Widgets
 			this.OnCursorChanged (false);
 		}
 
+		private bool BeginChange(UndoType type)
+		{
+			if (this.isReadOnly)
+			{
+				return false;
+			}
+
+			var e = new CancelEventArgs ();
+
+			this.OnAboutToChange (e);
+
+			if (e.Cancel)
+			{
+				return false;
+			}
+
+			this.UndoMemorize (type);
+
+			return true;
+		}
+
 		private void UndoMemorize(UndoType type)
 		{
 			//	Mémorise l'état actuel complet du texte, pour permettre l'annulation.
-			this.OnAboutToChange ();
 
 			if (this.opletQueue == null)
 				return;
@@ -967,6 +1036,7 @@ namespace Epsitec.Common.Widgets
 
 		private enum UndoType
 		{
+			None,
 			Insert,
 			Delete,
 			CascadableStyle,	// plusieurs modifs -> un seul undo global
@@ -1188,16 +1258,13 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void OnAboutToChange()
+		private void OnAboutToChange(CancelEventArgs e)
 		{
-			if (this.AboutToChange != null)
-			{
-				this.AboutToChange (this);
-			}
+			this.AboutToChange.Raise (this, e);
 		}
 
 
-		public event EventHandler				AboutToChange;
+		public event EventHandler<CancelEventArgs> AboutToChange;
 		public event EventHandler				TextInserted;
 		public event EventHandler				TextDeleted;
 		public event EventHandler				CursorChanged;
