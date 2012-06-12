@@ -34,6 +34,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public virtual void Clear()
 		{
 			this.ViewGraph             = false;
+			this.ZeroFiltered          = true;
+			this.ZeroDisplayedInWhite  = true;
+			this.HasGraphicColumn      = false;
+			this.DeepFrom              = 0;
+			this.DeepTo                = int.MaxValue;
 			this.ComparisonEnable      = false;
 			this.ComparisonShowed      = ComparisonShowed.None;
 			this.ComparisonDisplayMode = ComparisonDisplayMode.Montant;
@@ -50,14 +55,16 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		}
 
 
-		public bool ViewGraph
+		public bool Specialist
 		{
 			get;
 			set;
 		}
 
-		public bool Specialist
+
+		public bool ViewGraph
 		{
+			//	Affiche le graphe à la place du tableau ?
 			get;
 			set;
 		}
@@ -67,6 +74,42 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			//	0 = options graphiques cachées
 			//	1 = options graphiques communes
 			//	2 = options graphiques détaillées
+			get;
+			set;
+		}
+
+
+		public bool ZeroFiltered
+		{
+			//	Filtre les montants nuls (qui ne sont alors plus affichés) ?
+			get;
+			set;
+		}
+
+		public bool ZeroDisplayedInWhite
+		{
+			//	Affiche en blanc les montants nuls ?
+			get;
+			set;
+		}
+
+		public bool HasGraphicColumn
+		{
+			//	Affiche une colonne avec un graphe simplifié ?
+			get;
+			set;
+		}
+
+		public int DeepFrom
+		{
+			//	Affiche les comptes depuis cette profondeur.
+			get;
+			set;
+		}
+
+		public int DeepTo
+		{
+			//	Affiche les comptes jusqu'à cette profondeur.
 			get;
 			set;
 		}
@@ -172,6 +215,11 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 
 			dst.ViewGraph             = this.ViewGraph;
+			dst.ZeroFiltered          = this.ZeroFiltered;
+			dst.ZeroDisplayedInWhite  = this.ZeroDisplayedInWhite;
+			dst.HasGraphicColumn      = this.HasGraphicColumn;
+			dst.DeepFrom              = this.DeepFrom;
+			dst.DeepTo                = this.DeepTo;
 			dst.ComparisonEnable      = this.ComparisonEnable;
 			dst.ComparisonShowed      = this.ComparisonShowed;
 			dst.ComparisonDisplayMode = this.ComparisonDisplayMode;
@@ -181,8 +229,13 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 		public virtual bool CompareTo(AbstractOptions other)
 		{
-			if (this.ViewGraph        != other.ViewGraph        ||
-				this.ComparisonEnable != other.ComparisonEnable ||
+			if (this.ViewGraph            != other.ViewGraph            ||
+				this.ZeroFiltered         != other.ZeroFiltered         ||
+				this.ZeroDisplayedInWhite != other.ZeroDisplayedInWhite ||
+				this.HasGraphicColumn     != other.HasGraphicColumn     ||
+				this.DeepFrom             != other.DeepFrom             ||
+				this.DeepTo               != other.DeepTo               ||
+				this.ComparisonEnable != other.ComparisonEnable         ||
 				!this.graphOptions.CompareTo (other.graphOptions))
 			{
 				return false;

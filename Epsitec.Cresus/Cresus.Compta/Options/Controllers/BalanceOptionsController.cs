@@ -58,42 +58,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			this.CreateGraphUI (frame);
-
-			this.zeroButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 200,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
-
-			this.graphicsButton = new CheckButton
-			{
-				Parent         = frame,
-				Text           = "Graphique du solde",
-				PreferredWidth = 120,
-				Dock           = DockStyle.Left,
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.zeroButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.ZeroDisplayedInWhite = !this.Options.ZeroDisplayedInWhite;
-					this.OptionsChanged ();
-				}
-			};
-
-			this.graphicsButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
-					this.OptionsChanged ();
-				}
-			};
+			this.CreateZeroFilteredUI (frame);
+			this.CreateZeroDisplayedInWhiteUI (frame);
+			this.CreateHasGraphicColumnUI (frame);
 		}
 
 		protected override bool HasBeginnerSpecialist
@@ -113,16 +80,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateGraphWidgets ();
+			this.UpdateZeroFiltered ();
+			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateHasGraphicColumn ();
 			this.UpdateComparison ();
 
-			using (this.ignoreChanges.Enter ())
-			{
-				this.zeroButton.Visibility     = !this.options.ViewGraph;
-				this.graphicsButton.Visibility = !this.options.ViewGraph;
-
-				this.zeroButton.ActiveState     = this.Options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
-				this.graphicsButton.ActiveState = this.Options.HasGraphics          ? ActiveState.Yes : ActiveState.No;
-			}
+			this.zeroFilteredButton.Visibility         = !this.options.ViewGraph;
+			this.zeroDisplayedInWhiteButton.Visibility = !this.options.ViewGraph;
+			this.hasGraphicColumnButton.Visibility     = !this.options.ViewGraph;
 
 			base.UpdateWidgets ();
 		}
@@ -134,9 +99,5 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				return this.options as BalanceOptions;
 			}
 		}
-
-
-		private CheckButton			zeroButton;
-		private CheckButton			graphicsButton;
 	}
 }

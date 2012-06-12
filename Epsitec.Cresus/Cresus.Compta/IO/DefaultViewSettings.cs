@@ -431,7 +431,7 @@ namespace Epsitec.Cresus.Compta.IO
 			var o = options as DoubleOptions;
 
 			o.ZeroDisplayedInWhite  = true;
-			o.HasGraphics           = (showed != ComparisonShowed.None);
+			o.HasGraphicColumn      = (showed != ComparisonShowed.None);
 			o.ComparisonEnable      = (showed != ComparisonShowed.None);
 			o.ComparisonShowed      = showed;
 			o.ComparisonDisplayMode = mode;

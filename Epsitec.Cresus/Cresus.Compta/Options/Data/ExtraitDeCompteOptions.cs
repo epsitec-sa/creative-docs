@@ -23,8 +23,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.HasGraphics = true;
-
+			this.HasGraphicColumn = true;
 			this.graphOptions.Mode = GraphMode.Lines;
 			this.graphOptions.HasLegend = false;
 			this.graphOptions.TitleText = "Extrait de compte";
@@ -32,12 +31,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 
 		public FormattedText NuméroCompte
-		{
-			get;
-			set;
-		}
-
-		public bool HasGraphics
 		{
 			get;
 			set;
@@ -70,7 +63,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			var d = dst as ExtraitDeCompteOptions;
 
 			d.NuméroCompte = this.NuméroCompte;
-			d.HasGraphics  = this.HasGraphics;
 
 			base.CopyTo (dst);
 		}
@@ -84,8 +76,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as ExtraitDeCompteOptions;
 
-			return this.NuméroCompte == o.NuméroCompte &&
-				   this.HasGraphics  == o.HasGraphics;
+			return this.NuméroCompte == o.NuméroCompte;
 		}
 
 
@@ -106,7 +97,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				}
 				else
 				{
-					if (this.HasGraphics)
+					if (this.HasGraphicColumn)
 					{
 						this.AppendSummaryBuilder ("Graphique du solde");
 					}

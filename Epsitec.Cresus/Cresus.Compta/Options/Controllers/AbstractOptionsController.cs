@@ -223,6 +223,102 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
+		#region ZeroFiltered
+		protected void CreateZeroFilteredUI(FrameBox parent)
+		{
+			this.zeroFilteredButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Cacher les comptes dont le solde est nul",
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.zeroFilteredButton.PreferredWidth = this.zeroFilteredButton.GetBestFitSize ().Width;
+
+			this.zeroFilteredButton.Clicked += delegate
+			{
+				this.options.ZeroFiltered = !this.options.ZeroFiltered;
+				this.UpdateZeroFiltered ();
+				this.OptionsChanged ();
+			};
+
+			this.UpdateZeroFiltered ();
+		}
+
+		protected void UpdateZeroFiltered()
+		{
+			this.zeroFilteredButton.ActiveState = this.options.ZeroFiltered ? ActiveState.Yes : ActiveState.No;
+		}
+		#endregion
+
+
+		#region ZeroDisplayedInWhite
+		protected void CreateZeroDisplayedInWhiteUI(FrameBox parent)
+		{
+			this.zeroDisplayedInWhiteButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Affiche en blanc les montants nuls",
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.zeroDisplayedInWhiteButton.PreferredWidth = this.zeroDisplayedInWhiteButton.GetBestFitSize ().Width;
+
+			this.zeroDisplayedInWhiteButton.Clicked += delegate
+			{
+				this.options.ZeroDisplayedInWhite = !this.options.ZeroDisplayedInWhite;
+				this.UpdateZeroDisplayedInWhite ();
+				this.OptionsChanged ();
+			};
+
+			this.UpdateZeroDisplayedInWhite ();
+		}
+
+		protected void UpdateZeroDisplayedInWhite()
+		{
+			this.zeroDisplayedInWhiteButton.ActiveState = this.options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
+		}
+		#endregion
+
+
+		#region HasGraphicColumn
+		protected void CreateHasGraphicColumnUI(FrameBox parent)
+		{
+			this.hasGraphicColumnButton = new CheckButton
+			{
+				Parent         = parent,
+				FormattedText  = "Graphique du solde",
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.hasGraphicColumnButton.PreferredWidth = this.hasGraphicColumnButton.GetBestFitSize ().Width;
+
+			this.hasGraphicColumnButton.Clicked += delegate
+			{
+				this.options.HasGraphicColumn = !this.options.HasGraphicColumn;
+				this.UpdateHasGraphicColumn ();
+				this.OptionsChanged ();
+			};
+
+			this.UpdateHasGraphicColumn ();
+		}
+
+		protected void UpdateHasGraphicColumn()
+		{
+			this.hasGraphicColumnButton.ActiveState = this.options.HasGraphicColumn ? ActiveState.Yes : ActiveState.No;
+		}
+		#endregion
+
+
 		#region Comparaison
 		protected FrameBox CreateComparisonUI(FrameBox parent, ComparisonShowed possibleMode)
 		{
@@ -578,6 +674,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected FrameBox										graphbar;
 		protected FrameBox										mainFrame;
 		protected FrameBox										comparisonFrame;
+
+		protected CheckButton									zeroFilteredButton;
+		protected CheckButton									zeroDisplayedInWhiteButton;
+		protected CheckButton									hasGraphicColumnButton;
 
 		protected CheckButton									buttonComparisonEnable;
 		protected FrameBox										frameComparisonShowed;

@@ -22,53 +22,8 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.ZeroDisplayedInWhite = true;
-			this.HasGraphics          = false;
-
+			this.HasGraphicColumn = false;
 			this.graphOptions.Mode = GraphMode.SideBySide;
-		}
-
-
-		public bool ZeroDisplayedInWhite
-		{
-			//	Affiche en blanc les montants nuls ?
-			get;
-			set;
-		}
-
-		public bool HasGraphics
-		{
-			get;
-			set;
-		}
-
-
-		public override void CopyTo(AbstractOptions dst)
-		{
-			if (dst == this)
-			{
-				return;
-			}
-
-			var d = dst as DoubleOptions;
-
-			d.ZeroDisplayedInWhite = this.ZeroDisplayedInWhite;
-			d.HasGraphics          = this.HasGraphics;
-
-			base.CopyTo (dst);
-		}
-
-		public override bool CompareTo(AbstractOptions other)
-		{
-			if (!base.CompareTo (other))
-			{
-				return false;
-			}
-
-			var o = other as DoubleOptions;
-
-			return this.ZeroDisplayedInWhite == o.ZeroDisplayedInWhite &&
-				   this.HasGraphics          == o.HasGraphics;
 		}
 
 
@@ -89,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 						this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
 					}
 
-					if (this.HasGraphics)
+					if (this.HasGraphicColumn)
 					{
 						this.AppendSummaryBuilder ("Graphique du solde");
 					}

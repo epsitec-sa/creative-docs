@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public override void UpdateGraphData(bool force)
 		{
 			//	Appelé après la mise à jour du filtre, pour mettre à jour les données graphiques.
-			if (!force && !this.Options.HasGraphics && !this.options.ViewGraph)
+			if (!force && !this.Options.HasGraphicColumn && !this.options.ViewGraph)
 			{
 				return;
 			}

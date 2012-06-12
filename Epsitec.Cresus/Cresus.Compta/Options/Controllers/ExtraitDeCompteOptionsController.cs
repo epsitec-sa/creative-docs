@@ -76,7 +76,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				if (this.ignoreChanges.IsZero)
 				{
-					this.Options.HasGraphics = (graphicsButton.ActiveState == ActiveState.Yes);
+					this.Options.HasGraphicColumn = (graphicsButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
@@ -190,7 +190,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			using (this.ignoreChanges.Enter ())
 			{
 				this.graphicsButton.Visibility = !this.options.ViewGraph;
-				this.graphicsButton.ActiveState = this.Options.HasGraphics ? ActiveState.Yes : ActiveState.No;
+				this.graphicsButton.ActiveState = this.Options.HasGraphicColumn ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();

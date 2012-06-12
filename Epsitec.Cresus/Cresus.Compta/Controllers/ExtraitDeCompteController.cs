@@ -260,7 +260,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var options = this.dataAccessor.Options as ExtraitDeCompteOptions;
 
-			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphicColumn);
 			this.ShowHideColumn (ColumnType.Journal,        this.compta.Journaux.Count > 1);
 
 #if false

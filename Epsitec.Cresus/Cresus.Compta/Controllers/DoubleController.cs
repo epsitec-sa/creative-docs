@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				var options = this.dataAccessor.Options as DoubleOptions;
 
-				if (options.HasGraphics)
+				if (options.HasGraphicColumn)
 				{
 					int count = 1 + options.ComparisonShowedCount;
 					return System.Math.Max (2+count*6, 14);
@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.ShowHideColumn (ColumnType.BudgetFuturProrata, false);
 			}
 
-			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphics);
+			this.ShowHideColumn (ColumnType.SoldeGraphique, options.HasGraphicColumn);
 		}
 	}
 }

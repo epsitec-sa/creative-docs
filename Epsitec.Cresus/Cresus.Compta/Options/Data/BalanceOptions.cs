@@ -22,25 +22,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			base.Clear ();
 
-			this.ZeroDisplayedInWhite = true;
-			this.ComparisonShowed     = ComparisonShowed.Budget;
-
+			this.ComparisonShowed = ComparisonShowed.Budget;
 			this.graphOptions.Mode = GraphMode.SideBySide;
 			this.graphOptions.TitleText = "Balance de vérification";
-		}
-
-
-		public bool ZeroDisplayedInWhite
-		{
-			//	Affiche en blanc les montants nuls ?
-			get;
-			set;
-		}
-
-		public bool HasGraphics
-		{
-			get;
-			set;
 		}
 
 
@@ -58,34 +42,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			options.SetComptaEntity (this.compta);
 			this.CopyTo (options);
 			return options;
-		}
-
-		public override void CopyTo(AbstractOptions dst)
-		{
-			if (dst == this)
-			{
-				return;
-			}
-
-			var d = dst as BalanceOptions;
-
-			d.ZeroDisplayedInWhite = this.ZeroDisplayedInWhite;
-			d.HasGraphics          = this.HasGraphics;
-
-			base.CopyTo (dst);
-		}
-
-		public override bool CompareTo(AbstractOptions other)
-		{
-			if (!base.CompareTo (other))
-			{
-				return false;
-			}
-
-			var o = other as BalanceOptions;
-
-			return this.ZeroDisplayedInWhite == o.ZeroDisplayedInWhite &&
-				   this.HasGraphics          == o.HasGraphics;
 		}
 
 
@@ -106,7 +62,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 						this.AppendSummaryBuilder ("Affiche en blanc les montants nuls");
 					}
 
-					if (this.HasGraphics)
+					if (this.HasGraphicColumn)
 					{
 						this.AppendSummaryBuilder ("Graphique du solde");
 					}

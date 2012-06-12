@@ -45,13 +45,6 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			get;
 		}
 
-		public bool ZeroDisplayedInWhite
-		{
-			//	Affiche en blanc les montants nuls ?
-			get;
-			set;
-		}
-
 		public bool HasStackedGraph
 		{
 			get;
@@ -89,11 +82,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			}
 
 			var d = dst as RésuméPériodiqueOptions;
-			d.NumberOfMonths       = this.NumberOfMonths;
-			d.Cumul                = this.Cumul;
-			d.ZeroDisplayedInWhite = this.ZeroDisplayedInWhite;
-			d.HasStackedGraph      = this.HasStackedGraph;
-			d.HasSideBySideGraph   = this.HasSideBySideGraph;
+			d.NumberOfMonths     = this.NumberOfMonths;
+			d.Cumul              = this.Cumul;
+			d.HasStackedGraph    = this.HasStackedGraph;
+			d.HasSideBySideGraph = this.HasSideBySideGraph;
 
 			base.CopyTo (dst);
 		}
@@ -107,11 +99,10 @@ namespace Epsitec.Cresus.Compta.Options.Data
 
 			var o = other as RésuméPériodiqueOptions;
 
-			return this.NumberOfMonths       == o.NumberOfMonths       &&
-				   this.Cumul                == o.Cumul                &&
-				   this.ZeroDisplayedInWhite == o.ZeroDisplayedInWhite &&
-				   this.HasStackedGraph      == o.HasStackedGraph      &&
-				   this.HasSideBySideGraph   == o.HasSideBySideGraph;
+			return this.NumberOfMonths     == o.NumberOfMonths    &&
+				   this.Cumul              == o.Cumul             &&
+				   this.HasStackedGraph    == o.HasStackedGraph   &&
+				   this.HasSideBySideGraph == o.HasSideBySideGraph;
 		}
 
 
