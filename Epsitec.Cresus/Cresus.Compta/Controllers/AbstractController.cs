@@ -616,6 +616,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.FilterUpdateTopToolbar ();
 				this.SearchUpdateLocator (true);
 				this.SearchUpdateTopToolbar ();
+				this.mainWindowController.UpdateTitle ();
 			}
 
 			this.UpdateViewSettings ();
@@ -635,6 +636,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.topFilterController != null)
 			{
 				this.topFilterController.SetFilterCount (this.dataAccessor.Count, this.dataAccessor.Count, this.dataAccessor.AllCount);
+			}
+		}
+
+		public void FilterClear()
+		{
+			if (this.topFilterController != null)
+			{
+				this.topFilterController.SearchClear ();
 			}
 		}
 

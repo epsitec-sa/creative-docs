@@ -438,6 +438,7 @@
     <EmbeddedResource Include="Images\Navigator.Menu.icon" />
     <EmbeddedResource Include="Images\Période.Next.icon" />
     <EmbeddedResource Include="Images\Période.Prev.icon" />
+    <EmbeddedResource Include="Images\Filter.Warning.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -136,6 +136,23 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock             = DockStyle.Fill,
 			};
 
+			this.titleButton = new IconButton
+			{
+				Parent           = this.titleLabel,
+				IconUri          = UIBuilder.GetResourceIconUri ("Filter.Warning"),
+				PreferredWidth   = 24,
+				PreferredHeight  = 24,
+				Anchor           = AnchorStyles.BottomLeft,
+				Visibility       = false,
+			};
+
+			ToolTip.Default.SetToolTip (this.titleButton, "Termine tous les filtres");
+
+			this.titleButton.Clicked += delegate
+			{
+				this.mainWindowController.ClearFilter ();
+			};
+
 			//	Ligne inférieure.
 			this.topTemporalController = new TopTemporalController (this.mainWindowController);
 			this.topTemporalController.CreateUI (line2);
@@ -177,6 +194,18 @@ namespace Epsitec.Cresus.Compta.Controllers
 			else
 			{
 				this.titleLabel.FormattedText = title.ApplyFontSize (13.0);
+			}
+
+			if (this.mainWindowController.HasFilter)
+			{
+				double x = System.Math.Floor((this.titleLabel.ActualWidth - this.titleLabel.GetBestFitSize ().Width) / 2);
+
+				this.titleButton.Margins = new Margins (x-24-4, 0, 0, 2);
+				this.titleButton.Visibility = true;
+			}
+			else
+			{
+				this.titleButton.Visibility = false;
 			}
 		}
 
@@ -336,6 +365,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Button							userLabel;
 		private Button							navigatorMenuButton;
 		private StaticText						titleLabel;
+		private IconButton						titleButton;
 		private TopTemporalController			topTemporalController;
 		private bool							windowActivated;
 		private bool							isFullScreen;

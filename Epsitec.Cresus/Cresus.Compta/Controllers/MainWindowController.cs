@@ -205,6 +205,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.controller.SearchUpdatePériode ();
 				this.controller.FilterUpdatePériode ();
 				this.controller.FilterStartAction ();
+
+				this.toolbarController.UpdateTitle ();
 			}
 		}
 
@@ -221,6 +223,37 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return this.defaultSettingsList;
+			}
+		}
+
+
+		public bool HasFilter
+		{
+			get
+			{
+				if (!this.temporalData.IsEmpty)
+				{
+					return true;
+				}
+
+				if (this.controller != null && this.controller.DataAccessor != null && this.controller.DataAccessor.FilterData != null &&
+					!this.controller.DataAccessor.FilterData.IsEmpty)
+				{
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		public void ClearFilter()
+		{
+			this.temporalData.Clear ();
+			this.toolbarController.UpdateTemporalFilter ();
+
+			if (this.controller != null)
+			{
+				this.controller.FilterClear ();
 			}
 		}
 
@@ -623,7 +656,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		private void UpdateTitle()
+		public void UpdateTitle()
 		{
 			this.mainWindow.Text = this.GetTitle (this.selectedDocument);
 			this.toolbarController.UpdateTitle ();
