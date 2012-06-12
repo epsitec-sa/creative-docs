@@ -1,4 +1,4 @@
-//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -34,7 +34,7 @@ namespace Epsitec.Common.Types
 		/// Gets the number of texts stored in this multilingual text instance.
 		/// </summary>
 		/// <value>The number of texts.</value>
-		public int Count
+		public int								Count
 		{
 			get
 			{
@@ -48,28 +48,29 @@ namespace Epsitec.Common.Types
 		/// <value>
 		/// 	<c>true</c> if this multilingual text instance contains any localizations; otherwise, <c>false</c>.
 		/// </value>
-		public bool ContainsLocalizations
+		public bool								ContainsLocalizations
 		{
 			get
 			{
 				int count = this.Count;
 				
 				if (count > 1)
-                {
+				{
 					return true;
-                }
+				}
 				else if (count == 1)
-                {
-					if (this.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageName) == false)
+				{
+					if (this.ContainsLanguage (MultilingualText.DefaultTwoLetterISOLanguageToken) == false)
 					{
 						return true;
 					}
-                }
+				}
 
 				return false;
 			}
 		}
 
+		
 		/// <summary>
 		/// Determines whether this multilingual text contains the specified language.
 		/// </summary>
@@ -150,7 +151,7 @@ namespace Epsitec.Common.Types
 		{
 			string text;
 
-			if (this.texts.TryGetValue (MultilingualText.DefaultTwoLetterISOLanguageName, out text))
+			if (this.texts.TryGetValue (MultilingualText.DefaultTwoLetterISOLanguageToken, out text))
 			{
 				return new FormattedText (text);
 			}
@@ -180,7 +181,7 @@ namespace Epsitec.Common.Types
 
 		public void SetDefaultText(FormattedText formattedText)
 		{
-			this.SetText (MultilingualText.DefaultTwoLetterISOLanguageName, formattedText);
+			this.SetText (MultilingualText.DefaultTwoLetterISOLanguageToken, formattedText);
 		}
 
 		/// <summary>
@@ -206,9 +207,9 @@ namespace Epsitec.Common.Types
 			}
 
 			if (this.texts.Count == 1 &&
-				this.texts.ContainsKey (MultilingualText.DefaultTwoLetterISOLanguageName))
+				this.texts.ContainsKey (MultilingualText.DefaultTwoLetterISOLanguageToken))
 			{
-				return new FormattedText (this.texts[MultilingualText.DefaultTwoLetterISOLanguageName]);
+				return new FormattedText (this.texts[MultilingualText.DefaultTwoLetterISOLanguageToken]);
 			}
 
 			var buffer = new System.Text.StringBuilder ();
@@ -324,10 +325,13 @@ namespace Epsitec.Common.Types
 		public static bool IsDefaultTwoLetterISOLanguageName(string twoLetterISOLanguageName)
 		{
 			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
-            {
+			{
 				return true;
-            }
-			return (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName);
+			}
+			else
+			{
+				return (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageToken);
+			}
 		}
 
 		/// <summary>
@@ -389,7 +393,7 @@ namespace Epsitec.Common.Types
 				}
 			}
 
-			return MultilingualText.DefaultTwoLetterISOLanguageName;
+			return MultilingualText.DefaultTwoLetterISOLanguageToken;
 		}
 
 
@@ -414,16 +418,16 @@ namespace Epsitec.Common.Types
 		{
 			if (string.IsNullOrEmpty (twoLetterISOLanguageName))
 			{
-				twoLetterISOLanguageName = MultilingualText.DefaultTwoLetterISOLanguageName;
+				twoLetterISOLanguageName = MultilingualText.DefaultTwoLetterISOLanguageToken;
 			}
 		}
 		
 		private static bool IsMultilingual(string text)
 		{
 			if (string.IsNullOrEmpty (text))
-            {
+			{
 				return false;
-            }
+			}
 
 			return text.StartsWith (MultilingualText.DivBeginWithLanguageAttribute);
 		}
@@ -454,7 +458,7 @@ namespace Epsitec.Common.Types
 
 			if (pos == 0 || pos < text.Length)
 			{
-				yield return MultilingualText.GetDivElement (MultilingualText.DefaultTwoLetterISOLanguageName, text.Substring (pos));
+				yield return MultilingualText.GetDivElement (MultilingualText.DefaultTwoLetterISOLanguageToken, text.Substring (pos));
 			}
 		}
 
@@ -546,7 +550,7 @@ namespace Epsitec.Common.Types
 		#endregion
 
 
-		public static readonly string DefaultTwoLetterISOLanguageName		= "*";
+		public static readonly string DefaultTwoLetterISOLanguageToken		= "*";
 
 		private const string DivBeginWithLanguageAttribute	= MultilingualText.DivBegin + MultilingualText.LanguageAttribute;  // "<div lang="
 		private const string LanguageAttribute				= "lang=";

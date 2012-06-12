@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			GlyphButton defaultButton = null;
 
-			if (twoLetterISOLanguageName != MultilingualText.DefaultTwoLetterISOLanguageName)  // pas la langue par défaut ?
+			if (twoLetterISOLanguageName != MultilingualText.DefaultTwoLetterISOLanguageToken)  // pas la langue par défaut ?
 			{
 				defaultButton = new GlyphButton
 				{
@@ -505,7 +505,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 				return true;
 			}
 
-			if (MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
+			if (MultilingualText.DefaultTwoLetterISOLanguageToken == twoLetterISOLanguageName)
 			{
 				if (!Library.UI.Services.Settings.CultureForData.HasTwoLetterISOLanguageName)
 				{
@@ -544,7 +544,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string GetDescription(string twoLetterISOLanguageName)
 		{
-			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName)
+			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageToken)
 			{
 				twoLetterISOLanguageName = "default";
 			}
@@ -572,9 +572,9 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static string NormalizeId(string twoLetterISOLanguageName)
 		{
-			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageName)
+			if (twoLetterISOLanguageName == MultilingualText.DefaultTwoLetterISOLanguageToken)
 			{
-				twoLetterISOLanguageName = Library.UI.Services.Settings.CultureForData.TwoLetterISOLanguageNameForDefault ?? "fr";
+				twoLetterISOLanguageName = Library.UI.Services.Settings.CultureForData.DefaultTwoLetterISOLanguageName ?? "fr";
 			}
 
 			return twoLetterISOLanguageName;
@@ -582,7 +582,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private static IEnumerable<string> GetTwoLetterISOLanguageNames()
 		{
-			yield return MultilingualText.DefaultTwoLetterISOLanguageName;
+			yield return MultilingualText.DefaultTwoLetterISOLanguageToken;
 			yield return "fr";
 			yield return "de";
 			yield return "en";

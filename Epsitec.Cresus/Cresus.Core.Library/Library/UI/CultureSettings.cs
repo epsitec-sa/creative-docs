@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -33,19 +33,19 @@ namespace Epsitec.Cresus.Core.Library.UI
 			}
 		}
 
-		public string							TwoLetterISOLanguageNameForDefault
+		public string							DefaultTwoLetterISOLanguageName
 		{
 			get
 			{
-				return this.twoLetterISOLanguageNameForDefault;
+				return this.defaultTwoLetterISOLanguageName;
 			}
 		}
 
-		public bool								IsActiveLanguageAlsoTheDefault
+		public bool								IsDefaultLanguageActive
 		{
 			get
 			{
-				return this.TwoLetterISOLanguageName == this.twoLetterISOLanguageNameForDefault;
+				return this.TwoLetterISOLanguageName == this.defaultTwoLetterISOLanguageName;
 			}
 		}
 
@@ -60,8 +60,8 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 		public void SelectLanguage(string twoLetterISOLanguageName)
 		{
-			if (string.IsNullOrEmpty (twoLetterISOLanguageName) ||
-				MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
+			if ((string.IsNullOrEmpty (twoLetterISOLanguageName)) ||
+				(MultilingualText.DefaultTwoLetterISOLanguageToken == twoLetterISOLanguageName))
 			{
 				twoLetterISOLanguageName = null;
 			}
@@ -80,7 +80,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 		public void DefineDefaultLanguage(string twoLetterISOLanguageName)
 		{
-			this.twoLetterISOLanguageNameForDefault = twoLetterISOLanguageName;
+			this.defaultTwoLetterISOLanguageName = twoLetterISOLanguageName;
 		}
 
 		public bool IsDefaultLanguage(string twoLetterISOLanguageName)
@@ -90,11 +90,11 @@ namespace Epsitec.Cresus.Core.Library.UI
 				return false;
 			}
 
-			if (MultilingualText.DefaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
+			if (MultilingualText.DefaultTwoLetterISOLanguageToken == twoLetterISOLanguageName)
 			{
 				return true;
 			}
-			if (this.twoLetterISOLanguageNameForDefault == twoLetterISOLanguageName)
+			if (this.defaultTwoLetterISOLanguageName == twoLetterISOLanguageName)
 			{
 				return true;
 			}
@@ -105,6 +105,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 		private void NotifyTwoLetterISOLanguageNameChanged(string oldTwoLetterISOLanguageName, string newTwoLetterISOLanguageName)
 		{
+			TextFormatter.DefineActiveCulture (newTwoLetterISOLanguageName);
 			Services.NotifyUpdateRequested (this);
 		}
 
@@ -112,6 +113,6 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 		private readonly CultureInfo			culture;
 		private string							twoLetterISOLanguageName;
-		private string							twoLetterISOLanguageNameForDefault;
+		private string							defaultTwoLetterISOLanguageName;
 	}
 }

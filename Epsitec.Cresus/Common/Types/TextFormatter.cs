@@ -20,6 +20,11 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
+				if (TextFormatter.cultureOverride != null)
+				{
+					return TextFormatter.cultureOverride.TwoLetterISOLanguageName;
+				}
+
 				return TextFormatter.CurrentCulture.TwoLetterISOLanguageName;
 			}
 		}
@@ -28,7 +33,9 @@ namespace Epsitec.Common.Types
 		{
 			get
 			{
-				return TextFormatter.cultureOverride ; // TODO:PA ?? Library.UI.Services.Settings.CultureForData.CultureInfo;
+				return TextFormatter.cultureOverride
+					?? TextFormatter.activeCulture
+					?? System.Threading.Thread.CurrentThread.CurrentCulture;
 			}
 		}
 
@@ -49,6 +56,18 @@ namespace Epsitec.Common.Types
 
 				return text.ApplyItalic ();
 			}
+		}
+
+
+		public static void DefineActiveCulture(CultureInfo cultureInfo)
+		{
+			TextFormatter.activeCulture = cultureInfo;
+		}
+
+		public static void DefineActiveCulture(string twoLetterISOLanguageName)
+		{
+			var fullName = twoLetterISOLanguageName + System.Threading.Thread.CurrentThread.CurrentCulture.Name.Substring (2);
+			TextFormatter.DefineActiveCulture (CultureInfo.GetCultureInfo (fullName));
 		}
 
 		public static FormattedText GetMonolingualText(FormattedText text, string twoLetterISOLanguageName = null)
@@ -681,12 +700,15 @@ namespace Epsitec.Common.Types
 
 
 		[System.ThreadStatic]
-		private static CultureInfo cultureOverride;
+		private static CultureInfo				cultureOverride;
+
+		[System.ThreadStatic]
+		private static CultureInfo				activeCulture;
 
 		[System.ThreadStatic]
 		private static TextFormatterDetailLevel detailLevel;
 
-		private static readonly object exclusion = new object ();
+		private static readonly object			exclusion = new object ();
 		private static readonly Dictionary<System.Type, System.Func<object, string>> defaultConverters = new Dictionary<System.Type, System.Func<object, string>> ();
 	}
 }
