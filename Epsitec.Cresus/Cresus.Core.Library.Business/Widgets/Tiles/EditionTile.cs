@@ -23,8 +23,17 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			{
 				Parent  = this,
 				Dock    = DockStyle.Fill,
+#if SLIMFIELD
+				Margins = this.ContainerPadding + new Margins (0, 0, 0, 1),
+				PreferredHeight = 10,
+#else
 				Margins = this.ContainerPadding + new Margins (0, 0, 0, 3),
+#endif
 			};
+
+#if SLIMFIELD
+			this.PreferredHeight = 10;
+#endif
 
 			//double tint = ((counter++) % 10) / 9.0;
 

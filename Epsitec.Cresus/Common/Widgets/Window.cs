@@ -505,7 +505,7 @@ namespace Epsitec.Common.Widgets
 			}
 			private set
 			{
-				 if (this.focusedWidget != value)
+				if (this.focusedWidget != value)
 				{
 					Widget oldFocus = this.focusedWidget;
 					Widget newFocus = value;

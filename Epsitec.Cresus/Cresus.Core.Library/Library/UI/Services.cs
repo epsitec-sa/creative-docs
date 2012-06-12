@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Dialogs;
@@ -219,12 +219,21 @@ namespace Epsitec.Cresus.Core.Library.UI
 
 			foreach (Visual widget in children)
 			{
-				if (widget is AbstractTextField)
-				{
-					var textField = widget as AbstractTextField;
+				var textField = widget as AbstractTextField;
 
+				if (textField != null)
+				{
 					textField.SelectAll ();
 					textField.Focus ();
+
+					return true;
+				}
+
+				var slimField = widget as SlimField;
+
+				if (slimField != null)
+				{
+					slimField.Focus ();
 
 					return true;
 				}
