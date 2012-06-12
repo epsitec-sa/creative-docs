@@ -98,7 +98,6 @@
     <Compile Include="Factories\CoreCommandHandlerFactory.cs" />
     <Compile Include="Resolvers\ResolutionMode.cs" />
     <Compile Include="Resources\Cresus.Core.Library\SourceCode\Res.cs" />
-    <Compile Include="TextBuilder.cs" />
     <Compile Include="Library\UI\Constants.cs" />
     <Compile Include="Library\UI\Services.cs" />
     <Compile Include="Library\UI\CultureSettings.cs" />

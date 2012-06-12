@@ -1080,6 +1080,7 @@
     <Compile Include="Types\StructuredTypeClass.cs" />
     <Compile Include="Types\StructuredTypeField.cs" />
     <Compile Include="Types\SystemTypeFamily.cs" />
+    <Compile Include="Types\TextBuilder.cs" />
     <Compile Include="Types\TextComparison.cs" />
     <Compile Include="Types\TextFormatter.cs" />
     <Compile Include="Types\TextFormatterConverter.cs" />

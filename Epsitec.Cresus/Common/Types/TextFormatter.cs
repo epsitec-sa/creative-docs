@@ -276,8 +276,9 @@ namespace Epsitec.Common.Types
 
 		public static System.IDisposable UsingCulture(CultureInfo culture, TextFormatterDetailLevel detailLevel)
 		{
+			var helper = new UsingCultureHelper ();
 			TextFormatter.SetCultureOverride (culture, detailLevel);
-			return new UsingCultureHelper ();
+			return helper;
 		}
 
 		
@@ -285,12 +286,6 @@ namespace Epsitec.Common.Types
 		{
 			TextFormatter.cultureOverride = culture;
 			TextFormatter.detailLevel = detailLevel;
-		}
-
-		private static void ClearCultureOverride()
-		{
-			TextFormatter.cultureOverride = null;
-			TextFormatter.detailLevel = TextFormatterDetailLevel.Default;
 		}
 
 		private static bool IsActiveCulture(CultureInfo culture)
@@ -389,7 +384,7 @@ namespace Epsitec.Common.Types
 
 				conditionalParentheses = text.EndsWith ("(~");
 
-				char prefix = text.RemoveTag ().FirstCharacter ();
+				char prefix = text.FirstCharacterOfSimpleText ();
 
 				if (prefix == Prefix.SkipItemIfPreviousEmpty)
 				{
@@ -399,10 +394,10 @@ namespace Epsitec.Common.Types
 					}
 
 					text   = text.Substring (1);
-					prefix = text.RemoveTag ().FirstCharacter ();
+					prefix = text.FirstCharacterOfSimpleText ();
 				}
 
-				char suffix = text.RemoveTag ().LastCharacter ();
+				char suffix = text.LastCharacterOfSimpleText ();
 
 				if (suffix == Suffix.SkipItemIfNextEmpty)
 				{
@@ -413,7 +408,7 @@ namespace Epsitec.Common.Types
 					}
 
 					text   = text.Substring (0, text.Length-1);
-					suffix = text.RemoveTag ().LastCharacter ();
+					suffix = text.LastCharacterOfSimpleText ();
 				}
 
 				if (TextFormatter.IsEmptyItem (text, conditionalParentheses))
@@ -424,7 +419,7 @@ namespace Epsitec.Common.Types
 					continue;
 				}
 
-				char lastCharacter = buffer.LastCharacter ();
+				char lastCharacter = buffer.LastCharacterOfSimpleText ();
 
 				if ((prefix.IsPunctuationMark ()) &&
 					((lastCharacter == prefix) || emptyItem))
@@ -479,7 +474,7 @@ namespace Epsitec.Common.Types
 				return true;
 			}
 
-			text = text.RemoveTag ();
+			text = FormattedText.Unescape (text);
 
 			return string.IsNullOrWhiteSpace (text);
 		}
@@ -488,14 +483,23 @@ namespace Epsitec.Common.Types
 
 		private class UsingCultureHelper : System.IDisposable
 		{
+			public UsingCultureHelper()
+			{
+				this.cultureOverride = TextFormatter.cultureOverride;
+				this.detailLevel     = TextFormatter.detailLevel;
+			}
+
 			#region IDisposable Members
 
 			void System.IDisposable.Dispose()
 			{
-				TextFormatter.ClearCultureOverride ();
+				TextFormatter.SetCultureOverride (this.cultureOverride, this.detailLevel);
 			}
 
 			#endregion
+
+			private readonly CultureInfo		cultureOverride;
+			private readonly TextFormatterDetailLevel	detailLevel;
 		}
 
 		#endregion

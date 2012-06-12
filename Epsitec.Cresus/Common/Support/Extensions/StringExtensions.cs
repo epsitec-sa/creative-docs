@@ -486,9 +486,14 @@ namespace Epsitec.Common.Support.Extensions
 			return n < 1 ? (char) 0 : text[0];
 		}
 
-		public static string RemoveTag(this string text)
+		public static char LastCharacterOfSimpleText(this string text)
 		{
-			return FormattedText.Unescape (text);
+			return FormattedText.Unescape (text).LastCharacter ();
+		}
+
+		public static char FirstCharacterOfSimpleText(this string text)
+		{
+			return FormattedText.Unescape (text).FirstCharacter ();
 		}
 
 		public static bool IsPunctuationMark(this char c)
