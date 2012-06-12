@@ -658,38 +658,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void UpdateTitle()
 		{
-			this.mainWindow.Text = this.GetTitle (this.selectedDocument);
 			this.toolbarController.UpdateTitle ();
-		}
-
-		public void SetTitleComplement(string text)
-		{
-			this.titleComplement = text;
-			this.UpdateTitle ();
-		}
-
-		public string GetTitle(ControllerType type)
-		{
-			if (this.compta  == null)
-			{
-				return "Crésus Comptabilité NG";
-			}
-			else
-			{
-				return string.Concat ("Crésus Comptabilité NG / ", this.compta.Nom, " / ", this.GetShortTitle (type));
-			}
-		}
-
-		private string GetShortTitle(ControllerType type)
-		{
-			string text = type.ToString ();  // TODO: provisoire !!!
-
-			if (!string.IsNullOrEmpty (this.titleComplement))
-			{
-				text += string.Concat (" / ", this.titleComplement);
-			}
-
-			return text;
 		}
 
 

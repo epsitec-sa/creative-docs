@@ -46,11 +46,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 				return Controllers.ControllerType.Bilan;
 			}
 		}
-
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-			this.SetSubtitle (this.période.ShortTitle);
-		}
 	}
 }

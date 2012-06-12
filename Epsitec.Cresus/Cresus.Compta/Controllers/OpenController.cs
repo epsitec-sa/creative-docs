@@ -48,11 +48,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-		}
-
 		public override bool AcceptPériodeChanged
 		{
 			get

@@ -144,7 +144,8 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 					viewSettingsName = controller.ViewSettingsList.Selected.Name;
 				}
 
-				return new NavigatorData (controllerType, controller.MixTitle, viewSettingsName, search, filter, options, permanents, controller.SelectedArrayLine);
+				var description = Présentations.GetName (controllerType);
+				return new NavigatorData (controllerType, description, viewSettingsName, search, filter, options, permanents, controller.SelectedArrayLine);
 			}
 		}
 

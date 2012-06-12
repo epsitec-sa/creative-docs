@@ -51,21 +51,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 			}
 		}
 
-		public void SetTitle(FormattedText title)
-		{
-			if (this.titleLabel.Visibility)
-			{
-				this.titleLabel.FormattedText = title;
-				this.titleFrame.PreferredWidth = this.titleLabel.GetBestFitSize ().Width;
-			}
-		}
-
-		public FrameBox GetTitleFrame()
-		{
-			this.titleLabel.Visibility = false;
-			return this.titleFrame;
-		}
-
 
 		public void LinkHiliteOptionsButton(bool hilite)
 		{
@@ -105,49 +90,10 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 				Dock            = DockStyle.Fill,
 			};
 
-			this.CreateLeftUI ();
 			this.CreateRightUI ();
 
 			this.CreateTabs ();
 			this.UpdateWidgets ();
-		}
-
-		private void CreateLeftUI()
-		{
-			var leftFrame = new FrameBox
-			{
-				PreferredWidth  = 10,
-				PreferredHeight = 24,
-				Padding         = new Margins (0, 0, 0, 5),
-			};
-
-			this.titleFrame = new FrameBox
-			{
-				Parent          = leftFrame,
-				PreferredWidth  = 10,
-				PreferredHeight = 24,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 2, 0, 0),
-			};
-
-			this.titleLabel = new StaticText
-			{
-				Parent          = this.titleFrame,
-				PreferredWidth  = 10,
-				PreferredHeight = 24,
-				Dock            = DockStyle.Fill,
-			};
-
-			this.titleLabel.HypertextClicked += delegate
-			{
-				if (this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty)
-				{
-					this.controller.MainWindowController.OpenPanelFilter ();
-				}
-			};
-
-			//?Cette zone à gauche des onglets n'est plus utile !!!
-			//?this.tabsPane.AddLeftWidget (leftFrame);
 		}
 
 		private void CreateRightUI()
@@ -756,8 +702,6 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Controllers
 
 		private FrameBox								toolbar;
 		private TabsPane								tabsPane;
-		private FrameBox								titleFrame;
-		private StaticText								titleLabel;
 		private Button									saveButton;
 		private Button									reloadButton;
 

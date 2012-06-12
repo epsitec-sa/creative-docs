@@ -178,15 +178,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.SetCommandEnable (Res.Commands.Multi.Join, false);
 			this.SetCommandEnable (Res.Commands.Multi.Auto, false);
 
-			this.mainWindowController.SetTitleComplement (null);
-
 			this.frameBox = new FrameBox
 			{
 				Parent	= parent,
 				Dock	= DockStyle.Fill,
 			};
 
-			this.CreateTitle (this.frameBox);
 			this.CreateViewSettings (this.frameBox);
 			this.CreateTopOptions (this.frameBox);
 			this.CreateTopFilter (this.frameBox);
@@ -233,7 +230,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.SearchStartAction ();
 			this.FilterUpdateTopToolbar ();
-			this.UpdateTitle ();
 			
 			if (this.editorController != null)
 			{
@@ -464,8 +460,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.viewSettingsController = new ViewSettingsController (this);
 			this.viewSettingsController.CreateUI (parent, this.ViewSettingsChangedAction);
-
-			this.CreateTitleFrame ();
 		}
 
 		private void ViewSettingsChangedAction()
@@ -670,115 +664,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			this.UpdateArrayContent ();
-			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
 			this.UpdateViewSettings ();
 		}
 		#endregion
 
-
-		#region Title
-		private void CreateTitle(FrameBox parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = this.frameBox,
-				PreferredHeight = 22,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, 4),
-				Visibility      = false,  //?
-			};
-
-			this.userLabel = new StaticText
-			{
-				Parent           = frame,
-				ContentAlignment = ContentAlignment.MiddleLeft,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth   = 100,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (20, 0, 0, 0),
-			};
-
-			new GlyphButton
-			{
-				Parent           = frame,
-				CommandObject    = Res.Commands.Compta.PériodeSuivante,
-				GlyphShape       = GlyphShape.ArrowRight,
-				ButtonStyle      = ButtonStyle.ToolItem,
-				PreferredWidth   = 20,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Right,
-			};
-
-			new GlyphButton
-			{
-				Parent           = frame,
-				CommandObject    = Res.Commands.Compta.PériodePrécédente,
-				GlyphShape       = GlyphShape.ArrowLeft,
-				ButtonStyle      = ButtonStyle.ToolItem,
-				PreferredWidth   = 20,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Right,
-			};
-
-			this.subtitleLabel = new StaticText
-			{
-				Parent           = frame,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth   = 200,
-				PreferredHeight  = 20,
-				Dock             = DockStyle.Right,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			this.CreateTitleFrame ();
-			//?this.UpdateUser ();
-		}
-
-		protected virtual void CreateTitleFrame()
-		{
-		}
-
-		public void UpdateUser()
-		{
-			string tooltip;
-
-			if (this.mainWindowController.CurrentUser == null)
-			{
-				this.userLabel.Visibility = true;
-				this.userLabel.FormattedText = TextFormatter.FormatText ("Déconnecté").ApplyItalic ().ApplyFontSize (13.0);
-				tooltip = "Aucun utilisateur n'est actuellement connecté.<br/>{0} permet de se connecter.";
-			}
-			else
-			{
-				if (this.compta.Utilisateurs.Count == 1 &&
-					string.IsNullOrEmpty (this.compta.Utilisateurs[0].MotDePasse))  // un seul utilisateur sans mot de passe ?
-				{
-					//	S'il n'y a qu'un seul utilisateur (forcément administrateur) sans mot de passe,
-					//	n'affiche pas l'identité de l'utilisateur.
-					this.userLabel.Visibility = false;
-					tooltip = null;
-				}
-				else
-				{
-					this.userLabel.Visibility = true;
-					this.userLabel.FormattedText = this.mainWindowController.CurrentUser.Utilisateur.ApplyBold ().ApplyFontSize (13.0);
-					tooltip = "Nom de l'utilisateur actuellement connecté.<br/>Si nécessaire, {0} permet de changer d'utilisateur.";
-				}
-			}
-
-			if (tooltip != null)
-			{
-				var icon = UIBuilder.GetIconTag ("Présentation.Login", iconSize: 20);
-				ToolTip.Default.SetToolTip (this.userLabel, string.Format (tooltip, icon));
-			}
-		}
-
-		protected virtual void UpdateTitle()
-		{
-		}
 
 		public virtual ControllerType ControllerType
 		{
@@ -816,57 +706,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected void SetTitle()
-		{
-			this.SetTitle (FormattedText.Null);
-		}
-
-		protected void SetTitle(FormattedText title)
-		{
-			if (title.IsNullOrEmpty)
-			{
-				title = Présentations.GetName (this.ControllerType);
-			}
-
-			this.title = title;
-			
-			if (this.viewSettingsController != null)
-			{
-				title = Présentations.GetGroupName (this.ControllerType);
-				title = title.ApplyBold ().ApplyFontSize (13.0);
-
-				if ((this.dataAccessor != null && this.dataAccessor.FilterData != null && !this.dataAccessor.FilterData.IsEmpty) ||
-					!this.mainWindowController.TemporalData.IsEmpty)
-				{
-					FormattedText ht = "filtre actif";
-					title = FormattedText.Concat (title, " (<a href=\"filter\">", ht, "</a>)");
-				}
-
-				this.viewSettingsController.SetTitle (title);
-			}
-		}
-
-		protected void SetSubtitle(FormattedText subtitle)
-		{
-			this.subtitle = subtitle;
-			this.subtitleLabel.FormattedText = subtitle.ApplyBold ().ApplyFontSize (13.0);
-		}
-
-		public FormattedText MixTitle
-		{
-			get
-			{
-				if (this.subtitle.IsNullOrEmpty)
-				{
-					return this.title;
-				}
-				else
-				{
-					return this.title + " / " + this.subtitle;
-				}
-			}
-		}
-
 		private void UpdatePanelsToolbar()
 		{
 			if (this.viewSettingsController != null && this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
@@ -887,7 +726,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				}
 			}
 		}
-		#endregion
 
 
 		#region Array
@@ -1383,9 +1221,5 @@ namespace Epsitec.Cresus.Compta.Controllers
 		protected GraphWidget									graphWidget;
 		protected AbstractEditorController						editorController;
 		protected FrameBox										frameBox;
-		protected StaticText									userLabel;
-		protected StaticText									subtitleLabel;
-		protected FormattedText									title;
-		protected FormattedText									subtitle;
 	}
 }

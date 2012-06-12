@@ -52,7 +52,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.UpdateColumnMappers ();
 			this.UpdateArray ();
-			this.UpdateWindowTitle ();
 
 			base.OptionsChanged ();
 		}
@@ -156,38 +155,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			get
 			{
 				return Controllers.ControllerType.ExtraitDeCompte;
-			}
-		}
-
-		protected override void UpdateTitle()
-		{
-			var numéro = (this.dataAccessor.Permanents as ExtraitDeComptePermanents).NuméroCompte;
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
-
-			if (compte == null)
-			{
-				this.SetTitle ();
-			}
-			else
-			{
-				this.SetTitle (TextFormatter.FormatText ("Compte", compte.Numéro, compte.Titre));
-			}
-
-			this.SetSubtitle (this.période.ShortTitle);
-		}
-
-		private void UpdateWindowTitle()
-		{
-			var numéro = (this.dataAccessor.Permanents as ExtraitDeComptePermanents).NuméroCompte;
-			var compte = this.compta.PlanComptable.Where (x => x.Numéro == numéro).FirstOrDefault ();
-
-			if (compte == null)
-			{
-				this.mainWindowController.SetTitleComplement (null);
-			}
-			else
-			{
-				this.mainWindowController.SetTitleComplement (string.Concat (compte.Numéro, " ", compte.Titre));
 			}
 		}
 

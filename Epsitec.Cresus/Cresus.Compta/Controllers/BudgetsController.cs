@@ -41,12 +41,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-			this.SetSubtitle (this.période.ShortTitle);
-		}
-
 
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{

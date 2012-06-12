@@ -48,12 +48,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-			this.SetSubtitle ("Toutes les périodes");
-		}
-
 
 		protected override FormattedText GetArrayText(int row, ColumnType columnType)
 		{

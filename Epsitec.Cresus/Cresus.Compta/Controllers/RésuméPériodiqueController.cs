@@ -68,7 +68,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.UpdateArray ();
 
 			this.UpdateArrayContent ();
-			this.UpdateTitle ();
 			this.FilterUpdateTopToolbar ();
 			this.UpdateViewSettings ();
 		}
@@ -79,12 +78,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				return Controllers.ControllerType.RésuméPériodique;
 			}
-		}
-
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-			this.SetSubtitle (this.période.ShortTitle);
 		}
 
 

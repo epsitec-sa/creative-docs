@@ -52,11 +52,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
-		protected override void UpdateTitle()
-		{
-			this.SetTitle ();
-		}
-
 		public override bool AcceptPériodeChanged
 		{
 			get
@@ -174,7 +169,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			this.scrollList.SelectedItemChanged += delegate
 			{
-				this.UpdateTitle ();
 				this.UpdateMain ();
 			};
 		}
