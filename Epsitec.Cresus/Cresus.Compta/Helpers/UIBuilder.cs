@@ -430,7 +430,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 		public static readonly Color TabsPaneGreenBack			= Color.FromHexa ("d7ffda");  // vert
 		public static readonly Color TabsPaneBlueBack			= Color.FromHexa ("d7f2ff");  // bleu
 
-#if false
+#if true
 		public static readonly Color SearchBackColor			= Color.FromHexa ("ffffcc");  // jaune pastel
 		public static readonly Color FilterBackColor			= Color.FromHexa ("ffeecc");  // orange pastel
 		public static readonly Color OptionsBackColor			= Color.FromHexa ("d2f0ff");  // bleu pastel

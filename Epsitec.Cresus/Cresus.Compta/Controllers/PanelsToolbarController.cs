@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void CreateUI(FrameBox parent)
 		{
-#if false
+#if true
 			this.optionsButton = this.CreateButton (parent, Res.Commands.Panel.Options, -1, UIBuilder.OptionsBackColor);
 			this.filterButton  = this.CreateButton (parent, Res.Commands.Panel.Filter,  -1, UIBuilder.FilterBackColor);
 			this.searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.SearchBackColor);
@@ -114,17 +114,17 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public void LinkHiliteOptionsButton(bool hilite)
 		{
-			this.optionsButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+			//?this.optionsButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
 		}
 
 		public void LinkHiliteFilterButton(bool hilite)
 		{
-			this.filterButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+			//?this.filterButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
 		}
 
 		public void LinkHiliteSearchButton(bool hilite)
 		{
-			this.searchButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
+			//?this.searchButton.BackColor = hilite ? UIBuilder.PanelButtonLinkHiliteColor : UIBuilder.PanelButtonSoftHiliteColor;
 		}
 
 	
