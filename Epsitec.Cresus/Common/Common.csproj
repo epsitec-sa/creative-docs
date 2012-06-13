@@ -1216,6 +1216,7 @@
     <Compile Include="Widgets\Behaviors\SlimFieldMenuSelectionEventArgs.cs" />
     <Compile Include="Widgets\Behaviors\SlimFieldTextBehavior.cs" />
     <Compile Include="Widgets\ColorSample.DragInfo.cs" />
+    <Compile Include="Widgets\SlimFieldBuilder.cs" />
     <Compile Include="Widgets\Widget.TabNavigator.cs" />
     <Compile Include="Widgets\EnableState.cs" />
     <Compile Include="Widgets\ISearchBox.cs" />

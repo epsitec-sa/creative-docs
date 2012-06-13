@@ -1,4 +1,4 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -685,14 +685,8 @@ namespace Epsitec.Common.Widgets
 
 		static ColorPalette()
 		{
-			Types.DependencyPropertyMetadata metadataDx = Visual.PreferredWidthProperty.DefaultMetadata.Clone ();
-			Types.DependencyPropertyMetadata metadataDy = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-
-			metadataDx.DefineDefaultValue (80.0-1);
-			metadataDy.DefineDefaultValue (160.0-1);
-
-			Visual.PreferredWidthProperty.OverrideMetadata (typeof (ColorPalette), metadataDx);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (ColorPalette), metadataDy);
+			Visual.PreferredWidthProperty.OverrideMetadataDefaultValue<ColorPalette> (80.0-1);
+			Visual.PreferredHeightProperty.OverrideMetadataDefaultValue<ColorPalette> (160.0-1);
 		}
 
 		internal static void NotifySelectedColorIndexChanged(DependencyObject obj, object oldValue, object newValue)

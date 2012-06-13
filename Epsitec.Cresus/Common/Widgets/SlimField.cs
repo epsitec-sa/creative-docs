@@ -16,7 +16,6 @@ namespace Epsitec.Common.Widgets
 		public SlimField()
 		{
 			this.InternalState |= WidgetInternalState.Focusable;
-			this.PreferredHeight = 17;
 			
 			this.menuItems = new List<SlimFieldMenuItem> ();
 		}
@@ -332,6 +331,12 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		static SlimField()
+		{
+			Visual.PreferredWidthProperty.OverrideMetadataDefaultValue<SlimField> (18.0);
+			Visual.MarginsProperty.OverrideMetadataDefaultValue<SlimField> (new Margins (0, 0, 0, 1));
+			Visual.HorizontalAlignmentProperty.OverrideMetadataDefaultValue<SlimField> (HorizontalAlignment.Left);
+		}
 
 
 

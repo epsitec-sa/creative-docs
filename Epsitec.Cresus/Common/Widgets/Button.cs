@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -36,13 +36,8 @@ namespace Epsitec.Common.Widgets
 		
 		static Button()
 		{
-			Types.DependencyPropertyMetadata metadata = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-			
 			double height = Widget.DefaultFontHeight+10;
-			
-			metadata.DefineDefaultValue (height);
-			
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (Button), metadata);
+			Visual.PreferredHeightProperty.OverrideMetadataDefaultValue<Button> (height);
 		}
 		
 		public virtual ButtonStyle		ButtonStyle

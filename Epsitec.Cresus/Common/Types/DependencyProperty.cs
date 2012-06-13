@@ -1,4 +1,4 @@
-//	Copyright © 2005-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2005-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -430,6 +430,22 @@ namespace Epsitec.Common.Types
 			}
 			
 			return null;
+		}
+
+		public void OverrideMetadataDefaultValue<T>(object value)
+			where T : DependencyObject
+		{
+			var metadata = this.DefaultMetadata.Clone ();
+			
+			metadata.DefineDefaultValue (value);
+
+			this.OverrideMetadata (typeof (T), metadata);
+		}
+
+		public void OverrideMetadata<T>(DependencyPropertyMetadata metadata)
+			where T : DependencyObject
+		{
+			this.OverrideMetadata (typeof (T), metadata);
 		}
 
 		public void OverrideMetadata(System.Type type, DependencyPropertyMetadata metadata)

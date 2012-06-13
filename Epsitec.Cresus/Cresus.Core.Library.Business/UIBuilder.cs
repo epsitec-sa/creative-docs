@@ -797,10 +797,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = parent,
 				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
-//-				PreferredHeight = 20,
 				Dock = dockStyle,
-				HorizontalAlignment = HorizontalAlignment.Left,
-//-				Margins = new Margins (0, Library.UI.Constants.RightMargin, 0, Library.UI.Constants.MarginUnderTextField),
 				FieldLabel = new FormattedText (label).ToSimpleText (),
 				FieldText = value,
 				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
@@ -852,7 +849,6 @@ namespace Epsitec.Cresus.Core
 				Parent = parent,
 				Dock = dockStyle,
 				IsReadOnly = this.ReadOnly || forceReadOnly,
-				HorizontalAlignment = HorizontalAlignment.Left,
 				FieldLabel = new FormattedText (label).ToSimpleText (),
 				FieldText = value,
 				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,

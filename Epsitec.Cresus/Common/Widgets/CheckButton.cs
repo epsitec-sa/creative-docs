@@ -1,5 +1,5 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
-//	Responsable: Pierre ARNAUD
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 namespace Epsitec.Common.Widgets
 {
@@ -24,16 +24,10 @@ namespace Epsitec.Common.Widgets
 
 		static CheckButton()
 		{
-			Types.DependencyPropertyMetadata metadataAlign = Visual.ContentAlignmentProperty.DefaultMetadata.Clone ();
-			Types.DependencyPropertyMetadata metadataHeight = Visual.PreferredHeightProperty.DefaultMetadata.Clone ();
-
 			double height = Widget.DefaultFontHeight + 1;
 
-			metadataAlign.DefineDefaultValue (Drawing.ContentAlignment.MiddleLeft);
-			metadataHeight.DefineDefaultValue (height);
-
-			Visual.ContentAlignmentProperty.OverrideMetadata (typeof (CheckButton), metadataAlign);
-			Visual.PreferredHeightProperty.OverrideMetadata (typeof (CheckButton), metadataHeight);
+			Visual.ContentAlignmentProperty.OverrideMetadataDefaultValue<CheckButton> (ContentAlignment.MiddleLeft);
+			Visual.PreferredHeightProperty.OverrideMetadataDefaultValue<CheckButton> (height);
 		}
 
 		public Drawing.Point LabelOffset
