@@ -231,32 +231,21 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override List<Widget> GetTabNavigationSiblings(TabNavigationDir dir, TabNavigationMode mode)
+		protected override bool FilterTabNavigationSibling(Widget sibling, TabNavigationDir dir, TabNavigationMode mode)
 		{
-			if (mode != TabNavigationMode.ActivateOnTab)
+			if ((mode == TabNavigationMode.ActivateOnTab) &&
+				(sibling != this))
 			{
-				return base.GetTabNavigationSiblings (dir, mode);
-			}
-
-			List<Widget> list = new List<Widget> ();
-
-			foreach (Widget widget in base.GetTabNavigationSiblings (dir, mode))
-			{
-				ColorSample sample = widget as ColorSample;
-
-				if (sample != null &&
-					sample != this)
+				if (sibling is ColorSample)
 				{
 					//	Samples which are in the same group must be skipped;
 					//	they cannot be reached through the TAB key.
-				}
-				else
-				{
-					list.Add (widget);
+
+					return false;
 				}
 			}
 
-			return list;
+			return base.FilterTabNavigationSibling (sibling, dir, mode);
 		}
 
 		protected override void ProcessMessage(Message message, Drawing.Point pos)
