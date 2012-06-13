@@ -1,4 +1,7 @@
-﻿using Nancy;
+﻿using Epsitec.Common.IO;
+using Epsitec.Common.Support.Extensions;
+
+using Nancy;
 using Nancy.ErrorHandling;
 
 using System;
@@ -22,12 +25,12 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			context.Response = CoreResponse.AsError ();
 			context.Response.StatusCode = statusCode;
 			
-			// TODO Log the exception
+			var exception = (Exception) context.Items["ERROR_TRACE"];
 
-			var exception = context.Items["ERROR_TRACE"];
-			Debug.WriteLine ("[" + DateTime.Now + "] Uncaught exception while processing nancy request: " + exception);
+			var message = "Uncaught exception while processing nancy request:\n"
+				+ exception.GetFullText ();
 
-			Debug.Assert (false);
+			Logger.LogToConsole (message);
 		}
 
 

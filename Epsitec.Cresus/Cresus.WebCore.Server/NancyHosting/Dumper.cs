@@ -1,4 +1,5 @@
-﻿using Epsitec.Common.Support.Extensions;
+﻿using Epsitec.Common.IO;
+using Epsitec.Common.Support.Extensions;
 
 using System;
 
@@ -34,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			{
 				var dump = Dumper.DumpElement (element);
 
-				System.Diagnostics.Debug.WriteLine (dump);
+				Logger.LogToConsole (dump);
 			}
 		}
 

@@ -1,4 +1,7 @@
-﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+﻿using Epsitec.Common.IO;
+using Epsitec.Common.Support.Extensions;
+
+using Epsitec.Cresus.WebCore.Server.CoreServer;
 
 using Nancy;
 using Nancy.Extensions;
@@ -67,7 +70,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 			{
 				HttpListenerRequest httpRequest = requestContext.Request;
 
-				Debug.WriteLine ("[" + DateTime.Now + "] Received http request: " + httpRequest.Url);
+				Logger.LogToConsole ("Received http request: " + httpRequest.Url);
 
 				using (HttpListenerResponse httpResponse = requestContext.Response)
 				{
@@ -81,15 +84,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 					}
 				}
 
-				Debug.WriteLine ("[" + DateTime.Now + "] Answered http request: " + httpRequest.Url);
+				Logger.LogToConsole ("Answered http request: " + httpRequest.Url);
 			}
 			catch (Exception e)
 			{
-				// TODO Log the exception
+				var message = "Uncaught exception while processing http request :\n"
+					+ e.GetFullText ();
 
-				Debug.WriteLine ("[" + DateTime.Now + "] Uncaught exception while processing http request : " + e.Message);
-
-				Debug.Assert (false);
+				Logger.LogToConsole (message);
 			}
 		}
 

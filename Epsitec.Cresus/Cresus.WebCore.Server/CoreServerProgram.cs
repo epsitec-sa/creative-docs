@@ -41,17 +41,17 @@ namespace Epsitec.Cresus.WebCore.Server
 
 		private void Initialize()
 		{
-			Console.WriteLine ("Generating icons...");
+			Logger.LogToConsole ("Generating icons...");
 
 			IconManager.BuildIcons (CoreServerProgram.iconDirectory.FullName);
 
-			Console.WriteLine ("Icons generated");
+			Logger.LogToConsole ("Icons generated");
 		}
 
 
 		private void Run(bool nGinxAutorun, FileInfo nGinxPath, Uri uri, int nbThreads, int maxNbSessions, TimeSpan sessionTimeout, TimeSpan sessionCleanupInterval)
 		{		
-			Console.WriteLine ("Launching server...");
+			Logger.LogToConsole ("Launching server...");
 
 			using (var nGinxServer = nGinxAutorun ? new NGinxServer (nGinxPath) : null)		
 			using (var serverContext = new ServerContext (maxNbSessions, sessionTimeout, sessionCleanupInterval))
@@ -61,17 +61,17 @@ namespace Epsitec.Cresus.WebCore.Server
 
 				Dumper.Instance.IsEnabled = CoreServerProgram.enableDumper;
 
-				Console.WriteLine ("Server launched");
-				Console.WriteLine ("Press [ENTER] to shut down");
+				Logger.LogToConsole ("Server launched");
+				Logger.LogToConsole ("Press [ENTER] to shut down");
 				Console.ReadLine ();
 
-				Console.WriteLine ("Shutting down server...");
+				Logger.LogToConsole ("Shutting down server...");
 
 				nancyServer.Stop ();
 			}
 
-			Console.WriteLine ("Server shut down");
-			Console.WriteLine ("Press [ENTER] to exit");
+			Logger.LogToConsole ("Server shut down");
+			Logger.LogToConsole ("Press [ENTER] to exit");
 			Console.ReadLine ();
 		}
 
