@@ -474,7 +474,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				PreferredHeight = 20,
 				MenuButtonWidth = UIBuilder.ComboButtonWidth,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
+				Margins         = new Margins (0, 1, 0, 0),
 				TabIndex        = ++this.tabIndex,
 			};
 
@@ -831,6 +831,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.options.ViewGraph = false;
 				this.ShowHideControllers ();
 				this.UpdateGraphWidgets ();
+				this.OptionsChanged ();
 			};
 
 			this.viewGraphButton.Clicked += delegate
@@ -838,6 +839,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.options.ViewGraph = true;
 				this.ShowHideControllers ();
 				this.UpdateGraphWidgets ();
+				this.OptionsChanged ();
 			};
 
 			this.showCommonGraphButton.Clicked += delegate

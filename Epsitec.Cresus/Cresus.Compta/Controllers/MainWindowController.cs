@@ -229,6 +229,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool HasFilter
 		{
+			//	Retourne true s'il y a un filtre en action quelque part.
 			get
 			{
 				if (!this.temporalData.IsEmpty)

@@ -710,19 +710,16 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.viewSettingsController != null && this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
 			{
+#if false
 				if (this.dataAccessor.SearchData != null)
 				{
 					this.viewSettingsController.PanelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
 				}
+#endif
 
 				if (this.dataAccessor.FilterData != null)
 				{
 					this.viewSettingsController.PanelsToolbarController.FilterEnable = !this.dataAccessor.FilterData.IsEmpty;
-				}
-
-				if (this.dataAccessor.Options != null)
-				{
-					this.viewSettingsController.PanelsToolbarController.OptionsEnable = !this.dataAccessor.Options.IsEmpty;
 				}
 			}
 		}

@@ -165,6 +165,20 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public FormattedText BeginnerFreeText
+		{
+			//	Texte libre à filtrer en mode débutant.
+			get
+			{
+				return this.nodesData[0].BeginnerFreeText;
+			}
+			set
+			{
+				this.nodesData[0].BeginnerFreeText = value;
+			}
+		}
+
+
 		public CatégorieDeCompte BeginnerCatégories
 		{
 			//	Catégories à filtrer en mode débutant.

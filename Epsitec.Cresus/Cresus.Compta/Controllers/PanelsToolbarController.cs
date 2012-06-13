@@ -74,7 +74,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool SearchEnable
 		{
-			//	Indique si les recherches sont actives. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			//	Indique si les recherches sont actives. Si oui, un petit (!) rouge  s'affiche en surimpression sur le bouton.
 			get
 			{
 				return this.searchMarker.Visibility;
@@ -87,7 +87,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool FilterEnable
 		{
-			//	Indique si le filtre est actif. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			//	Indique si le filtre est actif. Si oui, un petit filtre (!) s'affiche en surimpression sur le bouton.
 			get
 			{
 				return this.filterMarker.Visibility;
@@ -100,7 +100,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool OptionsEnable
 		{
-			//	Indique si les options sont actives. Si oui, un petit 'vu' vert s'affiche en surimpression du bouton.
+			//	Indique si les options sont actives. Si oui, un petit (!) rouge s'affiche en surimpression sur le bouton.
 			get
 			{
 				return this.optionsMarker.Visibility;

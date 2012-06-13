@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock             = DockStyle.Fill,
 			};
 
-			this.titleButton = new IconButton
+			this.titleFilterButton = new IconButton
 			{
 				Parent           = this.titleLabel,
 				IconUri          = UIBuilder.GetResourceIconUri ("Filter.Warning"),
@@ -146,9 +146,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Visibility       = false,
 			};
 
-			ToolTip.Default.SetToolTip (this.titleButton, "Termine tous les filtres");
+			ToolTip.Default.SetToolTip (this.titleFilterButton, "Termine tous les filtres");
 
-			this.titleButton.Clicked += delegate
+			this.titleFilterButton.Clicked += delegate
 			{
 				this.mainWindowController.ClearFilter ();
 			};
@@ -200,12 +200,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				double x = System.Math.Floor((this.titleLabel.ActualWidth - this.titleLabel.GetBestFitSize ().Width) / 2);
 
-				this.titleButton.Margins = new Margins (x-24-4, 0, 0, 2);
-				this.titleButton.Visibility = true;
+				this.titleFilterButton.Margins = new Margins (x-24-4, 0, 0, 2);
+				this.titleFilterButton.Visibility = true;
 			}
 			else
 			{
-				this.titleButton.Visibility = false;
+				this.titleFilterButton.Visibility = false;
 			}
 		}
 
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private Button							userLabel;
 		private Button							navigatorMenuButton;
 		private StaticText						titleLabel;
-		private IconButton						titleButton;
+		private IconButton						titleFilterButton;
 		private TopTemporalController			topTemporalController;
 		private bool							windowActivated;
 		private bool							isFullScreen;

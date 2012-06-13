@@ -230,6 +230,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock   = DockStyle.Fill,
 				};
 
+				this.CreateMiddleBeginnerFreeTextUI (stackFrame);
+
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Catégorie).Any ())
 				{
 					//?this.CreateMiddleBeginnerCatégorieUI (stackFrame);
@@ -254,6 +256,54 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.CreateMiddleBeginnerSearchUI ();
 			}
+		}
+
+
+		private void CreateMiddleBeginnerFreeTextUI(FrameBox parent)
+		{
+			var frame = this.CreateBeginnerFrame (parent, "Texte");
+
+			this.beginnerFreeTextField = new TextField
+			{
+				Parent          = frame,
+				FormattedText   = this.data.BeginnerFreeText,
+				PreferredWidth  = 250,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+			};
+
+			this.beginnerFreeTextButton = new IconButton
+			{
+				Parent          = frame,
+				IconUri         = UIBuilder.GetResourceIconUri ("Level.Clear"),
+				AutoFocus       = false,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (1, 0, 0, 0),
+			};
+
+			this.UpdateMiddleBeginnerFreeText ();
+
+			this.beginnerFreeTextField.TextChanged += delegate
+			{
+				this.data.BeginnerFreeText = this.beginnerFreeTextField.FormattedText;
+				this.UpdateMiddleBeginnerFreeText ();
+				this.SearchStartAction ();
+			};
+
+			this.beginnerFreeTextButton.Clicked += delegate
+			{
+				this.beginnerFreeTextField.FormattedText = null;
+			};
+
+			ToolTip.Default.SetToolTip (this.beginnerFreeTextField, "Texte cherché n'importe où");
+			ToolTip.Default.SetToolTip (this.beginnerFreeTextButton, "Efface le texte");
+		}
+
+		private void UpdateMiddleBeginnerFreeText()
+		{
+			this.beginnerFreeTextButton.Enable = !this.beginnerFreeTextField.FormattedText.IsNullOrEmpty;
 		}
 
 
@@ -545,6 +595,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private FrameBox CreateBeginnerFrame(FrameBox parent, FormattedText title)
 		{
+#if false
 			var line = new FrameBox
 			{
 				Parent          = parent,
@@ -574,12 +625,24 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 
 			return frame;
+#else
+			return new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 5+20+5,
+				DrawFullFrame   = true,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 0, -1),
+				Padding         = new Margins (5),
+			};
+#endif
 		}
 
 
 		private void CreateMiddleSpecialistUI()
 		{
 			this.beginnerSearchField         = null;
+			this.beginnerFreeTextField       = null;
 			this.beginnerBeginDateController = null;
 			this.beginnerEndDateController   = null;
 
@@ -762,6 +825,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				if (!this.isFilter && this.beginnerSearchField != null)
 				{
 					this.beginnerSearchField.Focus ();
+				}
+
+				if (this.isFilter && this.beginnerFreeTextField != null)
+				{
+					this.beginnerFreeTextField.Focus ();
 				}
 			}
 		}
@@ -949,6 +1017,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private StaticText								resultLabel;
 		private FrameBox								beginnerFrame;
 		private TextField								beginnerSearchField;
+		private TextField								beginnerFreeTextField;
+		private IconButton								beginnerFreeTextButton;
 		private CheckButton								beginnerCatégorieActif;
 		private CheckButton								beginnerCatégoriePassif;
 		private CheckButton								beginnerCatégorieCharge;

@@ -107,6 +107,61 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
+		public FormattedText BeginnerFreeText
+		{
+			//	Texte libre à filtrer en mode débutant.
+			get
+			{
+				var data = this.BeginnerFreeTextData;
+
+				if (data == null)
+				{
+					return FormattedText.Empty;
+				}
+				else
+				{
+					return data.SearchText.FromText;
+				}
+			}
+			set
+			{
+				var data = this.BeginnerFreeTextData;
+
+				if (value.IsNullOrEmpty)
+				{
+					if (data != null)
+					{
+						this.tabsData.Remove (data);
+						this.Adjust ();
+					}
+				}
+				else
+				{
+					if (data == null)
+					{
+						//	Si on n'a trouvé aucune ligne, on en crée une.
+						data = new SearchTabData ();
+						this.tabsData.Add (data);
+					}
+
+					data.Column              = ColumnType.None;
+					data.SearchText.Mode     = SearchMode.Fragment;
+					data.SearchText.FromText = value.ToString ();
+
+					this.BeginnerAdjust (true);
+				}
+			}
+		}
+
+		private SearchTabData BeginnerFreeTextData
+		{
+			get
+			{
+				return this.tabsData.Where (x => x.Column == ColumnType.None).FirstOrDefault ();
+			}
+		}
+
+
 		public CatégorieDeCompte BeginnerCatégories
 		{
 			//	Catégories à filtrer en mode débutant.
@@ -350,6 +405,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			if (isFilter)  // filtre ?
 			{
 				//	1) Cherche les données effectives.
+				var dataFreeText   = this.BeginnerFreeTextData;
 				var dataCatégories = this.BeginnerCatégoriesData;
 				var dataProfondeur = this.BeginnerProfondeurData;
 				var dataHideNuls   = this.BeginnerHideNulsData;
@@ -359,6 +415,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				this.tabsData.Clear ();
 
 				//	3) Puis remet les données effectives, dans le bon ordre.
+				if (dataFreeText != null)
+				{
+					this.tabsData.Add (dataFreeText);
+				}
+
 				if (dataCatégories != null)
 				{
 					this.tabsData.Add (dataCatégories);

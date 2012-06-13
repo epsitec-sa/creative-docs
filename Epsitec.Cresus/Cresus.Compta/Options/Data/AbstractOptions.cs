@@ -244,7 +244,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				this.DeepFrom             != other.DeepFrom             ||
 				this.DeepTo               != other.DeepTo               ||
 				this.Catégories           != other.Catégories           ||
-				this.ComparisonEnable != other.ComparisonEnable         ||
+				this.ComparisonEnable     != other.ComparisonEnable     ||
 				!this.graphOptions.CompareTo (other.graphOptions))
 			{
 				return false;
