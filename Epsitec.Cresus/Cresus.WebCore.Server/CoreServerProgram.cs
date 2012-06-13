@@ -5,6 +5,7 @@ using Epsitec.Common.IO;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
+using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using System;
 
@@ -58,6 +59,8 @@ namespace Epsitec.Cresus.WebCore.Server
 			{
 				nancyServer.Start ();
 
+				Dumper.Instance.IsEnabled = CoreServerProgram.enableDumper;
+
 				Console.WriteLine ("Server launched");
 				Console.WriteLine ("Press [ENTER] to shut down");
 				Console.ReadLine ();
@@ -95,6 +98,9 @@ namespace Epsitec.Cresus.WebCore.Server
 
 
 		private static readonly TimeSpan sessionCleanupInterval = TimeSpan.FromMinutes (1);
+
+
+		private static readonly bool enableDumper = false;
 
 
 	}

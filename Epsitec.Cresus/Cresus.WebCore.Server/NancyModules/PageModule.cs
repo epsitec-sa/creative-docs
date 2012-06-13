@@ -1,4 +1,5 @@
 ﻿using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 
@@ -24,6 +25,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetPageView(dynamic parameters)
 		{
 			string pageName = parameters.name;
+
+			Dumper.Instance.Dump ("Data for page: " + pageName);
 
 			return View[pageName];
 		}

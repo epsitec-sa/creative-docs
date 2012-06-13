@@ -66,7 +66,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			this.Session[LoginModule.LoggedInName] = false;
 
-			return "logout";
+			var response = "logout";
+
+			Dumper.Instance.Dump (response);
+
+			return response;
 		}
 
 

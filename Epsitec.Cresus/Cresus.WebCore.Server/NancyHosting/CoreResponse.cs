@@ -90,6 +90,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public static Response AsJson(object content, HttpStatusCode httpStatusCode)
 		{
+			Dumper.Instance.Dump (content);
+
 			return new JsonResponse (content, new DefaultJsonSerializer ())
 			{
 				StatusCode = httpStatusCode,

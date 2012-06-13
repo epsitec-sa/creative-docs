@@ -63,6 +63,7 @@
     <Compile Include="NancyHosting\CoreResponse.cs" />
     <Compile Include="CoreServer\AuthenticationManager.cs" />
     <Compile Include="NancyModules\Constants.cs" />
+    <Compile Include="NancyHosting\Dumper.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
     <Compile Include="UserInterface\PropertyAccessor\FieldType.cs" />
