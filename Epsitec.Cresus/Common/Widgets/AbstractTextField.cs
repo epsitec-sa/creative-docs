@@ -1439,13 +1439,16 @@ namespace Epsitec.Common.Widgets
 				return;
 			}
 
-			if (this.StartEdition ())
+			if (this.CanStartEdition)
 			{
-				//	OK.
-			}
-			else
-			{
-				e.Cancel = true;
+				if (this.StartEdition ())
+				{
+					//	OK.
+				}
+				else
+				{
+					e.Cancel = true;
+				}
 			}
 		}
 

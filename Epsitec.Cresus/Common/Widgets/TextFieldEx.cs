@@ -41,7 +41,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		protected override bool CanStartEdition
+		protected override bool					CanStartEdition
 		{
 			get
 			{

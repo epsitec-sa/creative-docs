@@ -137,7 +137,7 @@ namespace Epsitec.Common.Widgets
 				return this.scrollList;
 			}
 		}
-		
+
 		
 		public bool FindMatch(string find, out int index, out bool exactMatch)
 		{
