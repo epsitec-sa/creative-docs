@@ -1,6 +1,7 @@
-//	Copyright © 2003-2008, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
+using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Types;
 using Epsitec.Common.Widgets;
@@ -14,7 +15,7 @@ namespace Epsitec.Common.Widgets
 	/// <summary>
 	/// La classe ColorSample permet de représenter une couleur rgb.
 	/// </summary>
-	public class ColorSample : AbstractButton, Behaviors.IDragBehaviorHost
+	public partial class ColorSample : AbstractButton, Behaviors.IDragBehaviorHost
 	{
 		public ColorSample()
 		{
@@ -28,11 +29,11 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public Drawing.RichColor				Color
+		public RichColor						Color
 		{
 			get
 			{
-				return UndefinedValue.GetValue<Drawing.RichColor> (this.GetValue (ColorSample.ColorProperty), Drawing.RichColor.Empty, true);
+				return UndefinedValue.GetValue<RichColor> (this.GetValue (ColorSample.ColorProperty), RichColor.Empty, true);
 			}
 			set
 			{
@@ -78,7 +79,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-
 		public ColorSample						DragHost
 		{
 			get
@@ -101,16 +101,16 @@ namespace Epsitec.Common.Widgets
 
 		#region IDragBehaviorHost Members
 
-		public Drawing.Point					DragLocation
+		public Point							DragLocation
 		{
 			get
 			{
-				return Drawing.Point.Zero;
+				return Point.Zero;
 			}
 		}
 
 
-		public bool OnDragBegin(Drawing.Point cursor)
+		public bool OnDragBegin(Point cursor)
 		{
 			if (this.DragSourceEnable == false)
 			{
@@ -145,17 +145,17 @@ namespace Epsitec.Common.Widgets
 
 			if (cs != this.dragInfo.Target)
 			{
-				this.DragHilite (this.dragInfo.Target, this, false);
+				ColorSample.DragHilite (this.dragInfo.Target, this, false);
 				this.dragInfo.DefineTarget (cs);
-				this.DragHilite (this.dragInfo.Target, this, true);
+				ColorSample.DragHilite (this.dragInfo.Target, this, true);
 				this.UpdateSwapping ();
 			}
 		}
 
 		public void OnDragEnd()
 		{
-			this.DragHilite (this, this.dragInfo.Target, false);
-			this.DragHilite (this.dragInfo.Target, this, false);
+			ColorSample.DragHilite (this, this.dragInfo.Target, false);
+			ColorSample.DragHilite (this.dragInfo.Target, this, false);
 
 			if (this.dragInfo.Target != null)
 			{
@@ -164,7 +164,7 @@ namespace Epsitec.Common.Widgets
 					if (Message.CurrentState.IsShiftPressed || 
 						Message.CurrentState.IsControlPressed)
 					{
-						Drawing.RichColor temp = this.Color;
+						RichColor temp = this.Color;
 						this.Color = this.dragInfo.Target.Color;
 						this.dragInfo.Target.Color = temp;
 
@@ -191,11 +191,11 @@ namespace Epsitec.Common.Widgets
 		#endregion
 
 		
-		public override Drawing.Margins GetShapeMargins()
+		public override Margins GetShapeMargins()
 		{
 			if (this.DragSourceFrame)
 			{
-				return new Drawing.Margins (5, 5, 5, 5);
+				return new Margins (5, 5, 5, 5);
 			}
 			else
 			{
@@ -248,7 +248,7 @@ namespace Epsitec.Common.Widgets
 			return base.FilterTabNavigationSibling (sibling, dir, mode);
 		}
 
-		protected override void ProcessMessage(Message message, Drawing.Point pos)
+		protected override void ProcessMessage(Message message, Point pos)
 		{
 			ColorSample dragHost = this.DragHost;
 
@@ -297,15 +297,15 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		protected override void PaintBackgroundImplementation(Drawing.Graphics graphics, Drawing.Rectangle clipRect)
+		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
 		{
 			IAdorner adorner = Widgets.Adorners.Factory.Active;
-			Drawing.Rectangle rect = this.Client.Bounds;
+			Rectangle rect = this.Client.Bounds;
 
 			if (this.DragSourceFrame &&
 				this.ActiveState == ActiveState.Yes)
 			{
-				Drawing.Rectangle r = rect;
+				Rectangle r = rect;
 				r.Inflate (ColorSample.MarginSource);
 				graphics.AddFilledRectangle (r);
 				graphics.RenderSolid (adorner.ColorCaption);
@@ -335,9 +335,9 @@ namespace Epsitec.Common.Widgets
 					this.DragHost == null &&
 					this.dragInfo == null)
 				{
-					graphics.AddRectangle (Drawing.Rectangle.Deflate (rect, 1, 1));
+					graphics.AddRectangle (Rectangle.Deflate (rect, 1, 1));
 					graphics.RenderSolid (Drawing.Color.FromBrightness (1));
-					adorner.PaintFocusBox (graphics, Drawing.Rectangle.Deflate (rect, 1, 1));
+					adorner.PaintFocusBox (graphics, Rectangle.Deflate (rect, 1, 1));
 				}
 
 				if (this.dragInfo != null &&
@@ -380,7 +380,12 @@ namespace Epsitec.Common.Widgets
 			base.Dispose (disposing);
 		}
 
-		private static Drawing.Color GetHiliteColor(Drawing.Color color)
+		protected virtual void OnColorChanged()
+		{
+			this.RaiseUserEvent (ColorSample.ColorChangedEvent);
+		}
+
+		private static Color GetHiliteColor(Color color)
 		{
 			//	Trouve une couleur qui contraste avec la couleur spécifiée,
 			//	pour faire une mise en évidence.
@@ -433,24 +438,24 @@ namespace Epsitec.Common.Widgets
 				if (this.dragInfo.Target != null)
 				{
 					bool swap = (Message.CurrentState.IsShiftPressed) || (Message.CurrentState.IsControlPressed);
-					this.DragHilite (this, this.dragInfo.Target, swap);
+					ColorSample.DragHilite (this, this.dragInfo.Target, swap);
 				}
 				else
 				{
-					this.dragInfo.Color = Drawing.RichColor.Empty;
+					this.dragInfo.Color = RichColor.Empty;
 					this.Invalidate ();
 				}
 			}
 		}
 
-		private ColorSample FindDropTarget(Drawing.Point mouse)
+		private ColorSample FindDropTarget(Point mouse)
 		{
 			//	Cherche un widget ColorSample destinataire du drag & drop.
 
 			return this.Window.Root.FindChild (this.MapClientToRoot (mouse), WidgetChildFindMode.SkipHidden | WidgetChildFindMode.Deep | WidgetChildFindMode.SkipDisabled) as ColorSample;
 		}
 
-		private void DragHilite(ColorSample dst, ColorSample src, bool enable)
+		private static void DragHilite(ColorSample dst, ColorSample src, bool enable)
 		{
 			//	Met en évidence le widget ColorSample destinataire du drag & drop.
 			
@@ -463,7 +468,7 @@ namespace Epsitec.Common.Widgets
 
 			if (enable)
 			{
-				Drawing.RichColor color = src.Color;
+				RichColor color = src.Color;
 
 				if (dst.dragInfo == null)
 				{
@@ -479,7 +484,7 @@ namespace Epsitec.Common.Widgets
 			{
 				if (dst.dragInfo.Window != null)
 				{
-					dst.dragInfo.Color = Drawing.RichColor.Empty;
+					dst.dragInfo.Color = RichColor.Empty;
 				}
 				else
 				{
@@ -489,129 +494,6 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private void OnColorChanged()
-		{
-			var handler = this.GetUserEventHandler (ColorSample.ColorChangedEvent);
-			
-			if (handler != null)
-			{
-				handler (this);
-			}
-		}
-
-
-		#region DragInfo Class
-
-		/// <summary>
-		/// The <c>DragInfo</c> classe stores information needed only while drag
-		/// and drop is in progress.
-		/// </summary>
-		private class DragInfo : System.IDisposable
-		{
-			public DragInfo(ColorSample host)
-			{
-				this.host = host;
-			}
-
-			public DragInfo(Drawing.Point cursor, ColorSample widget)
-			{
-				System.Diagnostics.Debug.Assert (widget.DragHost != null);
-
-				this.host   = widget.DragHost;
-				this.target = null;
-				this.origin = widget.DragHost.MapClientToScreen (new Drawing.Point (-5, -5));
-
-				this.window = new DragWindow ();
-				this.window.Alpha = 1.0;
-				this.window.DefineWidget (widget, new Drawing.Size (11, 11), Drawing.Margins.Zero);
-				this.window.WindowLocation = this.Origin + cursor;
-				this.window.Owner = widget.DragHost.Window;
-				this.window.FocusWidget (widget);
-				this.window.Show ();
-			}
-
-			public DragWindow Window
-			{
-				get
-				{
-					return this.window;
-				}
-			}
-
-			public Drawing.Point Origin
-			{
-				get
-				{
-					return this.origin;
-				}
-			}
-
-			public ColorSample Target
-			{
-				get
-				{
-					return this.target;
-				}
-			}
-
-			public Drawing.RichColor Color
-			{
-				get
-				{
-					return this.color;
-				}
-				set
-				{
-					if (this.color != value)
-					{
-						this.color = value;
-						this.host.Invalidate ();
-					}
-				}
-			}
-
-			public void DefineTarget(ColorSample target)
-			{
-				this.target = target;
-			}
-			
-
-			public void DissolveAndDispose()
-			{
-				if (this.window != null)
-				{
-					this.window.DissolveAndDisposeWindow ();
-					this.window = null;
-				}
-
-				this.Dispose ();
-			}
-
-			#region IDisposable Members
-
-			public void Dispose()
-			{
-				if (this.window != null)
-				{
-					this.window.Hide ();
-					this.window.Dispose ();
-				}
-				
-				this.window = null;
-				this.host   = null;
-				this.target = null;
-			}
-
-			#endregion
-
-			private ColorSample host;
-			private DragWindow window;
-			private Drawing.Point origin;
-			private ColorSample target;
-			private Drawing.RichColor color;
-		}
-
-		#endregion
 
 		public event EventHandler				ColorChanged
 		{
@@ -625,15 +507,16 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 		
-		public static readonly DependencyProperty DragHostProperty         = DependencyProperty.Register ("DragHost", typeof (ColorSample), typeof (ColorSample), new DependencyPropertyMetadata ().MakeNotSerializable ());
-		public static readonly DependencyProperty ColorProperty            = DependencyProperty.Register ("Color", typeof (Drawing.RichColor), typeof (ColorSample), new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty DragSourceFrameProperty  = DependencyProperty.Register ("DragSourceFrame", typeof (bool), typeof (ColorSample), new Helpers.VisualPropertyMetadata (false, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
-		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty.Register ("DragSourceEnable", typeof (bool), typeof (ColorSample), new DependencyPropertyMetadata (true));
+		
+		public static readonly DependencyProperty DragHostProperty         = DependencyProperty<ColorSample>.Register<ColorSample> (x => x.DragHost, new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static readonly DependencyProperty ColorProperty            = DependencyProperty<ColorSample>.Register<RichColor> (x => x.Color, new Helpers.VisualPropertyMetadata (Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty DragSourceFrameProperty  = DependencyProperty<ColorSample>.Register<bool> (x => x.DragSourceFrame, new Helpers.VisualPropertyMetadata (false, Helpers.VisualPropertyMetadataOptions.AffectsDisplay));
+		public static readonly DependencyProperty DragSourceEnableProperty = DependencyProperty<ColorSample>.Register<bool> (x => x.DragSourceEnable, new DependencyPropertyMetadata (true));
 
 		private const string					ColorChangedEvent = "ColorChanged";
 		private const double					MarginSource = 4;
 
-		private Behaviors.DragBehavior			dragBehavior;
+		private readonly Behaviors.DragBehavior	dragBehavior;
 		private DragInfo						dragInfo;
 	}
 }

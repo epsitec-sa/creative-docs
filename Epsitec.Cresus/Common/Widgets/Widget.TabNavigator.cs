@@ -11,8 +11,17 @@ namespace Epsitec.Common.Widgets
 {
 	public partial class Widget
 	{
+		/// <summary>
+		/// The <c>TabNavigator</c> class implements the keyboard navigation from one widget
+		/// to the other, when the user presses TAB or an arrow key.
+		/// </summary>
 		class TabNavigator
 		{
+			/// <summary>
+			/// Initializes a new instance of the <see cref="TabNavigator"/> class.
+			/// </summary>
+			/// <param name="dir">The tab navigation direction.</param>
+			/// <param name="mode">The tab navigation mode.</param>
 			public TabNavigator(TabNavigationDir dir, TabNavigationMode mode)
 			{
 				this.dir   = dir;
@@ -20,7 +29,16 @@ namespace Epsitec.Common.Widgets
 				this.cache = new HashSet<Widget> ();
 			}
 
-			
+
+			/// <summary>
+			/// Finds the next tab widget. This method will walk the full widget tree until it
+			/// finds a satisfying widget. If the search fails, returns <c>null</c>. An internal
+			/// cache is used to make sure we don't try to navigate twice to the same widget.
+			/// </summary>
+			/// <param name="that">The widget where the TAB key was pressed.</param>
+			/// <param name="disableFirstEnter">If set to <c>true</c>, disables first enter.</param>
+			/// <param name="acceptFocus">If set to <c>true</c>, accepts focus.</param>
+			/// <returns>The next tab widget or <c>null</c> if none could be found.</returns>
 			public Widget FindTabWidget(Widget that, bool disableFirstEnter = false, bool acceptFocus = true)
 			{
 				if (this.cache.Add (that) == false)
