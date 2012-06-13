@@ -59,27 +59,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.CreateGraphUI (frame);
 			this.CreateCompteUI (frame);
-
-			this.graphicsButton = new CheckButton
-			{
-				Parent         = frame,
-				Text           = "Graphique du solde",
-				PreferredWidth = 120,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 0, 0, 0),
-			};
+			this.CreateHasGraphicColumnUI (frame);
 
 			this.UpdateWidgets ();
-
-			//	Connexion des événements.
-			this.graphicsButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.HasGraphicColumn = (graphicsButton.ActiveState == ActiveState.Yes);
-					this.OptionsChanged ();
-				}
-			};
 		}
 
 		private void CreateCompteUI(FrameBox parent)
@@ -91,7 +73,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
-			label.PreferredWidth = label.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (label);
 
 			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, parent, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
 			this.compteController.Box.Dock = DockStyle.Left;
@@ -186,12 +168,9 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateGraphWidgets ();
+			this.UpdateHasGraphicColumn ();
 
-			using (this.ignoreChanges.Enter ())
-			{
-				this.graphicsButton.Visibility = !this.options.ViewGraph;
-				this.graphicsButton.ActiveState = this.Options.HasGraphicColumn ? ActiveState.Yes : ActiveState.No;
-			}
+			this.hasGraphicColumnButton.Visibility = !this.options.ViewGraph;
 
 			base.UpdateWidgets ();
 		}
@@ -208,6 +187,5 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private AutoCompleteFieldController		compteController;
 		private StaticText						summaryLabel;
-		private CheckButton						graphicsButton;
 	}
 }

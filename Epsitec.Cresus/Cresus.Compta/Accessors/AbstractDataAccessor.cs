@@ -241,9 +241,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 		public virtual void UpdateFilter()
 		{
 			//	Met à jour le filtre.
+			this.UpdateMergedFilter ();
 			this.readonlyData.Clear ();
 
-			if ((this.filterData == null || this.filterData.IsEmpty) &&
+			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) &&
 				(this.mainWindowController.TemporalData == null || this.mainWindowController.TemporalData.IsEmpty))
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
@@ -303,7 +304,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		protected bool FilterLine(int row)
 		{
-			if (!this.filterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
+			if (!this.mergedFilterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
 			{
 				return false;
 			}
@@ -318,6 +319,32 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			return true;
+		}
+
+		protected void UpdateMergedFilter()
+		{
+			//	Met à jour mergedFilterData à partir de filterData, en y incorporant les données à
+			//	filtrer provenant des options. Cela est nécessaire, puisque, contre toute logique, il
+			//	a été décidé de mettre la plupart des choix concernant le filtre dans les options !
+			this.mergedFilterData = this.filterData.CopyFrom ();
+
+			if (this.options != null)
+			{
+				if (this.options.Catégories != CatégorieDeCompte.Tous)
+				{
+					this.mergedFilterData.BeginnerCatégories = this.options.Catégories;
+				}
+
+				if (this.options.DeepFrom != 1 || this.options.DeepTo != int.MaxValue)
+				{
+					this.mergedFilterData.SetBeginnerProfondeurs (this.options.DeepFrom, this.options.DeepTo);
+				}
+
+				if (this.options.ZeroFiltered)
+				{
+					this.mergedFilterData.BeginnerHideNuls = true;
+				}
+			}
 		}
 
 
@@ -684,6 +711,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected ViewSettingsList						viewSettingsList;
 		protected SearchData							searchData;
 		protected SearchData							filterData;
+		protected SearchData							mergedFilterData;
 		protected AbstractOptions						options;
 		protected AbstractPermanents					permanents;
 		protected int									firstEditedRow;

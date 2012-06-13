@@ -66,9 +66,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void UpdateReadonlyAllData()
 		{
+			this.UpdateMergedFilter ();
 			this.readonlyAllData.Clear ();
 
-			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
+			this.mergedFilterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
 			this.columnCount = this.Options.SoldesColumns.Count;

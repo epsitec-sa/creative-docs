@@ -9,6 +9,7 @@ using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,11 +17,11 @@ using System.Linq;
 namespace Epsitec.Cresus.Compta.Options.Controllers
 {
 	/// <summary>
-	/// Ce contrôleur gère les options d'affichage du compte d'exploitation de la comptabilité.
+	/// Ce contrôleur gère les options d'affichage du plan comptable de la comptabilité.
 	/// </summary>
-	public class ExploitationOptionsController : AbstractOptionsController
+	public class PlanComptableOptionsController : AbstractOptionsController
 	{
-		public ExploitationOptionsController(AbstractController controller)
+		public PlanComptableOptionsController(AbstractController controller)
 			: base (controller)
 		{
 		}
@@ -41,10 +42,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.mainFrame);
+			this.CreateMainUI (this.mainFrame);
+
+			this.UpdateWidgets ();
 		}
 
-		protected void CreateCheckUI(FrameBox parent)
+		protected void CreateMainUI(FrameBox parent)
 		{
 			var frame = new FrameBox
 			{
@@ -54,9 +57,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex        = ++this.tabIndex,
 			};
 
-			this.CreateZeroFilteredUI (frame);
-			this.CreateZeroDisplayedInWhiteUI (frame);
+			this.CreateCatégoriesUI (frame);
+			this.CreateSeparator (frame);
+			this.CreateDeepUI (frame);
 		}
+
 
 		protected override bool HasBeginnerSpecialist
 		{
@@ -72,19 +77,25 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			base.OptionsChanged ();
 		}
 
+		protected override void LevelChangedAction()
+		{
+			base.LevelChangedAction ();
+		}
+
 		protected override void UpdateWidgets()
 		{
-			this.UpdateZeroFiltered ();
-			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateCatégories ();
+			this.UpdateDeep ();
 
 			base.UpdateWidgets ();
 		}
 
-		private ExploitationOptions Options
+
+		private PlanComptableOptions Options
 		{
 			get
 			{
-				return this.options as ExploitationOptions;
+				return this.options as PlanComptableOptions;
 			}
 		}
 	}

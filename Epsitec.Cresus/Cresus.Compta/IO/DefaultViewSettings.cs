@@ -64,7 +64,8 @@ namespace Epsitec.Cresus.Compta.IO
 		{
 			var list = this.GetList (cmd);
 
-			this.CreateViewSettingsData (list, ControllerType.PlanComptable,   "Plan comptable",        true,  true,  false);
+			this.CreateViewSettingsData<PlanComptableOptions> (list, ControllerType.PlanComptable, "Plan comptable", true, true, false);
+
 			this.CreateViewSettingsData (list, ControllerType.Monnaies,        "Monnaies",              false, false, false);
 			this.CreateViewSettingsData (list, ControllerType.Périodes,        "Exercices comptables",  true,  false, false);
 			this.CreateViewSettingsData (list, ControllerType.PiècesGenerator, "Générateurs n° pièces", false, false, false);
@@ -84,21 +85,16 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Vue d'ensemble", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 1, 2);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Histogramme des comptes importants", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.SideBySide;
@@ -112,9 +108,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BalanceOptions> (list, ControllerType.Balance, "Secteurs des comptes importants", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Pie;
@@ -183,15 +177,12 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<BilanOptions> (list, ControllerType.Bilan, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 1, 2);
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
@@ -208,23 +199,18 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, DefaultViewSettings.defaultName, searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.None, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Vue d'ensemble du budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 1, 2);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 1, 2);
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<PPOptions> (list, ControllerType.PP, "Comparaison avec le budget", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 				this.OptionsAdaptDouble (viewSettings.BaseOptions, ComparisonShowed.Budget, ComparisonDisplayMode.Montant);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
@@ -233,7 +219,6 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<ExploitationOptions> (list, ControllerType.Exploitation, "Compte d'exploitation", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			this.Select (list);
@@ -256,25 +241,18 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Charges et produits", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptCatégorie (viewSettings.BaseOptions, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Tout", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
 			}
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Histogramme des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptCatégorie (viewSettings.BaseOptions, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
 				viewSettings.BaseOptions.GraphOptions.Mode = GraphMode.Stacked;
@@ -286,11 +264,8 @@ namespace Epsitec.Cresus.Compta.IO
 
 			{
 				var viewSettings = this.CreateViewSettingsData<RésuméPériodiqueOptions> (list, ControllerType.RésuméPériodique, "Secteurs des soldes", searchExist, filterExist, optionsExist);
-				this.SearchAdaptForNonZero (viewSettings.BaseFilter);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptCatégorie (viewSettings.BaseFilter, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
-				this.SearchAdd (viewSettings.BaseFilter);
-				this.SearchAdaptProfondeur (viewSettings.BaseFilter, 4, int.MaxValue);
+				this.SearchAdaptCatégorie (viewSettings.BaseOptions, CatégorieDeCompte.Charge | CatégorieDeCompte.Produit);
+				this.SearchAdaptProfondeur (viewSettings.BaseOptions, 4, int.MaxValue);
 				this.OptionsAdaptRésuméPériodique (viewSettings.BaseOptions, 1);
 
 				this.OptionsAdaptGraph (viewSettings.BaseOptions);
@@ -366,63 +341,15 @@ namespace Epsitec.Cresus.Compta.IO
 		}
 
 
-		private void SearchAdd(SearchData data)
+		private void SearchAdaptProfondeur(AbstractOptions options, int minProfondeur, int maxProfondeur)
 		{
-			data.NodesData[0].TabsData.Add (new SearchTabData ());
+			options.DeepFrom = minProfondeur;
+			options.DeepTo   = maxProfondeur;
 		}
 
-		private void SearchAdaptForNonZero(SearchData data)
+		private void SearchAdaptCatégorie(AbstractOptions options, CatégorieDeCompte catégorie)
 		{
-			var tab = data.NodesData[0].TabsData.Last ();
-
-			tab.SearchText.FromText = Converters.MontantToString (0, null);
-			tab.SearchText.Mode     = SearchMode.WholeContent;
-			tab.SearchText.Invert   = true;
-			tab.Column              = ColumnType.Solde;
-
-			this.SearchAdaptOrMode (data);
-		}
-
-		private void SearchAdaptProfondeur(SearchData data, int minProfondeur, int maxProfondeur)
-		{
-			var tab = data.NodesData[0].TabsData.Last ();
-
-			tab.SearchText.FromText = (minProfondeur == int.MaxValue) ? null : Converters.IntToString (minProfondeur);
-			tab.SearchText.ToText   = (maxProfondeur == int.MaxValue) ? null : Converters.IntToString (maxProfondeur);
-			tab.SearchText.Mode     = SearchMode.Interval;
-			tab.Column              = ColumnType.Profondeur;
-
-			this.SearchAdaptOrMode (data);
-		}
-
-		private void SearchAdaptDate(SearchData data, int startDay, int startMonth, int endDay, int endMonth)
-		{
-			var tab = data.NodesData[0].TabsData.Last ();
-
-			int year = Date.Today.Year;
-
-			tab.SearchText.FromText = Converters.DateToString (new Date (year, startMonth, startDay));
-			tab.SearchText.ToText   = Converters.DateToString (new Date (year,   endMonth,   endDay));
-			tab.SearchText.Mode     = SearchMode.Interval;
-			tab.Column              = ColumnType.Date;
-
-			this.SearchAdaptOrMode (data);
-		}
-
-		private void SearchAdaptCatégorie(SearchData data, CatégorieDeCompte catégorie)
-		{
-			var tab = data.NodesData[0].TabsData.Last ();
-
-			tab.SearchText.FromText = Converters.CatégoriesToString (catégorie);
-			tab.SearchText.Mode     = SearchMode.Jokers;
-			tab.Column              = ColumnType.Catégorie;
-
-			this.SearchAdaptOrMode (data);
-		}
-
-		private void SearchAdaptOrMode(SearchData data)
-		{
-			data.NodesData[0].OrMode = (data.NodesData[0].TabsData.Count == 1);
+			options.Catégories = catégorie;
 		}
 
 
@@ -437,14 +364,12 @@ namespace Epsitec.Cresus.Compta.IO
 			o.ComparisonDisplayMode = mode;
 		}
 
-
 		private void OptionsAdaptRésuméPériodique(AbstractOptions options, int numberOfMonths)
 		{
 			var o = options as RésuméPériodiqueOptions;
 
 			o.NumberOfMonths = numberOfMonths;
 		}
-
 
 		private void OptionsAdaptGraph(AbstractOptions options)
 		{

@@ -33,7 +33,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
-#if false
+#if true
 			if (hasBeginnerSpecialist)
 			{
 				this.beginnerButton = this.CreateButton (frame, "Level.Beginner", "Simple");
@@ -79,8 +79,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					Dock          = DockStyle.Left,
 				};
 			}
-#endif
-
+#else
 			this.levelButton = new IconButton
 			{
 				Parent        = frame,
@@ -103,6 +102,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					levelChangedAction ();
 				};
 			}
+#endif
 
 			this.UpdateButtons ();
 

@@ -114,10 +114,12 @@
     <Compile Include="Helpers\Présentations.cs" />
     <Compile Include="Helpers\Rectangles.cs" />
     <Compile Include="Helpers\Currencies.cs" />
+    <Compile Include="Options\Controllers\PlanComptableOptionsController.cs" />
     <Compile Include="Options\Controllers\SoldesColumnController.cs" />
     <Compile Include="Options\Controllers\SoldesOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméPériodiqueOptionsController.cs" />
     <Compile Include="Options\Controllers\RésuméTVAOptionsController.cs" />
+    <Compile Include="Options\Data\PlanComptableOptions.cs" />
     <Compile Include="Options\Data\SoldesColumn.cs" />
     <Compile Include="Options\Data\SoldesOptions.cs" />
     <Compile Include="Options\Data\RésuméPériodiqueOptions.cs" />

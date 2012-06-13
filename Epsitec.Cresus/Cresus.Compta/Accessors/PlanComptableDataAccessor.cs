@@ -27,16 +27,19 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.viewSettingsList = this.mainWindowController.GetViewSettingsList (controller.ViewSettingsKey);
 			this.searchData       = this.mainWindowController.GetSettingsSearchData (controller.SearchKey);
 			this.filterData       = this.viewSettingsList.Selected.CurrentFilter;
+			this.options          = this.viewSettingsList.Selected.CurrentOptions;
 		}
 
 
 		public override void UpdateFilter()
 		{
+			this.UpdateMergedFilter ();
 			this.UpdateAfterOptionsChanged ();
 		}
 
 		public override void UpdateAfterOptionsChanged()
 		{
+			this.UpdateMergedFilter ();
 			this.planComptableAll = this.compta.PlanComptable;
 
 			if (this.IsAllComptes)
@@ -560,7 +563,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return this.filterData == null || this.filterData.IsEmpty;
+				return this.mergedFilterData == null || this.mergedFilterData.IsEmpty;
 			}
 		}
 

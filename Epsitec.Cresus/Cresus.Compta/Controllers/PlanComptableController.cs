@@ -13,6 +13,7 @@ using Epsitec.Cresus.Compta.Entities;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Permanents;
 using Epsitec.Cresus.Compta.Options.Data;
+using Epsitec.Cresus.Compta.Options.Controllers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -39,6 +40,27 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 		}
 
+
+		protected override void CreateTopOptions(FrameBox parent)
+		{
+			this.optionsController = new PlanComptableOptionsController (this);
+			this.optionsController.CreateUI (parent, this.OptionsChanged);
+			this.optionsController.ShowPanel = this.ShowOptionsPanel;
+
+			this.UpdateColumnMappers ();
+		}
+
+		protected override void OptionsChanged()
+		{
+			this.dataAccessor.UpdateAfterOptionsChanged ();
+			this.ClearHilite ();
+			this.UpdateColumnMappers ();
+			this.UpdateArray ();
+
+			this.UpdateArrayContent ();
+			this.FilterUpdateTopToolbar ();
+			this.UpdateViewSettings ();
+		}
 
 		public override ControllerType ControllerType
 		{

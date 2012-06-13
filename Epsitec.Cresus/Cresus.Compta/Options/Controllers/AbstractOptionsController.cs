@@ -33,6 +33,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.options = this.controller.DataAccessor.Options;
 
 			this.ignoreChanges = new SafeCounter ();
+			this.specialistFrames = new List<FrameBox> ();
 		}
 
 
@@ -205,15 +206,20 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.options.Specialist = this.topPanelLeftController.Specialist;
 
-			if (this.comparisonFrame != null)
+			foreach (var line in this.specialistFrames)
 			{
-				this.comparisonFrame.Visibility = this.topPanelLeftController.Specialist;
+				line.Visibility = this.topPanelLeftController.Specialist;
 			}
 		}
 
 		protected virtual void UpdateWidgets()
 		{
 			this.topPanelRightController.ClearEnable = !this.options.IsEmpty;
+
+			foreach (var line in this.specialistFrames)
+			{
+				line.Visibility = this.topPanelLeftController.Specialist;
+			}
 		}
 
 
@@ -236,7 +242,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.zeroFilteredButton.PreferredWidth = this.zeroFilteredButton.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (this.zeroFilteredButton);
 
 			this.zeroFilteredButton.Clicked += delegate
 			{
@@ -261,14 +267,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.zeroDisplayedInWhiteButton = new CheckButton
 			{
 				Parent         = parent,
-				FormattedText  = "Affiche en blanc les montants nuls",
+				FormattedText  = "Afficher en blanc les montants nuls",
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.zeroDisplayedInWhiteButton.PreferredWidth = this.zeroDisplayedInWhiteButton.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (this.zeroDisplayedInWhiteButton);
 
 			this.zeroDisplayedInWhiteButton.Clicked += delegate
 			{
@@ -300,7 +306,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				TabIndex       = ++this.tabIndex,
 			};
 
-			this.hasGraphicColumnButton.PreferredWidth = this.hasGraphicColumnButton.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (this.hasGraphicColumnButton);
 
 			this.hasGraphicColumnButton.Clicked += delegate
 			{
@@ -319,17 +325,274 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#endregion
 
 
+		#region Catégories
+		protected void CreateCatégoriesUI(FrameBox parent)
+		{
+			this.catégorieActifButton = new CheckButton
+			{
+				Parent      = parent,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Actif),
+				AutoToggle  = false,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+				TabIndex    = ++this.tabIndex,
+			};
+
+			this.catégoriePassifButton = new CheckButton
+			{
+				Parent      = parent,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Passif),
+				AutoToggle  = false,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+				TabIndex    = ++this.tabIndex,
+			};
+
+			this.catégorieChargeButton = new CheckButton
+			{
+				Parent      = parent,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Charge),
+				AutoToggle  = false,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+				TabIndex    = ++this.tabIndex,
+			};
+
+			this.catégorieProduitButton = new CheckButton
+			{
+				Parent      = parent,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Produit),
+				AutoToggle  = false,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+				TabIndex    = ++this.tabIndex,
+			};
+
+			this.catégorieExploitationButton = new CheckButton
+			{
+				Parent      = parent,
+				Text        = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
+				AutoToggle  = false,
+				Dock        = DockStyle.Left,
+				Margins     = new Margins (0, 10, 0, 0),
+				TabIndex    = ++this.tabIndex,
+			};
+
+			UIBuilder.AdjustWidth (this.catégorieActifButton);
+			UIBuilder.AdjustWidth (this.catégoriePassifButton);
+			UIBuilder.AdjustWidth (this.catégorieChargeButton);
+			UIBuilder.AdjustWidth (this.catégorieProduitButton);
+			UIBuilder.AdjustWidth (this.catégorieExploitationButton);
+
+			this.catégorieActifButton.Clicked += delegate
+			{
+				this.options.Catégories ^= CatégorieDeCompte.Actif;
+				this.UpdateCatégories ();
+				this.OptionsChanged ();
+			};
+
+			this.catégoriePassifButton.Clicked += delegate
+			{
+				this.options.Catégories ^= CatégorieDeCompte.Passif;
+				this.UpdateCatégories ();
+				this.OptionsChanged ();
+			};
+
+			this.catégorieChargeButton.Clicked += delegate
+			{
+				this.options.Catégories ^= CatégorieDeCompte.Charge;
+				this.UpdateCatégories ();
+				this.OptionsChanged ();
+			};
+
+			this.catégorieProduitButton.Clicked += delegate
+			{
+				this.options.Catégories ^= CatégorieDeCompte.Produit;
+				this.UpdateCatégories ();
+				this.OptionsChanged ();
+			};
+
+			this.catégorieExploitationButton.Clicked += delegate
+			{
+				this.options.Catégories ^= CatégorieDeCompte.Exploitation;
+				this.UpdateCatégories ();
+				this.OptionsChanged ();
+			};
+
+			this.UpdateCatégories ();
+		}
+
+		protected void UpdateCatégories()
+		{
+			this.catégorieActifButton       .ActiveState = ((this.options.Catégories & CatégorieDeCompte.Actif)        != 0) ? ActiveState.Yes : ActiveState.No;
+			this.catégoriePassifButton      .ActiveState = ((this.options.Catégories & CatégorieDeCompte.Passif)       != 0) ? ActiveState.Yes : ActiveState.No;
+			this.catégorieChargeButton      .ActiveState = ((this.options.Catégories & CatégorieDeCompte.Charge)       != 0) ? ActiveState.Yes : ActiveState.No;
+			this.catégorieProduitButton     .ActiveState = ((this.options.Catégories & CatégorieDeCompte.Produit)      != 0) ? ActiveState.Yes : ActiveState.No;
+			this.catégorieExploitationButton.ActiveState = ((this.options.Catégories & CatégorieDeCompte.Exploitation) != 0) ? ActiveState.Yes : ActiveState.No;
+		}
+		#endregion
+
+
+		#region Deep
+		protected void CreateDeepUI(FrameBox parent)
+		{
+			var fromLabel = new StaticText
+			{
+				Parent         = parent,
+				Text           = "Profondeur de",
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+			};
+			UIBuilder.AdjustWidth (fromLabel);
+
+			this.deepFromField = new TextFieldCombo
+			{
+				Parent          = parent,
+				IsReadOnly      = true,
+				PreferredWidth  = 50,
+				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			var toLabel = new StaticText
+			{
+				Parent         = parent,
+				Text           = "À",
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
+			};
+			UIBuilder.AdjustWidth (toLabel);
+
+			this.deepToField = new TextFieldCombo
+			{
+				Parent          = parent,
+				IsReadOnly      = true,
+				PreferredWidth  = 50,
+				PreferredHeight = 20,
+				MenuButtonWidth = UIBuilder.ComboButtonWidth,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			this.deepClearButton = new IconButton
+			{
+				Parent          = parent,
+				IconUri         = UIBuilder.GetResourceIconUri ("Level.Clear"),
+				AutoFocus       = false,
+				PreferredWidth  = 20,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+				TabIndex        = ++this.tabIndex,
+			};
+
+			ToolTip.Default.SetToolTip (this.deepClearButton, "Montre tous les comptes");
+
+			this.InitializeDeep ();
+			this.UpdateDeep ();
+
+			this.deepFromField.TextChanged += delegate
+			{
+				this.DeepChanged ();
+			};
+
+			this.deepToField.TextChanged += delegate
+			{
+				this.DeepChanged ();
+			};
+
+			this.deepClearButton.Clicked += delegate
+			{
+				this.options.DeepFrom = 1;
+				this.options.DeepTo   = int.MaxValue;
+
+				this.InitializeDeep ();
+				this.OptionsChanged ();
+			};
+		}
+
+		protected void UpdateDeep()
+		{
+			using (this.ignoreChanges.Enter ())
+			{
+				this.deepFromField.FormattedText = this.DeepToDescription (this.options.DeepFrom);
+				this.deepToField.FormattedText   = this.DeepToDescription (this.options.DeepTo);
+			}
+		}
+
+		private void InitializeDeep()
+		{
+			this.InitializeDeep (this.deepFromField, 1, this.options.DeepTo);
+			this.InitializeDeep (this.deepToField, this.options.DeepFrom, int.MaxValue);
+
+			this.deepClearButton.Enable = (this.options.DeepFrom != 1 || this.options.DeepTo != int.MaxValue);
+		}
+
+		private void InitializeDeep(TextFieldCombo combo, int min, int max)
+		{
+			combo.Items.Clear ();
+
+			for (int i = 1; i <= 6; i++)
+			{
+				if (i >= min && i <= max)
+				{
+					combo.Items.Add (this.DeepToDescription (i));  // 1..6
+				}
+			}
+
+			if (max == int.MaxValue)
+			{
+				combo.Items.Add (this.DeepToDescription (int.MaxValue));  // Tout
+			}
+		}
+
+		protected void DeepChanged()
+		{
+			if (this.ignoreChanges.IsZero)
+			{
+				this.options.DeepFrom = this.DescriptionToDeep (this.deepFromField.FormattedText);
+				this.options.DeepTo   = this.DescriptionToDeep (this.deepToField.FormattedText);
+
+				this.InitializeDeep ();
+				this.OptionsChanged ();
+			}
+		}
+
+		private FormattedText DeepToDescription(int deep)
+		{
+			if (deep == int.MaxValue)
+			{
+				return "Tout";
+			}
+			else
+			{
+				return deep.ToString ();  // 1..9
+			}
+		}
+
+		private int DescriptionToDeep(FormattedText text)
+		{
+			var t = text.ToSimpleText ();
+
+			if (string.IsNullOrEmpty (t) || t.Length != 1 || t[0] < '1' || t[0] > '9')
+			{
+				return int.MaxValue;
+			}
+			else
+			{
+				return t[0] - '0';  // 1..n
+			}
+		}
+		#endregion
+
 		#region Comparaison
 		protected FrameBox CreateComparisonUI(FrameBox parent, ComparisonShowed possibleMode)
 		{
-			this.comparisonFrame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 5, 0),
-				TabIndex        = ++this.tabIndex,
-			};
+			this.comparisonFrame = this.CreateSpecialistFrameUI(parent);
 
 			this.buttonComparisonEnable = new CheckButton
 			{
@@ -487,6 +750,36 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			return ComparisonDisplayMode.Montant;
 		}
 		#endregion
+
+
+		protected FrameBox CreateSpecialistFrameUI(FrameBox parent)
+		{
+			var frame = new FrameBox
+			{
+				Parent          = parent,
+				PreferredHeight = 20,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 5, 0),
+				TabIndex        = ++this.tabIndex,
+				Visibility      = false,
+			};
+
+			this.specialistFrames.Add (frame);
+
+			return frame;
+		}
+
+		protected void CreateSeparator(FrameBox parent)
+		{
+			new Separator
+			{
+				Parent          = parent,
+				PreferredWidth  = 1,
+				IsVerticalLine  = true,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, 10, 0, 0),
+			};
+		}
 
 
 		#region Graph
@@ -665,6 +958,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected readonly ComptaPériodeEntity					période;
 		protected readonly AbstractOptions						options;
 		protected readonly SafeCounter							ignoreChanges;
+		protected readonly List<FrameBox>						specialistFrames;
 
 		protected System.Action									optionsChanged;
 
@@ -678,6 +972,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected CheckButton									zeroFilteredButton;
 		protected CheckButton									zeroDisplayedInWhiteButton;
 		protected CheckButton									hasGraphicColumnButton;
+		protected CheckButton									catégorieActifButton;
+		protected CheckButton									catégoriePassifButton;
+		protected CheckButton									catégorieChargeButton;
+		protected CheckButton									catégorieProduitButton;
+		protected CheckButton									catégorieExploitationButton;
+		protected TextFieldCombo								deepFromField;
+		protected TextFieldCombo								deepToField;
+		protected IconButton									deepClearButton;
 
 		protected CheckButton									buttonComparisonEnable;
 		protected FrameBox										frameComparisonShowed;

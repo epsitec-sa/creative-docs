@@ -232,17 +232,17 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Catégorie).Any ())
 				{
-					this.CreateMiddleBeginnerCatégorieUI (stackFrame);
+					//?this.CreateMiddleBeginnerCatégorieUI (stackFrame);
 				}
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Profondeur).Any ())
 				{
-					this.CreateMiddleBeginnerProfondeurUI (stackFrame);
+					//?this.CreateMiddleBeginnerProfondeurUI (stackFrame);
 				}
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Solde).Any ())
 				{
-					this.CreateMiddleBeginnerSoldeUI (stackFrame);
+					//?this.CreateMiddleBeginnerSoldeUI (stackFrame);
 				}
 
 				if (this.columnMappers.Where (x => x.Column == ColumnType.Date).Any ())
@@ -365,7 +365,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
 			};
-			fromLabel.PreferredWidth = fromLabel.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (fromLabel);
 
 			this.beginnerFromProfondeurField = new TextFieldCombo
 			{
@@ -386,7 +386,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
 			};
-			toLabel.PreferredWidth = toLabel.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (toLabel);
 
 			this.beginnerToProfondeurField = new TextFieldCombo
 			{

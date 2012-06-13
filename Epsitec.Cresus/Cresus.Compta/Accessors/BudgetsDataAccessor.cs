@@ -46,9 +46,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void UpdateAfterOptionsChanged()
 		{
+			this.UpdateMergedFilter ();
 			this.planComptableAll = this.compta.PlanComptable;
 
-			if ((this.filterData == null || this.filterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
+			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
 			{
 				this.planComptable = this.planComptableAll;
 			}
@@ -68,7 +69,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 
 			Date? dateDébut, dateFin;
-			this.filterData.GetBeginnerDates (out dateDébut, out dateFin);
+			this.mergedFilterData.GetBeginnerDates (out dateDébut, out dateFin);
 			this.mainWindowController.TemporalData.MergeDates (ref dateDébut, ref dateFin);
 			this.soldesJournalManager.Initialize (this.période.Journal, dateDébut, dateFin);
 

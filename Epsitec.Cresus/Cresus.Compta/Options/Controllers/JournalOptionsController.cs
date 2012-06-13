@@ -88,7 +88,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 
-			label.PreferredWidth = label.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (label);
 
 			this.comboJournaux = new TextFieldCombo
 			{

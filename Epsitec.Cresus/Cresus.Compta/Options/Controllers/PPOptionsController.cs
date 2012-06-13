@@ -44,6 +44,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.CreateCheckUI (this.mainFrame);
 			this.CreateComparisonUI (this.mainFrame, ComparisonShowed.All);
 
+			var line = this.CreateSpecialistFrameUI (this.mainFrame);
+			this.CreateDeepUI (line);
+			this.CreateSeparator (line);
+			this.CreateZeroFilteredUI (line);
+			this.CreateZeroDisplayedInWhiteUI (line);
+
 			this.UpdateWidgets ();
 		}
 
@@ -58,42 +64,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			this.CreateGraphUI (frame);
-
-			this.zeroButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 200,
-				Dock           = DockStyle.Left,
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.graphicsButton = new CheckButton
-			{
-				Parent         = frame,
-				Text           = "Graphique du solde",
-				PreferredWidth = 120,
-				Dock           = DockStyle.Left,
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.zeroButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.ZeroDisplayedInWhite = (zeroButton.ActiveState == ActiveState.Yes);
-					this.OptionsChanged ();
-				}
-			};
-
-			this.graphicsButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.HasGraphicColumn = (graphicsButton.ActiveState == ActiveState.Yes);
-					this.OptionsChanged ();
-				}
-			};
+			this.CreateHasGraphicColumnUI (frame);
 		}
 
 		protected override bool HasBeginnerSpecialist
@@ -113,16 +84,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateGraphWidgets ();
+			this.UpdateDeep ();
+			this.UpdateZeroFiltered ();
+			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateHasGraphicColumn ();
 			this.UpdateComparison ();
 
-			using (this.ignoreChanges.Enter ())
-			{
-				this.zeroButton.Visibility     = !this.options.ViewGraph;
-				this.graphicsButton.Visibility = !this.options.ViewGraph;
-
-				this.zeroButton.ActiveState     = this.Options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
-				this.graphicsButton.ActiveState = this.Options.HasGraphicColumn     ? ActiveState.Yes : ActiveState.No;
-			}
+			this.zeroFilteredButton.Visibility         = !this.options.ViewGraph;
+			this.zeroDisplayedInWhiteButton.Visibility = !this.options.ViewGraph;
+			this.hasGraphicColumnButton.Visibility     = !this.options.ViewGraph;
 
 			base.UpdateWidgets ();
 		}
@@ -134,9 +104,5 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				return this.options as DoubleOptions;
 			}
 		}
-
-
-		private CheckButton			zeroButton;
-		private CheckButton			graphicsButton;
 	}
 }

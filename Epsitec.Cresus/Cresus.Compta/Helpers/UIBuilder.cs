@@ -19,6 +19,12 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
+		public static void AdjustWidth(Widget widget)
+		{
+			widget.PreferredWidth = widget.GetBestFitSize ().Width;
+		}
+
+
 		public static FrameBox CreateMiniToolbar(Widget parent)
 		{
 			var toolbar = new FrameBox

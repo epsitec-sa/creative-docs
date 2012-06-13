@@ -44,6 +44,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.CreateMainUI (this.mainFrame);
 
+			var line = this.CreateSpecialistFrameUI (this.mainFrame);
+			this.CreateCatégoriesUI (line);
+			this.CreateSeparator (line);
+			this.CreateDeepUI (line);
+
+			line = this.CreateSpecialistFrameUI (this.mainFrame);
+			this.CreateZeroFilteredUI (line);
+			this.CreateZeroDisplayedInWhiteUI (line);
+
 			this.UpdateWidgets ();
 		}
 
@@ -59,13 +68,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.CreateGraphUI (frame);
 
-			new StaticText
+			var lp = new StaticText
 			{
 				Parent         = frame,
 				Text           = "Périodicité",
-				PreferredWidth = 60,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 			};
+			UIBuilder.AdjustWidth (lp);
 
 			this.monthsField = new TextFieldCombo
 			{
@@ -89,46 +99,43 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = frame,
 				Text           = "Chiffres cumulés",
-				PreferredWidth = 120,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
+			UIBuilder.AdjustWidth (this.cumulButton);
 
-			this.nullButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Affiche en blanc les montants nuls",
-				PreferredWidth = 200,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
+			this.CreateSeparator (frame);
 
 			this.graphLabel = new StaticText
 			{
 				Parent         = frame,
 				FormattedText  = "Graphiques",
-				PreferredWidth = 65,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
+			UIBuilder.AdjustWidth (this.graphLabel);
 
 			this.stackedGraphButton = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Cumulés",
-				PreferredWidth = 70,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
+			UIBuilder.AdjustWidth (this.stackedGraphButton);
 
 			this.sideBySideGraphButton = new CheckButton
 			{
 				Parent         = frame,
 				FormattedText  = "Côte à côte",
-				PreferredWidth = 90,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
+			UIBuilder.AdjustWidth (this.sideBySideGraphButton);
 
 			this.monthsField.SelectedItemChanged += delegate
 			{
@@ -144,15 +151,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				if (this.ignoreChanges.IsZero)
 				{
 					this.Options.Cumul = (this.cumulButton.ActiveState == ActiveState.Yes);
-					this.OptionsChanged ();
-				}
-			};
-
-			this.nullButton.ActiveStateChanged += delegate
-			{
-				if (this.ignoreChanges.IsZero)
-				{
-					this.Options.ZeroDisplayedInWhite = (this.nullButton.ActiveState == ActiveState.Yes);
 					this.OptionsChanged ();
 				}
 			};
@@ -193,7 +191,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			get
 			{
-				return false;
+				return true;
 			}
 		}
 
@@ -211,20 +209,24 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateGraphWidgets ();
+			this.UpdateCatégories ();
+			this.UpdateDeep ();
+			this.UpdateZeroFiltered ();
+			this.UpdateZeroDisplayedInWhite ();
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.cumulButton.Visibility           = !this.options.ViewGraph;
-				this.nullButton.Visibility            = !this.options.ViewGraph;
-				this.graphLabel.Visibility            = !this.options.ViewGraph;
-				this.stackedGraphButton.Visibility    = !this.options.ViewGraph;
-				this.sideBySideGraphButton.Visibility = !this.options.ViewGraph;
+				this.cumulButton.Visibility                = !this.options.ViewGraph;
+				this.zeroFilteredButton.Visibility         = !this.options.ViewGraph;
+				this.zeroDisplayedInWhiteButton.Visibility = !this.options.ViewGraph;
+				this.graphLabel.Visibility                 = !this.options.ViewGraph;
+				this.stackedGraphButton.Visibility         = !this.options.ViewGraph;
+				this.sideBySideGraphButton.Visibility      = !this.options.ViewGraph;
 
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
-				this.cumulButton.ActiveState           = this.Options.Cumul                ? ActiveState.Yes : ActiveState.No;
-				this.nullButton.ActiveState            = this.Options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
-				this.stackedGraphButton.ActiveState    = this.Options.HasStackedGraph      ? ActiveState.Yes : ActiveState.No;
-				this.sideBySideGraphButton.ActiveState = this.Options.HasSideBySideGraph   ? ActiveState.Yes : ActiveState.No;
+				this.cumulButton.ActiveState           = this.Options.Cumul              ? ActiveState.Yes : ActiveState.No;
+				this.stackedGraphButton.ActiveState    = this.Options.HasStackedGraph    ? ActiveState.Yes : ActiveState.No;
+				this.sideBySideGraphButton.ActiveState = this.Options.HasSideBySideGraph ? ActiveState.Yes : ActiveState.No;
 			}
 
 			base.UpdateWidgets ();
@@ -267,7 +269,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
-		private CheckButton			nullButton;
 		private StaticText			graphLabel;
 		private CheckButton			stackedGraphButton;
 		private CheckButton			sideBySideGraphButton;

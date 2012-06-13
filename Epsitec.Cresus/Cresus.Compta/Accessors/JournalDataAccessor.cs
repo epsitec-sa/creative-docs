@@ -43,6 +43,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public override void UpdateAfterOptionsChanged()
 		{
+			this.UpdateMergedFilter ();
+
 			if (this.IsAllJournaux)
 			{
 				this.journalAll = this.période.Journal;
@@ -53,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.journalAll = this.période.Journal.Where (x => x.Journal.Id == id).ToList ();
 			}
 
-			if ((this.filterData == null || this.filterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
+			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
 			{
 				this.journal = this.journalAll;
 			}

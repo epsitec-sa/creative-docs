@@ -221,7 +221,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.userLabel.FormattedText = user.Utilisateur;
 			}
 
-			this.userLabel.PreferredWidth = this.userLabel.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (this.userLabel);
 		}
 
 		public void UpdatePériode()
@@ -339,7 +339,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Margins         = new Margins (0, 0, 2, 2),
 			};
 
-			button.PreferredWidth = button.GetBestFitSize ().Width;
+			UIBuilder.AdjustWidth (button);
 
 			return button;
 		}

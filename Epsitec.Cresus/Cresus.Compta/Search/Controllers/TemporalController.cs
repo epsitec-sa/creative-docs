@@ -255,7 +255,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (1, 5, 0, 0),
 				};
-				label.PreferredWidth = label.GetBestFitSize ().Width;
+				UIBuilder.AdjustWidth (label);
 
 				this.beginDateField = new TextFieldEx
 				{
@@ -279,7 +279,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock           = DockStyle.Left,
 					Margins        = new Margins (5, 5, 0, 0),
 				};
-				label.PreferredWidth = label.GetBestFitSize ().Width;
+				UIBuilder.AdjustWidth (label);
 
 				this.endDateField = new TextFieldEx
 				{

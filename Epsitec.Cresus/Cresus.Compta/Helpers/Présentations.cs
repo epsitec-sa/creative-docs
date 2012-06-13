@@ -82,6 +82,7 @@ namespace Epsitec.Cresus.Compta.Helpers
 				   type == ControllerType.Exploitation ||
 				   type == ControllerType.ExtraitDeCompte ||
 				   type == ControllerType.Journal ||
+				   type == ControllerType.PlanComptable ||
 				   type == ControllerType.RésuméPériodique ||
 				   type == ControllerType.RésuméTVA ||
 				   type == ControllerType.Soldes;

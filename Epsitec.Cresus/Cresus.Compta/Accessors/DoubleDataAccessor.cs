@@ -39,9 +39,10 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void UpdateReadonlyAllData()
 		{
+			this.UpdateMergedFilter ();
 			this.readonlyAllData.Clear ();
 
-			this.filterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
+			this.mergedFilterData.GetBeginnerDates (out this.lastBeginDate, out this.lastEndDate);
 			this.mainWindowController.TemporalData.MergeDates (ref this.lastBeginDate, ref this.lastEndDate);
 			this.soldesJournalManager.Initialize (this.période.Journal, this.lastBeginDate, this.lastEndDate);
 
@@ -94,7 +95,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Génère les lignes de la partie "gauche" ou "droite".
 			//	Retourne le montant total.
 			int fromProfondeur, toProfondeur;
-			this.filterData.GetBeginnerProfondeurs (out fromProfondeur, out toProfondeur);
+			this.mergedFilterData.GetBeginnerProfondeurs (out fromProfondeur, out toProfondeur);
 
 			decimal total = 0;
 

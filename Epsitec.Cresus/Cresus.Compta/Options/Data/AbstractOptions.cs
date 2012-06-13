@@ -37,8 +37,9 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			this.ZeroFiltered          = true;
 			this.ZeroDisplayedInWhite  = true;
 			this.HasGraphicColumn      = false;
-			this.DeepFrom              = 0;
+			this.DeepFrom              = 1;
 			this.DeepTo                = int.MaxValue;
+			this.Catégories            = CatégorieDeCompte.Tous;
 			this.ComparisonEnable      = false;
 			this.ComparisonShowed      = ComparisonShowed.None;
 			this.ComparisonDisplayMode = ComparisonDisplayMode.Montant;
@@ -110,6 +111,12 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		public int DeepTo
 		{
 			//	Affiche les comptes jusqu'à cette profondeur.
+			get;
+			set;
+		}
+
+		public CatégorieDeCompte Catégories
+		{
 			get;
 			set;
 		}
@@ -220,6 +227,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			dst.HasGraphicColumn      = this.HasGraphicColumn;
 			dst.DeepFrom              = this.DeepFrom;
 			dst.DeepTo                = this.DeepTo;
+			dst.Catégories            = this.Catégories;
 			dst.ComparisonEnable      = this.ComparisonEnable;
 			dst.ComparisonShowed      = this.ComparisonShowed;
 			dst.ComparisonDisplayMode = this.ComparisonDisplayMode;
@@ -235,6 +243,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 				this.HasGraphicColumn     != other.HasGraphicColumn     ||
 				this.DeepFrom             != other.DeepFrom             ||
 				this.DeepTo               != other.DeepTo               ||
+				this.Catégories           != other.Catégories           ||
 				this.ComparisonEnable != other.ComparisonEnable         ||
 				!this.graphOptions.CompareTo (other.graphOptions))
 			{

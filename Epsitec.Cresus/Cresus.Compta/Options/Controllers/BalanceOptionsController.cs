@@ -44,6 +44,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.CreateCheckUI (this.mainFrame);
 			this.CreateComparisonUI (this.mainFrame, ComparisonShowed.All);
 
+			var line = this.CreateSpecialistFrameUI (this.mainFrame);
+			this.CreateDeepUI (line);
+			this.CreateSeparator (line);
+			this.CreateZeroFilteredUI (line);
+			this.CreateZeroDisplayedInWhiteUI (line);
+
 			this.UpdateWidgets ();
 		}
 
@@ -58,8 +64,6 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			this.CreateGraphUI (frame);
-			this.CreateZeroFilteredUI (frame);
-			this.CreateZeroDisplayedInWhiteUI (frame);
 			this.CreateHasGraphicColumnUI (frame);
 		}
 
@@ -80,6 +84,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected override void UpdateWidgets()
 		{
 			this.UpdateGraphWidgets ();
+			this.UpdateDeep ();
 			this.UpdateZeroFiltered ();
 			this.UpdateZeroDisplayedInWhite ();
 			this.UpdateHasGraphicColumn ();
