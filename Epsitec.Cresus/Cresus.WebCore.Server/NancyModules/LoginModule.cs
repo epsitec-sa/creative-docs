@@ -37,14 +37,14 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				this.Session[LoginModule.LoggedInName] = true;
 				this.Session[LoginModule.CoreSessionName] = session.Id;
 
-				return this.Response.AsCoreSuccess ();
+				return CoreResponse.AsSuccess ();
 			}
 			else
 			{
 				var dic = new Dictionary<string, object> ();
 				dic["username"] = "Incorrect username";
 
-				return this.Response.AsCoreError (dic);
+				return CoreResponse.AsError (dic);
 			}
 		}
 

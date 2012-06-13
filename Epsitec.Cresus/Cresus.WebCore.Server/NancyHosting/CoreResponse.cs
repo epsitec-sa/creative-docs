@@ -15,21 +15,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 	/// Every response should be one of them, because ExtJS or the global JS
 	/// use the "success" field to know what to do with the data.
 	/// </summary>
-	internal class CoreResponse
+	internal static class CoreResponse
 	{
 
 
-		public static Response Error()
+		public static Response AsError()
 		{
 			// NOTE: This method will return a generic error to the client.
 
 			var errors = new Dictionary<string, object> ();
-			
-			return CoreResponse.Error (errors);
+
+			return CoreResponse.AsError (errors);
 		}
 
 
-		public static Response Error(ErrorCode errorCode)
+		public static Response AsError(ErrorCode errorCode)
 		{
 			// NOTE: This method will return the custom error code and the client should behave
 			// accordingly.
@@ -39,11 +39,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				{ "code", ((int) errorCode).ToString (CultureInfo.InvariantCulture) }
 			};
 
-			return CoreResponse.Error (errors);
+			return CoreResponse.AsError (errors);
 		}
 
 
-		public static Response Error(string title, string message)
+		public static Response AsError(string title, string message)
 		{
 			// NOTE: This method will return a title and a message that the client will use to
 			// display a dialog box.
@@ -54,42 +54,61 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 				{ "message", message },
 			};
 
-			return CoreResponse.Error (errors);
+			return CoreResponse.AsError (errors);
 		}
 
 
-		public static Response Error(object errors)
+		public static Response AsError(object errors)
 		{
-			var parent = new Dictionary<string, object> ();
-			
-			parent["success"] = false;
-			parent["errors"] = errors;
+			var response = CoreResponse.GetResponse (false, errors);
 
-			var response = new JsonResponse (parent, new DefaultJsonSerializer ())
-			{
-				StatusCode = HttpStatusCode.BadRequest,
-			};
-
-			return response;
+			return CoreResponse.AsJson (response, HttpStatusCode.BadRequest);
 		}
 
 
-		public static Response Success()
+		public static Response AsSuccess()
 		{
 			var content = new Dictionary<string, object> ();
 			
-			return CoreResponse.Success (content);
+			return CoreResponse.AsSuccess (content);
 		}
 
 
-		public static Response Success(object content)
+		public static Response AsSuccess(object content)
+		{
+			var response = CoreResponse.GetResponse (true, content);
+
+			return CoreResponse.AsJson (response, HttpStatusCode.OK);
+		}
+
+
+		public static Response AsJson(object content)
+		{
+			return CoreResponse.AsJson (content, HttpStatusCode.OK);
+		}
+
+
+		public static Response AsJson(object content, HttpStatusCode httpStatusCode)
+		{
+			return new JsonResponse (content, new DefaultJsonSerializer ())
+			{
+				StatusCode = httpStatusCode,
+			};
+		}
+
+
+		private static Dictionary<string, object> GetResponse(bool success, object content)
 		{
 			var parent = new Dictionary<string, object> ();
 
-			parent["success"] = true;
-			parent["content"] = content;
+			var key = success
+				? "content"
+				: "errors";
+			
+			parent["success"] = success;
+			parent[key] = content;
 
-			return new JsonResponse (parent, new DefaultJsonSerializer ());
+			return parent;
 		}
 
 

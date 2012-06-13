@@ -51,7 +51,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (propartyAccessor == null)
 			{
-				return Response.AsCoreError ();
+				return CoreResponse.AsError ();
 			}
 
 			var collection = propartyAccessor.GetCollection (parentEntity);
@@ -60,7 +60,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (toDelete.IsEmpty ())
 			{
-				return Response.AsCoreError ();
+				return CoreResponse.AsError ();
 			}
 
 			using (context.Bind (parentEntity))
@@ -73,7 +73,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				context.SaveChanges ();
 			}
 
-			return Response.AsCoreSuccess ();
+			return CoreResponse.AsSuccess ();
 		}
 
 
@@ -97,7 +97,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (propertyAccessor == null)
 			{
-				return Response.AsCoreError ();
+				return CoreResponse.AsError ();
 			}
 
 			using (context.Bind (parentEntity, newEntity))
@@ -109,7 +109,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
-			return Response.AsCoreSuccess (key);
+
+			return CoreResponse.AsSuccess (key);
 		}
 
 

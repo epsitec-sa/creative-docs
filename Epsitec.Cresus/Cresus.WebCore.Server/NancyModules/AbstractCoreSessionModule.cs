@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (safeCoreSession == null)
 			{
-				return CoreResponse.Error (CoreResponse.ErrorCode.SessionTimeout);
+				return CoreResponse.AsError (CoreResponse.ErrorCode.SessionTimeout);
 			}
 			else
 			{

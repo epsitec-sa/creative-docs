@@ -1,10 +1,8 @@
-﻿
-using Epsitec.Common.Types;
+﻿using Epsitec.Common.Types;
 using Epsitec.Common.Support.Extensions;
 
-using Epsitec.Cresus.Core.Library;
-
 using Epsitec.Cresus.WebCore.Server.CoreServer;
+using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
 
@@ -37,7 +35,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var list = EnumModule.GetValues (typeName).ToList ();
 
-			return Response.AsJson (list);
+			return CoreResponse.AsJson (list);
 		}
 
 

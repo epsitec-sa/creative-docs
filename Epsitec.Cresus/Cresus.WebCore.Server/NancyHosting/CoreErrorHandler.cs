@@ -19,9 +19,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 
 		public void Handle(HttpStatusCode statusCode, NancyContext context)
 		{
-			context.Response = CoreResponse.Error ();
+			context.Response = CoreResponse.AsError ();
 			context.Response.StatusCode = statusCode;
-
+			
 			// TODO Log the exception
 
 			var exception = context.Items["ERROR_TRACE"];

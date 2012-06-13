@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			{
 				var errors = invalidItems.ToDictionary (i => i.Item1.Id, i => "Invalid value");
 
-				return Response.AsCoreError (errors);
+				return CoreResponse.AsError (errors);
 			}
 			else
 			{
@@ -69,7 +69,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					}
 
 					businessContext.SaveChanges ();
-					return Response.AsCoreSuccess ();
+					return CoreResponse.AsSuccess ();
 				}
 			}
 		}

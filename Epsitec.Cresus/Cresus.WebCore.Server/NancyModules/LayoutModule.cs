@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var s = PanelBuilder.BuildController (entity, mode, controllerSubTypeId, coreSession);
 
-			return Response.AsCoreSuccess (s);
+			return CoreResponse.AsSuccess (s);
 		}
 		
 

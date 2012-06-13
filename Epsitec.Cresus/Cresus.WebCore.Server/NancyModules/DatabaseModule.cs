@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var list = DatabasesModule.databases.Values.Select (d => d.ToDictionary ()).ToList ();
 
-			return Response.AsCoreSuccess (list);
+			return CoreResponse.AsSuccess (list);
 		}
 
 
@@ -164,9 +164,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			dic["total"] = enumerable.Count (); // For ExtJS
 			dic["entities"] = subset;
 
-			var res = Response.AsJson (dic);
-
-			return res;
+			return CoreResponse.AsJson (dic);
 		}
 
 
@@ -188,7 +186,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				context.SaveChanges ();
 			}
 
-			return Response.AsCoreBoolean (ok);
+			return ok
+				? CoreResponse.AsSuccess ()
+				: CoreResponse.AsError ();
 		}
 
 
@@ -198,7 +198,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			// TODO Being able to create an entity (problems with the AbstractPerson)
 
-			return Response.AsCoreError ();
+			return CoreResponse.AsError ();
 		}
 
 
