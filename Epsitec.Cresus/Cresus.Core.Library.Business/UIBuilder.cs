@@ -796,7 +796,7 @@ namespace Epsitec.Cresus.Core
 			var slimField = new SlimField
 			{
 				Parent = parent,
-//-				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
+				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
 //-				PreferredHeight = 20,
 				Dock = dockStyle,
 				HorizontalAlignment = HorizontalAlignment.Left,
@@ -851,6 +851,7 @@ namespace Epsitec.Cresus.Core
 			{
 				Parent = parent,
 				Dock = dockStyle,
+				IsReadOnly = this.ReadOnly || forceReadOnly,
 				HorizontalAlignment = HorizontalAlignment.Left,
 				FieldLabel = new FormattedText (label).ToSimpleText (),
 				FieldText = value,

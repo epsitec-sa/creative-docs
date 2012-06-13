@@ -82,6 +82,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				return;
 			}
+
+			if (this.host.IsReadOnly)
+			{
+				return;
+			}
 			
 			this.DisposeTextField ();
 			this.CreateTextField ();
@@ -159,6 +164,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				DefocusAction = DefocusAction.Modal,
 				SwallowEscapeOnRejectEdition = true,
 				SwallowReturnOnAcceptEdition = true,
+				IsReadOnly = this.host.IsReadOnly,
 			};
 
 			this.textField.SelectAll ();

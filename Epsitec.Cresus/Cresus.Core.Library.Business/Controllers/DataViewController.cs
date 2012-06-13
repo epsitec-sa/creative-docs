@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.Core.Controllers
 					if (activateSubView (false))
 					{
 						e.Cancel = true;
-						break;
+						return;
 					}
 
 					//	If non-cyclic activation failed, keep track of the cyclic activation
@@ -417,7 +417,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				if (activateSubView ())
 				{
 					e.Cancel = true;
-					break;
+					return;
 				}
 			}
 		}

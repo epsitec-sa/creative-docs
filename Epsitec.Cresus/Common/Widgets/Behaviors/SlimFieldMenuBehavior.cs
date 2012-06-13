@@ -98,6 +98,11 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleHostEntered(object sender, MessageEventArgs e)
 		{
+			if (this.host.IsReadOnly)
+			{
+				return;
+			}
+
 			this.host.DisplayMode = SlimFieldDisplayMode.Menu;
 			this.host.UpdatePreferredSize ();
 		}

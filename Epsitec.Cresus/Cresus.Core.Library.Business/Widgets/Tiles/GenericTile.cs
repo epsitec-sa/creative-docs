@@ -1,5 +1,5 @@
-﻿//	Copyright © 2010-2011, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
-//	Author: Daniel ROUX, Maintainer: Daniel ROUX
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+//	Author: Daniel ROUX, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Drawing;
 using Epsitec.Common.Widgets;
@@ -91,7 +91,7 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 			}
 		}
 
-		public void OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null, NavigationPathElement navigationPathElement = null)
+		public bool OpenSubView(Orchestrators.DataViewOrchestrator orchestrator, CoreViewController parentController, CoreViewController subViewController = null, NavigationPathElement navigationPathElement = null)
 		{
 			var controller = subViewController ?? this.CreateSubViewController (orchestrator, parentController, navigationPathElement);
 
@@ -108,7 +108,11 @@ namespace Epsitec.Cresus.Core.Widgets.Tiles
 
 				System.Diagnostics.Debug.Assert (this.subViewController != null);
 				System.Diagnostics.Debug.Assert (this.IsSelected);
+
+				return true;
 			}
+
+			return false;
 		}
 
 		

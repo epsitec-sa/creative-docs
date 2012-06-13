@@ -847,15 +847,15 @@ namespace Epsitec.Cresus.Core.Controllers
 		{
 			var tile = TileContainerController.GetNextLiveGenericTile (tiles);
 
-			if (tile == null)
+			if (tile != null)
 			{
-				return false;
+				if (tile.OpenSubView (this.orchestrator, this.controller))
+				{
+					return true;
+				}
 			}
-			else
-			{
-				tile.OpenSubView (this.orchestrator, this.controller);
-				return true;
-			}
+
+			return false;
 		}
 
 		private void HandleContainerSizeChanged(object sender, DependencyPropertyChangedEventArgs e)

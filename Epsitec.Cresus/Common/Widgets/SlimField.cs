@@ -11,7 +11,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	public class SlimField : Widget
+	public class SlimField : Widget, IReadOnly
 	{
 		public SlimField()
 		{
@@ -65,6 +65,25 @@ namespace Epsitec.Common.Widgets
 			get;
 			set;
 		}
+
+		public bool								IsReadOnly
+		{
+			get;
+			set;
+		}
+
+
+		#region IReadOnly Members
+
+		bool Types.IReadOnly.IsReadOnly
+		{
+			get
+			{
+				return this.IsReadOnly;
+			}
+		}
+
+		#endregion
 
 		
 		public override Size GetBestFitSize()
@@ -129,6 +148,11 @@ namespace Epsitec.Common.Widgets
 
 		private void PaintBackgroundSurface(Graphics graphics, Rectangle bounds)
 		{
+			if (this.IsReadOnly)
+			{
+				return;
+			}
+
 			graphics.AddFilledRectangle (bounds);
 			graphics.RenderSolid (SlimField.Colors.BackColor);
 		}
