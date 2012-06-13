@@ -46,6 +46,11 @@ namespace Epsitec.Common.Support.Extensions
 			return string.Join (" | ", symbols);
 		}
 
+		public static System.NotSupportedException NotSupportedException(this System.Enum value)
+		{
+			return new System.NotSupportedException (string.Concat (value.GetQualifiedName (), " not supported"));
+		}
+
 
 		internal static ulong ToUInt64(object value)
 		{

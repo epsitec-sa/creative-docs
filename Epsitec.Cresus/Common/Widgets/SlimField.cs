@@ -117,6 +117,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SlimFieldDisplayMode.Text:
+				case SlimFieldDisplayMode.TextEdition:
 					this.PaintText (graphics);
 					break;
 
@@ -185,7 +186,12 @@ namespace Epsitec.Common.Widgets
 
 			graphics.Color = SlimField.Colors.TextColor;
 			graphics.PaintText (geomPrefix, this.FieldPrefix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize);
-			graphics.PaintText (geomText, this.FieldText, SlimField.Fonts.TextFont, Font.DefaultFontSize);
+
+			if (this.DisplayMode == SlimFieldDisplayMode.Text)
+			{
+				graphics.PaintText (geomText, this.FieldText, SlimField.Fonts.TextFont, Font.DefaultFontSize);
+			}
+
 			graphics.PaintText (geomSuffix, this.FieldSuffix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize);
 		}
 
@@ -244,6 +250,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SlimFieldDisplayMode.Text:
+				case SlimFieldDisplayMode.TextEdition:
 					width += SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldPrefix) * Font.DefaultFontSize;
 					width += SlimField.Fonts.TextFont.GetTextAdvance (this.FieldText) * Font.DefaultFontSize;
 					width += SlimField.Fonts.DescriptionFont.GetTextAdvance (this.FieldSuffix) * Font.DefaultFontSize;

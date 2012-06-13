@@ -209,7 +209,7 @@ namespace Epsitec.Common.BigList
 					break;
 
 				default:
-					throw new System.NotSupportedException (string.Format ("Unsupported selection mode {0}", selectionMode.GetQualifiedName ()));
+					throw selectionMode.NotSupportedException ();
 			}
 		}
 

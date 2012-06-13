@@ -49,7 +49,7 @@ namespace Epsitec.Common.BigList
 					return this.Index+1;
 			}
 
-			throw new System.NotSupportedException (string.Format ("Attachment {0} not supported", this.Attachment.GetQualifiedName ()));
+			throw this.Attachment.NotSupportedException ();
 		}
 
 		public void SetInsertionIndex(int index)
@@ -65,7 +65,7 @@ namespace Epsitec.Common.BigList
 					return;
 			}
 
-			throw new System.NotSupportedException (string.Format ("Attachment {0} not supported", this.Attachment.GetQualifiedName ()));
+			throw this.Attachment.NotSupportedException ();
 		}
 	}
 }

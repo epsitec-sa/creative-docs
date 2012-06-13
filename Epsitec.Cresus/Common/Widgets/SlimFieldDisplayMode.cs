@@ -22,6 +22,11 @@ namespace Epsitec.Common.Widgets
 		Text,
 
 		/// <summary>
+		/// Display the text value when in edition mode (similar to <see cref="Text"/>).
+		/// </summary>
+		TextEdition,
+
+		/// <summary>
 		/// Display the menu. This is used to let the user select one of the values.
 		/// </summary>
 		Menu,

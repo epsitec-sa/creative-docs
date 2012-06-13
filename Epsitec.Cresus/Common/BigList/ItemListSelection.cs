@@ -152,7 +152,7 @@ namespace Epsitec.Common.BigList
 				}
 			}
 
-			throw new System.InvalidOperationException (string.Format ("Select does not understand {0}", selection.GetQualifiedName ()));
+			throw selection.NotSupportedException ();
 		}
 
 		private bool DeselectAllButOne(int index, ItemListSelectionEventArgs e)

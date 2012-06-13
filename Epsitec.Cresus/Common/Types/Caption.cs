@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support.Extensions;
@@ -805,12 +805,12 @@ namespace Epsitec.Common.Types
 		/// <summary>
 		/// Occurs when the <c>Caption</c> object changes.
 		/// </summary>
-		public event Support.EventHandler Changed;
+		public event Support.EventHandler		Changed;
 
-		private Collections.HostedList<string> labels;
-		private string[] sortedLabels;
-		private Support.Druid id;
-		private int suspendCounter;
-		private bool hasChanged;
+		private Collections.HostedList<string>	labels;
+		private string[]						sortedLabels;
+		private Support.Druid					id;
+		private int								suspendCounter;
+		private bool							hasChanged;
 	}
 }
