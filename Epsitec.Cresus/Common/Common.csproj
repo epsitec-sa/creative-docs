@@ -440,6 +440,7 @@
     <Compile Include="Support\EntityEngine\ActionDispatcher.cs" />
     <Compile Include="Support\EntityEngine\ActionInfo.cs" />
     <Compile Include="Support\EntityEngine\EntityStatusAccumulationMode.cs" />
+    <Compile Include="Support\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Support\FormatTokenFormatterResolver.cs" />
     <Compile Include="Support\InterfaceImplementationResolver.cs" />
     <Compile Include="Support\TextValue.cs" />

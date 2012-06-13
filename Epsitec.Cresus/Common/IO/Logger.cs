@@ -50,12 +50,9 @@ namespace Epsitec.Common.IO
 		/// <param name="message">The message to log.</param>
 		public static void LogToConsole(string message)
 		{
-			foreach (string line in Logger.BuildLines (message))
-			{
-				System.Console.WriteLine (line);
-			}
+			var lines = Logger.BuildLines (message);
 
-			System.Console.WriteLine ();
+			System.Console.WriteLine (string.Join ("\n", lines));
 		}
 
 		/// <summary>

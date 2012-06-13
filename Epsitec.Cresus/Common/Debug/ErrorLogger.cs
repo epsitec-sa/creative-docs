@@ -2,6 +2,8 @@
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
 using Epsitec.Common.IO;
+using Epsitec.Common.Support.Extensions;
+
 
 namespace Epsitec.Common.Debug
 {
@@ -74,20 +76,10 @@ namespace Epsitec.Common.Debug
 		/// <param name="file">The file where to log exception.</param>
 		public static void LogException(System.Exception exception, string file)
 		{
-			string error = "========= New Exception =========";
+			string header = "========= New Exception =========";
+			string error = exception.GetFullText ();
 
-			for (System.Exception e = exception; e != null; e = e.InnerException)
-			{
-				error = string.Format ("{0}\n\nType: {1}\nMessage: {2}\nSource: {3}\nStack trace: {4}",
-					error,
-					e.GetType (),
-					e.Message,
-					e.Source,
-					e.StackTrace
-				);
-			}
-
-			ErrorLogger.LogErrorMessage (error, file);
+			ErrorLogger.LogErrorMessage (header + "\n" + error, file);
 		}
 
 		/// <summary>
