@@ -6,8 +6,6 @@ using Nancy.ErrorHandling;
 
 using System;
 
-using System.Diagnostics;
-
 
 namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 {
@@ -24,11 +22,26 @@ namespace Epsitec.Cresus.WebCore.Server.NancyHosting
 		{
 			context.Response = CoreResponse.AsError ();
 			context.Response.StatusCode = statusCode;
-			
-			var exception = (Exception) context.Items["ERROR_TRACE"];
 
-			var message = "Uncaught exception while processing nancy request:\n"
-				+ exception.GetFullText ();
+			string error;
+			
+			object exception;
+			object trace;
+
+			if (context.Items.TryGetValue ("ERROR_EXCEPTION", out exception))
+			{
+				error = ((Exception) exception).GetFullText ();
+			}
+			else if (context.Items.TryGetValue ("ERROR_TRACE", out trace))
+			{
+				error = (string) trace;
+			}
+			else
+			{
+				error = "Details are not available";
+			}
+
+			var message = "Uncaught exception while processing nancy request: " + error;
 
 			Logger.LogToConsole (message);
 		}
