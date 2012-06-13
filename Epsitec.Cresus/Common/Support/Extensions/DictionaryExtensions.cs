@@ -2,6 +2,8 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types.Collections;
+
+using System.Collections;
 using System.Collections.Generic;
 
 
@@ -75,6 +77,39 @@ namespace Epsitec.Common.Support.Extensions
 			dictionary.ThrowIfNull ("dictionary");
 
 			return new ReadOnlyDictionary<TKey, TValue> (dictionary);
+		}
+
+		/// <summary>
+		/// Converts a Dictionary to a sequence of DictionaryEntry.
+		/// </summary>
+		/// <remarks>
+		/// This method is usefull only if you want to enumerate a generic Dictionary{TKey,TValue}
+		/// into a non generic sequence of DictionaryEntry. If you call any Linq method or use a
+		/// foreach on a generic Dictionary, you will enumerate KeyValuePair{TKey,TValue} and you
+		/// can't use them if you don't know at compile time the values of TKey and TValue. This
+		/// method lets you do this. Fore more information, you can have a look at the following:
+		/// http://stackoverflow.com/questions/7683294
+		/// http://stackoverflow.com/questions/9713311
+		/// </remarks>
+		/// <param name="dictionary">The dictionary that will be converted to a sequence of DictionaryEntry</param>
+		/// <returns>The sequence of DictionaryEntry</returns>
+		public static IEnumerable<DictionaryEntry> AsEntries(this IDictionary dictionary)
+		{
+			dictionary.ThrowIfNull ("dictionary");
+
+			// Here we use an helper method so that the argument check is immediate but the
+			// execution of the body is deferred.
+			// Marc
+
+			return DictionaryExtensions.AsEntriesInternal (dictionary);
+		}
+
+		private static IEnumerable<DictionaryEntry> AsEntriesInternal(IDictionary dictionary)
+		{
+			foreach (DictionaryEntry entry in dictionary)
+			{
+				yield return entry;
+			}
 		}
 	}
 }

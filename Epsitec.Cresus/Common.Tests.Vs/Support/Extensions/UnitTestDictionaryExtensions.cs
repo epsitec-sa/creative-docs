@@ -50,6 +50,40 @@ namespace Epsitec.Common.Tests.Vs.Support.Extensions
 		}
 
 
+		[TestMethod]
+		public void AsEntriesArgumentCheck()
+		{
+			ExceptionAssert.Throw<System.ArgumentNullException>
+			(
+				() => ((Dictionary<int, int>) null).AsEntries ()
+			);
+		}
+
+
+		[TestMethod]
+		public void AsEntriesTest()
+		{
+			var dice = new System.Random ();
+
+			for (int i = 0; i < 25; i++)
+			{
+				var dictionary = Enumerable
+					.Range (0, 25)
+					.ToDictionary (e => e, e => dice.Next ());
+
+				var expectedKeys = dictionary.Keys;
+				var actualKeys = dictionary.AsEntries ().Select (e => e.Key).Cast<int> ();
+				
+				Assert.IsTrue (expectedKeys.SetEquals (actualKeys));
+
+				foreach (var entry in dictionary.AsEntries ())
+				{
+					Assert.AreEqual (dictionary[(int) entry.Key], entry.Value);
+				}
+			}
+		}
+
+
 	}
 
 
