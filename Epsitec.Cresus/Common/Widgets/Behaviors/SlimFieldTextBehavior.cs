@@ -125,6 +125,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextEditionStarting(object sender, CancelEventArgs e)
 		{
+			this.textBeforeEdition = this.host.FieldText;
 			this.OnTextEditionStarting (e);
 		}
 
@@ -136,18 +137,32 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleTextEditionAccepted(object sender)
 		{
+			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
 			this.StopTextFieldEdition ();
 		}
 
 		private void HandleTextEditionRejected(object sender)
 		{
+			this.host.FieldText = this.textBeforeEdition;
 			this.StopTextFieldEdition ();
 		}
 
 		private void HandleTextTextEdited(object sender)
 		{
-			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-			
+			var text = this.textField.FormattedText.ToSimpleText ();
+
+			if ((text.Length == 0) &&
+				(this.HasButtons))
+			{
+				//	Cheat: we don't want the default label to show up once we have started
+				//	editing the text value, so we replace the empty text with an almost empty
+				//	one...
+
+				text = " ";
+			}
+
+			this.host.FieldText = text;
+
 			this.TransitionToState (EditionState.Edited);
 			this.AdjustGeometry ();
 		}
@@ -209,8 +224,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return;
 			}
 
-			this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-
 			this.TransitionToState (EditionState.Inactive);
 
 			if (this.HasFocus || this.HasButtons)
@@ -225,25 +238,36 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.AdjustGeometry ();
 		}
 
-		
+
 		private void AdjustGeometry()
 		{
+			var mode = this.host.GetActiveDisplayMode ();
+
 			if (this.textField != null)
 			{
 //-				this.host.FieldText = this.textField.FormattedText.ToSimpleText ();
-			}
-				
-			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
-			var total = this.host.MeasureWidth (this.host.GetActiveDisplayMode ());
 
-			if (this.HasFocus)
+				if (mode == SlimFieldDisplayMode.Label)
+				{
+					this.textField.TextDisplayMode = TextFieldDisplayMode.Transparent;
+				}
+				else
+				{
+					this.textField.TextDisplayMode = TextFieldDisplayMode.Default;
+				}
+			}
+
+			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
+			var total = this.host.MeasureWidth (mode);
+
+			if (this.HasFocus && (mode == SlimFieldDisplayMode.Text))
 			{
 				total += System.Math.Max (20, width) - width;
 			}
 
 			this.AdjustHostPreferredWidth (total);
 			this.AdjustTextFieldMargins ();
-			
+
 			this.host.Invalidate ();
 		}
 
@@ -326,5 +350,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		private TextFieldEx						textField;
 		private EditionState					textFieldEditionState;
+		private string							textBeforeEdition;
 	}
 }

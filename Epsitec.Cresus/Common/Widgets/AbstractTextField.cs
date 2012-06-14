@@ -1936,7 +1936,8 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintTextFieldBackground(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle fill, Drawing.Point pos)
 		{
-			if (this.BackColor.IsTransparent)
+			if ((this.BackColor.IsTransparent) ||
+				(this.textFieldDisplayMode == TextFieldDisplayMode.Transparent))
 			{
 				//	Ne peint pas le fond de la ligne éditable si celle-ci a un fond
 				//	explicitement défini comme "transparent".
@@ -1952,6 +1953,11 @@ namespace Epsitec.Common.Widgets
 
 		protected virtual void PaintTextFieldText(Drawing.Graphics graphics, IAdorner adorner, WidgetPaintState state, Drawing.Rectangle clipRect, Drawing.Rectangle rInside, Drawing.Point pos)
 		{
+			if (this.textFieldDisplayMode == TextFieldDisplayMode.Transparent)
+			{
+				return;
+			}
+
 			TextLayout        layout  = this.GetPaintTextLayout ();
 			TextLayoutContext context = new TextLayoutContext (this.navigator.Context);
 
@@ -2065,15 +2071,20 @@ namespace Epsitec.Common.Widgets
 				return AbstractTextField.GetPaintTextLayoutForPassword (original, this.PasswordReplacementCharacter);
 			}
 
-			if (this.textFieldDisplayMode == TextFieldDisplayMode.InheritedValue)
+			switch (this.textFieldDisplayMode)
 			{
-				return AbstractTextField.GetPaintTextLayoutItalic (original);
+				case TextFieldDisplayMode.Transparent:
+					return original;
+
+				case TextFieldDisplayMode.InheritedValue:
+					return AbstractTextField.GetPaintTextLayoutItalic (original);
+		
+				case TextFieldDisplayMode.OverriddenValue:
+					return AbstractTextField.GetPaintTextLayoutBold (original);
+
+				default:
+					break;
 			}
-			if (this.textFieldDisplayMode == TextFieldDisplayMode.OverriddenValue)
-			{
-				return AbstractTextField.GetPaintTextLayoutBold (original);
-			}
-			
 			
 			string hintText = this.HintText;
 

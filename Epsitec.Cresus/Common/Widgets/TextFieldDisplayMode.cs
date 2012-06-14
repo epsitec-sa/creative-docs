@@ -37,5 +37,7 @@ namespace Epsitec.Common.Widgets
 		/// there will be no difference between the standard text and the hint.
 		/// </summary>
 		PassiveHint,
+
+		Transparent,
 	}
 }
