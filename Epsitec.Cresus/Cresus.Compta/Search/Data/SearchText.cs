@@ -186,7 +186,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			int count = 0;
 			string simple = target.ToSimpleText ();
 
-			if (string.IsNullOrEmpty (simple) || !simple.StartsWith (StringArray.SpecialContentStart))
+			if (string.IsNullOrEmpty (simple) || !simple.StartsWith (Widgets.StringArray.SpecialContentStart))
 			{
 				if (this.mode == SearchMode.WholeContent)
 				{

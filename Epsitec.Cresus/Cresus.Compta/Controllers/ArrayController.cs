@@ -29,7 +29,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged, System.Action<Point> rightClick)
+		public Widgets.StringArray CreateUI(FrameBox parent, System.Action updateCellContent, System.Action columnsWidthChanged, System.Action selectedRowChanged, System.Action<Point> rightClick)
 		{
 			this.rightClick = rightClick;
 
@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.headerController.CreateUI (this.mainFrame);
 
 			//	Crée le tableau.
-			this.array = new StringArray
+			this.array = new Widgets.StringArray
 			{
 				Parent            = this.mainFrame,
 				Dock              = DockStyle.Fill,
@@ -235,9 +235,9 @@ namespace Epsitec.Cresus.Compta.Controllers
 						string text = getCellText (row, this.columnMappersShowed[column].Column).ToString ();
 						var color = Color.Empty;
 
-						if (!string.IsNullOrEmpty (text) && text.StartsWith (StringArray.SpecialContentSearchTarget))
+						if (!string.IsNullOrEmpty (text) && text.StartsWith (Widgets.StringArray.SpecialContentSearchTarget))
 						{
-							text = text.Substring (StringArray.SpecialContentSearchTarget.Length);
+							text = text.Substring (Widgets.StringArray.SpecialContentSearchTarget.Length);
 							color = UIBuilder.BackOutsideSearchColor;  // jaune pâle
 						}
 
@@ -409,6 +409,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private System.Action<Point>			rightClick;
 		private List<ColumnMapper>				columnMappersShowed;
 		private HeaderController				headerController;
-		private StringArray						array;
+		private Widgets.StringArray				array;
 	}
 }
