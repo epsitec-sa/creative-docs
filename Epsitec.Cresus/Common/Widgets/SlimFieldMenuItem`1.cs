@@ -3,10 +3,23 @@
 
 using Epsitec.Common.Support;
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Widgets
 {
 	public class SlimFieldMenuItem<T> : SlimFieldMenuItem
 	{
+		public SlimFieldMenuItem(T value,
+			/**/				 IEnumerable<TextValue> texts,
+			/**/				 ActiveState active = ActiveState.No,
+			/**/				 EnableState enable = EnableState.Enabled,
+			/**/				 SlimFieldMenuItemStyle style = SlimFieldMenuItemStyle.Value,
+			/**/				 SlimFieldMenuItemHilite hilite = SlimFieldMenuItemHilite.None)
+			: this (value, new StringArray (texts.Select (x => x.SimpleText)), active, enable, style, hilite)
+		{
+		}
+
 		public SlimFieldMenuItem(T value,
 			/**/				 StringArray texts,
 			/**/				 ActiveState active = ActiveState.No,
@@ -19,7 +32,7 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public T Value
+		public T								Value
 		{
 			get;
 			set;

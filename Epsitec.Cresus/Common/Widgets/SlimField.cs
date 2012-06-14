@@ -184,6 +184,51 @@ namespace Epsitec.Common.Widgets
 			this.PaintFocusRectangle (graphics, bounds);
 		}
 
+
+		private static int GetMenuItemsTextVariantCount(IList<MenuItem> menuItems)
+		{
+			int num = 0;
+
+			foreach (var item in menuItems)
+			{
+				num = System.Math.Max (num, item.Item3.Texts.Count);
+			}
+
+			return num;
+		}
+
+		private int SelectMenuItemsTextVariant(double maxWidth)
+		{
+			IList<MenuItem> menuItems = this.GetMenuItems ().ToList ();
+
+			int count = SlimField.GetMenuItemsTextVariantCount (menuItems);
+
+			for (int i = 0; i < count; i++)
+			{
+				double valueWidth = SlimField.MeasureMenuItems (i, menuItems.Where (x => x.Item3.Style == SlimFieldMenuItemStyle.Value));
+				double extraWidth = SlimField.MeasureMenuItems (i, menuItems.Where (x => x.Item3.Style == SlimFieldMenuItemStyle.Extra));
+				
+				if (valueWidth + extraWidth < maxWidth)
+				{
+					return i;
+				}
+			}
+
+			return count-1;
+		}
+
+		private static double MeasureMenuItems(int variant, IEnumerable<MenuItem> menuItems)
+		{
+			double width = 0;
+
+			foreach (var item in menuItems)
+			{
+				width += item.Item1.GetTextAdvance (item.GetText (variant));
+			}
+
+			return width * Font.DefaultFontSize;
+		}
+
 		private void PaintFocusRectangle(Graphics graphics, Rectangle bounds)
 		{
 			if ((this.IsFocused) ||
@@ -258,7 +303,7 @@ namespace Epsitec.Common.Widgets
 			x = geom.Origin.X;
 			y = geom.Origin.Y;
 
-			foreach (var tuple in this.GetMenuItemFontTextTuples ())
+			foreach (var tuple in this.GetMenuItems ())
 			{
 				var font    = tuple.Item1;
 				var text    = tuple.Item2;
@@ -316,7 +361,7 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SlimFieldDisplayMode.Menu:
-					foreach (var tuple in this.GetMenuItemFontTextTuples ())
+					foreach (var tuple in this.GetMenuItems ())
 					{
 						var font = tuple.Item1;
 						var text = tuple.Item2;
@@ -329,7 +374,7 @@ namespace Epsitec.Common.Widgets
 			return width;
 		}
 
-		private IEnumerable<System.Tuple<Font, string, SlimFieldMenuItem>> GetMenuItemFontTextTuples()
+		private IEnumerable<MenuItem> GetMenuItems()
 		{
 			bool first = true;
 
@@ -341,17 +386,20 @@ namespace Epsitec.Common.Widgets
 				}
 				else
 				{
-					yield return new System.Tuple<Font, string, SlimFieldMenuItem> (SlimField.Fonts.MenuFont, SlimField.Strings.MenuSeparator, null);
+					yield return new MenuItem (SlimField.Fonts.MenuFont, SlimField.Strings.MenuSeparator);
 				}
 
-				yield return new System.Tuple<Font, string, SlimFieldMenuItem> (SlimField.GetMenuItemFont (item), item.Texts.FirstOrDefault (), item);
+				yield return new MenuItem (item);
 			}
 		}
 
 
+
+
+
 		private SlimFieldMenuItem DetectMenuItem(double advance)
 		{
-			foreach (var tuple in this.GetMenuItemFontTextTuples ())
+			foreach (var tuple in this.GetMenuItems ())
 			{
 				var font = tuple.Item1;
 				var text = tuple.Item2;
@@ -398,6 +446,33 @@ namespace Epsitec.Common.Widgets
 		}
 
 
+		private class MenuItem : System.Tuple<Font, string, SlimFieldMenuItem>
+		{
+			public MenuItem(Font font, string text)
+				: base (font, text, null)
+			{
+			}
+			
+			public MenuItem(SlimFieldMenuItem item)
+				: base (SlimField.GetMenuItemFont (item), item.Texts.FirstOrDefault (), item)
+			{
+			}
+
+			public string GetText(int variant)
+			{
+				var texts = this.Item3.Texts;
+				var count = texts.Count;
+
+				if (variant < count)
+				{
+					return texts[variant];
+				}
+				else
+				{
+					return texts[count-1];
+				}
+			}
+		}
 
 		private static class Strings
 		{

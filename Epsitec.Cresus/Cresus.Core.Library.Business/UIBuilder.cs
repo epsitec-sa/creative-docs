@@ -852,10 +852,11 @@ namespace Epsitec.Cresus.Core
 
 			foreach (var item in controller.GetPossibleItems ().Take (5))
 			{
-				var array = new StringArray (item.GetTextValues ().Where (x => x.Category == TextValueCategory.Name).Select (x => x.SimpleText).ToArray ());
-//				var text = controller.ToFormattedTextConverter (item).ToSimpleText ();
-				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, array));
+				var texts = item.GetTextValues ().Where (x => x.Category == TextValueCategory.Name);
+				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, texts));
 			}
+
+			slimField.MenuItems.Add (new SlimFieldMenuItem<T> (null, "plus…", style: SlimFieldMenuItemStyle.Extra));
 
 //-			this.RegisterTextField (slimField);
 			this.ContentListAdd (slimField);
