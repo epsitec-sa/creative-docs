@@ -6,6 +6,8 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Controllers;
 
+using Epsitec.Cresus.DataLayer.Context;
+
 using System;
 
 using System.Collections.Generic;
@@ -96,6 +98,30 @@ namespace Epsitec.Cresus.WebCore.Server
 		}
 
 
+		public static string GetEntityId(BusinessContext businessContext, AbstractEntity entity)
+		{
+			string entityId = null;
+
+			if (entity != null)
+			{
+				var entityKey = businessContext.DataContext.GetNormalizedEntityKey (entity);
+
+				if (entityKey.HasValue)
+				{
+					entityId = entityKey.Value.ToString ();
+				}
+			}
+
+			return entityId;
+		}
+
+
+		public static AbstractEntity ResolveEntity(BusinessContext businessContext, string entityId)
+		{
+			var entityKey = EntityKey.Parse (entityId);
+
+			return businessContext.DataContext.ResolveEntity (entityKey);
+		}
 	}
 
 

@@ -40,8 +40,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var context = coreSession.GetBusinessContext ();
 
 			string parentEntityId = Request.Form.parentEntity;
-			var parentKey = EntityKey.Parse (parentEntityId);
-			AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
+
+			AbstractEntity parentEntity = Tools.ResolveEntity (context, parentEntityId);
 
 			string deleteEntity = Request.Form.deleteEntity;
 			var deleteKey = EntityKey.Parse (deleteEntity);
@@ -82,8 +82,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var context = coreSession.GetBusinessContext ();
 
 			string parentEntityId = Request.Form.parentEntity;
-			var parentKey = EntityKey.Parse (parentEntityId);
-			AbstractEntity parentEntity = context.DataContext.ResolveEntity (parentKey);
+			AbstractEntity parentEntity = Tools.ResolveEntity (context, parentEntityId);
 
 			string typeName = Request.Form.entityType;
 			var type = Type.GetType (typeName);
@@ -108,7 +107,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				context.SaveChanges (EntitySaveMode.IncludeEmpty);
 			}
 
-			var key = context.DataContext.GetNormalizedEntityKey (newEntity).ToString ();
+			var key = Tools.GetEntityId (context, newEntity);
 
 			return CoreResponse.AsSuccess (key);
 		}

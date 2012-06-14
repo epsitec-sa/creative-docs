@@ -2,8 +2,6 @@
 
 using Epsitec.Cresus.Core.Business;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
@@ -44,7 +42,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			var propertyAccessorsWithValues = EntityModule.GetPropertyAccessorsWithValues (businessContext, propertyAccessorCache, form)
 				.ToList ();
 
-			var entity = EntityModule.ResolveEntity (businessContext, (string) parameters.id);
+			var entity = Tools.ResolveEntity (businessContext, (string) parameters.id);
 
 			var invalidItems = propertyAccessorsWithValues
 				.Where (i => !i.Item1.CheckValue (entity, i.Item2))
@@ -137,7 +135,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			return sequence
 				.Where (id => !string.IsNullOrEmpty (id))
-				.Select (id => EntityModule.ResolveEntity (businessContext, id))
+				.Select (id => Tools.ResolveEntity (businessContext, id))
 				.ToList ();
 		}
 
@@ -149,7 +147,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			if (!EntityModule.IsStringNullOrEmpty (entityId))
 			{
-				entity = EntityModule.ResolveEntity (businessContext, entityId);
+				entity = Tools.ResolveEntity (businessContext, entityId);
 			}
 
 			return entity;
@@ -166,14 +164,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			}
 
 			return enumerationValue;
-		}
-
-
-		private static AbstractEntity ResolveEntity(BusinessContext businessContext, string entityId)
-		{
-			var entityKey = EntityKey.Parse (entityId);
-
-			return businessContext.DataContext.ResolveEntity (entityKey);
 		}
 
 

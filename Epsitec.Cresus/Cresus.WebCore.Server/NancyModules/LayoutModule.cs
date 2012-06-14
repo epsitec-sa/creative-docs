@@ -1,8 +1,4 @@
-﻿using Epsitec.Common.Support.EntityEngine;
-
-using Epsitec.Cresus.Core.Controllers;
-
-using Epsitec.Cresus.DataLayer.Context;
+﻿using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
@@ -34,8 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var context = coreSession.GetBusinessContext ();
 
-			var entityKey = EntityKey.Parse (parameters.id);
-			AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
+			var entity = Tools.ResolveEntity (context, (string) parameters.id);
 
 			ViewControllerMode mode = Tools.ParseViewControllerMode (parameters.mode);
 			int? controllerSubTypeId = Tools.ParseControllerSubTypeId (parameters.controllerSubTypeId);

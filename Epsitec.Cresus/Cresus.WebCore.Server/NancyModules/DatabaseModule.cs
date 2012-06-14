@@ -5,8 +5,6 @@ using Epsitec.Common.Support.EntityEngine;
 using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer.Context;
-
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -134,7 +132,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		private Response GetDatabase(CoreSession coreSession, dynamic parameters)
 		{
 			var context = coreSession.GetBusinessContext ();
-			var dataContext = context.DataContext;
 
 			string databaseName = parameters.name;
 
@@ -154,7 +151,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					   select new
 					   {
 						   name = summary,
-						   uniqueId = dataContext.GetNormalizedEntityKey (c).Value.ToString ()
+						   uniqueId = Tools.GetEntityId (context, c)
 					   };
 
 			// Only take a subset of all the entities
@@ -174,8 +171,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			string paramEntityKey = (string) Request.Form.entityId;
 
-			var entityKey = EntityKey.Parse (paramEntityKey);
-			AbstractEntity entity = context.DataContext.ResolveEntity (entityKey);
+			AbstractEntity entity = Tools.ResolveEntity (context, paramEntityKey);
 
 			bool ok = false;
 
