@@ -235,7 +235,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			}
 				
 			var width = this.host.MeasureWidth (SlimFieldDisplayMode.MeasureTextOnly);
-			var total = this.host.MeasureWidth (SlimFieldDisplayMode.Text);
+			var total = this.host.MeasureWidth (this.host.GetActiveDisplayMode ());
 
 			if (this.HasFocus)
 			{

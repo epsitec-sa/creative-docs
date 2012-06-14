@@ -87,7 +87,7 @@ namespace Epsitec.Common.Widgets
 		
 		public override Size GetBestFitSize()
 		{
-			var width  = System.Math.Ceiling (this.MeasureWidth (this.DisplayMode));
+			var width  = System.Math.Ceiling (this.MeasureWidth (this.GetActiveDisplayMode ()));
 			var height = System.Math.Ceiling (Font.DefaultFontSize * 1.2 + 2 * SlimField.MarginY);
 
 			return new Size (width, height);
@@ -96,6 +96,21 @@ namespace Epsitec.Common.Widgets
 		public Rectangle GetTextSurface()
 		{
 			return Rectangle.Deflate (this.Client.Bounds, SlimField.MarginX, SlimField.MarginY);
+		}
+
+		public SlimFieldDisplayMode GetActiveDisplayMode()
+		{
+			var mode = this.DisplayMode;
+
+			if (mode == SlimFieldDisplayMode.Label)
+			{
+				if (string.IsNullOrEmpty (this.FieldText) == false)
+				{
+					mode = SlimFieldDisplayMode.Text;
+				}
+			}
+
+			return mode;
 		}
 
 		public SlimFieldMenuItem DetectMenuItem(Point pos)
@@ -110,7 +125,7 @@ namespace Epsitec.Common.Widgets
 
 			this.PaintBackgroundSurface (graphics, bounds);
 
-			switch (this.DisplayMode)
+			switch (this.GetActiveDisplayMode ())
 			{
 				case SlimFieldDisplayMode.Label:
 					this.PaintLabel (graphics);
@@ -187,7 +202,7 @@ namespace Epsitec.Common.Widgets
 			graphics.Color = SlimField.Colors.TextColor;
 			graphics.PaintText (geomPrefix, this.FieldPrefix, SlimField.Fonts.DescriptionFont, Font.DefaultFontSize);
 
-			if (this.DisplayMode == SlimFieldDisplayMode.Text)
+			if (this.GetActiveDisplayMode () == SlimFieldDisplayMode.Text)
 			{
 				graphics.PaintText (geomText, this.FieldText, SlimField.Fonts.TextFont, Font.DefaultFontSize);
 			}
