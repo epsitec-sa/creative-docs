@@ -100,9 +100,9 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 				}
 			}
 
-			if (currentName.IsNullOrEmpty)
+			if (currentName.IsNullOrEmpty ())
 			{
-				if (this.businessDocument.FooterText.IsNullOrEmpty)
+				if (this.businessDocument.FooterText.IsNullOrEmpty ())
 				{
 					currentName = TextFormatter.FormatText ("Aucun texte").ApplyItalic ();
 				}
@@ -125,7 +125,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 			if (documentCategory != null)
 			{
-				this.documentFooterTextEntities = documentCategory.DocumentFooterTexts.Where (x => !x.Description.IsNullOrEmpty);
+				this.documentFooterTextEntities = documentCategory.DocumentFooterTexts.Where (x => !x.Description.IsNullOrEmpty ());
 			}
 		}
 

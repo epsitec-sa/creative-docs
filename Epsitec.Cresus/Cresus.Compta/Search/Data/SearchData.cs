@@ -340,7 +340,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					int count;
 					FormattedText s = node.GetSummary (columnMappers, out count);
 
-					if (!s.IsNullOrEmpty)
+					if (!s.IsNullOrEmpty ())
 					{
 						if (!first)
 						{

@@ -70,7 +70,7 @@ namespace Epsitec.Cresus.Compta.Settings.Controllers
 			if (this.data.ValidateAction != null)
 			{
 				var error = this.data.ValidateAction ();
-				if (!error.IsNullOrEmpty)
+				if (!error.IsNullOrEmpty ())
 				{
 					this.SetError (error);
 					return;

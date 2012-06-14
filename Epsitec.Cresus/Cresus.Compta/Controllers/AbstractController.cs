@@ -972,7 +972,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 				if (result == null)  // pas trouvé ?
 				{
-					if (!text.IsNullOrEmpty && !text.ToString ().StartsWith (Compta.Widgets.StringArray.SpecialContentStart))
+					if (!text.IsNullOrEmpty () && !text.ToString ().StartsWith (Compta.Widgets.StringArray.SpecialContentStart))
 					{
 						text = text.ApplyFontColor (UIBuilder.TextOutsideSearchColor);  // gris
 					}

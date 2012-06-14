@@ -521,7 +521,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				journalUtilisé = écriture.Journal;
 
-				if (!écriture.Pièce.IsNullOrEmpty && !pièces.Contains (écriture.Pièce))
+				if (!écriture.Pièce.IsNullOrEmpty () && !pièces.Contains (écriture.Pièce))
 				{
 					pièces.Add (écriture.Pièce);
 				}
@@ -595,7 +595,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 				journalUtilisé = écriture.Journal;
 
-				if (!écriture.Pièce.IsNullOrEmpty && !pièces.Contains (écriture.Pièce))
+				if (!écriture.Pièce.IsNullOrEmpty () && !pièces.Contains (écriture.Pièce))
 				{
 					pièces.Add (écriture.Pièce);
 				}
@@ -1002,7 +1002,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
-			if (compte == null || compte.Numéro.IsNullOrEmpty)
+			if (compte == null || compte.Numéro.IsNullOrEmpty ())
 			{
 				return JournalDataAccessor.multi;
 			}
@@ -1014,7 +1014,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
-			if (numéro.IsNullOrEmpty || numéro == JournalDataAccessor.multi)
+			if (numéro.IsNullOrEmpty () || numéro == JournalDataAccessor.multi)
 			{
 				return null;
 			}
@@ -1026,7 +1026,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaJournalEntity GetJournal(ComptaEntity compta, FormattedText name)
 		{
-			if (name.IsNullOrEmpty)
+			if (name.IsNullOrEmpty ())
 			{
 				return null;
 			}

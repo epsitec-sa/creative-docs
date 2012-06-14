@@ -22,7 +22,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			var text = TextFormatter.FormatText (desc, tax);
 
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return "<i>TVA</i>";
 			}

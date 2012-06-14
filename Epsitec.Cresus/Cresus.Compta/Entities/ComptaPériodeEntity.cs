@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				var title = Dates.GetDescription (this.DateDébut, this.DateFin);
 
-				if (!this.Description.IsNullOrEmpty)
+				if (!this.Description.IsNullOrEmpty ())
 				{
 					title = FormattedText.Concat (title, " (", this.Description, ")");
 				}

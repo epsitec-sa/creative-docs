@@ -249,7 +249,7 @@ namespace Epsitec.Cresus.Core.Documents
 
 			FormattedText bullet = hasBullet ? "● " : "";
 
-			if (!value.IsNullOrEmpty)
+			if (!value.IsNullOrEmpty ())
 			{
 				value = value.Lines.FirstOrDefault ();
 			}
@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core.Documents
 				value = string.Concat (value, " mm");
 			}
 
-			if (description.IsNullOrEmpty)
+			if (description.IsNullOrEmpty ())
 			{
 				description = option.Option.ToString ();  // faute de mieux !
 			}

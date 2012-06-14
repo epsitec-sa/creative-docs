@@ -146,7 +146,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner
 				//	Désérialisation échouée. On suppose être en présence d'un nouveau
 				//	workflow fraichement créé, dont il faut juste reprendre le noeud initial.
 
-				if (this.workflowDefinitionEntity.Name.IsNullOrWhiteSpace)
+				if (this.workflowDefinitionEntity.Name.IsNullOrWhiteSpace ())
 				{
 					this.workflowDefinitionEntity.Name = "e";
 				}

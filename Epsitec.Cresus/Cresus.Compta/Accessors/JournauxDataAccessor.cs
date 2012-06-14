@@ -321,7 +321,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaPiècesGeneratorEntity GetPiècesGenerator(ComptaEntity compta, FormattedText pièce)
 		{
-			if (pièce.IsNullOrEmpty)
+			if (pièce.IsNullOrEmpty ())
 			{
 				return null;
 			}

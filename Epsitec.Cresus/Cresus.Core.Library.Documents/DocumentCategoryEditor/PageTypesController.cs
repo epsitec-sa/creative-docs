@@ -212,7 +212,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				errorMessage = "Aucune page imprimable n'est choisie";
 			}
 
-			if (errorMessage.IsNullOrEmpty)
+			if (errorMessage.IsNullOrEmpty ())
 			{
 				this.errorFrame.Visibility = false;
 			}

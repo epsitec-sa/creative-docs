@@ -118,7 +118,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as RésuméTVAData;
 
-			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty ());
 
 			item.Clicked += delegate
 			{

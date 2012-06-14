@@ -86,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 			{
 				this.StartSummaryBuilder ();
 
-				if (!this.NuméroCompte.IsNullOrEmpty)
+				if (!this.NuméroCompte.IsNullOrEmpty ())
 				{
 					this.AppendSummaryBuilder (FormattedText.Concat ("Compte ", this.NuméroCompte));
 				}

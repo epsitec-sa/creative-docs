@@ -34,7 +34,7 @@ namespace Epsitec.Cresus.Core.Widgets
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "a<br/>b");
 
 			tt.SetSimpleText (null);
-			System.Diagnostics.Debug.Assert (tt.GetTaggedText ().IsNullOrEmpty);
+			System.Diagnostics.Debug.Assert (tt.GetTaggedText ().IsNullOrEmpty ());
 			tt.InsertTag (0, "<br/>");
 			System.Diagnostics.Debug.Assert (tt.GetTaggedText () == "<br/>");
 
@@ -77,7 +77,7 @@ namespace Epsitec.Cresus.Core.Widgets
 		{
 			this.blocs.Clear ();
 
-			if (formattedText.IsNullOrEmpty)
+			if (formattedText.IsNullOrEmpty ())
 			{
 				this.blocs.Add ("");
 			}

@@ -333,7 +333,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				error = "Cet utilisateur n'est plus valide aujourd'hui";
 			}
 
-			if (error.IsNullOrEmpty)  // ok
+			if (error.IsNullOrEmpty ())  // ok
 			{
 				this.userField.FormattedText = utilisateur.Utilisateur;
 				this.mainWindowController.CurrentUser = utilisateur;

@@ -370,7 +370,7 @@ namespace Epsitec.Cresus.Core.Business.Rules
 				if (documentCategory != null)
 				{
 					var now = System.DateTime.UtcNow;
-					var documentFooterText = documentCategory.DocumentFooterTexts.Where (x => !x.Description.IsNullOrEmpty && now.InRange (x)).FirstOrDefault ();
+					var documentFooterText = documentCategory.DocumentFooterTexts.Where (x => !x.Description.IsNullOrEmpty () && now.InRange (x)).FirstOrDefault ();
 
 					if (documentFooterText != null)
 					{

@@ -71,55 +71,48 @@ namespace Epsitec.Common.Types
 			}
 		}
 
+
+
 		/// <summary>
 		/// Gets a value indicating whether this instance represents a null
 		/// text.
 		/// </summary>
 		/// <value><c>true</c> if this instance represents a null text; otherwise, <c>false</c>.</value>
-		public bool								IsNull
+		public bool IsNull()
 		{
-			get
-			{
-				return this.text == null;
-			}
+			return this.text == null;
 		}
 
 		/// <summary>
 		/// Gets a value indicating whether this text is null or empty.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if this text is null or empty; otherwise, <c>false</c>.
+		/// <c>true</c> if this text is null or empty; otherwise, <c>false</c>.
 		/// </value>
-		public bool								IsNullOrEmpty
+		public bool IsNullOrEmpty()
 		{
-			get
-			{
-				return string.IsNullOrEmpty (this.text);
-			}
+			return string.IsNullOrEmpty (this.text);
 		}
 
 		/// <summary>
 		/// Gets a value indicating whether this text is null, empty or consists only of white-space characters.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if this text is null, empty or consists only of white-space characters; otherwise, <c>false</c>.
+		/// <c>true</c> if this text is null, empty or consists only of white-space characters; otherwise, <c>false</c>.
 		/// </value>
-		public bool								IsNullOrWhiteSpace
+		public bool IsNullOrWhiteSpace()
 		{
-			get
-			{
-				return this.text.IsNullOrWhiteSpace ();
-			}
+			return this.text.IsNullOrWhiteSpace ();
 		}
 
-
+		
 		public FormattedText GetValueOrDefault(params FormattedText[] defaultTexts)
 		{
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				foreach (var text in defaultTexts)
 				{
-					if (text.IsNullOrEmpty == false)
+					if (text.IsNullOrEmpty () == false)
 					{
 						return text;
 					}
@@ -159,7 +152,7 @@ namespace Epsitec.Common.Types
 
 		public FormattedText AppendLineIfNotNull(FormattedText line = default (FormattedText))
 		{
-			if (line.IsNullOrEmpty)
+			if (line.IsNullOrEmpty ())
 			{
 				return this;
 			}
@@ -171,7 +164,7 @@ namespace Epsitec.Common.Types
 
 		public FormattedText AppendLine(FormattedText line = default (FormattedText))
 		{
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				return line;
 			}
@@ -210,7 +203,7 @@ namespace Epsitec.Common.Types
 			// NOTE It is pointless to add formatting tags around an empty text, so the text is
 			// empty, simply return the text without modifications.
 
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				return this;
 			}
@@ -221,7 +214,7 @@ namespace Epsitec.Common.Types
 
 		public FormattedText Replace(FormattedText pattern, FormattedText replacement, System.StringComparison comparison = System.StringComparison.Ordinal)
 		{
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				return this;
 			}
@@ -239,7 +232,7 @@ namespace Epsitec.Common.Types
 		/// <returns>The original text if it is not empty; otherwise, the default text provided by the caller.</returns>
 		public FormattedText IfNullOrEmptyReplaceWith(FormattedText defaultText)
 		{
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				return defaultText;
 			}
@@ -267,7 +260,7 @@ namespace Epsitec.Common.Types
 
 		public static FormattedText[] Split(FormattedText text, string separator, System.StringSplitOptions options = System.StringSplitOptions.None)
 		{
-			if (text.IsNull)
+			if (text.IsNull ())
 			{
 				return new FormattedText[] { FormattedText.Empty };
 			}
@@ -387,7 +380,7 @@ namespace Epsitec.Common.Types
 		/// <returns>The result of the conversion.</returns>
 		public string ToSimpleText()
 		{
-			if (this.IsNullOrEmpty)
+			if (this.IsNullOrEmpty ())
 			{
 				return this.text;
 			}

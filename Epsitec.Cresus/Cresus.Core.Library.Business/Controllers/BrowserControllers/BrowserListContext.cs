@@ -89,7 +89,7 @@ namespace Epsitec.Cresus.Core.Controllers.BrowserControllers
 			{
 				var text = entity.GetCompactSummary ();
 
-				if (text.IsNullOrEmpty)
+				if (text.IsNullOrEmpty ())
 				{
 					return CollectionTemplate.DefaultEmptyText;
 				}

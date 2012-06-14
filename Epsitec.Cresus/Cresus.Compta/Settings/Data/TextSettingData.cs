@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 			var o = (other as TextSettingData);
 
-			if (this.Value.IsNullOrEmpty && o.Value.IsNullOrEmpty)
+			if (this.Value.IsNullOrEmpty () && o.Value.IsNullOrEmpty ())
 			{
 				return true;
 			}

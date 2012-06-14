@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 					}
 				}
 
-				if (viewSettingsName.IsNullOrEmpty && controller.ViewSettingsList != null && controller.ViewSettingsList.Selected != null)
+				if (viewSettingsName.IsNullOrEmpty () && controller.ViewSettingsList != null && controller.ViewSettingsList.Selected != null)
 				{
 					viewSettingsName = controller.ViewSettingsList.Selected.Name;
 				}

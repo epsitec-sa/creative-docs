@@ -200,7 +200,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				graphics.RenderSolid (adorner.ColorBorder);
 			}
 
-			if (!this.overlayText.IsNullOrEmpty)
+			if (!this.overlayText.IsNullOrEmpty ())
 			{
 				if (this.overlayTextLayout == null)
 				{

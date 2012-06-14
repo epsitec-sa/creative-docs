@@ -784,7 +784,7 @@ namespace Epsitec.Cresus.Compta.Graph
 				text = Converters.MontantToString (value, 0);
 			}
 
-			if (!text.IsNullOrEmpty)
+			if (!text.IsNullOrEmpty ())
 			{
 				var rect = new Rectangle (center.X-200, center.Y-100, 400, 200);
 				var color = backColor.GetBrightness () < 0.25 ? Color.FromName ("White") : Color.FromName ("Black");

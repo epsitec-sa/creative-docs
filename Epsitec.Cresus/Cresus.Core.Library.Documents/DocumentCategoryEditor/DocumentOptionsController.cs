@@ -888,7 +888,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 						info.ErrorText.FormattedText = text;
 
-						if (text.IsNullOrEmpty)
+						if (text.IsNullOrEmpty ())
 						{
 							ToolTip.Default.HideToolTipForWidget (info.ErrorText);
 						}
@@ -925,7 +925,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 						info.UselessText.FormattedText = text;
 
-						if (text.IsNullOrEmpty)
+						if (text.IsNullOrEmpty ())
 						{
 							ToolTip.Default.HideToolTipForWidget (info.UselessText);
 						}
@@ -1005,7 +1005,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				missingMessage = "Aucune option d'impression n'est choisie";
 			}
 
-			if (errorMessage.IsNullOrEmpty)
+			if (errorMessage.IsNullOrEmpty ())
 			{
 				this.errorFrame.Visibility = false;
 			}
@@ -1015,7 +1015,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				this.errorText.FormattedText = errorMessage;
 			}
 
-			if (uselessMessage.IsNullOrEmpty)
+			if (uselessMessage.IsNullOrEmpty ())
 			{
 				this.uselessFrame.Visibility = false;
 			}
@@ -1025,7 +1025,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				this.uselessText.FormattedText = uselessMessage;
 			}
 
-			if (missingMessage.IsNullOrEmpty)
+			if (missingMessage.IsNullOrEmpty ())
 			{
 				this.missingFrame.Visibility = false;
 			}

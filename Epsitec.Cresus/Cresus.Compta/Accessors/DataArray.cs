@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			var text = this.GetText (row, column);
 
-			return !text.IsNullOrEmpty && text == "1";
+			return !text.IsNullOrEmpty () && text == "1";
 		}
 
 		public void SetBool(int row, ColumnType column, bool value)

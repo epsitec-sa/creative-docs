@@ -101,7 +101,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			if (compte == null)
 			{
-				if (this.NuméroCompte.IsNullOrEmpty)
+				if (this.NuméroCompte.IsNullOrEmpty ())
 				{
 					this.summaryLabel.FormattedText = FormattedText.Concat ("Indéfini").ApplyFontColor (Color.FromName ("Red"));
 				}

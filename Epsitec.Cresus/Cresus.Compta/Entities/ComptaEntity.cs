@@ -182,7 +182,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		public void AddLibellé(ComptaPériodeEntity période, FormattedText libellé)
 		{
 			//	Insère un nouveau libellé volatile. S'il est déjà dans la liste, on le remet au sommet.
-			if (libellé.IsNullOrEmpty)
+			if (libellé.IsNullOrEmpty ())
 			{
 				return;
 			}
@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Compta.Entities
 			var c = compte;
 			int niveau = 0;
 
-			while (c != null && c.Groupe != null && !c.Groupe.Numéro.IsNullOrEmpty)
+			while (c != null && c.Groupe != null && !c.Groupe.Numéro.IsNullOrEmpty ())
 			{
 				c = this.PlanComptable.Where (x => x.Numéro == c.Groupe.Numéro).FirstOrDefault ();
 

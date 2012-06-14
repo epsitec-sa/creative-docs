@@ -64,7 +64,7 @@ namespace Epsitec.Common.Dialogs
 
 			button1               = new Button (dialogWindow.Root);
 			button1.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 3*75 - 3*8, 16, 75, button1.PreferredHeight));
-			button1.FormattedText = this.yesText.IsNullOrEmpty ? Widgets.Res.Strings.Dialog.Button.Yes : this.yesText;
+			button1.FormattedText = this.yesText.IsNullOrEmpty () ? Widgets.Res.Strings.Dialog.Button.Yes : this.yesText;
 			button1.CommandObject = Res.Commands.Dialog.Generic.Yes;
 			button1.TabIndex      = 2;
 			button1.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -72,7 +72,7 @@ namespace Epsitec.Common.Dialogs
 
 			button2               = new Button (dialogWindow.Root);
 			button2.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 2*75 - 2*8, 16, 75, button2.PreferredHeight));
-			button2.FormattedText = this.noText.IsNullOrEmpty ? Widgets.Res.Strings.Dialog.Button.No : this.noText;
+			button2.FormattedText = this.noText.IsNullOrEmpty () ? Widgets.Res.Strings.Dialog.Button.No : this.noText;
 			button2.CommandObject = Res.Commands.Dialog.Generic.No;
 			button2.TabIndex      = 3;
 			button2.TabNavigationMode = TabNavigationMode.ActivateOnTab;
@@ -81,7 +81,7 @@ namespace Epsitec.Common.Dialogs
 			{
 				button3               = new Button (dialogWindow.Root);
 				button3.SetManualBounds (new Drawing.Rectangle (dialogWindow.ClientSize.Width - 1*75 - 1*8, 16, 75, button3.PreferredHeight));
-				button3.FormattedText = this.cancelText.IsNullOrEmpty ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancelText;
+				button3.FormattedText = this.cancelText.IsNullOrEmpty () ? Widgets.Res.Strings.Dialog.Button.Cancel : this.cancelText;
 				button3.Name          = "Cancel";
 				button3.CommandObject = Res.Commands.Dialog.Generic.Cancel;
 				button3.TabIndex      = 4;

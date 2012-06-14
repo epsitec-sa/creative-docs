@@ -123,7 +123,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static DialogResult ShowError(FormattedText formattedErrorMessage, string title, Window owner)
 		{
-			if (formattedErrorMessage.IsNullOrEmpty)
+			if (formattedErrorMessage.IsNullOrEmpty ())
 			{
 				return DialogResult.None;
 			}
@@ -143,7 +143,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static DialogResult ShowMessage(FormattedText formattedMessage, string title, Window owner)
 		{
-			if (formattedMessage.IsNullOrEmpty)
+			if (formattedMessage.IsNullOrEmpty ())
 			{
 				return DialogResult.None;
 			}
@@ -158,7 +158,7 @@ namespace Epsitec.Common.Dialogs
 
 		public static DialogResult ShowQuestion(FormattedText formattedQuestion, Window owner)
 		{
-			if (formattedQuestion.IsNullOrEmpty)
+			if (formattedQuestion.IsNullOrEmpty ())
 			{
 				return DialogResult.None;
 			}

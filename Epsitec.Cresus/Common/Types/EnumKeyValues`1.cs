@@ -24,7 +24,7 @@ namespace Epsitec.Common.Types
 		public EnumKeyValues(T key, params FormattedText[] values)
 		{
 			this.key    = key;
-			this.values = values.Where (x => !x.IsNullOrEmpty).ToArray ();
+			this.values = values.Where (x => !x.IsNullOrEmpty ()).ToArray ();
 		}
 
 

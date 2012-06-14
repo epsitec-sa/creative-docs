@@ -128,7 +128,7 @@ namespace Epsitec.Cresus.Core.Print
 		{
 			get
 			{
-				return this.error.IsNullOrEmpty;
+				return this.error.IsNullOrEmpty ();
 			}
 		}
 
@@ -136,7 +136,7 @@ namespace Epsitec.Cresus.Core.Print
 		{
 			get
 			{
-				return !this.error.IsNullOrEmpty;
+				return !this.error.IsNullOrEmpty ();
 			}
 		}
 

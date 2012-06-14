@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Compta.IO
 				{
 					string err = this.ImportPlanComptable (ref période);
 
-					if (string.IsNullOrEmpty (err) && this.compta.Nom.IsNullOrEmpty)
+					if (string.IsNullOrEmpty (err) && this.compta.Nom.IsNullOrEmpty ())
 					{
 						this.compta.Nom = System.IO.Path.GetFileNameWithoutExtension (filename);
 					}

@@ -1331,7 +1331,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				var tab = this.GetShowedTabFromIndex (index);
 				if (tab != null)
 				{
-					if (!tab.TabItem.Tooltip.IsNullOrEmpty)  // existe-t-il un tooltip spécifique ?
+					if (!tab.TabItem.Tooltip.IsNullOrEmpty ())  // existe-t-il un tooltip spécifique ?
 					{
 						return tab.TabItem.Tooltip;
 					}
@@ -1357,7 +1357,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 			foreach (var index in this.hiddenIndexes)
 			{
 				var text = this.tabs[index].TabItem.FormattedText;
-				if (text.IsNullOrEmpty)
+				if (text.IsNullOrEmpty ())
 				{
 					text = this.tabs[index].TabItem.Tooltip;
 				}
@@ -1687,7 +1687,7 @@ namespace Epsitec.Cresus.Compta.Widgets
 				{
 					this.textLayout.FormattedText = this.tabItem.FormattedText;
 				}
-				else if (this.tabItem.FormattedText.IsNullOrEmpty)
+				else if (this.tabItem.FormattedText.IsNullOrEmpty ())
 				{
 					this.textLayout.FormattedText = UIBuilder.GetIconTag (this.tabItem.Icon, iconSize: this.IconSize, style: style);
 				}

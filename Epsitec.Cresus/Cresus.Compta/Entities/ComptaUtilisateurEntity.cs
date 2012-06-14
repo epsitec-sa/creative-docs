@@ -25,7 +25,7 @@ namespace Epsitec.Cresus.Compta.Entities
 
 				if (this.NomComplet == this.Utilisateur)
 				{
-					if (this.Utilisateur.IsNullOrEmpty)
+					if (this.Utilisateur.IsNullOrEmpty ())
 					{
 						text = "Nouvel utilisateur";
 					}

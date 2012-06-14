@@ -133,12 +133,12 @@ namespace Epsitec.Cresus.Compta.ViewSettings.Data
 
 			var list = new List<string> ();
 
-			if (!f.IsNullOrEmpty)
+			if (!f.IsNullOrEmpty ())
 			{
 				list.Add ("Filtrer " + f);
 			}
 
-			if (!o.IsNullOrEmpty)
+			if (!o.IsNullOrEmpty ())
 			{
 				list.Add ("Options " + o);
 			}

@@ -381,11 +381,11 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			//	Met les conditions à la fin de la facture.
 			FormattedText conditions;
 
-			if (!this.paymentTransactionEntity.Text.IsNullOrEmpty)
+			if (!this.paymentTransactionEntity.Text.IsNullOrEmpty ())
 			{
 				conditions = this.paymentTransactionEntity.Text;
 			}
-			else if (!this.paymentTransactionEntity.PaymentDetail.PaymentCategory.Description.IsNullOrEmpty)
+			else if (!this.paymentTransactionEntity.PaymentDetail.PaymentCategory.Description.IsNullOrEmpty ())
 			{
 				conditions = this.paymentTransactionEntity.PaymentDetail.PaymentCategory.Description;
 			}
@@ -394,7 +394,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				conditions = this.paymentTransactionEntity.PaymentDetail.PaymentCategory.Name;
 			}
 
-			if (!conditions.IsNullOrEmpty)
+			if (!conditions.IsNullOrEmpty ())
 			{
 				var band = new TextBand ();
 				band.TwoLetterISOLanguageName = this.TwoLetterISOLanguageName;

@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			System.Diagnostics.Debug.Assert (this.summaryBuilder != null);
 
-			if (!text.IsNullOrEmpty)
+			if (!text.IsNullOrEmpty ())
 			{
 				if (!this.firstSummary)
 				{

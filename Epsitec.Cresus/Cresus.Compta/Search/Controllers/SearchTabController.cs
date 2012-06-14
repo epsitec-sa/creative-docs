@@ -339,11 +339,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				var mapper = this.columnMappers[i];
 
-				if (!mapper.HideForSearch && mapper.RelativeWidth != 0 && !mapper.Description.IsNullOrEmpty && (this.isFilter || mapper.Show))
+				if (!mapper.HideForSearch && mapper.RelativeWidth != 0 && !mapper.Description.IsNullOrEmpty () && (this.isFilter || mapper.Show))
 				{
 					FormattedText desc = mapper.Description;
 
-					if (desc.IsNullOrEmpty)
+					if (desc.IsNullOrEmpty ())
 					{
 						desc = string.Format ("colonne n° {0}", (i+1).ToString ());
 					}

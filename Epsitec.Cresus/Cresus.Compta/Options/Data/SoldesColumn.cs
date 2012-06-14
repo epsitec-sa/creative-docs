@@ -36,7 +36,7 @@ namespace Epsitec.Cresus.Compta.Options.Data
 		{
 			get
 			{
-				if (this.NuméroCompte.IsNullOrEmpty)
+				if (this.NuméroCompte.IsNullOrEmpty ())
 				{
 					return FormattedText.Concat ("Vide").ApplyItalic ();
 				}

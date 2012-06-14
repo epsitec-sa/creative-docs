@@ -308,7 +308,7 @@ namespace Epsitec.Cresus.Core.Print
 					documentPrinter.SetPrintingUnit (printingUnit, customOptions, PreviewMode.Print);
 					var err = documentPrinter.BuildSections ();
 
-					if (err.IsNullOrEmpty)  // ok ?
+					if (err.IsNullOrEmpty ())  // ok ?
 					{
 						if (!documentPrinter.IsEmpty (pageType))
 						{

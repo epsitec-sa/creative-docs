@@ -345,7 +345,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				return;  // une ligne vide est toujours ok
 			}
 
-			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty)  // pas de code TVA ?
+			if (this.GetText (ColumnType.CodeTVA).IsNullOrEmpty ())  // pas de code TVA ?
 			{
 				if (data.HasText)
 				{
@@ -524,7 +524,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCodeTVAEntity TextToCodeTVA(ComptaEntity compta, FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return null;
 			}
@@ -587,9 +587,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 				var débit  = this.GetText (ColumnType.Débit);
 				var crédit = this.GetText (ColumnType.Crédit);
 
-				return (débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
-					   (crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi) &&
-					   this.GetText (ColumnType.Libellé).IsNullOrEmpty &&
+				return (débit .IsNullOrEmpty () || débit  == JournalDataAccessor.multi) &&
+					   (crédit.IsNullOrEmpty () || crédit == JournalDataAccessor.multi) &&
+					   this.GetText (ColumnType.Libellé).IsNullOrEmpty () &&
 					   Converters.ParseMontant (this.GetText (ColumnType.Montant)).GetValueOrDefault () == 0 &&
 					   this.GetText (ColumnType.TotalAutomatique) != "1";
 			}

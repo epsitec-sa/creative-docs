@@ -106,7 +106,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 					text = FormattedText.Empty;
 				}
 
-				if (!text.IsNullOrEmpty)
+				if (!text.IsNullOrEmpty ())
 				{
 					for (int i = 0; i < niveau; i++)
 					{
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			var data = this.dataAccessor.GetReadOnlyData (this.arrayController.SelectedRow) as RésuméPériodiqueData;
 
-			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty);
+			var item = this.PutContextMenuItem (menu, Présentations.GetIcon (ControllerType.ExtraitDeCompte), string.Format ("Extrait du compte {0}", data.Numéro), !data.Numéro.IsNullOrEmpty ());
 
 			item.Clicked += delegate
 			{

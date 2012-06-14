@@ -289,7 +289,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 		private void UpdateText()
 		{
-			if (this.paymentCategoryEntity.Description.IsNullOrEmpty)
+			if (this.paymentCategoryEntity.Description.IsNullOrEmpty ())
 			{
 				this.Text = this.paymentCategoryEntity.Name;
 			}
@@ -302,7 +302,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 		private void UpdateButtons()
 		{
 			bool dateOK = this.dateConverter.CanConvertFromString (this.dateField.Text);
-			bool textOK = !this.textField.FormattedText.IsNullOrEmpty;
+			bool textOK = !this.textField.FormattedText.IsNullOrEmpty ();
 
 			if (this.paymentCategoryEntity != null && dateOK)
 			{

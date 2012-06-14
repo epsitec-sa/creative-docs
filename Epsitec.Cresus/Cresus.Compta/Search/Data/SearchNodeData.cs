@@ -127,7 +127,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				var data = this.BeginnerFreeTextData;
 
-				if (value.IsNullOrEmpty)
+				if (value.IsNullOrEmpty ())
 				{
 					if (data != null)
 					{
@@ -520,7 +520,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				{
 					FormattedText s = tab.GetSummary (columnMappers);
 
-					if (!s.IsNullOrEmpty)
+					if (!s.IsNullOrEmpty ())
 					{
 						if (!first)
 						{

@@ -284,7 +284,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 		protected void CreateLabelUI(Widget parent)
 		{
-			if (this.HasRightEditor && !this.columnMapper.Description.IsNullOrEmpty)
+			if (this.HasRightEditor && !this.columnMapper.Description.IsNullOrEmpty ())
 			{
 				new StaticText
 				{
@@ -341,7 +341,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 
 				if (this.HasRightEditor)
 				{
-					if (this.columnMapper.Description.IsNullOrEmpty)
+					if (this.columnMapper.Description.IsNullOrEmpty ())
 					{
 						top = -6;
 					}

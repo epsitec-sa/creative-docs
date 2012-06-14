@@ -314,7 +314,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static FormattedText GetNuméro(ComptaCompteEntity compte)
 		{
-			if (compte == null || compte.Numéro.IsNullOrEmpty)
+			if (compte == null || compte.Numéro.IsNullOrEmpty ())
 			{
 				return FormattedText.Empty;
 			}
@@ -326,7 +326,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
-			if (numéro.IsNullOrEmpty)
+			if (numéro.IsNullOrEmpty ())
 			{
 				return null;
 			}

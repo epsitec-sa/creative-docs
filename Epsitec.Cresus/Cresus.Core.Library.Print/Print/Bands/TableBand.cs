@@ -615,7 +615,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 							rowEnding = false;
 						}
 
-						if (textBand.LastLineCount == 0 && !textBand.Text.IsNullOrEmpty)
+						if (textBand.LastLineCount == 0 && !textBand.Text.IsNullOrEmpty ())
 						{
 							//	Si une seule colonne non vide n'arrive pas à caser au moins une ligne,
 							//	il faut rejeter cette 'row' et essayer dans une nouvelle section.

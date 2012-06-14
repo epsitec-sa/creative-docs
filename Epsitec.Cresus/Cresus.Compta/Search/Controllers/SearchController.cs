@@ -303,7 +303,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void UpdateMiddleBeginnerFreeText()
 		{
-			this.beginnerFreeTextButton.Enable = !this.beginnerFreeTextField.FormattedText.IsNullOrEmpty;
+			this.beginnerFreeTextButton.Enable = !this.beginnerFreeTextField.FormattedText.IsNullOrEmpty ();
 		}
 
 

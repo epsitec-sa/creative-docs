@@ -185,7 +185,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private ComptaListeTVAEntity SetTaux(FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return null;
 			}

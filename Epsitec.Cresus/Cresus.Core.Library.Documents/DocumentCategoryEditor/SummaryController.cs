@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 
 				foreach (var line in this.detailTexts)
 				{
-					if (line.IsNullOrEmpty)
+					if (line.IsNullOrEmpty ())
 					{
 						new Separator
 						{
@@ -228,7 +228,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Left,
 			};
 
-			if (!iconTooltip.IsNullOrEmpty)
+			if (!iconTooltip.IsNullOrEmpty ())
 			{
 				ToolTip.Default.SetToolTip (staticIcon, iconTooltip);
 			}
@@ -256,7 +256,7 @@ namespace Epsitec.Cresus.Core.DocumentCategoryController
 				Dock = DockStyle.Right,
 			};
 
-			if (valueTooltip.IsNullOrEmpty)
+			if (valueTooltip.IsNullOrEmpty ())
 			{
 				ToolTip.Default.SetToolTip (staticValue, value);
 			}

@@ -1015,7 +1015,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		#region Static title manager
 		public static FormattedText TitleToSimpleText(FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return null;
 			}
@@ -1035,7 +1035,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 
 		public static bool IsTitle(FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return false;
 			}

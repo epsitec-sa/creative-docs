@@ -251,7 +251,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		{
 			string text = def.WorkflowName.ToString ();
 
-			if (!def.WorkflowDescription.IsNullOrWhiteSpace)
+			if (!def.WorkflowDescription.IsNullOrWhiteSpace ())
 			{
 				string desc = def.WorkflowDescription.ToString ().Replace ("<br/>", ", ");
 				text += string.Concat (" (", desc, ")");
@@ -264,7 +264,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Dialogs
 		{
 			string text = node.Name.ToString ();
 
-			if (!node.Description.IsNullOrWhiteSpace)
+			if (!node.Description.IsNullOrWhiteSpace ())
 			{
 				string desc = node.Description.ToString ().Replace ("<br/>", ", ");
 				text += string.Concat (" (", desc, ")");

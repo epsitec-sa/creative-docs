@@ -30,7 +30,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			this.title.Alignment = ContentAlignment.MiddleCenter;
 			this.title.BreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 
-			if (this.Entity.Name.IsNullOrWhiteSpace)
+			if (this.Entity.Name.IsNullOrWhiteSpace ())
 			{
 				this.TitleNumber = this.editor.GetNodeTitleNumbrer ();
 			}
@@ -639,7 +639,7 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 				this.comment = new ObjectComment (this.editor, this.Entity);
 				this.comment.AttachObject = this;
 
-				if (!this.Entity.Description.IsNullOrWhiteSpace)
+				if (!this.Entity.Description.IsNullOrWhiteSpace ())
 				{
 					this.comment.Text = this.Entity.Description.ToString ();
 				}

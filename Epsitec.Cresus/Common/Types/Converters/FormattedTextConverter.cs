@@ -20,7 +20,7 @@ namespace Epsitec.Common.Types.Converters
 		
 		public override string ConvertToString(FormattedText text)
 		{
-			return text.IsNull ? null : text.ToString ();
+			return text.IsNull () ? null : text.ToString ();
 		}
 
 		public override ConversionResult<FormattedText> ConvertFromString(string text)

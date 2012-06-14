@@ -71,7 +71,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		protected virtual void AppendSummary(TextBuilder builder)
 		{
-			if (!this.Name.IsNullOrEmpty)
+			if (!this.Name.IsNullOrEmpty ())
 			{
 				builder.Append (this.Name);
 			}

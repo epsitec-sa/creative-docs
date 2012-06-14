@@ -316,7 +316,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 
 		protected static void PaintText(IPaintPort port, Rectangle bounds, ContentAlignment alignment, Font font, double fontSize, FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return;
 			}

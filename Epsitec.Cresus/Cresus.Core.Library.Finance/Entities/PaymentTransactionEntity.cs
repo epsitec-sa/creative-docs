@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.Core.Entities
 			FormattedText title = this.Text.Lines.FirstOrDefault ();
 			FormattedText ratio = FormattedText.Empty; //Helpers.InvoiceDocumentHelper.GetInstalmentName (invoiceDocument, this, true);
 
-			if (ratio.IsNullOrWhiteSpace)
+			if (ratio.IsNullOrWhiteSpace ())
 			{
 				return TextFormatter.FormatText (amount, title);
 			}

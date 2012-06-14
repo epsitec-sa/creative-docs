@@ -236,7 +236,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 				if ((context != null) &&
 					(context.IsRegisteredAsEmptyEntity (source)))
 				{
-					this.BindEmptyEntityTileData (data, source, x => x.IsNullOrEmpty);
+					this.BindEmptyEntityTileData (data, source, x => x.IsNullOrEmpty ());
 				}
 				else
 				{
@@ -330,9 +330,9 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			data.ClearAccessors ();
 			data.TitleAccessor        = IndirectAccessor<T, FormattedText>.GetAccessor (this.TitleAccessor, source);
-			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
+			data.TextAccessor         = IndirectAccessor<T, FormattedText>.GetAccessor (this.TextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty ());
 			data.CompactTitleAccessor = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTitleAccessor, source);
-			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty);
+			data.CompactTextAccessor  = IndirectAccessor<T, FormattedText>.GetAccessor (this.CompactTextAccessor, source, CollectionTemplate.DefaultEmptyText, x => x.IsNullOrEmpty ());
 		}
 
 		private T CreateDummyItem(ICollectionAccessor collectionAccessor)

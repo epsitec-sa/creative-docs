@@ -82,7 +82,7 @@ namespace Epsitec.Aider.Entities
 			{
 				var addressLines = defaultMailaddress
 				.GetAddressLines ()
-				.Where (l => !l.IsNullOrWhiteSpace);
+				.Where (l => !l.IsNullOrWhiteSpace ());
 
 				foreach (var mailAddressLine in addressLines)
 				{

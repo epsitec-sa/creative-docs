@@ -908,8 +908,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				var débit  = this.dataAccessor.EditionLine[i].GetText (ColumnType.Débit);
 				var crédit = this.dataAccessor.EditionLine[i].GetText (ColumnType.Crédit);
 
-				if ((débit .IsNullOrEmpty || débit  == JournalDataAccessor.multi) &&
-					(crédit.IsNullOrEmpty || crédit == JournalDataAccessor.multi))
+				if ((débit .IsNullOrEmpty () || débit  == JournalDataAccessor.multi) &&
+					(crédit.IsNullOrEmpty () || crédit == JournalDataAccessor.multi))
 				{
 					this.dataAccessor.EditionLine[i].SetText (ColumnType.Débit,  null);
 					this.dataAccessor.EditionLine[i].SetText (ColumnType.Crédit, null);
@@ -1371,7 +1371,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (columnType == ColumnType.Débit)
 			{
-				if (débit.IsNullOrEmpty)
+				if (débit.IsNullOrEmpty ())
 				{
 					this.dataAccessor.EditionLine[line].SetText (ColumnType.Crédit, FormattedText.Empty);
 				}
@@ -1389,7 +1389,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 			else if (columnType == ColumnType.Crédit)
 			{
-				if (crédit.IsNullOrEmpty)
+				if (crédit.IsNullOrEmpty ())
 				{
 					this.dataAccessor.EditionLine[line].SetText (ColumnType.Débit, FormattedText.Empty);
 				}
@@ -1441,7 +1441,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private void LibelléChanged(int line)
 		{
 			var libellé = this.dataAccessor.EditionLine[line].GetText (ColumnType.Libellé);
-			var auto = libellé.IsNullOrEmpty ? "1" : "0";
+			var auto = libellé.IsNullOrEmpty () ? "1" : "0";
 			this.dataAccessor.EditionLine[line].SetText (ColumnType.IsAutoLibellé, auto);
 
 			if (this.UpdateMultiLibelléTVA ())
@@ -1962,7 +1962,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void GetInfoCompte(FormattedText numéro, out FormattedText titre, out FormattedText solde)
 		{
-			if (numéro.IsNullOrEmpty || numéro == JournalDataAccessor.multi)
+			if (numéro.IsNullOrEmpty () || numéro == JournalDataAccessor.multi)
 			{
 #if false
 				if (this.isMulti)
@@ -2411,13 +2411,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.dataAccessor.EditionLine[line].SetText (ColumnType.Crédit, modèle.Crédit.Numéro);
 			}
 
-			if (!modèle.Pièce.IsNullOrEmpty)
+			if (!modèle.Pièce.IsNullOrEmpty ())
 			{
 				this.dataAccessor.EditionLine[line].SetText (ColumnType.Pièce, modèle.Pièce);
 			}
 
 			int cursor = -1;
-			if (!modèle.Libellé.IsNullOrEmpty)
+			if (!modèle.Libellé.IsNullOrEmpty ())
 			{
 				cursor = modèle.Libellé.ToString ().IndexOf ("@");
 				var m = modèle.Libellé.ToString ().Replace ("@", "");

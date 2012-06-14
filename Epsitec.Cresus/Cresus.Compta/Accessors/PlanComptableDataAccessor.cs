@@ -582,7 +582,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public static ComptaCompteEntity GetCompte(ComptaEntity compta, FormattedText numéro)
 		{
-			if (numéro.IsNullOrEmpty)
+			if (numéro.IsNullOrEmpty ())
 			{
 				return null;
 			}

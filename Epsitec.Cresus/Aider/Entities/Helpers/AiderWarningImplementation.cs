@@ -28,7 +28,7 @@ namespace Epsitec.Aider.Entities.Helpers
 		public static FormattedText GetTitle<T>(T warning)
 			where T : AbstractEntity, IAiderWarning
 		{
-			if (warning.Title.IsNullOrEmpty)
+			if (warning.Title.IsNullOrEmpty ())
 			{
 				var entityId = warning.GetEntityStructuredTypeId ();
 				var entityType = EntityInfo.GetStructuredType (entityId);

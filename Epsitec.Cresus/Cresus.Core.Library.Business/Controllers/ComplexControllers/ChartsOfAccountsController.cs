@@ -280,7 +280,7 @@ namespace Epsitec.Cresus.Core.Controllers.ComplexControllers
 
 						FormattedText err = this.CheckChart (chart);
 
-						if (err.IsNullOrEmpty)  // ok ?
+						if (err.IsNullOrEmpty ())  // ok ?
 						{
 							this.financeSettingsEntity.AddChartOfAccounts (this.businessContext, chart);
 

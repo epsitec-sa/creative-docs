@@ -41,7 +41,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public ActionItem(string name, ActionClass actionClass, System.Action action, FormattedText label, FormattedText description = default (FormattedText), double weight = 0.0)
 		{
-			if (ActionItem.IsIcon (label) && description.IsNullOrEmpty)
+			if (ActionItem.IsIcon (label) && description.IsNullOrEmpty ())
 			{
 				var caption = ActionClass.GetDefaultCaption (actionClass.Class);
 
@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Core.Controllers.ActionControllers
 
 		public static bool IsIcon(FormattedText text)
 		{
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return false;
 			}

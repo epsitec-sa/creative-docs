@@ -459,7 +459,7 @@ namespace Epsitec.Cresus.Compta.Graph
 			//	Retourne un titre, le complet s'il existe, sinon le court.
 			var title = this.GetFullTitle (dimension, coordIndex);
 
-			if (title.IsNullOrEmpty)
+			if (title.IsNullOrEmpty ())
 			{
 				title = this.GetShortTitle (dimension, coordIndex);
 			}

@@ -180,7 +180,7 @@ namespace Epsitec.Cresus.Core.Library.UI
 			string fullMessage = string.Format (message.ToString (), Services.GetShortWindowTitle (), exMessage);
 			FormattedText formattedMessage;
 
-			if (hint.IsNullOrEmpty)
+			if (hint.IsNullOrEmpty ())
 			{
 				formattedMessage = new FormattedText (string.Concat (Services.StringMessageFontElement, fullMessage, Services.StringEndFontElement));
 			}

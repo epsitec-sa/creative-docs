@@ -168,7 +168,7 @@ namespace Epsitec.Common.Types
 		/// <param name="text">The formatted text.</param>
 		public void SetText(string twoLetterISOLanguageName, FormattedText text)
 		{
-			if (text.IsNull)
+			if (text.IsNull ())
 			{
 				this.ClearText (twoLetterISOLanguageName);
 			}
@@ -373,7 +373,7 @@ namespace Epsitec.Common.Types
 		/// <returns></returns>
 		public static string GetTwoLetterISOLanguageName(FormattedText text, int index)
 		{
-			if (!text.IsNullOrEmpty)
+			if (!text.IsNullOrEmpty ())
 			{
 				string s = text.ToString ();
 

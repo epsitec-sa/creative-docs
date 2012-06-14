@@ -164,7 +164,7 @@ namespace Epsitec.Cresus.Compta.Fields.Controllers
 			//	entered = "5.3.2" hint = "05.03.2012" out = "5.3.2"
 			//	entered = "5 3"   hint = "05.03.2012" out = "5 3.2012"
 
-			if (entered.IsNullOrEmpty || hint.IsNullOrEmpty)
+			if (entered.IsNullOrEmpty () || hint.IsNullOrEmpty ())
 			{
 				return hint.ToSimpleText ();
 			}

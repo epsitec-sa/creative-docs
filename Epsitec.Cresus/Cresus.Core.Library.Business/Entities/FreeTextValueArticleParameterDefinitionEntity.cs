@@ -39,7 +39,7 @@ namespace Epsitec.Cresus.Core.Entities
 			base.AppendSummary (builder);
 			builder.Append ("~: ");
 
-			if (!this.ShortText.IsNullOrWhiteSpace)
+			if (!this.ShortText.IsNullOrWhiteSpace ())
 			{
 				builder.Append (this.ShortText);
 			}

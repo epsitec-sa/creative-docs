@@ -301,7 +301,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			var error = this.ErrorDescription;
 
-			if (error.IsNullOrEmpty)
+			if (error.IsNullOrEmpty ())
 			{
 				this.warningIcon.Visibility = false;
 			}
@@ -656,7 +656,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				rank = ((dateRange.BeginDate.Month-1)/6+1).ToString ("0");  // 1..2
 			}
 
-			if (!rank.IsNullOrEmpty)
+			if (!rank.IsNullOrEmpty ())
 			{
 				desc = FormattedText.Concat (rank.ApplyBold (), ": ", desc);
 			}

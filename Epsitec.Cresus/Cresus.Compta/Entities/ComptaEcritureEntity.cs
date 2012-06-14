@@ -43,8 +43,8 @@ namespace Epsitec.Cresus.Compta.Entities
 			{
 				return this.Débit == null &&
 					   this.Crédit == null &&
-					   this.Pièce.IsNullOrEmpty &&
-					   this.Libellé.IsNullOrEmpty &&
+					   this.Pièce.IsNullOrEmpty () &&
+					   this.Libellé.IsNullOrEmpty () &&
 					   this.Montant == 0 &&
 					   this.TotalAutomatique == false;
 			}
@@ -126,7 +126,7 @@ namespace Epsitec.Cresus.Compta.Entities
 		private static FormattedText GetLibelléTVA(FormattedText code, decimal? taux)
 		{
 			//	Retourne par exemple "TVA 8.0% (IPM)".
-			if (!code.IsNullOrEmpty && taux.HasValue)
+			if (!code.IsNullOrEmpty () && taux.HasValue)
 			{
 				return string.Format ("TVA {0} ({1})", Converters.PercentToString (taux), code);
 			}

@@ -137,7 +137,7 @@ namespace Epsitec.Cresus.Compta.IO
 
 			var pièce = this.SearchInsideFreezer (generator, rank);  // cherche dans le congélateur
 
-			if (pièce.IsNullOrEmpty)  // pas trouvé ?
+			if (pièce.IsNullOrEmpty ())  // pas trouvé ?
 			{
 				//	Si on a mis les pièces de rangs 0, 1 et 2 dans le congélateur et qu'on demande la pièce de rang 7,
 				//	on va générer et mettre dans le congélateur les pièces 3 à 7.
@@ -202,7 +202,7 @@ namespace Epsitec.Cresus.Compta.IO
 		private static FormattedText FormatPièce(FormattedText format, int numéro)
 		{
 			//	Retourne un numéro de pièce formaté.
-			if (format.IsNullOrEmpty)
+			if (format.IsNullOrEmpty ())
 			{
 				return numéro.ToString (System.Globalization.CultureInfo.InvariantCulture);
 			}
@@ -274,7 +274,7 @@ namespace Epsitec.Cresus.Compta.IO
 				t = t.Substring (0, t.Length-s.Length);
 			}
 
-			if (format.IsNullOrEmpty)
+			if (format.IsNullOrEmpty ())
 			{
 				return Converters.ParseInt (t);
 			}

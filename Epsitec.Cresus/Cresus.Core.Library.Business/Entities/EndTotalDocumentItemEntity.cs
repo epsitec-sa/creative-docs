@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 		{
 			var desc = this.TextForPrice;
 
-			if (desc.IsNullOrEmpty)
+			if (desc.IsNullOrEmpty ())
 			{
 				desc = "Grand total";
 			}
@@ -37,7 +37,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 			var text = TextFormatter.FormatText (desc, total);
 
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				return "<i>Grand total</i>";
 			}

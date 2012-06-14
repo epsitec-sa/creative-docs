@@ -72,7 +72,7 @@ namespace Epsitec.Common.Support
 		{
 			get
 			{
-				if (this.formattedText.IsNull)
+				if (this.formattedText.IsNull ())
 				{
 					return FormattedText.FromSimpleText (this.simpleText);
 				}
@@ -93,7 +93,7 @@ namespace Epsitec.Common.Support
 				{
 					format |= TextFormat.Simple;
 				}
-				if (this.formattedText.IsNull == false)
+				if (this.formattedText.IsNull () == false)
 				{
 					format |= TextFormat.Formatted;
 				}
@@ -119,7 +119,7 @@ namespace Epsitec.Common.Support
 		{
 			return this.category.GetHashCode ()
 				^ (this.simpleText == null ? 0 : this.simpleText.GetHashCode ())
-				^ (this.formattedText.IsNull ? 0 : this.formattedText.GetHashCode ());
+				^ (this.formattedText.IsNull () ? 0 : this.formattedText.GetHashCode ());
 		}
 
 

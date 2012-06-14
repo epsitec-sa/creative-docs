@@ -63,7 +63,7 @@ namespace Epsitec.Cresus.Core.Helpers
 			//	Retourne le nom du document imprimé.
 			//	Par exemple "Facture", "Offre" ou "Bon pour commande".
 			if (metadata.DocumentCategory.IsNull () ||
-				metadata.DocumentCategory.Name.IsNullOrEmpty)
+				metadata.DocumentCategory.Name.IsNullOrEmpty ())
 			{
 				return "Document";  // nom générique
 			}
@@ -105,7 +105,7 @@ namespace Epsitec.Cresus.Core.Helpers
 
 			var instalmentName = TextFormatter.FormatText (billingDetails.InstalmentName);
 
-			if (!instalmentName.IsNullOrEmpty)
+			if (!instalmentName.IsNullOrEmpty ())
 			{
 				if (parenthesis)
 				{

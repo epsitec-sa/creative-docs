@@ -85,7 +85,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		{
 			get
 			{
-				return this.error.IsNullOrEmpty;
+				return this.error.IsNullOrEmpty ();
 			}
 		}
 
@@ -93,7 +93,7 @@ namespace Epsitec.Cresus.Core.Print.Serialization
 		{
 			get
 			{
-				return !this.error.IsNullOrEmpty;
+				return !this.error.IsNullOrEmpty ();
 			}
 		}
 

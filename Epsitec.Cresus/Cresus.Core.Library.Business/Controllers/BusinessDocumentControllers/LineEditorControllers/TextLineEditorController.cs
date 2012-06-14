@@ -119,7 +119,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			}
 			set
 			{
-				if (value.IsNullOrEmpty)
+				if (value.IsNullOrEmpty ())
 				{
 					this.Entity.Text = null;
 				}

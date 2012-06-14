@@ -54,7 +54,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return !this.text.IsNullOrEmpty;
+				return !this.text.IsNullOrEmpty ();
 			}
 		}
 
@@ -104,7 +104,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			get
 			{
-				return !this.error.IsNullOrEmpty;
+				return !this.error.IsNullOrEmpty ();
 			}
 		}
 

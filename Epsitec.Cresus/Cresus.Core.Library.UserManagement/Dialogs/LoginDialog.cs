@@ -300,7 +300,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 
 			var message = this.GetErrorMessage ();
 
-			if (message.IsNullOrEmpty)
+			if (message.IsNullOrEmpty ())
 			{
 				this.errorMessage.Visibility = false;
 			}

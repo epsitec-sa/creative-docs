@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 
 			store.UpdateImage (this.dataContext, this.imageEntity, file);
 
-			if (this.imageEntity.Name.IsNullOrEmpty)
+			if (this.imageEntity.Name.IsNullOrEmpty ())
 			{
 				this.imageEntity.Name = System.IO.Path.GetFileNameWithoutExtension (this.imageEntity.ImageBlob.FileName);
 			}

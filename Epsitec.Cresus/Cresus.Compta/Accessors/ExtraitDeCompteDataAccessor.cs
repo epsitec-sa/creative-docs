@@ -68,7 +68,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.readonlyAllData.Clear ();
 
 			FormattedText numéroCompte = this.Options.NuméroCompte.ToSimpleText ();
-			if (numéroCompte.IsNullOrEmpty)
+			if (numéroCompte.IsNullOrEmpty ())
 			{
 				this.readonlyData.Clear ();
 				return;
@@ -161,7 +161,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		{
 			//	Met à jour l'évolution du solde du compte, visible dans la colonne 'Solde'.
 			FormattedText numéroCompte = this.Options.NuméroCompte;
-			if (numéroCompte.IsNullOrEmpty)
+			if (numéroCompte.IsNullOrEmpty ())
 			{
 				return;
 			}
@@ -542,7 +542,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 		private static bool Match(ComptaCompteEntity compte, FormattedText numéro)
 		{
 			//	Retroune true si le compte ou ses fils correspond au numéro.
-			while (compte != null && !compte.Numéro.IsNullOrEmpty)
+			while (compte != null && !compte.Numéro.IsNullOrEmpty ())
 			{
 				if (compte.Numéro == numéro)
 				{

@@ -304,7 +304,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 					var q = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalQuantity);
 					var u = info.GetColumnContent (DocumentItemAccessorColumn.AdditionalUnit);
 
-					if (q.IsNullOrEmpty)
+					if (q.IsNullOrEmpty ())
 					{
 						return CellContent.Empty;
 					}

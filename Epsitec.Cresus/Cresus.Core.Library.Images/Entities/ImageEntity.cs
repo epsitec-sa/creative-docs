@@ -17,8 +17,8 @@ namespace Epsitec.Cresus.Core.Entities
 	{
 		public override FormattedText GetSummary()
 		{
-			string name = this.Name.IsNullOrWhiteSpace ? "<i>Inconnu</i>" : this.Name.ToString ();
-			string desc = this.Description.IsNullOrWhiteSpace ? "<i>Inconnu</i>" : this.Description.ToString ();
+			string name = this.Name.IsNullOrWhiteSpace () ? "<i>Inconnu</i>" : this.Name.ToString ();
+			string desc = this.Description.IsNullOrWhiteSpace () ? "<i>Inconnu</i>" : this.Description.ToString ();
 
 			if (this.ImageBlob.IsNull ())
 			{

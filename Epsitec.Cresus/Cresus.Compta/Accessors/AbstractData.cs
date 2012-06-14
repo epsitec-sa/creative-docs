@@ -53,12 +53,12 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	Retourne un texte décoré par les propriétés typographiques IsBold et IsItalic, s'il ne
 			//	s'agit pas d'un contenu spécial "$${_xxx_}$$".
 
-			if (this.IsBold && !value.IsNullOrEmpty && !value.ToString ().StartsWith (StringArray.SpecialContentStart))
+			if (this.IsBold && !value.IsNullOrEmpty () && !value.ToString ().StartsWith (StringArray.SpecialContentStart))
 			{
 				value = value.ApplyBold ();
 			}
 
-			if (this.IsItalic && !value.IsNullOrEmpty && !value.ToString ().StartsWith (StringArray.SpecialContentStart))
+			if (this.IsItalic && !value.IsNullOrEmpty () && !value.ToString ().StartsWith (StringArray.SpecialContentStart))
 			{
 				value = value.ApplyItalic ();
 			}

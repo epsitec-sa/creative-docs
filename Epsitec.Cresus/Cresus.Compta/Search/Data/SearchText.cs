@@ -563,7 +563,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			{
 				var builder = new System.Text.StringBuilder ();
 
-				if (!columnName.IsNullOrEmpty)
+				if (!columnName.IsNullOrEmpty ())
 				{
 					builder.Append (columnName);
 				}
@@ -572,7 +572,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				{
 					builder.Append ("≠");
 				}
-				if (!this.invert && !columnName.IsNullOrEmpty)
+				if (!this.invert && !columnName.IsNullOrEmpty ())
 				{
 					builder.Append ("=");
 				}

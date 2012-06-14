@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				text = text.ApplyBold ();
 			}
 
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				this.operationLabel.Visibility = false;
 			}
@@ -106,13 +106,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		private void UpdateWidgets()
 		{
-			if (!this.errorDescription.IsNullOrEmpty)
+			if (!this.errorDescription.IsNullOrEmpty ())
 			{
 				//?this.toolbar.BackColor = UIBuilder.ErrorColor;
 				this.editionLabel.Visibility = true;
 				this.editionLabel.FormattedText = FormattedText.Concat (this.errorDescription.ApplyBold (), " ");
 			}
-			else if (!this.editionDescription.IsNullOrEmpty)
+			else if (!this.editionDescription.IsNullOrEmpty ())
 			{
 				//?this.toolbar.BackColor = Color.Empty;
 				this.editionLabel.Visibility = true;

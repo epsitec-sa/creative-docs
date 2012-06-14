@@ -80,8 +80,8 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		public FormattedText GetColumnContent(DocumentItemAccessorColumn columnA, DocumentItemAccessorColumn columnB)
 		{
 			var text = this.GetColumnContent (columnA);
-			
-			if (text.IsNullOrEmpty)
+
+			if (text.IsNullOrEmpty ())
 			{
 				text = this.GetColumnContent (columnB);
 			}

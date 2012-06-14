@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 					var percent = BudgetsManager.GetPercent (solde, budget);
 					var montant = Converters.MontantToString (budget, monnaie);
 
-					if (percent.IsNullOrEmpty || string.IsNullOrEmpty (montant))
+					if (percent.IsNullOrEmpty () || string.IsNullOrEmpty (montant))
 					{
 						return FormattedText.Empty;
 					}

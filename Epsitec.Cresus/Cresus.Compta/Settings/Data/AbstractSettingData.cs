@@ -66,7 +66,7 @@ namespace Epsitec.Cresus.Compta.Settings.Data
 		{
 			get
 			{
-				return !this.error.IsNullOrEmpty;
+				return !this.error.IsNullOrEmpty ();
 			}
 		}
 

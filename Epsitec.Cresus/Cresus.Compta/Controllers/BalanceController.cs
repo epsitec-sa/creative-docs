@@ -105,8 +105,8 @@ namespace Epsitec.Cresus.Compta.Controllers
 				{
 					text = FormattedText.Empty;
 				}
-				
-				if (!text.IsNullOrEmpty)
+
+				if (!text.IsNullOrEmpty ())
 				{
 					for (int i = 0; i < niveau; i++)
 					{

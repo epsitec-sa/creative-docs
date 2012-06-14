@@ -159,7 +159,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		public bool HasError(ColumnType columnType)
 		{
-			return !this.GetError (columnType).IsNullOrEmpty;
+			return !this.GetError (columnType).IsNullOrEmpty ();
 		}
 
 		public FormattedText GetError(ColumnType columnType)

@@ -82,7 +82,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 					var line = this.GetContent (row, column);
 					merged = merged.AppendLine (line);
 
-					if (!line.IsNullOrEmpty)
+					if (!line.IsNullOrEmpty ())
 					{
 						empty = false;
 					}
@@ -273,7 +273,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			var text = line.Text;
 
-			if (text.IsNullOrEmpty)
+			if (text.IsNullOrEmpty ())
 			{
 				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.TextNotDefined);
 				this.SetContent (0, DocumentItemAccessorColumn.ArticleDescription, " ");
@@ -297,7 +297,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 
 			var description = this.GetArticleItemDescription (line);
 
-			if (description.IsNullOrEmpty)
+			if (description.IsNullOrEmpty ())
 			{
 				this.SetError (0, DocumentItemAccessorColumn.ArticleDescription, DocumentItemAccessorError.ArticleNotDefined);
 			}
@@ -750,14 +750,14 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			}
 			else if (this.mode.HasFlag (DocumentItemAccessorMode.UseArticleBoth))
 			{
-				if (line.ArticleNameCache.IsNullOrEmpty && line.ArticleDescriptionCache.IsNullOrEmpty)  // (name = null) + (description = null) ?
+				if (line.ArticleNameCache.IsNullOrEmpty () && line.ArticleDescriptionCache.IsNullOrEmpty ())  // (name = null) + (description = null) ?
 				{
 				}
-				else if (line.ArticleNameCache.IsNullOrEmpty)  // (name = null) + (description = exist) ?
+				else if (line.ArticleNameCache.IsNullOrEmpty ())  // (name = null) + (description = exist) ?
 				{
 					description = line.ArticleDescriptionCache;
 				}
-				else if (line.ArticleDescriptionCache.IsNullOrEmpty)  // (name = exist) + (description = null) ?
+				else if (line.ArticleDescriptionCache.IsNullOrEmpty ())  // (name = exist) + (description = null) ?
 				{
 					description = line.ArticleNameCache;
 				}
@@ -852,7 +852,7 @@ namespace Epsitec.Cresus.Core.Library.Business.ContentAccessors
 			//	Modifie le contenu d'une cellule.
 			text = TextFormatter.GetMonolingualText (text, this.twoLetterISOLanguageName);
 
-			if (text != null && !text.IsNullOrEmpty)
+			if (text != null && !text.IsNullOrEmpty ())
 			{
 				var key = DocumentItemAccessor.GetKey (row, column);
 				this.content[key] = text;

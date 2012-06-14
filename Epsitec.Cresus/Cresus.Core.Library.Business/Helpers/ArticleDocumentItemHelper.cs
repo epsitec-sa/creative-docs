@@ -81,7 +81,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				unit = quantity.Unit.Name;
 			}
 
-			if (unit.IsNull == false)
+			if (unit.IsNull () == false)
 			{
 				return ArticleQuantityEntity.FormatQuantity (0, unit);
 			}
@@ -109,7 +109,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					description = article.ReplacementName;
 				}
-				else if (!article.ArticleDefinition.Name.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Name.IsNullOrEmpty ())
 				{
 					description = article.ArticleDefinition.Name;
 				}
@@ -122,7 +122,7 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					description = article.ReplacementDescription;
 				}
-				else if (!article.ArticleDefinition.Description.IsNullOrEmpty)
+				else if (!article.ArticleDefinition.Description.IsNullOrEmpty ())
 				{
 					description = article.ArticleDefinition.Description;
 				}

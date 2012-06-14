@@ -135,8 +135,8 @@ namespace Epsitec.Cresus.Core.Bricks
 			this.ProcessProperty (brick, BrickPropertyKey.Attribute, x => this.ProcessAttribute (item, x));
 			this.ProcessProperty (brick, BrickPropertyKey.Include, x => this.ProcessInclusion (x));
 
-			if ((!item.Title.IsNullOrEmpty) &&
-				(item.CompactTitle.IsNull))
+			if ((!item.Title.IsNullOrEmpty ()) &&
+				(item.CompactTitle.IsNull ()))
 			{
 				item.CompactTitle = item.Title;
 			}

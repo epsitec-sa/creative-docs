@@ -364,8 +364,8 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 				get
 				{
 					return string.IsNullOrEmpty (this.Value) &&
-						   this.ShortDescription.IsNullOrEmpty &&
-						   this.LongDescription.IsNullOrEmpty;
+						   this.ShortDescription.IsNullOrEmpty () &&
+						   this.LongDescription.IsNullOrEmpty ();
 				}
 			}
 		}
@@ -427,11 +427,11 @@ namespace Epsitec.Cresus.Core.Controllers.SpecialControllers
 		private FormattedText GetMonolingualFirstLine(FormattedText text)
 		{
 			//	Retourne la première ligne d'un texte dans la langue courante.
-			if (!text.IsNullOrEmpty)
+			if (!text.IsNullOrEmpty ())
 			{
 				text = this.GetMonolingualText (text);
 
-				if (!text.IsNullOrEmpty)
+				if (!text.IsNullOrEmpty ())
 				{
 					text = text.Lines.FirstOrDefault ();
 				}

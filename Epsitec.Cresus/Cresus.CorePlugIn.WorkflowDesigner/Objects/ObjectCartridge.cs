@@ -38,12 +38,12 @@ namespace Epsitec.Cresus.CorePlugIn.WorkflowDesigner.Objects
 			this.textLayoutSubtitle.Alignment = ContentAlignment.MiddleLeft;
 			this.textLayoutSubtitle.BreakMode = TextBreakMode.Hyphenate;
 
-			if (this.Entity.WorkflowName.IsNullOrWhiteSpace)
+			if (this.Entity.WorkflowName.IsNullOrWhiteSpace ())
 			{
 				this.Entity.WorkflowName = "Nouveau workflow";
 			}
 
-			if (this.Entity.WorkflowDescription.IsNullOrWhiteSpace)
+			if (this.Entity.WorkflowDescription.IsNullOrWhiteSpace ())
 			{
 				this.Entity.WorkflowDescription = "Cliquez ici pour entrer une description...";
 			}

@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public static EntityStatus GetEntityStatus(this FormattedText text)
 		{
-			if (text.IsNullOrWhiteSpace)
+			if (text.IsNullOrWhiteSpace ())
 			{
 				return EntityStatus.Empty;
 			}

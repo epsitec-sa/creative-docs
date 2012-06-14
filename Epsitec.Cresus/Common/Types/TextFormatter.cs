@@ -83,7 +83,7 @@ namespace Epsitec.Common.Types
 				var multilingualText = new MultilingualText (text);
 				var monolingual = multilingualText.GetTextOrDefault (twoLetterISOLanguageName);
 
-				if (monolingual.IsNullOrEmpty)
+				if (monolingual.IsNullOrEmpty ())
 				{
 					monolingual = multilingualText.GetTextOrDefault (TextFormatter.CurrentTwoLetterISOLanguageName);
 				}

@@ -1042,7 +1042,7 @@ namespace Epsitec.Cresus.Core.Dialogs
 			{
 				FormattedText pwm = this.GetPasswordMessage ();
 
-				if (pwm.IsNullOrEmpty)  // ok ?
+				if (pwm.IsNullOrEmpty ())  // ok ?
 				{
 					user.SetPassword (this.newPasswordField1.Text);
 

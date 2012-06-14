@@ -183,7 +183,7 @@ namespace Epsitec.Common.Types
 			if (value is FormattedText)
 			{
 				FormattedText text = (FormattedText) value;
-				return text.IsNull;
+				return text.IsNull ();
 			}
 
 			return false;

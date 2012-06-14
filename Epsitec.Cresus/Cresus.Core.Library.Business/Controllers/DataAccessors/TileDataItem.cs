@@ -188,7 +188,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.displayedTitle.IsNullOrEmpty)
+				if (this.displayedTitle.IsNullOrEmpty ())
 				{
 					return this.Title;
 				}
@@ -203,7 +203,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.displayedText.IsNullOrEmpty)
+				if (this.displayedText.IsNullOrEmpty ())
 				{
 					return this.Text;
 				}
@@ -218,7 +218,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.displayedCompactText.IsNullOrEmpty)
+				if (this.displayedCompactText.IsNullOrEmpty ())
 				{
 					return this.CompactText;
 				}
@@ -233,7 +233,7 @@ namespace Epsitec.Cresus.Core.Controllers.DataAccessors
 		{
 			get
 			{
-				if (this.displayedCompactTitle.IsNullOrEmpty)
+				if (this.displayedCompactTitle.IsNullOrEmpty ())
 				{
 					return this.CompactTitle;
 				}

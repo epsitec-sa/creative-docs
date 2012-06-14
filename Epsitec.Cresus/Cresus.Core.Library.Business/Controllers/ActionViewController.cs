@@ -148,7 +148,7 @@ namespace Epsitec.Cresus.Core.Controllers
 
 			var tooltip = FormattedText.Empty;
 
-			if (!layout.Item.Description.IsNullOrEmpty)
+			if (!layout.Item.Description.IsNullOrEmpty ())
 			{
 				tooltip = layout.Item.Description;
 			}
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Core.Controllers
 				tooltip = layout.Item.Label;
 			}
 
-			if (!tooltip.IsNullOrEmpty && (tooltip != layout.Item.Label || layout.IsTextTooLarge))
+			if (!tooltip.IsNullOrEmpty () && (tooltip != layout.Item.Label || layout.IsTextTooLarge))
 			{
 				ToolTip.Default.SetToolTip (button, tooltip);
 			}

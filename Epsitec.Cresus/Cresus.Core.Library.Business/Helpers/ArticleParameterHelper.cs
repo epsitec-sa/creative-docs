@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Helpers
 		public static FormattedText ArticleDescriptionReplaceTags(ArticleDocumentItemEntity articleDocumentItem, FormattedText description)
 		{
 			//	Remplace les tags <param code="..."/> par les valeurs réelles de l'article.
-			if (description.IsNullOrEmpty)
+			if (description.IsNullOrEmpty ())
 			{
 				return FormattedText.Null;
 			}
@@ -99,12 +99,12 @@ namespace Epsitec.Cresus.Core.Helpers
 				{
 					if (value == values[i])
 					{
-						if (i < longDescriptions.Length && !longDescriptions[i].IsNullOrEmpty)
+						if (i < longDescriptions.Length && !longDescriptions[i].IsNullOrEmpty ())
 						{
 							return longDescriptions[i];
 						}
 
-						if (i < shortDescriptions.Length && !shortDescriptions[i].IsNullOrEmpty)
+						if (i < shortDescriptions.Length && !shortDescriptions[i].IsNullOrEmpty ())
 						{
 							return shortDescriptions[i];
 						}

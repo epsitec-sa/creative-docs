@@ -175,7 +175,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				{
 					FormattedText address = this.GetOptionText (DocumentOption.HeaderFromAddress);
 
-					if (address.IsNullOrEmpty)
+					if (address.IsNullOrEmpty ())
 					{
 						address = settings.Company.DefaultMailContact.GetSummary ();
 					}
@@ -312,7 +312,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 		protected void BuildFooter()
 		{
 			//	Ajoute le pied de page dans le document.
-			if (!this.Entity.FooterText.IsNullOrEmpty)
+			if (!this.Entity.FooterText.IsNullOrEmpty ())
 			{
 				var fontSize = this.GetOptionValue (DocumentOption.FooterTextFontSize);
 
@@ -329,7 +329,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			{
 				var secondaryMailContactText = this.documentLogic.SecondaryMailContactText;
 
-				if (!secondaryMailContactText.IsNullOrEmpty)
+				if (!secondaryMailContactText.IsNullOrEmpty ())
 				{
 					var fontSize = this.GetOptionValue (DocumentOption.FooterSecondaryMailFontSize);
 
@@ -539,7 +539,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 
 			if (this.HasOption (DocumentOption.GapBeforeGroup))
 			{
-				bool hasTopGap = !accessor.GetContent (0, DocumentItemAccessorColumn.GroupNumber).IsNullOrEmpty;  // début d'un groupe ?
+				bool hasTopGap = !accessor.GetContent (0, DocumentItemAccessorColumn.GroupNumber).IsNullOrEmpty ();  // début d'un groupe ?
 
 				if (hasTopGap)
 				{
@@ -634,7 +634,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			var text = TextFormatter.FormatText (this.Metadata.DocumentTitle);
 			double firstColumnWidth = 16;
 
-			if (text.IsNullOrEmpty || width < firstColumnWidth+10)
+			if (text.IsNullOrEmpty () || width < firstColumnWidth+10)
 			{
 				return null;
 			}
@@ -774,15 +774,15 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 			FormattedText b = accessor.GetContent (row, begin);
 			FormattedText e = accessor.GetContent (row, end);
 
-			if (!b.IsNullOrEmpty && !e.IsNullOrEmpty)
+			if (!b.IsNullOrEmpty () && !e.IsNullOrEmpty ())
 			{
 				return FormattedText.Concat (b, " au ", e);
 			}
-			else if (!b.IsNullOrEmpty && e.IsNullOrEmpty)
+			else if (!b.IsNullOrEmpty () && e.IsNullOrEmpty ())
 			{
 				return b;
 			}
-			else if (b.IsNullOrEmpty && !e.IsNullOrEmpty)
+			else if (b.IsNullOrEmpty () && !e.IsNullOrEmpty ())
 			{
 				return FormattedText.Concat ("Au ", e);
 			}
@@ -1239,7 +1239,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				{
 					var content = accessor.GetContent (i, column);
 
-					if (!content.IsNullOrEmpty)
+					if (!content.IsNullOrEmpty ())
 					{
 						return false;
 					}
@@ -1395,7 +1395,7 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 				var q = BusinessDocumentPrinter.GetQuantityAndUnit (accessor, i, DocumentItemAccessorColumn.AdditionalQuantity, DocumentItemAccessorColumn.AdditionalUnit);
 				var d = BusinessDocumentPrinter.GetDates (accessor, i, DocumentItemAccessorColumn.AdditionalBeginDate, DocumentItemAccessorColumn.AdditionalEndDate);
 
-				if (!t.IsNullOrEmpty || !q.IsNullOrEmpty || !d.IsNullOrEmpty)
+				if (!t.IsNullOrEmpty () || !q.IsNullOrEmpty () || !d.IsNullOrEmpty ())
 				{
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "Separate"))  // dans une colonne spécifique ?
 					{
@@ -1408,22 +1408,22 @@ namespace Epsitec.Cresus.Core.Business.EntityPrinters
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantity") &&  // avec les quantités ?
-						this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty)  // (*)
+						this.GetTableText (row + i, TableColumnKeys.MainQuantity).IsNullOrEmpty ())  // (*)
 					{
 						//	"Retardé 5 pces 25.12.2011"
 						this.SetTableText (row+i, TableColumnKeys.MainQuantity, TextFormatter.FormatText (t, q, d));  // très compact, peu de place
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToDescription") &&  // avec les descriptions ?
-						this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
+						this.GetTableText (row + i, TableColumnKeys.ArticleDescription).IsNullOrEmpty ())  // (*)
 					{
 						//	"Retardé 5 pces, le 25.12.2011"
 						this.SetTableText (row+i, TableColumnKeys.ArticleDescription, TextFormatter.FormatText (t, q, "le~", d));  // assez de place à disposition
 					}
 
 					if (this.HasOption (DocumentOption.ArticleAdditionalQuantities, "ToQuantityAndDescription") &&  // réparti ?
-						this.GetTableText (row+i, TableColumnKeys.MainQuantity).IsNullOrEmpty &&  // (*)
-						this.GetTableText (row+i, TableColumnKeys.ArticleDescription).IsNullOrEmpty)  // (*)
+						this.GetTableText (row + i, TableColumnKeys.MainQuantity).IsNullOrEmpty () &&  // (*)
+						this.GetTableText (row + i, TableColumnKeys.ArticleDescription).IsNullOrEmpty ())  // (*)
 					{
 						//	1) "−5 pces"
 						//	2) "Retardé, le 25.12.2011"

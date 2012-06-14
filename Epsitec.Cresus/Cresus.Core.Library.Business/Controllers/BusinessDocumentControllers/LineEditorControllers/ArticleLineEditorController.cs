@@ -633,9 +633,9 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			//	languages; compare and replace only the text for the active language :
 			var replacementText = shortDescription ? this.Item.ReplacementName : this.Item.ReplacementDescription;
 
-			string articleText = value.IsNull ? null : TextFormatter.ConvertToText (value);
+			string articleText = value.IsNull () ? null : TextFormatter.ConvertToText (value);
 			string defaultText = TextFormatter.ConvertToText (shortDescription ? this.Item.ArticleDefinition.Name : this.Item.ArticleDefinition.Description);
-			string currentReplacement = replacementText.IsNull ? null : TextFormatter.ConvertToText (replacementText);
+			string currentReplacement = replacementText.IsNull () ? null : TextFormatter.ConvertToText (replacementText);
 
 			if (articleText == defaultText)  // texte standard ?
 			{
@@ -704,7 +704,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 		{
 			using (this.accessData.BusinessContext.SuspendUpdates ())
 			{
-				if (value.IsNullOrWhiteSpace)
+				if (value.IsNullOrWhiteSpace ())
 				{
 					var discount = this.Item.Discounts.FirstOrDefault (x => x.DiscountPolicy == policy);
 
@@ -807,7 +807,7 @@ namespace Epsitec.Cresus.Core.Controllers.BusinessDocumentControllers
 			{
 				var discount = this.Item.Discounts[i];
 
-				if ((discount.Text.IsNullOrEmpty) &&
+				if ((discount.Text.IsNullOrEmpty ()) &&
 					(discount.Value == null) &&
 					(discount.DiscountRate == null))
 				{

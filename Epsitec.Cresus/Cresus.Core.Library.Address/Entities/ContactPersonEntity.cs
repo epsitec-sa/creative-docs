@@ -19,7 +19,7 @@ namespace Epsitec.Cresus.Core.Entities
 
 		public override FormattedText GetCompactSummary()
 		{
-			if (!this.Name.IsNullOrEmpty)
+			if (!this.Name.IsNullOrEmpty ())
 			{
 				return this.Name;
 			}

@@ -368,7 +368,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		public virtual void DeleteAction()
 		{
 			var error = this.dataAccessor.GetRemoveModificationLineError ();
-			if (!error.IsNullOrEmpty)
+			if (!error.IsNullOrEmpty ())
 			{
 				this.controller.MainWindowController.ErrorDialog (error);
 				return;

@@ -44,7 +44,7 @@ namespace Epsitec.Cresus.Core.Print.Bands
 			}
 			set
 			{
-				if (value.IsNullOrEmpty)
+				if (value.IsNullOrEmpty ())
 				{
 					this.text = null;
 				}

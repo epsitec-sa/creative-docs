@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Bricks
 		public BrickProperty(BrickPropertyKey key, FormattedText value)
 		{
 			this.key = key;
-			this.value = value.IsNull ? null : value.ToString ();
+			this.value = value.IsNull () ? null : value.ToString ();
 			this.isDefaultProperty = false;
 		}
 

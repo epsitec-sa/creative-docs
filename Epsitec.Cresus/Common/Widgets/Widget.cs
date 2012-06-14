@@ -1195,7 +1195,7 @@ namespace Epsitec.Common.Widgets
 				{
 					FormattedText error = this.Validator.ErrorMessage;
 
-					if (! error.IsNullOrWhiteSpace)
+					if (!error.IsNullOrWhiteSpace ())
 					{
 						ToolTip.SetToolTipColor (this, Widgets.Adorners.Factory.Active.ColorError);
 						ToolTip.Default.SetToolTip (this, error);
