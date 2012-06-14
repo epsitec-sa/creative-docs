@@ -784,12 +784,12 @@ namespace Epsitec.Cresus.Core
 		#endregion
 
 #if SLIMFIELD
-		public SlimField CreateSlimField(EditionTile tile, double width, bool forceReadOnly, string label, Marshaler marshaler)
+		public SlimField CreateSlimField(EditionTile tile, double width, bool forceReadOnly, Caption caption, Marshaler marshaler)
 		{
-			return this.CreateSlimField (tile.Container, DockStyle.Stacked, width, forceReadOnly, label, marshaler);
+			return this.CreateSlimField (tile.Container, DockStyle.Stacked, width, forceReadOnly, caption, marshaler);
 		}
 
-		public SlimField CreateSlimField(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, string label, Marshaler marshaler, INamedType fieldType = null)
+		public SlimField CreateSlimField(FrameBox parent, DockStyle dockStyle, double width, bool forceReadOnly, Caption caption, Marshaler marshaler, INamedType fieldType = null)
 		{
 			string value = marshaler.GetStringValue ();
 
@@ -798,11 +798,12 @@ namespace Epsitec.Cresus.Core
 				Parent = parent,
 				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
 				Dock = dockStyle,
-				FieldLabel = new FormattedText (label).ToSimpleText (),
 				FieldText = value,
 				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
 				TabIndex = ++this.tabIndex,
 			};
+			
+			SlimFieldBuilder.SetFieldTexts (slimField, caption);
 
 			this.ContentListAdd (slimField);
 
@@ -829,6 +830,7 @@ namespace Epsitec.Cresus.Core
 				delegate
 				{
 					marshaler.SetStringValue (slimField.FieldText);
+					SlimFieldBuilder.SetFieldTexts (slimField, caption);
 //-					behavior.GetTextField ().FormattedText = FormattedText.FromSimpleText (marshaler.GetStringValue ());
 				};
 

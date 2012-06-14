@@ -20,23 +20,24 @@ namespace Epsitec.Common.Widgets
 			return slimField;
 		}
 
-		public static void SetFieldTexts(SlimField slimField, Caption caption, string value)
+		public static void SetFieldTexts(SlimField slimField, Caption caption)
 		{
 			var displayMode = slimField.DisplayMode;
 
+			slimField.FieldLabel = SlimFieldBuilder.GetLabelText (caption);
+			
 			switch (displayMode)
 			{
 				case SlimFieldDisplayMode.Label:
-					slimField.FieldLabel = SlimFieldBuilder.GetLabelText (caption);
 					break;
 
 				case SlimFieldDisplayMode.TextEdition:
-					SlimFieldBuilder.SetFieldTexts (slimField, SlimFieldBuilder.GetEditText (caption), value);
+					SlimFieldBuilder.SetFieldTexts (slimField, SlimFieldBuilder.GetEditText (caption));
 					break;
 
 				case SlimFieldDisplayMode.Text:
 				case SlimFieldDisplayMode.Menu:
-					SlimFieldBuilder.SetFieldTexts (slimField, SlimFieldBuilder.GetValueText (caption), value);
+					SlimFieldBuilder.SetFieldTexts (slimField, SlimFieldBuilder.GetValueText (caption));
 					break;
 
 				default:
@@ -44,16 +45,35 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
-		private static void SetFieldTexts(SlimField slimField, string captionText, string value)
+		private static void SetFieldTexts(SlimField slimField, string captionText)
 		{
 			if (string.IsNullOrEmpty (captionText))
 			{
 				slimField.FieldPrefix = null;
-				slimField.FieldText   = value;
 				slimField.FieldSuffix = null;
 			}
 			else
 			{
+				if (captionText[0] == '[')
+				{
+					int end = captionText.IndexOf (']', 1);
+
+					if (end > 0)
+					{
+						while (++end < captionText.Length)
+						{
+							if (captionText[end] != ' ')
+							{
+								break;
+							}
+						}
+
+						captionText = captionText.Substring (end);
+					}
+				}
+
+				captionText = FormattedText.Unescape (captionText);
+
 				int pos = captionText.IndexOf ('*');
 
 				if (pos < 0)
@@ -62,7 +82,6 @@ namespace Epsitec.Common.Widgets
 				}
 
 				slimField.FieldPrefix = captionText.Substring (0, pos++);
-				slimField.FieldText   = value;
 				slimField.FieldSuffix = pos < captionText.Length ? captionText.Substring (pos) : null;
 			}
 		}

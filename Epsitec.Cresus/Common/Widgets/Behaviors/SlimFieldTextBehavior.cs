@@ -176,8 +176,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
 			this.textField.TextEdited       += this.HandleTextTextEdited;
 
-			this.host.DisplayMode = SlimFieldDisplayMode.TextEdition;
-
 			this.AdjustGeometry ();
 		}
 		
@@ -194,8 +192,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				this.textField.Dispose ();
 				this.textField = null;
-
-				this.host.DisplayMode = this.host.FieldText == null ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 			}
 		}
 

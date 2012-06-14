@@ -109,7 +109,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 		private void HandleHostExited(object sender, MessageEventArgs e)
 		{
-			this.host.DisplayMode = this.host.FieldText == null ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
+			this.host.DisplayMode = string.IsNullOrEmpty (this.host.FieldText) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 			this.host.UpdatePreferredSize ();
 			this.UpdateMenuItemHilite (null);
 		}
