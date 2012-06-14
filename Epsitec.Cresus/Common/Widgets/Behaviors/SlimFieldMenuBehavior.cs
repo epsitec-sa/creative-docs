@@ -66,6 +66,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 			{
 				this.host.FieldText = item.Text;
 				this.OnSelected ();
+				this.host.UpdatePreferredSize ();
 				this.host.Invalidate ();
 			}
 		}
@@ -74,6 +75,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 		{
 			this.host.FieldText = null;
 			this.host.MenuItems.ForEach (x => x.Active = ActiveState.No);
+			this.host.UpdatePreferredSize ();
 			this.host.Invalidate ();
 		}
 
