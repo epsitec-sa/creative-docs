@@ -443,8 +443,9 @@
     <Compile Include="Support\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Support\FormatTokenFormatterResolver.cs" />
     <Compile Include="Support\InterfaceImplementationResolver.cs" />
+    <Compile Include="Support\TextFormat.cs" />
     <Compile Include="Support\TextValue.cs" />
-    <Compile Include="Support\TextValueType.cs" />
+    <Compile Include="Support\TextValueCategory.cs" />
     <Compile Include="Support\EntityEngine\NullNodeAction.cs" />
     <Compile Include="Support\EntityEngine\SafeResourceResolver.cs" />
     <Compile Include="Support\EntityEngine\ThreadSafeReadOnlyListProxy.cs" />

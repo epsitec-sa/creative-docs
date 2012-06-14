@@ -15,6 +15,9 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		Label,
 
+		/// <summary>
+		/// Display the label when in edition mode (similar to <see cref="Label"/>).
+		/// </summary>
 		LabelEdition,
 
 		/// <summary>

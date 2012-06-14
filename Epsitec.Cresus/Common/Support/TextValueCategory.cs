@@ -7,10 +7,10 @@ using System.Linq;
 namespace Epsitec.Common.Support
 {
 	/// <summary>
-	/// The <c>TextValueType</c> enumeration defines a few common types used to classify
+	/// The <c>TextValueCategory</c> enumeration defines a few common categories used to classify
 	/// <see cref="TextValue"/> instances.
 	/// </summary>
-	public enum TextValueType
+	public enum TextValueCategory
 	{
 		Data,
 

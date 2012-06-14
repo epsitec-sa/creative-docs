@@ -83,8 +83,21 @@ namespace Epsitec.Common.Widgets
 
 		public bool								IsReadOnly
 		{
-			get;
-			set;
+			get
+			{
+				return this.GetValue<bool> (SlimField.IsReadOnlyProperty);
+			}
+			set
+			{
+				if (value)
+				{
+					this.SetValue (SlimField.IsReadOnlyProperty, value);
+				}
+				else
+				{
+					this.ClearValue (SlimField.IsReadOnlyProperty);
+				}
+			}
 		}
 
 
@@ -376,6 +389,7 @@ namespace Epsitec.Common.Widgets
 			}
 		}
 
+		
 		static SlimField()
 		{
 			Visual.PreferredWidthProperty.OverrideMetadataDefaultValue<SlimField> (18.0);
@@ -430,6 +444,7 @@ namespace Epsitec.Common.Widgets
 
 
 		public static DependencyProperty DisplayModeProperty = DependencyProperty<SlimField>.Register<SlimFieldDisplayMode> (x => x.DisplayMode);
+		public static DependencyProperty IsReadOnlyProperty = DependencyProperty<SlimField>.Register<bool> (x => x.IsReadOnly);
 
 
 		private readonly List<SlimFieldMenuItem> menuItems;

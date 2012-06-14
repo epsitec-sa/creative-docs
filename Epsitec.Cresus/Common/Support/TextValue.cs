@@ -9,47 +9,47 @@ namespace Epsitec.Common.Support
 {
 	/// <summary>
 	/// The <c>TextValue</c> structure is used to represent a text value of a given
-	/// type, provided by an <see cref="AbstractEntity"/>.
+	/// category, provided by an <see cref="AbstractEntity"/>.
 	/// </summary>
 	public struct TextValue : System.IEquatable<TextValue>
 	{
 		public TextValue(string simpleText)
-			: this (TextValueType.Summary, simpleText)
+			: this (TextValueCategory.Summary, simpleText)
 		{
 		}
 
-		public TextValue(TextValueType type, string simpleText)
+		public TextValue(TextValueCategory category, string simpleText)
 		{
-			this.type = type;
+			this.category = category;
 			this.simpleText = simpleText;
 			this.formattedText = FormattedText.Empty;
 		}
 
 		public TextValue(FormattedText formattedText)
-			: this (TextValueType.Summary, formattedText)
+			: this (TextValueCategory.Summary, formattedText)
 		{
 		}
-		
-		public TextValue(TextValueType type, FormattedText formattedText)
+
+		public TextValue(TextValueCategory category, FormattedText formattedText)
 		{
-			this.type = type;
+			this.category = category;
 			this.simpleText = null;
 			this.formattedText = TextFormatter.FormatText (formattedText);
 		}
 
 		public TextValue(TextValue keyword)
 		{
-			this.type          = keyword.type;
+			this.category          = keyword.category;
 			this.simpleText    = keyword.simpleText;
 			this.formattedText = keyword.formattedText;
 		}
 		
 
-		public TextValueType					Type
+		public TextValueCategory				Category
 		{
 			get
 			{
-				return this.type;
+				return this.category;
 			}
 		}
 
@@ -83,6 +83,25 @@ namespace Epsitec.Common.Support
 			}
 		}
 
+		public TextFormat						Format
+		{
+			get
+			{
+				var format = TextFormat.None;
+
+				if (this.simpleText != null)
+				{
+					format |= TextFormat.Simple;
+				}
+				if (this.formattedText.IsNull == false)
+				{
+					format |= TextFormat.Formatted;
+				}
+
+				return format;
+			}
+		}
+
 
 		public override bool Equals(object obj)
 		{
@@ -98,7 +117,7 @@ namespace Epsitec.Common.Support
 
 		public override int GetHashCode()
 		{
-			return this.type.GetHashCode ()
+			return this.category.GetHashCode ()
 				^ (this.simpleText == null ? 0 : this.simpleText.GetHashCode ())
 				^ (this.formattedText.IsNull ? 0 : this.formattedText.GetHashCode ());
 		}
@@ -108,7 +127,7 @@ namespace Epsitec.Common.Support
 
 		public bool Equals(TextValue other)
 		{
-			if (this.type == other.type)
+			if (this.category == other.category)
 			{
 				if ((this.simpleText != null) ||
 					(other.simpleText != null))
@@ -126,8 +145,8 @@ namespace Epsitec.Common.Support
 
 		#endregion
 
-		
-		private readonly TextValueType			type;
+
+		private readonly TextValueCategory		category;
 		private readonly string					simpleText;
 		private readonly FormattedText			formattedText;
 	}
