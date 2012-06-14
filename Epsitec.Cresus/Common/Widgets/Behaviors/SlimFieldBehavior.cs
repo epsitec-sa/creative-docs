@@ -18,23 +18,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		}
 
 
-		public Caption							Caption
-		{
-			get
-			{
-				return this.caption;
-			}
-			set
-			{
-				if (this.caption != value)
-				{
-					this.caption = value;
-					SlimFieldBuilder.SetFieldTexts (this.host, this.caption);
-				}
-			}
-		}
-
-
 		protected virtual void OnTextEditionStarting(CancelEventArgs e)
 		{
 			this.TextEditionStarting.Raise (this, e);
@@ -57,6 +40,5 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		
 		protected readonly SlimField			host;
-		private Caption							caption;
 	}
 }

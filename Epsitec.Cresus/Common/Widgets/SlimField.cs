@@ -123,6 +123,9 @@ namespace Epsitec.Common.Widgets
 				case SlimFieldDisplayMode.Label:
 					return string.IsNullOrEmpty (this.FieldText) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 
+				case SlimFieldDisplayMode.LabelEdition:
+					return string.IsNullOrEmpty (this.FieldText) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
+
 				case SlimFieldDisplayMode.TextEdition:
 					return SlimFieldDisplayMode.Text;
 
@@ -146,6 +149,7 @@ namespace Epsitec.Common.Widgets
 			switch (this.GetActiveDisplayMode ())
 			{
 				case SlimFieldDisplayMode.Label:
+				case SlimFieldDisplayMode.LabelEdition:
 					this.PaintLabel (graphics);
 					break;
 
@@ -274,6 +278,7 @@ namespace Epsitec.Common.Widgets
 			switch (displayMode)
 			{
 				case SlimFieldDisplayMode.Label:
+				case SlimFieldDisplayMode.LabelEdition:
 					width += 6;
 					width += SlimField.Fonts.LabelFont.GetTextAdvance (this.FieldLabel) * Font.DefaultFontSize;
 					break;

@@ -190,6 +190,17 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.textField.EditionRejected  += this.HandleTextEditionRejected;
 			this.textField.TextEdited       += this.HandleTextTextEdited;
 
+			switch (this.host.DisplayMode)
+			{
+				case SlimFieldDisplayMode.Label:
+					this.host.DisplayMode = SlimFieldDisplayMode.LabelEdition;
+					break;
+
+				case SlimFieldDisplayMode.Text:
+					this.host.DisplayMode = SlimFieldDisplayMode.TextEdition;
+					break;
+			}
+
 			this.AdjustGeometry ();
 		}
 		
@@ -206,6 +217,19 @@ namespace Epsitec.Common.Widgets.Behaviors
 				
 				this.textField.Dispose ();
 				this.textField = null;
+
+				switch (this.host.DisplayMode)
+				{
+					case SlimFieldDisplayMode.LabelEdition:
+						this.host.DisplayMode = SlimFieldDisplayMode.Label;
+						break;
+
+					case SlimFieldDisplayMode.TextEdition:
+						this.host.DisplayMode = SlimFieldDisplayMode.Text;
+						break;
+				}
+
+				this.AdjustGeometry ();
 			}
 		}
 

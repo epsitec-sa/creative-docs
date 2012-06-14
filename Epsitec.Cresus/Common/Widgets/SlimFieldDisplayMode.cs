@@ -15,6 +15,8 @@ namespace Epsitec.Common.Widgets
 		/// </summary>
 		Label,
 
+		LabelEdition,
+
 		/// <summary>
 		/// Display the text value. A prefix and a suffix might be included with the text value
 		/// to make the data more meaningful.

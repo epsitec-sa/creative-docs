@@ -11,10 +11,11 @@ namespace Epsitec.Common.Widgets
 {
 	public static class SlimFieldBuilder
 	{
-		public static SlimField CreateSlimField(Caption caption)
+		public static SlimField CreateSlimField(Caption caption, SlimFieldDisplayMode displayMode)
 		{
 			var slimField = new SlimField ()
 			{
+				DisplayMode = displayMode,
 			};
 
 			new CaptionBinder (slimField, caption);
@@ -53,6 +54,7 @@ namespace Epsitec.Common.Widgets
 			switch (displayMode)
 			{
 				case SlimFieldDisplayMode.Label:
+				case SlimFieldDisplayMode.LabelEdition:
 					break;
 
 				case SlimFieldDisplayMode.TextEdition:

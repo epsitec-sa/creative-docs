@@ -793,15 +793,13 @@ namespace Epsitec.Cresus.Core
 		{
 			string value = marshaler.GetStringValue ();
 
-			var slimField = new SlimField
-			{
-				Parent = parent,
-				IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly,
-				Dock = dockStyle,
-				FieldText = value,
-				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
-				TabIndex = ++this.tabIndex,
-			};
+			var slimField = SlimFieldBuilder.CreateSlimField (caption, string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text);
+			
+			slimField.Parent = parent;
+			slimField.IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly;
+			slimField.Dock = dockStyle;
+			slimField.FieldText = value;
+			slimField.TabIndex = ++this.tabIndex;
 			
 			this.ContentListAdd (slimField);
 
@@ -811,10 +809,7 @@ namespace Epsitec.Cresus.Core
 				slimField.PreferredWidth = width;
 			}
 
-			var behavior = new SlimFieldTextBehavior (slimField)
-			{
-				Caption = caption,
-			};
+			var behavior = new SlimFieldTextBehavior (slimField);
 			
 			this.RegisterSlimField (behavior);
 			
@@ -847,15 +842,13 @@ namespace Epsitec.Cresus.Core
 			var dockStyle = DockStyle.Stacked;
 			var value = controller.ToFormattedTextConverter (controller.GetValue ()).ToSimpleText ();
 
-			var slimField = new SlimField
-			{
-				Parent = parent,
-				Dock = dockStyle,
-				IsReadOnly = this.ReadOnly || forceReadOnly,
-				FieldText = value,
-				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
-				TabIndex = ++this.tabIndex,
-			};
+			var slimField = SlimFieldBuilder.CreateSlimField (caption, string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text);
+			
+			slimField.Parent = parent;
+			slimField.Dock = dockStyle;
+			slimField.IsReadOnly = this.ReadOnly || forceReadOnly;
+			slimField.FieldText = value;
+			slimField.TabIndex = ++this.tabIndex;
 
 			foreach (var item in controller.GetPossibleItems ().Take (5))
 			{
@@ -866,10 +859,7 @@ namespace Epsitec.Cresus.Core
 //-			this.RegisterTextField (slimField);
 			this.ContentListAdd (slimField);
 
-			var behavior = new SlimFieldMenuBehavior (slimField)
-			{
-				Caption = caption
-			};
+			var behavior = new SlimFieldMenuBehavior (slimField);
 
 			behavior.Selected +=
 				delegate
