@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
+using Epsitec.Common.Support;
 using Epsitec.Common.Support.EntityEngine;
 
 using System.Collections.Generic;
@@ -25,10 +26,10 @@ namespace Epsitec.Cresus.Core.Entities
 			return TextFormatter.FormatText (this.Name, "(", this.ShortName, ")");
 		}
 
-		public override IEnumerable<FormattedText> GetFormattedEntityKeywords()
+		public override IEnumerable<TextValue> GetTextValues()
 		{
-			yield return TextFormatter.FormatText (this.Name);
-			yield return TextFormatter.FormatText (this.ShortName);
+			yield return new TextValue (TextValueCategory.Name, this.Name);
+			yield return new TextValue (TextValueCategory.Name, this.ShortName);
 		}
 
 		public override EntityStatus GetEntityStatus()
