@@ -837,6 +837,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		public void SearchClear()
 		{
+#if false
 			if (this.data.Specialist)
 			{
 				while (this.data.NodesData.Count > 1)
@@ -858,6 +859,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				this.data.TemporalData.Clear ();
 			}
+#else
+			this.data.Clear ();
+#endif
 
 			this.CreateMiddleUI ();
 			this.UpdateButtons ();

@@ -31,7 +31,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateJournalUI (this.mainFrame);
+			this.CreateJournalUI (this.firstFrame);
 		}
 
 		protected override bool HasBeginnerSpecialist
@@ -71,17 +71,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private void CreateJournalUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				TabIndex        = ++this.tabIndex,
-			};
+			var box = this.CreateBox (parent);
 
 			var label = new StaticText
 			{
-				Parent          = frame,
+				Parent          = box,
 				Text            = "Journal",
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -92,7 +86,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.comboJournaux = new TextFieldCombo
 			{
-				Parent          = frame,
+				Parent          = box,
 				PreferredWidth  = JournalOptionsController.JournauxWidth,
 				PreferredHeight = 20,
 				MenuButtonWidth = UIBuilder.ComboButtonWidth,
@@ -103,8 +97,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.summary = new StaticText
 			{
-				Parent  = frame,
-				Dock    = DockStyle.Fill,
+				Parent  = box,
+				Dock    = DockStyle.Left,
 				Margins = new Margins (20, 0, 0, 0),
 			};
 
@@ -155,6 +149,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			var journal = this.compta.Journaux.Where (x => x.Id == this.Options.JournalId).FirstOrDefault ();
 			this.summary.Text = this.période.GetJournalSummary (journal);
+			UIBuilder.AdjustWidth (this.summary);
 		}
 
 

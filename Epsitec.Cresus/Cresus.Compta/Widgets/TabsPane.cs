@@ -699,7 +699,8 @@ namespace Epsitec.Cresus.Compta.Widgets
 
 				if (backColor.IsEmpty)
 				{
-					backColor = this.Parent.BackColor;
+					var pc = this.Parent.BackColor;
+					backColor = Color.FromHsv (pc.Hue, pc.Saturation, pc.Value*0.95);
 				}
 				else
 				{

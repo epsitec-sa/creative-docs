@@ -27,7 +27,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		}
 
 
-		private void Clear()
+		public void Clear()
 		{
 			//	Vide les données et prépare une unique ligne.
 			this.nodesData.Clear ();

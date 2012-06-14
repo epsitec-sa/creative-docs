@@ -42,24 +42,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateMainUI (this.mainFrame);
+			this.CreateMainUI (this.firstFrame);
 
 			this.UpdateWidgets ();
 		}
 
 		protected void CreateMainUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.CreateCatégoriesUI (frame);
-			this.CreateSeparator (frame);
-			this.CreateDeepUI (frame);
+			this.CreateCatégoriesUI (parent);
+			this.CreateDeepUI (parent);
 		}
 
 

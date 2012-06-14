@@ -42,63 +42,61 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.mainFrame);
-			this.CreateDifférenceUI (this.mainFrame);
+			this.CreateCheckUI (this.firstFrame);
+			this.CreateDifférenceUI ();
 
 			this.UpdateWidgets ();
 		}
 
 		protected void CreateCheckUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				TabIndex        = ++this.tabIndex,
-			};
+			var box = this.CreateBox (parent);
 
 			this.montreEcrituresButton = new CheckButton
 			{
-				Parent         = frame,
+				Parent         = box,
 				FormattedText  = "Montre les écritures",
-				PreferredWidth = 160,
 				ActiveState    = this.Options.MontreEcritures ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
 			this.montantTTCButton = new CheckButton
 			{
-				Parent         = frame,
+				Parent         = box,
 				FormattedText  = "Affiche les montants TTC",
-				PreferredWidth = 180,
 				ActiveState    = this.Options.MontantTTC ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 20, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
 			this.parCodeTVAButton0 = new RadioButton
 			{
-				Parent         = frame,
+				Parent         = box,
 				FormattedText  = "Résumé par comptes",
-				PreferredWidth = 140,
 				ActiveState    = !this.Options.ParCodesTVA ? ActiveState.Yes : ActiveState.No,
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
 			this.parCodeTVAButton1 = new RadioButton
 			{
-				Parent         = frame,
+				Parent         = box,
 				FormattedText  = "Résumé par codes TVA",
-				PreferredWidth = 160,
 				ActiveState    = this.Options.ParCodesTVA ? ActiveState.Yes : ActiveState.No,
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
 				TabIndex       = ++this.tabIndex,
 			};
+
+			UIBuilder.AdjustWidth (this.montreEcrituresButton);
+			UIBuilder.AdjustWidth (this.montantTTCButton);
+			UIBuilder.AdjustWidth (this.parCodeTVAButton0);
+			UIBuilder.AdjustWidth (this.parCodeTVAButton1);
 
 			this.montreEcrituresButton.ActiveStateChanged += delegate
 			{
@@ -135,26 +133,21 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 		}
 
-		protected void CreateDifférenceUI(FrameBox parent)
+		protected void CreateDifférenceUI()
 		{
-			this.différenceFrame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 5, 0),
-				TabIndex        = ++this.tabIndex,
-			};
+			var frame = this.CreateSpecialistFrameUI ();
+			this.différenceFrame = this.CreateBox (frame);
 
 			this.différenceButton = new CheckButton
 			{
 				Parent         = this.différenceFrame,
 				FormattedText  = "Ignore les différences inférieures ou égales à",
-				PreferredWidth = 240,
 				ActiveState    = (this.Options.MontantLimite.HasValue || this.Options.PourcentLimite.HasValue) ? ActiveState.Yes : ActiveState.No,
 				Dock           = DockStyle.Left,
+				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
+			UIBuilder.AdjustWidth (this.différenceButton);
 
 			this.limiteField = new TextFieldEx
 			{
@@ -172,23 +165,23 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent          = this.différenceFrame,
 				Text            = "CHF",
-				PreferredWidth  = 50,
 				PreferredHeight = 20,
 				AutoToggle      = false,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
+				Margins         = new Margins (0, 10, 0, 0),
 			};
+			UIBuilder.AdjustWidth (this.limiteMontantRadio);
 
 			this.limitePourcentRadio = new RadioButton
 			{
 				Parent          = this.différenceFrame,
 				Text            = "%",
-				PreferredWidth  = 40,
 				PreferredHeight = 20,
 				AutoToggle      = false,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 5, 0, 0),
+				Margins         = new Margins (0, 10, 0, 0),
 			};
+			UIBuilder.AdjustWidth (this.limitePourcentRadio);
 
 			this.différenceButton.ActiveStateChanged += delegate
 			{

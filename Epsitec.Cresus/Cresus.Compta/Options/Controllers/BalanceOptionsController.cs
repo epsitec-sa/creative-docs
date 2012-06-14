@@ -41,30 +41,21 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateCheckUI (this.mainFrame);
-			this.CreateComparisonUI (this.mainFrame, ComparisonShowed.All);
+			this.CreateCheckUI (this.firstFrame);
+			this.CreateComparisonUI (ComparisonShowed.All);
 
-			var line = this.CreateSpecialistFrameUI (this.mainFrame);
+			var line = this.CreateSpecialistFrameUI ();
 			this.CreateDeepUI (line);
-			this.CreateSeparator (line);
-			this.CreateZeroFilteredUI (line);
-			this.CreateZeroDisplayedInWhiteUI (line);
+			this.CreateZeroUI (line);
 
 			this.UpdateWidgets ();
 		}
 
 		protected void CreateCheckUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				TabIndex        = ++this.tabIndex,
-			};
-
-			this.CreateGraphUI (frame);
-			this.CreateHasGraphicColumnUI (frame);
+			this.CreateGraphUI (parent);
+			this.hasGraphicColumnFrame = this.CreateHasGraphicColumnUI (parent);
+			this.CreateCatégoriesUI (parent);
 		}
 
 		protected override bool HasBeginnerSpecialist
@@ -85,14 +76,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			this.UpdateGraphWidgets ();
 			this.UpdateDeep ();
-			this.UpdateZeroFiltered ();
-			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateZero ();
 			this.UpdateHasGraphicColumn ();
+			this.UpdateCatégories ();
 			this.UpdateComparison ();
 
-			this.zeroFilteredButton.Visibility         = !this.options.ViewGraph;
+			this.hasGraphicColumnFrame.Visibility      = !this.options.ViewGraph;
 			this.zeroDisplayedInWhiteButton.Visibility = !this.options.ViewGraph;
-			this.hasGraphicColumnButton.Visibility     = !this.options.ViewGraph;
 
 			base.UpdateWidgets ();
 		}
@@ -104,5 +94,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				return this.options as BalanceOptions;
 			}
 		}
+
+
+		private FrameBox			hasGraphicColumnFrame;
 	}
 }

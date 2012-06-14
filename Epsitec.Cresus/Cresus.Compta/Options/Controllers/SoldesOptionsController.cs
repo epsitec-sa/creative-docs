@@ -43,29 +43,24 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateMainUI (this.mainFrame);
+			this.CreateMainUI (this.firstFrame);
 
 			this.UpdateWidgets ();
 		}
 
 		protected void CreateMainUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				Dock            = DockStyle.Top,
-			};
-
 			var leftFrame = new FrameBox
 			{
-				Parent          = frame,
+				Parent          = parent,
 				Dock            = DockStyle.Fill,
 			};
 
 			this.rightFrame = new FrameBox
 			{
-				Parent          = frame,
+				Parent          = parent,
 				Dock            = DockStyle.Right,
+				Padding         = new Margins (5),
 			};
 
 			var line1 = new FrameBox
@@ -77,61 +72,65 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.CreateGraphUI (line1);
 
-			new StaticText
 			{
-				Parent         = line1,
-				Text           = "Résolution",
-				PreferredWidth = 60,
-				Dock           = DockStyle.Left,
-			};
+				var box = this.CreateBox (line1);
 
-			this.resolutionField = new TextFieldCombo
-			{
-				Parent          = line1,
-				PreferredWidth  = 70,
-				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				IsReadOnly      = true,
-				Dock            = DockStyle.Left,
-				TabIndex        = ++this.tabIndex,
-				Margins         = new Margins (0, 10, 0, 0),
-			};
+				new StaticText
+				{
+					Parent         = box,
+					Text           = "Résolution",
+					PreferredWidth = 60,
+					Dock           = DockStyle.Left,
+				};
 
-			for (int i = 0; i < 5; i++)
-			{
-				int resolution = SoldesOptionsController.IndexToResolution (i);
-				this.resolutionField.Items.Add (SoldesOptions.ResolutionToDescription (resolution));
+				this.resolutionField = new TextFieldCombo
+				{
+					Parent          = box,
+					PreferredWidth  = 70,
+					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
+					IsReadOnly      = true,
+					Dock            = DockStyle.Left,
+					TabIndex        = ++this.tabIndex,
+					Margins         = new Margins (0, 10, 0, 0),
+				};
+
+				for (int i = 0; i < 5; i++)
+				{
+					int resolution = SoldesOptionsController.IndexToResolution (i);
+					this.resolutionField.Items.Add (SoldesOptions.ResolutionToDescription (resolution));
+				}
+
+				new StaticText
+				{
+					Parent         = box,
+					Text           = "Tranches",
+					PreferredWidth = 50,
+					Dock           = DockStyle.Left,
+				};
+
+				this.countField = new TextFieldEx
+				{
+					Parent                       = box,
+					PreferredWidth               = 60,
+					PreferredHeight              = 20,
+					Dock                         = DockStyle.Left,
+					DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
+					SwallowEscapeOnRejectEdition = true,
+					SwallowReturnOnAcceptEdition = true,
+					TabIndex                     = ++this.tabIndex,
+					Margins                      = new Margins (0, 20, 0, 0),
+				};
+
+				this.cumulButton = new CheckButton
+				{
+					Parent         = box,
+					FormattedText  = "Chiffres cumulés",
+					PreferredWidth = 100,
+					Dock           = DockStyle.Left,
+					TabIndex       = ++this.tabIndex,
+				};
 			}
-
-			new StaticText
-			{
-				Parent         = line1,
-				Text           = "Tranches",
-				PreferredWidth = 50,
-				Dock           = DockStyle.Left,
-			};
-
-			this.countField = new TextFieldEx
-			{
-				Parent                       = line1,
-				PreferredWidth               = 60,
-				PreferredHeight              = 20,
-				Dock                         = DockStyle.Left,
-				DefocusAction                = DefocusAction.AutoAcceptOrRejectEdition,
-				SwallowEscapeOnRejectEdition = true,
-				SwallowReturnOnAcceptEdition = true,
-				TabIndex                     = ++this.tabIndex,
-				Margins                      = new Margins (0, 20, 0, 0),
-			};
-
-			this.cumulButton = new CheckButton
-			{
-				Parent         = line1,
-				FormattedText  = "Chiffres cumulés",
-				PreferredWidth = 100,
-				Dock           = DockStyle.Left,
-				TabIndex       = ++this.tabIndex,
-			};
 
 			this.resolutionField.SelectedItemChanged += delegate
 			{

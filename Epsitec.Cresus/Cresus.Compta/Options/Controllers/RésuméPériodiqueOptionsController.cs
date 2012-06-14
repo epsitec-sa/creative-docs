@@ -42,100 +42,94 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateMainUI (this.mainFrame);
+			this.CreateMainUI (this.firstFrame);
 
-			var line = this.CreateSpecialistFrameUI (this.mainFrame);
+			var line = this.CreateSpecialistFrameUI ();
 			this.CreateCatégoriesUI (line);
-			this.CreateSeparator (line);
-			this.CreateDeepUI (line);
 
-			line = this.CreateSpecialistFrameUI (this.mainFrame);
-			this.CreateZeroFilteredUI (line);
-			this.CreateZeroDisplayedInWhiteUI (line);
+			line = this.CreateSpecialistFrameUI ();
+			this.CreateDeepUI (line);
+			this.CreateZeroUI (line);
 
 			this.UpdateWidgets ();
 		}
 
 		protected void CreateMainUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				TabIndex        = ++this.tabIndex,
-			};
+			this.CreateGraphUI (parent);
 
-			this.CreateGraphUI (frame);
-
-			var lp = new StaticText
 			{
-				Parent         = frame,
-				Text           = "Périodicité",
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-			};
-			UIBuilder.AdjustWidth (lp);
+				var box = this.CreateBox (parent);
 
-			this.monthsField = new TextFieldCombo
-			{
-				Parent          = frame,
-				PreferredWidth  = 100,
-				PreferredHeight = 20,
-				MenuButtonWidth = UIBuilder.ComboButtonWidth,
-				IsReadOnly      = true,
-				Dock            = DockStyle.Left,
-				TabIndex        = ++this.tabIndex,
-				Margins         = new Margins (0, 20, 0, 0),
-			};
+				var lp = new StaticText
+				{
+					Parent         = box,
+					Text           = "Périodicité",
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (0, 10, 0, 0),
+				};
+				UIBuilder.AdjustWidth (lp);
 
-			for (int i = 0; i < 5; i++)
-			{
-				int months = RésuméPériodiqueOptionsController.IndexToMonths (i);
-				this.monthsField.Items.Add (RésuméPériodiqueOptions.MonthsToDescription (months));
+				this.monthsField = new TextFieldCombo
+				{
+					Parent          = box,
+					PreferredWidth  = 100,
+					PreferredHeight = 20,
+					MenuButtonWidth = UIBuilder.ComboButtonWidth,
+					IsReadOnly      = true,
+					Dock            = DockStyle.Left,
+					TabIndex        = ++this.tabIndex,
+				};
+
+				for (int i = 0; i < 5; i++)
+				{
+					int months = RésuméPériodiqueOptionsController.IndexToMonths (i);
+					this.monthsField.Items.Add (RésuméPériodiqueOptions.MonthsToDescription (months));
+				}
+
+				this.cumulButton = new CheckButton
+				{
+					Parent         = box,
+					Text           = "Chiffres cumulés",
+					Dock           = DockStyle.Left,
+					Margins         = new Margins (20, 0, 0, 0),
+					TabIndex       = ++this.tabIndex,
+				};
+				UIBuilder.AdjustWidth (this.cumulButton);
 			}
 
-			this.cumulButton = new CheckButton
 			{
-				Parent         = frame,
-				Text           = "Chiffres cumulés",
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = ++this.tabIndex,
-			};
-			UIBuilder.AdjustWidth (this.cumulButton);
+				this.graphBox = this.CreateBox (parent);
 
-			this.CreateSeparator (frame);
+				var label = new StaticText
+				{
+					Parent         = this.graphBox,
+					FormattedText  = "Graphiques",
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (0, 10, 0, 0),
+					TabIndex       = ++this.tabIndex,
+				};
+				UIBuilder.AdjustWidth (label);
 
-			this.graphLabel = new StaticText
-			{
-				Parent         = frame,
-				FormattedText  = "Graphiques",
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = ++this.tabIndex,
-			};
-			UIBuilder.AdjustWidth (this.graphLabel);
+				this.stackedGraphButton = new CheckButton
+				{
+					Parent         = this.graphBox,
+					FormattedText  = "cumulés",
+					Dock           = DockStyle.Left,
+					Margins        = new Margins (0, 10, 0, 0),
+					TabIndex       = ++this.tabIndex,
+				};
+				UIBuilder.AdjustWidth (this.stackedGraphButton);
 
-			this.stackedGraphButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Cumulés",
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = ++this.tabIndex,
-			};
-			UIBuilder.AdjustWidth (this.stackedGraphButton);
-
-			this.sideBySideGraphButton = new CheckButton
-			{
-				Parent         = frame,
-				FormattedText  = "Côte à côte",
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = ++this.tabIndex,
-			};
-			UIBuilder.AdjustWidth (this.sideBySideGraphButton);
+				this.sideBySideGraphButton = new CheckButton
+				{
+					Parent         = this.graphBox,
+					FormattedText  = "côte à côte",
+					Dock           = DockStyle.Left,
+					TabIndex       = ++this.tabIndex,
+				};
+				UIBuilder.AdjustWidth (this.sideBySideGraphButton);
+			}
 
 			this.monthsField.SelectedItemChanged += delegate
 			{
@@ -211,17 +205,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			this.UpdateGraphWidgets ();
 			this.UpdateCatégories ();
 			this.UpdateDeep ();
-			this.UpdateZeroFiltered ();
-			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateZero ();
 
 			using (this.ignoreChanges.Enter ())
 			{
-				this.cumulButton.Visibility                = !this.options.ViewGraph;
-				this.zeroFilteredButton.Visibility         = !this.options.ViewGraph;
-				this.zeroDisplayedInWhiteButton.Visibility = !this.options.ViewGraph;
-				this.graphLabel.Visibility                 = !this.options.ViewGraph;
-				this.stackedGraphButton.Visibility         = !this.options.ViewGraph;
-				this.sideBySideGraphButton.Visibility      = !this.options.ViewGraph;
+				this.cumulButton.Visibility        = !this.options.ViewGraph;
+				this.zeroFilteredButton.Visibility = !this.options.ViewGraph;
+				this.graphBox.Visibility           = !this.options.ViewGraph;
 
 				this.monthsField.Text = RésuméPériodiqueOptions.MonthsToDescription (this.Options.NumberOfMonths);
 				this.cumulButton.ActiveState           = this.Options.Cumul              ? ActiveState.Yes : ActiveState.No;
@@ -269,7 +259,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 		private TextFieldCombo		monthsField;
 		private CheckButton			cumulButton;
-		private StaticText			graphLabel;
+		private FrameBox			graphBox;
 		private CheckButton			stackedGraphButton;
 		private CheckButton			sideBySideGraphButton;
 	}

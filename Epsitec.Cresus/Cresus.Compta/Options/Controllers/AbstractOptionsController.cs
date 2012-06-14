@@ -156,8 +156,10 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			{
 				Parent         = this.toolbar,
 				Dock           = DockStyle.Fill,
-				Padding        = new Margins (5),
+				Margins        = new Margins (-1, -1, 0, 1),
 			};
+
+			this.CreateFirstFrame ();
 
 			var topPanelRightFrame = new FrameBox
 			{
@@ -199,6 +201,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		public void ClearAction()
 		{
 			this.options.Clear ();
+			this.ShowArrayOrGraph ();
 			this.OptionsChanged ();
 		}
 
@@ -229,80 +232,69 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		}
 
 
-		#region ZeroFiltered
-		protected void CreateZeroFilteredUI(FrameBox parent)
+		#region Zero
+		protected void CreateZeroUI(FrameBox parent)
 		{
+			var box = this.CreateBox (parent);
+
 			this.zeroFilteredButton = new CheckButton
 			{
-				Parent         = parent,
+				Parent         = box,
 				FormattedText  = "Cacher les comptes dont le solde est nul",
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
+				TabIndex       = ++this.tabIndex,
+			};
+
+			this.zeroDisplayedInWhiteButton = new CheckButton
+			{
+				Parent         = box,
+				FormattedText  = "Afficher en blanc les montants nuls",
+				AutoToggle     = false,
+				Dock           = DockStyle.Left,
+				Margins        = new Margins (10, 0, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
 			UIBuilder.AdjustWidth (this.zeroFilteredButton);
+			UIBuilder.AdjustWidth (this.zeroDisplayedInWhiteButton);
 
 			this.zeroFilteredButton.Clicked += delegate
 			{
 				this.options.ZeroFiltered = !this.options.ZeroFiltered;
-				this.UpdateZeroFiltered ();
+				this.UpdateZero ();
 				this.OptionsChanged ();
 			};
-
-			this.UpdateZeroFiltered ();
-		}
-
-		protected void UpdateZeroFiltered()
-		{
-			this.zeroFilteredButton.ActiveState = this.options.ZeroFiltered ? ActiveState.Yes : ActiveState.No;
-		}
-		#endregion
-
-
-		#region ZeroDisplayedInWhite
-		protected void CreateZeroDisplayedInWhiteUI(FrameBox parent)
-		{
-			this.zeroDisplayedInWhiteButton = new CheckButton
-			{
-				Parent         = parent,
-				FormattedText  = "Afficher en blanc les montants nuls",
-				AutoToggle     = false,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
-				TabIndex       = ++this.tabIndex,
-			};
-
-			UIBuilder.AdjustWidth (this.zeroDisplayedInWhiteButton);
 
 			this.zeroDisplayedInWhiteButton.Clicked += delegate
 			{
 				this.options.ZeroDisplayedInWhite = !this.options.ZeroDisplayedInWhite;
-				this.UpdateZeroDisplayedInWhite ();
+				this.UpdateZero ();
 				this.OptionsChanged ();
 			};
 
-			this.UpdateZeroDisplayedInWhite ();
+			this.UpdateZero ();
 		}
 
-		protected void UpdateZeroDisplayedInWhite()
+		protected void UpdateZero()
 		{
+			this.zeroFilteredButton.ActiveState = this.options.ZeroFiltered ? ActiveState.Yes : ActiveState.No;
 			this.zeroDisplayedInWhiteButton.ActiveState = this.options.ZeroDisplayedInWhite ? ActiveState.Yes : ActiveState.No;
 		}
 		#endregion
 
 
 		#region HasGraphicColumn
-		protected void CreateHasGraphicColumnUI(FrameBox parent)
+		protected FrameBox CreateHasGraphicColumnUI(FrameBox parent)
 		{
+			var box = this.CreateBox (parent);
+
 			this.hasGraphicColumnButton = new CheckButton
 			{
-				Parent         = parent,
+				Parent         = box,
 				FormattedText  = "Graphique du solde",
 				AutoToggle     = false,
 				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 10, 0, 0),
 				TabIndex       = ++this.tabIndex,
 			};
 
@@ -316,6 +308,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			this.UpdateHasGraphicColumn ();
+
+			return box;
 		}
 
 		protected void UpdateHasGraphicColumn()
@@ -328,9 +322,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#region Catégories
 		protected void CreateCatégoriesUI(FrameBox parent)
 		{
+			var box = this.CreateBox (parent);
+
 			this.catégorieActifButton = new CheckButton
 			{
-				Parent      = parent,
+				Parent      = box,
 				Text        = Converters.CatégorieToString (CatégorieDeCompte.Actif),
 				AutoToggle  = false,
 				Dock        = DockStyle.Left,
@@ -340,7 +336,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.catégoriePassifButton = new CheckButton
 			{
-				Parent      = parent,
+				Parent      = box,
 				Text        = Converters.CatégorieToString (CatégorieDeCompte.Passif),
 				AutoToggle  = false,
 				Dock        = DockStyle.Left,
@@ -350,7 +346,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.catégorieChargeButton = new CheckButton
 			{
-				Parent      = parent,
+				Parent      = box,
 				Text        = Converters.CatégorieToString (CatégorieDeCompte.Charge),
 				AutoToggle  = false,
 				Dock        = DockStyle.Left,
@@ -360,7 +356,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.catégorieProduitButton = new CheckButton
 			{
-				Parent      = parent,
+				Parent      = box,
 				Text        = Converters.CatégorieToString (CatégorieDeCompte.Produit),
 				AutoToggle  = false,
 				Dock        = DockStyle.Left,
@@ -370,11 +366,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.catégorieExploitationButton = new CheckButton
 			{
-				Parent      = parent,
+				Parent      = box,
 				Text        = Converters.CatégorieToString (CatégorieDeCompte.Exploitation),
 				AutoToggle  = false,
 				Dock        = DockStyle.Left,
-				Margins     = new Margins (0, 10, 0, 0),
+				Margins     = new Margins (0, 0, 0, 0),
 				TabIndex    = ++this.tabIndex,
 			};
 
@@ -436,9 +432,11 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#region Deep
 		protected void CreateDeepUI(FrameBox parent)
 		{
+			var box = this.CreateBox (parent);
+
 			var fromLabel = new StaticText
 			{
-				Parent         = parent,
+				Parent         = box,
 				Text           = "Profondeur de",
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
@@ -447,7 +445,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.deepFromField = new TextFieldCombo
 			{
-				Parent          = parent,
+				Parent          = box,
 				IsReadOnly      = true,
 				PreferredWidth  = 50,
 				PreferredHeight = 20,
@@ -459,8 +457,8 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			var toLabel = new StaticText
 			{
-				Parent         = parent,
-				Text           = "À",
+				Parent         = box,
+				Text           = "à",
 				Dock           = DockStyle.Left,
 				Margins        = new Margins (0, 10, 0, 0),
 			};
@@ -468,7 +466,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.deepToField = new TextFieldCombo
 			{
-				Parent          = parent,
+				Parent          = box,
 				IsReadOnly      = true,
 				PreferredWidth  = 50,
 				PreferredHeight = 20,
@@ -480,13 +478,12 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.deepClearButton = new IconButton
 			{
-				Parent          = parent,
+				Parent          = box,
 				IconUri         = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				AutoFocus       = false,
 				PreferredWidth  = 20,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
 				TabIndex        = ++this.tabIndex,
 			};
 
@@ -590,13 +587,15 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#endregion
 
 		#region Comparaison
-		protected FrameBox CreateComparisonUI(FrameBox parent, ComparisonShowed possibleMode)
+		protected FrameBox CreateComparisonUI(ComparisonShowed possibleMode)
 		{
-			this.comparisonFrame = this.CreateSpecialistFrameUI(parent);
+			var frame = this.CreateSpecialistFrameUI ();
+			var box = this.CreateBox (frame);
+			box.DrawFullFrame = false;
 
 			this.buttonComparisonEnable = new CheckButton
 			{
-				Parent          = this.comparisonFrame,
+				Parent          = box,
 				PreferredWidth  = 120,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
@@ -604,14 +603,14 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 			};
 
 			{
-				this.frameComparisonShowed = UIBuilder.CreatePseudoCombo (this.comparisonFrame, out this.fieldComparisonShowed, out this.buttonComparisonShowed);
+				this.frameComparisonShowed = UIBuilder.CreatePseudoCombo (box, out this.fieldComparisonShowed, out this.buttonComparisonShowed);
 				this.frameComparisonShowed.PreferredWidth = 150;
 				this.frameComparisonShowed.Margins = new Margins (0, 20, 0, 0);
 			}
 
 			this.labelComparisonDisplayMode = new StaticText
 			{
-				Parent         = this.comparisonFrame,
+				Parent         = box,
 				FormattedText  = "Affichage",
 				PreferredWidth = 55,
 				Dock           = DockStyle.Left,
@@ -619,7 +618,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.fieldComparisonDisplayMode = new TextFieldCombo
 			{
-				Parent          = this.comparisonFrame,
+				Parent          = box,
 				IsReadOnly      = true,
 				PreferredWidth  = 150,
 				PreferredHeight = 20,
@@ -661,15 +660,13 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				}
 			};
 
-			return this.comparisonFrame;
+			return box;
 		}
 
 		protected void UpdateComparison()
 		{
 			using (this.ignoreChanges.Enter ())
 			{
-				this.comparisonFrame.Visibility = this.topPanelLeftController.Specialist;
-
 				bool enable = this.options.ComparisonEnable;
 
 				this.buttonComparisonEnable.ActiveState = this.options.ComparisonEnable ? ActiveState.Yes : ActiveState.No;
@@ -752,54 +749,19 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#endregion
 
 
-		protected FrameBox CreateSpecialistFrameUI(FrameBox parent)
-		{
-			var frame = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 20,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 5, 0),
-				TabIndex        = ++this.tabIndex,
-				Visibility      = false,
-			};
-
-			this.specialistFrames.Add (frame);
-
-			return frame;
-		}
-
-		protected void CreateSeparator(FrameBox parent)
-		{
-			new Separator
-			{
-				Parent          = parent,
-				PreferredWidth  = 1,
-				IsVerticalLine  = true,
-				Dock            = DockStyle.Left,
-				Margins         = new Margins (0, 10, 0, 0),
-			};
-		}
-
-
 		#region Graph
 		protected FrameBox CreateGraphUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent         = parent,
-				PreferredWidth = 40,
-				Dock           = DockStyle.Left,
-				Margins        = new Margins (0, 20, 0, 0),
-			};
+			var box = this.CreateBox (parent);
+			box.PreferredWidth = 40;
 
-			this.viewArrayButton = this.CreateButton (frame, "View.Array", "Montre le tableau");
-			this.viewGraphButton = this.CreateButton (frame, "View.Graph", "Montre le graphique");
+			this.viewArrayButton = this.CreateButton (box, "View.Array", "Montre le tableau");
+			this.viewGraphButton = this.CreateButton (box, "View.Graph", "Montre le graphique");
 			this.viewGraphButton.Margins = new Margins (2, 0, 0, 0);
 
 			this.showCommonGraphButton = new BackIconButton
 			{
-				Parent          = frame,
+				Parent          = box,
 				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Common"),
 				BackColor       = UIBuilder.SelectionColor,
 				PreferredWidth  = 20,
@@ -812,7 +774,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			this.showDetailedGraphButton = new BackIconButton
 			{
-				Parent          = frame,
+				Parent          = box,
 				IconUri         = UIBuilder.GetResourceIconUri ("View.Graph.Detailed"),
 				BackColor       = UIBuilder.SelectionColor,
 				PreferredWidth  = 20,
@@ -870,7 +832,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 				this.UpdateGraphWidgets ();
 			};
 
-			return frame;
+			return box;
 		}
 
 		private void ShowHideControllers()
@@ -936,6 +898,52 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		#endregion
 
 
+		protected void CreateFirstFrame()
+		{
+			this.firstFrame = new FrameBox
+			{
+				Parent          = this.mainFrame,
+				DrawFullFrame   = true,
+				PreferredHeight = 5+20+5,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 0, -1),
+				TabIndex        = ++this.tabIndex,
+			};
+		}
+
+		protected FrameBox CreateSpecialistFrameUI()
+		{
+			var frame = new FrameBox
+			{
+				Parent          = this.mainFrame,
+				DrawFullFrame   = true,
+				PreferredHeight = 5+20+5,
+				Dock            = DockStyle.Top,
+				Margins         = new Margins (0, 0, 0, -1),
+				TabIndex        = ++this.tabIndex,
+				Visibility      = false,
+			};
+
+			this.specialistFrames.Add (frame);
+
+			return frame;
+		}
+
+		protected FrameBox CreateBox(FrameBox parent)
+		{
+			return new FrameBox
+			{
+				Parent          = parent,
+				DrawFullFrame   = true,
+				PreferredHeight = 5+20+5,
+				Dock            = DockStyle.Left,
+				Margins         = new Margins (0, -1, 0, 0),
+				Padding         = new Margins (10, 10, 5, 5),
+				TabIndex        = ++this.tabIndex,
+			};
+		}
+
+
 		private BackIconButton CreateButton(FrameBox parent, string icon, string description)
 		{
 			var button = new BackIconButton
@@ -969,7 +977,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		protected FrameBox										toolbar;
 		protected FrameBox										graphbar;
 		protected FrameBox										mainFrame;
-		protected FrameBox										comparisonFrame;
+		protected FrameBox										firstFrame;
 
 		protected CheckButton									zeroFilteredButton;
 		protected CheckButton									zeroDisplayedInWhiteButton;

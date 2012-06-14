@@ -328,6 +328,11 @@ namespace Epsitec.Cresus.Compta.Accessors
 			//	a été décidé de mettre la plupart des choix concernant le filtre dans les options !
 			this.mergedFilterData = this.filterData.CopyFrom ();
 
+			if (!this.filterData.Enable)
+			{
+				this.mergedFilterData.Clear ();
+			}
+
 			if (this.options != null)
 			{
 				if (this.options.Catégories != CatégorieDeCompte.Tous)

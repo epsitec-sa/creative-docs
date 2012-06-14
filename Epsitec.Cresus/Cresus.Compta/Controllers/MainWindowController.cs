@@ -251,6 +251,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			this.temporalData.Clear ();
 			this.toolbarController.UpdateTemporalFilter ();
+			this.TemporalDataChanged ();
 
 			if (this.controller != null)
 			{

@@ -45,45 +45,40 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 		{
 			base.CreateUI (parent, optionsChanged);
 
-			this.CreateEditionUI (this.mainFrame);
+			this.CreateEditionUI (this.firstFrame);
 		}
 
 		private void CreateEditionUI(FrameBox parent)
 		{
-			var frame = new FrameBox
-			{
-				Parent   = parent,
-				Dock     = DockStyle.Top,
-				TabIndex = ++this.tabIndex,
-			};
-
-			this.CreateGraphUI (frame);
-			this.CreateCompteUI (frame);
-			this.CreateHasGraphicColumnUI (frame);
+			this.CreateGraphUI (parent);
+			this.CreateCompteUI (parent);
+			this.CreateHasGraphicColumnUI (parent);
 
 			this.UpdateWidgets ();
 		}
 
 		private void CreateCompteUI(FrameBox parent)
 		{
+			var box = this.CreateBox (parent);
+
 			var label = new StaticText
 			{
-				Parent          = parent,
+				Parent          = box,
 				FormattedText   = FormattedText.Concat ("Compte"),
 				Dock            = DockStyle.Left,
 				Margins         = new Margins (0, 10, 0, 0),
 			};
 			UIBuilder.AdjustWidth (label);
 
-			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, parent, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
+			this.compteController = UIBuilder.CreateAutoCompleteField (this.controller, box, this.NuméroCompte, "Compte", this.ValidateCompteAction, this.CompteChangedAction);
 			this.compteController.Box.Dock = DockStyle.Left;
 
 			this.summaryLabel = new StaticText
 			{
-				Parent          = parent,
+				Parent          = box,
 				TextBreakMode   = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
 				Dock            = DockStyle.Left,
-				Margins         = new Margins (10, 20, 0, 0),
+				Margins         = new Margins (10, 0, 0, 0),
 			};
 
 			this.UpdateComptes ();
