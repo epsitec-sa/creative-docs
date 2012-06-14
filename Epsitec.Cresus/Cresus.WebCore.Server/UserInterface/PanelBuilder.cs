@@ -110,11 +110,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 				td => td.ToTiles
 				(
 					entity,
-					e => this.GetEntityId (e),
-					(t, u) => this.GetIconClass (t, u),
-					t => this.GetTypeName (t),
-					e => this.BuildEditionTiles (e),
-					t => this.GetEntities (t)
+					this.GetEntityId,
+					this.GetIconClass,
+					this.GetTypeName,
+					this.BuildEditionTiles,
+					this.GetEntities
 				)
 			);
 		}
