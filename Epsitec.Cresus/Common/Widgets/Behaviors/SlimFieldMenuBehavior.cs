@@ -64,7 +64,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 
 			if (changed)
 			{
-				this.host.FieldText = item.Text;
+				this.host.FieldText = item.Texts.FirstOrDefault ();
 				this.OnSelected ();
 				this.host.UpdatePreferredSize ();
 				this.host.Invalidate ();

@@ -443,6 +443,7 @@
     <Compile Include="Support\Extensions\ExceptionExtensions.cs" />
     <Compile Include="Support\FormatTokenFormatterResolver.cs" />
     <Compile Include="Support\InterfaceImplementationResolver.cs" />
+    <Compile Include="Support\StringArray.cs" />
     <Compile Include="Support\TextFormat.cs" />
     <Compile Include="Support\TextValue.cs" />
     <Compile Include="Support\TextValueCategory.cs" />
@@ -887,6 +888,7 @@
     <Compile Include="Types\Collections\ReadOnlyDictionary.cs" />
     <Compile Include="Types\Collections\ReadOnlyList.cs" />
     <Compile Include="Types\Collections\ReadOnlyObservableList.cs" />
+    <Compile Include="Types\Collections\SingleValueEnumerable.cs" />
     <Compile Include="Types\Collections\StructuredTypeFieldCollection.cs" />
     <Compile Include="Types\Collections\WeakList.cs" />
     <Compile Include="Types\CollectionType.cs" />

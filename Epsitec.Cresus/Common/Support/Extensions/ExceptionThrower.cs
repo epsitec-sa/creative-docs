@@ -1,6 +1,9 @@
 ﻿//	Copyright © 2011-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Marc BETTEX, Maintainer: Marc BETTEX
 
+using System.Collections.Generic;
+using System.Linq;
+
 namespace Epsitec.Common.Support.Extensions
 {
 	/// <summary>
@@ -73,6 +76,15 @@ namespace Epsitec.Common.Support.Extensions
 			if (condition (element))
 			{
 				throw new System.ArgumentException (message);
+			}
+		}
+
+		public static void ThrowIfAnyNull<T>(this IEnumerable<T> collection, string elementName)
+			where T : class
+		{
+			if (collection.Any (x => x == null))
+			{
+				throw new System.ArgumentNullException (elementName, "Collection contains a null item");
 			}
 		}
 

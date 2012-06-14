@@ -344,7 +344,7 @@ namespace Epsitec.Common.Widgets
 					yield return new System.Tuple<Font, string, SlimFieldMenuItem> (SlimField.Fonts.MenuFont, SlimField.Strings.MenuSeparator, null);
 				}
 
-				yield return new System.Tuple<Font, string, SlimFieldMenuItem> (SlimField.GetMenuItemFont (item), item.Text, item);
+				yield return new System.Tuple<Font, string, SlimFieldMenuItem> (SlimField.GetMenuItemFont (item), item.Texts.FirstOrDefault (), item);
 			}
 		}
 
