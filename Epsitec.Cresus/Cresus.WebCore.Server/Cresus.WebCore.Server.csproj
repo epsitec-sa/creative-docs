@@ -66,6 +66,8 @@
     <Compile Include="NancyHosting\Dumper.cs" />
     <Compile Include="NGinxServer.cs" />
     <Compile Include="Tools.cs" />
+    <Compile Include="UserInterface\AbstractLambdaCache.cs" />
+    <Compile Include="UserInterface\AbstractLambdaCache`1.cs" />
     <Compile Include="UserInterface\PropertyAccessor\FieldType.cs" />
     <Compile Include="UserInterface\PropertyAccessor\FieldTypeSelector.cs" />
     <Compile Include="UserInterface\PropertyAccessor\AbstractMarshalerFactory.cs" />
