@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -12,6 +12,6 @@ namespace Epsitec.Cresus.Core.Library.UI
 {
 	internal sealed class Properties : DependencyObject
 	{
-		public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty<Properties>.RegisterAttached ("isWindowPositionSaverActive", typeof (bool));
+		public static readonly DependencyProperty		IsWindowPositionSaverActiveProperty	= DependencyProperty<Properties>.RegisterAttached<bool> ("isWindowPositionSaverActive");
 	}
 }

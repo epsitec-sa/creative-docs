@@ -156,7 +156,7 @@ namespace Epsitec.Cresus.Core.Data
 
 		public event EventHandler				LockStateChanged;
 
-		public static readonly DependencyProperty LockMonitorProperty = DependencyProperty<LockMonitor>.RegisterAttached ("LockMonitor", typeof (LockMonitor));
+		public static readonly DependencyProperty LockMonitorProperty = DependencyProperty<LockMonitor>.RegisterAttached<LockMonitor> ("LockMonitor");
 
 		private readonly string[]				lockNames;
 		private readonly DataInfrastructure		dataInfrastructure;

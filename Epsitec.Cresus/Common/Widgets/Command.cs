@@ -1,4 +1,4 @@
-//	Copyright © 2003-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2003-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -673,10 +673,10 @@ namespace Epsitec.Common.Widgets
 		public static readonly DependencyProperty CaptionProperty	= DependencyProperty<Command>.RegisterReadOnly (x => x.Caption, new DependencyPropertyMetadata (Command.GetCaptionValue));
 		public static readonly DependencyProperty CommandIdProperty	= DependencyProperty<Command>.RegisterReadOnly (x => x.CommandId, new DependencyPropertyMetadata (Command.GetCommandIdValue));
 		
-		public static readonly DependencyProperty GroupProperty			   = DependencyProperty<Command>.RegisterAttached ("Group", typeof (string));
-		public static readonly DependencyProperty StatefullProperty		   = DependencyProperty<Command>.RegisterAttached ("Statefull", typeof (bool), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty<Command>.RegisterAttached ("HideWhenDisabled", typeof (bool), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty<Command>.RegisterAttached ("DefaultParameter", typeof (string));
+		public static readonly DependencyProperty GroupProperty			   = DependencyProperty<Command>.RegisterAttached<string> ("Group");
+		public static readonly DependencyProperty StatefullProperty		   = DependencyProperty<Command>.RegisterAttached<bool> ("Statefull");
+		public static readonly DependencyProperty HideWhenDisabledProperty = DependencyProperty<Command>.RegisterAttached<bool> ("HideWhenDisabled");
+		public static readonly DependencyProperty DefaultParameterProperty = DependencyProperty<Command>.RegisterAttached<string> ("DefaultParameter");
 		
 		private static int nextUniqueId;
 

@@ -28,13 +28,13 @@ namespace Epsitec.Common.Types
 			System.Type propertyType = typeof (TResult);
 			System.Type ownerType    = typeof (T);
 
-			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
+			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata (default (TResult)));
 		}
 
 		public static DependencyProperty Register<TResult>(Expression<System.Func<T, TResult>> expression, System.Func<T, TResult> getValueOverrideCallback)
 		{
 			return DependencyProperty<T>.Register<TResult> (expression,
-				new DependencyPropertyMetadata (getValueOverrideCallback));
+				new DependencyPropertyMetadata (default (TResult), x => getValueOverrideCallback (x as T)));
 		}
 
 		public static DependencyProperty Register<TResult>(Expression<System.Func<T, TResult>> expression,
@@ -43,7 +43,7 @@ namespace Epsitec.Common.Types
 			System.Action<DependencyObject, object, object> genericPropertyInvalidatedCallback = (s, a, b) => propertyInvalidatedCallback ((T) s, (TResult) a, (TResult) b);
 
 			return DependencyProperty<T>.Register<TResult> (expression,
-				new DependencyPropertyMetadata (getValueOverrideCallback,
+				new DependencyPropertyMetadata (default (TResult), x => getValueOverrideCallback (x as T),
 					new PropertyInvalidatedCallback (genericPropertyInvalidatedCallback)));
 		}
 
@@ -60,7 +60,7 @@ namespace Epsitec.Common.Types
 			string expressionName = ExpressionAnalyzer.GetLambdaPropertyInfo (expression).Name;
 			System.Type ownerType = typeof (T);
 
-			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
+			return DependencyProperty.Register (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata (default (TResult)));
 		}
 
 		/// <summary>
@@ -77,28 +77,31 @@ namespace Epsitec.Common.Types
 			System.Type propertyType = typeof (TResult);
 			System.Type ownerType    = typeof (T);
 
-			return DependencyProperty.RegisterReadOnly (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterReadOnly (expressionName, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata (default (TResult)));
 		}
 
 		public static DependencyProperty RegisterReadOnly<TResult>(Expression<System.Func<T, TResult>> expression, System.Func<T, TResult> getValueOverrideCallback)
 		{
 			return DependencyProperty<T>.RegisterReadOnly<TResult> (expression,
-				new DependencyPropertyMetadata (getValueOverrideCallback));
+				new DependencyPropertyMetadata (default (TResult), x => getValueOverrideCallback (x as T)));
 		}
 
 
 		/// <summary>
 		/// Registers an attached property.
 		/// </summary>
+		/// <typeparam name="TResult">The type of the result.</typeparam>
 		/// <param name="name">The name of the property.</param>
-		/// <param name="propertyType">The type of the property.</param>
 		/// <param name="metadata">The optional metadata.</param>
-		/// <returns>The dependency property.</returns>
-		public static DependencyProperty RegisterAttached(string name, System.Type propertyType, DependencyPropertyMetadata metadata = null)
+		/// <returns>
+		/// The dependency property.
+		/// </returns>
+		public static DependencyProperty RegisterAttached<TResult>(string name, DependencyPropertyMetadata metadata = null)
 		{
 			System.Type ownerType    = typeof (T);
+			System.Type propertyType = typeof (TResult);
 
-			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata ());
+			return DependencyProperty.RegisterAttached (name, propertyType, ownerType, metadata ?? new DependencyPropertyMetadata (default (TResult)));
 		}
 	}
 }

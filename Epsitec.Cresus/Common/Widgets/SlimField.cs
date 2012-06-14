@@ -5,9 +5,12 @@ using Epsitec.Common.Drawing;
 using Epsitec.Common.Support;
 using Epsitec.Common.Support.Extensions;
 using Epsitec.Common.Types;
+using Epsitec.Common.Widgets;
 
 using System.Collections.Generic;
 using System.Linq;
+
+[assembly:DependencyClass (typeof (SlimField))]
 
 namespace Epsitec.Common.Widgets
 {
@@ -61,8 +64,21 @@ namespace Epsitec.Common.Widgets
 
 		public SlimFieldDisplayMode				DisplayMode
 		{
-			get;
-			set;
+			get
+			{
+				return this.GetValue<SlimFieldDisplayMode> (SlimField.DisplayModeProperty);
+			}
+			set
+			{
+				if (value == SlimFieldDisplayMode.Label)
+				{
+					this.ClearValue (SlimField.DisplayModeProperty);
+				}
+				else
+				{
+					this.SetValue (SlimField.DisplayModeProperty, value);
+				}
+			}
 		}
 
 		public bool								IsReadOnly
@@ -102,15 +118,17 @@ namespace Epsitec.Common.Widgets
 		{
 			var mode = this.DisplayMode;
 
-			if (mode == SlimFieldDisplayMode.Label)
+			switch (mode)
 			{
-				if (string.IsNullOrEmpty (this.FieldText) == false)
-				{
-					mode = SlimFieldDisplayMode.Text;
-				}
-			}
+				case SlimFieldDisplayMode.Label:
+					return string.IsNullOrEmpty (this.FieldText) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 
-			return mode;
+				case SlimFieldDisplayMode.TextEdition:
+					return SlimFieldDisplayMode.Text;
+
+				default:
+					return mode;
+			}
 		}
 
 		public SlimFieldMenuItem DetectMenuItem(Point pos)
@@ -388,8 +406,26 @@ namespace Epsitec.Common.Widgets
 			public static readonly Font			SelectedExtraFont = Font.GetFont ("Segoe UI", "Bold Italic");
 		}
 
+
+		public event EventHandler<DependencyPropertyChangedEventArgs> DisplayModeChanged
+		{
+			add
+			{
+				this.AddEventHandler (SlimField.DisplayModeProperty, value);
+			}
+			remove
+			{
+				this.RemoveEventHandler (SlimField.DisplayModeProperty, value);
+			}
+		}
+
+
 		private const int						MarginX = 3;
 		private const int						MarginY = 2;
+
+
+		public static DependencyProperty DisplayModeProperty = DependencyProperty<SlimField>.Register<SlimFieldDisplayMode> (x => x.DisplayMode);
+
 
 		private readonly List<SlimFieldMenuItem> menuItems;
 	}

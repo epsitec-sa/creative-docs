@@ -1,4 +1,4 @@
-//	Copyright © 2006-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2006-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -177,7 +177,7 @@ namespace Epsitec.Common.Widgets
 			return obj.GetValue (CommandState.AdvancedStateProperty) as string;
 		}
 
-		public static readonly DependencyProperty AdvancedStateProperty  = DependencyProperty<CommandState>.RegisterAttached ("AdvancedState", typeof (string));
+		public static readonly DependencyProperty AdvancedStateProperty  = DependencyProperty<CommandState>.RegisterAttached<string> ("AdvancedState");
 		public static readonly DependencyProperty CommandProperty        = DependencyProperty<CommandState>.RegisterReadOnly (x => x.Command);
 		public static readonly DependencyProperty CommandContextProperty = DependencyProperty<CommandState>.RegisterReadOnly (x => x.CommandContext);
 

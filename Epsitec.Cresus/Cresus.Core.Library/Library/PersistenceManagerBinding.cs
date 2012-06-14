@@ -1,4 +1,4 @@
-﻿//	Copyright © 2008-2011, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2008-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Types;
@@ -50,7 +50,7 @@ namespace Epsitec.Cresus.Core.Library
 			return obj.GetValue (PersistenceManagerBinding.PersistenceBindingProperty) as PersistenceManagerBinding;
 		}
 
-		
-		public static DependencyProperty PersistenceBindingProperty = DependencyProperty<PersistenceManagerBinding>.RegisterAttached ("PersistenceBinding", typeof (PersistenceManagerBinding));
+
+		public static DependencyProperty PersistenceBindingProperty = DependencyProperty<PersistenceManagerBinding>.RegisterAttached<PersistenceManagerBinding> ("PersistenceBinding");
 	}
 }

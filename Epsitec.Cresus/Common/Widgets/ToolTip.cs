@@ -800,10 +800,10 @@ namespace Epsitec.Common.Widgets
 		}
 
 
-		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipText", typeof (string), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipWidget",  typeof (Widget), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipCaption", typeof (Caption), PrivateDependencyPropertyMetadata.Default);
-		public static readonly DependencyProperty ToolTipColorProperty   = DependencyProperty<ToolTip>.RegisterAttached ("ToolTipColor",   typeof (Color), PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipTextProperty    = DependencyProperty<ToolTip>.RegisterAttached<string> ("ToolTipText", PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipWidgetProperty  = DependencyProperty<ToolTip>.RegisterAttached<Widget> ("ToolTipWidget", PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipCaptionProperty = DependencyProperty<ToolTip>.RegisterAttached<Caption> ("ToolTipCaption", PrivateDependencyPropertyMetadata.Default);
+		public static readonly DependencyProperty ToolTipColorProperty   = DependencyProperty<ToolTip>.RegisterAttached<Color> ("ToolTipColor", PrivateDependencyPropertyMetadata.Default);
 
 		private readonly Dictionary<long, object> hash;
 		private ToolTipBehaviour				behaviour;

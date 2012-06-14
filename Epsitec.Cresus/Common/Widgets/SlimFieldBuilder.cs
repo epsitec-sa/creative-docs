@@ -17,7 +17,31 @@ namespace Epsitec.Common.Widgets
 			{
 			};
 
+			new CaptionBinder (slimField, caption);
+
 			return slimField;
+		}
+
+		private sealed class CaptionBinder
+		{
+			public CaptionBinder(SlimField field, Caption caption)
+			{
+				this.field   = field;
+				this.caption = caption;
+
+				SlimFieldBuilder.SetFieldTexts (this.field, this.caption);
+
+				this.field.DisplayModeChanged += this.HandleFieldDisplayModeChanged;
+			}
+
+
+			private void HandleFieldDisplayModeChanged(object sender, DependencyPropertyChangedEventArgs e)
+			{
+				SlimFieldBuilder.SetFieldTexts (this.field, this.caption);
+			}
+
+			private readonly SlimField			field;
+			private readonly Caption			caption;
 		}
 
 		public static void SetFieldTexts(SlimField slimField, Caption caption)

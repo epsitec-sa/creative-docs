@@ -1,4 +1,4 @@
-//	Copyright © 2004-2010, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
+//	Copyright © 2004-2012, EPSITEC SA, 1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
@@ -354,15 +354,15 @@ namespace Epsitec.Common.Types
 		}
 
 		
-		public static readonly DependencyProperty	MinimumLengthProperty = DependencyProperty<StringType>.RegisterAttached ("MinLength", typeof (int), new DependencyPropertyMetadata (0));
-		public static readonly DependencyProperty	MaximumLengthProperty = DependencyProperty<StringType>.RegisterAttached ("MaxLength", typeof (int), new DependencyPropertyMetadata (1000000));
+		public static readonly DependencyProperty	MinimumLengthProperty = DependencyProperty<StringType>.RegisterAttached<int> ("MinLength", new DependencyPropertyMetadata (0));
+		public static readonly DependencyProperty	MaximumLengthProperty = DependencyProperty<StringType>.RegisterAttached<int> ("MaxLength", new DependencyPropertyMetadata (1000000));
 
-		public static readonly DependencyProperty	UseFixedLengthStorageProperty  = DependencyProperty<StringType>.RegisterAttached ("UseFixedLengthStorage", typeof (bool), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty	UseMultilingualStorageProperty = DependencyProperty<StringType>.RegisterAttached ("UseMultilingualStorage", typeof (bool), new DependencyPropertyMetadata (false));
-		public static readonly DependencyProperty	UseFormattedTextProperty       = DependencyProperty<StringType>.RegisterAttached ("UseFormattedText", typeof (bool), new DependencyPropertyMetadata (false));
+		public static readonly DependencyProperty	UseFixedLengthStorageProperty  = DependencyProperty<StringType>.RegisterAttached<bool> ("UseFixedLengthStorage");
+		public static readonly DependencyProperty	UseMultilingualStorageProperty = DependencyProperty<StringType>.RegisterAttached<bool> ("UseMultilingualStorage");
+		public static readonly DependencyProperty	UseFormattedTextProperty       = DependencyProperty<StringType>.RegisterAttached<bool> ("UseFormattedText");
 
-		public static readonly DependencyProperty	DefaultSearchBehaviorProperty     = DependencyProperty<StringType>.RegisterAttached ("DefaultSearchBehavior", typeof (StringSearchBehavior), new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
-		public static readonly DependencyProperty	DefaultComparisonBehaviorProperty = DependencyProperty<StringType>.RegisterAttached ("DefaultComparisonBehavior", typeof (StringComparisonBehavior), new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
+		public static readonly DependencyProperty	DefaultSearchBehaviorProperty     = DependencyProperty<StringType>.RegisterAttached<StringSearchBehavior> ("DefaultSearchBehavior", new DependencyPropertyMetadata (StringSearchBehavior.ExactMatch));
+		public static readonly DependencyProperty	DefaultComparisonBehaviorProperty = DependencyProperty<StringType>.RegisterAttached<StringComparisonBehavior> ("DefaultComparisonBehavior", new DependencyPropertyMetadata (StringComparisonBehavior.Ordinal));
 
 		private static StringType					defaultNativeValue;
 		private static StringType					defaultValue;

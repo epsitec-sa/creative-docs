@@ -167,8 +167,8 @@ namespace Epsitec.Common.Widgets.Layouts
 			return visual.GetValue (LayoutMeasure.HeightProperty) as LayoutMeasure;
 		}
 		
-		public static DependencyProperty WidthProperty  = DependencyProperty<LayoutMeasure>.RegisterAttached ("Width", typeof (LayoutMeasure), new DependencyPropertyMetadata ().MakeNotSerializable ());
-		public static DependencyProperty HeightProperty = DependencyProperty<LayoutMeasure>.RegisterAttached ("Height", typeof (LayoutMeasure), new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static DependencyProperty WidthProperty  = DependencyProperty<LayoutMeasure>.RegisterAttached<LayoutMeasure> ("Width", new DependencyPropertyMetadata ().MakeNotSerializable ());
+		public static DependencyProperty HeightProperty = DependencyProperty<LayoutMeasure>.RegisterAttached<LayoutMeasure> ("Height", new DependencyPropertyMetadata ().MakeNotSerializable ());
 		
 		private double							min;
 		private double							max;
