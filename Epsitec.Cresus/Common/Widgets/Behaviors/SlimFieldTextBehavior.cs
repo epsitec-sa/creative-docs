@@ -50,8 +50,7 @@ namespace Epsitec.Common.Widgets.Behaviors
 				}
 			}
 		}
-		
-		
+
 		#region IDisposable Members
 
 		public void Dispose()

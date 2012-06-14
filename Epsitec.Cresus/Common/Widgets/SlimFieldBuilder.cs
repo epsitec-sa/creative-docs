@@ -43,6 +43,8 @@ namespace Epsitec.Common.Widgets
 				default:
 					throw displayMode.NotSupportedException ();
 			}
+
+			slimField.UpdatePreferredSize ();
 		}
 
 		private static void SetFieldTexts(SlimField slimField, string captionText)

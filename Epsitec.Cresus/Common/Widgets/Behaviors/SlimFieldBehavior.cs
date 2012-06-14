@@ -2,6 +2,7 @@
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using Epsitec.Common.Support;
+using Epsitec.Common.Types;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,22 @@ namespace Epsitec.Common.Widgets.Behaviors
 			this.host.UpdatePreferredSize ();
 		}
 
+
+		public Caption							Caption
+		{
+			get
+			{
+				return this.caption;
+			}
+			set
+			{
+				if (this.caption != value)
+				{
+					this.caption = value;
+					SlimFieldBuilder.SetFieldTexts (this.host, this.caption);
+				}
+			}
+		}
 
 
 		protected virtual void OnTextEditionStarting(CancelEventArgs e)
@@ -40,5 +57,6 @@ namespace Epsitec.Common.Widgets.Behaviors
 		
 		
 		protected readonly SlimField			host;
+		private Caption							caption;
 	}
 }

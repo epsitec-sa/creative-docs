@@ -139,7 +139,7 @@ namespace Epsitec.Cresus.Core.Bricks.Factories
 					var tile    = frame as EditionTile;
 
 #if SLIMFIELD
-					var widget  = builder.CreateSlimField<TField> (tile, title, this.readOnly, sel);
+					var widget  = builder.CreateSlimField<TField> (tile, caption, this.readOnly, sel);
 #else
 					var widget  = builder.CreateAutoCompleteTextField<TField> (tile, title, this.readOnly, sel);
 #endif

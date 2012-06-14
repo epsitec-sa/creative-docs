@@ -803,8 +803,6 @@ namespace Epsitec.Cresus.Core
 				TabIndex = ++this.tabIndex,
 			};
 			
-			SlimFieldBuilder.SetFieldTexts (slimField, caption);
-
 			this.ContentListAdd (slimField);
 
 			if (width > 0)
@@ -813,7 +811,10 @@ namespace Epsitec.Cresus.Core
 				slimField.PreferredWidth = width;
 			}
 
-			var behavior = new SlimFieldTextBehavior (slimField);
+			var behavior = new SlimFieldTextBehavior (slimField)
+			{
+				Caption = caption,
+			};
 			
 			this.RegisterSlimField (behavior);
 			
@@ -839,7 +840,7 @@ namespace Epsitec.Cresus.Core
 			return slimField;
 		}
 
-		public SlimField CreateSlimField<T>(EditionTile tile, string label, bool forceReadOnly, SelectionController<T> controller)
+		public SlimField CreateSlimField<T>(EditionTile tile, Caption caption, bool forceReadOnly, SelectionController<T> controller)
 			where T : AbstractEntity, new ()
 		{
 			var parent = tile.Container;
@@ -851,7 +852,6 @@ namespace Epsitec.Cresus.Core
 				Parent = parent,
 				Dock = dockStyle,
 				IsReadOnly = this.ReadOnly || forceReadOnly,
-				FieldLabel = new FormattedText (label).ToSimpleText (),
 				FieldText = value,
 				DisplayMode = string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text,
 				TabIndex = ++this.tabIndex,
@@ -866,7 +866,10 @@ namespace Epsitec.Cresus.Core
 //-			this.RegisterTextField (slimField);
 			this.ContentListAdd (slimField);
 
-			var behavior = new SlimFieldMenuBehavior (slimField);
+			var behavior = new SlimFieldMenuBehavior (slimField)
+			{
+				Caption = caption
+			};
 
 			behavior.Selected +=
 				delegate
