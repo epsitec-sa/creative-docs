@@ -49,7 +49,7 @@ namespace Epsitec.Common.Widgets
 		{
 			var displayMode = slimField.DisplayMode;
 
-			slimField.FieldLabel = SlimFieldBuilder.GetLabelText (caption);
+			slimField.FieldLabel = FormattedText.Unescape (SlimFieldBuilder.GetLabelText (caption));
 			
 			switch (displayMode)
 			{
