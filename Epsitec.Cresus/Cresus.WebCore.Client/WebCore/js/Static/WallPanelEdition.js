@@ -65,7 +65,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelEdition',
     /* Constructor */
     constructor : function (options)
     {
-      options.url = 'proxy/entity/' + options.entityId;
+      options.url = 'proxy/entity/edit/' + options.entityId;
       this.callParent(arguments);
       return this;
     }

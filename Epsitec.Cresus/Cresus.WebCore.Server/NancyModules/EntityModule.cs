@@ -29,11 +29,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EntityModule(ServerContext serverContext)
 			: base (serverContext, "/entity")
 		{
-			Post["/{id}"] = p => this.ExecuteWithCoreSession (cs => this.Update (cs, p));
+			Post["/edit/{id}"] = p => this.ExecuteWithCoreSession (cs => this.Edit (cs, p));
 		}
 
 
-		private Response Update(CoreSession coreSession, dynamic parameters)
+		private Response Edit(CoreSession coreSession, dynamic parameters)
 		{
 			var businessContext = coreSession.GetBusinessContext ();
 			var propertyAccessorCache = coreSession.PropertyAccessorCache;
