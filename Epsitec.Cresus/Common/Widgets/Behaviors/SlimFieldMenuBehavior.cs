@@ -105,12 +105,14 @@ namespace Epsitec.Common.Widgets.Behaviors
 				return;
 			}
 
+			this.host.MinWidth = System.Math.Ceiling (this.host.MeasureWidth (this.host.GetActiveDisplayMode ()));
 			this.host.DisplayMode = SlimFieldDisplayMode.Menu;
 			this.host.UpdatePreferredSize ();
 		}
 
 		private void HandleHostExited(object sender, MessageEventArgs e)
 		{
+			this.host.ClearValue (Visual.MinWidthProperty);
 			this.host.DisplayMode = string.IsNullOrEmpty (this.host.FieldText) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text;
 			this.host.UpdatePreferredSize ();
 			this.UpdateMenuItemHilite (null);
