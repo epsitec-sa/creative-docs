@@ -164,15 +164,19 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
 				.ToList ();
 
+			var logs = dbInfrastructures
+				.Select (i => new EntityDeletionLog (i, entityEngine.ServiceSchemaEngine))
+				.ToList ();
+
 			try
 			{
 				System.DateTime time = System.DateTime.Now;
 
-				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				var threads = logs.Select (l => new System.Threading.Thread (() =>
 				{
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 
-					var log = new EntityDeletionLog (d, entityEngine.ServiceSchemaEngine);
+					var log = l;
 
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{
@@ -180,7 +184,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 
 						var id = System.Math.Max (entry.EntryId.Value - 10, 1);
 
-						var entries = log.GetEntriesNewerThan (new DbId (id));
+						log.GetEntriesNewerThan (new DbId (id));
 					}
 				})).ToList ();
 

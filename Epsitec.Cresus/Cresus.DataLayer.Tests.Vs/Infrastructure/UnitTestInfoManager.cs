@@ -181,16 +181,20 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
 				.ToList ();
 
+			var infoManagers = dbInfrastructures
+				.Select (i => new InfoManager (i, entityEngine.ServiceSchemaEngine))
+				.ToList ();
+
 			try
 			{
 				System.DateTime time = System.DateTime.Now;
 				var keys = Enumerable.Range (0, 50).Select (i => i.ToString ()).ToList ();
 
-				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				var threads = infoManagers.Select (i => new System.Threading.Thread (() =>
 				{
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 					
-					var infoManager = new InfoManager (d, entityEngine.ServiceSchemaEngine);
+					var infoManager = i;
 
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{

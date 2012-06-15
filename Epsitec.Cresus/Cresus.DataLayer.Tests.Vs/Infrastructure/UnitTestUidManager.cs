@@ -368,6 +368,10 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				.Select (i => DbInfrastructureHelper.ConnectToTestDatabase ())
 				.ToList ();
 
+			var uidManagers = dbInfrastructures
+				.Select (i => new UidManager (i, entityEngine.ServiceSchemaEngine))
+				.ToList ();
+
 			List<UidGenerator> generators = new List<UidGenerator> ();
 			Dictionary<UidGenerator, int> usedGenerators = new Dictionary<UidGenerator, int> ();
 
@@ -375,12 +379,12 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 			{
 				System.DateTime time = System.DateTime.Now;
 
-				var threads = dbInfrastructures.Select (d => new System.Threading.Thread (() =>
+				var threads = uidManagers.Select (m => new System.Threading.Thread (() =>
 				{
 					var dice = new System.Random (System.Threading.Thread.CurrentThread.ManagedThreadId);
 
-					var uidManager = new UidManager (d, entityEngine.ServiceSchemaEngine);
-
+					var uidManager = m;
+					
 					while (System.DateTime.Now - time <= System.TimeSpan.FromSeconds (15))
 					{
 						int count;
