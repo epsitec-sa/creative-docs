@@ -9,21 +9,32 @@ Ext.Loader.setConfig(
   }
 );
 
-// Some classes need to be loaded before the launch
-// They define aliases that have to be known
-Ext.require('Epsitec.Cresus.Core.Static.Checkboxes');
-Ext.require('Epsitec.Cresus.Core.Static.Enum');
-Ext.require('Epsitec.Cresus.Core.Static.Entity');
-Ext.require('Epsitec.Cresus.Core.Static.ErrorHandler');
-Ext.require('Epsitec.Cresus.Core.Static.ListItem');
-Ext.require('Epsitec.Cresus.Core.Static.WallPanelEdition');
-Ext.require('Epsitec.Cresus.Core.Static.WallPanelEmptySummary');
-Ext.require('Epsitec.Cresus.Core.Static.WallPanelSummary');
-
 Ext.application(
   {
     name : 'Epsitec.Cresus.Core',
     appFolder : 'js',
+    
+    requires :
+    [
+      'Epsitec.Cresus.Core.Static.Checkboxes',
+      'Epsitec.Cresus.Core.Static.ColumnManager',
+      'Epsitec.Cresus.Core.Static.ColumnPanel',
+      'Epsitec.Cresus.Core.Static.Entity',
+      'Epsitec.Cresus.Core.Static.EntityComboBox',
+      'Epsitec.Cresus.Core.Static.Enum',
+      'Epsitec.Cresus.Core.Static.EnumComboBox',
+      'Epsitec.Cresus.Core.Static.ErrorHandler',
+      'Epsitec.Cresus.Core.Static.List',
+      'Epsitec.Cresus.Core.Static.ListContainer',
+      'Epsitec.Cresus.Core.Static.ListItem',
+      'Epsitec.Cresus.Core.Static.LoginPanel',
+      'Epsitec.Cresus.Core.Static.Menu',
+      'Epsitec.Cresus.Core.Static.TabbedPage',
+      'Epsitec.Cresus.Core.Static.TabMgr',
+      'Epsitec.Cresus.Core.Static.WallPanelEdition',
+      'Epsitec.Cresus.Core.Static.WallPanelEmptySummary',
+      'Epsitec.Cresus.Core.Static.WallPanelSummary',
+    ],
     
     columnmgr : null,
     tabmgr : null,
