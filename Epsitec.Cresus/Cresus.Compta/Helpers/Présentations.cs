@@ -125,6 +125,18 @@ namespace Epsitec.Cresus.Compta.Helpers
 			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".Search");
 		}
 
+		public static string GetSearchSettingsCollectionKey(ControllerType type)
+		{
+			//	Retourne la clé d'accès pour les données SearchDataCollection des recherches.
+			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".SearchCollection");
+		}
+
+		public static string GetFilterSettingsCollectionKey(ControllerType type)
+		{
+			//	Retourne la clé d'accès pour les données SearchDataCollection du filtre.
+			return string.Concat ("Présentation." + Présentations.ControllerTypeToString (type) + ".FilterCollection");
+		}
+
 		public static string GetPermanentsSettingsKey(ControllerType type)
 		{
 			//	Retourne la clé d'accès pour les données AbstractPermanents.

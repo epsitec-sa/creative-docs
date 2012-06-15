@@ -23,7 +23,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 
 
-		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
+		public FrameBox CreateUI(FrameBox parent, string clearText, System.Action miscAction, System.Action clearAction, System.Action closeAction, System.Action levelChangedAction)
 		{
 			var frame = new FrameBox
 			{
@@ -33,11 +33,40 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Dock            = DockStyle.Top,
 			};
 
+			if (miscAction == null)
+			{
+				new FrameBox
+				{
+					Parent        = frame,
+					PreferredSize = new Size (20, 20),
+					Dock          = DockStyle.Left,
+				};
+			}
+			else
+			{
+				this.buttonMisc = new IconButton
+				{
+					Parent        = frame,
+					IconUri       = UIBuilder.GetResourceIconUri ("Level.Misc"),
+					PreferredSize = new Size (20, 20),
+					AutoFocus     = false,
+					Dock          = DockStyle.Left,
+				};
+
+				ToolTip.Default.SetToolTip (this.buttonMisc, "Menu des actions supplémentaires");
+
+				this.buttonMisc.Clicked += delegate
+				{
+					miscAction ();
+				};
+			}
+
 			this.buttonClear = new IconButton
 			{
 				Parent        = frame,
 				IconUri       = UIBuilder.GetResourceIconUri ("Level.Clear"),
 				PreferredSize = new Size (20, 20),
+				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 			};
 
@@ -46,6 +75,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Parent        = frame,
 				IconUri       = UIBuilder.GetResourceIconUri ("Level.Close"),
 				PreferredSize = new Size (20, 20),
+				AutoFocus     = false,
 				Dock          = DockStyle.Left,
 			};
 
@@ -65,6 +95,15 @@ namespace Epsitec.Cresus.Compta.Controllers
 			};
 
 			return frame;
+		}
+
+
+		public IconButton ButtonMisc
+		{
+			get
+			{
+				return this.buttonMisc;
+			}
 		}
 
 		public bool ClearEnable
@@ -88,6 +127,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 		private readonly AbstractController		controller;
 
 		private bool							specialist;
+		private IconButton						buttonMisc;
 		private IconButton						buttonClear;
 		private IconButton						buttonClose;
 	}

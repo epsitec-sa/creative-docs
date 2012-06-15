@@ -127,6 +127,7 @@
     <Compile Include="Search\Controllers\TemporalController.cs" />
     <Compile Include="Search\Controllers\TemporalControllerOld.cs" />
     <Compile Include="Search\Controllers\TopTemporalController.cs" />
+    <Compile Include="Search\Data\SearchDataCollection.cs" />
     <Compile Include="Search\Data\TemporalDataDuration.cs" />
     <Compile Include="Search\Data\TemporalData.cs" />
     <Compile Include="TypeEcriture.cs" />
@@ -441,6 +442,7 @@
     <EmbeddedResource Include="Images\Période.Next.icon" />
     <EmbeddedResource Include="Images\Période.Prev.icon" />
     <EmbeddedResource Include="Images\Filter.Warning.icon" />
+    <EmbeddedResource Include="Images\Level.Misc.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

@@ -177,7 +177,7 @@ namespace Epsitec.Cresus.Compta.Options.Controllers
 
 			//	Remplissage de la frame droite.
 			this.topPanelRightController = new TopPanelRightController (this.controller);
-			this.topPanelRightController.CreateUI (topPanelRightFrame, "Remet les options standards", this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
+			this.topPanelRightController.CreateUI (topPanelRightFrame, "Remet les options standards", null, this.ClearAction, this.controller.MainWindowController.ClosePanelOptions, this.LevelChangedAction);
 
 			this.graphOptionsController = new GraphOptionsController (this.controller);
 			this.graphOptionsController.CreateUI (this.graphbar, this.optionsChanged);

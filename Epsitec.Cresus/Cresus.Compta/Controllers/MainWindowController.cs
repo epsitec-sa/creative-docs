@@ -1560,6 +1560,19 @@ namespace Epsitec.Cresus.Compta.Controllers
 		}
 #endif
 
+		public SearchDataCollection GetSettingsSearchDataCollection(string key)
+		{
+			ISettingsData result;
+			if (this.settingsData.TryGetValue (key, out result))
+			{
+				return result as SearchDataCollection;
+			}
+
+			var collection = new SearchDataCollection ();
+			this.settingsData.Add (key, collection);
+			return collection;
+		}
+
 		public SearchData GetSettingsSearchData(string key, System.Action<SearchData> initialize = null)
 		{
 			ISettingsData result;
@@ -1589,9 +1602,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			}
 
 			var data = new ViewSettingsList ();
-
 			this.settingsData.Add (key, data);
-
 			return data;
 		}
 		#endregion

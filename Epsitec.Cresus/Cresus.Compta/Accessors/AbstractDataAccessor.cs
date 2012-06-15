@@ -46,6 +46,9 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.searchResults   = new List<SearchResult> ();
 
 			this.cube = new Cube ();
+
+			this.searchDataCollection = this.mainWindowController.GetSettingsSearchDataCollection (Présentations.GetSearchSettingsCollectionKey (this.controller.ControllerType));
+			this.filterDataCollection = this.mainWindowController.GetSettingsSearchDataCollection (Présentations.GetFilterSettingsCollectionKey (this.controller.ControllerType));
 		}
 
 
@@ -62,6 +65,22 @@ namespace Epsitec.Cresus.Compta.Accessors
 			get
 			{
 				return this.viewSettingsList;
+			}
+		}
+
+		public SearchDataCollection SearchDataCollection
+		{
+			get
+			{
+				return this.searchDataCollection;
+			}
+		}
+
+		public SearchDataCollection FilterDataCollection
+		{
+			get
+			{
+				return this.filterDataCollection;
 			}
 		}
 
@@ -719,6 +738,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected SearchData							mergedFilterData;
 		protected AbstractOptions						options;
 		protected AbstractPermanents					permanents;
+		protected SearchDataCollection					searchDataCollection;
+		protected SearchDataCollection					filterDataCollection;
 		protected int									firstEditedRow;
 		protected int									countEditedRow;
 		protected int									initialCountEditedRow;

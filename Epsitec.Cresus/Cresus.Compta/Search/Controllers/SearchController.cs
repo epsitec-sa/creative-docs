@@ -791,7 +791,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 
 			this.topPanelRightController = new TopPanelRightController (this.controller);
-			this.topPanelRightController.CreateUI (parent, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.ClearAction, closeAction, this.LevelChangedAction);
+			this.topPanelRightController.CreateUI (parent, this.isFilter ? "Termine le filtre" : "Termine la recherche", this.MiscAction, this.ClearAction, closeAction, this.LevelChangedAction);
+		}
+
+		private void MiscAction()
+		{
+			this.ShowMiscMenu (this.topPanelRightController.ButtonMisc);
 		}
 
 		private void ClearAction()
@@ -999,6 +1004,115 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				}
 			}
 		}
+
+
+		#region Misc menu
+		private void ShowMiscMenu(Widget parentButton)
+		{
+			//	Affiche le menu des actions supplémentaires.
+			var menu = new VMenu ();
+
+			var collection = this.Collection;
+
+			for (int i = 0; i< collection.DataList.Count; i++)
+			{
+				var data = collection.DataList[i];
+
+				var icon = (i == collection.SelectedIndex) ? "Button.RadioYes" : "Button.RadioNo";
+				this.AddToMenu (menu, true, icon, data.GetSummary (this.controller.ColumnMappers), this.MenuUseAction, i);
+			}
+
+			if (collection.DataList.Any ())
+			{
+				menu.Items.Add (new MenuSeparator ());
+			}
+
+			this.AddToMenu (menu, true, "Edit.Duplicate", "Dupliquer", this.MenuDuplicateAction);
+			this.AddToMenu (menu, true, "Edit.Delete",    "Supprimer", this.MenuDeleteAction);
+
+			menu.Items.Add (new MenuSeparator ());
+
+			this.AddToMenu (menu, true, "ViewSettings.Reload", "Réutiliser les réglages initiaux", this.MenuReloadAction);
+			this.AddToMenu (menu, true, "ViewSettings.Save",   "Enregistrer les réglages actuels", this.MenuSaveAction);
+
+			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
+
+			menu.Host = parentButton.Window;
+			menu.ShowAsComboList (parentButton, Point.Zero, parentButton);
+		}
+
+		private void AddToMenu(VMenu menu, bool enable, string icon, FormattedText text, System.Action<MenuItem> action, int index = -1)
+		{
+			var item = new MenuItem ()
+			{
+				IconUri       = UIBuilder.GetResourceIconUri (icon),
+				FormattedText = text,
+				Enable        = enable,
+				TabIndex      = index,
+			};
+
+			item.Clicked += delegate
+			{
+				action (item);
+			};
+
+			menu.Items.Add (item);
+		}
+
+		private void MenuUseAction(MenuItem item)
+		{
+			var index = item.TabIndex;
+
+			var collection = this.Collection;
+			collection.SelectedIndex = index;
+
+			if (this.isFilter)
+			{
+				collection.DataList[index].CopyTo (this.controller.DataAccessor.FilterData);
+			}
+			else
+			{
+				collection.DataList[index].CopyTo (this.controller.DataAccessor.SearchData);
+			}
+
+			this.SearchStartAction ();
+			this.controller.UpdateAfterChanged ();
+		}
+
+		private void MenuDuplicateAction(MenuItem item)
+		{
+			if (this.isFilter)
+			{
+				var data = this.controller.DataAccessor.FilterData.CopyFrom ();
+				this.Collection.DataList.Add (data);
+			}
+			else
+			{
+				var data = this.controller.DataAccessor.SearchData.CopyFrom ();
+				this.Collection.DataList.Add (data);
+			}
+		}
+
+		private void MenuDeleteAction(MenuItem item)
+		{
+		}
+
+		private void MenuReloadAction(MenuItem item)
+		{
+		}
+
+		private void MenuSaveAction(MenuItem item)
+		{
+		}
+
+		private SearchDataCollection Collection
+		{
+			get
+			{
+				return this.isFilter ? this.controller.DataAccessor.FilterDataCollection : this.controller.DataAccessor.SearchDataCollection;
+			}
+		}
+		#endregion
 
 
 		private readonly AbstractController				controller;
