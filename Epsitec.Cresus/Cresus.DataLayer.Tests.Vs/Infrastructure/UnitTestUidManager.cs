@@ -369,6 +369,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 				.ToList ();
 
 			List<UidGenerator> generators = new List<UidGenerator> ();
+			Dictionary<UidGenerator, int> usedGenerators = new Dictionary<UidGenerator, int> ();
 
 			try
 			{
@@ -389,7 +390,7 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 							count = generators.Count;
 						}
 
-						if (count < 20 || dice.NextDouble () > 0.9)
+						if (count < nbThreads || dice.NextDouble () > 0.9)
 						{
 							var slots = Enumerable.Range (0, 5)
 								.Select (i => new UidSlot (i * 3, (i + 1) * 3 - 1))
@@ -400,77 +401,74 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 							lock (generators)
 							{
 								generators.Add (generator);
+								usedGenerators[generator] = 0;
 							}
 						}
 
-						string generatorName1 = null;
+						UidGenerator generator1 = null;
 
 						lock (generators)
 						{
 							if (generators.Count > 0)
 							{
-								var generator = generators[dice.Next (0, generators.Count)];
-
-								generatorName1 = generator.Name;
+								generator1 = generators[dice.Next (0, generators.Count)];
 							}
 						}
 
-						if (generatorName1 != null)
+						if (generator1 != null)
 						{
-							uidManager.DoesUidGeneratorExist (generatorName1);
+							uidManager.DoesUidGeneratorExist (generator1.Name);
 						}
 
-						string generatorName2 = null;
+						UidGenerator generator2 = null;
 
 						lock (generators)
 						{
 							if (generators.Count > 0)
 							{
-								var generator = generators[dice.Next (0, generators.Count)];
-
-								generatorName2 = generator.Name;
+								generator2 = generators[dice.Next (0, generators.Count)];
+								usedGenerators[generator2] = usedGenerators[generator2] + 1;
 							}
 						}
 
-						if (generatorName2 != null)
+						if (generator2 != null)
 						{
-							try
+							uidManager.GetUidGenerator (generator2.Name);
+
+							lock (generators)
 							{
-								uidManager.GetUidGenerator (generatorName2);
-							}
-							catch (System.InvalidOperationException)
-							{
-								// The generator has been deleted. Let's ignore this exception.
-								// Marc
+								usedGenerators[generator2] = usedGenerators[generator2] - 1;
 							}
 						}
 
-						string generatorName3 = null;
+						UidGenerator generator3 = null;
 
 						lock (generators)
 						{
 							if (generators.Count > 0)
 							{
-								var generator = generators[dice.Next (0, generators.Count)];
-
-								generatorName3 = generator.Name;
+								generator3 = generators[dice.Next (0, generators.Count)];
+								usedGenerators[generator3] = usedGenerators[generator3] + 1;
 							}
 						}
 
-						if (generatorName3 != null)
+						if (generator3 != null)
 						{
-							try
+							uidManager.GetNextUid (generator3.Name);
+
+
+							lock (generators)
 							{
-								uidManager.GetNextUid (generatorName3);
-							}
-							catch (System.InvalidOperationException)
-							{
-								// The generator has been deleted. Let's ignore this exception.
-								// Marc
+								usedGenerators[generator3] = usedGenerators[generator3] - 1;
 							}
 						}
 
-						if (count > 20 && dice.NextDouble () > 0.95)
+						lock (generators)
+						{
+							count = generators.Count;
+						}
+
+						if (count > nbThreads && dice.NextDouble () > 0.95)
 						{
 							UidGenerator generator = null;
 
@@ -478,11 +476,16 @@ namespace Epsitec.Cresus.DataLayer.Tests.Vs.Infrastructure
 							{
 								if (generators.Count > 0)
 								{
-									int index = dice.Next (0, generators.Count);
+									var possibleGenerators = generators
+										.Where (g => usedGenerators[g] == 0)
+										.ToList ();
 
-									generator = generators[index];
+									int index = dice.Next (0, possibleGenerators.Count);
 
-									generators.RemoveAt (index);
+									generator = possibleGenerators[index];
+
+									generators.Remove (generator);
+									usedGenerators.Remove (generator);
 								}
 							}
 
