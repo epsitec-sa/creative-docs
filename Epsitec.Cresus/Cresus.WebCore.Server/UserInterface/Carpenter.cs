@@ -9,6 +9,7 @@ using Epsitec.Cresus.Core.Bricks;
 using Epsitec.Cresus.Core.Controllers;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator;
 using Epsitec.Cresus.WebCore.Server.UserInterface.TileData;
 
 using System;
@@ -33,16 +34,16 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 	{
 
 
-		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, PropertyAccessorCache propertyAccessorCache)
+		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (brick, propertyAccessorCache);
+				yield return Carpenter.BuildTileData (brick, propertyAccessorCache, autoCreatorCache);
 			}
 		}
 
 
-		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
 			var mode = Carpenter.GetTileMode (brick);
 
@@ -58,7 +59,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
-					return Carpenter.BuildSummaryTileDataItem (brick, propertyAccessorCache);
+					return Carpenter.BuildSummaryTileDataItem (brick, propertyAccessorCache, autoCreatorCache);
 
 				default:
 					throw new NotImplementedException ();
@@ -82,13 +83,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache)
+		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
 			var summaryTileData = Carpenter.CreateSummaryTileData ();
 
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
 
-			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, propertyAccessorCache);
+			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, propertyAccessorCache, autoCreatorCache);
 
 			return summaryTileData;
 		}
@@ -120,7 +121,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData, PropertyAccessorCache propertyAccessorCache)
+		private static void PopulateSummaryTileData(Brick brick, SummaryTileData summaryTileData, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
 			summaryTileData.EntityGetter = Carpenter.GetEntityGetter (brick);
 
@@ -130,7 +131,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 			summaryTileData.TitleGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Title);
 			summaryTileData.TextGetter = Carpenter.GetMandatoryGetter (brick, BrickPropertyKey.Text);
 
-			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData);
+			Carpenter.PopulateSummaryTileDataWithAttributes (brick, summaryTileData, autoCreatorCache);
 
 			summaryTileData.Template = Carpenter.GetOptionalTemplate (brick, propertyAccessorCache);
 		}
@@ -240,11 +241,11 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData)
+		private static void PopulateSummaryTileDataWithAttributes(Brick brick, SummaryTileData summaryTileData, AutoCreatorCache autoCreatorCache)
 		{
 			foreach (var brickMode in Carpenter.GetBrickModes (brick))
 			{
-				Carpenter.PupulateSummaryTileDataWithAttribute (brickMode, summaryTileData);
+				Carpenter.PupulateSummaryTileDataWithAttribute (brick, brickMode, summaryTileData, autoCreatorCache);
 			}
 		}
 
@@ -259,7 +260,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static void PupulateSummaryTileDataWithAttribute(BrickMode brickMode, SummaryTileData summaryTileData)
+		private static void PupulateSummaryTileDataWithAttribute(Brick brick, BrickMode brickMode, SummaryTileData summaryTileData, AutoCreatorCache autoCreatorCache)
 		{
 			// TODO Implement other brick modes ?
 
@@ -275,6 +276,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 				case BrickMode.HideRemoveButton:
 					summaryTileData.HideRemoveButton = true;
+					break;
+
+				case BrickMode.AutoCreateNullEntity:
+					summaryTileData.AutoCreator = autoCreatorCache.Get (brick.GetLambda ());
 					break;
 
 				default:

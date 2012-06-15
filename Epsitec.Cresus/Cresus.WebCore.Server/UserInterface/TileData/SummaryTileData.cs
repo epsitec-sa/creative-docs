@@ -1,8 +1,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Controllers;
-
-using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator;
 using Epsitec.Cresus.WebCore.Server.UserInterface.Tile;
 
 using System;
@@ -49,6 +48,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 
 
 		public bool HideRemoveButton
+		{
+			get;
+			set;
+		}
+
+
+		public AutoCreator AutoCreator
 		{
 			get;
 			set;
@@ -103,6 +109,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				SubViewControllerSubTypeId = Tools.ControllerSubTypeIdToString (this.SubViewControllerSubTypeId),
 				Text = this.TextGetter (entity).ToString (),
 				Title = this.TitleGetter (entity).ToString (),
+				AutoCreatorId = this.GetAutoCreatorId ()
 			};
 		}
 
@@ -134,6 +141,14 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 				HideAddButton = this.HideAddButton,
 				HideRemoveButton = this.HideRemoveButton,
 			};
+		}
+
+
+		private string GetAutoCreatorId()
+		{
+			return this.AutoCreator == null
+				? null
+				: this.AutoCreator.Id;
 		}
 
 

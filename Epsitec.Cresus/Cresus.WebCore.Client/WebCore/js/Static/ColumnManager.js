@@ -41,8 +41,13 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
      *  2: Replace the current column
      *  3: Show a column for a newly created entity, and set the "selected" to the new entity id
      */
-    showEntity : function (controllerMode, controllerSubTypeId, entityId, panel, columnMode)
+    showEntity : function (controllerMode, controllerSubTypeId, entityId, panel, columnMode, callback)
     {
+      if (typeof callback === "undefined")
+      {
+        callback = null;
+      }
+      
       panel.setLoading();
       
       Ext.Ajax.request(
@@ -80,6 +85,10 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
               break;
             }
             
+            if (callback !== null)
+            {
+              callback();
+            }
           },
           failure : function (response, options)
           {

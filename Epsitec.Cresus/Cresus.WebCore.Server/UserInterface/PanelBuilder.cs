@@ -99,7 +99,10 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		private IEnumerable<ITileData> GetTileData(BrickWall brickWall)
 		{
-			return Carpenter.BuildTileData (brickWall, this.coreSession.PropertyAccessorCache);
+			var propertyAccessorCache = this.coreSession.PropertyAccessorCache;
+			var autoCreatorCache = this.coreSession.AutoCreatorCache;
+
+			return Carpenter.BuildTileData(brickWall, propertyAccessorCache, autoCreatorCache);
 		}
 
 

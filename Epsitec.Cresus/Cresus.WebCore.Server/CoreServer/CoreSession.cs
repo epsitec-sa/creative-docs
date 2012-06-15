@@ -8,6 +8,7 @@ using Epsitec.Cresus.Core.Library;
 using Epsitec.Cresus.Core.Library.UI;
 
 using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAccessor;
+using Epsitec.Cresus.WebCore.Server.UserInterface.PropertyAutoCreator;
 
 
 namespace Epsitec.Cresus.WebCore.Server.CoreServer
@@ -23,6 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			this.id = id;
 			this.coreData = this.GetComponent<CoreData> ();
 			this.propertyAccessorCache = new PropertyAccessorCache ();
+			this.autoCreatorCache = new AutoCreatorCache ();
 
 			Services.SetApplication (this);
 		}
@@ -68,6 +70,13 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 			}
 		}
 
+		internal AutoCreatorCache			AutoCreatorCache
+		{
+			get
+			{
+				return this.autoCreatorCache;
+			}
+		}
 		
 		public BusinessContext GetBusinessContext()
 		{
@@ -100,7 +109,8 @@ namespace Epsitec.Cresus.WebCore.Server.CoreServer
 
 		private readonly string					id;
 		private readonly CoreData				coreData;
-		private readonly PropertyAccessorCache propertyAccessorCache;
+		private readonly PropertyAccessorCache	propertyAccessorCache;
+		private readonly AutoCreatorCache		autoCreatorCache;
 		private BusinessContext					businessContext;
 	}
 }

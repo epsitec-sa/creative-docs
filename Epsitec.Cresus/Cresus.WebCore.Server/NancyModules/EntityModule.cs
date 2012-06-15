@@ -30,6 +30,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (serverContext, "/entity")
 		{
 			Post["/edit/{id}"] = p => this.ExecuteWithCoreSession (cs => this.Edit (cs, p));
+			Post["/autoCreate"] = _ => this.ExecuteWithCoreSession (cs => this.AutoCreateNullEntity (cs));
 		}
 
 
@@ -70,6 +71,27 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 					return CoreResponse.AsSuccess ();
 				}
 			}
+		}
+
+
+		private Response AutoCreateNullEntity(CoreSession coreSession)
+		{
+			// NOTE Should we add some locking here in order to ensure that we don't have two
+			// clients that auto create an entity at the same time ?
+
+			var businessContext = coreSession.GetBusinessContext ();
+			var autoCreatorCache = coreSession.AutoCreatorCache;
+
+			var entity = Tools.ResolveEntity (businessContext, (string) Request.Form.entityId);
+			var autoCreator = autoCreatorCache.Get ((string) Request.Form.autoCreatorId);
+
+			var child = autoCreator.Execute (businessContext, entity);
+
+			businessContext.SaveChanges ();
+
+			var entityId = Tools.GetEntityId (businessContext, child);
+
+			return CoreResponse.AsSuccess (entityId);
 		}
 
 

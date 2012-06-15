@@ -51,6 +51,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
+		public string AutoCreatorId
+		{
+			get;
+			set;
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var panel = new Dictionary<string, object> ();
@@ -68,6 +75,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			panel["entityId"] = this.EntityId;
 			panel["subViewControllerMode"] = this.SubViewControllerMode;
 			panel["subViewControllerSubTypeId"] = this.SubViewControllerSubTypeId;
+
+			panel["autoCreatorId"] = this.AutoCreatorId;
 
 			return panel;
 		}
