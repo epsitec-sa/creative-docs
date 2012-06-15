@@ -33,6 +33,13 @@ namespace Epsitec.Common.Widgets
 					return this.items;
 				}
 			}
+
+			public MenuLayout Update(double maxWidth)
+			{
+				this.SelectMenuItemsTextVariant (maxWidth / Font.DefaultFontSize);
+				
+				return this;
+			}
 			
 			public SlimFieldMenuItem DetectMenuItem(double advance)
 			{
@@ -41,7 +48,7 @@ namespace Epsitec.Common.Widgets
 				foreach (var item in this.items)
 				{
 					double prefix = item.PrefixAdvance;
-					double width  = item.GetTextAdvance ();
+					double width  = item.TextAdvance;
 
 					if ((advance <= width) &&
 						(advance >= prefix))
@@ -55,6 +62,13 @@ namespace Epsitec.Common.Widgets
 				return null;
 			}
 
+
+			/// <summary>
+			/// Gets a collection of <see cref="MenuItem"/>s, based on the <see cref="SlimField"/>
+			/// collection of menu items; this will generate items with separations.
+			/// </summary>
+			/// <param name="collection">The <see cref="SlimField"/> collection of menu items.</param>
+			/// <returns>The collection of <see cref="MenuItem"/>s.</returns>
 			private static IEnumerable<MenuItem> GetMenuItems(IEnumerable<SlimFieldMenuItem> collection)
 			{
 				bool first = true;
@@ -81,25 +95,65 @@ namespace Epsitec.Common.Widgets
 				return collection.Max (x => x.VariantCount);
 			}
 
-			private int SelectMenuItemsTextVariant(double maxWidth)
+			private void SelectMenuItemsTextVariant(double maxWidth)
 			{
+				int bestTextCount   = 0;
+				int bestTextVariant = 0;
+
+				this.items.ForEach (x => x.SelectVariant (0));
+
+				var valueItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Value).ToArray ();
+				var fixedItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Extra || x.Style == SlimFieldMenuItemStyle.Symbol).ToArray ();
+				
 				for (int i = 0; i < count; i++)
 				{
-					double valueWidth = this.MeasureMenuItems (i, this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Value));
-					double extraWidth = this.MeasureMenuItems (i, this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Extra));
+					var valueWidths = this.MeasureMenuItems (i, valueItems);
+					var fixedWidth  = this.MeasureMenuItems (i, fixedItems).Sum ();
 
-					if (valueWidth + extraWidth < maxWidth)
+					int numTextCount = MenuLayout.GetMaxWidthCount (maxWidth - fixedWidth, valueWidths);
+
+					if (numTextCount > bestTextCount)
 					{
-						return i;
+						bestTextVariant = i;
+						bestTextCount   = numTextCount;
 					}
 				}
 
-				return count-1;
+				for (int i = 0; i < bestTextCount; i++)
+				{
+					valueItems[i].SelectVariant (bestTextVariant);
+				}
+				for (int i = bestTextCount; i < valueItems.Length; i++)
+				{
+					valueItems[i].SelectVariant (-1);
+				}
+
+				fixedItems.ForEach (x => x.SelectVariant (bestTextVariant));
 			}
 
-			private double MeasureMenuItems(int variant, IEnumerable<MenuItem> collection)
+			private static int GetMaxWidthCount(double maxWidth, IEnumerable<double> widths)
 			{
-				return collection.Sum (x => x.GetTextAdvance (variant)) * Font.DefaultFontSize;
+				var count = 0;
+				var total = 0.0d;
+
+				foreach (var width in widths)
+				{
+					total += width;
+					
+					if (total > maxWidth)
+					{
+						break;
+					}
+
+					count++;
+				}
+
+				return count;
+			}
+
+			private IEnumerable<double> MeasureMenuItems(int variant, IEnumerable<MenuItem> collection)
+			{
+				return collection.Select (x => x.PrefixAdvance + x.GetTextAdvance (variant));
 			}
 
 			private readonly SlimField host;

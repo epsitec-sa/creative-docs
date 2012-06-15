@@ -86,6 +86,36 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
+			public double						TextAdvance
+			{
+				get
+				{
+					return this.Font.GetTextAdvance (this.Text);
+				}
+			}
+
+			public string						Prefix
+			{
+				get;
+				set;
+			}
+
+			public double						PrefixAdvance
+			{
+				get
+				{
+					if ((this.variant < 0) ||
+						(string.IsNullOrEmpty (this.Prefix)))
+					{
+						return 0;
+					}
+					else
+					{
+						return SlimField.Fonts.TextFont.GetTextAdvance (this.Prefix);
+					}
+				}
+			}
+
 			public SlimFieldMenuItem			Item
 			{
 				get
@@ -102,20 +132,6 @@ namespace Epsitec.Common.Widgets
 				}
 			}
 
-			public string						Prefix
-			{
-				get;
-				set;
-			}
-
-			public double						PrefixAdvance
-			{
-				get
-				{
-					return this.Prefix == null ? 0 : SlimField.Fonts.TextFont.GetTextAdvance (this.Prefix);
-				}
-			}
-
 
 			public void SelectVariant(int variant)
 			{
@@ -124,6 +140,11 @@ namespace Epsitec.Common.Widgets
 
 			public string GetText(int variant)
 			{
+				if (variant < 0)
+				{
+					return "";
+				}
+
 				var texts = this.item.Texts;
 				var count = texts.Count;
 
@@ -135,11 +156,6 @@ namespace Epsitec.Common.Widgets
 				{
 					return texts[count-1];
 				}
-			}
-
-			public double GetTextAdvance()
-			{
-				return this.Font.GetTextAdvance (this.Text);
 			}
 
 			public double GetTextAdvance(int variant)

@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 		public SlimFieldMenuItem DetectMenuItem(Point pos)
 		{
 			double advance = pos.X - this.GetTextSurface ().X;
-			return new MenuLayout (this).DetectMenuItem (advance);
+			return new MenuLayout (this).Update (this.MaxWidth).DetectMenuItem (advance);
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -268,6 +268,11 @@ namespace Epsitec.Common.Widgets
 				var advance = font.GetTextAdvance (text) * Font.DefaultFontSize;
 				var prefix  = item.PrefixAdvance * Font.DefaultFontSize;
 
+				if (advance == 0)
+				{
+					continue;
+				}
+
 				x     += prefix;
 				width -= prefix;
 
@@ -290,7 +295,7 @@ namespace Epsitec.Common.Widgets
 
 		private IEnumerable<MenuItem> GetMenuItems()
 		{
-			return new MenuLayout (this).Items;
+			return new MenuLayout (this).Update (this.MaxWidth).Items;
 		}
 
 		public double MeasureWidth(SlimFieldDisplayMode displayMode)
@@ -327,7 +332,7 @@ namespace Epsitec.Common.Widgets
 				case SlimFieldDisplayMode.Menu:
 					foreach (var item in this.GetMenuItems ())
 					{
-						width += (item.GetTextAdvance () + item.PrefixAdvance) * Font.DefaultFontSize;
+						width += (item.TextAdvance + item.PrefixAdvance) * Font.DefaultFontSize;
 					}
 					break;
 			}

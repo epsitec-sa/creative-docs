@@ -794,7 +794,8 @@ namespace Epsitec.Cresus.Core
 			string value = marshaler.GetStringValue ();
 
 			var slimField = SlimFieldBuilder.CreateSlimField (caption, string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text);
-			
+
+			slimField.MaxWidth = 240;
 			slimField.Parent = parent;
 			slimField.IsReadOnly = this.ReadOnly || marshaler.IsReadOnly || forceReadOnly;
 			slimField.Dock = dockStyle;
@@ -843,7 +844,8 @@ namespace Epsitec.Cresus.Core
 			var value = controller.ToFormattedTextConverter (controller.GetValue ()).ToSimpleText ();
 
 			var slimField = SlimFieldBuilder.CreateSlimField (caption, string.IsNullOrEmpty (value) ? SlimFieldDisplayMode.Label : SlimFieldDisplayMode.Text);
-			
+
+			slimField.MaxWidth = 240;
 			slimField.Parent = parent;
 			slimField.Dock = dockStyle;
 			slimField.IsReadOnly = this.ReadOnly || forceReadOnly;
