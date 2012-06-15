@@ -1028,12 +1028,19 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 
 			this.AddToMenu (menu, true, "Edit.Duplicate", "Dupliquer", this.MenuDuplicateAction);
-			this.AddToMenu (menu, true, "Edit.Delete",    "Supprimer", this.MenuDeleteAction);
+
+			bool enable = collection.SelectedIndex != -1;
+			this.AddToMenu (menu, enable, "Edit.Delete",    "Supprimer", this.MenuDeleteAction);
 
 			menu.Items.Add (new MenuSeparator ());
 
-			this.AddToMenu (menu, true, "ViewSettings.Reload", "Réutiliser les réglages initiaux", this.MenuReloadAction);
-			this.AddToMenu (menu, true, "ViewSettings.Save",   "Enregistrer les réglages actuels", this.MenuSaveAction);
+			if (enable)
+			{
+				enable = !collection.DataList[collection.SelectedIndex].CompareTo (this.SearchData);
+			}
+
+			this.AddToMenu (menu, enable, "ViewSettings.Reload", "Réutiliser les réglages initiaux", this.MenuReloadAction);
+			this.AddToMenu (menu, enable, "ViewSettings.Save",   "Enregistrer les réglages actuels", this.MenuSaveAction);
 
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
@@ -1065,15 +1072,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 			var collection = this.Collection;
 			collection.SelectedIndex = index;
-
-			if (this.isFilter)
-			{
-				collection.DataList[index].CopyTo (this.controller.DataAccessor.FilterData);
-			}
-			else
-			{
-				collection.DataList[index].CopyTo (this.controller.DataAccessor.SearchData);
-			}
+			collection.DataList[index].CopyTo (this.SearchData);
 
 			this.SearchStartAction ();
 			this.controller.UpdateAfterChanged ();
@@ -1081,16 +1080,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void MenuDuplicateAction(MenuItem item)
 		{
-			if (this.isFilter)
-			{
-				var data = this.controller.DataAccessor.FilterData.CopyFrom ();
-				this.Collection.DataList.Add (data);
-			}
-			else
-			{
-				var data = this.controller.DataAccessor.SearchData.CopyFrom ();
-				this.Collection.DataList.Add (data);
-			}
+			var data = this.SearchData.CopyFrom ();
+			this.Collection.DataList.Add (data);
 		}
 
 		private void MenuDeleteAction(MenuItem item)
@@ -1099,17 +1090,50 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void MenuReloadAction(MenuItem item)
 		{
+			var collection = this.Collection;
+			var index = collection.SelectedIndex;
+			collection.SelectedIndex = index;
+			collection.DataList[index].CopyTo (this.SearchData);
+
+			this.SearchStartAction ();
+			this.controller.UpdateAfterChanged ();
 		}
 
 		private void MenuSaveAction(MenuItem item)
 		{
+			var collection = this.Collection;
+			var index = collection.SelectedIndex;
+			collection.SelectedIndex = index;
+			this.SearchData.CopyTo (collection.DataList[index]);
 		}
 
 		private SearchDataCollection Collection
 		{
 			get
 			{
-				return this.isFilter ? this.controller.DataAccessor.FilterDataCollection : this.controller.DataAccessor.SearchDataCollection;
+				if (this.isFilter)
+				{
+					return this.controller.DataAccessor.FilterDataCollection;
+				}
+				else
+				{
+					return this.controller.DataAccessor.SearchDataCollection;
+				}
+			}
+		}
+
+		private SearchData SearchData
+		{
+			get
+			{
+				if (this.isFilter)
+				{
+					return this.controller.DataAccessor.FilterData;
+				}
+				else
+				{
+					return this.controller.DataAccessor.SearchData;
+				}
 			}
 		}
 		#endregion
