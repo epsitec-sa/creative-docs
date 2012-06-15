@@ -122,7 +122,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       var newId = oldId + 1;
       config.columnId = newId;
       
-      this.clearColumns(newId);
+      this.clearRightColumns(newId);
       this.addColumn(config);
       
       this.setSelectedPanel(panel, oldId);
@@ -163,13 +163,16 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       // Copy the old children
       var items = Ext.Array.clone(this.items.items);
       
+      // Copy the current selection state
+      var selectedEntityIds = Ext.Array.clone(this.selectedEntities);
+      
       // Remove the old children
       var length = this.items.items.length;
       for (var i = 0; i < length; ++i)
       {
         // Remove the children from the dom, but not from the memory,
         // except the refreshed panel that we can delete
-        this.remove(this.items.items[0], i == newId);
+        this.clearColumn(0, i == newId);
       }
       
       // Re-add the children, with the new one
@@ -187,18 +190,26 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       }
       
       // Re-apply the selection
-      var selectedEntityId = this.selectedEntities[newId];
-      if (selectedEntityId != null)
+      for(var i = 0; i < this.items.length; ++i)
       {
-        Ext.Array.each(col.items.items, function (item)
+        var selectedEntityId = selectedEntityIds[newId];
+        
+        if (selectedEntityId !== null)
+        {
+          var column = this.items.items[i];
+          
+          for (var j = 0; j < column.items.items.length; ++j)
           {
-            if (item.entityId == selectedEntityId)
+            var item = column.items.items[j];
+            
+            if (item.entityId === selectedEntityId)
             {
-              this.setSelectedPanel(item, newId);
+              this.setSelectedPanel(item, j);
             }
-          }, this);
+          }
+        }
       }
-      
+     
       // Re-apply scroll
       dom.scrollLeft = scrollLeft;
       dom.scrollTop = scrollTop;
@@ -210,7 +221,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       var newId = oldId + 1;
       config.columnId = newId;
       
-      this.clearColumns(newId);
+      this.clearRightColumns(newId);
       this.addColumn(config);
       
       this.setSelectedEntity(oldId, panel, entityId);
@@ -231,18 +242,29 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     },
     
     // index: number of columns to keep
-    clearColumns : function (index)
+    clearRightColumns : function (index)
     {
       while (this.items.length > index)
       {
-        var rem = this.items.items[this.items.length - 1];
-        this.remove(rem);
+        var colIndex = this.items.length - 1;
+        
+        this.clearColumn(colIndex);
       }
+    },
+    
+    clearColumn : function(index, autoDestroy)
+    {
+      var rem = this.items.items[index];
+      
+      this.remove(rem, autoDestroy);
+      
+      this.selectedPanels.splice(index, 1);
+      this.selectedEntities.splice(index, 1);
     },
     
     clearAllColumns : function ()
     {
-      this.removeAll();
+      this.clearRightColumns(0);
     },
     
     setSelectedPanel : function (panel, columnId)
