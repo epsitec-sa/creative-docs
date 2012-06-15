@@ -1,4 +1,4 @@
-﻿//	Copyright © 2010, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
+﻿//	Copyright © 2010-2012, EPSITEC SA, CH-1400 Yverdon-les-Bains, Switzerland
 //	Author: Pierre ARNAUD, Maintainer: Pierre ARNAUD
 
 using System.Collections.Generic;
@@ -20,6 +20,9 @@ namespace Epsitec.Common.Debug
 
 			System.Windows.Forms.Application.ThreadException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.Exception);
 			System.AppDomain.CurrentDomain.UnhandledException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.ExceptionObject as System.Exception);
+
+			//	See http://blog.cincura.net/232922-unobserved-tasks-in-net-4-5/ and http://msdn.microsoft.com/en-us/library/system.threading.tasks.taskscheduler.unobservedtaskexception.aspx
+			System.Threading.Tasks.TaskScheduler.UnobservedTaskException += (sender, e) => GeneralExceptionCatcher.ProcessException (e.Exception);
 
 			System.Windows.Forms.Application.SetUnhandledExceptionMode (System.Windows.Forms.UnhandledExceptionMode.CatchException);
 			
@@ -73,9 +76,9 @@ namespace Epsitec.Common.Debug
 			System.Diagnostics.Debug.WriteLine (buffer.ToString ());
 
 			if (GeneralExceptionCatcher.abortOnException)
-            {
+			{
 				System.Environment.Exit (1);
-            }
+			}
 		}
 
 		private static readonly List<System.Action<System.Exception>> handlers = new List<System.Action<System.Exception>> ();

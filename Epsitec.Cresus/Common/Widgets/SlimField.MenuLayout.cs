@@ -16,6 +16,10 @@ namespace Epsitec.Common.Widgets
 {
 	public partial class SlimField
 	{
+		/// <summary>
+		/// The <c>MenuLayout</c> class manages the layout details of a <see cref="SlimField"/>
+		/// menu.
+		/// </summary>
 		private class MenuLayout
 		{
 			public MenuLayout(SlimField host)
@@ -36,7 +40,7 @@ namespace Epsitec.Common.Widgets
 
 			public MenuLayout Update(double maxWidth)
 			{
-				this.SelectMenuItemsTextVariant (maxWidth / Font.DefaultFontSize);
+				this.SelectVariant (maxWidth / Font.DefaultFontSize);
 				
 				return this;
 			}
@@ -60,6 +64,35 @@ namespace Epsitec.Common.Widgets
 				}
 
 				return null;
+			}
+
+			
+			private void SelectVariant(double availableWidth)
+			{
+				int bestTextCount   = 0;
+				int bestTextVariant = 0;
+
+				this.items.ForEach (x => x.SelectVariant (0));
+
+				var valueItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Value).ToArray ();
+				var fixedItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Extra || x.Style == SlimFieldMenuItemStyle.Symbol).ToArray ();
+					
+				for (int i = 0; i < count; i++)
+				{
+					var valueWidths = this.MeasureMenuItems (i, valueItems);
+					var fixedWidth  = this.MeasureMenuItems (i, fixedItems).Sum ();
+
+					int numTextCount = MenuLayout.GetMaxWidthCount (availableWidth - fixedWidth, valueWidths);
+
+					if (numTextCount > bestTextCount)
+					{
+						bestTextVariant = i;
+						bestTextCount   = numTextCount;
+					}
+				}
+
+				MenuLayout.SelectVariantAndHideExtraItems (valueItems, bestTextVariant, bestTextCount);
+				MenuLayout.SelectVariantAndHideExtraItems (fixedItems, bestTextVariant, fixedItems.Length);
 			}
 
 
@@ -95,40 +128,16 @@ namespace Epsitec.Common.Widgets
 				return collection.Max (x => x.VariantCount);
 			}
 
-			private void SelectMenuItemsTextVariant(double maxWidth)
+			private static void SelectVariantAndHideExtraItems(MenuItem[] items, int variant, int visibleCount)
 			{
-				int bestTextCount   = 0;
-				int bestTextVariant = 0;
-
-				this.items.ForEach (x => x.SelectVariant (0));
-
-				var valueItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Value).ToArray ();
-				var fixedItems = this.items.Where (x => x.Style == SlimFieldMenuItemStyle.Extra || x.Style == SlimFieldMenuItemStyle.Symbol).ToArray ();
-				
-				for (int i = 0; i < count; i++)
+				for (int i = 0; i < visibleCount; i++)
 				{
-					var valueWidths = this.MeasureMenuItems (i, valueItems);
-					var fixedWidth  = this.MeasureMenuItems (i, fixedItems).Sum ();
-
-					int numTextCount = MenuLayout.GetMaxWidthCount (maxWidth - fixedWidth, valueWidths);
-
-					if (numTextCount > bestTextCount)
-					{
-						bestTextVariant = i;
-						bestTextCount   = numTextCount;
-					}
+					items[i].SelectVariant (variant);
 				}
-
-				for (int i = 0; i < bestTextCount; i++)
+				for (int i = visibleCount; i < items.Length; i++)
 				{
-					valueItems[i].SelectVariant (bestTextVariant);
+					items[i].SelectVariant (-1);
 				}
-				for (int i = bestTextCount; i < valueItems.Length; i++)
-				{
-					valueItems[i].SelectVariant (-1);
-				}
-
-				fixedItems.ForEach (x => x.SelectVariant (bestTextVariant));
 			}
 
 			private static int GetMaxWidthCount(double maxWidth, IEnumerable<double> widths)
@@ -156,9 +165,9 @@ namespace Epsitec.Common.Widgets
 				return collection.Select (x => x.PrefixAdvance + x.GetTextAdvance (variant));
 			}
 
-			private readonly SlimField host;
-			private readonly List<MenuItem> items;
-			private readonly int count;
+			private readonly SlimField			host;
+			private readonly List<MenuItem>		items;
+			private readonly int				count;
 		}
 	}
 }
