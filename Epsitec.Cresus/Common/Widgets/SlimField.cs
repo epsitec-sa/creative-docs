@@ -14,7 +14,7 @@ using System.Linq;
 
 namespace Epsitec.Common.Widgets
 {
-	public class SlimField : Widget, IReadOnly
+	public partial class SlimField : Widget, IReadOnly
 	{
 		public SlimField()
 		{
@@ -150,7 +150,7 @@ namespace Epsitec.Common.Widgets
 		public SlimFieldMenuItem DetectMenuItem(Point pos)
 		{
 			double advance = pos.X - this.GetTextSurface ().X;
-			return this.DetectMenuItem (advance);
+			return new MenuLayout (this).DetectMenuItem (advance);
 		}
 
 		protected override void PaintBackgroundImplementation(Graphics graphics, Rectangle clipRect)
@@ -184,50 +184,6 @@ namespace Epsitec.Common.Widgets
 			this.PaintFocusRectangle (graphics, bounds);
 		}
 
-
-		private static int GetMenuItemsTextVariantCount(IList<MenuItem> menuItems)
-		{
-			int num = 0;
-
-			foreach (var item in menuItems)
-			{
-				num = System.Math.Max (num, item.Item3.Texts.Count);
-			}
-
-			return num;
-		}
-
-		private int SelectMenuItemsTextVariant(double maxWidth)
-		{
-			IList<MenuItem> menuItems = this.GetMenuItems ().ToList ();
-
-			int count = SlimField.GetMenuItemsTextVariantCount (menuItems);
-
-			for (int i = 0; i < count; i++)
-			{
-				double valueWidth = SlimField.MeasureMenuItems (i, menuItems.Where (x => x.Item3.Style == SlimFieldMenuItemStyle.Value));
-				double extraWidth = SlimField.MeasureMenuItems (i, menuItems.Where (x => x.Item3.Style == SlimFieldMenuItemStyle.Extra));
-				
-				if (valueWidth + extraWidth < maxWidth)
-				{
-					return i;
-				}
-			}
-
-			return count-1;
-		}
-
-		private static double MeasureMenuItems(int variant, IEnumerable<MenuItem> menuItems)
-		{
-			double width = 0;
-
-			foreach (var item in menuItems)
-			{
-				width += item.Item1.GetTextAdvance (item.GetText (variant));
-			}
-
-			return width * Font.DefaultFontSize;
-		}
 
 		private void PaintFocusRectangle(Graphics graphics, Rectangle bounds)
 		{
@@ -303,14 +259,17 @@ namespace Epsitec.Common.Widgets
 			x = geom.Origin.X;
 			y = geom.Origin.Y;
 
-			foreach (var tuple in this.GetMenuItems ())
+			foreach (var item in this.GetMenuItems ())
 			{
-				var font    = tuple.Item1;
-				var text    = tuple.Item2;
-				var item    = tuple.Item3;
-				var hilite  = item == null ? SlimFieldMenuItemHilite.None : item.Hilite;
+				var font    = item.Font;
+				var text    = item.Text;
+				var hilite  = item.Hilite;
+				var color   = item.Color;
 				var advance = font.GetTextAdvance (text) * Font.DefaultFontSize;
-				var color   = item == null ? SlimField.Colors.TextColor : item.Enable == EnableState.Enabled ? SlimField.Colors.TextColor : SlimField.Colors.DisabledColor;
+				var prefix  = item.PrefixAdvance * Font.DefaultFontSize;
+
+				x     += prefix;
+				width -= prefix;
 
 				graphics.Color = color;
 				graphics.PaintText (x, y, width, height, text, font, Font.DefaultFontSize, Drawing.ContentAlignment.BaselineLeft);
@@ -327,6 +286,11 @@ namespace Epsitec.Common.Widgets
 				x     += advance;
 				width -= advance;
 			}
+		}
+
+		private IEnumerable<MenuItem> GetMenuItems()
+		{
+			return new MenuLayout (this).Items;
 		}
 
 		public double MeasureWidth(SlimFieldDisplayMode displayMode)
@@ -361,12 +325,9 @@ namespace Epsitec.Common.Widgets
 					break;
 
 				case SlimFieldDisplayMode.Menu:
-					foreach (var tuple in this.GetMenuItems ())
+					foreach (var item in this.GetMenuItems ())
 					{
-						var font = tuple.Item1;
-						var text = tuple.Item2;
-
-						width += font.GetTextAdvance (text) * Font.DefaultFontSize;
+						width += (item.GetTextAdvance () + item.PrefixAdvance) * Font.DefaultFontSize;
 					}
 					break;
 			}
@@ -374,49 +335,9 @@ namespace Epsitec.Common.Widgets
 			return width;
 		}
 
-		private IEnumerable<MenuItem> GetMenuItems()
-		{
-			bool first = true;
-
-			foreach (var item in this.menuItems)
-			{
-				if (first)
-				{
-					first = false;
-				}
-				else
-				{
-					yield return new MenuItem (SlimField.Fonts.MenuFont, SlimField.Strings.MenuSeparator);
-				}
-
-				yield return new MenuItem (item);
-			}
-		}
 
 
 
-
-
-		private SlimFieldMenuItem DetectMenuItem(double advance)
-		{
-			foreach (var tuple in this.GetMenuItems ())
-			{
-				var font = tuple.Item1;
-				var text = tuple.Item2;
-				var item = tuple.Item3;
-
-				double width = font.GetTextAdvance (text) * Font.DefaultFontSize;
-
-				if (advance <= width)
-				{
-					return item;
-				}
-
-				advance -= width;
-			}
-
-			return null;
-		}
 
 		private static Font GetMenuItemFont(SlimFieldMenuItem item)
 		{
@@ -445,34 +366,6 @@ namespace Epsitec.Common.Widgets
 			Visual.HorizontalAlignmentProperty.OverrideMetadataDefaultValue<SlimField> (HorizontalAlignment.Left);
 		}
 
-
-		private class MenuItem : System.Tuple<Font, string, SlimFieldMenuItem>
-		{
-			public MenuItem(Font font, string text)
-				: base (font, text, null)
-			{
-			}
-			
-			public MenuItem(SlimFieldMenuItem item)
-				: base (SlimField.GetMenuItemFont (item), item.Texts.FirstOrDefault (), item)
-			{
-			}
-
-			public string GetText(int variant)
-			{
-				var texts = this.Item3.Texts;
-				var count = texts.Count;
-
-				if (variant < count)
-				{
-					return texts[variant];
-				}
-				else
-				{
-					return texts[count-1];
-				}
-			}
-		}
 
 		private static class Strings
 		{

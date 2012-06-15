@@ -69,6 +69,14 @@ namespace Epsitec.Common.Support
 			return new StringArray (value);
 		}
 
+
+		public bool								IsEmpty
+		{
+			get
+			{
+				return this.first == null;
+			}
+		}
 		
 		public int								Count
 		{

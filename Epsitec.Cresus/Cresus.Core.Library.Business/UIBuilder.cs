@@ -853,7 +853,14 @@ namespace Epsitec.Cresus.Core
 			foreach (var item in controller.GetPossibleItems ().Take (5))
 			{
 				var texts = item.GetTextValues ().Where (x => x.Category == TextValueCategory.Name);
-				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, texts));
+				var array = new StringArray (texts.Select (x => x.SimpleText));
+
+				if (array.IsEmpty)
+				{
+					continue;
+				}
+
+				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, array));
 			}
 
 			slimField.MenuItems.Add (new SlimFieldMenuItem<T> (null, "plus…", style: SlimFieldMenuItemStyle.Extra));
