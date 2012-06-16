@@ -964,6 +964,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private void UpdateSummary()
 		{
 			//	Met à jour le résumé du critère, qui n'est visible que si la place le permet.
+#if false
 			int count = this.data.DeepCount;
 
 			if (count <= 1)
@@ -984,6 +985,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					this.summaryLabel.TextBreakMode = TextBreakMode.Ellipsis | TextBreakMode.Split;
 				}
 			}
+#else
+			this.summaryLabel.Visibility = false;
+#endif
 		}
 
 
