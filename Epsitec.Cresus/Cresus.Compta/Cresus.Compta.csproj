@@ -443,6 +443,7 @@
     <EmbeddedResource Include="Images\Période.Prev.icon" />
     <EmbeddedResource Include="Images\Filter.Warning.icon" />
     <EmbeddedResource Include="Images\Level.Misc.icon" />
+    <EmbeddedResource Include="Images\Edit.Add.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

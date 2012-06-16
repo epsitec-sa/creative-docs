@@ -1010,16 +1010,50 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private void ShowMiscMenu(Widget parentButton)
 		{
 			//	Affiche le menu des actions supplémentaires.
-			var menu = new VMenu ();
+			var collection = this.MenuCollection;
 
-			var collection = this.Collection;
+			bool selectEnable = collection.SelectedIndex != -1;
+			bool collectionEnable = selectEnable;
+
+			if (collectionEnable)
+			{
+				collectionEnable = !collection.DataList[collection.SelectedIndex].CompareTo (this.MenuData);
+
+				if (collection.DataList[collection.SelectedIndex].Specialist != this.Specialist)
+				{
+					collectionEnable = true;
+				}
+			}
+
+			bool moveBeginEnable = selectEnable;
+			bool moveEndEnable   = selectEnable;
+
+			if (moveBeginEnable && collection.SelectedIndex == 0)
+			{
+				moveBeginEnable = false;
+			}
+
+			if (moveEndEnable && collection.SelectedIndex == collection.DataList.Count-1)
+			{
+				moveEndEnable = false;
+			}
+
+			//	Met toutes les données connues dans le menu.
+			var menu = new VMenu ();
 
 			for (int i = 0; i< collection.DataList.Count; i++)
 			{
 				var data = collection.DataList[i];
 
-				var icon = (i == collection.SelectedIndex) ? "Button.RadioYes" : "Button.RadioNo";
-				this.AddToMenu (menu, true, icon, data.GetSummary (this.controller.ColumnMappers), this.MenuUseAction, i);
+				var icon = (i == collection.SelectedIndex) ? "MarkYes" : "MarkNo";
+				var text = data.GetSummary (this.controller.ColumnMappers);
+
+				if (collectionEnable && i == collection.SelectedIndex)
+				{
+					text = text.ApplyBold ();
+				}
+
+				this.AddToMenu (menu, true, icon, text, this.MenuUseAction, i);
 			}
 
 			if (collection.DataList.Any ())
@@ -1027,21 +1061,21 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				menu.Items.Add (new MenuSeparator ());
 			}
 
-			this.AddToMenu (menu, true, "Edit.Duplicate", "Dupliquer", this.MenuDuplicateAction);
-
-			bool enable = collection.SelectedIndex != -1;
-			this.AddToMenu (menu, enable, "Edit.Delete",    "Supprimer", this.MenuDeleteAction);
+			//	Met les commandes standards dans le menu.
+			this.AddToMenu (menu, true,         "Edit.Add",    "Ajouter",   this.MenuAddAction);
+			this.AddToMenu (menu, selectEnable, "Edit.Delete", "Supprimer", this.MenuDeleteAction);
 
 			menu.Items.Add (new MenuSeparator ());
 
-			if (enable)
-			{
-				enable = !collection.DataList[collection.SelectedIndex].CompareTo (this.SearchData);
-			}
+			this.AddToMenu (menu, collectionEnable, "ViewSettings.Reload", "Réutiliser les réglages initiaux", this.MenuReloadAction);
+			this.AddToMenu (menu, collectionEnable, "ViewSettings.Save",   "Enregistrer les réglages actuels", this.MenuSaveAction);
 
-			this.AddToMenu (menu, enable, "ViewSettings.Reload", "Réutiliser les réglages initiaux", this.MenuReloadAction);
-			this.AddToMenu (menu, enable, "ViewSettings.Save",   "Enregistrer les réglages actuels", this.MenuSaveAction);
+			menu.Items.Add (new MenuSeparator ());
 
+			this.AddToMenu (menu, moveBeginEnable, "Edit.Tab.Begin", "Déplacer en tête",  this.MenuMoveBeginAction);
+			this.AddToMenu (menu, moveEndEnable,   "Edit.Tab.End",   "Déplacer en queue", this.MenuMoveEndAction);
+
+			//	Affiche le menu.
 			TextFieldCombo.AdjustComboSize (parentButton, menu, false);
 
 			menu.Host = parentButton.Window;
@@ -1070,30 +1104,38 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		{
 			var index = item.TabIndex;
 
-			var collection = this.Collection;
+			var collection = this.MenuCollection;
 			collection.SelectedIndex = index;
-			collection.DataList[index].CopyTo (this.SearchData);
+			collection.DataList[index].CopyTo (this.MenuData);
+			this.Specialist = collection.DataList[index].Specialist;
 
 			this.SearchStartAction ();
 			this.controller.UpdateAfterChanged ();
 		}
 
-		private void MenuDuplicateAction(MenuItem item)
+		private void MenuAddAction(MenuItem item)
 		{
-			var data = this.SearchData.CopyFrom ();
-			this.Collection.DataList.Add (data);
+			var collection = this.MenuCollection;
+			var data = this.MenuData.CopyFrom ();
+			data.Specialist = this.Specialist;
+			collection.DataList.Add (data);
+			collection.SelectedIndex = collection.DataList.Count-1;
 		}
 
 		private void MenuDeleteAction(MenuItem item)
 		{
+			var collection = this.MenuCollection;
+			this.MenuCollection.DataList.RemoveAt (collection.SelectedIndex);
+			collection.SelectedIndex = -1;
 		}
 
 		private void MenuReloadAction(MenuItem item)
 		{
-			var collection = this.Collection;
+			var collection = this.MenuCollection;
 			var index = collection.SelectedIndex;
 			collection.SelectedIndex = index;
-			collection.DataList[index].CopyTo (this.SearchData);
+			collection.DataList[index].CopyTo (this.MenuData);
+			this.Specialist = collection.DataList[index].Specialist;
 
 			this.SearchStartAction ();
 			this.controller.UpdateAfterChanged ();
@@ -1101,13 +1143,36 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void MenuSaveAction(MenuItem item)
 		{
-			var collection = this.Collection;
+			var collection = this.MenuCollection;
 			var index = collection.SelectedIndex;
 			collection.SelectedIndex = index;
-			this.SearchData.CopyTo (collection.DataList[index]);
+			this.MenuData.CopyTo (collection.DataList[index]);
+			collection.DataList[index].Specialist = this.Specialist;
 		}
 
-		private SearchDataCollection Collection
+		private void MenuMoveBeginAction(MenuItem item)
+		{
+			var collection = this.MenuCollection;
+			var index = collection.SelectedIndex;
+			var data = collection.DataList[index];
+			this.MenuCollection.DataList.RemoveAt (collection.SelectedIndex);
+			index = 0;
+			collection.DataList.Insert (index, data);
+			collection.SelectedIndex = index;
+		}
+
+		private void MenuMoveEndAction(MenuItem item)
+		{
+			var collection = this.MenuCollection;
+			var index = collection.SelectedIndex;
+			var data = collection.DataList[index];
+			this.MenuCollection.DataList.RemoveAt (collection.SelectedIndex);
+			index = collection.DataList.Count;
+			collection.DataList.Insert (index, data);
+			collection.SelectedIndex = index;
+		}
+
+		private SearchDataCollection MenuCollection
 		{
 			get
 			{
@@ -1122,7 +1187,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			}
 		}
 
-		private SearchData SearchData
+		private SearchData MenuData
 		{
 			get
 			{
