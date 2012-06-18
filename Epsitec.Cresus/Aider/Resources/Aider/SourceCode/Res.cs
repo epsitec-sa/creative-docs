@@ -1734,8 +1734,6 @@ namespace Epsitec.Aider
 				public static readonly global::Epsitec.Common.Support.Druid DataSource = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 10);
 				//	designer:cap/LVAS2
 				public static readonly global::Epsitec.Common.Support.Druid DeclarationStatus = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 92);
-				//	designer:cap/LVGO02
-				public static readonly global::Epsitec.Common.Support.Druid HackIndex = new global::Epsitec.Common.Support.Druid (_moduleId, 80, 24);
 				//	designer:cap/LVACB
 				public static readonly global::Epsitec.Common.Support.Druid Nationality = new global::Epsitec.Common.Support.Druid (_moduleId, 10, 364);
 				//	designer:cap/LVA7

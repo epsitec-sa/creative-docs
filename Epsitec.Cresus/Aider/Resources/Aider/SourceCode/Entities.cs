@@ -466,28 +466,6 @@ namespace Epsitec.Aider.Entities
 				}
 			}
 		}
-		///	<summary>
-		///	The <c>HackIndex</c> field.
-		///	designer:fld/LVA/LVGO02
-		///	</summary>
-		[global::Epsitec.Common.Support.EntityField ("[LVGO02]")]
-		public long? HackIndex
-		{
-			get
-			{
-				return this.GetField<long?> ("[LVGO02]");
-			}
-			set
-			{
-				long? oldValue = this.HackIndex;
-				if (oldValue != value || !this.IsFieldDefined("[LVGO02]"))
-				{
-					this.OnHackIndexChanging (oldValue, value);
-					this.SetField<long?> ("[LVGO02]", oldValue, value);
-					this.OnHackIndexChanged (oldValue, value);
-				}
-			}
-		}
 		
 		partial void OnCreationDateChanging(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
 		partial void OnCreationDateChanged(global::Epsitec.Common.Types.Date oldValue, global::Epsitec.Common.Types.Date newValue);
@@ -527,8 +505,6 @@ namespace Epsitec.Aider.Entities
 		partial void OnAddress1Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddress2Changing(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
 		partial void OnAddress2Changed(global::Epsitec.Aider.Entities.eCH_AddressEntity oldValue, global::Epsitec.Aider.Entities.eCH_AddressEntity newValue);
-		partial void OnHackIndexChanging(long? oldValue, long? newValue);
-		partial void OnHackIndexChanged(long? oldValue, long? newValue);
 		
 		partial void GetNationality(ref global::Epsitec.Aider.Entities.AiderCountryEntity value);
 		partial void SetNationality(global::Epsitec.Aider.Entities.AiderCountryEntity value);

@@ -34,8 +34,6 @@ namespace Epsitec.Aider.Data.ECh
 
 		public static void Import(CoreDataManager coreDataManager, IList<EChReportedPerson> eChReportedPersons)
 		{
-			AiderEnumerator.ExecuteUglyHack ();
-
 			var townDataToEntityKey = EChDataImporter.ImportTowns (coreDataManager, eChReportedPersons);
 
 			EChDataImporter.ImportPersons (coreDataManager, eChReportedPersons, townDataToEntityKey);
