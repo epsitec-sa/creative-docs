@@ -518,6 +518,11 @@ namespace Epsitec.Cresus.Compta.Controllers
 			//	Appelé lorsque le critère de recherche a été modifié, et qu'il faut commencer une recherche.
 			if (this.dataAccessor != null)
 			{
+				if (this.dataAccessor.SearchData.QuickFilter || this.dataAccessor.HasQuickFilter != this.dataAccessor.SearchData.QuickFilter)
+				{
+					this.dataAccessor.UpdateFilter ();
+				}
+
 				this.dataAccessor.SearchUpdate ();
 				this.BaseUpdateArrayContent ();
 				this.SearchUpdateLocator (true);

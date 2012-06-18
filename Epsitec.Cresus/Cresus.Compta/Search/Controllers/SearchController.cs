@@ -10,6 +10,7 @@ using Epsitec.Common.Types.Converters;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Widgets;
 using Epsitec.Cresus.Compta.Helpers;
 using Epsitec.Cresus.Compta.Search.Data;
 using Epsitec.Cresus.Compta.Fields.Controllers;
@@ -681,6 +682,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			ToolTip.Default.SetToolTip (this.summaryLabel, "Résumé");
 
 			{
+				bool hasNextPrev = !this.isFilter;
+
 				this.buttonPrev = new GlyphButton
 				{
 					Parent          = footer,
@@ -690,7 +693,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					Dock            = DockStyle.Left,
 					Enable          = false,
 					Margins         = new Margins (0, 0, 0, 0),
-					Visibility      = !this.isFilter,
+					Visibility      = hasNextPrev,
 				};
 
 				this.buttonNext = new GlyphButton
@@ -701,17 +704,49 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
 					Enable          = false,
-					Margins         = new Margins (-1, 10, 0, 0),
-					Visibility      = !this.isFilter,
+					Margins         = new Margins (-1, 0, 0, 0),
+					Visibility      = hasNextPrev,
 				};
 
 				new FrameBox
 				{
 					Parent          = footer,
-					PreferredWidth  = 20+20-1+10,
+					PreferredWidth  = 20+20-1,
 					PreferredHeight = 20,
 					Dock            = DockStyle.Left,
-					Visibility      = this.isFilter,
+					Visibility      = !hasNextPrev,
+				};
+
+				bool hasQuickFilter = !this.isFilter && this.controller.DataAccessor.FilterData != null;
+
+				this.buttonQuickFilter = new BackIconButton
+				{
+					Parent          = footer,
+					IconUri         = UIBuilder.GetResourceIconUri ("Search.QuickFilter"),
+					PreferredWidth  = 20,
+					PreferredHeight = 20,
+					BackColor       = UIBuilder.SelectionColor,
+					Dock            = DockStyle.Left,
+					Margins         = new Margins (1, 0, 0, 0),
+					AutoFocus       = false,
+					Visibility      = hasQuickFilter,
+				};
+
+				new FrameBox
+				{
+					Parent          = footer,
+					PreferredWidth  = 1+20,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
+					Visibility      = !hasQuickFilter,
+				};
+
+				new FrameBox
+				{
+					Parent          = footer,
+					PreferredWidth  = 10,
+					PreferredHeight = 20,
+					Dock            = DockStyle.Left,
 				};
 
 				this.resultLabel = new StaticText
@@ -734,8 +769,16 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 					this.searchNextAction (1);
 				};
 
-				ToolTip.Default.SetToolTip (this.buttonPrev, "Cherche en arrière");
-				ToolTip.Default.SetToolTip (this.buttonNext, "Cherche en avant");
+				this.buttonQuickFilter.Clicked += delegate
+				{
+					this.data.QuickFilter = !this.data.QuickFilter;
+					this.UpdateButtons ();
+					this.SearchStartAction ();
+				};
+
+				ToolTip.Default.SetToolTip (this.buttonPrev,        "Cherche en arrière");
+				ToolTip.Default.SetToolTip (this.buttonNext,        "Cherche en avant");
+				ToolTip.Default.SetToolTip (this.buttonQuickFilter, "Filtre instantané");
 			}
 		}
 
@@ -745,8 +788,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent          = this.beginnerFrame,
 				Text            = this.data.BeginnerSearch,
+				PreferredWidth  = 250,
 				PreferredHeight = 20,
-				Dock            = DockStyle.Fill,
+				Dock            = DockStyle.Left,
 			};
 
 			this.beginnerSearchField.TextChanged += delegate
@@ -945,6 +989,11 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			if (this.filterEnableButton != null)
 			{
 				this.filterEnableButton.ActiveState = this.data.Enable ? ActiveState.Yes : ActiveState.No;
+			}
+
+			if (this.buttonQuickFilter != null)
+			{
+				this.buttonQuickFilter.ActiveState = this.data.QuickFilter ? ActiveState.Yes : ActiveState.No;
 			}
 
 			foreach (var controller in this.nodeControllers)
@@ -1224,6 +1273,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private CheckButton								filterEnableButton;
 		private GlyphButton								buttonNext;
 		private GlyphButton								buttonPrev;
+		private BackIconButton							buttonQuickFilter;
 		private StaticText								summaryLabel;
 		private StaticText								resultLabel;
 		private FrameBox								beginnerFrame;

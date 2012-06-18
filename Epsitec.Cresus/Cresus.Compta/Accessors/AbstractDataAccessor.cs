@@ -263,8 +263,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateMergedFilter ();
 			this.readonlyData.Clear ();
 
-			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) &&
-				(this.mainWindowController.TemporalData == null || this.mainWindowController.TemporalData.IsEmpty))
+			if (!this.HasFilter)
 			{
 				this.readonlyData.AddRange (this.readonlyAllData);
 			}
@@ -321,10 +320,27 @@ namespace Epsitec.Cresus.Compta.Accessors
 			}
 		}
 
+		protected bool HasFilter
+		{
+			get
+			{
+				return (this.mergedFilterData != null && !this.mergedFilterData.IsEmpty) ||
+					   (this.searchData != null && this.searchData.QuickFilter && !this.searchData.IsEmpty) ||
+					   (this.mainWindowController.TemporalData != null && !this.mainWindowController.TemporalData.IsEmpty);
+			}
+		}
+
 		protected bool FilterLine(int row)
 		{
 			if (!this.mergedFilterData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
 			{
+				return false;
+			}
+
+			if (this.searchData != null && this.searchData.QuickFilter && !this.searchData.IsEmpty &&
+				!this.searchData.Process (null, row, (x, y) => this.GetText (x, y, true), this.columnMappers.Where (x => x.Show).Select (x => x.Column)))
+			{
+				this.hasQuickFilter = true;
 				return false;
 			}
 
@@ -340,12 +356,21 @@ namespace Epsitec.Cresus.Compta.Accessors
 			return true;
 		}
 
+		public bool HasQuickFilter
+		{
+			get
+			{
+				return this.hasQuickFilter;
+			}
+		}
+
 		protected void UpdateMergedFilter()
 		{
 			//	Met à jour mergedFilterData à partir de filterData, en y incorporant les données à
 			//	filtrer provenant des options. Cela est nécessaire, puisque, contre toute logique, il
 			//	a été décidé de mettre la plupart des choix concernant le filtre dans les options !
 			this.mergedFilterData = this.filterData.CopyFrom ();
+			this.hasQuickFilter = false;
 
 			if (!this.filterData.Enable)
 			{
@@ -754,5 +779,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 		protected Cube									cube;
 		protected Cube									cubeToDraw;
 		protected GraphOptions							arrayGraphOptions;
+		protected bool									hasQuickFilter;
 	}
 }

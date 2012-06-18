@@ -55,7 +55,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				this.journalAll = this.période.Journal.Where (x => x.Journal.Id == id).ToList ();
 			}
 
-			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
+			if (!this.HasFilter)
 			{
 				this.journal = this.journalAll;
 			}

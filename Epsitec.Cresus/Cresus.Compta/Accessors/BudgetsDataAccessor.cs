@@ -49,7 +49,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateMergedFilter ();
 			this.planComptableAll = this.compta.PlanComptable;
 
-			if ((this.mergedFilterData == null || this.mergedFilterData.IsEmpty) && this.mainWindowController.TemporalData.IsEmpty)
+			if (!this.HasFilter)
 			{
 				this.planComptable = this.planComptableAll;
 			}

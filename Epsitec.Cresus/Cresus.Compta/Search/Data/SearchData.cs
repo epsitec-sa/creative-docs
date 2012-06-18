@@ -73,6 +73,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			set;
 		}
 
+		public bool QuickFilter
+		{
+			get;
+			set;
+		}
+
 
 		public SearchTabData FirstTabData
 		{

@@ -444,6 +444,7 @@
     <EmbeddedResource Include="Images\Filter.Warning.icon" />
     <EmbeddedResource Include="Images\Level.Misc.icon" />
     <EmbeddedResource Include="Images\Edit.Add.icon" />
+    <EmbeddedResource Include="Images\Search.QuickFilter.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">

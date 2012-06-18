@@ -42,7 +42,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 			this.UpdateMergedFilter ();
 			this.planComptableAll = this.compta.PlanComptable;
 
-			if (this.IsAllComptes)
+			if (!this.HasFilter)
 			{
 				this.planComptable = this.planComptableAll;
 			}
@@ -311,7 +311,7 @@ namespace Epsitec.Cresus.Compta.Accessors
 				int row = this.GetSortedRow (compte.Numéro);
 				this.planComptable.Insert (row, compte);
 
-				if (!this.IsAllComptes)
+				if (this.HasFilter)
 				{
 					int globalRow = this.GetSortedRow (compte.Numéro, global: true);
 					this.compta.PlanComptable.Insert (globalRow, compte);
@@ -555,15 +555,6 @@ namespace Epsitec.Cresus.Compta.Accessors
 			else
 			{
 				return this.planComptable;
-			}
-		}
-
-
-		private bool IsAllComptes
-		{
-			get
-			{
-				return this.mergedFilterData == null || this.mergedFilterData.IsEmpty;
 			}
 		}
 
