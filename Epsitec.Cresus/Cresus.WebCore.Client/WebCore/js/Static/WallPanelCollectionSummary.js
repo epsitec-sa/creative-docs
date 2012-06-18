@@ -103,6 +103,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
           },
           success : function (response, options)
           {
+            this.setLoading(false);
             this.getEl().slideOut();
           },
           failure : function ()
