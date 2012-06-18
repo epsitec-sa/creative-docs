@@ -62,7 +62,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var sessionId = (string) this.Session[LoginModule.CoreSessionName];
 
-			this.ServerContext.CoreSessionManager.DeleteSession (sessionId);
+			if (!string.IsNullOrEmpty(sessionId))
+			{
+				this.ServerContext.CoreSessionManager.DeleteSession (sessionId);
+			}
 
 			this.Session[LoginModule.LoggedInName] = false;
 
