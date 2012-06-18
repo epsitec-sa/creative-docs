@@ -46,24 +46,24 @@ namespace Epsitec.Common.Tests.Types
 
 			for (int i = 0; i < steps; i++)
 			{
-				//	allocator: 0.45 μs
+				//	allocator: 0.45 µs
 				allocator ();
 			}
 
 			stopwatch.Stop ();
-			System.Console.Out.WriteLine ("DynamicMethod + ILGen: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+			System.Console.Out.WriteLine ("DynamicMethod + ILGen: {0} µs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
 
 			stopwatch.Reset ();
 			stopwatch.Start ();
 
 			for (int i = 0; i < steps; i++)
 			{
-				//	Activator: 17.2 μs (38 x plus lent que activator)
+				//	Activator: 17.2 µs (38 x plus lent que activator)
 				System.Activator.CreateInstance (type);
 			}
 
 			stopwatch.Stop ();
-			System.Console.Out.WriteLine ("Activator.CreateInstance: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+			System.Console.Out.WriteLine ("Activator.CreateInstance: {0} µs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
 
 			DependencyObjectType depType = DependencyObjectType.FromSystemType (type);
 			depType.CreateEmptyObject ();
@@ -78,7 +78,7 @@ namespace Epsitec.Common.Tests.Types
 			}
 
 			stopwatch.Stop ();
-			System.Console.Out.WriteLine ("CreateEmptyObject: {0} μs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
+			System.Console.Out.WriteLine ("CreateEmptyObject: {0} µs, {1} executions.", 1.0M * stopwatch.ElapsedMilliseconds / (steps / 1000), steps);
 		}
 
 		[Test]

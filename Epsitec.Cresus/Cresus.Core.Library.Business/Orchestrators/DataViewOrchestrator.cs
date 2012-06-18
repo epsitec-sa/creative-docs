@@ -35,24 +35,27 @@ namespace Epsitec.Cresus.Core.Orchestrators
 		/// <param name="commandContext">The command context.</param>
 		public DataViewOrchestrator(CoreApp host)
 		{
-			this.components         = new CoreComponentHostImplementation<ViewControllerComponent> ();
-			this.host               = host;
-			this.data               = this.host.FindComponent<CoreData> ();
-			this.commandContext     = this.host.CommandContext;
+			using (Epsitec.Common.Debug.Profiler.MeasureMilliseconds ("DataViewOrchestrator initialized in {0}"))
+			{
+				this.components         = new CoreComponentHostImplementation<ViewControllerComponent> ();
+				this.host               = host;
+				this.data               = this.host.FindComponent<CoreData> ();
+				this.commandContext     = this.host.CommandContext;
 
-			this.host.RegisterComponent (this);
-			this.host.RegisterComponentAsDisposable (this);
-			this.host.ActivateComponent (this);
+				this.host.RegisterComponent (this);
+				this.host.RegisterComponentAsDisposable (this);
+				this.host.ActivateComponent (this);
 
-			this.CreateNewBusinessContext ();
+				this.CreateNewBusinessContext ();
 
-			Factories.ViewControllerComponentFactory.RegisterComponents (this);
-			Factories.ViewControllerComponentFactory.SetupComponents (this.components.GetComponents ());
+				Factories.ViewControllerComponentFactory.RegisterComponents (this);
+				Factories.ViewControllerComponentFactory.SetupComponents (this.components.GetComponents ());
 
-			this.navigator          = new NavigationOrchestrator (this);
-			this.workflowController = new WorkflowController (this);
+				this.navigator          = new NavigationOrchestrator (this);
+				this.workflowController = new WorkflowController (this);
 
-			this.workflowController.AttachBusinessContext (this.businessContext);
+				this.workflowController.AttachBusinessContext (this.businessContext);
+			}
 		}
 
 

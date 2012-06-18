@@ -148,7 +148,7 @@ namespace Epsitec.Common.Types
 			//	The allocator invokes a dynamically generated piece of IL code
 			//	which does simply 'new' the associated type. With .NET 2.0, this
 			//	is 40 times faster than the equivalent System.Activator call; it
-			//	takes less than 0.5 μs on a 3GHz Pentium-D system.
+			//	takes less than 0.5 µs on a 3GHz Pentium-D system.
 			
 			return this.allocator ();
 		}
