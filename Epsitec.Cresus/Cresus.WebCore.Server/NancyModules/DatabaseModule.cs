@@ -4,9 +4,6 @@ using Epsitec.Common.Support.EntityEngine;
 
 using Epsitec.Cresus.Core.Entities;
 
-using Epsitec.Cresus.DataLayer.Context;
-using Epsitec.Cresus.DataLayer.Expressions;
-
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
@@ -123,9 +120,15 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabaseList(CoreSession coreSession)
 		{
-			var list = DatabasesModule.databases.Values.Select (d => d.ToDictionary ()).ToList ();
+			var content = from database in DatabasesModule.databases.Values
+			              select new Dictionary<string, object> ()
+			              {
+			              	  { "Title", database.Title },
+			              	  { "DatabaseName", database.DatabaseName },
+			              	  { "CssClass", database.CssClass },
+			              };
 
-			return CoreResponse.AsSuccess (list);
+			return CoreResponse.AsSuccess (content.ToList ());
 		}
 
 
@@ -157,8 +160,8 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var content = new Dictionary<string, object> ()
 			{
-				{"total", total },
-				{"entities", entities.ToList () },
+				{ "total", total },
+				{ "entities", entities.ToList () },
 			};
 
 			return CoreResponse.AsJson (content);
@@ -199,67 +202,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 		private readonly static Dictionary<string, Database> databases;
-
-
-		private abstract class Database
-		{
-
-
-			public string Title;
-			public string DatabaseName;
-			public string CssClass;
-
-
-			public abstract int GetCount(DataContext dataContext);
-
-
-			public abstract IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take);
-
-
-			public Dictionary<string, object> ToDictionary()
-			{
-				return new Dictionary<string, object> ()
-				{
-					{ "Title", this.Title },
-					{ "DatabaseName", this.DatabaseName },
-					{ "CssClass", this.CssClass },
-				};
-			}
-
-		}
-
-
-		private sealed class Database<T> : Database
-			where T : AbstractEntity, new ()
-		{
-
-
-			public override int GetCount(DataContext dataContext)
-			{
-				return dataContext.GetCount (new T ());
-			}
-
-
-			public override IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take)
-			{
-				var example = new T ();
-
-				var request = new DataLayer.Loader.Request ()
-				{
-					RootEntity = example,
-					Skip = skip,
-					Take = take,
-				};
-
-				request.AddSortClause
-				(
-					InternalField.CreateId (example),
-					SortOrder.Ascending
-				);
-
-				return dataContext.GetByRequest<T> (request);
-			}
-		}
 
 
 	}
