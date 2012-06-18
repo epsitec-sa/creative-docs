@@ -865,7 +865,17 @@ namespace Epsitec.Cresus.Core
 				slimField.MenuItems.Add (new SlimFieldMenuItem<T> (item, array));
 			}
 
-			slimField.MenuItems.Add (new SlimFieldMenuItem<T> (null, "plus…", style: SlimFieldMenuItemStyle.Extra));
+			tile.AllowSelection = true;
+
+			var viewController = this.container.EntityViewController;
+			var orchestrator   = viewController.Orchestrator;
+
+			slimField.MenuItems.Add (new SlimFieldMenuItemCommand (SlimFieldMenuItemCommandCode.Extra, _ =>
+			{
+				var navPath = new TileNavigationPathElement ("foo");
+				var subViewController = new Epsitec.Cresus.Core.Controllers.PickerControllers.ItemPickerController ("ItemPicker", orchestrator, viewController, navPath);
+				tile.OpenSubView (orchestrator, viewController, subViewController);
+			}));
 
 //-			this.RegisterTextField (slimField);
 			this.ContentListAdd (slimField);

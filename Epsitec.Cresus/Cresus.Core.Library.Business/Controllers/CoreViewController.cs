@@ -28,12 +28,14 @@ namespace Epsitec.Cresus.Core.Controllers
 		/// Initializes a new instance of the <see cref="CoreViewController"/> class.
 		/// </summary>
 		/// <param name="name">The name of the controller.</param>
-		public CoreViewController(string name, DataViewOrchestrator orchestrator = null)
+		public CoreViewController(string name, DataViewOrchestrator orchestrator = null, CoreViewController parentController = null, NavigationPathElement navigationPathElement = null)
 			: base (name)
 		{
 			if (EntityViewControllerFactory.Default == null)
 			{
-				this.orchestrator = orchestrator;
+				this.orchestrator          = orchestrator;
+				this.parentController      = parentController;
+				this.navigationPathElement = navigationPathElement;
 			}
 			else
 			{
@@ -42,10 +44,10 @@ namespace Epsitec.Cresus.Core.Controllers
 					return;
 				}
 
-				this.orchestrator          = EntityViewControllerFactory.Default.Orchestrator;
 				this.viewControllerMode    = EntityViewControllerFactory.Default.Mode;
-				this.navigationPathElement = EntityViewControllerFactory.Default.NavigationPathElement;
-				this.parentController      = EntityViewControllerFactory.Default.ParentController; // this.orchestrator.GetLeafViewController ();
+				this.orchestrator          = orchestrator          ?? EntityViewControllerFactory.Default.Orchestrator;
+				this.navigationPathElement = navigationPathElement ?? EntityViewControllerFactory.Default.NavigationPathElement;
+				this.parentController      = parentController      ?? EntityViewControllerFactory.Default.ParentController;
 			}
 
 			//	Make sure we create the default business context :

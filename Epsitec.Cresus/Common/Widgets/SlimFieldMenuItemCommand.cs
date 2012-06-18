@@ -50,7 +50,7 @@ namespace Epsitec.Common.Widgets
 					return "✘";
 
 				case SlimFieldMenuItemCommandCode.Extra:
-					return "autre…";
+					return "plus…";
 
 				default:
 					return "";
