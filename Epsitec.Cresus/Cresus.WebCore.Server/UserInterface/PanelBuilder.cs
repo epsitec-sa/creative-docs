@@ -58,12 +58,6 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		/// <summary>
-		/// Creates a controller according to an entity and a ViewMode
-		/// </summary>
-		/// <param name="entity"></param>
-		/// <param name="mode"></param>
-		/// <returns>Name of the generated panel</returns>
 		private Dictionary<string, object> Run()
 		{
 			var panel = new Dictionary<string, object> ();
