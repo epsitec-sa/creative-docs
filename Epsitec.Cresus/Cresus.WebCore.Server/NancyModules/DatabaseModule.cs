@@ -2,15 +2,15 @@
 
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.Core.Business;
 using Epsitec.Cresus.Core.Entities;
+
+using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.DataLayer.Expressions;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
 
 using Nancy;
-
-using System;
 
 using System.Collections.Generic;
 
@@ -131,37 +131,37 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response GetDatabase(CoreSession coreSession, dynamic parameters)
 		{
-			var context = coreSession.GetBusinessContext ();
+			// NOTE Should we use a RequestView here, in order to maintain consistency between each
+ 			// calls ?
+
+			var businessContext = coreSession.GetBusinessContext ();
+			var dataContext = businessContext.DataContext;
 
 			string databaseName = parameters.name;
 
-			// Get all entites from the current Type
-			var type = DatabasesModule.databases[databaseName].GetDatabaseType ();
-			var method = typeof (BusinessContext).GetMethod ("GetAllEntities");
-			var m = method.MakeGenericMethod (type);
-			var o = m.Invoke (context, new object[0]);
-			var enumerable = o as IEnumerable<AbstractEntity>;
+			int start = Request.Query.start;
+			int limit = Request.Query.limit;
 
-			var start = (int) Request.Query.start;
-			var limit = (int) Request.Query.limit;
+			var database = DatabasesModule.databases[databaseName];
 
-			var list = from c in enumerable
-					   let summary = c.GetCompactSummary ().ToSimpleText ()
-					   // orderby summary // TODO Awefully slow !
-					   select new
-					   {
-						   name = summary,
-						   uniqueId = Tools.GetEntityId (context, c)
-					   };
+			var total = database.GetCount (dataContext);
+			
+			var entities = from entity in database.GetEntities (dataContext, start, limit)
+			               let summary = entity.GetCompactSummary ().ToSimpleText ()
+			               let id = Tools.GetEntityId (businessContext, entity)
+			               select new
+						   {
+							   name = summary,
+							   uniqueId = id,
+						   };
 
-			// Only take a subset of all the entities
-			var subset = list.Skip (start).Take (limit).ToList ();
+			var content = new Dictionary<string, object> ()
+			{
+				{"total", total },
+				{"entities", entities.ToList () },
+			};
 
-			var dic = new Dictionary<string, object> ();
-			dic["total"] = enumerable.Count (); // For ExtJS
-			dic["entities"] = subset;
-
-			return CoreResponse.AsJson (dic);
+			return CoreResponse.AsJson (content);
 		}
 
 
@@ -169,7 +169,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var context = coreSession.GetBusinessContext ();
 
-			string paramEntityKey = (string) Request.Form.entityId;
+			string paramEntityKey = Request.Form.entityId;
 
 			AbstractEntity entity = Tools.ResolveEntity (context, paramEntityKey);
 
@@ -210,7 +210,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			public string CssClass;
 
 
-			public abstract Type GetDatabaseType();
+			public abstract int GetCount(DataContext dataContext);
+
+
+			public abstract IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take);
 
 
 			public Dictionary<string, object> ToDictionary()
@@ -227,16 +230,35 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 
 		private sealed class Database<T> : Database
-			where T : AbstractEntity
+			where T : AbstractEntity, new ()
 		{
 
 
-			public override Type GetDatabaseType()
+			public override int GetCount(DataContext dataContext)
 			{
-				return typeof (T);
+				return dataContext.GetCount (new T ());
 			}
 
 
+			public override IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take)
+			{
+				var example = new T ();
+
+				var request = new DataLayer.Loader.Request ()
+				{
+					RootEntity = example,
+					Skip = skip,
+					Take = take,
+				};
+
+				request.AddSortClause
+				(
+					InternalField.CreateId (example),
+					SortOrder.Ascending
+				);
+
+				return dataContext.GetByRequest<T> (request);
+			}
 		}
 
 
