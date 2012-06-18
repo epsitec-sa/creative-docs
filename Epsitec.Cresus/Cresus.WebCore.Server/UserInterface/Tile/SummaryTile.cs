@@ -58,6 +58,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		}
 
 
+		public bool IsRoot
+		{
+			get;
+			set;
+		}
+
+
 		public override Dictionary<string, object> ToDictionary()
 		{
 			var panel = new Dictionary<string, object> ();
@@ -72,6 +79,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 			panel["title"] = this.Title;
 			panel["html"] = this.Text;
 
+			panel["isRoot"] = this.IsRoot;
 			panel["entityId"] = this.EntityId;
 			panel["subViewControllerMode"] = this.SubViewControllerMode;
 			panel["subViewControllerSubTypeId"] = this.SubViewControllerSubTypeId;

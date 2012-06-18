@@ -36,14 +36,18 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 		public static IEnumerable<ITileData> BuildTileData(BrickWall brickWall, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
 		{
+			bool isFirst = true;
+
 			foreach (var brick in brickWall.Bricks)
 			{
-				yield return Carpenter.BuildTileData (brick, propertyAccessorCache, autoCreatorCache);
+				yield return Carpenter.BuildTileData (brick, propertyAccessorCache, autoCreatorCache, isFirst);
+
+				isFirst = false;
 			}
 		}
 
 
-		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		private static ITileData BuildTileData(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache, bool isFirst)
 		{
 			var mode = Carpenter.GetTileMode (brick);
 
@@ -59,7 +63,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 					throw new NotImplementedException ();
 
 				case ViewControllerMode.Summary:
-					return Carpenter.BuildSummaryTileDataItem (brick, propertyAccessorCache, autoCreatorCache);
+					return Carpenter.BuildSummaryTileDataItem (brick, propertyAccessorCache, autoCreatorCache, isFirst);
 
 				default:
 					throw new NotImplementedException ();
@@ -83,13 +87,15 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 		}
 
 
-		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache)
+		private static SummaryTileData BuildSummaryTileDataItem(Brick brick, PropertyAccessorCache propertyAccessorCache, AutoCreatorCache autoCreatorCache, bool isFirst)
 		{
 			var summaryTileData = Carpenter.CreateSummaryTileData ();
 
 			var summaryBrick = Carpenter.GetSummaryBrick (brick);
 
 			Carpenter.PopulateSummaryTileData (summaryBrick, summaryTileData, propertyAccessorCache, autoCreatorCache);
+
+			summaryTileData.IsRoot = isFirst;
 
 			return summaryTileData;
 		}

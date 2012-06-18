@@ -83,11 +83,9 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface
 
 			var tileData = this.GetTileData (brickWall);
 			var tiles = this.GetTiles (tileData, entity);
-			var panels = tiles.Select (t => t.ToDictionary ()).ToList ();
+			var items = tiles.Select (t => t.ToDictionary ());
 
-			panels[0]["isRoot"] = true;
-
-			return panels;
+			return items.ToList ();
 		}
 
 

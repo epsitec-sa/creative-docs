@@ -54,6 +54,13 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		}
 
 
+		public bool IsRoot
+		{
+			get;
+			set;
+		}
+
+
 		public AutoCreator AutoCreator
 		{
 			get;
@@ -103,6 +110,7 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.TileData
 		{
 			return new SummaryTile ()
 			{
+				IsRoot = this.IsRoot,
 				EntityId = entityIdGetter (this.EntityGetter(entity)),
 				IconClass = iconClassGetter (this.EntityType, this.Icon),
 				SubViewControllerMode = Tools.ViewControllerModeToString (this.SubViewControllerMode),
