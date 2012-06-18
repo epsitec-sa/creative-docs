@@ -41,6 +41,8 @@ namespace Epsitec.Cresus.WebCore.Server.UserInterface.Tile
 		{
 			var panel = base.ToDictionary ();
 
+			panel["xtype"] = "collectionsummary";
+
 			panel["hideRemoveButton"] = this.HideRemoveButton;
 			panel["hideAddButton"] = this.HideAddButton;
 			panel["propertyAccessorId"] = this.PropertyAccessorId;

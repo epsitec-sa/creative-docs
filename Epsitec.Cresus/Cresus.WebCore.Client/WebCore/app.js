@@ -31,6 +31,7 @@ Ext.application(
       'Epsitec.Cresus.Core.Static.Menu',
       'Epsitec.Cresus.Core.Static.TabbedPage',
       'Epsitec.Cresus.Core.Static.TabMgr',
+      'Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       'Epsitec.Cresus.Core.Static.WallPanelEdition',
       'Epsitec.Cresus.Core.Static.WallPanelEmptySummary',
       'Epsitec.Cresus.Core.Static.WallPanelSummary',

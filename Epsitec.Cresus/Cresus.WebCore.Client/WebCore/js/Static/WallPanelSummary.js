@@ -10,22 +10,18 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     
     /* Properties */
     entityId : null,
-    propertyAccessorId : null,
-    entityType : null,
     isRoot : false,
     subViewControllerMode : 'edition',
     subViewControllerSubTypeId : 'null',
-    hideRemoveButton : false,
-    hideAddButton : false,
+    autoCreatorId : null,
     selectedPanelCls : 'selected-entity',
     selected : false,
-    autoCreatorId : null,
     
     /* Constructor */
     constructor : function (o)
     {
       var options = o || {};
-      this.addEntityTools(options);
+      this.addRefreshButton(options);
       
       this.callParent(new Array(options));
       return this;
@@ -46,8 +42,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     },
     
     /* Additional methods */
-    
-    addEntityTools : function (options)
+    addRefreshButton : function (options)
     {
       options.tools = options.tools || new Array();
       
@@ -61,32 +56,6 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
             scope : this
           }
         );
-      }
-      else
-      {
-        if (options.hideRemoveButton == null || !options.hideRemoveButton)
-        {
-          options.tools.push(
-            {
-              type : 'minus',
-              tooltip : 'Remove this item',
-              handler : this.deleteEntity,
-              scope : this
-            }
-          );
-        }
-        
-        if (options.hideAddButton == null || !options.hideAddButton)
-        {
-          options.tools.push(
-            {
-              type : 'plus',
-              tooltip : 'Add a new item',
-              handler : this.addEntity,
-              scope : this
-            }
-          );
-        }
       }
     },
     
@@ -119,72 +88,6 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     {
       var columnMgr = Ext.getCmp('columnmgr');
       columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 3);
-    },
-    
-    deleteEntity : function ()
-    {
-      this.setLoading();
-      
-      Ext.Ajax.request(
-        {
-          url : 'proxy/collection/delete',
-          params :
-          {
-            parentEntity : this.ownerCt.parentEntity,
-            deleteEntity : this.entityId,
-            propertyAccessorId : this.propertyAccessorId
-          },
-          success : function (response, options)
-          {
-            this.getEl().slideOut();
-          },
-          failure : function ()
-          {
-            this.setLoading(false);
-            Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
-          },
-          scope : this
-        }
-      );
-    },
-    
-    addEntity : function ()
-    {
-      this.setLoading();
-      
-      Ext.Ajax.request(
-        {
-          url : 'proxy/collection/create',
-          params :
-          {
-            parentEntity : this.ownerCt.parentEntity,
-            entityType : this.entityType,
-            propertyAccessorId : this.propertyAccessorId
-          },
-          success : function (response, options)
-          {
-            this.setLoading(false);
-            
-            try
-            {
-              var json = Ext.decode(response.responseText);
-            }
-            catch (err)
-            {
-              options.failure.apply(arguments);
-              return;
-            }
-            
-            this.showNewEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, json.content, this);
-          },
-          failure : function ()
-          {
-            this.setLoading(false);
-            Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
-          },
-          scope : this
-        }
-      );
     },
     
     autoCreateNullEntity : function()
