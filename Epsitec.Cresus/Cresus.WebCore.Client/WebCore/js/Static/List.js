@@ -141,7 +141,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
           {
             model : 'Epsitec.Cresus.Core.Static.ListItem',
             storeId : 'persons',
-            pageSize : 200,
+            pageSize : 100,
             remoteSort : true,
             buffered : true,
             proxy :
