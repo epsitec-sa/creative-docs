@@ -199,7 +199,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Parent              = this.middleFrame,
 				ContainerLayoutMode = this.isFilter ? ContainerLayoutMode.VerticalFlow : ContainerLayoutMode.HorizontalFlow,
 				Dock                = DockStyle.Fill,
-				Padding             = new Margins (5, 5, this.isFilter ? 0 : 5, this.isFilter ? 0 : 5),
+				Padding             = new Margins (5, 0, this.isFilter ? 0 : 5, this.isFilter ? 0 : 5),
 			};
 
 			{
@@ -247,7 +247,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void CreateMiddleBeginnerFreeTextUI(FrameBox parent)
 		{
-			var frame = this.CreateBeginnerFrame (parent, "Texte");
+			var frame = this.CreateBeginnerFrame (parent);
 
 			this.beginnerFreeTextField = new TextField
 			{
@@ -295,7 +295,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		private void CreateMiddleBeginnerDatesUI(FrameBox parent)
 		{
-			var frame = this.CreateBeginnerFrame (parent, "Période");
+			var frame = this.CreateBeginnerFrame (parent);
 
 			this.temporalController = new TemporalController (this.data.TemporalData);
 			this.temporalController.CreateUI (frame, this.GetPériode, this.BeginnerDateChanged);
@@ -324,39 +324,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		}
 
 
-		private FrameBox CreateBeginnerFrame(FrameBox parent, FormattedText title)
+		private FrameBox CreateBeginnerFrame(FrameBox parent)
 		{
-#if false
-			var line = new FrameBox
-			{
-				Parent          = parent,
-				PreferredHeight = 5+20+5,
-				Dock            = DockStyle.Top,
-				Margins         = new Margins (0, 0, 0, -1),
-			};
-
-			new StaticText
-			{
-				Parent           = line,
-				FormattedText    = title,
-				ContentAlignment = ContentAlignment.MiddleRight,
-				TextBreakMode    = TextBreakMode.Ellipsis | TextBreakMode.Split | TextBreakMode.SingleLine,
-				PreferredWidth   = 60,
-				Dock             = DockStyle.Left,
-				Margins          = new Margins (0, 10, 0, 0),
-			};
-
-			var frame = new FrameBox
-			{
-				Parent          = line,
-				PreferredHeight = 20,
-				DrawFullFrame   = true,
-				Dock            = DockStyle.Fill,
-				Padding         = new Margins (10, 5, 5, 5),
-			};
-
-			return frame;
-#else
 			return new FrameBox
 			{
 				Parent          = parent,
@@ -366,7 +335,6 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins         = new Margins (0, 0, 0, -1),
 				Padding         = new Margins (5),
 			};
-#endif
 		}
 
 
@@ -518,7 +486,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			{
 				Parent          = this.beginnerFrame,
 				Text            = this.data.BeginnerSearch,
-				PreferredWidth  = 250,
+				PreferredWidth  = 250+5,
 				PreferredHeight = 20,
 				Dock            = DockStyle.Left,
 			};
