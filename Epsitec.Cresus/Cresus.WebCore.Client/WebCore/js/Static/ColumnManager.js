@@ -201,7 +201,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       // Re-apply the selection
       for(var i = 0; i < this.items.length; ++i)
       {
-        var selectedEntityId = selectedEntityIds[newId];
+        var selectedEntityId = selectedEntityIds[i];
         
         if (selectedEntityId !== null)
         {
