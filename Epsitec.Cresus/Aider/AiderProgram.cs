@@ -117,7 +117,7 @@ namespace Epsitec.Aider
 
 				var coreDataManager = new CoreDataManager (app.Data);
 
-				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-04-04.xml");
+				var eChDataFile = new FileInfo (@"S:\Epsitec.Cresus\App.Aider\Samples\eerv-2012-04-18.xml");
 				var eChReportedPersons = EChDataLoader.Load (eChDataFile);
 				EChDataImporter.Import (coreDataManager, eChReportedPersons);
 				
