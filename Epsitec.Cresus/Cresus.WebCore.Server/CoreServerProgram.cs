@@ -5,7 +5,6 @@ using Epsitec.Common.IO;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
 using Epsitec.Cresus.WebCore.Server.NancyHosting;
-using Epsitec.Cresus.WebCore.Server.NancyModules;
 
 using System;
 
