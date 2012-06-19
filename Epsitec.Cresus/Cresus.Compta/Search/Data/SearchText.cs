@@ -57,6 +57,30 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 		}
 
+		public bool Additionnal
+		{
+			get
+			{
+				return this.additionnal;
+			}
+			set
+			{
+				this.additionnal = value;
+
+				if (this.additionnal == false)
+				{
+					if (this.mode == SearchMode.Empty || this.mode == SearchMode.Jokers)
+					{
+						this.mode = SearchMode.Fragment;
+					}
+
+					this.matchCase = false;
+					this.wholeWord = false;
+					this.invert    = false;
+				}
+			}
+		}
+
 		public SearchMode Mode
 		{
 			get
@@ -124,12 +148,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public void Clear()
 		{
-			this.fromText  = null;
-			this.toText    = null;
-			this.mode      = SearchMode.Fragment;
-			this.matchCase = false;
-			this.wholeWord = false;
-			this.invert    = false;
+			this.fromText    = null;
+			this.toText      = null;
+			this.additionnal = false;
+			this.mode        = SearchMode.Fragment;
+			this.matchCase   = false;
+			this.wholeWord   = false;
+			this.invert      = false;
 
 			this.PreparesSearch ();
 		}
@@ -138,7 +163,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				if (this.mode == SearchMode.Interval)
+				if (this.additionnal)
+				{
+					return false;
+				}
+				else if (this.mode == SearchMode.Interval)
 				{
 					return string.IsNullOrEmpty (this.fromText) && string.IsNullOrEmpty (this.toText);
 				}
@@ -524,10 +553,11 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			return SearchText.CompareFormattedText (other.fromText, this.fromText)  &&
 				   SearchText.CompareFormattedText (other.toText,   this.toText  )  &&
-				   other.mode      == this.mode      &&
-				   other.matchCase == this.matchCase &&
-				   other.wholeWord == this.wholeWord &&
-				   other.invert    == this.invert;
+				   other.additionnal == this.additionnal &&
+				   other.mode        == this.mode        &&
+				   other.matchCase   == this.matchCase   &&
+				   other.wholeWord   == this.wholeWord   &&
+				   other.invert      == this.invert;
 		}
 
 		private static bool CompareFormattedText(FormattedText t1, FormattedText t2)
@@ -542,12 +572,13 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public void CopyTo(SearchText dst)
 		{
-			dst.fromText  = this.fromText;
-			dst.toText    = this.toText;
-			dst.mode      = this.mode;
-			dst.matchCase = this.matchCase;
-			dst.wholeWord = this.wholeWord;
-			dst.invert    = this.invert;
+			dst.fromText    = this.fromText;
+			dst.toText      = this.toText;
+			dst.additionnal = this.additionnal;
+			dst.mode        = this.mode;
+			dst.matchCase   = this.matchCase;
+			dst.wholeWord   = this.wholeWord;
+			dst.invert      = this.invert;
 
 			dst.PreparesSearch ();
 		}
@@ -604,6 +635,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		private string					fromText;
 		private string					toText;
 		private SearchMode				mode;
+		private bool					additionnal;
 		private bool					matchCase;
 		private bool					wholeWord;
 		private bool					invert;

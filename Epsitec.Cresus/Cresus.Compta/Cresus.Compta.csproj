@@ -445,6 +445,20 @@
     <EmbeddedResource Include="Images\Level.Misc.icon" />
     <EmbeddedResource Include="Images\Edit.Add.icon" />
     <EmbeddedResource Include="Images\Search.QuickFilter.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.Empty.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.EndsWith.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.Fragment.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.Jokers.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.StartsWith.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.WholeContent.icon" />
+    <EmbeddedResource Include="Images\Search.Interval.False.icon" />
+    <EmbeddedResource Include="Images\Search.Interval.True.icon" />
+    <EmbeddedResource Include="Images\Search.Invert.False.icon" />
+    <EmbeddedResource Include="Images\Search.Invert.True.icon" />
+    <EmbeddedResource Include="Images\Search.MatchCase.False.icon" />
+    <EmbeddedResource Include="Images\Search.MatchCase.True.icon" />
+    <EmbeddedResource Include="Images\Search.WholeWord.False.icon" />
+    <EmbeddedResource Include="Images\Search.WholeWord.True.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
