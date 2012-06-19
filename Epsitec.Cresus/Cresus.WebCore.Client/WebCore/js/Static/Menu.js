@@ -36,6 +36,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
               Ext.Ajax.request(
                 {
                   url : 'proxy/log/out',
+                  method : 'POST',
                   callback : function ()
                   {
                     window.location.reload();

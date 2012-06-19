@@ -24,7 +24,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 			: base (serverContext, "/log")
 		{
 			Post["/in"] = p => this.Login ();
-			Get["/out"] = p => this.Logout ();
+			Post["/out"] = p => this.Logout ();
 		}
 
 

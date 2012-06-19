@@ -56,6 +56,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       Ext.Ajax.request(
         {
           url : 'proxy/collection/create',
+          method : 'POST',
           params :
           {
             parentEntity : this.ownerCt.parentEntity,
@@ -95,6 +96,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       Ext.Ajax.request(
         {
           url : 'proxy/collection/delete',
+          method : 'POST',
           params :
           {
             parentEntity : this.ownerCt.parentEntity,

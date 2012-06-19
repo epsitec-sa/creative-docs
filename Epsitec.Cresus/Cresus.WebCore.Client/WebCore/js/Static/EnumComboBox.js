@@ -48,24 +48,14 @@ Ext.define('Epsitec.Cresus.Core.Static.EnumComboBox',
         
         combo.setLoading();
         
-        // Create a proxy to get info about the Enum. We want to get the info using the POST method,
-        // because we have to specify the type (name)
         var proxy = Ext.create('Ext.data.proxy.Ajax',
             {
               type : 'ajax',
-              url : 'proxy/enum/',
+              url : 'proxy/enum/get/' + name,
               reader :
               {
                 type : 'json'
               },
-              extraParams :
-              {
-                name : name
-              },
-              actionMethods :
-              {
-                reader : 'POST'
-              }
             }
           );
         

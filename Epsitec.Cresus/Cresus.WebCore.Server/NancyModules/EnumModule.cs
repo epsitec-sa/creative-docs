@@ -25,13 +25,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public EnumModule(ServerContext serverContext)
 			: base (serverContext, "/enum")
 		{
-			Post["/"] = p => this.ExecuteWithCoreSession (cs => this.GetEnum ());
+			Get["/get/{name}"] = p => this.ExecuteWithCoreSession (cs => this.GetEnum (p));
 		}
 
 
-		private Response GetEnum()
+		private Response GetEnum(dynamic parameters)
 		{
-			string typeName = Request.Form.name;
+			string typeName = parameters.name;
 
 			var list = EnumModule.GetValues (typeName).ToList ();
 
