@@ -190,11 +190,20 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 		private Response CreateEntity(CoreSession coreSession, dynamic parameters)
 		{
+			// TODO This implementation is very simple and will only work if the entity that will be
+			// created is not of an abstract type. If it is an abstract entity, probable that an
+			// entity of the wrong type will be created. Probably that we should implement something
+			// with the CreationControllers.
+
 			var context = coreSession.GetBusinessContext ();
 
-			// TODO Being able to create an entity (problems with the AbstractPerson)
+			string databaseName = parameters.name;
+			var database = DatabasesModule.databases[databaseName];
 
-			return CoreResponse.AsError ();
+			var entity = database.Create (context);
+			var entityId = Tools.GetEntityId (context, entity);
+
+			return CoreResponse.AsSuccess (entityId);
 		}
 
 

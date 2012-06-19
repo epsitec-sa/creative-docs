@@ -43,6 +43,21 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
+		public override AbstractEntity Create(BusinessContext businessContext)
+		{
+			var entity = businessContext.CreateEntity<T> ();
+
+			// NOTE Here we need to include the empty entities, otherwise we might be in the case
+			// where the entity that we just have created will be empty and thus not saved and this
+			// will lead the user to click like a maniac on the "create" button without noticeable
+			// result other than him becoming mad :-P
+
+			businessContext.SaveChanges (EntitySaveMode.IncludeEmpty);
+
+			return entity;
+		}
+
+
 	}
 
 

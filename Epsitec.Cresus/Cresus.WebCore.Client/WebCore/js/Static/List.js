@@ -35,7 +35,9 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
         iconCls : 'epsitec-cresus-core-images-edition-new-icon32',
         handler : function ()
         {
-          Epsitec.Cresus.Core.Static.ErrorHandler.handleErrorDefault();
+          var list = this.up('panel');
+          
+          list.createEntity();
         }
       },
       {
@@ -125,6 +127,29 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
           {
             entityId : id
           },
+          success : function (response, options)
+          {
+            this.setLoading(false);
+            this.store.load();
+          },
+          failure : function (response, options)
+          {
+            this.setLoading(false);
+            Epsitec.Cresus.Core.Static.ErrorHandler.handleError(response);
+          },
+          scope : this
+        }
+      );
+    },
+    
+    createEntity : function ()
+    {
+      this.setLoading();
+      
+      Ext.Ajax.request(
+        {
+          url : 'proxy/database/create/' + this.databaseName,
+          method : 'POST',
           success : function (response, options)
           {
             this.setLoading(false);

@@ -40,6 +40,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, int skip, int take);
 
 
+		public abstract AbstractEntity Create(BusinessContext businessContext);
+
+
 	}
 
 
