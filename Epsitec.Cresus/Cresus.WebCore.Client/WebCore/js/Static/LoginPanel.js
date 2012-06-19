@@ -100,7 +100,6 @@ Ext.define('Epsitec.Cresus.Core.Static.LoginPanel',
       
       this.callParent(new Array(options));
       
-      //this.submitLogin(); // TODO debug!
       return this;
     },
     
