@@ -83,12 +83,6 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       var columnMgr = Ext.getCmp('columnmgr');
       columnMgr.refreshColumn(this.ownerCt);
     },
-
-    showNewEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel)
-    {
-      var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 3);
-    },
     
     autoCreateNullEntity : function()
     {   

@@ -117,7 +117,12 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
         }
       );
     },
-    
+
+    showNewEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel)
+    {
+      var columnMgr = Ext.getCmp('columnmgr');
+      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 3);
+    },  
   }
 );
  
