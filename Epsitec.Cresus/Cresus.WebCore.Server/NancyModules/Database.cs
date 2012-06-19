@@ -1,6 +1,6 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Business;
 
 using System.Collections.Generic;
 
@@ -34,10 +34,10 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		}
 
 
-		public abstract int GetCount(DataContext dataContext);
+		public abstract int GetCount(BusinessContext businessContext);
 
 
-		public abstract IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take);
+		public abstract IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, int skip, int take);
 
 
 	}

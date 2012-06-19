@@ -1,6 +1,7 @@
 using Epsitec.Common.Support.EntityEngine;
 
-using Epsitec.Cresus.DataLayer.Context;
+using Epsitec.Cresus.Core.Business;
+
 using Epsitec.Cresus.DataLayer.Expressions;
 
 using System.Collections.Generic;
@@ -15,13 +16,13 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 	{
 
 
-		public override int GetCount(DataContext dataContext)
+		public override int GetCount(BusinessContext businessContext)
 		{
-			return dataContext.GetCount (new T ());
+			return businessContext.DataContext.GetCount (new T ());
 		}
 
 
-		public override IEnumerable<AbstractEntity> GetEntities(DataContext dataContext, int skip, int take)
+		public override IEnumerable<AbstractEntity> GetEntities(BusinessContext businessContext, int skip, int take)
 		{
 			var example = new T ();
 
@@ -38,7 +39,7 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 				SortOrder.Ascending
 			);
 
-			return dataContext.GetByRequest<T> (request);
+			return businessContext.DataContext.GetByRequest<T> (request);
 		}
 
 

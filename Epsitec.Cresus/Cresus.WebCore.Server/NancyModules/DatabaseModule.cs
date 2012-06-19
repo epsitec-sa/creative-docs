@@ -1,7 +1,5 @@
 ﻿using Epsitec.Aider.Entities;
 
-using Epsitec.Common.Support.EntityEngine;
-
 using Epsitec.Cresus.Core.Entities;
 
 using Epsitec.Cresus.WebCore.Server.CoreServer;
@@ -147,9 +145,9 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 
 			var database = DatabasesModule.databases[databaseName];
 
-			var total = database.GetCount (dataContext);
-			
-			var entities = from entity in database.GetEntities (dataContext, start, limit)
+			var total = database.GetCount (businessContext);
+
+			var entities = from entity in database.GetEntities (businessContext, start, limit)
 			               let summary = entity.GetCompactSummary ().ToSimpleText ()
 			               let id = Tools.GetEntityId (businessContext, entity)
 			               select new
@@ -172,11 +170,11 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
 		{
 			var context = coreSession.GetBusinessContext ();
 
-			string paramEntityKey = Request.Form.entityId;
+			string entityId = Request.Form.entityId;
 
-			AbstractEntity entity = Tools.ResolveEntity (context, paramEntityKey);
+			var entity = Tools.ResolveEntity (context, entityId);
 
-			bool ok = false;
+			var ok = false;
 
 			using (context.Bind (entity))
 			{
