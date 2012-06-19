@@ -136,7 +136,6 @@ namespace Epsitec.Cresus.WebCore.Server.NancyModules
  			// calls ?
 
 			var businessContext = coreSession.GetBusinessContext ();
-			var dataContext = businessContext.DataContext;
 
 			string databaseName = parameters.name;
 
