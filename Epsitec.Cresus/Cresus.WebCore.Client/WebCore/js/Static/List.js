@@ -120,6 +120,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
       Ext.Ajax.request(
         {
           url : 'proxy/database/delete',
+          method : 'POST',
           params :
           {
             entityId : id
