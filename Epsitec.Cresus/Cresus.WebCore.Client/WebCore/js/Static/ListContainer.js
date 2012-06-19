@@ -26,9 +26,9 @@ Ext.define('Epsitec.Cresus.Core.Static.ListContainer',
     
     /* Additional methods */
     
-    showList: function(url) {
+    showList: function(databaseName) {
       this.removeAll();
-      var list = Ext.create('Epsitec.Cresus.Core.Static.List', url);
+      var list = Ext.create('Epsitec.Cresus.Core.Static.List', databaseName);
       this.add(list);
     
       var columnMgr = Ext.getCmp('columnmgr');

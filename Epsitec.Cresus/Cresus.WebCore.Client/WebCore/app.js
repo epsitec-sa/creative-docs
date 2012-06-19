@@ -69,7 +69,7 @@ Ext.application(
       
       this.columnmgr = Ext.create('Epsitec.Cresus.Core.Static.ColumnManager');
       this.menu = Ext.create('Epsitec.Cresus.Core.Static.Menu');
-      var list = Ext.create('Epsitec.Cresus.Core.Static.List', 'proxy/database/customers');
+      var list = Ext.create('Epsitec.Cresus.Core.Static.List', 'customers');
       this.listContainer = Ext.create('Epsitec.Cresus.Core.Static.ListContainer', list);
       this.tabmgr = Ext.create('Epsitec.Cresus.Core.Static.TabMgr', this.columnmgr);
       

@@ -116,7 +116,7 @@ Ext.define('Epsitec.Cresus.Core.Static.Menu',
                 handler : function ()
                 {
                   var l = Ext.getCmp('listContainer');
-                  l.showList('proxy/database/' + menu.DatabaseName);
+                  l.showList(menu.DatabaseName);
                 },
                 scale : 'large',
                 iconAlign : 'top',

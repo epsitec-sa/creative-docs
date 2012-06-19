@@ -59,7 +59,6 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
           var id = item.get('uniqueId');
           
           list.deleteEntity(id);
-          
         }
       },
       {
@@ -76,11 +75,16 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
       }
     ],
     
+    /* Properties */
+    databaseName : null,
+    
     /* Constructor */
-    constructor : function (url)
+    constructor : function (databaseName)
     {
-      this.store = Epsitec.Cresus.Core.Static.List.getStore(url);
+      this.store = Epsitec.Cresus.Core.Static.List.getStore(databaseName);
       this.store.guaranteeRange(0, 100);
+      
+      this.databaseName = databaseName;
       
       this.callParent(arguments);
       return this;
@@ -136,7 +140,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
     },
     
     statics : {
-      getStore: function(url) {
+      getStore: function(databaseName) {
         var store = Ext.create('Ext.data.Store',
           {
             model : 'Epsitec.Cresus.Core.Static.ListItem',
@@ -147,7 +151,7 @@ Ext.define('Epsitec.Cresus.Core.Static.List',
             proxy :
             {
               type : 'ajax',
-              url : url,
+              url : 'proxy/database/get/' + databaseName,
               reader :
               {
                 type : 'json',
