@@ -69,21 +69,23 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       this.execute(controllerMode, controllerSubTypeId, entityId, parentPanel, callback2, callbackContext2);
     },
     
-    refreshColumn : function(columnId)
+    refreshColumn : function(columnId, callback, callbackContext)
     {
       var columnPanel = this.columns[columnId];
       
-      var callback = function (config)
+      var callback1 = function (config)
       {
         this.replaceExistingColumn(columnId, config)
+        
+        Epsitec.Cresus.Core.Static.Tools.doCallback(callback, callbackContext, [config]);
       };
-      var callbackContext = this;
+      var callbackContext1 = this;
       
       var controllerMode = columnPanel.controllerMode;
       var controllerSubTypeId = columnPanel.controllerSubTypeId;
       var entityId = columnPanel.parentEntity;
       
-      this.execute(controllerMode, controllerSubTypeId, entityId, columnPanel, callback, callbackContext);
+      this.execute(controllerMode, controllerSubTypeId, entityId, columnPanel, callback1, callbackContext1);
     },
     
     execute : function(controllerMode, controllerSubTypeId, entityId, loadingPanel, callback, callbackContext)
@@ -228,8 +230,6 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     
     removeColumnsFromIndex : function (index, autoDestroy)
     {
-      
-      
       for (var i = this.columns.length - 1; i >= index; i--)
       {
         this.removeColumn(i, autoDestroy);

@@ -77,23 +77,23 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       columnMgr.addEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, this, callback, callbackContext);
     },
     
-    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId)
+    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext)
     {
-      var callback = function()
+      var callback1 = function()
       {
-        this.refreshEntity();
+        this.refreshEntity(callback, callbackContext);
       };
-      var callbackContext = this;
+      var callbackContext1 = this;
       
-      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext);
+      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, callback1, callbackContext1);
     },
     
-    refreshEntity : function ()
+    refreshEntity : function (callback, callbackContext)
     {
       var columnId = this.ownerCt.columnId;
       
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.refreshColumn(columnId);
+      columnMgr.refreshColumn(columnId, callback, callbackContext);
     },
     
     autoCreateNullEntity : function()
