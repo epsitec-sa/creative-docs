@@ -37,9 +37,13 @@ namespace Epsitec.Cresus.Compta.Controllers
 			this.searchButton  = this.CreateButton (parent, Res.Commands.Panel.Search,   0, UIBuilder.PanelButtonSoftHiliteColor);
 #endif
 
-			this.optionsMarker = this.CreateMarker (this.optionsButton);
-			this.filterMarker  = this.CreateMarker (this.filterButton);
-			this.searchMarker  = this.CreateMarker (this.searchButton);
+			this.optionsMarker = UIBuilder.CreateMarker (this.optionsButton, "Panel.Active");
+			this.filterMarker  = UIBuilder.CreateMarker (this.filterButton,  "Panel.Active");
+			this.searchMarker  = UIBuilder.CreateMarker (this.searchButton,  "Panel.Active");
+
+			this.optionsMarker.Visibility = false;
+			this.filterMarker .Visibility = false;
+			this.searchMarker .Visibility = false;
 
 			this.optionsButton.Entered += delegate
 			{
@@ -141,20 +145,6 @@ namespace Epsitec.Cresus.Compta.Controllers
 				Name              = command.Name,
 				AutoFocus         = false,
 				Margins           = new Margins (0, rightMargin, 0, 0),
-			};
-		}
-
-		private StaticText CreateMarker(Widget parent)
-		{
-			//	Crée le petit 'vu' vert en surimpression d'un bouton. Par chance, le widget StaticText ne capture
-			//	pas les événements souris !
-			return new StaticText
-			{
-				Parent           = parent,
-				Text             = UIBuilder.GetIconTag ("Panel.Active"),
-				ContentAlignment = ContentAlignment.BottomRight,
-				Anchor           = AnchorStyles.All,
-				Visibility       = false,
 			};
 		}
 

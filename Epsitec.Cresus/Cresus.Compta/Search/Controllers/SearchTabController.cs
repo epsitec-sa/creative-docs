@@ -226,6 +226,8 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				Margins           = new Margins (-1, 0, 0, 0),
 			};
 
+			UIBuilder.CreateMarker (this.modeButton, "Search.Mode.Marker");
+
 			ToolTip.Default.SetToolTip (this.modeButton,      "Mode de recherche");
 			ToolTip.Default.SetToolTip (this.matchCaseButton, "Respecter la casse");
 			ToolTip.Default.SetToolTip (this.wholeWordButton, "Mot entier");

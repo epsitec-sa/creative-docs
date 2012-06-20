@@ -94,7 +94,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				ToolTip.Default.SetToolTip (this.levelButton, "Mode simple ou avancé");
 
-				this.levelMarker = this.CreateMarker (this.levelButton);
+				this.levelMarker = UIBuilder.CreateMarker (this.levelButton, "Panel.Specialist");
 
 				this.levelButton.Clicked += delegate
 				{

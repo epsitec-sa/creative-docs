@@ -19,6 +19,20 @@ namespace Epsitec.Cresus.Compta.Helpers
 {
 	public static class UIBuilder
 	{
+		public static StaticText CreateMarker(Widget parent, string icon)
+		{
+			//	Crée un marqueur ("+", "v", "vu", etc.) en surimpression d'un bouton.
+			//	Par chance, le widget StaticText ne capture pas les événements souris !
+			return new StaticText
+			{
+				Parent           = parent,
+				Text             = UIBuilder.GetIconTag (icon),
+				ContentAlignment = ContentAlignment.BottomRight,
+				Anchor           = AnchorStyles.All,
+			};
+		}
+
+
 		public static void AdjustWidth(Widget widget)
 		{
 			widget.PreferredWidth = widget.GetBestFitSize ().Width;

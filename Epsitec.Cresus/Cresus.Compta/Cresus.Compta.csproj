@@ -459,6 +459,7 @@
     <EmbeddedResource Include="Images\Search.MatchCase.True.icon" />
     <EmbeddedResource Include="Images\Search.WholeWord.False.icon" />
     <EmbeddedResource Include="Images\Search.WholeWord.True.icon" />
+    <EmbeddedResource Include="Images\Search.Mode.Marker.icon" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Common\Common.csproj">
