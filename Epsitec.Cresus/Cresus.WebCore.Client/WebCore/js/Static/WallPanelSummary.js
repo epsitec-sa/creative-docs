@@ -15,7 +15,6 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     subViewControllerSubTypeId : 'null',
     autoCreatorId : null,
     selectedPanelCls : 'selected-entity',
-    selected : false,
     
     /* Constructor */
     constructor : function (o)
@@ -149,20 +148,13 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       );
     },
     
-    isSelected : function ()
+    select : function ()
     {
-      return this.selected != null ? this.selected : false;
-    },
-    
-    setSelected : function ()
-    {
-      this.selected = true;
       this.addCls(this.selectedPanelCls);
     },
     
-    setUnSelected : function ()
+    unselect : function ()
     {
-      this.selected = false;
       this.removeCls(this.selectedPanelCls);
     }
   }
