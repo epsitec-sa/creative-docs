@@ -913,7 +913,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 			{
 				foreach (var tab in node.TabsData)
 				{
-					if (tab.Column == ColumnType.Date)
+					if (tab.Columns.Contains (ColumnType.Date))
 					{
 						var dateDébut = Converters.ParseDate (tab.SearchText.FromText);
 						if (dateDébut.HasValue)

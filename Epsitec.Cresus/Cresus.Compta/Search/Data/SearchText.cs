@@ -163,11 +163,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				if (this.additionnal)
-				{
-					return false;
-				}
-				else if (this.mode == SearchMode.Interval)
+				if (this.mode == SearchMode.Interval)
 				{
 					return string.IsNullOrEmpty (this.fromText) && string.IsNullOrEmpty (this.toText);
 				}

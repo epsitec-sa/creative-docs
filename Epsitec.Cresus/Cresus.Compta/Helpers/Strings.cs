@@ -71,6 +71,11 @@ namespace Epsitec.Cresus.Compta.Helpers
 
 		public static string SentenceConcat(List<string> list)
 		{
+			return Strings.SentenceConcat ("et", list);
+		}
+
+		public static string SentenceConcat(string conjunctive, List<string> list)
+		{
 			//	Transforme une liste contenant "rouge", "vert" et "bleu" en une phrase "rouge, vert et bleu".
 			var builder = new System.Text.StringBuilder ();
 
@@ -86,7 +91,9 @@ namespace Epsitec.Cresus.Compta.Helpers
 					}
 					else
 					{
-						builder.Append (" et ");
+						builder.Append (" ");
+						builder.Append (conjunctive);
+						builder.Append (" ");
 					}
 				}
 

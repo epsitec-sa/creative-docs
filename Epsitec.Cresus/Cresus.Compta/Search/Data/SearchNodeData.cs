@@ -144,7 +144,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 						this.tabsData.Add (data);
 					}
 
-					data.Column              = ColumnType.None;
+					data.Columns.Clear ();
 					data.SearchText.Mode     = SearchMode.Fragment;
 					data.SearchText.FromText = value.ToString ();
 
@@ -157,7 +157,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				return this.tabsData.Where (x => x.Column == ColumnType.None).FirstOrDefault ();
+				return this.tabsData.Where (x => !x.Columns.Any ()).FirstOrDefault ();
 			}
 		}
 
@@ -199,7 +199,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 						this.tabsData.Add (data);
 					}
 
-					data.Column              = ColumnType.Catégorie;
+					data.Columns.Clear ();
+					data.Columns.Add (ColumnType.Catégorie);
 					data.SearchText.Mode     = SearchMode.Jokers;
 					data.SearchText.FromText = Converters.CatégoriesToString (value);
 
@@ -212,7 +213,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Catégorie).FirstOrDefault ();
+				return this.tabsData.Where (x => x.Columns.Contains (ColumnType.Catégorie)).FirstOrDefault ();
 			}
 		}
 
@@ -261,7 +262,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					this.tabsData.Add (data);
 				}
 
-				data.Column              = ColumnType.Profondeur;
+				data.Columns.Clear ();
+				data.Columns.Add (ColumnType.Profondeur);
 				data.SearchText.Mode     = SearchMode.Interval;
 				data.SearchText.FromText = (from == int.MaxValue) ? null : from.ToString ();
 				data.SearchText.ToText   = (to   == int.MaxValue) ? null : to  .ToString ();
@@ -274,7 +276,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Profondeur).FirstOrDefault ();
+				return this.tabsData.Where (x => x.Columns.Contains (ColumnType.Profondeur)).FirstOrDefault ();
 			}
 		}
 
@@ -305,7 +307,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 						this.tabsData.Add (data);
 					}
 
-					data.Column              = ColumnType.Solde;
+					data.Columns.Clear ();
+					data.Columns.Add (ColumnType.Solde);
 					data.SearchText.Mode     = SearchMode.WholeContent;
 					data.SearchText.Invert   = true;
 					data.SearchText.FromText = Converters.MontantToString (0, null);
@@ -327,7 +330,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		{
 			get
 			{
-				return this.tabsData.Where (x => x.Column == ColumnType.Solde).FirstOrDefault ();
+				return this.tabsData.Where (x => x.Columns.Contains (ColumnType.Solde)).FirstOrDefault ();
 			}
 		}
 
@@ -370,7 +373,8 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					this.tabsData.Add (data);
 				}
 
-				data.Column              = ColumnType.Date;
+				data.Columns.Clear ();
+				data.Columns.Add (ColumnType.Date);
 				data.SearchText.Mode     = SearchMode.Interval;
 				data.SearchText.FromText = Converters.DateToString (beginDate);
 				data.SearchText.ToText   = Converters.DateToString (endDate);

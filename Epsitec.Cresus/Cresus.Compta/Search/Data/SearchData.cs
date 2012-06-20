@@ -399,7 +399,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 				{
 					bool tabFound = false;
 
-					if (tab.Column == ColumnType.None)  // cherche dans toutes les colonnes ?
+					if (!tab.Columns.Any ())  // cherche dans toutes les colonnes ?
 					{
 						foreach (var column in columnTypes)
 						{
@@ -419,17 +419,21 @@ namespace Epsitec.Cresus.Compta.Search.Data
 					}
 					else  // cherche dans une colonne précise ?
 					{
-						FormattedText text = getText (row, tab.Column);
-						int n = tab.SearchText.Search (ref text);
-
-						if (n != 0)  // trouvé ?
+						foreach (var column in tab.Columns)
 						{
-							if (results != null)
-							{
-								results.Add (new SearchResult (row, tab.Column, text));
-							}
+							FormattedText text = getText (row, column);
+							int n = tab.SearchText.Search (ref text);
 
-							tabFound = true;
+							if (n != 0)  // trouvé ?
+							{
+								if (results != null)
+								{
+									results.Add (new SearchResult (row, column, text));
+								}
+
+								tabFound = true;
+								break;
+							}
 						}
 					}
 

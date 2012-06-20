@@ -6,6 +6,7 @@ using Epsitec.Common.Types;
 using Epsitec.Cresus.Compta.Accessors;
 using Epsitec.Cresus.Compta.Controllers;
 using Epsitec.Cresus.Compta.Entities;
+using Epsitec.Cresus.Compta.Helpers;
 
 using System.Collections.Generic;
 using System.Linq;
@@ -21,6 +22,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public SearchTabData()
 		{
 			this.searchText = new SearchText ();
+			this.columns = new List<ColumnType> ();
 			this.Active = true;
 		}
 
@@ -32,10 +34,12 @@ namespace Epsitec.Cresus.Compta.Search.Data
 			}
 		}
 
-		public ColumnType Column
+		public List<ColumnType> Columns
 		{
-			get;
-			set;
+			get
+			{
+				return this.columns;
+			}
 		}
 
 		public bool Active
@@ -47,7 +51,7 @@ namespace Epsitec.Cresus.Compta.Search.Data
 		public void Clear()
 		{
 			this.searchText.Clear ();
-			this.Column = ColumnType.None;
+			this.columns.Clear ();
 		}
 
 		public bool IsEmpty
@@ -61,36 +65,57 @@ namespace Epsitec.Cresus.Compta.Search.Data
 
 		public bool CompareTo(SearchTabData other)
 		{
-			return other.Column == this.Column &&
-				   other.Active == this.Active &&
+			if (other.columns.Count != this.columns.Count)
+			{
+				return false;
+			}
+
+			for (int i = 0; i < other.columns.Count; i++)
+			{
+				if (other.columns[i] != this.columns[i])
+				{
+					return false;
+				}
+			}
+
+			return other.Active == this.Active &&
 				   this.searchText.CompareTo (other.searchText);
 		}
 
 		public void CopyTo(SearchTabData dst)
 		{
-			dst.Column = this.Column;
+			dst.columns.Clear ();
+			dst.columns.AddRange (this.columns);
+
 			dst.Active = this.Active;
+
 			this.searchText.CopyTo (dst.searchText);
 		}
 
 
 		public FormattedText GetSummary(List<ColumnMapper> columnMappers)
 		{
-			FormattedText columnName = FormattedText.Empty;
+			return this.searchText.GetSummary (this.GetColumnsSummary (columnMappers));
+		}
 
-			if (this.Column != ColumnType.None)
+		public FormattedText GetColumnsSummary(List<ColumnMapper> columnMappers)
+		{
+			var list = new List<string> ();
+
+			foreach (var column in this.columns)
 			{
-				var mapper = columnMappers.Where (x => x.Column == this.Column).FirstOrDefault ();
+				var mapper = columnMappers.Where (x => x.Column == column).FirstOrDefault ();
 				if (mapper != null)
 				{
-					columnName = mapper.Description;
+					list.Add (mapper.Description.ToString ());
 				}
 			}
 
-			return this.searchText.GetSummary (columnName);
+			return Strings.SentenceConcat ("ou", list);
 		}
 
 
 		private readonly SearchText			searchText;
+		private readonly List<ColumnType>	columns;
 	}
 }

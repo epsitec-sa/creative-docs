@@ -36,7 +36,8 @@ namespace Epsitec.Cresus.Compta.Accessors
 
 		private void FilterInitialize(SearchData data)
 		{
-			data.FirstTabData.Column              = ColumnType.Solde;
+			data.FirstTabData.Columns.Clear ();
+			data.FirstTabData.Columns.Add (ColumnType.Solde);
 			data.FirstTabData.SearchText.Mode     = SearchMode.WholeContent;
 			data.FirstTabData.SearchText.Invert   = true;
 			data.FirstTabData.SearchText.FromText = Converters.MontantToString (0, this.compta.Monnaies[0]);
