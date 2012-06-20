@@ -39,7 +39,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelEdition',
                 {
                   this.setLoading(false);
                   var columnMgr = Ext.getCmp('columnmgr');
-                  columnMgr.refreshLeftColumn(this.ownerCt);
+                  columnMgr.refreshColumn(this.ownerCt.columnId - 1);
                 },
                 failure : function (form, action)
                 {

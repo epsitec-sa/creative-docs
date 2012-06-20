@@ -32,7 +32,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ListContainer',
       this.add(list);
     
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.clearAllColumns();
+      columnMgr.clearColumns();
       
       var tabMgr = Ext.getCmp('tabmgr');
       if (tabMgr != null)

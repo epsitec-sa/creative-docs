@@ -67,20 +67,33 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
       }
       else
       {
-        this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, this.entityId, this);
+        this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, this.entityId);
       }
     },
 
-    showEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel, callback)
+    showEntityColumn : function (subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext)
     {
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 1, callback);
+      columnMgr.addEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, this, callback, callbackContext);
+    },
+    
+    showEntityColumnAndRefresh : function (subViewControllerMode, subViewControllerSubTypeId, entityId)
+    {
+      var callback = function()
+      {
+        this.refreshEntity();
+      };
+      var callbackContext = this;
+      
+      this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext);
     },
     
     refreshEntity : function ()
     {
+      var columnId = this.ownerCt.columnId;
+      
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.refreshColumn(this.ownerCt);
+      columnMgr.refreshColumn(columnId);
     },
     
     autoCreateNullEntity : function()
@@ -119,24 +132,14 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
             // messes up the things when we want to add a new column with the current instance which
             // will have been removed from the UI at the time the callback will be called.
             
-            var callback = null;
-            
             if (this.entityId !== newEntityId)
             {
-              this.entityId = newEntityId;
-              
-              // We need this temporary variable to capture the value of 'this' now, otherwise it
-              // will be bound to something else when the callback will be called. That's because
-              // of this weird javacript function implementation :-P
-              var self = this;
-              
-              callback = function()
-              {
-                self.refreshEntity();
-              };
+              this.showEntityColumnAndRefresh(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
             }
-            
-            this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, this.entityId, this, callback);
+            else
+            {
+              this.showEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
+            }
           },
           failure : function ()
           {

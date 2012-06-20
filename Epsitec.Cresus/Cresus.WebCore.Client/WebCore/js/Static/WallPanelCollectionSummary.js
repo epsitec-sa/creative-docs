@@ -77,7 +77,9 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
               return;
             }
             
-            this.showNewEntityColumn(this.subViewControllerMode, this.subViewControllerSubTypeId, json.content, this);
+            var newEntityId = json.content;
+            
+            this.showEntityColumnAndRefresh(this.subViewControllerMode, this.subViewControllerSubTypeId, newEntityId);
           },
           failure : function ()
           {
@@ -117,12 +119,6 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
         }
       );
     },
-
-    showNewEntityColumn: function (subViewControllerMode, subViewControllerSubTypeId, entityId, panel)
-    {
-      var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.showEntity(subViewControllerMode, subViewControllerSubTypeId, entityId, panel, 3);
-    },  
   }
 );
  
