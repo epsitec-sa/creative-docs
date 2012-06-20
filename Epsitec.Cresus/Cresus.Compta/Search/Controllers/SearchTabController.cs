@@ -684,12 +684,29 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 				else
 				{
 					this.tabData.Columns.Add (type);
+					this.SortColumns ();
 				}
 
 				this.searchStartAction ();
 			};
 
 			menu.Items.Add (item);
+		}
+
+		private void SortColumns()
+		{
+			var sorted = new List<ColumnType> ();
+
+			foreach (var mapper in this.columnMappers)
+			{
+				if (this.tabData.Columns.Contains (mapper.Column))
+				{
+					sorted.Add (mapper.Column);
+				}
+			}
+
+			this.tabData.Columns.Clear ();
+			this.tabData.Columns.AddRange (sorted);
 		}
 		#endregion
 
