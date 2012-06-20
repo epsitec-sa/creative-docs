@@ -75,6 +75,12 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			this.searchController.SearchClear ();
 		}
 
+		public void QuickFilterClear()
+		{
+			this.searchController.Data.QuickFilter = false;
+			this.searchStartAction ();
+		}
+
 
 		public void LinkHilitePanel(bool hilite)
 		{
@@ -83,6 +89,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 
 		public void CreateUI(FrameBox parent, System.Action searchStartAction, System.Action<int> searchNextAction)
 		{
+			this.searchStartAction = searchStartAction;
+			this.searchNextAction  = searchNextAction;
+
 			this.toolbar = new FrameBox
 			{
 				Parent          = parent,
@@ -105,7 +114,7 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 			};
 
 			this.searchController = new SearchController (this.controller, this.dataAccessor.SearchData, false);
-			this.searchController.CreateUI (this.toolbar, searchStartAction, searchNextAction);
+			this.searchController.CreateUI (this.toolbar, this.searchStartAction, this.searchNextAction);
 		}
 
 		public void UpdateContent()
@@ -137,6 +146,9 @@ namespace Epsitec.Cresus.Compta.Search.Controllers
 		private readonly ComptaEntity			compta;
 		private readonly BusinessContext		businessContext;
 		private readonly AbstractDataAccessor	dataAccessor;
+
+		private System.Action					searchStartAction;
+		private System.Action<int>				searchNextAction;
 
 		private FrameBox						toolbar;
 		private SearchController				searchController;

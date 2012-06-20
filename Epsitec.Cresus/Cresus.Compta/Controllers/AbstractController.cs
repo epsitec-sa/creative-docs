@@ -528,6 +528,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 				this.SearchUpdateLocator (true);
 				this.SearchUpdateTopToolbar ();
 				this.UpdateViewSettings ();
+				this.mainWindowController.UpdateTitle ();
 			}
 		}
 
@@ -568,6 +569,14 @@ namespace Epsitec.Cresus.Compta.Controllers
 			if (this.topSearchController != null)
 			{
 				this.topSearchController.SetSearchCount (this.dataAccessor.Count, this.dataAccessor.SearchCount, this.dataAccessor.SearchLocator);
+			}
+		}
+
+		public void QuickFilterClear()
+		{
+			if (this.topSearchController != null)
+			{
+				this.topSearchController.QuickFilterClear ();
 			}
 		}
 
@@ -715,12 +724,10 @@ namespace Epsitec.Cresus.Compta.Controllers
 		{
 			if (this.viewSettingsController != null && this.viewSettingsController.PanelsToolbarController != null && this.dataAccessor != null)
 			{
-#if false
 				if (this.dataAccessor.SearchData != null)
 				{
-					this.viewSettingsController.PanelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty;
+					this.viewSettingsController.PanelsToolbarController.SearchEnable = !this.dataAccessor.SearchData.IsEmpty && this.dataAccessor.SearchData.QuickFilter;
 				}
-#endif
 
 				if (this.dataAccessor.FilterData != null)
 				{

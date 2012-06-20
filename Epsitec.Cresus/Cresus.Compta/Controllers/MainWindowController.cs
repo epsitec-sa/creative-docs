@@ -243,6 +243,12 @@ namespace Epsitec.Cresus.Compta.Controllers
 					return true;
 				}
 
+				if (this.controller != null && this.controller.DataAccessor != null && this.controller.DataAccessor.SearchData != null &&
+					!this.controller.DataAccessor.SearchData.IsEmpty && this.controller.DataAccessor.SearchData.QuickFilter)
+				{
+					return true;
+				}
+
 				return false;
 			}
 		}
@@ -255,6 +261,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 			if (this.controller != null)
 			{
+				this.controller.QuickFilterClear ();
 				this.controller.FilterClear ();
 			}
 		}

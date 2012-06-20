@@ -78,7 +78,7 @@ namespace Epsitec.Cresus.Compta.Controllers
 
 		public bool SearchEnable
 		{
-			//	Indique si les recherches sont actives. Si oui, un petit (!) rouge  s'affiche en surimpression sur le bouton.
+			//	Indique si les recherches sont actives. Si oui, un petit (!) rouge s'affiche en surimpression sur le bouton.
 			get
 			{
 				return this.searchMarker.Visibility;
