@@ -267,7 +267,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     
     selectPanel : function (columnId, panel)
     {
-      var oldPanel = this.selectedPanels[columnId];
+      var oldPanel = this.getSelectedPanel(columnId);
       if (oldPanel != null)
       {
         oldPanel.unselect();
@@ -276,6 +276,20 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       panel.select();
       
       this.selectedPanels[columnId] = panel;
+    },
+    
+    getSelectedEntity : function (columnId)
+    {
+      var selectedPanel = this.getSelectedPanel(columnId);
+      
+      return selectedPanel == null
+        ? null
+        : selectedPanel.entityId;
+    },
+    
+    getSelectedPanel : function (columnId)
+    {
+      return this.selectedPanels[columnId];
     },
   }
 );

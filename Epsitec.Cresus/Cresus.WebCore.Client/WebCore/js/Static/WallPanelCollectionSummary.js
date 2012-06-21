@@ -63,6 +63,24 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       this.showEntityColumnAndRefresh(subViewControllerMode, subViewControllerSubTypeId, entityId, callback, callbackContext);
     },
     
+    removePanel : function ()
+    {
+      var columnMgr = Ext.getCmp('columnmgr');
+      
+      // If this panel is currently selected, we must remove all the columns to the
+      // right of this one.
+      var columnId = this.ownerCt.columnId;
+      var selectedEntityId = columnMgr.getSelectedEntity(columnId);
+      
+      if (selectedEntityId == this.entityId)
+      {
+        columnMgr.removeColumnsFromIndex(columnId + 1);
+      }
+      
+      // Now we can remove the current element.
+      this.getEl().slideOut();
+    },
+    
     addEntity : function ()
     {
       this.setLoading();
@@ -122,7 +140,8 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
           success : function (response, options)
           {
             this.setLoading(false);
-            this.getEl().slideOut();
+            
+            this.removePanel();
           },
           failure : function ()
           {
