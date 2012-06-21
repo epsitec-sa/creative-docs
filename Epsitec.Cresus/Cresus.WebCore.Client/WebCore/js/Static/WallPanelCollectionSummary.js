@@ -77,8 +77,9 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
         columnMgr.removeColumnsFromIndex(columnId + 1);
       }
       
-      // Now we can remove the current element.
-      this.getEl().slideOut();
+      // Now we refresh the current column in order to update the UI with any modification that
+      // the deletion might have done to summaries.
+      this.refreshEntity();
     },
     
     addEntity : function ()
