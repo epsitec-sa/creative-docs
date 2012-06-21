@@ -51,7 +51,9 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
           {
             type : 'refresh',
             tooltip : 'Refresh entity',
-            handler : this.refreshEntity,
+            // We don't call the function directly because ExtJs calls the handler with some arguments
+            // that are not compatible witht the refreshEntity signature.
+            handler : function () { this.refreshEntity(); },
             scope : this
           }
         );
