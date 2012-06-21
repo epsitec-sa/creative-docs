@@ -22,7 +22,6 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
     /* Properties */
     columns : [],
     selectedPanels : [],
-    selectedEntities : [],
     
     /* Additional methods */
     clearColumns : function()
@@ -154,7 +153,6 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       this.columns.push(column);
       this.selectedPanels.push(null);
-      this.selectedEntities.push(null);
     },
     
     replaceExistingColumn : function (columnId, config)
@@ -186,7 +184,10 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       // Copy the current columns and the selection state.
       var clonedColumns = Ext.Array.clone(this.columns);
-      var clonedSelectedEntityies = Ext.Array.clone(this.selectedEntities);
+      var selectedEntityIds = this.selectedPanels.map
+      (
+        function (p) { return p == null ? null : p.entityId; }
+      );
       
       // Remove the columns at the right ot the one we want to refresh, but don't
       // delete them from memory. We need them later.
@@ -215,7 +216,7 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       // Reapply the selection on the columns that we have just added.
       for (var i = columnId; i < nbColumns; i++)
       {
-        var selectedEntityId = clonedSelectedEntityies[i];
+        var selectedEntityId = selectedEntityIds[i];
         
         if (selectedEntityId !== null)
         {
@@ -244,7 +245,6 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       
       this.columns.splice(index, 1);
       this.selectedPanels.splice(index, 1);
-      this.selectedEntities.splice(index, 1);
     },
     
     selectEntity : function (columnId, entityId)
@@ -276,7 +276,6 @@ Ext.define('Epsitec.Cresus.Core.Static.ColumnManager',
       panel.select();
       
       this.selectedPanels[columnId] = panel;
-      this.selectedEntities[columnId] = panel.entityId;
     },
   }
 );
