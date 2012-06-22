@@ -79,7 +79,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelCollectionSummary',
       
       // Now we refresh the current column in order to update the UI with any modification that
       // the deletion might have done to summaries.
-      this.refreshEntity();
+      this.refreshEntity(true);
     },
     
     addEntity : function ()

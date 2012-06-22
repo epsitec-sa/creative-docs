@@ -53,7 +53,7 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
             tooltip : 'Refresh entity',
             // We don't call the function directly because ExtJs calls the handler with some arguments
             // that are not compatible witht the refreshEntity signature.
-            handler : function () { this.refreshEntity(); },
+            handler : function () { this.refreshEntity(false); },
             scope : this
           }
         );
@@ -83,19 +83,20 @@ Ext.define('Epsitec.Cresus.Core.Static.WallPanelSummary',
     {
       var callback1 = function()
       {
-        this.refreshEntity(callback, callbackContext);
+        this.refreshEntity(true, callback, callbackContext);
       };
       var callbackContext1 = this;
       
       this.showEntityColumn(subViewControllerMode, subViewControllerSubTypeId, entityId, callback1, callbackContext1);
     },
     
-    refreshEntity : function (callback, callbackContext)
+    refreshEntity : function (refreshAll, callback, callbackContext)
     {
-      var columnId = this.ownerCt.columnId;
+      var firstColumnId = refreshAll ? 0 : this.ownerCt.columnId;
+      var lastColumnId = this.ownerCt.columnId;
       
       var columnMgr = Ext.getCmp('columnmgr');
-      columnMgr.refreshColumn(columnId, callback, callbackContext);
+      columnMgr.refreshColumns(firstColumnId, lastColumnId, callback, callbackContext);
     },
     
     autoCreateNullEntity : function()
